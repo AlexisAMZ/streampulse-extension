@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StreamPulse</title>
+    <link rel="stylesheet" href="../css/popup.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="brand">
+        <img src="../images/photos/logosp.png" alt="StreamPulse" class="brand-logo" />
+        <h1 data-i18n="popup.title">StreamPulse</h1>
+      </div>
+      <div class="header-controls">
+        <nav class="tabs header-tabs">
+          <button
+            class="tab-button active"
+            data-tab="streamers"
+            data-i18n="popup.tabs.streamers"
+          >
+            Streamers
+          </button>
+          <button class="tab-button" data-tab="settings" data-i18n="popup.tabs.settings">
+            Réglages
+          </button>
+        </nav>
+        <button
+          id="refresh-button"
+          type="button"
+          data-i18n="popup.refresh"
+          data-i18n-attr-title="popup.refresh"
+        >
+          Actualiser
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="add-streamer">
+        <form id="add-streamer-form" autocomplete="off">
+          <label for="streamer-input" data-i18n="popup.addStreamerTitleBase">
+            Ajouter un streamer
+          </label>
+          <div
+            class="platform-picker"
+            id="platform-picker"
+            role="group"
+            data-i18n-attr-ariaLabel="popup.platformSelectorLabel"
+          ></div>
+          <div class="input-group">
+            <span class="input-prefix" id="handle-prefix">@</span>
+            <input
+              id="streamer-input"
+              name="streamer"
+              type="text"
+              maxlength="80"
+              autocomplete="off"
+              autocapitalize="none"
+              spellcheck="false"
+              required
+            />
+            <button type="submit" data-i18n="popup.addStreamerSubmit">Ajouter</button>
+          </div>
+          <p class="helper-text" data-i18n="popup.addStreamerHelperBase">
+            Saisissez le lien ou l’identifiant du créateur.
+          </p>
+          <p id="feedback-message" class="feedback-message" hidden></p>
+        </form>
+      </section>
+
+      <section id="streamer-list" class="streamer-list empty">
+        <p class="empty-state" data-i18n="popup.emptyState">
+          Aucun streamer suivi. Ajoutez-en un pour commencer.
+        </p>
+      </section>
+
+      <section id="settings-section" class="settings-section hidden">
+        <h2 data-i18n="popup.settingsTitle">Réglages</h2>
+        <div class="settings-items">
+          <label class="settings-toggle">
+            <div class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.liveNotificationsTitle">
+                Notifications Chrome
+              </span>
+              <span
+                class="settings-description"
+                data-i18n="popup.settings.liveNotificationsDescription"
+              >
+                Recevoir une alerte lorsqu’un streamer suivi démarre un live.
+              </span>
+            </div>
+            <input id="pref-live-notifications" type="checkbox" />
+          </label>
+
+          <label class="settings-toggle">
+            <div class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.gameAlertsTitle">
+                Alertes changement de catégorie
+              </span>
+              <span
+                class="settings-description"
+                data-i18n="popup.settings.gameAlertsDescription"
+              >
+                Être notifié lorsqu’un streamer change de jeu sur Twitch.
+              </span>
+            </div>
+            <input id="pref-game-alerts" type="checkbox" />
+          </label>
+
+          <label class="settings-toggle">
+            <div class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.soundsTitle">
+                Son des notifications
+              </span>
+              <span
+                class="settings-description"
+                data-i18n="popup.settings.soundsDescription"
+              >
+                Activer ou couper le son lors des alertes.
+              </span>
+            </div>
+            <input id="pref-sounds" type="checkbox" />
+          </label>
+
+          <label class="settings-toggle">
+            <div class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.autoClaimTitle">
+                Récupération auto des points
+              </span>
+              <span
+                class="settings-description"
+                data-i18n="popup.settings.autoClaimDescription"
+              >
+                Cliquer automatiquement les bonus de points de chaîne sur Twitch.
+              </span>
+            </div>
+            <input id="pref-auto-claim" type="checkbox" />
+          </label>
+
+          <label class="settings-toggle">
+            <div class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.autoRefreshTitle">
+                Actualisation automatique
+              </span>
+              <span
+                class="settings-description"
+                data-i18n="popup.settings.autoRefreshDescription"
+              >
+                Relance le lecteur Twitch en cas d’erreur (#1000, #2000, #3000…).
+              </span>
+            </div>
+            <input id="pref-auto-refresh" type="checkbox" />
+          </label>
+
+          <label class="settings-toggle">
+            <div class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.fastForwardTitle">
+                Bouton d’avance rapide
+              </span>
+              <span
+                class="settings-description"
+                data-i18n="popup.settings.fastForwardDescription"
+              >
+                Ajoute un bouton pour rattraper instantanément le direct.
+              </span>
+            </div>
+            <input id="pref-fast-forward" type="checkbox" />
+          </label>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-text">
+            <span class="settings-title">Filtre de chat (Anti-Spoiler)</span>
+            <span class="settings-description">Mots-clés à masquer (séparés par des virgules).</span>
+          </div>
+          <textarea id="pref-chat-keywords" rows="3" placeholder="Ex: spoiler, mot1, mot2..." style="width:100%; margin-top:8px; border-radius:4px; padding:8px; border:1px solid rgba(255,255,255,0.1); background:rgba(0,0,0,0.2); color:#fff; min-height:60px; font-size:13px;"></textarea>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-text">
+            <span class="settings-title" data-i18n="popup.settings.dataTitle">Données & Statistiques</span>
+            <span class="settings-description" data-i18n="popup.settings.dataDescription">Gérez vos données et consultez vos statistiques.</span>
+          </div>
+          
+          <div class="stats-container" style="display: flex; align-items: center; justify-content: space-between;">
+            <div class="stat-item">
+              <span class="stat-value" id="stat-points">--</span>
+              <span class="stat-label" data-i18n="popup.stats.pointsClaimed">Points récupérés</span>
+            </div>
+            <button id="btn-reset-stats" class="reset-button" title="Réinitialiser" style="background:none; border:none; cursor:pointer; opacity:0.6; padding: 4px;">
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            </button>
+          </div>
+          </div>
+
+          <div class="data-actions">
+            <button id="btn-export" class="secondary-button" type="button" data-i18n="popup.actions.export">Exporter</button>
+            <button id="btn-import" class="secondary-button" type="button" data-i18n="popup.actions.import">Importer</button>
+            <input type="file" id="file-import" accept=".json" hidden />
+          </div>
+        </div>
+
+        <div class="language-settings">
+          <div class="settings-text">
+            <span class="settings-title" data-i18n="popup.settings.languageTitle">
+              Langue de l’extension
+            </span>
+            <span
+              class="settings-description"
+              data-i18n="popup.settings.languageDescription"
+            >
+              Choisissez la langue de l’interface.
+            </span>
+          </div>
+          <div
+            class="language-options"
+            id="language-options-popup"
+            data-i18n-attr-ariaLabel="meta.languageSwitcherLabel"
+          ></div>
+        </div>
+        <button
+          id="test-notification"
+          type="button"
+          class="test-notification"
+          data-i18n="popup.testNotification"
+        >
+          Tester une notification
+        </button>
+      </section>
+    </main>
+
+    <template id="streamer-item-template">
+      <article class="streamer-card">
+        <div class="card-preview" hidden>
+          <div class="live-preview" hidden>
+            <img class="preview-image" alt="" />
+            <div class="preview-overlay">
+              <p class="live-title"></p>
+              <p class="status-category" hidden></p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card-main">
+          <div class="identity">
+            <img class="avatar" alt="" />
+            <div>
+              <p class="display-name"></p>
+              <p class="identity-meta"></p>
+            </div>
+          </div>
+          <div class="status">
+            <span class="status-pill offline" data-i18n="popup.card.offline">Hors ligne</span>
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <div class="social-links"></div>
+          
+          <div class="card-actions-buttons">
+            <button class="notification-button" type="button" data-i18n-attr-title="popup.card.notificationsToggle" title="Notifications">
+              <svg class="bell-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+              <svg class="bell-off-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><path d="M13.73 21a2 2 0 0 1-3.46 0"></path><path d="M18.63 13A17.89 17.89 0 0 1 18 8"></path><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"></path><path d="M18 8a6 6 0 0 0-9.33-5"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+            </button>
+            <button class="open-button" type="button" data-i18n-attr-title="popup.card.open" title="Ouvrir">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </button>
+            <button class="remove-button" type="button" data-i18n-attr-title="popup.card.remove" title="Retirer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+          </div>
+        </div>
+        
+        <div class="last-update" hidden></div>
+      </article>
+    </template>
+
+    <script type="module" src="../js/popup.js"></script>
+    <footer class="popup-footer">
+      <p data-i18n="popup.meta.footerText" data-i18n-mode="html">
+        Créé par
+        <a href="https://www.instagram.com/alexisamz" target="_blank" rel="noopener noreferrer">@AlexisAMZ</a>
+        •
+        <a href="mailto:contact@alexisamz.fr">contact@alexisamz.fr</a>
+      </p>
+    </footer>
+  </body>
+</html>

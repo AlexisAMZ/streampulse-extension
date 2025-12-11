@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StreamPulse – Première configuration</title>
+    <link rel="stylesheet" href="../css/onboarding.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <img
+          src="../images/photos/logo.png"
+          alt="Logo StreamPulse"
+          class="brand-logo"
+        />
+        <h1 data-i18n="onboarding.welcomeTitle">Bienvenue sur StreamPulse</h1>
+        <p data-i18n="onboarding.welcomeDescription">
+          Ajoute ton premier streamer pour recevoir ses notifications. Tu
+          pourras en ajouter d'autres ensuite directement depuis StreamPulse.
+        </p>
+      </header>
+
+      <section class="card">
+        <div class="card-grid">
+          <div class="card-primary">
+            <section class="language-selector">
+              <div>
+                <p class="language-title" data-i18n="onboarding.languagePrompt">
+                  Choisis la langue de l’extension
+                </p>
+                <p class="language-hint" data-i18n="onboarding.languageHint">
+                  Tu pourras la modifier plus tard depuis les réglages.
+                </p>
+              </div>
+              <div
+                class="language-options"
+                id="language-options"
+                data-i18n-attr-ariaLabel="meta.languageSwitcherLabel"
+              ></div>
+            </section>
+
+            <form id="onboarding-form" autocomplete="off">
+              <label for="streamer-input" data-i18n="onboarding.formLabelBase">
+                Nom du créateur *
+              </label>
+              <div
+                class="platform-picker"
+                id="onboarding-platform-picker"
+                role="group"
+                data-i18n-attr-ariaLabel="popup.platformSelectorLabel"
+              ></div>
+              <div class="input-group">
+                <span class="input-prefix" id="onboarding-handle-prefix"
+                  >@</span
+                >
+                <input
+                  id="streamer-input"
+                  name="streamer"
+                  type="text"
+                  maxlength="80"
+                  autocomplete="off"
+                  autocapitalize="none"
+                  spellcheck="false"
+                  required
+                />
+              </div>
+              <p class="helper-text" data-i18n="onboarding.helperTextBase">
+                Saisis son identifiant ou le lien de sa chaîne.
+              </p>
+              <button
+                id="submit-button"
+                type="submit"
+                data-i18n="onboarding.submit"
+              >
+                Ajouter ce streamer
+              </button>
+            </form>
+
+            <p id="feedback" class="feedback" hidden></p>
+
+            <section id="current-streamers" class="current-streamers" hidden>
+              <h2 data-i18n="onboarding.currentHeader">
+                Streamers suivis (installation)
+              </h2>
+              <p
+                class="current-streamers-hint"
+                data-i18n="onboarding.currentHint"
+              >
+                Vérifie ta sélection. Retire un streamer si tu t'es trompé avant
+                de terminer.
+              </p>
+              <ul id="streamer-list" class="streamer-list"></ul>
+            </section>
+
+            <section id="next-steps" class="next-steps" hidden>
+              <header>
+                <h2 data-i18n="onboarding.nextStepTitle">Dernière étape</h2>
+                <p class="callout" data-i18n="onboarding.pinCallout">
+                  📌 Pour retrouver l’extension facilement, pense à l’épingler :
+                </p>
+              </header>
+              <ol>
+                <li data-i18n="onboarding.pinStep1" data-i18n-mode="html">
+                  <strong>Clique</strong> sur l'icône puzzle en haut à droite
+                </li>
+                <li data-i18n="onboarding.pinStep2" data-i18n-mode="html">
+                  <strong>Cherche</strong>
+                  <span class="highlight">StreamPulse</span>
+                </li>
+                <li data-i18n="onboarding.pinStep3" data-i18n-mode="html">
+                  <strong>Épingle</strong> l’extension pour l’avoir toujours
+                  sous la main
+                </li>
+              </ol>
+              <p class="hint" data-i18n="onboarding.nextHint">
+                Tu pourras ajouter d'autres streamers ou compléter leurs réseaux
+                depuis le menu principal.
+              </p>
+              <div class="actions">
+                <button
+                  id="finish-button"
+                  type="button"
+                  disabled
+                  data-i18n="onboarding.finish"
+                >
+                  Terminer
+                </button>
+              </div>
+            </section>
+          </div>
+
+          <aside class="card-sidebar">
+            <section class="preferences">
+              <header class="preferences-header">
+                <h2 data-i18n="onboarding.preferencesTitle">
+                  Réglages recommandés
+                </h2>
+                <p data-i18n="onboarding.preferencesDescription">
+                  Active les options qui te conviennent. Tu pourras les modifier
+                  plus tard dans les réglages.
+                </p>
+              </header>
+
+              <div class="settings-groups">
+                <div class="settings-group">
+                  <h3
+                    class="settings-group-title"
+                    data-i18n="onboarding.playerGroupTitle"
+                  >
+                    Lecteur Twitch
+                  </h3>
+                  <p
+                    class="settings-group-hint"
+                    data-i18n="onboarding.playerGroupHint"
+                  >
+                    Optimise le lecteur pour rattraper le direct.
+                  </p>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span
+                        class="settings-title"
+                        data-i18n="popup.settings.autoRefreshTitle"
+                      ></span>
+                      <span
+                        class="settings-description"
+                        data-i18n="popup.settings.autoRefreshDescription"
+                      ></span>
+                    </div>
+                    <input
+                      id="onboarding-auto-refresh"
+                      type="checkbox"
+                      checked
+                    />
+                  </label>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span
+                        class="settings-title"
+                        data-i18n="popup.settings.fastForwardTitle"
+                      ></span>
+                      <span
+                        class="settings-description"
+                        data-i18n="popup.settings.fastForwardDescription"
+                      ></span>
+                    </div>
+                    <input
+                      id="onboarding-fast-forward"
+                      type="checkbox"
+                      checked
+                    />
+                  </label>
+                </div>
+
+                <div class="settings-group">
+                  <h3
+                    class="settings-group-title"
+                    data-i18n="onboarding.notificationsGroupTitle"
+                  >
+                    Notifications
+                  </h3>
+                  <p
+                    class="settings-group-hint"
+                    data-i18n="onboarding.notificationsGroupHint"
+                  >
+                    Personnalise la façon dont StreamPulse te prévient.
+                  </p>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span
+                        class="settings-title"
+                        data-i18n="popup.settings.liveNotificationsTitle"
+                      ></span>
+                      <span
+                        class="settings-description"
+                        data-i18n="popup.settings.liveNotificationsDescription"
+                      ></span>
+                    </div>
+                    <input
+                      id="onboarding-live-notifications"
+                      type="checkbox"
+                      checked
+                    />
+                  </label>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span
+                        class="settings-title"
+                        data-i18n="popup.settings.gameAlertsTitle"
+                      ></span>
+                      <span
+                        class="settings-description"
+                        data-i18n="popup.settings.gameAlertsDescription"
+                      ></span>
+                    </div>
+                    <input id="onboarding-game-alerts" type="checkbox" />
+                  </label>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span
+                        class="settings-title"
+                        data-i18n="popup.settings.soundsTitle"
+                      ></span>
+                      <span
+                        class="settings-description"
+                        data-i18n="popup.settings.soundsDescription"
+                      ></span>
+                    </div>
+                    <input id="onboarding-sounds" type="checkbox" checked />
+                  </label>
+                </div>
+
+                <div class="settings-group">
+                  <h3
+                    class="settings-group-title"
+                    data-i18n="onboarding.qualityGroupTitle"
+                  >
+                    Automatisation
+                  </h3>
+                  <p
+                    class="settings-group-hint"
+                    data-i18n="onboarding.qualityGroupHint"
+                  >
+                    Automatise les petites actions répétitives.
+                  </p>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span
+                        class="settings-title"
+                        data-i18n="popup.settings.autoClaimTitle"
+                      ></span>
+                      <span
+                        class="settings-description"
+                        data-i18n="popup.settings.autoClaimDescription"
+                      ></span>
+                    </div>
+                    <input id="onboarding-auto-claim" type="checkbox" checked />
+                  </label>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p data-i18n="onboarding.footerText" data-i18n-mode="html">
+        Créé par
+        <a
+          href="https://www.instagram.com/alexisamz"
+          target="_blank"
+          rel="noopener noreferrer"
+          >@AlexisAMZ</a
+        >
+        •
+        <a href="mailto:contact@streampulse.fr">contact@streampulse.fr</a>
+      </p>
+    </footer>
+
+    <script type="module" src="../js/onboarding.js"></script>
+  </body>
+</html>

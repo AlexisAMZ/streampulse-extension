@@ -1,0 +1,67 @@
+{
+  "manifest_version": 3,
+  "default_locale": "en",
+  "name": "__MSG_appName__",
+  "description": "__MSG_appDesc__",
+  "version": "25.12.09",
+  "permissions": ["storage", "alarms", "notifications", "offscreen"],
+  "host_permissions": [
+    "https://api.twitch.tv/*",
+    "https://tmi.twitch.tv/*",
+    "https://gql.twitch.tv/*",
+    "https://www.twitch.tv/*",
+    "https://kick.com/*",
+    "https://*.kick.com/*",
+    "https://graphigo.prd.dlive.tv/*",
+    "https://images.prd.dlivecdn.com/*",
+    "https://files.kick.com/*",
+    "https://images.kick.com/*",
+    "https://stream.kick.com/*"
+  ],
+  "author": "AlexisAMZ",
+  "background": {
+    "service_worker": "js/background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.twitch.tv/*"],
+      "all_frames": true,
+      "match_about_blank": true,
+      "js": ["js/channelPointsClaimer.js", "js/twitchPlayerEnhancer.js", "js/chatFilter.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://kick.com/*", "https://*.kick.com/*"],
+      "all_frames": true,
+      "js": ["js/kickPlayerEnhancer.js", "js/chatFilter.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "html/popup.html",
+    "default_icon": {
+      "16": "images/photos/16px.png",
+      "32": "images/photos/32px.png",
+      "48": "images/photos/48px.png",
+      "128": "images/photos/128px.png"
+    }
+  },
+  "icons": {
+    "16": "images/photos/16px.png",
+    "32": "images/photos/32px.png",
+    "48": "images/photos/48px.png",
+    "128": "images/photos/128px.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "config.js",
+        "html/audio-handler.html",
+        "sons/notification.mp3",
+        "images/photos/128px.png"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

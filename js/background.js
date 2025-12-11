@@ -1,0 +1,1908 @@
+import { CONFIG } from "../config.js";
+import {
+  translations,
+  DEFAULT_LANGUAGE,
+  formatTemplate,
+} from "../i18n/translations.js";
+import {
+  DEFAULT_PLATFORM,
+  buildProfileUrl,
+  formatHandleForDisplay,
+  getHandleComparisonKey,
+  getPlatformIcon,
+  getPlatformLabelKey,
+  normalizePlatform,
+  platformSupportsLiveStatus,
+  sanitizeHandle,
+} from "./platforms.js";
+
+const STORAGE_KEYS = {
+  STREAMERS: "betaGeneralStreamers",
+  STATUSES: "betaGeneralStatuses",
+  STATS: "betaGeneralStats",
+};
+
+const WATCHER_ALARM = "streampulseWatcher";
+const KEEP_ALIVE_ALARM = "streampulseKeepAlive";
+
+const streamerStates = new Map();
+const streamerCache = new Map();
+const streamerLiveState = new Map();
+const NOTIFICATION_NAMESPACE = "streampulse";
+
+const BADGE_COLOR_LIVE = "#f7f4e3";
+const BADGE_COLOR_IDLE = "#6C5CE7";
+
+const SUPPORTED_LANGUAGES = new Set(Object.keys(translations));
+const PREFERENCES_KEY = "betaGeneralPreferences";
+const DEFAULT_PREFERENCES = {
+  liveNotifications: true,
+  gameNotifications: false,
+  soundsEnabled: true,
+  autoClaimChannelPoints: true,
+  autoRefreshPlayerErrors: true,
+  enableFastForwardButton: true,
+  language: DEFAULT_LANGUAGE,
+};
+
+const DEFAULT_STATS = {
+  channelPointsClaimed: 0,
+};
+
+const DEFAULT_POLL_INTERVAL =
+  Number(CONFIG.pollIntervalMinutes) > 0 ? CONFIG.pollIntervalMinutes : 1;
+let keepAliveHandle = null;
+
+function sanitizeLogin(value = "") {
+  return sanitizeHandle("twitch", value);
+}
+
+async function fetchJson(url, options = {}, timeoutMs = 15000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+    return await response.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function normalizeSocialLinks(rawSocials) {
+  if (!rawSocials || typeof rawSocials !== "object") {
+    return {};
+  }
+  const socials = {};
+  for (const [rawKey, value] of Object.entries(rawSocials)) {
+    if (typeof value === "string") {
+      const trimmed = value.trim();
+      if (trimmed) {
+        const key = String(rawKey).toLowerCase();
+        socials[key] = trimmed;
+      }
+    }
+  }
+  return socials;
+}
+
+function normalizeStreamer(raw) {
+  const platform = normalizePlatform(
+    raw.platform ||
+      (raw.twitch ? "twitch" : DEFAULT_PLATFORM)
+  );
+  const baseHandle =
+    raw.handle ??
+    raw.twitch ??
+    raw.login ??
+    raw.username ??
+    raw.id ??
+    "";
+  const sanitizedHandle = sanitizeHandle(platform, baseHandle);
+  const twitchLogin =
+    platform === "twitch"
+      ? sanitizeHandle("twitch", raw.twitch || sanitizedHandle)
+      : "";
+  const derivedId =
+    raw.id ||
+    (platform === "twitch" && twitchLogin
+      ? twitchLogin
+      : sanitizedHandle
+      ? `${platform}:${sanitizedHandle}`
+      : null);
+  const id = derivedId || `streamer_${Date.now()}`;
+  const displayName =
+    raw.displayName ||
+    raw.name ||
+    raw.twitch ||
+    (sanitizedHandle
+      ? formatHandleForDisplay(platform, sanitizedHandle)
+      : id);
+
+  return {
+    id,
+    platform,
+    handle: sanitizedHandle,
+    twitch: twitchLogin,
+    displayName,
+    notificationsEnabled:
+      typeof raw.notificationsEnabled === "boolean"
+        ? raw.notificationsEnabled
+        : true,
+    avatarUrl: raw.avatarUrl || "",
+    twitchId: platform === "twitch" ? raw.twitchId || "" : "",
+    createdAt: raw.createdAt || Date.now(),
+    socials: normalizeSocialLinks(raw.socials),
+  };
+}
+
+function normalizeLanguage(value) {
+  if (typeof value === "string") {
+    const candidate = value.toLowerCase();
+    if (SUPPORTED_LANGUAGES.has(candidate)) {
+      return candidate;
+    }
+  }
+  return DEFAULT_LANGUAGE;
+}
+
+function resolveExternalUrl(rawValue, defaultOrigin = "") {
+  if (!rawValue) {
+    return "";
+  }
+  if (typeof rawValue === "object") {
+    const candidate = rawValue.url || rawValue.src || rawValue.path || rawValue.location;
+    if (!candidate && typeof rawValue.toString === "function") {
+      return resolveExternalUrl(rawValue.toString(), defaultOrigin);
+    }
+    return resolveExternalUrl(candidate, defaultOrigin);
+  }
+
+  const value = String(rawValue).trim();
+  if (!value) {
+    return "";
+  }
+
+  if (/^https?:\/\//i.test(value)) {
+    return value;
+  }
+
+  if (value.startsWith("//")) {
+    return `https:${value}`;
+  }
+
+  if (defaultOrigin) {
+    const origin = String(defaultOrigin).trim().replace(/\/+$/g, "");
+    const path = value.replace(/^\/+/g, "");
+    if (origin) {
+      return `${origin}/${path}`;
+    }
+  }
+
+  return value;
+}
+
+function fillDimensions(url, width = 1280, height = 720) {
+  if (!url) return "";
+  let result = String(url);
+  const sizeToken = `${width}x${height}`;
+  result = result
+    .replace(/\{\{\s*size\s*\}\}/gi, sizeToken)
+    .replace(/\{size\}/gi, sizeToken)
+    .replace(/\{\{\s*width\s*\}\}/gi, String(width))
+    .replace(/\{\{\s*height\s*\}\}/gi, String(height))
+    .replace(/\{width\}/gi, String(width))
+    .replace(/\{height\}/gi, String(height))
+    .replace(/%width%/gi, String(width))
+    .replace(/%height%/gi, String(height));
+  return result;
+}
+
+function resolveKickAsset(value, { prefix = "https://files.kick.com" } = {}) {
+  if (!value) return "";
+
+  let raw = "";
+  if (typeof value === "string") {
+    raw = value;
+  } else if (typeof value === "object") {
+    raw = value?.url || value?.src || value?.href || "";
+    // Handle toString for some edge case objects if needed, but usually safe to skip
+    if (!raw && typeof value.toString === "function") {
+      const text = value.toString();
+      if (text && text !== "[object Object]") raw = text;
+    }
+  }
+
+  if (!raw) return "";
+
+  let normalized = fillDimensions(raw);
+  if (!normalized) return "";
+
+  if (/^https?:\/\//i.test(normalized)) {
+    return normalized;
+  }
+  if (normalized.startsWith("//")) {
+    return `https:${normalized}`;
+  }
+
+  const cleanPrefix = prefix.replace(/\/$/, "");
+  const cleanPath = normalized.replace(/^\//, "");
+  return `${cleanPrefix}/${cleanPath}`;
+}
+
+function resolveTranslationValue(lang, key) {
+  if (!key) return null;
+  const segments = key.split(".");
+  let current = translations[lang] || translations[DEFAULT_LANGUAGE] || {};
+  for (const segment of segments) {
+    if (current && Object.prototype.hasOwnProperty.call(current, segment)) {
+      current = current[segment];
+    } else {
+      current = null;
+      break;
+    }
+  }
+  if (current == null && lang !== DEFAULT_LANGUAGE) {
+    return resolveTranslationValue(DEFAULT_LANGUAGE, key);
+  }
+  return current;
+}
+
+function translate(lang, key, params = {}) {
+  const value = resolveTranslationValue(lang, key);
+  if (typeof value === "string") {
+    return formatTemplate(value, params);
+  }
+  if (typeof value === "function") {
+    return value(params, { lang });
+  }
+  if (value == null) {
+    return key;
+  }
+  return value;
+}
+
+function translateWithPrefs(preferences, key, params = {}) {
+  const lang = normalizeLanguage(preferences?.language);
+  return translate(lang, key, params);
+}
+
+function formatNumberForLanguage(lang, value) {
+  try {
+    const locale = lang === "fr" ? "fr-FR" : "en-US";
+    return new Intl.NumberFormat(locale).format(value);
+  } catch (error) {
+    return String(value);
+  }
+}
+
+class DataStore {
+  static async getStreamers() {
+    const stored = await chrome.storage.local.get(STORAGE_KEYS.STREAMERS);
+    const streamers = stored[STORAGE_KEYS.STREAMERS] || [];
+    return streamers.map(normalizeStreamer);
+  }
+
+  static async saveStreamers(streamers) {
+    const normalized = streamers.map(normalizeStreamer);
+    await chrome.storage.local.set({
+      [STORAGE_KEYS.STREAMERS]: normalized,
+    });
+    return normalized;
+  }
+
+  static async getStatuses() {
+    const stored = await chrome.storage.local.get(STORAGE_KEYS.STATUSES);
+    return stored[STORAGE_KEYS.STATUSES] || {};
+  }
+
+  static async saveStatuses(statuses) {
+    await chrome.storage.local.set({
+      [STORAGE_KEYS.STATUSES]: statuses,
+    });
+  }
+
+  static async ensureDefaults() {
+    const existing = await this.getStreamers();
+    if (existing.length > 0) {
+      return existing;
+    }
+    const defaults = (CONFIG.defaultStreamers || []).map(normalizeStreamer);
+    await this.saveStreamers(defaults);
+    return defaults;
+  }
+
+  static async updateStreamer(updatedStreamer) {
+    const streamers = await this.getStreamers();
+    const idx = streamers.findIndex((s) => s.id === updatedStreamer.id);
+    if (idx === -1) {
+      streamers.push(updatedStreamer);
+    } else {
+      streamers[idx] = normalizeStreamer({
+        ...streamers[idx],
+        ...updatedStreamer,
+      });
+    }
+    await this.saveStreamers(streamers);
+    return streamers[idx] || updatedStreamer;
+  }
+}
+
+class PreferenceStore {
+  static sanitize(preferences = {}) {
+    return {
+      liveNotifications: preferences.liveNotifications !== false,
+      gameNotifications: Boolean(preferences.gameNotifications),
+      soundsEnabled: preferences.soundsEnabled !== false,
+      autoClaimChannelPoints: preferences.autoClaimChannelPoints !== false,
+      autoRefreshPlayerErrors: preferences.autoRefreshPlayerErrors !== false,
+      enableFastForwardButton: preferences.enableFastForwardButton !== false,
+      language: normalizeLanguage(preferences.language),
+    };
+  }
+
+  static async get() {
+    try {
+      const stored = await chrome.storage.local.get(PREFERENCES_KEY);
+      return {
+        ...DEFAULT_PREFERENCES,
+        ...this.sanitize(stored[PREFERENCES_KEY] || {}),
+      };
+    } catch (error) {
+      console.warn("Preference load error:", error.message);
+      return { ...DEFAULT_PREFERENCES };
+    }
+  }
+
+  static async set(preferences) {
+    const sanitized = {
+      ...DEFAULT_PREFERENCES,
+      ...this.sanitize(preferences),
+    };
+    await chrome.storage.local.set({
+      [PREFERENCES_KEY]: sanitized,
+    });
+    return sanitized;
+  }
+
+  static async update(updates) {
+    const current = await this.get();
+    const merged = { ...current, ...updates };
+    return this.set(merged);
+  }
+
+  static async ensureDefaults() {
+    const stored = await chrome.storage.local.get(PREFERENCES_KEY);
+    if (!stored[PREFERENCES_KEY]) {
+      await this.set(DEFAULT_PREFERENCES);
+      return { ...DEFAULT_PREFERENCES };
+    }
+    return {
+      ...DEFAULT_PREFERENCES,
+      ...this.sanitize(stored[PREFERENCES_KEY]),
+    };
+  }
+}
+
+class StatsStore {
+  static async get() {
+    try {
+      const stored = await chrome.storage.local.get(STORAGE_KEYS.STATS);
+      return {
+        ...DEFAULT_STATS,
+        ...(stored[STORAGE_KEYS.STATS] || {}),
+      };
+    } catch (error) {
+      console.warn("Stats load error:", error);
+      return { ...DEFAULT_STATS };
+    }
+  }
+
+  static async update(updates) {
+    const current = await this.get();
+    const merged = { ...current, ...updates };
+    await chrome.storage.local.set({
+      [STORAGE_KEYS.STATS]: merged,
+    });
+    return merged;
+  }
+
+  static async increment(stat, value = 1) {
+    const current = await this.get();
+    const newValue = (current[stat] || 0) + value;
+    return this.update({ [stat]: newValue });
+  }
+}
+
+class PlatformChecker {
+  static async getTwitchUser(login) {
+    const sanitized = sanitizeLogin(login);
+    if (!sanitized) return null;
+    try {
+      const data = await fetchJson(
+        `https://api.twitch.tv/helix/users?login=${sanitized}`,
+        {
+          headers: {
+            "Client-ID": CONFIG.clientId,
+            Authorization: `Bearer ${CONFIG.accessToken}`,
+            Accept: "application/json",
+          },
+        }
+      );
+      return data.data?.[0] || null;
+    } catch (error) {
+      console.warn("Twitch user fetch error:", error.message);
+      return null;
+    }
+  }
+
+  static async getTwitchStatus(login) {
+    const sanitized = sanitizeLogin(login);
+    if (!sanitized) return { isLive: false };
+    try {
+      const data = await fetchJson(
+        `https://api.twitch.tv/helix/streams?user_login=${sanitized}`,
+        {
+          headers: {
+            "Client-ID": CONFIG.clientId,
+            Authorization: `Bearer ${CONFIG.accessToken}`,
+            Accept: "application/json",
+          },
+        }
+      );
+      const stream = data.data?.[0];
+      if (!stream) {
+        return { isLive: false };
+      }
+      return {
+        isLive: true,
+        platform: "twitch",
+        game: stream.game_name || "",
+        viewers: stream.viewer_count || 0,
+        title: stream.title || "",
+        startedAt: stream.started_at,
+        sessionId: stream.id,
+        thumbnailUrl: stream.thumbnail_url,
+      };
+    } catch (error) {
+      console.warn("Twitch status error:", error.message);
+      return { isLive: false, error: error.message };
+    }
+  }
+
+  static async getKickChannel(handle) {
+    const sanitized = sanitizeHandle("kick", handle);
+    if (!sanitized) return null;
+    try {
+      const data = await fetchJson(
+        `https://kick.com/api/v2/channels/${encodeURIComponent(sanitized)}`
+      );
+      if (!data || data.error) {
+        return null;
+      }
+      return data;
+    } catch (error) {
+      if (error?.message?.includes?.("404")) {
+        return null;
+      }
+      console.warn("Kick channel fetch error:", error.message);
+      return null;
+    }
+  }
+
+  static extractKickStatus(channel, handle) {
+    if (!channel) {
+      return {
+        isLive: false,
+        platform: "kick",
+        url: buildProfileUrl("kick", handle),
+      };
+    }
+
+    const stream = channel?.livestream;
+    const base = {
+      platform: "kick",
+      url: buildProfileUrl("kick", channel.slug || handle),
+      avatarUrl:
+        resolveKickAsset(channel?.user?.profile_pic) ||
+        resolveKickAsset(channel?.profile_pic) ||
+        "",
+      displayName:
+        channel?.user?.display_name ||
+        channel?.user?.username ||
+        channel?.slug ||
+        handle,
+    };
+
+    const streamStatus = String(stream?.status || "").toLowerCase();
+    // Some API responses use is_live boolean, others context.
+    const isLive =
+      Boolean(stream) &&
+      (stream?.is_live === true || stream?.is_live === undefined) && // If undefined, rely on status
+      (!streamStatus || streamStatus === "live");
+
+    if (!isLive) {
+      return {
+        isLive: false,
+        ...base,
+      };
+    }
+
+    const category =
+      stream?.category?.name ||
+      stream?.category?.slug ||
+      stream?.category?.title ||
+      "";
+
+    const preferredSize = { width: 1280, height: 720 };
+    const dimensionSuffix = `${preferredSize.width}x${preferredSize.height}`;
+    // Optimize: Cache for 60 seconds to prevent flickering on every popup open
+    const cb = Math.floor(Date.now() / 60000); // 1-minute cache bucket
+
+    const rawCandidates = [
+      stream?.thumbnail?.url, // New structure often has this
+      stream?.thumbnail?.src,
+      stream?.thumbnail_url,
+      stream?.thumbnail // Sometimes string
+    ];
+
+    const slug = channel?.slug || channel?.user?.username || stream?.slug;
+    const channelId = channel?.id || stream?.channel_id || stream?.id;
+
+    if (channelId) {
+       // Modern Kick V2 images
+       rawCandidates.push(
+        `https://images.kick.com/v2/stream-thumbnails/${channelId}/live-${dimensionSuffix}.webp`,
+        `https://images.kick.com/v2/stream-thumbnails/${channelId}/live-${dimensionSuffix}.jpg`,
+        
+        // Classic Files
+        `https://files.kick.com/stream-thumbnails/${channelId}/livestream-${dimensionSuffix}.webp`,
+        `https://files.kick.com/stream-thumbnails/${channelId}/livestream-${dimensionSuffix}.jpg`,
+        `https://files.kick.com/stream-thumbnails/${channelId}/livestream-${dimensionSuffix}.png`,
+        `https://files.kick.com/stream-thumbnails/${channelId}/livestream.jpg`,
+        `https://files.kick.com/stream-thumbnails/${channelId}/livestream.png`
+       );
+    }
+
+    if (slug) {
+       rawCandidates.push(
+        `https://files.kick.com/stream-thumbnails/${slug}/livestream-${dimensionSuffix}.webp`,
+        `https://files.kick.com/stream-thumbnails/${slug}/livestream-${dimensionSuffix}.jpg`,
+        `https://files.kick.com/stream-thumbnails/${slug}/livestream.jpg`
+       );
+    }
+
+    // Resolve, Filter, Sort
+    const distinctUrls = new Set();
+    const allCandidates = [];
+    
+    for (const raw of rawCandidates) {
+        const resolved = resolveKickAsset(raw);
+        if (resolved && !resolved.includes("null") && !resolved.includes("undefined")) {
+            if (!distinctUrls.has(resolved)) {
+                distinctUrls.add(resolved);
+                allCandidates.push(resolved);
+            }
+        }
+    }
+    
+    // Sort to prioritize "v2" and "webp" and "livestream"
+    allCandidates.sort((a, b) => {
+        const score = (url) => {
+            let s = 0;
+            if (url.includes("v2")) s += 4;
+            if (url.includes("webp")) s += 2;
+            if (/livestream|live-/i.test(url)) s += 5;
+            return s;
+        };
+        return score(b) - score(a);
+    });
+
+    // Cache bust all candidates
+    const thumbnailCandidates = allCandidates.map(url => {
+        if (url.includes("cb=")) return url;
+        const separator = url.includes("?") ? "&" : "?";
+        return `${url}${separator}cb=${cb}`;
+    });
+
+    const thumbnail = thumbnailCandidates[0] || "";
+    
+    const viewerCount =
+      Number(stream?.viewer_count ?? stream?.viewers ?? stream?.view_count) ||
+      0;
+
+    return {
+      isLive: true,
+      ...base,
+      game: category,
+      viewers: viewerCount,
+      title: stream?.session_title || stream?.title || "",
+      startedAt: stream?.start_time || stream?.created_at || null,
+      sessionId: stream?.id || null,
+      thumbnailUrl: thumbnail,
+      thumbnailCandidates,
+    };
+  }
+
+  static async getKickStatus(handle) {
+    const channel = await this.getKickChannel(handle);
+    return this.extractKickStatus(channel, handle);
+  }
+
+  static async getDliveUser(handle) {
+    const sanitized = sanitizeHandle("dlive", handle);
+    if (!sanitized) return null;
+    
+    // Try by username first (more reliable for livestream status)
+    const userQuery = `
+      query ($username: String!) {
+        user(username: $username) {
+          username
+          displayname
+          avatar
+          livestream {
+            id
+            title
+            thumbnailUrl
+            createdAt
+            watchingCount
+            category {
+              title
+            }
+          }
+        }
+      }
+    `;
+
+    // Fallback if username fails
+    const displayQuery = `
+      query ($displayname: String!) {
+        userByDisplayName(displayname: $displayname) {
+          username
+          displayname
+          avatar
+          livestream {
+            id
+            title
+            thumbnailUrl
+            createdAt
+            watchingCount
+            category {
+              title
+            }
+          }
+        }
+      }
+    `;
+
+    try {
+      // Attempt 1: by username
+      let data = await fetchJson("https://graphigo.prd.dlive.tv/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: userQuery, variables: { username: sanitized } }),
+      });
+      
+      if (data?.data?.user) {
+        return data.data.user;
+      }
+
+      // Attempt 2: by displayname (legacy fallback)
+      data = await fetchJson("https://graphigo.prd.dlive.tv/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: displayQuery, variables: { displayname: sanitized } }),
+      });
+
+      return data?.data?.userByDisplayName || null;
+
+    } catch (error) {
+      console.warn("DLive user fetch error:", error.message);
+      return null;
+    }
+  }
+
+  static extractDliveStatus(user, handle) {
+    if (!user) {
+      return {
+        isLive: false,
+        platform: "dlive",
+        url: buildProfileUrl("dlive", handle),
+      };
+    }
+
+    const base = {
+      platform: "dlive",
+      url: buildProfileUrl("dlive", user.username || handle),
+      avatarUrl: resolveExternalUrl(user.avatar, "https://images.prd.dlivecdn.com"),
+      displayName: user.displayname || user.username || handle,
+    };
+
+    const stream = user.livestream;
+    if (!stream) {
+      return {
+        isLive: false,
+        ...base,
+      };
+    }
+
+    let thumbnail = resolveExternalUrl(
+      stream.thumbnailUrl || stream.thumbnail || stream.cover,
+      "https://images.prd.dlivecdn.com"
+    );
+    
+    if (thumbnail) {
+      const cb = Date.now();
+      const separator = thumbnail.includes("?") ? "&" : "?";
+      thumbnail = `${thumbnail}${separator}cb=${cb}`;
+    }
+    const viewerCount = Number(stream.watchingCount) || 0;
+    return {
+      isLive: true,
+      ...base,
+      title: stream.title || "",
+      game: stream.category?.title || "",
+      viewers: viewerCount,
+      startedAt: stream.createdAt || null,
+      sessionId: stream.id || null,
+      thumbnailUrl: thumbnail,
+    };
+  }
+
+  static async getDliveStatus(handle) {
+    const user = await this.getDliveUser(handle);
+    return this.extractDliveStatus(user, handle);
+  }
+
+  static async getStatus(streamer) {
+    const platform = normalizePlatform(streamer?.platform);
+    const supportsLive = platformSupportsLiveStatus(platform);
+    if (platform === "twitch") {
+      const login = streamer.twitch || streamer.handle;
+      const status = await this.getTwitchStatus(login);
+      return {
+        ...status,
+        platform,
+        supportsLiveStatus: supportsLive,
+        url: buildProfileUrl(platform, login),
+      };
+    }
+    if (platform === "kick") {
+      const status = await this.getKickStatus(streamer.handle || streamer.id);
+      return {
+        ...status,
+        platform,
+        supportsLiveStatus: supportsLive,
+      };
+    }
+    if (platform === "dlive") {
+      const status = await this.getDliveStatus(streamer.handle || streamer.id);
+      return {
+        ...status,
+        platform,
+        supportsLiveStatus: supportsLive,
+      };
+    }
+    return {
+      isLive: false,
+      platform,
+      supportsLiveStatus: supportsLive,
+      url: buildProfileUrl(platform, streamer?.handle || ""),
+    };
+  }
+}
+
+class NotificationCenter {
+  static storageKey = `${NOTIFICATION_NAMESPACE}:scheduled`;
+  static alarmPrefix = `${NOTIFICATION_NAMESPACE}:alarm:`;
+  static clickMap = new Map();
+  static initialized = false;
+
+  static getDefaultIcon() {
+    return chrome.runtime.getURL("images/photos/logo.png");
+  }
+
+  static resolveIcon(icon) {
+    if (typeof icon === "string") {
+      const trimmed = icon.trim();
+      if (!trimmed) {
+        return this.getDefaultIcon();
+      }
+      if (trimmed.startsWith("http://")) {
+        return `https://${trimmed.slice(7)}`;
+      }
+      return trimmed;
+    }
+    return this.getDefaultIcon();
+  }
+
+  static async init() {
+    if (this.initialized) return;
+    this.initialized = true;
+
+    chrome.notifications.onClicked.addListener((notificationId) => {
+      const info = this.clickMap.get(notificationId);
+      if (!info) return;
+      this.clickMap.delete(notificationId);
+      chrome.notifications.clear(notificationId);
+      if (info.streamerId) {
+        openStreamerFromNotification(info.streamerId);
+      } else if (info.url) {
+        chrome.tabs.create({ url: info.url });
+      }
+    });
+
+    chrome.notifications.onClosed.addListener((notificationId) => {
+      if (this.clickMap.has(notificationId)) {
+        this.clickMap.delete(notificationId);
+      }
+    });
+
+    const entries = await this.getScheduled();
+    entries.forEach((entry) => {
+      chrome.alarms.create(entry.alarmName, {
+        delayInMinutes: 0.1,
+        periodInMinutes: entry.intervalMinutes,
+      });
+    });
+  }
+
+  static async show(options = {}) {
+    await this.init();
+    const id = `${NOTIFICATION_NAMESPACE}-${Date.now()}-${Math.random()
+      .toString(36)
+      .slice(2, 10)}`;
+    this.clickMap.set(id, {
+      url: options.url || null,
+      streamerId: options.streamerId || null,
+      platform: options.platform || null,
+    });
+    await chrome.notifications.create(id, {
+      type: "basic",
+      iconUrl: this.resolveIcon(options.iconUrl),
+      title: options.title || translate(DEFAULT_LANGUAGE, "common.appName"),
+      message: options.message || "",
+      requireInteraction: Boolean(options.requireInteraction),
+      priority:
+        typeof options.priority === "number"
+          ? options.priority
+          : options.requireInteraction
+          ? 2
+          : 0,
+    });
+    if (options.playSound) {
+      await SoundManager.play(CONFIG.notifications?.soundFile);
+    }
+    return id;
+  }
+
+  static async schedule(options = {}) {
+    await this.init();
+    const entries = await this.getScheduled();
+    const alarmName = options.name
+      ? `${this.alarmPrefix}${options.name}`
+      : `${this.alarmPrefix}${Date.now()}`;
+    const interval = Math.max(
+      Number(options.intervalMinutes) || DEFAULT_POLL_INTERVAL,
+      0.1
+    );
+    const updated = entries.filter((entry) => entry.alarmName !== alarmName);
+    updated.push({
+      alarmName,
+      title: options.title || translate(DEFAULT_LANGUAGE, "common.appName"),
+      message: options.message || "",
+      url: options.url || null,
+      streamerId: options.streamerId || null,
+      platform: options.platform || null,
+      intervalMinutes: interval,
+      requireInteraction: Boolean(options.requireInteraction),
+      priority:
+        typeof options.priority === "number"
+          ? options.priority
+          : options.requireInteraction
+          ? 2
+          : 0,
+      playSound: options.playSound !== false,
+      iconUrl: this.resolveIcon(options.iconUrl),
+    });
+    await this.saveScheduled(updated);
+    chrome.alarms.create(alarmName, {
+      delayInMinutes: 0.1,
+      periodInMinutes: interval,
+    });
+    return alarmName;
+  }
+
+  static async cancel(name) {
+    const entries = await this.getScheduled();
+    const alarmName = `${this.alarmPrefix}${name}`;
+    const filtered = entries.filter((entry) => entry.alarmName !== alarmName);
+    await this.saveScheduled(filtered);
+    chrome.alarms.clear(alarmName);
+  }
+
+  static async handleAlarm(alarmName) {
+    await this.init();
+    if (!alarmName.startsWith(this.alarmPrefix)) return false;
+    const entries = await this.getScheduled();
+    const entry = entries.find((item) => item.alarmName === alarmName);
+    if (!entry) return false;
+    await this.show(entry);
+    return true;
+  }
+
+  static async getScheduled() {
+    const stored = await chrome.storage.local.get(this.storageKey);
+    return stored[this.storageKey] || [];
+  }
+
+  static async saveScheduled(entries) {
+    await chrome.storage.local.set({ [this.storageKey]: entries });
+  }
+}
+
+class NotificationSystem {
+  static async notifyLive(streamer, status, preferences = DEFAULT_PREFERENCES) {
+    if (preferences.liveNotifications === false) {
+      return;
+    }
+
+    const lang = normalizeLanguage(preferences?.language);
+    const platform = status.platform || streamer.platform || "twitch";
+    const name =
+      streamer.displayName ||
+      formatHandleForDisplay(platform, streamer.handle || streamer.twitch);
+    const title = translate(lang, "background.notifications.liveTitle", {
+      name,
+    });
+
+    const detailParts = [];
+    if (status.title) {
+      detailParts.push(status.title);
+    }
+    if (status.game && Number.isFinite(status.viewers)) {
+      detailParts.push(
+        translate(lang, "background.notifications.liveMessage", {
+          game: status.game,
+          viewers: formatNumberForLanguage(lang, status.viewers),
+        })
+      );
+    } else if (status.game) {
+      detailParts.push(
+        translate(lang, "background.notifications.liveMessageNoViewers", {
+          game: status.game,
+        })
+      );
+    } else if (Number.isFinite(status.viewers)) {
+      detailParts.push(
+        translate(lang, "background.notifications.liveMessageNoGame", {
+          viewers: formatNumberForLanguage(lang, status.viewers),
+        })
+      );
+    }
+
+    const platformLabel = translate(lang, getPlatformLabelKey(platform));
+    detailParts.push(platformLabel);
+    const message = detailParts.filter(Boolean).join(" • ");
+
+    const targetUrl = buildProfileUrl(
+      platform,
+      streamer.handle || streamer.twitch || streamer.id
+    );
+    const streamerStatus = streamerStates.get(streamer.id);
+    const fallbackIcon =
+      (chrome?.runtime && getPlatformIcon(platform)
+        ? chrome.runtime.getURL(getPlatformIcon(platform))
+        : null) || NotificationCenter.getDefaultIcon();
+    const iconCandidate =
+      streamerStatus?.avatarUrl || streamer.avatarUrl || fallbackIcon;
+    const iconUrl = NotificationCenter.resolveIcon(iconCandidate);
+
+    await NotificationCenter.show({
+      title,
+      message,
+      streamerId: streamer.id,
+      platform: status.platform,
+      url: status.url || targetUrl,
+      iconUrl,
+      requireInteraction: true,
+      priority: 2,
+      playSound: preferences?.soundsEnabled !== false,
+    });
+  }
+
+  static async notifyGameChange(
+    streamer,
+    fromGame,
+    toGame,
+    preferences = DEFAULT_PREFERENCES,
+    platform = null
+  ) {
+    if (
+      preferences.liveNotifications === false ||
+      !preferences.gameNotifications
+    ) {
+      return;
+    }
+
+    const lang = normalizeLanguage(preferences?.language);
+    const platformKey = platform || streamer.platform || "twitch";
+    if (!platformSupportsLiveStatus(platformKey)) {
+      return;
+    }
+    const title = translate(
+      lang,
+      "background.notifications.categoryChangeTitle",
+      {
+        name:
+          streamer.displayName ||
+          formatHandleForDisplay(
+            platformKey,
+            streamer.handle || streamer.twitch
+          ),
+      }
+    );
+    const message = translate(
+      lang,
+      "background.notifications.categoryChangeMessage",
+      {
+        from:
+          fromGame ||
+          translate(lang, "background.notifications.unknownCategory"),
+        to: toGame || translate(lang, "background.notifications.newCategory"),
+      }
+    );
+
+    const targetUrl = buildProfileUrl(
+      platformKey,
+      streamer.handle || streamer.twitch || streamer.id
+    );
+    const streamerStatus = streamerStates.get(streamer.id);
+    const fallbackIcon =
+      (chrome?.runtime && getPlatformIcon(platformKey)
+        ? chrome.runtime.getURL(getPlatformIcon(platformKey))
+        : null) || NotificationCenter.getDefaultIcon();
+    const iconCandidate =
+      streamerStatus?.avatarUrl || streamer.avatarUrl || fallbackIcon;
+    const iconUrl = NotificationCenter.resolveIcon(iconCandidate);
+
+    await NotificationCenter.show({
+      title,
+      message,
+      streamerId: streamer.id,
+      platform: platformKey,
+      url: targetUrl,
+      iconUrl,
+      requireInteraction: false,
+      priority: 1,
+      playSound: preferences?.soundsEnabled !== false,
+    });
+  }
+
+  static async sendTest(preferences = DEFAULT_PREFERENCES) {
+    if (preferences.liveNotifications === false) {
+      throw new Error(
+        translateWithPrefs(
+          preferences,
+          "background.errors.notificationsDisabled"
+        )
+      );
+    }
+
+    const lang = normalizeLanguage(preferences?.language);
+
+    await NotificationCenter.show({
+      title: translate(lang, "common.appName"),
+      message: translate(lang, "background.notifications.testSimpleMessage"),
+      requireInteraction: true,
+      priority: 2,
+      playSound: preferences?.soundsEnabled !== false,
+    });
+  }
+}
+
+class SoundManager {
+  static async play(filePath = "sons/notification.mp3") {
+    if (!filePath) return;
+    try {
+      await chrome.offscreen.createDocument({
+        url: "html/audio-handler.html",
+        reasons: ["AUDIO_PLAYBACK"],
+        justification: "Lecture d'une notification audio",
+      });
+    } catch (creationError) {
+      if (
+        !creationError?.message?.includes("Only a single offscreen") &&
+        !creationError?.message?.includes("already created")
+      ) {
+        console.warn("Offscreen creation error:", creationError.message);
+      }
+    }
+
+    try {
+      await chrome.runtime.sendMessage({
+        audioCommand: {
+          action: "play",
+          file: filePath,
+          volume: 1.0,
+        },
+      });
+    } catch (error) {
+      console.warn("Audio playback error:", error.message);
+    }
+  }
+}
+
+class ActionBadge {
+  static formatBadgeCount(count) {
+    if (!Number.isFinite(count) || count <= 0) {
+      return "";
+    }
+    if (count >= 100) {
+      return "99+";
+    }
+    return String(count);
+  }
+
+  static async setLive(count, preferences = null) {
+    const prefs = preferences || (await PreferenceStore.get());
+    try {
+      await chrome.action.setBadgeText({ text: this.formatBadgeCount(count) });
+      await chrome.action.setBadgeBackgroundColor({ color: BADGE_COLOR_LIVE });
+      await chrome.action.setTitle({
+        title: translateWithPrefs(prefs, "background.badge.live", {
+          count,
+        }),
+      });
+    } catch (error) {
+      console.warn("Badge live update failed:", error.message);
+    }
+  }
+
+  static async clear(preferences = null) {
+    const prefs = preferences || (await PreferenceStore.get());
+    try {
+      await chrome.action.setBadgeText({ text: "" });
+      await chrome.action.setBadgeBackgroundColor({ color: BADGE_COLOR_IDLE });
+      await chrome.action.setTitle({
+        title: translateWithPrefs(prefs, "background.badge.idle"),
+      });
+    } catch (error) {
+      console.warn("Badge clear failed:", error.message);
+    }
+  }
+
+  static async update(liveCount, preferences = null) {
+    const prefs = preferences || (await PreferenceStore.get());
+    if (liveCount > 0) {
+      await this.setLive(liveCount, prefs);
+    } else {
+      await this.clear(prefs);
+    }
+  }
+}
+
+async function buildStreamerStatus(streamer) {
+  const platform = streamer.platform || "twitch";
+  const status = await PlatformChecker.getStatus(streamer);
+  const activeStatus = status.isLive
+    ? { ...status, platform, supportsLiveStatus: status.supportsLiveStatus }
+    : {
+        isLive: false,
+        platform,
+        supportsLiveStatus: status.supportsLiveStatus,
+        url: status.url || buildProfileUrl(platform, streamer.handle),
+        avatarUrl: status.avatarUrl || "",
+      };
+
+  let avatarUrl = streamer.avatarUrl || status.avatarUrl || "";
+  if (!avatarUrl && platform === "twitch") {
+    const login = streamer.twitch || streamer.handle;
+    if (status?.login) {
+      avatarUrl = `https://static-cdn.jtvnw.net/previews-ttv/live_user_${status.login}-128x128.jpg`;
+    } else if (login) {
+      avatarUrl = `https://static-cdn.jtvnw.net/jtv_user_pictures/${login}-profile_image-70x70.png`;
+    }
+  }
+  if (!avatarUrl) {
+    const fallbackIcon =
+      (chrome?.runtime
+        ? chrome.runtime.getURL(getPlatformIcon(platform))
+        : null) || null;
+    avatarUrl = fallbackIcon || "";
+  }
+
+  const displayName =
+    streamer.displayName ||
+    status.displayName ||
+    formatHandleForDisplay(platform, streamer.handle || streamer.twitch);
+
+  return {
+    id: streamer.id,
+    platform,
+    handle: streamer.handle,
+    displayName,
+    avatarUrl,
+    active: activeStatus,
+    updatedAt: Date.now(),
+  };
+}
+
+async function pollStreamers({ forceNotification = false } = {}) {
+  const streamers = await DataStore.getStreamers();
+  const preferences = await PreferenceStore.get();
+  if (streamers.length === 0) {
+    await DataStore.saveStatuses({});
+    await ActionBadge.update(0, preferences);
+    return [];
+  }
+
+  if (streamerLiveState.size === 0) {
+    const savedStatuses = await DataStore.getStatuses();
+    Object.values(savedStatuses || {}).forEach((status) => {
+      if (status && status.id) {
+        streamerLiveState.set(status.id, {
+          isLive: Boolean(status.active?.isLive),
+          platform: status.active?.platform || null,
+          game: status.active?.game || "",
+          sessionId: status.active?.sessionId || null,
+          title: status.active?.title || "",
+          avatarUrl: status.avatarUrl || "",
+          supportsLiveStatus:
+            status.active?.supportsLiveStatus !== false,
+        });
+      }
+    });
+  }
+
+  streamers.forEach((streamer) => {
+    streamerCache.set(streamer.id, streamer);
+  });
+
+  const statuses = await Promise.all(streamers.map(buildStreamerStatus));
+
+  for (const status of statuses) {
+    const streamer = streamers.find((s) => s.id === status.id);
+    const previousLiveState = streamerLiveState.get(streamer.id) || {
+      isLive: false,
+      platform: null,
+      game: "",
+      sessionId: null,
+      title: "",
+      supportsLiveStatus: false,
+    };
+
+    const nextLiveState = {
+      isLive: Boolean(status.active?.isLive),
+      platform: status.active?.platform || null,
+      game: status.active?.game || "",
+      sessionId: status.active?.sessionId || null,
+      title: status.active?.title || "",
+      avatarUrl: status.avatarUrl || streamer.avatarUrl || null,
+      supportsLiveStatus: status.active?.supportsLiveStatus !== false,
+    };
+
+    const notificationsEnabled =
+      preferences.liveNotifications !== false &&
+      streamer.notificationsEnabled !== false;
+
+    if (forceNotification && notificationsEnabled && nextLiveState.isLive) {
+      await NotificationSystem.notifyLive(streamer, status.active, preferences);
+    } else if (notificationsEnabled && nextLiveState.isLive) {
+      const wasLive = previousLiveState.isLive;
+      const sessionChanged =
+        previousLiveState.sessionId &&
+        nextLiveState.sessionId &&
+        previousLiveState.sessionId !== nextLiveState.sessionId;
+
+      if (!wasLive || sessionChanged) {
+        await NotificationSystem.notifyLive(
+          streamer,
+          status.active,
+          preferences
+        );
+      } else {
+        const shouldNotifyGame =
+          preferences.gameNotifications &&
+          preferences.liveNotifications !== false &&
+          previousLiveState.isLive &&
+          previousLiveState.game &&
+          nextLiveState.game &&
+          previousLiveState.game !== nextLiveState.game &&
+          (!previousLiveState.sessionId ||
+            !nextLiveState.sessionId ||
+            previousLiveState.sessionId === nextLiveState.sessionId);
+
+        if (shouldNotifyGame) {
+          await NotificationSystem.notifyGameChange(
+            streamer,
+            previousLiveState.game,
+            nextLiveState.game,
+            preferences,
+            nextLiveState.platform
+          );
+        }
+      }
+    }
+
+    streamerStates.set(status.id, status);
+    streamerLiveState.set(streamer.id, nextLiveState);
+  }
+
+  const statusesObject = {};
+  statuses.forEach((status) => {
+    statusesObject[status.id] = status;
+  });
+  await DataStore.saveStatuses(statusesObject);
+
+  const liveCount = statuses.reduce((total, status) => {
+    return total + (status.active?.isLive ? 1 : 0);
+  }, 0);
+  await ActionBadge.update(liveCount, preferences);
+
+  return statuses;
+}
+
+function scheduleWatcherAlarm() {
+  chrome.alarms.create(WATCHER_ALARM, {
+    periodInMinutes: DEFAULT_POLL_INTERVAL,
+    delayInMinutes: 0.1,
+  });
+}
+
+function scheduleKeepAliveAlarm() {
+  chrome.alarms.create(KEEP_ALIVE_ALARM, {
+    periodInMinutes: Math.max(DEFAULT_POLL_INTERVAL / 2, 0.5),
+    delayInMinutes: 0.1,
+  });
+}
+
+function startKeepAliveHeartbeat() {
+  if (keepAliveHandle) return;
+  keepAliveHandle = setInterval(() => {
+    chrome.runtime.getPlatformInfo(() => {
+      if (chrome.runtime.lastError) {
+        console.debug(
+          "Keep-alive ping error:",
+          chrome.runtime.lastError.message
+        );
+      }
+    });
+  }, 25000);
+}
+
+async function openOnboarding() {
+  const url = chrome.runtime.getURL("html/onboarding.html");
+  try {
+    await chrome.tabs.create({ url });
+  } catch (error) {
+    console.warn("Failed to open onboarding:", error.message);
+  }
+}
+
+chrome.runtime.onInstalled.addListener(async (details) => {
+  const streamers = await DataStore.ensureDefaults();
+  await PreferenceStore.ensureDefaults();
+  await NotificationCenter.init();
+  scheduleWatcherAlarm();
+  scheduleKeepAliveAlarm();
+  startKeepAliveHeartbeat();
+  await pollStreamers({ forceNotification: false });
+  const installReason = details?.reason || "install";
+  if (
+    installReason === chrome.runtime.OnInstalledReason?.INSTALL ||
+    installReason === "install"
+  ) {
+    if (!streamers.length) {
+      await openOnboarding();
+    }
+  }
+});
+
+chrome.runtime.onStartup.addListener(async () => {
+  scheduleWatcherAlarm();
+  scheduleKeepAliveAlarm();
+  startKeepAliveHeartbeat();
+  await PreferenceStore.ensureDefaults();
+  await NotificationCenter.init();
+  await pollStreamers({ forceNotification: false });
+});
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === WATCHER_ALARM) {
+    pollStreamers({ forceNotification: false }).catch((error) => {
+      console.warn("Polling error:", error.message);
+    });
+  } else if (alarm.name === KEEP_ALIVE_ALARM) {
+    chrome.runtime.getPlatformInfo(() => {
+      if (chrome.runtime.lastError) {
+        console.debug(
+          "KeepAlive alarm ping error:",
+          chrome.runtime.lastError.message
+        );
+      }
+    });
+  } else if (alarm.name.startsWith(NotificationCenter.alarmPrefix)) {
+    NotificationCenter.handleAlarm(alarm.name).catch((error) => {
+      console.warn("Scheduled alarm error:", error?.message || error);
+    });
+  }
+});
+
+async function openStreamerFromNotification(streamerId) {
+  if (!streamerId) return;
+  const streamer = streamerCache.get(streamerId);
+  const states = streamerStates.get(streamerId);
+
+  const platform = normalizePlatform(
+    streamer?.platform || states?.active?.platform || DEFAULT_PLATFORM
+  );
+  const handle =
+    streamer?.handle ||
+    streamer?.twitch ||
+    states?.active?.login ||
+    (platform === "twitch"
+      ? sanitizeHandle("twitch", streamerId)
+      : streamerId);
+  const targetUrl = buildProfileUrl(platform, handle);
+
+  try {
+    await chrome.tabs.create({
+      url: targetUrl,
+    });
+  } catch (error) {
+    console.warn("Failed to open streamer page:", error?.message || error);
+  }
+}
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  switch (request?.type) {
+    case "notify":
+      (async () => {
+        await NotificationCenter.show({
+          title: request.title,
+          message: request.message,
+          url: request.url || null,
+          streamerId: request.streamerId || null,
+          platform: request.platform || null,
+          requireInteraction: Boolean(request.requireInteraction),
+          priority:
+            typeof request.priority === "number"
+              ? request.priority
+              : request.requireInteraction
+              ? 2
+              : 0,
+          playSound: request.playSound !== false,
+        });
+        sendResponse({ success: true });
+      })();
+      return true;
+
+    case "schedule":
+      (async () => {
+        await NotificationCenter.schedule(request);
+        sendResponse({ success: true });
+      })();
+      return true;
+
+    case "diagnosticTests":
+      (async () => {
+        const preferences = await PreferenceStore.get();
+        const lang = normalizeLanguage(preferences.language);
+        await NotificationCenter.show({
+          title: translate(lang, "background.notifications.test1Title"),
+          message: translate(lang, "background.notifications.test1Message"),
+          url: "https://www.twitch.tv/",
+          playSound: true,
+        });
+        await delay(400);
+        await NotificationCenter.show({
+          title: translate(lang, "background.notifications.test2Title"),
+          message: translate(lang, "background.notifications.test2Message"),
+          url: "https://www.youtube.com/",
+          requireInteraction: true,
+          priority: 2,
+          playSound: true,
+        });
+        await NotificationCenter.schedule({
+          name: translate(lang, "background.diagnostics.scheduleName", {
+            id: 3,
+          }),
+          title: translate(lang, "background.notifications.test3Title"),
+          message: translate(lang, "background.notifications.test3Message"),
+          url: "https://www.twitch.tv/directory/following/live",
+          intervalMinutes: 1,
+          requireInteraction: false,
+          playSound: true,
+        });
+        await NotificationCenter.schedule({
+          name: translate(lang, "background.diagnostics.scheduleName", {
+            id: 4,
+          }),
+          title: translate(lang, "background.notifications.test4Title"),
+          message: translate(lang, "background.notifications.test4Message"),
+          url: "https://www.twitch.tv/directory",
+          intervalMinutes: 0.5,
+          requireInteraction: true,
+          priority: 2,
+          playSound: true,
+        });
+        await delay(400);
+        await NotificationCenter.show({
+          title: translate(lang, "background.notifications.test5Title"),
+          message: translate(lang, "background.notifications.test5Message"),
+          playSound: false,
+        });
+        sendResponse({ success: true });
+      })();
+      return true;
+
+    case "streampulse:fetchJson":
+      (async () => {
+        try {
+          const data = await fetchJson(
+            request.url,
+            request.options || {},
+            request.timeoutMs || 15000
+          );
+          sendResponse({ success: true, data });
+        } catch (error) {
+          sendResponse({
+            success: false,
+            error: error?.message || String(error),
+          });
+        }
+      })();
+      return true;
+
+    case "getStreamers":
+      (async () => {
+        const [streamers, statuses, preferences] = await Promise.all([
+          DataStore.getStreamers(),
+          DataStore.getStatuses(),
+          PreferenceStore.get(),
+        ]);
+        sendResponse({ streamers, statuses, preferences });
+      })();
+      return true;
+
+    case "addStreamer":
+      (async () => {
+        const preferences = await PreferenceStore.get();
+        const requestedPlatform = request.platform || "twitch";
+        const platform = normalizePlatform(
+          requestedPlatform || DEFAULT_PLATFORM
+        );
+        const rawHandle =
+          request.handle ??
+          request.twitch ??
+          request.login ??
+          request.url ??
+          "";
+        const handle = sanitizeHandle(platform, rawHandle);
+
+        if (!handle) {
+          const platformLabel = translateWithPrefs(
+            preferences,
+            getPlatformLabelKey(platform)
+          );
+          sendResponse({
+            error: translateWithPrefs(
+              preferences,
+              "background.errors.invalidHandle",
+              { platform: platformLabel }
+            ),
+          });
+          return;
+        }
+
+        const streamers = await DataStore.getStreamers();
+        const incomingKey = getHandleComparisonKey(platform, handle);
+        const alreadyExists = streamers.some((streamer) => {
+          const existingKey = getHandleComparisonKey(
+            streamer.platform || "twitch",
+            streamer.handle || streamer.twitch || streamer.id
+          );
+          return existingKey === incomingKey;
+        });
+
+        if (alreadyExists) {
+          const platformLabel = translateWithPrefs(
+            preferences,
+            getPlatformLabelKey(platform)
+          );
+          sendResponse({
+            error: translateWithPrefs(
+              preferences,
+              "background.errors.streamerExistsPlatform",
+              { platform: platformLabel }
+            ),
+          });
+          return;
+        }
+
+        let sourceData = {
+          id: `${platform}:${handle}`,
+          platform,
+          handle,
+          notificationsEnabled: true,
+          socials: {},
+        };
+
+        if (platform === "twitch") {
+          const user = await PlatformChecker.getTwitchUser(handle);
+          if (!user) {
+            sendResponse({
+              error: translateWithPrefs(
+                preferences,
+                "background.errors.streamerNotFound",
+                {
+                  platform: translateWithPrefs(
+                    preferences,
+                    getPlatformLabelKey(platform)
+                  ),
+                }
+              ),
+            });
+            return;
+          }
+
+          sourceData = {
+            ...sourceData,
+            id: handle,
+            twitch: handle,
+            displayName: user.display_name || handle,
+            avatarUrl: user.profile_image_url || "",
+            twitchId: user.id,
+          };
+        } else if (platform === "kick") {
+          const channel = await PlatformChecker.getKickChannel(handle);
+          if (!channel) {
+            sendResponse({
+              error: translateWithPrefs(
+                preferences,
+                "background.errors.streamerNotFound",
+                {
+                  platform: translateWithPrefs(
+                    preferences,
+                    getPlatformLabelKey(platform)
+                  ),
+                }
+              ),
+            });
+            return;
+          }
+
+          sourceData = {
+            ...sourceData,
+            displayName:
+              channel?.user?.display_name ||
+              channel?.user?.username ||
+              channel?.slug ||
+              formatHandleForDisplay(platform, handle),
+            avatarUrl: resolveExternalUrl(
+              channel?.user?.profile_pic,
+              "https://files.kick.com"
+            ),
+            handle: channel?.slug || handle,
+          };
+        } else if (platform === "dlive") {
+          const user = await PlatformChecker.getDliveUser(handle);
+          if (!user) {
+            sendResponse({
+              error: translateWithPrefs(
+                preferences,
+                "background.errors.streamerNotFound",
+                {
+                  platform: translateWithPrefs(
+                    preferences,
+                    getPlatformLabelKey(platform)
+                  ),
+                }
+              ),
+            });
+            return;
+          }
+
+          sourceData = {
+            ...sourceData,
+            displayName:
+              user.displayname ||
+              user.username ||
+              formatHandleForDisplay(platform, handle),
+            avatarUrl: resolveExternalUrl(
+              user.avatar,
+              "https://images.prd.dlivecdn.com"
+            ),
+            handle: user.username || handle,
+          };
+        } else {
+          sourceData = {
+            ...sourceData,
+            displayName:
+              request.displayName ||
+              formatHandleForDisplay(platform, handle),
+            avatarUrl: request.avatarUrl || "",
+          };
+        }
+
+        if (platform === "twitch") {
+          sourceData.id = sourceData.twitch;
+        } else {
+          sourceData.id = `${platform}:${sanitizeHandle(
+            platform,
+            sourceData.handle
+          )}`;
+        }
+
+        const newStreamer = normalizeStreamer(sourceData);
+
+        const updated = await DataStore.saveStreamers([
+          ...streamers,
+          newStreamer,
+        ]);
+
+        await pollStreamers({ forceNotification: false });
+
+        sendResponse({
+          success: true,
+          streamers: updated,
+        });
+      })();
+      return true;
+
+    case "removeStreamer":
+      (async () => {
+        const targetId = request.id;
+        const streamers = await DataStore.getStreamers();
+        const filtered = streamers.filter((s) => s.id !== targetId);
+        await DataStore.saveStreamers(filtered);
+        streamerStates.delete(targetId);
+        await pollStreamers({ forceNotification: false });
+        sendResponse({ success: true, streamers: filtered });
+      })();
+      return true;
+
+    case "toggleNotifications":
+      (async () => {
+        const streamers = await DataStore.getStreamers();
+        const idx = streamers.findIndex((s) => s.id === request.id);
+        if (idx === -1) {
+          sendResponse({ error: "Streamer introuvable." });
+          return;
+        }
+        streamers[idx].notificationsEnabled = Boolean(request.enabled);
+        await DataStore.saveStreamers(streamers);
+        sendResponse({ success: true });
+      })();
+      return true;
+
+    case "refreshStatuses":
+      PlatformChecker.refreshAll().then(() => {
+        sendResponse({ success: true });
+      });
+      return true;
+
+    case "getStats":
+      StatsStore.get().then((stats) => {
+        sendResponse({ success: true, stats });
+      });
+      return true;
+
+    case "incrementStat":
+      (async () => {
+        const { stat, value } = request;
+        if (stat) {
+          await StatsStore.increment(stat, Number(value) || 1);
+        }
+        sendResponse({ success: true });
+      })();
+      return true;
+    
+    case "resetStat":
+      (async () => {
+        const { stat } = request;
+        if (stat) {
+
+          const current = await StatsStore.get();
+          current[stat] = 0;
+          await chrome.storage.local.set({ [STORAGE_KEYS.STATS]: current });
+        }
+        sendResponse({ success: true });
+      })();
+      return true;
+
+    case "updatePreferences":
+      (async () => {
+        const incomingUpdates = request.updates || {};
+        const updates = {};
+        if ("liveNotifications" in incomingUpdates) {
+          updates.liveNotifications =
+            incomingUpdates.liveNotifications !== false;
+        }
+        if ("gameNotifications" in incomingUpdates) {
+          updates.gameNotifications =
+            incomingUpdates.gameNotifications === true;
+        }
+        if ("soundsEnabled" in incomingUpdates) {
+          updates.soundsEnabled = incomingUpdates.soundsEnabled !== false;
+        }
+        if ("autoClaimChannelPoints" in incomingUpdates) {
+          updates.autoClaimChannelPoints =
+            incomingUpdates.autoClaimChannelPoints !== false;
+        }
+        if ("autoRefreshPlayerErrors" in incomingUpdates) {
+          updates.autoRefreshPlayerErrors =
+            incomingUpdates.autoRefreshPlayerErrors !== false;
+        }
+        if ("enableFastForwardButton" in incomingUpdates) {
+          updates.enableFastForwardButton =
+            incomingUpdates.enableFastForwardButton !== false;
+        }
+        if ("language" in incomingUpdates) {
+          updates.language = normalizeLanguage(incomingUpdates.language);
+        }
+
+        if (Object.keys(updates).length === 0) {
+          const preferences = await PreferenceStore.get();
+          sendResponse({
+            error: translateWithPrefs(
+              preferences,
+              "background.errors.noPreferencesUpdate"
+            ),
+          });
+          return;
+        }
+
+        const preferences = await PreferenceStore.update(updates);
+        sendResponse({ success: true, preferences });
+      })();
+      return true;
+
+    case "testNotification":
+      (async () => {
+        const preferences = await PreferenceStore.get();
+        try {
+          await NotificationSystem.sendTest(preferences);
+          sendResponse({ success: true });
+        } catch (error) {
+          sendResponse({
+            error:
+              error?.message ||
+              translateWithPrefs(
+                preferences,
+                "background.errors.testNotificationFailed"
+              ),
+          });
+        }
+      })();
+      return true;
+
+    default:
+      if (request?.audioCommand) {
+        return false;
+      }
+      break;
+  }
+
+  return false;
+});
+
+scheduleWatcherAlarm();
+scheduleKeepAliveAlarm();
+startKeepAliveHeartbeat();
+
+(async () => {
+  await PreferenceStore.ensureDefaults();
+  await NotificationCenter.init();
+  await pollStreamers({ forceNotification: false });
+})();
