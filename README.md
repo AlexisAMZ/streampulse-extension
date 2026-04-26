@@ -6,6 +6,9 @@
   <a href="https://chromewebstore.google.com/detail/streampulse-multi-streame/ipfhbfabadbpkjimhdcjadopnahdpddh">Chrome Web Store</a>
 </div>
 
+## 📥 Download
+[**Download StreamPulse on the Chrome Web Store**](https://chromewebstore.google.com/detail/streampulse-multi-streame/ipfhbfabadbpkjimhdcjadopnahdpddh)
+
 ## 📌 Overview
 StreamPulse is a lightweight browser extension built for the streaming community. It stays invisible until you need it, providing essential features for Twitch, Kick, and DLive without the bloat.
 
