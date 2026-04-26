@@ -46,9 +46,15 @@ export const translations = {
       autoRefreshTitle: "Actualisation automatique",
       autoRefreshDescription:
         "Relancer le lecteur Twitch lorsqu’un message d’erreur (#1000, #2000, #3000, #4000 ou #5000) apparaît.",
-      fastForwardTitle: "Bouton d’avance rapide",
+      fastForwardTitle: "Bouton d'avance rapide",
       fastForwardDescription:
         "Ajouter un bouton au lecteur pour rattraper instantanément le direct.",
+chatFilterTitle: "Mots-clés masqués",
+      chatFilterDescription: "Masquer les messages contenant ces mots (séparés par des virgules).",
+      chatFilterPlaceholder: "spoiler, ban, giveaway...",
+      blockedUsersTitle: "Utilisateurs masqués",
+      blockedUsersDescription: "Masquer les messages de ces utilisateurs (séparés par des virgules).",
+      blockedUsersPlaceholder: "bot, spammer...",
       formLabelBase: "Nom du créateur *",
       formLabelPlatform: "Ajouter un créateur {{platform}}",
       helperTextBase: "Saisis l’identifiant ou le lien du créateur.",
@@ -58,8 +64,8 @@ export const translations = {
         kick: "ex: Teuf",
         dlive: "ex: Teuf",
       },
-      submit: "Ajouter ce streamer",
-      currentHeader: "Streamers suivis (installation)",
+      submit: "Ajouter",
+      currentHeader: "Streamers suivis",
       currentHint:
         "Vérifie ta sélection. Retire un streamer si tu t'es trompé avant de terminer.",
       removeStreamer: "Retirer",
@@ -73,7 +79,15 @@ export const translations = {
         "<strong>Épingle</strong> l’extension pour l’avoir toujours sous la main",
       nextHint:
         "Tu pourras ajouter d'autres streamers ou compléter leurs réseaux depuis le menu principal.",
-      finish: "Terminer",
+      stepLanguage: "Langue",
+      stepStreamers: "Streamers",
+      stepSettings: "Réglages",
+      stepFinish: "C'est parti",
+      continueBtn: "Continuer",
+      backBtn: "Retour",
+      finishTitle: "Tu es prêt !",
+      finishDescription: "StreamPulse est configuré. Épingle l'extension pour y accéder facilement.",
+      finish: "Lancer StreamPulse 🚀",
       footerText:
         'Créé par <a href="https://www.instagram.com/alexisamz" target="_blank" rel="noopener noreferrer">@AlexisAMZ</a> • <a href="mailto:contact@alexisamz.fr">contact@alexisamz.fr</a>',
       feedback: {
@@ -110,6 +124,12 @@ export const translations = {
         dlive: "ex: Teuf",
       },
       emptyState: "Aucun streamer suivi. Ajoutez-en un pour commencer.",
+      sort: {
+        live: "En ligne d'abord",
+        nameAsc: "Nom A → Z",
+        nameDesc: "Nom Z → A",
+        custom: "Ordre personnalisé",
+      },
       settingsTitle: "Réglages",
       settings: {
         liveNotificationsTitle: "Notifications Chrome",
@@ -126,30 +146,55 @@ export const translations = {
         autoRefreshTitle: "Actualisation automatique",
         autoRefreshDescription:
           "Relancer le lecteur Twitch si un message d’erreur (#1000, #2000, #3000, #4000 ou #5000) apparaît.",
-        fastForwardTitle: "Bouton d’avance rapide",
+        fastForwardTitle: "Bouton d'avance rapide",
         fastForwardDescription:
           "Ajouter un bouton pour rattraper instantanément le direct quand le flux est en retard.",
-        languageTitle: "Langue de l’extension",
+        chatFilterDescription: "Mots-clés à masquer (séparés par des virgules).",
+        languageTitle: "Langue de l'extension",
         languageDescription: "Choisissez la langue de l’interface.",
         dataTitle: "Données & Statistiques",
         dataDescription: "Gérez vos données et consultez vos statistiques.",
+        groupNotifications: "Notifications",
+        groupAutomation: "Automatisation",
+        groupChat: "Chat",
+        groupData: "Données",
+        groupWatchTime: "Temps de visionnage",
+        watchTimeTitle: "Watch Time Tracker",
+        watchTimeDescription:
+          "Suivi du temps passé sur chaque chaîne.",
+      },
+      watchTime: {
+        totalTime: "Temps total",
+        totalChannels: "Chaînes",
+        topWatched: "Les plus regardés",
+        empty: "Aucune donnée ce mois-ci. Regarde un stream pour commencer !",
       },
       stats: {
         pointsClaimed: "Points récupérés",
+        confirmReset: "Réinitialiser les statistiques ?",
+        resetSuccess: "Statistiques remises à zéro",
+        resetError: "Erreur lors de la réinitialisation",
+        loadError: "Erreur",
       },
       actions: {
         export: "Exporter",
         import: "Importer",
+        saveChatFilter: "Enregistrer le filtre",
+        saveBlockedUsers: "Enregistrer les utilisateurs masqués",
       },
+      supportDev: "Offrir un Bubble Tea au développeur",
       testNotification: "Tester une notification",
       card: {
         offline: "Hors ligne",
         notificationsToggle: "Notifications",
         open: "Ouvrir",
         remove: "Retirer",
+        confirmRemove: "Supprimer ?",
+        confirmYes: "Oui",
+        confirmNo: "Non",
         defaultLiveTitle: "En direct",
         lastUpdateLabel: "Dernière MAJ",
-        noPreview: "Pas d’aperçu disponible",
+        noPreview: "Pas d'aperçu disponible",
         statusLive: "En live · {{platform}}",
         offlinePlatform: "Hors ligne · {{platform}}",
         statusUnsupported: "Statut indisponible sur {{platform}}",
@@ -169,8 +214,10 @@ export const translations = {
         autoClaimDisabled: "Récupération automatique des points désactivée.",
         autoRefreshEnabled: "Actualisation automatique du lecteur activée.",
         autoRefreshDisabled: "Actualisation automatique du lecteur désactivée.",
-        fastForwardEnabled: "Bouton d’avance rapide activé.",
-        fastForwardDisabled: "Bouton d’avance rapide désactivé.",
+        fastForwardEnabled: "Bouton d'avance rapide activé.",
+        fastForwardDisabled: "Bouton d'avance rapide désactivé.",
+        watchTimeEnabled: "Watch Time Tracker activé.",
+        watchTimeDisabled: "Watch Time Tracker désactivé.",
         languageUpdated: "Langue mise à jour.",
       },
       errors: {
@@ -180,6 +227,8 @@ export const translations = {
         streamerExists: "Ce streamer est déjà suivi.",
         streamerNotFound:
           "Impossible de trouver ce créateur sur {{platform}}. Vérifiez l'orthographe.",
+        apiError:
+          "Erreur de connexion à {{platform}}. Réessayez dans un instant.",
       },
       feedback: {
         adding: "Ajout en cours…",
@@ -191,6 +240,8 @@ export const translations = {
         refreshDone: "Statuts mis à jour.",
         testSent: "Notification de test envoyée !",
         importSuccess: "Données importées avec succès !",
+        chatFilterSaved: "Filtre de chat enregistré.",
+        blockedUsersSaved: "Utilisateurs masqués enregistrés.",
         importError: "Erreur lors de l'importation.",
       },
       meta: {
@@ -213,6 +264,8 @@ export const translations = {
         streamerExistsPlatform: "Ce créateur est déjà suivi sur {{platform}}.",
         streamerNotFound:
           "Impossible de trouver ce créateur sur {{platform}}. Vérifie l'orthographe.",
+        apiError:
+          "Erreur de connexion à {{platform}}. Réessaie dans un instant.",
         noPreferencesUpdate: "Aucune préférence à mettre à jour.",
         testNotificationFailed:
           "Impossible d'envoyer la notification de test pour le moment.",
@@ -295,6 +348,12 @@ export const translations = {
       fastForwardTitle: "Fast-forward button",
       fastForwardDescription:
         "Add a button to the player to catch up to live instantly.",
+      chatFilterTitle: "Chat Filter",
+      chatFilterDescription: "Hide messages containing these words (comma separated).",
+      chatFilterPlaceholder: "spoiler, ban, giveaway...",
+      blockedUsersTitle: "Blocked Users",
+      blockedUsersDescription: "Hide messages from these users (comma separated).",
+      blockedUsersPlaceholder: "bot, spammer...",
       formLabelBase: "Creator name *",
       formLabelPlatform: "Add a {{platform}} creator",
       helperTextBase: "Enter the creator handle or channel link.",
@@ -304,8 +363,8 @@ export const translations = {
         kick: "e.g. trainwreckstv",
         dlive: "e.g. yomogi",
       },
-      submit: "Add this streamer",
-      currentHeader: "Followed streamers (setup)",
+      submit: "Add",
+      currentHeader: "Followed streamers",
       currentHint:
         "Review your selection. Remove a streamer if you made a mistake before finishing.",
       removeStreamer: "Remove",
@@ -317,7 +376,15 @@ export const translations = {
       pinStep3: "<strong>Pin</strong> the extension to keep it handy",
       nextHint:
         "You can add more streamers or complete their social links from the main menu.",
-      finish: "Finish",
+      stepLanguage: "Language",
+      stepStreamers: "Streamers",
+      stepSettings: "Settings",
+      stepFinish: "Let's go",
+      continueBtn: "Continue",
+      backBtn: "Back",
+      finishTitle: "You're all set!",
+      finishDescription: "StreamPulse is ready. Pin the extension for quick access.",
+      finish: "Launch StreamPulse 🚀",
       footerText:
         'Created by <a href="https://www.instagram.com/alexisamz" target="_blank" rel="noopener noreferrer">@AlexisAMZ</a> • <a href="mailto:contact@alexisamz.fr">contact@alexisamz.fr</a>',
       feedback: {
@@ -352,6 +419,12 @@ export const translations = {
         dlive: "e.g. yomogi",
       },
       emptyState: "No streamers followed yet. Add one to get started.",
+      sort: {
+        live: "Online first",
+        nameAsc: "Name A → Z",
+        nameDesc: "Name Z → A",
+        custom: "Custom order",
+      },
       settingsTitle: "Settings",
       settings: {
         liveNotificationsTitle: "Chrome notifications",
@@ -371,24 +444,49 @@ export const translations = {
         fastForwardTitle: "Fast-forward button",
         fastForwardDescription:
           "Add a button to instantly catch up to live when the stream lags behind.",
+        chatFilterDescription: "Hide messages containing these words (comma separated).",
         languageTitle: "Extension language",
         languageDescription: "Choose the interface language.",
         dataTitle: "Data & Statistics",
         dataDescription: "Manage your data and view your statistics.",
+        groupNotifications: "Notifications",
+        groupAutomation: "Automation",
+        groupChat: "Chat",
+        groupData: "Data",
+        groupWatchTime: "Watch Time",
+        watchTimeTitle: "Watch Time Tracker",
+        watchTimeDescription:
+          "Track time spent on each channel.",
+      },
+      watchTime: {
+        totalTime: "Total time",
+        totalChannels: "Channels",
+        topWatched: "Most watched",
+        empty: "No data this month. Watch a stream to get started!",
       },
       stats: {
         pointsClaimed: "Points claimed",
+        confirmReset: "Reset statistics?",
+        resetSuccess: "Statistics reset",
+        resetError: "Failed to reset statistics",
+        loadError: "Error",
       },
       actions: {
         export: "Export",
         import: "Import",
+        saveChatFilter: "Save chat filter",
+        saveBlockedUsers: "Save blocked users",
       },
+      supportDev: "Offer a Bubble Tea to the developer",
       testNotification: "Send a test notification",
       card: {
         offline: "Offline",
         notificationsToggle: "Notifications",
         open: "Open",
         remove: "Remove",
+        confirmRemove: "Delete?",
+        confirmYes: "Yes",
+        confirmNo: "No",
         defaultLiveTitle: "Live now",
         lastUpdateLabel: "Last update",
         noPreview: "No preview available",
@@ -413,6 +511,8 @@ export const translations = {
         autoRefreshDisabled: "Automatic player refresh disabled.",
         fastForwardEnabled: "Fast-forward button enabled.",
         fastForwardDisabled: "Fast-forward button disabled.",
+        watchTimeEnabled: "Watch Time Tracker enabled.",
+        watchTimeDisabled: "Watch Time Tracker disabled.",
         languageUpdated: "Language updated.",
       },
       errors: {
@@ -420,7 +520,9 @@ export const translations = {
         invalidHandle: "Please enter a valid {{platform}} identifier.",
         streamerExists: "This creator is already followed.",
         streamerNotFound:
-          "We couldn’t find this creator on {{platform}}. Double-check the spelling.",
+          "We couldn't find this creator on {{platform}}. Double-check the spelling.",
+        apiError:
+          "Connection error with {{platform}}. Please try again in a moment.",
       },
       feedback: {
         adding: "Adding streamer…",
@@ -432,6 +534,8 @@ export const translations = {
         refreshDone: "Statuses updated.",
         testSent: "Test notification sent!",
         importSuccess: "Data imported successfully!",
+        chatFilterSaved: "Chat filter saved.",
+        blockedUsersSaved: "Blocked users saved.",
         importError: "Error importing data.",
       },
       meta: {
@@ -453,7 +557,9 @@ export const translations = {
         streamerExistsPlatform:
           "This creator is already followed on {{platform}}.",
         streamerNotFound:
-          "We couldn’t find this creator on {{platform}}. Check the spelling.",
+          "We couldn't find this creator on {{platform}}. Check the spelling.",
+        apiError:
+          "Connection error with {{platform}}. Try again in a moment.",
         noPreferencesUpdate: "No preferences to update.",
         testNotificationFailed:
           "The test notification cannot be sent right now.",

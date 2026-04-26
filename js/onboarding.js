@@ -19,59 +19,96 @@ import {
   sanitizeHandle,
 } from "./platforms.js";
 
+/* ── DOM refs ── */
 const form = document.getElementById("onboarding-form");
 const input = document.getElementById("streamer-input");
 const platformPicker = document.getElementById("onboarding-platform-picker");
 const handlePrefix = document.getElementById("onboarding-handle-prefix");
 const submitButton = document.getElementById("submit-button");
 const feedback = document.getElementById("feedback");
-const nextSteps = document.getElementById("next-steps");
 const currentStreamersSection = document.getElementById("current-streamers");
 const streamerList = document.getElementById("streamer-list");
 const finishButton = document.getElementById("finish-button");
 const languageOptions = document.getElementById("language-options");
-const helperText = form?.querySelector(".helper-text");
-const formLabel = form?.querySelector("label[for='streamer-input']");
+const stepperFill = document.getElementById("stepper-fill");
+const particlesContainer = document.getElementById("particles");
+
 const preferenceToggleDefinitions = [
-  {
-    element: document.getElementById("onboarding-live-notifications"),
-    key: "liveNotifications",
-  },
-  {
-    element: document.getElementById("onboarding-game-alerts"),
-    key: "gameNotifications",
-  },
-  {
-    element: document.getElementById("onboarding-sounds"),
-    key: "soundsEnabled",
-  },
-  {
-    element: document.getElementById("onboarding-auto-refresh"),
-    key: "autoRefreshPlayerErrors",
-  },
-  {
-    element: document.getElementById("onboarding-fast-forward"),
-    key: "enableFastForwardButton",
-  },
-  {
-    element: document.getElementById("onboarding-auto-claim"),
-    key: "autoClaimChannelPoints",
-  },
+  { element: document.getElementById("onboarding-live-notifications"), key: "liveNotifications" },
+  { element: document.getElementById("onboarding-game-alerts"), key: "gameNotifications" },
+  { element: document.getElementById("onboarding-sounds"), key: "soundsEnabled" },
+  { element: document.getElementById("onboarding-auto-refresh"), key: "autoRefreshPlayerErrors" },
+  { element: document.getElementById("onboarding-fast-forward"), key: "enableFastForwardButton" },
+  { element: document.getElementById("onboarding-auto-claim"), key: "autoClaimChannelPoints" },
 ];
 
+/* ── State ── */
 let currentStreamers = [];
 let unsubscribeLanguage = null;
 let currentPreferences = null;
 let selectedPlatform = DEFAULT_PLATFORM;
+let currentStep = 0;
+const TOTAL_STEPS = 4;
 
+/* ══════════════════════════════
+   WIZARD NAVIGATION
+   ══════════════════════════════ */
+function goToStep(targetStep, direction = "forward") {
+  if (targetStep < 0 || targetStep >= TOTAL_STEPS || targetStep === currentStep) return;
+
+  const currentEl = document.querySelector(`.wizard-step[data-step="${currentStep}"]`);
+  const targetEl = document.querySelector(`.wizard-step[data-step="${targetStep}"]`);
+  if (!currentEl || !targetEl) return;
+
+  const outClass = direction === "forward" ? "slide-out-left" : "slide-out-right";
+  currentEl.classList.add(outClass);
+
+  currentEl.addEventListener("animationend", () => {
+    currentEl.classList.remove("active", outClass);
+    targetEl.classList.add("active");
+    currentStep = targetStep;
+    updateStepper();
+  }, { once: true });
+}
+
+function updateStepper() {
+  const dots = document.querySelectorAll(".step-dot");
+  dots.forEach((dot, i) => {
+    dot.classList.toggle("active", i === currentStep);
+    dot.classList.toggle("completed", i < currentStep);
+  });
+
+  const pct = currentStep === 0 ? 0 : (currentStep / (TOTAL_STEPS - 1)) * 100;
+  if (stepperFill) stepperFill.style.width = `${pct}%`;
+}
+
+/* ══════════════════════════════
+   PARTICLES
+   ══════════════════════════════ */
+function spawnParticles() {
+  if (!particlesContainer) return;
+  const count = 20;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement("div");
+    p.className = "particle";
+    p.style.left = `${Math.random() * 100}%`;
+    p.style.animationDuration = `${8 + Math.random() * 12}s`;
+    p.style.animationDelay = `${Math.random() * 10}s`;
+    p.style.width = p.style.height = `${2 + Math.random() * 4}px`;
+    p.style.opacity = `${0.2 + Math.random() * 0.4}`;
+    particlesContainer.appendChild(p);
+  }
+}
+
+/* ══════════════════════════════
+   PLATFORM / INPUT HELPERS
+   ══════════════════════════════ */
 function sanitizeInput(value = "", platform = selectedPlatform) {
   return sanitizeHandle(platform, value);
 }
 
 function setLoading(isLoading) {
-  if (submitButton) {
-    submitButton.disabled = isLoading;
-  }
+  if (submitButton) submitButton.disabled = isLoading;
 }
 
 function showFeedback(message = "", type = "success") {
@@ -79,9 +116,7 @@ function showFeedback(message = "", type = "success") {
   feedback.hidden = !message;
   feedback.textContent = message || "";
   feedback.classList.remove("success", "error");
-  if (message) {
-    feedback.classList.add(type === "error" ? "error" : "success");
-  }
+  if (message) feedback.classList.add(type === "error" ? "error" : "success");
 }
 
 function getPlatformDefinition(platform) {
@@ -106,15 +141,13 @@ function updatePlatformPickerUI() {
 
 function updatePlatformTexts() {
   const platformLabel = getPlatformLabel(selectedPlatform);
-  if (formLabel) {
-    formLabel.textContent = t("onboarding.formLabelPlatform", {
-      platform: platformLabel,
-    });
+  const stepHeader = document.querySelector('.wizard-step[data-step="1"] .step-header h2');
+  const stepDesc = document.querySelector('.wizard-step[data-step="1"] .step-desc');
+  if (stepHeader) {
+    stepHeader.textContent = t("onboarding.formLabelPlatform", { platform: platformLabel });
   }
-  if (helperText) {
-    helperText.textContent = t("onboarding.helperTextPlatform", {
-      platform: platformLabel,
-    });
+  if (stepDesc) {
+    stepDesc.textContent = t("onboarding.helperTextPlatform", { platform: platformLabel });
   }
   if (input) {
     const placeholderKey =
@@ -160,14 +193,9 @@ function setSelectedPlatform(platform) {
   updatePlatformTexts();
 }
 
-function handlePlatformPickerClick(event) {
-  const button = event.target.closest(".platform-button");
-  if (!button) return;
-  const { platform } = button.dataset;
-  if (!platform) return;
-  setSelectedPlatform(platform);
-}
-
+/* ══════════════════════════════
+   STREAMER CRUD
+   ══════════════════════════════ */
 async function addStreamer(rawValue, platform = selectedPlatform) {
   try {
     return await chrome.runtime.sendMessage({
@@ -184,16 +212,21 @@ async function addStreamer(rawValue, platform = selectedPlatform) {
 
 async function removeStreamer(streamerId) {
   try {
-    return await chrome.runtime.sendMessage({
-      type: "removeStreamer",
-      id: streamerId,
-    });
+    return await chrome.runtime.sendMessage({ type: "removeStreamer", id: streamerId });
   } catch (error) {
     console.error("Onboarding remove streamer error:", error);
     return { error: t("onboarding.errors.removeFailed") };
   }
 }
 
+function updateNextButton() {
+  const btn = document.getElementById("btn-next-1");
+  if (btn) btn.disabled = currentStreamers.length === 0;
+}
+
+/* ══════════════════════════════
+   LANGUAGE
+   ══════════════════════════════ */
 function updateLanguageButtonsState() {
   if (!languageOptions) return;
   const active = getCurrentLanguage();
@@ -217,21 +250,21 @@ function buildLanguageButtons() {
   updateLanguageButtonsState();
 }
 
+/* ══════════════════════════════
+   RENDERERS
+   ══════════════════════════════ */
 function renderStreamers(streamers = []) {
   if (!currentStreamersSection || !streamerList) return;
-
   streamerList.innerHTML = "";
 
   if (!streamers.length) {
     currentStreamersSection.hidden = true;
-    if (nextSteps) nextSteps.hidden = true;
-    if (finishButton) finishButton.disabled = true;
+    updateNextButton();
     return;
   }
 
   currentStreamersSection.hidden = false;
-  if (nextSteps) nextSteps.hidden = false;
-  if (finishButton) finishButton.disabled = false;
+  updateNextButton();
 
   const runtime =
     (typeof chrome !== "undefined" && chrome.runtime) ||
@@ -252,29 +285,19 @@ function renderStreamers(streamers = []) {
     avatar.className = "streamer-avatar";
     const platformId = streamer.platform || DEFAULT_PLATFORM;
     const definition = getPlatformDefinition(platformId);
-    const platformIcon = runtime
-      ? runtime.getURL(definition.icon)
-      : `../${definition.icon}`;
-    avatar.src =
-      streamer.avatarUrl || platformIcon || fallbackAvatar;
-    const handleLabel = formatHandleForDisplay(
-      platformId,
-      streamer.handle || streamer.twitch
-    );
+    const platformIcon = runtime ? runtime.getURL(definition.icon) : `../${definition.icon}`;
+    avatar.src = streamer.avatarUrl || platformIcon || fallbackAvatar;
+    const handleLabel = formatHandleForDisplay(platformId, streamer.handle || streamer.twitch);
     avatar.alt = streamer.displayName || handleLabel || "Streamer";
     avatar.referrerPolicy = "no-referrer";
-    avatar.onerror = () => {
-      avatar.src = platformIcon || fallbackAvatar;
-    };
+    avatar.onerror = function () { this.onerror = null; this.src = platformIcon || fallbackAvatar; };
 
     const name = document.createElement("span");
     name.className = "streamer-name";
     const platformLabel = t(getPlatformLabelKey(platformId));
-    if (streamer.displayName) {
-      name.textContent = `${streamer.displayName} • ${platformLabel}`;
-    } else {
-      name.textContent = `${handleLabel} • ${platformLabel}`;
-    }
+    name.textContent = streamer.displayName
+      ? `${streamer.displayName} · ${platformLabel}`
+      : `${handleLabel} · ${platformLabel}`;
 
     info.append(avatar, name);
 
@@ -293,8 +316,7 @@ function renderStreamers(streamers = []) {
 function renderPreferenceToggles(preferences = {}) {
   preferenceToggleDefinitions.forEach(({ element, key }) => {
     if (!element) return;
-    const enabled = preferences[key] !== false;
-    element.checked = enabled;
+    element.checked = preferences[key] !== false;
   });
 }
 
@@ -307,33 +329,22 @@ async function updatePreferenceToggle({ element, key }, enabled) {
     });
     if (response?.error) {
       showFeedback(response.error, "error");
-      if (element) {
-        element.checked = previous;
-      }
+      if (element) element.checked = previous;
       return;
     }
-    const nextPreferences =
-      response?.preferences || {
-        ...(currentPreferences || {}),
-        [key]: enabled,
-      };
-    currentPreferences = nextPreferences;
+    currentPreferences = response?.preferences || { ...(currentPreferences || {}), [key]: enabled };
     renderPreferenceToggles(currentPreferences);
   } catch (error) {
     console.error("Onboarding preference update error:", error);
     showFeedback(t("onboarding.errors.extensionUnavailable"), "error");
-    if (element) {
-      element.checked = previous;
-    }
+    if (element) element.checked = previous;
   }
 }
 
 async function loadStreamers() {
   let response = null;
   try {
-    response = await chrome.runtime.sendMessage({
-      type: "getStreamers",
-    });
+    response = await chrome.runtime.sendMessage({ type: "getStreamers" });
   } catch (error) {
     console.error("Onboarding load streamers error:", error);
   }
@@ -343,6 +354,9 @@ async function loadStreamers() {
   renderPreferenceToggles(currentPreferences);
 }
 
+/* ══════════════════════════════
+   i18n
+   ══════════════════════════════ */
 function refreshTranslations() {
   applyTranslations(document);
   document.title = t("onboarding.documentTitle");
@@ -354,24 +368,39 @@ function refreshTranslations() {
   setSelectedPlatform(selectedPlatform);
 }
 
-async function handleLanguageClick(event) {
-  const button = event.target.closest(".language-button");
-  if (!button) return;
-  const { lang } = button.dataset;
-  if (!lang) return;
-  await setLanguage(lang);
-}
-
+/* ══════════════════════════════
+   EVENT LISTENERS
+   ══════════════════════════════ */
 function registerEventListeners() {
+  /* --- Wizard nav buttons --- */
+  document.getElementById("btn-next-0")?.addEventListener("click", () => goToStep(1, "forward"));
+  document.getElementById("btn-next-1")?.addEventListener("click", () => goToStep(2, "forward"));
+  document.getElementById("btn-next-2")?.addEventListener("click", () => goToStep(3, "forward"));
+  document.getElementById("btn-back-1")?.addEventListener("click", () => goToStep(0, "back"));
+  document.getElementById("btn-back-2")?.addEventListener("click", () => goToStep(1, "back"));
+
+  /* --- Stepper dot clicks --- */
+  document.querySelectorAll(".step-dot").forEach((dot) => {
+    dot.addEventListener("click", () => {
+      const target = parseInt(dot.dataset.step, 10);
+      if (target < currentStep) {
+        goToStep(target, "back");
+      } else if (target <= currentStep + 1 && target > currentStep) {
+        /* Only allow advancing one step at a time (or going back) */
+        const canAdvance = target !== 1 || currentStreamers.length > 0 || target <= currentStep;
+        if (canAdvance || target <= currentStep) goToStep(target, "forward");
+      }
+    });
+  });
+
+  /* --- Form submit --- */
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
     const rawValue = input?.value ?? "";
     const sanitized = sanitizeInput(rawValue);
     if (!sanitized) {
       showFeedback(
-        t("onboarding.feedback.invalidHandle", {
-          platform: getPlatformLabel(selectedPlatform),
-        }),
+        t("onboarding.feedback.invalidHandle", { platform: getPlatformLabel(selectedPlatform) }),
         "error"
       );
       return;
@@ -381,7 +410,6 @@ function registerEventListeners() {
     showFeedback(t("onboarding.feedback.adding"), "success");
 
     const result = await addStreamer(rawValue.trim(), selectedPlatform);
-
     setLoading(false);
 
     if (result?.error) {
@@ -401,16 +429,20 @@ function registerEventListeners() {
     await loadStreamers();
   });
 
-  platformPicker?.addEventListener("click", handlePlatformPickerClick);
+  /* --- Platform picker --- */
+  platformPicker?.addEventListener("click", (event) => {
+    const button = event.target.closest(".platform-button");
+    if (!button?.dataset.platform) return;
+    setSelectedPlatform(button.dataset.platform);
+  });
 
+  /* --- Remove streamer --- */
   streamerList?.addEventListener("click", async (event) => {
     const button = event.target.closest(".remove-streamer");
-    if (!button) return;
-    const streamerId = button.dataset.streamerId;
-    if (!streamerId) return;
+    if (!button?.dataset.streamerId) return;
 
     button.disabled = true;
-    const result = await removeStreamer(streamerId);
+    const result = await removeStreamer(button.dataset.streamerId);
     button.disabled = false;
 
     if (result?.error) {
@@ -422,28 +454,38 @@ function registerEventListeners() {
     await loadStreamers();
   });
 
+  /* --- Preference toggles --- */
   preferenceToggleDefinitions.forEach((definition) => {
     definition.element?.addEventListener("change", (event) => {
       updatePreferenceToggle(definition, event.target.checked);
     });
   });
 
-  languageOptions?.addEventListener("click", handleLanguageClick);
+  /* --- Language buttons --- */
+  languageOptions?.addEventListener("click", async (event) => {
+    const button = event.target.closest(".language-button");
+    if (!button?.dataset.lang) return;
+    await setLanguage(button.dataset.lang);
+  });
 
+  /* --- Finish button --- */
   finishButton?.addEventListener("click", () => {
     window.close();
   });
 }
 
+/* ══════════════════════════════
+   INIT
+   ══════════════════════════════ */
 async function initialize() {
   await initI18n();
   buildLanguageButtons();
   refreshTranslations();
   registerEventListeners();
+  spawnParticles();
+  updateStepper();
 
-  unsubscribeLanguage = onLanguageChange(() => {
-    refreshTranslations();
-  });
+  unsubscribeLanguage = onLanguageChange(() => refreshTranslations());
 
   await loadStreamers();
 }
@@ -453,7 +495,5 @@ initialize().catch((error) => {
 });
 
 window.addEventListener("unload", () => {
-  if (typeof unsubscribeLanguage === "function") {
-    unsubscribeLanguage();
-  }
+  if (typeof unsubscribeLanguage === "function") unsubscribeLanguage();
 });

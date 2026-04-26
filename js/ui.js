@@ -13,6 +13,86 @@ function getPlatformLabel(platform) {
   return t(getPlatformLabelKey(platform));
 }
 
+// --- Hover-to-play live preview ---
+const HOVER_DELAY = 500;
+
+function getEmbedUrl(platformId, streamer, status) {
+  // Twitch blocks extension origins — no embed possible in MV3 popup
+  switch (platformId) {
+    case "kick":
+    case "kishta": {
+      let slug = status?.url?.includes("kick.com") ? status.url.split("/").pop() : null;
+      if (!slug) slug = (streamer.handle || "").replace(/^@/, "");
+      if (platformId === "kishta") slug = "teuf";
+      return slug ? `https://player.kick.com/${slug}?autoplay=true&muted=false` : null;
+    }
+    default:
+      return null;
+  }
+}
+
+function setupHoverPreview(cardPreview, platformId, streamer, status) {
+  const embedUrl = getEmbedUrl(platformId, streamer, status);
+  if (!embedUrl) return;
+
+  let hoverTimer = null;
+
+  cardPreview.addEventListener("mouseenter", () => {
+    hoverTimer = setTimeout(() => {
+      if (cardPreview.querySelector(".hover-player-wrap")) return;
+      const wrap = document.createElement("div");
+      wrap.className = "hover-player-wrap";
+      const iframe = document.createElement("iframe");
+      iframe.src = embedUrl;
+      iframe.allow = "autoplay; encrypted-media; picture-in-picture";
+      iframe.setAttribute("scrolling", "no");
+      wrap.appendChild(iframe);
+      cardPreview.appendChild(wrap);
+    }, HOVER_DELAY);
+  });
+
+  cardPreview.addEventListener("mouseleave", () => {
+    clearTimeout(hoverTimer);
+    hoverTimer = null;
+    const wrap = cardPreview.querySelector(".hover-player-wrap");
+    if (wrap) wrap.remove();
+  });
+}
+
+// --- Thumbnail cache (survive popup close/reopen) ---
+const thumbCache = {};
+let thumbCacheLoaded = false;
+
+async function loadThumbCache() {
+  if (thumbCacheLoaded) return;
+  try {
+    const data = await chrome.storage.local.get("streampulse:thumbCache");
+    Object.assign(thumbCache, data["streampulse:thumbCache"] || {});
+  } catch (_) { /* ignore */ }
+  thumbCacheLoaded = true;
+}
+
+let thumbSaveTimer = null;
+function saveThumbCache() {
+  clearTimeout(thumbSaveTimer);
+  thumbSaveTimer = setTimeout(() => {
+    chrome.storage.local.set({ "streampulse:thumbCache": thumbCache }).catch(() => {});
+  }, 1000);
+}
+
+function getCachedThumb(streamerId) {
+  return thumbCache[streamerId] || null;
+}
+
+function setCachedThumb(streamerId, url) {
+  if (!url) return;
+  thumbCache[streamerId] = url;
+  saveThumbCache();
+}
+
+// Load cache on module init
+loadThumbCache();
+
 function buildThumbnailUrl(rawUrl, width = 320, height = 180) {
   if (!rawUrl) return "";
   return rawUrl
@@ -153,7 +233,7 @@ function bindCardActions(notificationButton, openButton, removeButton, streamer,
     notificationButton.addEventListener("click", async () => {
       const currentlyEnabled = notificationButton.classList.contains("active");
       const newState = !currentlyEnabled;
-      
+
       const success = await callbacks.onToggleNotify(streamer.id, newState);
       if (success) {
          const bellIcon = notificationButton.querySelector(".bell-icon");
@@ -180,27 +260,48 @@ function bindCardActions(notificationButton, openButton, removeButton, streamer,
 
   if (removeButton) {
     removeButton.addEventListener("click", () => {
-       callbacks.onRemove(streamer.id, displayLabel);
+      const card = removeButton.closest(".streamer-card");
+      if (!card || card.querySelector(".confirm-overlay")) return;
+
+      const overlay = document.createElement("div");
+      overlay.className = "confirm-overlay";
+
+      const text = document.createElement("span");
+      text.className = "confirm-text";
+      text.textContent = t("popup.card.confirmRemove") || "Supprimer ?";
+
+      const btnYes = document.createElement("button");
+      btnYes.className = "confirm-yes";
+      btnYes.textContent = t("popup.card.confirmYes") || "Oui";
+
+      const btnNo = document.createElement("button");
+      btnNo.className = "confirm-no";
+      btnNo.textContent = t("popup.card.confirmNo") || "Non";
+
+      overlay.append(text, btnYes, btnNo);
+      card.appendChild(overlay);
+
+      // Auto-cancel after 3s
+      const timer = setTimeout(() => overlay.remove(), 3000);
+
+      btnYes.addEventListener("click", (e) => {
+        e.stopPropagation();
+        clearTimeout(timer);
+        overlay.remove();
+        callbacks.onRemove(streamer.id, displayLabel);
+      });
+
+      btnNo.addEventListener("click", (e) => {
+        e.stopPropagation();
+        clearTimeout(timer);
+        overlay.remove();
+      });
     });
   }
 }
 
-/**
- * Creates and fills the streamer card DOM element
- * @param {Object} streamer - The streamer data object
- * @param {Object} status - The current status object (e.g. state.statuses[id])
- * @param {DocumentFragment} template - The HTML template for cards
- * @param {Object} callbacks - { onRemove, onToggleNotify, onOpen }
- */
 export function createStreamerCard(streamer, status, template, callbacks) {
-  // We clone from the template content
   const fragment = template.content.cloneNode(true);
-  
-  // Note: We assume applyTranslations is run on the parent or we run it here if needed.
-  // Ideally, the template text content is already handled or we replace text content dynamically.
-  // In popup.js 'applyTranslations(fragment)' was called. We can skip it if we set text manually, 
-  // but for static labels in the template, we might rely on the caller or do it here.
-  // Let's assume the caller handles general i18n or we rely on textContent updates below.
 
   const card = fragment.querySelector(".streamer-card");
   const avatar = fragment.querySelector(".avatar");
@@ -238,8 +339,9 @@ export function createStreamerCard(streamer, status, template, callbacks) {
   }`;
   avatar.src = streamer.avatarUrl || fallbackAvatar || "../images/photos/48px.png";
   avatar.alt = t("popup.labels.avatarAlt", { name: displayLabel });
-  avatar.onerror = () => {
-    avatar.src = fallbackAvatar || "../images/photos/48px.png";
+  avatar.onerror = function() {
+    this.onerror = null; // prevent infinite loop & release closure
+    this.src = fallbackAvatar || "../images/photos/48px.png";
   };
 
   const isNotifEnabled = streamer.notificationsEnabled !== false;
@@ -292,30 +394,94 @@ export function createStreamerCard(streamer, status, template, callbacks) {
       .filter(Boolean)
       .map(url => buildThumbnailUrl(url, 480, 270));
 
-    // Special verification for Kick: Use live player embed
-    if (platformId === "kick") {
+    const showFallbackPreview = () => {
+      if (!cardPreview || !livePreview) return;
+      cardPreview.hidden = false;
+      livePreview.hidden = false;
+      cardPreview.classList.remove("is-loading");
+      cardPreview.classList.add("is-fallback");
+      if (previewImage) {
+        previewImage.hidden = true;
+        previewImage.removeAttribute("src");
+      }
+      // Enhanced fallback: avatar + game
+      let fallbackContent = cardPreview.querySelector(".fallback-content");
+      if (!fallbackContent) {
+        fallbackContent = document.createElement("div");
+        fallbackContent.className = "fallback-content";
+
+        const fbAvatar = document.createElement("img");
+        fbAvatar.className = "fallback-avatar";
+        fbAvatar.src = streamer.avatarUrl || `../${getPlatformDefinition(platformId).icon || "images/photos/48px.png"}`;
+        fbAvatar.alt = displayLabel;
+
+        fallbackContent.appendChild(fbAvatar);
+
+        if (activeStatus.game) {
+          const fbGame = document.createElement("span");
+          fbGame.className = "fallback-game";
+          fbGame.textContent = activeStatus.game;
+          fallbackContent.appendChild(fbGame);
+        }
+
+        cardPreview.appendChild(fallbackContent);
+      }
+    };
+
+    if (platformId === "kick" || platformId === "kishta") {
         if (cardPreview && previewImage) {
-            const slug = activeStatus.url ? activeStatus.url.split('/').pop() : formattedHandle;
-            if (slug) {
+            let iframeSrc = null;
+
+            if (platformId === "kishta") {
+               let slug = "teuf";
+               iframeSrc = `https://player.kick.com/${slug}?autoplay=true&muted=true`;
+            } else {
+                let slug = activeStatus.url && activeStatus.url.includes("kick.com") ? activeStatus.url.split('/').pop() : null;
+                if (!slug && streamer.handle === "teufteuf") slug = "teuf";
+                if (!slug) slug = streamer.handle ? streamer.handle.replace(/^@/, '') : "";
+                if (slug) iframeSrc = `https://player.kick.com/${slug}?autoplay=true&muted=true`;
+            }
+
+            if (iframeSrc) {
                 const existingIframe = cardPreview.querySelector('iframe');
                 if (existingIframe) existingIframe.remove();
-        
-                const iframe = document.createElement('iframe');
-                iframe.src = `https://player.kick.com/${slug}?autoplay=true&muted=true`;
-                iframe.style.width = '100%';
-                iframe.style.height = '100%';
-                iframe.style.border = 'none';
-                iframe.style.pointerEvents = 'none';
-                iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
-                iframe.setAttribute('scrolling', 'no');
-                
+                const existingOverlay = cardPreview.querySelector('.iframe-play-overlay');
+                if (existingOverlay) existingOverlay.remove();
+
                 previewImage.hidden = true;
-                cardPreview.appendChild(iframe);
                 cardPreview.hidden = false;
-                cardPreview.classList.remove("is-loading"); 
+                cardPreview.classList.remove("is-fallback");
+                cardPreview.classList.remove("is-loading");
                 if (livePreview) livePreview.hidden = false;
-                
-                // Manually update title/game since we bypass image loading
+
+                if (platformId === "kishta") {
+                  // Kishta auto-loads
+                  const iframe = document.createElement('iframe');
+                  iframe.dataset.src = iframeSrc;
+                  iframe.className = 'lazy-iframe';
+                  iframe.style.cssText = 'width:100%;height:100%;border:none;pointer-events:auto;';
+                  iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+                  iframe.setAttribute('scrolling', 'yes');
+                  cardPreview.appendChild(iframe);
+                } else {
+                  // Kick: click-to-play overlay
+                  const overlay = document.createElement('div');
+                  overlay.className = 'iframe-play-overlay';
+                  const playIcon = document.createElement('div');
+                  playIcon.className = 'play-icon';
+                  overlay.appendChild(playIcon);
+                  overlay.addEventListener('click', () => {
+                    overlay.remove();
+                    const iframe = document.createElement('iframe');
+                    iframe.src = iframeSrc;
+                    iframe.style.cssText = 'width:100%;height:100%;border:none;pointer-events:none;';
+                    iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+                    iframe.setAttribute('scrolling', 'no');
+                    cardPreview.appendChild(iframe);
+                  });
+                  cardPreview.appendChild(overlay);
+                }
+
                 liveTitle.textContent = activeStatus.title || t("popup.card.defaultLiveTitle");
                 if (statusCategory) {
                   const category = activeStatus.game || "";
@@ -323,55 +489,68 @@ export function createStreamerCard(streamer, status, template, callbacks) {
                   statusCategory.hidden = !category.trim();
                 }
                 renderLastUpdate(lastUpdate, status?.updatedAt, activeStatus);
-                // Return here to avoid image processing logic
                 renderSocialLinks(streamer, socialLinksContainer);
                 bindCardActions(notificationButton, openButton, removeButton, streamer, platformId, displayLabel, callbacks);
-                return fragment; 
+                return fragment;
             }
         }
     }
 
     if (cardPreview && previewImage && candidates.length > 0) {
       cardPreview.hidden = false;
+      cardPreview.classList.remove("is-fallback");
       if (livePreview) livePreview.hidden = false;
       previewImage.hidden = false;
-      
-      // Cleanup iframe if present
-      const existingIframe = cardPreview.querySelector('iframe');
+
+      const existingIframe = cardPreview.querySelector("iframe");
       if (existingIframe) existingIframe.remove();
 
       previewImage.alt = t("popup.labels.previewAltLive", {
         name: displayLabel,
       });
       previewImage.classList.remove("is-offline-preview");
-      cardPreview.classList.add("is-loading");
 
+      // Show cached thumbnail instantly while loading fresh one
+      const cached = getCachedThumb(streamer.id);
+      if (cached) {
+        previewImage.src = cached;
+        cardPreview.classList.remove("is-loading");
+      } else {
+        cardPreview.classList.add("is-loading");
+      }
+
+      // Load fresh thumbnail in background
       let candidateIdx = 0;
+      const freshImg = new Image();
+
       const loadNext = () => {
         if (candidateIdx >= candidates.length) {
-             cardPreview.classList.remove("is-loading");
-             // cardPreview.hidden = true; // Optional: hide if all fail?
-             return;
+          if (!cached) showFallbackPreview();
+          return;
         }
-        previewImage.src = candidates[candidateIdx++];
-      };
-      
-      previewImage.onload = () => {
-         cardPreview.classList.remove("is-loading");
-         cardPreview.hidden = false;
-         if (livePreview) livePreview.hidden = false;
+        freshImg.src = candidates[candidateIdx++];
       };
 
-      previewImage.onerror = loadNext;
+      freshImg.onload = function () {
+        freshImg.onload = null;
+        freshImg.onerror = null;
+        const freshUrl = freshImg.src;
+        // Swap to fresh thumbnail
+        previewImage.src = freshUrl;
+        cardPreview.classList.remove("is-loading");
+        cardPreview.hidden = false;
+        if (livePreview) livePreview.hidden = false;
+        // Update cache
+        setCachedThumb(streamer.id, freshUrl);
+      };
+
+      freshImg.onerror = function () {
+        loadNext();
+      };
       loadNext();
 
     } else if (cardPreview) {
-      cardPreview.hidden = true;
-      if (livePreview) livePreview.hidden = true;
-      if (previewImage) {
-        previewImage.removeAttribute("src");
-        previewImage.alt = "";
-      }
+      showFallbackPreview();
     }
     liveTitle.textContent = activeStatus.title || t("popup.card.defaultLiveTitle");
     if (statusCategory) {
@@ -380,6 +559,11 @@ export function createStreamerCard(streamer, status, template, callbacks) {
       statusCategory.hidden = !category.trim();
     }
     renderLastUpdate(lastUpdate, status?.updatedAt, activeStatus);
+
+    // Hover-to-play on live cards
+    if (cardPreview) {
+      setupHoverPreview(cardPreview, platformId, streamer, activeStatus);
+    }
   } else {
     statusPill.textContent = t("popup.card.offlinePlatform", {
       platform: platformLabel,
@@ -390,15 +574,15 @@ export function createStreamerCard(streamer, status, template, callbacks) {
     card.classList.remove("live", "unsupported");
 
     if (cardPreview) {
-      cardPreview.hidden = false;
-      if (livePreview) livePreview.hidden = false;
+      cardPreview.hidden = true;
+      if (livePreview) livePreview.hidden = true;
       if (previewImage) {
-        previewImage.src = "../images/photos/offline.jpg";
-        previewImage.alt = t("popup.labels.previewAltOffline", { name: displayLabel });
-        previewImage.classList.add("is-offline-preview");
+        previewImage.removeAttribute("src");
+        previewImage.alt = "";
+        previewImage.classList.remove("is-offline-preview");
       }
     }
-    
+
     liveTitle.textContent = t("popup.card.offline");
     if (statusCategory) {
       statusCategory.textContent = "";
@@ -408,8 +592,6 @@ export function createStreamerCard(streamer, status, template, callbacks) {
   }
 
   renderSocialLinks(streamer, socialLinksContainer);
-
-  // Bind Actions (Callbacks)
   bindCardActions(notificationButton, openButton, removeButton, streamer, platformId, displayLabel, callbacks);
 
   return fragment;

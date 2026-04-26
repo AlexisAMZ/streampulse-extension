@@ -22,6 +22,9 @@ import {
   platformSupportsLiveStatus,
   sanitizeHandle,
 } from "./platforms.js";
+import { createStreamerCard, formatNumber } from "./ui.js";
+
+const PREFERENCES_STORAGE_KEY = "betaGeneralPreferences";
 
 const defaultPreferences = {
   liveNotifications: true,
@@ -30,6 +33,7 @@ const defaultPreferences = {
   autoClaimChannelPoints: true,
   autoRefreshPlayerErrors: true,
   enableFastForwardButton: true,
+  watchTimeTracker: true,
   language: DEFAULT_LANGUAGE,
 };
 
@@ -38,30 +42,6 @@ const state = {
   statuses: {},
   preferences: { ...defaultPreferences },
   selectedPlatform: DEFAULT_PLATFORM,
-};
-
-const SOCIAL_ORDER = [
-  "twitch",
-  "youtube",
-  "kick",
-  "dlive",
-  "instagram",
-  "twitter",
-  "tiktok",
-  "discord",
-  "spotify",
-];
-
-const SOCIAL_DEFINITIONS = {
-  twitch: { label: "Twitch", icon: "../images/social/Twitch.png" },
-  youtube: { label: "YouTube", icon: "../images/social/youtube.png" },
-  kick: { label: "Kick", icon: "../images/social/Kick.png" },
-  dlive: { label: "DLive", icon: "../images/social/dlive.svg" },
-  instagram: { label: "Instagram", icon: "../images/social/instagram.png" },
-  twitter: { label: "Twitter", icon: "../images/social/twitter.png" },
-  tiktok: { label: "TikTok", icon: "../images/social/tiktok.png" },
-  discord: { label: "Discord", icon: "../images/social/discord.png" },
-  spotify: { label: "Spotify", icon: "../images/social/spotify.png" },
 };
 
 const streamerListEl = document.getElementById("streamer-list");
@@ -81,46 +61,124 @@ const autoClaimToggle = document.getElementById("pref-auto-claim");
 const autoRefreshToggle = document.getElementById("pref-auto-refresh");
 const fastForwardToggle = document.getElementById("pref-fast-forward");
 const chatKeywordsInput = document.getElementById("pref-chat-keywords");
+const blockedUsersInput = document.getElementById("pref-blocked-users");
+const saveChatFilterButton = document.getElementById("save-chat-filter");
+const saveBlockedUsersButton = document.getElementById("save-blocked-users");
 const testNotificationButton = document.getElementById("test-notification");
 const tabButtons = Array.from(document.querySelectorAll(".tab-button"));
 const addStreamerSection = document.querySelector(".add-streamer");
 const settingsSection = document.getElementById("settings-section");
 const languageOptions = document.getElementById("language-options-popup");
 
-
 const statPointsEl = document.getElementById("stat-points");
 const btnExport = document.getElementById("btn-export");
 const btnImport = document.getElementById("btn-import");
 const btnResetStats = document.getElementById("btn-reset-stats");
 const fileImport = document.getElementById("file-import");
+const headerPointsValue = document.getElementById("header-points-value");
 
-let feedbackTimer = null;
+const watchTimeMonthSelect = document.getElementById("watch-time-month");
+const wtTotalTime = document.getElementById("wt-total-time");
+const wtTotalChannels = document.getElementById("wt-total-channels");
+const wtTopWatched = document.getElementById("wt-top-watched");
+const wtEmpty = document.getElementById("wt-empty");
+const watchTimeToggle = document.getElementById("pref-watch-time");
+
+const toastContainer = document.getElementById("toast-container");
+const MAX_TOASTS = 5;
+const TOAST_DURATION = 4000;
+
 let currentTab = "streamers";
 let unsubscribeLanguage = null;
+let lastAddedId = null;
+let previousLiveIds = new Set(); // track who was live last render
+let lastPointsValue = null; // for odometer bump
+
+function markButtonSuccess(button) {
+  if (!button) return;
+  button.classList.add("btn-success");
+  setTimeout(() => {
+    button.classList.remove("btn-success");
+  }, 2000);
+}
 
 function sanitizeInput(value = "", platform = state.selectedPlatform) {
   return sanitizeHandle(platform, value);
 }
 
 function showFeedback(message, type = "success") {
-  if (!feedbackMessage) return;
-  feedbackMessage.hidden = !message;
-  feedbackMessage.textContent = message || "";
-  feedbackMessage.classList.remove("success", "error");
-  if (message) {
-    feedbackMessage.classList.add(type === "error" ? "error" : "success");
+  if (!message) return;
+  if (!toastContainer) return;
+
+  // Enforce max stack
+  const existing = toastContainer.querySelectorAll(".toast:not(.removing)");
+  if (existing.length >= MAX_TOASTS) {
+    const oldest = existing[0];
+    removeToast(oldest);
   }
 
-  if (feedbackTimer) {
-    clearTimeout(feedbackTimer);
-  }
+  const toast = document.createElement("div");
+  toast.className = `toast ${type === "error" ? "error" : "success"}`;
+  toast.textContent = message;
+  toast.addEventListener("click", () => removeToast(toast));
+  toastContainer.appendChild(toast);
 
-  if (message) {
-    feedbackTimer = setTimeout(() => {
-      feedbackMessage.hidden = true;
-      feedbackMessage.textContent = "";
-    }, 4000);
+  setTimeout(() => removeToast(toast), TOAST_DURATION);
+}
+
+function removeToast(toast) {
+  if (!toast || toast.classList.contains("removing")) return;
+  toast.classList.add("removing");
+  toast.addEventListener("animationend", () => toast.remove(), { once: true });
+}
+
+// --- Theme ---
+function applyTheme(theme) {
+  document.body.dataset.theme = theme;
+  document.querySelectorAll(".theme-toggle-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.themeValue === theme);
+  });
+}
+
+function initTheme() {
+  const saved = state.preferences.theme || "dark";
+  applyTheme(saved);
+  document.querySelectorAll(".theme-toggle-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const theme = btn.dataset.themeValue;
+      applyTheme(theme);
+      state.preferences.theme = theme;
+      chrome.storage.local.get(PREFERENCES_STORAGE_KEY).then((data) => {
+        const prefs = data[PREFERENCES_STORAGE_KEY] || {};
+        prefs.theme = theme;
+        chrome.storage.local.set({ [PREFERENCES_STORAGE_KEY]: prefs });
+      });
+    });
+  });
+}
+
+// --- Skeleton Loading ---
+function showSkeletons(count = 3) {
+  if (!streamerListEl) return;
+  streamerListEl.innerHTML = "";
+  streamerListEl.classList.remove("empty");
+  for (let i = 0; i < count; i++) {
+    const skeleton = document.createElement("div");
+    skeleton.className = "skeleton-card";
+    skeleton.innerHTML = `
+      <div class="skeleton-avatar"></div>
+      <div class="skeleton-lines">
+        <div class="skeleton-line" style="width:70%"></div>
+        <div class="skeleton-line" style="width:50%"></div>
+      </div>
+    `;
+    streamerListEl.appendChild(skeleton);
   }
+}
+
+function removeSkeletons() {
+  if (!streamerListEl) return;
+  streamerListEl.querySelectorAll(".skeleton-card").forEach((el) => el.remove());
 }
 
 function getPlatformDefinition(platform) {
@@ -156,14 +214,26 @@ function updateAddStreamerTexts() {
     });
   }
   if (streamerInput) {
-    const placeholderKey = getPlatformPlaceholderKey(
-      state.selectedPlatform,
-      "popup"
-    );
-    if (placeholderKey) {
-      streamerInput.placeholder = t(placeholderKey);
+    if (state.selectedPlatform === "kishta") {
+      streamerInput.value = "Teuf";
+      streamerInput.readOnly = true;
+      streamerInput.style.opacity = "0.7";
+      streamerInput.style.pointerEvents = "none";
     } else {
-      streamerInput.placeholder = "";
+      streamerInput.readOnly = false;
+      streamerInput.style.opacity = "1";
+      streamerInput.style.pointerEvents = "auto";
+      streamerInput.value = "";
+
+      const placeholderKey = getPlatformPlaceholderKey(
+        state.selectedPlatform,
+        "popup"
+      );
+      if (placeholderKey) {
+        streamerInput.placeholder = t(placeholderKey);
+      } else {
+        streamerInput.placeholder = "";
+      }
     }
   }
   if (handlePrefix) {
@@ -171,6 +241,10 @@ function updateAddStreamerTexts() {
     const prefix = definition.inputPrefix || "";
     handlePrefix.textContent = prefix;
     handlePrefix.classList.toggle("is-hidden", !prefix);
+
+    if (state.selectedPlatform === "kishta") {
+      handlePrefix.classList.add("is-hidden");
+    }
   }
 }
 
@@ -215,12 +289,191 @@ async function sendMessage(payload) {
   }
 }
 
-import { createStreamerCard, formatNumber } from "./ui.js";
+let lazyObserver = null;
 
-// ... existing imports ...
+function observeLazyIframes() {
+  if (lazyObserver) {
+    lazyObserver.disconnect();
+  }
 
-// Removed duplicative functions moved to ui.js:
-// buildThumbnailUrl, formatNumber, buildIdentityMeta, formatUpdatedAt, renderLastUpdate, renderSocialLinks, createStreamerCard
+  lazyObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const iframe = entry.target;
+        if (iframe.dataset.src) {
+          requestAnimationFrame(() => {
+            iframe.src = iframe.dataset.src;
+            iframe.removeAttribute("data-src");
+            iframe.classList.remove("lazy-iframe");
+            observer.unobserve(iframe);
+          });
+        }
+      }
+    });
+  }, {
+    root: streamerListEl ? streamerListEl.parentNode : null,
+    rootMargin: "200px",
+    threshold: 0,
+  });
+
+  const candidates = document.querySelectorAll(".lazy-iframe");
+  candidates.forEach((iframe) => lazyObserver.observe(iframe));
+}
+
+// --- Drag & Drop with ghost card preview ---
+let dragSrcEl = null;
+let dragGhost = null;
+
+function removeGhost() {
+  if (dragGhost) {
+    dragGhost.remove();
+    dragGhost = null;
+  }
+}
+
+function createGhostClone(card) {
+  const clone = card.cloneNode(true);
+  clone.classList.remove("dragging");
+  clone.classList.add("drag-ghost");
+  clone.removeAttribute("draggable");
+  // Strip interactive elements from clone
+  clone.querySelectorAll("button, input, a, iframe").forEach((el) => {
+    el.removeAttribute("onclick");
+    el.style.pointerEvents = "none";
+  });
+  return clone;
+}
+
+const REAL_CARDS = ".streamer-card:not(.dragging):not(.drag-ghost)";
+
+function getDropTarget(y) {
+  const cards = [...streamerListEl.querySelectorAll(REAL_CARDS)];
+  let closest = null;
+  let closestOffset = Number.NEGATIVE_INFINITY;
+
+  for (const card of cards) {
+    const rect = card.getBoundingClientRect();
+    const offset = y - (rect.top + rect.height / 2);
+    if (offset < 0 && offset > closestOffset) {
+      closestOffset = offset;
+      closest = card;
+    }
+  }
+  return closest; // null = append at end
+}
+
+function initDragAndDrop() {
+  if (!streamerListEl || streamerListEl._dragInit) return;
+  streamerListEl._dragInit = true;
+
+  streamerListEl.addEventListener("dragstart", (e) => {
+    const card = e.target.closest(".streamer-card");
+    if (!card) return;
+    dragSrcEl = card;
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", card.dataset.index);
+    // Slight delay so browser captures drag image first
+    requestAnimationFrame(() => card.classList.add("dragging"));
+  });
+
+  streamerListEl.addEventListener("dragend", () => {
+    if (dragSrcEl) dragSrcEl.classList.remove("dragging");
+    removeGhost();
+    dragSrcEl = null;
+  });
+
+  streamerListEl.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+
+    if (!dragSrcEl) return;
+
+    // Create ghost clone once per drag
+    if (!dragGhost) {
+      dragGhost = createGhostClone(dragSrcEl);
+    }
+
+    const target = getDropTarget(e.clientY);
+    if (target) {
+      if (target.previousElementSibling !== dragGhost) {
+        streamerListEl.insertBefore(dragGhost, target);
+      }
+    } else {
+      if (streamerListEl.lastElementChild !== dragGhost) {
+        streamerListEl.appendChild(dragGhost);
+      }
+    }
+  });
+
+  streamerListEl.addEventListener("dragleave", (e) => {
+    if (e.relatedTarget && !streamerListEl.contains(e.relatedTarget)) {
+      removeGhost();
+    }
+  });
+
+  streamerListEl.addEventListener("drop", async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (!dragSrcEl) return;
+    const fromIndex = parseInt(e.dataTransfer.getData("text/plain"), 10);
+    if (isNaN(fromIndex)) { removeGhost(); return; }
+
+    // Determine target index from ghost position
+    const allCards = [...streamerListEl.querySelectorAll(REAL_CARDS)];
+    let toIndex = allCards.length;
+
+    if (dragGhost) {
+      // Walk forward from ghost to find the next real card
+      let sibling = dragGhost.nextElementSibling;
+      while (sibling && sibling.classList.contains("drag-ghost")) {
+        sibling = sibling.nextElementSibling;
+      }
+      if (sibling && sibling.classList.contains("streamer-card") && !sibling.classList.contains("dragging")) {
+        const nextIdx = parseInt(sibling.dataset.index, 10);
+        if (!isNaN(nextIdx)) toIndex = nextIdx;
+      }
+    }
+
+    removeGhost();
+
+    const adjustedTo = toIndex > fromIndex ? toIndex - 1 : toIndex;
+    if (adjustedTo === fromIndex) return;
+
+    const movedItem = state.streamers[fromIndex];
+    const newStreamers = [...state.streamers];
+    newStreamers.splice(fromIndex, 1);
+    newStreamers.splice(adjustedTo, 0, movedItem);
+    state.streamers = newStreamers;
+
+    await chrome.storage.local.set({ betaGeneralStreamers: newStreamers });
+    renderStreamers();
+  });
+}
+
+function sortStreamers(list, mode) {
+  switch (mode) {
+    case "live":
+      return list.sort((a, b) => {
+        const aLive = state.statuses[a.id]?.active?.isLive ? 1 : 0;
+        const bLive = state.statuses[b.id]?.active?.isLive ? 1 : 0;
+        if (bLive !== aLive) return bLive - aLive;
+        // Secondary: alphabetical
+        return (a.displayName || a.handle || "").localeCompare(b.displayName || b.handle || "");
+      });
+    case "name-asc":
+      return list.sort((a, b) =>
+        (a.displayName || a.handle || "").localeCompare(b.displayName || b.handle || "")
+      );
+    case "name-desc":
+      return list.sort((a, b) =>
+        (b.displayName || b.handle || "").localeCompare(a.displayName || a.handle || "")
+      );
+    case "custom":
+    default:
+      return list; // original order (drag & drop)
+  }
+}
 
 function renderStreamers() {
   if (!streamerListEl) return;
@@ -239,72 +492,99 @@ function renderStreamers() {
   streamerListEl.classList.remove("empty");
   const fragment = document.createDocumentFragment();
 
-  const sortedStreamers = [...state.streamers].sort((a, b) => {
-    const aStatus = state.statuses[a.id]?.active || {};
-    const bStatus = state.statuses[b.id]?.active || {};
-    const aLive = Boolean(aStatus.isLive);
-    const bLive = Boolean(bStatus.isLive);
-    
-    if (aLive !== bLive) {
-      return aLive ? -1 : 1;
-    }
-    return (a.displayName || "").localeCompare(b.displayName || "");
-  });
+  // Sort streamers based on selected order
+  const sortSelect = document.getElementById("sort-order");
+  const sortMode = sortSelect?.value || "live";
+  const streamersToRender = sortStreamers([...state.streamers], sortMode);
 
   const callbacks = {
     onToggleNotify: async (id, enabled) => {
-       const result = await sendMessage({
-         type: "toggleNotifications",
-         id,
-         enabled,
-       });
+      const result = await sendMessage({
+        type: "toggleNotifications",
+        id,
+        enabled,
+      });
 
-       if (result?.error) {
-         showFeedback(result.error, "error");
-         return false;
-       } else {
-         // Assuming success
-         // We can show feedback here if needed, but the button state toggles visually in UI.js
-         // Actually, UI.js toggles it *if* we return true.
-         
-         // Find streamer for message
-         const s = state.streamers.find(x => x.id === id);
-         const messageKey = enabled ? "popup.toast.notifyEnabled" : "popup.toast.notifyDisabled";
-         // We might need to simplify feedback logic or import helper, 
-         // but showFeedback is available in this scope.
-         
-         // Let's rely on generic success feedback or just mute it if it's too spammy.
-         // Keeping original behavior:
-         if (s) {
-            const platformId = s.platform || DEFAULT_PLATFORM;
-            const name = s.displayName || formatHandleForDisplay(platformId, s.handle || s.twitch);
-            showFeedback(t(messageKey, { name }), "success");
-         }
-         return true;
-       }
+      if (result?.error) {
+        showFeedback(result.error, "error");
+        return false;
+      } else {
+        const s = state.streamers.find((x) => x.id === id);
+        const messageKey = enabled ? "popup.toast.notifyEnabled" : "popup.toast.notifyDisabled";
+        if (s) {
+          const platformId = s.platform || DEFAULT_PLATFORM;
+          const name = s.displayName || formatHandleForDisplay(platformId, s.handle || s.twitch);
+          showFeedback(t(messageKey, { name }), "success");
+        }
+        return true;
+      }
     },
     onOpen: (url) => {
-       chrome.tabs.create({ url }, () => window.close());
+      chrome.tabs.create({ url }, () => window.close());
     },
     onRemove: async (id, name) => {
-       const result = await sendMessage({ type: "removeStreamer", id });
-       if (result?.success) {
-          showFeedback(t("popup.feedback.removeSuccess", { name }), "success");
-          await loadStreamers();
-       } else if (result?.error) {
-          showFeedback(result.error, "error");
-       }
-    }
+      const result = await sendMessage({ type: "removeStreamer", id });
+      if (result?.success) {
+        showFeedback(t("popup.feedback.removeSuccess", { name }), "success");
+        await loadStreamers();
+      } else if (result?.error) {
+        showFeedback(result.error, "error");
+      }
+    },
   };
 
-  sortedStreamers.forEach((streamer) => {
+  const currentLiveIds = new Set();
+
+  streamersToRender.forEach((streamer, index) => {
     const status = state.statuses[streamer.id] || {};
-    fragment.appendChild(createStreamerCard(streamer, status, template, callbacks));
+    const activeStatus = status?.active || {};
+    const cardFragment = createStreamerCard(streamer, status, template, callbacks);
+    const card = cardFragment.querySelector(".streamer-card");
+    card.dataset.id = streamer.id;
+    card.dataset.index = index;
+    // Disable drag & drop when not in custom sort mode
+    if (sortMode !== "custom") card.removeAttribute("draggable");
+
+    // Track live IDs
+    if (activeStatus.isLive) currentLiveIds.add(streamer.id);
+
+    // Pulse glow if just went live (wasn't live before)
+    if (activeStatus.isLive && previousLiveIds.size > 0 && !previousLiveIds.has(streamer.id)) {
+      card.classList.add("just-went-live");
+      card.addEventListener("animationend", () => card.classList.remove("just-went-live"), { once: true });
+    }
+
+    // Click card → open channel (ignore clicks on buttons/actions)
+    card.addEventListener("click", (e) => {
+      if (e.target.closest("button, .card-actions, .confirm-overlay, input")) return;
+      const platformId = streamer.platform || DEFAULT_PLATFORM;
+      const url = buildProfileUrl(platformId, streamer.handle || streamer.twitch || streamer.id);
+      chrome.tabs.create({ url }, () => window.close());
+    });
+    card.style.cursor = "pointer";
+
+    // Slide-in animation for newly added card
+    if (lastAddedId) {
+      const compKey = getHandleComparisonKey(
+        streamer.platform || DEFAULT_PLATFORM,
+        streamer.handle || streamer.twitch
+      );
+      if (compKey === lastAddedId) {
+        card.classList.add("card-enter");
+        card.addEventListener("animationend", () => card.classList.remove("card-enter"), { once: true });
+        lastAddedId = null;
+      }
+    }
+
+    fragment.appendChild(cardFragment);
   });
 
-  streamerListEl.appendChild(fragment);
-}
+  previousLiveIds = currentLiveIds;
 
+  streamerListEl.appendChild(fragment);
+  initDragAndDrop();
+  observeLazyIframes();
+}
 
 function renderPreferences() {
   const prefs = state.preferences || defaultPreferences;
@@ -326,8 +606,14 @@ function renderPreferences() {
   if (fastForwardToggle) {
     fastForwardToggle.checked = prefs.enableFastForwardButton !== false;
   }
+  if (watchTimeToggle) {
+    watchTimeToggle.checked = prefs.watchTimeTracker !== false;
+  }
   if (chatKeywordsInput) {
     chatKeywordsInput.value = prefs.chatKeywords || "";
+  }
+  if (blockedUsersInput) {
+    blockedUsersInput.value = prefs.chatBlockedUsers || "";
   }
   updateLanguageButtonsState();
 }
@@ -351,12 +637,11 @@ function setActiveTab(tabName) {
 }
 
 async function loadStreamers() {
-  // Optimization: Read from storage directly to avoid waiting for Service Worker wakeup
   try {
     const data = await chrome.storage.local.get([
       "betaGeneralStreamers",
       "betaGeneralStatuses",
-      "betaGeneralPreferences"
+      "betaGeneralPreferences",
     ]);
 
     state.streamers = data.betaGeneralStreamers || [];
@@ -365,40 +650,202 @@ async function loadStreamers() {
       ...state.preferences,
       ...(data.betaGeneralPreferences || {}),
     };
-    
+
     renderStreamers();
     renderPreferences();
     renderStats();
-
-    // Optionally trigger a background refresh if needed, usually the alarm handles it.
-    // We can fire a 'checking' message without waiting for it.
-    sendMessage({ type: "getStreamers" }).catch(() => {});
-
+    renderWatchTimeSummary();
   } catch (error) {
     console.error("Fast load failed:", error);
-    // Fallback? usually storage failure is fatal anyway
   }
+}
+
+function animatePointsValue(el, newValue) {
+  const formatted = formatNumber(newValue);
+  if (lastPointsValue !== null && newValue !== lastPointsValue && el) {
+    el.textContent = formatted;
+    el.classList.add("points-bump");
+    el.addEventListener("animationend", () => el.classList.remove("points-bump"), { once: true });
+  } else if (el) {
+    el.textContent = formatted;
+  }
+  lastPointsValue = newValue;
 }
 
 async function renderStats() {
-  if (!statPointsEl) {
-    console.warn("Stats element not found");
-    return;
-  }
   try {
-    // Optimization: Read storage directly
     const data = await chrome.storage.local.get("betaGeneralStats");
     const stats = data.betaGeneralStats || {};
     const points = stats.channelPointsClaimed || 0;
-    statPointsEl.textContent = formatNumber(points);
+    const formatted = formatNumber(points);
+
+    // Settings counter
+    if (statPointsEl) statPointsEl.textContent = formatted;
+
+    // Header badge — animated bump
+    if (headerPointsValue) animatePointsValue(headerPointsValue, points);
   } catch (err) {
     console.error("renderStats failed:", err);
-    statPointsEl.textContent = "Err";
+    if (statPointsEl) statPointsEl.textContent = t("popup.stats.loadError") || "--";
+    if (headerPointsValue) headerPointsValue.textContent = "--";
   }
 }
 
+function formatDuration(totalSeconds) {
+  const h = Math.floor(totalSeconds / 3600);
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  if (h > 0) return `${h}h${m > 0 ? String(m).padStart(2, "0") : ""}`;
+  return `${m}min`;
+}
+
+function resolveWatchTimeEntry(entry) {
+  const key = entry.channel.toLowerCase();
+  const platform = entry.platform;
+
+  // Use avatar from watch time data (resolved by background)
+  let avatarUrl = entry.avatarUrl || "";
+  let displayName = entry.channel;
+
+  // Cross-reference with followed streamers for display name
+  for (const s of state.streamers) {
+    const sp = s.platform || "twitch";
+    if (sp !== platform) continue;
+    const handle = (s.handle || s.twitch || s.id || "").toLowerCase();
+    if (handle === key) {
+      displayName = s.displayName || entry.channel;
+      // Prefer fresh avatar from statuses
+      if (!avatarUrl) {
+        const statusData = state.statuses[s.id];
+        avatarUrl = statusData?.avatarUrl || s.avatarUrl || "";
+      }
+      break;
+    }
+  }
+
+  // Fallback: platform icon
+  if (!avatarUrl) {
+    try {
+      const iconPath = platform === "kick" ? "images/social/Kick.png" : "images/social/Twitch.png";
+      avatarUrl = chrome.runtime.getURL(iconPath);
+    } catch { /* ignore */ }
+  }
+
+  return { displayName, avatarUrl, platform };
+}
+
+function buildWtRankingItem(entry, valueHtml) {
+  const { displayName, avatarUrl, platform } = resolveWatchTimeEntry(entry);
+  const li = document.createElement("li");
+
+  const avatarImg = document.createElement("img");
+  avatarImg.className = "wt-avatar";
+  avatarImg.src = avatarUrl;
+  avatarImg.alt = "";
+  avatarImg.loading = "lazy";
+  avatarImg.onerror = function () {
+    this.onerror = null;
+    const icon = platform === "kick" ? "images/social/Kick.png" : "images/social/Twitch.png";
+    this.src = chrome.runtime.getURL(icon);
+  };
+
+  const info = document.createElement("div");
+  info.className = "wt-entry-info";
+  info.innerHTML = `
+    <span class="wt-channel">${escapeHtml(displayName)}</span>
+    <span class="wt-platform-badge">${escapeHtml(platform)}</span>
+  `;
+
+  const value = document.createElement("span");
+  value.className = "wt-value";
+  value.innerHTML = valueHtml;
+
+  li.append(avatarImg, info, value);
+  return li;
+}
+
+async function renderWatchTimeSummary(month = null) {
+  try {
+    const result = await sendMessage({ type: "getWatchTimeSummary", month });
+
+    if (!result?.success || !result.summary) {
+      showWatchTimeEmpty();
+      return;
+    }
+
+    const summary = result.summary;
+
+    // Populate month selector
+    if (watchTimeMonthSelect) {
+      watchTimeMonthSelect.innerHTML = "";
+      if (summary.availableMonths?.length > 0) {
+        watchTimeMonthSelect.disabled = false;
+        for (const m of summary.availableMonths) {
+          const opt = document.createElement("option");
+          opt.value = m;
+          const [y, mo] = m.split("-");
+          const date = new Date(Number(y), Number(mo) - 1);
+          opt.textContent = date.toLocaleDateString(
+            state.preferences.language === "fr" ? "fr-FR" : "en-US",
+            { month: "long", year: "numeric" }
+          );
+          if (m === summary.month) opt.selected = true;
+          watchTimeMonthSelect.appendChild(opt);
+        }
+      } else {
+        const now = new Date();
+        const opt = document.createElement("option");
+        opt.textContent = now.toLocaleDateString(
+          state.preferences.language === "fr" ? "fr-FR" : "en-US",
+          { month: "long", year: "numeric" }
+        );
+        watchTimeMonthSelect.appendChild(opt);
+        watchTimeMonthSelect.disabled = true;
+      }
+    }
+
+    const hasData = summary.totalSeconds > 0;
+
+    if (wtEmpty) wtEmpty.classList.toggle("hidden", hasData);
+    if (wtTotalTime) wtTotalTime.textContent = hasData ? formatDuration(summary.totalSeconds) : "--";
+    if (wtTotalChannels) wtTotalChannels.textContent = hasData ? String(summary.channelCount) : "--";
+
+    // Top watched
+    if (wtTopWatched) {
+      wtTopWatched.innerHTML = "";
+      if (hasData) {
+        for (const entry of summary.topWatched.slice(0, 5)) {
+          if (entry.watchSeconds <= 0) continue;
+          wtTopWatched.appendChild(
+            buildWtRankingItem(entry, formatDuration(entry.watchSeconds))
+          );
+        }
+      }
+    }
+  } catch (err) {
+    console.warn("renderWatchTimeSummary error:", err);
+    showWatchTimeEmpty();
+  }
+}
+
+function showWatchTimeEmpty() {
+  if (wtEmpty) wtEmpty.classList.remove("hidden");
+  if (wtTotalTime) wtTotalTime.textContent = "--";
+  if (wtTotalChannels) wtTotalChannels.textContent = "--";
+  if (wtTopWatched) wtTopWatched.innerHTML = "";
+}
+
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
 async function handleExport() {
-  const data = await chrome.storage.local.get(null);
+  const raw = await chrome.storage.local.get([...ALLOWED_STORAGE_KEYS]);
+  const data = {};
+  for (const key of ALLOWED_STORAGE_KEYS) {
+    if (key in raw) data[key] = raw[key];
+  }
   const blob = new Blob([JSON.stringify(data, null, 2)], {
     type: "application/json",
   });
@@ -410,10 +857,9 @@ async function handleExport() {
   URL.revokeObjectURL(url);
 }
 
-
 async function handleResetStats() {
   if (!confirm(t("popup.stats.confirmReset") || "Réinitialiser les statistiques ?")) return;
-  
+
   if (btnResetStats) btnResetStats.disabled = true;
   try {
     await sendMessage({
@@ -423,13 +869,34 @@ async function handleResetStats() {
     await renderStats();
     showFeedback(t("popup.stats.resetSuccess") || "Statistiques remises à zéro", "success");
   } catch (err) {
-    showFeedback("Erreur lors de la réinitialisation", "error");
+    showFeedback(t("popup.stats.resetError") || "Reset failed", "error");
   }
   if (btnResetStats) btnResetStats.disabled = false;
 }
 
 function handleImportClick() {
   fileImport?.click();
+}
+
+const ALLOWED_STORAGE_KEYS = new Set([
+  "betaGeneralStreamers",
+  "betaGeneralStatuses",
+  "betaGeneralStats",
+  "betaGeneralPreferences",
+  "betaWatchTimeData",
+  "streampulse:scheduled",
+  "streampulse:thumbCache",
+]);
+
+function sanitizeImportData(raw) {
+  if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return null;
+  const cleaned = {};
+  for (const [key, value] of Object.entries(raw)) {
+    if (ALLOWED_STORAGE_KEYS.has(key)) {
+      cleaned[key] = value;
+    }
+  }
+  return Object.keys(cleaned).length > 0 ? cleaned : null;
 }
 
 function handleFileImport(event) {
@@ -440,14 +907,16 @@ function handleFileImport(event) {
   reader.onload = async (e) => {
     try {
       const json = JSON.parse(e.target.result);
-      if (typeof json === "object" && json !== null) {
-        await chrome.storage.local.clear();
-        await chrome.storage.local.set(json);
-        showFeedback(t("popup.feedback.importSuccess"), "success");
-        setTimeout(() => window.location.reload(), 1000);
-      } else {
-        throw new Error("Invalid JSON");
+      const sanitized = sanitizeImportData(json);
+      if (!sanitized) {
+        throw new Error("Invalid or empty backup file");
       }
+      const { onboardingShown } = await chrome.storage.local.get("onboardingShown");
+      await chrome.storage.local.clear();
+      if (onboardingShown) sanitized.onboardingShown = true;
+      await chrome.storage.local.set(sanitized);
+      showFeedback(t("popup.feedback.importSuccess"), "success");
+      setTimeout(() => window.location.reload(), 1000);
     } catch (error) {
       console.error("Import error:", error);
       showFeedback(t("popup.feedback.importError"), "error");
@@ -503,7 +972,12 @@ async function handleLanguageClick(event) {
 
 async function handleAddStreamer(event) {
   event.preventDefault();
-  const rawValue = streamerInput?.value ?? "";
+  let rawValue = streamerInput?.value ?? "";
+
+  if (state.selectedPlatform === "kishta") {
+    rawValue = "Teuf";
+  }
+
   const sanitized = sanitizeInput(rawValue);
   if (!sanitized) {
     showFeedback(
@@ -537,6 +1011,9 @@ async function handleAddStreamer(event) {
     return;
   }
 
+  // Track for slide-in animation
+  lastAddedId = getHandleComparisonKey(state.selectedPlatform, sanitized);
+
   streamerInput.value = "";
   showFeedback(
     t("popup.feedback.addSuccessPlatform", {
@@ -556,15 +1033,6 @@ function handlePlatformPickerClick(event) {
   setSelectedPlatform(platform);
 }
 
-async function handleRefresh() {
-  refreshButton.disabled = true;
-  showFeedback(t("popup.feedback.refreshing"), "success");
-  await sendMessage({ type: "refreshStatuses" });
-  await loadStreamers();
-  refreshButton.disabled = false;
-  showFeedback(t("popup.feedback.refreshDone"), "success");
-}
-
 async function updatePreferences(updates) {
   const result = await sendMessage({
     type: "updatePreferences",
@@ -574,7 +1042,7 @@ async function updatePreferences(updates) {
   if (result?.error) {
     showFeedback(result.error, "error");
     renderPreferences();
-    return;
+    return false;
   }
 
   state.preferences = {
@@ -625,30 +1093,26 @@ async function updatePreferences(updates) {
     showFeedback(t(messageKey), "success");
   }
 
-}
-
-async function handleTestNotification() {
-  testNotificationButton.disabled = true;
-  const result = await sendMessage({ type: "testNotification" });
-  testNotificationButton.disabled = false;
-
-  if (result?.error) {
-    showFeedback(result.error, "error");
-    return;
+  if ("watchTimeTracker" in updates) {
+    const messageKey = updates.watchTimeTracker
+      ? "popup.preferences.watchTimeEnabled"
+      : "popup.preferences.watchTimeDisabled";
+    showFeedback(t(messageKey), "success");
   }
 
-  showFeedback(t("popup.feedback.testSent"), "success");
+  return true;
 }
 
-
 document.addEventListener("DOMContentLoaded", async () => {
-  // Optimization: Fetch ALL data in one single async call to minimize latency
   try {
+    // Show skeleton placeholders immediately
+    showSkeletons(3);
+
     const data = await chrome.storage.local.get([
       "betaGeneralStreamers",
       "betaGeneralStatuses",
       "betaGeneralPreferences",
-      "betaGeneralStats"
+      "betaGeneralStats",
     ]);
 
     // 1. Setup Language & I18n
@@ -662,19 +1126,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     state.streamers = data.betaGeneralStreamers || [];
     state.statuses = data.betaGeneralStatuses || {};
     state.preferences = { ...defaultPreferences, ...prefs };
-    
-    // Render everything
+
+    removeSkeletons();
     renderStreamers();
     renderPreferences();
+    initTheme();
     renderPlatformPicker();
     setSelectedPlatform(state.selectedPlatform);
-    
-    // Render Stats
+
+    // Render Stats (settings + header badge)
     const stats = data.betaGeneralStats || {};
-    if (statPointsEl) {
-        statPointsEl.textContent = formatNumber(stats.channelPointsClaimed || 0);
+    const pts = stats.channelPointsClaimed || 0;
+    const ptsFormatted = formatNumber(pts);
+    if (statPointsEl) statPointsEl.textContent = ptsFormatted;
+    if (headerPointsValue) {
+      headerPointsValue.textContent = ptsFormatted;
+      lastPointsValue = pts;
     }
-    
+
+    // Live-update stats when storage changes (points claimed while popup open)
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area === "local" && changes.betaGeneralStats) {
+        renderStats();
+      }
+    });
+
+    // Watch time summary — fire-and-forget, don't block popup opening
+    renderWatchTimeSummary().catch(() => {});
+
     // 3. Setup UI Components
     const tabs = document.querySelectorAll(".tab-button");
     tabs.forEach((tab) => {
@@ -709,11 +1188,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
+    document.getElementById("sort-order")?.addEventListener("change", () => {
+      renderStreamers();
+    });
+
     refreshButton?.addEventListener("click", async () => {
+      refreshButton.disabled = true;
       const icon = refreshButton.querySelector("svg") || refreshButton;
       icon.classList.add("spin");
+      await sendMessage({ type: "refreshStatuses" });
       await loadStreamers();
       icon.classList.remove("spin");
+      refreshButton.disabled = false;
     });
 
     addStreamerForm?.addEventListener("submit", handleAddStreamer);
@@ -732,17 +1218,63 @@ document.addEventListener("DOMContentLoaded", async () => {
     autoRefreshToggle?.addEventListener("change", (e) => {
       updatePreferences({ autoRefreshPlayerErrors: e.target.checked });
     });
-    
+
     if (fastForwardToggle) {
-        fastForwardToggle.addEventListener("change", (e) => {
+      fastForwardToggle.addEventListener("change", (e) => {
         updatePreferences({ enableFastForwardButton: e.target.checked });
-        });
+      });
+    }
+
+    if (watchTimeToggle) {
+      watchTimeToggle.addEventListener("change", (e) => {
+        updatePreferences({ watchTimeTracker: e.target.checked });
+      });
+    }
+
+    if (watchTimeMonthSelect) {
+      watchTimeMonthSelect.addEventListener("change", (e) => {
+        renderWatchTimeSummary(e.target.value);
+      });
     }
 
     if (chatKeywordsInput) {
-        chatKeywordsInput.addEventListener("change", (e) => {
+      chatKeywordsInput.addEventListener("change", (e) => {
         updatePreferences({ chatKeywords: e.target.value });
+      });
+    }
+
+    if (blockedUsersInput) {
+      blockedUsersInput.addEventListener("change", (e) => {
+        updatePreferences({ chatBlockedUsers: e.target.value });
+      });
+    }
+
+    if (saveChatFilterButton) {
+      saveChatFilterButton.addEventListener("click", async () => {
+        const keywords = chatKeywordsInput?.value || "";
+        const blocked = blockedUsersInput?.value || "";
+        const ok = await updatePreferences({
+          chatKeywords: keywords,
+          chatBlockedUsers: blocked,
         });
+        if (ok) {
+          showFeedback(t("popup.feedback.chatFilterSaved"), "success");
+          markButtonSuccess(saveChatFilterButton);
+        }
+      });
+    }
+
+    if (saveBlockedUsersButton) {
+      saveBlockedUsersButton.addEventListener("click", async () => {
+        const blocked = blockedUsersInput?.value || "";
+        const ok = await updatePreferences({
+          chatBlockedUsers: blocked,
+        });
+        if (ok) {
+          showFeedback(t("popup.feedback.blockedUsersSaved"), "success");
+          markButtonSuccess(saveBlockedUsersButton);
+        }
+      });
     }
 
     languageOptions?.addEventListener("click", handleLanguageClick);
@@ -750,10 +1282,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     testNotificationButton?.addEventListener("click", async () => {
       const result = await sendMessage({ type: "testNotification" });
       if (result?.success) {
-        showFeedback(t("popup.toast.testNotificationSent"), "success");
+        showFeedback(t("popup.feedback.testSent"), "success");
+        markButtonSuccess(testNotificationButton);
       }
     });
-    
+
     btnExport?.addEventListener("click", handleExport);
     btnImport?.addEventListener("click", handleImportClick);
     btnResetStats?.addEventListener("click", handleResetStats);
@@ -761,18 +1294,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     buildLanguageButtons();
     setActiveTab("streamers");
-    
+
     unsubscribeLanguage = onLanguageChange(() => {
-        refreshTranslations();
+      refreshTranslations();
     });
 
-    // 4. Background Sync (Optional, Silent)
-    // Trigger background to check statuses if it hasn't lately
+    // 4. Background Sync (Silent)
     sendMessage({ type: "getStreamers" }).catch(() => {});
-
   } catch (error) {
     console.error("Popup Init Error:", error);
-    // Fallback safe init
     await initI18n();
     applyTranslations(document);
     loadStreamers();

@@ -20,6 +20,7 @@ const STORAGE_KEYS = {
   STREAMERS: "betaGeneralStreamers",
   STATUSES: "betaGeneralStatuses",
   STATS: "betaGeneralStats",
+  WATCH_TIME: "betaWatchTimeData",
 };
 
 const WATCHER_ALARM = "streampulseWatcher";
@@ -42,6 +43,9 @@ const DEFAULT_PREFERENCES = {
   autoClaimChannelPoints: true,
   autoRefreshPlayerErrors: true,
   enableFastForwardButton: true,
+  watchTimeTracker: true,
+  chatKeywords: "",
+  chatBlockedUsers: "",
   language: DEFAULT_LANGUAGE,
 };
 
@@ -51,7 +55,7 @@ const DEFAULT_STATS = {
 
 const DEFAULT_POLL_INTERVAL =
   Number(CONFIG.pollIntervalMinutes) > 0 ? CONFIG.pollIntervalMinutes : 1;
-let keepAliveHandle = null;
+
 
 function sanitizeLogin(value = "") {
   return sanitizeHandle("twitch", value);
@@ -188,19 +192,12 @@ function resolveExternalUrl(rawValue, defaultOrigin = "") {
 }
 
 function fillDimensions(url, width = 1280, height = 720) {
-  if (!url) return "";
-  let result = String(url);
-  const sizeToken = `${width}x${height}`;
-  result = result
-    .replace(/\{\{\s*size\s*\}\}/gi, sizeToken)
-    .replace(/\{size\}/gi, sizeToken)
-    .replace(/\{\{\s*width\s*\}\}/gi, String(width))
-    .replace(/\{\{\s*height\s*\}\}/gi, String(height))
-    .replace(/\{width\}/gi, String(width))
-    .replace(/\{height\}/gi, String(height))
-    .replace(/%width%/gi, String(width))
-    .replace(/%height%/gi, String(height));
-  return result;
+  if (!url || typeof url !== "string") return url;
+  return url
+    .replace("{width}", String(width))
+    .replace("{height}", String(height))
+    .replace("%{width}", String(width))
+    .replace("%{height}", String(height));
 }
 
 function resolveKickAsset(value, { prefix = "https://files.kick.com" } = {}) {
@@ -342,6 +339,9 @@ class PreferenceStore {
       autoClaimChannelPoints: preferences.autoClaimChannelPoints !== false,
       autoRefreshPlayerErrors: preferences.autoRefreshPlayerErrors !== false,
       enableFastForwardButton: preferences.enableFastForwardButton !== false,
+      watchTimeTracker: preferences.watchTimeTracker !== false,
+      chatKeywords: typeof preferences.chatKeywords === "string" ? preferences.chatKeywords : "",
+      chatBlockedUsers: typeof preferences.chatBlockedUsers === "string" ? preferences.chatBlockedUsers : "",
       language: normalizeLanguage(preferences.language),
     };
   }
@@ -419,6 +419,165 @@ class StatsStore {
   }
 }
 
+// Avatar cache for watch time (avoids repeated API calls)
+const wtAvatarCache = new Map();
+
+async function resolveChannelAvatar(platform, channel) {
+  const cacheKey = `${platform}:${channel}`;
+
+  // 1. Memory cache
+  if (wtAvatarCache.has(cacheKey)) return wtAvatarCache.get(cacheKey);
+
+  // 2. Check followed streamers (streamerStates has statuses with avatarUrl)
+  for (const [id, status] of streamerStates) {
+    if (status?.handle === channel || id === channel) {
+      const url = status?.avatarUrl || "";
+      if (url) {
+        wtAvatarCache.set(cacheKey, url);
+        return url;
+      }
+    }
+  }
+
+  // 3. Check streamerCache
+  for (const [, s] of streamerCache) {
+    const sp = s.platform || "twitch";
+    const handle = (s.handle || s.twitch || s.id || "").toLowerCase();
+    if (sp === platform && handle === channel.toLowerCase()) {
+      if (s.avatarUrl) {
+        wtAvatarCache.set(cacheKey, s.avatarUrl);
+        return s.avatarUrl;
+      }
+    }
+  }
+
+  // 4. API lookup (one-shot, cached)
+  try {
+    if (platform === "twitch") {
+      const data = await fetchJson(
+        `https://api.twitch.tv/helix/users?login=${encodeURIComponent(channel)}`,
+        { headers: twitchHeaders() }
+      );
+      const url = data?.data?.[0]?.profile_image_url || "";
+      wtAvatarCache.set(cacheKey, url);
+      return url;
+    }
+    if (platform === "kick") {
+      const data = await fetchJson(
+        `https://kick.com/api/v2/channels/${encodeURIComponent(channel)}`
+      );
+      const url = data?.user?.profile_pic || "";
+      wtAvatarCache.set(cacheKey, url);
+      return url;
+    }
+  } catch {
+    // API failed — cache empty string to avoid retrying every heartbeat
+    wtAvatarCache.set(cacheKey, "");
+  }
+
+  return "";
+}
+
+class WatchTimeStore {
+  static _getMonthKey() {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, "0");
+    return `${y}-${m}`;
+  }
+
+  static async _getData() {
+    const stored = await chrome.storage.local.get(STORAGE_KEYS.WATCH_TIME);
+    return stored[STORAGE_KEYS.WATCH_TIME] || {};
+  }
+
+  static async _saveData(data) {
+    await chrome.storage.local.set({ [STORAGE_KEYS.WATCH_TIME]: data });
+  }
+
+  static async record(platform, channel, seconds, avatarUrl = "") {
+    // Skip pure presence pings (no actual data to record)
+    if (seconds <= 0) return;
+
+    const month = this._getMonthKey();
+    const data = await this._getData();
+
+    if (!data[month]) data[month] = {};
+    const key = `${platform}:${channel}`;
+    if (!data[month][key]) {
+      data[month][key] = { watchSeconds: 0, platform, channel, avatarUrl: "" };
+    }
+
+    data[month][key].watchSeconds += seconds;
+    // Update avatar if we got a fresher one
+    if (avatarUrl) data[month][key].avatarUrl = avatarUrl;
+
+    // Prune months older than 3 months to save storage
+    const months = Object.keys(data).sort();
+    while (months.length > 3) {
+      delete data[months.shift()];
+    }
+
+    await this._saveData(data);
+  }
+
+  static async getSummary(monthKey = null) {
+    const data = await this._getData();
+    const key = monthKey || this._getMonthKey();
+    const monthData = data[key] || {};
+
+    const entries = Object.values(monthData);
+    entries.sort((a, b) => b.watchSeconds - a.watchSeconds);
+
+    const topWatchedRaw = entries.slice(0, 10);
+
+    // Resolve missing avatars before returning
+    const topWatched = await Promise.all(
+      topWatchedRaw.map(async (e) => {
+        let avatarUrl = e.avatarUrl || "";
+        if (!avatarUrl) {
+          avatarUrl = await resolveChannelAvatar(e.platform, e.channel);
+          // Persist resolved avatar for next time
+          if (avatarUrl && monthData[`${e.platform}:${e.channel}`]) {
+            monthData[`${e.platform}:${e.channel}`].avatarUrl = avatarUrl;
+          }
+        }
+        return {
+          platform: e.platform,
+          channel: e.channel,
+          watchSeconds: e.watchSeconds,
+          avatarUrl,
+        };
+      })
+    );
+
+    // Save back any newly resolved avatars
+    if (data[key]) {
+      data[key] = monthData;
+      await this._saveData(data);
+    }
+
+    const totalSeconds = entries.reduce((s, e) => s + e.watchSeconds, 0);
+    const availableMonths = Object.keys(data).sort().reverse();
+
+    return {
+      month: key,
+      availableMonths,
+      totalSeconds,
+      channelCount: entries.length,
+      topWatched,
+    };
+  }
+}
+
+function twitchHeaders() {
+  return {
+    "Client-ID": CONFIG.clientId,
+    Authorization: `Bearer ${CONFIG.accessToken}`,
+    Accept: "application/json",
+  };
+}
+
 class PlatformChecker {
   static async getTwitchUser(login) {
     const sanitized = sanitizeLogin(login);
@@ -426,18 +585,12 @@ class PlatformChecker {
     try {
       const data = await fetchJson(
         `https://api.twitch.tv/helix/users?login=${sanitized}`,
-        {
-          headers: {
-            "Client-ID": CONFIG.clientId,
-            Authorization: `Bearer ${CONFIG.accessToken}`,
-            Accept: "application/json",
-          },
-        }
+        { headers: twitchHeaders() }
       );
       return data.data?.[0] || null;
     } catch (error) {
       console.warn("Twitch user fetch error:", error.message);
-      return null;
+      return { _apiError: true, status: error.message };
     }
   }
 
@@ -447,13 +600,7 @@ class PlatformChecker {
     try {
       const data = await fetchJson(
         `https://api.twitch.tv/helix/streams?user_login=${sanitized}`,
-        {
-          headers: {
-            "Client-ID": CONFIG.clientId,
-            Authorization: `Bearer ${CONFIG.accessToken}`,
-            Accept: "application/json",
-          },
-        }
+        { headers: twitchHeaders() }
       );
       const stream = data.data?.[0];
       if (!stream) {
@@ -491,7 +638,7 @@ class PlatformChecker {
         return null;
       }
       console.warn("Kick channel fetch error:", error.message);
-      return null;
+      return { _apiError: true, status: error.message };
     }
   }
 
@@ -603,8 +750,8 @@ class PlatformChecker {
         return score(b) - score(a);
     });
 
-    // Cache bust all candidates
-    const thumbnailCandidates = allCandidates.map(url => {
+    // Keep top 5 candidates max + cache bust
+    const thumbnailCandidates = allCandidates.slice(0, 5).map(url => {
         if (url.includes("cb=")) return url;
         const separator = url.includes("?") ? "&" : "?";
         return `${url}${separator}cb=${cb}`;
@@ -703,7 +850,7 @@ class PlatformChecker {
 
     } catch (error) {
       console.warn("DLive user fetch error:", error.message);
-      return null;
+      return { _apiError: true, status: error.message };
     }
   }
 
@@ -737,7 +884,7 @@ class PlatformChecker {
     );
     
     if (thumbnail) {
-      const cb = Date.now();
+      const cb = Math.floor(Date.now() / 60000);
       const separator = thumbnail.includes("?") ? "&" : "?";
       thumbnail = `${thumbnail}${separator}cb=${cb}`;
     }
@@ -794,6 +941,10 @@ class PlatformChecker {
       supportsLiveStatus: supportsLive,
       url: buildProfileUrl(platform, streamer?.handle || ""),
     };
+  }
+
+  static async refreshAll() {
+    return pollStreamers({ forceNotification: false });
   }
 }
 
@@ -857,6 +1008,11 @@ class NotificationCenter {
     const id = `${NOTIFICATION_NAMESPACE}-${Date.now()}-${Math.random()
       .toString(36)
       .slice(2, 10)}`;
+    // Cap clickMap to prevent unbounded growth
+    if (this.clickMap.size > 50) {
+      const oldest = this.clickMap.keys().next().value;
+      this.clickMap.delete(oldest);
+    }
     this.clickMap.set(id, {
       url: options.url || null,
       streamerId: options.streamerId || null,
@@ -1260,14 +1416,23 @@ async function pollStreamers({ forceNotification = false } = {}) {
     });
   }
 
+  const streamerById = new Map();
   streamers.forEach((streamer) => {
     streamerCache.set(streamer.id, streamer);
+    streamerById.set(streamer.id, streamer);
   });
 
-  const statuses = await Promise.all(streamers.map(buildStreamerStatus));
+  // Cap concurrency to 3 parallel fetches — lighter on RAM & network
+  const statuses = [];
+  const CONCURRENCY = 3;
+  for (let i = 0; i < streamers.length; i += CONCURRENCY) {
+    const batch = streamers.slice(i, i + CONCURRENCY);
+    const results = await Promise.all(batch.map(buildStreamerStatus));
+    statuses.push(...results);
+  }
 
   for (const status of statuses) {
-    const streamer = streamers.find((s) => s.id === status.id);
+    const streamer = streamerById.get(status.id);
     const previousLiveState = streamerLiveState.get(streamer.id) || {
       isLive: false,
       platform: null,
@@ -1345,7 +1510,49 @@ async function pollStreamers({ forceNotification = false } = {}) {
   }, 0);
   await ActionBadge.update(liveCount, preferences);
 
+  // Pre-cache thumbnails for live streamers (background)
+  precacheThumbnails(statuses).catch(() => {});
+
   return statuses;
+}
+
+async function precacheThumbnails(statuses) {
+  const CACHE_KEY = "streampulse:thumbCache";
+  let cache = {};
+  try {
+    const stored = await chrome.storage.local.get(CACHE_KEY);
+    cache = stored[CACHE_KEY] || {};
+  } catch { /* ignore */ }
+
+  let changed = false;
+
+  for (const status of statuses) {
+    if (!status.active?.isLive) continue;
+
+    // Pick the best thumbnail URL (no fetch — CORS blocks HEAD from SW)
+    const candidates = status.active.thumbnailCandidates || [];
+    const mainThumb = status.active.thumbnailUrl;
+    const url = candidates[0] || mainThumb;
+    if (!url) continue;
+
+    if (cache[status.id] !== url) {
+      cache[status.id] = url;
+      changed = true;
+    }
+  }
+
+  // Clean cache: remove entries for streamers no longer followed
+  const statusIds = new Set(statuses.map((s) => s.id));
+  for (const id of Object.keys(cache)) {
+    if (!statusIds.has(id)) {
+      delete cache[id];
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    await chrome.storage.local.set({ [CACHE_KEY]: cache }).catch(() => {});
+  }
 }
 
 function scheduleWatcherAlarm() {
@@ -1362,19 +1569,10 @@ function scheduleKeepAliveAlarm() {
   });
 }
 
-function startKeepAliveHeartbeat() {
-  if (keepAliveHandle) return;
-  keepAliveHandle = setInterval(() => {
-    chrome.runtime.getPlatformInfo(() => {
-      if (chrome.runtime.lastError) {
-        console.debug(
-          "Keep-alive ping error:",
-          chrome.runtime.lastError.message
-        );
-      }
-    });
-  }, 25000);
-}
+// Keep-alive heartbeat removed: the KEEP_ALIVE_ALARM is sufficient in MV3.
+// setInterval doesn't persist across SW termination anyway.
+
+let initDone = false;
 
 async function openOnboarding() {
   const url = chrome.runtime.getURL("html/onboarding.html");
@@ -1386,28 +1584,32 @@ async function openOnboarding() {
 }
 
 chrome.runtime.onInstalled.addListener(async (details) => {
+  initDone = true;
   const streamers = await DataStore.ensureDefaults();
   await PreferenceStore.ensureDefaults();
   await NotificationCenter.init();
   scheduleWatcherAlarm();
   scheduleKeepAliveAlarm();
-  startKeepAliveHeartbeat();
+
   await pollStreamers({ forceNotification: false });
   const installReason = details?.reason || "install";
   if (
     installReason === chrome.runtime.OnInstalledReason?.INSTALL ||
     installReason === "install"
   ) {
-    if (!streamers.length) {
+    const { onboardingShown } = await chrome.storage.local.get("onboardingShown");
+    if (!onboardingShown && !streamers.length) {
+      await chrome.storage.local.set({ onboardingShown: true });
       await openOnboarding();
     }
   }
 });
 
 chrome.runtime.onStartup.addListener(async () => {
+  initDone = true;
   scheduleWatcherAlarm();
   scheduleKeepAliveAlarm();
-  startKeepAliveHeartbeat();
+
   await PreferenceStore.ensureDefaults();
   await NotificationCenter.init();
   await pollStreamers({ forceNotification: false });
@@ -1640,11 +1842,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         if (platform === "twitch") {
           const user = await PlatformChecker.getTwitchUser(handle);
-          if (!user) {
+          if (!user || user._apiError) {
+            const errorKey = user?._apiError
+              ? "background.errors.apiError"
+              : "background.errors.streamerNotFound";
             sendResponse({
               error: translateWithPrefs(
                 preferences,
-                "background.errors.streamerNotFound",
+                errorKey,
                 {
                   platform: translateWithPrefs(
                     preferences,
@@ -1666,11 +1871,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           };
         } else if (platform === "kick") {
           const channel = await PlatformChecker.getKickChannel(handle);
-          if (!channel) {
+          if (!channel || channel._apiError) {
+            const errorKey = channel?._apiError
+              ? "background.errors.apiError"
+              : "background.errors.streamerNotFound";
             sendResponse({
               error: translateWithPrefs(
                 preferences,
-                "background.errors.streamerNotFound",
+                errorKey,
                 {
                   platform: translateWithPrefs(
                     preferences,
@@ -1697,11 +1905,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           };
         } else if (platform === "dlive") {
           const user = await PlatformChecker.getDliveUser(handle);
-          if (!user) {
+          if (!user || user._apiError) {
+            const errorKey = user?._apiError
+              ? "background.errors.apiError"
+              : "background.errors.streamerNotFound";
             sendResponse({
               error: translateWithPrefs(
                 preferences,
-                "background.errors.streamerNotFound",
+                errorKey,
                 {
                   platform: translateWithPrefs(
                     preferences,
@@ -1767,6 +1978,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const filtered = streamers.filter((s) => s.id !== targetId);
         await DataStore.saveStreamers(filtered);
         streamerStates.delete(targetId);
+        streamerCache.delete(targetId);
+        streamerLiveState.delete(targetId);
         await pollStreamers({ forceNotification: false });
         sendResponse({ success: true, streamers: filtered });
       })();
@@ -1774,10 +1987,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     case "toggleNotifications":
       (async () => {
+        const preferences = await PreferenceStore.get();
         const streamers = await DataStore.getStreamers();
         const idx = streamers.findIndex((s) => s.id === request.id);
         if (idx === -1) {
-          sendResponse({ error: "Streamer introuvable." });
+          sendResponse({ error: translateWithPrefs(preferences, "background.errors.streamerNotFound", { platform: "" }) });
           return;
         }
         streamers[idx].notificationsEnabled = Boolean(request.enabled);
@@ -1790,6 +2004,39 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       PlatformChecker.refreshAll().then(() => {
         sendResponse({ success: true });
       });
+      return true;
+
+
+    case "trackWatchTime":
+      (async () => {
+        try {
+          const { channel, platform, seconds } = request;
+          if (channel && platform) {
+            // Resolve avatar: try followed streamers first, then API
+            const avatar = await resolveChannelAvatar(platform, channel);
+            await WatchTimeStore.record(
+              platform,
+              channel,
+              Number(seconds) || 60,
+              avatar
+            );
+          }
+          sendResponse({ success: true });
+        } catch (error) {
+          sendResponse({ error: error.message });
+        }
+      })();
+      return true;
+
+    case "getWatchTimeSummary":
+      (async () => {
+        try {
+          const summary = await WatchTimeStore.getSummary(request.month || null);
+          sendResponse({ success: true, summary });
+        } catch (error) {
+          sendResponse({ error: error.message });
+        }
+      })();
       return true;
 
     case "getStats":
@@ -1848,6 +2095,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           updates.enableFastForwardButton =
             incomingUpdates.enableFastForwardButton !== false;
         }
+        if ("chatKeywords" in incomingUpdates) {
+          updates.chatKeywords =
+            typeof incomingUpdates.chatKeywords === "string"
+              ? incomingUpdates.chatKeywords
+              : "";
+        }
+        if ("chatBlockedUsers" in incomingUpdates) {
+          updates.chatBlockedUsers =
+            typeof incomingUpdates.chatBlockedUsers === "string"
+              ? incomingUpdates.chatBlockedUsers
+              : "";
+        }
+        if ("watchTimeTracker" in incomingUpdates) {
+          updates.watchTimeTracker =
+            incomingUpdates.watchTimeTracker !== false;
+        }
         if ("language" in incomingUpdates) {
           updates.language = normalizeLanguage(incomingUpdates.language);
         }
@@ -1899,10 +2162,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 scheduleWatcherAlarm();
 scheduleKeepAliveAlarm();
-startKeepAliveHeartbeat();
 
 (async () => {
+  if (initDone) return;
   await PreferenceStore.ensureDefaults();
   await NotificationCenter.init();
-  await pollStreamers({ forceNotification: false });
+  // Non-blocking: let the popup open fast while poll runs in background
+  pollStreamers({ forceNotification: false }).catch((err) => {
+    console.warn("Initial poll failed:", err?.message || err);
+  });
 })();

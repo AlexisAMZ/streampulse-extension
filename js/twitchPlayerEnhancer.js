@@ -25,7 +25,6 @@
   let extensionConfig = {
     clientId: "",
     accessToken: "",
-    refreshToken: "",
     features: DEFAULT_FEATURE_CONFIG,
   };
 
@@ -538,50 +537,6 @@
     return merged;
   }
 
-  function backgroundFetchJson(url, options = {}, timeoutMs = 15000) {
-    const fetchDirect = () =>
-      new Promise((resolve, reject) => {
-        const controller = new AbortController();
-        const timer = window.setTimeout(() => controller.abort(), timeoutMs);
-        fetch(url, { ...options, signal: controller.signal })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`${response.status}`);
-            }
-            return response.json();
-          })
-          .then(resolve)
-          .catch(reject)
-          .finally(() => window.clearTimeout(timer));
-      });
-
-    return new Promise((resolve, reject) => {
-      if (!chrome?.runtime?.sendMessage) {
-        fetchDirect().then(resolve).catch(reject);
-        return;
-      }
-      chrome.runtime.sendMessage(
-        {
-          type: "streampulse:fetchJson",
-          url,
-          options,
-          timeoutMs,
-        },
-        (response) => {
-          if (chrome.runtime?.lastError) {
-            fetchDirect().then(resolve).catch(reject);
-            return;
-          }
-          if (!response?.success) {
-            reject(new Error(response?.error || "Background fetch failed"));
-            return;
-          }
-          resolve(response.data);
-        }
-      );
-    });
-  }
-
   async function loadExtensionConfig() {
     try {
       const module = await import(chrome.runtime.getURL("config.js"));
@@ -589,7 +544,6 @@
       extensionConfig = {
         clientId: loadedConfig.clientId || "",
         accessToken: loadedConfig.accessToken || "",
-        refreshToken: loadedConfig.refreshToken || "",
         features: mergeFeatureConfig(
           DEFAULT_FEATURE_CONFIG,
           loadedConfig.features || {}
@@ -603,7 +557,6 @@
       extensionConfig = {
         clientId: "",
         accessToken: "",
-        refreshToken: "",
         features: DEFAULT_FEATURE_CONFIG,
       };
     }
@@ -618,16 +571,15 @@
       this.header = null;
       this.observer = null;
       this.updateIntervalId = null;
+      this.headerCheckIntervalId = null;
+      this.locale = getLocaleKey();
     }
 
     start() {
       this.ensureHeader();
-      if (!this.observer) {
-        this.observer = new MutationObserver(() => this.ensureHeader());
-        this.observer.observe(document.body, {
-          childList: true,
-          subtree: true,
-        });
+      // Check for header every 3s instead of MutationObserver on body (perf)
+      if (this.headerCheckIntervalId == null) {
+        this.headerCheckIntervalId = window.setInterval(() => this.ensureHeader(), 3000);
       }
       if (this.updateIntervalId == null) {
         this.updateIntervalId = window.setInterval(() => this.update(), 1000);
@@ -636,9 +588,9 @@
     }
 
     stop() {
-      if (this.observer) {
-        this.observer.disconnect();
-        this.observer = null;
+      if (this.headerCheckIntervalId != null) {
+        clearInterval(this.headerCheckIntervalId);
+        this.headerCheckIntervalId = null;
       }
       if (this.updateIntervalId != null) {
         clearInterval(this.updateIntervalId);
@@ -698,7 +650,7 @@
       this.text = document.createElement("span");
       this.text.className = "streampulse-latency-text";
       this.text.textContent =
-        getLocaleKey() === "fr" ? "Latence : --" : "Latency: --";
+        this.locale === "fr" ? "Latence : --" : "Latency: --";
 
       this.button.append(this.dot, this.text);
       this.button.addEventListener("click", () => this.handleClick());
@@ -736,7 +688,7 @@
       if (!isLive) {
         this.button.classList.remove("is-live");
         this.button.classList.add("is-disabled");
-        this.text.textContent = getLocaleKey() === "fr" ? "OFFLINE" : "OFFLINE";
+        this.text.textContent = "OFFLINE";
         return;
       }
 
@@ -755,11 +707,11 @@
 
       if (latency == null) {
         this.text.textContent =
-          getLocaleKey() === "fr" ? "Latence : --" : "Latency: --";
+          this.locale === "fr" ? "Latence : --" : "Latency: --";
       } else {
         const formatted = latency < 0.1 ? "0.0" : latency.toFixed(2);
         this.text.textContent =
-          getLocaleKey() === "fr"
+          this.locale === "fr"
             ? `Latence : ${formatted}s`
             : `Latency: ${formatted}s`;
       }
