@@ -723,6 +723,10 @@
 
 
   async function init() {
+    // Defensive guard: only initialize in the top frame. Latency button targets
+    // chat header / video player which live in the top frame on Twitch.
+    if (!isTopWindow) return;
+
     if (window.__streampulseEnhancerInitialized) {
       return;
     }

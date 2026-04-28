@@ -3,7 +3,7 @@
   "default_locale": "en",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "26.4.30",
+  "version": "26.4.31",
   "permissions": ["storage", "alarms", "notifications", "offscreen"],
   "host_permissions": [
     "https://api.twitch.tv/*",
@@ -28,14 +28,13 @@
   "content_scripts": [
     {
       "matches": ["https://www.twitch.tv/*"],
-      "all_frames": true,
-      "match_about_blank": true,
+      "all_frames": false,
       "js": ["js/channelPointsClaimer.js", "js/twitchPlayerEnhancer.js", "js/chatFilter.js", "js/watchTimeTracker.js"],
       "run_at": "document_idle"
     },
     {
       "matches": ["https://kick.com/*", "https://*.kick.com/*"],
-      "all_frames": true,
+      "all_frames": false,
       "js": ["js/kickPlayerEnhancer.js", "js/kickChannelPoints.js", "js/chatFilter.js", "js/watchTimeTracker.js"],
       "run_at": "document_idle"
     }

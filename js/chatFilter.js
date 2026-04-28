@@ -1,4 +1,7 @@
 (() => {
+  // Guard against running in sub-frames or about:blank iframes — chat lives in the top frame.
+  if (window.top !== window) return;
+
   const PREFERENCES_KEY = "betaGeneralPreferences";
   const FALLBACK_REPLACEMENT_EN = "Message removed by StreamPulse";
   const FALLBACK_REPLACEMENT_FR = "Message supprimé par StreamPulse";

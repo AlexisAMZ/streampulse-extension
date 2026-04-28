@@ -2,6 +2,9 @@
   // Kick Player Enhancer
   // Features: Fast Forward to Live, Latency Monitor (Simplified)
 
+  // Top-frame guard: avoid duplicating intervals in sub-frames (perf).
+  if (window.top !== window) return;
+
   const PREFERENCES_KEY = "betaGeneralPreferences";
   const FAST_FORWARD_ID = "streampulse-kick-fast-forward";
   
