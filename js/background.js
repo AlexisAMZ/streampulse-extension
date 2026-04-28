@@ -1699,25 +1699,15 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   await pollStreamers({ forceNotification: false });
   const installReason = details?.reason || "install";
 
+  // Onboarding is shown only on fresh install. Existing users updating to a new
+  // version keep their data and can edit their pseudo from the Settings tab.
   if (
     installReason === chrome.runtime.OnInstalledReason?.INSTALL ||
     installReason === "install"
   ) {
-    // Fresh install — show onboarding if no streamers yet
     const { onboardingShown } = await chrome.storage.local.get("onboardingShown");
     if (!onboardingShown && !streamers.length) {
       await chrome.storage.local.set({ onboardingShown: true });
-      await openOnboarding();
-    }
-  } else if (
-    installReason === chrome.runtime.OnInstalledReason?.UPDATE ||
-    installReason === "update"
-  ) {
-    // Existing user update — show onboarding only if they haven't set their profile yet.
-    // The onboarding pre-fills their existing streamers & preferences automatically;
-    // it only asks for the new "pseudo" feature they don't have yet.
-    const { userProfile } = await chrome.storage.local.get("userProfile");
-    if (!userProfile?.handle) {
       await openOnboarding();
     }
   }
