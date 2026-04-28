@@ -14,60 +14,96 @@ function getPlatformLabel(platform) {
 }
 
 // --- Hover-to-play live preview ---
+// Static thumbnail by default; iframe player loads only on hover (500ms delay)
+// and is destroyed on mouseleave to free RAM.
+
 const HOVER_DELAY = 500;
 
 function getEmbedUrl(platformId, streamer, status) {
-  // Twitch blocks extension origins — no embed possible in MV3 popup
-  switch (platformId) {
-    case "kick":
-    case "kishta": {
-      let slug = status?.url?.includes("kick.com") ? status.url.split("/").pop() : null;
-      if (!slug) slug = (streamer.handle || "").replace(/^@/, "");
-      if (platformId === "kishta") slug = "teuf";
-      return slug ? `https://player.kick.com/${slug}?autoplay=true&muted=false` : null;
-    }
-    default:
-      return null;
+  if (platformId === "kick" && status?.isLive) {
+    const slug = streamer.handle;
+    if (slug) return `https://player.kick.com/${encodeURIComponent(slug)}?muted=true`;
   }
+  return null;
 }
 
-function setupHoverPreview(cardPreview, platformId, streamer, status) {
+function setupHoverPreview(cardPreview, platformId, streamer, status, callbacks) {
+  const openStream = () => {
+    const url = buildProfileUrl(platformId, streamer.handle || streamer.twitch || streamer.id);
+    callbacks?.onOpen?.(url);
+  };
+
+  // Always allow clicking the card preview to open the stream
+  cardPreview.style.cursor = "pointer";
+  cardPreview.addEventListener("click", openStream);
+
   const embedUrl = getEmbedUrl(platformId, streamer, status);
-  if (!embedUrl) return;
+  if (!embedUrl) return; // No embed available — static thumbnail + click only
 
   let hoverTimer = null;
 
+  const teardownIframe = () => {
+    const wrap = cardPreview.querySelector(".hover-player-wrap");
+    if (wrap) {
+      const iframe = wrap.querySelector("iframe");
+      if (iframe) iframe.src = "about:blank"; // stop streaming + free RAM
+      wrap.remove();
+    }
+  };
+
   cardPreview.addEventListener("mouseenter", () => {
+    if (cardPreview.querySelector(".hover-player-wrap")) return;
     hoverTimer = setTimeout(() => {
-      if (cardPreview.querySelector(".hover-player-wrap")) return;
       const wrap = document.createElement("div");
       wrap.className = "hover-player-wrap";
+
       const iframe = document.createElement("iframe");
-      iframe.src = embedUrl;
       iframe.allow = "autoplay; encrypted-media; picture-in-picture";
       iframe.setAttribute("scrolling", "no");
+      iframe.setAttribute("muted", "");
+      iframe.src = embedUrl;
       wrap.appendChild(iframe);
+
+      // Transparent overlay above iframe captures clicks (iframes block bubbling)
+      const clickOverlay = document.createElement("div");
+      clickOverlay.className = "embed-click-overlay";
+      clickOverlay.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openStream();
+      });
+      wrap.appendChild(clickOverlay);
+
       cardPreview.appendChild(wrap);
     }, HOVER_DELAY);
   });
 
   cardPreview.addEventListener("mouseleave", () => {
-    clearTimeout(hoverTimer);
-    hoverTimer = null;
-    const wrap = cardPreview.querySelector(".hover-player-wrap");
-    if (wrap) wrap.remove();
+    if (hoverTimer) {
+      clearTimeout(hoverTimer);
+      hoverTimer = null;
+    }
+    teardownIframe();
   });
 }
 
 // --- Thumbnail cache (survive popup close/reopen) ---
-const thumbCache = {};
+// LRU-bounded to keep memory under control on low-end machines.
+const THUMB_CACHE_MAX = 50;
+const thumbCache = new Map(); // insertion order = LRU order
 let thumbCacheLoaded = false;
 
 async function loadThumbCache() {
   if (thumbCacheLoaded) return;
   try {
     const data = await chrome.storage.local.get("streampulse:thumbCache");
-    Object.assign(thumbCache, data["streampulse:thumbCache"] || {});
+    const stored = data["streampulse:thumbCache"] || {};
+    for (const [k, v] of Object.entries(stored)) {
+      thumbCache.set(k, v);
+      if (thumbCache.size > THUMB_CACHE_MAX) {
+        const oldestKey = thumbCache.keys().next().value;
+        thumbCache.delete(oldestKey);
+      }
+    }
   } catch (_) { /* ignore */ }
   thumbCacheLoaded = true;
 }
@@ -76,17 +112,32 @@ let thumbSaveTimer = null;
 function saveThumbCache() {
   clearTimeout(thumbSaveTimer);
   thumbSaveTimer = setTimeout(() => {
-    chrome.storage.local.set({ "streampulse:thumbCache": thumbCache }).catch(() => {});
+    chrome.storage.local.set({
+      "streampulse:thumbCache": Object.fromEntries(thumbCache),
+    }).catch(() => {});
   }, 1000);
 }
 
 function getCachedThumb(streamerId) {
-  return thumbCache[streamerId] || null;
+  if (!thumbCache.has(streamerId)) return null;
+  // Refresh LRU position
+  const url = thumbCache.get(streamerId);
+  thumbCache.delete(streamerId);
+  thumbCache.set(streamerId, url);
+  return url;
 }
 
 function setCachedThumb(streamerId, url) {
-  if (!url) return;
-  thumbCache[streamerId] = url;
+  if (url) {
+    if (thumbCache.has(streamerId)) thumbCache.delete(streamerId);
+    thumbCache.set(streamerId, url);
+    if (thumbCache.size > THUMB_CACHE_MAX) {
+      const oldestKey = thumbCache.keys().next().value;
+      thumbCache.delete(oldestKey);
+    }
+  } else {
+    thumbCache.delete(streamerId);
+  }
   saveThumbCache();
 }
 
@@ -98,6 +149,33 @@ function buildThumbnailUrl(rawUrl, width = 320, height = 180) {
   return rawUrl
     .replace("{width}", String(width))
     .replace("{height}", String(height));
+}
+
+// --- Thumbnail load queue ---
+// Limits concurrent network fetches so the popup doesn't stall on
+// users with many live streamers.
+const MAX_THUMB_CONCURRENCY = 3;
+let _activeThumbs = 0;
+const _thumbQueue = [];
+
+function _drainThumbQueue() {
+  while (_activeThumbs < MAX_THUMB_CONCURRENCY && _thumbQueue.length > 0) {
+    const fn = _thumbQueue.shift();
+    _activeThumbs++;
+    let released = false;
+    const release = () => {
+      if (released) return;
+      released = true;
+      _activeThumbs--;
+      _drainThumbQueue();
+    };
+    try { fn(release); } catch (_) { release(); }
+  }
+}
+
+function scheduleThumbLoad(fn) {
+  _thumbQueue.push(fn);
+  _drainThumbQueue();
 }
 
 export function formatNumber(value) {
@@ -228,7 +306,7 @@ function renderSocialLinks(streamer, container) {
 }
 
 
-function bindCardActions(notificationButton, openButton, removeButton, streamer, platformId, displayLabel, callbacks) {
+function bindCardActions(notificationButton, gameNotificationButton, openButton, removeButton, streamer, platformId, displayLabel, callbacks) {
   if (notificationButton) {
     notificationButton.addEventListener("click", async () => {
       const currentlyEnabled = notificationButton.classList.contains("active");
@@ -246,6 +324,28 @@ function bindCardActions(notificationButton, openButton, removeButton, streamer,
            notificationButton.classList.remove("active");
            if (bellIcon) bellIcon.style.display = "none";
            if (bellOffIcon) bellOffIcon.style.display = "";
+         }
+      }
+    });
+  }
+
+  if (gameNotificationButton) {
+    gameNotificationButton.addEventListener("click", async () => {
+      const currentlyEnabled = gameNotificationButton.classList.contains("active");
+      const newState = !currentlyEnabled;
+
+      const success = await callbacks.onToggleGameNotify(streamer.id, newState);
+      if (success) {
+         const gamepadIcon = gameNotificationButton.querySelector(".gamepad-icon");
+         const gamepadOffIcon = gameNotificationButton.querySelector(".gamepad-off-icon");
+         if (newState) {
+           gameNotificationButton.classList.add("active");
+           if (gamepadIcon) gamepadIcon.style.display = "";
+           if (gamepadOffIcon) gamepadOffIcon.style.display = "none";
+         } else {
+           gameNotificationButton.classList.remove("active");
+           if (gamepadIcon) gamepadIcon.style.display = "none";
+           if (gamepadOffIcon) gamepadOffIcon.style.display = "";
          }
       }
     });
@@ -308,6 +408,7 @@ export function createStreamerCard(streamer, status, template, callbacks) {
   const displayName = fragment.querySelector(".display-name");
   const statusPill = fragment.querySelector(".status-pill");
   const notificationButton = fragment.querySelector(".notification-button");
+  const gameNotificationButton = fragment.querySelector(".game-notification-button");
   const openButton = fragment.querySelector(".open-button");
   const removeButton = fragment.querySelector(".remove-button");
   const cardPreview = fragment.querySelector(".card-preview");
@@ -329,7 +430,16 @@ export function createStreamerCard(streamer, status, template, callbacks) {
     streamer.displayName ||
     formatHandleForDisplay(platformId, streamer.handle || streamer.twitch);
 
-  displayName.textContent = displayLabel;
+  // V7 — data-platform for CSS ring + glyph color
+  if (card) card.dataset.platform = platformId;
+
+  // Wrap name in span so it can be truncated independently of the platform glyph
+  displayName.innerHTML = "";
+  const nameText = document.createElement("span");
+  nameText.className = "name-text";
+  nameText.textContent = displayLabel;
+  displayName.appendChild(nameText);
+
   const identityMetaText = buildIdentityMeta(streamer, activeStatus);
   identityMeta.textContent = identityMetaText;
   identityMeta.hidden = !identityMetaText;
@@ -356,6 +466,21 @@ export function createStreamerCard(streamer, status, template, callbacks) {
       notificationButton.classList.remove("active");
       if (bellIcon) bellIcon.style.display = "none";
       if (bellOffIcon) bellOffIcon.style.display = "";
+    }
+  }
+
+  const isGameNotifEnabled = streamer.gameNotificationsEnabled !== false;
+  if (gameNotificationButton) {
+    const gamepadIcon = gameNotificationButton.querySelector(".gamepad-icon");
+    const gamepadOffIcon = gameNotificationButton.querySelector(".gamepad-off-icon");
+    if (isGameNotifEnabled) {
+      gameNotificationButton.classList.add("active");
+      if (gamepadIcon) gamepadIcon.style.display = "";
+      if (gamepadOffIcon) gamepadOffIcon.style.display = "none";
+    } else {
+      gameNotificationButton.classList.remove("active");
+      if (gamepadIcon) gamepadIcon.style.display = "none";
+      if (gamepadOffIcon) gamepadOffIcon.style.display = "";
     }
   }
 
@@ -404,153 +529,87 @@ export function createStreamerCard(streamer, status, template, callbacks) {
         previewImage.hidden = true;
         previewImage.removeAttribute("src");
       }
-      // Enhanced fallback: avatar + game
-      let fallbackContent = cardPreview.querySelector(".fallback-content");
-      if (!fallbackContent) {
-        fallbackContent = document.createElement("div");
-        fallbackContent.className = "fallback-content";
-
-        const fbAvatar = document.createElement("img");
-        fbAvatar.className = "fallback-avatar";
-        fbAvatar.src = streamer.avatarUrl || `../${getPlatformDefinition(platformId).icon || "images/photos/48px.png"}`;
-        fbAvatar.alt = displayLabel;
-
-        fallbackContent.appendChild(fbAvatar);
-
-        if (activeStatus.game) {
-          const fbGame = document.createElement("span");
-          fbGame.className = "fallback-game";
-          fbGame.textContent = activeStatus.game;
-          fallbackContent.appendChild(fbGame);
-        }
-
-        cardPreview.appendChild(fallbackContent);
+      if (livePreview.querySelector(".fallback-content")) return;
+      const fallbackContent = document.createElement("div");
+      fallbackContent.className = "fallback-content";
+      const fbAvatar = document.createElement("img");
+      fbAvatar.className = "fallback-avatar";
+      fbAvatar.src = streamer.avatarUrl || `../${getPlatformDefinition(platformId).icon || "images/photos/48px.png"}`;
+      fbAvatar.onerror = () => { fbAvatar.src = `../images/social/${platformId === "kick" ? "Kick" : platformId === "dlive" ? "dlive" : "twitch"}.png`; };
+      fbAvatar.alt = displayLabel;
+      fallbackContent.appendChild(fbAvatar);
+      if (activeStatus.game) {
+        const fbGame = document.createElement("span");
+        fbGame.className = "fallback-game";
+        fbGame.textContent = activeStatus.game;
+        fallbackContent.appendChild(fbGame);
       }
+      livePreview.appendChild(fallbackContent);
     };
 
-    if (platformId === "kick" || platformId === "kishta") {
-        if (cardPreview && previewImage) {
-            let iframeSrc = null;
-
-            if (platformId === "kishta") {
-               let slug = "teuf";
-               iframeSrc = `https://player.kick.com/${slug}?autoplay=true&muted=true`;
-            } else {
-                let slug = activeStatus.url && activeStatus.url.includes("kick.com") ? activeStatus.url.split('/').pop() : null;
-                if (!slug && streamer.handle === "teufteuf") slug = "teuf";
-                if (!slug) slug = streamer.handle ? streamer.handle.replace(/^@/, '') : "";
-                if (slug) iframeSrc = `https://player.kick.com/${slug}?autoplay=true&muted=true`;
-            }
-
-            if (iframeSrc) {
-                const existingIframe = cardPreview.querySelector('iframe');
-                if (existingIframe) existingIframe.remove();
-                const existingOverlay = cardPreview.querySelector('.iframe-play-overlay');
-                if (existingOverlay) existingOverlay.remove();
-
-                previewImage.hidden = true;
-                cardPreview.hidden = false;
-                cardPreview.classList.remove("is-fallback");
-                cardPreview.classList.remove("is-loading");
-                if (livePreview) livePreview.hidden = false;
-
-                if (platformId === "kishta") {
-                  // Kishta auto-loads
-                  const iframe = document.createElement('iframe');
-                  iframe.dataset.src = iframeSrc;
-                  iframe.className = 'lazy-iframe';
-                  iframe.style.cssText = 'width:100%;height:100%;border:none;pointer-events:auto;';
-                  iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
-                  iframe.setAttribute('scrolling', 'yes');
-                  cardPreview.appendChild(iframe);
-                } else {
-                  // Kick: click-to-play overlay
-                  const overlay = document.createElement('div');
-                  overlay.className = 'iframe-play-overlay';
-                  const playIcon = document.createElement('div');
-                  playIcon.className = 'play-icon';
-                  overlay.appendChild(playIcon);
-                  overlay.addEventListener('click', () => {
-                    overlay.remove();
-                    const iframe = document.createElement('iframe');
-                    iframe.src = iframeSrc;
-                    iframe.style.cssText = 'width:100%;height:100%;border:none;pointer-events:none;';
-                    iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
-                    iframe.setAttribute('scrolling', 'no');
-                    cardPreview.appendChild(iframe);
-                  });
-                  cardPreview.appendChild(overlay);
-                }
-
-                liveTitle.textContent = activeStatus.title || t("popup.card.defaultLiveTitle");
-                if (statusCategory) {
-                  const category = activeStatus.game || "";
-                  statusCategory.textContent = category;
-                  statusCategory.hidden = !category.trim();
-                }
-                renderLastUpdate(lastUpdate, status?.updatedAt, activeStatus);
-                renderSocialLinks(streamer, socialLinksContainer);
-                bindCardActions(notificationButton, openButton, removeButton, streamer, platformId, displayLabel, callbacks);
-                return fragment;
-            }
-        }
-    }
-
-    if (cardPreview && previewImage && candidates.length > 0) {
+    if (cardPreview) {
       cardPreview.hidden = false;
-      cardPreview.classList.remove("is-fallback");
       if (livePreview) livePreview.hidden = false;
-      previewImage.hidden = false;
+      previewImage.onerror = null;
 
-      const existingIframe = cardPreview.querySelector("iframe");
-      if (existingIframe) existingIframe.remove();
-
-      previewImage.alt = t("popup.labels.previewAltLive", {
-        name: displayLabel,
-      });
+      cardPreview.querySelector("iframe")?.remove();
+      previewImage.alt = t("popup.labels.previewAltLive", { name: displayLabel });
       previewImage.classList.remove("is-offline-preview");
 
-      // Show cached thumbnail instantly while loading fresh one
-      const cached = getCachedThumb(streamer.id);
-      if (cached) {
-        previewImage.src = cached;
-        cardPreview.classList.remove("is-loading");
-      } else {
-        cardPreview.classList.add("is-loading");
-      }
-
-      // Load fresh thumbnail in background
-      let candidateIdx = 0;
-      const freshImg = new Image();
-
-      const loadNext = () => {
-        if (candidateIdx >= candidates.length) {
-          if (!cached) showFallbackPreview();
-          return;
-        }
-        freshImg.src = candidates[candidateIdx++];
-      };
-
-      freshImg.onload = function () {
-        freshImg.onload = null;
-        freshImg.onerror = null;
-        const freshUrl = freshImg.src;
-        // Swap to fresh thumbnail
-        previewImage.src = freshUrl;
-        cardPreview.classList.remove("is-loading");
-        cardPreview.hidden = false;
-        if (livePreview) livePreview.hidden = false;
-        // Update cache
-        setCachedThumb(streamer.id, freshUrl);
-      };
-
-      freshImg.onerror = function () {
-        loadNext();
-      };
-      loadNext();
-
-    } else if (cardPreview) {
+      // Always show fallback avatar immediately — replaced by thumbnail if one loads
       showFallbackPreview();
+
+      if (previewImage && candidates.length > 0) {
+        let candidateIdx = 0;
+
+        const applyThumb = (url) => {
+          livePreview?.querySelector(".fallback-content")?.remove();
+          cardPreview.classList.remove("is-fallback", "is-loading");
+          previewImage.src = url;
+          previewImage.hidden = false;
+        };
+
+        const tryCandidate = () => {
+          if (candidateIdx >= candidates.length) {
+            setCachedThumb(streamer.id, null);
+            return; // keep fallback avatar
+          }
+          const url = candidates[candidateIdx++];
+          scheduleThumbLoad((release) => {
+            const img = new Image();
+            img.onload = () => {
+              release();
+              if (img.naturalWidth < 100) { tryCandidate(); return; }
+              applyThumb(url);
+              setCachedThumb(streamer.id, url);
+            };
+            img.onerror = () => { release(); tryCandidate(); };
+            img.src = url;
+          });
+        };
+
+        const cached = getCachedThumb(streamer.id);
+        if (cached) {
+          // Show cached thumb instantly (browser HTTP cache will likely hit).
+          // Don't re-validate against the network — the next poll will refresh.
+          scheduleThumbLoad((release) => {
+            const img = new Image();
+            img.onload = () => {
+              release();
+              if (img.naturalWidth < 100) { tryCandidate(); return; }
+              applyThumb(cached);
+            };
+            img.onerror = () => {
+              release();
+              setCachedThumb(streamer.id, null);
+              tryCandidate();
+            };
+            img.src = cached;
+          });
+        } else {
+          tryCandidate();
+        }
+      }
     }
     liveTitle.textContent = activeStatus.title || t("popup.card.defaultLiveTitle");
     if (statusCategory) {
@@ -558,11 +617,27 @@ export function createStreamerCard(streamer, status, template, callbacks) {
       statusCategory.textContent = category;
       statusCategory.hidden = !category.trim();
     }
+
+    // V7 — inject live badge + viewer badge + started-at into livePreview
+    if (livePreview) {
+      livePreview.querySelectorAll(".live-badge,.viewer-badge,.started-at").forEach(el => el.remove());
+      const liveBadge = document.createElement("span");
+      liveBadge.className = "live-badge";
+      liveBadge.innerHTML = `<span class="live-dot"></span>LIVE`;
+      livePreview.appendChild(liveBadge);
+      if (activeStatus.viewers != null) {
+        const viewerBadge = document.createElement("span");
+        viewerBadge.className = "viewer-badge";
+        viewerBadge.textContent = `👁 ${formatNumber ? formatNumber(activeStatus.viewers) : activeStatus.viewers}`;
+        livePreview.appendChild(viewerBadge);
+      }
+    }
+
     renderLastUpdate(lastUpdate, status?.updatedAt, activeStatus);
 
-    // Hover-to-play on live cards
+    // Hover-to-play on live cards (iframe loads on hover, frees RAM on leave)
     if (cardPreview) {
-      setupHoverPreview(cardPreview, platformId, streamer, activeStatus);
+      setupHoverPreview(cardPreview, platformId, streamer, activeStatus, callbacks);
     }
   } else {
     statusPill.textContent = t("popup.card.offlinePlatform", {
@@ -592,7 +667,7 @@ export function createStreamerCard(streamer, status, template, callbacks) {
   }
 
   renderSocialLinks(streamer, socialLinksContainer);
-  bindCardActions(notificationButton, openButton, removeButton, streamer, platformId, displayLabel, callbacks);
+  bindCardActions(notificationButton, gameNotificationButton, openButton, removeButton, streamer, platformId, displayLabel, callbacks);
 
   return fragment;
 }

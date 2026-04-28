@@ -47,6 +47,7 @@ const DEFAULT_PREFERENCES = {
   chatKeywords: "",
   chatBlockedUsers: "",
   language: DEFAULT_LANGUAGE,
+  sortOrder: "live",
 };
 
 const DEFAULT_STATS = {
@@ -59,6 +60,69 @@ const DEFAULT_POLL_INTERVAL =
 
 function sanitizeLogin(value = "") {
   return sanitizeHandle("twitch", value);
+}
+
+// ─── Kick Official API — App Access Token ─────────────────────────────────────
+
+const _kickToken = { value: null, expiresAt: 0 };
+
+async function getKickCredentials() {
+  const data = await chrome.storage.local.get("streampulse:kickCreds");
+  return data["streampulse:kickCreds"] || null;
+}
+
+async function getKickAppToken() {
+  const creds = await getKickCredentials();
+  if (!creds?.clientId || !creds?.clientSecret) return null;
+
+  // Use in-memory cache
+  if (_kickToken.value && Date.now() < _kickToken.expiresAt - 120_000) {
+    return _kickToken.value;
+  }
+
+  // Check persistent cache
+  const stored = await chrome.storage.local.get("streampulse:kickToken");
+  const cached = stored["streampulse:kickToken"];
+  if (cached?.value && Date.now() < cached.expiresAt - 120_000) {
+    _kickToken.value = cached.value;
+    _kickToken.expiresAt = cached.expiresAt;
+    return _kickToken.value;
+  }
+
+  // Fetch fresh token
+  try {
+    const resp = await fetch("https://id.kick.com/oauth/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        grant_type: "client_credentials",
+        client_id: creds.clientId,
+        client_secret: creds.clientSecret,
+      }),
+    });
+    if (!resp.ok) return null;
+    const json = await resp.json();
+    if (!json.access_token) return null;
+    const expiresAt = Date.now() + (json.expires_in ?? 3600) * 1000;
+    _kickToken.value = json.access_token;
+    _kickToken.expiresAt = expiresAt;
+    await chrome.storage.local.set({
+      "streampulse:kickToken": { value: json.access_token, expiresAt },
+    });
+    return json.access_token;
+  } catch {
+    return null;
+  }
+}
+
+async function fetchKickOfficial(slug, token) {
+  const resp = await fetch(
+    `https://api.kick.com/public/v1/channels?slug=${encodeURIComponent(slug)}`,
+    { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } }
+  );
+  if (!resp.ok) throw new Error(`${resp.status}`);
+  const json = await resp.json();
+  return json?.data?.[0] ?? null;
 }
 
 async function fetchJson(url, options = {}, timeoutMs = 15000) {
@@ -332,6 +396,7 @@ class DataStore {
 
 class PreferenceStore {
   static sanitize(preferences = {}) {
+    const SORT_ORDER_VALUES = ["live", "name-asc", "name-desc", "custom"];
     return {
       liveNotifications: preferences.liveNotifications !== false,
       gameNotifications: Boolean(preferences.gameNotifications),
@@ -343,6 +408,7 @@ class PreferenceStore {
       chatKeywords: typeof preferences.chatKeywords === "string" ? preferences.chatKeywords : "",
       chatBlockedUsers: typeof preferences.chatBlockedUsers === "string" ? preferences.chatBlockedUsers : "",
       language: normalizeLanguage(preferences.language),
+      sortOrder: SORT_ORDER_VALUES.includes(preferences.sortOrder) ? preferences.sortOrder : "live",
     };
   }
 
@@ -625,21 +691,55 @@ class PlatformChecker {
   static async getKickChannel(handle) {
     const sanitized = sanitizeHandle("kick", handle);
     if (!sanitized) return null;
+
+    // Try official API first (needs credentials)
+    try {
+      const token = await getKickAppToken();
+      if (token) {
+        const official = await fetchKickOfficial(sanitized, token);
+        if (official) return { _source: "official", ...official };
+      }
+    } catch { /* fall through to V2 */ }
+
+    // Fallback: unofficial V2 API
     try {
       const data = await fetchJson(
         `https://kick.com/api/v2/channels/${encodeURIComponent(sanitized)}`
       );
-      if (!data || data.error) {
-        return null;
-      }
+      if (!data || data.error) return null;
       return data;
     } catch (error) {
-      if (error?.message?.includes?.("404")) {
-        return null;
-      }
+      if (error?.message?.includes?.("404")) return null;
       console.warn("Kick channel fetch error:", error.message);
       return { _apiError: true, status: error.message };
     }
+  }
+
+  // Extract status from official api.kick.com/public/v1/channels response
+  static extractKickStatusOfficial(channel, handle) {
+    const stream = channel?.stream;
+    const slug = channel?.slug || handle;
+    const base = {
+      platform: "kick",
+      url: buildProfileUrl("kick", slug),
+      displayName: slug,
+      avatarUrl: channel?.banner_picture || "",
+    };
+
+    if (!stream?.is_live) return { isLive: false, ...base };
+
+    const thumb = stream.thumbnail || "";
+    return {
+      isLive: true,
+      ...base,
+      title: channel.stream_title || "",
+      game: channel.category?.name || "",
+      viewers: stream.viewer_count || 0,
+      startedAt: stream.start_time || null,
+      thumbnailUrl: thumb,
+      thumbnailCandidates: thumb ? [thumb] : [],
+      supportsLiveStatus: true,
+    };
   }
 
   static extractKickStatus(channel, handle) {
@@ -691,70 +791,52 @@ class PlatformChecker {
     // Optimize: Cache for 60 seconds to prevent flickering on every popup open
     const cb = Math.floor(Date.now() / 60000); // 1-minute cache bucket
 
-    const rawCandidates = [
-      stream?.thumbnail?.url, // New structure often has this
-      stream?.thumbnail?.src,
-      stream?.thumbnail_url,
-      stream?.thumbnail // Sometimes string
-    ];
-
     const slug = channel?.slug || channel?.user?.username || stream?.slug;
     const channelId = channel?.id || stream?.channel_id || stream?.id;
 
+    // API-provided URLs first (most reliable), then constructed fallbacks
+    const apiRaw = [
+      stream?.thumbnail?.url,
+      stream?.thumbnail?.src,
+      stream?.thumbnail_url,
+      stream?.thumbnail,
+    ];
+
+    const constructedRaw = [];
     if (channelId) {
-       // Modern Kick V2 images
-       rawCandidates.push(
+      constructedRaw.push(
         `https://images.kick.com/v2/stream-thumbnails/${channelId}/live-${dimensionSuffix}.webp`,
         `https://images.kick.com/v2/stream-thumbnails/${channelId}/live-${dimensionSuffix}.jpg`,
-        
-        // Classic Files
         `https://files.kick.com/stream-thumbnails/${channelId}/livestream-${dimensionSuffix}.webp`,
         `https://files.kick.com/stream-thumbnails/${channelId}/livestream-${dimensionSuffix}.jpg`,
-        `https://files.kick.com/stream-thumbnails/${channelId}/livestream-${dimensionSuffix}.png`,
-        `https://files.kick.com/stream-thumbnails/${channelId}/livestream.jpg`,
-        `https://files.kick.com/stream-thumbnails/${channelId}/livestream.png`
-       );
+        `https://files.kick.com/stream-thumbnails/${channelId}/livestream.jpg`
+      );
     }
-
     if (slug) {
-       rawCandidates.push(
+      constructedRaw.push(
         `https://files.kick.com/stream-thumbnails/${slug}/livestream-${dimensionSuffix}.webp`,
         `https://files.kick.com/stream-thumbnails/${slug}/livestream-${dimensionSuffix}.jpg`,
         `https://files.kick.com/stream-thumbnails/${slug}/livestream.jpg`
-       );
+      );
     }
 
-    // Resolve, Filter, Sort
     const distinctUrls = new Set();
     const allCandidates = [];
-    
-    for (const raw of rawCandidates) {
-        const resolved = resolveKickAsset(raw);
-        if (resolved && !resolved.includes("null") && !resolved.includes("undefined")) {
-            if (!distinctUrls.has(resolved)) {
-                distinctUrls.add(resolved);
-                allCandidates.push(resolved);
-            }
+    for (const raw of [...apiRaw, ...constructedRaw]) {
+      const resolved = resolveKickAsset(raw);
+      if (resolved && !resolved.includes("null") && !resolved.includes("undefined")) {
+        if (!distinctUrls.has(resolved)) {
+          distinctUrls.add(resolved);
+          allCandidates.push(resolved);
         }
+      }
     }
-    
-    // Sort to prioritize "v2" and "webp" and "livestream"
-    allCandidates.sort((a, b) => {
-        const score = (url) => {
-            let s = 0;
-            if (url.includes("v2")) s += 4;
-            if (url.includes("webp")) s += 2;
-            if (/livestream|live-/i.test(url)) s += 5;
-            return s;
-        };
-        return score(b) - score(a);
-    });
 
-    // Keep top 5 candidates max + cache bust
+    // Cache bust, keep top 5
     const thumbnailCandidates = allCandidates.slice(0, 5).map(url => {
-        if (url.includes("cb=")) return url;
-        const separator = url.includes("?") ? "&" : "?";
-        return `${url}${separator}cb=${cb}`;
+      if (url.includes("cb=")) return url;
+      const separator = url.includes("?") ? "&" : "?";
+      return `${url}${separator}cb=${cb}`;
     });
 
     const thumbnail = thumbnailCandidates[0] || "";
@@ -778,6 +860,9 @@ class PlatformChecker {
 
   static async getKickStatus(handle) {
     const channel = await this.getKickChannel(handle);
+    if (channel?._source === "official") {
+      return this.extractKickStatusOfficial(channel, handle);
+    }
     return this.extractKickStatus(channel, handle);
   }
 
@@ -1389,7 +1474,25 @@ async function buildStreamerStatus(streamer) {
   };
 }
 
+let _pollInFlight = null;
+let _lastPollAt = 0;
+
 async function pollStreamers({ forceNotification = false } = {}) {
+  // Re-entrancy guard: dedupe concurrent calls
+  if (_pollInFlight) return _pollInFlight;
+
+  _pollInFlight = (async () => {
+    try {
+      return await _pollStreamersImpl({ forceNotification });
+    } finally {
+      _lastPollAt = Date.now();
+      _pollInFlight = null;
+    }
+  })();
+  return _pollInFlight;
+}
+
+async function _pollStreamersImpl({ forceNotification = false } = {}) {
   const streamers = await DataStore.getStreamers();
   const preferences = await PreferenceStore.get();
   if (streamers.length === 0) {
@@ -1472,8 +1575,10 @@ async function pollStreamers({ forceNotification = false } = {}) {
           preferences
         );
       } else {
+        const gameNotificationsEnabled = streamer.gameNotificationsEnabled !== false;
         const shouldNotifyGame =
           preferences.gameNotifications &&
+          gameNotificationsEnabled &&
           preferences.liveNotifications !== false &&
           previousLiveState.isLive &&
           previousLiveState.game &&
@@ -1593,13 +1698,26 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 
   await pollStreamers({ forceNotification: false });
   const installReason = details?.reason || "install";
+
   if (
     installReason === chrome.runtime.OnInstalledReason?.INSTALL ||
     installReason === "install"
   ) {
+    // Fresh install — show onboarding if no streamers yet
     const { onboardingShown } = await chrome.storage.local.get("onboardingShown");
     if (!onboardingShown && !streamers.length) {
       await chrome.storage.local.set({ onboardingShown: true });
+      await openOnboarding();
+    }
+  } else if (
+    installReason === chrome.runtime.OnInstalledReason?.UPDATE ||
+    installReason === "update"
+  ) {
+    // Existing user update — show onboarding only if they haven't set their profile yet.
+    // The onboarding pre-fills their existing streamers & preferences automatically;
+    // it only asks for the new "pseudo" feature they don't have yet.
+    const { userProfile } = await chrome.storage.local.get("userProfile");
+    if (!userProfile?.handle) {
       await openOnboarding();
     }
   }
@@ -1748,6 +1866,39 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       })();
       return true;
 
+    case "streampulse:saveKickCreds":
+      (async () => {
+        const { clientId, clientSecret } = request;
+        if (!clientId || !clientSecret) {
+          // Clear credentials
+          await chrome.storage.local.remove(["streampulse:kickCreds", "streampulse:kickToken"]);
+          _kickToken.value = null;
+          _kickToken.expiresAt = 0;
+          sendResponse({ success: true });
+          return;
+        }
+        await chrome.storage.local.set({
+          "streampulse:kickCreds": { clientId, clientSecret },
+        });
+        // Invalidate cached token
+        _kickToken.value = null;
+        _kickToken.expiresAt = 0;
+        await chrome.storage.local.remove("streampulse:kickToken");
+        // Test token immediately
+        const token = await getKickAppToken();
+        sendResponse({ success: !!token });
+      })();
+      return true;
+
+    case "streampulse:getKickCreds":
+      (async () => {
+        const creds = await getKickCredentials();
+        const stored = await chrome.storage.local.get("streampulse:kickToken");
+        const hasToken = !!(stored["streampulse:kickToken"]?.value);
+        sendResponse({ clientId: creds?.clientId || "", hasToken });
+      })();
+      return true;
+
     case "streampulse:fetchJson":
       (async () => {
         try {
@@ -1766,16 +1917,71 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       })();
       return true;
 
+    case "streampulse:fetchImage":
+      // Fetch an image URL via the background (has proper credentials/cookies)
+      // and return it as a base64 data URL so the popup can display it.
+      (async () => {
+        const { url } = request;
+        if (!url) { sendResponse({ success: false }); return; }
+        try {
+          const response = await fetch(url, {
+            credentials: "include",
+            headers: {
+              "Referer": "https://kick.com/",
+              "Accept": "image/webp,image/avif,image/*,*/*",
+            },
+          });
+          if (!response.ok) { sendResponse({ success: false, status: response.status }); return; }
+          const mimeType = response.headers.get("content-type")?.split(";")[0] || "image/webp";
+          const buffer = await response.arrayBuffer();
+          const bytes = new Uint8Array(buffer);
+          let binary = "";
+          const CHUNK = 8192;
+          for (let i = 0; i < bytes.length; i += CHUNK) {
+            binary += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK));
+          }
+          const dataUrl = `data:${mimeType};base64,${btoa(binary)}`;
+          sendResponse({ success: true, dataUrl });
+        } catch (e) {
+          sendResponse({ success: false, error: e?.message });
+        }
+      })();
+      return true;
+
     case "getStreamers":
       (async () => {
-        const [streamers, statuses, preferences] = await Promise.all([
+        const [streamers, statuses, preferences, profileData] = await Promise.all([
           DataStore.getStreamers(),
           DataStore.getStatuses(),
           PreferenceStore.get(),
+          chrome.storage.local.get("userProfile")
         ]);
-        sendResponse({ streamers, statuses, preferences });
+        sendResponse({ streamers, statuses, preferences, userProfile: profileData.userProfile || null });
       })();
       return true;
+
+    case "lookupTwitchUser": {
+      const handle = sanitizeHandle("twitch", request.handle || "");
+      if (!handle) { sendResponse({ error: "invalid" }); return true; }
+      PlatformChecker.getTwitchUser(handle)
+        .then(user => {
+          if (!user || user._apiError) {
+            sendResponse({ user: null });
+          } else {
+            sendResponse({ user: { display_name: user.display_name, profile_image_url: user.profile_image_url, id: user.id } });
+          }
+        })
+        .catch(() => sendResponse({ user: null }));
+      return true;
+    }
+
+    case "updateUserProfile": {
+      const profile = request.profile || {};
+      chrome.storage.local.set({ userProfile: profile })
+        .then(() => sendResponse({ success: true }))
+        .catch(err => sendResponse({ error: err.message }));
+      return true;
+    }
 
     case "addStreamer":
       (async () => {
@@ -2000,6 +2206,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       })();
       return true;
 
+    case "toggleGameNotifications":
+      (async () => {
+        const preferences = await PreferenceStore.get();
+        const streamers = await DataStore.getStreamers();
+        const idx = streamers.findIndex((s) => s.id === request.id);
+        if (idx === -1) {
+          sendResponse({ error: translateWithPrefs(preferences, "background.errors.streamerNotFound", { platform: "" }) });
+          return;
+        }
+        streamers[idx].gameNotificationsEnabled = Boolean(request.enabled);
+        await DataStore.saveStreamers(streamers);
+        sendResponse({ success: true });
+      })();
+      return true;
+
     case "refreshStatuses":
       PlatformChecker.refreshAll().then(() => {
         sendResponse({ success: true });
@@ -2012,14 +2233,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         try {
           const { channel, platform, seconds } = request;
           if (channel && platform) {
-            // Resolve avatar: try followed streamers first, then API
-            const avatar = await resolveChannelAvatar(platform, channel);
-            await WatchTimeStore.record(
-              platform,
-              channel,
-              Number(seconds) || 60,
-              avatar
-            );
+            const secs = Number(seconds) || 0;
+            // Record immediately — never block on avatar resolution
+            await WatchTimeStore.record(platform, channel, secs, "");
+            // Best-effort avatar update (fire-and-forget, doesn't block response)
+            if (secs > 0) {
+              resolveChannelAvatar(platform, channel)
+                .then(async (avatar) => {
+                  if (avatar) {
+                    const data = await WatchTimeStore._getData();
+                    const month = WatchTimeStore._getMonthKey();
+                    const key = `${platform}:${channel}`;
+                    if (data[month]?.[key] && !data[month][key].avatarUrl) {
+                      data[month][key].avatarUrl = avatar;
+                      await WatchTimeStore._saveData(data);
+                    }
+                  }
+                })
+                .catch(() => {});
+            }
           }
           sendResponse({ success: true });
         } catch (error) {
@@ -2114,6 +2346,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if ("language" in incomingUpdates) {
           updates.language = normalizeLanguage(incomingUpdates.language);
         }
+        if ("sortOrder" in incomingUpdates) {
+          const allowed = ["live", "name-asc", "name-desc", "custom"];
+          const val = incomingUpdates.sortOrder;
+          updates.sortOrder = allowed.includes(val) ? val : "live";
+        }
 
         if (Object.keys(updates).length === 0) {
           const preferences = await PreferenceStore.get();
@@ -2165,10 +2402,25 @@ scheduleKeepAliveAlarm();
 
 (async () => {
   if (initDone) return;
+  initDone = true;
   await PreferenceStore.ensureDefaults();
   await NotificationCenter.init();
-  // Non-blocking: let the popup open fast while poll runs in background
-  pollStreamers({ forceNotification: false }).catch((err) => {
-    console.warn("Initial poll failed:", err?.message || err);
-  });
+
+  // Only poll on SW wake if cached statuses are stale (>60s old).
+  // Avoids triggering a full poll every time the popup is reopened.
+  try {
+    const statuses = await DataStore.getStatuses();
+    const updatedAts = Object.values(statuses || {})
+      .map((s) => s?.updatedAt || 0)
+      .filter(Boolean);
+    const newest = updatedAts.length ? Math.max(...updatedAts) : 0;
+    const staleness = Date.now() - newest;
+    if (newest === 0 || staleness > 60_000) {
+      pollStreamers({ forceNotification: false }).catch((err) => {
+        console.warn("Initial poll failed:", err?.message || err);
+      });
+    }
+  } catch (err) {
+    console.warn("Init staleness check failed:", err?.message || err);
+  }
 })();

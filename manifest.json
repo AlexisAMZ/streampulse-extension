@@ -3,7 +3,7 @@
   "default_locale": "en",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "26.04.26",
+  "version": "26.4.28",
   "permissions": ["storage", "alarms", "notifications", "offscreen"],
   "host_permissions": [
     "https://api.twitch.tv/*",
@@ -16,7 +16,9 @@
     "https://images.prd.dlivecdn.com/*",
     "https://files.kick.com/*",
     "https://images.kick.com/*",
-    "https://stream.kick.com/*"
+    "https://stream.kick.com/*",
+    "https://id.kick.com/*",
+    "https://api.kick.com/*"
   ],
   "author": "AlexisAMZ",
   "background": {
@@ -34,7 +36,7 @@
     {
       "matches": ["https://kick.com/*", "https://*.kick.com/*"],
       "all_frames": true,
-      "js": ["js/kickPlayerEnhancer.js", "js/chatFilter.js", "js/watchTimeTracker.js"],
+      "js": ["js/kickPlayerEnhancer.js", "js/kickChannelPoints.js", "js/chatFilter.js", "js/watchTimeTracker.js"],
       "run_at": "document_idle"
     }
   ],

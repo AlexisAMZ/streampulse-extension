@@ -35,6 +35,7 @@ const defaultPreferences = {
   enableFastForwardButton: true,
   watchTimeTracker: true,
   language: DEFAULT_LANGUAGE,
+  sortOrder: "live",
 };
 
 const state = {
@@ -42,6 +43,7 @@ const state = {
   statuses: {},
   preferences: { ...defaultPreferences },
   selectedPlatform: DEFAULT_PLATFORM,
+  userProfile: null,
 };
 
 const streamerListEl = document.getElementById("streamer-list");
@@ -83,6 +85,9 @@ const wtTotalChannels = document.getElementById("wt-total-channels");
 const wtTopWatched = document.getElementById("wt-top-watched");
 const wtEmpty = document.getElementById("wt-empty");
 const watchTimeToggle = document.getElementById("pref-watch-time");
+
+const pseudoInput = document.getElementById("pref-pseudo-input");
+const pseudoSaveButton = document.getElementById("pref-pseudo-save");
 
 const toastContainer = document.getElementById("toast-container");
 const MAX_TOASTS = 5;
@@ -129,7 +134,12 @@ function showFeedback(message, type = "success") {
 function removeToast(toast) {
   if (!toast || toast.classList.contains("removing")) return;
   toast.classList.add("removing");
-  toast.addEventListener("animationend", () => toast.remove(), { once: true });
+  // Fallback in case animationend doesn't fire (no animation, browser bug, etc.)
+  const fallback = setTimeout(() => toast.remove(), 400);
+  toast.addEventListener("animationend", () => {
+    clearTimeout(fallback);
+    toast.remove();
+  }, { once: true });
 }
 
 // --- Theme ---
@@ -195,7 +205,7 @@ function updatePlatformPickerUI() {
   platformPicker.querySelectorAll(".platform-button").forEach((button) => {
     const btnPlatform = normalizePlatform(button.dataset.platform);
     const isActive = btnPlatform === state.selectedPlatform;
-    button.classList.toggle("is-active", isActive);
+    button.classList.toggle("active", isActive);
     button.setAttribute("aria-pressed", isActive ? "true" : "false");
     button.title = getPlatformLabel(btnPlatform);
   });
@@ -346,21 +356,6 @@ function createGhostClone(card) {
 
 const REAL_CARDS = ".streamer-card:not(.dragging):not(.drag-ghost)";
 
-function getDropTarget(y) {
-  const cards = [...streamerListEl.querySelectorAll(REAL_CARDS)];
-  let closest = null;
-  let closestOffset = Number.NEGATIVE_INFINITY;
-
-  for (const card of cards) {
-    const rect = card.getBoundingClientRect();
-    const offset = y - (rect.top + rect.height / 2);
-    if (offset < 0 && offset > closestOffset) {
-      closestOffset = offset;
-      closest = card;
-    }
-  }
-  return closest; // null = append at end
-}
 
 function initDragAndDrop() {
   if (!streamerListEl || streamerListEl._dragInit) return;
@@ -385,23 +380,21 @@ function initDragAndDrop() {
   streamerListEl.addEventListener("dragover", (e) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
+  });
 
+  streamerListEl.addEventListener("dragenter", (e) => {
     if (!dragSrcEl) return;
+    const card = e.target.closest(REAL_CARDS);
+    if (!card || card === dragSrcEl) return;
 
-    // Create ghost clone once per drag
-    if (!dragGhost) {
-      dragGhost = createGhostClone(dragSrcEl);
-    }
+    if (!dragGhost) dragGhost = createGhostClone(dragSrcEl);
 
-    const target = getDropTarget(e.clientY);
-    if (target) {
-      if (target.previousElementSibling !== dragGhost) {
-        streamerListEl.insertBefore(dragGhost, target);
-      }
+    const rect = card.getBoundingClientRect();
+    const insertAfter = e.clientY > rect.top + rect.height / 2;
+    if (insertAfter) {
+      card.after(dragGhost);
     } else {
-      if (streamerListEl.lastElementChild !== dragGhost) {
-        streamerListEl.appendChild(dragGhost);
-      }
+      card.before(dragGhost);
     }
   });
 
@@ -492,7 +485,7 @@ function renderStreamers() {
   streamerListEl.classList.remove("empty");
   const fragment = document.createDocumentFragment();
 
-  // Sort streamers based on selected order
+  // Sort streamers based on selected order (live-first keeps live cards before offline)
   const sortSelect = document.getElementById("sort-order");
   const sortMode = sortSelect?.value || "live";
   const streamersToRender = sortStreamers([...state.streamers], sortMode);
@@ -511,6 +504,27 @@ function renderStreamers() {
       } else {
         const s = state.streamers.find((x) => x.id === id);
         const messageKey = enabled ? "popup.toast.notifyEnabled" : "popup.toast.notifyDisabled";
+        if (s) {
+          const platformId = s.platform || DEFAULT_PLATFORM;
+          const name = s.displayName || formatHandleForDisplay(platformId, s.handle || s.twitch);
+          showFeedback(t(messageKey, { name }), "success");
+        }
+        return true;
+      }
+    },
+    onToggleGameNotify: async (id, enabled) => {
+      const result = await sendMessage({
+        type: "toggleGameNotifications",
+        id,
+        enabled,
+      });
+
+      if (result?.error) {
+        showFeedback(result.error, "error");
+        return false;
+      } else {
+        const s = state.streamers.find((x) => x.id === id);
+        const messageKey = enabled ? "popup.toast.gameNotifyEnabled" : "popup.toast.gameNotifyDisabled";
         if (s) {
           const platformId = s.platform || DEFAULT_PLATFORM;
           const name = s.displayName || formatHandleForDisplay(platformId, s.handle || s.twitch);
@@ -542,28 +556,23 @@ function renderStreamers() {
     const card = cardFragment.querySelector(".streamer-card");
     card.dataset.id = streamer.id;
     card.dataset.index = index;
-    // Disable drag & drop when not in custom sort mode
     if (sortMode !== "custom") card.removeAttribute("draggable");
 
-    // Track live IDs
     if (activeStatus.isLive) currentLiveIds.add(streamer.id);
 
-    // Pulse glow if just went live (wasn't live before)
     if (activeStatus.isLive && previousLiveIds.size > 0 && !previousLiveIds.has(streamer.id)) {
       card.classList.add("just-went-live");
       card.addEventListener("animationend", () => card.classList.remove("just-went-live"), { once: true });
     }
 
-    // Click card → open channel (ignore clicks on buttons/actions)
     card.addEventListener("click", (e) => {
-      if (e.target.closest("button, .card-actions, .confirm-overlay, input")) return;
+      if (e.target.closest("button, .card-actions, .confirm-overlay, input, .hover-player-wrap")) return;
       const platformId = streamer.platform || DEFAULT_PLATFORM;
       const url = buildProfileUrl(platformId, streamer.handle || streamer.twitch || streamer.id);
       chrome.tabs.create({ url }, () => window.close());
     });
     card.style.cursor = "pointer";
 
-    // Slide-in animation for newly added card
     if (lastAddedId) {
       const compKey = getHandleComparisonKey(
         streamer.platform || DEFAULT_PLATFORM,
@@ -584,6 +593,45 @@ function renderStreamers() {
   streamerListEl.appendChild(fragment);
   initDragAndDrop();
   observeLazyIframes();
+}
+
+function renderGreeting() {
+  const greetingTitleEl = document.getElementById("greeting-title");
+  if (!greetingTitleEl) return;
+  const greetingName = state.userProfile?.displayName || state.userProfile?.handle || "";
+  const hour = new Date().getHours();
+  const salut = hour < 18 ? t("popup.greetingMorning") : t("popup.greetingEvening");
+  const greetingSub = t("popup.greetingSub");
+  const line1 = document.createTextNode(greetingName ? `${salut} ${greetingName}.` : `${salut}.`);
+  const br = document.createElement("br");
+  const sub = document.createElement("span");
+  sub.className = "greeting-sub";
+  sub.textContent = greetingSub;
+  greetingTitleEl.replaceChildren(line1, br, sub);
+}
+
+async function handleSavePseudo() {
+  if (!pseudoInput || !pseudoSaveButton) return;
+  const raw = pseudoInput.value.trim();
+  if (!raw) {
+    showFeedback(t("popup.settings.pseudoEmpty") || "Pseudo vide", "error");
+    return;
+  }
+  const previous = state.userProfile || {};
+  const next = { ...previous, handle: raw, displayName: raw };
+
+  pseudoSaveButton.disabled = true;
+  const result = await sendMessage({ type: "updateUserProfile", profile: next });
+  pseudoSaveButton.disabled = false;
+
+  if (result?.success) {
+    state.userProfile = next;
+    renderGreeting();
+    markButtonSuccess(pseudoSaveButton);
+    showFeedback(t("popup.settings.pseudoSaved") || "Pseudo mis à jour", "success");
+  } else {
+    showFeedback(result?.error || t("popup.errors.generic"), "error");
+  }
 }
 
 function renderPreferences() {
@@ -615,9 +663,14 @@ function renderPreferences() {
   if (blockedUsersInput) {
     blockedUsersInput.value = prefs.chatBlockedUsers || "";
   }
+  const sortSelect = document.getElementById("sort-order");
+  if (sortSelect && prefs.sortOrder) {
+    sortSelect.value = prefs.sortOrder;
+  }
   updateLanguageButtonsState();
 }
 
+let _watchTimeLoaded = false;
 function setActiveTab(tabName) {
   currentTab = tabName;
   tabButtons.forEach((button) => {
@@ -625,14 +678,18 @@ function setActiveTab(tabName) {
     button.classList.toggle("active", isActive);
   });
 
+  const streamersView = document.getElementById("streamers-view");
   if (tabName === "streamers") {
-    addStreamerSection?.classList.remove("hidden");
-    streamerListEl?.classList.remove("hidden");
+    streamersView?.classList.remove("hidden");
     settingsSection?.classList.add("hidden");
   } else {
-    addStreamerSection?.classList.add("hidden");
-    streamerListEl?.classList.add("hidden");
+    streamersView?.classList.add("hidden");
     settingsSection?.classList.remove("hidden");
+    // Lazy-load watch time summary the first time settings is opened
+    if (!_watchTimeLoaded) {
+      _watchTimeLoaded = true;
+      renderWatchTimeSummary().catch(() => {});
+    }
   }
 }
 
@@ -672,18 +729,23 @@ function animatePointsValue(el, newValue) {
   lastPointsValue = newValue;
 }
 
-async function renderStats() {
+async function renderStats(preloadedStats = null) {
   try {
-    const data = await chrome.storage.local.get("betaGeneralStats");
-    const stats = data.betaGeneralStats || {};
+    const stats = preloadedStats !== null
+      ? preloadedStats
+      : (await chrome.storage.local.get("betaGeneralStats")).betaGeneralStats || {};
     const points = stats.channelPointsClaimed || 0;
-    const formatted = formatNumber(points);
+    const formatted = points > 0 ? formatNumber(points) : "--";
 
     // Settings counter
     if (statPointsEl) statPointsEl.textContent = formatted;
 
     // Header badge — animated bump
     if (headerPointsValue) animatePointsValue(headerPointsValue, points);
+
+    // Greeting bar points block
+    const headerPointsValue2 = document.getElementById("header-points-value2");
+    if (headerPointsValue2) headerPointsValue2.textContent = formatted;
   } catch (err) {
     console.error("renderStats failed:", err);
     if (statPointsEl) statPointsEl.textContent = t("popup.stats.loadError") || "--";
@@ -763,16 +825,31 @@ function buildWtRankingItem(entry, valueHtml) {
   return li;
 }
 
-async function renderWatchTimeSummary(month = null) {
+function _getCurrentMonthKey() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+}
+
+async function renderWatchTimeSummary(month = null, preloadedData = null) {
   try {
-    const result = await sendMessage({ type: "getWatchTimeSummary", month });
+    // Read directly from storage — bypasses the service worker (MV3 can be sleeping)
+    const data = preloadedData !== null
+      ? preloadedData
+      : (await chrome.storage.local.get("betaWatchTimeData")).betaWatchTimeData || {};
 
-    if (!result?.success || !result.summary) {
-      showWatchTimeEmpty();
-      return;
-    }
+    const monthKey = month || _getCurrentMonthKey();
+    const monthData = data[monthKey] || {};
+    const entries = Object.values(monthData).sort((a, b) => b.watchSeconds - a.watchSeconds);
+    const totalSeconds = entries.reduce((s, e) => s + e.watchSeconds, 0);
+    const availableMonths = Object.keys(data).sort().reverse();
 
-    const summary = result.summary;
+    const summary = {
+      month: monthKey,
+      availableMonths,
+      totalSeconds,
+      channelCount: entries.length,
+      topWatched: entries.slice(0, 10),
+    };
 
     // Populate month selector
     if (watchTimeMonthSelect) {
@@ -804,6 +881,10 @@ async function renderWatchTimeSummary(month = null) {
     }
 
     const hasData = summary.totalSeconds > 0;
+
+    // Greeting bar watch time block
+    const statWatchtimeEl = document.getElementById("stat-watchtime");
+    if (statWatchtimeEl) statWatchtimeEl.textContent = hasData ? formatDuration(summary.totalSeconds) : "--";
 
     if (wtEmpty) wtEmpty.classList.toggle("hidden", hasData);
     if (wtTotalTime) wtTotalTime.textContent = hasData ? formatDuration(summary.totalSeconds) : "--";
@@ -959,6 +1040,7 @@ function refreshTranslations() {
   renderStats();
   renderPlatformPicker();
   setSelectedPlatform(state.selectedPlatform);
+  renderGreeting();
 }
 
 async function handleLanguageClick(event) {
@@ -1108,12 +1190,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Show skeleton placeholders immediately
     showSkeletons(3);
 
+    // Storage round-trip — only the keys needed for first paint.
+    // betaWatchTimeData can be large (months of records) and is only shown in the
+    // Settings tab — load it lazily when that tab is opened.
+    const _t0 = performance.now();
     const data = await chrome.storage.local.get([
       "betaGeneralStreamers",
       "betaGeneralStatuses",
       "betaGeneralPreferences",
       "betaGeneralStats",
+      "userProfile",
     ]);
+    const _storageMs = performance.now() - _t0;
+    if (_storageMs > 200) {
+      console.warn(`[SP] slow storage read: ${_storageMs.toFixed(0)}ms`, {
+        streamers: (data.betaGeneralStreamers || []).length,
+        statusesBytes: JSON.stringify(data.betaGeneralStatuses || {}).length,
+        prefsBytes: JSON.stringify(data.betaGeneralPreferences || {}).length,
+      });
+    }
 
     // 1. Setup Language & I18n
     const prefs = data.betaGeneralPreferences || {};
@@ -1121,6 +1216,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     await initI18n(lang);
     applyTranslations(document);
     syncDocumentLanguage("popup.htmlLang");
+
+    // Setup Greeting V7 — #greeting-title + old header fallback
+    state.userProfile = data.userProfile || null;
+    renderGreeting();
+
+    // Pre-fill pseudo input in settings
+    if (pseudoInput) {
+      pseudoInput.value = state.userProfile?.handle || state.userProfile?.displayName || "";
+    }
 
     // 2. Setup State & Render UI Immediately
     state.streamers = data.betaGeneralStreamers || [];
@@ -1134,25 +1238,39 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderPlatformPicker();
     setSelectedPlatform(state.selectedPlatform);
 
-    // Render Stats (settings + header badge)
-    const stats = data.betaGeneralStats || {};
-    const pts = stats.channelPointsClaimed || 0;
-    const ptsFormatted = formatNumber(pts);
-    if (statPointsEl) statPointsEl.textContent = ptsFormatted;
-    if (headerPointsValue) {
-      headerPointsValue.textContent = ptsFormatted;
-      lastPointsValue = pts;
-    }
+    // Render Stats (settings + header badge + V7 greeting bar) — use pre-fetched data
+    renderStats(data.betaGeneralStats || {}).catch(() => {});
+    // V7 live viewers total
+    const updateV7Stats = () => {
+      const liveStreamers = state.streamers.filter(s => state.statuses[s.id]?.active?.isLive);
+      const totalViewers = liveStreamers.reduce((acc, s) => acc + (state.statuses[s.id]?.viewers || 0), 0);
+      const statViewersEl = document.getElementById("stat-viewers");
+      if (statViewersEl) statViewersEl.textContent = totalViewers > 0 ? formatNumber(totalViewers) : "--";
+      const liveCountEl = document.getElementById("live-count");
+      if (liveCountEl) liveCountEl.textContent = String(liveStreamers.length).padStart(2, "0");
+      const offlineCountEl = document.getElementById("offline-count");
+      if (offlineCountEl) offlineCountEl.textContent = String(state.streamers.length - liveStreamers.length).padStart(2, "0");
+      const greetingLiveCountEl = document.getElementById("greeting-live-count");
+      if (greetingLiveCountEl) greetingLiveCountEl.textContent = `${liveStreamers.length} streamer${liveStreamers.length > 1 ? "s" : ""} en live`;
+    };
+    updateV7Stats();
 
     // Live-update stats when storage changes (points claimed while popup open)
     chrome.storage.onChanged.addListener((changes, area) => {
-      if (area === "local" && changes.betaGeneralStats) {
+      if (area !== "local") return;
+      if (changes.betaGeneralStats) {
         renderStats();
+      }
+      // Only re-render watch time if the user is actually looking at it.
+      // Otherwise we'd reload a potentially-large blob every 60s for nothing.
+      if (changes.betaWatchTimeData && currentTab === "settings" && _watchTimeLoaded) {
+        renderWatchTimeSummary().catch(() => {});
       }
     });
 
-    // Watch time summary — fire-and-forget, don't block popup opening
-    renderWatchTimeSummary().catch(() => {});
+    // Watch time summary is rendered lazily when the Settings tab opens
+    // (see setActiveTab) — keeps initial popup paint fast even when the
+    // betaWatchTimeData blob is large.
 
     // 3. Setup UI Components
     const tabs = document.querySelectorAll(".tab-button");
@@ -1188,8 +1306,25 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
-    document.getElementById("sort-order")?.addEventListener("change", () => {
+    document.getElementById("sort-order")?.addEventListener("change", (e) => {
+      updatePreferences({ sortOrder: e.target.value });
       renderStreamers();
+    });
+
+    // Platform filter buttons (EN DIRECT section)
+    document.getElementById("platform-filter-group")?.addEventListener("click", (e) => {
+      const btn = e.target.closest(".pf-btn");
+      if (!btn) return;
+      document.querySelectorAll(".pf-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const filter = btn.dataset.filter;
+      document.querySelectorAll("#streamer-list .streamer-card").forEach(card => {
+        if (filter === "all") {
+          card.hidden = false;
+        } else {
+          card.hidden = card.dataset.platform !== filter;
+        }
+      });
     });
 
     refreshButton?.addEventListener("click", async () => {
@@ -1292,6 +1427,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     btnResetStats?.addEventListener("click", handleResetStats);
     fileImport?.addEventListener("change", handleFileImport);
 
+    pseudoSaveButton?.addEventListener("click", handleSavePseudo);
+    pseudoInput?.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleSavePseudo();
+      }
+    });
+
     buildLanguageButtons();
     setActiveTab("streamers");
 
@@ -1301,6 +1444,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 4. Background Sync (Silent)
     sendMessage({ type: "getStreamers" }).catch(() => {});
+
+    // Free Kick embed connections immediately on popup close so the next
+    // open isn't delayed by lingering network streams.
+    window.addEventListener("pagehide", () => {
+      document.querySelectorAll(".hover-player-wrap iframe").forEach((f) => {
+        f.src = "about:blank";
+      });
+    }, { once: true });
   } catch (error) {
     console.error("Popup Init Error:", error);
     await initI18n();

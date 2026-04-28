@@ -3,272 +3,407 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StreamPulse – Première configuration</title>
+    <title data-i18n="onboarding.documentTitle">StreamPulse — Première configuration</title>
     <link rel="stylesheet" href="../css/onboarding.css" />
   </head>
   <body>
-    <!-- Gradient mesh background -->
+    <!-- ═══ AMBIENT BACKGROUND LAYERS ═══ -->
     <div class="bg-mesh"></div>
+    <div class="bg-pulse"></div>
+    <div class="bg-grid"></div>
+    <canvas id="particles"></canvas>
+    <div class="bg-scan"></div>
+    <div class="bg-vignette"></div>
 
-    <!-- Floating particles -->
-    <div class="particles" id="particles"></div>
+    <!-- Coordinate markers (DAW/console vibe) -->
+    <span class="bg-coords bg-coords-tl">N · 48°51′24″ · LIVE</span>
+    <span class="bg-coords bg-coords-tr">SYS / STREAMPULSE / V1.0</span>
+    <span class="bg-coords bg-coords-bl">CH 01 · ONBOARDING</span>
+    <span class="bg-coords bg-coords-br">REC · 0.0 dB · 60FPS</span>
 
     <main class="container">
-      <!-- Progress stepper -->
-      <nav class="stepper" id="stepper">
-        <div class="stepper-track">
-          <div class="stepper-fill" id="stepper-fill"></div>
+      <!-- ═══ TOP HEADER ═══ -->
+      <header class="top-header">
+        <div class="brand">
+          <img class="brand-mark" src="../images/photos/logosp.png" alt="StreamPulse" />
+          <span class="brand-name">STREAMPULSE</span>
+          <span class="brand-sep"></span>
+          <span class="brand-sub" data-i18n="onboarding.documentTitle">Première configuration</span>
+
+          <span class="brand-live">ON AIR</span>
         </div>
-        <button class="step-dot active" data-step="0" aria-label="Langue">
-          <span class="step-icon">🌐</span>
+        <span class="step-counter">
+          <span class="step-counter-label">STEP</span>
+          <span class="step-counter-current-wrap">
+            <span id="step-counter-current">01</span>
+          </span>
+          <span class="step-counter-divider">/</span>
+          <span class="step-counter-total">05</span>
+        </span>
+      </header>
+
+      <!-- ═══ STEPPER ═══ -->
+      <nav class="stepper" id="stepper" aria-label="Progression">
+        <div class="step-pill active" data-step="0">
+          <span class="step-num">01</span>
           <span class="step-label" data-i18n="onboarding.stepLanguage">Langue</span>
-        </button>
-        <button class="step-dot" data-step="1" aria-label="Streamers">
-          <span class="step-icon">📺</span>
+        </div>
+        <div class="step-pill" data-step="1">
+          <span class="step-num">02</span>
+          <span class="step-label" data-i18n="onboarding.stepProfile">Pseudo</span>
+        </div>
+        <div class="step-pill" data-step="2">
+          <span class="step-num">03</span>
           <span class="step-label" data-i18n="onboarding.stepStreamers">Streamers</span>
-        </button>
-        <button class="step-dot" data-step="2" aria-label="Réglages">
-          <span class="step-icon">⚙️</span>
+        </div>
+        <div class="step-pill" data-step="3">
+          <span class="step-num">04</span>
           <span class="step-label" data-i18n="onboarding.stepSettings">Réglages</span>
-        </button>
-        <button class="step-dot" data-step="3" aria-label="Fin">
-          <span class="step-icon">🚀</span>
-          <span class="step-label" data-i18n="onboarding.stepFinish">C'est parti</span>
-        </button>
+        </div>
+        <div class="step-pill" data-step="4">
+          <span class="step-num">05</span>
+          <span class="step-label" data-i18n="onboarding.stepFinish">Lancement</span>
+        </div>
       </nav>
 
-      <!-- STEP 0 : Welcome + Language -->
-      <section class="wizard-step active" data-step="0">
-        <div class="step-card glass">
-          <div class="welcome-hero">
-            <div class="logo-glow">
-              <img
-                src="../images/photos/logo.png"
-                alt="Logo StreamPulse"
-                class="brand-logo"
-              />
+      <!-- ═══ STAGE ═══ -->
+      <div class="stage">
+        <!-- ─── STEP 0 : Welcome + Language ─── -->
+        <section class="wizard-step active" data-step="0">
+          <div class="step-frame step-frame-single">
+            <div class="welcome-frame">
+              <p class="welcome-tagline" data-i18n="onboarding.welcomeTagline">EXTENSION CHROME · TWITCH · DLIVE · KICK</p>
+              <h1 class="welcome-display">
+                <span class="word" data-i18n="onboarding.welcomeWord1" style="animation-delay: 0.1s">Ne</span>
+                <span class="word" data-i18n="onboarding.welcomeWord2" style="animation-delay: 0.2s">rate</span>
+                <span class="word" data-i18n="onboarding.welcomeWord3" style="animation-delay: 0.3s">plus</span>
+                <span class="word italic" data-i18n="onboarding.welcomeWord4" style="animation-delay: 0.5s">jamais</span>
+                <br />
+                <span class="word" data-i18n="onboarding.welcomeWord5" style="animation-delay: 0.7s">un</span>
+                <span class="word italic" data-i18n="onboarding.welcomeWord6" style="animation-delay: 0.85s">live.</span>
+              </h1>
+              <p class="welcome-sub" data-i18n="onboarding.welcomeDescription">
+                Une extension pour suivre tes streamers en un coup d'œil. Commence par choisir la langue de l'interface.
+              </p>
+
+              <div class="language-options" id="language-options"></div>
+
+              <div class="step-nav" style="justify-content: center;">
+                <button class="btn btn-primary" id="btn-next-0">
+                  <span data-i18n="onboarding.continueBtn">Continuer</span>
+                  <span class="btn-icon">→</span>
+                </button>
+              </div>
             </div>
-            <h1 class="welcome-title" data-i18n="onboarding.welcomeTitle">
-              Bienvenue sur StreamPulse
-            </h1>
-            <p class="welcome-sub" data-i18n="onboarding.welcomeDescription">
-              Ajoute ton premier streamer pour recevoir ses notifications. Tu
-              pourras en ajouter d'autres ensuite directement depuis StreamPulse.
-            </p>
           </div>
+        </section>
 
-          <div class="language-picker">
-            <p class="picker-label" data-i18n="onboarding.languagePrompt">
-              Choisis la langue de l'extension
-            </p>
-            <div class="language-options" id="language-options"></div>
+        <!-- ─── STEP 1 : Profile ─── -->
+        <section class="wizard-step" data-step="1">
+          <div class="step-frame">
+            <!-- Left: editorial header -->
+            <div class="step-header">
+              <div class="step-eyebrow">02 / USER · IDENTITÉ</div>
+              <h1 class="step-title" data-i18n="onboarding.profileTitle">
+                Quel est ton <span class="accent">pseudo</span> ?
+              </h1>
+              <p class="step-desc" data-i18n="onboarding.profileDescription">
+                Renseigne ton pseudo Twitch — on récupère ta photo de profil pour t'accueillir comme il faut à chaque ouverture.
+              </p>
+              <div class="step-meta">
+                <span class="step-meta-item">RECHERCHE LIVE</span>
+                <span class="step-meta-item">API TWITCH</span>
+                <span class="step-meta-item">OPTIONNEL</span>
+              </div>
+            </div>
+
+            <!-- Right: interactive content -->
+            <div class="step-content">
+              <div class="glass profile-card frame-brackets">
+                <div class="profile-avatar-row">
+                  <div class="profile-avatar-wrap">
+                    <div class="profile-avatar" id="profile-avatar">
+                      <span class="profile-avatar-initials" id="profile-avatar-initials">?</span>
+                      <img class="profile-avatar-img" id="profile-avatar-img" alt="" hidden />
+                      <span class="profile-avatar-spinner" id="profile-avatar-spinner" hidden></span>
+                    </div>
+                    <span class="profile-avatar-status" id="profile-avatar-status" data-state="idle">·</span>
+                  </div>
+
+                  <div class="profile-info">
+                    <span class="profile-info-label">DISPLAY NAME</span>
+                    <span class="profile-info-name" id="profile-preview-name">—</span>
+                    <span class="profile-info-line" id="profile-hint" data-state="idle" data-i18n="onboarding.profileHintIdle">
+                      Saisis ton pseudo — recherche automatique.
+                    </span>
+                  </div>
+                </div>
+
+                <div class="profile-form">
+                  <label class="profile-label" for="profile-input" data-i18n="onboarding.profileInputLabel">
+                    TON PSEUDO TWITCH
+                  </label>
+                  <div class="input-row">
+                    <span class="input-prefix">@</span>
+                    <input
+                      id="profile-input"
+                      type="text"
+                      maxlength="32"
+                      autocomplete="off"
+                      autocapitalize="none"
+                      spellcheck="false"
+                      placeholder="alexisamz"
+                    />
+                    <span class="input-counter"><span id="profile-input-count">0</span>/32</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="step-nav">
+                <button class="btn btn-ghost" id="btn-back-1">
+                  <span class="btn-icon">←</span>
+                  <span data-i18n="onboarding.backBtn">Retour</span>
+                </button>
+                <button class="btn btn-primary" id="btn-next-1" disabled>
+                  <span data-i18n="onboarding.continueBtn">Continuer</span>
+                  <span class="btn-icon">→</span>
+                </button>
+              </div>
+            </div>
           </div>
+        </section>
 
-          <button class="btn-next btn-primary" id="btn-next-0" data-i18n="onboarding.continueBtn">
-            Continuer
-          </button>
-        </div>
-      </section>
+        <!-- ─── STEP 2 : Streamers ─── -->
+        <section class="wizard-step" data-step="2">
+          <div class="step-frame">
+            <div class="step-header">
+              <div class="step-eyebrow">03 / FOLLOW · STREAMERS</div>
+              <h1 class="step-title" data-i18n="onboarding.formLabelBase">
+                Tes <span class="accent">streamers</span><br />à suivre.
+              </h1>
+              <p class="step-desc" data-i18n="onboarding.helperTextBase">
+                Saisis un identifiant ou colle le lien d'une chaîne. Tu pourras toujours en ajouter plus tard.
+              </p>
+              <div class="step-meta">
+                <span class="step-meta-item">TWITCH</span>
+                <span class="step-meta-item">YOUTUBE</span>
+                <span class="step-meta-item">KICK</span>
+              </div>
+            </div>
 
-      <!-- STEP 1 : Add streamers -->
-      <section class="wizard-step" data-step="1">
-        <div class="step-card glass">
-          <div class="step-header">
-            <h2 data-i18n="onboarding.formLabelBase">Nom du créateur *</h2>
-            <p class="step-desc" data-i18n="onboarding.helperTextBase">
-              Saisis son identifiant ou le lien de sa chaîne.
-            </p>
+            <div class="step-content">
+              <div class="glass frame-brackets" style="display: flex; flex-direction: column; gap: 14px;">
+                <form id="onboarding-form" autocomplete="off" style="display: flex; flex-direction: column; gap: 12px;">
+                  <div
+                    class="platform-picker"
+                    id="onboarding-platform-picker"
+                    role="group"
+                    data-i18n-attr-ariaLabel="popup.platformSelectorLabel"
+                  ></div>
+
+                  <div class="input-row">
+                    <span class="input-prefix" id="onboarding-handle-prefix">@</span>
+                    <input
+                      id="streamer-input"
+                      name="streamer"
+                      type="text"
+                      maxlength="80"
+                      autocomplete="off"
+                      autocapitalize="none"
+                      spellcheck="false"
+                      required
+                      placeholder="pseudo ou URL"
+                    />
+                    <button id="submit-button" type="submit" data-i18n="onboarding.submit">
+                      Ajouter
+                    </button>
+                  </div>
+                </form>
+
+                <p id="feedback" class="feedback" hidden></p>
+
+                <section id="current-streamers" class="current-streamers" hidden>
+                  <div class="section-row">
+                    <span class="section-label" data-i18n="onboarding.currentHeader">STREAMERS SUIVIS</span>
+                    <span class="section-line"></span>
+                    <span class="section-count" id="streamer-count">00</span>
+                  </div>
+                  <ul id="streamer-list" class="streamer-list"></ul>
+                </section>
+              </div>
+
+              <div class="step-nav">
+                <button class="btn btn-ghost" id="btn-back-2">
+                  <span class="btn-icon">←</span>
+                  <span data-i18n="onboarding.backBtn">Retour</span>
+                </button>
+                <button class="btn btn-primary" id="btn-next-2" disabled>
+                  <span data-i18n="onboarding.continueBtn">Continuer</span>
+                  <span class="btn-icon">→</span>
+                </button>
+              </div>
+            </div>
           </div>
+        </section>
 
-          <form id="onboarding-form" autocomplete="off">
-            <div
-              class="platform-picker"
-              id="onboarding-platform-picker"
-              role="group"
-              data-i18n-attr-ariaLabel="popup.platformSelectorLabel"
-            ></div>
+        <!-- ─── STEP 3 : Settings ─── -->
+        <section class="wizard-step" data-step="3">
+          <div class="step-frame">
+            <div class="step-header">
+              <div class="step-eyebrow">04 / PREFS · RÉGLAGES</div>
+              <h1 class="step-title" data-i18n="onboarding.preferencesTitle">
+                Quelques <span class="accent">préférences</span>.
+              </h1>
+              <p class="step-desc" data-i18n="onboarding.preferencesDescription">
+                Active ce qui t'intéresse — tout est modifiable plus tard depuis les réglages.
+              </p>
+              <div class="step-meta">
+                <span class="step-meta-item">SONS</span>
+                <span class="step-meta-item">NOTIFICATIONS</span>
+                <span class="step-meta-item">AUTO</span>
+              </div>
+            </div>
 
-            <div class="input-row">
-              <span class="input-prefix" id="onboarding-handle-prefix">@</span>
-              <input
-                id="streamer-input"
-                name="streamer"
-                type="text"
-                maxlength="80"
-                autocomplete="off"
-                autocapitalize="none"
-                spellcheck="false"
-                required
-              />
-              <button id="submit-button" type="submit" data-i18n="onboarding.submit">
-                Ajouter
+            <div class="step-content">
+              <div class="settings-groups">
+                <div class="settings-group frame-brackets">
+                  <span class="section-label" data-i18n="onboarding.playerGroupTitle">LECTEUR TWITCH</span>
+                  <p class="settings-group-hint" data-i18n="onboarding.playerGroupHint">
+                    Optimise le lecteur pour rattraper le direct.
+                  </p>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span class="settings-title" data-i18n="popup.settings.autoRefreshTitle"></span>
+                      <span class="settings-description" data-i18n="popup.settings.autoRefreshDescription"></span>
+                    </div>
+                    <input id="onboarding-auto-refresh" type="checkbox" checked />
+                  </label>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span class="settings-title" data-i18n="popup.settings.fastForwardTitle"></span>
+                      <span class="settings-description" data-i18n="popup.settings.fastForwardDescription"></span>
+                    </div>
+                    <input id="onboarding-fast-forward" type="checkbox" checked />
+                  </label>
+                </div>
+
+                <div class="settings-group frame-brackets">
+                  <span class="section-label" data-i18n="onboarding.notificationsGroupTitle">NOTIFICATIONS</span>
+                  <p class="settings-group-hint" data-i18n="onboarding.notificationsGroupHint">
+                    Personnalise la façon dont StreamPulse te prévient.
+                  </p>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span class="settings-title" data-i18n="popup.settings.liveNotificationsTitle"></span>
+                      <span class="settings-description" data-i18n="popup.settings.liveNotificationsDescription"></span>
+                    </div>
+                    <input id="onboarding-live-notifications" type="checkbox" checked />
+                  </label>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span class="settings-title" data-i18n="popup.settings.gameAlertsTitle"></span>
+                      <span class="settings-description" data-i18n="popup.settings.gameAlertsDescription"></span>
+                    </div>
+                    <input id="onboarding-game-alerts" type="checkbox" />
+                  </label>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span class="settings-title" data-i18n="popup.settings.soundsTitle"></span>
+                      <span class="settings-description" data-i18n="popup.settings.soundsDescription"></span>
+                    </div>
+                    <input id="onboarding-sounds" type="checkbox" checked />
+                  </label>
+                </div>
+
+                <div class="settings-group frame-brackets">
+                  <span class="section-label" data-i18n="onboarding.qualityGroupTitle">AUTOMATISATION</span>
+                  <p class="settings-group-hint" data-i18n="onboarding.qualityGroupHint">
+                    Automatise les petites actions répétitives.
+                  </p>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span class="settings-title" data-i18n="popup.settings.autoClaimTitle"></span>
+                      <span class="settings-description" data-i18n="popup.settings.autoClaimDescription"></span>
+                    </div>
+                    <input id="onboarding-auto-claim" type="checkbox" checked />
+                  </label>
+                </div>
+              </div>
+
+              <div class="step-nav">
+                <button class="btn btn-ghost" id="btn-back-3">
+                  <span class="btn-icon">←</span>
+                  <span data-i18n="onboarding.backBtn">Retour</span>
+                </button>
+                <button class="btn btn-primary" id="btn-next-3">
+                  <span data-i18n="onboarding.continueBtn">Continuer</span>
+                  <span class="btn-icon">→</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── STEP 4 : Finish ─── -->
+        <section class="wizard-step" data-step="4">
+          <div class="step-frame step-frame-single">
+            <div class="finish-frame">
+              <div class="finish-check">✓</div>
+              <div class="step-eyebrow" style="justify-content: center;">05 / READY · LANCEMENT</div>
+              <h1 class="finish-title" data-i18n="onboarding.finishTitle">
+                Tout est prêt<span class="name-suffix" id="finish-name-suffix"></span>.
+              </h1>
+              <p class="welcome-sub" data-i18n="onboarding.finishDescription">
+                StreamPulse va te prévenir dès qu'un streamer suivi se lance. Pense à épingler l'extension.
+              </p>
+
+              <div class="glass pin-instructions frame-brackets">
+                <div class="pin-label">
+                  <span class="section-label">📌 ÉPINGLER L'EXTENSION</span>
+                </div>
+                <ol class="pin-steps">
+                  <li data-i18n="onboarding.pinStep1" data-i18n-mode="html">
+                    <strong>Clique</strong> sur l'icône puzzle en haut à droite
+                  </li>
+                  <li data-i18n="onboarding.pinStep2" data-i18n-mode="html">
+                    <strong>Cherche</strong> <span class="highlight">StreamPulse</span>
+                  </li>
+                  <li data-i18n="onboarding.pinStep3" data-i18n-mode="html">
+                    <strong>Épingle</strong> l'extension pour l'avoir toujours sous la main
+                  </li>
+                </ol>
+              </div>
+
+              <button id="finish-button" class="btn btn-finish" data-i18n="onboarding.finish">
+                Lancer StreamPulse →
               </button>
-            </div>
-          </form>
 
-          <p id="feedback" class="feedback" hidden></p>
-
-          <section id="current-streamers" class="current-streamers" hidden>
-            <h3 data-i18n="onboarding.currentHeader">
-              Streamers suivis
-            </h3>
-            <ul id="streamer-list" class="streamer-list"></ul>
-          </section>
-
-          <div class="step-nav">
-            <button class="btn-back" id="btn-back-1" data-i18n="onboarding.backBtn">Retour</button>
-            <button class="btn-next btn-primary" id="btn-next-1" disabled data-i18n="onboarding.continueBtn">
-              Continuer
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- STEP 2 : Settings -->
-      <section class="wizard-step" data-step="2">
-        <div class="step-card glass">
-          <div class="step-header">
-            <h2 data-i18n="onboarding.preferencesTitle">Réglages recommandés</h2>
-            <p class="step-desc" data-i18n="onboarding.preferencesDescription">
-              Active les options qui te conviennent. Tu pourras les modifier plus tard.
-            </p>
-          </div>
-
-          <div class="settings-groups">
-            <div class="settings-group glass-inner">
-              <h3 class="settings-group-title" data-i18n="onboarding.playerGroupTitle">
-                Lecteur Twitch
-              </h3>
-              <p class="settings-group-hint" data-i18n="onboarding.playerGroupHint">
-                Optimise le lecteur pour rattraper le direct.
+              <p class="finish-hint" data-i18n="onboarding.nextHint">
+                Tu pourras ajouter d'autres streamers depuis le menu principal.
               </p>
-
-              <label class="settings-toggle">
-                <div class="settings-text">
-                  <span class="settings-title" data-i18n="popup.settings.autoRefreshTitle"></span>
-                  <span class="settings-description" data-i18n="popup.settings.autoRefreshDescription"></span>
-                </div>
-                <input id="onboarding-auto-refresh" type="checkbox" checked />
-              </label>
-
-              <label class="settings-toggle">
-                <div class="settings-text">
-                  <span class="settings-title" data-i18n="popup.settings.fastForwardTitle"></span>
-                  <span class="settings-description" data-i18n="popup.settings.fastForwardDescription"></span>
-                </div>
-                <input id="onboarding-fast-forward" type="checkbox" checked />
-              </label>
-            </div>
-
-            <div class="settings-group glass-inner">
-              <h3 class="settings-group-title" data-i18n="onboarding.notificationsGroupTitle">
-                Notifications
-              </h3>
-              <p class="settings-group-hint" data-i18n="onboarding.notificationsGroupHint">
-                Personnalise la façon dont StreamPulse te prévient.
-              </p>
-
-              <label class="settings-toggle">
-                <div class="settings-text">
-                  <span class="settings-title" data-i18n="popup.settings.liveNotificationsTitle"></span>
-                  <span class="settings-description" data-i18n="popup.settings.liveNotificationsDescription"></span>
-                </div>
-                <input id="onboarding-live-notifications" type="checkbox" checked />
-              </label>
-
-              <label class="settings-toggle">
-                <div class="settings-text">
-                  <span class="settings-title" data-i18n="popup.settings.gameAlertsTitle"></span>
-                  <span class="settings-description" data-i18n="popup.settings.gameAlertsDescription"></span>
-                </div>
-                <input id="onboarding-game-alerts" type="checkbox" />
-              </label>
-
-              <label class="settings-toggle">
-                <div class="settings-text">
-                  <span class="settings-title" data-i18n="popup.settings.soundsTitle"></span>
-                  <span class="settings-description" data-i18n="popup.settings.soundsDescription"></span>
-                </div>
-                <input id="onboarding-sounds" type="checkbox" checked />
-              </label>
-            </div>
-
-            <div class="settings-group glass-inner">
-              <h3 class="settings-group-title" data-i18n="onboarding.qualityGroupTitle">
-                Automatisation
-              </h3>
-              <p class="settings-group-hint" data-i18n="onboarding.qualityGroupHint">
-                Automatise les petites actions répétitives.
-              </p>
-
-              <label class="settings-toggle">
-                <div class="settings-text">
-                  <span class="settings-title" data-i18n="popup.settings.autoClaimTitle"></span>
-                  <span class="settings-description" data-i18n="popup.settings.autoClaimDescription"></span>
-                </div>
-                <input id="onboarding-auto-claim" type="checkbox" checked />
-              </label>
             </div>
           </div>
+        </section>
+      </div>
 
-          <div class="step-nav">
-            <button class="btn-back" id="btn-back-2" data-i18n="onboarding.backBtn">Retour</button>
-            <button class="btn-next btn-primary" id="btn-next-2" data-i18n="onboarding.continueBtn">
-              Continuer
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- STEP 3 : Finish -->
-      <section class="wizard-step" data-step="3">
-        <div class="step-card glass finish-card">
-          <div class="finish-hero">
-            <div class="finish-check">✓</div>
-            <h2 data-i18n="onboarding.finishTitle">Tu es prêt !</h2>
-            <p class="step-desc" data-i18n="onboarding.finishDescription">
-              StreamPulse est configuré. Épingle l'extension pour y accéder facilement.
-            </p>
-          </div>
-
-          <div class="pin-instructions glass-inner">
-            <p class="callout" data-i18n="onboarding.pinCallout">
-              📌 Pour retrouver l'extension facilement, pense à l'épingler :
-            </p>
-            <ol>
-              <li data-i18n="onboarding.pinStep1" data-i18n-mode="html">
-                <strong>Clique</strong> sur l'icône puzzle en haut à droite
-              </li>
-              <li data-i18n="onboarding.pinStep2" data-i18n-mode="html">
-                <strong>Cherche</strong>
-                <span class="highlight">StreamPulse</span>
-              </li>
-              <li data-i18n="onboarding.pinStep3" data-i18n-mode="html">
-                <strong>Épingle</strong> l'extension pour l'avoir toujours sous la main
-              </li>
-            </ol>
-          </div>
-
-          <button id="finish-button" class="btn-next btn-finish" data-i18n="onboarding.finish">
-            Lancer StreamPulse 🚀
-          </button>
-
-          <p class="finish-hint" data-i18n="onboarding.nextHint">
-            Tu pourras ajouter d'autres streamers depuis le menu principal.
-          </p>
-        </div>
-      </section>
+      <!-- ═══ FOOTER ═══ -->
+      <footer class="footer">
+        <span class="footer-brand">© 2025 STREAMPULSE</span>
+        <p data-i18n="onboarding.footerText" data-i18n-mode="html" style="font-family: var(--sp-mono);">
+          BY <a href="https://www.instagram.com/alexisamz" target="_blank" rel="noopener noreferrer">@ALEXISAMZ</a>
+          · <a href="mailto:contact@streampulse.fr">CONTACT@STREAMPULSE.FR</a>
+        </p>
+        <span class="footer-coords">LAT 48.8534 · LON 2.3488</span>
+      </footer>
     </main>
 
-    <footer class="footer">
-      <p data-i18n="onboarding.footerText" data-i18n-mode="html">
-        Créé par
-        <a href="https://www.instagram.com/alexisamz" target="_blank" rel="noopener noreferrer">@AlexisAMZ</a>
-        •
-        <a href="mailto:contact@streampulse.fr">contact@streampulse.fr</a>
-      </p>
-    </footer>
-
+    <script src="../js/particles.js"></script>
     <script type="module" src="../js/onboarding.js"></script>
   </body>
 </html>

@@ -2,7 +2,7 @@
   "use strict";
 
   // Watch Time Tracker — tracks per-channel watch time.
-  // Heartbeat every 60s, first tick immediate on channel detection.
+  // Heartbeat every 60s; partial seconds captured on page close via pagehide.
 
   if (window.top !== window) return; // skip iframes
 
@@ -13,6 +13,8 @@
   let heartbeatId = null;
   let currentChannel = null;
   let currentPlatform = null;
+  let trackingStartTime = null;   // wall-clock time of last channel switch
+  let lastHeartbeatTime = null;   // wall-clock time of last successful heartbeat
 
   // ── Platform & channel detection ──
 
@@ -49,7 +51,7 @@
     return { platform, channel: segment };
   }
 
-  // ── Heartbeat ──
+  // ── Messaging ──
 
   function safeSend(msg) {
     try {
@@ -59,15 +61,11 @@
     }
   }
 
+  // ── Heartbeat ──
+
   function sendHeartbeat() {
-    const info = extractChannel();
-    if (!info) return;
-
-    if (info.channel !== currentChannel || info.platform !== currentPlatform) {
-      currentChannel = info.channel;
-      currentPlatform = info.platform;
-    }
-
+    if (!currentChannel || !currentPlatform) return;
+    lastHeartbeatTime = Date.now();
     safeSend({
       type: "trackWatchTime",
       channel: currentChannel,
@@ -76,6 +74,8 @@
     });
   }
 
+  // ── Tracking lifecycle ──
+
   function startTracking() {
     if (heartbeatId) return;
 
@@ -83,8 +83,13 @@
     if (info) {
       currentChannel = info.channel;
       currentPlatform = info.platform;
+    }
 
-      // Presence ping
+    trackingStartTime = Date.now();
+    lastHeartbeatTime = Date.now();
+
+    // Presence ping — records channel start, no seconds
+    if (currentChannel && currentPlatform) {
       safeSend({
         type: "trackWatchTime",
         channel: currentChannel,
@@ -103,6 +108,8 @@
     }
     currentChannel = null;
     currentPlatform = null;
+    trackingStartTime = null;
+    lastHeartbeatTime = null;
   }
 
   // ── URL change detection (SPA) ──
@@ -120,6 +127,10 @@
         currentChannel = info.channel;
         currentPlatform = info.platform;
 
+        // Reset timestamps for the new channel
+        trackingStartTime = Date.now();
+        lastHeartbeatTime = Date.now();
+
         safeSend({
           type: "trackWatchTime",
           channel: currentChannel,
@@ -130,8 +141,26 @@
     } else {
       currentChannel = null;
       currentPlatform = null;
+      trackingStartTime = null;
+      lastHeartbeatTime = null;
     }
   }
+
+  // ── Save partial time on page close ──
+
+  window.addEventListener("beforeunload", () => {
+    if (!currentChannel || !currentPlatform || !lastHeartbeatTime) return;
+    // Seconds elapsed since the last heartbeat (partial interval)
+    const elapsed = Math.round((Date.now() - lastHeartbeatTime) / 1000);
+    if (elapsed >= 5) {
+      safeSend({
+        type: "trackWatchTime",
+        channel: currentChannel,
+        platform: currentPlatform,
+        seconds: elapsed,
+      });
+    }
+  });
 
   // ── Settings ──
 
