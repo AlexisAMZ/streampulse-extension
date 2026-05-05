@@ -13,6 +13,19 @@
   const isTopWindow = window.top === window;
   const storage = chrome?.storage?.local;
 
+  const TWITCH_NON_STREAM_ROUTES = new Set([
+    "", "directory", "settings", "subscriptions", "drops",
+    "wallet", "u", "search", "videos", "moderator",
+    "inventory", "friends", "following", "payments",
+    "notifications", "privacy", "security", "squad",
+  ]);
+
+  function isStreamPage() {
+    const path = window.location.pathname.split("/").filter(Boolean);
+    if (path.length === 0) return false;
+    return !TWITCH_NON_STREAM_ROUTES.has(path[0].toLowerCase());
+  }
+
   const DEFAULT_FEATURE_CONFIG = {
     streamLatency: {
       enabled: true,
@@ -739,7 +752,7 @@
       ensureSharedStyles();
     }
 
-    if (extensionConfig.features.streamLatency.enabled) {
+    if (extensionConfig.features.streamLatency.enabled && isStreamPage()) {
       latencyFeature = new LatencyFeature(
         extensionConfig.features.streamLatency
       );
@@ -748,7 +761,6 @@
 
     if (isTopWindow) {
       initPreferences();
-
     }
   }
 

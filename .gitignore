@@ -1,3 +1,9 @@
 .DS_Store
 config.js
 *.zip
+.env
+i18n/translations.*.draft.json
+node_modules/
+package.json
+scripts/
+

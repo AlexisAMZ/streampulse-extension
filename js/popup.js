@@ -1251,7 +1251,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       const offlineCountEl = document.getElementById("offline-count");
       if (offlineCountEl) offlineCountEl.textContent = String(state.streamers.length - liveStreamers.length).padStart(2, "0");
       const greetingLiveCountEl = document.getElementById("greeting-live-count");
-      if (greetingLiveCountEl) greetingLiveCountEl.textContent = `${liveStreamers.length} streamer${liveStreamers.length > 1 ? "s" : ""} en live`;
+      if (greetingLiveCountEl) {
+        const count = liveStreamers.length;
+        const countKey = count > 1
+          ? "popup.greetingLiveCountPlural"
+          : "popup.greetingLiveCountSingular";
+        greetingLiveCountEl.textContent = t(countKey, { count });
+      }
     };
     updateV7Stats();
 
