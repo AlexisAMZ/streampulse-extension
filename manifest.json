@@ -3,7 +3,7 @@
   "default_locale": "en",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "26.4.32",
+  "version": "26.4.33",
   "permissions": ["storage", "alarms", "notifications", "offscreen"],
   "host_permissions": [
     "https://api.twitch.tv/*",

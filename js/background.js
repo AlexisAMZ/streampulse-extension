@@ -21,6 +21,11 @@ const STORAGE_KEYS = {
   STATUSES: "betaGeneralStatuses",
   STATS: "betaGeneralStats",
   WATCH_TIME: "betaWatchTimeData",
+  // Dedicated key for live-state notification dedup. Separate from STATUSES
+  // (which is the popup display data) so it survives even if statuses are
+  // wiped/reset. This is critical for MV3: every SW restart wipes the
+  // in-memory `streamerLiveState` Map, so we MUST restore from storage.
+  LIVE_STATE: "streamPulseLiveState",
 };
 
 const WATCHER_ALARM = "streampulseWatcher";
@@ -365,6 +370,20 @@ class DataStore {
   static async saveStatuses(statuses) {
     await chrome.storage.local.set({
       [STORAGE_KEYS.STATUSES]: statuses,
+    });
+  }
+
+  // Live-state dedicated key: persistent across SW restarts. Used ONLY for
+  // notification dedup (was-live / session-id tracking). Never wiped by the
+  // poll loop, even if streamers list is transiently empty.
+  static async getLiveState() {
+    const stored = await chrome.storage.local.get(STORAGE_KEYS.LIVE_STATE);
+    return stored[STORAGE_KEYS.LIVE_STATE] || {};
+  }
+
+  static async saveLiveState(stateObject) {
+    await chrome.storage.local.set({
+      [STORAGE_KEYS.LIVE_STATE]: stateObject,
     });
   }
 
@@ -1496,27 +1515,38 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
   const streamers = await DataStore.getStreamers();
   const preferences = await PreferenceStore.get();
   if (streamers.length === 0) {
-    await DataStore.saveStatuses({});
+    // Don't wipe statuses/live-state here. A transient empty read from
+    // chrome.storage (or a single-poll race) shouldn't destroy the dedup state
+    // for genuinely-followed streamers — it would cause every previously-live
+    // streamer to re-fire its "now live" notification on the next poll.
     await ActionBadge.update(0, preferences);
     return [];
   }
 
-  if (streamerLiveState.size === 0) {
-    const savedStatuses = await DataStore.getStatuses();
-    Object.values(savedStatuses || {}).forEach((status) => {
-      if (status && status.id) {
-        streamerLiveState.set(status.id, {
-          isLive: Boolean(status.active?.isLive),
-          platform: status.active?.platform || null,
-          game: status.active?.game || "",
-          sessionId: status.active?.sessionId || null,
-          title: status.active?.title || "",
-          avatarUrl: status.avatarUrl || "",
-          supportsLiveStatus:
-            status.active?.supportsLiveStatus !== false,
+  // ALWAYS restore from the dedicated LIVE_STATE storage key (not just when
+  // size === 0). MV3 service workers can be terminated between any two polls,
+  // and this Map is module-level (lost on every restart). Without restoring
+  // from storage, every poll on a fresh SW would see `wasLive = false` and
+  // re-fire the "live" notification — i.e. one notification per poll interval.
+  // Using a dedicated key (vs. piggybacking on STATUSES) means notification
+  // dedup survives even if the statuses object is transiently wiped.
+  try {
+    const savedLiveState = await DataStore.getLiveState();
+    Object.entries(savedLiveState || {}).forEach(([id, entry]) => {
+      if (!streamerLiveState.has(id) && entry && typeof entry === "object") {
+        streamerLiveState.set(id, {
+          isLive: Boolean(entry.isLive),
+          platform: entry.platform || null,
+          game: entry.game || "",
+          sessionId: entry.sessionId || null,
+          title: entry.title || "",
+          avatarUrl: entry.avatarUrl || "",
+          supportsLiveStatus: entry.supportsLiveStatus !== false,
         });
       }
     });
+  } catch (err) {
+    console.warn("Failed to restore live state:", err?.message || err);
   }
 
   const streamerById = new Map();
@@ -1610,6 +1640,18 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
   });
   await DataStore.saveStatuses(statusesObject);
 
+  // Persist live-state separately so notification dedup survives SW restarts.
+  // Storing as a plain object (Map serialization) keyed by streamer.id.
+  try {
+    const liveStateObject = {};
+    streamerLiveState.forEach((value, key) => {
+      liveStateObject[key] = value;
+    });
+    await DataStore.saveLiveState(liveStateObject);
+  } catch (err) {
+    console.warn("Failed to persist live state:", err?.message || err);
+  }
+
   const liveCount = statuses.reduce((total, status) => {
     return total + (status.active?.isLive ? 1 : 0);
   }, 0);
@@ -1660,17 +1702,30 @@ async function precacheThumbnails(statuses) {
   }
 }
 
+// Idempotent: only create the alarm if it doesn't already exist. Otherwise
+// every SW restart would call chrome.alarms.create() with the same name,
+// CANCELLING the existing periodic alarm and replacing it with a fresh one
+// using delayInMinutes: 0.1 (clamped to 1 min in production). This means the
+// alarm phase keeps shifting forward by 1 min on every wake-up — the period
+// is no longer the configured 10 min, polls bunch up, and notifications can
+// re-fire on every wake if state restoration lags.
 function scheduleWatcherAlarm() {
-  chrome.alarms.create(WATCHER_ALARM, {
-    periodInMinutes: DEFAULT_POLL_INTERVAL,
-    delayInMinutes: 0.1,
+  chrome.alarms.get(WATCHER_ALARM, (existing) => {
+    if (existing) return;
+    chrome.alarms.create(WATCHER_ALARM, {
+      periodInMinutes: DEFAULT_POLL_INTERVAL,
+      delayInMinutes: 0.1,
+    });
   });
 }
 
 function scheduleKeepAliveAlarm() {
-  chrome.alarms.create(KEEP_ALIVE_ALARM, {
-    periodInMinutes: Math.max(DEFAULT_POLL_INTERVAL / 2, 0.5),
-    delayInMinutes: 0.1,
+  chrome.alarms.get(KEEP_ALIVE_ALARM, (existing) => {
+    if (existing) return;
+    chrome.alarms.create(KEEP_ALIVE_ALARM, {
+      periodInMinutes: Math.max(DEFAULT_POLL_INTERVAL / 2, 0.5),
+      delayInMinutes: 0.1,
+    });
   });
 }
 
