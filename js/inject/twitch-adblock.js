@@ -99,27 +99,69 @@
     function isAdReq(u) {
       return /edge\.ads\.twitch\.tv|aws\.twitch\.tv\/ads|\/ads\?/i.test(u || "");
     }
-    // Remove Twitch SSAI ad segments from a media playlist: drop everything inside
-    // a twitch-stitched-ad date-range until the discontinuity that resumes live.
+    // Remove Twitch SSAI ad segments from a media playlist.
+    //
+    // Twitch brackets the ad pod with #EXT-X-DISCONTINUITY and tags it with
+    // CLASS="twitch-stitched-ad" date-ranges (a pod range + a per-segment quartile
+    // range before each ad segment). Crucially the FIRST discontinuity *opens* the
+    // ad (it is not the end), so we enter "ad mode" on a stitched-ad date-range and
+    // only leave it on a discontinuity AFTER we have dropped at least one ad
+    // segment — that distinguishes the closing discontinuity from the opening one.
     function stripAds(text) {
       var lines = String(text).split("\n");
       var out = [];
-      var inAd = false;
+      var seg = []; // tags buffered for the segment currently being read
+      var adMode = false;
+      var adSegsDropped = 0;
       for (var i = 0; i < lines.length; i++) {
         var ln = lines[i];
-        if (ln.indexOf("#EXT-X-DATERANGE") === 0 && ln.indexOf("twitch-stitched-ad") !== -1) {
-          inAd = true;
+        if (ln.indexOf("#EXT-X-DATERANGE") === 0) {
+          if (ln.indexOf("twitch-stitched-ad") !== -1) {
+            adMode = true; // entering / staying in the ad pod
+            continue; // drop the ad date-range
+          }
+          out.push(ln); // keep non-ad metadata date-ranges
           continue;
         }
-        if (inAd) {
-          if (ln.indexOf("#EXT-X-DISCONTINUITY") === 0) {
-            inAd = false; // ad block ends; resume live (drop the discontinuity too)
-            continue;
+        if (ln.indexOf("#EXT-X-DISCONTINUITY") === 0) {
+          if (adMode) {
+            if (adSegsDropped > 0) {
+              adMode = false; // closing discontinuity (we already dropped ad segments)
+              adSegsDropped = 0;
+            }
+            continue; // drop discontinuities that bracket the ad
           }
-          continue; // drop ad lines (#EXTINF, segment URLs, program-date-time…)
+          out.push(ln); // keep a legitimate live-stream discontinuity
+          continue;
         }
-        out.push(ln);
+        if (ln.indexOf("#EXTINF") === 0 || ln.indexOf("#EXT-X-PROGRAM-DATE-TIME") === 0) {
+          seg.push(ln);
+          continue;
+        }
+        if (ln.length > 0 && ln.charAt(0) !== "#") {
+          // a media segment URL — commit or drop the buffered block
+          seg.push(ln);
+          if (adMode) {
+            adSegsDropped++;
+          } else {
+            for (var j = 0; j < seg.length; j++) out.push(seg[j]);
+          }
+          seg = [];
+          continue;
+        }
+        out.push(ln); // header / other tags
       }
+      for (var k = 0; k < seg.length; k++) out.push(seg[k]); // flush trailing buffer
+      // Fail-safe: never hand the player a playlist with zero media segments — that
+      // stalls it into a retry loop (offline screen). If stripping gutted everything
+      // (a pure-ad window, or a format that trapped us in ad-mode), return the
+      // original untouched: the ad plays, but playback stays intact and the hook
+      // reports it as "missed" rather than a block.
+      var keptSegs = 0;
+      for (var m = 0; m < out.length; m++) {
+        if (out[m].length > 0 && out[m].charAt(0) !== "#") keptSegs++;
+      }
+      if (keptSegs === 0) return text;
       return out.join("\n");
     }
     var rf = scope.fetch;
@@ -142,9 +184,9 @@
               .then(function (t) {
                 if (hasAd(t)) {
                   var clean = stripAds(t);
-                  // Only claim a block when we actually removed ad segments. If our
-                  // strip can't handle this format, signal "missed" (no banner / no
-                  // count) so we never lie — the stream-swap path rescues these.
+                  // SSAI strip reduces ads in mixed windows but can be partial on
+                  // pre-rolls, so it never raises the banner/counter (only the
+                  // reliable CSAI block does). If we removed nothing, report "missed".
                   if (clean !== t && clean.length < t.length) {
                     signal("ssai");
                     return new Response(clean, {
@@ -196,19 +238,29 @@
     }
   }
 
+  // Route a hook signal. Only the CSAI block (empty-payload, reliable) raises the
+  // banner + counter. SSAI strips reduce ads but can be partial on pre-rolls, so we
+  // track them quietly and never claim a confirmed block; "missed" is tracked too.
+  function route(kind) {
+    try {
+      var d = window.__SP_ADBLOCK_DIAG__;
+      if (kind === "csai") {
+        d.csai = (d.csai || 0) + 1;
+        d.workerAd++;
+        dbg("CSAI ad blocked");
+        window.postMessage({ __sp_adblock: "ad", where: "csai" }, "*");
+      } else if (kind === "ssai") {
+        d.stripped++;
+      } else {
+        d.missed++;
+      }
+    } catch (_e) {}
+  }
+
   // Main thread hooks.
   try {
     applyHooks(window, function (w) {
-      try {
-        if (w === "missed") {
-          window.__SP_ADBLOCK_DIAG__.missed++;
-          dbg("AD MISSED (main) — strip could not handle this format");
-          window.postMessage({ __sp_adblock: "missed", where: "main" }, "*");
-        } else {
-          dbg("AD blocked (main-" + w + ")");
-          window.postMessage({ __sp_adblock: "ad", where: "main-" + w }, "*");
-        }
-      } catch (_e) {}
+      route(w);
     });
   } catch (e) {
     dbg("main hook failed", e && e.message);
@@ -220,24 +272,10 @@
     var workerInit =
       "(" +
       applyHooks.toString() +
-      ")(self, function(w){try{self.postMessage({__sp_adblock:'ad',where:'worker-'+w});}catch(e){}});\n";
+      ")(self, function(w){try{self.postMessage({__sp_adblock:'sig',kind:w});}catch(e){}});\n";
     function attachAdListener(w) {
       w.addEventListener("message", function (e) {
-        if (e && e.data && e.data.__sp_adblock === "ad") {
-          var where = String(e.data.where || "worker");
-          try {
-            if (where.indexOf("missed") !== -1) {
-              // Detected but our strip removed nothing → don't claim a block.
-              window.__SP_ADBLOCK_DIAG__.missed++;
-              window.postMessage({ __sp_adblock: "missed", where: where }, "*");
-            } else {
-              dbg("AD blocked from " + where);
-              window.__SP_ADBLOCK_DIAG__.workerAd++;
-              if (where.indexOf("ssai") !== -1) window.__SP_ADBLOCK_DIAG__.stripped++;
-              window.postMessage({ __sp_adblock: "ad", where: where }, "*");
-            }
-          } catch (_e) {}
-        }
+        if (e && e.data && e.data.__sp_adblock === "sig") route(e.data.kind);
       });
     }
     function makeSP(RealWorker) {

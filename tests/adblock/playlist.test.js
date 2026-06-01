@@ -103,6 +103,68 @@ describe("twitch-adblock fetch hook — SSAI stripping", () => {
     expect(text).toContain("seg-live-2.ts");
   });
 
+  it("strips a midroll pod where the discontinuity OPENS the ad (per-segment markers)", async () => {
+    const midroll = [
+      "#EXTM3U",
+      "#EXT-X-VERSION:3",
+      "#EXT-X-TARGETDURATION:6",
+      "#EXT-X-MEDIA-SEQUENCE:100",
+      '#EXT-X-DATERANGE:ID="sess",CLASS="twitch-session",END-ON-NEXT=YES',
+      '#EXT-X-DATERANGE:ID="pod",CLASS="twitch-stitched-ad",DURATION=4',
+      "#EXT-X-DISCONTINUITY",
+      '#EXT-X-DATERANGE:ID="q0",CLASS="twitch-stitched-ad",X-TV-TWITCH-AD-QUARTILE="0"',
+      "#EXT-X-PROGRAM-DATE-TIME:2026-06-01T00:00:00Z",
+      "#EXTINF:2.0,",
+      "https://ad/ad-seg-1.ts",
+      '#EXT-X-DATERANGE:ID="q1",CLASS="twitch-stitched-ad",X-TV-TWITCH-AD-QUARTILE="1"',
+      "#EXT-X-PROGRAM-DATE-TIME:2026-06-01T00:00:02Z",
+      "#EXTINF:2.0,",
+      "https://ad/ad-seg-2.ts",
+      "#EXT-X-DISCONTINUITY",
+      "#EXT-X-PROGRAM-DATE-TIME:2026-06-01T00:00:04Z",
+      "#EXTINF:2.0,",
+      "https://live/live-seg-1.ts",
+      "#EXTINF:2.0,",
+      "https://live/live-seg-2.ts",
+    ].join("\n");
+    const sandbox = installAdblock(() =>
+      Promise.resolve(new FakeResponse(midroll, { status: 200 }))
+    );
+    const res = await sandbox.fetch(PLAYLIST_URL);
+    const text = await res.text();
+    expect(text).not.toContain("ad-seg-1.ts");
+    expect(text).not.toContain("ad-seg-2.ts");
+    expect(text).not.toContain("twitch-stitched-ad");
+    expect(text).not.toContain("#EXT-X-DISCONTINUITY");
+    expect(text).toContain("live-seg-1.ts");
+    expect(text).toContain("live-seg-2.ts");
+    expect(text).toContain("twitch-session"); // non-ad metadata kept
+  });
+
+  it("fails safe on a pure-ad window — returns the original rather than an empty playlist", async () => {
+    const pureAd = [
+      "#EXTM3U",
+      "#EXT-X-VERSION:3",
+      "#EXT-X-MEDIA-SEQUENCE:1",
+      '#EXT-X-DATERANGE:ID="pod",CLASS="twitch-stitched-ad",DURATION=4',
+      "#EXT-X-DISCONTINUITY",
+      '#EXT-X-DATERANGE:ID="q0",CLASS="twitch-stitched-ad",X-TV-TWITCH-AD-QUARTILE="0"',
+      "#EXTINF:2.0,",
+      "https://ad/ad1.ts",
+      '#EXT-X-DATERANGE:ID="q1",CLASS="twitch-stitched-ad",X-TV-TWITCH-AD-QUARTILE="1"',
+      "#EXTINF:2.0,",
+      "https://ad/ad2.ts",
+    ].join("\n");
+    const sandbox = installAdblock(() =>
+      Promise.resolve(new FakeResponse(pureAd, { status: 200 }))
+    );
+    const res = await sandbox.fetch(PLAYLIST_URL);
+    const text = await res.text();
+    // No live segments to keep → must return the original so the player keeps playing.
+    expect(text).toBe(pureAd);
+    expect(text).toContain("ad1.ts");
+  });
+
   it("records the strip in the diagnostics counter", async () => {
     const sandbox = installAdblock(() =>
       Promise.resolve(new FakeResponse(AD_PLAYLIST, { status: 200 }))
