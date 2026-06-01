@@ -177,7 +177,8 @@
         }
       });
     }
-    var SPWorker = function (url, opts) {
+    function makeSP(RealWorker) {
+      var SPWorker = function (url, opts) {
       try {
         var u = typeof url === "string" ? url : (url && url.href) || "";
         dbg("worker seen", u);
@@ -221,10 +222,23 @@
       }
       return new RealWorker(url, opts);
     };
-    SPWorker.prototype = RealWorker.prototype;
+      try { SPWorker.prototype = RealWorker.prototype; } catch (_p) {}
+      return SPWorker;
+    }
+    // Keep our wrapper outermost even if another extension (e.g. 7TV) overrides
+    // window.Worker after us: a getter/setter chains to whatever they install.
+    var inner = window.Worker;
+    var sp = makeSP(inner);
     try {
-      window.Worker = SPWorker;
-    } catch (_e) {}
+      Object.defineProperty(window, "Worker", {
+        configurable: true,
+        enumerable: true,
+        get: function () { return sp; },
+        set: function (v) { if (v && v !== sp) { inner = v; sp = makeSP(inner); } },
+      });
+    } catch (_e) {
+      try { window.Worker = sp; } catch (_e2) {}
+    }
   }
 
   // Banner shown on the player when an ad is detected.
