@@ -135,6 +135,7 @@ chatFilterTitle: "Mots-clés masqués",
       statBlock: {
         points: "Points",
         watchTime: "Temps",
+        adblock: "Pubs bloquées",
       },
       section: {
         live: "EN DIRECT",
@@ -251,6 +252,7 @@ chatFilterTitle: "Mots-clés masqués",
         saveChatFilter: "Enregistrer le filtre",
         saveBlockedUsers: "Enregistrer les utilisateurs masqués",
       },
+      adblockBlockedForYou: "pubs bloquées pour toi",
       supportDev: "Offrir un Bubble Tea au développeur",
       testNotification: "Tester une notification",
       card: {
@@ -500,6 +502,7 @@ chatFilterTitle: "Mots-clés masqués",
       statBlock: {
         points: "Points",
         watchTime: "Watch time",
+        adblock: "Ads blocked",
       },
       section: {
         live: "LIVE NOW",
@@ -615,6 +618,7 @@ chatFilterTitle: "Mots-clés masqués",
         saveChatFilter: "Save chat filter",
         saveBlockedUsers: "Save blocked users",
       },
+      adblockBlockedForYou: "ads blocked for you",
       supportDev: "Offer a Bubble Tea to the developer",
       testNotification: "Send a test notification",
       card: {
@@ -852,6 +856,7 @@ chatFilterTitle: "Mots-clés masqués",
       statBlock: {
         points: "Puntos",
         watchTime: "Tiempo",
+        adblock: "Anuncios bloqueados",
       },
       section: {
         live: "EN DIRECTO",
@@ -961,6 +966,7 @@ chatFilterTitle: "Mots-clés masqués",
         saveChatFilter: "Guardar filtro",
         saveBlockedUsers: "Guardar usuarios bloqueados",
       },
+      adblockBlockedForYou: "anuncios bloqueados para ti",
       supportDev: "Invitar a un Bubble Tea al desarrollador",
       testNotification: "Probar una notificación",
       card: {
@@ -1191,6 +1197,7 @@ chatFilterTitle: "Mots-clés masqués",
       statBlock: {
         points: "Pontos",
         watchTime: "Tempo",
+        adblock: "Anúncios bloqueados",
       },
       section: {
         live: "AO VIVO",
@@ -1300,6 +1307,7 @@ chatFilterTitle: "Mots-clés masqués",
         saveChatFilter: "Salvar filtro",
         saveBlockedUsers: "Salvar usuários bloqueados",
       },
+      adblockBlockedForYou: "anúncios bloqueados para você",
       supportDev: "Pagar um Bubble Tea para o dev",
       testNotification: "Testar uma notificação",
       card: {

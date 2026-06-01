@@ -797,10 +797,31 @@ async function renderStats(preloadedStats = null) {
     // Greeting bar points block
     const headerPointsValue2 = document.getElementById("header-points-value2");
     if (headerPointsValue2) headerPointsValue2.textContent = formatted;
+
+    // Ads blocked by StreamPulse (counter written by adblock-bridge.js on twitch.tv)
+    await renderAdblockCount();
   } catch (err) {
     console.error("renderStats failed:", err);
     if (statPointsEl) statPointsEl.textContent = t("popup.stats.loadError") || "--";
     if (headerPointsValue) headerPointsValue.textContent = "--";
+  }
+}
+
+// Surface the persistent "ads blocked" total in the greeting stat block and the
+// settings value card (the donation prompt). Hides the value-card stat line on a
+// fresh install (0) so it never reads "0 pubs bloquées".
+async function renderAdblockCount() {
+  try {
+    const blocked =
+      (await chrome.storage.local.get("spAdblockBlockedTotal")).spAdblockBlockedTotal || 0;
+    const statEl = document.getElementById("stat-adblock");
+    if (statEl) statEl.textContent = blocked > 0 ? formatNumber(blocked) : "--";
+    const cardCount = document.getElementById("adblock-value-count");
+    if (cardCount) cardCount.textContent = formatNumber(blocked);
+    const cardStat = document.getElementById("adblock-value-stat");
+    if (cardStat) cardStat.style.display = blocked > 0 ? "" : "none";
+  } catch (_e) {
+    /* non-critical */
   }
 }
 
@@ -998,6 +1019,7 @@ async function handleResetStats() {
       type: "resetStat",
       stat: "channelPointsClaimed",
     });
+    await chrome.storage.local.set({ spAdblockBlockedTotal: 0 });
     await renderStats();
     showFeedback(t("popup.stats.resetSuccess") || "Statistiques remises à zéro", "success");
   } catch (err) {
@@ -1016,6 +1038,7 @@ const ALLOWED_STORAGE_KEYS = new Set([
   "betaGeneralStats",
   "betaGeneralPreferences",
   "betaWatchTimeData",
+  "spAdblockBlockedTotal",
   "streampulse:scheduled",
   "streampulse:thumbCache",
 ]);

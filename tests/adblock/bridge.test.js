@@ -46,3 +46,26 @@ describe("adblock-bridge.disabledFlagFor", () => {
     expect(disabledFlagFor(undefined)).toBe("0");
   });
 });
+
+describe("adblock-bridge.shouldCount (ad-break debounce)", () => {
+  const COOLDOWN = 45000;
+
+  it("counts the first ad signal (no prior break)", () => {
+    const { shouldCount } = loadBridge();
+    expect(shouldCount(1_000_000, 0, COOLDOWN)).toBe(true);
+  });
+
+  it("collapses rapid repeats within the cooldown into one break", () => {
+    const { shouldCount } = loadBridge();
+    const last = 1_000_000;
+    expect(shouldCount(last + 1000, last, COOLDOWN)).toBe(false);
+    expect(shouldCount(last + 44_999, last, COOLDOWN)).toBe(false);
+  });
+
+  it("counts a new break once the cooldown has elapsed", () => {
+    const { shouldCount } = loadBridge();
+    const last = 1_000_000;
+    expect(shouldCount(last + COOLDOWN, last, COOLDOWN)).toBe(true);
+    expect(shouldCount(last + 90_000, last, COOLDOWN)).toBe(true);
+  });
+});

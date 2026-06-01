@@ -1902,6 +1902,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       })();
       return true;
 
+    case "openSettings":
+      try {
+        chrome.tabs.create({ url: chrome.runtime.getURL("html/popup.html") });
+        sendResponse({ success: true });
+      } catch (e) {
+        sendResponse({ success: false, error: e?.message });
+      }
+      return true;
+
     case "diagnosticTests":
       (async () => {
         const preferences = await PreferenceStore.get();

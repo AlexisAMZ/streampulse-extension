@@ -44,6 +44,13 @@
       "run_at": "document_start"
     },
     {
+      "matches": ["https://www.twitch.tv/*"],
+      "all_frames": false,
+      "js": ["js/inject/topbar.js"],
+      "css": ["css/topbar.css"],
+      "run_at": "document_idle"
+    },
+    {
       "matches": ["https://www.twitch.tv/*", "https://clips.twitch.tv/*"],
       "all_frames": false,
       "js": [
@@ -102,7 +109,8 @@
       "resources": [
         "html/audio-handler.html",
         "sons/notification.mp3",
-        "images/photos/128px.png"
+        "images/photos/128px.png",
+        "images/photos/logosp.png"
       ],
       "matches": ["<all_urls>"]
     }

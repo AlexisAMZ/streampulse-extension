@@ -124,6 +124,29 @@ describe("twitch-adblock fetch hook — SSAI stripping", () => {
     expect(text).toContain("seg1.ts");
     expect(text).toContain("seg2.ts");
   });
+
+  it("returns the playlist unchanged when it can't strip the format (no false block)", async () => {
+    // hasAd() is true (X-TV-TWITCH-AD) but there is no twitch-stitched-ad daterange
+    // for stripAds() to act on — so we must NOT pretend we blocked it.
+    const unstrippable = [
+      "#EXTM3U",
+      "#EXT-X-VERSION:3",
+      "#EXTINF:2.0,live",
+      "seg-live-1.ts",
+      '#EXT-X-DATERANGE:ID="x",X-TV-TWITCH-AD-ROLL-TYPE="MIDROLL"',
+      "#EXTINF:2.0,ad",
+      "ad-seg-x.ts",
+      "#EXTINF:2.0,live",
+      "seg-live-2.ts",
+    ].join("\n");
+    const sandbox = installAdblock(() =>
+      Promise.resolve(new FakeResponse(unstrippable, { status: 200 }))
+    );
+    const res = await sandbox.fetch(PLAYLIST_URL);
+    const text = await res.text();
+    expect(text).toBe(unstrippable);
+    expect(text).toContain("ad-seg-x.ts");
+  });
 });
 
 describe("twitch-adblock fetch hook — CSAI blocking", () => {

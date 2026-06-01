@@ -59,6 +59,7 @@
     wrappedCount: 0,
     workerAd: 0,
     stripped: 0,
+    missed: 0,
     debug: DEBUG,
   };
   var DIAG_CAP = 50;
@@ -140,13 +141,20 @@
               .text()
               .then(function (t) {
                 if (hasAd(t)) {
-                  signal("ssai");
-                  // M2.1: strip stitched-ad segments and return the clean playlist.
-                  return new Response(stripAds(t), {
-                    status: res.status,
-                    statusText: res.statusText,
-                    headers: res.headers,
-                  });
+                  var clean = stripAds(t);
+                  // Only claim a block when we actually removed ad segments. If our
+                  // strip can't handle this format, signal "missed" (no banner / no
+                  // count) so we never lie — the stream-swap path rescues these.
+                  if (clean !== t && clean.length < t.length) {
+                    signal("ssai");
+                    return new Response(clean, {
+                      status: res.status,
+                      statusText: res.statusText,
+                      headers: res.headers,
+                    });
+                  }
+                  signal("missed");
+                  return res;
                 }
                 return res;
               })
@@ -177,7 +185,8 @@
           if (isPlaylist(x.__sp_url)) {
             x.addEventListener("load", function () {
               try {
-                if (hasAd(x.responseText)) signal("xhr");
+                // Detection only (we don't rewrite XHR playlists) → never claim a block.
+                if (hasAd(x.responseText)) signal("missed");
               } catch (e) {}
             });
           }
@@ -190,9 +199,15 @@
   // Main thread hooks.
   try {
     applyHooks(window, function (w) {
-      dbg("AD detected (main-" + w + ")");
       try {
-        window.postMessage({ __sp_adblock: "ad", where: "main-" + w }, "*");
+        if (w === "missed") {
+          window.__SP_ADBLOCK_DIAG__.missed++;
+          dbg("AD MISSED (main) — strip could not handle this format");
+          window.postMessage({ __sp_adblock: "missed", where: "main" }, "*");
+        } else {
+          dbg("AD blocked (main-" + w + ")");
+          window.postMessage({ __sp_adblock: "ad", where: "main-" + w }, "*");
+        }
       } catch (_e) {}
     });
   } catch (e) {
@@ -209,11 +224,18 @@
     function attachAdListener(w) {
       w.addEventListener("message", function (e) {
         if (e && e.data && e.data.__sp_adblock === "ad") {
-          dbg("AD signal from " + (e.data.where || "worker"));
+          var where = String(e.data.where || "worker");
           try {
-            window.__SP_ADBLOCK_DIAG__.workerAd++;
-            if (String(e.data.where || "").indexOf("ssai") !== -1) window.__SP_ADBLOCK_DIAG__.stripped++;
-            window.postMessage({ __sp_adblock: "ad", where: e.data.where || "worker" }, "*");
+            if (where.indexOf("missed") !== -1) {
+              // Detected but our strip removed nothing → don't claim a block.
+              window.__SP_ADBLOCK_DIAG__.missed++;
+              window.postMessage({ __sp_adblock: "missed", where: where }, "*");
+            } else {
+              dbg("AD blocked from " + where);
+              window.__SP_ADBLOCK_DIAG__.workerAd++;
+              if (where.indexOf("ssai") !== -1) window.__SP_ADBLOCK_DIAG__.stripped++;
+              window.postMessage({ __sp_adblock: "ad", where: where }, "*");
+            }
           } catch (_e) {}
         }
       });
@@ -282,6 +304,19 @@
     }
   }
 
+  // Running total of blocked ad breaks (fed by adblock-bridge.js via postMessage).
+  var blockedTotal = null;
+  // Donation link surfaced right at the moment of value (an ad was just blocked).
+  var TIP_URL = "https://revolut.me/alexisamz";
+  function bannerCountText() {
+    if (blockedTotal == null) return "";
+    try {
+      return " · " + Number(blockedTotal).toLocaleString();
+    } catch (_e) {
+      return " · " + blockedTotal;
+    }
+  }
+
   // Banner shown on the player when an ad is detected.
   var hideTimer = null;
   function showBanner() {
@@ -293,7 +328,15 @@
         el.innerHTML =
           '<img src="' + SP_LOGO + '" alt="" style="width:15px;height:15px;border-radius:3px;' +
           'margin-right:7px;vertical-align:-3px;object-fit:cover" />' +
-          "Ad blocked by StreamPulse";
+          '<span style="vertical-align:middle">Ad blocked by StreamPulse</span>' +
+          '<span id="sp-adblock-count" style="vertical-align:middle;opacity:.8;font-weight:500"></span>' +
+          '<a id="sp-adblock-tip" href="' + TIP_URL + '" target="_blank" rel="noopener noreferrer" ' +
+          'title="Offrir un Bubble Tea" style="margin-left:9px;display:inline-flex;align-items:center;' +
+          'vertical-align:middle;pointer-events:auto;cursor:pointer;color:#ffd300">' +
+          '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+          'stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/>' +
+          '<path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/>' +
+          '<line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></a>';
         el.setAttribute(
           "style",
           [
@@ -326,6 +369,8 @@
         el.style.position = "fixed";
         if (el.parentNode !== document.body) document.body.appendChild(el);
       }
+      var cEl = el.querySelector("#sp-adblock-count");
+      if (cEl) cEl.textContent = bannerCountText();
       el.style.display = "block";
       if (hideTimer) clearTimeout(hideTimer);
       hideTimer = setTimeout(function () {
@@ -335,7 +380,14 @@
   }
 
   window.addEventListener("message", function (e) {
-    if (e && e.source === window && e.data && e.data.__sp_adblock === "ad") showBanner();
+    if (!e || e.source !== window || !e.data) return;
+    if (e.data.__sp_adblock === "ad") {
+      showBanner();
+    } else if (typeof e.data.__sp_adblock_count === "number") {
+      blockedTotal = e.data.__sp_adblock_count;
+      var cEl = document.getElementById("sp-adblock-count");
+      if (cEl) cEl.textContent = bannerCountText();
+    }
   });
 
   dbg("installed");

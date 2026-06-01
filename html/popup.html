@@ -52,6 +52,10 @@
             <div class="stat-block-label" data-i18n="popup.statBlock.watchTime">Watch time</div>
             <div class="stat-block-value muted" id="stat-watchtime">--</div>
           </div>
+          <div class="stat-block">
+            <div class="stat-block-label" data-i18n="popup.statBlock.adblock">Pubs bloquées</div>
+            <div class="stat-block-value muted" id="stat-adblock">--</div>
+          </div>
         </div>
       </div>
 
@@ -118,6 +122,25 @@
     <!-- ── Settings tab ── -->
     <section id="settings-section" class="settings-section hidden">
       <h2 data-i18n="popup.settingsTitle">Réglages</h2>
+
+      <!-- Support: value card (ties the donation to the value delivered) -->
+      <div class="adblock-value-card">
+        <div class="adblock-value-stat" id="adblock-value-stat">
+          <span class="adblock-value-shield">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </span>
+          <span class="adblock-value-text">
+            <span class="adblock-value-count" id="adblock-value-count">0</span>
+            <span data-i18n="popup.adblockBlockedForYou">pubs bloquées pour toi</span>
+          </span>
+        </div>
+        <a href="https://revolut.me/alexisamz" target="_blank" rel="noopener noreferrer" class="support-button promoted">
+          <span class="support-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+          </span>
+          <span data-i18n="popup.supportDev">Offrir un Bubble Tea au développeur</span>
+        </a>
+      </div>
 
       <!-- Theme toggle -->
       <div class="theme-toggle-row">
@@ -389,13 +412,6 @@
         </div>
       </div>
 
-      <!-- Support footer -->
-      <div class="settings-footer">
-        <a href="https://revolut.me/alexisamz" target="_blank" rel="noopener noreferrer" class="support-button">
-          <span class="support-icon">🧋</span>
-          <span data-i18n="popup.supportDev">Offrir un Bubble Tea au développeur</span>
-        </a>
-      </div>
     </section>
 
     <!-- ── Card template ── -->

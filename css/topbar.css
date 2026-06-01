@@ -1,0 +1,175 @@
+/* StreamPulse — Twitch top-bar button + control panel (injected by topbar.js). */
+
+.sp-topbar-wrap {
+  display: flex;
+  align-items: center;
+  margin: 0 5px;
+}
+.sp-topbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 9999px;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+.sp-topbar-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+.sp-topbar-logo {
+  width: 21px;
+  height: 21px;
+  border-radius: 5px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Dropdown control panel */
+.sp-topbar-panel {
+  position: fixed;
+  z-index: 2147483647;
+  width: 268px;
+  background: #18181b;
+  color: #efeff1;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+  padding: 12px;
+  font: 13px/1.3 Inter, -apple-system, system-ui, "Segoe UI", sans-serif;
+  animation: sp-tb-in 0.12s ease;
+}
+@keyframes sp-tb-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.sp-tb-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.sp-tb-head .sp-tb-logo {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.sp-tb-stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.sp-tb-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 9px 4px;
+  color: #adadb8;
+}
+.sp-tb-stat b {
+  color: #efeff1;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.sp-tb-ic {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  display: block;
+}
+
+.sp-tb-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 9px 4px;
+  margin: 0;
+  background: none;
+  border: none;
+  color: #efeff1;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+.sp-tb-row:hover {
+  color: #fff;
+}
+.sp-tb-sw {
+  position: relative;
+  width: 34px;
+  height: 19px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.18);
+  transition: background 0.15s ease;
+  flex-shrink: 0;
+}
+.sp-tb-sw::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.15s ease;
+}
+.sp-tb-sw.on {
+  background: #9147ff;
+}
+.sp-tb-sw.on::after {
+  transform: translateX(15px);
+}
+
+.sp-tb-tip,
+.sp-tb-settings {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  text-decoration: none;
+  border-radius: 8px;
+}
+.sp-tb-tip {
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(255, 211, 0, 0.12);
+  border: 1px solid rgba(255, 211, 0, 0.35);
+  color: #efeff1;
+  font-weight: 600;
+}
+.sp-tb-tip:hover {
+  background: rgba(255, 211, 0, 0.2);
+}
+.sp-tb-settings {
+  margin-top: 8px;
+  padding: 8px;
+  color: #adadb8;
+  font-size: 12px;
+}
+.sp-tb-settings:hover {
+  color: #efeff1;
+}
