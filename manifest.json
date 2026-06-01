@@ -9,7 +9,11 @@
     "https://api.twitch.tv/*",
     "https://tmi.twitch.tv/*",
     "https://gql.twitch.tv/*",
+    "https://usher.ttvnw.net/*",
+    "https://*.ttvnw.net/*",
+    "https://*.cdn-perfprod.com/*",
     "https://www.twitch.tv/*",
+    "https://clips.twitch.tv/*",
     "https://kick.com/*",
     "https://*.kick.com/*",
     "https://graphigo.prd.dlive.tv/*",
@@ -26,6 +30,28 @@
     "type": "module"
   },
   "content_scripts": [
+    {
+      "matches": ["https://www.twitch.tv/*"],
+      "all_frames": false,
+      "js": ["js/inject/twitch-adblock.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://www.twitch.tv/*", "https://clips.twitch.tv/*"],
+      "all_frames": false,
+      "js": [
+        "js/vendor/hls.light.min.js",
+        "js/previews/sources.js",
+        "js/previews/card.js",
+        "js/previews/targets-twitch.js",
+        "js/previews/observer.js",
+        "js/previews/stream.js",
+        "js/twitchPreviews.js"
+      ],
+      "css": ["css/previews.css"],
+      "run_at": "document_idle"
+    },
     {
       "matches": ["https://www.twitch.tv/*"],
       "all_frames": false,

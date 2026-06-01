@@ -1,0 +1,171 @@
+/* StreamPulse — hover previews. Injected on twitch.tv / clips.twitch.tv.
+   Self-contained styling (popup.css :root tokens are not present on Twitch),
+   replicating StreamPulse's popup preview-card look. All selectors namespaced
+   under .sp-preview to avoid clashing with Twitch or other extensions. */
+
+.sp-preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 360px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #0e0e14;
+  box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  pointer-events: none; /* never intercept the mouse — keeps hover/teardown reliable */
+  opacity: 0;
+  transform: scale(0.96);
+}
+.sp-preview[hidden] {
+  display: none;
+}
+.sp-preview--animated {
+  transition: opacity 0.16s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.16s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sp-preview--in {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sp-preview {
+    transition: none !important;
+    transform: none;
+  }
+}
+
+.sp-preview__media {
+  position: relative;
+  width: 100%;
+  height: 202px;
+  background: #000;
+  overflow: hidden;
+}
+
+.sp-preview__img,
+.sp-preview__iframe,
+.sp-preview__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover;
+  display: block;
+  background: #000;
+}
+.sp-preview__img[hidden],
+.sp-preview__iframe[hidden],
+.sp-preview__video[hidden] {
+  display: none;
+}
+
+.sp-preview__fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #1a0d2e 0%, #2a1060 60%, #4a1a9a 100%);
+}
+.sp-preview__fallback[hidden] {
+  display: none;
+}
+.sp-preview__fallback-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.5);
+}
+.sp-preview__fallback-avatar[hidden] {
+  display: none;
+}
+.sp-preview__fallback-game {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.55);
+  text-align: center;
+  max-width: 85%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+}
+
+.sp-preview__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 50%, rgba(0, 0, 0, 0.6));
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 8px 10px;
+  pointer-events: none;
+}
+.sp-preview__title {
+  margin: 0 0 2px 0;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.sp-preview__title[hidden] {
+  display: none;
+}
+.sp-preview__category {
+  margin: 0;
+  font-size: 9.5px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  letter-spacing: 0.04em;
+}
+.sp-preview__category[hidden] {
+  display: none;
+}
+
+.sp-preview__badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #ff3b3b;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Live channel video mode uses a native <video> (raw HLS) — no Twitch chrome to
+   hide, so our overlay/badge stay visible over it. Clip previews still use an
+   iframe embed. */
+
+/* Stacking: the image poster sits above the <video> so the thumbnail shows
+   instantly while the stream buffers; once playing, JS hides the poster. */
+.sp-preview__video,
+.sp-preview__iframe {
+  z-index: 1;
+}
+.sp-preview__fallback {
+  z-index: 2;
+}
+.sp-preview__img {
+  z-index: 3;
+}
+.sp-preview__overlay {
+  z-index: 4;
+}
+.sp-preview__badge {
+  z-index: 5;
+}

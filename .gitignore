@@ -6,4 +6,6 @@ i18n/translations.*.draft.json
 node_modules/
 package.json
 scripts/
+coverage/
+package-lock.json
 

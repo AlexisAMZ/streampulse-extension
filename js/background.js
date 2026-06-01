@@ -53,6 +53,16 @@ const DEFAULT_PREFERENCES = {
   chatBlockedUsers: "",
   language: DEFAULT_LANGUAGE,
   sortOrder: "live",
+  previewsEnabled: true,
+  previewsMode: "image",
+  previewsSurfaceDirectory: true,
+  previewsSurfaceSidebar: true,
+  previewsSurfaceClips: true,
+  previewsSurfaceSearch: true,
+  previewsSize: "m",
+  previewsAudio: false,
+  previewsShowDelayMs: 200,
+  previewsAnimations: true,
 };
 
 const DEFAULT_STATS = {
@@ -416,6 +426,8 @@ class DataStore {
 class PreferenceStore {
   static sanitize(preferences = {}) {
     const SORT_ORDER_VALUES = ["live", "name-asc", "name-desc", "custom"];
+    const PREVIEWS_SIZES = ["s", "m", "l"];
+    const previewsDelay = Number(preferences.previewsShowDelayMs);
     return {
       liveNotifications: preferences.liveNotifications !== false,
       gameNotifications: Boolean(preferences.gameNotifications),
@@ -428,6 +440,18 @@ class PreferenceStore {
       chatBlockedUsers: typeof preferences.chatBlockedUsers === "string" ? preferences.chatBlockedUsers : "",
       language: normalizeLanguage(preferences.language),
       sortOrder: SORT_ORDER_VALUES.includes(preferences.sortOrder) ? preferences.sortOrder : "live",
+      previewsEnabled: preferences.previewsEnabled !== false,
+      previewsMode: preferences.previewsMode === "video" ? "video" : "image",
+      previewsSurfaceDirectory: preferences.previewsSurfaceDirectory !== false,
+      previewsSurfaceSidebar: preferences.previewsSurfaceSidebar !== false,
+      previewsSurfaceClips: preferences.previewsSurfaceClips !== false,
+      previewsSurfaceSearch: preferences.previewsSurfaceSearch !== false,
+      previewsSize: PREVIEWS_SIZES.includes(preferences.previewsSize) ? preferences.previewsSize : "m",
+      previewsAudio: preferences.previewsAudio === true,
+      previewsShowDelayMs: Number.isFinite(previewsDelay)
+        ? Math.min(2000, Math.max(0, previewsDelay))
+        : 200,
+      previewsAnimations: preferences.previewsAnimations !== false,
     };
   }
 
@@ -675,7 +699,7 @@ class PlatformChecker {
       return data.data?.[0] || null;
     } catch (error) {
       console.warn("Twitch user fetch error:", error.message);
-      return { _apiError: true, status: error.message };
+      return { _apiError: true, status: error.message, isError: true };
     }
   }
 
@@ -703,7 +727,7 @@ class PlatformChecker {
       };
     } catch (error) {
       console.warn("Twitch status error:", error.message);
-      return { isLive: false, error: error.message };
+      return { isLive: false, error: error.message, isError: true };
     }
   }
 
@@ -730,7 +754,7 @@ class PlatformChecker {
     } catch (error) {
       if (error?.message?.includes?.("404")) return null;
       console.warn("Kick channel fetch error:", error.message);
-      return { _apiError: true, status: error.message };
+      return { _apiError: true, status: error.message, isError: true };
     }
   }
 
@@ -879,6 +903,9 @@ class PlatformChecker {
 
   static async getKickStatus(handle) {
     const channel = await this.getKickChannel(handle);
+    if (channel?._apiError) {
+      return { isLive: false, platform: "kick", error: channel.status, isError: true };
+    }
     if (channel?._source === "official") {
       return this.extractKickStatusOfficial(channel, handle);
     }
@@ -1007,6 +1034,9 @@ class PlatformChecker {
 
   static async getDliveStatus(handle) {
     const user = await this.getDliveUser(handle);
+    if (user?._apiError) {
+      return { isLive: false, platform: "dlive", error: user.status, isError: true };
+    }
     return this.extractDliveStatus(user, handle);
   }
 
@@ -1458,6 +1488,8 @@ async function buildStreamerStatus(streamer) {
         supportsLiveStatus: status.supportsLiveStatus,
         url: status.url || buildProfileUrl(platform, streamer.handle),
         avatarUrl: status.avatarUrl || "",
+        error: status.error,
+        isError: status.isError,
       };
 
   let avatarUrl = streamer.avatarUrl || status.avatarUrl || "";
@@ -1583,7 +1615,16 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
       title: status.active?.title || "",
       avatarUrl: status.avatarUrl || streamer.avatarUrl || null,
       supportsLiveStatus: status.active?.supportsLiveStatus !== false,
+      isError: Boolean(status.active?.isError),
     };
+
+    // If there was an API error, preserve the previous live state to prevent offline/online flapping
+    if (nextLiveState.isError) {
+      nextLiveState.isLive = previousLiveState.isLive;
+      nextLiveState.sessionId = previousLiveState.sessionId;
+      nextLiveState.game = previousLiveState.game;
+      nextLiveState.title = previousLiveState.title;
+    }
 
     const notificationsEnabled =
       preferences.liveNotifications !== false &&
@@ -2395,6 +2436,48 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           const allowed = ["live", "name-asc", "name-desc", "custom"];
           const val = incomingUpdates.sortOrder;
           updates.sortOrder = allowed.includes(val) ? val : "live";
+        }
+        if ("previewsEnabled" in incomingUpdates) {
+          updates.previewsEnabled = incomingUpdates.previewsEnabled !== false;
+        }
+        if ("previewsMode" in incomingUpdates) {
+          updates.previewsMode =
+            incomingUpdates.previewsMode === "video" ? "video" : "image";
+        }
+        if ("previewsSurfaceDirectory" in incomingUpdates) {
+          updates.previewsSurfaceDirectory =
+            incomingUpdates.previewsSurfaceDirectory !== false;
+        }
+        if ("previewsSurfaceSidebar" in incomingUpdates) {
+          updates.previewsSurfaceSidebar =
+            incomingUpdates.previewsSurfaceSidebar !== false;
+        }
+        if ("previewsSurfaceClips" in incomingUpdates) {
+          updates.previewsSurfaceClips =
+            incomingUpdates.previewsSurfaceClips !== false;
+        }
+        if ("previewsSurfaceSearch" in incomingUpdates) {
+          updates.previewsSurfaceSearch =
+            incomingUpdates.previewsSurfaceSearch !== false;
+        }
+        if ("previewsSize" in incomingUpdates) {
+          const allowedSizes = ["s", "m", "l"];
+          updates.previewsSize = allowedSizes.includes(incomingUpdates.previewsSize)
+            ? incomingUpdates.previewsSize
+            : "m";
+        }
+        if ("previewsAudio" in incomingUpdates) {
+          updates.previewsAudio = incomingUpdates.previewsAudio === true;
+        }
+        if ("previewsShowDelayMs" in incomingUpdates) {
+          const d = Number(incomingUpdates.previewsShowDelayMs);
+          updates.previewsShowDelayMs = Number.isFinite(d)
+            ? Math.min(2000, Math.max(0, d))
+            : 200;
+        }
+        if ("previewsAnimations" in incomingUpdates) {
+          updates.previewsAnimations =
+            incomingUpdates.previewsAnimations !== false;
         }
 
         if (Object.keys(updates).length === 0) {

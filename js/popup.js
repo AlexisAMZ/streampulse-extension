@@ -62,6 +62,17 @@ const soundsToggle = document.getElementById("pref-sounds");
 const autoClaimToggle = document.getElementById("pref-auto-claim");
 const autoRefreshToggle = document.getElementById("pref-auto-refresh");
 const fastForwardToggle = document.getElementById("pref-fast-forward");
+const previewsEnabledToggle = document.getElementById("pref-previews-enabled");
+const previewsModeGroup = document.getElementById("previews-mode-group");
+const previewsSizeGroup = document.getElementById("previews-size-group");
+const previewsDirectoryToggle = document.getElementById("pref-previews-directory");
+const previewsSidebarToggle = document.getElementById("pref-previews-sidebar");
+const previewsClipsToggle = document.getElementById("pref-previews-clips");
+const previewsSearchToggle = document.getElementById("pref-previews-search");
+const previewsAudioToggle = document.getElementById("pref-previews-audio");
+const previewsDelayInput = document.getElementById("pref-previews-delay");
+const previewsDelayValue = document.getElementById("previews-delay-value");
+const previewsAnimationsToggle = document.getElementById("pref-previews-animations");
 const chatKeywordsInput = document.getElementById("pref-chat-keywords");
 const blockedUsersInput = document.getElementById("pref-blocked-users");
 const saveChatFilterButton = document.getElementById("save-chat-filter");
@@ -656,6 +667,42 @@ function renderPreferences() {
   }
   if (watchTimeToggle) {
     watchTimeToggle.checked = prefs.watchTimeTracker !== false;
+  }
+  if (previewsEnabledToggle) {
+    previewsEnabledToggle.checked = prefs.previewsEnabled !== false;
+  }
+  if (previewsDirectoryToggle) {
+    previewsDirectoryToggle.checked = prefs.previewsSurfaceDirectory !== false;
+  }
+  if (previewsSidebarToggle) {
+    previewsSidebarToggle.checked = prefs.previewsSurfaceSidebar !== false;
+  }
+  if (previewsClipsToggle) {
+    previewsClipsToggle.checked = prefs.previewsSurfaceClips !== false;
+  }
+  if (previewsSearchToggle) {
+    previewsSearchToggle.checked = prefs.previewsSurfaceSearch !== false;
+  }
+  if (previewsAudioToggle) {
+    previewsAudioToggle.checked = prefs.previewsAudio === true;
+  }
+  if (previewsAnimationsToggle) {
+    previewsAnimationsToggle.checked = prefs.previewsAnimations !== false;
+  }
+  {
+    const pvMode = prefs.previewsMode === "video" ? "video" : "image";
+    previewsModeGroup?.querySelectorAll(".seg-btn").forEach((b) => {
+      b.classList.toggle("active", b.dataset.previewsMode === pvMode);
+    });
+    const pvSize = ["s", "m", "l"].includes(prefs.previewsSize) ? prefs.previewsSize : "m";
+    previewsSizeGroup?.querySelectorAll(".seg-btn").forEach((b) => {
+      b.classList.toggle("active", b.dataset.previewsSize === pvSize);
+    });
+    if (previewsDelayInput) {
+      const d = Number.isFinite(prefs.previewsShowDelayMs) ? prefs.previewsShowDelayMs : 200;
+      previewsDelayInput.value = String(d);
+      if (previewsDelayValue) previewsDelayValue.textContent = String(d);
+    }
   }
   if (chatKeywordsInput) {
     chatKeywordsInput.value = prefs.chatKeywords || "";
@@ -1359,6 +1406,51 @@ document.addEventListener("DOMContentLoaded", async () => {
     autoRefreshToggle?.addEventListener("change", (e) => {
       updatePreferences({ autoRefreshPlayerErrors: e.target.checked });
     });
+    previewsEnabledToggle?.addEventListener("change", (e) => {
+      updatePreferences({ previewsEnabled: e.target.checked });
+    });
+    previewsDirectoryToggle?.addEventListener("change", (e) => {
+      updatePreferences({ previewsSurfaceDirectory: e.target.checked });
+    });
+    previewsSidebarToggle?.addEventListener("change", (e) => {
+      updatePreferences({ previewsSurfaceSidebar: e.target.checked });
+    });
+    previewsClipsToggle?.addEventListener("change", (e) => {
+      updatePreferences({ previewsSurfaceClips: e.target.checked });
+    });
+    previewsSearchToggle?.addEventListener("change", (e) => {
+      updatePreferences({ previewsSurfaceSearch: e.target.checked });
+    });
+    previewsAudioToggle?.addEventListener("change", (e) => {
+      updatePreferences({ previewsAudio: e.target.checked });
+    });
+    previewsAnimationsToggle?.addEventListener("change", (e) => {
+      updatePreferences({ previewsAnimations: e.target.checked });
+    });
+    previewsModeGroup?.querySelectorAll(".seg-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        previewsModeGroup.querySelectorAll(".seg-btn").forEach((b) => {
+          b.classList.toggle("active", b === btn);
+        });
+        updatePreferences({ previewsMode: btn.dataset.previewsMode });
+      });
+    });
+    previewsSizeGroup?.querySelectorAll(".seg-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        previewsSizeGroup.querySelectorAll(".seg-btn").forEach((b) => {
+          b.classList.toggle("active", b === btn);
+        });
+        updatePreferences({ previewsSize: btn.dataset.previewsSize });
+      });
+    });
+    if (previewsDelayInput) {
+      previewsDelayInput.addEventListener("input", (e) => {
+        if (previewsDelayValue) previewsDelayValue.textContent = String(e.target.value);
+      });
+      previewsDelayInput.addEventListener("change", (e) => {
+        updatePreferences({ previewsShowDelayMs: Number(e.target.value) });
+      });
+    }
 
     if (fastForwardToggle) {
       fastForwardToggle.addEventListener("change", (e) => {

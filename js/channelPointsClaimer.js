@@ -13,12 +13,22 @@
   function tryClaim() {
     if (Date.now() - lastClaimTime < 5000) return;
 
-    const container = document.querySelector(".claimable-bonus");
-    if (!container) return;
+    let btn = document.querySelector('button[aria-label="Claim Bonus"], button[aria-label="Récupérer le bonus"]');
+    
+    if (!btn) {
+      const icon = document.querySelector('.claimable-bonus__icon');
+      if (icon) btn = icon.closest('button');
+    }
 
-    const btn = container.querySelector("button");
+    if (!btn) {
+      // SVG path du coffre Twitch, indépendant de la langue et des classes
+      const svgPath = document.querySelector('path[d="M13 12h-2v2h2v-2Z"]');
+      if (svgPath) btn = svgPath.closest('button');
+    }
+
     if (!btn) return;
 
+    console.log("[StreamPulse] Coffre de points trouvé ! Tentative de récupération...");
     lastClaimTime = Date.now();
     btn.click();
 

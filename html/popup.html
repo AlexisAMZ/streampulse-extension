@@ -216,6 +216,65 @@
           </div>
           <input id="pref-fast-forward" type="checkbox" />
         </label>
+
+        <!-- Group: Hover previews -->
+        <p class="settings-group-header" data-i18n="popup.settings.groupPreviews">Previews au survol</p>
+
+        <label class="settings-toggle">
+          <div class="settings-text">
+            <span class="settings-title" data-i18n="popup.settings.previewsEnableTitle">Previews au survol</span>
+            <span class="settings-description" data-i18n="popup.settings.previewsEnableDescription">Affiche un aperçu du live en survolant une chaîne ou un clip.</span>
+          </div>
+          <input id="pref-previews-enabled" type="checkbox" />
+        </label>
+
+        <div class="settings-text" style="margin-top:8px">
+          <span class="settings-title" data-i18n="popup.settings.previewsModeTitle">Mode d'aperçu</span>
+        </div>
+        <div class="seg-group" id="previews-mode-group">
+          <button type="button" class="seg-btn" data-previews-mode="image" data-i18n="popup.settings.previewsModeImage">Image</button>
+          <button type="button" class="seg-btn" data-previews-mode="video" data-i18n="popup.settings.previewsModeVideo">Vidéo</button>
+        </div>
+
+        <div class="settings-text" style="margin-top:8px">
+          <span class="settings-title" data-i18n="popup.settings.previewsSurfacesTitle">Afficher sur</span>
+        </div>
+        <div class="previews-surfaces">
+          <label class="chip-check"><input type="checkbox" id="pref-previews-directory" /><span data-i18n="popup.settings.previewsSurfaceDirectory">Répertoire</span></label>
+          <label class="chip-check"><input type="checkbox" id="pref-previews-sidebar" /><span data-i18n="popup.settings.previewsSurfaceSidebar">Sidebar</span></label>
+          <label class="chip-check"><input type="checkbox" id="pref-previews-clips" /><span data-i18n="popup.settings.previewsSurfaceClips">Clips</span></label>
+          <label class="chip-check"><input type="checkbox" id="pref-previews-search" /><span data-i18n="popup.settings.previewsSurfaceSearch">Recherche</span></label>
+        </div>
+
+        <div class="settings-text" style="margin-top:8px">
+          <span class="settings-title" data-i18n="popup.settings.previewsSizeTitle">Taille</span>
+        </div>
+        <div class="seg-group" id="previews-size-group">
+          <button type="button" class="seg-btn" data-previews-size="s">S</button>
+          <button type="button" class="seg-btn" data-previews-size="m">M</button>
+          <button type="button" class="seg-btn" data-previews-size="l">L</button>
+        </div>
+
+        <label class="settings-toggle" style="margin-top:8px">
+          <div class="settings-text">
+            <span class="settings-title" data-i18n="popup.settings.previewsAudioTitle">Audio (mode vidéo)</span>
+            <span class="settings-description" data-i18n="popup.settings.previewsAudioDescription">Activer le son dans les aperçus vidéo.</span>
+          </div>
+          <input id="pref-previews-audio" type="checkbox" />
+        </label>
+
+        <div class="settings-text" style="margin-top:8px">
+          <span class="settings-title" data-i18n="popup.settings.previewsDelayTitle">Délai d'apparition</span>
+          <span class="settings-description"><span id="previews-delay-value">200</span> ms</span>
+        </div>
+        <input id="pref-previews-delay" type="range" min="0" max="800" step="50" value="200" class="settings-range" />
+
+        <label class="settings-toggle" style="margin-top:8px">
+          <div class="settings-text">
+            <span class="settings-title" data-i18n="popup.settings.previewsAnimationsTitle">Animations</span>
+          </div>
+          <input id="pref-previews-animations" type="checkbox" />
+        </label>
       </div>
 
       <!-- Group: Chat -->
