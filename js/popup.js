@@ -73,6 +73,7 @@ const previewsAudioToggle = document.getElementById("pref-previews-audio");
 const previewsDelayInput = document.getElementById("pref-previews-delay");
 const previewsDelayValue = document.getElementById("previews-delay-value");
 const previewsAnimationsToggle = document.getElementById("pref-previews-animations");
+const adblockEnabledToggle = document.getElementById("pref-adblock-enabled");
 const chatKeywordsInput = document.getElementById("pref-chat-keywords");
 const blockedUsersInput = document.getElementById("pref-blocked-users");
 const saveChatFilterButton = document.getElementById("save-chat-filter");
@@ -688,6 +689,9 @@ function renderPreferences() {
   }
   if (previewsAnimationsToggle) {
     previewsAnimationsToggle.checked = prefs.previewsAnimations !== false;
+  }
+  if (adblockEnabledToggle) {
+    adblockEnabledToggle.checked = prefs.adblockEnabled !== false;
   }
   {
     const pvMode = prefs.previewsMode === "video" ? "video" : "image";
@@ -1426,6 +1430,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     previewsAnimationsToggle?.addEventListener("change", (e) => {
       updatePreferences({ previewsAnimations: e.target.checked });
+    });
+    adblockEnabledToggle?.addEventListener("change", (e) => {
+      updatePreferences({ adblockEnabled: e.target.checked });
     });
     previewsModeGroup?.querySelectorAll(".seg-btn").forEach((btn) => {
       btn.addEventListener("click", () => {

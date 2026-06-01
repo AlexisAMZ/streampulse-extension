@@ -38,6 +38,12 @@
       "world": "MAIN"
     },
     {
+      "matches": ["https://www.twitch.tv/*"],
+      "all_frames": false,
+      "js": ["js/inject/adblock-bridge.js"],
+      "run_at": "document_start"
+    },
+    {
       "matches": ["https://www.twitch.tv/*", "https://clips.twitch.tv/*"],
       "all_frames": false,
       "js": [

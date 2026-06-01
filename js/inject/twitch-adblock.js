@@ -1,18 +1,27 @@
 /**
- * StreamPulse — Twitch site-wide ad detector (M1: detect + banner).
+ * StreamPulse — Twitch site-wide ad blocker (CSAI + SSAI).
  *
  * Runs in the PAGE main world (manifest `world: "MAIN"`, run_at document_start)
  * so it can hook Twitch's own player without the page CSP blocking it. Twitch
  * fetches its HLS playlist inside the `amazon-ivs-wasmworker`, so we hook both the
- * main-thread fetch/XHR AND wrap that worker to detect Twitch stitched-ad breaks.
+ * main-thread fetch/XHR AND wrap that worker (incl. blob: workers) to catch ads.
  *
- * M2: blocks CSAI ads by returning an empty "no ads" payload for edge.ads.twitch.tv
- * requests, plus an "Ad blocked by StreamPulse" banner. (SSAI stitched-ad stripping
- * in the worker playlist is the next step.)
+ *  - CSAI (client-side ad creatives): the edge.ads.twitch.tv request is answered
+ *    with an empty "no ads" payload.
+ *  - SSAI (server-side stitched ads): the stitched-ad segments are stripped out of
+ *    the HLS media playlist so the player runs straight through to live.
  *
- * Kill-switch (if the Twitch player ever breaks): in the page console run
- *   localStorage['sp-adblock-disabled'] = '1'
- * then reload the tab. Debug logs: set window.__SP_PREVIEWS_DEBUG__ = true.
+ * An "Ad blocked by StreamPulse" banner is shown on the player when an ad is
+ * caught. Resilient to other extensions that also override window.Worker (e.g.
+ * 7TV) via a getter/setter chain.
+ *
+ * Toggle: the `adblockEnabled` preference (popup) is mirrored into the kill-switch
+ * below by `adblock-bridge.js`; changes apply on the next page load.
+ *
+ * Kill-switch (manual, if the Twitch player ever breaks): in the page console run
+ *   localStorage['sp-adblock-disabled'] = '1'   // then reload
+ * Debug logs (off by default): localStorage['sp-adblock-debug'] = '1' (reload),
+ * or window.__SP_PREVIEWS_DEBUG__ = true. Inspect window.__SP_ADBLOCK_DIAG__.
  */
 (function () {
   "use strict";
@@ -23,17 +32,49 @@
 
   if (window.__SP_TWITCH_ADBLOCK__) return;
   window.__SP_TWITCH_ADBLOCK__ = true;
-  // Live diagnostics — inspect via window.__SP_ADBLOCK_DIAG__.
-  window.__SP_ADBLOCK_DIAG__ = { seen: [], wrapped: [], workerAd: 0, stripped: 0 };
 
+  // Kill-switch — set by adblock-bridge.js from the `adblockEnabled` pref (or
+  // manually in the console). When disabled, install nothing.
   try {
     if (localStorage.getItem("sp-adblock-disabled") === "1") return;
   } catch (_e) {}
 
-  // M1: logs are always on and use console.log so they're visible at the default
-  // console level (console.debug is hidden unless "Verbose" is enabled).
-  // (Re-gate behind __SP_PREVIEWS_DEBUG__ + console.debug later.)
+  // Debug logging is OFF by default (production). Enable for support with
+  //   localStorage['sp-adblock-debug'] = '1'   (then reload)
+  // or window.__SP_PREVIEWS_DEBUG__ = true.
+  var DEBUG = false;
+  try {
+    DEBUG =
+      localStorage.getItem("sp-adblock-debug") === "1" ||
+      window.__SP_PREVIEWS_DEBUG__ === true;
+  } catch (_e) {}
+
+  // Live diagnostics (window.__SP_ADBLOCK_DIAG__): action counters are always kept
+  // (cheap, useful for support); the URL sample arrays only fill in debug mode and
+  // are capped to avoid unbounded growth.
+  window.__SP_ADBLOCK_DIAG__ = {
+    seen: [],
+    wrapped: [],
+    seenCount: 0,
+    wrappedCount: 0,
+    workerAd: 0,
+    stripped: 0,
+    debug: DEBUG,
+  };
+  var DIAG_CAP = 50;
+  function diagPush(key, val) {
+    try {
+      var d = window.__SP_ADBLOCK_DIAG__;
+      d[key + "Count"] = (d[key + "Count"] || 0) + 1; // always-on counter
+      if (DEBUG) {
+        var arr = d[key];
+        if (arr && arr.length < DIAG_CAP) arr.push(val); // sample only in debug
+      }
+    } catch (_e) {}
+  }
+
   function dbg() {
+    if (!DEBUG) return;
     try {
       if (window.console) {
         console.log.apply(console, ["[SP adblock]"].concat([].slice.call(arguments)));
@@ -182,13 +223,13 @@
       try {
         var u = typeof url === "string" ? url : (url && url.href) || "";
         dbg("worker seen", u);
-        try { window.__SP_ADBLOCK_DIAG__.seen.push(String(u).split("?")[0].slice(-64)); } catch (_d) {}
+        diagPush("seen", String(u).split("?")[0].slice(-64));
         var isModule = opts && opts.type === "module";
 
         // Case A — direct IVS/player worker URL.
         if (u && u.indexOf("blob:") !== 0 && /wasmworker|amazon-ivs|player-core|\.worker\./i.test(u)) {
           dbg("wrapping worker (url)", u);
-          try { window.__SP_ADBLOCK_DIAG__.wrapped.push("url"); } catch (_d) {}
+          diagPush("wrapped", "url");
           var src = workerInit + "importScripts(" + JSON.stringify(u) + ");";
           var w = new RealWorker(URL.createObjectURL(new Blob([src], { type: "application/javascript" })), opts);
           attachAdListener(w);
@@ -208,7 +249,7 @@
           } catch (_x) {}
           if (code && /usher|ttvnw|\.m3u8|amazon-ivs|wasmworker|importScripts|MediaSource/i.test(code)) {
             dbg("wrapping worker (blob)");
-            try { window.__SP_ADBLOCK_DIAG__.wrapped.push("blob"); } catch (_d) {}
+            diagPush("wrapped", "blob");
             var bw = new RealWorker(
               URL.createObjectURL(new Blob([workerInit + "\n;\n" + code], { type: "application/javascript" })),
               opts

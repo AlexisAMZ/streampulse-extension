@@ -204,6 +204,10 @@ chatFilterTitle: "Mots-clés masqués",
         contactEmail: "Email",
         groupNotifications: "Notifications",
         groupAutomation: "Automatisation",
+        groupAdblock: "Bloqueur de pub",
+        adblockEnableTitle: "Bloqueur de pub Twitch",
+        adblockEnableDescription:
+          "Bloque les pubs Twitch (pré-roll et mid-roll) directement dans le lecteur. Recharge la page pour appliquer.",
         groupPreviews: "Previews au survol",
         previewsEnableTitle: "Previews au survol",
         previewsEnableDescription:
@@ -564,6 +568,10 @@ chatFilterTitle: "Mots-clés masqués",
         dataDescription: "Manage your data and view your statistics.",
         groupNotifications: "Notifications",
         groupAutomation: "Automation",
+        groupAdblock: "Ad blocker",
+        adblockEnableTitle: "Twitch ad blocker",
+        adblockEnableDescription:
+          "Blocks Twitch ads (pre-roll and mid-roll) right in the player. Reload the page to apply.",
         groupPreviews: "Hover previews",
         previewsEnableTitle: "Hover previews",
         previewsEnableDescription:
@@ -907,6 +915,10 @@ chatFilterTitle: "Mots-clés masqués",
         contactEmail: "Email",
         groupNotifications: "Notificaciones",
         groupAutomation: "Automatización",
+        groupAdblock: "Bloqueador de anuncios",
+        adblockEnableTitle: "Bloqueador de anuncios de Twitch",
+        adblockEnableDescription:
+          "Bloquea los anuncios de Twitch (pre-roll y mid-roll) directamente en el reproductor. Recarga la página para aplicar.",
         groupPreviews: "Vistas previas al pasar",
         previewsEnableTitle: "Vistas previas al pasar",
         previewsEnableDescription:
@@ -1242,6 +1254,10 @@ chatFilterTitle: "Mots-clés masqués",
         contactEmail: "Email",
         groupNotifications: "Notificações",
         groupAutomation: "Automação",
+        groupAdblock: "Bloqueador de anúncios",
+        adblockEnableTitle: "Bloqueador de anúncios da Twitch",
+        adblockEnableDescription:
+          "Bloqueia os anúncios da Twitch (pré-roll e mid-roll) direto no player. Recarregue a página para aplicar.",
         groupPreviews: "Prévias ao passar o mouse",
         previewsEnableTitle: "Prévias ao passar o mouse",
         previewsEnableDescription:
