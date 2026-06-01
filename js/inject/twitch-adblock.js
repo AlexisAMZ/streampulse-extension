@@ -23,6 +23,8 @@
 
   if (window.__SP_TWITCH_ADBLOCK__) return;
   window.__SP_TWITCH_ADBLOCK__ = true;
+  // Live diagnostics — inspect via window.__SP_ADBLOCK_DIAG__.
+  window.__SP_ADBLOCK_DIAG__ = { seen: [], wrapped: [], workerAd: 0, stripped: 0 };
 
   try {
     if (localStorage.getItem("sp-adblock-disabled") === "1") return;
@@ -55,14 +57,36 @@
     function isAdReq(u) {
       return /edge\.ads\.twitch\.tv|aws\.twitch\.tv\/ads|\/ads\?/i.test(u || "");
     }
+    // Remove Twitch SSAI ad segments from a media playlist: drop everything inside
+    // a twitch-stitched-ad date-range until the discontinuity that resumes live.
+    function stripAds(text) {
+      var lines = String(text).split("\n");
+      var out = [];
+      var inAd = false;
+      for (var i = 0; i < lines.length; i++) {
+        var ln = lines[i];
+        if (ln.indexOf("#EXT-X-DATERANGE") === 0 && ln.indexOf("twitch-stitched-ad") !== -1) {
+          inAd = true;
+          continue;
+        }
+        if (inAd) {
+          if (ln.indexOf("#EXT-X-DISCONTINUITY") === 0) {
+            inAd = false; // ad block ends; resume live (drop the discontinuity too)
+            continue;
+          }
+          continue; // drop ad lines (#EXTINF, segment URLs, program-date-time…)
+        }
+        out.push(ln);
+      }
+      return out.join("\n");
+    }
     var rf = scope.fetch;
     if (rf) {
       scope.fetch = function (input) {
         var url = typeof input === "string" ? input : (input && input.url) || "";
         if (isAdReq(url)) {
           signal("csai");
-          // M2: block the CSAI ad request — return an empty "no ads" payload so
-          // Twitch's player has no ad to play and stays on live content.
+          // M2: block the CSAI ad request — return an empty "no ads" payload.
           return Promise.resolve(
             new Response("[]", { status: 200, headers: { "Content-Type": "application/json" } })
           );
@@ -70,16 +94,24 @@
         var p = rf.apply(this, arguments);
         if (isPlaylist(url)) {
           p = p.then(function (res) {
-            try {
-              res
-                .clone()
-                .text()
-                .then(function (t) {
-                  if (hasAd(t)) signal("fetch");
-                })
-                .catch(function () {});
-            } catch (e) {}
-            return res;
+            return res
+              .clone()
+              .text()
+              .then(function (t) {
+                if (hasAd(t)) {
+                  signal("ssai");
+                  // M2.1: strip stitched-ad segments and return the clean playlist.
+                  return new Response(stripAds(t), {
+                    status: res.status,
+                    statusText: res.statusText,
+                    headers: res.headers,
+                  });
+                }
+                return res;
+              })
+              .catch(function () {
+                return res;
+              });
           });
         }
         return p;
@@ -133,24 +165,56 @@
       "(" +
       applyHooks.toString() +
       ")(self, function(w){try{self.postMessage({__sp_adblock:'ad',where:'worker-'+w});}catch(e){}});\n";
+    function attachAdListener(w) {
+      w.addEventListener("message", function (e) {
+        if (e && e.data && e.data.__sp_adblock === "ad") {
+          dbg("AD signal from " + (e.data.where || "worker"));
+          try {
+            window.__SP_ADBLOCK_DIAG__.workerAd++;
+            if (String(e.data.where || "").indexOf("ssai") !== -1) window.__SP_ADBLOCK_DIAG__.stripped++;
+            window.postMessage({ __sp_adblock: "ad", where: e.data.where || "worker" }, "*");
+          } catch (_e) {}
+        }
+      });
+    }
     var SPWorker = function (url, opts) {
       try {
         var u = typeof url === "string" ? url : (url && url.href) || "";
         dbg("worker seen", u);
+        try { window.__SP_ADBLOCK_DIAG__.seen.push(String(u).split("?")[0].slice(-64)); } catch (_d) {}
+        var isModule = opts && opts.type === "module";
+
+        // Case A — direct IVS/player worker URL.
         if (u && u.indexOf("blob:") !== 0 && /wasmworker|amazon-ivs|player-core|\.worker\./i.test(u)) {
-          dbg("wrapping worker", u);
+          dbg("wrapping worker (url)", u);
+          try { window.__SP_ADBLOCK_DIAG__.wrapped.push("url"); } catch (_d) {}
           var src = workerInit + "importScripts(" + JSON.stringify(u) + ");";
-          var blobUrl = URL.createObjectURL(new Blob([src], { type: "application/javascript" }));
-          var w = new RealWorker(blobUrl, opts);
-          w.addEventListener("message", function (e) {
-            if (e && e.data && e.data.__sp_adblock === "ad") {
-              dbg("AD signal from " + (e.data.where || "worker"));
-              try {
-                window.postMessage({ __sp_adblock: "ad", where: e.data.where || "worker" }, "*");
-              } catch (_e) {}
-            }
-          });
+          var w = new RealWorker(URL.createObjectURL(new Blob([src], { type: "application/javascript" })), opts);
+          attachAdListener(w);
           return w;
+        }
+
+        // Case B — Twitch ships the IVS worker as a blob: read it synchronously
+        // (in-memory, instant) and prepend our hook so it runs inside the worker.
+        // Only wrap blobs that look stream-related; skip module workers.
+        if (u && u.indexOf("blob:") === 0 && !isModule) {
+          var code = "";
+          try {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", u, false);
+            xhr.send();
+            code = xhr.responseText || "";
+          } catch (_x) {}
+          if (code && /usher|ttvnw|\.m3u8|amazon-ivs|wasmworker|importScripts|MediaSource/i.test(code)) {
+            dbg("wrapping worker (blob)");
+            try { window.__SP_ADBLOCK_DIAG__.wrapped.push("blob"); } catch (_d) {}
+            var bw = new RealWorker(
+              URL.createObjectURL(new Blob([workerInit + "\n;\n" + code], { type: "application/javascript" })),
+              opts
+            );
+            attachAdListener(bw);
+            return bw;
+          }
         }
       } catch (err) {
         dbg("worker wrap failed -> real worker", err && err.message);
