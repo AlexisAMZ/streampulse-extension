@@ -28,7 +28,7 @@
 
     if (!btn) return;
 
-    console.log("[StreamPulse] Coffre de points trouvé ! Tentative de récupération...");
+    // Channel points bonus chest found — claim it
     lastClaimTime = Date.now();
     btn.click();
 

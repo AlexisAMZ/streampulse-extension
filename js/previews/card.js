@@ -70,9 +70,8 @@
    */
   function createPreviewCard() {
     let root = null;
-    let mediaEl, imgEl, iframeEl, videoEl, fallbackEl, fbAvatarEl, fbGameEl, titleEl, categoryEl;
+    let mediaEl, imgEl, iframeEl, fallbackEl, fbAvatarEl, fbGameEl, titleEl, categoryEl;
     let refreshTimer = null;
-    let hls = null;
     let playToken = 0;
     let visible = false;
 
@@ -92,12 +91,6 @@
       iframeEl.setAttribute("scrolling", "no");
       iframeEl.hidden = true;
 
-      videoEl = el("video", "sp-preview__video");
-      videoEl.muted = true;
-      videoEl.setAttribute("playsinline", "");
-      videoEl.setAttribute("preload", "none");
-      videoEl.hidden = true;
-
       fallbackEl = el("div", "sp-preview__fallback");
       fbAvatarEl = el("img", "sp-preview__fallback-avatar");
       fbAvatarEl.alt = "";
@@ -112,7 +105,7 @@
       const badge = el("span", "sp-preview__badge");
       badge.textContent = "LIVE";
 
-      mediaEl.append(imgEl, iframeEl, videoEl, fallbackEl, overlay, badge);
+      mediaEl.append(imgEl, iframeEl, fallbackEl, overlay, badge);
       root.append(mediaEl);
       document.body.appendChild(root);
     }
@@ -164,16 +157,6 @@
     }
 
     function teardownPlayback() {
-      if (hls) {
-        try { hls.destroy(); } catch (_e) {}
-        hls = null;
-      }
-      if (videoEl) {
-        try { videoEl.pause(); } catch (_e) {}
-        videoEl.removeAttribute("src");
-        try { videoEl.load(); } catch (_e) {}
-        videoEl.hidden = true;
-      }
       if (iframeEl) {
         iframeEl.src = "";
         iframeEl.hidden = true;
@@ -188,160 +171,6 @@
       iframeEl.src = store.sources.clipEmbedUrl(descriptor.slug, { parent, muted: !opts.audio });
     }
 
-    // Wraps hls.js's playlist loader to flag Twitch stitched-ad breaks as each
-    // media playlist arrives — without mutating it (so no sequence desync).
-    function makeAdAwareLoader(Hls, onAd) {
-      return class extends Hls.DefaultConfig.loader {
-        load(context, config, callbacks) {
-          const orig = callbacks.onSuccess;
-          callbacks.onSuccess = (response, stats, ctx, net) => {
-            try {
-              const data = response && response.data;
-              if (typeof data === "string" && data.indexOf("#EXTINF") !== -1) {
-                onAd(store.stream.hasAd(data), data);
-              }
-            } catch (_e) {}
-            orig(response, stats, ctx, net);
-          };
-          super.load(context, config, callbacks);
-        }
-      };
-    }
-
-    // Clean live video: play the raw HLS stream in a native <video> (no Twitch
-    // chrome). During Twitch stitched-ad breaks we cover the player with the live
-    // thumbnail (TwitchAdSolutions-style detection) so an ad is never shown. Falls
-    // back to the image thumbnail on any failure.
-    function applyNativeVideo(descriptor, size, opts) {
-      const token = ++playToken;
-      stopRefresh();
-      iframeEl.hidden = true;
-      iframeEl.src = "";
-
-      let started = false; // the <video> has produced frames
-      let ad = false; // an ad break is currently in the playlist
-
-      const thumbUrl = () =>
-        store.sources.twitchPreviewImageUrl(descriptor.login, size.width, size.height);
-
-      // The image sits above the <video> (z-index) and doubles as the loading
-      // poster AND the ad cover: visible until the video plays AND no ad is active.
-      function render() {
-        const showVideo = started && !ad;
-        if (!showVideo && !imgEl.getAttribute("src")) imgEl.src = thumbUrl();
-        imgEl.hidden = showVideo;
-      }
-
-      imgEl.onload = null;
-      imgEl.onerror = () => {
-        imgEl.hidden = true;
-      };
-      imgEl.src = thumbUrl();
-      showFallback(descriptor);
-      videoEl.hidden = false;
-      videoEl.muted = true;
-      render();
-
-      videoEl.addEventListener(
-        "playing",
-        () => {
-          if (token !== playToken) return;
-          started = true;
-          clearFallback();
-          render();
-        },
-        { once: true }
-      );
-
-      const toImage = () => {
-        if (token !== playToken) return;
-        teardownPlayback();
-        applyImageMode(descriptor, size);
-      };
-
-      const startPlayback = () => {
-        videoEl
-          .play()
-          .then(() => {
-            if (opts.audio && token === playToken) videoEl.muted = false;
-          })
-          .catch(() => {});
-      };
-
-      const onAd = (isAd, text) => {
-        if (token !== playToken) return;
-        if (isAd && !ad) {
-          const marker = (String(text).match(/#EXT-X-DATERANGE[^\n]*/) || [""])[0].slice(0, 220);
-          dbg("AD detected -> cover with thumbnail", marker);
-        } else if (!isAd && ad) {
-          dbg("AD over -> back to live");
-        }
-        ad = isAd;
-        render();
-      };
-
-      (async () => {
-        try {
-          const Hls = NS.Hls;
-          if (!Hls) dbg("hls.js not loaded (NS.Hls is undefined)");
-
-          // Prefer the ad-free proxy; fall back to the direct usher stream (ads
-          // there are hidden by the thumbnail cover); finally the image thumbnail.
-          let url;
-          try {
-            url = await store.stream.resolveProxyMaster(descriptor.login);
-            dbg("proxy OK", url);
-          } catch (proxyErr) {
-            dbg("proxy failed -> usher", proxyErr && proxyErr.message);
-            url = await store.stream.fetchPlaylist(descriptor.login, { maxHeight: 360 });
-            dbg("usher OK (ads covered by thumbnail)", url);
-          }
-          if (token !== playToken) return;
-
-          if (Hls && Hls.isSupported()) {
-            if (hls) {
-              try { hls.destroy(); } catch (_e) {}
-            }
-            hls = new Hls({
-              capLevelToPlayerSize: true,
-              maxBufferLength: 6,
-              liveSyncDurationCount: 2,
-              lowLatencyMode: false,
-              enableWorker: false,
-              pLoader: makeAdAwareLoader(Hls, onAd),
-            });
-            hls.on(Hls.Events.ERROR, (_evt, data) => {
-              dbg("hls error", data && data.type, data && data.details, data && data.fatal);
-              if (data && data.fatal) toImage();
-            });
-            hls.loadSource(url);
-            hls.attachMedia(videoEl);
-            hls.on(Hls.Events.MANIFEST_PARSED, () => {
-              if (token === playToken) startPlayback();
-            });
-          } else if (videoEl.canPlayType("application/vnd.apple.mpegurl")) {
-            videoEl.src = url; // Safari plays HLS natively
-            startPlayback();
-          } else {
-            dbg("no HLS support in this browser -> image");
-            toImage();
-          }
-        } catch (err) {
-          dbg("playback resolve failed -> image", err && err.message);
-          toImage();
-        }
-      })();
-    }
-
-    function applyVideoMode(descriptor, size, opts) {
-      if (descriptor.kind === "clip" && descriptor.slug) {
-        teardownPlayback();
-        applyClipEmbed(descriptor, opts);
-      } else {
-        applyNativeVideo(descriptor, size, opts);
-      }
-    }
-
     function show(anchorEl, descriptor, opts) {
       if (!root) mount();
       opts = opts || {};
@@ -350,7 +179,7 @@
 
       root.style.width = size.width + "px";
       mediaEl.style.height = size.height + "px";
-      root.setAttribute("data-mode", opts.mode === "video" ? "video" : "image");
+      root.setAttribute("data-mode", "image");
 
       titleEl.textContent = descriptor.title || "";
       categoryEl.textContent = descriptor.category || "";
@@ -360,8 +189,12 @@
       // Show fallback (avatar + game) until the real media loads.
       showFallback(descriptor);
 
-      if (opts.mode === "video") applyVideoMode(descriptor, size, opts);
-      else applyImageMode(descriptor, size);
+      if (descriptor.kind === "clip" && descriptor.slug) {
+        teardownPlayback();
+        applyClipEmbed(descriptor, opts);
+      } else {
+        applyImageMode(descriptor, size);
+      }
 
       root.hidden = false;
       const rect = anchorEl.getBoundingClientRect();

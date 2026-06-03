@@ -656,6 +656,6 @@ initialize().catch((error) => {
   console.error("Onboarding initialization error:", error);
 });
 
-window.addEventListener("unload", () => {
+window.addEventListener("pagehide", () => {
   if (typeof unsubscribeLanguage === "function") unsubscribeLanguage();
 });

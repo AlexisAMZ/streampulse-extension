@@ -9,9 +9,6 @@
     "https://api.twitch.tv/*",
     "https://tmi.twitch.tv/*",
     "https://gql.twitch.tv/*",
-    "https://usher.ttvnw.net/*",
-    "https://*.ttvnw.net/*",
-    "https://*.cdn-perfprod.com/*",
     "https://www.twitch.tv/*",
     "https://clips.twitch.tv/*",
     "https://kick.com/*",
@@ -81,17 +78,6 @@
     "128": "images/photos/128px.png"
   },
   "web_accessible_resources": [
-    {
-      "resources": [
-        "config.js"
-      ],
-      "matches": [
-        "https://www.twitch.tv/*",
-        "https://kick.com/*",
-        "https://*.kick.com/*",
-        "https://dlive.tv/*"
-      ]
-    },
     {
       "resources": [
         "html/audio-handler.html",

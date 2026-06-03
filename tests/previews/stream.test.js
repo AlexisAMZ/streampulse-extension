@@ -35,20 +35,6 @@ describe("stream.usherUrl", () => {
   });
 });
 
-describe("stream.proxyMasterUrl", () => {
-  it("joins the proxy base + channel, stripping a trailing slash and lowercasing", () => {
-    expect(stream.proxyMasterUrl("https://lb-eu.cdn-perfprod.com/live", "XQc")).toBe(
-      "https://lb-eu.cdn-perfprod.com/live/xqc"
-    );
-    expect(stream.proxyMasterUrl("https://p/live/", "Ninja")).toBe("https://p/live/ninja");
-  });
-
-  it("ships a non-empty default proxy list", () => {
-    expect(Array.isArray(stream.PROXY_BASES)).toBe(true);
-    expect(stream.PROXY_BASES.length).toBeGreaterThan(0);
-  });
-});
-
 describe("stream.hasAd", () => {
   it("detects a Twitch stitched-ad break", () => {
     const ad = [

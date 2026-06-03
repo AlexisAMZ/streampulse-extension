@@ -680,11 +680,14 @@ class WatchTimeStore {
 }
 
 function twitchHeaders() {
-  return {
+  const headers = {
     "Client-ID": CONFIG.clientId,
-    Authorization: `Bearer ${CONFIG.accessToken}`,
     Accept: "application/json",
   };
+  if (CONFIG.accessToken) {
+    headers.Authorization = `Bearer ${CONFIG.accessToken}`;
+  }
+  return headers;
 }
 
 class PlatformChecker {

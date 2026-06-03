@@ -1,13 +1,10 @@
 /**
  * StreamPulse — hover previews: Twitch live HLS resolver.
  *
- * Resolves a channel's raw HLS playlist so video mode can play clean live video
- * in a native <video> (via hls.js) with NO Twitch player chrome:
+ * Provides pure helpers for resolving a channel's HLS playlist:
  *   GQL PlaybackAccessToken  →  usher .m3u8 master  →  pick a light quality.
  *
- * Uses Twitch's public web Client-ID (unauthenticated). This relies on Twitch's
- * internal endpoints (gray-area vs ToS); callers must fall back to the image
- * thumbnail on any failure so the preview never breaks.
+ * Uses Twitch's public web Client-ID (unauthenticated).
  *
  * Pure helpers are unit-tested; `fetchPlaylist` performs the network calls.
  * Attaches to `self.__SP_PREVIEWS__.stream`.
@@ -120,46 +117,6 @@
     return pickVariant(master, opts.maxHeight) || url;
   }
 
-  // TTV-LOL-style ad-block proxies. These return an ad-free master playlist for a
-  // channel (the proxy fetches from a no-ad region; segments still load directly
-  // from Twitch's CDN). Community proxies change often — edit this list if video
-  // previews stop working. Falls back to the image thumbnail when none respond.
-  const PROXY_BASES = [
-    "https://lb-eu.cdn-perfprod.com/live",
-    "https://lb-eu2.cdn-perfprod.com/live",
-    "https://lb-na.cdn-perfprod.com/live",
-    "https://lb-as.cdn-perfprod.com/live",
-  ];
-
-  function proxyMasterUrl(base, login) {
-    return base.replace(/\/+$/, "") + "/" + safeLogin(login);
-  }
-
-  /**
-   * Resolve an ad-free master playlist URL via the first reachable proxy.
-   * @param {string} login
-   * @param {string[]} [bases]
-   * @returns {Promise<string>} proxied master .m3u8 URL
-   * @throws when no proxy responds (caller falls back to the image thumbnail)
-   */
-  async function resolveProxyMaster(login, bases) {
-    bases = bases && bases.length ? bases : PROXY_BASES;
-    for (let i = 0; i < bases.length; i++) {
-      try {
-        const url = proxyMasterUrl(bases[i], login);
-        // Plain GET only — any custom header would trigger a CORS preflight that
-        // these proxies reject (Access-Control-Allow-Headers).
-        const res = await fetch(url);
-        if (!res.ok) continue;
-        const text = await res.text();
-        if (text && text.indexOf("#EXTM3U") === 0) return url;
-      } catch (_e) {
-        /* try the next proxy */
-      }
-    }
-    throw new Error("no-proxy");
-  }
-
   // True when a media playlist contains a Twitch stitched-ad break.
   function hasAd(text) {
     const s = String(text || "");
@@ -171,10 +128,7 @@
     usherUrl,
     pickVariant,
     fetchPlaylist,
-    proxyMasterUrl,
-    resolveProxyMaster,
     hasAd,
-    PROXY_BASES,
     CLIENT_ID,
   };
 })();
