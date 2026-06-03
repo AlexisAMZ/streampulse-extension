@@ -1,4 +1,4 @@
-import { CONFIG } from "../config.js";
+import { CONFIG as LOCAL_CONFIG } from "../config.js";
 import {
   translations,
   DEFAULT_LANGUAGE,
@@ -27,6 +27,35 @@ const STORAGE_KEYS = {
   // in-memory `streamerLiveState` Map, so we MUST restore from storage.
   LIVE_STATE: "streamPulseLiveState",
 };
+
+// ─── Remote config (credentials hosted on Vercel, never in the zip) ──────────
+const REMOTE_CONFIG_URL = "https://alexisamz.fr/api/streampulse-config";
+const REMOTE_CONFIG_CACHE_KEY = "streampulse:remoteConfig";
+const REMOTE_CONFIG_TTL_MS = 60 * 60 * 1000; // 1 hour
+
+let CONFIG = { ...LOCAL_CONFIG };
+
+async function fetchRemoteConfig() {
+  try {
+    const stored = await chrome.storage.local.get(REMOTE_CONFIG_CACHE_KEY);
+    const cached = stored[REMOTE_CONFIG_CACHE_KEY];
+    if (cached && Date.now() - cached.fetchedAt < REMOTE_CONFIG_TTL_MS) {
+      CONFIG = { ...LOCAL_CONFIG, ...cached.data };
+      return;
+    }
+    const res = await fetch(REMOTE_CONFIG_URL, { cache: "no-store" });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data?.clientId) {
+      CONFIG = { ...LOCAL_CONFIG, ...data };
+      await chrome.storage.local.set({
+        [REMOTE_CONFIG_CACHE_KEY]: { data, fetchedAt: Date.now() },
+      });
+    }
+  } catch {
+    // Network error — keep local config, extension still works offline
+  }
+}
 
 const WATCHER_ALARM = "streampulseWatcher";
 const KEEP_ALIVE_ALARM = "streampulseKeepAlive";
@@ -1789,6 +1818,7 @@ async function openOnboarding() {
 
 chrome.runtime.onInstalled.addListener(async (details) => {
   initDone = true;
+  await fetchRemoteConfig(); // load credentials before first poll
   const streamers = await DataStore.ensureDefaults();
   await PreferenceStore.ensureDefaults();
   await NotificationCenter.init();
@@ -1814,6 +1844,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 
 chrome.runtime.onStartup.addListener(async () => {
   initDone = true;
+  await fetchRemoteConfig(); // refresh credentials on browser startup
   scheduleWatcherAlarm();
   scheduleKeepAliveAlarm();
 
