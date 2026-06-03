@@ -63,7 +63,6 @@ const DEFAULT_PREFERENCES = {
   previewsAudio: false,
   previewsShowDelayMs: 200,
   previewsAnimations: true,
-  adblockEnabled: true,
 };
 
 const DEFAULT_STATS = {
@@ -453,7 +452,6 @@ class PreferenceStore {
         ? Math.min(2000, Math.max(0, previewsDelay))
         : 200,
       previewsAnimations: preferences.previewsAnimations !== false,
-      adblockEnabled: preferences.adblockEnabled !== false,
     };
   }
 
@@ -2489,9 +2487,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if ("previewsAnimations" in incomingUpdates) {
           updates.previewsAnimations =
             incomingUpdates.previewsAnimations !== false;
-        }
-        if ("adblockEnabled" in incomingUpdates) {
-          updates.adblockEnabled = incomingUpdates.adblockEnabled !== false;
         }
 
         if (Object.keys(updates).length === 0) {

@@ -33,19 +33,6 @@
     {
       "matches": ["https://www.twitch.tv/*"],
       "all_frames": false,
-      "js": ["js/inject/twitch-adblock.js"],
-      "run_at": "document_start",
-      "world": "MAIN"
-    },
-    {
-      "matches": ["https://www.twitch.tv/*"],
-      "all_frames": false,
-      "js": ["js/inject/adblock-bridge.js"],
-      "run_at": "document_start"
-    },
-    {
-      "matches": ["https://www.twitch.tv/*"],
-      "all_frames": false,
       "js": ["js/inject/topbar.js"],
       "css": ["css/topbar.css"],
       "run_at": "document_idle"

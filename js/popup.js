@@ -73,7 +73,6 @@ const previewsAudioToggle = document.getElementById("pref-previews-audio");
 const previewsDelayInput = document.getElementById("pref-previews-delay");
 const previewsDelayValue = document.getElementById("previews-delay-value");
 const previewsAnimationsToggle = document.getElementById("pref-previews-animations");
-const adblockEnabledToggle = document.getElementById("pref-adblock-enabled");
 const chatKeywordsInput = document.getElementById("pref-chat-keywords");
 const blockedUsersInput = document.getElementById("pref-blocked-users");
 const saveChatFilterButton = document.getElementById("save-chat-filter");
@@ -690,9 +689,6 @@ function renderPreferences() {
   if (previewsAnimationsToggle) {
     previewsAnimationsToggle.checked = prefs.previewsAnimations !== false;
   }
-  if (adblockEnabledToggle) {
-    adblockEnabledToggle.checked = prefs.adblockEnabled !== false;
-  }
   {
     const pvMode = prefs.previewsMode === "video" ? "video" : "image";
     previewsModeGroup?.querySelectorAll(".seg-btn").forEach((b) => {
@@ -797,31 +793,10 @@ async function renderStats(preloadedStats = null) {
     // Greeting bar points block
     const headerPointsValue2 = document.getElementById("header-points-value2");
     if (headerPointsValue2) headerPointsValue2.textContent = formatted;
-
-    // Ads blocked by StreamPulse (counter written by adblock-bridge.js on twitch.tv)
-    await renderAdblockCount();
   } catch (err) {
     console.error("renderStats failed:", err);
     if (statPointsEl) statPointsEl.textContent = t("popup.stats.loadError") || "--";
     if (headerPointsValue) headerPointsValue.textContent = "--";
-  }
-}
-
-// Surface the persistent "ads blocked" total in the greeting stat block and the
-// settings value card (the donation prompt). Hides the value-card stat line on a
-// fresh install (0) so it never reads "0 pubs bloquées".
-async function renderAdblockCount() {
-  try {
-    const blocked =
-      (await chrome.storage.local.get("spAdblockBlockedTotal")).spAdblockBlockedTotal || 0;
-    const statEl = document.getElementById("stat-adblock");
-    if (statEl) statEl.textContent = blocked > 0 ? formatNumber(blocked) : "--";
-    const cardCount = document.getElementById("adblock-value-count");
-    if (cardCount) cardCount.textContent = formatNumber(blocked);
-    const cardStat = document.getElementById("adblock-value-stat");
-    if (cardStat) cardStat.style.display = blocked > 0 ? "" : "none";
-  } catch (_e) {
-    /* non-critical */
   }
 }
 
@@ -1019,7 +994,6 @@ async function handleResetStats() {
       type: "resetStat",
       stat: "channelPointsClaimed",
     });
-    await chrome.storage.local.set({ spAdblockBlockedTotal: 0 });
     await renderStats();
     showFeedback(t("popup.stats.resetSuccess") || "Statistiques remises à zéro", "success");
   } catch (err) {
@@ -1038,7 +1012,6 @@ const ALLOWED_STORAGE_KEYS = new Set([
   "betaGeneralStats",
   "betaGeneralPreferences",
   "betaWatchTimeData",
-  "spAdblockBlockedTotal",
   "streampulse:scheduled",
   "streampulse:thumbCache",
 ]);
@@ -1453,9 +1426,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     previewsAnimationsToggle?.addEventListener("change", (e) => {
       updatePreferences({ previewsAnimations: e.target.checked });
-    });
-    adblockEnabledToggle?.addEventListener("change", (e) => {
-      updatePreferences({ adblockEnabled: e.target.checked });
     });
     previewsModeGroup?.querySelectorAll(".seg-btn").forEach((btn) => {
       btn.addEventListener("click", () => {

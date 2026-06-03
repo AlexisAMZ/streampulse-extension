@@ -52,10 +52,6 @@
             <div class="stat-block-label" data-i18n="popup.statBlock.watchTime">Watch time</div>
             <div class="stat-block-value muted" id="stat-watchtime">--</div>
           </div>
-          <div class="stat-block">
-            <div class="stat-block-label" data-i18n="popup.statBlock.adblock">Pubs bloquées</div>
-            <div class="stat-block-value muted" id="stat-adblock">--</div>
-          </div>
         </div>
       </div>
 
@@ -123,24 +119,13 @@
     <section id="settings-section" class="settings-section hidden">
       <h2 data-i18n="popup.settingsTitle">Réglages</h2>
 
-      <!-- Support: value card (ties the donation to the value delivered) -->
-      <div class="adblock-value-card">
-        <div class="adblock-value-stat" id="adblock-value-stat">
-          <span class="adblock-value-shield">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </span>
-          <span class="adblock-value-text">
-            <span class="adblock-value-count" id="adblock-value-count">0</span>
-            <span data-i18n="popup.adblockBlockedForYou">pubs bloquées pour toi</span>
-          </span>
-        </div>
-        <a href="https://revolut.me/alexisamz" target="_blank" rel="noopener noreferrer" class="support-button promoted">
-          <span class="support-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-          </span>
-          <span data-i18n="popup.supportDev">Offrir un Bubble Tea au développeur</span>
-        </a>
-      </div>
+      <!-- Support the developer -->
+      <a href="https://revolut.me/alexisamz" target="_blank" rel="noopener noreferrer" class="support-button promoted">
+        <span class="support-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        </span>
+        <span data-i18n="popup.supportDev">Offrir un Bubble Tea au développeur</span>
+      </a>
 
       <!-- Theme toggle -->
       <div class="theme-toggle-row">
@@ -238,17 +223,6 @@
             <span class="settings-description" data-i18n="popup.settings.fastForwardDescription">Ajoute un bouton pour rattraper instantanément le direct.</span>
           </div>
           <input id="pref-fast-forward" type="checkbox" />
-        </label>
-
-        <!-- Group: Ad blocker -->
-        <p class="settings-group-header" data-i18n="popup.settings.groupAdblock">Bloqueur de pub</p>
-
-        <label class="settings-toggle">
-          <div class="settings-text">
-            <span class="settings-title" data-i18n="popup.settings.adblockEnableTitle">Bloqueur de pub Twitch</span>
-            <span class="settings-description" data-i18n="popup.settings.adblockEnableDescription">Bloque les pubs Twitch (pré-roll et mid-roll) directement dans le lecteur. Recharge la page pour appliquer.</span>
-          </div>
-          <input id="pref-adblock-enabled" type="checkbox" />
         </label>
 
         <!-- Group: Hover previews -->

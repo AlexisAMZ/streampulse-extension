@@ -45,10 +45,10 @@
   }
 
   var I18N = {
-    fr: { adblock: "Bloqueur de pub", previews: "Previews au survol", tip: "Offrir un Bubble Tea", settings: "Tous les réglages" },
-    en: { adblock: "Ad blocker", previews: "Hover previews", tip: "Offer a Bubble Tea", settings: "All settings" },
-    es: { adblock: "Bloqueador de anuncios", previews: "Vistas previas", tip: "Invitar a un Bubble Tea", settings: "Ajustes" },
-    pt: { adblock: "Bloqueador de anúncios", previews: "Prévias ao passar", tip: "Pagar um Bubble Tea", settings: "Configurações" },
+    fr: { previews: "Previews au survol", tip: "Offrir un Bubble Tea", settings: "Tous les réglages" },
+    en: { previews: "Hover previews", tip: "Offer a Bubble Tea", settings: "All settings" },
+    es: { previews: "Vistas previas", tip: "Invitar a un Bubble Tea", settings: "Ajustes" },
+    pt: { previews: "Prévias ao passar", tip: "Pagar um Bubble Tea", settings: "Configurações" },
   };
   function langKey(l) {
     return I18N[l] ? l : "en";
@@ -84,7 +84,6 @@
     );
   }
   var ICON = {
-    shield: svg('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'),
     gem: svg('<polygon points="12 2 19 9 12 22 5 9"/><line x1="5" y1="9" x2="19" y2="9"/>'),
     clock: svg('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>'),
     coffee: svg(
@@ -149,16 +148,14 @@
   function loadState(cb) {
     try {
       chrome.storage.local.get(
-        [PREFERENCES_KEY, "betaGeneralStats", "betaWatchTimeData", "spAdblockBlockedTotal"],
+        [PREFERENCES_KEY, "betaGeneralStats", "betaWatchTimeData"],
         function (r) {
           r = r || {};
           var prefs = r[PREFERENCES_KEY] || {};
           var stats = r.betaGeneralStats || {};
           cb({
-            adblock: r.spAdblockBlockedTotal || 0,
             points: stats.channelPointsClaimed || 0,
             watchSeconds: currentMonthWatch(r.betaWatchTimeData || {}),
-            adblockEnabled: prefs.adblockEnabled !== false,
             previewsEnabled: prefs.previewsEnabled !== false,
             lang: langKey(prefs.language),
           });
@@ -215,12 +212,9 @@
     p.innerHTML =
       '<div class="sp-tb-head"><img class="sp-tb-logo" alt="" src="' + LOGO_URL + '"><span>StreamPulse</span></div>' +
       '<div class="sp-tb-stats">' +
-      '<div class="sp-tb-stat" title="' + L.adblock + '">' + ICON.shield + "<b>" + fmtNum(st.adblock) + "</b></div>" +
       '<div class="sp-tb-stat" title="Points">' + ICON.gem + "<b>" + fmtNum(st.points) + "</b></div>" +
       '<div class="sp-tb-stat" title="Watch time">' + ICON.clock + "<b>" + fmtDur(st.watchSeconds) + "</b></div>" +
       "</div>" +
-      '<button class="sp-tb-row" type="button" data-sp-toggle="adblockEnabled"><span>' +
-      L.adblock + '</span><span class="sp-tb-sw' + (st.adblockEnabled ? " on" : "") + '"></span></button>' +
       '<button class="sp-tb-row" type="button" data-sp-toggle="previewsEnabled"><span>' +
       L.previews + '</span><span class="sp-tb-sw' + (st.previewsEnabled ? " on" : "") + '"></span></button>' +
       '<a class="sp-tb-tip" href="' + TIP_URL + '" target="_blank" rel="noopener noreferrer">' +
