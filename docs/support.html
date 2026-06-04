@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StreamPulse — Centre d'assistance</title>
+  <meta name="description" content="Besoin d'aide avec StreamPulse ? Consultez la FAQ ou contactez notre équipe. Suivez vos streamers Twitch, Kick et DLive en un coup d'œil." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --sp-bg:          #06060a;
+      --sp-bg-2:        #0a0a12;
+      --sp-violet:      #9146FF;
+      --sp-violet-deep: #5b1bd4;
+      --sp-violet-2:    #b681ff;
+      --sp-violet-glow: rgba(145, 70, 255, 0.55);
+      --sp-violet-soft: rgba(145, 70, 255, 0.16);
+      --sp-ink:         #f5f5f7;
+      --sp-ink-2:       #b4b4c4;
+      --sp-ink-3:       #6f6f80;
+      --sp-success:     #53FC18;
+      --sp-line:        rgba(255, 255, 255, 0.06);
+      --sp-line-2:      rgba(255, 255, 255, 0.10);
+      --sp-sans:        "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      --sp-serif:       "Fraunces", Georgia, serif;
+      --radius:         16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sp-sans);
+      color: var(--sp-ink);
+      background: var(--sp-bg);
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      background-image:
+        radial-gradient(ellipse 60% 50% at 12% 8%, rgba(145, 70, 255, 0.22) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 55% at 90% 95%, rgba(91, 27, 212, 0.20) 0%, transparent 60%),
+        linear-gradient(180deg, var(--sp-bg) 0%, var(--sp-bg-2) 100%);
+      background-attachment: fixed;
+    }
+
+    a { color: var(--sp-violet-2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+    /* ---------- Header ---------- */
+    header {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--sp-line);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 700; font-size: 18px; letter-spacing: -0.02em; }
+    .brand .logo {
+      width: 30px; height: 30px; border-radius: 9px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--sp-violet) 0%, var(--sp-violet-deep) 100%);
+      box-shadow: 0 0 18px var(--sp-violet-glow);
+    }
+    .brand .logo svg { width: 17px; height: 17px; display: block; }
+    .brand .pulse { color: var(--sp-violet-2); }
+    .nav a.back { color: var(--sp-ink-2); font-size: 14px; font-weight: 500; }
+    .nav a.back:hover { color: var(--sp-ink); text-decoration: none; }
+
+    /* ---------- Hero ---------- */
+    .hero { padding: 64px 0 40px; text-align: center; }
+    .eyebrow {
+      display: inline-block;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--sp-violet-2);
+      padding: 6px 14px; border-radius: 999px;
+      background: var(--sp-violet-soft); border: 1px solid var(--sp-line-2);
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-family: var(--sp-serif);
+      font-weight: 600; font-size: clamp(32px, 6vw, 48px);
+      letter-spacing: -0.02em; line-height: 1.08;
+      margin-bottom: 16px;
+    }
+    .hero p { color: var(--sp-ink-2); font-size: 17px; max-width: 520px; margin: 0 auto; }
+
+    /* ---------- Sections ---------- */
+    section { padding: 32px 0; }
+    .section-title {
+      font-family: var(--sp-serif); font-weight: 600;
+      font-size: 24px; letter-spacing: -0.01em; margin-bottom: 20px;
+    }
+
+    /* ---------- FAQ ---------- */
+    .faq details {
+      border: 1px solid var(--sp-line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.018);
+      margin-bottom: 10px;
+      overflow: hidden;
+      transition: border-color 0.2s ease;
+    }
+    .faq details[open] { border-color: var(--sp-line-2); }
+    .faq summary {
+      list-style: none; cursor: pointer;
+      padding: 16px 20px; font-weight: 600; font-size: 15px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary .chev {
+      flex: none; width: 18px; height: 18px; color: var(--sp-violet-2);
+      transition: transform 0.2s ease;
+    }
+    .faq details[open] summary .chev { transform: rotate(180deg); }
+    .faq .answer { padding: 0 20px 18px; color: var(--sp-ink-2); font-size: 14.5px; }
+
+    /* ---------- Form ---------- */
+    .card {
+      border: 1px solid var(--sp-line-2);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.012) 100%);
+      padding: 28px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    }
+    .field { margin-bottom: 18px; }
+    .field label {
+      display: block; font-size: 13px; font-weight: 600;
+      color: var(--sp-ink-2); margin-bottom: 7px;
+    }
+    .field label .req { color: var(--sp-violet-2); }
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%; font-family: inherit; font-size: 15px; color: var(--sp-ink);
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--sp-line-2);
+      border-radius: 10px;
+      padding: 12px 14px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .field textarea { resize: vertical; min-height: 130px; }
+    .field input::placeholder,
+    .field textarea::placeholder { color: var(--sp-ink-3); }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--sp-violet);
+      box-shadow: 0 0 0 3px var(--sp-violet-soft);
+    }
+    .field select { appearance: none; cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23b681ff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px;
+    }
+
+    .btn {
+      width: 100%; cursor: pointer;
+      font-family: inherit; font-size: 15.5px; font-weight: 600; color: #fff;
+      background: linear-gradient(135deg, var(--sp-violet) 0%, var(--sp-violet-deep) 100%);
+      border: none; border-radius: 11px; padding: 14px 20px;
+      box-shadow: 0 8px 24px rgba(145, 70, 255, 0.35);
+      transition: transform 0.12s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 30px rgba(145, 70, 255, 0.45); }
+    .btn:active { transform: translateY(0); }
+
+    .form-note { font-size: 12.5px; color: var(--sp-ink-3); margin-top: 14px; text-align: center; }
+    .form-note a { color: var(--sp-ink-2); }
+
+    /* Confirmation banner (shown after submit) */
+    .confirm {
+      display: none;
+      align-items: flex-start; gap: 12px;
+      border: 1px solid rgba(83, 252, 24, 0.3);
+      background: rgba(83, 252, 24, 0.07);
+      border-radius: 12px; padding: 16px 18px; margin-bottom: 22px;
+      font-size: 14.5px; color: var(--sp-ink);
+    }
+    .confirm.show { display: flex; }
+    .confirm svg { flex: none; width: 20px; height: 20px; color: var(--sp-success); margin-top: 1px; }
+    .confirm b { color: var(--sp-success); }
+
+    /* ---------- Footer ---------- */
+    footer {
+      margin-top: 32px; padding: 32px 0 48px;
+      border-top: 1px solid var(--sp-line);
+      text-align: center; color: var(--sp-ink-3); font-size: 13px;
+    }
+    footer .links { margin-bottom: 12px; display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; }
+    footer .links a { color: var(--sp-ink-2); }
+    footer .platforms { display: inline-flex; gap: 8px; margin-bottom: 14px; }
+    footer .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+
+    @media (max-width: 520px) {
+      .hero { padding: 44px 0 28px; }
+      .card { padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12h4l2.5 7 5-14L17 12h4" />
+          </svg>
+        </span>
+        Stream<span class="pulse">Pulse</span>
+      </div>
+      <a class="back" href="https://streampulse.fr">← Retour au site</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="hero">
+      <span class="eyebrow">Centre d'assistance</span>
+      <h1>Comment pouvons-nous vous aider&nbsp;?</h1>
+      <p>Une question, un bug ou une suggestion à propos de StreamPulse&nbsp;? Consultez la FAQ ci-dessous ou écrivez-nous directement.</p>
+    </div>
+
+    <!-- FAQ -->
+    <section class="faq">
+      <h2 class="section-title">Questions fréquentes</h2>
+
+      <details open>
+        <summary>
+          Comment ajouter un streamer à ma liste&nbsp;?
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">Ouvrez l'extension depuis la barre d'outils, saisissez le nom de la chaîne (Twitch, Kick ou DLive) dans le champ d'ajout, puis validez. Son statut live s'affiche aussitôt.</div>
+      </details>
+
+      <details>
+        <summary>
+          Mes données sont-elles collectées&nbsp;?
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">Non. Vos préférences, votre temps de visionnage et vos points restent stockés <strong>localement</strong> dans votre navigateur. Seuls les noms des chaînes suivies sont envoyés aux APIs publiques de Twitch, Kick et DLive pour vérifier leur statut. Détails dans notre <a href="https://streampulse.fr/privacy.html">politique de confidentialité</a>.</div>
+      </details>
+
+      <details>
+        <summary>
+          Une chaîne n'apparaît pas comme «&nbsp;en live&nbsp;»&nbsp;?
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">Vérifiez l'orthographe exacte du nom de la chaîne et patientez quelques secondes le temps de l'actualisation. Si le problème persiste, contactez-nous via le formulaire ci-dessous en précisant la plateforme et le nom de la chaîne.</div>
+      </details>
+
+      <details>
+        <summary>
+          StreamPulse est-il gratuit&nbsp;?
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="answer">Oui, totalement&nbsp;: 100&nbsp;% gratuit, sans compte et sans publicité.</div>
+      </details>
+    </section>
+
+    <!-- Contact form -->
+    <section>
+      <h2 class="section-title">Nous contacter</h2>
+
+      <div class="card">
+        <div class="confirm" id="confirm" role="status" aria-live="polite">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <div><b>Merci&nbsp;!</b> Votre message est prêt. Votre logiciel de messagerie vient de s'ouvrir pour l'envoyer à <strong>contact@alexisamz.fr</strong>. Si rien ne s'est passé, écrivez-nous directement à cette adresse.</div>
+        </div>
+
+        <form id="supportForm" novalidate>
+          <div class="field">
+            <label for="name">Nom <span class="req">*</span></label>
+            <input type="text" id="name" name="name" placeholder="Votre nom" required />
+          </div>
+
+          <div class="field">
+            <label for="email">E-mail <span class="req">*</span></label>
+            <input type="email" id="email" name="email" placeholder="vous@exemple.com" required />
+          </div>
+
+          <div class="field">
+            <label for="subject">Sujet</label>
+            <select id="subject" name="subject">
+              <option value="Question générale">Question générale</option>
+              <option value="Signaler un bug">Signaler un bug</option>
+              <option value="Suggestion / fonctionnalité">Suggestion / fonctionnalité</option>
+              <option value="Confidentialité & données">Confidentialité &amp; données</option>
+              <option value="Autre">Autre</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="message">Message <span class="req">*</span></label>
+            <textarea id="message" name="message" placeholder="Décrivez votre demande en détail…" required></textarea>
+          </div>
+
+          <button type="submit" class="btn">Envoyer le message</button>
+          <p class="form-note">Vous pouvez aussi nous écrire directement à <a href="mailto:contact@alexisamz.fr">contact@alexisamz.fr</a></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="platforms" aria-hidden="true">
+        <span class="dot" style="background:#9146FF"></span>
+        <span class="dot" style="background:#53FC18"></span>
+        <span class="dot" style="background:#FFD300"></span>
+      </div>
+      <div class="links">
+        <a href="https://streampulse.fr">Accueil</a>
+        <a href="https://streampulse.fr/privacy.html">Confidentialité</a>
+        <a href="mailto:contact@alexisamz.fr">contact@alexisamz.fr</a>
+      </div>
+      <div>© 2026 StreamPulse · Suivez vos streamers Twitch, Kick &amp; DLive</div>
+    </div>
+  </footer>
+
+  <script>
+    // No backend yet: gracefully fall back to a pre-filled mailto so the form
+    // is still genuinely useful, and show an inline confirmation.
+    (function () {
+      "use strict";
+      var form = document.getElementById("supportForm");
+      var confirm = document.getElementById("confirm");
+      var RECIPIENT = "contact@alexisamz.fr";
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        // Native validation for required fields.
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        var name = form.name.value.trim();
+        var email = form.email.value.trim();
+        var subject = form.subject.value;
+        var message = form.message.value.trim();
+
+        var mailSubject = "[StreamPulse] " + subject;
+        var mailBody =
+          "Nom : " + name + "\n" +
+          "E-mail : " + email + "\n" +
+          "Sujet : " + subject + "\n\n" +
+          message;
+
+        // Open the user's mail client with everything pre-filled.
+        window.location.href =
+          "mailto:" + RECIPIENT +
+          "?subject=" + encodeURIComponent(mailSubject) +
+          "&body=" + encodeURIComponent(mailBody);
+
+        // Show confirmation and reset the form.
+        confirm.classList.add("show");
+        confirm.scrollIntoView({ behavior: "smooth", block: "center" });
+        form.reset();
+      });
+    })();
+  </script>
+</body>
+</html>
