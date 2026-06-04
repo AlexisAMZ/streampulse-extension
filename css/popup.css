@@ -19,7 +19,6 @@
 :root {
   --twitch-purple: #9146FF;
   --kick-green: #53FC18;
-  --dlive-yellow: #FFD300;
 
   --bg-base: #08080d;
   --bg-card: rgba(255, 255, 255, 0.025);
@@ -582,9 +581,6 @@ body > * { position: relative; z-index: 1; }
 .streamer-card[data-platform="twitch"] .fallback-content {
   background: linear-gradient(135deg, #1a0d2e 0%, #2a1060 60%, #4a1a9a 100%);
 }
-.streamer-card[data-platform="dlive"] .fallback-content {
-  background: linear-gradient(135deg, #1a1200 0%, #2e1f00 60%, #5a3d00 100%);
-}
 .fallback-avatar {
   width: 52px;
   height: 52px;
@@ -746,9 +742,6 @@ body > * { position: relative; z-index: 1; }
 .streamer-card[data-platform="kick"] .avatar {
   box-shadow: 0 0 0 1.5px var(--kick-green), 0 0 0 3px rgba(0, 0, 0, 0.55);
 }
-.streamer-card[data-platform="dlive"] .avatar {
-  box-shadow: 0 0 0 1.5px var(--dlive-yellow), 0 0 0 3px rgba(0, 0, 0, 0.55);
-}
 .identity > div {
   flex: 1;
   min-width: 0;
@@ -782,7 +775,6 @@ body > * { position: relative; z-index: 1; }
 }
 .streamer-card[data-platform="twitch"] .platform-glyph { color: var(--twitch-purple); }
 .streamer-card[data-platform="kick"] .platform-glyph { color: var(--kick-green); }
-.streamer-card[data-platform="dlive"] .platform-glyph { color: var(--dlive-yellow); }
 .platform-glyph::before {
   content: "";
   width: 5px;
@@ -1045,10 +1037,6 @@ body > * { position: relative; z-index: 1; }
 .platform-picker .platform-option[data-platform="kick"].active {
   background: rgba(83, 252, 24, 0.15);
 }
-.platform-picker button[data-platform="dlive"].active,
-.platform-picker .platform-option[data-platform="dlive"].active {
-  background: rgba(255, 211, 0, 0.15);
-}
 [data-theme="light"] .platform-picker button.active,
 [data-theme="light"] .platform-picker .platform-option.active { background: rgba(0, 0, 0, 0.08); }
 .platform-picker button::before,
@@ -1063,8 +1051,6 @@ body > * { position: relative; z-index: 1; }
 .platform-picker .platform-option[data-platform="twitch"]::before { background: var(--twitch-purple); }
 .platform-picker button[data-platform="kick"]::before,
 .platform-picker .platform-option[data-platform="kick"]::before { background: var(--kick-green); }
-.platform-picker button[data-platform="dlive"]::before,
-.platform-picker .platform-option[data-platform="dlive"]::before { background: var(--dlive-yellow); }
 
 /* V6 Style platform icons */
 .platform-picker button img,

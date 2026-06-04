@@ -3,7 +3,7 @@
   "default_locale": "en",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "26.6.3",
+  "version": "26.6.5",
   "permissions": ["storage", "alarms", "notifications", "offscreen"],
   "host_permissions": [
     "https://api.twitch.tv/*",
@@ -13,8 +13,6 @@
     "https://clips.twitch.tv/*",
     "https://kick.com/*",
     "https://*.kick.com/*",
-    "https://graphigo.prd.dlive.tv/*",
-    "https://images.prd.dlivecdn.com/*",
     "https://files.kick.com/*",
     "https://images.kick.com/*",
     "https://stream.kick.com/*",

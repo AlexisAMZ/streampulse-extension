@@ -1,8 +1,8 @@
 {
   "appName": {
-    "message": "StreamPulse : Outils & Monitoring Twitch, Kick & DLive"
+    "message": "StreamPulse : Monitoring Twitch & Kick"
   },
   "appDesc": {
-    "message": "Récupération auto des channel points · alertes live · aperçus · filtres chat pour Twitch, Kick & DLive. Gratuit, sans compte."
+    "message": "Récupération auto des channel points · alertes live · aperçus · filtres chat pour Twitch & Kick. Gratuit, sans compte."
   }
 }

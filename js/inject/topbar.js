@@ -111,17 +111,25 @@
     }
     return null;
   }
+  // direct child of `row` that contains `el` (or null)
+  function directChildOf(row, el) {
+    if (!row || !el) return null;
+    var x = el;
+    while (x && x.parentElement && x.parentElement !== row) x = x.parentElement;
+    return x && x.parentElement === row ? x : null;
+  }
   function findRow() {
     var bits = document.querySelector('[data-a-target="top-nav-get-bits-button"]');
     var whisp = document.querySelector('[data-a-target="threads-box-closed"]');
     var notif =
       document.querySelector('[data-a-target="top-nav-notifications-toggle"]') ||
       document.querySelector('[aria-label="Open Notifications"]');
-    var a = bits || notif;
-    var b = whisp || notif;
+    var profile = document.querySelector('[data-a-target="user-menu-toggle"]');
+    var a = profile || notif || bits;
+    var b = bits || notif || whisp;
     var row = a && b && a !== b ? lca(a, b) : null;
     if (!row) {
-      var any = notif || bits || whisp;
+      var any = profile || notif || bits || whisp;
       if (any) {
         var w = any;
         // climb to a parent that holds several icon wrappers
@@ -134,13 +142,11 @@
         }
       }
     }
-    // direct-child wrapper of the row that holds notifications (insert before it)
-    var ref = null;
-    if (row && notif) {
-      var x = notif;
-      while (x && x.parentElement && x.parentElement !== row) x = x.parentElement;
-      if (x && x.parentElement === row) ref = x;
-    }
+    // Anchor to the LEFT of the profile avatar: insert before the profile's
+    // direct-child wrapper. Fall back to the notifications wrapper. We never
+    // append at the end — that lands the button to the RIGHT of the profile
+    // (the intermittent bug being fixed).
+    var ref = directChildOf(row, profile) || directChildOf(row, notif);
     return { row: row, ref: ref };
   }
 
@@ -265,7 +271,10 @@
   // ---- button injection ----------------------------------------------------
   function injectButton() {
     var f = findRow();
-    if (!f.row) return false;
+    // Require a valid left-of-profile anchor before inserting. If it's not in
+    // the DOM yet (Twitch still rendering), bail and let the observer retry —
+    // never insert without a ref, which would land the button at the far right.
+    if (!f.row || !f.ref) return false;
     if (f.row.querySelector("#sp-topbar-btn")) return true;
     var wrap = document.createElement("div");
     wrap.className = "sp-topbar-wrap";
@@ -285,8 +294,7 @@
       e.stopPropagation();
       togglePanel(btn);
     });
-    if (f.ref) f.row.insertBefore(wrap, f.ref);
-    else f.row.appendChild(wrap);
+    f.row.insertBefore(wrap, f.ref);
     return true;
   }
 

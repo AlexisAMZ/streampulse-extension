@@ -11,17 +11,8 @@ function sanitizeSimpleHandle(value) {
   return cleaned.replace(SIMPLE_HANDLE_CHARS, "").toLowerCase();
 }
 
-function sanitizeCasePreservingHandle(value) {
-  const cleaned = trimValue(value).replace(/^@+/, "");
-  return cleaned.replace(SIMPLE_HANDLE_CHARS, "");
-}
-
 function sanitizeKickHandle(value) {
   return sanitizeSimpleHandle(value);
-}
-
-function sanitizeDliveHandle(value) {
-  return sanitizeCasePreservingHandle(value);
 }
 
 function sanitizeTwitchHandle(value) {
@@ -77,29 +68,6 @@ export const PLATFORM_DEFINITIONS = {
     buildUrl(handle) {
       const cleaned = sanitizeKickHandle(handle);
       return cleaned ? `https://kick.com/${cleaned}` : "https://kick.com/";
-    },
-  },
-  dlive: {
-    id: "dlive",
-    labelKey: "platforms.dlive",
-    shortLabelKey: "platformsShort.dlive",
-    icon: "images/social/dlive.svg",
-    color: "#F9C400",
-    inputPrefix: "@",
-    placeholderKey: {
-      popup: "popup.placeholders.dlive",
-      onboarding: "onboarding.placeholders.dlive",
-    },
-    supportsLiveStatus: true,
-    sanitizeHandle: sanitizeDliveHandle,
-    sanitizeForComparison: sanitizeSimpleForComparison,
-    formatHandle(handle) {
-      const cleaned = sanitizeDliveHandle(handle);
-      return cleaned ? `@${cleaned}` : "";
-    },
-    buildUrl(handle) {
-      const cleaned = sanitizeDliveHandle(handle);
-      return cleaned ? `https://dlive.tv/${cleaned}` : "https://dlive.tv/";
     },
   },
 };

@@ -552,8 +552,11 @@
 
   async function loadExtensionConfig() {
     try {
-      const module = await import(chrome.runtime.getURL("config.js"));
-      const loadedConfig = module?.CONFIG || {};
+      // Request the resolved config from the service worker. We no longer
+      // import config.js directly — it was removed from web_accessible_resources
+      // for CWS compliance, and the SW holds the live Vercel credentials.
+      const loadedConfig =
+        (await chrome.runtime.sendMessage({ type: "getConfig" })) || {};
       extensionConfig = {
         clientId: loadedConfig.clientId || "",
         accessToken: loadedConfig.accessToken || "",
@@ -564,7 +567,7 @@
       };
     } catch (error) {
       console.warn(
-        "StreamPulse: unable to load config.js, using defaults.",
+        "StreamPulse: unable to load config, using defaults.",
         error
       );
       extensionConfig = {

@@ -247,7 +247,6 @@ const SOCIAL_ORDER = [
   "twitch",
   "youtube",
   "kick",
-  "dlive",
   "instagram",
   "twitter",
   "tiktok",
@@ -259,7 +258,6 @@ const SOCIAL_DEFINITIONS = {
   twitch: { label: "Twitch", icon: "../images/social/Twitch.png" },
   youtube: { label: "YouTube", icon: "../images/social/youtube.png" },
   kick: { label: "Kick", icon: "../images/social/Kick.png" },
-  dlive: { label: "DLive", icon: "../images/social/dlive.svg" },
   instagram: { label: "Instagram", icon: "../images/social/instagram.png" },
   twitter: { label: "Twitter", icon: "../images/social/twitter.png" },
   tiktok: { label: "TikTok", icon: "../images/social/tiktok.png" },
@@ -535,7 +533,7 @@ export function createStreamerCard(streamer, status, template, callbacks) {
       const fbAvatar = document.createElement("img");
       fbAvatar.className = "fallback-avatar";
       fbAvatar.src = streamer.avatarUrl || `../${getPlatformDefinition(platformId).icon || "images/photos/48px.png"}`;
-      fbAvatar.onerror = () => { fbAvatar.src = `../images/social/${platformId === "kick" ? "Kick" : platformId === "dlive" ? "dlive" : "twitch"}.png`; };
+      fbAvatar.onerror = () => { fbAvatar.src = `../images/social/${platformId === "kick" ? "Kick" : "twitch"}.png`; };
       fbAvatar.alt = displayLabel;
       fallbackContent.appendChild(fbAvatar);
       if (activeStatus.game) {

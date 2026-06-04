@@ -1,7 +1,7 @@
 <div align="center">
   <img src="images/photos/128px.png" alt="StreamPulse Logo" width="120" />
   <h1>StreamPulse Extension</h1>
-  <p>A unified Chrome extension to master Twitch, Kick, and DLive.</p>
+  <p>A unified Chrome extension to master Twitch and Kick.</p>
   <a href="https://streampulse.fr">Website</a> •
   <a href="https://chromewebstore.google.com/detail/streampulse-multi-streame/ipfhbfabadbpkjimhdcjadopnahdpddh">Chrome Web Store</a>
 </div>
@@ -10,7 +10,7 @@
 [**Download StreamPulse on the Chrome Web Store**](https://chromewebstore.google.com/detail/streampulse-multi-streame/ipfhbfabadbpkjimhdcjadopnahdpddh)
 
 ## 📌 Overview
-StreamPulse is a lightweight browser extension built for the streaming community. It stays invisible until you need it, providing essential features for Twitch, Kick, and DLive without the bloat.
+StreamPulse is a lightweight browser extension built for the streaming community. It stays invisible until you need it, providing essential features for Twitch and Kick without the bloat.
 
 ## ✨ Features
 - 🔔 **Real-Time Alerts**: Get notified the exact second your favorite streamer goes live.

@@ -34,15 +34,23 @@ const REMOTE_CONFIG_CACHE_KEY = "streampulse:remoteConfig";
 const REMOTE_CONFIG_TTL_MS = 60 * 60 * 1000; // 1 hour
 
 let CONFIG = { ...LOCAL_CONFIG };
+let _configReady = null;
 
 async function fetchRemoteConfig() {
   try {
     const stored = await chrome.storage.local.get(REMOTE_CONFIG_CACHE_KEY);
     const cached = stored[REMOTE_CONFIG_CACHE_KEY];
-    if (cached && Date.now() - cached.fetchedAt < REMOTE_CONFIG_TTL_MS) {
+    // Always hydrate from cache FIRST — even if stale — so credentials are
+    // available immediately after an MV3 service-worker restart (which wipes
+    // the in-memory CONFIG back to the token-less LOCAL_CONFIG). Without this,
+    // an alarm-triggered poll fires before any network fetch and Twitch
+    // rejects the token-less request with 401.
+    if (cached?.data?.clientId) {
       CONFIG = { ...LOCAL_CONFIG, ...cached.data };
-      return;
     }
+    // Cache fresh → nothing more to do.
+    if (cached && Date.now() - cached.fetchedAt < REMOTE_CONFIG_TTL_MS) return;
+    // Cache missing or stale → refresh from the network.
     const res = await fetch(REMOTE_CONFIG_URL, { cache: "no-store" });
     if (!res.ok) return;
     const data = await res.json();
@@ -53,8 +61,22 @@ async function fetchRemoteConfig() {
       });
     }
   } catch {
-    // Network error — keep local config, extension still works offline
+    // Network error — keep whatever we hydrated from cache (or local fallback)
   }
+}
+
+// Gate every Twitch API call behind this. Returns instantly once credentials
+// are loaded for this service-worker lifetime; otherwise re-hydrates from the
+// storage cache (and refreshes from network). Deduped so a burst of callers
+// triggers a single load.
+function ensureConfig() {
+  if (CONFIG.accessToken) return Promise.resolve();
+  if (!_configReady) {
+    _configReady = fetchRemoteConfig().finally(() => {
+      _configReady = null;
+    });
+  }
+  return _configReady;
 }
 
 const WATCHER_ALARM = "streampulseWatcher";
@@ -592,6 +614,7 @@ async function resolveChannelAvatar(platform, channel) {
   // 4. API lookup (one-shot, cached)
   try {
     if (platform === "twitch") {
+      await ensureConfig();
       const data = await fetchJson(
         `https://api.twitch.tv/helix/users?login=${encodeURIComponent(channel)}`,
         { headers: twitchHeaders() }
@@ -723,6 +746,7 @@ class PlatformChecker {
   static async getTwitchUser(login) {
     const sanitized = sanitizeLogin(login);
     if (!sanitized) return null;
+    await ensureConfig();
     try {
       const data = await fetchJson(
         `https://api.twitch.tv/helix/users?login=${sanitized}`,
@@ -738,6 +762,7 @@ class PlatformChecker {
   static async getTwitchStatus(login) {
     const sanitized = sanitizeLogin(login);
     if (!sanitized) return { isLive: false };
+    await ensureConfig();
     try {
       const data = await fetchJson(
         `https://api.twitch.tv/helix/streams?user_login=${sanitized}`,
@@ -944,134 +969,6 @@ class PlatformChecker {
     return this.extractKickStatus(channel, handle);
   }
 
-  static async getDliveUser(handle) {
-    const sanitized = sanitizeHandle("dlive", handle);
-    if (!sanitized) return null;
-    
-    // Try by username first (more reliable for livestream status)
-    const userQuery = `
-      query ($username: String!) {
-        user(username: $username) {
-          username
-          displayname
-          avatar
-          livestream {
-            id
-            title
-            thumbnailUrl
-            createdAt
-            watchingCount
-            category {
-              title
-            }
-          }
-        }
-      }
-    `;
-
-    // Fallback if username fails
-    const displayQuery = `
-      query ($displayname: String!) {
-        userByDisplayName(displayname: $displayname) {
-          username
-          displayname
-          avatar
-          livestream {
-            id
-            title
-            thumbnailUrl
-            createdAt
-            watchingCount
-            category {
-              title
-            }
-          }
-        }
-      }
-    `;
-
-    try {
-      // Attempt 1: by username
-      let data = await fetchJson("https://graphigo.prd.dlive.tv/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: userQuery, variables: { username: sanitized } }),
-      });
-      
-      if (data?.data?.user) {
-        return data.data.user;
-      }
-
-      // Attempt 2: by displayname (legacy fallback)
-      data = await fetchJson("https://graphigo.prd.dlive.tv/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: displayQuery, variables: { displayname: sanitized } }),
-      });
-
-      return data?.data?.userByDisplayName || null;
-
-    } catch (error) {
-      console.warn("DLive user fetch error:", error.message);
-      return { _apiError: true, status: error.message };
-    }
-  }
-
-  static extractDliveStatus(user, handle) {
-    if (!user) {
-      return {
-        isLive: false,
-        platform: "dlive",
-        url: buildProfileUrl("dlive", handle),
-      };
-    }
-
-    const base = {
-      platform: "dlive",
-      url: buildProfileUrl("dlive", user.username || handle),
-      avatarUrl: resolveExternalUrl(user.avatar, "https://images.prd.dlivecdn.com"),
-      displayName: user.displayname || user.username || handle,
-    };
-
-    const stream = user.livestream;
-    if (!stream) {
-      return {
-        isLive: false,
-        ...base,
-      };
-    }
-
-    let thumbnail = resolveExternalUrl(
-      stream.thumbnailUrl || stream.thumbnail || stream.cover,
-      "https://images.prd.dlivecdn.com"
-    );
-    
-    if (thumbnail) {
-      const cb = Math.floor(Date.now() / 60000);
-      const separator = thumbnail.includes("?") ? "&" : "?";
-      thumbnail = `${thumbnail}${separator}cb=${cb}`;
-    }
-    const viewerCount = Number(stream.watchingCount) || 0;
-    return {
-      isLive: true,
-      ...base,
-      title: stream.title || "",
-      game: stream.category?.title || "",
-      viewers: viewerCount,
-      startedAt: stream.createdAt || null,
-      sessionId: stream.id || null,
-      thumbnailUrl: thumbnail,
-    };
-  }
-
-  static async getDliveStatus(handle) {
-    const user = await this.getDliveUser(handle);
-    if (user?._apiError) {
-      return { isLive: false, platform: "dlive", error: user.status, isError: true };
-    }
-    return this.extractDliveStatus(user, handle);
-  }
-
   static async getStatus(streamer) {
     const platform = normalizePlatform(streamer?.platform);
     const supportsLive = platformSupportsLiveStatus(platform);
@@ -1087,14 +984,6 @@ class PlatformChecker {
     }
     if (platform === "kick") {
       const status = await this.getKickStatus(streamer.handle || streamer.id);
-      return {
-        ...status,
-        platform,
-        supportsLiveStatus: supportsLive,
-      };
-    }
-    if (platform === "dlive") {
-      const status = await this.getDliveStatus(streamer.handle || streamer.id);
       return {
         ...status,
         platform,
@@ -1576,6 +1465,7 @@ async function pollStreamers({ forceNotification = false } = {}) {
 }
 
 async function _pollStreamersImpl({ forceNotification = false } = {}) {
+  await ensureConfig(); // hydrate credentials before any Twitch API call (MV3 SW restart safety)
   const streamers = await DataStore.getStreamers();
   const preferences = await PreferenceStore.get();
   if (streamers.length === 0) {
@@ -1943,6 +1833,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
       return true;
 
+    case "getConfig":
+      // Content scripts can no longer import config.js directly (it was removed
+      // from web_accessible_resources for CWS compliance). They request the
+      // resolved config here instead — which also gives them the live Vercel
+      // credentials rather than the empty local fallback.
+      (async () => {
+        try {
+          await ensureConfig();
+          sendResponse({
+            clientId: CONFIG.clientId || "",
+            accessToken: CONFIG.accessToken || "",
+            features: CONFIG.features || {},
+          });
+        } catch (e) {
+          sendResponse({ clientId: "", accessToken: "", features: {} });
+        }
+      })();
+      return true;
+
     case "diagnosticTests":
       (async () => {
         const preferences = await PreferenceStore.get();
@@ -2237,39 +2146,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
               "https://files.kick.com"
             ),
             handle: channel?.slug || handle,
-          };
-        } else if (platform === "dlive") {
-          const user = await PlatformChecker.getDliveUser(handle);
-          if (!user || user._apiError) {
-            const errorKey = user?._apiError
-              ? "background.errors.apiError"
-              : "background.errors.streamerNotFound";
-            sendResponse({
-              error: translateWithPrefs(
-                preferences,
-                errorKey,
-                {
-                  platform: translateWithPrefs(
-                    preferences,
-                    getPlatformLabelKey(platform)
-                  ),
-                }
-              ),
-            });
-            return;
-          }
-
-          sourceData = {
-            ...sourceData,
-            displayName:
-              user.displayname ||
-              user.username ||
-              formatHandleForDisplay(platform, handle),
-            avatarUrl: resolveExternalUrl(
-              user.avatar,
-              "https://images.prd.dlivecdn.com"
-            ),
-            handle: user.username || handle,
           };
         } else {
           sourceData = {
