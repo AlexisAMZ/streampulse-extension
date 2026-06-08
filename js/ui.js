@@ -35,7 +35,10 @@ function setupHoverPreview(cardPreview, platformId, streamer, status, callbacks)
 
   // Always allow clicking the card preview to open the stream
   cardPreview.style.cursor = "pointer";
-  cardPreview.addEventListener("click", openStream);
+  cardPreview.addEventListener("click", (e) => {
+    e.stopPropagation();
+    openStream();
+  });
 
   const embedUrl = getEmbedUrl(platformId, streamer, status);
   if (!embedUrl) return; // No embed available — static thumbnail + click only
