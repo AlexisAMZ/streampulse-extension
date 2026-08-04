@@ -8,3 +8,7 @@
 ## Rule: No Em-Dashes (—)
 - NEVER use em-dashes `—` in UI text, titles, meta tags, or descriptions across projects (EXCEPT for `dczimports`).
 - Replace with clean punctuation like `:`, `.`, `,`, `|`, or `·` depending on context, or rephrase the sentence smoothly.
+
+## Rule: Git Commit Messages in French
+- ALL git commit messages MUST ALWAYS be written in French (`fr`).
+- Format example: `feat: Ajout de l'ouverture automatique de l'inventaire Twitch Drops` ou `fix: Correction de la mise en cache CDN`
