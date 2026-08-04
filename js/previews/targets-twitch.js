@@ -30,6 +30,7 @@
     ".side-nav-card__title",
     '[data-a-target="side-nav-card-title"]',
     "h3[title]",
+    "h3",
     ".tw-media-card-meta__title",
   ];
   const CATEGORY_SELECTORS = [

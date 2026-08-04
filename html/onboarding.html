@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title data-i18n="onboarding.documentTitle">StreamPulse — Première configuration</title>
+    <title data-i18n="onboarding.documentTitle">StreamPulse : Première configuration</title>
     <link rel="stylesheet" href="../css/onboarding.css" />
   </head>
   <body>
@@ -108,7 +108,7 @@
                 Quel est ton <span class="accent">pseudo</span> ?
               </h1>
               <p class="step-desc" data-i18n="onboarding.profileDescription">
-                Renseigne ton pseudo Twitch — on récupère ta photo de profil pour t'accueillir comme il faut à chaque ouverture.
+                Renseigne ton pseudo Twitch : on récupère ta photo de profil pour t'accueillir comme il faut à chaque ouverture.
               </p>
               <div class="step-meta">
                 <span class="step-meta-item">RECHERCHE LIVE</span>
@@ -132,9 +132,9 @@
 
                   <div class="profile-info">
                     <span class="profile-info-label">DISPLAY NAME</span>
-                    <span class="profile-info-name" id="profile-preview-name">—</span>
+                    <span class="profile-info-name" id="profile-preview-name">…</span>
                     <span class="profile-info-line" id="profile-hint" data-state="idle" data-i18n="onboarding.profileHintIdle">
-                      Saisis ton pseudo — recherche automatique.
+                      Saisis ton pseudo : recherche automatique.
                     </span>
                   </div>
                 </div>
@@ -255,7 +255,7 @@
                 Quelques <span class="accent">préférences</span>.
               </h1>
               <p class="step-desc" data-i18n="onboarding.preferencesDescription">
-                Active ce qui t'intéresse — tout est modifiable plus tard depuis les réglages.
+                Active ce qui t'intéresse : tout est modifiable plus tard depuis les réglages.
               </p>
               <div class="step-meta">
                 <span class="step-meta-item">SONS</span>
@@ -265,11 +265,59 @@
             </div>
 
             <div class="step-content">
-              <div class="settings-groups">
+                <!-- Groupe: Récompenses & Drops -->
+                <div class="settings-group frame-brackets">
+                  <span class="section-label" data-i18n="onboarding.qualityGroupTitle">RÉCOMPENSES & AUTOMATISATION</span>
+                  <p class="settings-group-hint" data-i18n="onboarding.qualityGroupHint">
+                    Réclamation automatique des bonus et des récompenses.
+                  </p>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span class="settings-title" data-i18n="popup.settings.autoClaimTitle"></span>
+                      <span class="settings-description" data-i18n="popup.settings.autoClaimDescription"></span>
+                    </div>
+                    <input id="onboarding-auto-claim" type="checkbox" checked />
+                  </label>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span class="settings-title" data-i18n="popup.settings.autoClaimDropsTitle"></span>
+                      <span class="settings-description" data-i18n="popup.settings.autoClaimDropsDescription"></span>
+                    </div>
+                    <input id="onboarding-auto-claim-drops" type="checkbox" checked />
+                  </label>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span class="settings-title" data-i18n="popup.settings.autoClaimMomentsTitle"></span>
+                      <span class="settings-description" data-i18n="popup.settings.autoClaimMomentsDescription"></span>
+                    </div>
+                    <input id="onboarding-auto-claim-moments" type="checkbox" checked />
+                  </label>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span class="settings-title">Ouverture auto de l'inventaire Drops</span>
+                      <span class="settings-description">Ouvrir l'inventaire Twitch en arrière-plan pour réclamer vos Drops.</span>
+                    </div>
+                    <input id="onboarding-auto-open-inventory" type="checkbox" />
+                  </label>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span class="settings-title" data-i18n="popup.settings.autoCancelRaidsTitle"></span>
+                      <span class="settings-description" data-i18n="popup.settings.autoCancelRaidsDescription"></span>
+                    </div>
+                    <input id="onboarding-auto-cancel-raids" type="checkbox" checked />
+                  </label>
+                </div>
+
+                <!-- Groupe: Lecteur Video -->
                 <div class="settings-group frame-brackets">
                   <span class="section-label" data-i18n="onboarding.playerGroupTitle">LECTEUR TWITCH</span>
                   <p class="settings-group-hint" data-i18n="onboarding.playerGroupHint">
-                    Optimise le lecteur pour rattraper le direct.
+                    Optimise le lecteur pour rattraper le direct et masquer le superflu.
                   </p>
 
                   <label class="settings-toggle">
@@ -287,8 +335,49 @@
                     </div>
                     <input id="onboarding-fast-forward" type="checkbox" checked />
                   </label>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span class="settings-title" data-i18n="popup.settings.hideTwitchExtensionsTitle"></span>
+                      <span class="settings-description" data-i18n="popup.settings.hideTwitchExtensionsDescription"></span>
+                    </div>
+                    <input id="onboarding-hide-extensions" type="checkbox" />
+                  </label>
                 </div>
 
+                <!-- Groupe: Onglets & Navigation -->
+                <div class="settings-group frame-brackets">
+                  <span class="section-label">ONGLETS & ARRIÈRE-PLAN</span>
+                  <p class="settings-group-hint">
+                    Gestion visuelle et maintien de l'activité des onglets.
+                  </p>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span class="settings-title">Avatar du streamer sur l'onglet</span>
+                      <span class="settings-description">Remplacer l'icône de l'onglet par la photo du streamer en direct.</span>
+                    </div>
+                    <input id="onboarding-streamer-favicon" type="checkbox" checked />
+                  </label>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span class="settings-title">Pastille rouge LIVE sur l'onglet</span>
+                      <span class="settings-description">Afficher un point rouge LIVE sur l'icône de l'onglet pendant un direct.</span>
+                    </div>
+                    <input id="onboarding-tab-live-icon" type="checkbox" checked />
+                  </label>
+
+                  <label class="settings-toggle">
+                    <div class="settings-text">
+                      <span class="settings-title" data-i18n="popup.settings.preventTabDiscardTitle"></span>
+                      <span class="settings-description" data-i18n="popup.settings.preventTabDiscardDescription"></span>
+                    </div>
+                    <input id="onboarding-prevent-tab-discard" type="checkbox" checked />
+                  </label>
+                </div>
+
+                <!-- Groupe: Notifications & Alertes -->
                 <div class="settings-group frame-brackets">
                   <span class="section-label" data-i18n="onboarding.notificationsGroupTitle">NOTIFICATIONS</span>
                   <p class="settings-group-hint" data-i18n="onboarding.notificationsGroupHint">
@@ -319,22 +408,6 @@
                     <input id="onboarding-sounds" type="checkbox" checked />
                   </label>
                 </div>
-
-                <div class="settings-group frame-brackets">
-                  <span class="section-label" data-i18n="onboarding.qualityGroupTitle">AUTOMATISATION</span>
-                  <p class="settings-group-hint" data-i18n="onboarding.qualityGroupHint">
-                    Automatise les petites actions répétitives.
-                  </p>
-
-                  <label class="settings-toggle">
-                    <div class="settings-text">
-                      <span class="settings-title" data-i18n="popup.settings.autoClaimTitle"></span>
-                      <span class="settings-description" data-i18n="popup.settings.autoClaimDescription"></span>
-                    </div>
-                    <input id="onboarding-auto-claim" type="checkbox" checked />
-                  </label>
-                </div>
-              </div>
 
               <div class="step-nav">
                 <button class="btn btn-ghost" id="btn-back-3">

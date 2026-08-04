@@ -203,9 +203,85 @@
         <label class="settings-toggle">
           <div class="settings-text">
             <span class="settings-title" data-i18n="popup.settings.autoClaimTitle">Récupération auto des points</span>
-            <span class="settings-description" data-i18n="popup.settings.autoClaimDescription">Cliquer automatiquement les bonus de points de chaîne sur Twitch et suivre les points gagnés sur Kick.</span>
+            <span class="settings-description" data-i18n="popup.settings.autoClaimDescription">Cliquer automatiquement les bonus de points de chaîne sur Twitch.</span>
           </div>
           <input id="pref-auto-claim" type="checkbox" />
+        </label>
+
+        <label class="settings-toggle">
+          <div class="settings-text">
+            <span class="settings-title" data-i18n="popup.settings.autoClaimDropsTitle">Auto-claim Drops Twitch</span>
+            <span class="settings-description" data-i18n="popup.settings.autoClaimDropsDescription">Réclamer automatiquement les Drops Twitch dès qu'ils sont disponibles.</span>
+          </div>
+          <input id="pref-auto-claim-drops" type="checkbox" />
+        </label>
+
+        <label class="settings-toggle">
+          <div class="settings-text">
+            <span class="settings-title" data-i18n="popup.settings.autoClaimMomentsTitle">Réclamation auto des Moments</span>
+            <span class="settings-description" data-i18n="popup.settings.autoClaimMomentsDescription">Récupérer automatiquement les badges de Moments Twitch.</span>
+          </div>
+          <input id="pref-auto-claim-moments" type="checkbox" />
+        </label>
+
+        <label class="settings-toggle">
+          <div class="settings-text">
+            <span class="settings-title">Ouverture auto de l'inventaire Drops</span>
+            <span class="settings-description">Ouvrir l'inventaire Twitch en arrière-plan pour réclamer automatiquement vos Drops.</span>
+          </div>
+          <input id="pref-auto-open-inventory" type="checkbox" />
+        </label>
+
+        <div class="settings-text" id="auto-open-inventory-interval-wrap" style="margin: 8px 0 12px 0; display:flex; align-items:center; justify-content:space-between;">
+          <span class="settings-title">Fréquence d'ouverture</span>
+          <select id="pref-auto-open-inventory-interval" style="background:#18181b; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:4px 8px; font-size:12px;">
+            <option value="1">Toutes les 1h</option>
+            <option value="2">Toutes les 2h</option>
+            <option value="4" selected>Toutes les 4h</option>
+            <option value="6">Toutes les 6h</option>
+            <option value="12">Toutes les 12h</option>
+            <option value="24">Toutes les 24h</option>
+          </select>
+        </div>
+
+        <label class="settings-toggle">
+          <div class="settings-text">
+            <span class="settings-title" data-i18n="popup.settings.autoCancelRaidsTitle">Annulation automatique des Raids</span>
+            <span class="settings-description" data-i18n="popup.settings.autoCancelRaidsDescription">Annuler automatiquement la redirection lors d'un Raid Twitch.</span>
+          </div>
+          <input id="pref-auto-cancel-raids" type="checkbox" />
+        </label>
+
+        <label class="settings-toggle">
+          <div class="settings-text">
+            <span class="settings-title" data-i18n="popup.settings.hideTwitchExtensionsTitle">Masquer les extensions Twitch</span>
+            <span class="settings-description" data-i18n="popup.settings.hideTwitchExtensionsDescription">Masquer les incrustations/overlays d'extensions sur le lecteur vidéo.</span>
+          </div>
+          <input id="pref-hide-twitch-extensions" type="checkbox" />
+        </label>
+
+        <label class="settings-toggle">
+          <div class="settings-text">
+            <span class="settings-title" data-i18n="popup.settings.preventTabDiscardTitle">Empêcher le déchargement de l'onglet</span>
+            <span class="settings-description" data-i18n="popup.settings.preventTabDiscardDescription">Empêcher Chrome de fermer ou décharger l'onglet Twitch/Kick inactif.</span>
+          </div>
+          <input id="pref-prevent-tab-discard" type="checkbox" />
+        </label>
+
+        <label class="settings-toggle">
+          <div class="settings-text">
+            <span class="settings-title">Avatar du streamer sur l'onglet</span>
+            <span class="settings-description">Remplacer l'icône de l'onglet par la photo de profil du streamer en direct.</span>
+          </div>
+          <input id="pref-enable-streamer-favicon" type="checkbox" />
+        </label>
+
+        <label class="settings-toggle">
+          <div class="settings-text">
+            <span class="settings-title">Pastille rouge LIVE sur l'onglet</span>
+            <span class="settings-description">Afficher un point rouge LIVE sur l'icône de l'onglet quand le flux est en direct.</span>
+          </div>
+          <input id="pref-enable-tab-live-icon" type="checkbox" />
         </label>
 
         <label class="settings-toggle">
@@ -360,6 +436,46 @@
       </label>
 
       <button id="test-notification" type="button" class="test-notification" data-i18n="popup.testNotification">Tester une notification</button>
+
+      <!-- Group: Event Logs -->
+      <p class="settings-group-header">Journal d'événements</p>
+      <div class="settings-group">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <div class="log-filter-group" id="log-filter-group" style="display:flex; gap:4px;">
+            <button type="button" class="pf-btn active" data-log-filter="all">Tous</button>
+            <button type="button" class="pf-btn" data-log-filter="drop">Drops</button>
+            <button type="button" class="pf-btn" data-log-filter="moment">Moments</button>
+            <button type="button" class="pf-btn" data-log-filter="raid">Raids</button>
+          </div>
+          <button id="btn-clear-logs" type="button" class="reset-button" title="Effacer le journal" style="background:transparent; border:none; color:#ef4444; cursor:pointer;">Effacer</button>
+        </div>
+        <div id="logs-container" style="display:flex; flex-direction:column; gap:6px; max-height:220px; overflow-y:auto;">
+          <p class="empty-state">Aucun événement enregistré.</p>
+        </div>
+      </div>
+
+      <!-- Group: FAQ & Help -->
+      <p class="settings-group-header">Aide & FAQ</p>
+      <div class="faq-accordion" style="display:flex; flex-direction:column; gap:8px;">
+        <details class="faq-item" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:6px; padding:8px 10px;">
+          <summary style="font-weight:600; cursor:pointer; color:#efeff1; font-size:12px;">💎 Points de chaîne & Drops</summary>
+          <div style="margin-top:6px; font-size:11px; color:#adadb8; line-height:1.4;">
+            StreamPulse clique automatiquement sur le coffre de points de chaîne et réclame vos Drops dès qu'ils apparaissent.
+          </div>
+        </details>
+        <details class="faq-item" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:6px; padding:8px 10px;">
+          <summary style="font-weight:600; cursor:pointer; color:#efeff1; font-size:12px;">⚡ Lecteur & Anti-Pause</summary>
+          <div style="margin-top:6px; font-size:11px; color:#adadb8; line-height:1.4;">
+            La Visibility API est masquée pour Twitch afin que le flux vidéo continue de tourner en arrière-plan sans coupure d'audio.
+          </div>
+        </details>
+        <details class="faq-item" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:6px; padding:8px 10px;">
+          <summary style="font-weight:600; cursor:pointer; color:#efeff1; font-size:12px;">🔮 Prédictions & Raids</summary>
+          <div style="margin-top:6px; font-size:11px; color:#adadb8; line-height:1.4;">
+            Un widget déplaçable s'affiche sur la vidéo pour voter rapidement. Les redirections de raid sont annulées si l'option est active.
+          </div>
+        </details>
+      </div>
 
       <!-- Contact -->
       <p class="settings-group-header" data-i18n="popup.settings.groupContact">Contact</p>

@@ -94,8 +94,13 @@
       fallbackEl = el("div", "sp-preview__fallback");
       fbAvatarEl = el("img", "sp-preview__fallback-avatar");
       fbAvatarEl.alt = "";
+      
+      const fbLoadingEl = el("span", "sp-preview__fallback-loading");
+      const lang = (document.documentElement.lang || navigator.language || "en").toLowerCase();
+      fbLoadingEl.textContent = lang.startsWith("fr") ? "Chargement..." : "Loading...";
+      
       fbGameEl = el("span", "sp-preview__fallback-game");
-      fallbackEl.append(fbAvatarEl, fbGameEl);
+      fallbackEl.append(fbAvatarEl, fbLoadingEl, fbGameEl);
 
       const overlay = el("div", "sp-preview__overlay");
       titleEl = el("p", "sp-preview__title");
@@ -135,7 +140,8 @@
     function applyImageMode(descriptor, size) {
       playToken++;
       teardownPlayback();
-      imgEl.hidden = false;
+      imgEl.hidden = true;
+      imgEl.removeAttribute("src");
       const sources = store.sources;
       let firstLoad = true;
       const load = () => {
@@ -149,8 +155,14 @@
         );
         firstLoad = false;
       };
-      imgEl.onload = () => clearFallback();
-      imgEl.onerror = () => showFallback(descriptor);
+      imgEl.onload = () => {
+        imgEl.hidden = false;
+        clearFallback();
+      };
+      imgEl.onerror = () => {
+        imgEl.hidden = true;
+        showFallback(descriptor);
+      };
       load();
       stopRefresh();
       refreshTimer = setInterval(load, IMAGE_REFRESH_MS);
@@ -238,7 +250,13 @@
       root = null;
     }
 
-    return { mount, show, hide, destroy, isVisible: () => visible };
+    function updateTitle(title) {
+      if (!root) return;
+      titleEl.textContent = title || "";
+      titleEl.hidden = !title;
+    }
+
+    return { mount, show, hide, destroy, isVisible: () => visible, updateTitle };
   }
 
   store.computePosition = computePosition;

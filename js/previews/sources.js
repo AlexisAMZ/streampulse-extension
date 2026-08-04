@@ -82,10 +82,32 @@
     return "https://clips.twitch.tv/embed?" + params.toString();
   }
 
+  /**
+   * Fetch live stream title from GQL.
+   * @param {string} login
+   * @returns {Promise<string|null>}
+   */
+  async function fetchStreamTitle(login) {
+    try {
+      const res = await fetch("https://gql.twitch.tv/gql", {
+        method: "POST",
+        headers: { "Client-ID": "kimne78kx3ncx6brgo4mv6wki5h1ko" },
+        body: JSON.stringify({
+          query: `query { user(login: "${safeLogin(login)}") { stream { title } } }`
+        })
+      });
+      const data = await res.json();
+      return (data && data.data && data.data.user && data.data.user.stream && data.data.user.stream.title) || null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   store.sources = {
     SIZE_PRESETS,
     twitchPreviewImageUrl,
     twitchPlayerEmbedUrl,
     clipEmbedUrl,
+    fetchStreamTitle,
   };
 })();

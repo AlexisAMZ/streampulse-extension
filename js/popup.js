@@ -60,6 +60,15 @@ const liveNotificationsToggle = document.getElementById("pref-live-notifications
 const gameAlertsToggle = document.getElementById("pref-game-alerts");
 const soundsToggle = document.getElementById("pref-sounds");
 const autoClaimToggle = document.getElementById("pref-auto-claim");
+const autoClaimDropsToggle = document.getElementById("pref-auto-claim-drops");
+const autoClaimMomentsToggle = document.getElementById("pref-auto-claim-moments");
+const autoOpenInventoryToggle = document.getElementById("pref-auto-open-inventory");
+const autoOpenInventoryIntervalSelect = document.getElementById("pref-auto-open-inventory-interval");
+const hideTwitchExtensionsToggle = document.getElementById("pref-hide-twitch-extensions");
+const autoCancelRaidsToggle = document.getElementById("pref-auto-cancel-raids");
+const preventTabDiscardToggle = document.getElementById("pref-prevent-tab-discard");
+const streamerFaviconToggle = document.getElementById("pref-enable-streamer-favicon");
+const tabLiveIconToggle = document.getElementById("pref-enable-tab-live-icon");
 const autoRefreshToggle = document.getElementById("pref-auto-refresh");
 const fastForwardToggle = document.getElementById("pref-fast-forward");
 const previewsEnabledToggle = document.getElementById("pref-previews-enabled");
@@ -659,6 +668,33 @@ function renderPreferences() {
   if (autoClaimToggle) {
     autoClaimToggle.checked = prefs.autoClaimChannelPoints !== false;
   }
+  if (autoClaimDropsToggle) {
+    autoClaimDropsToggle.checked = prefs.autoClaimDrops !== false;
+  }
+  if (autoClaimMomentsToggle) {
+    autoClaimMomentsToggle.checked = prefs.autoClaimMoments !== false;
+  }
+  if (autoOpenInventoryToggle) {
+    autoOpenInventoryToggle.checked = Boolean(prefs.autoOpenInventory);
+  }
+  if (autoOpenInventoryIntervalSelect) {
+    autoOpenInventoryIntervalSelect.value = String(prefs.autoOpenInventoryIntervalHours || 4);
+  }
+  if (hideTwitchExtensionsToggle) {
+    hideTwitchExtensionsToggle.checked = Boolean(prefs.hideTwitchExtensions);
+  }
+  if (autoCancelRaidsToggle) {
+    autoCancelRaidsToggle.checked = prefs.autoCancelRaids !== false;
+  }
+  if (preventTabDiscardToggle) {
+    preventTabDiscardToggle.checked = prefs.preventTabDiscard !== false;
+  }
+  if (streamerFaviconToggle) {
+    streamerFaviconToggle.checked = prefs.enableStreamerFavicon !== false;
+  }
+  if (tabLiveIconToggle) {
+    tabLiveIconToggle.checked = prefs.enableTabLiveIcon !== false;
+  }
   if (autoRefreshToggle) {
     autoRefreshToggle.checked = prefs.autoRefreshPlayerErrors !== false;
   }
@@ -718,6 +754,51 @@ function renderPreferences() {
 }
 
 let _watchTimeLoaded = false;
+let currentLogFilter = "all";
+
+async function renderEventLogs() {
+  const container = document.getElementById("logs-container");
+  if (!container) return;
+
+  try {
+    const resp = await chrome.runtime.sendMessage({ type: "getEventLogs" });
+    const logs = resp?.logs || [];
+
+    const filtered = logs.filter((log) => {
+      if (currentLogFilter === "all") return true;
+      return log.type === currentLogFilter;
+    });
+
+    if (filtered.length === 0) {
+      container.innerHTML = `<p class="empty-state">Aucun événement enregistré.</p>`;
+      return;
+    }
+
+    container.innerHTML = filtered
+      .map((log) => {
+        const timeStr = new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        let icon = "📌";
+        if (log.type === "drop") icon = "🎁";
+        else if (log.type === "moment") icon = "📸";
+        else if (log.type === "raid") icon = "🛡️";
+        else if (log.type === "points") icon = "💎";
+
+        return `
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:6px; font-size:12px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span>${icon}</span>
+              <span style="font-weight:600; color:#efeff1;">${log.text || log.type}</span>
+            </div>
+            <span style="color:#772ce8; font-size:11px;">${timeStr}</span>
+          </div>
+        `;
+      })
+      .join("");
+  } catch (_) {
+    container.innerHTML = `<p class="empty-state">Erreur lors de la lecture du journal.</p>`;
+  }
+}
+
 function setActiveTab(tabName) {
   currentTab = tabName;
   tabButtons.forEach((button) => {
@@ -726,13 +807,15 @@ function setActiveTab(tabName) {
   });
 
   const streamersView = document.getElementById("streamers-view");
+  const settingsSection = document.getElementById("settings-section");
+
   if (tabName === "streamers") {
     streamersView?.classList.remove("hidden");
     settingsSection?.classList.add("hidden");
   } else {
     streamersView?.classList.add("hidden");
     settingsSection?.classList.remove("hidden");
-    // Lazy-load watch time summary the first time settings is opened
+    renderEventLogs().catch(() => {});
     if (!_watchTimeLoaded) {
       _watchTimeLoaded = true;
       renderWatchTimeSummary().catch(() => {});
@@ -1368,7 +1451,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("platform-filter-group")?.addEventListener("click", (e) => {
       const btn = e.target.closest(".pf-btn");
       if (!btn) return;
-      document.querySelectorAll(".pf-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll("#platform-filter-group .pf-btn").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       const filter = btn.dataset.filter;
       document.querySelectorAll("#streamer-list .streamer-card").forEach(card => {
@@ -1378,6 +1461,21 @@ document.addEventListener("DOMContentLoaded", async () => {
           card.hidden = card.dataset.platform !== filter;
         }
       });
+    });
+
+    // Log filter buttons
+    document.getElementById("log-filter-group")?.addEventListener("click", (e) => {
+      const btn = e.target.closest(".pf-btn");
+      if (!btn) return;
+      document.querySelectorAll("#log-filter-group .pf-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentLogFilter = btn.dataset.logFilter || "all";
+      renderEventLogs().catch(() => {});
+    });
+
+    document.getElementById("btn-clear-logs")?.addEventListener("click", async () => {
+      await chrome.runtime.sendMessage({ type: "clearEventLogs" });
+      renderEventLogs().catch(() => {});
     });
 
     refreshButton?.addEventListener("click", async () => {
@@ -1402,6 +1500,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     autoClaimToggle?.addEventListener("change", (e) => {
       updatePreferences({ autoClaimChannelPoints: e.target.checked });
+    });
+    autoClaimDropsToggle?.addEventListener("change", (e) => {
+      updatePreferences({ autoClaimDrops: e.target.checked });
+    });
+    autoClaimMomentsToggle?.addEventListener("change", (e) => {
+      updatePreferences({ autoClaimMoments: e.target.checked });
+    });
+    autoOpenInventoryToggle?.addEventListener("change", (e) => {
+      updatePreferences({ autoOpenInventory: e.target.checked });
+    });
+    autoOpenInventoryIntervalSelect?.addEventListener("change", (e) => {
+      updatePreferences({ autoOpenInventoryIntervalHours: Number(e.target.value) });
+    });
+    hideTwitchExtensionsToggle?.addEventListener("change", (e) => {
+      updatePreferences({ hideTwitchExtensions: e.target.checked });
+    });
+    autoCancelRaidsToggle?.addEventListener("change", (e) => {
+      updatePreferences({ autoCancelRaids: e.target.checked });
+    });
+    preventTabDiscardToggle?.addEventListener("change", (e) => {
+      updatePreferences({ preventTabDiscard: e.target.checked });
+    });
+    streamerFaviconToggle?.addEventListener("change", (e) => {
+      updatePreferences({ enableStreamerFavicon: e.target.checked });
+    });
+    tabLiveIconToggle?.addEventListener("change", (e) => {
+      updatePreferences({ enableTabLiveIcon: e.target.checked });
     });
     autoRefreshToggle?.addEventListener("change", (e) => {
       updatePreferences({ autoRefreshPlayerErrors: e.target.checked });

@@ -53,7 +53,15 @@ const preferenceToggleDefinitions = [
   { element: document.getElementById("onboarding-sounds"), key: "soundsEnabled" },
   { element: document.getElementById("onboarding-auto-refresh"), key: "autoRefreshPlayerErrors" },
   { element: document.getElementById("onboarding-fast-forward"), key: "enableFastForwardButton" },
+  { element: document.getElementById("onboarding-hide-extensions"), key: "hideTwitchExtensions" },
   { element: document.getElementById("onboarding-auto-claim"), key: "autoClaimChannelPoints" },
+  { element: document.getElementById("onboarding-auto-claim-drops"), key: "autoClaimDrops" },
+  { element: document.getElementById("onboarding-auto-claim-moments"), key: "autoClaimMoments" },
+  { element: document.getElementById("onboarding-auto-open-inventory"), key: "autoOpenInventory" },
+  { element: document.getElementById("onboarding-auto-cancel-raids"), key: "autoCancelRaids" },
+  { element: document.getElementById("onboarding-prevent-tab-discard"), key: "preventTabDiscard" },
+  { element: document.getElementById("onboarding-streamer-favicon"), key: "enableStreamerFavicon" },
+  { element: document.getElementById("onboarding-tab-live-icon"), key: "enableTabLiveIcon" },
 ];
 
 const LANGUAGE_FLAGS = { fr: "🇫🇷", en: "🇬🇧", es: "🇪🇸", de: "🇩🇪", it: "🇮🇹", pt: "🇵🇹" };
@@ -635,6 +643,54 @@ function registerEventListeners() {
   });
 }
 
+function setupUpdateModeUI() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const isUpdateMode = urlParams.get("mode") === "update";
+  if (!isUpdateMode) return;
+
+  const stepHeaderEyebrow = document.querySelector('.wizard-step[data-step="3"] .step-eyebrow');
+  const stepHeaderTitle = document.querySelector('.wizard-step[data-step="3"] .step-title');
+  const stepHeaderDesc = document.querySelector('.wizard-step[data-step="3"] .step-desc');
+
+  if (stepHeaderEyebrow) stepHeaderEyebrow.textContent = "04 / NOUVEAUTÉS · MISE À JOUR";
+  if (stepHeaderTitle) stepHeaderTitle.innerHTML = 'Découvre les <span class="accent">nouveautés</span> !';
+  if (stepHeaderDesc) stepHeaderDesc.textContent = "Voici les nouvelles fonctionnalités d'automatisation et de personnalisation ajoutées à ton extension. Tes préférences actuelles sont conservées.";
+
+  const btnBack3 = document.getElementById("btn-back-3");
+  if (btnBack3) btnBack3.style.display = "none";
+
+  const newSettingElementIds = [
+    "onboarding-auto-claim-drops",
+    "onboarding-auto-claim-moments",
+    "onboarding-auto-cancel-raids",
+    "onboarding-hide-extensions",
+    "onboarding-streamer-favicon",
+    "onboarding-tab-live-icon",
+    "onboarding-prevent-tab-discard",
+  ];
+
+  newSettingElementIds.forEach((id) => {
+    const el = document.getElementById(id);
+    const titleEl = el?.closest(".settings-toggle")?.querySelector(".settings-title");
+    if (titleEl && !titleEl.querySelector(".badge-new")) {
+      const badge = document.createElement("span");
+      badge.className = "badge-new";
+      badge.textContent = "NOUVEAU";
+      titleEl.appendChild(badge);
+    }
+  });
+
+  // Jump straight to Step 3 (Réglages)
+  const currentEl = document.querySelector('.wizard-step[data-step="0"]');
+  const targetEl = document.querySelector('.wizard-step[data-step="3"]');
+  if (currentEl && targetEl) {
+    currentEl.classList.remove("active");
+    targetEl.classList.add("active");
+    currentStep = 3;
+    updateStepper();
+  }
+}
+
 /* ════════════════════════════════
    INIT
    ════════════════════════════════ */
@@ -650,6 +706,7 @@ async function initialize() {
   unsubscribeLanguage = onLanguageChange(() => refreshTranslations());
 
   await loadStreamers();
+  setupUpdateModeUI();
 }
 
 initialize().catch((error) => {

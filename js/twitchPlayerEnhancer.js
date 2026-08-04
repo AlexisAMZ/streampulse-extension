@@ -501,6 +501,93 @@
     } else if (!shouldFastForward && fastForwardEnabled) {
       disableFastForward();
     }
+
+    setHideTwitchExtensions(preferences.hideTwitchExtensions === true);
+    setAutoCancelRaids(preferences.autoCancelRaids !== false);
+    if (preferences.enablePredictionsPopup !== false) {
+      ensurePredictionsButton();
+    }
+  }
+
+  const HIDE_EXTENSIONS_STYLE_ID = "streampulse-hide-extensions-style";
+  function setHideTwitchExtensions(enable) {
+    let style = document.getElementById(HIDE_EXTENSIONS_STYLE_ID);
+    if (enable) {
+      if (!style) {
+        style = document.createElement("style");
+        style.id = HIDE_EXTENSIONS_STYLE_ID;
+        // Strictly target Twitch extensions overlays on video player (compatible with 7TV)
+        style.textContent = `
+          .extension-container,
+          .extensions-dock-card,
+          iframe.extension-frame,
+          div[data-a-target="extension-overlay"],
+          .extensions-video-overlay-size-container {
+            display: none !important;
+            pointer-events: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+          }
+        `;
+        document.head?.appendChild(style);
+      }
+    } else {
+      if (style?.parentElement) {
+        style.parentElement.removeChild(style);
+      }
+    }
+  }
+
+  let raidCheckIntervalId = null;
+  function checkAndCancelRaid() {
+    const raidCancelBtn = document.querySelector(
+      'button[data-a-target="cancel-raid-button"], .raid-banner button, [data-test-selector="raid-banner-cancel-button"]'
+    );
+    if (raidCancelBtn instanceof HTMLElement) {
+      raidCancelBtn.click();
+      try {
+        chrome.runtime.sendMessage({
+          type: "incrementStat",
+          stat: "raidsCancelled",
+          value: 1,
+        }).catch(() => {});
+      } catch (_) {}
+    }
+  }
+  function setAutoCancelRaids(enable) {
+    if (enable) {
+      if (!raidCheckIntervalId) {
+        raidCheckIntervalId = setInterval(checkAndCancelRaid, 2000);
+      }
+    } else {
+      if (raidCheckIntervalId) {
+        clearInterval(raidCheckIntervalId);
+        raidCheckIntervalId = null;
+      }
+    }
+  }
+
+  const PREDICTIONS_BUTTON_ID = "streampulse-predictions-btn";
+  function ensurePredictionsButton() {
+    const header = document.querySelector('[data-a-target="chat-room-header"], .stream-chat-header');
+    if (!header) return;
+    let btn = document.getElementById(PREDICTIONS_BUTTON_ID);
+    if (!btn) {
+      btn = document.createElement("button");
+      btn.id = PREDICTIONS_BUTTON_ID;
+      btn.type = "button";
+      btn.title = "Prédictions / Predictions";
+      btn.style.cssText = "background:transparent;border:none;color:#dedee3;cursor:pointer;font-size:14px;padding:4px 8px;margin-right:4px;";
+      btn.innerHTML = "🔮";
+      btn.addEventListener("click", () => {
+        const predWidget = document.querySelector('.community-prediction-highlight-header, [data-test-selector="prediction-widget"]');
+        if (predWidget) {
+          predWidget.scrollIntoView({ behavior: 'smooth' });
+          predWidget.click();
+        }
+      });
+      header.prepend(btn);
+    }
   }
 
   function handleStorageChange(changes, areaName) {

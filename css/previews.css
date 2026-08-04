@@ -86,6 +86,17 @@
 .sp-preview__fallback-avatar[hidden] {
   display: none;
 }
+.sp-preview__fallback-loading {
+  font-size: 13px;
+  font-weight: 500;
+  color: #ffffff;
+  margin-top: 4px;
+  animation: sp-pulse-loading 1.5s infinite ease-in-out;
+}
+@keyframes sp-pulse-loading {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
 .sp-preview__fallback-game {
   font-size: 10px;
   color: rgba(255, 255, 255, 0.55);

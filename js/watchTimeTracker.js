@@ -165,16 +165,21 @@
   // ── Settings ──
 
   function loadSettings() {
-    chrome.storage.local.get([PREFERENCES_KEY], (result) => {
-      if (chrome.runtime.lastError) return;
-      const prefs = result[PREFERENCES_KEY] || {};
-      enabled = prefs.watchTimeTracker !== false;
-      if (enabled) {
-        startTracking();
-      } else {
-        stopTracking();
-      }
-    });
+    try {
+      if (!chrome.runtime?.id) return;
+      chrome.storage.local.get([PREFERENCES_KEY], (result) => {
+        if (chrome.runtime.lastError) return;
+        const prefs = result[PREFERENCES_KEY] || {};
+        enabled = prefs.watchTimeTracker !== false;
+        if (enabled) {
+          startTracking();
+        } else {
+          stopTracking();
+        }
+      });
+    } catch (e) {
+      // Extension context invalidated, ignore
+    }
   }
 
   chrome.storage.onChanged.addListener((changes, area) => {

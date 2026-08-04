@@ -73,6 +73,16 @@
       if (prefs.surfaces[descriptor.surface] === false) return;
       lastAnchor = anchor;
       card.show(anchor, descriptor, showOpts());
+
+      if (descriptor.kind === "channel" && SP.sources && SP.sources.fetchStreamTitle) {
+        if (!descriptor.title || descriptor.surface === "sidebar") {
+          SP.sources.fetchStreamTitle(descriptor.login).then(function(title) {
+            if (title && lastAnchor === anchor && card && card.isVisible()) {
+              card.updateTitle(title);
+            }
+          });
+        }
+      }
     } catch (_e) {
       /* never throw into the page */
     }

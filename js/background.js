@@ -31,7 +31,7 @@ const STORAGE_KEYS = {
 // ─── Remote config (credentials hosted on Vercel, never in the zip) ──────────
 const REMOTE_CONFIG_URL = "https://alexisamz.fr/api/streampulse-config";
 const REMOTE_CONFIG_CACHE_KEY = "streampulse:remoteConfig";
-const REMOTE_CONFIG_TTL_MS = 60 * 60 * 1000; // 1 hour
+const REMOTE_CONFIG_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 let CONFIG = { ...LOCAL_CONFIG };
 let _configReady = null;
@@ -81,6 +81,18 @@ function ensureConfig() {
 
 const WATCHER_ALARM = "streampulseWatcher";
 const KEEP_ALIVE_ALARM = "streampulseKeepAlive";
+const AUTO_OPEN_INVENTORY_ALARM = "streamPulseAutoOpenInventoryAlarm";
+
+async function setupAutoOpenInventoryAlarm(prefs = {}) {
+  if (prefs.autoOpenInventory && Number(prefs.autoOpenInventoryIntervalHours) > 0) {
+    const minutes = Number(prefs.autoOpenInventoryIntervalHours) * 60;
+    chrome.alarms.create(AUTO_OPEN_INVENTORY_ALARM, {
+      periodInMinutes: minutes,
+    });
+  } else {
+    chrome.alarms.clear(AUTO_OPEN_INVENTORY_ALARM);
+  }
+}
 
 const streamerStates = new Map();
 const streamerCache = new Map();
@@ -95,8 +107,21 @@ const PREFERENCES_KEY = "betaGeneralPreferences";
 const DEFAULT_PREFERENCES = {
   liveNotifications: true,
   gameNotifications: false,
+  dropAlerts: true,
+  predictionAlerts: true,
+  raidAlerts: true,
   soundsEnabled: true,
   autoClaimChannelPoints: true,
+  autoClaimDrops: true,
+  autoClaimMoments: true,
+  autoOpenInventory: false,
+  autoOpenInventoryIntervalHours: 4,
+  hideTwitchExtensions: false,
+  autoCancelRaids: true,
+  preventTabDiscard: true,
+  enablePredictionsPopup: true,
+  enableTabLiveIcon: true,
+  enableStreamerFavicon: true,
   autoRefreshPlayerErrors: true,
   enableFastForwardButton: true,
   watchTimeTracker: true,
@@ -118,6 +143,9 @@ const DEFAULT_PREFERENCES = {
 
 const DEFAULT_STATS = {
   channelPointsClaimed: 0,
+  dropsClaimed: 0,
+  momentsClaimed: 0,
+  raidsCancelled: 0,
 };
 
 const DEFAULT_POLL_INTERVAL =
@@ -484,6 +512,16 @@ class PreferenceStore {
       gameNotifications: Boolean(preferences.gameNotifications),
       soundsEnabled: preferences.soundsEnabled !== false,
       autoClaimChannelPoints: preferences.autoClaimChannelPoints !== false,
+      autoClaimDrops: preferences.autoClaimDrops !== false,
+      autoClaimMoments: preferences.autoClaimMoments !== false,
+      autoOpenInventory: Boolean(preferences.autoOpenInventory),
+      autoOpenInventoryIntervalHours: Number(preferences.autoOpenInventoryIntervalHours) > 0 ? Number(preferences.autoOpenInventoryIntervalHours) : 4,
+      hideTwitchExtensions: Boolean(preferences.hideTwitchExtensions),
+      autoCancelRaids: preferences.autoCancelRaids !== false,
+      preventTabDiscard: preferences.preventTabDiscard !== false,
+      enablePredictionsPopup: preferences.enablePredictionsPopup !== false,
+      enableTabLiveIcon: preferences.enableTabLiveIcon !== false,
+      enableStreamerFavicon: preferences.enableStreamerFavicon !== false,
       autoRefreshPlayerErrors: preferences.autoRefreshPlayerErrors !== false,
       enableFastForwardButton: preferences.enableFastForwardButton !== false,
       watchTimeTracker: preferences.watchTimeTracker !== false,
@@ -527,6 +565,7 @@ class PreferenceStore {
     await chrome.storage.local.set({
       [PREFERENCES_KEY]: sanitized,
     });
+    setupAutoOpenInventoryAlarm(sanitized);
     return sanitized;
   }
 
@@ -576,6 +615,42 @@ class StatsStore {
     const current = await this.get();
     const newValue = (current[stat] || 0) + value;
     return this.update({ [stat]: newValue });
+  }
+}
+
+class EventLogStore {
+  static async getLogs() {
+    try {
+      const stored = await chrome.storage.local.get(STORAGE_KEYS.EVENT_LOGS);
+      return stored[STORAGE_KEYS.EVENT_LOGS] || [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  static async addLog(entry = {}) {
+    try {
+      const logs = await this.getLogs();
+      const newLog = {
+        id: `log_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+        timestamp: Date.now(),
+        type: entry.type || "info", // "drop", "moment", "raid", "prediction", "points"
+        channel: entry.channel || "",
+        text: entry.text || "",
+        value: entry.value || 0,
+      };
+      logs.unshift(newLog);
+      if (logs.length > 100) logs.pop();
+      await chrome.storage.local.set({ [STORAGE_KEYS.EVENT_LOGS]: logs });
+      return newLog;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static async clearLogs() {
+    await chrome.storage.local.set({ [STORAGE_KEYS.EVENT_LOGS]: [] });
+    return [];
   }
 }
 
@@ -1697,8 +1772,9 @@ function scheduleKeepAliveAlarm() {
 
 let initDone = false;
 
-async function openOnboarding() {
-  const url = chrome.runtime.getURL("html/onboarding.html");
+async function openOnboarding(mode = "") {
+  const query = mode ? `?mode=${encodeURIComponent(mode)}` : "";
+  const url = chrome.runtime.getURL(`html/onboarding.html${query}`);
   try {
     await chrome.tabs.create({ url });
   } catch (error) {
@@ -1717,18 +1793,25 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 
   await pollStreamers({ forceNotification: false });
   const installReason = details?.reason || "install";
+  const CURRENT_FEATURE_VERSION = 2;
 
-  // Onboarding is shown only on fresh install. Existing users updating to a new
-  // version keep their data and can edit their pseudo from the Settings tab.
+  const { onboardingShown, seenFeatureVersion } = await chrome.storage.local.get([
+    "onboardingShown",
+    "seenFeatureVersion",
+  ]);
+
   if (
     installReason === chrome.runtime.OnInstalledReason?.INSTALL ||
     installReason === "install"
   ) {
-    const { onboardingShown } = await chrome.storage.local.get("onboardingShown");
     if (!onboardingShown && !streamers.length) {
-      await chrome.storage.local.set({ onboardingShown: true });
+      await chrome.storage.local.set({ onboardingShown: true, seenFeatureVersion: CURRENT_FEATURE_VERSION });
       await openOnboarding();
     }
+  } else if ((seenFeatureVersion || 0) < CURRENT_FEATURE_VERSION) {
+    // Show new feature onboarding for existing users updating
+    await chrome.storage.local.set({ seenFeatureVersion: CURRENT_FEATURE_VERSION });
+    await openOnboarding("update");
   }
 });
 
@@ -1738,7 +1821,8 @@ chrome.runtime.onStartup.addListener(async () => {
   scheduleWatcherAlarm();
   scheduleKeepAliveAlarm();
 
-  await PreferenceStore.ensureDefaults();
+  const prefs = await PreferenceStore.ensureDefaults();
+  setupAutoOpenInventoryAlarm(prefs);
   await NotificationCenter.init();
   await pollStreamers({ forceNotification: false });
 });
@@ -1755,6 +1839,17 @@ chrome.alarms.onAlarm.addListener((alarm) => {
           "KeepAlive alarm ping error:",
           chrome.runtime.lastError.message
         );
+      }
+    });
+  } else if (alarm.name === AUTO_OPEN_INVENTORY_ALARM) {
+    chrome.tabs.query({ url: "*://www.twitch.tv/drops/inventory*" }, (tabs) => {
+      if (tabs && tabs.length > 0) {
+        chrome.tabs.reload(tabs[0].id);
+      } else {
+        chrome.tabs.create({
+          url: "https://www.twitch.tv/drops/inventory",
+          active: false,
+        });
       }
     });
   } else if (alarm.name.startsWith(NotificationCenter.alarmPrefix)) {
@@ -2284,12 +2379,54 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     case "incrementStat":
       (async () => {
-        const { stat, value } = request;
+        const { stat, value, channel, text } = request;
         if (stat) {
           await StatsStore.increment(stat, Number(value) || 1);
+          let type = "info";
+          if (stat === "dropsClaimed") type = "drop";
+          else if (stat === "momentsClaimed") type = "moment";
+          else if (stat === "raidsCancelled") type = "raid";
+          else if (stat === "channelPointsClaimed") type = "points";
+
+          await EventLogStore.addLog({
+            type,
+            channel: channel || "",
+            text: text || `${stat} (+${value || 1})`,
+            value: value || 1,
+          });
+
+          // Event alerts notification check
+          const prefs = await PreferenceStore.get();
+          if (type === "drop" && prefs.dropAlerts) {
+            chrome.notifications?.create?.({
+              type: "basic",
+              iconUrl: "images/photos/128px.png",
+              title: "StreamPulse · Drop réclamé !",
+              message: text || "Un Drop Twitch a été réclamé automatiquement.",
+            });
+          } else if (type === "raid" && prefs.raidAlerts) {
+            chrome.notifications?.create?.({
+              type: "basic",
+              iconUrl: "images/photos/128px.png",
+              title: "StreamPulse · Raid annulé",
+              message: text || "Le transfert vers la chaîne raidée a été annulé.",
+            });
+          }
         }
         sendResponse({ success: true });
       })();
+      return true;
+
+    case "getEventLogs":
+      EventLogStore.getLogs().then((logs) => {
+        sendResponse({ success: true, logs });
+      });
+      return true;
+
+    case "clearEventLogs":
+      EventLogStore.clearLogs().then((logs) => {
+        sendResponse({ success: true, logs });
+      });
       return true;
     
     case "resetStat":
@@ -2471,3 +2608,16 @@ scheduleKeepAliveAlarm();
     console.warn("Init staleness check failed:", err?.message || err);
   }
 })();
+
+if (chrome.tabs?.onUpdated?.addListener) {
+  chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+    if (tab?.url && (tab.url.includes("twitch.tv") || tab.url.includes("kick.com"))) {
+      try {
+        const prefs = await PreferenceStore.get();
+        if (prefs.preventTabDiscard && tab.autoDiscardable !== false) {
+          await chrome.tabs.update(tabId, { autoDiscardable: false });
+        }
+      } catch (_) {}
+    }
+  });
+}
