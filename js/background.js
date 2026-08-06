@@ -431,7 +431,7 @@ function formatNumberForLanguage(lang, value) {
   try {
     const locale = lang === "fr" ? "fr-FR" : "en-US";
     return new Intl.NumberFormat(locale).format(value);
-  } catch (error) {
+  } catch {
     return String(value);
   }
 }
@@ -1941,7 +1941,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             accessToken: CONFIG.accessToken || "",
             features: CONFIG.features || {},
           });
-        } catch (e) {
+        } catch {
           sendResponse({ clientId: "", accessToken: "", features: {} });
         }
       })();

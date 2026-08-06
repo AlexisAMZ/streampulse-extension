@@ -19,7 +19,6 @@ import {
   getPlatformLabelKey,
   getPlatformPlaceholderKey,
   normalizePlatform,
-  platformSupportsLiveStatus,
   sanitizeHandle,
 } from "./platforms.js";
 import { createStreamerCard, formatNumber } from "./ui.js";
@@ -55,7 +54,6 @@ const addStreamerLabel = addStreamerForm?.querySelector("label[for='streamer-inp
 const helperTextEl = addStreamerForm?.querySelector(".helper-text");
 const refreshButton = document.getElementById("refresh-button");
 const template = document.getElementById("streamer-item-template");
-const feedbackMessage = document.getElementById("feedback-message");
 const liveNotificationsToggle = document.getElementById("pref-live-notifications");
 const gameAlertsToggle = document.getElementById("pref-game-alerts");
 const soundsToggle = document.getElementById("pref-sounds");
@@ -88,8 +86,6 @@ const saveChatFilterButton = document.getElementById("save-chat-filter");
 const saveBlockedUsersButton = document.getElementById("save-blocked-users");
 const testNotificationButton = document.getElementById("test-notification");
 const tabButtons = Array.from(document.querySelectorAll(".tab-button"));
-const addStreamerSection = document.querySelector(".add-streamer");
-const settingsSection = document.getElementById("settings-section");
 const languageOptions = document.getElementById("language-options-popup");
 
 const statPointsEl = document.getElementById("stat-points");
@@ -114,7 +110,6 @@ const MAX_TOASTS = 5;
 const TOAST_DURATION = 4000;
 
 let currentTab = "streamers";
-let unsubscribeLanguage = null;
 let lastAddedId = null;
 let previousLiveIds = new Set(); // track who was live last render
 let lastPointsValue = null; // for odometer bump
@@ -1079,7 +1074,7 @@ async function handleResetStats() {
     });
     await renderStats();
     showFeedback(t("popup.stats.resetSuccess") || "Statistiques remises à zéro", "success");
-  } catch (err) {
+  } catch {
     showFeedback(t("popup.stats.resetError") || "Reset failed", "error");
   }
   if (btnResetStats) btnResetStats.disabled = false;
@@ -1235,14 +1230,6 @@ async function handleAddStreamer(event) {
     "success"
   );
   await loadStreamers();
-}
-
-function handlePlatformPickerClick(event) {
-  const button = event.target.closest(".platform-button");
-  if (!button) return;
-  const { platform } = button.dataset;
-  if (!platform) return;
-  setSelectedPlatform(platform);
 }
 
 async function updatePreferences(updates) {
@@ -1661,7 +1648,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     buildLanguageButtons();
     setActiveTab("streamers");
 
-    unsubscribeLanguage = onLanguageChange(() => {
+    // Le popup est detruit a chaque fermeture, il n'y a pas de desabonnement
+    // a conserver.
+    onLanguageChange(() => {
       refreshTranslations();
     });
 

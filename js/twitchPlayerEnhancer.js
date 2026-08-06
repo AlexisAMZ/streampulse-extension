@@ -7,8 +7,6 @@
   const FAST_FORWARD_BUTTON_ID = "streampulse-fast-forward-btn";
   const FAST_FORWARD_STYLE_ID = "streampulse-fast-forward-style";
   const SHARED_STYLE_ID = "streampulse-enhancer-styles";
-  const LATENCY_CHANNEL_NAME = "streampulse-latency";
-  const CONTEXT_ID = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
   const isTopWindow = window.top === window;
   const storage = chrome?.storage?.local;
@@ -40,8 +38,6 @@
     accessToken: "",
     features: DEFAULT_FEATURE_CONFIG,
   };
-
-  let preferencesCache = {};
 
   let autoRefreshEnabled = false;
   let errorCheckTimeoutId = null;
@@ -486,8 +482,6 @@
   }
 
   function applyPreferences(preferences = {}) {
-    preferencesCache = preferences;
-
     const shouldAutoRefresh = preferences[AUTO_REFRESH_FIELD] !== false;
     if (shouldAutoRefresh && !autoRefreshEnabled) {
       enableAutoRefresh();

@@ -186,7 +186,7 @@ export function formatNumber(value) {
     const lang = getCurrentLanguage();
     const locale = lang === "fr" ? "fr-FR" : "en-US";
     return new Intl.NumberFormat(locale).format(value);
-  } catch (error) {
+  } catch {
     return String(value);
   }
 }

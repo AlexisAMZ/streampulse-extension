@@ -32,7 +32,6 @@ const streamerCount = document.getElementById("streamer-count");
 const finishButton = document.getElementById("finish-button");
 const finishNameSuffix = document.getElementById("finish-name-suffix");
 const languageOptions = document.getElementById("language-options");
-const stepperEl = document.getElementById("stepper");
 const stepCounterCurrent = document.getElementById("step-counter-current");
 
 /* Profile (NEW) */

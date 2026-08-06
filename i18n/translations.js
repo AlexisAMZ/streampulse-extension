@@ -34,7 +34,6 @@ export const translations = {
       profileHintFound: "✓ Trouvé : {{handle}}",
       profileHintNotFound: "Aucun profil Twitch trouvé. Tu peux quand même continuer.",
       profilePreviewSuffix: "Voici qui est en ligne.",
-      htmlLang: "fr",
       documentTitle: "Première configuration",
       welcomeTagline: "EXTENSION CHROME · TWITCH · KICK",
       welcomeWord1: "Ne",

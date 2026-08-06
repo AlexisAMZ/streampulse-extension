@@ -13,7 +13,6 @@
   let heartbeatId = null;
   let currentChannel = null;
   let currentPlatform = null;
-  let trackingStartTime = null;   // wall-clock time of last channel switch
   let lastHeartbeatTime = null;   // wall-clock time of last successful heartbeat
 
   // ── Platform & channel detection ──
@@ -85,7 +84,6 @@
       currentPlatform = info.platform;
     }
 
-    trackingStartTime = Date.now();
     lastHeartbeatTime = Date.now();
 
     // Presence ping — records channel start, no seconds
@@ -108,7 +106,6 @@
     }
     currentChannel = null;
     currentPlatform = null;
-    trackingStartTime = null;
     lastHeartbeatTime = null;
   }
 
@@ -128,7 +125,6 @@
         currentPlatform = info.platform;
 
         // Reset timestamps for the new channel
-        trackingStartTime = Date.now();
         lastHeartbeatTime = Date.now();
 
         safeSend({
@@ -141,7 +137,6 @@
     } else {
       currentChannel = null;
       currentPlatform = null;
-      trackingStartTime = null;
       lastHeartbeatTime = null;
     }
   }
@@ -177,7 +172,7 @@
           stopTracking();
         }
       });
-    } catch (e) {
+    } catch {
       // Extension context invalidated, ignore
     }
   }

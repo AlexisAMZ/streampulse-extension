@@ -15,6 +15,9 @@
 
   // Opt-in diagnostics: set `window.__SP_PREVIEWS_DEBUG__ = true` in the Twitch
   // tab console, then hover a live channel to trace the video pipeline.
+  // Conserve volontairement sans appelant : outil de debug a rebrancher au
+  // besoin dans le pipeline video.
+  // eslint-disable-next-line no-unused-vars
   function dbg() {
     try {
       if (NS.__SP_PREVIEWS_DEBUG__ && typeof console !== "undefined") {
@@ -72,7 +75,6 @@
     let root = null;
     let mediaEl, imgEl, iframeEl, fallbackEl, fbAvatarEl, fbGameEl, titleEl, categoryEl;
     let refreshTimer = null;
-    let playToken = 0;
     let visible = false;
 
     function mount() {
@@ -138,7 +140,6 @@
     }
 
     function applyImageMode(descriptor, size) {
-      playToken++;
       teardownPlayback();
       imgEl.hidden = true;
       imgEl.removeAttribute("src");
@@ -235,7 +236,6 @@
     function hide() {
       if (!root) return;
       visible = false;
-      playToken++;
       stopRefresh();
       teardownPlayback();
       root.classList.remove("sp-preview--in");

@@ -97,7 +97,7 @@ export async function setLanguage(nextLang) {
     if (response?.success) {
       updated = true;
     }
-  } catch (error) {
+  } catch {
     try {
       const stored = await chrome.storage.local.get(PREFERENCES_KEY);
       const prefs = stored?.[PREFERENCES_KEY] || {};

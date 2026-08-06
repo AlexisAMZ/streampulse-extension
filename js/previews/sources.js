@@ -98,7 +98,7 @@
       });
       const data = await res.json();
       return (data && data.data && data.data.user && data.data.user.stream && data.data.user.stream.title) || null;
-    } catch (e) {
+    } catch {
       return null;
     }
   }

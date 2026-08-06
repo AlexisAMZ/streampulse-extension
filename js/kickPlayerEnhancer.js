@@ -45,14 +45,6 @@
     return null;
   }
 
-  function isBehind(video) {
-    if (!video || !video.buffered.length) return false;
-    const end = video.buffered.end(video.buffered.length - 1);
-    const current = video.currentTime;
-    // If we are more than 3 seconds behind the buffer end, we assume we can skip
-    return (end - current) > 2.5; 
-  }
-
   function createButton() {
     if (document.getElementById(FAST_FORWARD_ID)) return document.getElementById(FAST_FORWARD_ID);
 
