@@ -4,11 +4,11 @@ config.js
 .env
 i18n/translations.*.draft.json
 node_modules/
-package.json
-scripts/
 coverage/
-package-lock.json
 
+# package.json, package-lock.json, eslint.config.mjs et scripts/ sont versionnes
+# depuis la 26.8.6 : ils portent le lint et le script de build. Ils ne partent
+# pas dans le zip, l'exclusion est faite explicitement par scripts/build-zip.mjs.
 
 backups/
 .agents/

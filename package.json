@@ -1,0 +1,18 @@
+{
+  "name": "streampulse-extension",
+  "version": "26.8.6",
+  "private": true,
+  "description": "Outillage de developpement de l'extension StreamPulse. Rien ici n'est package dans le zip livre au Chrome Web Store.",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "verify": "node scripts/verify.mjs",
+    "build": "npm run lint && node scripts/build-zip.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.8.0",
+    "globals": "^17.9.0"
+  }
+}
