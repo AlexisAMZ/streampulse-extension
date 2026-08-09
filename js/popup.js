@@ -8,6 +8,7 @@ import {
   t,
   syncDocumentLanguage,
   DEFAULT_LANGUAGE,
+  resolveLocale,
 } from "./i18n.js";
 import {
   AVAILABLE_PLATFORMS,
@@ -778,13 +779,21 @@ async function renderEventLogs() {
         else if (log.type === "raid") icon = "🛡️";
         else if (log.type === "points") icon = "💎";
 
+        // log.text and log.channel originate from the Twitch DOM, so they must
+        // be escaped before being interpolated into innerHTML.
+        const label = escapeHtml(String(log.text || log.type || ""));
+        const channel = log.channel ? escapeHtml(String(log.channel)) : "";
+
         return `
           <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:6px; font-size:12px;">
-            <div style="display:flex; align-items:center; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px; min-width:0;">
               <span>${icon}</span>
-              <span style="font-weight:600; color:#efeff1;">${log.text || log.type}</span>
+              <div style="display:flex; flex-direction:column; min-width:0;">
+                <span style="font-weight:600; color:#efeff1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${label}</span>
+                ${channel ? `<span style="color:#bf94ff; font-size:11px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${channel}</span>` : ""}
+              </div>
             </div>
-            <span style="color:#772ce8; font-size:11px;">${timeStr}</span>
+            <span style="color:#772ce8; font-size:11px; flex-shrink:0;">${timeStr}</span>
           </div>
         `;
       })
@@ -986,20 +995,20 @@ async function renderWatchTimeSummary(month = null, preloadedData = null) {
           opt.value = m;
           const [y, mo] = m.split("-");
           const date = new Date(Number(y), Number(mo) - 1);
-          opt.textContent = date.toLocaleDateString(
-            state.preferences.language === "fr" ? "fr-FR" : "en-US",
-            { month: "long", year: "numeric" }
-          );
+          opt.textContent = date.toLocaleDateString(resolveLocale(state.preferences.language), {
+            month: "long",
+            year: "numeric",
+          });
           if (m === summary.month) opt.selected = true;
           watchTimeMonthSelect.appendChild(opt);
         }
       } else {
         const now = new Date();
         const opt = document.createElement("option");
-        opt.textContent = now.toLocaleDateString(
-          state.preferences.language === "fr" ? "fr-FR" : "en-US",
-          { month: "long", year: "numeric" }
-        );
+        opt.textContent = now.toLocaleDateString(resolveLocale(state.preferences.language), {
+          month: "long",
+          year: "numeric",
+        });
         watchTimeMonthSelect.appendChild(opt);
         watchTimeMonthSelect.disabled = true;
       }
@@ -1136,7 +1145,9 @@ function updateLanguageButtonsState() {
   if (!languageOptions) return;
   const active = getCurrentLanguage();
   languageOptions.querySelectorAll(".language-button").forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.lang === active);
+    const isActive = button.dataset.lang === active;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", isActive ? "true" : "false");
   });
 }
 
@@ -1329,7 +1340,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // 1. Setup Language & I18n
     const prefs = data.betaGeneralPreferences || {};
-    const lang = prefs.language || DEFAULT_LANGUAGE;
+    // Pass the raw stored value: initI18n normalizes it and falls back on its own.
+    const lang = prefs.language;
     await initI18n(lang);
     applyTranslations(document);
     syncDocumentLanguage("popup.htmlLang");

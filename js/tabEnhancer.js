@@ -8,6 +8,27 @@
   let isAvatarFaviconActive = true;
   let originalFavicon = null;
 
+  // Indicator colors: red = live, orange = this channel is raiding another one.
+  const DOT_LIVE = "#FF0000";
+  const DOT_RAID = "#FF8A00";
+
+  /**
+   * True while Twitch shows the outgoing-raid banner on the current channel.
+   * Lets the favicon signal a raid even when auto-follow is disabled, so the
+   * viewer notices the channel is moving on.
+   */
+  function isRaiding() {
+    try {
+      return Boolean(
+        document.querySelector(
+          '[data-test-selector="raid-banner"], .raid-banner, [data-a-target="raid-banner"], button[data-a-target="cancel-raid-button"]'
+        )
+      );
+    } catch (_) {
+      return false;
+    }
+  }
+
   function findStreamerAvatarUrl() {
     const streamerSelectors = [
       '[data-a-target="stream-channel-avatar"] img',
@@ -73,7 +94,8 @@
 
         if (isLive && isLiveIconActive) {
           ctx.restore();
-          ctx.fillStyle = "#FF0000";
+          const raiding = isRaiding();
+          ctx.fillStyle = raiding ? DOT_RAID : DOT_LIVE;
           ctx.beginPath();
           ctx.arc(size - 6, size - 6, 5, 0, 2 * Math.PI);
           ctx.fill();

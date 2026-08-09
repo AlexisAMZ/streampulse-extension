@@ -3,6 +3,7 @@ import {
   DEFAULT_LANGUAGE,
   translations,
   formatTemplate,
+  matchLanguage,
 } from "../i18n/translations.js";
 
 const PREFERENCES_KEY = "betaGeneralPreferences";
@@ -19,11 +20,9 @@ async function readStoredLanguage() {
   try {
     const stored = await chrome.storage.local.get(PREFERENCES_KEY);
     const prefs = stored?.[PREFERENCES_KEY];
-    if (prefs && typeof prefs[LANGUAGE_PROP] === "string") {
-      const candidate = prefs[LANGUAGE_PROP].toLowerCase();
-      if (isValidLanguage(candidate)) {
-        return candidate;
-      }
+    const matched = matchLanguage(prefs?.[LANGUAGE_PROP]);
+    if (matched) {
+      return matched;
     }
   } catch (error) {
     console.warn("Language read error:", error);
@@ -72,48 +71,54 @@ export function getCurrentLanguage() {
 }
 
 export async function initI18n(preloadedLanguage = null) {
-  if (preloadedLanguage) {
-    currentLanguage = preloadedLanguage;
+  // The caller may hand us a raw stored value ("pt_BR", "EN"), so normalize it
+  // instead of trusting it blindly — an unmatched tag would silently render keys.
+  const matched = matchLanguage(preloadedLanguage);
+  if (matched) {
+    currentLanguage = matched;
   } else {
     currentLanguage = await readStoredLanguage();
   }
   return currentLanguage;
 }
 
-export async function setLanguage(nextLang) {
-  if (!isValidLanguage(nextLang)) {
+export async function setLanguage(requestedLang) {
+  const nextLang = matchLanguage(requestedLang);
+  if (!nextLang || !isValidLanguage(nextLang)) {
     return currentLanguage;
   }
   if (nextLang === currentLanguage) {
     return currentLanguage;
   }
 
-  let updated = false;
+  // Apply locally first so the UI switches even if the service worker is asleep
+  // or rejects the write; storage below is the durable source of truth.
+  currentLanguage = nextLang;
+  notifyLanguageChange();
+
+  let persisted;
   try {
     const response = await chrome.runtime.sendMessage({
       type: "updatePreferences",
       updates: { [LANGUAGE_PROP]: nextLang },
     });
-    if (response?.success) {
-      updated = true;
-    }
+    persisted = Boolean(response?.success);
   } catch {
+    persisted = false;
+  }
+
+  if (!persisted) {
     try {
       const stored = await chrome.storage.local.get(PREFERENCES_KEY);
       const prefs = stored?.[PREFERENCES_KEY] || {};
       await chrome.storage.local.set({
         [PREFERENCES_KEY]: { ...prefs, [LANGUAGE_PROP]: nextLang },
       });
-      updated = true;
     } catch (fallbackError) {
       console.warn("Language fallback write error:", fallbackError);
     }
   }
 
-  if (updated) {
-    currentLanguage = nextLang;
-    notifyLanguageChange();
-  }
   return currentLanguage;
 }
 
@@ -192,4 +197,4 @@ export async function syncDocumentLanguage(htmlLangKey) {
   }
 }
 
-export { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES } from "../i18n/translations.js";
+export { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES, resolveLocale } from "../i18n/translations.js";

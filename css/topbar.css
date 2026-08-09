@@ -173,3 +173,111 @@
 .sp-tb-settings:hover {
   color: #efeff1;
 }
+
+/* ── "Add to StreamPulse" button on channel pages (quickFollow.js) ───────── */
+/* Sits to the LEFT of Twitch's Follow / Subscribe control, so the gap is on
+   the right. Scoped tightly to avoid clashing with 7TV / FFZ injections. */
+.sp-qf-wrap {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+/* Default = NOT yet added: solid Twitch purple, so it reads as a primary call to
+   action next to Subscribe. 30px tall and borderless to match the action row;
+   radius is intentionally rounder (8px) than Twitch's 4px so the button reads as
+   ours without looking bolted on. */
+.sp-qf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 30px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 8px;
+  background: #9147ff;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+/* Darker purple on hover, the same shade Twitch uses for Subscribe. */
+.sp-qf-btn:hover:not(:disabled) {
+  background: #772ce8;
+}
+.sp-qf-btn:focus-visible {
+  outline: 2px solid #efeff1;
+  outline-offset: 2px;
+}
+.sp-qf-btn:disabled {
+  cursor: default;
+}
+.sp-qf-btn.is-busy {
+  opacity: 0.6;
+}
+.sp-qf-logo {
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+}
+/* Longer locales ("Adicionar ao StreamPulse") must not stretch the action row. */
+.sp-qf-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 190px;
+}
+/* Already added: drop to the neutral grey fill. The job is done, so it steps
+   back and stops competing with Twitch's own Follow / Subscribe buttons. */
+.sp-qf-btn.is-tracked {
+  background: rgba(255, 255, 255, 0.15);
+  color: #efeff1;
+}
+/* Hover on the tracked state hints at removal without shouting: slightly
+   lighter, no red, since this sits next to Twitch's own controls. */
+.sp-qf-btn.is-tracked:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.24);
+  color: #fff;
+}
+
+.sp-qf-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  max-width: 340px;
+  padding: 11px 16px;
+  border-radius: 10px;
+  background: #18181b;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #efeff1;
+  font: 13px/1.3 Inter, -apple-system, system-ui, "Segoe UI", sans-serif;
+  font-weight: 600;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+.sp-qf-toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.sp-qf-toast-logo {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+}

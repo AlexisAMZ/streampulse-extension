@@ -73,9 +73,14 @@
    */
   function createPreviewCard() {
     let root = null;
-    let mediaEl, imgEl, iframeEl, fallbackEl, fbAvatarEl, fbGameEl, titleEl, categoryEl;
+    let mediaEl, imgEl, iframeEl, videoEl, fallbackEl, fbAvatarEl, fbGameEl, titleEl, categoryEl;
     let refreshTimer = null;
     let visible = false;
+    // Live HLS playback state. `playbackToken` guards against races: an async
+    // playlist fetch that resolves after the user moved to another card must not
+    // attach its stream to the now-recycled node.
+    let hls = null;
+    let playbackToken = 0;
 
     function mount() {
       if (root) return;
@@ -92,6 +97,14 @@
       iframeEl.setAttribute("allow", "autoplay; encrypted-media; picture-in-picture");
       iframeEl.setAttribute("scrolling", "no");
       iframeEl.hidden = true;
+
+      videoEl = el("video", "sp-preview__video");
+      videoEl.muted = true;
+      videoEl.autoplay = true;
+      videoEl.playsInline = true;
+      videoEl.setAttribute("playsinline", "");
+      videoEl.setAttribute("preload", "none");
+      videoEl.hidden = true;
 
       fallbackEl = el("div", "sp-preview__fallback");
       fbAvatarEl = el("img", "sp-preview__fallback-avatar");
@@ -112,7 +125,7 @@
       const badge = el("span", "sp-preview__badge");
       badge.textContent = "LIVE";
 
-      mediaEl.append(imgEl, iframeEl, fallbackEl, overlay, badge);
+      mediaEl.append(videoEl, imgEl, iframeEl, fallbackEl, overlay, badge);
       root.append(mediaEl);
       document.body.appendChild(root);
     }
@@ -170,9 +183,115 @@
     }
 
     function teardownPlayback() {
+      // Invalidate any in-flight playlist fetch before tearing down.
+      playbackToken += 1;
+
       if (iframeEl) {
         iframeEl.src = "";
         iframeEl.hidden = true;
+      }
+      if (hls) {
+        try {
+          hls.destroy();
+        } catch (_e) {}
+        hls = null;
+      }
+      if (videoEl) {
+        videoEl.hidden = true;
+        try {
+          videoEl.pause();
+        } catch (_e) {}
+        // Detach the source so Chrome actually releases the network connection;
+        // leaving `src` set keeps the segment fetches alive in the background.
+        videoEl.removeAttribute("src");
+        try {
+          videoEl.load();
+        } catch (_e) {}
+      }
+    }
+
+    /**
+     * Live channel video mode: resolve the HLS variant for `login` and play it
+     * behind the still image, swapping the poster out once frames arrive.
+     * Falls back to the refreshing thumbnail on any failure (sub-only gate,
+     * geo-block, ad-roll, missing MSE) so the card is never left blank.
+     */
+    function applyVideoMode(descriptor, size, opts) {
+      // Keep the still image running underneath: it paints immediately and acts
+      // as the fallback if playback never starts.
+      applyImageMode(descriptor, size);
+
+      const stream = store.stream;
+      if (!stream || typeof stream.fetchPlaylist !== "function") return;
+
+      const token = ++playbackToken;
+      const wanted = Math.max(160, Math.min(1080, size.height * 2));
+
+      Promise.resolve()
+        // `fetchPlaylist` already resolves the master playlist AND picks a
+        // variant, so it hands back a ready-to-play .m3u8 URL. Re-parsing it
+        // here would yield null (an URL has no #EXT-X-STREAM-INF lines) and
+        // silently kill playback.
+        .then(() => stream.fetchPlaylist(descriptor.login, { maxHeight: wanted }))
+        .then((variantUrl) => {
+          if (token !== playbackToken) return;
+          if (!variantUrl || typeof variantUrl !== "string") return;
+          startPlayback(variantUrl, token, opts);
+        })
+        .catch(() => {
+          /* keep the image fallback */
+        });
+    }
+
+    function startPlayback(variantUrl, token, opts) {
+      if (token !== playbackToken || !videoEl) return;
+
+      videoEl.muted = !(opts && opts.audio === true);
+      videoEl.volume = videoEl.muted ? 0 : 0.5;
+
+      const onPlaying = () => {
+        if (token !== playbackToken) return;
+        // Frames are flowing: reveal the video and drop the still poster.
+        videoEl.hidden = false;
+        stopRefresh();
+        imgEl.hidden = true;
+        imgEl.removeAttribute("src");
+        clearFallback();
+      };
+      videoEl.addEventListener("playing", onPlaying, { once: true });
+
+      const Hls = NS.Hls;
+      const canNative =
+        typeof videoEl.canPlayType === "function" &&
+        videoEl.canPlayType("application/vnd.apple.mpegurl") !== "";
+
+      if (Hls && Hls.isSupported && Hls.isSupported()) {
+        try {
+          hls = new Hls({ enableWorker: false, lowLatencyMode: true, backBufferLength: 0 });
+          hls.on(Hls.Events.ERROR, (_evt, data) => {
+            // Only fatal errors are unrecoverable; hls.js retries the rest itself.
+            if (data && data.fatal) {
+              teardownPlayback();
+            }
+          });
+          hls.loadSource(variantUrl);
+          hls.attachMedia(videoEl);
+          const p = videoEl.play();
+          if (p && typeof p.catch === "function") p.catch(() => {});
+          return;
+        } catch (_e) {
+          hls = null;
+        }
+      }
+
+      if (canNative) {
+        try {
+          videoEl.src = variantUrl;
+          const p = videoEl.play();
+          if (p && typeof p.catch === "function") p.catch(() => {});
+        } catch (_e) {
+          /* keep the image fallback */
+        }
       }
     }
 
@@ -192,7 +311,10 @@
 
       root.style.width = size.width + "px";
       mediaEl.style.height = size.height + "px";
-      root.setAttribute("data-mode", "image");
+
+      // Video mode only applies to live channels; clips always use the embed.
+      const wantsVideo = opts.mode === "video" && descriptor.kind !== "clip";
+      root.setAttribute("data-mode", wantsVideo ? "video" : "image");
 
       titleEl.textContent = descriptor.title || "";
       categoryEl.textContent = descriptor.category || "";
@@ -205,6 +327,9 @@
       if (descriptor.kind === "clip" && descriptor.slug) {
         teardownPlayback();
         applyClipEmbed(descriptor, opts);
+      } else if (wantsVideo) {
+        teardownPlayback();
+        applyVideoMode(descriptor, size, opts);
       } else {
         applyImageMode(descriptor, size);
       }

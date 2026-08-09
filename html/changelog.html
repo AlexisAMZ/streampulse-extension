@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StreamPulse : Nouveautés</title>
+    <!-- Inherit the onboarding design system, then layer only the patch-notes
+         specifics on top. Duplicating the tokens and ambient layers would mean
+         two files to keep in sync every time the look changes. -->
+    <link rel="stylesheet" href="../css/onboarding.css" />
+    <link rel="stylesheet" href="../css/changelog.css" />
+  </head>
+  <body>
+    <!-- ═══ AMBIENT BACKGROUND LAYERS (identical to onboarding step 0) ═══ -->
+    <div class="bg-mesh"></div>
+    <div class="bg-pulse"></div>
+    <div class="bg-grid"></div>
+    <canvas id="particles"></canvas>
+    <div class="bg-scan"></div>
+    <div class="bg-vignette"></div>
+
+    <!-- Coordinate markers (DAW/console vibe) -->
+    <span class="bg-coords bg-coords-tl">N · 48°51′24″ · LIVE</span>
+    <span class="bg-coords bg-coords-tr">SYS / STREAMPULSE / <span id="cl-sys-version">V1.0</span></span>
+    <span class="bg-coords bg-coords-bl">CH 02 · CHANGELOG</span>
+    <span class="bg-coords bg-coords-br">REC · 0.0 dB · 60FPS</span>
+
+    <main class="container">
+      <!-- ═══ TOP HEADER ═══ -->
+      <header class="top-header">
+        <div class="brand">
+          <img class="brand-mark" src="../images/photos/logosp.png" alt="StreamPulse" />
+          <span class="brand-name">STREAMPULSE</span>
+          <span class="brand-sep"></span>
+          <span class="brand-sub">Notes de version</span>
+          <span class="brand-live">ON AIR</span>
+        </div>
+        <span class="step-counter">
+          <span class="step-counter-label">BUILD</span>
+          <span class="step-counter-current-wrap">
+            <span id="cl-version">—</span>
+          </span>
+        </span>
+      </header>
+
+      <div class="stage">
+        <section class="wizard-step active">
+          <div class="step-frame step-frame-single">
+            <div class="welcome-frame">
+              <p class="welcome-tagline" id="cl-date">MISE À JOUR INSTALLÉE</p>
+
+              <!-- Same oversized serif display as onboarding step 0. Words are
+                   injected by changelog.js so each one keeps its stagger. -->
+              <h1 class="welcome-display" id="cl-display"></h1>
+
+              <div class="cl-hero-rule"></div>
+
+              <p class="welcome-sub" id="cl-subtitle">
+                Voici ce qui a changé depuis votre dernière version.
+              </p>
+
+              <!-- Populated by changelog.js. No inline handlers: verify.mjs
+                   rejects them. -->
+              <div class="cl-changes" id="cl-changes" aria-label="Changements"></div>
+
+              <section class="cl-thanks" id="cl-thanks" hidden>
+                <h2 class="cl-section-title">
+                  <span class="cl-section-rule"></span>
+                  <span>Merci à eux</span>
+                  <span class="cl-section-rule"></span>
+                </h2>
+                <p class="cl-thanks-intro">
+                  Ces personnes ont signalé des bugs ou proposé des idées qui ont
+                  façonné cette version.
+                </p>
+                <ul class="cl-thanks-list" id="cl-thanks-list"></ul>
+              </section>
+
+              <section class="cl-history" id="cl-history" hidden>
+                <h2 class="cl-section-title">
+                  <span class="cl-section-rule"></span>
+                  <span>Versions précédentes</span>
+                  <span class="cl-section-rule"></span>
+                </h2>
+                <div class="cl-history-list" id="cl-history-list"></div>
+              </section>
+
+              <div class="step-nav" style="justify-content: center;">
+                <button class="btn btn-primary" id="cl-close" type="button">
+                  <span>Continuer</span>
+                  <span class="btn-icon">→</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="../js/particles.js"></script>
+    <script type="module" src="../js/changelog.js"></script>
+  </body>
+</html>

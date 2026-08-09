@@ -90,6 +90,77 @@ else {
   pass(`${locales.length} locales (${locales.join(", ")}) parse with matching key sets`);
 }
 
+// ── 2b. translations.js ─────────────────────────────────────────────────────
+// _locales/ only carries appName/appDesc (what the manifest needs). The real UI
+// strings live in i18n/translations.js, so completeness must be checked there:
+// a missing key silently falls back to English at runtime and ships unnoticed.
+{
+  const flatten = (node, prefix = "") =>
+    Object.entries(node ?? {}).flatMap(([key, value]) =>
+      value && typeof value === "object" && !Array.isArray(value)
+        ? flatten(value, `${prefix}${key}.`)
+        : [`${prefix}${key}`],
+    );
+
+  try {
+    const mod = await import(new URL("../i18n/translations.js", import.meta.url).href);
+    const { translations, AVAILABLE_LANGUAGES, DEFAULT_LANGUAGE } = mod;
+    const declared = AVAILABLE_LANGUAGES.map((l) => l.code);
+
+    const orphanBlocks = Object.keys(translations).filter((c) => !declared.includes(c));
+    if (orphanBlocks.length) {
+      warn(`translations.js defines blocks absent from AVAILABLE_LANGUAGES: ${orphanBlocks.join(", ")}`);
+    }
+
+    const referenceKeys = flatten(translations[DEFAULT_LANGUAGE]);
+    let incomplete = 0;
+
+    for (const code of declared) {
+      const block = translations[code];
+      if (!block) {
+        fail(`translations.js has no block for declared language "${code}"`);
+        incomplete += 1;
+        continue;
+      }
+      const keys = new Set(flatten(block));
+      const missing = referenceKeys.filter((k) => !keys.has(k));
+      if (missing.length) {
+        const preview = missing.slice(0, 5).join(", ");
+        const rest = missing.length > 5 ? ` (+${missing.length - 5} more)` : "";
+        fail(`translations.js "${code}" is missing ${missing.length} key(s): ${preview}${rest}`);
+        incomplete += 1;
+      }
+    }
+
+    if (!incomplete) {
+      pass(`translations.js: ${declared.length} languages complete (${referenceKeys.length} keys each)`);
+    }
+
+    // Every language declared here must also reach the content scripts, which
+    // read the generated js/inject/i18n-inline.js rather than the ES module.
+    const inlinePath = "js/inject/i18n-inline.js";
+    if (!exists(inlinePath)) {
+      fail(`${inlinePath} is missing — run: node scripts/build-inline-i18n.mjs`);
+    } else {
+      const sandbox = {};
+      new Function("window", fs.readFileSync(abs(inlinePath), "utf8"))(sandbox);
+      const api = sandbox.__SP_I18N__;
+      if (!api) {
+        fail(`${inlinePath} does not expose window.__SP_I18N__`);
+      } else {
+        const absent = declared.filter((c) => !api.languages.includes(c));
+        if (absent.length) {
+          fail(`${inlinePath} is stale, missing: ${absent.join(", ")} — run: node scripts/build-inline-i18n.mjs`);
+        } else {
+          pass(`${inlinePath} exposes all ${api.languages.length} languages to content scripts`);
+        }
+      }
+    }
+  } catch (e) {
+    fail(`i18n/translations.js could not be analysed: ${e.message}`);
+  }
+}
+
 // ── 3. JS syntax ────────────────────────────────────────────────────────────
 // Each file must parse either as an ES module or as a classic script.
 const walk = (dir, out = []) => {
@@ -171,6 +242,32 @@ const cfg = fs.readFileSync(abs("config.js"), "utf8");
 const token = cfg.match(/accessToken:\s*["']([^"']*)["']/)?.[1];
 if (token) fail(`config.js ships a non-empty accessToken (${token.length} chars) and would leak it in the zip`);
 else pass("config.js ships no access token (credentials stay remote)");
+
+// The patch notes page is shown automatically after every update, so a release
+// whose version has no entry in changelog-data.js would greet users with an
+// empty page. Fail the build instead of shipping that.
+const CHANGELOG_DATA = "js/changelog-data.js";
+if (!exists(CHANGELOG_DATA)) {
+  fail(`${CHANGELOG_DATA} is missing (patch notes page depends on it)`);
+} else {
+  const src = fs.readFileSync(abs(CHANGELOG_DATA), "utf8");
+  const versions = [...src.matchAll(/version:\s*["']([^"']+)["']/g)].map((m) => m[1]);
+  if (!versions.length) {
+    fail(`${CHANGELOG_DATA} declares no release entry`);
+  } else if (!versions.includes(manifest.version)) {
+    fail(
+      `${CHANGELOG_DATA} has no entry for manifest version ${manifest.version} ` +
+        `(found: ${versions.slice(0, 5).join(", ")}) — add the patch notes before shipping`
+    );
+  } else if (versions[0] !== manifest.version) {
+    warn(
+      `${CHANGELOG_DATA}: newest entry is ${versions[0]} but the manifest says ` +
+        `${manifest.version}; the release being shipped should be first in the list`
+    );
+  } else {
+    pass(`patch notes present for version ${manifest.version}`);
+  }
+}
 
 function report() {
   console.log(ok.map((m) => `  PASS  ${m}`).join("\n"));

@@ -1140,7 +1140,7 @@ body {
 .remove-streamer {
   width: 28px;
   height: 28px;
-  border-radius: 4px;
+  border-radius: 7px;
   background: transparent;
   border: 1px solid var(--sp-line-2);
   color: var(--sp-ink-3);
@@ -1153,10 +1153,16 @@ body {
   font-size: 12px;
 }
 .remove-streamer::before { content: "✕"; }
+/* Solid red on hover, matching .remove-button in the popup so the destructive
+   action looks the same everywhere in the extension. */
 .remove-streamer:hover {
-  background: rgba(255,91,91,0.1);
+  background: var(--sp-error);
   border-color: var(--sp-error);
-  color: var(--sp-error);
+  color: #fff;
+}
+.remove-streamer:focus-visible {
+  outline: 2px solid var(--sp-error);
+  outline-offset: 2px;
 }
 
 /* ════════════════════════════════════════════════

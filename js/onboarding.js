@@ -374,7 +374,9 @@ function updateLanguageButtonsState() {
   if (!languageOptions) return;
   const active = getCurrentLanguage();
   languageOptions.querySelectorAll(".language-button").forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.lang === active);
+    const isActive = button.dataset.lang === active;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", isActive ? "true" : "false");
   });
 }
 

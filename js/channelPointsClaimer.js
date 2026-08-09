@@ -12,6 +12,56 @@
   let isMomentsActive = true;
   let lastClaimTime = 0;
 
+  // Twitch routes that are not channel pages; the first path segment on these is
+  // a feature name, not a streamer login.
+  const NON_CHANNEL_ROUTES = new Set([
+    "directory",
+    "settings",
+    "drops",
+    "downloads",
+    "subscriptions",
+    "wallet",
+    "inventory",
+    "friends",
+    "u",
+    "videos",
+    "search",
+    "prime",
+    "turbo",
+    "store",
+    "jobs",
+    "p",
+  ]);
+
+  /**
+   * Best-effort current channel login, used to label event logs.
+   * Prefers the DOM (accurate on embeds and after SPA navigation) and falls back
+   * to the URL. Returns "" when we are not on a channel page.
+   */
+  function getCurrentChannel() {
+    try {
+      const link = document.querySelector(
+        'a[data-a-target="stream-title-link"], [data-a-target="channel-header-name"] a, a[data-a-target="user-channel-header-item"]'
+      );
+      const fromLink = link?.getAttribute("href")?.replace(/^\//, "").split("/")[0];
+      if (fromLink) return fromLink.toLowerCase();
+
+      const nameEl = document.querySelector(
+        'h1[data-a-target="channel-header-name"], [data-a-target="channel-header-name"]'
+      );
+      const fromName = nameEl?.textContent?.trim();
+      if (fromName) return fromName.toLowerCase();
+
+      const segment = location.pathname.replace(/^\//, "").split("/")[0] || "";
+      const candidate = segment.toLowerCase();
+      if (!candidate || NON_CHANNEL_ROUTES.has(candidate)) return "";
+      if (!/^[a-z0-9_]{3,25}$/.test(candidate)) return "";
+      return candidate;
+    } catch (_) {
+      return "";
+    }
+  }
+
   function tryClaimChannelPoints() {
     let btn = document.querySelector(
       'button[aria-label="Claim Bonus"], button[aria-label="Récupérer le bonus"], button[aria-label*="Bonus"]'
@@ -49,6 +99,7 @@
           type: "incrementStat",
           stat: "channelPointsClaimed",
           value: points,
+          channel: getCurrentChannel(),
         }).catch(() => {});
       } catch (_) {}
     }, 300);
@@ -57,12 +108,15 @@
   }
 
   function notifyDropClaimed() {
+    // Resolve the channel now: the DOM can change during the 300ms debounce.
+    const channel = getCurrentChannel();
     setTimeout(() => {
       try {
         chrome.runtime.sendMessage({
           type: "incrementStat",
           stat: "dropsClaimed",
           value: 1,
+          channel,
         }).catch(() => {});
       } catch (_) {}
     }, 300);
@@ -143,12 +197,14 @@
       if (btn && btn instanceof HTMLElement && btn.offsetParent !== null) {
         lastClaimTime = Date.now();
         btn.click();
+        const channel = getCurrentChannel();
         setTimeout(() => {
           try {
             chrome.runtime.sendMessage({
               type: "incrementStat",
               stat: "momentsClaimed",
               value: 1,
+              channel,
             }).catch(() => {});
           } catch (_) {}
         }, 300);

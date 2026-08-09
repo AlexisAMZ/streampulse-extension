@@ -3,6 +3,8 @@ import {
   translations,
   DEFAULT_LANGUAGE,
   formatTemplate,
+  matchLanguage,
+  resolveLocale,
 } from "../i18n/translations.js";
 import {
   DEFAULT_PLATFORM,
@@ -31,7 +33,7 @@ const STORAGE_KEYS = {
 // ─── Remote config (credentials hosted on Vercel, never in the zip) ──────────
 const REMOTE_CONFIG_URL = "https://alexisamz.fr/api/streampulse-config";
 const REMOTE_CONFIG_CACHE_KEY = "streampulse:remoteConfig";
-const REMOTE_CONFIG_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+const REMOTE_CONFIG_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
 
 let CONFIG = { ...LOCAL_CONFIG };
 let _configReady = null;
@@ -102,7 +104,6 @@ const NOTIFICATION_NAMESPACE = "streampulse";
 const BADGE_COLOR_LIVE = "#f7f4e3";
 const BADGE_COLOR_IDLE = "#6C5CE7";
 
-const SUPPORTED_LANGUAGES = new Set(Object.keys(translations));
 const PREFERENCES_KEY = "betaGeneralPreferences";
 const DEFAULT_PREFERENCES = {
   liveNotifications: true,
@@ -304,13 +305,7 @@ function normalizeStreamer(raw) {
 }
 
 function normalizeLanguage(value) {
-  if (typeof value === "string") {
-    const candidate = value.toLowerCase();
-    if (SUPPORTED_LANGUAGES.has(candidate)) {
-      return candidate;
-    }
-  }
-  return DEFAULT_LANGUAGE;
+  return matchLanguage(value) || DEFAULT_LANGUAGE;
 }
 
 function resolveExternalUrl(rawValue, defaultOrigin = "") {
@@ -429,8 +424,7 @@ function translateWithPrefs(preferences, key, params = {}) {
 
 function formatNumberForLanguage(lang, value) {
   try {
-    const locale = lang === "fr" ? "fr-FR" : "en-US";
-    return new Intl.NumberFormat(locale).format(value);
+    return new Intl.NumberFormat(resolveLocale(lang)).format(value);
   } catch {
     return String(value);
   }
@@ -1133,6 +1127,44 @@ class NotificationCenter {
     });
   }
 
+  /**
+   * Create a notification, retrying with the bundled icon if the remote one
+   * cannot be fetched.
+   *
+   * Chrome rejects the WHOLE notification with "Unable to download all
+   * specified images" when `iconUrl` points at a remote avatar it can't load
+   * (CDN hiccup, offline, or a content blocker intercepting the request). The
+   * notification is the actual feature here and the avatar is decorative, so a
+   * failed image must never cost the user the alert.
+   */
+  static async createWithIconFallback(id, notificationOptions) {
+    const create = (options) =>
+      new Promise((resolve, reject) => {
+        try {
+          chrome.notifications.create(id, options, () => {
+            const err = chrome.runtime.lastError;
+            if (err) reject(new Error(err.message));
+            else resolve(true);
+          });
+        } catch (e) {
+          reject(e);
+        }
+      });
+
+    try {
+      return await create(notificationOptions);
+    } catch (_e) {
+      const fallback = this.getDefaultIcon();
+      if (notificationOptions.iconUrl === fallback) return false;
+      try {
+        return await create({ ...notificationOptions, iconUrl: fallback });
+      } catch (_e2) {
+        // Never let a cosmetic image failure reject into an unhandled promise.
+        return false;
+      }
+    }
+  }
+
   static async show(options = {}) {
     await this.init();
     const id = `${NOTIFICATION_NAMESPACE}-${Date.now()}-${Math.random()
@@ -1148,7 +1180,7 @@ class NotificationCenter {
       streamerId: options.streamerId || null,
       platform: options.platform || null,
     });
-    await chrome.notifications.create(id, {
+    await this.createWithIconFallback(id, {
       type: "basic",
       iconUrl: this.resolveIcon(options.iconUrl),
       title: options.title || translate(DEFAULT_LANGUAGE, "common.appName"),
@@ -1782,6 +1814,15 @@ async function openOnboarding(mode = "") {
   }
 }
 
+async function openPatchNotes() {
+  const url = chrome.runtime.getURL("html/changelog.html");
+  try {
+    await chrome.tabs.create({ url });
+  } catch (error) {
+    console.warn("Failed to open patch notes:", error.message);
+  }
+}
+
 chrome.runtime.onInstalled.addListener(async (details) => {
   initDone = true;
   await fetchRemoteConfig(); // load credentials before first poll
@@ -1793,25 +1834,39 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 
   await pollStreamers({ forceNotification: false });
   const installReason = details?.reason || "install";
-  const CURRENT_FEATURE_VERSION = 2;
+  const currentVersion = chrome.runtime.getManifest().version;
 
-  const { onboardingShown, seenFeatureVersion } = await chrome.storage.local.get([
+  const { onboardingShown, seenPatchNotesVersion } = await chrome.storage.local.get([
     "onboardingShown",
-    "seenFeatureVersion",
+    "seenPatchNotesVersion",
   ]);
 
   if (
     installReason === chrome.runtime.OnInstalledReason?.INSTALL ||
     installReason === "install"
   ) {
+    // Fresh install: onboarding covers the feature tour, so patch notes would be
+    // redundant. Mark this version seen to avoid showing them on the next update.
     if (!onboardingShown && !streamers.length) {
-      await chrome.storage.local.set({ onboardingShown: true, seenFeatureVersion: CURRENT_FEATURE_VERSION });
+      await chrome.storage.local.set({
+        onboardingShown: true,
+        seenPatchNotesVersion: currentVersion,
+      });
       await openOnboarding();
+    } else {
+      await chrome.storage.local.set({ seenPatchNotesVersion: currentVersion });
     }
-  } else if ((seenFeatureVersion || 0) < CURRENT_FEATURE_VERSION) {
-    // Show new feature onboarding for existing users updating
-    await chrome.storage.local.set({ seenFeatureVersion: CURRENT_FEATURE_VERSION });
-    await openOnboarding("update");
+  } else if (
+    installReason === chrome.runtime.OnInstalledReason?.UPDATE ||
+    installReason === "update"
+  ) {
+    // Compare against the manifest version rather than a hand-bumped counter, so
+    // shipping a release is enough to trigger the notes. The guard also means a
+    // service-worker restart on the same version won't reopen the tab.
+    if (seenPatchNotesVersion !== currentVersion) {
+      await chrome.storage.local.set({ seenPatchNotesVersion: currentVersion });
+      await openPatchNotes();
+    }
   }
 });
 
@@ -2379,7 +2434,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     case "incrementStat":
       (async () => {
-        const { stat, value, channel, text } = request;
+        const { stat, value, channel, text, raidTarget } = request;
         if (stat) {
           await StatsStore.increment(stat, Number(value) || 1);
           let type = "info";
@@ -2388,10 +2443,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           else if (stat === "raidsCancelled") type = "raid";
           else if (stat === "channelPointsClaimed") type = "points";
 
+          let logText = text || `${stat} (+${value || 1})`;
+          if (!text && type === "raid" && raidTarget) {
+            logText = `Raid → ${raidTarget} (annulé)`;
+          }
+
           await EventLogStore.addLog({
             type,
             channel: channel || "",
-            text: text || `${stat} (+${value || 1})`,
+            text: logText,
             value: value || 1,
           });
 
@@ -2464,6 +2524,56 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if ("autoRefreshPlayerErrors" in incomingUpdates) {
           updates.autoRefreshPlayerErrors =
             incomingUpdates.autoRefreshPlayerErrors !== false;
+        }
+        // Default-true toggles: any value other than an explicit `false` keeps them on.
+        if ("autoClaimDrops" in incomingUpdates) {
+          updates.autoClaimDrops = incomingUpdates.autoClaimDrops !== false;
+        }
+        if ("autoClaimMoments" in incomingUpdates) {
+          updates.autoClaimMoments = incomingUpdates.autoClaimMoments !== false;
+        }
+        if ("autoCancelRaids" in incomingUpdates) {
+          updates.autoCancelRaids = incomingUpdates.autoCancelRaids !== false;
+        }
+        if ("preventTabDiscard" in incomingUpdates) {
+          updates.preventTabDiscard =
+            incomingUpdates.preventTabDiscard !== false;
+        }
+        if ("enableTabLiveIcon" in incomingUpdates) {
+          updates.enableTabLiveIcon =
+            incomingUpdates.enableTabLiveIcon !== false;
+        }
+        if ("enableStreamerFavicon" in incomingUpdates) {
+          updates.enableStreamerFavicon =
+            incomingUpdates.enableStreamerFavicon !== false;
+        }
+        if ("enablePredictionsPopup" in incomingUpdates) {
+          updates.enablePredictionsPopup =
+            incomingUpdates.enablePredictionsPopup !== false;
+        }
+        if ("dropAlerts" in incomingUpdates) {
+          updates.dropAlerts = incomingUpdates.dropAlerts !== false;
+        }
+        if ("predictionAlerts" in incomingUpdates) {
+          updates.predictionAlerts = incomingUpdates.predictionAlerts !== false;
+        }
+        if ("raidAlerts" in incomingUpdates) {
+          updates.raidAlerts = incomingUpdates.raidAlerts !== false;
+        }
+        // Default-false toggle: requires an explicit `true` to enable.
+        if ("autoOpenInventory" in incomingUpdates) {
+          updates.autoOpenInventory =
+            incomingUpdates.autoOpenInventory === true;
+        }
+        if ("autoOpenInventoryIntervalHours" in incomingUpdates) {
+          const hours = Number(incomingUpdates.autoOpenInventoryIntervalHours);
+          updates.autoOpenInventoryIntervalHours = Number.isFinite(hours)
+            ? Math.min(24, Math.max(1, Math.round(hours)))
+            : DEFAULT_PREFERENCES.autoOpenInventoryIntervalHours;
+        }
+        if ("hideTwitchExtensions" in incomingUpdates) {
+          updates.hideTwitchExtensions =
+            incomingUpdates.hideTwitchExtensions === true;
         }
         if ("enableFastForwardButton" in incomingUpdates) {
           updates.enableFastForwardButton =

@@ -9,6 +9,8 @@ const ES_MODULES = [
   "config.js",
   "i18n/translations.js",
   "js/background.js",
+  "js/changelog.js",
+  "js/changelog-data.js",
   "js/i18n.js",
   "js/onboarding.js",
   "js/platforms.js",

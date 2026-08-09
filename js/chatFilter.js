@@ -3,16 +3,27 @@
   if (window.top !== window) return;
 
   const PREFERENCES_KEY = "betaGeneralPreferences";
-  const FALLBACK_REPLACEMENT_EN = "Message removed by StreamPulse";
-  const FALLBACK_REPLACEMENT_FR = "Message supprimé par StreamPulse";
-  const REPLACEMENT_MESSAGE =
-    (typeof chrome !== "undefined" &&
-      chrome?.i18n?.getMessage?.("chatFilterReplacement")) ||
-    (typeof navigator !== "undefined" &&
-    typeof navigator.language === "string" &&
-    navigator.language.toLowerCase().startsWith("fr")
-      ? FALLBACK_REPLACEMENT_FR
-      : FALLBACK_REPLACEMENT_EN);
+
+  /**
+   * Langue courante de l'extension.
+   *
+   * Lit la préférence utilisateur plutôt que navigator.language : ce dernier
+   * donne la langue du navigateur, pas celle choisie dans StreamPulse. La valeur
+   * est rafraîchie par loadSettings(), déjà rappelé à chaque changement de
+   * préférences — donc aucun aller-retour storage supplémentaire.
+   */
+  let currentLang = "en";
+
+  const i18nApi = () =>
+    typeof window !== "undefined" ? window.__SP_I18N__ : null;
+
+  /** Libellé affiché à la place d'un message filtré. */
+  function replacementText() {
+    const api = i18nApi();
+    return api
+      ? api.get(currentLang, "chatFilter.replacement")
+      : "Message removed by StreamPulse";
+  }
 
   let blockedKeywords = [];
   let blockedUsers = [];
@@ -61,6 +72,8 @@
   function loadSettings() {
     chrome.storage.local.get([PREFERENCES_KEY], (result) => {
       const prefs = result[PREFERENCES_KEY] || {};
+      const api = i18nApi();
+      currentLang = api ? api.resolve(prefs.language) : "en";
       blockedKeywords = parseList(prefs.chatKeywords || "");
       blockedUsers = parseList(prefs.chatBlockedUsers || "");
 
@@ -78,7 +91,10 @@
   function parseList(input) {
     if (Array.isArray(input)) return input.map(normalizeName).filter(Boolean);
     if (typeof input === "string") {
-      return input.split(/[\n,;]+/).map(normalizeName).filter(Boolean);
+      return input
+        .split(/[\n,;]+/)
+        .map(normalizeName)
+        .filter(Boolean);
     }
     return [];
   }
@@ -140,14 +156,20 @@
       if (found) return { contentNode: found, text: found.textContent };
     }
     const fragments = messageNode.querySelectorAll(
-      "span.text-fragment, span[data-a-target='chat-message-text']"
+      "span.text-fragment, span[data-a-target='chat-message-text']",
     );
     if (fragments.length) {
-      const text = Array.from(fragments).map((f) => f.textContent).join(" ").trim();
+      const text = Array.from(fragments)
+        .map((f) => f.textContent)
+        .join(" ")
+        .trim();
       const parent = fragments[0].closest(
-        "[data-a-target='chat-line-message-body'], .chat-line__message-body, .chat-entry-content"
+        "[data-a-target='chat-line-message-body'], .chat-line__message-body, .chat-entry-content",
       );
-      return { contentNode: parent || fragments[0].parentElement || fragments[0], text };
+      return {
+        contentNode: parent || fragments[0].parentElement || fragments[0],
+        text,
+      };
     }
     return { contentNode: null, text: "" };
   }
@@ -165,7 +187,7 @@
 
   function applyReplacement(contentNode, messageNode) {
     const replacement = document.createElement("span");
-    replacement.textContent = REPLACEMENT_MESSAGE;
+    replacement.textContent = replacementText();
     replacement.style.cssText =
       "color:rgba(255,255,255,0.6);font-style:italic;font-size:0.9em;display:inline;text-shadow:none";
     contentNode.textContent = "";

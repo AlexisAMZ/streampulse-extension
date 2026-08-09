@@ -1,4 +1,4 @@
-import { t, getCurrentLanguage } from "./i18n.js";
+import { t, getCurrentLanguage, resolveLocale } from "./i18n.js";
 import {
   DEFAULT_PLATFORM,
   getPlatformDefinition,
@@ -183,9 +183,7 @@ function scheduleThumbLoad(fn) {
 
 export function formatNumber(value) {
   try {
-    const lang = getCurrentLanguage();
-    const locale = lang === "fr" ? "fr-FR" : "en-US";
-    return new Intl.NumberFormat(locale).format(value);
+    return new Intl.NumberFormat(resolveLocale(getCurrentLanguage())).format(value);
   } catch {
     return String(value);
   }
@@ -209,11 +207,9 @@ function formatUpdatedAt(timestamp) {
     return { label, time: t("popup.labels.lastUpdateTimePlaceholder") };
   }
   const date = new Date(timestamp);
-  const lang = getCurrentLanguage();
-  const locale = lang === "fr" ? "fr-FR" : "en-US";
   return {
     label,
-    time: date.toLocaleTimeString(locale, {
+    time: date.toLocaleTimeString(resolveLocale(getCurrentLanguage()), {
       hour: "2-digit",
       minute: "2-digit",
     }),
@@ -366,36 +362,63 @@ function bindCardActions(notificationButton, gameNotificationButton, openButton,
 
       const overlay = document.createElement("div");
       overlay.className = "confirm-overlay";
+      // Modal-ish semantics: this traps the card until answered.
+      overlay.setAttribute("role", "alertdialog");
+      overlay.setAttribute("aria-label", t("popup.card.confirmRemove") || "Supprimer ?");
 
       const text = document.createElement("span");
       text.className = "confirm-text";
-      text.textContent = t("popup.card.confirmRemove") || "Supprimer ?";
+      // Name the streamer being removed. "Supprimer ?" alone is ambiguous once
+      // several cards are on screen.
+      text.textContent = displayLabel
+        ? `${t("popup.card.confirmRemove") || "Supprimer"} ${displayLabel}`
+        : t("popup.card.confirmRemove") || "Supprimer ?";
+
+      const actions = document.createElement("div");
+      actions.className = "confirm-actions";
 
       const btnYes = document.createElement("button");
       btnYes.className = "confirm-yes";
+      btnYes.type = "button";
       btnYes.textContent = t("popup.card.confirmYes") || "Oui";
 
       const btnNo = document.createElement("button");
       btnNo.className = "confirm-no";
+      btnNo.type = "button";
       btnNo.textContent = t("popup.card.confirmNo") || "Non";
 
-      overlay.append(text, btnYes, btnNo);
+      // Cancel first in the DOM: it is the safe default, so it gets initial
+      // focus and Tab reaches it before the destructive action.
+      actions.append(btnNo, btnYes);
+      overlay.append(text, actions);
       card.appendChild(overlay);
+      btnNo.focus();
 
-      // Auto-cancel after 3s
-      const timer = setTimeout(() => overlay.remove(), 3000);
+      const close = () => {
+        overlay.classList.remove("show");
+        setTimeout(() => overlay.remove(), 140);
+      };
+
+      requestAnimationFrame(() => overlay.classList.add("show"));
+
+      // No auto-dismiss timer: it used to yank the dialog away after 3s while
+      // the user was still reading. Escape and "Non" are the ways out.
+      overlay.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          e.stopPropagation();
+          close();
+        }
+      });
 
       btnYes.addEventListener("click", (e) => {
         e.stopPropagation();
-        clearTimeout(timer);
-        overlay.remove();
+        close();
         callbacks.onRemove(streamer.id, displayLabel);
       });
 
       btnNo.addEventListener("click", (e) => {
         e.stopPropagation();
-        clearTimeout(timer);
-        overlay.remove();
+        close();
       });
     });
   }

@@ -1,0 +1,378 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   StreamPulse — Patch notes (html/changelog.html)
+
+   Loaded AFTER onboarding.css, which supplies the design tokens, ambient
+   background layers, .container / .stage / .welcome-* typography, .glass,
+   .frame-brackets and the .btn buttons. Only patch-notes specifics live here.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Onboarding step 0 is a short hero. This page scrolls, so the stage must not
+   be locked to the viewport height. */
+.stage {
+  align-items: flex-start;
+  padding-bottom: 88px;
+}
+.welcome-frame {
+  width: 100%;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+/* Smaller than onboarding's hero: a release title is longer than
+   "Ne rate plus jamais un live." and would otherwise fill the screen. */
+.welcome-display {
+  font-size: clamp(38px, 4.8vw, 68px);
+  margin-bottom: 20px;
+}
+
+/* Violet rule under the hero, growing on load — same underlineGrow the
+   onboarding uses for its section titles. */
+.cl-hero-rule {
+  width: 78px;
+  height: 2px;
+  margin: 0 auto 26px;
+  background: linear-gradient(90deg, var(--sp-violet), var(--sp-violet-2));
+  border-radius: 2px;
+  box-shadow: 0 0 18px var(--sp-violet-glow);
+  transform-origin: center;
+  animation: underlineGrow 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both;
+}
+
+.step-counter-current-wrap #cl-version {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Changes ─────────────────────────────────────────────────────────────── */
+.cl-changes {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0 auto 52px;
+  text-align: left;
+}
+
+/* .glass + .frame-brackets come from onboarding.css; this adds the angled
+   violet wash and the staggered entrance. */
+.cl-group {
+  display: grid;
+  grid-template-columns: 104px 1fr;
+  gap: 20px;
+  align-items: start;
+  padding: 20px 22px;
+  overflow: hidden;
+  animation: streamerIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition:
+    border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* The angled wash rides on its own element, not ::before — .frame-brackets
+   already claims both pseudo-elements for the violet corner marks. */
+.cl-group-wash {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--sp-violet-soft) 0%, transparent 55%);
+  opacity: 0.35;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 0;
+}
+.cl-group:hover {
+  border-color: var(--sp-line-strong);
+  transform: translateY(-2px);
+}
+.cl-group:hover .cl-group-wash {
+  opacity: 0.75;
+}
+.cl-group > * {
+  position: relative;
+  z-index: 1;
+}
+/* Absolutely positioned, so keep it out of the two-column grid flow. */
+.cl-group > .cl-group-wash {
+  position: absolute;
+  z-index: 0;
+}
+
+.cl-tag {
+  font-family: var(--sp-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 7px 9px;
+  border-radius: 4px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--sp-line-2);
+  color: var(--sp-ink-2);
+  margin-top: 2px;
+}
+.cl-tag-new {
+  background: var(--sp-violet-soft);
+  border-color: var(--sp-violet);
+  color: var(--sp-violet-2);
+  box-shadow: 0 0 16px var(--sp-violet-faint);
+}
+.cl-tag-fix {
+  background: rgba(83, 252, 24, 0.1);
+  border-color: rgba(83, 252, 24, 0.32);
+  color: var(--sp-success);
+}
+.cl-tag-improved {
+  background: rgba(255, 176, 32, 0.1);
+  border-color: rgba(255, 176, 32, 0.32);
+  color: #ffb020;
+}
+
+.cl-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cl-item {
+  position: relative;
+  padding-left: 18px;
+  font-family: var(--sp-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--sp-ink-2);
+}
+/* Small violet diamond rather than a bullet — echoes .bg-coords::before. */
+.cl-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 5px;
+  height: 5px;
+  background: var(--sp-violet);
+  transform: rotate(45deg);
+  box-shadow: 0 0 8px var(--sp-violet-glow);
+}
+.cl-empty {
+  margin: 0;
+  font-size: 14px;
+  color: var(--sp-ink-3);
+}
+
+/* ── Section headings ────────────────────────────────────────────────────── */
+.cl-section-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0 0 10px;
+  font-family: var(--sp-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sp-ink-3);
+}
+.cl-section-rule {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--sp-line-2), transparent);
+}
+
+/* ── Thanks ──────────────────────────────────────────────────────────────── */
+/* The emotional centre of the page, so it gets the strongest treatment:
+   violet border, inner glow, serif intro. Mirrors .callout-preview. */
+.cl-thanks {
+  margin-bottom: 52px;
+  padding: 28px 26px 26px;
+  border-radius: 8px;
+  border: 1px solid var(--sp-violet);
+  background:
+    linear-gradient(180deg, rgba(145, 70, 255, 0.1) 0%, rgba(145, 70, 255, 0.03) 100%);
+  box-shadow:
+    0 0 30px var(--sp-violet-faint),
+    inset 0 0 40px rgba(145, 70, 255, 0.05);
+  position: relative;
+}
+.cl-thanks .cl-section-title {
+  color: var(--sp-violet-2);
+  justify-content: center;
+}
+.cl-thanks .cl-section-rule {
+  background: linear-gradient(90deg, transparent, rgba(145, 70, 255, 0.4), transparent);
+}
+.cl-thanks-intro {
+  margin: 0 0 22px;
+  font-family: var(--sp-serif);
+  font-size: 17px;
+  line-height: 1.45;
+  color: var(--sp-ink);
+  text-align: center;
+}
+.cl-thanks-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  text-align: left;
+}
+/* A single contributor shouldn't stretch edge to edge. */
+.cl-thanks-list:has(> :only-child) {
+  grid-template-columns: minmax(240px, 340px);
+  justify-content: center;
+}
+.cl-thanks-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--sp-line-2);
+  overflow: hidden;
+  animation: streamerIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition:
+    border-color 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cl-thanks-item:hover {
+  border-color: var(--sp-violet);
+  transform: translateY(-2px);
+}
+.cl-thanks-avatar {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--sp-violet) 0%, var(--sp-violet-deep) 100%);
+  color: #fff;
+  font-family: var(--sp-mono);
+  font-size: 15px;
+  font-weight: 700;
+  animation: trackGlow 3s ease-in-out infinite;
+}
+.cl-thanks-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.cl-thanks-handle {
+  font-family: var(--sp-sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sp-ink);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+a.cl-thanks-handle:hover {
+  color: var(--sp-violet-2);
+  text-decoration: underline;
+}
+.cl-thanks-for {
+  font-family: var(--sp-sans);
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--sp-ink-3);
+}
+
+/* ── History ─────────────────────────────────────────────────────────────── */
+.cl-history {
+  margin-bottom: 44px;
+}
+.cl-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+.cl-history-entry {
+  border: 1px solid var(--sp-line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+  transition: border-color 0.25s;
+}
+.cl-history-entry[open] {
+  border-color: var(--sp-line-2);
+}
+.cl-history-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  cursor: pointer;
+  font-family: var(--sp-sans);
+  font-size: 13px;
+  list-style: none;
+  transition: background 0.25s;
+}
+.cl-history-summary::-webkit-details-marker {
+  display: none;
+}
+.cl-history-summary:hover {
+  background: var(--sp-violet-faint);
+}
+/* Chevron that rotates on open, drawn in CSS to avoid shipping an icon. */
+.cl-history-summary::after {
+  content: "";
+  margin-left: auto;
+  width: 6px;
+  height: 6px;
+  border-right: 1px solid var(--sp-ink-3);
+  border-bottom: 1px solid var(--sp-ink-3);
+  transform: rotate(45deg);
+  transition: transform 0.25s;
+  flex-shrink: 0;
+}
+.cl-history-entry[open] .cl-history-summary::after {
+  transform: rotate(-135deg);
+}
+.cl-history-version {
+  font-family: var(--sp-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--sp-violet-2);
+}
+.cl-history-title {
+  color: var(--sp-ink-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cl-history-entry .cl-list {
+  padding: 2px 16px 16px;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .cl-group {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .cl-tag {
+    justify-self: start;
+  }
+  .cl-thanks {
+    padding: 22px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cl-hero-rule,
+  .cl-group,
+  .cl-thanks-item,
+  .cl-thanks-avatar {
+    animation: none;
+  }
+  .cl-group,
+  .cl-thanks-item {
+    transition: none;
+  }
+}

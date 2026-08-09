@@ -106,25 +106,50 @@
     sharedStylesInserted = true;
   }
 
-  function getLocaleKey() {
-    const lang = (
-      document.documentElement.lang ||
-      navigator.language ||
-      "en"
-    ).toLowerCase();
-    return lang.startsWith("fr") ? "fr" : "en";
+  /**
+   * Langue courante de l'extension.
+   *
+   * Lit la préférence utilisateur (stockée par le popup) plutôt que
+   * document.documentElement.lang / navigator.language : ces derniers donnent la
+   * langue de Twitch ou du navigateur, pas celle choisie dans StreamPulse. Le
+   * cache évite un aller-retour storage à chaque rendu ; l'écouteur plus bas le
+   * met à jour quand l'utilisateur change de langue.
+   */
+  var currentLang = "en";
+
+  function i18nApi() {
+    return typeof window !== "undefined" ? window.__SP_I18N__ : null;
   }
 
+  function getLocaleKey() {
+    return currentLang;
+  }
+
+  /** Lit une clé inject.player.*, avec repli sur l'anglais. */
+  function tr(key, params) {
+    var api = i18nApi();
+    if (!api) return key;
+    return api.get(currentLang, "player." + key, params);
+  }
+
+  try {
+    chrome.storage.local.get("betaGeneralPreferences", function (res) {
+      var api = i18nApi();
+      var stored = res && res.betaGeneralPreferences && res.betaGeneralPreferences.language;
+      currentLang = api ? api.resolve(stored) : "en";
+    });
+    chrome.storage.onChanged.addListener(function (changes, area) {
+      if (area !== "local" || !changes.betaGeneralPreferences) return;
+      var api = i18nApi();
+      var next = (changes.betaGeneralPreferences.newValue || {}).language;
+      currentLang = api ? api.resolve(next) : "en";
+    });
+  } catch (_e) {}
+
   function getFastForwardTexts() {
-    if (getLocaleKey() === "fr") {
-      return {
-        tooltip: "Rattraper le direct",
-        holdHint: "Maintenir pour avance x2"
-      };
-    }
     return {
-      tooltip: "Skip to live",
-      holdHint: "Hold to fast-forward x2"
+      tooltip: tr("skipToLive"),
+      holdHint: tr("holdToFastForward"),
     };
   }
 
@@ -533,17 +558,88 @@
   }
 
   let raidCheckIntervalId = null;
-  function checkAndCancelRaid() {
-    const raidCancelBtn = document.querySelector(
-      'button[data-a-target="cancel-raid-button"], .raid-banner button, [data-test-selector="raid-banner-cancel-button"]'
+
+  // Twitch routes whose first path segment is a feature name, not a login.
+  const NON_CHANNEL_ROUTES = new Set([
+    "directory", "settings", "drops", "downloads", "subscriptions", "wallet",
+    "inventory", "friends", "u", "videos", "search", "prime", "turbo", "store",
+    "jobs", "p",
+  ]);
+
+  function getCurrentChannel() {
+    try {
+      const segment = location.pathname.replace(/^\//, "").split("/")[0] || "";
+      const candidate = segment.toLowerCase();
+      if (!candidate || NON_CHANNEL_ROUTES.has(candidate)) return "";
+      if (!/^[a-z0-9_]{3,25}$/.test(candidate)) return "";
+      return candidate;
+    } catch (_) {
+      return "";
+    }
+  }
+
+  /**
+   * Read the raid target login from the banner ("... is raiding <target>").
+   * @returns {string} the raided channel, or "" when unknown.
+   */
+  function getRaidTarget() {
+    try {
+      const banner = document.querySelector(
+        '[data-test-selector="raid-banner"], .raid-banner, [data-a-target="raid-banner"]'
+      );
+      if (!banner) return "";
+      const link = banner.querySelector('a[href^="/"]');
+      const target = link?.getAttribute("href")?.replace(/^\//, "").split("/")[0];
+      return target ? target.toLowerCase() : "";
+    } catch (_) {
+      return "";
+    }
+  }
+
+  /**
+   * Locate the raid *cancel* control specifically.
+   *
+   * `.raid-banner button` is deliberately not used as a blanket selector: the
+   * banner also contains the "Join raid" button, and on some layouts that one
+   * comes first — clicking it would send the viewer to the raid instead of
+   * cancelling it, the exact opposite of the preference.
+   */
+  function findRaidCancelButton() {
+    const direct = document.querySelector(
+      'button[data-a-target="cancel-raid-button"], [data-test-selector="raid-banner-cancel-button"]'
     );
+    if (direct instanceof HTMLElement) return direct;
+
+    const banner = document.querySelector(
+      '[data-test-selector="raid-banner"], .raid-banner, [data-a-target="raid-banner"]'
+    );
+    if (!banner) return null;
+
+    const buttons = Array.from(banner.querySelectorAll("button"));
+    return (
+      buttons.find((btn) => {
+        const label = `${btn.getAttribute("aria-label") || ""} ${btn.textContent || ""}`
+          .trim()
+          .toLowerCase();
+        // Match cancel/leave wording; never match join/go wording.
+        if (/rejoindre|join|participer|go now|regarder/.test(label)) return false;
+        return /annuler|cancel|quitter|leave|refuser|decline|no thanks/.test(label);
+      }) || null
+    );
+  }
+
+  function checkAndCancelRaid() {
+    const raidCancelBtn = findRaidCancelButton();
     if (raidCancelBtn instanceof HTMLElement) {
+      const target = getRaidTarget();
       raidCancelBtn.click();
       try {
         chrome.runtime.sendMessage({
           type: "incrementStat",
           stat: "raidsCancelled",
           value: 1,
+          channel: getCurrentChannel(),
+          raidTarget: target,
         }).catch(() => {});
       } catch (_) {}
     }
@@ -746,8 +842,7 @@
 
       this.text = document.createElement("span");
       this.text.className = "streampulse-latency-text";
-      this.text.textContent =
-        this.locale === "fr" ? "Latence : --" : "Latency: --";
+      this.text.textContent = tr("latencyEmpty");
 
       this.button.append(this.dot, this.text);
       this.button.addEventListener("click", () => this.handleClick());
@@ -785,7 +880,7 @@
       if (!isLive) {
         this.button.classList.remove("is-live");
         this.button.classList.add("is-disabled");
-        this.text.textContent = "OFFLINE";
+        this.text.textContent = tr("offline");
         return;
       }
 
@@ -803,14 +898,10 @@
       }
 
       if (latency == null) {
-        this.text.textContent =
-          this.locale === "fr" ? "Latence : --" : "Latency: --";
+        this.text.textContent = tr("latencyEmpty");
       } else {
         const formatted = latency < 0.1 ? "0.0" : latency.toFixed(2);
-        this.text.textContent =
-          this.locale === "fr"
-            ? `Latence : ${formatted}s`
-            : `Latency: ${formatted}s`;
+        this.text.textContent = tr("latencyValue", { value: formatted });
       }
     }
   }

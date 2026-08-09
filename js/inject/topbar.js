@@ -44,14 +44,28 @@
     }
   }
 
-  var I18N = {
-    fr: { previews: "Previews au survol", tip: "Offrir un Bubble Tea", settings: "Tous les réglages" },
-    en: { previews: "Hover previews", tip: "Offer a Bubble Tea", settings: "All settings" },
-    es: { previews: "Vistas previas", tip: "Invitar a un Bubble Tea", settings: "Ajustes" },
-    pt: { previews: "Prévias ao passar", tip: "Pagar um Bubble Tea", settings: "Configurações" },
-  };
+  // Les chaînes vivent dans i18n/translations.js (clés inject.topbar.*) et sont
+  // exposées ici par js/inject/i18n-inline.js, chargé avant ce script. Les
+  // content scripts étant injectés en scripts classiques, ils ne peuvent pas
+  // importer le module ES directement.
+  function i18n() {
+    return typeof window !== "undefined" ? window.__SP_I18N__ : null;
+  }
+
   function langKey(l) {
-    return I18N[l] ? l : "en";
+    var api = i18n();
+    return api ? api.resolve(l) : "en";
+  }
+
+  /**
+   * Lit une clé inject.topbar.*, avec repli sur l'anglais puis sur la clé.
+   * Nommée `tr` et non `t` : ce fichier utilise déjà `var t` pour des noeuds
+   * DOM (onDocClick), et le var local masquerait la fonction.
+   */
+  function tr(lang, key) {
+    var api = i18n();
+    if (!api) return key;
+    return api.get(api.resolve(lang), "topbar." + key);
   }
 
   try {
@@ -211,7 +225,7 @@
 
   function buildPanel(st) {
     st = st || {};
-    var L = I18N[langKey(st.lang)];
+    var lang = langKey(st.lang);
     var p = document.createElement("div");
     p.className = "sp-topbar-panel";
     p.id = "sp-topbar-panel";
@@ -222,11 +236,11 @@
       '<div class="sp-tb-stat" title="Watch time">' + ICON.clock + "<b>" + fmtDur(st.watchSeconds) + "</b></div>" +
       "</div>" +
       '<button class="sp-tb-row" type="button" data-sp-toggle="previewsEnabled"><span>' +
-      L.previews + '</span><span class="sp-tb-sw' + (st.previewsEnabled ? " on" : "") + '"></span></button>' +
+      tr(lang, "previews") + '</span><span class="sp-tb-sw' + (st.previewsEnabled ? " on" : "") + '"></span></button>' +
       '<a class="sp-tb-tip" href="' + TIP_URL + '" target="_blank" rel="noopener noreferrer">' +
-      ICON.coffee + "<span>" + L.tip + "</span></a>" +
+      ICON.coffee + "<span>" + tr(lang, "tip") + "</span></a>" +
       '<a class="sp-tb-settings" href="#" id="sp-tb-settings-link">' +
-      ICON.gear + "<span>" + L.settings + "</span></a>";
+      ICON.gear + "<span>" + tr(lang, "settings") + "</span></a>";
 
     var toggles = p.querySelectorAll("[data-sp-toggle]");
     Array.prototype.forEach.call(toggles, function (rowEl) {
