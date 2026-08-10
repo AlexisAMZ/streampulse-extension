@@ -653,9 +653,22 @@ function setupUpdateModeUI() {
   const stepHeaderTitle = document.querySelector('.wizard-step[data-step="3"] .step-title');
   const stepHeaderDesc = document.querySelector('.wizard-step[data-step="3"] .step-desc');
 
-  if (stepHeaderEyebrow) stepHeaderEyebrow.textContent = "04 / NOUVEAUTÉS · MISE À JOUR";
-  if (stepHeaderTitle) stepHeaderTitle.innerHTML = 'Découvre les <span class="accent">nouveautés</span> !';
-  if (stepHeaderDesc) stepHeaderDesc.textContent = "Voici les nouvelles fonctionnalités d'automatisation et de personnalisation ajoutées à ton extension. Tes préférences actuelles sont conservées.";
+  // Le mode mise à jour réécrit l'en-tête de l'étape 4. On repose aussi les
+  // data-i18n : sans eux, un changement de langue depuis cet écran restaurerait
+  // le texte du mode première installation.
+  if (stepHeaderEyebrow) {
+    stepHeaderEyebrow.dataset.i18n = "onboarding.updateEyebrow";
+    stepHeaderEyebrow.textContent = t("onboarding.updateEyebrow");
+  }
+  if (stepHeaderTitle) {
+    stepHeaderTitle.dataset.i18n = "onboarding.updateTitle";
+    stepHeaderTitle.dataset.i18nMode = "html";
+    stepHeaderTitle.innerHTML = t("onboarding.updateTitle");
+  }
+  if (stepHeaderDesc) {
+    stepHeaderDesc.dataset.i18n = "onboarding.updateDescription";
+    stepHeaderDesc.textContent = t("onboarding.updateDescription");
+  }
 
   const btnBack3 = document.getElementById("btn-back-3");
   if (btnBack3) btnBack3.style.display = "none";
@@ -695,8 +708,25 @@ function setupUpdateModeUI() {
 /* ════════════════════════════════
    INIT
    ════════════════════════════════ */
+/**
+ * Repère « SYS / STREAMPULSE / Vx.y.z » en haut à droite.
+ *
+ * Il était écrit V1.0 en dur dans le HTML : tous les utilisateurs voyaient cette
+ * valeur quelle que soit leur version installée.
+ */
+function renderSystemVersion() {
+  const host = document.getElementById("ob-sys-version");
+  if (!host) return;
+  try {
+    host.textContent = `V${chrome.runtime.getManifest().version}`;
+  } catch (_) {
+    host.textContent = "";
+  }
+}
+
 async function initialize() {
   await initI18n();
+  renderSystemVersion();
   buildLanguageButtons();
   refreshTranslations();
   registerEventListeners();

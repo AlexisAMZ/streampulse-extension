@@ -622,6 +622,14 @@ body {
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 60px var(--sp-violet-glow);
   filter: drop-shadow(0 0 24px var(--sp-violet-faint));
+  /* background-clip: text ne peint le dégradé que dans la boîte de l'élément.
+     Une italique penche à droite et un jambage (le g de Changelog) descend sous
+     une ligne calée à line-height: 0.92 : mesuré, l'encre débordait de 19,6 px
+     à droite, 4,5 px à gauche et 2,8 px en bas, et tout ce qui dépasse ressort
+     transparent. On agrandit la boîte, et la marge négative annule exactement
+     l'agrandissement pour ne décaler ni la ligne ni les mots voisins. */
+  padding: 0.12em 0.68em 0.18em 0.15em;
+  margin: -0.12em -0.68em -0.18em -0.15em;
 }
 @keyframes wordIn {
   0%   { opacity: 0; transform: translateY(40px) rotate(-2deg); filter: blur(8px); }

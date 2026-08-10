@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StreamPulse : Nouveautés</title>
+    <title data-i18n="changelog.documentTitle">StreamPulse: What's new</title>
     <!-- Inherit the onboarding design system, then layer only the patch-notes
          specifics on top. Duplicating the tokens and ambient layers would mean
          two files to keep in sync every time the look changes. -->
@@ -32,11 +32,11 @@
           <img class="brand-mark" src="../images/photos/logosp.png" alt="StreamPulse" />
           <span class="brand-name">STREAMPULSE</span>
           <span class="brand-sep"></span>
-          <span class="brand-sub">Notes de version</span>
+          <span class="brand-sub" data-i18n="changelog.brandSub">Release notes</span>
           <span class="brand-live">ON AIR</span>
         </div>
         <span class="step-counter">
-          <span class="step-counter-label">BUILD</span>
+          <span class="step-counter-label" data-i18n="changelog.build">BUILD</span>
           <span class="step-counter-current-wrap">
             <span id="cl-version">—</span>
           </span>
@@ -47,7 +47,7 @@
         <section class="wizard-step active">
           <div class="step-frame step-frame-single">
             <div class="welcome-frame">
-              <p class="welcome-tagline" id="cl-date">MISE À JOUR INSTALLÉE</p>
+              <p class="welcome-tagline" id="cl-date">UPDATE INSTALLED</p>
 
               <!-- Same oversized serif display as onboarding step 0. Words are
                    injected by changelog.js so each one keeps its stagger. -->
@@ -55,9 +55,7 @@
 
               <div class="cl-hero-rule"></div>
 
-              <p class="welcome-sub" id="cl-subtitle">
-                Voici ce qui a changé depuis votre dernière version.
-              </p>
+              <p class="welcome-sub" id="cl-subtitle"></p>
 
               <!-- Populated by changelog.js. No inline handlers: verify.mjs
                    rejects them. -->
@@ -66,12 +64,11 @@
               <section class="cl-thanks" id="cl-thanks" hidden>
                 <h2 class="cl-section-title">
                   <span class="cl-section-rule"></span>
-                  <span>Merci à eux</span>
+                  <span id="cl-thanks-title" data-i18n="changelog.thanksTitle">Thanks to them</span>
                   <span class="cl-section-rule"></span>
                 </h2>
-                <p class="cl-thanks-intro">
-                  Ces personnes ont signalé des bugs ou proposé des idées qui ont
-                  façonné cette version.
+                <p class="cl-thanks-intro" id="cl-thanks-intro" data-i18n="changelog.thanksIntro">
+                  These people reported bugs or suggested ideas that shaped this release.
                 </p>
                 <ul class="cl-thanks-list" id="cl-thanks-list"></ul>
               </section>
@@ -79,15 +76,19 @@
               <section class="cl-history" id="cl-history" hidden>
                 <h2 class="cl-section-title">
                   <span class="cl-section-rule"></span>
-                  <span>Versions précédentes</span>
+                  <span data-i18n="changelog.historyTitle">Previous versions</span>
                   <span class="cl-section-rule"></span>
                 </h2>
                 <div class="cl-history-list" id="cl-history-list"></div>
               </section>
 
+              <!-- Rempli par changelog.js : le texte et l'URL changent tous les
+                   deux avec la langue, et le lien est construit sans innerHTML. -->
+              <p class="cl-support" id="cl-support"></p>
+
               <div class="step-nav" style="justify-content: center;">
                 <button class="btn btn-primary" id="cl-close" type="button">
-                  <span>Continuer</span>
+                  <span data-i18n="changelog.continueBtn">Continue</span>
                   <span class="btn-icon">→</span>
                 </button>
               </div>

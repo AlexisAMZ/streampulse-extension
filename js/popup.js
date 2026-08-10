@@ -766,7 +766,7 @@ async function renderEventLogs() {
     });
 
     if (filtered.length === 0) {
-      container.innerHTML = `<p class="empty-state">Aucun événement enregistré.</p>`;
+      container.innerHTML = `<p class="empty-state">${escapeHtml(t("popup.settings.logEmpty"))}</p>`;
       return;
     }
 
@@ -799,7 +799,7 @@ async function renderEventLogs() {
       })
       .join("");
   } catch (_) {
-    container.innerHTML = `<p class="empty-state">Erreur lors de la lecture du journal.</p>`;
+    container.innerHTML = `<p class="empty-state">${escapeHtml(t("popup.settings.logError"))}</p>`;
   }
 }
 

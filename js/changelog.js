@@ -6,12 +6,24 @@
  * otherwise inject markup into this page.
  */
 
-import { RELEASES, getRelease, getLatestRelease } from "./changelog-data.js";
+import { RELEASES, getRelease, getLatestRelease, pickLocalized } from "./changelog-data.js";
+import { initI18n, applyTranslations, t, resolveLocale, getCurrentLanguage } from "./i18n.js";
 
-const TYPE_LABELS = {
-  new: "NOUVEAU",
-  fix: "CORRIGÉ",
-  improved: "AMÉLIORÉ",
+/**
+ * Texte d'une note de version dans la langue choisie par l'utilisateur.
+ *
+ * Les notes ne vivent pas dans translations.js : elles changent à chaque
+ * release et n'ont pas à passer le contrôle de complétude sur 16 langues.
+ */
+function localized(value) {
+  return pickLocalized(value, getCurrentLanguage());
+}
+
+/** Clé de libellé pour chaque type de changement. */
+const TYPE_KEYS = {
+  new: "changelog.tagNew",
+  fix: "changelog.tagFix",
+  improved: "changelog.tagImproved",
 };
 
 /** Accept only http(s) links, so a bad entry can't yield a javascript: URL. */
@@ -29,7 +41,8 @@ function formatDate(iso) {
   if (!iso) return "";
   const parsed = new Date(`${iso}T00:00:00`);
   if (Number.isNaN(parsed.getTime())) return iso;
-  return parsed.toLocaleDateString("fr-FR", {
+  // Suit la langue choisie dans StreamPulse, pas celle du navigateur.
+  return parsed.toLocaleDateString(resolveLocale(getCurrentLanguage()), {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -49,7 +62,7 @@ function renderChanges(release) {
 
   const changes = Array.isArray(release.changes) ? release.changes : [];
   if (!changes.length) {
-    host.append(el("p", "cl-empty", "Corrections internes et améliorations de stabilité."));
+    host.append(el("p", "cl-empty", t("changelog.genericChanges")));
     return;
   }
 
@@ -72,11 +85,11 @@ function renderChanges(release) {
     const items = changes.filter((change) => change.type === type);
     if (!items.length) continue;
 
-    const group = makeGroup(`cl-tag cl-tag-${type}`, TYPE_LABELS[type] || type.toUpperCase());
+    const group = makeGroup(`cl-tag cl-tag-${type}`, t(TYPE_KEYS[type] || "changelog.tagOther"));
 
     const list = el("ul", "cl-list");
     for (const item of items) {
-      list.append(el("li", "cl-item", item.text || ""));
+      list.append(el("li", "cl-item", localized(item.text)));
     }
     group.append(list);
     host.append(group);
@@ -86,9 +99,9 @@ function renderChanges(release) {
   const known = new Set(["new", "improved", "fix"]);
   const rest = changes.filter((change) => !known.has(change.type));
   if (rest.length) {
-    const group = makeGroup("cl-tag", "AUTRE");
+    const group = makeGroup("cl-tag", t("changelog.tagOther"));
     const list = el("ul", "cl-list");
-    for (const item of rest) list.append(el("li", "cl-item", item.text || ""));
+    for (const item of rest) list.append(el("li", "cl-item", localized(item.text)));
     group.append(list);
     host.append(group);
   }
@@ -111,6 +124,18 @@ function renderThanks(release) {
   }
   section.hidden = false;
 
+  // Avec un seul contributeur, « Merci à eux » sonne faux — mais écrire « à lui »
+  // supposerait un genre qu'on ne connaît pas. Le titre reste donc neutre, et la
+  // phrase d'intro disparaît : sa carte dit déjà qui il est et ce qu'il a fait,
+  // la répéter donnait trois fois le même pseudo à l'écran.
+  const single = thanks.length === 1;
+  document.getElementById("cl-thanks-title").textContent = t(
+    single ? "changelog.thanksTitleOne" : "changelog.thanksTitle"
+  );
+  const intro = document.getElementById("cl-thanks-intro");
+  intro.hidden = single;
+  if (!single) intro.textContent = t("changelog.thanksIntro");
+
   thanks.forEach((person, index) => {
     const item = el("li", "cl-thanks-item");
     // Land after the change panels, so the page resolves top to bottom.
@@ -131,11 +156,59 @@ function renderThanks(release) {
     } else {
       body.append(el("span", "cl-thanks-handle", person.handle));
     }
-    if (person.for) body.append(el("span", "cl-thanks-for", person.for));
+    const credit = localized(person.for);
+    if (credit) body.append(el("span", "cl-thanks-for", credit));
 
     item.append(body);
     list.append(item);
   });
+}
+
+/**
+ * Ligne « Un bug, une idée ? » avec le lien vers la page de support.
+ *
+ * L'URL est localisée au même titre que le texte : le site expose une page par
+ * langue, et le français n'a pas de préfixe. safeUrl garde le href en https,
+ * comme pour les profils de contributeurs.
+ */
+function renderSupport() {
+  const host = document.getElementById("cl-support");
+  if (!host) return;
+  host.replaceChildren();
+
+  const url = safeUrl(t("changelog.supportUrl"));
+  if (!url) {
+    host.hidden = true;
+    return;
+  }
+  host.hidden = false;
+
+  // Icône construite en SVG plutôt qu'en emoji : elle hérite de currentColor et
+  // reste nette à toutes les tailles, comme le reste des repères de la page.
+  const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  icon.setAttribute("class", "cl-support-icon");
+  icon.setAttribute("viewBox", "0 0 24 24");
+  icon.setAttribute("fill", "none");
+  icon.setAttribute("stroke", "currentColor");
+  icon.setAttribute("stroke-width", "1.8");
+  icon.setAttribute("stroke-linecap", "round");
+  icon.setAttribute("stroke-linejoin", "round");
+  icon.setAttribute("aria-hidden", "true");
+  const bubble = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  bubble.setAttribute("d", "M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.9-.9L3 20.5l1.6-4.4A8.4 8.4 0 0 1 12 3.1a8.4 8.4 0 0 1 9 8.4z");
+  icon.append(bubble);
+
+  const text = el("span", "cl-support-text", t("changelog.supportIntro"));
+
+  const link = el("a", "cl-support-link", t("changelog.supportLink"));
+  link.href = url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.append(el("span", "cl-support-arrow", "→"));
+
+  const card = el("div", "cl-support-card glass frame-brackets");
+  card.append(icon, text, link);
+  host.append(card);
 }
 
 function renderHistory(currentVersion) {
@@ -154,12 +227,13 @@ function renderHistory(currentVersion) {
     const details = el("details", "cl-history-entry");
     const summary = el("summary", "cl-history-summary");
     summary.append(el("span", "cl-history-version", `v${release.version}`));
-    if (release.title) summary.append(el("span", "cl-history-title", release.title));
+    const historyTitle = localized(release.title);
+    if (historyTitle) summary.append(el("span", "cl-history-title", historyTitle));
     details.append(summary);
 
     const list = el("ul", "cl-list");
     for (const change of release.changes || []) {
-      list.append(el("li", "cl-item", change.text || ""));
+      list.append(el("li", "cl-item", localized(change.text)));
     }
     details.append(list);
     host.append(details);
@@ -203,29 +277,41 @@ function render(release) {
 
   const date = formatDate(release.date);
   document.getElementById("cl-date").textContent = date
-    ? `MISE À JOUR · ${date}`
-    : "MISE À JOUR INSTALLÉE";
+    ? `${t("changelog.updatePrefix")} · ${date}`
+    : t("changelog.updateInstalled");
 
-  renderDisplay(release.title || `Version ${release.version}`);
+  // Le H1 nomme la page, pas la release : le titre propre à la version reste
+  // affiché dans « Versions précédentes », et le sous-titre juste dessous dit
+  // déjà ce que celle-ci apporte.
+  renderDisplay(t("changelog.pageTitle"));
 
   // Explicit subtitle wins; otherwise summarise so the hero never sits on top
   // of a generic sentence that says nothing about this release.
   const subtitle = document.getElementById("cl-subtitle");
-  if (release.subtitle) {
-    subtitle.textContent = release.subtitle;
+  const releaseSubtitle = localized(release.subtitle);
+  if (releaseSubtitle) {
+    subtitle.textContent = releaseSubtitle;
   } else {
     const count = Array.isArray(release.changes) ? release.changes.length : 0;
     subtitle.textContent = count
-      ? `${count} changement${count > 1 ? "s" : ""} dans cette version.`
-      : "Corrections internes et améliorations de stabilité.";
+      ? t(count > 1 ? "changelog.changeCountPlural" : "changelog.changeCountSingular", { count })
+      : t("changelog.genericChanges");
   }
 
   renderChanges(release);
   renderThanks(release);
   renderHistory(release.version);
+  renderSupport();
 }
 
-function init() {
+async function init() {
+  // La langue vient de la préférence utilisateur (storage). initI18n doit être
+  // résolu avant tout rendu, sinon la première peinture utiliserait la langue
+  // par défaut puis changerait sous les yeux de l'utilisateur.
+  await initI18n();
+  applyTranslations(document);
+  document.documentElement.lang = getCurrentLanguage();
+
   // Prefer the running manifest version so the page always describes what's
   // installed; fall back to the newest entry when that lookup fails.
   let version;
@@ -237,10 +323,10 @@ function init() {
 
   const release = getRelease(version) || getLatestRelease();
   if (!release) {
-    renderDisplay("Aucune note disponible");
-    document.getElementById("cl-subtitle").textContent =
-      "Les notes de cette version n'ont pas encore été publiées.";
+    renderDisplay(t("changelog.noNotes"));
+    document.getElementById("cl-subtitle").textContent = t("changelog.noNotesBody");
     document.getElementById("cl-version").textContent = version ? `v${version}` : "—";
+    renderSupport();
     return;
   }
 
@@ -255,4 +341,8 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") window.close();
 });
 
-init();
+// init() est asynchrone (chargement de la langue) : un rejet non capturé
+// laisserait la page vide sans trace exploitable.
+init().catch((error) => {
+  console.error("[changelog] init failed:", error);
+});

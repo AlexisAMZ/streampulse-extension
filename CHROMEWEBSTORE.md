@@ -141,4 +141,5 @@ StreamPulse does not collect any personal data, contains zero trackers or ads, a
 
 | Version | Date | Description des changements | Statut CWS |
 |---------|------|-----------------------------|------------|
+| 26.8.9 | 2026-08-10 | Bouton « Ajouter à StreamPulse » sur les pages de chaîne Twitch, page de notes de version localisée, anneau LIVE autour de l'avatar de l'onglet avec clignotement au raid, correction des libellés restés en français quelle que soit la langue. | Prêt pour publication |
 | 26.8.6 | 2026-08-06 | Amélioration des aperçus vidéo Twitch/Kick, optimisation anti-pause du lecteur et gestion i18n FR/EN. | Prêt pour publication |

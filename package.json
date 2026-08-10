@@ -1,6 +1,6 @@
 {
   "name": "streampulse-extension",
-  "version": "26.8.6",
+  "version": "26.8.9",
   "private": true,
   "description": "Outillage de developpement de l'extension StreamPulse. Rien ici n'est package dans le zip livre au Chrome Web Store.",
   "type": "module",

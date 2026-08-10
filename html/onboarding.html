@@ -17,7 +17,7 @@
 
     <!-- Coordinate markers (DAW/console vibe) -->
     <span class="bg-coords bg-coords-tl">N · 48°51′24″ · LIVE</span>
-    <span class="bg-coords bg-coords-tr">SYS / STREAMPULSE / V1.0</span>
+    <span class="bg-coords bg-coords-tr">SYS / STREAMPULSE / <span id="ob-sys-version">V1.0</span></span>
     <span class="bg-coords bg-coords-bl">CH 01 · ONBOARDING</span>
     <span class="bg-coords bg-coords-br">REC · 0.0 dB · 60FPS</span>
 
@@ -103,7 +103,7 @@
           <div class="step-frame">
             <!-- Left: editorial header -->
             <div class="step-header">
-              <div class="step-eyebrow">02 / USER · IDENTITÉ</div>
+              <div class="step-eyebrow" data-i18n="onboarding.stepUserEyebrow">02 / USER · IDENTITÉ</div>
               <h1 class="step-title" data-i18n="onboarding.profileTitle">
                 Quel est ton <span class="accent">pseudo</span> ?
               </h1>
@@ -111,9 +111,9 @@
                 Renseigne ton pseudo Twitch : on récupère ta photo de profil pour t'accueillir comme il faut à chaque ouverture.
               </p>
               <div class="step-meta">
-                <span class="step-meta-item">RECHERCHE LIVE</span>
+                <span class="step-meta-item" data-i18n="onboarding.metaLiveSearch">RECHERCHE LIVE</span>
                 <span class="step-meta-item">API TWITCH</span>
-                <span class="step-meta-item">OPTIONNEL</span>
+                <span class="step-meta-item" data-i18n="onboarding.metaOptional">OPTIONNEL</span>
               </div>
             </div>
 
@@ -177,7 +177,7 @@
         <section class="wizard-step" data-step="2">
           <div class="step-frame">
             <div class="step-header">
-              <div class="step-eyebrow">03 / FOLLOW · STREAMERS</div>
+              <div class="step-eyebrow" data-i18n="onboarding.stepFollowEyebrow">03 / FOLLOW · STREAMERS</div>
               <h1 class="step-title" data-i18n="onboarding.formLabelBase">
                 Tes <span class="accent">streamers</span><br />à suivre.
               </h1>
@@ -250,7 +250,7 @@
         <section class="wizard-step" data-step="3">
           <div class="step-frame">
             <div class="step-header">
-              <div class="step-eyebrow">04 / PREFS · RÉGLAGES</div>
+              <div class="step-eyebrow" data-i18n="onboarding.stepPrefsEyebrow">04 / PREFS · RÉGLAGES</div>
               <h1 class="step-title" data-i18n="onboarding.preferencesTitle">
                 Quelques <span class="accent">préférences</span>.
               </h1>
@@ -258,7 +258,7 @@
                 Active ce qui t'intéresse : tout est modifiable plus tard depuis les réglages.
               </p>
               <div class="step-meta">
-                <span class="step-meta-item">SONS</span>
+                <span class="step-meta-item" data-i18n="onboarding.metaSounds">SONS</span>
                 <span class="step-meta-item">NOTIFICATIONS</span>
                 <span class="step-meta-item">AUTO</span>
               </div>
@@ -298,8 +298,8 @@
 
                   <label class="settings-toggle">
                     <div class="settings-text">
-                      <span class="settings-title">Ouverture auto de l'inventaire Drops</span>
-                      <span class="settings-description">Ouvrir l'inventaire Twitch en arrière-plan pour réclamer vos Drops.</span>
+                      <span class="settings-title" data-i18n="onboarding.autoOpenInventoryTitle">Ouverture auto de l'inventaire Drops</span>
+                      <span class="settings-description" data-i18n="onboarding.autoOpenInventoryDescription">Ouvrir l'inventaire Twitch en arrière-plan pour réclamer vos Drops.</span>
                     </div>
                     <input id="onboarding-auto-open-inventory" type="checkbox" />
                   </label>
@@ -347,23 +347,23 @@
 
                 <!-- Groupe: Onglets & Navigation -->
                 <div class="settings-group frame-brackets">
-                  <span class="section-label">ONGLETS & ARRIÈRE-PLAN</span>
-                  <p class="settings-group-hint">
+                  <span class="section-label" data-i18n="onboarding.tabsGroupLabel">ONGLETS &amp; ARRIÈRE-PLAN</span>
+                  <p class="settings-group-hint" data-i18n="onboarding.tabsGroupHint">
                     Gestion visuelle et maintien de l'activité des onglets.
                   </p>
 
                   <label class="settings-toggle">
                     <div class="settings-text">
-                      <span class="settings-title">Avatar du streamer sur l'onglet</span>
-                      <span class="settings-description">Remplacer l'icône de l'onglet par la photo du streamer en direct.</span>
+                      <span class="settings-title" data-i18n="onboarding.streamerFaviconTitle">Avatar du streamer sur l'onglet</span>
+                      <span class="settings-description" data-i18n="onboarding.streamerFaviconDescription">Remplacer l'icône de l'onglet par la photo du streamer en direct.</span>
                     </div>
                     <input id="onboarding-streamer-favicon" type="checkbox" checked />
                   </label>
 
                   <label class="settings-toggle">
                     <div class="settings-text">
-                      <span class="settings-title">Pastille rouge LIVE sur l'onglet</span>
-                      <span class="settings-description">Afficher un point rouge LIVE sur l'icône de l'onglet pendant un direct.</span>
+                      <span class="settings-title" data-i18n="onboarding.tabLiveIconTitle">Pastille rouge LIVE sur l'onglet</span>
+                      <span class="settings-description" data-i18n="onboarding.tabLiveIconDescription">Afficher un point rouge LIVE sur l'icône de l'onglet pendant un direct.</span>
                     </div>
                     <input id="onboarding-tab-live-icon" type="checkbox" checked />
                   </label>
@@ -428,7 +428,7 @@
           <div class="step-frame step-frame-single">
             <div class="finish-frame">
               <div class="finish-check">✓</div>
-              <div class="step-eyebrow" style="justify-content: center;">05 / READY · LANCEMENT</div>
+              <div class="step-eyebrow" style="justify-content: center;" data-i18n="onboarding.stepReadyEyebrow">05 / READY · LANCEMENT</div>
               <h1 class="finish-title" data-i18n="onboarding.finishTitle">
                 Tout est prêt<span class="name-suffix" id="finish-name-suffix"></span>.
               </h1>
@@ -438,7 +438,7 @@
 
               <div class="glass pin-instructions frame-brackets">
                 <div class="pin-label">
-                  <span class="section-label">📌 ÉPINGLER L'EXTENSION</span>
+                  <span class="section-label" data-i18n="onboarding.pinLabel">📌 ÉPINGLER L'EXTENSION</span>
                 </div>
                 <ol class="pin-steps">
                   <li data-i18n="onboarding.pinStep1" data-i18n-mode="html">

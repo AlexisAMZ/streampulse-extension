@@ -558,6 +558,7 @@
   }
 
   let raidCheckIntervalId = null;
+  let raidObserver = null;
 
   // Twitch routes whose first path segment is a feature name, not a login.
   const NON_CHANNEL_ROUTES = new Set([
@@ -578,15 +579,44 @@
     }
   }
 
+  // Twitch renomme régulièrement ses data-a-target. On liste large, et on garde
+  // un repli textuel pour ne pas dépendre d'un seul attribut interne.
+  const RAID_BANNER_SELECTORS = [
+    '[data-test-selector="raid-banner"]',
+    '[data-a-target="raid-banner"]',
+    ".raid-banner",
+    '[class*="raid-banner"]',
+    '[data-a-target*="raid-banner"]',
+  ].join(", ");
+
+  const RAID_WORDS = /\braid(ing|s|é|ing you)?\b|raid en cours|va raider/i;
+  const CANCEL_WORDS = /annuler|cancel|quitter|leave|refuser|decline|no thanks|cancelar|abbrechen/i;
+  const JOIN_WORDS = /rejoindre|join|participer|go now|regarder|unirse|entrar|mitmachen/i;
+  // Le chat contient le mot « raid » en permanence : on l'exclut du balayage,
+  // sinon un message suffirait à déclencher un clic.
+  const CHAT_SCOPE =
+    '[data-a-target="chat-scrollable-area__message-container"], .chat-scrollable-area__message-container, [data-test-selector="chat-scrollable-area__message-container"]';
+
+  function findRaidBanner() {
+    const direct = document.querySelector(RAID_BANNER_SELECTORS);
+    if (direct instanceof HTMLElement) return direct;
+
+    // Repli : un conteneur court qui parle de raid et porte un bouton.
+    for (const el of document.querySelectorAll('div[class*="banner"], div[role="banner"], aside')) {
+      if (el.closest(CHAT_SCOPE)) continue;
+      const text = (el.textContent || "").slice(0, 200);
+      if (RAID_WORDS.test(text) && el.querySelector("button")) return el;
+    }
+    return null;
+  }
+
   /**
    * Read the raid target login from the banner ("... is raiding <target>").
    * @returns {string} the raided channel, or "" when unknown.
    */
   function getRaidTarget() {
     try {
-      const banner = document.querySelector(
-        '[data-test-selector="raid-banner"], .raid-banner, [data-a-target="raid-banner"]'
-      );
+      const banner = findRaidBanner();
       if (!banner) return "";
       const link = banner.querySelector('a[href^="/"]');
       const target = link?.getAttribute("href")?.replace(/^\//, "").split("/")[0];
@@ -610,28 +640,40 @@
     );
     if (direct instanceof HTMLElement) return direct;
 
-    const banner = document.querySelector(
-      '[data-test-selector="raid-banner"], .raid-banner, [data-a-target="raid-banner"]'
-    );
-    if (!banner) return null;
+    const banner = findRaidBanner();
+    // Sans bannière identifiée on balaie la page entière, mais la sélection du
+    // bouton reste stricte : un « Annuler » d'un autre dialogue ne doit jamais
+    // être cliqué, d'où l'exigence d'un contexte qui parle de raid.
+    const scope = banner || document;
 
-    const buttons = Array.from(banner.querySelectorAll("button"));
+    const buttons = Array.from(scope.querySelectorAll("button"));
     return (
       buttons.find((btn) => {
+        if (btn.closest(CHAT_SCOPE)) return false;
         const label = `${btn.getAttribute("aria-label") || ""} ${btn.textContent || ""}`
           .trim()
           .toLowerCase();
         // Match cancel/leave wording; never match join/go wording.
-        if (/rejoindre|join|participer|go now|regarder/.test(label)) return false;
-        return /annuler|cancel|quitter|leave|refuser|decline|no thanks/.test(label);
+        if (JOIN_WORDS.test(label)) return false;
+        if (!CANCEL_WORDS.test(label)) return false;
+        if (banner) return true;
+        const context = btn.closest("div, section, aside");
+        return RAID_WORDS.test((context?.textContent || "").slice(0, 200));
       }) || null
     );
   }
 
+  // Un clic suffit. Sans ce garde, le sondage reclique tant que la bannière
+  // n'a pas disparu du DOM, ce qui gonfle la statistique de raids annulés.
+  let lastCancelledRaidAt = 0;
+
   function checkAndCancelRaid() {
+    if (Date.now() - lastCancelledRaidAt < 8000) return;
+
     const raidCancelBtn = findRaidCancelButton();
     if (raidCancelBtn instanceof HTMLElement) {
       const target = getRaidTarget();
+      lastCancelledRaidAt = Date.now();
       raidCancelBtn.click();
       try {
         chrome.runtime.sendMessage({
@@ -644,15 +686,29 @@
       } catch (_) {}
     }
   }
+
   function setAutoCancelRaids(enable) {
     if (enable) {
       if (!raidCheckIntervalId) {
         raidCheckIntervalId = setInterval(checkAndCancelRaid, 2000);
       }
+      // Le sondage seul laissait passer jusqu'à deux secondes entre l'apparition
+      // de la bannière et le clic. Sur un raid court, la redirection partait
+      // avant. L'observateur réagit à l'insertion du nœud, le sondage ne sert
+      // plus que de filet si une mutation passe inaperçue.
+      if (!raidObserver) {
+        raidObserver = new MutationObserver(() => checkAndCancelRaid());
+        raidObserver.observe(document.body, { childList: true, subtree: true });
+      }
+      checkAndCancelRaid();
     } else {
       if (raidCheckIntervalId) {
         clearInterval(raidCheckIntervalId);
         raidCheckIntervalId = null;
+      }
+      if (raidObserver) {
+        raidObserver.disconnect();
+        raidObserver = null;
       }
     }
   }

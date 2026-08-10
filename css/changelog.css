@@ -364,6 +364,76 @@ a.cl-thanks-handle:hover {
   }
 }
 
+/* Ligne de contact, juste avant le bouton de sortie : discrète, mais c'est le
+   dernier endroit que l'utilisateur regarde avant de fermer la page. */
+.cl-support {
+  margin: 34px 0 6px;
+  text-align: center;
+}
+/* Carte plutôt que simple ligne : c'est le dernier élément avant le bouton de
+   sortie, il doit se voir sans concurrencer la section des remerciements, qui
+   garde le cadre violet plein. */
+.cl-support-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  text-align: left;
+  animation: streamerIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
+  transition: border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cl-support-card:hover {
+  border-color: var(--sp-violet);
+}
+.cl-support-icon {
+  flex-shrink: 0;
+  width: 19px;
+  height: 19px;
+  color: var(--sp-violet-2);
+}
+.cl-support-text {
+  font-family: var(--sp-serif);
+  font-size: 15px;
+  color: var(--sp-ink-2);
+}
+.cl-support-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--sp-violet);
+  background: rgba(145, 70, 255, 0.12);
+  color: var(--sp-ink);
+  font-family: var(--sp-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+.cl-support-link:hover {
+  background: rgba(145, 70, 255, 0.26);
+  box-shadow: 0 0 18px var(--sp-violet-glow);
+  transform: translateY(-1px);
+}
+.cl-support-arrow {
+  transition: transform 0.25s;
+}
+.cl-support-link:hover .cl-support-arrow {
+  transform: translateX(3px);
+}
+
+@media (max-width: 560px) {
+  .cl-support-card {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cl-hero-rule,
   .cl-group,

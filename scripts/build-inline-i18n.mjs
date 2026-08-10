@@ -15,7 +15,7 @@
  *   node scripts/build-inline-i18n.mjs
  */
 import { writeFile } from "node:fs/promises";
-import { translations, AVAILABLE_LANGUAGES } from "../i18n/translations.js";
+import { translations, ALL_LANGUAGES } from "../i18n/translations.js";
 
 const OUT = new URL("../js/inject/i18n-inline.js", import.meta.url);
 
@@ -23,7 +23,9 @@ const OUT = new URL("../js/inject/i18n-inline.js", import.meta.url);
 const NAMESPACE = "inject";
 
 const payload = {};
-for (const { code } of AVAILABLE_LANGUAGES) {
+// ALL_LANGUAGES et non AVAILABLE_LANGUAGES : les langues pas encore publiées
+// doivent quand même être résolvables si Chrome les demande.
+for (const { code } of ALL_LANGUAGES) {
   const block = translations[code]?.[NAMESPACE];
   if (!block) {
     throw new Error(`translations.${code}.${NAMESPACE} manquant — lancer expand-languages d'abord.`);

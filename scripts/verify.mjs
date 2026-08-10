@@ -7,7 +7,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 // Sans argument on verifie le depot lui-meme ; build-zip.mjs passe le dossier
 // du zip decompresse pour verifier le paquet reellement livre.
@@ -104,12 +104,15 @@ else {
 
   try {
     const mod = await import(new URL("../i18n/translations.js", import.meta.url).href);
-    const { translations, AVAILABLE_LANGUAGES, DEFAULT_LANGUAGE } = mod;
-    const declared = AVAILABLE_LANGUAGES.map((l) => l.code);
+    const { translations, ALL_LANGUAGES, AVAILABLE_LANGUAGES, DEFAULT_LANGUAGE } = mod;
+    // Toutes les langues doivent être structurellement complètes, y compris
+    // celles pas encore publiées : elles restent résolvables à l'exécution.
+    const declared = ALL_LANGUAGES.map((l) => l.code);
+    const published = AVAILABLE_LANGUAGES.map((l) => l.code);
 
     const orphanBlocks = Object.keys(translations).filter((c) => !declared.includes(c));
     if (orphanBlocks.length) {
-      warn(`translations.js defines blocks absent from AVAILABLE_LANGUAGES: ${orphanBlocks.join(", ")}`);
+      warn(`translations.js defines blocks absent from ALL_LANGUAGES: ${orphanBlocks.join(", ")}`);
     }
 
     const referenceKeys = flatten(translations[DEFAULT_LANGUAGE]);
@@ -135,6 +138,29 @@ else {
     if (!incomplete) {
       pass(`translations.js: ${declared.length} languages complete (${referenceKeys.length} keys each)`);
     }
+
+    // Une langue publiée (ready: true) ne doit pas être un simple copier-coller
+    // de l'anglais : ce serait promettre une traduction inexistante.
+    const flattenPairs = (node, prefix = "") =>
+      Object.entries(node ?? {}).flatMap(([key, value]) =>
+        value && typeof value === "object" && !Array.isArray(value)
+          ? flattenPairs(value, `${prefix}${key}.`)
+          : [[`${prefix}${key}`, value]],
+      );
+    const enPairs = new Map(flattenPairs(translations.en));
+    for (const code of published) {
+      if (code === "en") continue;
+      const pairs = flattenPairs(translations[code]).filter(([, v]) => typeof v === "string");
+      const identical = pairs.filter(([k, v]) => enPairs.get(k) === v).length;
+      const ratio = pairs.length ? identical / pairs.length : 0;
+      if (ratio > 0.5) {
+        fail(
+          `translations.js "${code}" is marked ready but ${Math.round(ratio * 100)}% of its strings ` +
+            `are identical to English — set ready:false until it is translated`,
+        );
+      }
+    }
+    pass(`language switcher exposes ${published.length}/${declared.length} translated languages (${published.join(", ")})`);
 
     // Every language declared here must also reach the content scripts, which
     // read the generated js/inject/i18n-inline.js rather than the ES module.
@@ -266,6 +292,119 @@ if (!exists(CHANGELOG_DATA)) {
     );
   } else {
     pass(`patch notes present for version ${manifest.version}`);
+  }
+
+  // Les notes sont rédigées à la main à chaque release, langue par langue. Sans
+  // ce contrôle, une release écrite en français seulement s'afficherait telle
+  // quelle à tous les utilisateurs espagnols ou anglais.
+  try {
+    const [data, i18n] = await Promise.all([
+      import(pathToFileURL(abs(CHANGELOG_DATA)).href),
+      import(pathToFileURL(abs("i18n/translations.js")).href),
+    ]);
+    const publishedCodes = i18n.AVAILABLE_LANGUAGES.map((l) => l.code);
+
+    // Chaque chaîne visible par l'utilisateur, avec un chemin lisible dans le
+    // message d'erreur pour aller la corriger directement.
+    const localizedFields = (release) => [
+      ["title", release.title],
+      ["subtitle", release.subtitle],
+      ...(release.changes ?? []).map((c, i) => [`changes[${i}].text`, c.text]),
+      ...(release.thanks ?? []).map((p, i) => [`thanks[${i}].for`, p.for]),
+    ];
+
+    const gaps = [];
+    for (const release of data.RELEASES ?? []) {
+      for (const [field, value] of localizedFields(release)) {
+        if (value == null) continue; // Champ optionnel non renseigné : correct.
+        if (typeof value === "string") {
+          gaps.push(`${release.version} ${field} is a plain string, not a { fr, en, ... } map`);
+          continue;
+        }
+        const missing = publishedCodes.filter((code) => !value[code]?.trim());
+        if (missing.length) gaps.push(`${release.version} ${field} misses ${missing.join(", ")}`);
+      }
+    }
+
+    if (gaps.length) {
+      const preview = gaps.slice(0, 6);
+      preview.forEach((g) => fail(`${CHANGELOG_DATA}: ${g}`));
+      if (gaps.length > preview.length) {
+        fail(`${CHANGELOG_DATA}: +${gaps.length - preview.length} more untranslated patch note(s)`);
+      }
+    } else {
+      pass(`patch notes translated into all ${publishedCodes.length} published languages (${publishedCodes.join(", ")})`);
+    }
+  } catch (e) {
+    fail(`${CHANGELOG_DATA} could not be imported for the translation check: ${e.message}`);
+  }
+}
+
+// Un libellé écrit en dur dans le HTML ne passe jamais par applyTranslations :
+// il reste en français quelle que soit la langue choisie. C'est exactement ce
+// qu'un testeur a remonté sur l'inventaire Drops, les icônes d'onglet et le
+// journal. On refuse donc tout texte visible sans data-i18n dans les écrans
+// traduits. Les libellés purement décoratifs (codes, marques, coordonnées)
+// vivent dans l'allowlist ci-dessous.
+{
+  const I18N_PAGES = ["html/popup.html", "html/onboarding.html", "html/changelog.html"];
+  // Étiquettes de design volontairement non traduites : sigles, noms propres,
+  // repères type console. Les ajouter ici est un choix, pas un oubli.
+  const DECORATIVE = new Set([
+    "STREAMPULSE", "ON AIR", "STEP", "BUILD", "API TWITCH", "DISPLAY NAME",
+    "TWITCH", "YOUTUBE", "KICK", "NOTIFICATIONS", "AUTO", "LIVE", "CONTACT",
+    "Email", "StreamPulse", "Drops", "Moments", "Raids",
+  ]);
+  // Nœuds dont le contenu est écrit par le JS au rendu (avec t()), donc vides
+  // de sens dans le HTML : ce qui s'y trouve n'est qu'un gabarit.
+  const RUNTIME_OWNED = new Set(["greeting-title", "greeting-live-count", "logs-container"]);
+  const VOID_TAGS = new Set(["br", "img", "input", "hr", "meta", "link", "source", "path", "line", "rect", "polyline", "circle", "polygon", "use"]);
+  const untranslated = [];
+
+  for (const page of I18N_PAGES) {
+    if (!exists(page)) continue;
+    const src = fs.readFileSync(abs(page), "utf8");
+    // Pile d'ancêtres : un parent porteur de data-i18n réécrit tout son
+    // sous-arbre, donc le texte de ses enfants n'a pas à être annoté.
+    const stack = [];
+    const covered = () => stack.some((f) => f.i18n || f.runtime);
+    const lineAt = (index) => src.slice(0, index).split("\n").length;
+
+    for (const m of src.matchAll(/<(\/?)([a-zA-Z][\w-]*)([^>]*?)(\/?)>([^<]*)/g)) {
+      const [, closing, tag, attrs, selfClose, text] = m;
+      const name = tag.toLowerCase();
+      if (closing) {
+        while (stack.length && stack.pop().tag !== name);
+      } else if (!selfClose && !VOID_TAGS.has(name)) {
+        const id = attrs.match(/\bid="([^"]+)"/)?.[1];
+        stack.push({
+          tag: name,
+          i18n: /data-i18n/.test(attrs),
+          runtime: Boolean(id && RUNTIME_OWNED.has(id)),
+        });
+      }
+
+      const value = text.trim();
+      if (!value || closing || covered()) continue;
+      if (DECORATIVE.has(value)) continue;
+      if (/\bbg-coords\b|\bstep-counter\b/.test(attrs)) continue;
+      // Ni ponctuation seule, ni pseudo/URL, ni repère tout en capitales.
+      if (!/\p{L}{3}/u.test(value)) continue;
+      if (/^[@#]/.test(value) || /^https?:/.test(value)) continue;
+      if (!/\p{Ll}/u.test(value)) continue;
+      untranslated.push(`${page}:${lineAt(m.index)} <${name}> "${value.slice(0, 48)}"`);
+    }
+  }
+
+  if (untranslated.length) {
+    untranslated.slice(0, 8).forEach((hit) =>
+      fail(`visible text without data-i18n, it will stay in one language: ${hit}`)
+    );
+    if (untranslated.length > 8) {
+      fail(`+${untranslated.length - 8} more untranslated string(s) in the i18n pages`);
+    }
+  } else {
+    pass(`${I18N_PAGES.length} translated pages: every visible string carries data-i18n`);
   }
 }
 

@@ -226,21 +226,21 @@
 
         <label class="settings-toggle">
           <div class="settings-text">
-            <span class="settings-title">Ouverture auto de l'inventaire Drops</span>
-            <span class="settings-description">Ouvrir l'inventaire Twitch en arrière-plan pour réclamer automatiquement vos Drops.</span>
+            <span class="settings-title" data-i18n="popup.settings.autoOpenInventoryTitle">Ouverture auto de l'inventaire Drops</span>
+            <span class="settings-description" data-i18n="popup.settings.autoOpenInventoryDescription">Ouvrir l'inventaire Twitch en arrière-plan pour réclamer automatiquement vos Drops.</span>
           </div>
           <input id="pref-auto-open-inventory" type="checkbox" />
         </label>
 
         <div class="settings-text" id="auto-open-inventory-interval-wrap" style="margin: 8px 0 12px 0; display:flex; align-items:center; justify-content:space-between;">
-          <span class="settings-title">Fréquence d'ouverture</span>
+          <span class="settings-title" data-i18n="popup.settings.inventoryFrequencyLabel">Fréquence d'ouverture</span>
           <select id="pref-auto-open-inventory-interval" style="background:#18181b; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:4px 8px; font-size:12px;">
-            <option value="1">Toutes les 1h</option>
-            <option value="2">Toutes les 2h</option>
-            <option value="4" selected>Toutes les 4h</option>
-            <option value="6">Toutes les 6h</option>
-            <option value="12">Toutes les 12h</option>
-            <option value="24">Toutes les 24h</option>
+            <option value="1" data-i18n="popup.settings.inventoryEvery1h">Toutes les 1h</option>
+            <option value="2" data-i18n="popup.settings.inventoryEvery2h">Toutes les 2h</option>
+            <option value="4" selected data-i18n="popup.settings.inventoryEvery4h">Toutes les 4h</option>
+            <option value="6" data-i18n="popup.settings.inventoryEvery6h">Toutes les 6h</option>
+            <option value="12" data-i18n="popup.settings.inventoryEvery12h">Toutes les 12h</option>
+            <option value="24" data-i18n="popup.settings.inventoryEvery24h">Toutes les 24h</option>
           </select>
         </div>
 
@@ -270,16 +270,16 @@
 
         <label class="settings-toggle">
           <div class="settings-text">
-            <span class="settings-title">Avatar du streamer sur l'onglet</span>
-            <span class="settings-description">Remplacer l'icône de l'onglet par la photo de profil du streamer en direct.</span>
+            <span class="settings-title" data-i18n="popup.settings.streamerFaviconTitle">Avatar du streamer sur l'onglet</span>
+            <span class="settings-description" data-i18n="popup.settings.streamerFaviconDescription">Remplacer l'icône de l'onglet par la photo de profil du streamer en direct.</span>
           </div>
           <input id="pref-enable-streamer-favicon" type="checkbox" />
         </label>
 
         <label class="settings-toggle">
           <div class="settings-text">
-            <span class="settings-title">Pastille rouge LIVE sur l'onglet</span>
-            <span class="settings-description">Afficher un point rouge LIVE sur l'icône de l'onglet quand le flux est en direct.</span>
+            <span class="settings-title" data-i18n="popup.settings.tabLiveIconTitle">Pastille rouge LIVE sur l'onglet</span>
+            <span class="settings-description" data-i18n="popup.settings.tabLiveIconDescription">Afficher un point rouge LIVE sur l'icône de l'onglet quand le flux est en direct.</span>
           </div>
           <input id="pref-enable-tab-live-icon" type="checkbox" />
         </label>
@@ -438,40 +438,40 @@
       <button id="test-notification" type="button" class="test-notification" data-i18n="popup.testNotification">Tester une notification</button>
 
       <!-- Group: Event Logs -->
-      <p class="settings-group-header">Journal d'événements</p>
+      <p class="settings-group-header" data-i18n="popup.settings.groupEventLog">Journal d'événements</p>
       <div class="settings-group">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
           <div class="log-filter-group" id="log-filter-group" style="display:flex; gap:4px;">
-            <button type="button" class="pf-btn active" data-log-filter="all">Tous</button>
+            <button type="button" class="pf-btn active" data-log-filter="all" data-i18n="popup.settings.logFilterAll">Tous</button>
             <button type="button" class="pf-btn" data-log-filter="drop">Drops</button>
             <button type="button" class="pf-btn" data-log-filter="moment">Moments</button>
             <button type="button" class="pf-btn" data-log-filter="raid">Raids</button>
           </div>
-          <button id="btn-clear-logs" type="button" class="reset-button" title="Effacer le journal" style="background:transparent; border:none; color:#ef4444; cursor:pointer;">Effacer</button>
+          <button id="btn-clear-logs" type="button" class="reset-button" data-i18n="popup.settings.logClear" data-i18n-attr-title="popup.settings.logClearTitle" title="Effacer le journal" style="background:transparent; border:none; color:#ef4444; cursor:pointer;">Effacer</button>
         </div>
         <div id="logs-container" style="display:flex; flex-direction:column; gap:6px; max-height:220px; overflow-y:auto;">
-          <p class="empty-state">Aucun événement enregistré.</p>
+          <p class="empty-state" data-i18n="popup.settings.logEmpty">Aucun événement enregistré.</p>
         </div>
       </div>
 
       <!-- Group: FAQ & Help -->
-      <p class="settings-group-header">Aide & FAQ</p>
+      <p class="settings-group-header" data-i18n="popup.settings.groupFaq">Aide &amp; FAQ</p>
       <div class="faq-accordion" style="display:flex; flex-direction:column; gap:8px;">
         <details class="faq-item" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:6px; padding:8px 10px;">
-          <summary style="font-weight:600; cursor:pointer; color:#efeff1; font-size:12px;">💎 Points de chaîne & Drops</summary>
-          <div style="margin-top:6px; font-size:11px; color:#adadb8; line-height:1.4;">
+          <summary style="font-weight:600; cursor:pointer; color:#efeff1; font-size:12px;" data-i18n="popup.settings.faqPointsTitle">💎 Points de chaîne &amp; Drops</summary>
+          <div style="margin-top:6px; font-size:11px; color:#adadb8; line-height:1.4;" data-i18n="popup.settings.faqPointsBody">
             StreamPulse clique automatiquement sur le coffre de points de chaîne et réclame vos Drops dès qu'ils apparaissent.
           </div>
         </details>
         <details class="faq-item" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:6px; padding:8px 10px;">
-          <summary style="font-weight:600; cursor:pointer; color:#efeff1; font-size:12px;">⚡ Lecteur & Anti-Pause</summary>
-          <div style="margin-top:6px; font-size:11px; color:#adadb8; line-height:1.4;">
+          <summary style="font-weight:600; cursor:pointer; color:#efeff1; font-size:12px;" data-i18n="popup.settings.faqPlayerTitle">⚡ Lecteur &amp; Anti-Pause</summary>
+          <div style="margin-top:6px; font-size:11px; color:#adadb8; line-height:1.4;" data-i18n="popup.settings.faqPlayerBody">
             La Visibility API est masquée pour Twitch afin que le flux vidéo continue de tourner en arrière-plan sans coupure d'audio.
           </div>
         </details>
         <details class="faq-item" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:6px; padding:8px 10px;">
-          <summary style="font-weight:600; cursor:pointer; color:#efeff1; font-size:12px;">🔮 Prédictions & Raids</summary>
-          <div style="margin-top:6px; font-size:11px; color:#adadb8; line-height:1.4;">
+          <summary style="font-weight:600; cursor:pointer; color:#efeff1; font-size:12px;" data-i18n="popup.settings.faqPredictionsTitle">🔮 Prédictions &amp; Raids</summary>
+          <div style="margin-top:6px; font-size:11px; color:#adadb8; line-height:1.4;" data-i18n="popup.settings.faqPredictionsBody">
             Un widget déplaçable s'affiche sur la vidéo pour voter rapidement. Les redirections de raid sont annulées si l'option est active.
           </div>
         </details>

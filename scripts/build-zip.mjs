@@ -17,7 +17,9 @@ const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = process.env.STREAMPULSE_ZIP_DIR || path.join(os.homedir(), "Desktop/dev/ZIPS");
 
 // Versionne mais reserve au developpement : jamais livre.
-const DEV_ONLY = [/^README\.md$/, /^\.gitignore$/, /^package(-lock)?\.json$/, /^eslint\.config\.mjs$/, /^scripts\//];
+// Toute la documentation est exclue, pas seulement le README : CHROMEWEBSTORE.md
+// partait dans l'archive livrée, avec la fiche Store et l'historique interne.
+const DEV_ONLY = [/\.md$/i, /^\.gitignore$/, /^package(-lock)?\.json$/, /^eslint\.config\.mjs$/, /^scripts\//];
 // Necessaire a l'extension mais gitignore.
 const EXTRA = ["config.js"];
 // Filet de securite : si l'une de ces entrees apparait, on refuse de packager.
