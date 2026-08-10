@@ -504,6 +504,14 @@ class PreferenceStore {
     return {
       liveNotifications: preferences.liveNotifications !== false,
       gameNotifications: Boolean(preferences.gameNotifications),
+      // Ces trois cles etaient absentes de sanitize() : elles etaient acceptees
+      // par le handler updatePreferences puis perdues a l'ecriture, et le spread
+      // de DEFAULT_PREFERENCES dans set() les remettait a true. Impossible de les
+      // desactiver. La parite DEFAULT_PREFERENCES / sanitize() est desormais
+      // verifiee par scripts/verify.mjs.
+      dropAlerts: preferences.dropAlerts !== false,
+      predictionAlerts: preferences.predictionAlerts !== false,
+      raidAlerts: preferences.raidAlerts !== false,
       soundsEnabled: preferences.soundsEnabled !== false,
       autoClaimChannelPoints: preferences.autoClaimChannelPoints !== false,
       autoClaimDrops: preferences.autoClaimDrops !== false,
