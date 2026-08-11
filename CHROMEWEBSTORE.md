@@ -208,4 +208,223 @@ Datenschutz an erster Stelle:
 StreamPulse sammelt KEINE persönlichen Daten, erfordert KEIN Konto und enthält KEINE Werbung oder Tracker. Alle deine Einstellungen werden sicher und lokal auf deinem Gerät gespeichert.
 ```
 
-*(Note : Pour ne pas surcharger ce fichier, les traductions en Italien, Polonais, Turc, Russe, Japonais, Coréen, Indonésien, Néerlandais, Suédois et Tchèque sont générées directement dans le tableau de bord du Web Store Chrome via leurs fichiers _locales respectifs. L'anglais "en" et les autres langues s'appliqueront automatiquement).*
+
+### 🇮🇹 Italien (IT)
+**Short Description**:
+`Ritiro automatico dei Punti Canale, avvisi live, anteprime e filtri chat per Twitch e Kick. Disponibile in 15 lingue! Gratis.`
+
+**Detailed Description**:
+```text
+StreamPulse è l'estensione definitiva per migliorare la tua esperienza su Twitch e Kick. Ultraleggera e velocissima, automatizza il tuo flusso di lavoro senza rallentare il browser.
+
+✨ NOVITÀ: L'estensione è ora completamente tradotta e disponibile in oltre 15 lingue!
+
+Caratteristiche principali:
+• Ritiro automatico dei Punti Canale: Non perderti più i punti canale di Twitch o le ricompense di Kick! StreamPulse li raccoglie automaticamente in background mentre ti godi la diretta.
+• Avvisi in tempo reale: Sii il primo in chat. Ricevi notifiche desktop istantanee non appena i tuoi streamer preferiti vanno in onda.
+• Anteprime live al passaggio del mouse: Risparmia tempo visualizzando l'anteprima di qualsiasi diretta passando semplicemente il mouse sul link del canale, senza dover lasciare la scheda attuale.
+• Anti-Pausa e ottimizzazione del player: Evita che gli stream vadano in pausa automaticamente quando cambi scheda e sfrutta il ripristino automatico in caso di fastidiosi errori di rete (come Twitch #2000).
+• Filtri chat e contatore del tempo di visione: Nascondi lo spam indesiderato usando filtri per parole chiave e tieni traccia del tempo trascorso a guardare i tuoi canali preferiti.
+• Dashboard unificata: Un elegante pop-up che unisce perfettamente Twitch e Kick per mostrare chi è live a colpo d'occhio.
+
+La privacy prima di tutto:
+StreamPulse NON raccoglie alcun dato personale, NON richiede un account e NON contiene annunci o tracker. Tutte le tue impostazioni vengono salvate in modo sicuro a livello locale sul tuo dispositivo.
+```
+
+### 🇵🇱 Polonais (PL)
+**Short Description**:
+`Automatyczne zbieranie Punktów Kanału, alerty na żywo, podglądy i filtry czatu dla Twitch i Kick. Dostępne w 15 językach! Za darmo.`
+
+**Detailed Description**:
+```text
+StreamPulse to najlepsze rozszerzenie do przeglądarki, które przeniesie Twoje doświadczenia z Twitcha i Kicka na wyższy poziom. Ultralekkie i błyskawiczne, automatyzuje Twoje działania bez spowalniania przeglądarki.
+
+✨ NOWOŚĆ: Rozszerzenie jest teraz w pełni przetłumaczone i dostępne w ponad 15 językach!
+
+Kluczowe funkcje:
+• Automatyczne zbieranie Punktów Kanału: Nigdy więcej nie przegap punktów na Twitchu ani nagród na Kicku! StreamPulse zbiera je automatycznie w tle, podczas gdy Ty oglądasz stream.
+• Alerty na żywo w czasie rzeczywistym: Bądź pierwszy na czacie. Otrzymuj błyskawiczne powiadomienia na pulpit w sekundę po tym, jak Twoi ulubieni streamerzy rozpoczną transmisję.
+• Podgląd na żywo po najechaniu kursorem: Oszczędzaj czas podglądając dowolny stream na żywo najeżdżając kursorem na link do kanału, bez konieczności opuszczania bieżącej karty.
+• Anti-Pause i optymalizacja odtwarzacza: Zapobiega automatycznemu wstrzymywaniu transmisji po zmianie karty i umożliwia automatyczne wznawianie po uciążliwych błędach sieciowych (jak np. Twitch #2000).
+• Filtrowanie czatu i śledzenie czasu oglądania: Ukrywaj niechciany spam za pomocą filtrów słów kluczowych i dokładnie śledź czas oglądania na swoich ulubionych kanałach.
+• Zintegrowany panel główny: Eleganckie wyskakujące okienko, które łączy Twitcha i Kicka pokazując na pierwszy rzut oka, kto jest na żywo.
+
+Prywatność przede wszystkim:
+StreamPulse NIE zbiera żadnych danych osobowych, NIE wymaga konta i NIE zawiera ŻADNYCH reklam ani trackerów. Wszystkie ustawienia są bezpiecznie zapisywane lokalnie na Twoim urządzeniu.
+```
+
+### 🇹🇷 Turc (TR)
+**Short Description**:
+`Twitch ve Kick için otomatik Kanal Puanı toplama, canlı bildirimler, önizlemeler ve sohbet filtreleri. 15 dilde mevcut! Ücretsiz.`
+
+**Detailed Description**:
+```text
+StreamPulse, Twitch ve Kick izleme deneyiminizi bir üst seviyeye taşıyacak en iyi tarayıcı eklentisidir. Ultra hafif ve şimşek hızında olan bu eklenti, tarayıcınızı yavaşlatmadan işlemlerinizi otomatikleştirir.
+
+✨ YENİ: Eklenti artık tamamen çevrilmiş durumda ve 15'ten fazla dilde kullanılabilir!
+
+Temel Özellikler:
+• Otomatik Kanal Puanı Toplama: Twitch kanal puanlarını veya Kick ödüllerini bir daha asla kaçırmayın! Siz yayının keyfini çıkarırken StreamPulse bunları arka planda otomatik olarak toplar.
+• Gerçek Zamanlı Canlı Bildirimler: Sohbette ilk siz olun. Favori yayıncılarınız canlı yayına geçtiği saniye anında masaüstü bildirimleri alın.
+• Üzerine Gelince Canlı Önizleme: Sadece bir kanal bağlantısının üzerine gelerek herhangi bir canlı yayını önizleyin, mevcut sekmenizden ayrılmanıza gerek kalmaz.
+• Otomatik Duraklatma Engeli ve Oynatıcı Optimizasyonu: Sekme değiştirdiğinizde yayınların otomatik olarak duraklatılmasını önleyin ve sinir bozucu ağ hatalarından (Twitch #2000 gibi) otomatik olarak kurtulun.
+• Sohbet Filtreleme ve İzleme Süresi Takibi: İstenmeyen spam'i anahtar kelime filtreleri kullanarak gizleyin ve favori kanallarınızda tam izleme sürenizi takip edin.
+• Birleştirilmiş Kontrol Paneli: Twitch ve Kick'i bir araya getirerek kimin canlı yayında olduğunu tek bakışta gösteren şık bir açılır pencere.
+
+Önce Gizlilik:
+StreamPulse HİÇBİR kişisel veri toplamaz, hesap GEREKTİRMEZ ve SIFIR reklam veya izleyici içerir. Tüm ayarlarınız cihazınıza yerel olarak ve güvenli bir şekilde kaydedilir.
+```
+
+### 🇷🇺 Russe (RU)
+**Short Description**:
+`Автоматический сбор Баллов канала, уведомления, превью и фильтры чата для Twitch и Kick. Доступно на 15 языках! Бесплатно.`
+
+**Detailed Description**:
+```text
+StreamPulse — лучшее браузерное расширение для улучшения вашего опыта просмотра Twitch и Kick. Ультралегкое и невероятно быстрое, оно автоматизирует ваши действия, не замедляя работу браузера.
+
+✨ НОВИНКА: Расширение полностью переведено и доступно более чем на 15 языках!
+
+Ключевые особенности:
+• Автоматический сбор Баллов канала: Никогда не упускайте баллы Twitch и награды Kick! StreamPulse собирает их автоматически в фоновом режиме, пока вы наслаждаетесь стримом.
+• Уведомления о прямых трансляциях в реальном времени: Будьте первым в чате. Получайте мгновенные уведомления на рабочий стол в ту секунду, когда ваши любимые стримеры выходят в эфир.
+• Предварительный просмотр при наведении: Экономьте время, просматривая любой стрим в прямом эфире, просто наведя курсор на ссылку канала, без необходимости покидать текущую вкладку.
+• Защита от пауз и оптимизация плеера: Предотвращает автоматическую паузу стримов при переключении вкладок и обеспечивает автоматическое восстановление после сетевых ошибок (например, Twitch #2000).
+• Фильтрация чата и трекер времени просмотра: Скрывайте нежелательный спам с помощью фильтров по ключевым словам и точно отслеживайте время, проведенное на любимых каналах.
+• Единая панель управления: Изящное всплывающее окно, которое объединяет Twitch и Kick, показывая, кто находится в прямом эфире с одного взгляда.
+
+Конфиденциальность превыше всего:
+StreamPulse НЕ собирает личные данные, НЕ требует учетной записи и НЕ содержит рекламы или трекеров. Все ваши настройки надежно сохраняются локально на вашем устройстве.
+```
+
+### 🇯🇵 Japonais (JA)
+**Short Description**:
+`TwitchとKick用の自動チャンネルポイント獲得、ライブ通知、プレビュー、チャットフィルター。15言語対応！無料。`
+
+**Detailed Description**:
+```text
+StreamPulseは、TwitchとKickの視聴体験を向上させる究極のブラウザ拡張機能です。超軽量で非常に高速であり、ブラウザを遅くすることなく作業を自動化します。
+
+✨ 新機能：拡張機能が完全に翻訳され、15以上の言語で利用可能になりました！
+
+主な機能：
+• チャンネルポイントの自動獲得：TwitchのチャンネルポイントやKickの報酬を二度と逃しません！配信を楽しんでいる間に、StreamPulseがバックグラウンドで自動的にポイントを獲得します。
+• リアルタイムのライブ通知：チャットで一番乗りしましょう。お気に入りのストリーマーが配信を開始した瞬間に、デスクトップ通知をすぐに受け取れます。
+• ホバー時のライブプレビュー：チャンネルのリンクにカーソルを合わせるだけで、現在のタブから移動することなく、ライブ配信をプレビューして時間を節約できます。
+• 自動一時停止の防止とプレイヤーの最適化：タブを切り替えたときに配信が自動的に一時停止するのを防ぎ、（Twitchエラー #2000 のような）ネットワークエラーからの自動復旧機能を利用できます。
+• チャットのフィルタリングと視聴時間トラッカー：キーワードフィルターを使用して不要なスパムを非表示にし、お気に入りのチャンネルでの正確な視聴時間を追跡します。
+• 統合ダッシュボード：TwitchとKickを統合し、誰が配信中であるかを一目で確認できる洗練されたポップアップ。
+
+プライバシー第一：
+StreamPulseは個人データを一切収集せず、アカウントも不要で、広告やトラッカーもゼロです。すべての設定はお使いのデバイスにローカルかつ安全に保存されます。
+```
+
+### 🇰🇷 Coréen (KO)
+**Short Description**:
+`Twitch 및 Kick용 채널 포인트 자동 획득, 라이브 알림, 미리보기 및 채팅 필터. 15개 언어 지원! 무료.`
+
+**Detailed Description**:
+```text
+StreamPulse는 Twitch 및 Kick 시청 경험을 향상시키는 최고의 브라우저 확장 프로그램입니다. 초경량이며 매우 빠르기 때문에 브라우저 속도를 저하시키지 않고 작업을 자동화합니다.
+
+✨ 새로운 기능: 확장 프로그램이 완전히 번역되어 15개 이상의 언어로 제공됩니다!
+
+주요 기능:
+• 채널 포인트 자동 수집: Twitch 채널 포인트나 Kick 보상을 다시는 놓치지 마세요! 스트리밍을 즐기는 동안 StreamPulse가 백그라운드에서 자동으로 포인트를 수집합니다.
+• 실시간 라이브 알림: 채팅에서 1등이 되어보세요. 좋아하는 스트리머가 방송을 시작하는 즉시 바탕 화면 알림을 받으세요.
+• 호버 라이브 미리보기: 현재 탭을 벗어날 필요 없이 채널 링크 위로 마우스를 가져가기만 하면 라이브 스트림을 미리 볼 수 있어 시간을 절약할 수 있습니다.
+• 일시 정지 방지 및 플레이어 최적화: 탭을 전환할 때 스트림이 자동으로 일시 정지되는 것을 방지하고, 성가신 네트워크 오류(예: Twitch #2000)로부터 자동 복구 기능을 즐기세요.
+• 채팅 필터링 및 시청 시간 추적기: 키워드 필터를 사용하여 원치 않는 스팸을 숨기고, 좋아하는 채널의 정확한 시청 시간을 추적하세요.
+• 통합 대시보드: Twitch와 Kick을 매끄럽게 통합하여 누가 방송 중인지 한눈에 보여주는 세련된 팝업입니다.
+
+개인정보 보호 최우선:
+StreamPulse는 개인 데이터를 전혀 수집하지 않으며, 계정이 필요하지 않고, 광고나 트래커가 전혀 없습니다. 모든 설정은 기기에 안전하게 로컬로 저장됩니다.
+```
+
+### 🇮🇩 Indonésien (ID)
+**Short Description**:
+`Klaim otomatis Channel Points, peringatan live, pratinjau & filter obrolan untuk Twitch & Kick. Tersedia dalam 15 bahasa! Gratis.`
+
+**Detailed Description**:
+```text
+StreamPulse adalah ekstensi browser terbaik untuk meningkatkan pengalaman menonton Twitch dan Kick Anda. Sangat ringan dan secepat kilat, ini mengotomatiskan tugas Anda tanpa memperlambat browser Anda.
+
+✨ BARU: Ekstensi ini sekarang telah diterjemahkan sepenuhnya dan tersedia dalam lebih dari 15 bahasa!
+
+Fitur Utama:
+• Kumpulkan Channel Points Otomatis: Jangan pernah melewatkan poin saluran Twitch atau hadiah Kick! StreamPulse mengklaimnya secara otomatis di latar belakang saat Anda menikmati streaming.
+• Peringatan Live Real-Time: Jadilah yang pertama di obrolan. Dapatkan pemberitahuan desktop instan pada detik streamer favorit Anda mulai siaran.
+• Pratinjau Live Saat Diarahkan: Menghemat waktu dengan mempratinjau live stream apa pun hanya dengan mengarahkan kursor ke tautan saluran, tidak perlu meninggalkan tab Anda saat ini.
+• Anti-Jeda & Pengoptimalan Pemutar: Mencegah streaming dijeda secara otomatis saat Anda beralih tab, dan nikmati pemulihan otomatis dari kesalahan jaringan yang mengganggu (seperti Twitch #2000).
+• Penyaringan Obrolan & Pelacak Waktu Tonton: Sembunyikan spam yang tidak diinginkan menggunakan filter kata kunci, dan lacak waktu tonton persis Anda di saluran favorit Anda.
+• Dasbor Terpadu: Pop-up ramping dan lengkap yang menyatukan Twitch dan Kick untuk menunjukkan siapa yang sedang live secara sekilas.
+
+Privasi Pertama:
+StreamPulse TIDAK mengumpulkan data pribadi apa pun, TIDAK memerlukan akun, dan TIDAK MENGANDUNG iklan atau pelacak. Semua pengaturan Anda disimpan dengan aman secara lokal di perangkat Anda.
+```
+
+### 🇳🇱 Néerlandais (NL)
+**Short Description**:
+`Automatisch claimen van kanaalpunten, live meldingen, voorvertoningen & chatfilters voor Twitch & Kick. In 15 talen! Gratis.`
+
+**Detailed Description**:
+```text
+StreamPulse is de ultieme browserextensie om je kijkervaring op Twitch en Kick te verbeteren. Vederlicht en razendsnel, het automatiseert je workflow zonder je browser te vertragen.
+
+✨ NIEUW: De extensie is nu volledig vertaald en beschikbaar in meer dan 15 talen!
+
+Belangrijkste functies:
+• Kanaalpunten automatisch verzamelen: Loop nooit meer Twitch-kanaalpunten of Kick-beloningen mis! StreamPulse claimt ze automatisch op de achtergrond terwijl jij van de stream geniet.
+• Realtime live waarschuwingen: Wees de eerste in de chat. Ontvang direct bureaubladmeldingen op het moment dat je favoriete streamers live gaan.
+• Live voorvertoningen (hover): Bespaar tijd door een voorbeeld van een live stream te bekijken door simpelweg met je muis over een kanaallink te gaan, zonder dat je je huidige tabblad hoeft te verlaten.
+• Anti-Pause en speleroptimalisatie: Voorkom dat streams automatisch pauzeren wanneer je van tabblad wisselt, en geniet van automatisch herstel van vervelende netwerkfouten (zoals Twitch #2000).
+• Chatfiltering en kijktijdtracker: Verberg ongewenste spam met behulp van trefwoordfilters en houd je exacte kijktijd bij op je favoriete kanalen.
+• Geünificeerd dashboard: Een strakke, alles-in-één pop-up die Twitch en Kick naadloos samenbrengt om in één oogopslag te laten zien wie er live is.
+
+Privacy voorop:
+StreamPulse verzamelt GEEN persoonlijke gegevens, vereist GEEN account en bevat NUL advertenties of trackers. Al je instellingen worden veilig en lokaal op je apparaat opgeslagen.
+```
+
+### 🇸🇪 Suédois (SV)
+**Short Description**:
+`Automatisk insamling av kanalpoäng, livevarningar, förhandsvisningar & chattfilter för Twitch & Kick. På 15 språk! Gratis.`
+
+**Detailed Description**:
+```text
+StreamPulse är det ultimata webbläsartillägget för att förbättra din tittarupplevelse på Twitch och Kick. Ultralätt och blixtsnabb automatiserar den ditt arbetsflöde utan att göra din webbläsare långsammare.
+
+✨ NYHET: Tillägget är nu helt översatt och tillgängligt på över 15 språk!
+
+Nyckelfunktioner:
+• Samla in kanalpoäng automatiskt: Missa aldrig Twitch-kanalpoäng eller Kick-belöningar igen! StreamPulse samlar in dem automatiskt i bakgrunden medan du njuter av streamen.
+• Livevarningar i realtid: Var först i chatten. Få omedelbara skrivbordsaviseringar samma sekund som dina favoritstreamers går live.
+• Live-förhandsvisningar vid hovring: Spara tid genom att förhandsgranska vilken live stream som helst bara genom att hålla muspekaren över en kanallänk, du behöver inte lämna din nuvarande flik.
+• Anti-Pause och spelaroptimering: Förhindra att streams pausas automatiskt när du byter flik, och njut av automatisk återställning från irriterande nätverksfel (som Twitch #2000).
+• Chattfiltrering och visningstidspårare: Dölj oönskad spam med hjälp av sökordsfilter och spåra din exakta visningstid över dina favoritkanaler.
+• Enhetlig instrumentpanel: En elegant allt-i-ett-popup som sömlöst för samman Twitch och Kick för att visa vem som är live med en blick.
+
+Integritet först:
+StreamPulse samlar INTE in några personuppgifter, kräver INGET konto och innehåller NOLL annonser eller spårare. Alla dina inställningar sparas säkert lokalt på din enhet.
+```
+
+### 🇨🇿 Tchèque (CS)
+**Short Description**:
+`Automatické sbírání bodů, živá upozornění, náhledy a filtry chatu pro Twitch a Kick. K dispozici v 15 jazycích! Zdarma.`
+
+**Detailed Description**:
+```text
+StreamPulse je dokonalé rozšíření prohlížeče, které pozvedne váš zážitek ze sledování na Twitchi a Kicku. Je mimořádně lehké a bleskově rychlé, automatizuje vaše činnosti, aniž by zpomalovalo váš prohlížeč.
+
+✨ NOVINKA: Rozšíření je nyní plně přeloženo a je k dispozici ve více než 15 jazycích!
+
+Klíčové vlastnosti:
+• Automatické sbírání bodů kanálu: Už nikdy nezmeškáte body kanálu Twitch nebo odměny na Kicku! StreamPulse je automaticky sbírá na pozadí, zatímco si užíváte stream.
+• Živá upozornění v reálném čase: Buďte v chatu první. Získejte okamžitá upozornění na plochu ve vteřině, kdy vaši oblíbení streameři začnou vysílat.
+• Živé náhledy po najetí myší: Ušetřete čas tím, že si prohlédnete jakýkoli živý stream pouhým najetím myší na odkaz na kanál, aniž byste museli opustit aktuální kartu.
+• Anti-Pause a optimalizace přehrávače: Zabraňte automatickému pozastavení streamů při přepínání karet a užijte si automatické zotavení z nepříjemných chyb sítě (jako je chyba #2000).
+• Filtrování chatu a sledování času sledování: Skryjte nechtěný spam pomocí filtrů klíčových slov a sledujte svůj přesný čas sledování na svých oblíbených kanálech.
+• Sjednocený ovládací panel: Elegantní vyskakovací okno, které plynule spojuje Twitch a Kick, abyste na první pohled viděli, kdo vysílá živě.
+
+Ochrana soukromí na prvním místě:
+StreamPulse NEshromažďuje žádné osobní údaje, NEvyžaduje ŽÁDNÝ účet a obsahuje NULA reklam nebo sledovačů. Všechna vaše nastavení jsou bezpečně uložena lokálně ve vašem zařízení.
+```
