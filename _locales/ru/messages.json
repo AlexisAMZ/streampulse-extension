@@ -1,0 +1,8 @@
+{
+  "appName": {
+    "message": "StreamPulse: Расширение для Twitch и Kick"
+  },
+  "appDesc": {
+    "message": "Автоматический сбор Баллов канала, уведомления, превью и фильтры чата для Twitch и Kick."
+  }
+}

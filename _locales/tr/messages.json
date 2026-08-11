@@ -1,0 +1,8 @@
+{
+  "appName": {
+    "message": "StreamPulse: Twitch ve Kick eklentisi"
+  },
+  "appDesc": {
+    "message": "Twitch ve Kick için otomatik Kanal Puanı toplama, canlı bildirimler, önizlemeler ve sohbet filtreleri."
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "appName": {
+    "message": "StreamPulse: Twitch & Kick-tillägg"
+  },
+  "appDesc": {
+    "message": "Automatisk insamling av kanalpoäng, livevarningar, förhandsvisningar & chattfilter för Twitch & Kick."
+  }
+}

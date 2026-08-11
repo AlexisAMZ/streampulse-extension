@@ -41,7 +41,7 @@ StreamPulse is the ultimate browser extension to elevate your Twitch and Kick vi
 Key Features:
 • Auto-Collect Channel Points: Never miss out on Twitch channel points or Kick rewards! StreamPulse claims them automatically in the background while you enjoy the stream.
 • Real-Time Live Alerts: Be the first in chat. Get instant desktop notifications the second your favorite streamers go live.
-• Live Hover Previews: Save time by previewing any live stream just by hovering over a channel link—no need to leave your current tab.
+• Live Hover Previews: Save time by previewing any live stream just by hovering over a channel link, no need to leave your current tab.
 • Anti-Pause & Player Optimization: Prevent streams from pausing automatically when you switch tabs, and enjoy auto-recovery from annoying network errors (like Twitch #2000).
 • Chat Filtering & Watch Time Tracker: Hide unwanted spam using keyword filters, and track your exact watch time across your favorite channels.
 • Unified Dashboard: A sleek, all-in-one pop-up that seamlessly brings Twitch and Kick together to show who's live at a glance.
@@ -133,5 +133,79 @@ StreamPulse does NOT collect any personal data, requires NO account, and contain
 
 | Version | Date | Description des changements | Statut CWS |
 |---------|------|-----------------------------|------------|
-| 26.8.9 | 2026-08-10 | Bouton « Ajouter à StreamPulse » sur les pages de chaîne Twitch, page de notes de version localisée, anneau LIVE autour de l'avatar de l'onglet avec clignotement au raid, correction des libellés restés en français quelle que soit la langue. | Prêt pour publication |
+| 26.8.11 | 2026-08-11 | Bouton « Ajouter à StreamPulse » sur les pages de chaîne Twitch, page de notes de version localisée, traductions dans 15 langues ajoutées, ajustements d'interface (indicateur de latence). | Prêt pour publication |
 | 26.8.6 | 2026-08-06 | Amélioration des aperçus vidéo Twitch/Kick, optimisation anti-pause du lecteur et gestion i18n FR/EN. | Prêt pour publication |
+
+---
+
+## 8. Traductions pour le Chrome Web Store (Prêt à copier-coller)
+
+Les textes suivants sont formatés en texte brut pur, sans tiret cadratin ni markdown incompatible avec le Chrome Web Store.
+
+### 🇪🇸 Espagnol (ES)
+**Short Description**:
+`Reclama Puntos del Canal automáticamente, alertas en vivo, vistas previas y filtros de chat para Twitch y Kick. ¡En 15 idiomas! Gratis.`
+
+**Detailed Description**:
+```text
+StreamPulse es la extensión definitiva para mejorar tu experiencia en Twitch y Kick. Ultraligera y súper rápida, automatiza tus tareas sin ralentizar tu navegador.
+
+✨ NUEVO: ¡La extensión ahora está completamente traducida y disponible en más de 15 idiomas!
+
+Características principales:
+• Reclamo automático de Puntos del Canal: ¡Nunca más te pierdas los puntos de Twitch o las recompensas de Kick! StreamPulse los recoge automáticamente en segundo plano mientras disfrutas del stream.
+• Alertas en vivo en tiempo real: Sé el primero en el chat. Recibe notificaciones de escritorio al instante en cuanto tus streamers favoritos empiecen a transmitir.
+• Vistas previas en vivo al pasar el cursor: Ahorra tiempo previsualizando cualquier stream en vivo con solo pasar el ratón por encima del enlace de un canal, sin tener que salir de la pestaña actual.
+• Anti-Pausa y optimización del reproductor: Evita que los streams se pausen automáticamente al cambiar de pestaña y disfruta de la recuperación automática de errores de red (como el error #2000 de Twitch).
+• Filtros de chat y rastreador de tiempo de visualización: Oculta el spam no deseado usando filtros de palabras clave y haz un seguimiento exacto de tu tiempo de visualización en tus canales favoritos.
+• Panel unificado: Una ventana emergente elegante que reúne a Twitch y Kick para mostrarte quién está en vivo de un vistazo.
+
+Privacidad ante todo:
+StreamPulse NO recopila ningún dato personal, NO requiere cuenta y NO contiene anuncios ni rastreadores. Toda tu configuración se guarda de forma segura localmente en tu dispositivo.
+```
+
+### 🇧🇷 Portugais (PT-BR)
+**Short Description**:
+`Resgate automático de Pontos do Canal, alertas ao vivo, prévias e filtros de chat para Twitch e Kick. Em 15 idiomas! Grátis.`
+
+**Detailed Description**:
+```text
+StreamPulse é a extensão definitiva para melhorar sua experiência na Twitch e na Kick. Super leve e extremamente rápida, ela automatiza suas tarefas sem deixar seu navegador lento.
+
+✨ NOVIDADE: A extensão agora está totalmente traduzida e disponível em mais de 15 idiomas!
+
+Principais Recursos:
+• Coleta automática de Pontos do Canal: Nunca mais perca os pontos da Twitch ou recompensas da Kick! O StreamPulse coleta tudo automaticamente em segundo plano enquanto você assiste.
+• Alertas ao vivo em tempo real: Seja o primeiro no chat. Receba notificações na área de trabalho instantaneamente quando seus streamers favoritos entrarem ao vivo.
+• Prévias ao vivo ao passar o mouse: Economize tempo visualizando qualquer stream ao vivo apenas passando o mouse sobre o link de um canal, sem precisar sair da aba atual.
+• Anti-Pausa e otimização do player: Impede que as transmissões pausem automaticamente quando você muda de aba e oferece recuperação automática de erros de rede (como o erro #2000 da Twitch).
+• Filtro de chat e rastreador de tempo: Oculte spam indesejado usando filtros de palavras-chave e acompanhe exatamente o seu tempo assistido nos canais favoritos.
+• Painel unificado: Um pop-up elegante que junta Twitch e Kick para mostrar quem está ao vivo de forma rápida e prática.
+
+Privacidade em primeiro lugar:
+O StreamPulse NÃO coleta dados pessoais, NÃO exige conta e NÃO contém anúncios ou rastreadores. Todas as suas configurações são salvas com segurança localmente no seu dispositivo.
+```
+
+### 🇩🇪 Allemand (DE)
+**Short Description**:
+`Auto-Sammeln von Kanalpunkten, Live-Warnungen, Vorschauen & Chat-Filter für Twitch & Kick. Verfügbar in 15 Sprachen! Kostenlos.`
+
+**Detailed Description**:
+```text
+StreamPulse ist die ultimative Browser-Erweiterung, um dein Twitch- und Kick-Erlebnis zu verbessern. Ultraleicht und blitzschnell, automatisiert es deine Abläufe, ohne deinen Browser zu verlangsamen.
+
+✨ NEU: Die Erweiterung ist jetzt vollständig übersetzt und in über 15 Sprachen verfügbar!
+
+Hauptfunktionen:
+• Automatisches Sammeln von Kanalpunkten: Verpasse nie wieder Twitch-Kanalpunkte oder Kick-Belohnungen! StreamPulse sammelt sie automatisch im Hintergrund, während du den Stream genießt.
+• Echtzeit-Live-Benachrichtigungen: Sei der Erste im Chat. Erhalte sofortige Desktop-Benachrichtigungen, sobald deine Lieblings-Streamer online gehen.
+• Live-Vorschau beim Darüberfahren: Spare Zeit, indem du jeden Live-Stream in der Vorschau ansiehst, indem du einfach mit der Maus über einen Kanal-Link fährst, ohne deinen aktuellen Tab zu verlassen.
+• Anti-Pause & Player-Optimierung: Verhindere, dass Streams automatisch pausieren, wenn du den Tab wechselst, und profitiere von der automatischen Wiederherstellung bei Netzwerkfehlern (wie Twitch #2000).
+• Chat-Filter & Watchtime-Tracker: Verstecke unerwünschten Spam mithilfe von Stichwortfiltern und verfolge deine genaue Wiedergabezeit auf deinen Lieblingskanälen.
+• Einheitliches Dashboard: Ein elegantes Pop-up, das Twitch und Kick nahtlos zusammenführt, um auf einen Blick zu zeigen, wer live ist.
+
+Datenschutz an erster Stelle:
+StreamPulse sammelt KEINE persönlichen Daten, erfordert KEIN Konto und enthält KEINE Werbung oder Tracker. Alle deine Einstellungen werden sicher und lokal auf deinem Gerät gespeichert.
+```
+
+*(Note : Pour ne pas surcharger ce fichier, les traductions en Italien, Polonais, Turc, Russe, Japonais, Coréen, Indonésien, Néerlandais, Suédois et Tchèque sont générées directement dans le tableau de bord du Web Store Chrome via leurs fichiers _locales respectifs. L'anglais "en" et les autres langues s'appliqueront automatiquement).*
