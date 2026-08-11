@@ -63,7 +63,7 @@ const preferenceToggleDefinitions = [
   { element: document.getElementById("onboarding-tab-live-icon"), key: "enableTabLiveIcon" },
 ];
 
-const LANGUAGE_FLAGS = { fr: "🇫🇷", en: "🇬🇧", es: "🇪🇸", de: "🇩🇪", it: "🇮🇹", pt: "🇵🇹" };
+const LANGUAGE_FLAGS = { fr: "🇫🇷", en: "🇬🇧", es: "🇪🇸", "pt-BR": "🇧🇷", de: "🇩🇪", it: "🇮🇹", pl: "🇵🇱", tr: "🇹🇷", ru: "🇷🇺", ja: "🇯🇵", ko: "🇰🇷", id: "🇮🇩", nl: "🇳🇱", hi: "🇮🇳", sv: "🇸🇪", cs: "🇨🇿" };
 
 /* ── State ── */
 let currentStreamers = [];
