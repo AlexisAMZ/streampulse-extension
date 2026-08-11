@@ -48,8 +48,8 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
-    version: "26.8.9",
-    "date": "2026-08-10",
+    version: "26.8.11",
+    "date": "2026-08-11",
     "title": {
       "fr": "Le bouton qui manquait",
       "en": "The button that was missing",
@@ -85,6 +85,26 @@ export const RELEASES = [
       "cs": "Přidání streameru bez nutnosti otevřít rozšíření a potvrzení odstranění, která jsou konečně čitelná."
     },
     "changes": [
+      {
+        "type": "new",
+        "text": {
+          "fr": "L'extension est désormais entièrement traduite et disponible dans 15 langues ! Le Chrome Web Store affichera automatiquement le nom et la description dans votre langue.",
+          "en": "The extension is now fully translated and available in 15 languages! The Chrome Web Store will automatically display the name and description in your language.",
+          "es": "¡La extensión ya está completamente traducida y disponible en 15 idiomas! Chrome Web Store mostrará automáticamente el nombre y la descripción en tu idioma.",
+          "pt-BR": "A extensão agora está totalmente traduzida e disponível em 15 idiomas! A Chrome Web Store exibirá automaticamente o nome e a descrição no seu idioma.",
+          "de": "Die Erweiterung ist nun vollständig in 15 Sprachen übersetzt und verfügbar! Der Chrome Web Store zeigt Name und Beschreibung automatisch in Ihrer Sprache an.",
+          "it": "L'estensione è ora completamente tradotta e disponibile in 15 lingue! Il Chrome Web Store visualizzerà automaticamente il nome e la descrizione nella tua lingua.",
+          "pl": "Rozszerzenie jest teraz w pełni przetłumaczone i dostępne w 15 językach! Chrome Web Store automatycznie wyświetli nazwę i opis w Twoim języku.",
+          "tr": "Eklenti artık tamamen çevrildi ve 15 dilde mevcut! Chrome Web Mağazası adı ve açıklamayı otomatik olarak dilinizde gösterecektir.",
+          "ru": "Расширение теперь полностью переведено и доступно на 15 языках! Интернет-магазин Chrome будет автоматически отображать название и описание на вашем языке.",
+          "ja": "拡張機能が完全に翻訳され、15の言語で利用できるようになりました！Chromeウェブストアでは、言語に合わせて名前と説明が自動的に表示されます。",
+          "ko": "이제 확장 프로그램이 15개 언어로 완벽하게 번역되어 제공됩니다! Chrome 웹 스토어에서 사용자의 언어로 이름과 설명이 자동으로 표시됩니다.",
+          "id": "Ekstensi kini telah diterjemahkan sepenuhnya dan tersedia dalam 15 bahasa! Chrome Web Store akan secara otomatis menampilkan nama dan deskripsi dalam bahasa Anda.",
+          "nl": "De extensie is nu volledig vertaald en beschikbaar in 15 talen! De Chrome Web Store toont de naam en beschrijving automatisch in jouw taal.",
+          "sv": "Tillägget är nu helt översatt och tillgängligt på 15 språk! Chrome Web Store visar automatiskt namn och beskrivning på ditt språk.",
+          "cs": "Rozšíření je nyní plně přeloženo a je k dispozici v 15 jazycích! Internetový obchod Chrome automaticky zobrazí název a popis ve vašem jazyce."
+        }
+      },
       {
         "type": "new",
         "text": {
