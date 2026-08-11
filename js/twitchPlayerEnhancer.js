@@ -64,7 +64,6 @@
       align-items: center;
       justify-content: center;
       padding: 6px 12px;
-      padding-right: 30px;
       color: #dedee3;
       font-weight: 600;
       font-size: 14px;
@@ -855,7 +854,7 @@
 
     findHeader() {
       const selectors = [
-        ".stream-chat-header__right",
+        ".stream-chat-header__left",
         ".stream-chat-header",
         '[data-a-target="chat-room-header"]',
         '[data-test-selector="chat-room-header"]',
