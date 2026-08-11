@@ -7,8 +7,8 @@
 ## 1. Informations Principales du Store (Store Listing)
 
 ### Nom de l'extension
-**FR** : `StreamPulse : Monitoring Twitch & Kick` (39 / 75 caractères)  
-**EN** : `StreamPulse: Twitch & Kick Monitor` (34 / 75 caractères)
+**FR** : `StreamPulse : extension Twitch & Kick` (37 / 75 caractères)  
+**EN** : `StreamPulse: Twitch & Kick extension` (36 / 75 caractères)
 
 ### Description Courte (Short Description)
 **FR** : `Récupération auto des channel points, alertes live, aperçus et filtres chat pour Twitch & Kick. Gratuit et sans compte.` (121 / 132 caractères)  
@@ -16,7 +16,7 @@
 
 ### Description Détaillée (Detailed Description - FR)
 ```text
-StreamPulse est l'extension ultime pour optimiser votre expérience sur Twitch et Kick. Conçue pour être ultra-légère et rapide, elle s'intègre de manière transparente à votre navigateur sans alourdir le système.
+StreamPulse est souvent citée parmi les meilleures extensions Twitch de 2026. Conçue pour être ultra-légère et rapide, c'est l'extension ultime pour automatiser votre expérience sur Twitch et Kick. Elle s'intègre de manière transparente à votre navigateur basé sur Chromium sans l'alourdir, et se combine parfaitement avec des extensions comme FrankerFaceZ (FFZ) ou BetterTTV (BTTV).
 
 Fonctionnalités principales :
 
