@@ -122,25 +122,38 @@
     }, 300);
   }
 
+  /**
+   * Un bouton n'est cliqué que s'il porte un verbe de réclamation.
+   *
+   * Les anciens sélecteurs `aria-label*="Drop"` et `aria-label*="drop"` étaient
+   * bien trop larges : le second attrapait « dropdown », donc n'importe quel
+   * menu déroulant, et le premier le bouton « Drops activés » des pages de
+   * catégorie. Le clic basculait le filtre, Twitch redessinait, et on recliquait
+   * toutes les 4 secondes en notifiant un Drop réclamé à chaque tour.
+   */
+  const CLAIM_VERB = /\b(claim|réclamer|reclamer|obtenir|resgatar|reclamar)\b/i;
+  const NOT_A_CLAIM = /dropdown|menu|filtr|filter|activ(é|e)s?|enabled|param|settings|tri|sort/i;
+
+  function isClaimButton(btn) {
+    if (!(btn instanceof HTMLElement)) return false;
+    if (btn.offsetParent === null || btn.hasAttribute("disabled")) return false;
+    const label = `${btn.getAttribute("aria-label") || ""} ${btn.textContent || ""}`.trim();
+    if (!label || NOT_A_CLAIM.test(label)) return false;
+    return CLAIM_VERB.test(label);
+  }
+
   function tryClaimDrops() {
-    // Selectors for Twitch Drop claim buttons (in overlay, live or /drops/inventory)
-    const selectors = [
+    // Boutons désignés par attribut : ce sont les vrais, on leur fait confiance.
+    const exact = [
       '[data-a-target="claim-drop-button"]',
       'button[data-test-selector="claim-drop-button"]',
-      'button[aria-label*="Drop"]',
-      'button[aria-label*="drop"]',
-      'button[aria-label*="Réclamer"]',
-      'button[aria-label*="Obtenir"]',
-      'button[aria-label*="Claim"]',
-      '.claim-drop-button button',
-      'button.claim-button',
+      ".claim-drop-button button",
+      "button.claim-button",
     ];
 
-    for (const selector of selectors) {
-      const btns = document.querySelectorAll(selector);
-      for (const btn of btns) {
+    for (const selector of exact) {
+      for (const btn of document.querySelectorAll(selector)) {
         if (
-          btn &&
           btn instanceof HTMLElement &&
           btn.offsetParent !== null &&
           !btn.hasAttribute("disabled")
@@ -153,30 +166,25 @@
       }
     }
 
-    // Text content fallback scanner for inventory page (twitch.tv/drops/inventory or /inventory)
-    const allButtons = document.querySelectorAll("button");
-    for (const btn of allButtons) {
-      if (
-        btn &&
-        btn instanceof HTMLElement &&
-        btn.offsetParent !== null &&
-        !btn.hasAttribute("disabled")
-      ) {
-        const txt = (btn.textContent || "").trim().toLowerCase();
-        if (
-          txt.includes("réclamer maintenant") ||
-          txt.includes("claim now") ||
-          txt.includes("réclamer le drop") ||
-          txt.includes("claim drop") ||
-          txt === "réclamer" ||
-          txt === "claim" ||
-          txt === "obtenir"
-        ) {
-          lastClaimTime = Date.now();
-          btn.click();
-          notifyDropClaimed();
-          return true;
-        }
+    // Repli sur le libellé, cantonné aux zones qui parlent réellement de Drops.
+    // On filtre sur « drops » au pluriel, qui ne se retrouve pas dans
+    // « dropdown ». Hors de ces zones, un bouton « Réclamer » peut appartenir à
+    // tout autre chose.
+    const scopes = /^\/drops(\/|$)/.test(location.pathname)
+      ? [document]
+      : Array.from(
+          document.querySelectorAll(
+            '[class*="drops"], [data-a-target*="drops"], [data-test-selector*="drops"]'
+          )
+        );
+
+    for (const scope of scopes) {
+      for (const btn of scope.querySelectorAll("button")) {
+        if (!isClaimButton(btn)) continue;
+        lastClaimTime = Date.now();
+        btn.click();
+        notifyDropClaimed();
+        return true;
       }
     }
 

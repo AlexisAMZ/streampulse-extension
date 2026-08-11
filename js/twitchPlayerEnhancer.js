@@ -589,25 +589,23 @@
     '[data-a-target*="raid-banner"]',
   ].join(", ");
 
-  const RAID_WORDS = /\braid(ing|s|é|ing you)?\b|raid en cours|va raider/i;
+  const CANCEL_SELECTORS =
+    'button[data-a-target="cancel-raid-button"], [data-test-selector="raid-banner-cancel-button"]';
   const CANCEL_WORDS = /annuler|cancel|quitter|leave|refuser|decline|no thanks|cancelar|abbrechen/i;
   const JOIN_WORDS = /rejoindre|join|participer|go now|regarder|unirse|entrar|mitmachen/i;
-  // Le chat contient le mot « raid » en permanence : on l'exclut du balayage,
-  // sinon un message suffirait à déclencher un clic.
-  const CHAT_SCOPE =
-    '[data-a-target="chat-scrollable-area__message-container"], .chat-scrollable-area__message-container, [data-test-selector="chat-scrollable-area__message-container"]';
 
+  /**
+   * La bannière de raid, reconnue par ses seuls attributs.
+   *
+   * Une version précédente balayait en plus tous les conteneurs de la page en
+   * lisant leur textContent. Couplé à l'observateur ci-dessous, ça relançait une
+   * sérialisation complète du DOM des dizaines de fois par seconde et figeait
+   * l'onglet Twitch. Un `querySelector` sur une liste d'attributs suffit et
+   * coûte un parcours indexé.
+   */
   function findRaidBanner() {
-    const direct = document.querySelector(RAID_BANNER_SELECTORS);
-    if (direct instanceof HTMLElement) return direct;
-
-    // Repli : un conteneur court qui parle de raid et porte un bouton.
-    for (const el of document.querySelectorAll('div[class*="banner"], div[role="banner"], aside')) {
-      if (el.closest(CHAT_SCOPE)) continue;
-      const text = (el.textContent || "").slice(0, 200);
-      if (RAID_WORDS.test(text) && el.querySelector("button")) return el;
-    }
-    return null;
+    const el = document.querySelector(RAID_BANNER_SELECTORS);
+    return el instanceof HTMLElement ? el : null;
   }
 
   /**
@@ -635,30 +633,24 @@
    * cancelling it, the exact opposite of the preference.
    */
   function findRaidCancelButton() {
-    const direct = document.querySelector(
-      'button[data-a-target="cancel-raid-button"], [data-test-selector="raid-banner-cancel-button"]'
-    );
+    const direct = document.querySelector(CANCEL_SELECTORS);
     if (direct instanceof HTMLElement) return direct;
 
+    // Rien en dehors de la bannière n'est cliquable. Une version précédente
+    // cherchait « annuler » dans toute la page dès qu'aucune bannière n'était
+    // trouvée : elle cliquait des boutons sans aucun rapport, dont celui des
+    // Drops, en boucle.
     const banner = findRaidBanner();
-    // Sans bannière identifiée on balaie la page entière, mais la sélection du
-    // bouton reste stricte : un « Annuler » d'un autre dialogue ne doit jamais
-    // être cliqué, d'où l'exigence d'un contexte qui parle de raid.
-    const scope = banner || document;
+    if (!banner) return null;
 
-    const buttons = Array.from(scope.querySelectorAll("button"));
     return (
-      buttons.find((btn) => {
-        if (btn.closest(CHAT_SCOPE)) return false;
+      Array.from(banner.querySelectorAll("button")).find((btn) => {
         const label = `${btn.getAttribute("aria-label") || ""} ${btn.textContent || ""}`
           .trim()
           .toLowerCase();
         // Match cancel/leave wording; never match join/go wording.
         if (JOIN_WORDS.test(label)) return false;
-        if (!CANCEL_WORDS.test(label)) return false;
-        if (banner) return true;
-        const context = btn.closest("div, section, aside");
-        return RAID_WORDS.test((context?.textContent || "").slice(0, 200));
+        return CANCEL_WORDS.test(label);
       }) || null
     );
   }
@@ -666,6 +658,19 @@
   // Un clic suffit. Sans ce garde, le sondage reclique tant que la bannière
   // n'a pas disparu du DOM, ce qui gonfle la statistique de raids annulés.
   let lastCancelledRaidAt = 0;
+
+  // Amortisseur de l'observateur : au plus une vérification toutes les 300 ms,
+  // quel que soit le nombre de mutations. La vérification elle-même se réduit à
+  // deux querySelector, donc ce plafond est largement suffisant.
+  let raidCheckScheduled = false;
+  function scheduleRaidCheck() {
+    if (raidCheckScheduled) return;
+    raidCheckScheduled = true;
+    setTimeout(() => {
+      raidCheckScheduled = false;
+      checkAndCancelRaid();
+    }, 300);
+  }
 
   function checkAndCancelRaid() {
     if (Date.now() - lastCancelledRaidAt < 8000) return;
@@ -693,11 +698,11 @@
         raidCheckIntervalId = setInterval(checkAndCancelRaid, 2000);
       }
       // Le sondage seul laissait passer jusqu'à deux secondes entre l'apparition
-      // de la bannière et le clic. Sur un raid court, la redirection partait
-      // avant. L'observateur réagit à l'insertion du nœud, le sondage ne sert
-      // plus que de filet si une mutation passe inaperçue.
+      // de la bannière et le clic. L'observateur raccourcit ce délai, mais il
+      // doit être amorti : le chat Twitch mute plusieurs fois par seconde, et
+      // déclencher la vérification à chaque mutation figeait l'onglet.
       if (!raidObserver) {
-        raidObserver = new MutationObserver(() => checkAndCancelRaid());
+        raidObserver = new MutationObserver(scheduleRaidCheck);
         raidObserver.observe(document.body, { childList: true, subtree: true });
       }
       checkAndCancelRaid();
