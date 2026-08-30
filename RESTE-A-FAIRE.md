@@ -1,170 +1,75 @@
 # Reste à faire
 
-État au commit `bbdf631` (16 langues + page de notes de version).
-Chiffres mesurés sur le dépôt, pas estimés.
+État au commit `eba6094` (26.8.11). Chiffres mesurés sur le dépôt, pas estimés.
 
 ---
 
-## 1. Traduire les 12 nouvelles langues — reporté, ne bloque pas la publication
+## 1. Traductions — FAIT
 
-Décision : on publie avec les 4 langues déjà traduites (`fr`, `en`, `es`,
-`pt-BR`). Les 12 autres restent en `ready: false`, donc absentes du sélecteur —
-un Chrome en allemand tombe sur `de` et voit de l'anglais, exactement comme
-avant leur ajout. Rien de cassé côté utilisateur, rien qui bloque la soumission.
+Les 16 langues sont complètes : 357 clés chacune, 0 clé manquante.
+15 langues sont publiées (`ready: true`), seul `hi` (hindi) reste en
+`ready: false` (10 % de chaînes encore identiques à l'anglais).
 
-La structure est complète et `npm run verify` passe, mais les chaînes sont encore
-de l'anglais recopié.
-
-Part de chaînes identiques à l'anglais, sur 289 :
-
-| Langue | Non traduit | | Langue | Non traduit |
+| Langue | Prête | | Langue | Prête |
 |---|---|---|---|---|
-| `de` Deutsch | 100 % | | `id` Indonesia | 100 % |
-| `it` Italiano | 100 % | | `nl` Nederlands | 100 % |
-| `pl` Polski | 100 % | | `sv` Svenska | 100 % |
-| `cs` Čeština | 100 % | | `tr` Türkçe | 99 % |
-| `ru` Русский | 99 % | | `ja` 日本語 | 99 % |
-| `ko` 한국어 | 99 % | | `hi` हिन्दी | 99 % |
+| `fr` | ✅ | | `id` | ✅ |
+| `en` | ✅ | | `nl` | ✅ |
+| `es` | ✅ | | `hi` | ❌ (ready:false) |
+| `pt-BR` | ✅ | | `sv` | ✅ |
+| `de` | ✅ | | `cs` | ✅ |
+| `it` | ✅ | | `tr` | ✅ |
+| `pl` | ✅ | | `ru` | ✅ |
+| `ja` | ✅ | | `ko` | ✅ |
 
-Les 4 langues d'origine sont saines : `fr` 11 %, `es` 7 %, `pt-BR` 7 % — et ce
-résidu est normal (« StreamPulse », « Twitch », « OFFLINE », les termes qu'on ne
-traduit pas).
-
-Volume réel : **~86 500 caractères** pour les 12 langues (7 212 par langue). La
-clé DeepL Free du `.env` couvre 500 000 caractères par mois, donc largement de
-quoi faire.
-
-Points de vigilance vérifiés en amont :
-
-- **39 chaînes contiennent des placeholders** `{{count}}`, `{{name}}`,
-  `{{platform}}`. DeepL les préserve avec `tag_handling: html`, mais ça doit être
-  revalidé après coup.
-- **5 chaînes contiennent du HTML** (`<strong>`, `<a href>`) — même paramètre.
-- **9 chaînes font 3 caractères ou moins** (`Add`, `Yes`, `No`, `all`, `--`).
-  Sans contexte, une traduction automatique se trompe facilement.
-- `background.badge.live` est une **fonction** de pluralisation, pas une chaîne.
-  Elle ne doit pas passer dans le traducteur.
-- Utiliser `formality: prefer_less` (tutoiement) sur les 9 langues qui le
-  supportent : `de it pl ru ja nl es pt-BR fr`. Les 7 autres l'ignorent.
-- Normaliser les tirets cadratins `–` `—` en sortie : DeepL en insère, les règles
-  du projet les interdisent.
-- Verrouiller par glossaire : `StreamPulse`, `Twitch`, `Kick`, `Drops`, `raid`,
-  `clip`, `bits`.
-
-Après la passe, valider avec l'outil déjà en place :
-
-```bash
-node scripts/diff-translations.mjs <sauvegarde-avant.js>
-npm run verify
-```
-
-`diff-translations.mjs` compare les fonctions sur leur **résultat** et non leur
-source, donc un reformatage ne produit pas de faux positif.
+Pour publier `hi` une fois traduit : passer `ready: true` dans
+`i18n/translations.js`, puis `npm run verify`.
 
 ---
 
 ## 2. Page de notes de version — fait
 
-**Le cadre** (`js/changelog.js`, `html/changelog.html`) : les libellés passent par
-un bloc `changelog.*` dans `translations.js`, et la date suit
-`resolveLocale(getCurrentLanguage())` — donc la langue choisie dans StreamPulse,
-pas celle du navigateur.
-
-**Le contenu** (`js/changelog-data.js`) : question tranchée, chaque texte est une
-carte par langue.
-
-```js
-title: { fr: "...", en: "...", es: "...", "pt-BR": "..." }
-```
-
-Concerne `title`, `subtitle`, `changes[].text` et `thanks[].for`. La lecture passe
-par `pickLocalized(value, lang)`, qui retombe sur l'anglais quand la langue
-demandée manque — c'est ce que voit un Chrome en allemand, qui résout vers `de`.
-
-Un contrôle `verify.mjs` refuse désormais une release dont un texte ne couvre pas
-les 4 langues publiées, ou qui serait restée en chaîne simple :
-
-```
-FAIL  js/changelog-data.js: 26.8.8 changes[0].text misses es
-FAIL  js/changelog-data.js: 26.8.8 subtitle is a plain string, not a { fr, en, ... } map
-```
-
-Vérifié en déclenchant les deux cas volontairement. Conséquence pour les
-prochaines releases : les notes se rédigent en 4 langues, sinon le build échoue.
-Et si une 5ᵉ langue passe `ready: true`, toutes les entrées existantes deviennent
-incomplètes tant qu'elles ne sont pas complétées.
+Le cadre (`js/changelog.js`, `html/changelog.html`) est en place, les textes
+sont des cartes par langue (4 langues publiées obligatoires), et `verify.mjs`
+refuse une release avec des textes incomplets.
 
 ---
 
-## 3. `_locales/` limité à 4 langues
+## 3. `_locales/` limité à 4 langues — partiel
 
-`_locales/` ne contient que `en`, `es`, `fr`, `pt_BR`, avec 2 clés chacun :
-`appName` et `appDesc`. Ce sont le **nom et la description de la fiche Chrome Web
-Store**, pas l'interface.
+`_locales/` contient `en`, `es`, `fr`, `pt_BR` (2 clés : nom et description de
+la fiche Chrome Web Store). Les 12 autres langues voient la fiche en anglais.
 
-Rien ne casse — `default_locale: "en"` assure le repli — mais la fiche Store
-s'affiche en anglais pour les 12 nouvelles langues, alors que l'extension se
-présentera comme localisée.
-
-Peu de travail : 2 chaînes × 12 langues = 24 traductions. C'est du texte
-marketing, donc il vaut mieux le soigner ou le reprendre du site.
+Rien ne casse (`default_locale: "en"`), mais la fiche Store ne suit pas les
+15 langues publiées dans l'interface. 24 traductions à faire (2 × 12), texte
+marketing à soigner.
 
 ---
 
-## 4. Publier les langues une par une
+## 4. Vérifications non faites
 
-Résolu sur le plan technique. `i18n/translations.js` expose deux listes :
+Ces choses sont codées et passent les contrôles automatiques, mais n'ont
+jamais été observées en fonctionnement :
 
-- `ALL_LANGUAGES` — les 16, chacune avec un drapeau `ready`
-- `AVAILABLE_LANGUAGES` — les seules `ready: true`, c'est ce que lit le sélecteur
-
-Aujourd'hui seules `fr`, `en`, `es`, `pt-BR` sont publiées. Les 12 autres restent
-résolvables (un Chrome en allemand tombe bien sur `de`, qui affiche l'anglais),
-mais ne sont pas proposées dans le sélecteur.
-
-Pour publier une langue une fois traduite, une seule ligne à changer :
-
-```js
-{ code: "de", label: "Deutsch", ready: true },
-```
-
-Puis `npm run verify`. Un garde-fou refuse une langue marquée `ready` dont plus
-de 50 % des chaînes sont encore identiques à l'anglais :
-
-```
-FAIL  translations.js "de" is marked ready but 100% of its strings
-      are identical to English — set ready:false until it is translated
-```
-
-Rien d'autre à toucher : popup et onboarding lisent `getAvailableLanguages()`.
-
----
-
-## 5. Vérifications non faites
-
-Ces choses sont codées et passent les contrôles automatiques, mais n'ont **jamais
-été observées en fonctionnement** :
-
-- **Page de notes de version** — jamais vue s'afficher. Elle s'ouvre après une
-  mise à jour. Pour la tester directement, relever l'ID sur `chrome://extensions`
-  puis ouvrir `chrome-extension://<ID>/html/changelog.html`.
+- **Page de notes de version** — jamais vue s'afficher. Pour la tester :
+  ouvrir `chrome-extension://<ID>/html/changelog.html`.
 - **Correctif des notifications** — `createWithIconFallback` dans
   `js/background.js` doit supprimer l'erreur `Unable to download all specified
-  images` quand l'avatar distant est bloqué. Non confirmé de ton côté.
-- **Rendu dans les langues non latines** — `ja`, `ko`, `hi`, `ru` n'ont pas été
-  regardées visuellement. Les libellés longs en allemand et les scripts non
-  latins peuvent déborder dans le popup et la topbar.
+  images` quand l'avatar distant est bloqué. Non confirmé.
+- **Rendu dans les langues non latines** — `ja`, `ko`, `ru` pas regardées
+  visuellement. Les libellés longs peuvent déborder dans le popup et la topbar.
 
 ---
 
-## Ordre suggéré
+## 5. Idées de features (analyse Claude, à valider)
 
-Avant la soumission : point 5 uniquement (voir la page de notes s'afficher, et une
-notification dont l'avatar échoue). C'est le seul risque réel de cette version.
-
-Après, sans urgence : traduire les 12 langues (point 1), ce qui débloque le
-point 4, puis compléter `_locales/` (point 3) pour les langues effectivement
-publiées.
+1. **Stats de session** (facile-moyen) : dashboard popup, points/heure, drops,
+   temps par streamer. Données déjà collectées.
+2. **Auto-clip sur événements** (moyen) : réactiver `autoClipDetector.js`
+   (retiré) avec seuils configurables (raid, cheer, sub train).
+3. **Alertes Discord/webhook** (moyen) : URL webhook pour notifs live/drop
+   hors ligne.
+4. **Multi-vues / mosaïque** (difficile) : plusieurs streams en grille.
+5. **Historique drops/points ratés** (facile) : journal filtrable + export CSV.
 
 ---
 
