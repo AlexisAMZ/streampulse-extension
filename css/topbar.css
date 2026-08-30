@@ -1,5 +1,23 @@
 /* StreamPulse — Twitch top-bar button + control panel (injected by topbar.js). */
 
+/* logosp.png est un glyphe #6200EA sur fond transparent. Toutes les surfaces ou
+   on le pose sont sombres ou violettes, et le violet ne s'en detache sur aucune :
+   2,28:1 sur le #18181b de la nav Twitch (et 1,42:1 au survol, le fond
+   s'eclaircissant vers la luminance du glyphe), 1,68:1 sur le #9147ff du bouton
+   d'ajout, 1,65:1 sur le gris de l'etat suivi. Les trois sont sous le seuil
+   WCAG de 3:1 pour un element d'interface.
+
+   brightness(0) ecrase le RGB a zero, invert(1) le remonte a blanc ; le canal
+   alpha n'est touche par aucun des deux, donc l'antialiasing du glyphe survit.
+   Le logo s'aligne ainsi sur les icones de Twitch et sur nos propres libelles,
+   deja en #fff / #efeff1. */
+.sp-topbar-logo,
+.sp-tb-head .sp-tb-logo,
+.sp-qf-logo,
+.sp-qf-toast-logo {
+  filter: brightness(0) invert(1);
+}
+
 .sp-topbar-wrap {
   display: flex;
   align-items: center;
