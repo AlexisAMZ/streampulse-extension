@@ -48,6 +48,189 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.8.12",
+    "date": "2026-08-30",
+    "title": {
+      "fr": "Il ressemble enfin à Twitch",
+      "en": "It finally looks like Twitch",
+      "es": "Por fin parece de Twitch",
+      "pt-BR": "Enfim com a cara da Twitch",
+      "de": "Endlich wie ein Twitch-Button",
+      "it": "Finalmente sembra di Twitch",
+      "pl": "Wreszcie wygląda jak Twitch",
+      "tr": "Sonunda Twitch'e benziyor",
+      "ru": "Наконец-то как у Twitch",
+      "ja": "ようやくTwitchらしく",
+      "ko": "마침내 트위치처럼",
+      "id": "Akhirnya terlihat seperti Twitch",
+      "nl": "Eindelijk net als Twitch",
+      "sv": "Äntligen som en Twitch-knapp",
+      "cs": "Konečně vypadá jako Twitch"
+    },
+    "subtitle": {
+      "fr": "Le bouton de chaîne adopte la forme, la taille et les couleurs de Twitch, et affiche enfin le bon état.",
+      "en": "The channel button takes on Twitch's shape, size and colours, and finally shows the right state.",
+      "es": "El botón de canal adopta la forma, el tamaño y los colores de Twitch, y por fin muestra el estado correcto.",
+      "pt-BR": "O botão de canal adota a forma, o tamanho e as cores da Twitch, e enfim mostra o estado certo.",
+      "de": "Die Kanal-Schaltfläche übernimmt Form, Größe und Farben von Twitch und zeigt endlich den richtigen Zustand.",
+      "it": "Il pulsante del canale adotta forma, dimensioni e colori di Twitch e mostra finalmente lo stato corretto.",
+      "pl": "Przycisk kanału przejmuje kształt, rozmiar i kolory Twitcha i wreszcie pokazuje właściwy stan.",
+      "tr": "Kanal düğmesi Twitch'in biçimini, boyutunu ve renklerini benimsiyor ve nihayet doğru durumu gösteriyor.",
+      "ru": "Кнопка на странице канала перенимает форму, размер и цвета Twitch и наконец показывает верное состояние.",
+      "ja": "チャンネルページのボタンがTwitchの形状・サイズ・配色を採用し、ようやく正しい状態を表示します。",
+      "ko": "채널 버튼이 트위치의 모양과 크기, 색상을 그대로 따르고 마침내 올바른 상태를 표시합니다.",
+      "id": "Tombol saluran mengadopsi bentuk, ukuran, dan warna Twitch, dan akhirnya menampilkan status yang benar.",
+      "nl": "De kanaalknop neemt de vorm, grootte en kleuren van Twitch over en toont eindelijk de juiste status.",
+      "sv": "Kanalknappen antar Twitchs form, storlek och färger och visar äntligen rätt status.",
+      "cs": "Tlačítko na stránce kanálu přebírá tvar, velikost i barvy Twitche a konečně zobrazuje správný stav."
+    },
+    "changes": [
+      {
+        "type": "improved",
+        "text": {
+          "fr": "Le bouton « Ajouter à StreamPulse » reprend maintenant exactement la géométrie des boutons de Twitch : pilule complète, 32 px de haut, et le même gris que « S'abonner » une fois la chaîne suivie. Il ne se repère plus comme un élément rapporté au milieu de la barre d'actions.",
+          "en": "The “Add to StreamPulse” button now matches Twitch's own geometry exactly: full pill shape, 32px tall, and the same grey as “Subscribe” once the channel is tracked. It no longer stands out as something bolted onto the action row.",
+          "es": "El botón «Añadir a StreamPulse» adopta ahora exactamente la geometría de los botones de Twitch: forma de píldora completa, 32 px de alto y el mismo gris que «Suscribirse» una vez seguido el canal. Ya no destaca como un añadido en la barra de acciones.",
+          "pt-BR": "O botão “Adicionar ao StreamPulse” agora segue exatamente a geometria dos botões da Twitch: formato de pílula completo, 32 px de altura e o mesmo cinza de “Inscrever-se” depois que o canal é adicionado. Ele não parece mais um elemento colado na barra de ações.",
+          "de": "Die Schaltfläche „Zu StreamPulse hinzufügen“ übernimmt jetzt exakt die Geometrie der Twitch-Schaltflächen: vollständige Pillenform, 32 px hoch und dasselbe Grau wie „Abonnieren“, sobald der Kanal hinzugefügt wurde. Sie wirkt in der Aktionsleiste nicht länger wie ein Fremdkörper.",
+          "it": "Il pulsante “Aggiungi a StreamPulse” adotta ora esattamente la geometria dei pulsanti di Twitch: forma a pillola completa, 32 px di altezza e lo stesso grigio di “Iscriviti” una volta seguito il canale. Non si distingue più come un elemento aggiunto alla barra delle azioni.",
+          "pl": "Przycisk „Dodaj do StreamPulse” ma teraz dokładnie taką samą geometrię jak przyciski Twitcha: pełny kształt pigułki, 32 px wysokości i ten sam szary kolor co „Subskrybuj” po dodaniu kanału. Nie wyróżnia się już jako element doklejony do paska akcji.",
+          "tr": "“StreamPulse'a Ekle” düğmesi artık Twitch düğmelerinin geometrisini birebir kullanıyor: tam hap biçimi, 32 piksel yükseklik ve kanal eklendiğinde “Abone Ol” ile aynı gri. Artık işlem çubuğuna sonradan eklenmiş gibi durmuyor.",
+          "ru": "Кнопка «Добавить в StreamPulse» теперь в точности повторяет геометрию кнопок Twitch: полностью скруглённая форма, высота 32 пикселя и тот же серый цвет, что и у «Подписаться», после добавления канала. Она больше не выделяется как чужеродный элемент на панели действий.",
+          "ja": "「StreamPulseに追加」ボタンが、Twitchのボタンと完全に同じ形状になりました。角丸の錠剤型、高さ32px、チャンネル追加後は「チャンネル登録」と同じグレーです。アクションバーの中で後付けの要素に見えることがなくなりました。",
+          "ko": "‘StreamPulse에 추가’ 버튼이 이제 트위치 버튼의 형태를 그대로 따릅니다. 완전한 알약 모양, 높이 32px, 채널을 추가한 뒤에는 ‘구독’과 같은 회색입니다. 더 이상 작업 표시줄에 덧붙인 요소처럼 보이지 않습니다.",
+          "id": "Tombol “Tambahkan ke StreamPulse” kini mengikuti geometri tombol Twitch secara persis: bentuk pil penuh, tinggi 32 px, dan abu-abu yang sama dengan “Berlangganan” setelah saluran ditambahkan. Tombol ini tidak lagi terlihat seperti elemen tempelan di bilah tindakan.",
+          "nl": "De knop ‘Toevoegen aan StreamPulse’ neemt nu precies de vormgeving van de Twitch-knoppen over: volledige pilvorm, 32 px hoog en hetzelfde grijs als ‘Abonneren’ zodra het kanaal is toegevoegd. Hij valt niet langer op als een vreemd element in de actiebalk.",
+          "sv": "Knappen ”Lägg till i StreamPulse” följer nu exakt Twitchs egen geometri: helt rundad form, 32 px hög och samma grå som ”Prenumerera” när kanalen har lagts till. Den sticker inte längre ut som ett främmande element i åtgärdsraden.",
+          "cs": "Tlačítko „Přidat do StreamPulse“ nyní přesně kopíruje geometrii tlačítek Twitche: plný tvar pilulky, výška 32 px a stejná šedá jako u „Odebírat“, jakmile kanál přidáte. Už nepůsobí jako cizí prvek v panelu akcí."
+        }
+      },
+      {
+        "type": "fix",
+        "text": {
+          "fr": "Le bouton affichait « Ajouter » sur une chaîne déjà suivie, puis basculait en gris une seconde plus tard. Il interrogeait le service worker, qui s'endort en arrière-plan et ne répondait pas ; la liste est maintenant lue directement dans le stockage, qui répond toujours.",
+          "en": "The button showed “Add” on a channel you were already tracking, then flipped to grey a second later. It was asking the service worker, which goes to sleep in the background and never answered; the list is now read straight from storage, which always answers.",
+          "es": "El botón mostraba «Añadir» en un canal que ya seguías y cambiaba a gris un segundo después. Consultaba al service worker, que se duerme en segundo plano y no respondía; ahora la lista se lee directamente del almacenamiento, que siempre responde.",
+          "pt-BR": "O botão mostrava “Adicionar” em um canal que você já seguia e mudava para cinza um segundo depois. Ele consultava o service worker, que hiberna em segundo plano e não respondia; agora a lista é lida direto do armazenamento, que sempre responde.",
+          "de": "Die Schaltfläche zeigte „Hinzufügen“ bei einem bereits hinzugefügten Kanal und wechselte erst eine Sekunde später zu Grau. Sie fragte den Service Worker ab, der im Hintergrund einschläft und nicht antwortete; die Liste wird jetzt direkt aus dem Speicher gelesen, der immer antwortet.",
+          "it": "Il pulsante mostrava “Aggiungi” su un canale già seguito, per poi diventare grigio un secondo dopo. Interrogava il service worker, che va in sospensione in background e non rispondeva; ora l'elenco viene letto direttamente dalla memoria, che risponde sempre.",
+          "pl": "Przycisk pokazywał „Dodaj” na kanale, który już obserwowałeś, a sekundę później zmieniał się na szary. Odpytywał service workera, który usypia w tle i nie odpowiadał; lista jest teraz odczytywana bezpośrednio z pamięci, która odpowiada zawsze.",
+          "tr": "Düğme, zaten takip ettiğiniz bir kanalda “Ekle” yazıyor, bir saniye sonra griye dönüyordu. Arka planda uykuya geçen service worker'a soruyor ve yanıt alamıyordu; liste artık her zaman yanıt veren depolama alanından doğrudan okunuyor.",
+          "ru": "Кнопка показывала «Добавить» на уже отслеживаемом канале и через секунду становилась серой. Она обращалась к service worker, который засыпает в фоне и не отвечал; теперь список читается напрямую из хранилища, которое отвечает всегда.",
+          "ja": "すでに追加済みのチャンネルでボタンが「追加」と表示され、1秒後にグレーに切り替わっていました。バックグラウンドでスリープするサービスワーカーに問い合わせて応答が得られていなかったためです。現在は常に応答するストレージから直接読み込むようになりました。",
+          "ko": "이미 추가한 채널에서도 버튼에 ‘추가’가 표시되었다가 1초 뒤 회색으로 바뀌었습니다. 백그라운드에서 절전 상태가 되는 서비스 워커에 요청해 응답을 받지 못했기 때문입니다. 이제 항상 응답하는 저장소에서 직접 목록을 읽습니다.",
+          "id": "Tombol menampilkan “Tambahkan” pada saluran yang sudah Anda ikuti, lalu berubah menjadi abu-abu sedetik kemudian. Tombol ini menanyakan service worker, yang tertidur di latar belakang dan tidak menjawab; daftar kini dibaca langsung dari penyimpanan, yang selalu menjawab.",
+          "nl": "De knop toonde ‘Toevoegen’ bij een kanaal dat je al volgde en werd een seconde later grijs. Hij bevroeg de service worker, die op de achtergrond in slaap valt en niet antwoordde; de lijst wordt nu rechtstreeks uit de opslag gelezen, die altijd antwoordt.",
+          "sv": "Knappen visade ”Lägg till” på en kanal du redan följde och blev grå först en sekund senare. Den frågade service workern, som somnar i bakgrunden och inte svarade; listan läses nu direkt från lagringen, som alltid svarar.",
+          "cs": "Tlačítko zobrazovalo „Přidat“ u kanálu, který jste už sledovali, a o sekundu později zšedlo. Dotazovalo se service workeru, který na pozadí usíná a neodpovídal; seznam se nyní načítá přímo z úložiště, které odpovídá vždy."
+        }
+      },
+      {
+        "type": "fix",
+        "text": {
+          "fr": "Sur les fenêtres étroites, le bouton faisait déborder la barre d'actions de Twitch et « S'abonner » passait sous le rail de droite. Quand la place manque, le libellé s'efface et seul le logo reste ; le texte complet s'affiche toujours au survol.",
+          "en": "On narrow windows, the button pushed Twitch's action row out of its column and “Subscribe” slipped under the right-hand rail. When space runs short the label now disappears and only the logo stays; the full text still shows on hover.",
+          "es": "En ventanas estrechas, el botón desbordaba la barra de acciones de Twitch y «Suscribirse» quedaba bajo la columna derecha. Cuando falta espacio, la etiqueta desaparece y solo queda el logotipo; el texto completo sigue apareciendo al pasar el cursor.",
+          "pt-BR": "Em janelas estreitas, o botão fazia a barra de ações da Twitch transbordar e “Inscrever-se” ia parar embaixo da coluna da direita. Quando falta espaço, o rótulo some e fica só o logotipo; o texto completo continua aparecendo ao passar o cursor.",
+          "de": "In schmalen Fenstern ließ die Schaltfläche die Aktionsleiste von Twitch überlaufen, und „Abonnieren“ rutschte unter die rechte Spalte. Wenn der Platz knapp wird, verschwindet jetzt die Beschriftung und nur das Logo bleibt; der vollständige Text erscheint weiterhin beim Überfahren mit der Maus.",
+          "it": "Nelle finestre strette il pulsante faceva traboccare la barra delle azioni di Twitch e “Iscriviti” finiva sotto la colonna di destra. Quando lo spazio scarseggia l'etichetta scompare e resta solo il logo; il testo completo compare comunque al passaggio del mouse.",
+          "pl": "W wąskich oknach przycisk powodował, że pasek akcji Twitcha wychodził poza swoją kolumnę, a „Subskrybuj” trafiał pod prawą szynę. Gdy brakuje miejsca, etykieta znika i zostaje samo logo; pełny tekst nadal pojawia się po najechaniu kursorem.",
+          "tr": "Dar pencerelerde düğme, Twitch'in işlem çubuğunun sütunundan taşmasına ve “Abone Ol” düğmesinin sağ rayın altına kaymasına neden oluyordu. Yer daraldığında artık etiket kayboluyor ve yalnızca logo kalıyor; tam metin fareyle üzerine gelindiğinde yine görünüyor.",
+          "ru": "В узких окнах кнопка выталкивала панель действий Twitch за пределы её колонки, и «Подписаться» уходила под правую панель. Когда места не хватает, подпись теперь скрывается и остаётся только логотип; полный текст по-прежнему виден при наведении.",
+          "ja": "ウィンドウ幅が狭いと、ボタンがTwitchのアクションバーを列からはみ出させ、「チャンネル登録」が右側のレールの下に回り込んでいました。スペースが足りない場合はラベルが消え、ロゴだけが残るようになりました。マウスを重ねれば全文が表示されます。",
+          "ko": "창이 좁을 때 이 버튼이 트위치 작업 표시줄을 열 밖으로 밀어내면서 ‘구독’이 오른쪽 레일 아래로 내려갔습니다. 이제 공간이 부족하면 레이블이 사라지고 로고만 남습니다. 전체 텍스트는 마우스를 올리면 그대로 표시됩니다.",
+          "id": "Pada jendela sempit, tombol ini membuat bilah tindakan Twitch meluap dari kolomnya dan “Berlangganan” terdorong ke bawah kolom kanan. Saat ruang menipis, label kini menghilang dan hanya logo yang tersisa; teks lengkap tetap muncul saat kursor diarahkan ke tombol.",
+          "nl": "In smalle vensters liet de knop de actiebalk van Twitch buiten zijn kolom lopen en schoof ‘Abonneren’ onder de rechterkolom. Als de ruimte krap wordt, verdwijnt nu het label en blijft alleen het logo over; de volledige tekst verschijnt nog steeds bij het zweven met de muis.",
+          "sv": "I smala fönster fick knappen Twitchs åtgärdsrad att svämma över sin kolumn och ”Prenumerera” hamnade under den högra listen. När utrymmet tryter försvinner nu etiketten och bara logotypen blir kvar; hela texten visas fortfarande när du håller muspekaren över.",
+          "cs": "V úzkých oknech tlačítko způsobovalo, že panel akcí Twitche přetekl ze svého sloupce a „Odebírat“ se propadlo pod pravou lištu. Když je málo místa, popisek nyní zmizí a zůstane jen logo; celý text se stále zobrazí po najetí myší."
+        }
+      },
+      {
+        "type": "fix",
+        "text": {
+          "fr": "Le logo StreamPulse était violet sur violet sur le bouton d'ajout, et violet sur gris foncé dans la barre de navigation Twitch : à peine visible dans les deux cas. Il passe en blanc partout où il est affiché.",
+          "en": "The StreamPulse logo was purple on purple on the add button, and purple on dark grey in the Twitch nav bar: barely visible either way. It is now white everywhere it appears.",
+          "es": "El logotipo de StreamPulse era morado sobre morado en el botón de añadir, y morado sobre gris oscuro en la barra de navegación de Twitch: apenas visible en ambos casos. Ahora es blanco en todos los lugares donde aparece.",
+          "pt-BR": "O logotipo do StreamPulse ficava roxo sobre roxo no botão de adicionar e roxo sobre cinza-escuro na barra de navegação da Twitch: quase invisível nos dois casos. Agora ele é branco em todos os lugares onde aparece.",
+          "de": "Das StreamPulse-Logo war auf der Hinzufügen-Schaltfläche Violett auf Violett und in der Twitch-Navigationsleiste Violett auf Dunkelgrau: in beiden Fällen kaum zu erkennen. Es ist jetzt überall weiß.",
+          "it": "Il logo StreamPulse era viola su viola sul pulsante di aggiunta e viola su grigio scuro nella barra di navigazione di Twitch: a malapena visibile in entrambi i casi. Ora è bianco ovunque compaia.",
+          "pl": "Logo StreamPulse było fioletowe na fioletowym tle przycisku dodawania i fioletowe na ciemnoszarym tle paska nawigacji Twitcha: w obu przypadkach ledwo widoczne. Teraz jest białe wszędzie, gdzie się pojawia.",
+          "tr": "StreamPulse logosu ekleme düğmesinde mor üzerine mor, Twitch gezinti çubuğunda ise koyu gri üzerine mordu: her iki durumda da güçlükle seçiliyordu. Artık göründüğü her yerde beyaz.",
+          "ru": "Логотип StreamPulse был фиолетовым на фиолетовом на кнопке добавления и фиолетовым на тёмно-сером в панели навигации Twitch: в обоих случаях он едва различался. Теперь он белый везде, где отображается.",
+          "ja": "StreamPulseのロゴは、追加ボタンでは紫の上に紫、Twitchのナビゲーションバーでは濃いグレーの上に紫で表示されており、どちらもほとんど見えませんでした。表示されるすべての場所で白になりました。",
+          "ko": "StreamPulse 로고가 추가 버튼에서는 보라색 위의 보라색으로, 트위치 내비게이션 바에서는 진회색 위의 보라색으로 표시되어 두 경우 모두 거의 보이지 않았습니다. 이제 표시되는 모든 위치에서 흰색으로 바뀝니다.",
+          "id": "Logo StreamPulse tampil ungu di atas ungu pada tombol tambah, dan ungu di atas abu-abu gelap pada bilah navigasi Twitch: nyaris tidak terlihat pada keduanya. Kini logo tersebut berwarna putih di mana pun ditampilkan.",
+          "nl": "Het StreamPulse-logo was paars op paars op de toevoegknop en paars op donkergrijs in de navigatiebalk van Twitch: in beide gevallen nauwelijks zichtbaar. Het is nu overal wit.",
+          "sv": "StreamPulse-logotypen var lila mot lila på lägg till-knappen och lila mot mörkgrått i Twitchs navigeringsfält: knappt synlig i båda fallen. Den är nu vit överallt där den visas.",
+          "cs": "Logo StreamPulse bylo na tlačítku pro přidání fialové na fialovém a v navigační liště Twitche fialové na tmavě šedém: v obou případech sotva viditelné. Nyní je bílé všude, kde se zobrazuje."
+        }
+      },
+      {
+        "type": "fix",
+        "text": {
+          "fr": "Les chaînes ajoutées avec une ancienne version de l'extension n'étaient pas reconnues par le bouton, qui proposait de les ajouter une seconde fois.",
+          "en": "Channels added with an older version of the extension weren't recognised by the button, which offered to add them a second time.",
+          "es": "Los canales añadidos con una versión anterior de la extensión no eran reconocidos por el botón, que ofrecía añadirlos por segunda vez.",
+          "pt-BR": "Canais adicionados com uma versão antiga da extensão não eram reconhecidos pelo botão, que oferecia adicioná-los uma segunda vez.",
+          "de": "Kanäle, die mit einer älteren Version der Erweiterung hinzugefügt wurden, wurden von der Schaltfläche nicht erkannt, die daraufhin anbot, sie ein zweites Mal hinzuzufügen.",
+          "it": "I canali aggiunti con una versione precedente dell'estensione non venivano riconosciuti dal pulsante, che proponeva di aggiungerli una seconda volta.",
+          "pl": "Kanały dodane starszą wersją rozszerzenia nie były rozpoznawane przez przycisk, który proponował dodanie ich po raz drugi.",
+          "tr": "Uzantının eski bir sürümüyle eklenen kanallar düğme tarafından tanınmıyor ve ikinci kez eklenmeleri öneriliyordu.",
+          "ru": "Каналы, добавленные в старой версии расширения, не распознавались кнопкой, и она предлагала добавить их повторно.",
+          "ja": "以前のバージョンの拡張機能で追加したチャンネルがボタンに認識されず、二重に追加するよう促されていました。",
+          "ko": "이전 버전의 확장 프로그램으로 추가한 채널을 버튼이 인식하지 못해 다시 추가하라고 안내했습니다.",
+          "id": "Saluran yang ditambahkan dengan versi lama ekstensi tidak dikenali oleh tombol, sehingga ditawarkan untuk ditambahkan kedua kalinya.",
+          "nl": "Kanalen die met een oudere versie van de extensie waren toegevoegd, werden niet herkend door de knop, die aanbood ze een tweede keer toe te voegen.",
+          "sv": "Kanaler som lagts till med en äldre version av tillägget kändes inte igen av knappen, som erbjöd sig att lägga till dem en gång till.",
+          "cs": "Kanály přidané starší verzí rozšíření tlačítko nerozpoznalo a nabízelo jejich přidání podruhé."
+        }
+      }
+    ],
+    "thanks": [
+      {
+        "handle": "NaGeL182",
+        "url": "https://github.com/NaGeL182",
+        "for": {
+          "fr": "signalement des réglages Drops sans effet et de la fenêtre d'inventaire qui se rouvrait en boucle",
+          "en": "reporting the Drops settings that did nothing and the inventory window that kept reopening",
+          "es": "informar de los ajustes de Drops que no hacían nada y de la ventana de inventario que se reabría en bucle",
+          "pt-BR": "relatar as configurações de Drops que não funcionavam e a janela de inventário que reabria em loop",
+          "de": "Meldung der wirkungslosen Drops-Einstellungen und des Inventarfensters, das sich immer wieder öffnete",
+          "it": "segnalazione delle impostazioni Drops che non avevano effetto e della finestra dell'inventario che si riapriva in continuazione",
+          "pl": "zgłoszenie niedziałających ustawień Drops i okna ekwipunku, które otwierało się w kółko",
+          "tr": "işe yaramayan Drops ayarlarını ve sürekli yeniden açılan envanter penceresini bildirme",
+          "ru": "сообщение о неработающих настройках Drops и об окне инвентаря, которое открывалось снова и снова",
+          "ja": "効果のなかったDrops設定と、繰り返し開き直すインベントリ画面の報告",
+          "ko": "작동하지 않던 Drops 설정과 반복해서 다시 열리던 인벤토리 창 제보",
+          "id": "melaporkan pengaturan Drops yang tidak berfungsi dan jendela inventaris yang terus terbuka kembali",
+          "nl": "het melden van de Drops-instellingen die niets deden en het inventarisvenster dat zich steeds opnieuw opende",
+          "sv": "rapportera Drops-inställningarna som inte gjorde något och inventariefönstret som öppnades om och om igen",
+          "cs": "nahlášení nefunkčních nastavení Drops a okna inventáře, které se stále znovu otevíralo"
+        }
+      },
+      {
+        "handle": "Shiro",
+        "for": {
+          "fr": "tests et signalements sur le bouton des pages de chaîne",
+          "en": "testing and reporting on the channel page button",
+          "es": "pruebas e informes sobre el botón de las páginas de canal",
+          "pt-BR": "testes e relatos sobre o botão das páginas de canal",
+          "de": "Tests und Rückmeldungen zur Schaltfläche auf den Kanalseiten",
+          "it": "test e segnalazioni sul pulsante delle pagine dei canali",
+          "pl": "testy i zgłoszenia dotyczące przycisku na stronach kanałów",
+          "tr": "kanal sayfalarındaki düğmeyle ilgili testler ve bildirimler",
+          "ru": "тестирование и отзывы о кнопке на страницах каналов",
+          "ja": "チャンネルページのボタンに関するテストと報告",
+          "ko": "채널 페이지 버튼에 대한 테스트와 제보",
+          "id": "pengujian dan laporan tentang tombol di halaman saluran",
+          "nl": "tests en meldingen over de knop op de kanaalpagina's",
+          "sv": "tester och rapporter om knappen på kanalsidorna",
+          "cs": "testování a hlášení k tlačítku na stránkách kanálů"
+        }
+      }
+    ]
+  },
+  {
     version: "26.8.11",
     "date": "2026-08-11",
     "title": {
