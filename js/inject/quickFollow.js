@@ -70,6 +70,10 @@
   var currentLang = "en";
   var trackedSet = new Set();
   var busy = false;
+  // Tant que la liste suivie n'a pas été lue, l'état du bouton est INCONNU.
+  // Peindre « Ajouter » dans cet intervalle affiche un mensonge sur une chaîne
+  // déjà suivie, puis bascule en gris : c'est le clignotement d'état.
+  var trackedReady = false;
 
   /**
    * Résout la préférence stockée ("pt_BR", "EN", "de-DE") vers une langue
@@ -110,12 +114,28 @@
     return Boolean(handle) && trackedSet.has(handle.toLowerCase());
   }
 
+  /**
+   * Login Twitch d'une entrée stockée, ou "" si elle vise une autre plateforme.
+   *
+   * Reprend les mêmes replis que normalizeStreamer() côté background : une
+   * entrée écrite par une ancienne version n'a ni `platform` ni `handle`, juste
+   * `twitch`. L'ancien test `s.platform === "twitch" && s.handle` la rejetait,
+   * et le bouton repassait en « Ajouter » sur une chaîne pourtant suivie.
+   */
+  function entryHandle(entry) {
+    if (!entry) return "";
+    // Le background applique DEFAULT_PLATFORM = "twitch" quand le champ manque.
+    var platform = entry.platform || "twitch";
+    if (platform !== "twitch") return "";
+    var handle = entry.handle || entry.twitch || entry.login || entry.username || "";
+    return String(handle).toLowerCase();
+  }
+
   function setTrackedFromList(streamers) {
     var next = new Set();
     (streamers || []).forEach(function (s) {
-      if (s && s.platform === "twitch" && s.handle) {
-        next.add(String(s.handle).toLowerCase());
-      }
+      var handle = entryHandle(s);
+      if (handle) next.add(handle);
     });
     trackedSet = next;
   }
@@ -134,9 +154,26 @@
     });
   }
 
+  /**
+   * Liste suivie, lue directement dans chrome.storage.local.
+   *
+   * L'ancienne version passait par un message « getStreamers » au service
+   * worker. En MV3 ce worker s'endort : le message échoue alors avec
+   * chrome.runtime.lastError, send() résout null, et le null devenait une liste
+   * VIDE — donc « aucune chaîne suivie », donc le bouton violet « Ajouter » sur
+   * une chaîne déjà suivie, sans jamais retenter. Le stockage répond toujours,
+   * worker endormi ou non, et c'est déjà la source unique de getStreamers().
+   */
   function fetchTrackedStreamers() {
-    return send({ type: "getStreamers" }).then(function (res) {
-      return (res && res.streamers) || [];
+    return new Promise(function (resolve) {
+      try {
+        chrome.storage.local.get([STREAMERS_KEY], function (res) {
+          if (chrome.runtime.lastError) resolve(null);
+          else resolve((res && res[STREAMERS_KEY]) || []);
+        });
+      } catch (_e) {
+        resolve(null);
+      }
     });
   }
 
@@ -149,16 +186,19 @@
   function removeStreamer(handle) {
     // The background removes by `id`, so resolve the entry first.
     return fetchTrackedStreamers().then(function (streamers) {
+      // null = lecture impossible. Traiter ce cas comme « liste vide » faisait
+      // répondre « introuvable » et affichait un toast d'erreur sur un bouton
+      // pourtant légitime.
+      if (!streamers) return false;
+      var wanted = handle.toLowerCase();
       var match = null;
       for (var i = 0; i < streamers.length; i++) {
-        var s = streamers[i];
-        if (s && s.platform === "twitch" && s.handle &&
-            String(s.handle).toLowerCase() === handle.toLowerCase()) {
-          match = s;
+        if (entryHandle(streamers[i]) === wanted) {
+          match = streamers[i];
           break;
         }
       }
-      if (!match) return false;
+      if (!match || !match.id) return false;
       return send({ type: "removeStreamer", id: match.id }).then(function (res) {
         return Boolean(res && !res.error);
       });
@@ -411,6 +451,47 @@
     return btn;
   }
 
+  // ---- adaptation a la largeur disponible -----------------------------------
+  // Mesuré sur twitch.tv : à 960 px de viewport, le bouton complet (187 px +
+  // 8 px de marge) fait déborder le bloc d'actions de 51 px hors de sa colonne
+  // et « S'abonner » passe sous le rail de droite ; à 900 px le débordement
+  // atteint 111 px. Aucun flex-shrink ne corrige ça : la ligne de Twitch est en
+  // `min-width: auto`, donc elle ne se comprime pas, elle déborde. Il faut
+  // retirer de la largeur, pas en redistribuer.
+  var FIT_MAX_DEPTH = 6;
+
+  /** Un ancêtre proche du bouton dépasse-t-il hors de son parent ? */
+  function overflowsAncestor(node) {
+    var n = node;
+    for (var i = 0; i < FIT_MAX_DEPTH && n && n.parentElement; i++) {
+      var self = n.getBoundingClientRect();
+      var parent = n.parentElement.getBoundingClientRect();
+      // 1 px de tolérance : les rects Twitch sont fractionnaires.
+      if (self.right > parent.right + 1) return true;
+      n = n.parentElement;
+    }
+    return false;
+  }
+
+  /**
+   * Replie le bouton sur son logo seul quand le libellé ne tient plus.
+   *
+   * Le repli n'est conservé que s'il résout effectivement le débordement :
+   * si la ligne déborde aussi sans notre libellé, la cause n'est pas la nôtre
+   * et masquer le texte ne ferait que dégrader le bouton pour rien.
+   */
+  function fitButton(btn) {
+    try {
+      // On lit AVANT de toucher aux classes. Le MutationObserver rappelle
+      // ensure() toutes les 400 ms : muter d'abord forcerait un reflow à chaque
+      // passage, y compris sur un écran large où il n'y a rien à décider.
+      if (btn.classList.contains("is-compact")) btn.classList.remove("is-compact");
+      if (!overflowsAncestor(btn)) return;
+      btn.classList.add("is-compact");
+      if (overflowsAncestor(btn)) btn.classList.remove("is-compact");
+    } catch (_e) {}
+  }
+
   var lastChannel = null;
 
   /** Remove the button along with its .sp-qf-wrap parent, so SPA navigation
@@ -442,6 +523,12 @@
         return;
       }
 
+      // ensure() est appelé dès la fin du script et par le MutationObserver,
+      // donc potentiellement avant la lecture du stockage. Sans cette garde le
+      // bouton naissait en « Ajouter » puis basculait en gris une fois la liste
+      // arrivée. Mieux vaut l'afficher 20 ms plus tard que faux.
+      if (!trackedReady) return;
+
       // SPA navigation to another channel: rebind to the new login.
       if (existing && existing.dataset.spChannel !== handle) {
         removeButton(existing);
@@ -449,7 +536,11 @@
       }
 
       if (existing) {
+        // Le libellé change de largeur entre « Ajouter… » et « Suivi », donc le
+        // calcul de place doit être refait à chaque rendu, pas seulement à
+        // l'insertion.
         renderState(existing, handle);
+        fitButton(existing);
         return;
       }
 
@@ -471,6 +562,7 @@
       wrap.appendChild(btn);
       // Sit to the LEFT of Twitch's Follow / Subscribe control.
       anchor.row.insertBefore(wrap, anchor.ref);
+      fitButton(btn);
       log("button injected for", handle);
     } catch (e) {
       log("ensure() threw", e);
@@ -498,13 +590,14 @@
   }
 
   // ---- state wiring --------------------------------------------------------
-  chrome.storage.local.get([PREFERENCES_KEY], function (res) {
-    var prefs = (res && res[PREFERENCES_KEY]) || {};
-    currentLang = langKey(prefs.language);
-    fetchTrackedStreamers().then(function (streamers) {
-      setTrackedFromList(streamers);
-      ensure();
-    });
+  chrome.storage.local.get([PREFERENCES_KEY, STREAMERS_KEY], function (res) {
+    var data = res || {};
+    currentLang = langKey((data[PREFERENCES_KEY] || {}).language);
+    setTrackedFromList(data[STREAMERS_KEY]);
+    // Même si la lecture échoue, on débloque : un bouton figé indéfiniment
+    // serait un symptôme pire que l'état qu'on cherche à corriger.
+    trackedReady = true;
+    ensure();
   });
 
   // Language and the tracked list both live in storage, so one listener keeps
@@ -519,6 +612,9 @@
     }
     if (changes[STREAMERS_KEY]) {
       setTrackedFromList(changes[STREAMERS_KEY].newValue);
+      // Une écriture arrivée avant la lecture initiale est une source de vérité
+      // au moins aussi fraîche : inutile de rester bloqué sur trackedReady.
+      trackedReady = true;
       dirty = true;
     }
     if (dirty) ensure();
@@ -548,6 +644,19 @@
   try {
     mo.observe(document.documentElement, { childList: true, subtree: true });
   } catch (_e) {}
+
+  // Le repli dépend de la largeur de la fenêtre, du panneau de chat ouvert ou
+  // non, et de la barre latérale : autant d'états qui changent sans mutation
+  // DOM dans la ligne d'actions, donc sans passer par le MutationObserver.
+  var resizeTimer = null;
+  window.addEventListener("resize", function () {
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      resizeTimer = null;
+      var btn = document.getElementById(BTN_ID);
+      if (btn) fitButton(btn);
+    }, 150);
+  });
 
   ensure();
 })();

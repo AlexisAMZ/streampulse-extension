@@ -234,6 +234,18 @@
   white-space: nowrap;
   max-width: 190px;
 }
+/* Place contrainte : le libellé disparaît, le logo suffit à identifier le
+   bouton. Le texte complet reste dans title/aria-label, donc rien n'est perdu
+   pour le survol ni pour un lecteur d'écran. Bascule pilotée par fitButton()
+   dans quickFollow.js, qui mesure le débordement réel plutôt que de parier sur
+   un point de rupture fixe. */
+.sp-qf-btn.is-compact {
+  gap: 0;
+  padding: 0 8px;
+}
+.sp-qf-btn.is-compact .sp-qf-label {
+  display: none;
+}
 /* Already added: drop to the neutral grey fill. The job is done, so it steps
    back and stops competing with Twitch's own Follow / Subscribe buttons. */
 .sp-qf-btn.is-tracked {
