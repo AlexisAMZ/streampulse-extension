@@ -350,3 +350,37 @@ export const RELEASES = [
     ]
   }
 ];
+
+
+/**
+ * Texte d'un champ i18n pour une langue donnee.
+ *
+ * Ces trois fonctions vivaient ici jusqu'a la 26.8.9, puis ont disparu quand
+ * fab414f a regenere le fichier pour les 11 nouvelles langues. changelog.js les
+ * importe toujours : l'import echouait, le module entier ne s'executait pas, et
+ * la page de notes de version ne montrait plus que sa coquille vide. Le controle
+ * de `npm run verify` ne l'attrapait pas — il verifie que les fichiers JS
+ * parsent, pas que leurs imports se resolvent.
+ */
+export function pickLocalized(value, lang) {
+  if (value == null) return "";
+  if (typeof value === "string") return value;
+  if (typeof value !== "object") return "";
+
+  const picked = value[lang] ?? value[FALLBACK_LANGUAGE];
+  if (typeof picked === "string") return picked;
+
+  // Last resort: any language at all beats an empty line in the notes.
+  const any = Object.values(value).find((entry) => typeof entry === "string");
+  return any ?? "";
+}
+
+/** Release la plus recente, soit la premiere du tableau. */
+export function getLatestRelease() {
+  return RELEASES.length ? RELEASES[0] : null;
+}
+
+/** Release correspondant exactement a une version, ou null. */
+export function getRelease(version) {
+  return RELEASES.find((entry) => entry.version === version) || null;
+}
