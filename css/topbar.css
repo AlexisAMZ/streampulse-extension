@@ -201,22 +201,31 @@
   margin-right: 8px;
   flex-shrink: 0;
 }
-/* Default = NOT yet added: solid Twitch purple, so it reads as a primary call to
-   action next to Subscribe. 30px tall and borderless to match the action row;
-   radius is intentionally rounder (8px) than Twitch's 4px so the button reads as
-   ours without looking bolted on. */
+/* Etat par defaut, chaine pas encore ajoutee : violet Twitch plein, pour que le
+   bouton se lise comme une action primaire a cote de « S'abonner ».
+
+   La geometrie est relevee sur les boutons natifs de la barre d'actions de
+   chaine — follow-button, subscribe-button, gift-button, share-button — qui
+   partagent tous exactement : border-radius 9000px, height 32px, font-size 14px,
+   font-weight 600. Un commentaire precedent affirmait ici que Twitch etait en
+   4px et justifiait un 8px « volontairement plus rond » ; c'est caduc, leur
+   design system est passe aux pilules pleines, et notre rectangle arrondi de
+   30px se repererait au premier coup d'oeil au milieu d'elles.
+
+   9000px est le jeton de Twitch lui-meme, repris tel quel plutot qu'un 9999px
+   equivalent, pour que la filiation reste lisible si leur design bouge. */
 .sp-qf-btn {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  height: 30px;
+  height: 32px;
   padding: 0 12px;
   border: none;
-  border-radius: 8px;
+  border-radius: 9000px;
   background: #9147ff;
   color: #fff;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 1;
   cursor: pointer;
@@ -260,6 +269,8 @@
 .sp-qf-btn.is-compact {
   gap: 0;
   padding: 0 8px;
+  width: 32px;
+  justify-content: center;
 }
 .sp-qf-btn.is-compact .sp-qf-label {
   display: none;
@@ -267,13 +278,13 @@
 /* Already added: drop to the neutral grey fill. The job is done, so it steps
    back and stops competing with Twitch's own Follow / Subscribe buttons. */
 .sp-qf-btn.is-tracked {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(83, 83, 95, 0.38);
   color: #efeff1;
 }
 /* Hover on the tracked state hints at removal without shouting: slightly
    lighter, no red, since this sits next to Twitch's own controls. */
 .sp-qf-btn.is-tracked:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.24);
+  background: rgba(83, 83, 95, 0.58);
   color: #fff;
 }
 
