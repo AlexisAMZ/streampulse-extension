@@ -1,8 +1,8 @@
 {
   "appName": {
-    "message": "StreamPulse: Estensione per Twitch e Kick"
+    "message": "StreamPulse: Avvisi, punti e drops Twitch e Kick"
   },
   "appDesc": {
-    "message": "Ritiro automatico dei Punti Canale, avvisi live, anteprime e filtri chat per Twitch e Kick."
+    "message": "Ritiro automatico di Punti Canale e Drops, avvisi live, anteprime e filtri chat per Twitch e Kick."
   }
 }

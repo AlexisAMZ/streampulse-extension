@@ -1,8 +1,8 @@
 {
   "appName": {
-    "message": "StreamPulse: Twitch & Kick extensie"
+    "message": "StreamPulse: Twitch & Kick Meldingen, Punten & Drops"
   },
   "appDesc": {
-    "message": "Automatisch claimen van kanaalpunten, live meldingen, voorvertoningen & chatfilters voor Twitch & Kick."
+    "message": "Automatisch claimen van kanaalpunten & Drops, live meldingen, voorvertoningen & chatfilters voor Twitch & Kick."
   }
 }

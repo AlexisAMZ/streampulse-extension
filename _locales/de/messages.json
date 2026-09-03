@@ -1,8 +1,8 @@
 {
   "appName": {
-    "message": "StreamPulse: Twitch & Kick Erweiterung"
+    "message": "StreamPulse: Twitch & Kick Alerts, Punkte & Drops"
   },
   "appDesc": {
-    "message": "Auto-Sammeln von Kanalpunkten, Live-Warnungen, Vorschauen & Chat-Filter für Twitch & Kick."
+    "message": "Auto-Sammeln von Kanalpunkten & Drops, Live-Warnungen, Vorschauen & Chat-Filter für Twitch & Kick."
   }
 }
