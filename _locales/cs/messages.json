@@ -1,8 +1,8 @@
 {
   "appName": {
-    "message": "StreamPulse: Rozšíření pro Twitch a Kick"
+    "message": "StreamPulse: Upozornění, body a drops pro Twitch a Kick"
   },
   "appDesc": {
-    "message": "Automatické sbírání bodů, živá upozornění, náhledy a filtry chatu pro Twitch a Kick."
+    "message": "Automatické sbírání bodů kanálu a Drops, živá upozornění, náhledy a filtry chatu pro Twitch a Kick."
   }
 }

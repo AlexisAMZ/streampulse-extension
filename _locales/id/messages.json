@@ -1,8 +1,8 @@
 {
   "appName": {
-    "message": "StreamPulse: Ekstensi Twitch & Kick"
+    "message": "StreamPulse: Notifikasi, Poin & Drops Twitch & Kick"
   },
   "appDesc": {
-    "message": "Klaim otomatis Channel Points, peringatan live, pratinjau & filter obrolan untuk Twitch & Kick."
+    "message": "Klaim otomatis Channel Points & Drops, peringatan live, pratinjau & filter obrolan untuk Twitch & Kick."
   }
 }

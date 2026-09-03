@@ -1,8 +1,8 @@
 {
   "appName": {
-    "message": "StreamPulse : extension Twitch & Kick"
+    "message": "StreamPulse : Alertes, Points & Drops Twitch & Kick"
   },
   "appDesc": {
-    "message": "Récupération auto des channel points · alertes live · aperçus · filtres chat pour Twitch & Kick. Gratuit, sans compte."
+    "message": "Récupération auto des channel points & Drops · alertes live · aperçus · filtres chat pour Twitch & Kick. Gratuit, sans compte."
   }
 }

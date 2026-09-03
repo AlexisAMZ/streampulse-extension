@@ -7,8 +7,8 @@
 ## 1. Informations Principales du Store (Store Listing)
 
 ### Nom de l'extension
-**FR** : `StreamPulse : extension Twitch & Kick` (37 / 75 caractères)  
-**EN** : `StreamPulse: Twitch & Kick extension` (36 / 75 caractères)
+**FR** : `StreamPulse : Alertes, Points & Drops Twitch & Kick` (51 / 75 caractères)  
+**EN** : `StreamPulse: Twitch & Kick Alerts, Points & Drops` (49 / 75 caractères)
 
 ### Description Courte (Short Description)
 **FR** : `Collecte auto des points de chaîne, alertes live, aperçus au survol et filtres chat Twitch & Kick. Dispo en 15 langues !` (130 / 132 caractères)  
