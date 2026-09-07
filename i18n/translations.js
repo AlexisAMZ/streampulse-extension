@@ -108,6 +108,8 @@ export const translations = {
       "fastForwardTitle": "Bouton d'avance rapide",
       "fastForwardDescription": "Ajouter un bouton au lecteur pour rattraper instantanément le direct.",
       "chatFilterTitle": "Mots-clés masqués",
+      "communityBadgeTitle": "Badge communautaire",
+      "communityBadgeDescription": "Affiche l'icône StreamPulse à côté de votre pseudo et de ceux des autres utilisateurs dans le tchat Twitch. Une empreinte anonyme de votre pseudo est envoyée à streampulse.fr ; votre pseudo lui-même ne quitte jamais votre navigateur.",
       "chatFilterDescription": "Masquer les messages contenant ces mots (séparés par des virgules).",
       "chatFilterPlaceholder": "spoiler, ban, giveaway...",
       "blockedUsersTitle": "Utilisateurs masqués",
@@ -173,7 +175,8 @@ export const translations = {
       "platformFilter": {
         "all": "tous",
         "twitch": "twitch",
-        "kick": "kick"
+        "kick": "kick",
+        "zevent": "zevent"
       },
       "addStreamerTitleBase": "Ajouter un streamer",
       "addStreamerTitlePlatform": "Ajouter un streamer {{platform}}",
@@ -245,6 +248,8 @@ export const translations = {
         "autoRefreshDescription": "Relancer le lecteur Twitch si un message d’erreur (#1000, #2000, #3000, #4000 ou #5000) apparaît.",
         "fastForwardTitle": "Bouton d'avance rapide",
         "fastForwardDescription": "Ajouter un bouton pour rattraper instantanément le direct quand le flux est en retard.",
+        "communityBadgeTitle": "Badge communautaire",
+        "communityBadgeDescription": "Affiche l'icône StreamPulse à côté de votre pseudo et de ceux des autres utilisateurs dans le tchat Twitch. Une empreinte anonyme de votre pseudo est envoyée à streampulse.fr ; votre pseudo lui-même ne quitte jamais votre navigateur.",
         "chatFilterDescription": "Mots-clés à masquer (séparés par des virgules).",
         "languageTitle": "Langue de l'extension",
         "languageDescription": "Choisissez la langue de l’interface.",
@@ -283,7 +288,10 @@ export const translations = {
         "groupData": "Données",
         "groupWatchTime": "Temps de visionnage",
         "watchTimeTitle": "Watch Time Tracker",
-        "watchTimeDescription": "Suivi du temps passé sur chaque chaîne."
+        "watchTimeDescription": "Suivi du temps passé sur chaque chaîne.",
+        "groupEvents": "Événement ZEvent",
+        "zeventFeaturesTitle": "Dispositif ZEvent 2026",
+        "zeventFeaturesDescription": "Afficher le logo, le bandeau, le filtre et le surlignage des streamers."
       },
       "watchTime": {
         "totalTime": "Temps total",
@@ -374,6 +382,13 @@ export const translations = {
         "previewAltLive": "Aperçu du stream de {{name}}",
         "previewAltOffline": "Hors ligne - {{name}}",
         "avatarAlt": "Avatar de {{name}}"
+      },
+      "zeventBanner": {
+        "badge": "ÉVÉNEMENT TERMINÉ",
+        "title": "ZEvent 2026",
+        "subtitle": "Le marathon caritatif s'est achevé sur 32 891 874 € récoltés pour les associations.",
+        "cta": "Voir mon récap",
+        "dismiss": "Masquer"
       }
     },
     "background": {
@@ -539,6 +554,8 @@ export const translations = {
       "fastForwardTitle": "Fast-forward button",
       "fastForwardDescription": "Add a button to the player to catch up to live instantly.",
       "chatFilterTitle": "Chat Filter",
+      "communityBadgeTitle": "Community badge",
+      "communityBadgeDescription": "Shows the StreamPulse icon next to your username and those of other users in Twitch chat. An anonymous fingerprint of your username is sent to streampulse.fr; your username itself never leaves your browser.",
       "chatFilterDescription": "Hide messages containing these words (comma separated).",
       "chatFilterPlaceholder": "spoiler, ban, giveaway...",
       "blockedUsersTitle": "Blocked Users",
@@ -604,7 +621,8 @@ export const translations = {
       "platformFilter": {
         "all": "all",
         "twitch": "twitch",
-        "kick": "kick"
+        "kick": "kick",
+        "zevent": "zevent"
       },
       "addStreamerTitleBase": "Add a streamer",
       "addStreamerTitlePlatform": "Add a {{platform}} streamer",
@@ -676,6 +694,8 @@ export const translations = {
         "autoRefreshDescription": "Reload the Twitch player when an error message appears (#1000, #2000, #3000, #4000 or #5000).",
         "fastForwardTitle": "Fast-forward button",
         "fastForwardDescription": "Add a button to instantly catch up to live when the stream lags behind.",
+        "communityBadgeTitle": "Community badge",
+        "communityBadgeDescription": "Shows the StreamPulse icon next to your username and those of other users in Twitch chat. An anonymous fingerprint of your username is sent to streampulse.fr; your username itself never leaves your browser.",
         "chatFilterDescription": "Hide messages containing these words (comma separated).",
         "themeTitle": "Theme",
         "groupProfile": "Profile",
@@ -714,7 +734,10 @@ export const translations = {
         "groupData": "Data",
         "groupWatchTime": "Watch Time",
         "watchTimeTitle": "Watch Time Tracker",
-        "watchTimeDescription": "Track time spent on each channel."
+        "watchTimeDescription": "Track time spent on each channel.",
+        "groupEvents": "ZEvent Event",
+        "zeventFeaturesTitle": "ZEvent 2026 features",
+        "zeventFeaturesDescription": "Show the logo, banner, filter, and participant streamer highlights."
       },
       "watchTime": {
         "totalTime": "Total time",
@@ -805,6 +828,13 @@ export const translations = {
         "previewAltLive": "{{name}}’s live preview",
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "{{name}}’s avatar"
+      },
+      "zeventBanner": {
+        "badge": "EVENT ENDED",
+        "title": "ZEvent 2026",
+        "subtitle": "The charity marathon wrapped up with 32 891 874 € raised for the charities.",
+        "cta": "See my recap",
+        "dismiss": "Hide"
       }
     },
     "background": {
@@ -969,6 +999,8 @@ export const translations = {
       "fastForwardTitle": "Botón de avance rápido",
       "fastForwardDescription": "Añade un botón al reproductor para volver al live al instante.",
       "chatFilterTitle": "Palabras filtradas",
+      "communityBadgeTitle": "Insignia comunitaria",
+      "communityBadgeDescription": "Muestra el icono de StreamPulse junto a tu nombre y a los de otros usuarios en el chat de Twitch. Se envía una huella anónima de tu nombre a streampulse.fr; tu nombre nunca sale de tu navegador.",
       "chatFilterDescription": "Ocultar los mensajes que contengan estas palabras (separadas por comas).",
       "chatFilterPlaceholder": "spoiler, ban, sorteo…",
       "blockedUsersTitle": "Usuarios bloqueados",
@@ -1034,7 +1066,8 @@ export const translations = {
       "platformFilter": {
         "all": "todos",
         "twitch": "twitch",
-        "kick": "kick"
+        "kick": "kick",
+        "zevent": "zevent"
       },
       "addStreamerTitleBase": "Añadir un streamer",
       "addStreamerTitlePlatform": "Añadir un streamer de {{platform}}",
@@ -1070,6 +1103,8 @@ export const translations = {
         "autoRefreshDescription": "Reinicia el reproductor de Twitch si aparece un mensaje de error (#1000, #2000, #3000, #4000 o #5000).",
         "fastForwardTitle": "Botón de avance rápido",
         "fastForwardDescription": "Añade un botón para volver al live al instante cuando el flujo se atrasa.",
+        "communityBadgeTitle": "Insignia comunitaria",
+        "communityBadgeDescription": "Muestra el icono de StreamPulse junto a tu nombre y a los de otros usuarios en el chat de Twitch. Se envía una huella anónima de tu nombre a streampulse.fr; tu nombre nunca sale de tu navegador.",
         "chatFilterDescription": "Palabras a ocultar (separadas por comas).",
         "languageTitle": "Idioma de la extensión",
         "languageDescription": "Elige el idioma de la interfaz.",
@@ -1144,7 +1179,10 @@ export const translations = {
         "hideTwitchExtensionsTitle": "Ocultar extensiones de Twitch",
         "hideTwitchExtensionsDescription": "Oculta las superposiciones de extensiones de Twitch en el reproductor de vídeo.",
         "preventTabDiscardTitle": "Evitar la suspensión de pestañas",
-        "preventTabDiscardDescription": "Evita que Chrome descarte las pestañas inactivas de Twitch o Kick."
+        "preventTabDiscardDescription": "Evita que Chrome descarte las pestañas inactivas de Twitch o Kick.",
+        "groupEvents": "Evento ZEvent",
+        "zeventFeaturesTitle": "Funciones ZEvent 2026",
+        "zeventFeaturesDescription": "Mostrar el logo, el banner, el filtro y el resaltado de streamers."
       },
       "watchTime": {
         "totalTime": "Tiempo total",
@@ -1236,7 +1274,14 @@ export const translations = {
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "Avatar de {{name}}"
       },
-      "htmlLang": "es"
+      "htmlLang": "es",
+      "zeventBanner": {
+        "badge": "EVENTO FINALIZADO",
+        "title": "ZEvent 2026",
+        "subtitle": "El maratón solidario terminó con 32 891 874 € recaudados para las asociaciones.",
+        "cta": "Ver mi resumen",
+        "dismiss": "Ocultar"
+      }
     },
     "background": {
       "errors": {
@@ -1400,6 +1445,8 @@ export const translations = {
       "fastForwardTitle": "Botão de avanço rápido",
       "fastForwardDescription": "Adiciona um botão ao player para voltar à live na hora.",
       "chatFilterTitle": "Palavras filtradas",
+      "communityBadgeTitle": "Distintivo comunitário",
+      "communityBadgeDescription": "Exibe o ícone do StreamPulse ao lado do seu nome e dos demais usuários no chat da Twitch. Uma impressão anônima do seu nome é enviada para streampulse.fr; o nome em si nunca sai do seu navegador.",
       "chatFilterDescription": "Esconder mensagens que contenham essas palavras (separadas por vírgulas).",
       "chatFilterPlaceholder": "spoiler, ban, sorteio…",
       "blockedUsersTitle": "Usuários bloqueados",
@@ -1465,7 +1512,8 @@ export const translations = {
       "platformFilter": {
         "all": "todos",
         "twitch": "twitch",
-        "kick": "kick"
+        "kick": "kick",
+        "zevent": "zevent"
       },
       "addStreamerTitleBase": "Adicionar um streamer",
       "addStreamerTitlePlatform": "Adicionar um streamer de {{platform}}",
@@ -1501,6 +1549,8 @@ export const translations = {
         "autoRefreshDescription": "Reinicia o player da Twitch se aparecer uma mensagem de erro (#1000, #2000, #3000, #4000 ou #5000).",
         "fastForwardTitle": "Botão de avanço rápido",
         "fastForwardDescription": "Adiciona um botão para voltar à live na hora quando o stream atrasa.",
+        "communityBadgeTitle": "Distintivo comunitário",
+        "communityBadgeDescription": "Exibe o ícone do StreamPulse ao lado do seu nome e dos demais usuários no chat da Twitch. Uma impressão anônima do seu nome é enviada para streampulse.fr; o nome em si nunca sai do seu navegador.",
         "chatFilterDescription": "Palavras a esconder (separadas por vírgulas).",
         "languageTitle": "Idioma da extensão",
         "languageDescription": "Escolha o idioma da interface.",
@@ -1575,7 +1625,10 @@ export const translations = {
         "hideTwitchExtensionsTitle": "Ocultar extensões da Twitch",
         "hideTwitchExtensionsDescription": "Oculta as sobreposições de extensões da Twitch no player de vídeo.",
         "preventTabDiscardTitle": "Impedir a suspensão de abas",
-        "preventTabDiscardDescription": "Impede que o Chrome descarte abas inativas da Twitch ou Kick."
+        "preventTabDiscardDescription": "Impede que o Chrome descarte abas inativas da Twitch ou Kick.",
+        "groupEvents": "Evento ZEvent",
+        "zeventFeaturesTitle": "Recursos do ZEvent 2026",
+        "zeventFeaturesDescription": "Exibir o logotipo, banner, filtro e destaque dos streamers."
       },
       "watchTime": {
         "totalTime": "Tempo total",
@@ -1667,7 +1720,14 @@ export const translations = {
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "Avatar de {{name}}"
       },
-      "htmlLang": "pt-BR"
+      "htmlLang": "pt-BR",
+      "zeventBanner": {
+        "badge": "EVENTO ENCERRADO",
+        "title": "ZEvent 2026",
+        "subtitle": "A maratona beneficente terminou com 32 891 874 € arrecadados para as instituições.",
+        "cta": "Ver meu resumo",
+        "dismiss": "Ocultar"
+      }
     },
     "background": {
       "errors": {
@@ -1832,6 +1892,8 @@ export const translations = {
       "fastForwardTitle": "Schnellvorlauf-Taste",
       "fastForwardDescription": "Fügen Sie dem Player eine Schaltfläche hinzu, um sofort auf dem Laufenden zu bleiben.",
       "chatFilterTitle": "Chat-Filter",
+      "communityBadgeTitle": "Community-Abzeichen",
+      "communityBadgeDescription": "Zeigt das StreamPulse-Symbol neben deinem Namen und dem anderer Nutzer im Twitch-Chat. Ein anonymer Fingerabdruck deines Namens wird an streampulse.fr gesendet; der Name selbst verlässt deinen Browser nie.",
       "chatFilterDescription": "Nachrichten ausblenden, die diese Wörter enthalten (durch Kommas getrennt).",
       "chatFilterPlaceholder": "Spoiler, Verbot, Giveaway...",
       "blockedUsersTitle": "Blockierte Benutzer",
@@ -1897,7 +1959,8 @@ export const translations = {
       "platformFilter": {
         "all": "alle",
         "twitch": "zucken",
-        "kick": "Kick"
+        "kick": "Kick",
+        "zevent": "zevent"
       },
       "addStreamerTitleBase": "Fügen Sie einen Streamer hinzu",
       "addStreamerTitlePlatform": "Fügen Sie einen {{platform}}-Streamer hinzu",
@@ -1969,6 +2032,8 @@ export const translations = {
         "autoRefreshDescription": "Laden Sie den Twitch-Player neu, wenn eine Fehlermeldung erscheint (#1000, #2000, #3000, #4000 oder #5000).",
         "fastForwardTitle": "Schnellvorlauf-Taste",
         "fastForwardDescription": "Fügen Sie eine Schaltfläche hinzu, um sofort auf den neuesten Stand zu kommen, wenn der Stream hinterherhinkt.",
+        "communityBadgeTitle": "Community-Abzeichen",
+        "communityBadgeDescription": "Zeigt das StreamPulse-Symbol neben deinem Namen und dem anderer Nutzer im Twitch-Chat. Ein anonymer Fingerabdruck deines Namens wird an streampulse.fr gesendet; der Name selbst verlässt deinen Browser nie.",
         "chatFilterDescription": "Nachrichten ausblenden, die diese Wörter enthalten (durch Kommas getrennt).",
         "themeTitle": "Thema",
         "groupProfile": "Profil",
@@ -2007,7 +2072,10 @@ export const translations = {
         "groupData": "Daten",
         "groupWatchTime": "Wiedergabezeit",
         "watchTimeTitle": "Zeiterfassung ansehen",
-        "watchTimeDescription": "Verfolgen Sie die auf jedem Kanal verbrachte Zeit."
+        "watchTimeDescription": "Verfolgen Sie die auf jedem Kanal verbrachte Zeit.",
+        "groupEvents": "ZEvent-Event",
+        "zeventFeaturesTitle": "ZEvent 2026 Funktionen",
+        "zeventFeaturesDescription": "Logo, Banner, Filter und Streamer-Hervorhebung anzeigen."
       },
       "watchTime": {
         "totalTime": "Gesamtzeit",
@@ -2098,6 +2166,13 @@ export const translations = {
         "previewAltLive": "Live-Vorschau von {{name}}",
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "{{name}}s Avatar"
+      },
+      "zeventBanner": {
+        "badge": "EVENT BEENDET",
+        "title": "ZEvent 2026",
+        "subtitle": "Der Charity-Marathon endete mit 32 891 874 € für die Hilfsorganisationen.",
+        "cta": "Meine Bilanz ansehen",
+        "dismiss": "Ausblenden"
       }
     },
     "background": {
@@ -2263,6 +2338,8 @@ export const translations = {
       "fastForwardTitle": "Pulsante di avanzamento veloce",
       "fastForwardDescription": "Aggiungi un pulsante al player per restare aggiornato in tempo reale.",
       "chatFilterTitle": "Filtro chat",
+      "communityBadgeTitle": "Badge della comunità",
+      "communityBadgeDescription": "Mostra l'icona StreamPulse accanto al tuo nome e a quello degli altri utenti nella chat di Twitch. Un'impronta anonima del tuo nome viene inviata a streampulse.fr; il nome non lascia mai il tuo browser.",
       "chatFilterDescription": "Nascondi i messaggi contenenti queste parole (separate da virgole).",
       "chatFilterPlaceholder": "spoiler, ban, giveaway...",
       "blockedUsersTitle": "Utenti bloccati",
@@ -2328,7 +2405,8 @@ export const translations = {
       "platformFilter": {
         "all": "tutto",
         "twitch": "contrazione",
-        "kick": "calci"
+        "kick": "calci",
+        "zevent": "zevent"
       },
       "addStreamerTitleBase": "Aggiungi uno streamer",
       "addStreamerTitlePlatform": "Aggiungi uno streamer {{platform}}",
@@ -2400,6 +2478,8 @@ export const translations = {
         "autoRefreshDescription": "Ricarica il lettore Twitch quando viene visualizzato un messaggio di errore (#1000, #2000, #3000, #4000 o #5000).",
         "fastForwardTitle": "Pulsante di avanzamento veloce",
         "fastForwardDescription": "Aggiungi un pulsante per restare immediatamente aggiornato in diretta quando lo streaming è in ritardo.",
+        "communityBadgeTitle": "Badge della comunità",
+        "communityBadgeDescription": "Mostra l'icona StreamPulse accanto al tuo nome e a quello degli altri utenti nella chat di Twitch. Un'impronta anonima del tuo nome viene inviata a streampulse.fr; il nome non lascia mai il tuo browser.",
         "chatFilterDescription": "Nascondi i messaggi contenenti queste parole (separate da virgole).",
         "themeTitle": "Tema",
         "groupProfile": "Profilo",
@@ -2438,7 +2518,10 @@ export const translations = {
         "groupData": "Dati",
         "groupWatchTime": "Guarda l'ora",
         "watchTimeTitle": "Guarda il monitoraggio del tempo",
-        "watchTimeDescription": "Tieni traccia del tempo trascorso su ciascun canale."
+        "watchTimeDescription": "Tieni traccia del tempo trascorso su ciascun canale.",
+        "groupEvents": "Evento ZEvent",
+        "zeventFeaturesTitle": "Funzioni ZEvent 2026",
+        "zeventFeaturesDescription": "Mostra il logo, banner, filtro ed evidenziazione degli streamer."
       },
       "watchTime": {
         "totalTime": "Tempo totale",
@@ -2529,6 +2612,13 @@ export const translations = {
         "previewAltLive": "Anteprima dal vivo di {{name}}",
         "previewAltOffline": "Offline – {{nome}}",
         "avatarAlt": "L'avatar di {{nome}}"
+      },
+      "zeventBanner": {
+        "badge": "EVENTO CONCLUSO",
+        "title": "ZEvent 2026",
+        "subtitle": "La maratona benefica si è chiusa con 32 891 874 € raccolti per le associazioni.",
+        "cta": "Vedi il mio riepilogo",
+        "dismiss": "Nascondi"
       }
     },
     "background": {
@@ -2694,6 +2784,8 @@ export const translations = {
       "fastForwardTitle": "Przycisk przewijania do przodu",
       "fastForwardDescription": "Dodaj przycisk do odtwarzacza, aby nadrobić zaległości i żyć natychmiast.",
       "chatFilterTitle": "Filtr czatu",
+      "communityBadgeTitle": "Odznaka społeczności",
+      "communityBadgeDescription": "Pokazuje ikonę StreamPulse obok Twojego pseudonimu i pseudonimów innych użytkowników na czacie Twitcha. Anonimowy odcisk Twojego pseudonimu jest wysyłany do streampulse.fr; sam pseudonim nigdy nie opuszcza przeglądarki.",
       "chatFilterDescription": "Ukryj wiadomości zawierające te słowa (oddzielone przecinkami).",
       "chatFilterPlaceholder": "spoiler, ban, rozdanie...",
       "blockedUsersTitle": "Zablokowani użytkownicy",
@@ -2759,7 +2851,8 @@ export const translations = {
       "platformFilter": {
         "all": "wszystko",
         "twitch": "drgać",
-        "kick": "kopnij"
+        "kick": "kopnij",
+        "zevent": "zevent"
       },
       "addStreamerTitleBase": "Dodaj streamera",
       "addStreamerTitlePlatform": "Dodaj streamera {{platform}}",
@@ -2831,6 +2924,8 @@ export const translations = {
         "autoRefreshDescription": "Załaduj ponownie odtwarzacz Twitch, gdy pojawi się komunikat o błędzie (#1000, #2000, #3000, #4000 lub #5000).",
         "fastForwardTitle": "Przycisk przewijania do przodu",
         "fastForwardDescription": "Dodaj przycisk, aby natychmiast nadrobić zaległości w transmisji na żywo, gdy transmisja jest opóźniona.",
+        "communityBadgeTitle": "Odznaka społeczności",
+        "communityBadgeDescription": "Pokazuje ikonę StreamPulse obok Twojego pseudonimu i pseudonimów innych użytkowników na czacie Twitcha. Anonimowy odcisk Twojego pseudonimu jest wysyłany do streampulse.fr; sam pseudonim nigdy nie opuszcza przeglądarki.",
         "chatFilterDescription": "Ukryj wiadomości zawierające te słowa (oddzielone przecinkami).",
         "themeTitle": "Motyw",
         "groupProfile": "Profil",
@@ -2869,7 +2964,10 @@ export const translations = {
         "groupData": "Dane",
         "groupWatchTime": "Czas oglądania",
         "watchTimeTitle": "Obejrzyj Śledzenie czasu",
-        "watchTimeDescription": "Śledź czas spędzony na każdym kanale."
+        "watchTimeDescription": "Śledź czas spędzony na każdym kanale.",
+        "groupEvents": "Wydarzenie ZEvent",
+        "zeventFeaturesTitle": "Funkcje ZEvent 2026",
+        "zeventFeaturesDescription": "Pokaż logo, baner, filtr i wyróżnienie streamerów."
       },
       "watchTime": {
         "totalTime": "Całkowity czas",
@@ -2960,6 +3058,13 @@ export const translations = {
         "previewAltLive": "Podgląd na żywo {{name}}",
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "Awatar {{name}}"
+      },
+      "zeventBanner": {
+        "badge": "WYDARZENIE ZAKOŃCZONE",
+        "title": "ZEvent 2026",
+        "subtitle": "Charytatywny maraton zakończył się kwotą 32 891 874 € zebraną dla organizacji.",
+        "cta": "Zobacz moje podsumowanie",
+        "dismiss": "Ukryj"
       }
     },
     "background": {
@@ -3125,6 +3230,8 @@ export const translations = {
       "fastForwardTitle": "Hızlı ileri sarma düğmesi",
       "fastForwardDescription": "Oynatıcıya, canlı yayını anında yakalamak için bir düğme ekleyin.",
       "chatFilterTitle": "Sohbet Filtresi",
+      "communityBadgeTitle": "Topluluk rozeti",
+      "communityBadgeDescription": "Twitch sohbetinde kullanıcı adınızın ve diğer kullanıcıların adlarının yanında StreamPulse simgesini gösterir. Kullanıcı adınızın anonim bir parmak izi streampulse.fr adresine gönderilir; adın kendisi tarayıcınızdan asla çıkmaz.",
       "chatFilterDescription": "Bu kelimeleri içeren mesajları gizle (virgülle ayrılmış).",
       "chatFilterPlaceholder": "spoiler, yasak, hediye çekilişi...",
       "blockedUsersTitle": "Engellenen Kullanıcılar",
@@ -3190,7 +3297,8 @@ export const translations = {
       "platformFilter": {
         "all": "hepsi",
         "twitch": "seğirme",
-        "kick": "tekme"
+        "kick": "tekme",
+        "zevent": "zevent"
       },
       "addStreamerTitleBase": "Bir flama ekle",
       "addStreamerTitlePlatform": "Bir {{platform}} yayıncısı ekle",
@@ -3262,6 +3370,8 @@ export const translations = {
         "autoRefreshDescription": "Bir hata mesajı görüntülendiğinde (#1000, #2000, #3000, #4000 veya #5000) Twitch oynatıcısını yeniden yükleyin.",
         "fastForwardTitle": "Hızlı ileri sarma düğmesi",
         "fastForwardDescription": "Yayın gecikmesi yaşandığında anında canlı yayına yetişmek için bir düğme ekleyin.",
+        "communityBadgeTitle": "Topluluk rozeti",
+        "communityBadgeDescription": "Twitch sohbetinde kullanıcı adınızın ve diğer kullanıcıların adlarının yanında StreamPulse simgesini gösterir. Kullanıcı adınızın anonim bir parmak izi streampulse.fr adresine gönderilir; adın kendisi tarayıcınızdan asla çıkmaz.",
         "chatFilterDescription": "Bu kelimeleri içeren mesajları gizle (virgülle ayrılmış).",
         "themeTitle": "Tema",
         "groupProfile": "Profil",
@@ -3300,7 +3410,10 @@ export const translations = {
         "groupData": "Veriler",
         "groupWatchTime": "İzleme Süresi",
         "watchTimeTitle": "Zaman Takipçisi'ni İzle",
-        "watchTimeDescription": "Her bir kanalda geçirilen süreyi takip edin."
+        "watchTimeDescription": "Her bir kanalda geçirilen süreyi takip edin.",
+        "groupEvents": "ZEvent Etkinliği",
+        "zeventFeaturesTitle": "ZEvent 2026 özellikleri",
+        "zeventFeaturesDescription": "Logo, afiş, filtre ve yayıncı vurgulamalarını göster."
       },
       "watchTime": {
         "totalTime": "Toplam süre",
@@ -3391,6 +3504,13 @@ export const translations = {
         "previewAltLive": "{{name}}’ın canlı önizlemesi",
         "previewAltOffline": "Çevrimdışı – {{name}}",
         "avatarAlt": "{{name}}’in avatarı"
+      },
+      "zeventBanner": {
+        "badge": "ETKİNLİK SONA ERDİ",
+        "title": "ZEvent 2026",
+        "subtitle": "Yardım maratonu dernekler için toplanan 32 891 874 € ile sona erdi.",
+        "cta": "Özetimi gör",
+        "dismiss": "Gizle"
       }
     },
     "background": {
@@ -3556,6 +3676,8 @@ export const translations = {
       "fastForwardTitle": "Кнопка «Перемотка вперед»",
       "fastForwardDescription": "Добавьте в плеер кнопку, чтобы мгновенно перейти к текущему моменту прямой трансляции.",
       "chatFilterTitle": "Фильтр чата",
+      "communityBadgeTitle": "Значок сообщества",
+      "communityBadgeDescription": "Показывает значок StreamPulse рядом с вашим ником и никами других пользователей в чате Twitch. На streampulse.fr отправляется анонимный отпечаток вашего ника; сам ник никогда не покидает браузер.",
       "chatFilterDescription": "Скрыть сообщения, содержащие эти слова (разделенные запятыми).",
       "chatFilterPlaceholder": "спойлер, бан, розыгрыш...",
       "blockedUsersTitle": "Заблокированные пользователи",
@@ -3621,7 +3743,8 @@ export const translations = {
       "platformFilter": {
         "all": "все",
         "twitch": "дергание",
-        "kick": "удар"
+        "kick": "удар",
+        "zevent": "zevent"
       },
       "addStreamerTitleBase": "Добавить серпантин",
       "addStreamerTitlePlatform": "Добавить стримера {{platform}}",
@@ -3693,6 +3816,8 @@ export const translations = {
         "autoRefreshDescription": "Перезагрузите плеер Twitch при появлении сообщения об ошибке (#1000, #2000, #3000, #4000 или #5000).",
         "fastForwardTitle": "Кнопка «Перемотка вперед»",
         "fastForwardDescription": "Добавьте кнопку, чтобы мгновенно наверстать отставание от прямой трансляции, когда она начинает задерживаться.",
+        "communityBadgeTitle": "Значок сообщества",
+        "communityBadgeDescription": "Показывает значок StreamPulse рядом с вашим ником и никами других пользователей в чате Twitch. На streampulse.fr отправляется анонимный отпечаток вашего ника; сам ник никогда не покидает браузер.",
         "chatFilterDescription": "Скрыть сообщения, содержащие эти слова (разделенные запятыми).",
         "themeTitle": "Тема",
         "groupProfile": "Профиль",
@@ -3731,7 +3856,10 @@ export const translations = {
         "groupData": "Данные",
         "groupWatchTime": "Время просмотра",
         "watchTimeTitle": "Учетник рабочего времени",
-        "watchTimeDescription": "Отслеживайте время, затраченное на каждый канал."
+        "watchTimeDescription": "Отслеживайте время, затраченное на каждый канал.",
+        "groupEvents": "Событие ZEvent",
+        "zeventFeaturesTitle": "Функции ZEvent 2026",
+        "zeventFeaturesDescription": "Показывать логотип, баннер, фильтр и подсветку стримеров."
       },
       "watchTime": {
         "totalTime": "Общее время",
@@ -3822,6 +3950,13 @@ export const translations = {
         "previewAltLive": "Предварительный просмотр в режиме реального времени {{name}}",
         "previewAltOffline": "Не в сети – {{name}}",
         "avatarAlt": "Аватар {{name}}"
+      },
+      "zeventBanner": {
+        "badge": "СОБЫТИЕ ЗАВЕРШЕНО",
+        "title": "ZEvent 2026",
+        "subtitle": "Благотворительный марафон завершился суммой 32 891 874 € для фондов.",
+        "cta": "Мои итоги",
+        "dismiss": "Скрыть"
       }
     },
     "background": {
@@ -3987,6 +4122,8 @@ export const translations = {
       "fastForwardTitle": "早送りボタン",
       "fastForwardDescription": "プレイヤーにボタンを追加して、ライブ放送を即座に追いつけるようにします。",
       "chatFilterTitle": "チャットフィルター",
+      "communityBadgeTitle": "コミュニティバッジ",
+      "communityBadgeDescription": "Twitchチャットであなたと他のユーザーの名前の横にStreamPulseアイコンを表示します。ユーザー名の匿名ハッシュのみがstreampulse.frに送信され、ユーザー名自体がブラウザから出ることはありません。",
       "chatFilterDescription": "これらの単語（カンマ区切り）を含むメッセージを非表示にする。",
       "chatFilterPlaceholder": "ネタバレ、禁止、プレゼント企画……",
       "blockedUsersTitle": "ブロックされたユーザー",
@@ -4052,7 +4189,8 @@ export const translations = {
       "platformFilter": {
         "all": "すべて",
         "twitch": "ピクッ",
-        "kick": "キック"
+        "kick": "キック",
+        "zevent": "zevent"
       },
       "addStreamerTitleBase": "ストリーマーを追加する",
       "addStreamerTitlePlatform": "{{platform}}のストリーマーを追加する",
@@ -4124,6 +4262,8 @@ export const translations = {
         "autoRefreshDescription": "エラーメッセージ（#1000、#2000、#3000、#4000、または#5000）が表示された場合は、Twitchプレイヤーを再読み込みしてください。",
         "fastForwardTitle": "早送りボタン",
         "fastForwardDescription": "配信に遅れが生じた際に、即座にライブ配信に追いつけるボタンを追加します。",
+        "communityBadgeTitle": "コミュニティバッジ",
+        "communityBadgeDescription": "Twitchチャットであなたと他のユーザーの名前の横にStreamPulseアイコンを表示します。ユーザー名の匿名ハッシュのみがstreampulse.frに送信され、ユーザー名自体がブラウザから出ることはありません。",
         "chatFilterDescription": "これらの単語（カンマ区切り）を含むメッセージを非表示にする。",
         "themeTitle": "テーマ",
         "groupProfile": "プロフィール",
@@ -4162,7 +4302,10 @@ export const translations = {
         "groupData": "データ",
         "groupWatchTime": "視聴時間",
         "watchTimeTitle": "視聴時間トラッカー",
-        "watchTimeDescription": "各チャネルに費やした時間を追跡します。"
+        "watchTimeDescription": "各チャネルに費やした時間を追跡します。",
+        "groupEvents": "ZEventイベント",
+        "zeventFeaturesTitle": "ZEvent 2026機能",
+        "zeventFeaturesDescription": "ロゴ、バナー、フィルター、配信者の強調表示を有効化。"
       },
       "watchTime": {
         "totalTime": "合計時間",
@@ -4253,6 +4396,13 @@ export const translations = {
         "previewAltLive": "{{name}}のライブプレビュー",
         "previewAltOffline": "オフライン – {{name}}",
         "avatarAlt": "{{name}}さんのアバター"
+      },
+      "zeventBanner": {
+        "badge": "イベント終了",
+        "title": "ZEvent 2026",
+        "subtitle": "チャリティマラソンは団体への寄付総額 32 891 874 € で幕を閉じました。",
+        "cta": "自分の記録を見る",
+        "dismiss": "非表示"
       }
     },
     "background": {
@@ -4418,6 +4568,8 @@ export const translations = {
       "fastForwardTitle": "빨리 감기 버튼",
       "fastForwardDescription": "플레이어에 버튼을 추가하여 실시간으로 바로 따라잡을 수 있게 하세요.",
       "chatFilterTitle": "채팅 필터",
+      "communityBadgeTitle": "커뮤니티 배지",
+      "communityBadgeDescription": "트위치 채팅에서 내 이름과 다른 사용자 이름 옆에 StreamPulse 아이콘을 표시합니다. 사용자 이름의 익명 지문만 streampulse.fr로 전송되며, 이름 자체는 브라우저를 벗어나지 않습니다.",
       "chatFilterDescription": "다음 단어들이 포함된 메시지를 숨깁니다(쉼표로 구분).",
       "chatFilterPlaceholder": "스포일러, 차단, 경품 이벤트...",
       "blockedUsersTitle": "차단된 사용자",
@@ -4483,7 +4635,8 @@ export const translations = {
       "platformFilter": {
         "all": "모두",
         "twitch": "트위치",
-        "kick": "킥"
+        "kick": "킥",
+        "zevent": "zevent"
       },
       "addStreamerTitleBase": "스트리머 추가하기",
       "addStreamerTitlePlatform": "{{platform}} 스트리머 추가하기",
@@ -4555,6 +4708,8 @@ export const translations = {
         "autoRefreshDescription": "오류 메시지(#1000, #2000, #3000, #4000 또는 #5000)가 표시되면 Twitch 플레이어를 다시 불러오세요.",
         "fastForwardTitle": "빨리 감기 버튼",
         "fastForwardDescription": "스트림이 지연될 때 실시간으로 바로 따라잡을 수 있는 버튼을 추가하세요.",
+        "communityBadgeTitle": "커뮤니티 배지",
+        "communityBadgeDescription": "트위치 채팅에서 내 이름과 다른 사용자 이름 옆에 StreamPulse 아이콘을 표시합니다. 사용자 이름의 익명 지문만 streampulse.fr로 전송되며, 이름 자체는 브라우저를 벗어나지 않습니다.",
         "chatFilterDescription": "다음 단어들이 포함된 메시지를 숨깁니다(쉼표로 구분).",
         "themeTitle": "주제",
         "groupProfile": "프로필",
@@ -4593,7 +4748,10 @@ export const translations = {
         "groupData": "데이터",
         "groupWatchTime": "시청 시간",
         "watchTimeTitle": "시청 시간 추적기",
-        "watchTimeDescription": "각 채널별로 소요된 시간을 추적합니다."
+        "watchTimeDescription": "각 채널별로 소요된 시간을 추적합니다.",
+        "groupEvents": "ZEvent 이벤트",
+        "zeventFeaturesTitle": "ZEvent 2026 기능",
+        "zeventFeaturesDescription": "로고, 배너, 필터 및 스트리머 강조 표시 활성화."
       },
       "watchTime": {
         "totalTime": "총 소요 시간",
@@ -4684,6 +4842,13 @@ export const translations = {
         "previewAltLive": "{{name}}의 실시간 미리보기",
         "previewAltOffline": "오프라인 – {{name}}",
         "avatarAlt": "{{name}}의 아바타"
+      },
+      "zeventBanner": {
+        "badge": "이벤트 종료",
+        "title": "ZEvent 2026",
+        "subtitle": "자선 마라톤이 단체를 위한 32 891 874 € 모금으로 마무리되었습니다.",
+        "cta": "내 기록 보기",
+        "dismiss": "숨기기"
       }
     },
     "background": {
@@ -4849,6 +5014,8 @@ export const translations = {
       "fastForwardTitle": "Tombol maju cepat",
       "fastForwardDescription": "Tambahkan tombol ke pemutar agar dapat langsung mengikuti siaran langsung.",
       "chatFilterTitle": "Filter Obrolan",
+      "communityBadgeTitle": "Lencana komunitas",
+      "communityBadgeDescription": "Menampilkan ikon StreamPulse di samping nama Anda dan pengguna lain di obrolan Twitch. Sidik anonim dari nama Anda dikirim ke streampulse.fr; nama itu sendiri tidak pernah meninggalkan peramban Anda.",
       "chatFilterDescription": "Sembunyikan pesan yang berisi kata-kata berikut (dipisahkan dengan koma).",
       "chatFilterPlaceholder": "spoiler, pemblokiran, giveaway...",
       "blockedUsersTitle": "Pengguna yang Diblokir",
@@ -4914,7 +5081,8 @@ export const translations = {
       "platformFilter": {
         "all": "semua",
         "twitch": "kedutan",
-        "kick": "tendangan"
+        "kick": "tendangan",
+        "zevent": "zevent"
       },
       "addStreamerTitleBase": "Tambahkan pita hias",
       "addStreamerTitlePlatform": "Tambahkan streamer {{platform}}",
@@ -4986,6 +5154,8 @@ export const translations = {
         "autoRefreshDescription": "Muat ulang pemutar Twitch saat muncul pesan kesalahan (#1000, #2000, #3000, #4000, atau #5000).",
         "fastForwardTitle": "Tombol maju cepat",
         "fastForwardDescription": "Tambahkan tombol untuk langsung mengejar siaran langsung saat siaran mengalami keterlambatan.",
+        "communityBadgeTitle": "Lencana komunitas",
+        "communityBadgeDescription": "Menampilkan ikon StreamPulse di samping nama Anda dan pengguna lain di obrolan Twitch. Sidik anonim dari nama Anda dikirim ke streampulse.fr; nama itu sendiri tidak pernah meninggalkan peramban Anda.",
         "chatFilterDescription": "Sembunyikan pesan yang berisi kata-kata berikut (dipisahkan dengan koma).",
         "themeTitle": "Tema",
         "groupProfile": "Profil",
@@ -5024,7 +5194,10 @@ export const translations = {
         "groupData": "Data",
         "groupWatchTime": "Waktu Tonton",
         "watchTimeTitle": "Pelacak Waktu Menonton",
-        "watchTimeDescription": "Lacak waktu yang dihabiskan di setiap saluran."
+        "watchTimeDescription": "Lacak waktu yang dihabiskan di setiap saluran.",
+        "groupEvents": "Acara ZEvent",
+        "zeventFeaturesTitle": "Fitur ZEvent 2026",
+        "zeventFeaturesDescription": "Tampilkan logo, banner, filter, dan sorotan streamer."
       },
       "watchTime": {
         "totalTime": "Waktu total",
@@ -5115,6 +5288,13 @@ export const translations = {
         "previewAltLive": "Pratinjau langsung {{name}}",
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "Avatar {{name}}"
+      },
+      "zeventBanner": {
+        "badge": "ACARA BERAKHIR",
+        "title": "ZEvent 2026",
+        "subtitle": "Maraton amal berakhir dengan 32 891 874 € terkumpul untuk lembaga amal.",
+        "cta": "Lihat rekap saya",
+        "dismiss": "Sembunyikan"
       }
     },
     "background": {
@@ -5280,6 +5460,8 @@ export const translations = {
       "fastForwardTitle": "Knop 'Snel vooruitspoelen'",
       "fastForwardDescription": "Voeg een knop toe aan de speler om direct de live-uitzending bij te houden.",
       "chatFilterTitle": "Chatfilter",
+      "communityBadgeTitle": "Community-badge",
+      "communityBadgeDescription": "Toont het StreamPulse-pictogram naast jouw naam en die van andere gebruikers in de Twitch-chat. Een anonieme vingerafdruk van je naam wordt naar streampulse.fr gestuurd; de naam zelf verlaat je browser nooit.",
       "chatFilterDescription": "Verberg berichten die deze woorden bevatten (gescheiden door komma’s).",
       "chatFilterPlaceholder": "spoiler, ban, weggeefactie...",
       "blockedUsersTitle": "Gebruikers die zijn geblokkeerd",
@@ -5345,7 +5527,8 @@ export const translations = {
       "platformFilter": {
         "all": "alle",
         "twitch": "spiertrekking",
-        "kick": "kick"
+        "kick": "kick",
+        "zevent": "zevent"
       },
       "addStreamerTitleBase": "Een slinger toevoegen",
       "addStreamerTitlePlatform": "Voeg een {{platform}}-streamer toe",
@@ -5417,6 +5600,8 @@ export const translations = {
         "autoRefreshDescription": "Laad de Twitch-speler opnieuw wanneer er een foutmelding verschijnt (#1000, #2000, #3000, #4000 of #5000).",
         "fastForwardTitle": "Knop 'Snel vooruitspoelen'",
         "fastForwardDescription": "Voeg een knop toe om direct weer op de live-uitzending aan te sluiten wanneer de stream achterloopt.",
+        "communityBadgeTitle": "Community-badge",
+        "communityBadgeDescription": "Toont het StreamPulse-pictogram naast jouw naam en die van andere gebruikers in de Twitch-chat. Een anonieme vingerafdruk van je naam wordt naar streampulse.fr gestuurd; de naam zelf verlaat je browser nooit.",
         "chatFilterDescription": "Verberg berichten die deze woorden bevatten (gescheiden door komma’s).",
         "themeTitle": "Thema",
         "groupProfile": "Profiel",
@@ -5455,7 +5640,10 @@ export const translations = {
         "groupData": "Gegevens",
         "groupWatchTime": "Kijktijd",
         "watchTimeTitle": "Tijdregistratie-app",
-        "watchTimeDescription": "Houd bij hoeveel tijd er aan elk kanaal wordt besteed."
+        "watchTimeDescription": "Houd bij hoeveel tijd er aan elk kanaal wordt besteed.",
+        "groupEvents": "ZEvent-evenement",
+        "zeventFeaturesTitle": "ZEvent 2026-functies",
+        "zeventFeaturesDescription": "Logo, banner, filter en streamer-markeringen weergeven."
       },
       "watchTime": {
         "totalTime": "Totale tijd",
@@ -5546,6 +5734,13 @@ export const translations = {
         "previewAltLive": "Live-voorbeeld van {{name}}",
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "De avatar van {{name}}"
+      },
+      "zeventBanner": {
+        "badge": "EVENEMENT AFGELOPEN",
+        "title": "ZEvent 2026",
+        "subtitle": "De liefdadigheidsmarathon eindigde met 32 891 874 € voor de goede doelen.",
+        "cta": "Bekijk mijn overzicht",
+        "dismiss": "Verbergen"
       }
     },
     "background": {
@@ -5711,6 +5906,8 @@ export const translations = {
       "fastForwardTitle": "Fast-forward button",
       "fastForwardDescription": "Add a button to the player to catch up to live instantly.",
       "chatFilterTitle": "Chat Filter",
+      "communityBadgeTitle": "Community badge",
+      "communityBadgeDescription": "ट्विच चैट में आपके और अन्य उपयोगकर्ताओं के नाम के आगे StreamPulse आइकन दिखाता है। आपके नाम का एक गुमनाम फ़िंगरप्रिंट streampulse.fr को भेजा जाता है; नाम स्वयं कभी आपका ब्राउज़र नहीं छोड़ता।",
       "chatFilterDescription": "Hide messages containing these words (comma separated).",
       "chatFilterPlaceholder": "spoiler, ban, giveaway...",
       "blockedUsersTitle": "Blocked Users",
@@ -5776,7 +5973,8 @@ export const translations = {
       "platformFilter": {
         "all": "all",
         "twitch": "twitch",
-        "kick": "kick"
+        "kick": "kick",
+        "zevent": "zevent"
       },
       "addStreamerTitleBase": "Add a streamer",
       "addStreamerTitlePlatform": "Add a {{platform}} streamer",
@@ -5848,6 +6046,8 @@ export const translations = {
         "autoRefreshDescription": "Reload the Twitch player when an error message appears (#1000, #2000, #3000, #4000 or #5000).",
         "fastForwardTitle": "Fast-forward button",
         "fastForwardDescription": "Add a button to instantly catch up to live when the stream lags behind.",
+        "communityBadgeTitle": "Community badge",
+        "communityBadgeDescription": "ट्विच चैट में आपके और अन्य उपयोगकर्ताओं के नाम के आगे StreamPulse आइकन दिखाता है। आपके नाम का एक गुमनाम फ़िंगरप्रिंट streampulse.fr को भेजा जाता है; नाम स्वयं कभी आपका ब्राउज़र नहीं छोड़ता।",
         "chatFilterDescription": "Hide messages containing these words (comma separated).",
         "themeTitle": "Theme",
         "groupProfile": "Profile",
@@ -5886,7 +6086,10 @@ export const translations = {
         "groupData": "Data",
         "groupWatchTime": "Watch Time",
         "watchTimeTitle": "Watch Time Tracker",
-        "watchTimeDescription": "Track time spent on each channel."
+        "watchTimeDescription": "Track time spent on each channel.",
+        "groupEvents": "ZEvent इवेंट",
+        "zeventFeaturesTitle": "ZEvent 2026 सुविधाएं",
+        "zeventFeaturesDescription": "लोगो, बैनर, फ़िल्टर और स्ट्रीमर हाइलाइट दिखाएं।"
       },
       "watchTime": {
         "totalTime": "Total time",
@@ -5977,6 +6180,13 @@ export const translations = {
         "previewAltLive": "{{name}}’s live preview",
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "{{name}}’s avatar"
+      },
+      "zeventBanner": {
+        "badge": "इवेंट समाप्त",
+        "title": "ZEvent 2026",
+        "subtitle": "चैरिटी मैराथन संस्थाओं के लिए 32 891 874 € जुटाकर समाप्त हुआ।",
+        "cta": "मेरा सारांश देखें",
+        "dismiss": "छिपाएं"
       }
     },
     "background": {
@@ -6142,6 +6352,8 @@ export const translations = {
       "fastForwardTitle": "Snabbspolningsknapp",
       "fastForwardDescription": "Lägg till en knapp i spelaren för att omedelbart komma ikapp direktsändningen.",
       "chatFilterTitle": "Chatfilter",
+      "communityBadgeTitle": "Gemenskapsmärke",
+      "communityBadgeDescription": "Visar StreamPulse-ikonen bredvid ditt namn och andra användares namn i Twitch-chatten. Ett anonymt fingeravtryck av ditt namn skickas till streampulse.fr; namnet självt lämnar aldrig din webbläsare.",
       "chatFilterDescription": "Dölj meddelanden som innehåller dessa ord (separerade med kommatecken).",
       "chatFilterPlaceholder": "spoiler, avstängning, utlottning...",
       "blockedUsersTitle": "Blockerade användare",
@@ -6207,7 +6419,8 @@ export const translations = {
       "platformFilter": {
         "all": "alla",
         "twitch": "ryckning",
-        "kick": "kick"
+        "kick": "kick",
+        "zevent": "zevent"
       },
       "addStreamerTitleBase": "Lägg till en serpentinslinga",
       "addStreamerTitlePlatform": "Lägg till en {{platform}}-streamer",
@@ -6279,6 +6492,8 @@ export const translations = {
         "autoRefreshDescription": "Uppdatera Twitch-spelaren när ett felmeddelande visas (#1000, #2000, #3000, #4000 eller #5000).",
         "fastForwardTitle": "Snabbspolningsknapp",
         "fastForwardDescription": "Lägg till en knapp för att omedelbart komma ikapp livesändningen när den halkar efter.",
+        "communityBadgeTitle": "Gemenskapsmärke",
+        "communityBadgeDescription": "Visar StreamPulse-ikonen bredvid ditt namn och andra användares namn i Twitch-chatten. Ett anonymt fingeravtryck av ditt namn skickas till streampulse.fr; namnet självt lämnar aldrig din webbläsare.",
         "chatFilterDescription": "Dölj meddelanden som innehåller dessa ord (separerade med kommatecken).",
         "themeTitle": "Tema",
         "groupProfile": "Profil",
@@ -6317,7 +6532,10 @@ export const translations = {
         "groupData": "Data",
         "groupWatchTime": "Visningstid",
         "watchTimeTitle": "Tidsmätare för tittartid",
-        "watchTimeDescription": "Spåra hur mycket tid som läggs ner på varje kanal."
+        "watchTimeDescription": "Spåra hur mycket tid som läggs ner på varje kanal.",
+        "groupEvents": "ZEvent-evenemang",
+        "zeventFeaturesTitle": "ZEvent 2026-funktioner",
+        "zeventFeaturesDescription": "Visa logotyp, banner, filter och markering av streamers."
       },
       "watchTime": {
         "totalTime": "Total tid",
@@ -6408,6 +6626,13 @@ export const translations = {
         "previewAltLive": "{{name}}:s liveförhandsvisning",
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "{{name}}:s avatar"
+      },
+      "zeventBanner": {
+        "badge": "EVENEMANGET ÄR SLUT",
+        "title": "ZEvent 2026",
+        "subtitle": "Välgörenhetsmaratonet avslutades med 32 891 874 € insamlat till organisationerna.",
+        "cta": "Se min sammanfattning",
+        "dismiss": "Dölj"
       }
     },
     "background": {
@@ -6573,6 +6798,8 @@ export const translations = {
       "fastForwardTitle": "Tlačítko pro rychlý posun vpřed",
       "fastForwardDescription": "Přidejte do přehrávače tlačítko, které umožní okamžitě dohnat živé vysílání.",
       "chatFilterTitle": "Filtr chatu",
+      "communityBadgeTitle": "Komunitní odznak",
+      "communityBadgeDescription": "Zobrazuje ikonu StreamPulse vedle vašeho jména a jmen ostatních uživatelů v chatu Twitche. Na streampulse.fr se odesílá anonymní otisk vašeho jména; samotné jméno nikdy neopustí váš prohlížeč.",
       "chatFilterDescription": "Skrýt zprávy obsahující tato slova (oddělená čárkami).",
       "chatFilterPlaceholder": "spoiler, zákaz, soutěž...",
       "blockedUsersTitle": "Zablokovaní uživatelé",
@@ -6638,7 +6865,8 @@ export const translations = {
       "platformFilter": {
         "all": "všechny",
         "twitch": "záchvěv",
-        "kick": "kop"
+        "kick": "kop",
+        "zevent": "zevent"
       },
       "addStreamerTitleBase": "Přidat stužku",
       "addStreamerTitlePlatform": "Přidat streamera z {{platform}}",
@@ -6710,6 +6938,8 @@ export const translations = {
         "autoRefreshDescription": "Pokud se zobrazí chybová zpráva (#1000, #2000, #3000, #4000 nebo #5000), znovu načtěte přehrávač Twitch.",
         "fastForwardTitle": "Tlačítko pro rychlý posun vpřed",
         "fastForwardDescription": "Přidejte tlačítko, které vám umožní okamžitě se dostat do živého vysílání, když dojde ke zpoždění přenosu.",
+        "communityBadgeTitle": "Komunitní odznak",
+        "communityBadgeDescription": "Zobrazuje ikonu StreamPulse vedle vašeho jména a jmen ostatních uživatelů v chatu Twitche. Na streampulse.fr se odesílá anonymní otisk vašeho jména; samotné jméno nikdy neopustí váš prohlížeč.",
         "chatFilterDescription": "Skrýt zprávy obsahující tato slova (oddělená čárkami).",
         "themeTitle": "Téma",
         "groupProfile": "Profil",
@@ -6748,7 +6978,10 @@ export const translations = {
         "groupData": "Údaje",
         "groupWatchTime": "Doba sledování",
         "watchTimeTitle": "Sledování času",
-        "watchTimeDescription": "Sledujte čas strávený na jednotlivých kanálech."
+        "watchTimeDescription": "Sledujte čas strávený na jednotlivých kanálech.",
+        "groupEvents": "Událost ZEvent",
+        "zeventFeaturesTitle": "Funkce ZEvent 2026",
+        "zeventFeaturesDescription": "Zobrazit logo, banner, filtr a zvýraznění streamerů."
       },
       "watchTime": {
         "totalTime": "Celková doba",
@@ -6839,6 +7072,13 @@ export const translations = {
         "previewAltLive": "Živý náhled {{name}}",
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "Avatar uživatele {{name}}"
+      },
+      "zeventBanner": {
+        "badge": "UDÁLOST SKONČILA",
+        "title": "ZEvent 2026",
+        "subtitle": "Charitativní maraton skončil s částkou 32 891 874 € pro organizace.",
+        "cta": "Zobrazit můj přehled",
+        "dismiss": "Skrýt"
       }
     },
     "background": {

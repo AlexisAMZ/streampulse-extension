@@ -328,6 +328,7 @@
         if (panelEl) closePanel();
         ensure();
       }
+      highlightZEventSidebarChannels();
     }, 500);
   });
   try {
@@ -335,4 +336,132 @@
   } catch (_e) {}
 
   ensure();
+
+  // ── ZEvent 2026 : Sidebar Twitch Highlights ──
+  var ZEVENT_END_TIMESTAMP = 1788742800000;
+  function isZEventActive() {
+    return Date.now() < ZEVENT_END_TIMESTAMP;
+  }
+
+  var ZEVENT_PARTICIPANTS_LIST = ["aducine","adyce_","aesmodia","airka_off","alderiate","alinea_","alphacast","amixem","amo_ergo_sum__","anaee","anariake","antistar","antoinedaniel","anyme023","areliann","arlaya","arnaquemoisitupeux","artemize","aspig","avamind","aypierre","bagherajones","barbe___douce","bartchi","bastiui","bclv4","behop_veek","bestmarmotte","bibou_lol","bichard","bidaltv","blanche_omenka","bluestardust","bmsjoel","boomnasty_","brickmitri","brybry","bulledop","byilhann","bytell2","captainfracas","chap_gg","chaton_sauvage_","chezbubulle","chitai","chloe","chowh1","chrisklippel","citronviolet","clara__cmoi","clara_jones","clemovitch","clotho","clubpingouin_trash","coffee","crocodyletv","damdamlive","dart0is","david_kyden","dedefion_tv","deejaymakina","did0us","doigby","domingo","drakeoz_","dramatictac","drazonia","dreamschannelive","drfeelgood","drfrenesy","echorosen","ekylibre","ellbana","emilien","encremecanique","eneaxy","enjoyphoenix","eoscall__","eskc","esliane","etoile_ow","etoiles","eymryc","eziogdsp","f_bardino","fabdcolson","fantabobshow","farodgames","fausthea","fds_fallen","fefegg","feywee","flamby","flonflon","florence","fm_guru","foxlo_","geekfabula","general_mass","gius","gom4rt","grimvalth","guimauseterrier","hammerkick","harumate","haskouil_x_krousti","hctuan","helydia","hexotik00","himala_dofus","hiwamariri","hortyunderscore","hosarny","hugoauperchoir","humility","huzounet","hyp_tv","iamfandol","ibra","impactx_","ittledew","jackplaypz","jardistream","jaunerougebleu","jeanbaptisteshow","jengo_m","jessbond","jidun","jirayalecochon","jjetgames","jltomy","joueur_du_grenier","joyca","juliettearz","kammy64","kaosvmd","kapslockart","katchanvt","kejinn","kemist_c10h15n","kenbogard","kennystream","keola","khalamite_live","koala_cosy","koripeluche","kungitto","kwikwiii","kyuness_","la_capitainerie","la_golinval","lagameuseelle","laink","lalain","lalou_pissenlit","laniyelle","lapi","latavernedepatatus","leboldhistoire","lechatencostume","lege","lemwakast","lepotomat","les_archives","lexitvz","linca","littlebigwhale","lodeeey","lofimaria_","low4n","lu_k","lunae","lunium","lutti","lydia__am","lynkus_","m4fgaming","mahyars","maitrearmand","maitreleee","makse_tv","malariatv","malganyr","malm","manaryuujin","mandhyne","manglouste","maricanne","marieandthesapphics","mastu","masumorph","mathox","mcflyetcarlito","medalinya","melibellule","mellumine","meloka","menou","meteorann","michaelbielli","mielcrapouille","miiorca","minaravel","misscliick_","mistermv","misterpacothai","mlle_heloise","mokappan","moman","monkyjv","monsieurfoxx","morrigh4n","mrclubprotv","mrderiv","mrdrywiz","mynthos","nanie_nao","narkuss_lol","natoo","natsuko","necotho","neeq0xr","nejda","nellynessa","nia_c","nico_la","niioor","nimea_rl","notseriou_s","nykho","okanyaan_","oliarius","olithinoa","onest1_","onutrem","papy_grant","papyblade","paramiaasmr","peachypiwie","petitours","pomelyne","ponce","poncho_dlv","pressea","priscillaliaud","proteam","purpleofficiel","rasmelthor","raumane","ravencross","rayakuzaa","recalbox","recharging","rekriot","rhobalas_lol","rivenzi","ryuuna_vt","saab_","sakor_","salistoire","salma_","samueletienne","sawpalin","scok","scorpio","seaofthieves_france","sebjdg","seroths","sgauth","sheiyah","shinya_nia","shisheyu","shyroboy","siha_art","skerax","skydarc","skylissfr","skyrroztv","skyzio_","slyders","sneaze_","sol_hms","solaryhs","sparkly","splinter","stanrenart","streamdatabase","sturry316","sundae","sweetlullabytv","sylvainlyve","tamaroush_","tarkan_____","tartiine__","ter0pod","thecreepereb","thegreatreview","theguill84","theholomovement","tipstevens","tomtom","toneeuw","toutsecomprend","tpk_live","traytonlol","trinity","tsunadida","tweekz","ultia","uncleskarzi","unname_live","v3lia_","valeskatwitch","verveine_","virudi","volpoune","vulvyqueen","wakzlol","walkyrip","will_boss_gamer","willongshow","wingo","xanaa","xari","xillow__","xo_trixy","xynthiaa_","yodahkiin_","yohann_harth","yoona","yumi_ktv","yunaly_yt","zaelite","zerator","zevent","zeventplays","zoltan","zoraeli"];
+  var ZEVENT_MAP = {};
+  for (var k = 0; k < ZEVENT_PARTICIPANTS_LIST.length; k++) {
+    ZEVENT_MAP[ZEVENT_PARTICIPANTS_LIST[k]] = true;
+  }
+
+  var zeventEnabled = true;
+  function updateZEventPref() {
+    try {
+      chrome.storage.local.get("betaGeneralPreferences", function (res) {
+        var p = (res && res.betaGeneralPreferences) || {};
+        zeventEnabled = p.zeventFeatures !== false;
+        highlightZEventSidebarChannels();
+      });
+    } catch (_e) {}
+  }
+  try {
+    chrome.storage.onChanged.addListener(function (changes, area) {
+      if (area === "local" && changes.betaGeneralPreferences) {
+        updateZEventPref();
+      }
+    });
+  } catch (_e) {}
+
+  function extractSidebarHandle(row) {
+    var anchors = row.querySelectorAll ? row.querySelectorAll("a[href]") : [];
+    if (row.tagName === "A" && row.href) {
+      anchors = [row];
+    }
+    for (var a = 0; a < anchors.length; a++) {
+      var raw = anchors[a].getAttribute("href") || anchors[a].href || "";
+      var clean = raw.replace(/^https?:\/\/(?:www\.)?twitch\.tv/i, "").split(/[?#]/)[0].replace(/^\/+|\/+$/g, "");
+      var parts = clean.split("/");
+      if (parts.length === 1 && parts[0]) {
+        var h = parts[0].toLowerCase();
+        var blocked = ["directory", "videos", "downloads", "prime", "turbo", "subscriptions", "inventory", "wallet", "settings", "friends", "messages", "search", "p"];
+        if (blocked.indexOf(h) === -1) return h;
+      }
+    }
+    var titleEl = row.querySelector ? row.querySelector('[data-a-target="side-nav-title"], .side-nav-card__title, p[title], span[title]') : null;
+    if (titleEl) {
+      var titleName = (titleEl.getAttribute("title") || titleEl.textContent || "").trim().toLowerCase();
+      if (titleName && ZEVENT_MAP[titleName]) return titleName;
+    }
+    var img = row.querySelector ? row.querySelector("img[alt]") : null;
+    if (img) {
+      var alt = (img.getAttribute("alt") || "").trim().toLowerCase();
+      if (alt && ZEVENT_MAP[alt]) return alt;
+    }
+    return "";
+  }
+
+  function isSidebarRowLive(row) {
+    var text = (row.textContent || "").toLowerCase();
+    if (text.indexOf("hors ligne") !== -1 || text.indexOf("offline") !== -1) {
+      return false;
+    }
+    if (row.querySelector('.tw-channel-status-indicator--live, [data-a-target="side-nav-live-status"], .side-nav-card__live-status, [data-a-target="side-nav-card-metadata-viewers"], .tw-channel-status-indicator')) {
+      return true;
+    }
+    var aria = (row.getAttribute("aria-label") || (row.querySelector("a") && row.querySelector("a").getAttribute("aria-label")) || "").toLowerCase();
+    if (aria && (aria.indexOf("spectateur") !== -1 || aria.indexOf("viewer") !== -1 || aria.indexOf("diffuse") !== -1 || aria.indexOf("streaming") !== -1 || aria.indexOf("en direct") !== -1 || aria.indexOf("live") !== -1)) {
+      return true;
+    }
+    if (/\b\d+([,\.]\d+)?\s*(k|kilo|m)?\b/i.test(text)) {
+      return true;
+    }
+    return false;
+  }
+
+  function highlightZEventSidebarChannels() {
+    if (!isZEventActive() || !zeventEnabled) return;
+    try {
+      var cards = document.querySelectorAll(
+        '.side-nav-card, a[data-test-selector="followed-channel"], a.side-nav-card__link, [data-a-target="side-nav-card"], [data-a-target="side-nav-card-link"]'
+      );
+      if (!cards || !cards.length) return;
+
+      var processedRows = new Set ? new Set() : null;
+
+      for (var i = 0; i < cards.length; i++) {
+        var el = cards[i];
+        var row = el.closest(".side-nav-card, [data-a-target='side-nav-card'], li") || el;
+        if (processedRows) {
+          if (processedRows.has(row)) continue;
+          processedRows.add(row);
+        }
+
+        var handle = extractSidebarHandle(row);
+        var isZEvent = false;
+
+        if (handle && ZEVENT_MAP[handle]) {
+          if (isSidebarRowLive(row)) {
+            isZEvent = true;
+          }
+        }
+
+        var link = row.querySelector("a[href]") || (row.tagName === "A" ? row : null);
+
+        if (isZEvent) {
+          if (!row.classList.contains("sp-zevent-highlight")) {
+            row.classList.add("sp-zevent-highlight");
+          }
+          if (link && !link.classList.contains("sp-zevent-highlight")) {
+            link.classList.add("sp-zevent-highlight");
+          }
+        } else {
+          if (row.classList.contains("sp-zevent-highlight")) {
+            row.classList.remove("sp-zevent-highlight");
+          }
+          if (link && link.classList.contains("sp-zevent-highlight")) {
+            link.classList.remove("sp-zevent-highlight");
+          }
+        }
+      }
+    } catch (_e) {}
+  }
+
+  updateZEventPref();
+  highlightZEventSidebarChannels();
+  setInterval(highlightZEventSidebarChannels, 3000);
 })();

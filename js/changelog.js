@@ -89,7 +89,20 @@ function renderChanges(release) {
 
     const list = el("ul", "cl-list");
     for (const item of items) {
-      list.append(el("li", "cl-item", localized(item.text)));
+      const text = localized(item.text);
+      if (/zevent/i.test(text)) {
+        const li = el("li", "cl-item cl-item-zevent");
+        const badge = el("div", "cl-zevent-badge");
+        const img = el("img", "cl-zevent-logo");
+        img.src = "../images/zevent26.png";
+        img.alt = "ZEvent 2026";
+        badge.append(img);
+        const textSpan = el("span", "cl-item-text", text);
+        li.append(badge, textSpan);
+        list.append(li);
+      } else {
+        list.append(el("li", "cl-item", text));
+      }
     }
     group.append(list);
     host.append(group);
@@ -280,10 +293,8 @@ function render(release) {
     ? `${t("changelog.updatePrefix")} · ${date}`
     : t("changelog.updateInstalled");
 
-  // Le H1 nomme la page, pas la release : le titre propre à la version reste
-  // affiché dans « Versions précédentes », et le sous-titre juste dessous dit
-  // déjà ce que celle-ci apporte.
-  renderDisplay(t("changelog.pageTitle"));
+  // Le grand titre H1 affiche directement le titre de la mise à jour actuelle
+  renderDisplay(localized(release.title) || t("changelog.pageTitle"));
 
   // Explicit subtitle wins; otherwise summarise so the hero never sits on top
   // of a generic sentence that says nothing about this release.
@@ -312,20 +323,12 @@ async function init() {
   applyTranslations(document);
   document.documentElement.lang = getCurrentLanguage();
 
-  // Prefer the running manifest version so the page always describes what's
-  // installed; fall back to the newest entry when that lookup fails.
-  let version;
-  try {
-    version = chrome.runtime.getManifest().version;
-  } catch {
-    version = "";
-  }
-
-  const release = getRelease(version) || getLatestRelease();
+  // Toujours afficher la dernière version publiée (notes de la mise à jour actuelle)
+  const release = getLatestRelease();
   if (!release) {
     renderDisplay(t("changelog.noNotes"));
     document.getElementById("cl-subtitle").textContent = t("changelog.noNotesBody");
-    document.getElementById("cl-version").textContent = version ? `v${version}` : "—";
+    document.getElementById("cl-version").textContent = "—";
     renderSupport();
     return;
   }

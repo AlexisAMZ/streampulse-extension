@@ -392,6 +392,7 @@ if (!exists(CHANGELOG_DATA)) {
     "STREAMPULSE", "ON AIR", "STEP", "BUILD", "API TWITCH", "DISPLAY NAME",
     "TWITCH", "YOUTUBE", "KICK", "NOTIFICATIONS", "AUTO", "LIVE", "CONTACT",
     "Email", "StreamPulse", "Drops", "Moments", "Raids",
+    "Revolut", "PayPal", "ZEVENT", "ZEvent", "ZEVENT 2026", "ZEvent 2026",
   ]);
   // Nœuds dont le contenu est écrit par le JS au rendu (avec t()), donc vides
   // de sens dans le HTML : ce qui s'y trouve n'est qu'un gabarit.

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mon ZEvent 2026 · StreamPulse</title>
+    <link rel="icon" href="../images/photos/128px.png" />
+    <link rel="stylesheet" href="../css/recap.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="page-head">
+        <div class="brand">
+          <img src="../images/photos/128px.png" alt="" />
+          <span>StreamPulse</span>
+        </div>
+        <p class="page-title">Ton récap ZEvent 2026</p>
+        <p class="page-sub">
+          Le temps que tu as passé chez les streamers du ZEvent, d'après ton Watch Time Tracker.
+        </p>
+      </header>
+
+      <div class="formats" id="formats" hidden role="group" aria-label="Format de l'image">
+        <button class="format-btn active" data-format="twitter" type="button">Twitter · 16:9</button>
+        <button class="format-btn" data-format="story" type="button">Story Insta · 9:16</button>
+      </div>
+
+      <section class="stage" id="stage" hidden>
+        <canvas id="recap-canvas" width="1600" height="900" aria-label="Carte récapitulative"></canvas>
+      </section>
+
+      <p class="state" id="state">Chargement de tes statistiques…</p>
+
+      <section class="empty" id="empty" hidden>
+        <p class="empty-title">Aucun temps de visionnage ZEvent enregistré.</p>
+        <p class="empty-body">
+          Le Watch Time Tracker n'a rien relevé sur une chaîne participante ce mois-ci.
+          Vérifie qu'il est activé dans les réglages de l'extension.
+        </p>
+      </section>
+
+      <div class="actions" id="actions" hidden>
+        <button id="download" class="btn btn-primary" type="button">Télécharger l'image</button>
+        <button id="tweet" class="btn" type="button">Ouvrir Twitter</button>
+        <p class="hint">
+          Twitter ne peut pas récupérer l'image tout seul : télécharge-la, puis glisse-la dans ton tweet.
+        </p>
+      </div>
+
+      <p class="disclaimer">
+        Les durées sont agrégées par mois : elles couvrent septembre 2026, pas uniquement le week-end.
+        StreamPulse n'est pas affilié au ZEvent.
+      </p>
+    </main>
+    <script type="module" src="../js/recap.js"></script>
+  </body>
+</html>

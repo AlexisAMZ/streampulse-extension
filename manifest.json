@@ -3,8 +3,14 @@
   "default_locale": "en",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "26.8.12",
-  "permissions": ["storage", "alarms", "notifications", "offscreen", "tabs"],
+  "version": "26.09.04",
+  "permissions": [
+    "storage",
+    "alarms",
+    "notifications",
+    "offscreen",
+    "tabs"
+  ],
   "host_permissions": [
     "https://alexisamz.fr/*",
     "https://api.twitch.tv/*",
@@ -27,24 +33,37 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.twitch.tv/*"],
+      "matches": [
+        "https://www.twitch.tv/*"
+      ],
       "all_frames": false,
-      "js": ["js/inject/preventPause.js"],
+      "js": [
+        "js/inject/preventPause.js"
+      ],
       "run_at": "document_start"
     },
     {
-      "matches": ["https://www.twitch.tv/*"],
+      "matches": [
+        "https://www.twitch.tv/*"
+      ],
       "all_frames": false,
       "js": [
         "js/inject/i18n-inline.js",
         "js/inject/topbar.js",
-        "js/inject/quickFollow.js"
+        "js/inject/quickFollow.js",
+        "js/inject/twitch-badge.js"
       ],
-      "css": ["css/topbar.css"],
+      "css": [
+        "css/topbar.css",
+        "css/inject/twitch-badge.css"
+      ],
       "run_at": "document_idle"
     },
     {
-      "matches": ["https://www.twitch.tv/*", "https://clips.twitch.tv/*"],
+      "matches": [
+        "https://www.twitch.tv/*",
+        "https://clips.twitch.tv/*"
+      ],
       "all_frames": false,
       "js": [
         "js/vendor/hls.light.min.js",
@@ -55,11 +74,15 @@
         "js/previews/stream.js",
         "js/twitchPreviews.js"
       ],
-      "css": ["css/previews.css"],
+      "css": [
+        "css/previews.css"
+      ],
       "run_at": "document_idle"
     },
     {
-      "matches": ["https://www.twitch.tv/*"],
+      "matches": [
+        "https://www.twitch.tv/*"
+      ],
       "all_frames": false,
       "js": [
         "js/inject/i18n-inline.js",
@@ -73,7 +96,10 @@
       "run_at": "document_idle"
     },
     {
-      "matches": ["https://kick.com/*", "https://*.kick.com/*"],
+      "matches": [
+        "https://kick.com/*",
+        "https://*.kick.com/*"
+      ],
       "all_frames": false,
       "js": [
         "js/inject/i18n-inline.js",
@@ -108,9 +134,12 @@
         "html/changelog.html",
         "sons/notification.mp3",
         "images/photos/128px.png",
-        "images/photos/logosp.png"
+        "images/photos/logosp.png",
+        "images/zevent26.png"
       ],
-      "matches": ["<all_urls>"]
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ]
 }

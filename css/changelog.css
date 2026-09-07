@@ -364,10 +364,94 @@ a.cl-thanks-handle:hover {
   }
 }
 
+/* ── Donation card on changelog ── */
+.cl-donation-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 22px auto 0;
+  max-width: 580px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: rgba(255, 211, 0, 0.05);
+  border: 1px solid rgba(255, 211, 0, 0.25);
+  box-shadow: 0 0 25px rgba(255, 211, 0, 0.04);
+  transition: border-color 0.25s, background 0.25s;
+}
+.cl-donation-card:hover {
+  border-color: rgba(255, 211, 0, 0.45);
+  background: rgba(255, 211, 0, 0.08);
+}
+.cl-donation-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--sp-serif);
+  font-size: 15px;
+  color: var(--sp-ink);
+}
+.cl-donation-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffd300;
+}
+.cl-donation-icon svg {
+  width: 18px;
+  height: 18px;
+}
+.cl-donation-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.cl-donation-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--sp-line-2);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--sp-ink);
+  font-family: var(--sp-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.cl-donation-btn-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+.cl-donation-btn.revolut:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+.cl-donation-btn.paypal:hover {
+  background: rgba(0, 112, 186, 0.2);
+  border-color: rgba(0, 112, 186, 0.5);
+  color: #4da6ff;
+  transform: translateY(-1px);
+}
+@media (max-width: 560px) {
+  .cl-donation-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+}
+
 /* Ligne de contact, juste avant le bouton de sortie : discrète, mais c'est le
    dernier endroit que l'utilisateur regarde avant de fermer la page. */
 .cl-support {
-  margin: 34px 0 6px;
+  margin: 18px 0 6px;
   text-align: center;
 }
 /* Carte plutôt que simple ligne : c'est le dernier élément avant le bouton de
@@ -445,4 +529,31 @@ a.cl-thanks-handle:hover {
   .cl-thanks-item {
     transition: none;
   }
+}
+
+/* ── ZEvent 2026 in Changelog ── */
+.cl-item.cl-item-zevent {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  margin: 6px 0;
+  background: linear-gradient(135deg, rgba(0, 230, 118, 0.08) 0%, rgba(0, 230, 118, 0.02) 100%);
+  border: 1px solid rgba(0, 230, 118, 0.32);
+  border-radius: 8px;
+  position: relative;
+}
+.cl-item.cl-item-zevent::before {
+  display: none !important;
+}
+.cl-zevent-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.cl-zevent-logo {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(0, 230, 118, 0.45));
 }
