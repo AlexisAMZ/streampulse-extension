@@ -21,10 +21,6 @@
         </nav>
       </div>
       <div class="header-right">
-        <div class="header-points" id="header-points" title="Channel Points">
-          <span class="points-icon">💎</span>
-          <span class="points-value" id="header-points-value">--</span>
-        </div>
         <button id="refresh-button" type="button" class="icon-btn" data-i18n-attr-title="popup.refresh" title="Actualiser">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
         </button>
@@ -43,6 +39,9 @@
           </div>
           <h1 class="greeting-title" id="greeting-title">Bonsoir.<br><span class="greeting-sub">Voici qui est en ligne.</span></h1>
         </div>
+        <button id="zevent-greeting-logo" class="zevent-greeting-btn" type="button" aria-label="ZEvent 2026" title="ZEvent 2026">
+          <img src="../images/zevent26.png" class="zevent-greeting-img" alt="ZEvent 2026" />
+        </button>
         <div class="stats-row">
           <div class="stat-block">
             <div class="stat-block-label" data-i18n="popup.statBlock.points">Points</div>
@@ -57,6 +56,35 @@
 
       <!-- Scrollable area -->
       <div class="streamers-scroll-area">
+        <!-- ZEvent 2026 Event Banner -->
+        <div class="zevent-banner glass frame-brackets" id="zevent-banner">
+          <button class="zevent-banner-close" id="zevent-banner-close" type="button" aria-label="Fermer" title="Fermer">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+          <div class="zevent-banner-content">
+            <div class="zevent-banner-top">
+              <span class="zevent-live-badge zevent-ended">
+                <span data-i18n="popup.zeventBanner.badge">ÉVÉNEMENT TERMINÉ</span>
+              </span>
+            </div>
+            <div class="zevent-banner-body">
+              <div class="zevent-banner-visual">
+                <img src="../images/zevent26.png" class="zevent-banner-img" alt="ZEvent 2026" />
+              </div>
+              <div class="zevent-banner-info">
+                <h3 class="zevent-banner-title" data-i18n="popup.zeventBanner.title">ZEvent 2026</h3>
+                <p class="zevent-banner-subtitle" data-i18n="popup.zeventBanner.subtitle">Le marathon caritatif s'est achevé sur 32 891 874 € récoltés pour les associations.</p>
+              </div>
+            </div>
+            <div class="zevent-banner-actions">
+              <button id="zevent-recap-cta" class="zevent-btn primary" type="button">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="13"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="18" y1="20" x2="18" y2="9"></line></svg>
+                <span data-i18n="popup.zeventBanner.cta">Voir mon récap</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- Live section -->
         <div class="stream-section">
           <div class="section-row">
@@ -66,6 +94,10 @@
               <button class="pf-btn active" data-filter="all" data-i18n="popup.platformFilter.all">tous</button>
               <button class="pf-btn" data-filter="twitch" data-i18n="popup.platformFilter.twitch">twitch</button>
               <button class="pf-btn" data-filter="kick" data-i18n="popup.platformFilter.kick">kick</button>
+              <button class="pf-btn pf-zevent" data-filter="zevent" id="pf-btn-zevent" hidden>
+                <span class="pf-zevent-dot"></span>
+                <span data-i18n="popup.platformFilter.zevent">zevent</span>
+              </button>
             </div>
             <span class="section-count" id="live-count">00</span>
           </div>
@@ -118,13 +150,6 @@
     <section id="settings-section" class="settings-section hidden">
       <h2 data-i18n="popup.settingsTitle">Réglages</h2>
 
-      <!-- Support the developer -->
-      <a href="https://revolut.me/alexisamz" target="_blank" rel="noopener noreferrer" class="support-button promoted">
-        <span class="support-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-        </span>
-        <span data-i18n="popup.supportDev">Offrir un Bubble Tea au développeur</span>
-      </a>
 
       <!-- Theme toggle -->
       <div class="theme-toggle-row">
@@ -197,6 +222,17 @@
           <input id="pref-sounds" type="checkbox" />
         </label>
 
+        <!-- Group: ZEvent -->
+        <p class="settings-group-header" data-i18n="popup.settings.groupEvents">Événement ZEvent</p>
+
+        <label class="settings-toggle">
+          <div class="settings-text">
+            <span class="settings-title" data-i18n="popup.settings.zeventFeaturesTitle">Dispositif ZEvent 2026</span>
+            <span class="settings-description" data-i18n="popup.settings.zeventFeaturesDescription">Afficher le logo, le bandeau, le filtre et le surlignage des streamers.</span>
+          </div>
+          <input id="pref-zevent-features" type="checkbox" />
+        </label>
+
         <!-- Group: Automation -->
         <p class="settings-group-header" data-i18n="popup.settings.groupAutomation">Automatisation</p>
 
@@ -232,9 +268,9 @@
           <input id="pref-auto-open-inventory" type="checkbox" />
         </label>
 
-        <div class="settings-text" id="auto-open-inventory-interval-wrap" style="margin: 8px 0 12px 0; display:flex; align-items:center; justify-content:space-between;">
+        <div class="settings-sub-row" id="auto-open-inventory-interval-wrap">
           <span class="settings-title" data-i18n="popup.settings.inventoryFrequencyLabel">Fréquence d'ouverture</span>
-          <select id="pref-auto-open-inventory-interval" style="background:#18181b; color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:6px; padding:4px 8px; font-size:12px;">
+          <select id="pref-auto-open-inventory-interval" class="settings-select">
             <option value="1" data-i18n="popup.settings.inventoryEvery1h">Toutes les 1h</option>
             <option value="2" data-i18n="popup.settings.inventoryEvery2h">Toutes les 2h</option>
             <option value="4" selected data-i18n="popup.settings.inventoryEvery4h">Toutes les 4h</option>
@@ -364,6 +400,14 @@
       <p class="settings-group-header" data-i18n="popup.settings.groupChat">Chat</p>
 
       <div class="settings-group">
+        <label class="settings-toggle settings-highlight">
+          <div class="settings-text">
+            <span class="settings-title" data-i18n="popup.settings.communityBadgeTitle">Badge communautaire</span>
+            <span class="settings-description" data-i18n="popup.settings.communityBadgeDescription">Affiche l'icône StreamPulse à côté de votre pseudo et de ceux des autres utilisateurs dans le tchat Twitch.</span>
+          </div>
+          <input id="pref-community-badge" type="checkbox" />
+        </label>
+
         <div class="settings-text">
           <span class="settings-title" data-i18n="onboarding.chatFilterTitle">Filtre de chat (Anti-Spoiler)</span>
           <span class="settings-description" data-i18n="popup.settings.chatFilterDescription">Mots-clés à masquer (séparés par des virgules).</span>
@@ -425,6 +469,10 @@
           </div>
         </div>
         <p class="wt-empty-state hidden" id="wt-empty" data-i18n="popup.watchTime.empty">Aucune donnée ce mois-ci. Regarde un stream pour commencer !</p>
+        <button id="open-zevent-recap" class="zevent-recap-button" type="button">
+          <span class="zevent-recap-dot"></span>
+          Voir mon récap ZEvent 2026
+        </button>
       </div>
 
       <label class="settings-toggle">
@@ -497,6 +545,26 @@
           <a href="mailto:alexisdcrz@protonmail.com" class="contact-link" title="alexisdcrz@protonmail.com">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
             <span data-i18n="popup.settings.contactEmail">Email</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Support the developer -->
+      <div class="support-card">
+        <div class="support-card-title">
+          <span class="support-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+          </span>
+          <span data-i18n="popup.supportDev">Offrir un Bubble Tea au développeur</span>
+        </div>
+        <div class="support-buttons-group">
+          <a href="https://revolut.me/alexisamz" target="_blank" rel="noopener noreferrer" class="support-subbtn revolut" title="Revolut">
+            <svg class="support-subbtn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20.9133 6.9566C20.9133 3.1208 17.7898 0 13.9503 0H2.424v3.8605h10.9782c1.7376 0 3.177 1.3651 3.2087 3.043.016.84-.2994 1.633-.8878 2.2324-.5886.5998-1.375.9303-2.2144.9303H9.2322a.2756.2756 0 0 0-.2755.2752v3.431c0 .0585.018.1142.052.1612L16.2646 24h5.3114l-7.2727-10.094c3.6625-.1838 6.61-3.2612 6.61-6.9494zM6.8943 5.9229H2.424V24h4.4704z"/></svg>
+            <span>Revolut</span>
+          </a>
+          <a href="https://paypal.me/alexisamzdcrz" target="_blank" rel="noopener noreferrer" class="support-subbtn paypal" title="PayPal">
+            <svg class="support-subbtn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M15.607 4.653H8.941L6.645 19.251H1.82L4.862 0h7.995c3.754 0 6.375 2.294 6.473 5.513-.648-.478-2.105-.86-3.722-.86m6.57 5.546c0 3.41-3.01 6.853-6.958 6.853h-2.493L11.595 24H6.74l1.845-11.538h3.592c4.208 0 7.346-3.634 7.153-6.949a5.24 5.24 0 0 1 2.848 4.686M9.653 5.546h6.408c.907 0 1.942.222 2.363.541-.195 2.741-2.655 5.483-6.441 5.483H8.714Z"/></svg>
+            <span>PayPal</span>
           </a>
         </div>
       </div>

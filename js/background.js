@@ -140,6 +140,8 @@ const DEFAULT_PREFERENCES = {
   previewsAudio: false,
   previewsShowDelayMs: 200,
   previewsAnimations: true,
+  zeventFeatures: true,
+  communityBadge: true,
 };
 
 const DEFAULT_STATS = {
@@ -543,6 +545,8 @@ class PreferenceStore {
         ? Math.min(2000, Math.max(0, previewsDelay))
         : 200,
       previewsAnimations: preferences.previewsAnimations !== false,
+      zeventFeatures: preferences.zeventFeatures !== false,
+      communityBadge: preferences.communityBadge !== false,
     };
   }
 

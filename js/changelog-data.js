@@ -48,6 +48,269 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.09.04",
+    date: "2026-09-03",
+    title: {
+      fr: "Badge communautaire StreamPulse",
+      en: "StreamPulse community badge",
+      es: "Insignia comunitaria StreamPulse",
+      "pt-BR": "Distintivo comunitário StreamPulse",
+      de: "StreamPulse Community-Abzeichen",
+      it: "Badge della comunità StreamPulse",
+      pl: "Odznaka społeczności StreamPulse",
+      tr: "StreamPulse topluluk rozeti",
+      ru: "Значок сообщества StreamPulse",
+      ja: "StreamPulseコミュニティバッジ",
+      ko: "StreamPulse 커뮤니티 배지",
+      id: "Lencana komunitas StreamPulse",
+      nl: "StreamPulse community-badge",
+      sv: "StreamPulse-gemenskapsmärke",
+      cs: "Komunitní odznak StreamPulse"
+    },
+    subtitle: {
+      fr: "Les utilisateurs de StreamPulse affichent désormais un badge dans le tchat Twitch.",
+      en: "StreamPulse users now display a badge in Twitch chat.",
+      es: "Los usuarios de StreamPulse ahora muestran una insignia en el chat de Twitch.",
+      "pt-BR": "Os usuários do StreamPulse agora exibem um distintivo no chat da Twitch.",
+      de: "StreamPulse-Nutzer zeigen jetzt ein Abzeichen im Twitch-Chat an.",
+      it: "Gli utenti StreamPulse ora mostrano un badge nella chat di Twitch.",
+      pl: "Użytkownicy StreamPulse wyświetlają teraz odznakę na czacie Twitcha.",
+      tr: "StreamPulse kullanıcıları artık Twitch sohbetinde bir rozet görüntülüyor.",
+      ru: "Пользователи StreamPulse теперь отображают значок в чате Twitch.",
+      ja: "StreamPulseユーザーのTwitchチャットにバッジが表示されるようになりました。",
+      ko: "StreamPulse 사용자의 트위치 채팅에 배지가 표시됩니다.",
+      id: "Pengguna StreamPulse kini menampilkan lencana di obrolan Twitch.",
+      nl: "StreamPulse-gebruikers tonen nu een badge in de Twitch-chat.",
+      sv: "StreamPulse-användare visar nu ett märke i Twitch-chatten.",
+      cs: "Uživatelé StreamPulse nyní zobrazují odznak v chatu Twitche."
+    },
+    changes: [
+      {
+        type: "new",
+        text: {
+          fr: "Badge communautaire : tous les utilisateurs de StreamPulse sont automatiquement détectés et affichent une icône StreamPulse à côté de leur pseudo dans le tchat Twitch, visible par tous les membres de la communauté.",
+          en: "Community badge: all StreamPulse users are automatically detected and display a StreamPulse icon next to their username in Twitch chat, visible to all community members.",
+          es: "Insignia comunitaria: todos los usuarios de StreamPulse se detectan automáticamente y muestran un icono junto a su nombre en el chat de Twitch, visible para todos los miembros de la comunidad.",
+          "pt-BR": "Distintivo comunitário: todos os usuários do StreamPulse são detectados automaticamente e exibem um ícone ao lado do nome no chat da Twitch, visível para todos os membros da comunidade.",
+          de: "Community-Abzeichen: Alle StreamPulse-Nutzer werden automatisch erkannt und zeigen ein StreamPulse-Symbol neben ihrem Namen im Twitch-Chat an, sichtbar für alle Community-Mitglieder.",
+          it: "Badge della comunità: tutti gli utenti StreamPulse vengono rilevati automaticamente e mostrano un'icona accanto al nome nella chat di Twitch, visibile a tutti i membri della comunità.",
+          pl: "Odznaka społeczności: wszyscy użytkownicy StreamPulse są automatycznie wykrywani i wyświetlają ikonę obok swojego pseudonimu na czacie Twitcha, widoczną dla wszystkich członków społeczności.",
+          tr: "Topluluk rozeti: tüm StreamPulse kullanıcıları otomatik olarak algılanır ve Twitch sohbetinde kullanıcı adlarının yanında bir StreamPulse simgesi görüntülenir, tüm topluluk üyeleri tarafından görülebilir.",
+          ru: "Значок сообщества: все пользователи StreamPulse автоматически распознаются и отображают значок рядом с ником в чате Twitch, видимый всем участникам сообщества.",
+          ja: "コミュニティバッジ：StreamPulseユーザーは自動的に検出され、Twitchチャットのユーザー名の横にStreamPulseアイコンが表示されます。すべてのコミュニティメンバーに表示されます。",
+          ko: "커뮤니티 배지: 모든 StreamPulse 사용자가 자동으로 감지되어 트위치 채팅의 사용자 이름 옆에 StreamPulse 아이콘이 표시되며, 모든 커뮤니티 멤버에게 보입니다.",
+          id: "Lencana komunitas: semua pengguna StreamPulse terdeteksi secara otomatis dan menampilkan ikon StreamPulse di samping nama mereka di obrolan Twitch, terlihat oleh semua anggota komunitas.",
+          nl: "Community-badge: alle StreamPulse-gebruikers worden automatisch herkend en tonen een StreamPulse-pictogram naast hun naam in de Twitch-chat, zichtbaar voor alle leden van de community.",
+          sv: "Gemenskapsmärke: alla StreamPulse-användare upptäcks automatiskt och visar en StreamPulse-ikon bredvid sitt namn i Twitch-chatten, synlig för alla i gemenskapen.",
+          cs: "Komunitní odznak: všichni uživatelé StreamPulse jsou automaticky rozpoznáni a zobrazují ikonu StreamPulse vedle svého jména v chatu Twitche, viditelnou pro všechny členy komunity."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "Le badge est désactivable à tout moment dans Réglages → Chat → Badge communautaire.",
+          en: "The badge can be disabled anytime in Settings → Chat → Community badge.",
+          es: "La insignia se puede desactivar en cualquier momento en Ajustes → Chat → Insignia comunitaria.",
+          "pt-BR": "O distintivo pode ser desativado a qualquer momento em Configurações → Chat → Distintivo comunitário.",
+          de: "Das Abzeichen kann jederzeit unter Einstellungen → Chat → Community-Abzeichen deaktiviert werden.",
+          it: "Il badge può essere disattivato in qualsiasi momento in Impostazioni → Chat → Badge della comunità.",
+          pl: "Odznakę można wyłączyć w dowolnym momencie w Ustawienia → Czat → Odznaka społeczności.",
+          tr: "Rozet, Ayarlar → Sohbet → Topluluk rozeti bölümünden istediğiniz zaman devre dışı bırakılabilir.",
+          ru: "Значок можно отключить в любое время в Настройки → Чат → Значок сообщества.",
+          ja: "バッジは設定 → チャット → コミュニティバッジからいつでも無効にできます。",
+          ko: "배지는 설정 → 채팅 → 커뮤니티 배지에서 언제든지 비활성화할 수 있습니다.",
+          id: "Lencana dapat dinonaktifkan kapan saja di Pengaturan → Obrolan → Lencana komunitas.",
+          nl: "De badge kan op elk moment worden uitgeschakeld via Instellingen → Chat → Community-badge.",
+          sv: "Märket kan inaktiveras när som helst i Inställningar → Chatt → Gemenskapsmärke.",
+          cs: "Odznak lze kdykoli deaktivovat v Nastavení → Chat → Komunitní odznak."
+        }
+      }
+    ]
+  },
+  {
+      version: "26.09.03",
+      "date": "2026-09-03",
+      "title": {
+          "fr": "Compatibilité Firefox et interface épurée",
+          "en": "Firefox compatibility and cleaner interface",
+          "es": "Compatibilidad con Firefox e interfaz simplificada",
+          "pt-BR": "Compatibilidade com Firefox e interface simplificada",
+          "de": "Firefox-Kompatibilität und aufgeräumte Oberfläche",
+          "it": "Compatibilità con Firefox e interfaccia semplificata",
+          "pl": "Kompatybilność z Firefoksem i uporządkowany interfejs",
+          "tr": "Firefox uyumluluğu ve sadeleştirilmiş arayüz",
+          "ru": "Совместимость с Firefox и чистый интерфейс",
+          "ja": "Firefox対応と洗練されたUI",
+          "ko": "Firefox 호환성 및 깔끔해진 인터페이스",
+          "id": "Kompatibilitas Firefox dan antarmuka lebih rapi",
+          "nl": "Firefox-compatibiliteit en opgeruimde interface",
+          "sv": "Firefox-kompatibilitet och renare gränssnitt",
+          "cs": "Kompatibilita s Firefoxem a přehlednější rozhraní"
+      },
+      "subtitle": {
+          "fr": "Lancement de la version Firefox, refonte des intitulés et allègement du pop-up.",
+          "en": "Firefox launch, refreshed extension titles and streamlined popup.",
+          "es": "Lanzamiento en Firefox, actualización de títulos y simplificación del pop-up.",
+          "pt-BR": "Lançamento no Firefox, atualização de títulos e pop-up simplificado.",
+          "de": "Firefox-Start, überarbeitete Titel und vereinfachtes Pop-up.",
+          "it": "Lancio su Firefox, titoli rinnovati e popup semplificato.",
+          "pl": "Wydanie na Firefoksa, odświeżone tytuły i lżejsze okno.",
+          "tr": "Firefox sürümü, yenilenen başlıklar ve sadeleştirilmiş açılır pencere.",
+          "ru": "Запуск версии для Firefox, обновлённые названия и облегчённое окно.",
+          "ja": "Firefox版の提供開始、タイトルの刷新、ポップアップの簡素化。",
+          "ko": "Firefox 버전 출시, 확장 프로그램 이름 개편 및 팝업 간소화.",
+          "id": "Peluncuran Firefox, pembaruan judul ekstensi, dan perapian popup.",
+          "nl": "Lancering van de Firefox-versie, vernieuwde titels en een lichtere pop-up.",
+          "sv": "Firefox-lansering, uppdaterade titlar och en renare popup.",
+          "cs": "Vydání pro Firefox, aktualizované názvy a odlehčené vyskakovací okno."
+      },
+      "changes": [
+          {
+              "type": "new",
+              "text": {
+                  "fr": "Dispositif temporaire ZEvent 2026 : bandeau interactif, filtre dédié et surlignage vert des streamers participants. Fonctionnalité active pour le week-end qui se désactivera automatiquement lundi à 3h du matin (désactivable à tout moment dans les Réglages).",
+                  "en": "Temporary ZEvent 2026 features: interactive banner, dedicated filter, and green highlights for participating streamers. Active for the weekend and automatically turns off Monday at 3:00 AM (can also be toggled anytime in Settings).",
+                  "es": "Dispositivo temporal ZEvent 2026: banner interactivo, filtro dedicado y resaltado verde para streamers participantes. Función activa para el fin de semana que se desactivará automáticamente el lunes a las 3:00 AM (desactivable en Ajustes).",
+                  "pt-BR": "Recursos temporários do ZEvent 2026: banner interativo, filtro dedicado e destaque verde para streamers participantes. Ativo para o fim de semana e desativado automaticamente na segunda-feira às 3h (desativável em Configurações).",
+                  "de": "Temporäres ZEvent 2026 Feature: interaktives Banner, eigener Filter und grüne Hervorhebung für teilnehmende Streamer. Aktiv für das Wochenende und schaltet sich Montagmorgen um 3:00 Uhr automatisch ab (jederzeit in den Einstellungen deaktivierbar).",
+                  "it": "Funzionalità temporanee ZEvent 2026: banner interattivo, filtro dedicato ed evidenziazione verde per gli streamer partecipanti. Attivo per il fine settimana e disattivato automaticamente lunedì alle 3:00 (disattivabile nelle Impostazioni).",
+                  "pl": "Tymczasowe funkcje ZEvent 2026: interaktywny baner, dedykowany filtr i zielone wyróżnienie uczestniczących streamerów. Działa przez weekend i wyłącza się automatycznie w poniedziałek o 3:00 (możliwość wyłączenia w Ustawieniach).",
+                  "tr": "Geçici ZEvent 2026 özellikleri: etkileşimli afiş, özel filtre ve katılımcı yayıncılar için yeşil vurgulama. Hafta sonu boyunca aktif olup Pazartesi 03:00'te otomatik kapanır (Ayarlar'dan da kapatılabilir).",
+                  "ru": "Временные функции ZEvent 2026: интерактивный баннер, отдельный фильтр и зелёная подсветка стримеров. Активно на выходных и автоматически отключится в понедельник в 3:00 (можно отключить в Настройках).",
+                  "ja": "ZEvent 2026週末限定機能：インタラクティブバナー、専用フィルター、参加配信者のグリーンハイライト。月曜午前3時に自動終了します（設定からいつでも無効化可能）。",
+                  "ko": "ZEvent 2026 주말 한정 기능: 인터랙티브 배너, 전용 필터 및 참가 스트리머 녹색 강조 표시. 월요일 오전 3시에 자동 종료됩니다(설정에서 언제든지 비활성화 가능).",
+                  "id": "Fitur sementara ZEvent 2026: banner interaktif, filter khusus, dan sorotan hijau untuk streamer yang berpartisipasi. Aktif selama akhir pekan dan mati otomatis Senin pukul 03.00 (bisa dimatikan di Pengaturan).",
+                  "nl": "Tijdelijke ZEvent 2026-functies: interactieve banner, speciale filter en groene markering voor deelnemende streamers. Actief voor het weekend en schakelt maandag om 3:00 uur automatisch uit (altijd uitschakelbaar in Instellingen).",
+                  "sv": "Tillfälliga ZEvent 2026-funktioner: interaktiv banner, dedikerat filter och grön markering för deltagande streamers. Aktivt under helgen och stängs av automatiskt måndag kl. 03:00 (kan stängas av i Inställningar).",
+                  "cs": "Dočasné funkce ZEvent 2026: interaktivní banner, vyhrazený filtr a zelené zvýraznění zúčastněných streamerů. Aktivní během víkendu a v pondělí ve 3:00 se automaticky vypne (lze vypnout v Nastavení)."
+              }
+          },
+          {
+              "type": "new",
+              "text": {
+                  "fr": "Prise en charge officielle de Mozilla Firefox : moteur audio natif sans document offscreen et conformité stricte aux exigences de permissions Mozilla.",
+                  "en": "Official Mozilla Firefox support: native background audio engine without offscreen documents and strict compliance with Mozilla permission rules.",
+                  "es": "Compatibilidad oficial con Mozilla Firefox: motor de audio nativo sin documentos offscreen y cumplimiento estricto de los permisos de Mozilla.",
+                  "pt-BR": "Suporte oficial ao Mozilla Firefox: mecanismo de áudio nativo sem documentos offscreen e conformidade estrita com as permissões da Mozilla.",
+                  "de": "Offizielle Unterstützung für Mozilla Firefox: nativer Audio-Engine ohne Offscreen-Dokumente und strikte Einhaltung der Mozilla-Berechtigungsrichtlinien.",
+                  "it": "Supporto ufficiale per Mozilla Firefox: motore audio nativo senza documenti offscreen e piena conformità alle regole sui permessi di Mozilla.",
+                  "pl": "Oficjalne wsparcie dla przeglądarki Mozilla Firefox: natywny silnik audio bez dokumentów offscreen i pełna zgodność z zasadami uprawnień Mozilli.",
+                  "tr": "Resmi Mozilla Firefox desteği: offscreen belgeleri olmadan yerel ses motoru ve Mozilla izin kurallarına tam uyumluluk.",
+                  "ru": "Официальная поддержка Mozilla Firefox: встроенный звуковой движок без offscreen-документов и строгое соблюдение правил разрешений Mozilla.",
+                  "ja": "Mozilla Firefoxに正式対応。オフスクリーン文書を使用しないネイティブ音声エンジンと、Mozillaの権限ポリシーに完全準拠。",
+                  "ko": "Mozilla Firefox 공식 지원: 오프스크린 문서가 없는 기본 오디오 엔진 탑재 및 Mozilla 권한 정책 완전 준수.",
+                  "id": "Dukungan resmi untuk Mozilla Firefox: mesin audio bawaan tanpa dokumen offscreen dan kepatuhan penuh terhadap kebijakan izin Mozilla.",
+                  "nl": "Officiële ondersteuning voor Mozilla Firefox: native audio-engine zonder offscreen-documenten en strikte naleving van de Mozilla-machtigingsregels.",
+                  "sv": "Officiellt stöd för Mozilla Firefox: inbyggd ljudmotor utan offscreen-dokument och full överensstämmelse med Mozillas behörighetsregler.",
+                  "cs": "Oficiální podpora pro Mozilla Firefox: nativní zvukový modul bez offscreen dokumentů a přísné dodržení pravidel oprávnění Mozilla."
+              }
+          },
+          {
+              "type": "improved",
+              "text": {
+                  "fr": "Mise à jour des intitulés de l'extension dans les 15 langues pour refléter l'ensemble des fonctionnalités : alertes live en temps réel, points de chaîne et Twitch Drops.",
+                  "en": "Updated extension titles across all 15 languages to highlight the full feature set: real-time live alerts, Channel Points, and Twitch Drops.",
+                  "es": "Actualización de los títulos de la extensión en los 15 idiomas para reflejar todas las funciones: alertas en vivo en tiempo real, puntos de canal y Twitch Drops.",
+                  "pt-BR": "Atualização dos títulos da extensão nos 15 idiomas para destacar todos os recursos: alertas ao vivo em tempo real, pontos de canal e Twitch Drops.",
+                  "de": "Aktualisierung der Erweiterungstitel in allen 15 Sprachen, um den gesamten Funktionsumfang widerzuspiegeln: Live-Benachrichtigungen, Kanalpunkte und Twitch Drops.",
+                  "it": "Aggiornati i titoli dell'estensione in tutte le 15 lingue per evidenziare tutte le funzionalità: avvisi live in tempo reale, punti canale e Twitch Drops.",
+                  "pl": "Zaktualizowano nazwy rozszerzenia we wszystkich 15 językach, aby uwzględnić pełny zestaw funkcji: powiadomienia na żywo, punkty i Twitch Drops.",
+                  "tr": "Uzantı başlıkları, tüm özellikleri vurgulamak üzere 15 dilde güncellendi: gerçek zamanlı canlı yayın bildirimleri, Kanal Puanları ve Twitch Drops.",
+                  "ru": "Обновлены названия расширения на всех 15 языках, отражающие полный набор функций: оповещения о трансляциях, баллы канала и Twitch Drops.",
+                  "ja": "全15言語で拡張機能のタイトルを更新し、リアルタイム配信通知、チャンネルポイント、Twitch Dropsなど全機能を反映。",
+                  "ko": "실시간 라이브 알림, 채널 포인트, Twitch Drops 등 모든 기능을 반영하도록 15개 언어 전체에서 확장 프로그램 제목을 개편했습니다.",
+                  "id": "Pembaruan judul ekstensi di semua 15 bahasa untuk mencerminkan seluruh fitur: peringatan siaran langsung, Poin Saluran, dan Twitch Drops.",
+                  "nl": "Titels van de extensie bijgewerkt in alle 15 talen om het volledige functiepakket te weerspiegelen: live meldingen, kanaalpunten en Twitch Drops.",
+                  "sv": "Uppdaterade titlar på tillägget i alla 15 språk för att spegla hela funktionsuppsättningen: realtidsaviseringar, kanalpoäng och Twitch Drops.",
+                  "cs": "Aktualizace názvů rozšíření ve všech 15 jazycích tak, aby odrážely všechny funkce: živá upozornění v reálném čase, body kanálu a Twitch Drops."
+              }
+          },
+          {
+              "type": "improved",
+              "text": {
+                  "fr": "La barre supérieure du pop-up est allégée : le badge de points en double en haut à droite a été retiré. Le compteur principal reste mis en valeur dans la section d'accueil avec son animation fluide.",
+                  "en": "The popup top bar has been streamlined: the duplicate points badge in the top right was removed. The main counter remains highlighted in the greeting section with smooth animation.",
+                  "es": "La barra superior del pop-up se ha simplificado: se eliminó la insignia de puntos duplicada en la esquina superior derecha. El contador principal se mantiene en la sección de inicio con su animación fluida.",
+                  "pt-BR": "A barra superior do pop-up foi simplificada: o emblema de pontos duplicado no canto superior direito foi removido. O contador principal permanece em destaque na seção inicial com animação fluida.",
+                  "de": "Die obere Leiste des Pop-ups wurde aufgeräumt: Das doppelte Punkte-Symbol oben rechts wurde entfernt. Der Hauptzähler bleibt im Begrüßungsbereich mit flüssiger Animation hervorgehoben.",
+                  "it": "La barra superiore del popup è stata alleggerita: il badge dei punti duplicato in alto a destra è stato rimosso. Il contatore principale rimane in evidenza nella sezione iniziale con animazione fluida.",
+                  "pl": "Górny pasek okna został odchudzony: usunięto zduplikowaną plakietkę punktów w prawym górnym rogu. Główny licznik pozostaje wyróżniony w sekcji powitalnej z płynną animacją.",
+                  "tr": "Açılır pencerenin üst çubuğu sadeleştirildi: sağ üstteki yinelenen puan rozeti kaldırıldı. Ana sayaç, karşılama bölümünde akıcı animasyonuyla vurgulanmaya devam ediyor.",
+                  "ru": "Верхняя панель всплывающего окна стала чище: дублирующий значок баллов в правом верхнем углу удалён. Основной счётчик остаётся на главном экране с плавной анимацией.",
+                  "ja": "ポップアップ上部バーを整理し、右上の重複したポイントバッジを削除しました。メインカウンターはウェルカムセクションでスムーズなアニメーションとともに引き続き表示されます。",
+                  "ko": "팝업 상단 표시줄이 정리되었습니다. 오른쪽 상단의 중복 포인트 배지가 제거되었으며, 기본 카운터는 환영 섹션에서 부드러운 애니메이션과 함께 계속 유지됩니다.",
+                  "id": "Bilah atas popup telah dirapikan: lencana poin duplikat di kanan atas dihapus. Penghitung utama tetap ditonjolkan di bagian pembuka dengan animasi yang halus.",
+                  "nl": "De bovenbalk van de pop-up is opgeruimd: de dubbele puntenbadge rechtsboven is verwijderd. De hoofdteller blijft met vloeiende animatie zichtbaar in het begroetingsgedeelte.",
+                  "sv": "Popupens övre fält har rensats upp: den dubbla poängbrickan uppe till höger togs bort. Huvudräknaren förblir framhävd i välkomstsektionen med mjuk animering.",
+                  "cs": "Horní lišta vyskakovacího okna byla zpřehledněna: duplicitní odznak bodů vpravo nahoře byl odstraněn. Hlavní počítadlo zůstává zvýrazněno v uvítací sekci s plynulou animací."
+              }
+          },
+          {
+              "type": "fix",
+              "text": {
+                  "fr": "Correction du chargement de l'icône Twitch sur les systèmes et navigateurs stricts sur la casse des noms de fichiers.",
+                  "en": "Fixed Twitch icon loading on systems and browsers enforcing strict case sensitivity on filenames.",
+                  "es": "Corrección de la carga del icono de Twitch en sistemas y navegadores estrictos con las mayúsculas y minúsculas.",
+                  "pt-BR": "Correção do carregamento do ícone da Twitch em sistemas e navegadores sensíveis a maiúsculas e minúsculas.",
+                  "de": "Korrektur beim Laden des Twitch-Symbols auf Systemen und Browsern mit strikter Groß-/Kleinschreibung.",
+                  "it": "Corretto il caricamento dell'icona di Twitch su sistemi e browser rigorosi sulla distinzione tra maiuscole e minuscole.",
+                  "pl": "Naprawiono ładowanie ikony Twitcha w systemach i przeglądarkach rozróżniających wielkość liter w nazwach plików.",
+                  "tr": "Dosya adlarında büyük/küçük harf duyarlılığı olan sistem ve tarayıcılarda Twitch simgesinin yüklenmesi düzeltildi.",
+                  "ru": "Исправлена загрузка значка Twitch в системах и браузерах, чувствительных к регистру имён файлов.",
+                  "ja": "ファイル名の大文字・小文字を厳格に区別する環境やブラウザで、Twitchアイコンが正しく読み込まれるよう修正しました。",
+                  "ko": "파일명 대소문자를 엄격하게 구분하는 시스템 및 브라우저에서 트위치 아이콘이 정상적으로 로드되도록 수정했습니다.",
+                  "id": "Memperbaiki pemuatan ikon Twitch pada sistem dan peramban yang sensitif terhadap huruf besar/kecil pada nama file.",
+                  "nl": "Oplossing voor het laden van het Twitch-pictogram op systemen en browsers die hoofdlettergevoelig zijn voor bestandsnamen.",
+                  "sv": "Fixat laddning av Twitch-ikonen på system och webbläsare som skiljer på stora och små bokstäver.",
+                  "cs": "Oprava načítání ikony Twitche na systémech a v prohlížečích citlivých na velikost písmen v názvech souborů."
+              }
+          }
+      ],
+      "thanks": [
+        {
+          "handle": "NaGeL182",
+          "url": "https://github.com/NaGeL182",
+          "for": {
+            "fr": "retours précieux, tests continus et suggestions d'améliorations",
+            "en": "valuable feedback, continuous testing, and improvement suggestions",
+            "es": "comentarios valiosos, pruebas continuas y sugerencias de mejora",
+            "pt-BR": "feedbacks valiosos, testes contínuos e sugestões de melhorias",
+            "de": "wertvolles Feedback, kontinuierliche Tests und Verbesserungsvorschläge",
+            "it": "feedback preziosi, test continui e suggerimenti per miglioramenti",
+            "pl": "cenne uwagi, ciągłe testy i sugestie ulepszeń",
+            "tr": "değerli geri bildirimler, sürekli testler ve iyileştirme önerileri",
+            "ru": "ценные отзывы, непрерывное тестирование и предложения по улучшению",
+            "ja": "貴重なフィードバック、継続的なテスト、改善の提案",
+            "ko": "소중한 피드백, 지속적인 테스트 및 개선 제안",
+            "id": "masukan berharga, pengujian berkelanjutan, dan saran perbaikan",
+            "nl": "waardevolle feedback, continue tests en suggesties voor verbetering",
+            "sv": "värdefull feedback, kontinuerlig testning och förbättringsförslag",
+            "cs": "cenná zpětná vazba, průběžné testování a návrhy na zlepšení"
+          }
+        },
+        {
+          "handle": "Shiro",
+          "for": {
+            "fr": "tests continus, retours d'expérience et signalements",
+            "en": "continuous testing, feedback, and issue reporting",
+            "es": "pruebas continuas, comentarios y reporte de problemas",
+            "pt-BR": "testes contínuos, feedbacks e relatos de problemas",
+            "de": "kontinuierliche Tests, Feedback und Fehlermeldungen",
+            "it": "test continui, feedback e segnalazioni di problemi",
+            "pl": "ciągłe testy, opinie i zgłaszanie problemów",
+            "tr": "sürekli testler, geri bildirimler ve sorun bildirimleri",
+            "ru": "непрерывное тестирование, отзывы и сообщения о проблемах",
+            "ja": "継続的なテスト、フィードバック、問題の報告",
+            "ko": "지속적인 테스트, 피드백 및 문제 제보",
+            "id": "pengujian berkelanjutan, umpan balik, dan pelaporan masalah",
+            "nl": "continue tests, feedback en probleemmeldingen",
+            "sv": "kontinuerlig testning, feedback och felrapportering",
+            "cs": "průběžné testování, zpětná vazba a hlášení problémů"
+          }
+        }
+      ]
+  },
+  {
     version: "26.8.12",
     "date": "2026-08-30",
     "title": {

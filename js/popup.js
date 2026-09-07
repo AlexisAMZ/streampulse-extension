@@ -23,6 +23,7 @@ import {
   sanitizeHandle,
 } from "./platforms.js";
 import { createStreamerCard, formatNumber } from "./ui.js";
+import { isZEventActive, isZEventRecapActive } from "./zevent-participants.js";
 
 const PREFERENCES_STORAGE_KEY = "betaGeneralPreferences";
 
@@ -83,6 +84,7 @@ const previewsDelayValue = document.getElementById("previews-delay-value");
 const previewsAnimationsToggle = document.getElementById("pref-previews-animations");
 const chatKeywordsInput = document.getElementById("pref-chat-keywords");
 const blockedUsersInput = document.getElementById("pref-blocked-users");
+const zeventFeaturesToggle = document.getElementById("pref-zevent-features");
 const saveChatFilterButton = document.getElementById("save-chat-filter");
 const saveBlockedUsersButton = document.getElementById("save-blocked-users");
 const testNotificationButton = document.getElementById("test-notification");
@@ -94,7 +96,6 @@ const btnExport = document.getElementById("btn-export");
 const btnImport = document.getElementById("btn-import");
 const btnResetStats = document.getElementById("btn-reset-stats");
 const fileImport = document.getElementById("file-import");
-const headerPointsValue = document.getElementById("header-points-value");
 
 const watchTimeMonthSelect = document.getElementById("watch-time-month");
 const wtTotalTime = document.getElementById("wt-total-time");
@@ -102,6 +103,8 @@ const wtTotalChannels = document.getElementById("wt-total-channels");
 const wtTopWatched = document.getElementById("wt-top-watched");
 const wtEmpty = document.getElementById("wt-empty");
 const watchTimeToggle = document.getElementById("pref-watch-time");
+const zeventRecapButton = document.getElementById("open-zevent-recap");
+const communityBadgeToggle = document.getElementById("pref-community-badge");
 
 const pseudoInput = document.getElementById("pref-pseudo-input");
 const pseudoSaveButton = document.getElementById("pref-pseudo-save");
@@ -561,6 +564,7 @@ function renderStreamers() {
         showFeedback(result.error, "error");
       }
     },
+    zeventEnabled: isZEventActive() && (state.preferences || defaultPreferences).zeventFeatures !== false,
   };
 
   const currentLiveIds = new Set();
@@ -607,6 +611,14 @@ function renderStreamers() {
   previousLiveIds = currentLiveIds;
 
   streamerListEl.appendChild(fragment);
+
+  // Mise à jour de la visibilité du filtre ZEvent s'il y a des streamers de l'événement
+  const zeventCount = streamerListEl.querySelectorAll('.streamer-card[data-zevent="true"]').length;
+  const zeventFilterBtn = document.getElementById("pf-btn-zevent");
+  if (zeventFilterBtn) {
+    zeventFilterBtn.hidden = zeventCount === 0;
+  }
+
   initDragAndDrop();
   observeLazyIframes();
 }
@@ -700,6 +712,9 @@ function renderPreferences() {
   if (watchTimeToggle) {
     watchTimeToggle.checked = prefs.watchTimeTracker !== false;
   }
+  if (communityBadgeToggle) {
+    communityBadgeToggle.checked = prefs.communityBadge !== false;
+  }
   if (previewsEnabledToggle) {
     previewsEnabledToggle.checked = prefs.previewsEnabled !== false;
   }
@@ -742,11 +757,63 @@ function renderPreferences() {
   if (blockedUsersInput) {
     blockedUsersInput.value = prefs.chatBlockedUsers || "";
   }
+  if (zeventFeaturesToggle) {
+    zeventFeaturesToggle.checked = prefs.zeventFeatures !== false;
+  }
   const sortSelect = document.getElementById("sort-order");
   if (sortSelect && prefs.sortOrder) {
     sortSelect.value = prefs.sortOrder;
   }
   updateLanguageButtonsState();
+  updateZEventVisibility();
+}
+
+
+function updateZEventVisibility() {
+  const prefs = state.preferences || defaultPreferences;
+  const optedIn = prefs.zeventFeatures !== false;
+  // Pendant l'evenement : direct, filtre et surlignage. Apres : le bandeau
+  // reste, en mode recapitulatif, jusqu'a la fin de la fenetre de recap.
+  const isEnabled = isZEventActive() && optedIn;
+  const isRecap = isZEventRecapActive() && optedIn;
+  document.body.classList.toggle("zevent-active", isEnabled);
+  document.body.classList.toggle("zevent-recap", isRecap && !isEnabled);
+  const zeventGreetingLogo = document.getElementById("zevent-greeting-logo");
+  const zeventBanner = document.getElementById("zevent-banner");
+  const zeventFilterBtn = document.getElementById("pf-btn-zevent");
+  const zeventGroup = document.querySelector(".settings-group-header[data-i18n='popup.settings.groupEvents']");
+  const zeventToggleLabel = zeventFeaturesToggle?.closest(".settings-toggle");
+
+  // Le reglage disparait seulement quand plus rien de ZEvent n'est affichable.
+  if (!isZEventRecapActive()) {
+    if (zeventGroup) zeventGroup.hidden = true;
+    if (zeventToggleLabel) zeventToggleLabel.hidden = true;
+  }
+
+  // Le filtre "zevent" depend des cartes live : il ne survit pas a l'evenement.
+  if (!isEnabled && zeventFilterBtn) zeventFilterBtn.hidden = true;
+
+  if (!isRecap) {
+    if (zeventGreetingLogo) zeventGreetingLogo.hidden = true;
+    if (zeventBanner) zeventBanner.hidden = true;
+    // Le filtre actif n'est pas stocke en variable : il vit sur le bouton porteur
+    // de la classe .active, seule source de verite du groupe de filtres.
+    const activeFilterBtn = document.querySelector("#platform-filter-group .pf-btn.active");
+    if (activeFilterBtn?.dataset.filter === "zevent") {
+      const group = document.getElementById("platform-filter-group");
+      group?.querySelectorAll(".pf-btn").forEach((b) => b.classList.remove("active"));
+      group?.querySelector('.pf-btn[data-filter="all"]')?.classList.add("active");
+      document
+        .querySelectorAll("#streamer-list .streamer-card")
+        .forEach((c) => (c.hidden = false));
+    }
+  } else {
+    if (zeventGreetingLogo) zeventGreetingLogo.hidden = false;
+    chrome.storage.local.get("zeventBannerClosed", ({ zeventBannerClosed }) => {
+      if (zeventBanner) zeventBanner.hidden = !!zeventBannerClosed;
+      zeventGreetingLogo?.classList.toggle("active", !zeventBannerClosed);
+    });
+  }
 }
 
 let _watchTimeLoaded = false;
@@ -874,16 +941,12 @@ async function renderStats(preloadedStats = null) {
     // Settings counter
     if (statPointsEl) statPointsEl.textContent = formatted;
 
-    // Header badge — animated bump
-    if (headerPointsValue) animatePointsValue(headerPointsValue, points);
-
-    // Greeting bar points block
+    // Greeting bar points block — animated bump
     const headerPointsValue2 = document.getElementById("header-points-value2");
-    if (headerPointsValue2) headerPointsValue2.textContent = formatted;
+    if (headerPointsValue2) animatePointsValue(headerPointsValue2, points);
   } catch (err) {
     console.error("renderStats failed:", err);
     if (statPointsEl) statPointsEl.textContent = t("popup.stats.loadError") || "--";
-    if (headerPointsValue) headerPointsValue.textContent = "--";
   }
 }
 
@@ -921,7 +984,7 @@ function resolveWatchTimeEntry(entry) {
   // Fallback: platform icon
   if (!avatarUrl) {
     try {
-      const iconPath = platform === "kick" ? "images/social/Kick.png" : "images/social/Twitch.png";
+      const iconPath = platform === "kick" ? "images/social/Kick.png" : "images/social/twitch.png";
       avatarUrl = chrome.runtime.getURL(iconPath);
     } catch { /* ignore */ }
   }
@@ -940,7 +1003,7 @@ function buildWtRankingItem(entry, valueHtml) {
   avatarImg.loading = "lazy";
   avatarImg.onerror = function () {
     this.onerror = null;
-    const icon = platform === "kick" ? "images/social/Kick.png" : "images/social/Twitch.png";
+    const icon = platform === "kick" ? "images/social/Kick.png" : "images/social/twitch.png";
     this.src = chrome.runtime.getURL(icon);
   };
 
@@ -1456,11 +1519,42 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.querySelectorAll("#streamer-list .streamer-card").forEach(card => {
         if (filter === "all") {
           card.hidden = false;
+        } else if (filter === "zevent") {
+          card.hidden = card.dataset.zevent !== "true";
         } else {
           card.hidden = card.dataset.platform !== filter;
         }
       });
     });
+
+    // ZEvent 2026 banner + header logo trigger
+    const zeventBanner = document.getElementById("zevent-banner");
+    const zeventClose = document.getElementById("zevent-banner-close");
+    const zeventGreetingLogo = document.getElementById("zevent-greeting-logo");
+
+    if (zeventBanner) {
+      chrome.storage.local.get("zeventBannerClosed", ({ zeventBannerClosed }) => {
+        const isClosed = !!zeventBannerClosed;
+        zeventBanner.hidden = isClosed;
+        zeventGreetingLogo?.classList.toggle("active", !isClosed);
+      });
+
+      zeventClose?.addEventListener("click", () => {
+        zeventBanner.hidden = true;
+        zeventGreetingLogo?.classList.remove("active");
+        chrome.storage.local.set({ zeventBannerClosed: true });
+      });
+
+      zeventGreetingLogo?.addEventListener("click", () => {
+        const willShow = zeventBanner.hidden;
+        zeventBanner.hidden = !willShow;
+        zeventGreetingLogo.classList.toggle("active", willShow);
+        chrome.storage.local.set({ zeventBannerClosed: !willShow });
+        if (willShow) {
+          zeventBanner.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      });
+    }
 
     // Log filter buttons
     document.getElementById("log-filter-group")?.addEventListener("click", (e) => {
@@ -1496,6 +1590,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     soundsToggle?.addEventListener("change", (e) => {
       updatePreferences({ soundsEnabled: e.target.checked });
+    });
+    zeventFeaturesToggle?.addEventListener("change", async (e) => {
+      await updatePreferences({ zeventFeatures: e.target.checked });
+      updateZEventVisibility();
+      renderStreamers();
     });
     autoClaimToggle?.addEventListener("change", (e) => {
       updatePreferences({ autoClaimChannelPoints: e.target.checked });
@@ -1585,6 +1684,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (watchTimeToggle) {
       watchTimeToggle.addEventListener("change", (e) => {
         updatePreferences({ watchTimeTracker: e.target.checked });
+      });
+    }
+
+    if (communityBadgeToggle) {
+      communityBadgeToggle.addEventListener("change", (e) => {
+        updatePreferences({ communityBadge: e.target.checked });
       });
     }
 
@@ -1683,3 +1788,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     loadStreamers();
   }
 });
+
+// Recap ZEvent : page dediee, ouverte dans un onglet (le popup se ferme au clic).
+function openZEventRecap() {
+  chrome.tabs.create({ url: chrome.runtime.getURL("html/recap.html") });
+}
+
+zeventRecapButton?.addEventListener("click", openZEventRecap);
+document.getElementById("zevent-recap-cta")?.addEventListener("click", openZEventRecap);

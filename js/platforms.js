@@ -28,7 +28,7 @@ export const PLATFORM_DEFINITIONS = {
     id: "twitch",
     labelKey: "platforms.twitch",
     shortLabelKey: "platformsShort.twitch",
-    icon: "images/social/Twitch.png",
+    icon: "images/social/twitch.png",
     color: "#9146FF",
     inputPrefix: "@",
     placeholderKey: {
