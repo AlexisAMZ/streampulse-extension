@@ -15,9 +15,16 @@ const ES_MODULES = [
   "js/onboarding.js",
   "js/platforms.js",
   "js/popup.js",
+  "js/recap.js",
+  "js/recap-card.js",
+  "js/recap-draw.js",
+  "js/recap-story.js",
+  "js/recap-data.js",
   "js/ui.js",
+  "js/zevent-participants.js",
   "js/utils.js",
   "scripts/**/*.mjs",
+  "tests/**/*.mjs",
   "eslint.config.mjs",
 ];
 
