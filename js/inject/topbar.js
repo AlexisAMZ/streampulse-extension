@@ -407,7 +407,7 @@
     if (aria && (aria.indexOf("spectateur") !== -1 || aria.indexOf("viewer") !== -1 || aria.indexOf("diffuse") !== -1 || aria.indexOf("streaming") !== -1 || aria.indexOf("en direct") !== -1 || aria.indexOf("live") !== -1)) {
       return true;
     }
-    if (/\b\d+([,\.]\d+)?\s*(k|kilo|m)?\b/i.test(text)) {
+    if (/\b\d+([,.]\d+)?\s*(k|kilo|m)?\b/i.test(text)) {
       return true;
     }
     return false;
@@ -421,15 +421,14 @@
       );
       if (!cards || !cards.length) return;
 
-      var processedRows = new Set ? new Set() : null;
+      // Une carte et son lien renvoient la meme ligne : on ne la traite qu'une fois.
+      var processedRows = new Set();
 
       for (var i = 0; i < cards.length; i++) {
         var el = cards[i];
         var row = el.closest(".side-nav-card, [data-a-target='side-nav-card'], li") || el;
-        if (processedRows) {
-          if (processedRows.has(row)) continue;
-          processedRows.add(row);
-        }
+        if (processedRows.has(row)) continue;
+        processedRows.add(row);
 
         var handle = extractSidebarHandle(row);
         var isZEvent = false;

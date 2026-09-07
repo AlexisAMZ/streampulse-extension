@@ -6,7 +6,7 @@
  * otherwise inject markup into this page.
  */
 
-import { RELEASES, getRelease, getLatestRelease, pickLocalized } from "./changelog-data.js";
+import { RELEASES, getLatestRelease, pickLocalized } from "./changelog-data.js";
 import { initI18n, applyTranslations, t, resolveLocale, getCurrentLanguage } from "./i18n.js";
 
 /**

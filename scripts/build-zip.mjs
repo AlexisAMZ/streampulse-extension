@@ -19,7 +19,13 @@ const OUT_DIR = process.env.STREAMPULSE_ZIP_DIR || path.join(os.homedir(), "Desk
 // Versionne mais reserve au developpement : jamais livre.
 // Toute la documentation est exclue, pas seulement le README : CHROMEWEBSTORE.md
 // partait dans l'archive livrée, avec la fiche Store et l'historique interne.
-const DEV_ONLY = [/\.md$/i, /^\.gitignore$/, /^package(-lock)?\.json$/, /^eslint\.config\.mjs$/, /^scripts\//];
+const DEV_ONLY = [/\.md$/i, /^\.gitignore$/, /^package(-lock)?\.json$/, /^eslint\.config\.mjs$/, /^scripts\//,
+  // Captures et visuels de la fiche Chrome Web Store : ils appartiennent au
+  // formulaire du store, pas au paquet. 61 fichiers, ~22 Mo telecharges par
+  // chaque utilisateur pour rien.
+  /^images\/cws_screenshots\//, /^images\/promo\//,
+  // Tests unitaires : outillage de developpement.
+  /^tests\//];
 // Necessaire a l'extension mais gitignore.
 const EXTRA = ["config.js"];
 // Filet de securite : si l'une de ces entrees apparait, on refuse de packager.
