@@ -48,7 +48,7 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
-    version: "26.09.04",
+    version: "26.9.8",
     date: "2026-09-03",
     title: {
       fr: "Badge communautaire StreamPulse",
