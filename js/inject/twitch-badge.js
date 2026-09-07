@@ -2,11 +2,54 @@
   "use strict";
 
   var LOG = "[SP-Badge]";
-  var badgeUsers = new Set();
+  var API_URL = "https://alexisamz.fr/api/streampulse-badges";
+  var STORAGE_KEY = "streampulseBadgeHashes";
+  var LEGACY_STORAGE_KEY = "streampulseBadgeUsers"; // pseudos en clair, a purger
+
+  // Sel applicatif : il n'est pas secret (il vit dans l'extension), mais il
+  // empeche de reutiliser une table precalculee de pseudos Twitch contre la
+  // liste publique d'empreintes.
+  var HASH_SALT = "streampulse:badge:v1:";
+  var HASH_LENGTH = 12; // 48 bits : collisions negligeables a notre echelle
+
+  // Empreintes des porteurs du badge, et cache pseudo -> empreinte pour ne pas
+  // rehacher a chaque message du tchat.
+  var badgeHashes = new Set();
+  var hashCache = new Map();
   var currentTwitchUser = null;
   var badgeIconUrl = (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getURL)
     ? chrome.runtime.getURL("images/photos/128px.png")
     : "";
+
+  // ── Hachage des pseudos ──────────────────────────────────────────────────
+
+  /**
+   * Empreinte tronquee d'un pseudo. Le pseudo lui-meme ne quitte jamais le
+   * navigateur : seule cette valeur est envoyee et comparee.
+   */
+  function hashLogin(login) {
+    var key = String(login || "").toLowerCase().trim();
+    if (!key) return Promise.resolve("");
+
+    var cached = hashCache.get(key);
+    if (cached) return Promise.resolve(cached);
+
+    try {
+      var bytes = new TextEncoder().encode(HASH_SALT + key);
+      return crypto.subtle.digest("SHA-256", bytes).then(function (buffer) {
+        var hex = Array.prototype.map
+          .call(new Uint8Array(buffer), function (b) {
+            return b.toString(16).padStart(2, "0");
+          })
+          .join("")
+          .slice(0, HASH_LENGTH);
+        hashCache.set(key, hex);
+        return hex;
+      });
+    } catch (_e) {
+      return Promise.resolve("");
+    }
+  }
 
   // ── Detection du pseudo Twitch connecte ──────────────────────────────────
 
@@ -41,64 +84,91 @@
 
   function registerCurrentUser(username) {
     if (!username) return;
-    badgeUsers.add(username);
-    console.log(LOG, "utilisateur detecte :", username);
 
-    try {
-      chrome.storage.local.get(["streampulseBadgeUsers", "lastBadgeSync"], function (res) {
-        var list = (res && res.streampulseBadgeUsers) || [];
-        var set = new Set(list);
-        set.add(username);
-        badgeUsers = set;
-        chrome.storage.local.set({ streampulseBadgeUsers: Array.from(set) });
+    hashLogin(username).then(function (hash) {
+      if (!hash) return;
+      badgeHashes.add(hash);
+      console.log(LOG, "utilisateur detecte, empreinte enregistree");
 
-        var now = Date.now();
-        var lastSync = res && res.lastBadgeSync ? res.lastBadgeSync : 0;
-        if (now - lastSync > 86400000) {
-          fetch("https://alexisamz.fr/api/streampulse-badges", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username: username })
-          }).then(function () {
-            chrome.storage.local.set({ lastBadgeSync: now });
-            console.log(LOG, "sync API OK");
-          }).catch(function (e) {
-            console.log(LOG, "sync API echoue (normal si pas deploye)", e.message);
-          });
-        }
-      });
-    } catch (_e) {}
+      try {
+        chrome.storage.local.get([STORAGE_KEY, "lastBadgeSync"], function (res) {
+          var stored = (res && res[STORAGE_KEY]) || [];
+          var set = new Set(stored);
+          set.add(hash);
+          badgeHashes = set;
+          chrome.storage.local.set({ [STORAGE_KEY]: Array.from(set) });
+
+          var now = Date.now();
+          var lastSync = res && res.lastBadgeSync ? res.lastBadgeSync : 0;
+          if (now - lastSync > 86400000) {
+            fetch(API_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ hash: hash })
+            }).then(function (response) {
+              if (!response.ok) throw new Error("HTTP " + response.status);
+              chrome.storage.local.set({ lastBadgeSync: now });
+              console.log(LOG, "sync API OK");
+            }).catch(function (e) {
+              console.log(LOG, "sync API echouee :", e.message);
+            });
+          }
+        });
+      } catch (_e) {}
+    });
   }
 
   function fetchRemoteBadges() {
     try {
-      fetch("https://alexisamz.fr/api/streampulse-badges")
+      fetch(API_URL)
         .then(function (res) {
           if (!res.ok) return [];
           return res.json();
         })
         .then(function (data) {
-          if (Array.isArray(data) && data.length) {
-            for (var i = 0; i < data.length; i++) {
-              if (data[i]) badgeUsers.add(String(data[i]).toLowerCase().trim());
-            }
-            if (currentTwitchUser) badgeUsers.add(currentTwitchUser);
-            chrome.storage.local.set({ streampulseBadgeUsers: Array.from(badgeUsers) });
-            console.log(LOG, badgeUsers.size, "utilisateurs charges");
+          if (!Array.isArray(data) || !data.length) return;
+          for (var i = 0; i < data.length; i++) {
+            var hash = String(data[i] || "").toLowerCase().trim();
+            // Ignorer tout ce qui n'a pas la forme d'une empreinte : une
+            // reponse d'une ancienne version contiendrait des pseudos.
+            if (/^[a-f0-9]{12}$/.test(hash)) badgeHashes.add(hash);
           }
+          chrome.storage.local.set({ [STORAGE_KEY]: Array.from(badgeHashes) });
+          console.log(LOG, badgeHashes.size, "empreintes chargees");
+          rescanVisibleMessages();
         })
         .catch(function () {});
     } catch (_e) {}
   }
 
+  /**
+   * Repasse sur les messages deja affiches, une fois la liste distante connue.
+   * Seules les lignes sans badge sont reprises.
+   */
+  function rescanVisibleMessages() {
+    try {
+      var messages = document.querySelectorAll(MESSAGE_SELECTORS);
+      for (var i = 0; i < messages.length; i++) {
+        var el = messages[i];
+        if (el.querySelector(".sp-chat-badge")) continue;
+        el.classList.remove("sp-badge-processed");
+        processMessageLine(el);
+      }
+    } catch (_e) {}
+  }
+
   function initBadges() {
     try {
-      chrome.storage.local.get("streampulseBadgeUsers", function (res) {
-        if (res && Array.isArray(res.streampulseBadgeUsers)) {
-          res.streampulseBadgeUsers.forEach(function (u) {
-            badgeUsers.add(String(u).toLowerCase().trim());
+      chrome.storage.local.get(STORAGE_KEY, function (res) {
+        if (res && Array.isArray(res[STORAGE_KEY])) {
+          res[STORAGE_KEY].forEach(function (h) {
+            badgeHashes.add(String(h).toLowerCase().trim());
           });
         }
+        // Les versions precedentes stockaient des pseudos en clair : on ne les
+        // convertit pas, on les supprime.
+        chrome.storage.local.remove(LEGACY_STORAGE_KEY);
+
         currentTwitchUser = detectCurrentTwitchUser();
         if (currentTwitchUser) {
           registerCurrentUser(currentTwitchUser);
@@ -186,8 +256,16 @@
     messageEl.classList.add("sp-badge-processed");
 
     var username = getMessageUsername(messageEl);
-    if (!username || !badgeUsers.has(username)) return;
+    if (!username) return;
 
+    // Le hachage est asynchrone : la ligne est marquee traitee tout de suite
+    // pour ne pas la reprendre, et le badge arrive au tour suivant.
+    hashLogin(username).then(function (hash) {
+      if (hash && badgeHashes.has(hash)) injectBadge(messageEl);
+    });
+  }
+
+  function injectBadge(messageEl) {
     // 1. Conteneur de badges Twitch natif
     var badgesContainer = messageEl.querySelector(
       '.chat-line__message--badges, ' +
