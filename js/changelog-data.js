@@ -128,21 +128,21 @@ export const RELEASES = [
       {
         type: "new",
         text: {
-          fr: "Dispositif temporaire ZEvent 2026 : bandeau interactif, filtre dédié et surlignage vert des streamers participants. Fonctionnalité active pour le week-end qui se désactivera automatiquement lundi à 3h du matin (désactivable à tout moment dans les Réglages).",
-          en: "Temporary ZEvent 2026 features: interactive banner, dedicated filter, and green highlights for participating streamers. Active for the weekend and automatically turns off Monday at 3:00 AM (can also be toggled anytime in Settings).",
-          es: "Dispositivo temporal ZEvent 2026: banner interactivo, filtro dedicado y resaltado verde para streamers participantes. Función activa para el fin de semana que se desactivará automáticamente el lunes a las 3:00 AM (desactivable en Ajustes).",
-          "pt-BR": "Recursos temporários do ZEvent 2026: banner interativo, filtro dedicado e destaque verde para streamers participantes. Ativo para o fim de semana e desativado automaticamente na segunda-feira às 3h (desativável em Configurações).",
-          de: "Temporäres ZEvent 2026 Feature: interaktives Banner, eigener Filter und grüne Hervorhebung für teilnehmende Streamer. Aktiv für das Wochenende und schaltet sich Montagmorgen um 3:00 Uhr automatisch ab (jederzeit in den Einstellungen deaktivierbar).",
-          it: "Funzionalità temporanee ZEvent 2026: banner interattivo, filtro dedicato ed evidenziazione verde per gli streamer partecipanti. Attivo per il fine settimana e disattivato automaticamente lunedì alle 3:00 (disattivabile nelle Impostazioni).",
-          pl: "Tymczasowe funkcje ZEvent 2026: interaktywny baner, dedykowany filtr i zielone wyróżnienie uczestniczących streamerów. Działa przez weekend i wyłącza się automatycznie w poniedziałek o 3:00 (możliwość wyłączenia w Ustawieniach).",
-          tr: "Geçici ZEvent 2026 özellikleri: etkileşimli afiş, özel filtre ve katılımcı yayıncılar için yeşil vurgulama. Hafta sonu boyunca aktif olup Pazartesi 03:00'te otomatik kapanır (Ayarlar'dan da kapatılabilir).",
-          ru: "Временные функции ZEvent 2026: интерактивный баннер, отдельный фильтр и зелёная подсветка стримеров. Активно на выходных и автоматически отключится в понедельник в 3:00 (можно отключить в Настройках).",
-          ja: "ZEvent 2026週末限定機能：インタラクティブバナー、専用フィルター、参加配信者のグリーンハイライト。月曜午前3時に自動終了します（設定からいつでも無効化可能）。",
-          ko: "ZEvent 2026 주말 한정 기능: 인터랙티브 배너, 전용 필터 및 참가 스트리머 녹색 강조 표시. 월요일 오전 3시에 자동 종료됩니다(설정에서 언제든지 비활성화 가능).",
-          id: "Fitur sementara ZEvent 2026: banner interaktif, filter khusus, dan sorotan hijau untuk streamer yang berpartisipasi. Aktif selama akhir pekan dan mati otomatis Senin pukul 03.00 (bisa dimatikan di Pengaturan).",
-          nl: "Tijdelijke ZEvent 2026-functies: interactieve banner, speciale filter en groene markering voor deelnemende streamers. Actief voor het weekend en schakelt maandag om 3:00 uur automatisch uit (altijd uitschakelbaar in Instellingen).",
-          sv: "Tillfälliga ZEvent 2026-funktioner: interaktiv banner, dedikerat filter och grön markering för deltagande streamers. Aktivt under helgen och stängs av automatiskt måndag kl. 03:00 (kan stängas av i Inställningar).",
-          cs: "Dočasné funkce ZEvent 2026: interaktivní banner, vyhrazený filtr a zelené zvýraznění zúčastněných streamerů. Aktivní během víkendu a v pondělí ve 3:00 se automaticky vypne (lze vypnout v Nastavení)."
+          fr: "Dispositif ZEvent 2026 : pendant le week-end, un bandeau dédié, un filtre et le surlignage vert des streamers participants dans votre sidebar Twitch. L'événement terminé, le bandeau donne accès à votre récap (désactivable à tout moment dans les Réglages).",
+          en: "ZEvent 2026 features: during the weekend, a dedicated banner, a filter and green highlighting of participating streamers in your Twitch sidebar. Now that the event is over, the banner opens your recap (can be turned off anytime in Settings).",
+          es: "Funciones ZEvent 2026: durante el fin de semana, un banner dedicado, un filtro y el resaltado verde de los streamers participantes en tu barra lateral de Twitch. Terminado el evento, el banner da acceso a tu resumen (desactivable en cualquier momento en Ajustes).",
+          "pt-BR": "Recursos do ZEvent 2026: durante o fim de semana, um banner dedicado, um filtro e o destaque verde dos streamers participantes na sua barra lateral da Twitch. Encerrado o evento, o banner dá acesso ao seu resumo (desativável a qualquer momento nas Configurações).",
+          de: "ZEvent-2026-Funktionen: Am Wochenende ein eigenes Banner, ein Filter und die grüne Hervorhebung teilnehmender Streamer in deiner Twitch-Seitenleiste. Nach dem Event öffnet das Banner deinen Rückblick (jederzeit in den Einstellungen deaktivierbar).",
+          it: "Funzioni ZEvent 2026: durante il weekend, un banner dedicato, un filtro e l'evidenziazione verde degli streamer partecipanti nella barra laterale di Twitch. A evento concluso, il banner apre il tuo riepilogo (disattivabile in qualsiasi momento nelle Impostazioni).",
+          pl: "Funkcje ZEvent 2026: w weekend dedykowany baner, filtr i zielone podświetlenie uczestniczących streamerów na pasku bocznym Twitcha. Po zakończeniu wydarzenia baner otwiera Twoje podsumowanie (można wyłączyć w Ustawieniach).",
+          tr: "ZEvent 2026 özellikleri: hafta sonu boyunca özel bir afiş, bir filtre ve Twitch kenar çubuğunuzda katılan yayıncıların yeşil vurgusu. Etkinlik bittiğine göre afiş özetinizi açıyor (Ayarlar'dan istediğiniz zaman kapatılabilir).",
+          ru: "Возможности ZEvent 2026: в выходные — отдельный баннер, фильтр и зелёная подсветка участвующих стримеров в боковой панели Twitch. После завершения события баннер открывает ваши итоги (можно отключить в настройках).",
+          ja: "ZEvent 2026機能：週末は専用バナー、フィルター、Twitchサイドバーでの参加ストリーマーの緑色ハイライトを提供しました。イベント終了後、バナーからあなたの記録を開けます（設定でいつでも無効化できます）。",
+          ko: "ZEvent 2026 기능: 주말 동안 전용 배너, 필터, 트위치 사이드바의 참가 스트리머 초록색 강조를 제공했습니다. 이벤트가 끝난 지금은 배너에서 내 결산을 열 수 있습니다(설정에서 언제든 끌 수 있습니다).",
+          id: "Fitur ZEvent 2026: selama akhir pekan, banner khusus, filter, dan sorotan hijau streamer peserta di bilah sisi Twitch Anda. Setelah acara berakhir, banner membuka rekap Anda (dapat dimatikan kapan saja di Pengaturan).",
+          nl: "ZEvent 2026-functies: tijdens het weekend een eigen banner, een filter en groene markering van deelnemende streamers in je Twitch-zijbalk. Nu het evenement voorbij is, opent de banner je overzicht (altijd uit te schakelen in Instellingen).",
+          sv: "ZEvent 2026-funktioner: under helgen en egen banner, ett filter och grön markering av deltagande streamers i ditt Twitch-sidofält. Nu när evenemanget är slut öppnar bannern din sammanfattning (kan stängas av när som helst i Inställningar).",
+          cs: "Funkce ZEvent 2026: o víkendu vlastní banner, filtr a zelené zvýraznění zúčastněných streamerů v postranním panelu Twitche. Po skončení akce banner otevírá váš přehled (kdykoli vypnutelné v Nastavení)."
         }
       },
       {
