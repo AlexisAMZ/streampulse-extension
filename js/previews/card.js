@@ -84,6 +84,17 @@
 
     function mount() {
       if (root) return;
+
+      // Recharger l'extension tue le content script mais laisse son noeud dans
+      // la page. Ce fantome garde les preferences par defaut et intercepte les
+      // survols : la carte restait figee en taille "m" malgre le reglage.
+      try {
+        var stale = document.querySelectorAll(".sp-preview");
+        for (var i = 0; i < stale.length; i++) stale[i].remove();
+      } catch (_e) {
+        /* jamais bloquer le montage pour un nettoyage */
+      }
+
       root = el("div", "sp-preview");
       root.setAttribute("data-platform", "twitch");
       root.hidden = true;

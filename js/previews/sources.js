@@ -12,10 +12,12 @@
   const store = NS.__SP_PREVIEWS__ || (NS.__SP_PREVIEWS__ = {});
 
   // 16:9 presets used by the floating card and the image-mode thumbnail URL.
+  // Trois paliers nettement distincts : a 440px, le L se distinguait a peine
+  // du M. Le 16/9 est conserve pour que la video ne soit jamais recadree.
   const SIZE_PRESETS = {
     s: { width: 280, height: 157 },
-    m: { width: 360, height: 202 },
-    l: { width: 440, height: 247 },
+    m: { width: 400, height: 225 },
+    l: { width: 560, height: 315 },
   };
 
   /** Twitch logins are [a-z0-9_]; normalize defensively. */
