@@ -1828,14 +1828,23 @@ zeventRecapButton?.addEventListener("click", openZEventRecap);
 document.getElementById("zevent-recap-cta")?.addEventListener("click", openZEventRecap);
 
 // Notes de version : elles ne s'ouvrent plus d'elles-memes a chaque mise a
-// jour. La pastille signale qu'une version n'a pas encore ete consultee.
-if (patchNotesButton) {
-  chrome.storage.local.get("patchNotesUnread", ({ patchNotesUnread }) => {
-    if (patchNotesDot) patchNotesDot.hidden = !patchNotesUnread;
-  });
+// jour. Deux acces, l'un dans l'en-tete et l'autre dans les reglages, et une
+// pastille sur les deux tant que la version n'a pas ete consultee.
+{
+  const headerButton = document.getElementById("header-patch-notes");
+  const headerDot = document.getElementById("header-patch-dot");
+  const dots = [patchNotesDot, headerDot].filter(Boolean);
 
-  patchNotesButton.addEventListener("click", () => {
-    if (patchNotesDot) patchNotesDot.hidden = true;
-    sendMessage({ type: "openPatchNotes" });
-  });
+  if (patchNotesButton || headerButton) {
+    chrome.storage.local.get("patchNotesUnread", ({ patchNotesUnread }) => {
+      dots.forEach((d) => (d.hidden = !patchNotesUnread));
+    });
+
+    const open = () => {
+      dots.forEach((d) => (d.hidden = true));
+      sendMessage({ type: "openPatchNotes" });
+    };
+    patchNotesButton?.addEventListener("click", open);
+    headerButton?.addEventListener("click", open);
+  }
 }

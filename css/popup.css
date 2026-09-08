@@ -2306,3 +2306,24 @@ body > * { position: relative; z-index: 1; }
 .patch-notes-dot[hidden] {
   display: none !important;
 }
+
+/* Pastille de nouveaute sur le bouton de notes de l'en-tete. */
+#header-patch-notes {
+  position: relative;
+}
+
+.icon-btn-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent-glow);
+  pointer-events: none;
+}
+
+.icon-btn-dot[hidden] {
+  display: none !important;
+}
