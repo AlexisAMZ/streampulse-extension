@@ -40,6 +40,60 @@
     return row;
   }
 
+  var BADGE_MODES = [
+    { value: "author", label: "badgeAuthor" },
+    { value: "theme", label: "badgeTheme" },
+    { value: "custom", label: "badgeCustom" },
+  ];
+
+  /**
+   * Couleur du badge de tchat : les trois modes du réglage, en compact.
+   * Une couleur hexadécimale stockée signifie le mode personnalisé.
+   */
+  function badgeColorRow(state, deps) {
+    var stored = state.prefs.communityBadgeColor || "author";
+    var custom = stored !== "author" && stored !== "theme";
+
+    var row = el("div", "sp-tb-badge-row");
+    row.appendChild(el("span", "sp-tb-badge-label", deps.tr("badgeColor")));
+
+    var group = el("div", "sp-tb-badge-modes");
+    var picker = document.createElement("input");
+    picker.type = "color";
+    picker.className = "sp-tb-badge-picker";
+    picker.value = custom ? stored : "#9147ff";
+    picker.hidden = !custom;
+
+    BADGE_MODES.forEach(function (mode) {
+      var b = el("button", "sp-tb-badge-mode", deps.tr(mode.label));
+      b.type = "button";
+      var active = mode.value === "custom" ? custom : stored === mode.value;
+      if (active) b.classList.add("on");
+      b.addEventListener("click", function () {
+        group.querySelectorAll(".sp-tb-badge-mode").forEach(function (o) {
+          o.classList.remove("on");
+        });
+        b.classList.add("on");
+        picker.hidden = mode.value !== "custom";
+        deps.onToggle(
+          "communityBadgeColor",
+          mode.value === "custom" ? picker.value : mode.value
+        );
+      });
+      group.appendChild(b);
+    });
+
+    // "change" et non "input" : le sélecteur émet en continu pendant le
+    // glissement, ce qui écrirait la préférence à chaque pixel.
+    picker.addEventListener("change", function () {
+      deps.onToggle("communityBadgeColor", picker.value);
+    });
+
+    group.appendChild(picker);
+    row.appendChild(group);
+    return row;
+  }
+
   /**
    * Section « cette chaîne » : absente hors d'une page de chaîne, plutôt que
    * d'afficher un bloc vide sur l'accueil ou le répertoire.
@@ -80,6 +134,7 @@
         toggleRow(item.key, deps.tr(item.label), state.prefs[item.key] !== false)
       );
     });
+    wrap.appendChild(badgeColorRow(state, deps));
 
     return wrap;
   }
@@ -161,11 +216,21 @@
     if (channel) p.appendChild(channel);
     p.appendChild(liveSection(state, deps));
 
-    var tip = el("a", "sp-tb-tip");
-    tip.href = deps.tipUrl;
-    tip.target = "_blank";
-    tip.rel = "noopener noreferrer";
-    tip.innerHTML = deps.icon.coffee + "<span>" + deps.tr("tip") + "</span>";
+    // Le panneau n'offrait que Revolut, la ou le popup laisse le choix.
+    var tip = el("div", "sp-tb-tip-block");
+    var tipLabel = el("div", "sp-tb-tip-label");
+    tipLabel.innerHTML = deps.icon.coffee + "<span>" + deps.tr("tip") + "</span>";
+    tip.appendChild(tipLabel);
+
+    var tipLinks = el("div", "sp-tb-tip-links");
+    deps.tipLinks.forEach(function (link) {
+      var a = el("a", "sp-tb-tip-link", link.label);
+      a.href = link.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      tipLinks.appendChild(a);
+    });
+    tip.appendChild(tipLinks);
     p.appendChild(tip);
 
     var settings = el("a", "sp-tb-settings");

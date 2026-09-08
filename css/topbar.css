@@ -47,149 +47,442 @@
   display: block;
 }
 
-/* Dropdown control panel */
+/* ── Panneau deroulant ────────────────────────────────────────────────────
+   Meme direction artistique que le popup : les jetons sont redefinis ici
+   parce que le panneau vit dans la page Twitch, qui ne charge pas popup.css.
+   Toute evolution de la palette du popup doit etre repercutee ici. */
 .sp-topbar-panel {
-  position: fixed;
-  z-index: 2147483647;
-  width: 268px;
-  background: #18181b;
-  color: #efeff1;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+  --sp-bg-base: #08080d;
+  --sp-bg-card: rgba(255, 255, 255, 0.025);
+  --sp-bg-card-hover: rgba(255, 255, 255, 0.05);
+  --sp-bg-elev: rgba(255, 255, 255, 0.04);
+  --sp-border-subtle: rgba(255, 255, 255, 0.05);
+  --sp-border-medium: rgba(255, 255, 255, 0.08);
+  --sp-text-primary: #f0f0f4;
+  --sp-text-secondary: #c8c8d2;
+  --sp-text-muted: #7a7a8a;
+  --sp-accent: #9146ff;
+  --sp-accent-soft: rgba(145, 70, 255, 0.16);
+  --sp-accent-border: rgba(145, 70, 255, 0.35);
+  --sp-radius-xs: 4px;
+  --sp-radius-sm: 6px;
+  --sp-radius-md: 10px;
+  --sp-radius-lg: 14px;
+
+  position: absolute;
+  z-index: 9999;
+  width: 300px;
   padding: 12px;
-  font: 13px/1.3 Inter, -apple-system, system-ui, "Segoe UI", sans-serif;
-  animation: sp-tb-in 0.12s ease;
+  background: var(--sp-bg-base);
+  border: 1px solid var(--sp-border-medium);
+  border-radius: var(--sp-radius-lg);
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--sp-text-primary);
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
-@keyframes sp-tb-in {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+
+.sp-topbar-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sp-topbar-panel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 3px;
 }
 
 .sp-tb-head {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-weight: 700;
+  gap: 9px;
+  padding: 2px 2px 12px;
   font-size: 14px;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
+
 .sp-tb-head .sp-tb-logo {
   width: 20px;
   height: 20px;
-  border-radius: 5px;
-  object-fit: cover;
 }
 
+/* ── Cartes de statistiques ─────────────────────────────────────────────── */
 .sp-tb-stats {
   display: flex;
-  justify-content: space-between;
   gap: 6px;
   margin-bottom: 10px;
 }
+
 .sp-tb-stat {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  padding: 9px 4px;
-  color: #adadb8;
-}
-.sp-tb-stat b {
-  color: #efeff1;
-  font-size: 14px;
-  font-variant-numeric: tabular-nums;
-}
-.sp-tb-ic {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  display: block;
+  padding: 10px 8px;
+  background: var(--sp-bg-card);
+  border: 1px solid var(--sp-border-subtle);
+  border-radius: var(--sp-radius-md);
+  color: var(--sp-text-muted);
 }
 
+.sp-tb-stat b {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--sp-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.sp-tb-ic {
+  width: 14px;
+  height: 14px;
+}
+
+/* ── Sections ───────────────────────────────────────────────────────────── */
+.sp-tb-section {
+  margin-bottom: 10px;
+}
+
+.sp-tb-section-title {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--sp-text-muted);
+  padding: 2px 2px 7px;
+}
+
+/* ── Ligne « cette chaine » ─────────────────────────────────────────────── */
+.sp-tb-channel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 12px;
+  margin-bottom: 6px;
+  background: var(--sp-bg-card);
+  border: 1px solid var(--sp-border-subtle);
+  border-radius: var(--sp-radius-md);
+}
+
+.sp-tb-channel-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp-tb-channel-time {
+  font-size: 11px;
+  color: var(--sp-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.sp-tb-follow {
+  margin-left: auto;
+  flex-shrink: 0;
+  border: 1px solid var(--sp-accent-border);
+  background: var(--sp-accent-soft);
+  color: var(--sp-text-primary);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: var(--sp-radius-sm);
+  cursor: pointer;
+  transition: background 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sp-tb-follow:hover:not(:disabled) {
+  background: rgba(145, 70, 255, 0.28);
+}
+
+.sp-tb-follow.tracked,
+.sp-tb-follow:disabled {
+  border-color: var(--sp-border-medium);
+  background: var(--sp-bg-elev);
+  color: var(--sp-text-muted);
+  cursor: default;
+}
+
+/* ── Interrupteurs, calques sur .settings-toggle du popup ──────────────── */
 .sp-tb-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 14px;
   width: 100%;
-  padding: 9px 4px;
-  margin: 0;
-  background: none;
-  border: none;
-  color: #efeff1;
+  padding: 11px 12px;
+  margin-bottom: 6px;
+  background: var(--sp-bg-card);
+  border: 1px solid var(--sp-border-subtle);
+  border-radius: var(--sp-radius-md);
+  color: var(--sp-text-primary);
   font: inherit;
-  cursor: pointer;
+  font-size: 12.5px;
   text-align: left;
+  cursor: pointer;
+  transition: background 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
 .sp-tb-row:hover {
-  color: #fff;
+  background: var(--sp-bg-card-hover);
 }
+
 .sp-tb-sw {
   position: relative;
-  width: 34px;
-  height: 19px;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.18);
-  transition: background 0.15s ease;
+  width: 36px;
+  height: 20px;
   flex-shrink: 0;
+  background: var(--sp-bg-elev);
+  border: 1px solid var(--sp-border-medium);
+  border-radius: 999px;
+  transition: background 0.18s, border-color 0.18s;
 }
+
 .sp-tb-sw::after {
   content: "";
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 15px;
-  height: 15px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  background: #fff;
-  transition: transform 0.15s ease;
-}
-.sp-tb-sw.on {
-  background: #9147ff;
-}
-.sp-tb-sw.on::after {
-  transform: translateX(15px);
+  background: var(--sp-text-muted);
+  transition: transform 0.18s, background 0.18s;
 }
 
-.sp-tb-tip,
+.sp-tb-sw.on {
+  background: var(--sp-accent-soft);
+  border-color: var(--sp-accent-border);
+}
+
+.sp-tb-sw.on::after {
+  background: var(--sp-accent);
+  transform: translateX(16px);
+}
+
+/* ── Couleur du badge, calquee sur .seg-group du popup ─────────────────── */
+.sp-tb-badge-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 12px;
+  margin-bottom: 6px;
+  background: var(--sp-bg-card);
+  border: 1px solid var(--sp-border-subtle);
+  border-radius: var(--sp-radius-md);
+}
+
+.sp-tb-badge-label {
+  font-size: 12.5px;
+  color: var(--sp-text-primary);
+}
+
+.sp-tb-badge-modes {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px;
+  background: var(--sp-bg-elev);
+  border: 1px solid var(--sp-border-subtle);
+  border-radius: var(--sp-radius-sm);
+  flex-shrink: 0;
+}
+
+.sp-tb-badge-mode {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--sp-text-secondary);
+  font: inherit;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: var(--sp-radius-xs);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sp-tb-badge-mode:hover {
+  color: var(--sp-text-primary);
+}
+
+.sp-tb-badge-mode.on {
+  background: var(--sp-accent-soft);
+  color: var(--sp-text-primary);
+  box-shadow: inset 0 0 0 1px var(--sp-accent-border);
+}
+
+.sp-tb-badge-picker {
+  width: 22px;
+  height: 20px;
+  padding: 1px;
+  border: 1px solid var(--sp-border-medium);
+  border-radius: var(--sp-radius-xs);
+  background: var(--sp-bg-elev);
+  cursor: pointer;
+}
+
+.sp-tb-badge-picker[hidden] {
+  display: none !important;
+}
+
+/* ── Liste des lives ────────────────────────────────────────────────────── */
+.sp-tb-live {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  border: 1px solid transparent;
+  border-radius: var(--sp-radius-md);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.sp-tb-live:hover {
+  background: var(--sp-bg-card-hover);
+  border-color: var(--sp-border-subtle);
+}
+
+.sp-tb-live-av {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--sp-accent-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--sp-text-primary);
+}
+
+.sp-tb-live-av img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sp-tb-live-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.3;
+}
+
+.sp-tb-live-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp-tb-live-cat {
+  font-size: 10.5px;
+  color: var(--sp-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp-tb-empty {
+  padding: 10px 12px;
+  font-size: 11.5px;
+  color: var(--sp-text-muted);
+  background: var(--sp-bg-card);
+  border: 1px solid var(--sp-border-subtle);
+  border-radius: var(--sp-radius-md);
+}
+
+.sp-tb-more {
+  width: 100%;
+  padding: 7px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--sp-text-muted);
+  font: inherit;
+  font-size: 11.5px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sp-tb-more:hover {
+  color: var(--sp-text-primary);
+}
+
+/* ── Soutien : les deux memes destinations que le popup ─────────────────── */
+.sp-tb-tip-block {
+  padding: 11px 12px;
+  margin-bottom: 6px;
+  background: var(--sp-bg-card);
+  border: 1px solid var(--sp-border-subtle);
+  border-radius: var(--sp-radius-md);
+}
+
+.sp-tb-tip-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffd300;
+}
+
+.sp-tb-tip-links {
+  display: flex;
+  gap: 6px;
+  margin-top: 9px;
+}
+
+.sp-tb-tip-link {
+  flex: 1;
+  text-align: center;
+  padding: 7px 10px;
+  border: 1px solid var(--sp-border-medium);
+  border-radius: var(--sp-radius-sm);
+  background: var(--sp-bg-elev);
+  color: var(--sp-text-primary);
+  font-size: 11.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.sp-tb-tip-link:hover {
+  background: rgba(255, 211, 0, 0.1);
+  border-color: rgba(255, 211, 0, 0.32);
+}
+
 .sp-tb-settings {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  text-decoration: none;
-  border-radius: 8px;
-}
-.sp-tb-tip {
-  margin-top: 10px;
-  padding: 10px;
-  background: rgba(255, 211, 0, 0.12);
-  border: 1px solid rgba(255, 211, 0, 0.35);
-  color: #efeff1;
-  font-weight: 600;
-}
-.sp-tb-tip:hover {
-  background: rgba(255, 211, 0, 0.2);
-}
-.sp-tb-settings {
-  margin-top: 8px;
-  padding: 8px;
-  color: #adadb8;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: var(--sp-radius-md);
+  color: var(--sp-text-secondary);
   font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
 }
+
 .sp-tb-settings:hover {
-  color: #efeff1;
+  background: var(--sp-bg-card-hover);
+  color: var(--sp-text-primary);
 }
 
 /* ── "Add to StreamPulse" button on channel pages (quickFollow.js) ───────── */
@@ -366,169 +659,4 @@ a[data-test-selector="followed-channel"].sp-zevent-highlight:hover,
 .side-nav-card.sp-zevent-highlight .tw-avatar img {
   box-shadow: 0 0 0 2px #00e676, 0 0 8px rgba(0, 230, 118, 0.5) !important;
   border-radius: 50% !important;
-}
-
-/* ── Panneau : sections « cette chaîne » et « en direct » ────────────────── */
-.sp-tb-section {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 8px 0 6px;
-}
-
-.sp-tb-section-title {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  padding: 2px 12px 6px;
-}
-
-.sp-tb-channel {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 2px 12px 8px;
-}
-
-.sp-tb-channel-name {
-  font-size: 13px;
-  font-weight: 700;
-  color: #efeff1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.sp-tb-channel-time {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
-  font-variant-numeric: tabular-nums;
-}
-
-.sp-tb-follow {
-  margin-left: auto;
-  flex-shrink: 0;
-  border: 1px solid rgba(145, 71, 255, 0.5);
-  background: rgba(145, 71, 255, 0.16);
-  color: #d3bbff;
-  font: inherit;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.sp-tb-follow:hover:not(:disabled) {
-  background: rgba(145, 71, 255, 0.3);
-}
-
-.sp-tb-follow.tracked,
-.sp-tb-follow:disabled {
-  border-color: rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.45);
-  cursor: default;
-}
-
-.sp-tb-live {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  width: 100%;
-  padding: 6px 12px;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.sp-tb-live:hover {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.sp-tb-live-av {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  overflow: hidden;
-  background: rgba(145, 71, 255, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  color: #efeff1;
-}
-
-.sp-tb-live-av img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.sp-tb-live-meta {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  line-height: 1.25;
-}
-
-.sp-tb-live-name {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: #efeff1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.sp-tb-live-cat {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.45);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.sp-tb-empty,
-.sp-tb-more {
-  padding: 4px 12px 8px;
-  font-size: 11.5px;
-  color: rgba(255, 255, 255, 0.42);
-}
-
-.sp-tb-more {
-  width: 100%;
-  border: 0;
-  background: transparent;
-  font: inherit;
-  font-size: 11.5px;
-  text-align: left;
-  cursor: pointer;
-}
-
-.sp-tb-more:hover {
-  color: #efeff1;
-}
-
-/* Le panneau atteint ~670 px avec cinq lives : sur un ecran de portable il
-   depasserait sous la barre. On le plafonne a la hauteur utile de la fenetre
-   et on laisse defiler plutot que de tronquer. */
-.sp-topbar-panel {
-  max-height: calc(100vh - 80px);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-
-.sp-topbar-panel::-webkit-scrollbar {
-  width: 8px;
-}
-
-.sp-topbar-panel::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.16);
-  border-radius: 4px;
 }

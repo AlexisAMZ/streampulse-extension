@@ -522,9 +522,6 @@
 
     setHideTwitchExtensions(preferences.hideTwitchExtensions === true);
     setAutoCancelRaids(preferences.autoCancelRaids !== false);
-    if (preferences.enablePredictionsPopup !== false) {
-      ensurePredictionsButton();
-    }
   }
 
   const HIDE_EXTENSIONS_STYLE_ID = "streampulse-hide-extensions-style";
@@ -717,28 +714,13 @@
     }
   }
 
-  const PREDICTIONS_BUTTON_ID = "streampulse-predictions-btn";
-  function ensurePredictionsButton() {
-    const header = document.querySelector('[data-a-target="chat-room-header"], .stream-chat-header');
-    if (!header) return;
-    let btn = document.getElementById(PREDICTIONS_BUTTON_ID);
-    if (!btn) {
-      btn = document.createElement("button");
-      btn.id = PREDICTIONS_BUTTON_ID;
-      btn.type = "button";
-      btn.title = "Prédictions / Predictions";
-      btn.style.cssText = "background:transparent;border:none;color:#dedee3;cursor:pointer;font-size:14px;padding:4px 8px;margin-right:4px;";
-      btn.innerHTML = "🔮";
-      btn.addEventListener("click", () => {
-        const predWidget = document.querySelector('.community-prediction-highlight-header, [data-test-selector="prediction-widget"]');
-        if (predWidget) {
-          predWidget.scrollIntoView({ behavior: 'smooth' });
-          predWidget.click();
-        }
-      });
-      header.prepend(btn);
-    }
-  }
+  // Le bouton "prediction" injecte dans l'en-tete du tchat a ete retire.
+  // Ce nettoyage evite qu'il subsiste dans les onglets ouverts avant la
+  // mise a jour, ou le content script precedent l'avait deja pose.
+  try {
+    var legacy = document.getElementById("streampulse-predictions-btn");
+    if (legacy) legacy.remove();
+  } catch (_e) {}
 
   function handleStorageChange(changes, areaName) {
     if (areaName !== "local" || !changes || !(PREFERENCES_KEY in changes)) {

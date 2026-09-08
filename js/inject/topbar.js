@@ -87,7 +87,11 @@
   window.__SP_TOPBAR_INSTALLED__ = true;
 
   var LOGO_URL = chrome.runtime.getURL("images/photos/logosp.png");
-  var TIP_URL = "https://revolut.me/alexisamz";
+  // Memes destinations que la carte de soutien du popup.
+  var TIP_LINKS = [
+    { label: "Revolut", url: "https://revolut.me/alexisamz" },
+    { label: "PayPal", url: "https://paypal.me/alexisamzdcrz" },
+  ];
   var PREFERENCES_KEY = "betaGeneralPreferences";
 
   // Les segments de premier niveau qui ne sont pas des chaines.
@@ -325,7 +329,7 @@
         fmtNum: fmtNum,
         fmtDur: fmtDur,
         logoUrl: LOGO_URL,
-        tipUrl: TIP_URL,
+        tipLinks: TIP_LINKS,
         icon: ICON,
         onToggle: updatePref,
         addStreamer: function (login) {

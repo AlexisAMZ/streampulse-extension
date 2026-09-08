@@ -317,6 +317,22 @@
    */
   var THIRD_PARTY_MAX_DEPTH = 5;
 
+  // Ce test tourne a chaque mutation du tchat : journaliser chaque passage
+  // noyait les lignes utiles sous des centaines de repetitions identiques.
+  // On ne trace donc qu'une fois par conteneur distinct.
+  var seenThirdParty = null;
+
+  function logThirdPartyOnce(node) {
+    if (!DEBUG) return;
+    try {
+      if (!seenThirdParty) seenThirdParty = new Set();
+      var key = node.tagName + "." + (node.className || "");
+      if (seenThirdParty.has(key)) return;
+      seenThirdParty.add(key);
+      log("third-party node:", node.tagName, node.className);
+    } catch (_e) {}
+  }
+
   function isThirdParty(node) {
     try {
       if (!node || !node.matches) return false;
@@ -324,7 +340,7 @@
       for (var i = 0; i <= THIRD_PARTY_MAX_DEPTH; i++) {
         if (!n || n === document.body || n === document.documentElement) return false;
         if (n.matches(THIRD_PARTY_SELECTOR)) {
-          log("third-party node:", n.tagName, n.className);
+          logThirdPartyOnce(n);
           return true;
         }
         n = n.parentElement;
