@@ -769,6 +769,14 @@ function renderPreferences() {
 }
 
 
+/**
+ * Cle de fermeture du bandeau, distincte selon le mode : le bandeau du direct
+ * et celui du recapitulatif ne portent pas le meme message.
+ */
+function zeventBannerClosedKey(live) {
+  return live ? "zeventBannerClosed" : "zeventRecapBannerClosed";
+}
+
 function updateZEventVisibility() {
   const prefs = state.preferences || defaultPreferences;
   const optedIn = prefs.zeventFeatures !== false;
@@ -812,9 +820,14 @@ function updateZEventVisibility() {
     // que le direct est termine. Seul le bandeau survit, pour porter le recap.
     if (zeventGreetingLogo) zeventGreetingLogo.hidden = !isEnabled;
 
-    chrome.storage.local.get("zeventBannerClosed", ({ zeventBannerClosed }) => {
-      if (zeventBanner) zeventBanner.hidden = !!zeventBannerClosed;
-      zeventGreetingLogo?.classList.toggle("active", isEnabled && !zeventBannerClosed);
+    // Le bandeau de recap a son propre drapeau : sinon, quiconque a ferme le
+    // bandeau pendant l'evenement ne verrait jamais le recap, alors que le
+    // contenu n'est plus le meme.
+    const closedKey = zeventBannerClosedKey(isEnabled);
+    chrome.storage.local.get(closedKey, (res) => {
+      const closed = !!res?.[closedKey];
+      if (zeventBanner) zeventBanner.hidden = closed;
+      zeventGreetingLogo?.classList.toggle("active", isEnabled && !closed);
     });
   }
 }
@@ -1540,7 +1553,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     zeventClose?.addEventListener("click", () => {
       if (zeventBanner) zeventBanner.hidden = true;
-      chrome.storage.local.set({ zeventBannerClosed: true });
+      const live = isZEventActive() && (state.preferences || defaultPreferences).zeventFeatures !== false;
+      chrome.storage.local.set({ [zeventBannerClosedKey(live)]: true });
     });
 
     // Log filter buttons
