@@ -107,6 +107,8 @@ const zeventRecapButton = document.getElementById("open-zevent-recap");
 const communityBadgeToggle = document.getElementById("pref-community-badge");
 const badgeColorMode = document.getElementById("pref-badge-color-mode");
 const badgeColorValue = document.getElementById("pref-badge-color-value");
+const patchNotesButton = document.getElementById("open-patch-notes");
+const patchNotesDot = document.getElementById("patch-notes-dot");
 
 const pseudoInput = document.getElementById("pref-pseudo-input");
 const pseudoSaveButton = document.getElementById("pref-pseudo-save");
@@ -1824,3 +1826,16 @@ function openZEventRecap() {
 
 zeventRecapButton?.addEventListener("click", openZEventRecap);
 document.getElementById("zevent-recap-cta")?.addEventListener("click", openZEventRecap);
+
+// Notes de version : elles ne s'ouvrent plus d'elles-memes a chaque mise a
+// jour. La pastille signale qu'une version n'a pas encore ete consultee.
+if (patchNotesButton) {
+  chrome.storage.local.get("patchNotesUnread", ({ patchNotesUnread }) => {
+    if (patchNotesDot) patchNotesDot.hidden = !patchNotesUnread;
+  });
+
+  patchNotesButton.addEventListener("click", () => {
+    if (patchNotesDot) patchNotesDot.hidden = true;
+    sendMessage({ type: "openPatchNotes" });
+  });
+}

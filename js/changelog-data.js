@@ -48,8 +48,8 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
-    version: "26.9.8",
-    date: "2026-09-08",
+    version: "26.9.9",
+    date: "2026-09-09",
     title: {
       fr: "StreamPulse arrive sur Firefox",
       en: "StreamPulse lands on Firefox",
@@ -146,6 +146,46 @@ export const RELEASES = [
         }
       },
       {
+        type: "new",
+        text: {
+          fr: "Panneau de la topbar Twitch repensé : le temps passé sur la chaîne que vous regardez, un bouton pour l'ajouter à vos suivis, vos réglages rapides, et la liste de vos streamers actuellement en direct — cliquables pour basculer sans quitter la page.",
+          en: "Redesigned Twitch top-bar panel: how long you have watched the current channel, a button to add it to your list, your quick settings, and your streamers currently live — click to switch without leaving the page.",
+          es: "Panel de la barra superior de Twitch rediseñado: el tiempo pasado en el canal actual, un botón para añadirlo a tus seguidos, tus ajustes rápidos y tus streamers en directo, clicables para cambiar sin salir de la página.",
+          "pt-BR": "Painel da barra superior da Twitch redesenhado: o tempo assistido no canal atual, um botão para adicioná-lo aos seus seguidos, seus ajustes rápidos e seus streamers ao vivo, clicáveis para trocar sem sair da página.",
+          de: "Neu gestaltetes Twitch-Topbar-Panel: deine Sehzeit im aktuellen Kanal, ein Button zum Hinzufügen, deine Schnelleinstellungen und deine Streamer, die gerade live sind — anklickbar zum Wechseln, ohne die Seite zu verlassen.",
+          it: "Pannello della barra superiore di Twitch ridisegnato: il tempo passato sul canale attuale, un pulsante per aggiungerlo ai seguiti, le impostazioni rapide e i tuoi streamer in diretta, cliccabili per cambiare senza lasciare la pagina.",
+          pl: "Przeprojektowany panel górnego paska Twitcha: czas spędzony na oglądanym kanale, przycisk dodania go do obserwowanych, szybkie ustawienia i lista streamerów na żywo — klikalna, by przełączyć bez opuszczania strony.",
+          tr: "Yeniden tasarlanan Twitch üst çubuk paneli: izlediğiniz kanalda geçirdiğiniz süre, onu listenize ekleme düğmesi, hızlı ayarlarınız ve şu anda yayında olan yayıncılarınız — sayfadan ayrılmadan geçmek için tıklanabilir.",
+          ru: "Обновлённая панель верхней строки Twitch: время, проведённое на текущем канале, кнопка добавления в список, быстрые настройки и стримеры, которые сейчас в эфире — кликните, чтобы переключиться, не покидая страницу.",
+          ja: "Twitchトップバーのパネルを刷新：視聴中のチャンネルでの視聴時間、フォローに追加するボタン、クイック設定、そして配信中のストリーマー一覧。クリックでページを離れずに切り替えられます。",
+          ko: "트위치 상단 바 패널 개편: 현재 채널의 시청 시간, 목록에 추가하는 버튼, 빠른 설정, 그리고 방송 중인 스트리머 목록 — 클릭하면 페이지를 벗어나지 않고 이동합니다.",
+          id: "Panel bilah atas Twitch dirancang ulang: waktu tonton di kanal yang sedang Anda tonton, tombol untuk menambahkannya, pengaturan cepat, dan streamer Anda yang sedang live — klik untuk beralih tanpa meninggalkan halaman.",
+          nl: "Vernieuwd Twitch-topbalkpaneel: je kijktijd op het huidige kanaal, een knop om het toe te voegen, je snelle instellingen en je streamers die nu live zijn — klik om te wisselen zonder de pagina te verlaten.",
+          sv: "Omdesignad panel i Twitch-topplisten: din tittartid på kanalen du ser, en knapp för att lägga till den, dina snabbinställningar och dina streamers som sänder nu — klickbara för att byta utan att lämna sidan.",
+          cs: "Přepracovaný panel horní lišty Twitche: čas strávený na sledovaném kanálu, tlačítko pro přidání mezi sledované, rychlá nastavení a streameři, kteří právě vysílají — kliknutím přepnete bez opuštění stránky."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "La couleur du badge de tchat est réglable : la couleur du pseudo de chacun, du blanc ou noir selon le thème Twitch, ou une couleur de votre choix.",
+          en: "The chat badge colour is now adjustable: each person's username colour, white or black to match the Twitch theme, or a colour of your choice.",
+          es: "El color de la insignia del chat es ajustable: el color del nombre de cada persona, blanco o negro según el tema de Twitch, o el color que prefieras.",
+          "pt-BR": "A cor do distintivo no chat é ajustável: a cor do nome de cada pessoa, branco ou preto conforme o tema da Twitch, ou a cor que você preferir.",
+          de: "Die Farbe des Chat-Abzeichens ist einstellbar: die Namensfarbe der jeweiligen Person, Weiß oder Schwarz passend zum Twitch-Theme, oder eine eigene Farbe.",
+          it: "Il colore del badge in chat è regolabile: il colore del nome di ciascuno, bianco o nero secondo il tema di Twitch, o un colore a tua scelta.",
+          pl: "Kolor odznaki na czacie można ustawić: kolor pseudonimu każdej osoby, biały lub czarny zgodnie z motywem Twitcha, albo dowolny kolor.",
+          tr: "Sohbet rozetinin rengi ayarlanabilir: her kişinin kullanıcı adı rengi, Twitch temasına göre beyaz veya siyah, ya da seçtiğiniz bir renk.",
+          ru: "Цвет значка в чате настраивается: цвет ника каждого, белый или чёрный по теме Twitch, либо любой цвет на ваш выбор.",
+          ja: "チャットバッジの色を設定できます：各ユーザー名の色、Twitchのテーマに合わせた白か黒、または好きな色。",
+          ko: "채팅 배지 색상을 설정할 수 있습니다: 각자의 사용자 이름 색상, 트위치 테마에 맞춘 흰색 또는 검은색, 혹은 원하는 색상.",
+          id: "Warna lencana obrolan kini dapat diatur: warna nama tiap orang, putih atau hitam sesuai tema Twitch, atau warna pilihan Anda.",
+          nl: "De kleur van de chatbadge is instelbaar: de naamkleur van elke persoon, wit of zwart volgens het Twitch-thema, of een kleur naar keuze.",
+          sv: "Chattmärkets färg går att ställa in: varje persons namnfärg, vitt eller svart efter Twitch-temat, eller en egen färg.",
+          cs: "Barvu odznaku v chatu lze nastavit: barva jména každého uživatele, bílá nebo černá podle motivu Twitche, nebo vlastní barva."
+        }
+      },
+      {
         type: "improved",
         text: {
           fr: "Le badge est désactivable à tout moment dans Réglages → Chat → Badge communautaire.",
@@ -226,6 +266,66 @@ export const RELEASES = [
         }
       },
       {
+        type: "improved",
+        text: {
+          fr: "Chaque changement de réglage affiche désormais une confirmation : plus de doute sur ce qui a été pris en compte.",
+          en: "Every setting change now shows a confirmation, so there is no doubt about what was applied.",
+          es: "Cada cambio de ajuste muestra ahora una confirmación: sin dudas sobre lo que se ha aplicado.",
+          "pt-BR": "Cada alteração de configuração agora exibe uma confirmação: sem dúvidas sobre o que foi aplicado.",
+          de: "Jede Einstellungsänderung zeigt jetzt eine Bestätigung — kein Zweifel mehr, was übernommen wurde.",
+          it: "Ogni modifica alle impostazioni mostra ora una conferma: nessun dubbio su cosa è stato applicato.",
+          pl: "Każda zmiana ustawień pokazuje teraz potwierdzenie — bez wątpliwości, co zostało zapisane.",
+          tr: "Her ayar değişikliği artık bir onay gösteriyor: neyin uygulandığına dair şüphe kalmıyor.",
+          ru: "Каждое изменение настройки теперь показывает подтверждение — понятно, что именно применилось.",
+          ja: "設定を変更するたびに確認が表示されます。何が反映されたか迷いません。",
+          ko: "설정을 변경할 때마다 확인 메시지가 표시되어 무엇이 적용됐는지 분명해집니다.",
+          id: "Setiap perubahan pengaturan kini menampilkan konfirmasi, jadi tidak ada keraguan tentang apa yang diterapkan.",
+          nl: "Elke wijziging van een instelling toont nu een bevestiging: geen twijfel meer over wat is toegepast.",
+          sv: "Varje ändrad inställning visar nu en bekräftelse, så du vet vad som sparats.",
+          cs: "Každá změna nastavení nyní zobrazí potvrzení, takže je jasné, co se uložilo."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "Les trois tailles de preview au survol sont nettement plus distinctes, et la qualité vidéo suit la taille choisie.",
+          en: "The three hover preview sizes are now clearly distinct, and video quality follows the size you pick.",
+          es: "Los tres tamaños de vista previa son mucho más distintos, y la calidad de vídeo sigue el tamaño elegido.",
+          "pt-BR": "Os três tamanhos de pré-visualização estão bem mais distintos, e a qualidade do vídeo acompanha o tamanho escolhido.",
+          de: "Die drei Vorschaugrößen unterscheiden sich jetzt deutlich, und die Videoqualität folgt der gewählten Größe.",
+          it: "Le tre dimensioni dell'anteprima sono nettamente più distinte e la qualità video segue quella scelta.",
+          pl: "Trzy rozmiary podglądu są wyraźnie różne, a jakość wideo dostosowuje się do wybranego rozmiaru.",
+          tr: "Üç önizleme boyutu artık belirgin biçimde farklı ve video kalitesi seçilen boyutu izliyor.",
+          ru: "Три размера превью теперь заметно различаются, а качество видео следует выбранному размеру.",
+          ja: "ホバープレビューの3つのサイズがはっきり区別できるようになり、画質も選んだサイズに追従します。",
+          ko: "미리보기 세 가지 크기가 확실히 구분되며, 영상 화질도 선택한 크기를 따릅니다.",
+          id: "Tiga ukuran pratinjau kini jelas berbeda, dan kualitas video mengikuti ukuran yang dipilih.",
+          nl: "De drie voorbeeldformaten verschillen nu duidelijk, en de videokwaliteit volgt het gekozen formaat.",
+          sv: "De tre förhandsvisningsstorlekarna skiljer sig nu tydligt, och videokvaliteten följer vald storlek.",
+          cs: "Tři velikosti náhledu se nyní zřetelně liší a kvalita videa se řídí zvolenou velikostí."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "Le soutien au développeur propose Revolut et PayPal partout, y compris depuis la topbar Twitch qui n'offrait qu'un seul choix.",
+          en: "Supporting the developer offers both Revolut and PayPal everywhere, including from the Twitch top bar which previously offered only one.",
+          es: "El apoyo al desarrollador ofrece Revolut y PayPal en todas partes, incluida la barra superior de Twitch, que antes solo daba una opción.",
+          "pt-BR": "O apoio ao desenvolvedor oferece Revolut e PayPal em todos os lugares, inclusive na barra superior da Twitch, que antes tinha só uma opção.",
+          de: "Die Unterstützung bietet überall Revolut und PayPal, auch in der Twitch-Topbar, wo es bisher nur eine Option gab.",
+          it: "Il sostegno allo sviluppatore offre Revolut e PayPal ovunque, anche dalla barra superiore di Twitch che ne proponeva una sola.",
+          pl: "Wsparcie twórcy oferuje Revolut i PayPal wszędzie, także na górnym pasku Twitcha, gdzie wcześniej była tylko jedna opcja.",
+          tr: "Geliştiriciye destek her yerde Revolut ve PayPal sunuyor; daha önce tek seçenek olan Twitch üst çubuğu dahil.",
+          ru: "Поддержка разработчика предлагает Revolut и PayPal везде, включая верхнюю панель Twitch, где раньше был лишь один вариант.",
+          ja: "開発者への支援はどこからでもRevolutとPayPalを選べます。選択肢が1つだけだったTwitchトップバーも同様です。",
+          ko: "개발자 후원은 어디서든 Revolut과 PayPal을 제공합니다. 선택지가 하나뿐이던 트위치 상단 바도 마찬가지입니다.",
+          id: "Dukungan untuk pengembang menawarkan Revolut dan PayPal di mana saja, termasuk bilah atas Twitch yang sebelumnya hanya satu pilihan.",
+          nl: "Steun aan de ontwikkelaar biedt overal Revolut én PayPal, ook in de Twitch-topbalk die eerder maar één optie had.",
+          sv: "Stöd till utvecklaren erbjuder Revolut och PayPal överallt, även från Twitch-topplisten som tidigare bara hade ett val.",
+          cs: "Podpora vývojáře nabízí Revolut i PayPal všude, včetně horní lišty Twitche, kde byla dříve jen jedna možnost."
+        }
+      },
+      {
         type: "fix",
         text: {
           fr: "Correction du chargement de l'icône Twitch sur les systèmes et navigateurs stricts sur la casse des noms de fichiers.",
@@ -243,6 +343,86 @@ export const RELEASES = [
           nl: "Oplossing voor het laden van het Twitch-pictogram op systemen en browsers die hoofdlettergevoelig zijn voor bestandsnamen.",
           sv: "Fixat laddning av Twitch-ikonen på system och webbläsare som skiljer på stora och små bokstäver.",
           cs: "Oprava načítání ikony Twitche na systémech a v prohlížečích citlivých na velikost písmen v názvech souborů."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Les réglages « Dispositif ZEvent » et « Badge communautaire » ne s'enregistraient pas : les activer ou les désactiver restait sans effet et affichait une erreur. Corrigé, avec un contrôle automatique qui empêche le problème de revenir sur les autres réglages.",
+          en: "The « ZEvent features » and « Community badge » settings were not saved: turning them on or off did nothing and showed an error. Fixed, with an automated check that prevents the same problem on other settings.",
+          es: "Los ajustes «Dispositivo ZEvent» y «Insignia comunitaria» no se guardaban: activarlos o desactivarlos no hacía nada y mostraba un error. Corregido, con una comprobación automática que evita el problema en los demás ajustes.",
+          "pt-BR": "As configurações «Recursos do ZEvent» e «Distintivo comunitário» não eram salvas: ativá-las ou desativá-las não fazia nada e exibia um erro. Corrigido, com uma verificação automática que evita o problema nas demais configurações.",
+          de: "Die Einstellungen „ZEvent-Funktionen“ und „Community-Abzeichen“ wurden nicht gespeichert: Ein- oder Ausschalten bewirkte nichts und zeigte einen Fehler. Behoben, mit einer automatischen Prüfung, die das Problem bei anderen Einstellungen verhindert.",
+          it: "Le impostazioni «Funzioni ZEvent» e «Badge della comunità» non venivano salvate: attivarle o disattivarle non faceva nulla e mostrava un errore. Corretto, con un controllo automatico che previene lo stesso problema altrove.",
+          pl: "Ustawienia „Funkcje ZEvent” i „Odznaka społeczności” nie zapisywały się: włączenie lub wyłączenie nic nie dawało i pokazywało błąd. Naprawione, wraz z automatyczną kontrolą zapobiegającą temu w innych ustawieniach.",
+          tr: "«ZEvent özellikleri» ve «Topluluk rozeti» ayarları kaydedilmiyordu: açmak veya kapatmak hiçbir şey yapmıyor ve hata veriyordu. Düzeltildi; diğer ayarlarda tekrarlanmasını önleyen otomatik bir denetim eklendi.",
+          ru: "Настройки «Функции ZEvent» и «Значок сообщества» не сохранялись: включение или выключение ничего не давало и показывало ошибку. Исправлено, добавлена автоматическая проверка, чтобы это не повторилось с другими настройками.",
+          ja: "「ZEvent機能」と「コミュニティバッジ」の設定が保存されず、オンオフしても何も起きずエラーが出ていました。修正し、他の設定でも再発しないよう自動チェックを追加しました。",
+          ko: "「ZEvent 기능」과 「커뮤니티 배지」 설정이 저장되지 않아, 켜거나 꺼도 반응이 없고 오류가 표시됐습니다. 수정했으며, 다른 설정에서도 재발하지 않도록 자동 검사를 추가했습니다.",
+          id: "Pengaturan «Fitur ZEvent» dan «Lencana komunitas» tidak tersimpan: menyalakan atau mematikannya tidak berpengaruh dan menampilkan galat. Diperbaiki, dengan pemeriksaan otomatis agar tidak terulang pada pengaturan lain.",
+          nl: "De instellingen 'ZEvent-functies' en 'Community-badge' werden niet opgeslagen: aan- of uitzetten deed niets en gaf een fout. Opgelost, met een automatische controle die dit bij andere instellingen voorkomt.",
+          sv: "Inställningarna ”ZEvent-funktioner” och ”Gemenskapsmärke” sparades inte: att slå på eller av gjorde ingenting och visade ett fel. Åtgärdat, med en automatisk kontroll som förhindrar samma sak för andra inställningar.",
+          cs: "Nastavení „Funkce ZEvent“ a „Komunitní odznak“ se neukládala: zapnutí ani vypnutí nic neudělalo a zobrazilo chybu. Opraveno, včetně automatické kontroly, která problém u dalších nastavení zastaví."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Le badge du tchat était espacé deux fois plus que les badges natifs de Twitch : son alignement est désormais identique aux leurs, y compris avec 7TV.",
+          en: "The chat badge was spaced twice as far as Twitch's native badges: its alignment now matches theirs exactly, 7TV included.",
+          es: "La insignia del chat tenía el doble de separación que las nativas de Twitch: ahora se alinea igual que ellas, también con 7TV.",
+          "pt-BR": "O distintivo do chat tinha o dobro do espaçamento dos nativos da Twitch: agora alinha exatamente como eles, inclusive com 7TV.",
+          de: "Das Chat-Abzeichen hatte doppelt so viel Abstand wie Twitchs eigene Abzeichen: Die Ausrichtung stimmt jetzt exakt, auch mit 7TV.",
+          it: "Il badge in chat aveva il doppio dello spazio rispetto a quelli nativi di Twitch: ora è allineato esattamente come loro, anche con 7TV.",
+          pl: "Odznaka na czacie miała dwa razy większy odstęp niż natywne odznaki Twitcha: teraz jest wyrównana identycznie, także z 7TV.",
+          tr: "Sohbet rozeti, Twitch'in yerel rozetlerinden iki kat fazla boşluğa sahipti: hizalaması artık onlarla birebir aynı, 7TV dahil.",
+          ru: "Значок в чате отстоял вдвое дальше, чем родные значки Twitch: теперь выравнивание совпадает с ними, включая 7TV.",
+          ja: "チャットバッジの間隔がTwitch純正バッジの2倍でした。7TVを含め、配置が純正と同一になりました。",
+          ko: "채팅 배지의 간격이 트위치 기본 배지의 두 배였습니다. 이제 7TV를 포함해 정확히 동일하게 정렬됩니다.",
+          id: "Lencana obrolan berjarak dua kali lipat dari lencana asli Twitch: kini sejajar persis dengan mereka, termasuk dengan 7TV.",
+          nl: "De chatbadge stond twee keer zo ver als de eigen badges van Twitch: de uitlijning is nu identiek, ook met 7TV.",
+          sv: "Chattmärket hade dubbelt så stort avstånd som Twitchs egna märken: justeringen är nu identisk, även med 7TV.",
+          cs: "Odznak v chatu měl dvojnásobné odsazení oproti nativním odznakům Twitche: zarovnání je nyní shodné, i se 7TV."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Après une mise à jour de l'extension, la preview au survol restait figée sur sa taille par défaut jusqu'au rechargement de la page. La carte laissée par la version précédente est désormais nettoyée automatiquement.",
+          en: "After an extension update, the hover preview stayed stuck at its default size until the page was reloaded. The card left behind by the previous version is now cleaned up automatically.",
+          es: "Tras una actualización de la extensión, la vista previa se quedaba en su tamaño por defecto hasta recargar la página. La tarjeta dejada por la versión anterior ahora se limpia automáticamente.",
+          "pt-BR": "Após uma atualização da extensão, a pré-visualização ficava presa no tamanho padrão até recarregar a página. O cartão deixado pela versão anterior agora é removido automaticamente.",
+          de: "Nach einem Update der Erweiterung blieb die Vorschau bis zum Neuladen der Seite auf der Standardgröße. Die von der Vorversion zurückgelassene Karte wird jetzt automatisch entfernt.",
+          it: "Dopo un aggiornamento dell'estensione, l'anteprima restava bloccata sulla dimensione predefinita fino al ricaricamento della pagina. La scheda lasciata dalla versione precedente ora viene rimossa automaticamente.",
+          pl: "Po aktualizacji rozszerzenia podgląd pozostawał w domyślnym rozmiarze aż do odświeżenia strony. Karta pozostawiona przez poprzednią wersję jest teraz usuwana automatycznie.",
+          tr: "Uzantı güncellendikten sonra önizleme, sayfa yenilenene kadar varsayılan boyutunda takılı kalıyordu. Önceki sürümden kalan kart artık otomatik olarak temizleniyor.",
+          ru: "После обновления расширения превью оставалось в размере по умолчанию до перезагрузки страницы. Карточка, оставшаяся от прошлой версии, теперь удаляется автоматически.",
+          ja: "拡張機能の更新後、ページを再読み込みするまでプレビューが既定サイズのままでした。前バージョンが残したカードを自動的に片付けるようにしました。",
+          ko: "확장 프로그램 업데이트 후 페이지를 새로 고치기 전까지 미리보기가 기본 크기로 고정됐습니다. 이전 버전이 남긴 카드를 이제 자동으로 정리합니다.",
+          id: "Setelah pembaruan ekstensi, pratinjau tetap pada ukuran bawaan sampai halaman dimuat ulang. Kartu yang ditinggalkan versi sebelumnya kini dibersihkan otomatis.",
+          nl: "Na een update van de extensie bleef het voorbeeld op het standaardformaat staan tot de pagina werd herladen. De kaart van de vorige versie wordt nu automatisch opgeruimd.",
+          sv: "Efter en uppdatering av tillägget fastnade förhandsvisningen i standardstorleken tills sidan laddades om. Kortet som lämnats av den tidigare versionen städas nu bort automatiskt.",
+          cs: "Po aktualizaci rozšíření zůstal náhled ve výchozí velikosti až do obnovení stránky. Karta zanechaná předchozí verzí se nyní automaticky odstraní."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Le bouton « prédictions » ajouté en tête du tchat a été retiré : il faisait doublon avec l'interface de Twitch.",
+          en: "The « predictions » button added at the top of chat has been removed: it duplicated Twitch's own interface.",
+          es: "Se ha eliminado el botón de «predicciones» añadido en la cabecera del chat: duplicaba la interfaz de Twitch.",
+          "pt-BR": "O botão de «previsões» adicionado no topo do chat foi removido: duplicava a interface da própria Twitch.",
+          de: "Der oben im Chat eingefügte „Vorhersagen“-Button wurde entfernt: Er duplizierte Twitchs eigene Oberfläche.",
+          it: "Il pulsante «predizioni» aggiunto in cima alla chat è stato rimosso: duplicava l'interfaccia di Twitch.",
+          pl: "Przycisk „predykcje” dodawany na górze czatu został usunięty: dublował interfejs Twitcha.",
+          tr: "Sohbetin üstüne eklenen «tahminler» düğmesi kaldırıldı: Twitch'in kendi arayüzünü tekrarlıyordu.",
+          ru: "Кнопка «прогнозы» вверху чата удалена: она дублировала интерфейс самого Twitch.",
+          ja: "チャット上部に追加していた「予測」ボタンを削除しました。Twitch本体のUIと重複していたためです。",
+          ko: "채팅 상단에 추가되던 '예측' 버튼을 제거했습니다. 트위치 자체 인터페이스와 중복됐기 때문입니다.",
+          id: "Tombol «prediksi» di bagian atas obrolan dihapus: fungsinya menduplikasi antarmuka Twitch sendiri.",
+          nl: "De knop 'voorspellingen' bovenaan de chat is verwijderd: die dupliceerde de interface van Twitch zelf.",
+          sv: "Knappen ”förutsägelser” högst upp i chatten har tagits bort: den dubblerade Twitchs eget gränssnitt.",
+          cs: "Tlačítko „předpovědi“ přidávané nad chat bylo odstraněno: duplikovalo vlastní rozhraní Twitche."
         }
       }
     ]

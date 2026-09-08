@@ -1888,12 +1888,11 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     installReason === chrome.runtime.OnInstalledReason?.UPDATE ||
     installReason === "update"
   ) {
-    // Compare against the manifest version rather than a hand-bumped counter, so
-    // shipping a release is enough to trigger the notes. The guard also means a
-    // service-worker restart on the same version won't reopen the tab.
+    // Les notes ne s'ouvrent plus d'elles-memes : ouvrir un onglet sans que
+    // l'utilisateur l'ait demande est intrusif. On memorise seulement la
+    // version vue, pour signaler la nouveaute sur le bouton du popup.
     if (seenPatchNotesVersion !== currentVersion) {
-      await chrome.storage.local.set({ seenPatchNotesVersion: currentVersion });
-      await openPatchNotes();
+      await chrome.storage.local.set({ patchNotesUnread: true });
     }
   }
 });
@@ -1998,6 +1997,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case "schedule":
       (async () => {
         await NotificationCenter.schedule(request);
+        sendResponse({ success: true });
+      })();
+      return true;
+
+    case "openPatchNotes":
+      (async () => {
+        await chrome.storage.local.set({
+          patchNotesUnread: false,
+          seenPatchNotesVersion: chrome.runtime.getManifest().version,
+        });
+        await openPatchNotes();
         sendResponse({ success: true });
       })();
       return true;
