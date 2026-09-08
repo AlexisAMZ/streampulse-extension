@@ -49,42 +49,62 @@ export const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
   {
     version: "26.9.8",
-    date: "2026-09-03",
+    date: "2026-09-08",
     title: {
-      fr: "Badge communautaire StreamPulse",
-      en: "StreamPulse community badge",
-      es: "Insignia comunitaria StreamPulse",
-      "pt-BR": "Distintivo comunitário StreamPulse",
-      de: "StreamPulse Community-Abzeichen",
-      it: "Badge della comunità StreamPulse",
-      pl: "Odznaka społeczności StreamPulse",
-      tr: "StreamPulse topluluk rozeti",
-      ru: "Значок сообщества StreamPulse",
-      ja: "StreamPulseコミュニティバッジ",
-      ko: "StreamPulse 커뮤니티 배지",
-      id: "Lencana komunitas StreamPulse",
-      nl: "StreamPulse community-badge",
-      sv: "StreamPulse-gemenskapsmärke",
-      cs: "Komunitní odznak StreamPulse"
+      fr: "Récap ZEvent et badge communautaire",
+      en: "ZEvent recap and community badge",
+      es: "Resumen del ZEvent e insignia comunitaria",
+      "pt-BR": "Resumo do ZEvent e distintivo comunitário",
+      de: "ZEvent-Rückblick und Community-Abzeichen",
+      it: "Riepilogo ZEvent e badge della comunità",
+      pl: "Podsumowanie ZEvent i odznaka społeczności",
+      tr: "ZEvent özeti ve topluluk rozeti",
+      ru: "Итоги ZEvent и значок сообщества",
+      ja: "ZEventの記録とコミュニティバッジ",
+      ko: "ZEvent 결산과 커뮤니티 배지",
+      id: "Rekap ZEvent dan lencana komunitas",
+      nl: "ZEvent-overzicht en community-badge",
+      sv: "ZEvent-sammanfattning och gemenskapsmärke",
+      cs: "Přehled ZEvent a komunitní odznak"
     },
     subtitle: {
-      fr: "Les utilisateurs de StreamPulse affichent désormais un badge dans le tchat Twitch.",
-      en: "StreamPulse users now display a badge in Twitch chat.",
-      es: "Los usuarios de StreamPulse ahora muestran una insignia en el chat de Twitch.",
-      "pt-BR": "Os usuários do StreamPulse agora exibem um distintivo no chat da Twitch.",
-      de: "StreamPulse-Nutzer zeigen jetzt ein Abzeichen im Twitch-Chat an.",
-      it: "Gli utenti StreamPulse ora mostrano un badge nella chat di Twitch.",
-      pl: "Użytkownicy StreamPulse wyświetlają teraz odznakę na czacie Twitcha.",
-      tr: "StreamPulse kullanıcıları artık Twitch sohbetinde bir rozet görüntülüyor.",
-      ru: "Пользователи StreamPulse теперь отображают значок в чате Twitch.",
-      ja: "StreamPulseユーザーのTwitchチャットにバッジが表示されるようになりました。",
-      ko: "StreamPulse 사용자의 트위치 채팅에 배지가 표시됩니다.",
-      id: "Pengguna StreamPulse kini menampilkan lencana di obrolan Twitch.",
-      nl: "StreamPulse-gebruikers tonen nu een badge in de Twitch-chat.",
-      sv: "StreamPulse-användare visar nu ett märke i Twitch-chatten.",
-      cs: "Uživatelé StreamPulse nyní zobrazují odznak v chatu Twitche."
+      fr: "Votre bilan du ZEvent 2026 en image, et un badge StreamPulse dans le tchat Twitch.",
+      en: "Your ZEvent 2026 stats as a shareable image, plus a StreamPulse badge in Twitch chat.",
+      es: "Tu balance del ZEvent 2026 en imagen, y una insignia StreamPulse en el chat de Twitch.",
+      "pt-BR": "Seu balanço do ZEvent 2026 em imagem, e um distintivo StreamPulse no chat da Twitch.",
+      de: "Deine ZEvent-2026-Bilanz als Bild und ein StreamPulse-Abzeichen im Twitch-Chat.",
+      it: "Il tuo bilancio dello ZEvent 2026 in immagine e un badge StreamPulse nella chat di Twitch.",
+      pl: "Twoje podsumowanie ZEvent 2026 w obrazku i odznaka StreamPulse na czacie Twitcha.",
+      tr: "ZEvent 2026 bilançonuz görsel olarak ve Twitch sohbetinde bir StreamPulse rozeti.",
+      ru: "Ваши итоги ZEvent 2026 картинкой и значок StreamPulse в чате Twitch.",
+      ja: "ZEvent 2026の記録を画像で。Twitchチャットには StreamPulse バッジ。",
+      ko: "ZEvent 2026 결산을 이미지로, 그리고 트위치 채팅의 StreamPulse 배지.",
+      id: "Rekap ZEvent 2026 Anda dalam gambar, plus lencana StreamPulse di obrolan Twitch.",
+      nl: "Je ZEvent 2026-overzicht als afbeelding, plus een StreamPulse-badge in de Twitch-chat.",
+      sv: "Din ZEvent 2026-sammanfattning som bild och ett StreamPulse-märke i Twitch-chatten.",
+      cs: "Vaše bilance ZEvent 2026 v obrázku a odznak StreamPulse v chatu Twitche."
     },
     changes: [
+      {
+        type: "new",
+        text: {
+          fr: "Récap ZEvent 2026 : retrouvez le temps passé chez chaque streamer participant et exportez-le en image, au format Twitter ou story Instagram. Accessible depuis le bandeau ZEvent et depuis Réglages → Temps de visionnage.",
+          en: "ZEvent 2026 recap: see how long you watched each participating streamer and export it as an image, in Twitter or Instagram story format. Available from the ZEvent banner and from Settings → Watch time.",
+          es: "Resumen del ZEvent 2026: consulta el tiempo que pasaste con cada streamer participante y expórtalo como imagen, en formato Twitter o historia de Instagram. Disponible desde el banner ZEvent y en Ajustes → Tiempo de visionado.",
+          "pt-BR": "Resumo do ZEvent 2026: veja quanto tempo você assistiu a cada streamer participante e exporte como imagem, em formato Twitter ou story do Instagram. Disponível no banner ZEvent e em Configurações → Tempo de exibição.",
+          de: "ZEvent-2026-Rückblick: Sieh, wie lange du jeden teilnehmenden Streamer geschaut hast, und exportiere es als Bild im Twitter- oder Instagram-Story-Format. Erreichbar über das ZEvent-Banner und Einstellungen → Sehzeit.",
+          it: "Riepilogo ZEvent 2026: scopri quanto tempo hai passato con ogni streamer partecipante ed esportalo come immagine, in formato Twitter o storia Instagram. Disponibile dal banner ZEvent e da Impostazioni → Tempo di visione.",
+          pl: "Podsumowanie ZEvent 2026: sprawdź, ile czasu spędziłeś u każdego uczestniczącego streamera i wyeksportuj to jako obrazek w formacie Twittera lub relacji na Instagramie. Dostępne z banera ZEvent i z Ustawienia → Czas oglądania.",
+          tr: "ZEvent 2026 özeti: katılan her yayıncıyı ne kadar izlediğinizi görün ve Twitter veya Instagram hikâye formatında görsel olarak dışa aktarın. ZEvent afişinden ve Ayarlar → İzleme süresi bölümünden erişilir.",
+          ru: "Итоги ZEvent 2026: посмотрите, сколько вы смотрели каждого участвующего стримера, и сохраните картинку в формате Twitter или истории Instagram. Доступно из баннера ZEvent и в Настройки → Время просмотра.",
+          ja: "ZEvent 2026の記録：参加ストリーマーごとの視聴時間を確認し、Twitter形式またはInstagramストーリー形式の画像として書き出せます。ZEventバナーと設定 → 視聴時間から利用できます。",
+          ko: "ZEvent 2026 결산: 참가 스트리머별 시청 시간을 확인하고 트위터 또는 인스타그램 스토리 형식의 이미지로 내보낼 수 있습니다. ZEvent 배너와 설정 → 시청 시간에서 이용할 수 있습니다.",
+          id: "Rekap ZEvent 2026: lihat berapa lama Anda menonton setiap streamer peserta dan ekspor sebagai gambar, dalam format Twitter atau story Instagram. Tersedia dari banner ZEvent dan Pengaturan → Waktu tonton.",
+          nl: "ZEvent 2026-overzicht: bekijk hoelang je naar elke deelnemende streamer keek en exporteer het als afbeelding, in Twitter- of Instagram-storyformaat. Bereikbaar via de ZEvent-banner en Instellingen → Kijktijd.",
+          sv: "ZEvent 2026-sammanfattning: se hur länge du tittade på varje deltagande streamer och exportera det som en bild, i Twitter- eller Instagram-storyformat. Nås från ZEvent-bannern och Inställningar → Tittartid.",
+          cs: "Přehled ZEvent 2026: zjistěte, jak dlouho jste sledovali jednotlivé zúčastněné streamery, a exportujte to jako obrázek ve formátu Twitteru nebo Instagram story. Dostupné z banneru ZEvent a z Nastavení → Doba sledování."
+        }
+      },
       {
         type: "new",
         text: {
@@ -123,6 +143,26 @@ export const RELEASES = [
           nl: "De badge kan op elk moment worden uitgeschakeld via Instellingen → Chat → Community-badge.",
           sv: "Märket kan inaktiveras när som helst i Inställningar → Chatt → Gemenskapsmärke.",
           cs: "Odznak lze kdykoli deaktivovat v Nastavení → Chat → Komunitní odznak."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "Le badge communautaire n'envoie plus votre pseudo : seule une empreinte anonyme et irréversible est transmise, et la liste publique n'expose aucun nom.",
+          en: "The community badge no longer sends your username: only an anonymous, irreversible fingerprint is transmitted, and the public list exposes no names.",
+          es: "La insignia comunitaria ya no envía tu nombre: solo se transmite una huella anónima e irreversible, y la lista pública no expone ningún nombre.",
+          "pt-BR": "O distintivo comunitário não envia mais o seu nome: apenas uma impressão anônima e irreversível é transmitida, e a lista pública não expõe nome algum.",
+          de: "Das Community-Abzeichen sendet deinen Namen nicht mehr: Übertragen wird nur ein anonymer, nicht umkehrbarer Fingerabdruck, und die öffentliche Liste enthält keine Namen.",
+          it: "Il badge della comunità non invia più il tuo nome: viene trasmessa solo un'impronta anonima e irreversibile, e l'elenco pubblico non espone alcun nome.",
+          pl: "Odznaka społeczności nie wysyła już Twojego pseudonimu: przesyłany jest wyłącznie anonimowy, nieodwracalny odcisk, a publiczna lista nie ujawnia żadnych nazw.",
+          tr: "Topluluk rozeti artık kullanıcı adınızı göndermiyor: yalnızca anonim ve geri döndürülemez bir parmak izi iletilir ve herkese açık liste hiçbir ad içermez.",
+          ru: "Значок сообщества больше не отправляет ваш ник: передаётся только анонимный необратимый отпечаток, и публичный список не содержит имён.",
+          ja: "コミュニティバッジはユーザー名を送信しなくなりました。送られるのは匿名で復元できないハッシュのみで、公開リストに名前は含まれません。",
+          ko: "커뮤니티 배지는 더 이상 사용자 이름을 보내지 않습니다. 익명이며 되돌릴 수 없는 지문만 전송되고, 공개 목록에는 이름이 없습니다.",
+          id: "Lencana komunitas tidak lagi mengirim nama pengguna Anda: hanya sidik anonim dan tidak dapat dibalik yang dikirim, dan daftar publik tidak memuat nama.",
+          nl: "De community-badge stuurt je naam niet meer: alleen een anonieme, onomkeerbare vingerafdruk wordt verzonden, en de openbare lijst bevat geen namen.",
+          sv: "Gemenskapsmärket skickar inte längre ditt namn: endast ett anonymt, oåterkalleligt fingeravtryck överförs, och den offentliga listan innehåller inga namn.",
+          cs: "Komunitní odznak už neodesílá vaše jméno: přenáší se pouze anonymní a nevratný otisk a veřejný seznam neobsahuje žádná jména."
         }
       }
     ]
