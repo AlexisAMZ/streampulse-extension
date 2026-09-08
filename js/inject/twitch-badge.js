@@ -338,6 +338,21 @@
     });
   }
 
+  /**
+   * Les conteneurs de badges n'espacent pas tous leurs enfants de la meme
+   * facon : Twitch pose une marge sur ses propres badges, 7TV parfois un gap.
+   * Plutot que de parier, on mesure l'espace reellement obtenu et on ne pose
+   * une marge que s'il n'y en a pas — sinon le badge est colle au precedent.
+   */
+  function ensureSpacing(badge) {
+    try {
+      var prev = badge.previousElementSibling;
+      if (!prev) return;
+      var gap = badge.getBoundingClientRect().left - prev.getBoundingClientRect().right;
+      if (gap < 3) badge.classList.add("sp-chat-badge--spaced");
+    } catch (_e) {}
+  }
+
   function injectBadge(messageEl) {
     // 1. Conteneur de badges Twitch natif
     var badgesContainer = messageEl.querySelector(
@@ -345,7 +360,9 @@
       '[data-a-target="chat-badges"]'
     );
     if (badgesContainer && !badgesContainer.querySelector(".sp-chat-badge")) {
-      badgesContainer.appendChild(createBadgeElement(messageEl));
+      var nativeBadge = createBadgeElement(messageEl);
+      badgesContainer.appendChild(nativeBadge);
+      ensureSpacing(nativeBadge);
       return;
     }
 
@@ -356,7 +373,9 @@
       '[class*="chat-badge"]'
     );
     if (stvBadges && !stvBadges.querySelector(".sp-chat-badge")) {
-      stvBadges.appendChild(createBadgeElement(messageEl));
+      var stvBadge = createBadgeElement(messageEl);
+      stvBadges.appendChild(stvBadge);
+      ensureSpacing(stvBadge);
       return;
     }
 

@@ -160,7 +160,8 @@ export const translations = {
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Streamers",
-        "settings": "Réglages"
+        "settings": "Réglages",
+        "changelog": "Changelog"
       },
       "refresh": "Actualiser",
       "greetingLiveCountSingular": "{{count}} streamer en live",
@@ -627,7 +628,8 @@ export const translations = {
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Streamers",
-        "settings": "Settings"
+        "settings": "Settings",
+        "changelog": "Changelog"
       },
       "refresh": "Refresh",
       "greetingLiveCountSingular": "{{count}} streamer live",
@@ -1093,7 +1095,8 @@ export const translations = {
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Streamers",
-        "settings": "Ajustes"
+        "settings": "Ajustes",
+        "changelog": "Changelog"
       },
       "refresh": "Actualizar",
       "greetingLiveCountSingular": "{{count}} streamer en live",
@@ -1560,7 +1563,8 @@ export const translations = {
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Streamers",
-        "settings": "Configurações"
+        "settings": "Configurações",
+        "changelog": "Changelog"
       },
       "refresh": "Atualizar",
       "greetingLiveCountSingular": "{{count}} streamer ao vivo",
@@ -2028,7 +2032,8 @@ export const translations = {
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Streamer",
-        "settings": "Einstellungen"
+        "settings": "Einstellungen",
+        "changelog": "Changelog"
       },
       "refresh": "Aktualisieren",
       "greetingLiveCountSingular": "{{count}} Streamer live",
@@ -2495,7 +2500,8 @@ export const translations = {
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Stelle filanti",
-        "settings": "Impostazioni"
+        "settings": "Impostazioni",
+        "changelog": "Changelog"
       },
       "refresh": "Aggiorna",
       "greetingLiveCountSingular": "{{count}} streamer dal vivo",
@@ -2962,7 +2968,8 @@ export const translations = {
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Streamerzy",
-        "settings": "Ustawienia"
+        "settings": "Ustawienia",
+        "changelog": "Changelog"
       },
       "refresh": "Odśwież",
       "greetingLiveCountSingular": "{{count}} streamer na żywo",
@@ -3429,7 +3436,8 @@ export const translations = {
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Yayıncılar",
-        "settings": "Ayarlar"
+        "settings": "Ayarlar",
+        "changelog": "Changelog"
       },
       "refresh": "Yenile",
       "greetingLiveCountSingular": "{{count}} yayıncı canlı yayında",
@@ -3896,7 +3904,8 @@ export const translations = {
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Стримеры",
-        "settings": "Настройки"
+        "settings": "Настройки",
+        "changelog": "Changelog"
       },
       "refresh": "Обновить",
       "greetingLiveCountSingular": "{{count}} стримеров в прямом эфире",
@@ -4363,7 +4372,8 @@ export const translations = {
       "title": "StreamPulse",
       "tabs": {
         "streamers": "ストリーマー",
-        "settings": "設定"
+        "settings": "設定",
+        "changelog": "Changelog"
       },
       "refresh": "更新",
       "greetingLiveCountSingular": "{{count}}人の配信者がライブ配信中",
@@ -4830,7 +4840,8 @@ export const translations = {
       "title": "StreamPulse",
       "tabs": {
         "streamers": "스트리머",
-        "settings": "설정"
+        "settings": "설정",
+        "changelog": "Changelog"
       },
       "refresh": "새로 고침",
       "greetingLiveCountSingular": "{{count}}명의 스트리머가 생방송 중입니다",
@@ -5297,7 +5308,8 @@ export const translations = {
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Streamer",
-        "settings": "Pengaturan"
+        "settings": "Pengaturan",
+        "changelog": "Changelog"
       },
       "refresh": "Segarkan",
       "greetingLiveCountSingular": "{{count}} siaran langsung streamer",
@@ -5764,7 +5776,8 @@ export const translations = {
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Streamers",
-        "settings": "Instellingen"
+        "settings": "Instellingen",
+        "changelog": "Changelog"
       },
       "refresh": "Vernieuwen",
       "greetingLiveCountSingular": "{{count}} streamers live",
@@ -6231,7 +6244,8 @@ export const translations = {
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Streamers",
-        "settings": "Settings"
+        "settings": "Settings",
+        "changelog": "Changelog"
       },
       "refresh": "Refresh",
       "greetingLiveCountSingular": "{{count}} streamer live",
@@ -6698,7 +6712,8 @@ export const translations = {
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Streamare",
-        "settings": "Inställningar"
+        "settings": "Inställningar",
+        "changelog": "Changelog"
       },
       "refresh": "Uppdatera",
       "greetingLiveCountSingular": "{{count}} streamare live",
@@ -7165,7 +7180,8 @@ export const translations = {
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Streameři",
-        "settings": "Nastavení"
+        "settings": "Nastavení",
+        "changelog": "Changelog"
       },
       "refresh": "Obnovit",
       "greetingLiveCountSingular": "{{count}} streamerů vysílá živě",

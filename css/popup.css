@@ -2307,23 +2307,23 @@ body > * { position: relative; z-index: 1; }
   display: none !important;
 }
 
-/* Pastille de nouveaute sur le bouton de notes de l'en-tete. */
-#header-patch-notes {
-  position: relative;
+/* Acces au changelog, pose dans la barre d'onglets sans en etre un : il
+   ouvre une page au lieu de changer de vue, donc jamais d'etat actif. */
+.tab-changelog {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.icon-btn-dot {
-  position: absolute;
-  top: 4px;
-  right: 4px;
+.tab-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: var(--accent);
   box-shadow: 0 0 6px var(--accent-glow);
-  pointer-events: none;
+  flex-shrink: 0;
 }
 
-.icon-btn-dot[hidden] {
+.tab-dot[hidden] {
   display: none !important;
 }

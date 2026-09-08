@@ -36,6 +36,13 @@
   margin-right: 4px !important;
 }
 
+/* Pose uniquement quand la mesure montre que rien n'espace le badge du
+   precedent : certains conteneurs n'appliquent leur marge qu'a leurs propres
+   enfants, et notre badge se retrouvait colle. */
+.sp-chat-badge--spaced {
+  margin-left: 4px !important;
+}
+
 .sp-chat-badge:hover .sp-chat-badge-img {
   transform: scale(1.15);
   opacity: 0.85;
