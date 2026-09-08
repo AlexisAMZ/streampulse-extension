@@ -368,7 +368,9 @@
       '[class*="chat-user"]'
     );
     if (usernameEl && usernameEl.parentNode && !usernameEl.parentNode.querySelector(".sp-chat-badge")) {
-      usernameEl.parentNode.insertBefore(createBadgeElement(messageEl), usernameEl);
+      var standalone = createBadgeElement(messageEl);
+      standalone.classList.add("sp-chat-badge--standalone");
+      usernameEl.parentNode.insertBefore(standalone, usernameEl);
     }
   }
 
