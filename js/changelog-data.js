@@ -168,21 +168,21 @@ export const RELEASES = [
       {
         type: "improved",
         text: {
-          fr: "Le badge communautaire n'envoie plus votre pseudo : seule une empreinte anonyme et irréversible est transmise, et la liste publique n'expose aucun nom.",
-          en: "The community badge no longer sends your username: only an anonymous, irreversible fingerprint is transmitted, and the public list exposes no names.",
-          es: "La insignia comunitaria ya no envía tu nombre: solo se transmite una huella anónima e irreversible, y la lista pública no expone ningún nombre.",
-          "pt-BR": "O distintivo comunitário não envia mais o seu nome: apenas uma impressão anônima e irreversível é transmitida, e a lista pública não expõe nome algum.",
-          de: "Das Community-Abzeichen sendet deinen Namen nicht mehr: Übertragen wird nur ein anonymer, nicht umkehrbarer Fingerabdruck, und die öffentliche Liste enthält keine Namen.",
-          it: "Il badge della comunità non invia più il tuo nome: viene trasmessa solo un'impronta anonima e irreversibile, e l'elenco pubblico non espone alcun nome.",
-          pl: "Odznaka społeczności nie wysyła już Twojego pseudonimu: przesyłany jest wyłącznie anonimowy, nieodwracalny odcisk, a publiczna lista nie ujawnia żadnych nazw.",
-          tr: "Topluluk rozeti artık kullanıcı adınızı göndermiyor: yalnızca anonim ve geri döndürülemez bir parmak izi iletilir ve herkese açık liste hiçbir ad içermez.",
-          ru: "Значок сообщества больше не отправляет ваш ник: передаётся только анонимный необратимый отпечаток, и публичный список не содержит имён.",
-          ja: "コミュニティバッジはユーザー名を送信しなくなりました。送られるのは匿名で復元できないハッシュのみで、公開リストに名前は含まれません。",
-          ko: "커뮤니티 배지는 더 이상 사용자 이름을 보내지 않습니다. 익명이며 되돌릴 수 없는 지문만 전송되고, 공개 목록에는 이름이 없습니다.",
-          id: "Lencana komunitas tidak lagi mengirim nama pengguna Anda: hanya sidik anonim dan tidak dapat dibalik yang dikirim, dan daftar publik tidak memuat nama.",
-          nl: "De community-badge stuurt je naam niet meer: alleen een anonieme, onomkeerbare vingerafdruk wordt verzonden, en de openbare lijst bevat geen namen.",
-          sv: "Gemenskapsmärket skickar inte längre ditt namn: endast ett anonymt, oåterkalleligt fingeravtryck överförs, och den offentliga listan innehåller inga namn.",
-          cs: "Komunitní odznak už neodesílá vaše jméno: přenáší se pouze anonymní a nevratný otisk a veřejný seznam neobsahuje žádná jména."
+          fr: "Le badge communautaire n'envoie plus votre pseudo : seule une empreinte de celui-ci est transmise, calculée dans votre navigateur, et la liste publique n'affiche aucun nom.",
+          en: "The community badge no longer sends your username: only a fingerprint of it is transmitted, computed in your browser, and the public list shows no names.",
+          es: "La insignia comunitaria ya no envía tu nombre: solo se transmite una huella de este, calculada en tu navegador, y la lista pública no muestra ningún nombre.",
+          "pt-BR": "O distintivo comunitário não envia mais o seu nome: apenas uma impressão dele é transmitida, calculada no seu navegador, e a lista pública não exibe nome algum.",
+          de: "Das Community-Abzeichen sendet deinen Namen nicht mehr: Übertragen wird nur ein im Browser berechneter Fingerabdruck davon, und die öffentliche Liste zeigt keine Namen.",
+          it: "Il badge della comunità non invia più il tuo nome: viene trasmessa solo un'impronta di esso, calcolata nel tuo browser, e l'elenco pubblico non mostra alcun nome.",
+          pl: "Odznaka społeczności nie wysyła już Twojego pseudonimu: przesyłany jest tylko jego odcisk, obliczany w przeglądarce, a publiczna lista nie pokazuje żadnych nazw.",
+          tr: "Topluluk rozeti artık kullanıcı adınızı göndermiyor: yalnızca tarayıcınızda hesaplanan bir parmak izi iletilir ve herkese açık liste hiçbir ad göstermez.",
+          ru: "Значок сообщества больше не отправляет ваш ник: передаётся только его отпечаток, вычисленный в браузере, и публичный список не показывает имён.",
+          ja: "コミュニティバッジはユーザー名を送信しなくなりました。送られるのはブラウザ内で計算されたハッシュのみで、公開リストに名前は表示されません。",
+          ko: "커뮤니티 배지는 더 이상 사용자 이름을 보내지 않습니다. 브라우저에서 계산된 지문만 전송되며, 공개 목록에는 이름이 표시되지 않습니다.",
+          id: "Lencana komunitas tidak lagi mengirim nama pengguna Anda: hanya sidiknya yang dikirim, dihitung di peramban Anda, dan daftar publik tidak menampilkan nama.",
+          nl: "De community-badge stuurt je naam niet meer: alleen een in je browser berekende vingerafdruk ervan wordt verzonden, en de openbare lijst toont geen namen.",
+          sv: "Gemenskapsmärket skickar inte längre ditt namn: endast ett fingeravtryck av det, beräknat i din webbläsare, överförs och den offentliga listan visar inga namn.",
+          cs: "Komunitní odznak už neodesílá vaše jméno: přenáší se pouze jeho otisk vypočítaný ve vašem prohlížeči a veřejný seznam nezobrazuje žádná jména."
         }
       },
       {
