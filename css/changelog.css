@@ -557,3 +557,33 @@ a.cl-thanks-handle:hover {
   object-fit: contain;
   filter: drop-shadow(0 0 8px rgba(0, 230, 118, 0.45));
 }
+
+/* Raccourci vers le recap ZEvent, sous la liste des changements. */
+.cl-recap-cta {
+  /* Pose dans la carte ZEvent, sous son texte. La carte est un conteneur
+     flex en colonne : sans align-self, le lien s'etire sur toute la largeur. */
+  display: inline-flex;
+  align-self: flex-start;
+  width: fit-content;
+  align-items: center;
+  gap: 9px;
+  margin-top: 14px;
+  padding: 12px 20px;
+  border-radius: 9px;
+  border: 1px solid rgba(0, 230, 118, 0.45);
+  background: rgba(0, 230, 118, 0.1);
+  color: #00e676;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.cl-recap-cta:hover {
+  background: rgba(0, 230, 118, 0.18);
+  border-color: rgba(0, 230, 118, 0.7);
+}
+
+.cl-recap-cta:active { transform: translateY(1px); }
+
+.cl-recap-cta[hidden] { display: none !important; }

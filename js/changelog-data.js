@@ -108,21 +108,21 @@ export const RELEASES = [
       {
         type: "new",
         text: {
-          fr: "Récap ZEvent 2026 : retrouvez le temps passé chez chaque streamer participant et exportez-le en image, au format Twitter ou story Instagram. Accessible depuis le bandeau ZEvent et depuis Réglages → Temps de visionnage.",
-          en: "ZEvent 2026 recap: see how long you watched each participating streamer and export it as an image, in Twitter or Instagram story format. Available from the ZEvent banner and from Settings → Watch time.",
-          es: "Resumen del ZEvent 2026: consulta el tiempo que pasaste con cada streamer participante y expórtalo como imagen, en formato Twitter o historia de Instagram. Disponible desde el banner ZEvent y en Ajustes → Tiempo de visionado.",
-          "pt-BR": "Resumo do ZEvent 2026: veja quanto tempo você assistiu a cada streamer participante e exporte como imagem, em formato Twitter ou story do Instagram. Disponível no banner ZEvent e em Configurações → Tempo de exibição.",
-          de: "ZEvent-2026-Rückblick: Sieh, wie lange du jeden teilnehmenden Streamer geschaut hast, und exportiere es als Bild im Twitter- oder Instagram-Story-Format. Erreichbar über das ZEvent-Banner und Einstellungen → Sehzeit.",
-          it: "Riepilogo ZEvent 2026: scopri quanto tempo hai passato con ogni streamer partecipante ed esportalo come immagine, in formato Twitter o storia Instagram. Disponibile dal banner ZEvent e da Impostazioni → Tempo di visione.",
-          pl: "Podsumowanie ZEvent 2026: sprawdź, ile czasu spędziłeś u każdego uczestniczącego streamera i wyeksportuj to jako obrazek w formacie Twittera lub relacji na Instagramie. Dostępne z banera ZEvent i z Ustawienia → Czas oglądania.",
-          tr: "ZEvent 2026 özeti: katılan her yayıncıyı ne kadar izlediğinizi görün ve Twitter veya Instagram hikâye formatında görsel olarak dışa aktarın. ZEvent afişinden ve Ayarlar → İzleme süresi bölümünden erişilir.",
-          ru: "Итоги ZEvent 2026: посмотрите, сколько вы смотрели каждого участвующего стримера, и сохраните картинку в формате Twitter или истории Instagram. Доступно из баннера ZEvent и в Настройки → Время просмотра.",
-          ja: "ZEvent 2026の記録：参加ストリーマーごとの視聴時間を確認し、Twitter形式またはInstagramストーリー形式の画像として書き出せます。ZEventバナーと設定 → 視聴時間から利用できます。",
-          ko: "ZEvent 2026 결산: 참가 스트리머별 시청 시간을 확인하고 트위터 또는 인스타그램 스토리 형식의 이미지로 내보낼 수 있습니다. ZEvent 배너와 설정 → 시청 시간에서 이용할 수 있습니다.",
-          id: "Rekap ZEvent 2026: lihat berapa lama Anda menonton setiap streamer peserta dan ekspor sebagai gambar, dalam format Twitter atau story Instagram. Tersedia dari banner ZEvent dan Pengaturan → Waktu tonton.",
-          nl: "ZEvent 2026-overzicht: bekijk hoelang je naar elke deelnemende streamer keek en exporteer het als afbeelding, in Twitter- of Instagram-storyformaat. Bereikbaar via de ZEvent-banner en Instellingen → Kijktijd.",
-          sv: "ZEvent 2026-sammanfattning: se hur länge du tittade på varje deltagande streamer och exportera det som en bild, i Twitter- eller Instagram-storyformat. Nås från ZEvent-bannern och Inställningar → Tittartid.",
-          cs: "Přehled ZEvent 2026: zjistěte, jak dlouho jste sledovali jednotlivé zúčastněné streamery, a exportujte to jako obrázek ve formátu Twitteru nebo Instagram story. Dostupné z banneru ZEvent a z Nastavení → Doba sledování."
+          fr: "ZEvent 2026 : pendant le week-end, un bandeau dédié, un filtre et le surlignage vert des streamers participants dans votre sidebar Twitch. L'événement terminé, retrouvez votre récap — le temps passé chez chaque participant — et exportez-le en image, au format Twitter ou story Instagram.",
+          en: "ZEvent 2026: during the weekend, a dedicated banner, a filter and green highlighting of participating streamers in your Twitch sidebar. Now that it is over, open your recap — how long you watched each participant — and export it as an image, in Twitter or Instagram story format.",
+          es: "ZEvent 2026: durante el fin de semana, un banner dedicado, un filtro y el resaltado verde de los streamers participantes en tu barra lateral de Twitch. Terminado el evento, consulta tu resumen —el tiempo pasado con cada participante— y expórtalo como imagen, en formato Twitter o historia de Instagram.",
+          "pt-BR": "ZEvent 2026: durante o fim de semana, um banner dedicado, um filtro e o destaque verde dos streamers participantes na sua barra lateral da Twitch. Encerrado o evento, veja seu resumo — o tempo assistido com cada participante — e exporte como imagem, em formato Twitter ou story do Instagram.",
+          de: "ZEvent 2026: Am Wochenende ein eigenes Banner, ein Filter und die grüne Hervorhebung teilnehmender Streamer in deiner Twitch-Seitenleiste. Nach dem Event öffnest du deinen Rückblick — wie lange du jeden Teilnehmer geschaut hast — und exportierst ihn als Bild im Twitter- oder Instagram-Story-Format.",
+          it: "ZEvent 2026: durante il weekend, un banner dedicato, un filtro e l'evidenziazione verde degli streamer partecipanti nella barra laterale di Twitch. A evento concluso, apri il tuo riepilogo — il tempo passato con ogni partecipante — ed esportalo come immagine, in formato Twitter o storia Instagram.",
+          pl: "ZEvent 2026: w weekend dedykowany baner, filtr i zielone podświetlenie uczestniczących streamerów na pasku bocznym Twitcha. Po zakończeniu otwórz swoje podsumowanie — ile czasu spędziłeś u każdego uczestnika — i wyeksportuj je jako obrazek w formacie Twittera lub relacji na Instagramie.",
+          tr: "ZEvent 2026: hafta sonu boyunca özel bir afiş, bir filtre ve Twitch kenar çubuğunuzda katılan yayıncıların yeşil vurgusu. Etkinlik bittiğinde özetinizi açın — her katılımcıyı ne kadar izlediğinizi — ve Twitter veya Instagram hikâye formatında görsel olarak dışa aktarın.",
+          ru: "ZEvent 2026: в выходные — отдельный баннер, фильтр и зелёная подсветка участвующих стримеров в боковой панели Twitch. После завершения откройте свои итоги — сколько вы смотрели каждого участника — и сохраните картинку в формате Twitter или истории Instagram.",
+          ja: "ZEvent 2026：週末は専用バナー、フィルター、Twitchサイドバーでの参加ストリーマーの緑色ハイライト。終了後は、参加者ごとの視聴時間をまとめた記録を開き、Twitter形式またはInstagramストーリー形式の画像として書き出せます。",
+          ko: "ZEvent 2026: 주말 동안 전용 배너, 필터, 트위치 사이드바의 참가 스트리머 초록색 강조. 행사가 끝난 뒤에는 참가자별 시청 시간을 담은 결산을 열어 트위터 또는 인스타그램 스토리 형식의 이미지로 내보낼 수 있습니다.",
+          id: "ZEvent 2026: selama akhir pekan, banner khusus, filter, dan sorotan hijau streamer peserta di bilah sisi Twitch Anda. Setelah acara berakhir, buka rekap Anda — berapa lama Anda menonton tiap peserta — dan ekspor sebagai gambar dalam format Twitter atau story Instagram.",
+          nl: "ZEvent 2026: tijdens het weekend een eigen banner, een filter en groene markering van deelnemende streamers in je Twitch-zijbalk. Nu het voorbij is, open je je overzicht — hoelang je naar elke deelnemer keek — en exporteer je het als afbeelding, in Twitter- of Instagram-storyformaat.",
+          sv: "ZEvent 2026: under helgen en egen banner, ett filter och grön markering av deltagande streamers i ditt Twitch-sidofält. Nu när det är slut öppnar du din sammanfattning — hur länge du tittade på varje deltagare — och exporterar den som bild i Twitter- eller Instagram-storyformat.",
+          cs: "ZEvent 2026: o víkendu vlastní banner, filtr a zelené zvýraznění zúčastněných streamerů v postranním panelu Twitche. Po skončení otevřete svůj přehled — jak dlouho jste sledovali jednotlivé účastníky — a exportujte jej jako obrázek ve formátu Twitteru nebo Instagram story."
         }
       },
       {
@@ -143,26 +143,6 @@ export const RELEASES = [
           nl: "Community-badge: alle StreamPulse-gebruikers worden automatisch herkend en tonen een StreamPulse-pictogram naast hun naam in de Twitch-chat, zichtbaar voor alle leden van de community.",
           sv: "Gemenskapsmärke: alla StreamPulse-användare upptäcks automatiskt och visar en StreamPulse-ikon bredvid sitt namn i Twitch-chatten, synlig för alla i gemenskapen.",
           cs: "Komunitní odznak: všichni uživatelé StreamPulse jsou automaticky rozpoznáni a zobrazují ikonu StreamPulse vedle svého jména v chatu Twitche, viditelnou pro všechny členy komunity."
-        }
-      },
-      {
-        type: "new",
-        text: {
-          fr: "Dispositif ZEvent 2026 : pendant le week-end, un bandeau dédié, un filtre et le surlignage vert des streamers participants dans votre sidebar Twitch. L'événement terminé, le bandeau donne accès à votre récap (désactivable à tout moment dans les Réglages).",
-          en: "ZEvent 2026 features: during the weekend, a dedicated banner, a filter and green highlighting of participating streamers in your Twitch sidebar. Now that the event is over, the banner opens your recap (can be turned off anytime in Settings).",
-          es: "Funciones ZEvent 2026: durante el fin de semana, un banner dedicado, un filtro y el resaltado verde de los streamers participantes en tu barra lateral de Twitch. Terminado el evento, el banner da acceso a tu resumen (desactivable en cualquier momento en Ajustes).",
-          "pt-BR": "Recursos do ZEvent 2026: durante o fim de semana, um banner dedicado, um filtro e o destaque verde dos streamers participantes na sua barra lateral da Twitch. Encerrado o evento, o banner dá acesso ao seu resumo (desativável a qualquer momento nas Configurações).",
-          de: "ZEvent-2026-Funktionen: Am Wochenende ein eigenes Banner, ein Filter und die grüne Hervorhebung teilnehmender Streamer in deiner Twitch-Seitenleiste. Nach dem Event öffnet das Banner deinen Rückblick (jederzeit in den Einstellungen deaktivierbar).",
-          it: "Funzioni ZEvent 2026: durante il weekend, un banner dedicato, un filtro e l'evidenziazione verde degli streamer partecipanti nella barra laterale di Twitch. A evento concluso, il banner apre il tuo riepilogo (disattivabile in qualsiasi momento nelle Impostazioni).",
-          pl: "Funkcje ZEvent 2026: w weekend dedykowany baner, filtr i zielone podświetlenie uczestniczących streamerów na pasku bocznym Twitcha. Po zakończeniu wydarzenia baner otwiera Twoje podsumowanie (można wyłączyć w Ustawieniach).",
-          tr: "ZEvent 2026 özellikleri: hafta sonu boyunca özel bir afiş, bir filtre ve Twitch kenar çubuğunuzda katılan yayıncıların yeşil vurgusu. Etkinlik bittiğine göre afiş özetinizi açıyor (Ayarlar'dan istediğiniz zaman kapatılabilir).",
-          ru: "Возможности ZEvent 2026: в выходные — отдельный баннер, фильтр и зелёная подсветка участвующих стримеров в боковой панели Twitch. После завершения события баннер открывает ваши итоги (можно отключить в настройках).",
-          ja: "ZEvent 2026機能：週末は専用バナー、フィルター、Twitchサイドバーでの参加ストリーマーの緑色ハイライトを提供しました。イベント終了後、バナーからあなたの記録を開けます（設定でいつでも無効化できます）。",
-          ko: "ZEvent 2026 기능: 주말 동안 전용 배너, 필터, 트위치 사이드바의 참가 스트리머 초록색 강조를 제공했습니다. 이벤트가 끝난 지금은 배너에서 내 결산을 열 수 있습니다(설정에서 언제든 끌 수 있습니다).",
-          id: "Fitur ZEvent 2026: selama akhir pekan, banner khusus, filter, dan sorotan hijau streamer peserta di bilah sisi Twitch Anda. Setelah acara berakhir, banner membuka rekap Anda (dapat dimatikan kapan saja di Pengaturan).",
-          nl: "ZEvent 2026-functies: tijdens het weekend een eigen banner, een filter en groene markering van deelnemende streamers in je Twitch-zijbalk. Nu het evenement voorbij is, opent de banner je overzicht (altijd uit te schakelen in Instellingen).",
-          sv: "ZEvent 2026-funktioner: under helgen en egen banner, ett filter och grön markering av deltagande streamers i ditt Twitch-sidofält. Nu när evenemanget är slut öppnar bannern din sammanfattning (kan stängas av när som helst i Inställningar).",
-          cs: "Funkce ZEvent 2026: o víkendu vlastní banner, filtr a zelené zvýraznění zúčastněných streamerů v postranním panelu Twitche. Po skončení akce banner otevírá váš přehled (kdykoli vypnutelné v Nastavení)."
         }
       },
       {

@@ -2161,3 +2161,69 @@ body > * { position: relative; z-index: 1; }
   font: inherit;
   cursor: pointer;
 }
+
+/* ── Carte de soutien (Revolut / PayPal) ──────────────────────────────────
+   Le markup avait ete refait sans que les styles suivent : les liens
+   s'affichaient nus, avec des SVG a leur taille par defaut. */
+.support-card {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-medium);
+  border-radius: 10px;
+  background: var(--bg-elev);
+}
+
+.support-card-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.support-card-title .support-icon {
+  color: #ffd300;
+}
+
+.support-buttons-group {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.support-subbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  flex: 1;
+  padding: 9px 14px;
+  border: 1px solid var(--border-medium);
+  border-radius: 8px;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.support-subbtn:hover { transform: translateY(-1px); }
+
+.support-subbtn.revolut:hover {
+  background: rgba(0, 113, 227, 0.12);
+  border-color: rgba(0, 113, 227, 0.45);
+}
+
+.support-subbtn.paypal:hover {
+  background: rgba(0, 156, 222, 0.12);
+  border-color: rgba(0, 156, 222, 0.45);
+}
+
+/* Sans dimension explicite, un SVG inline s'etale a 300x150. */
+.support-subbtn-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}

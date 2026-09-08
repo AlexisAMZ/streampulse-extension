@@ -431,6 +431,7 @@ export const translations = {
     },
     "changelog": {
       "documentTitle": "StreamPulse : Nouveautés",
+      "recapCta": "Voir mon récap ZEvent",
       "brandSub": "Notes de version",
       "supportIntro": "Un bug, une idée ?",
       "supportLink": "Écrivez-nous",
@@ -877,6 +878,7 @@ export const translations = {
     },
     "changelog": {
       "documentTitle": "StreamPulse: What's new",
+      "recapCta": "See my ZEvent recap",
       "brandSub": "Release notes",
       "supportIntro": "Found a bug, got an idea?",
       "supportLink": "Write to us",
@@ -1323,6 +1325,7 @@ export const translations = {
     },
     "changelog": {
       "documentTitle": "StreamPulse: Novedades",
+      "recapCta": "Ver mi resumen del ZEvent",
       "brandSub": "Notas de la versión",
       "supportIntro": "¿Un fallo, una idea?",
       "supportLink": "Escríbenos",
@@ -1769,6 +1772,7 @@ export const translations = {
     },
     "changelog": {
       "documentTitle": "StreamPulse: Novidades",
+      "recapCta": "Ver meu resumo do ZEvent",
       "brandSub": "Notas da versão",
       "supportIntro": "Um bug, uma ideia?",
       "supportLink": "Escreva para nós",
@@ -2215,6 +2219,7 @@ export const translations = {
     },
     "changelog": {
       "documentTitle": "StreamPulse: Was ist neu",
+      "recapCta": "Meinen ZEvent-Rückblick ansehen",
       "brandSub": "Versionshinweise",
       "supportIntro": "Einen Fehler gefunden, eine Idee?",
       "supportLink": "Schreiben Sie uns",
@@ -2661,6 +2666,7 @@ export const translations = {
     },
     "changelog": {
       "documentTitle": "StreamPulse: Novità",
+      "recapCta": "Vedi il mio riepilogo ZEvent",
       "brandSub": "Note sulla versione",
       "supportIntro": "Hai trovato un bug, hai un'idea?",
       "supportLink": "Scrivici",
@@ -3107,6 +3113,7 @@ export const translations = {
     },
     "changelog": {
       "documentTitle": "StreamPulse: Co nowego",
+      "recapCta": "Zobacz moje podsumowanie ZEvent",
       "brandSub": "Informacje o wydaniu",
       "supportIntro": "Znalazłeś błąd, masz pomysł?",
       "supportLink": "Napisz do nas",
@@ -3553,6 +3560,7 @@ export const translations = {
     },
     "changelog": {
       "documentTitle": "StreamPulse: Yenilikler",
+      "recapCta": "ZEvent özetimi gör",
       "brandSub": "Sürüm notları",
       "supportIntro": "Bir hata mı buldunuz, bir fikriniz mi var?",
       "supportLink": "Bize yazın",
@@ -3999,6 +4007,7 @@ export const translations = {
     },
     "changelog": {
       "documentTitle": "StreamPulse: Что нового",
+      "recapCta": "Мои итоги ZEvent",
       "brandSub": "Примечания к выпуску",
       "supportIntro": "Нашли ошибку или у вас есть идея?",
       "supportLink": "Напишите нам",
@@ -4445,6 +4454,7 @@ export const translations = {
     },
     "changelog": {
       "documentTitle": "StreamPulse：新機能",
+      "recapCta": "ZEventの記録を見る",
       "brandSub": "リリースノート",
       "supportIntro": "バグを見つけましたか？ 何かアイデアはありますか？",
       "supportLink": "お問い合わせ",
@@ -4891,6 +4901,7 @@ export const translations = {
     },
     "changelog": {
       "documentTitle": "StreamPulse: 새로운 소식",
+      "recapCta": "내 ZEvent 결산 보기",
       "brandSub": "릴리스 노트",
       "supportIntro": "버그를 발견하셨나요, 아니면 좋은 아이디어가 있으신가요?",
       "supportLink": "문의하기",
@@ -5337,6 +5348,7 @@ export const translations = {
     },
     "changelog": {
       "documentTitle": "StreamPulse: Apa yang baru",
+      "recapCta": "Lihat rekap ZEvent saya",
       "brandSub": "Catatan Rilis",
       "supportIntro": "Menemukan bug, punya ide?",
       "supportLink": "Silakan kirimkan pesan kepada kami",
@@ -5783,6 +5795,7 @@ export const translations = {
     },
     "changelog": {
       "documentTitle": "StreamPulse: Wat is er nieuw?",
+      "recapCta": "Bekijk mijn ZEvent-overzicht",
       "brandSub": "Release-opmerkingen",
       "supportIntro": "Heb je een fout gevonden of een idee?",
       "supportLink": "Schrijf ons",
@@ -6229,6 +6242,7 @@ export const translations = {
     },
     "changelog": {
       "documentTitle": "StreamPulse: What's new",
+      "recapCta": "मेरा ZEvent सारांश देखें",
       "brandSub": "Release notes",
       "supportIntro": "Found a bug, got an idea?",
       "supportLink": "Write to us",
@@ -6675,6 +6689,7 @@ export const translations = {
     },
     "changelog": {
       "documentTitle": "StreamPulse: Nyheter",
+      "recapCta": "Se min ZEvent-sammanfattning",
       "brandSub": "Versionsinformation",
       "supportIntro": "Har du hittat ett fel eller har du ett förslag?",
       "supportLink": "Skriv till oss",
@@ -7121,6 +7136,7 @@ export const translations = {
     },
     "changelog": {
       "documentTitle": "StreamPulse: Co je nového",
+      "recapCta": "Zobrazit můj přehled ZEvent",
       "brandSub": "Poznámky k vydání",
       "supportIntro": "Našli jste chybu nebo máte nějaký nápad?",
       "supportLink": "Napište nám",

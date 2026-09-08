@@ -8,6 +8,7 @@
 
 import { RELEASES, getLatestRelease, pickLocalized } from "./changelog-data.js";
 import { initI18n, applyTranslations, t, resolveLocale, getCurrentLanguage } from "./i18n.js";
+import { isZEventRecapActive } from "./zevent-participants.js";
 
 /**
  * Texte d'une note de version dans la langue choisie par l'utilisateur.
@@ -99,6 +100,8 @@ function renderChanges(release) {
         badge.append(img);
         const textSpan = el("span", "cl-item-text", text);
         li.append(badge, textSpan);
+        const cta = buildRecapCta();
+        if (cta) li.append(cta);
         list.append(li);
       } else {
         list.append(el("li", "cl-item", text));
@@ -281,6 +284,36 @@ function renderDisplay(text) {
   });
 }
 
+/**
+ * Raccourci vers le recap, place dans la carte ZEvent elle-meme. Il n'a de
+ * sens que pendant la fenetre de recapitulatif : passee cette date, la page
+ * de recap serait vide.
+ */
+function buildRecapCta() {
+  if (!isZEventRecapActive()) return null;
+  const cta = el("a", "cl-recap-cta");
+  cta.href = "recap.html";
+  const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  icon.setAttribute("viewBox", "0 0 24 24");
+  icon.setAttribute("width", "14");
+  icon.setAttribute("height", "14");
+  icon.setAttribute("fill", "none");
+  icon.setAttribute("stroke", "currentColor");
+  icon.setAttribute("stroke-width", "2.4");
+  icon.setAttribute("stroke-linecap", "round");
+  icon.setAttribute("aria-hidden", "true");
+  for (const [x, y1] of [["6", "13"], ["12", "4"], ["18", "9"]]) {
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", x);
+    line.setAttribute("y1", "20");
+    line.setAttribute("x2", x);
+    line.setAttribute("y2", y1);
+    icon.append(line);
+  }
+  cta.append(icon, el("span", "", t("changelog.recapCta")));
+  return cta;
+}
+
 function render(release) {
   const versionLabel = `v${release.version}`;
   document.getElementById("cl-version").textContent = versionLabel;
@@ -295,6 +328,7 @@ function render(release) {
 
   // Le grand titre H1 affiche directement le titre de la mise à jour actuelle
   renderDisplay(localized(release.title) || t("changelog.pageTitle"));
+
 
   // Explicit subtitle wins; otherwise summarise so the hero never sits on top
   // of a generic sentence that says nothing about this release.
