@@ -90,6 +90,38 @@
   var TIP_URL = "https://revolut.me/alexisamz";
   var PREFERENCES_KEY = "betaGeneralPreferences";
 
+  // Les segments de premier niveau qui ne sont pas des chaines.
+  var NOT_CHANNELS = [
+    "directory", "videos", "downloads", "prime", "turbo", "subscriptions",
+    "inventory", "wallet", "settings", "friends", "messages", "search", "p", "u",
+  ];
+
+  /** Login de la chaine affichee, ou "" hors d'une page de chaine. */
+  function currentChannel() {
+    try {
+      var parts = location.pathname.split("/").filter(Boolean);
+      if (parts.length !== 1) return "";
+      var login = parts[0].toLowerCase();
+      if (NOT_CHANNELS.indexOf(login) !== -1) return "";
+      return /^[a-z0-9_]{3,25}$/.test(login) ? login : "";
+    } catch (_e) {
+      return "";
+    }
+  }
+
+  /** Secondes passees sur une chaine ce mois-ci. */
+  function channelWatch(data, login) {
+    try {
+      var now = new Date();
+      var key = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0");
+      var month = (data && data[key]) || {};
+      var entry = month["twitch:" + login];
+      return (entry && entry.watchSeconds) || 0;
+    } catch (_e) {
+      return 0;
+    }
+  }
+
   // Inline SVG icons (Feather style, inherit color via currentColor).
   function svg(body) {
     return (
@@ -166,25 +198,72 @@
 
   // ---- state ---------------------------------------------------------------
   function loadState(cb) {
+    var channel = currentChannel();
     try {
       chrome.storage.local.get(
         [PREFERENCES_KEY, "betaGeneralStats", "betaWatchTimeData"],
         function (r) {
           r = r || {};
           var prefs = r[PREFERENCES_KEY] || {};
-          var stats = r.betaGeneralStats || {};
-          cb({
-            points: stats.channelPointsClaimed || 0,
-            watchSeconds: currentMonthWatch(r.betaWatchTimeData || {}),
+          var watchData = r.betaWatchTimeData || {};
+          var base = {
+            points: stats(r).channelPointsClaimed || 0,
+            watchSeconds: currentMonthWatch(watchData),
+            prefs: prefs,
             previewsEnabled: prefs.previewsEnabled !== false,
             lang: langKey(prefs.language),
-          });
+            channel: channel,
+            channelWatchSeconds: channel ? channelWatch(watchData, channel) : 0,
+            channelTracked: false,
+            live: [],
+          };
+
+          // La liste des suivis vit cote service worker : sans reponse, on
+          // affiche quand meme le panneau plutot que rien.
+          try {
+            chrome.runtime.sendMessage({ type: "getStreamers" }, function (resp) {
+              if (chrome.runtime.lastError || !resp) return cb(base);
+              cb(withStreamers(base, resp, channel));
+            });
+          } catch (_e) {
+            cb(base);
+          }
         }
       );
     } catch (_e) {
       cb(null);
     }
   }
+
+  function stats(r) {
+    return r.betaGeneralStats || {};
+  }
+
+  /** Complete l'etat avec le suivi de la chaine courante et les lives. */
+  function withStreamers(base, resp, channel) {
+    var streamers = resp.streamers || [];
+    var statuses = resp.statuses || {};
+    var live = [];
+
+    for (var i = 0; i < streamers.length; i++) {
+      var s = streamers[i];
+      var handle = String(s.handle || s.login || "").toLowerCase();
+      if (channel && handle === channel) base.channelTracked = true;
+
+      var st = statuses[s.id] || statuses[handle] || {};
+      if (!st.isLive) continue;
+      live.push({
+        login: handle,
+        name: s.displayName || s.handle || handle,
+        category: st.gameName || st.category || "",
+        avatarUrl: s.avatarUrl || st.avatarUrl || "",
+      });
+    }
+
+    base.live = live;
+    return base;
+  }
+
   function updatePref(key, val) {
     try {
       var u = {};
@@ -226,43 +305,50 @@
   function buildPanel(st) {
     st = st || {};
     var lang = langKey(st.lang);
-    var p = document.createElement("div");
-    p.className = "sp-topbar-panel";
-    p.id = "sp-topbar-panel";
-    p.innerHTML =
-      '<div class="sp-tb-head"><img class="sp-tb-logo" alt="" src="' + LOGO_URL + '"><span>StreamPulse</span></div>' +
-      '<div class="sp-tb-stats">' +
-      '<div class="sp-tb-stat" title="Points">' + ICON.gem + "<b>" + fmtNum(st.points) + "</b></div>" +
-      '<div class="sp-tb-stat" title="Watch time">' + ICON.clock + "<b>" + fmtDur(st.watchSeconds) + "</b></div>" +
-      "</div>" +
-      '<button class="sp-tb-row" type="button" data-sp-toggle="previewsEnabled"><span>' +
-      tr(lang, "previews") + '</span><span class="sp-tb-sw' + (st.previewsEnabled ? " on" : "") + '"></span></button>' +
-      '<a class="sp-tb-tip" href="' + TIP_URL + '" target="_blank" rel="noopener noreferrer">' +
-      ICON.coffee + "<span>" + tr(lang, "tip") + "</span></a>" +
-      '<a class="sp-tb-settings" href="#" id="sp-tb-settings-link">' +
-      ICON.gear + "<span>" + tr(lang, "settings") + "</span></a>";
+    var panel = NS_PANEL();
+    if (!panel) return document.createElement("div");
 
-    var toggles = p.querySelectorAll("[data-sp-toggle]");
-    Array.prototype.forEach.call(toggles, function (rowEl) {
-      rowEl.addEventListener("click", function () {
-        var key = rowEl.getAttribute("data-sp-toggle");
-        var sw = rowEl.querySelector(".sp-tb-sw");
-        var newVal = !sw.classList.contains("on");
-        sw.classList.toggle("on", newVal);
-        updatePref(key, newVal);
-      });
-    });
-    var settingsLink = p.querySelector("#sp-tb-settings-link");
-    if (settingsLink) {
-      settingsLink.addEventListener("click", function (e) {
-        e.preventDefault();
-        try {
-          chrome.runtime.sendMessage({ type: "openSettings" });
-        } catch (_e) {}
-        closePanel();
-      });
-    }
-    return p;
+    return panel.build(
+      {
+        points: st.points,
+        watchSeconds: st.watchSeconds,
+        prefs: st.prefs || {},
+        channel: st.channel,
+        channelTracked: st.channelTracked,
+        channelWatchSeconds: st.channelWatchSeconds,
+        live: st.live,
+      },
+      {
+        tr: function (key) {
+          return tr(lang, key);
+        },
+        fmtNum: fmtNum,
+        fmtDur: fmtDur,
+        logoUrl: LOGO_URL,
+        tipUrl: TIP_URL,
+        icon: ICON,
+        onToggle: updatePref,
+        addStreamer: function (login) {
+          try {
+            chrome.runtime.sendMessage({ type: "addStreamer", platform: "twitch", handle: login });
+          } catch (_e) {}
+        },
+        openChannel: function (login) {
+          location.href = "https://www.twitch.tv/" + login;
+        },
+        openSettings: function () {
+          try {
+            chrome.runtime.sendMessage({ type: "openSettings" });
+          } catch (_e) {}
+          closePanel();
+        },
+      }
+    );
+  }
+
+  function NS_PANEL() {
+    var ns = typeof self !== "undefined" ? self : globalThis;
+    return ns.__SP_TOPBAR_PANEL__ || null;
   }
 
   function togglePanel(btn) {

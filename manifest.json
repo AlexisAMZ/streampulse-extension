@@ -49,6 +49,7 @@
       "all_frames": false,
       "js": [
         "js/inject/i18n-inline.js",
+        "js/inject/topbar-panel.js",
         "js/inject/topbar.js",
         "js/inject/quickFollow.js",
         "js/inject/twitch-badge.js"

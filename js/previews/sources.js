@@ -15,8 +15,8 @@
   // Trois paliers nettement distincts : a 440px, le L se distinguait a peine
   // du M. Le 16/9 est conserve pour que la video ne soit jamais recadree.
   const SIZE_PRESETS = {
-    s: { width: 280, height: 157 },
-    m: { width: 400, height: 225 },
+    s: { width: 368, height: 207 },
+    m: { width: 464, height: 261 },
     l: { width: 560, height: 315 },
   };
 
