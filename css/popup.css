@@ -2227,3 +2227,31 @@ body > * { position: relative; z-index: 1; }
   height: 15px;
   flex-shrink: 0;
 }
+
+/* Couleur du badge communautaire. */
+.badge-color-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 0;
+}
+
+.badge-color-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.badge-color-input {
+  width: 34px;
+  height: 30px;
+  padding: 2px;
+  border: 1px solid var(--border-medium);
+  border-radius: 7px;
+  background: var(--bg-elev);
+  cursor: pointer;
+}
+
+.badge-color-input[hidden] { display: none !important; }

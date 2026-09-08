@@ -105,6 +105,8 @@ const wtEmpty = document.getElementById("wt-empty");
 const watchTimeToggle = document.getElementById("pref-watch-time");
 const zeventRecapButton = document.getElementById("open-zevent-recap");
 const communityBadgeToggle = document.getElementById("pref-community-badge");
+const badgeColorMode = document.getElementById("pref-badge-color-mode");
+const badgeColorValue = document.getElementById("pref-badge-color-value");
 
 const pseudoInput = document.getElementById("pref-pseudo-input");
 const pseudoSaveButton = document.getElementById("pref-pseudo-save");
@@ -711,6 +713,16 @@ function renderPreferences() {
   }
   if (watchTimeToggle) {
     watchTimeToggle.checked = prefs.watchTimeTracker !== false;
+  }
+  if (badgeColorMode) {
+    // Une couleur hexadecimale stockee signifie le mode personnalise.
+    const stored = prefs.communityBadgeColor || "author";
+    const isCustom = stored !== "author" && stored !== "theme";
+    badgeColorMode.value = isCustom ? "custom" : stored;
+    if (badgeColorValue) {
+      badgeColorValue.hidden = !isCustom;
+      if (isCustom) badgeColorValue.value = stored;
+    }
   }
   if (communityBadgeToggle) {
     communityBadgeToggle.checked = prefs.communityBadge !== false;
@@ -1339,6 +1351,7 @@ async function updatePreferences(updates) {
     ...(result?.preferences || updates),
   };
   renderPreferences();
+  showFeedback(t("popup.settings.saved"));
 
   if ("liveNotifications" in updates) {
     const messageKey = updates.liveNotifications
@@ -1689,6 +1702,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (communityBadgeToggle) {
+      badgeColorMode?.addEventListener("change", (e) => {
+        const mode = e.target.value;
+        const custom = mode === "custom";
+        if (badgeColorValue) badgeColorValue.hidden = !custom;
+        updatePreferences({
+          communityBadgeColor: custom ? badgeColorValue?.value || "#9147ff" : mode,
+        });
+      });
+      // "change" et non "input" : le selecteur de couleur emet en continu
+      // pendant le glissement, ce qui declencherait un toast par pixel.
+      badgeColorValue?.addEventListener("change", (e) => {
+        updatePreferences({ communityBadgeColor: e.target.value });
+      });
+
       communityBadgeToggle.addEventListener("change", (e) => {
         updatePreferences({ communityBadge: e.target.checked });
       });

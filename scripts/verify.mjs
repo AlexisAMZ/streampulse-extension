@@ -254,6 +254,23 @@ if (!syntaxFails) pass(`${jsFiles.length} JS files parse cleanly`);
     } else {
       pass(`${defKeys.length} preferences survive sanitize(): none silently reset on write`);
     }
+
+    // Survivre a sanitize() ne suffit pas : le handler "updatePreferences"
+    // ne recopie que les cles qu'il liste. Une cle absente est silencieusement
+    // ignoree, et si c'est la seule envoyee, la mise a jour renvoie une erreur.
+    const handled = new Set(
+      [...bgSrc.matchAll(/"([A-Za-z0-9_]+)" in incomingUpdates/g)].map((m) => m[1])
+    );
+    const unwritable = defKeys.filter((k) => !handled.has(k));
+    if (!handled.size) {
+      warn("js/background.js: updatePreferences handler not parsed, write parity not checked");
+    } else if (unwritable.length) {
+      unwritable.forEach((k) =>
+        fail(`preference "${k}" is in DEFAULT_PREFERENCES but the updatePreferences handler ignores it: the toggle silently fails`)
+      );
+    } else {
+      pass(`${defKeys.length} preferences are accepted by the updatePreferences handler`);
+    }
   }
 }
 

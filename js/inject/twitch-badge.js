@@ -17,6 +17,9 @@
   var badgeHashes = new Set();
   var hashCache = new Map();
   var currentTwitchUser = null;
+
+  // "author" (couleur du pseudo), "theme" (blanc/noir), ou une couleur hexa.
+  var badgeColorMode = "author";
   var badgeIconUrl = (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getURL)
     ? chrome.runtime.getURL("images/photos/128px.png")
     : "";
@@ -234,18 +237,72 @@
 
   // ── Creation du badge ────────────────────────────────────────────────────
 
-  function createBadgeElement() {
+  function normalizeColorMode(value) {
+    if (value === "theme" || value === "author") return value;
+    if (typeof value === "string" && /^#[0-9a-fA-F]{6}$/.test(value.trim())) {
+      return value.trim().toLowerCase();
+    }
+    return "author";
+  }
+
+  /** Blanc sur le theme sombre de Twitch, noir sur le theme clair. */
+  function themeColor() {
+    var root = document.documentElement;
+    var dark = root.classList.contains("tw-root--theme-dark") ||
+      (document.body && document.body.classList.contains("dark-theme"));
+    return dark ? "#ffffff" : "#0e0e10";
+  }
+
+  /**
+   * Couleur du pseudo, telle que Twitch la pose sur l'element auteur. Un
+   * pseudo sans couleur, ou un tchat remplace par 7TV, retombe sur le theme :
+   * le badge ne doit jamais devenir invisible.
+   */
+  function authorColor(messageEl) {
+    try {
+      var el = messageEl.querySelector(
+        '[data-a-target="chat-message-username"], ' +
+        '.chat-author__display-name, ' +
+        '.seventv-chat-user-username, ' +
+        '[class*="chat-user"] span'
+      );
+      while (el) {
+        var inline = el.style && el.style.color;
+        if (inline) return inline;
+        var computed = getComputedStyle(el).color;
+        if (computed && computed !== "rgba(0, 0, 0, 0)") return computed;
+        el = el.parentElement;
+        if (el === messageEl) break;
+      }
+    } catch (_e) {}
+    return themeColor();
+  }
+
+  function resolveBadgeColor(messageEl) {
+    if (badgeColorMode === "author") return authorColor(messageEl);
+    if (badgeColorMode === "theme") return themeColor();
+    return badgeColorMode;
+  }
+
+  function createBadgeElement(messageEl) {
     var badge = document.createElement("span");
     badge.className = "sp-chat-badge";
     badge.setAttribute("title", "Utilisateur StreamPulse");
     badge.setAttribute("aria-label", "Utilisateur StreamPulse");
 
-    var img = document.createElement("img");
-    img.className = "sp-chat-badge-img";
-    img.src = badgeIconUrl;
-    img.alt = "StreamPulse";
+    // Le logo est un PNG monochrome applique en masque : il prend donc la
+    // couleur de fond, ce qu'une balise <img> ne permettrait pas.
+    var mark = document.createElement("span");
+    mark.className = "sp-chat-badge-img";
+    // Le masque est pose directement sur l'element : passe par une variable CSS
+    // consommee dans la feuille de style, une URL relative serait resolue par
+    // rapport a la feuille et non au document.
+    var mask = "url(" + badgeIconUrl + ")";
+    mark.style.setProperty("-webkit-mask-image", mask);
+    mark.style.setProperty("mask-image", mask);
+    mark.style.setProperty("--sp-badge-color", resolveBadgeColor(messageEl));
 
-    badge.appendChild(img);
+    badge.appendChild(mark);
     return badge;
   }
 
@@ -272,7 +329,7 @@
       '[data-a-target="chat-badges"]'
     );
     if (badgesContainer && !badgesContainer.querySelector(".sp-chat-badge")) {
-      badgesContainer.appendChild(createBadgeElement());
+      badgesContainer.appendChild(createBadgeElement(messageEl));
       return;
     }
 
@@ -283,7 +340,7 @@
       '[class*="chat-badge"]'
     );
     if (stvBadges && !stvBadges.querySelector(".sp-chat-badge")) {
-      stvBadges.appendChild(createBadgeElement());
+      stvBadges.appendChild(createBadgeElement(messageEl));
       return;
     }
 
@@ -295,7 +352,7 @@
       '[class*="chat-user"]'
     );
     if (usernameEl && usernameEl.parentNode && !usernameEl.parentNode.querySelector(".sp-chat-badge")) {
-      usernameEl.parentNode.insertBefore(createBadgeElement(), usernameEl);
+      usernameEl.parentNode.insertBefore(createBadgeElement(messageEl), usernameEl);
     }
   }
 
@@ -384,7 +441,8 @@
         return;
       }
 
-      console.log(LOG, "init", badgeIconUrl ? "icone OK" : "icone MANQUANTE");
+      badgeColorMode = normalizeColorMode(prefs.communityBadgeColor);
+      console.log(LOG, "init", badgeIconUrl ? "icone OK" : "icone MANQUANTE", "| couleur :", badgeColorMode);
       initBadges();
       setupChatObserver();
 

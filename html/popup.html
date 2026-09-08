@@ -411,6 +411,21 @@
           <input id="pref-community-badge" type="checkbox" />
         </label>
 
+      <div class="settings-row badge-color-row">
+        <div class="settings-text">
+          <span class="settings-title" data-i18n="popup.settings.badgeColorTitle">Couleur du badge</span>
+          <span class="settings-description" data-i18n="popup.settings.badgeColorDescription">Choisissez la teinte de l'icône affichée dans le tchat.</span>
+        </div>
+        <div class="badge-color-controls">
+          <select id="pref-badge-color-mode" class="watch-time-month-select">
+            <option value="author" data-i18n="popup.settings.badgeColorAuthor">Couleur du pseudo</option>
+            <option value="theme" data-i18n="popup.settings.badgeColorTheme">Selon le thème Twitch</option>
+            <option value="custom" data-i18n="popup.settings.badgeColorCustom">Couleur personnalisée</option>
+          </select>
+          <input id="pref-badge-color-value" class="badge-color-input" type="color" value="#9147ff" hidden />
+        </div>
+      </div>
+
         <div class="settings-text">
           <span class="settings-title" data-i18n="onboarding.chatFilterTitle">Filtre de chat (Anti-Spoiler)</span>
           <span class="settings-description" data-i18n="popup.settings.chatFilterDescription">Mots-clés à masquer (séparés par des virgules).</span>

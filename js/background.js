@@ -142,6 +142,9 @@ const DEFAULT_PREFERENCES = {
   previewsAnimations: true,
   zeventFeatures: true,
   communityBadge: true,
+  // "author" = couleur du pseudo, "theme" = blanc/noir selon Twitch,
+  // ou une couleur hexadecimale fixe.
+  communityBadgeColor: "author",
 };
 
 const DEFAULT_STATS = {
@@ -498,6 +501,18 @@ class DataStore {
   }
 }
 
+/**
+ * Couleur du badge communautaire : un mode connu, ou une couleur hexadecimale.
+ * Toute autre valeur retombe sur le defaut plutot que d'etre ecrite telle quelle.
+ */
+function sanitizeBadgeColor(value) {
+  if (value === "theme" || value === "author") return value;
+  if (typeof value === "string" && /^#[0-9a-fA-F]{6}$/.test(value.trim())) {
+    return value.trim().toLowerCase();
+  }
+  return DEFAULT_PREFERENCES.communityBadgeColor;
+}
+
 class PreferenceStore {
   static sanitize(preferences = {}) {
     const SORT_ORDER_VALUES = ["live", "name-asc", "name-desc", "custom"];
@@ -547,6 +562,7 @@ class PreferenceStore {
       previewsAnimations: preferences.previewsAnimations !== false,
       zeventFeatures: preferences.zeventFeatures !== false,
       communityBadge: preferences.communityBadge !== false,
+      communityBadgeColor: sanitizeBadgeColor(preferences.communityBadgeColor),
     };
   }
 
@@ -2656,6 +2672,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if ("previewsAnimations" in incomingUpdates) {
           updates.previewsAnimations =
             incomingUpdates.previewsAnimations !== false;
+        }
+        if ("zeventFeatures" in incomingUpdates) {
+          updates.zeventFeatures = incomingUpdates.zeventFeatures !== false;
+        }
+        if ("communityBadge" in incomingUpdates) {
+          updates.communityBadge = incomingUpdates.communityBadge !== false;
+        }
+        if ("communityBadgeColor" in incomingUpdates) {
+          updates.communityBadgeColor = sanitizeBadgeColor(
+            incomingUpdates.communityBadgeColor
+          );
         }
 
         if (Object.keys(updates).length === 0) {

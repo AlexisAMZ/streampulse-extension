@@ -11,17 +11,24 @@
   line-height: 1 !important;
 }
 
+/* Le logo est un PNG applique en masque : la couleur vient du fond, ce qui
+   permet de le teinter (couleur du pseudo, blanc/noir, ou couleur fixe).
+   Sans cela, le violet d'origine devient illisible sur le theme sombre. */
 .sp-chat-badge-img {
   width: 18px !important;
   height: 18px !important;
-  border-radius: 3px !important;
-  object-fit: contain !important;
   display: inline-block !important;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45));
-  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), filter 0.15s ease;
+  background-color: var(--sp-badge-color, currentColor) !important;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s ease;
 }
 
 .sp-chat-badge:hover .sp-chat-badge-img {
   transform: scale(1.15);
-  filter: drop-shadow(0 0 6px rgba(145, 71, 255, 0.85));
+  opacity: 0.85;
 }
