@@ -808,10 +808,13 @@ function updateZEventVisibility() {
         .forEach((c) => (c.hidden = false));
     }
   } else {
-    if (zeventGreetingLogo) zeventGreetingLogo.hidden = false;
+    // Le logo dans l'en-tete signale l'evenement en cours : il disparait des
+    // que le direct est termine. Seul le bandeau survit, pour porter le recap.
+    if (zeventGreetingLogo) zeventGreetingLogo.hidden = !isEnabled;
+
     chrome.storage.local.get("zeventBannerClosed", ({ zeventBannerClosed }) => {
       if (zeventBanner) zeventBanner.hidden = !!zeventBannerClosed;
-      zeventGreetingLogo?.classList.toggle("active", !zeventBannerClosed);
+      zeventGreetingLogo?.classList.toggle("active", isEnabled && !zeventBannerClosed);
     });
   }
 }
