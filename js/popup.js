@@ -1530,34 +1530,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     });
 
-    // ZEvent 2026 banner + header logo trigger
+    // Bandeau ZEvent. Sa visibilite appartient a updateZEventVisibility() seule :
+    // un second lecteur du storage le rouvrait en concurrence, y compris quand
+    // la fenetre de recapitulatif etait passee.
+    // La fermeture est definitive : rien ne le rouvre, le recap restant
+    // accessible depuis Reglages -> Temps de visionnage.
     const zeventBanner = document.getElementById("zevent-banner");
     const zeventClose = document.getElementById("zevent-banner-close");
-    const zeventGreetingLogo = document.getElementById("zevent-greeting-logo");
 
-    if (zeventBanner) {
-      chrome.storage.local.get("zeventBannerClosed", ({ zeventBannerClosed }) => {
-        const isClosed = !!zeventBannerClosed;
-        zeventBanner.hidden = isClosed;
-        zeventGreetingLogo?.classList.toggle("active", !isClosed);
-      });
-
-      zeventClose?.addEventListener("click", () => {
-        zeventBanner.hidden = true;
-        zeventGreetingLogo?.classList.remove("active");
-        chrome.storage.local.set({ zeventBannerClosed: true });
-      });
-
-      zeventGreetingLogo?.addEventListener("click", () => {
-        const willShow = zeventBanner.hidden;
-        zeventBanner.hidden = !willShow;
-        zeventGreetingLogo.classList.toggle("active", willShow);
-        chrome.storage.local.set({ zeventBannerClosed: !willShow });
-        if (willShow) {
-          zeventBanner.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }
-      });
-    }
+    zeventClose?.addEventListener("click", () => {
+      if (zeventBanner) zeventBanner.hidden = true;
+      chrome.storage.local.set({ zeventBannerClosed: true });
+    });
 
     // Log filter buttons
     document.getElementById("log-filter-group")?.addEventListener("click", (e) => {
