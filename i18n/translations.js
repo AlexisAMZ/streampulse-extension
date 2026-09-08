@@ -464,6 +464,15 @@ export const translations = {
     "inject": {
       "topbar": {
         "previews": "Previews au survol",
+        "thisChannel": "Cette chaîne",
+        "liveNow": "En direct",
+        "noneLive": "Personne en direct",
+        "watchedHere": "Regardé ici",
+        "follow": "Suivre",
+        "followed": "Suivi",
+        "autoClaim": "Points automatiques",
+        "fastForward": "Avance rapide",
+        "more": "+{{count}} autres",
         "tip": "Offrir un Bubble Tea",
         "settings": "Tous les réglages"
       },
@@ -917,6 +926,15 @@ export const translations = {
     "inject": {
       "topbar": {
         "previews": "Hover previews",
+        "thisChannel": "This channel",
+        "liveNow": "Live now",
+        "noneLive": "Nobody live right now",
+        "watchedHere": "Watched here",
+        "follow": "Follow",
+        "followed": "Followed",
+        "autoClaim": "Auto channel points",
+        "fastForward": "Fast forward",
+        "more": "+{{count}} more",
         "tip": "Offer a Bubble Tea",
         "settings": "All settings"
       },
@@ -1370,6 +1388,15 @@ export const translations = {
     "inject": {
       "topbar": {
         "previews": "Vistas previas",
+        "thisChannel": "Este canal",
+        "liveNow": "En directo",
+        "noneLive": "Nadie en directo",
+        "watchedHere": "Visto aquí",
+        "follow": "Seguir",
+        "followed": "Seguido",
+        "autoClaim": "Puntos automáticos",
+        "fastForward": "Avance rápido",
+        "more": "+{{count}} más",
         "tip": "Invitar a un Bubble Tea",
         "settings": "Ajustes"
       },
@@ -1823,6 +1850,15 @@ export const translations = {
     "inject": {
       "topbar": {
         "previews": "Prévias ao passar",
+        "thisChannel": "Este canal",
+        "liveNow": "Ao vivo",
+        "noneLive": "Ninguém ao vivo",
+        "watchedHere": "Assistido aqui",
+        "follow": "Seguir",
+        "followed": "Seguindo",
+        "autoClaim": "Pontos automáticos",
+        "fastForward": "Avanço rápido",
+        "more": "+{{count}} outros",
         "tip": "Pagar um Bubble Tea",
         "settings": "Configurações"
       },
@@ -2276,6 +2312,15 @@ export const translations = {
     "inject": {
       "topbar": {
         "previews": "Hover-Vorschau",
+        "thisChannel": "Dieser Kanal",
+        "liveNow": "Jetzt live",
+        "noneLive": "Niemand ist live",
+        "watchedHere": "Hier geschaut",
+        "follow": "Folgen",
+        "followed": "Verfolgt",
+        "autoClaim": "Automatische Punkte",
+        "fastForward": "Schnellvorlauf",
+        "more": "+{{count}} weitere",
         "tip": "Bieten Sie einen Bubble Tea an",
         "settings": "Alle Einstellungen"
       },
@@ -2729,6 +2774,15 @@ export const translations = {
     "inject": {
       "topbar": {
         "previews": "Anteprime al passaggio del mouse",
+        "thisChannel": "Questo canale",
+        "liveNow": "Ora in diretta",
+        "noneLive": "Nessuno in diretta",
+        "watchedHere": "Guardato qui",
+        "follow": "Segui",
+        "followed": "Seguito",
+        "autoClaim": "Punti automatici",
+        "fastForward": "Avanzamento rapido",
+        "more": "+{{count}} altri",
         "tip": "Offri un Bubble Tea",
         "settings": "Tutte le impostazioni"
       },
@@ -3182,6 +3236,15 @@ export const translations = {
     "inject": {
       "topbar": {
         "previews": "Najedź kursorem na podglądy",
+        "thisChannel": "Ten kanał",
+        "liveNow": "Na żywo",
+        "noneLive": "Nikt nie nadaje",
+        "watchedHere": "Oglądane tutaj",
+        "follow": "Obserwuj",
+        "followed": "Obserwowany",
+        "autoClaim": "Automatyczne punkty",
+        "fastForward": "Przewijanie",
+        "more": "+{{count}} więcej",
         "tip": "Zaoferuj herbatę bąbelkową",
         "settings": "Wszystkie ustawienia"
       },
@@ -3635,6 +3698,15 @@ export const translations = {
     "inject": {
       "topbar": {
         "previews": "Fareyle üzerine gelindiğinde görünen önizlemeler",
+        "thisChannel": "Bu kanal",
+        "liveNow": "Şu anda yayında",
+        "noneLive": "Kimse yayında değil",
+        "watchedHere": "Burada izlenen",
+        "follow": "Takip et",
+        "followed": "Takip ediliyor",
+        "autoClaim": "Otomatik puanlar",
+        "fastForward": "Hızlı ileri",
+        "more": "+{{count}} daha",
         "tip": "Bir Bubble Tea ikram edin",
         "settings": "Tüm ayarlar"
       },
@@ -4088,6 +4160,15 @@ export const translations = {
     "inject": {
       "topbar": {
         "previews": "Предварительный просмотр при наведении курсора",
+        "thisChannel": "Этот канал",
+        "liveNow": "В эфире",
+        "noneLive": "Никого нет в эфире",
+        "watchedHere": "Просмотрено здесь",
+        "follow": "Отслеживать",
+        "followed": "Отслеживается",
+        "autoClaim": "Автоочки канала",
+        "fastForward": "Перемотка",
+        "more": "+{{count}} ещё",
         "tip": "Предложите чай с пузырьками",
         "settings": "Все настройки"
       },
@@ -4541,6 +4622,15 @@ export const translations = {
     "inject": {
       "topbar": {
         "previews": "ホバー時のプレビュー",
+        "thisChannel": "このチャンネル",
+        "liveNow": "配信中",
+        "noneLive": "配信中の人はいません",
+        "watchedHere": "ここでの視聴",
+        "follow": "フォロー",
+        "followed": "フォロー中",
+        "autoClaim": "ポイント自動取得",
+        "fastForward": "早送り",
+        "more": "他 {{count}} 件",
         "tip": "バブルティーを振る舞う",
         "settings": "すべての設定"
       },
@@ -4994,6 +5084,15 @@ export const translations = {
     "inject": {
       "topbar": {
         "previews": "마우스 오버 시 미리보기",
+        "thisChannel": "이 채널",
+        "liveNow": "방송 중",
+        "noneLive": "방송 중인 사람이 없습니다",
+        "watchedHere": "여기서 시청",
+        "follow": "팔로우",
+        "followed": "팔로우 중",
+        "autoClaim": "자동 채널 포인트",
+        "fastForward": "빨리 감기",
+        "more": "외 {{count}}명",
         "tip": "버블티 한 잔 대접하기",
         "settings": "모든 설정"
       },
@@ -5447,6 +5546,15 @@ export const translations = {
     "inject": {
       "topbar": {
         "previews": "Pratinjau saat mengarahkan kursor",
+        "thisChannel": "Kanal ini",
+        "liveNow": "Sedang live",
+        "noneLive": "Tidak ada yang live",
+        "watchedHere": "Ditonton di sini",
+        "follow": "Ikuti",
+        "followed": "Diikuti",
+        "autoClaim": "Poin otomatis",
+        "fastForward": "Maju cepat",
+        "more": "+{{count}} lainnya",
         "tip": "Menawarkan Bubble Tea",
         "settings": "Semua pengaturan"
       },
@@ -5900,6 +6008,15 @@ export const translations = {
     "inject": {
       "topbar": {
         "previews": "Voorbeelden bij aanwijzen",
+        "thisChannel": "Dit kanaal",
+        "liveNow": "Nu live",
+        "noneLive": "Niemand is live",
+        "watchedHere": "Hier gekeken",
+        "follow": "Volgen",
+        "followed": "Gevolgd",
+        "autoClaim": "Automatische punten",
+        "fastForward": "Snel vooruit",
+        "more": "+{{count}} meer",
         "tip": "Bied een bubble tea aan",
         "settings": "Alle instellingen"
       },
@@ -6353,6 +6470,15 @@ export const translations = {
     "inject": {
       "topbar": {
         "previews": "Hover previews",
+        "thisChannel": "यह चैनल",
+        "liveNow": "अभी लाइव",
+        "noneLive": "कोई लाइव नहीं",
+        "watchedHere": "यहाँ देखा गया",
+        "follow": "फ़ॉलो करें",
+        "followed": "फ़ॉलो किया",
+        "autoClaim": "स्वतः चैनल पॉइंट",
+        "fastForward": "फास्ट फॉरवर्ड",
+        "more": "+{{count}} और",
         "tip": "Offer a Bubble Tea",
         "settings": "All settings"
       },
@@ -6806,6 +6932,15 @@ export const translations = {
     "inject": {
       "topbar": {
         "previews": "Förhandsvisning vid muspekning",
+        "thisChannel": "Den här kanalen",
+        "liveNow": "Sänder nu",
+        "noneLive": "Ingen sänder nu",
+        "watchedHere": "Tittat här",
+        "follow": "Följ",
+        "followed": "Följd",
+        "autoClaim": "Automatiska poäng",
+        "fastForward": "Snabbspolning",
+        "more": "+{{count}} till",
         "tip": "Bjud på ett bubbelte",
         "settings": "Alla inställningar"
       },
@@ -7259,6 +7394,15 @@ export const translations = {
     "inject": {
       "topbar": {
         "previews": "Náhledy při najetí myší",
+        "thisChannel": "Tento kanál",
+        "liveNow": "Právě živě",
+        "noneLive": "Nikdo nevysílá",
+        "watchedHere": "Sledováno zde",
+        "follow": "Sledovat",
+        "followed": "Sledováno",
+        "autoClaim": "Automatické body",
+        "fastForward": "Rychlé přetáčení",
+        "more": "+{{count}} dalších",
         "tip": "Nabídněte bubble tea",
         "settings": "Všechna nastavení"
       },

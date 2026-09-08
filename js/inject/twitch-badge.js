@@ -2,6 +2,22 @@
   "use strict";
 
   var LOG = "[SP-Badge]";
+
+  // Journalisation de debogage, muette par defaut. Activer dans la console de
+  // l'onglet Twitch avec localStorage.setItem("SP_DEBUG", "1"), comme
+  // quickFollow.js. Sans cela le badge imprimait a chaque balayage du tchat,
+  // dans la console de tous les utilisateurs.
+  var DEBUG = false;
+  try {
+    DEBUG = localStorage.getItem("SP_DEBUG") === "1";
+  } catch (_e) {}
+
+  function log() {
+    if (!DEBUG) return;
+    try {
+      console.log.apply(console, [LOG].concat(Array.prototype.slice.call(arguments)));
+    } catch (_e) {}
+  }
   var API_URL = "https://alexisamz.fr/api/streampulse-badges";
   var STORAGE_KEY = "streampulseBadgeHashes";
   var LEGACY_STORAGE_KEY = "streampulseBadgeUsers"; // pseudos en clair, a purger
@@ -91,7 +107,7 @@
     hashLogin(username).then(function (hash) {
       if (!hash) return;
       badgeHashes.add(hash);
-      console.log(LOG, "utilisateur detecte, empreinte enregistree");
+      log("utilisateur detecte, empreinte enregistree");
 
       try {
         chrome.storage.local.get([STORAGE_KEY, "lastBadgeSync"], function (res) {
@@ -111,9 +127,9 @@
             }).then(function (response) {
               if (!response.ok) throw new Error("HTTP " + response.status);
               chrome.storage.local.set({ lastBadgeSync: now });
-              console.log(LOG, "sync API OK");
+              log("sync API OK");
             }).catch(function (e) {
-              console.log(LOG, "sync API echouee :", e.message);
+              log("sync API echouee :", e.message);
             });
           }
         });
@@ -137,7 +153,7 @@
             if (/^[a-f0-9]{12}$/.test(hash)) badgeHashes.add(hash);
           }
           chrome.storage.local.set({ [STORAGE_KEY]: Array.from(badgeHashes) });
-          console.log(LOG, badgeHashes.size, "empreintes chargees");
+          log(badgeHashes.size, "empreintes chargees");
           rescanVisibleMessages();
         })
         .catch(function () {});
@@ -176,7 +192,7 @@
         if (currentTwitchUser) {
           registerCurrentUser(currentTwitchUser);
         } else {
-          console.log(LOG, "pseudo non detecte, nouvelle tentative dans 5s");
+          log("pseudo non detecte, nouvelle tentative dans 5s");
         }
         fetchRemoteBadges();
       });
@@ -412,11 +428,11 @@
         chatObserver.disconnect();
         chatObserver.observe(chatContainer, { childList: true, subtree: true });
         currentContainer = chatContainer;
-        console.log(LOG, "observe sur", chatContainer.className || chatContainer.tagName);
+        log("observe sur", chatContainer.className || chatContainer.tagName);
 
         // Traiter les messages deja presents
         var existing = chatContainer.querySelectorAll(MESSAGE_SELECTORS);
-        console.log(LOG, existing.length, "messages existants a traiter");
+        log(existing.length, "messages existants a traiter");
         for (var e = 0; e < existing.length; e++) {
           processMessageLine(existing[e]);
         }
@@ -437,12 +453,12 @@
     chrome.storage.local.get("betaGeneralPreferences", function (res) {
       var prefs = (res && res.betaGeneralPreferences) || {};
       if (prefs.communityBadge === false) {
-        console.log(LOG, "desactive par l utilisateur");
+        log("desactive par l utilisateur");
         return;
       }
 
       badgeColorMode = normalizeColorMode(prefs.communityBadgeColor);
-      console.log(LOG, "init", badgeIconUrl ? "icone OK" : "icone MANQUANTE", "| couleur :", badgeColorMode);
+      log("init", badgeIconUrl ? "icone OK" : "icone MANQUANTE", "| couleur :", badgeColorMode);
       initBadges();
       setupChatObserver();
 
