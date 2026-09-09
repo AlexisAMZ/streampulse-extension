@@ -1,6 +1,6 @@
 <h1 align="center">
-  <img src="https://www.streampulse.fr/assets/icons/icon128.png" alt="StreamPulse Icon" width="128"><br>
-  StreamPulse — Twitch & Kick Chrome Extension
+  <img src="images/photos/128px.png" alt="StreamPulse" width="128"><br>
+  StreamPulse: Twitch & Kick Chrome Extension
 </h1>
 
 <h4 align="center">The ultimate viewer extension to automate Channel Points, Drops, and Live Notifications.</h4>
