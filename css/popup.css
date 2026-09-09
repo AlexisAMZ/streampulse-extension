@@ -138,10 +138,56 @@ body > * { position: relative; z-index: 1; }
 
 /* ── Views Layout ── */
 #streamers-view {
+  position: relative;
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+/* Avatar Twitch de l'utilisateur en filigrane sur l'entete : bloc Points /
+   Temps et ligne de filtres, qui vivent dans deux conteneurs distincts. D'ou
+   un calque unique ancre en haut a droite de la vue plutot qu'un fond sur
+   chaque rangee. --stats-avatar et --stats-photo-height sont poses par
+   applyStatsAvatar() ; sans profil connu le calque reste vide. */
+#streamers-view::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 220px;
+  /* Largeur derivee de la hauteur : la photo etant carree et dimensionnee en
+     pourcentage de la hauteur, elle occupe alors toujours la meme fraction du
+     calque, et les paliers du masque restent cales sur ses bords quelle que
+     soit la hauteur mesuree. */
+  width: calc(var(--stats-photo-height, 0px) * 2.6);
+  height: var(--stats-photo-height, 0px);
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--stats-avatar, none);
+  /* no-repeat est obligatoire des lors que la photo ne remplit plus la boite. */
+  background-size: auto 160%;
+  background-repeat: no-repeat;
+  background-position: center 40%;
+  opacity: 0.25;
+  /* Fondu sur les quatre cotes. Les paliers sont cales a l'interieur de la
+     photo, pas sur la boite : depuis qu'elle est dezoomee elle ne remplit
+     plus le calque, et un fondu plus large laissait voir ses bords francs. */
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent 19%, #000 38%, #000 62%, transparent 81%),
+    linear-gradient(to bottom, transparent 0%, #000 14%, #000 55%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(90deg, transparent 19%, #000 38%, #000 62%, transparent 81%),
+    linear-gradient(to bottom, transparent 0%, #000 14%, #000 55%, transparent 100%);
+  mask-composite: intersect;
+}
+[data-theme="light"] #streamers-view::before { opacity: 0.16; }
+
+/* Le contenu de l'entete repasse au-dessus du filigrane */
+.greeting-bar,
+.streamers-scroll-area {
+  position: relative;
+  z-index: 1;
 }
 
 #settings-section {
@@ -635,6 +681,36 @@ body > * { position: relative; z-index: 1; }
   opacity: 0.35;
 }
 
+/* ── Infobulle des boutons de carte ────────────────────────────
+   Posee par setCardTooltip() dans ui.js, qui retire le title natif. */
+.card-actions-buttons button { position: relative; }
+.card-actions-buttons button[data-tooltip]::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) translateY(3px);
+  padding: 4px 7px;
+  border-radius: var(--radius-xs);
+  background: var(--tooltip-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-medium);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 5;
+  transition: opacity 0.12s ease, transform 0.12s ease;
+}
+.card-actions-buttons button[data-tooltip]:hover::before,
+.card-actions-buttons button[data-tooltip]:focus-visible::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 /* ── Streamer list (2-col: live cards span 2 rows, offline chips stack beside) ── */
 .streamer-list {
   display: grid;
@@ -727,15 +803,16 @@ body > * { position: relative; z-index: 1; }
   min-height: 0;
 }
 .streamer-card.offline .card-actions-buttons { gap: 3px; }
-.streamer-card.offline .notification-button,
-.streamer-card.offline .game-notification-button,
-.streamer-card.offline .open-button,
-.streamer-card.offline .remove-button {
+.streamer-card.offline .card-actions-buttons button {
   width: 24px;
   height: 24px;
-  border-radius: 5px;
+  border-radius: 6px;
 }
-.streamer-card.offline .open-button {
+.streamer-card.offline .card-actions-buttons button svg {
+  width: 12px;
+  height: 12px;
+}
+.streamer-card.offline .card-actions-buttons .open-button {
   width: auto;
   padding: 0 8px;
   font-size: 10px;
@@ -1116,14 +1193,13 @@ body > * { position: relative; z-index: 1; }
   gap: 4px;
   align-items: center;
 }
-.notification-button,
-.game-notification-button,
-.open-button,
-.remove-button {
+/* Le selecteur porte sur le conteneur, pas sur la liste des classes : c'est
+   cette enumeration qui laissait tout nouveau bouton sans aucun style. */
+.card-actions-buttons button {
   width: 28px;
   height: 28px;
   padding: 0;
-  border-radius: 7px;
+  border-radius: 8px;
   background: var(--bg-elev);
   border: 1px solid var(--border-subtle);
   color: var(--text-muted);
@@ -1131,13 +1207,30 @@ body > * { position: relative; z-index: 1; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s;
+  flex: 0 0 auto;
+  transition: background 0.15s var(--ease-out), border-color 0.15s var(--ease-out),
+    color 0.15s var(--ease-out), transform 0.12s var(--ease-out);
 }
-.notification-button:hover,
-.game-notification-button:hover,
-.open-button:hover {
+.card-actions-buttons button svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+}
+.card-actions-buttons button:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.09);
+  border-color: var(--border-medium);
+}
+.card-actions-buttons button:active { transform: scale(0.92); }
+[data-theme="light"] .card-actions-buttons button:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Un bouton d'alerte eteint : icone barree, contraste volontairement bas. */
+.card-actions-buttons .notification-button:not(.active),
+.card-actions-buttons .game-notification-button:not(.active),
+.card-actions-buttons .title-notification-button:not(.active) {
+  color: var(--text-faint);
 }
 /* Destructive action: it used to share the neutral hover above, which gave
    "delete" the same affordance as "open". Hovering now turns it red so the
@@ -1292,14 +1385,20 @@ body > * { position: relative; z-index: 1; }
     transform: none;
   }
 }
-.notification-button.active,
-.game-notification-button.active {
+.card-actions-buttons .notification-button.active,
+.card-actions-buttons .game-notification-button.active,
+.card-actions-buttons .title-notification-button.active {
   background: var(--accent-soft);
   border-color: var(--accent-border);
-  color: var(--text-primary);
+  color: #c9a8ff;
+}
+[data-theme="light"] .card-actions-buttons .notification-button.active,
+[data-theme="light"] .card-actions-buttons .game-notification-button.active,
+[data-theme="light"] .card-actions-buttons .title-notification-button.active {
+  color: var(--accent);
 }
 
-.open-button {
+.card-actions-buttons .open-button {
   width: auto;
   padding: 0 14px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.06));
@@ -1311,7 +1410,7 @@ body > * { position: relative; z-index: 1; }
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 1px 2px rgba(0, 0, 0, 0.3);
   gap: 5px;
 }
-.open-button::after {
+.card-actions-buttons .open-button::after {
   content: "↗";
   opacity: 0.5;
   font-size: 9px;

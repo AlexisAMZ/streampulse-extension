@@ -1,5 +1,12 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { translate } from "@vitalets/google-translate-api";
+import {
+  auditTranslations,
+  protectText,
+  restoreText,
+  restorationIsIntact,
+  LANG_CODE_KEYS,
+} from "./lib/i18n-audit.mjs";
 
 const FILE = new URL("../i18n/translations.js", import.meta.url);
 
@@ -30,6 +37,8 @@ async function run() {
 
   console.log(`Found ${enKeys.length} strings to translate.`);
 
+  const losses = [];
+
   for (const lang of targetLangs) {
     console.log(`\nTranslating to ${lang}...`);
     
@@ -56,27 +65,39 @@ async function run() {
     
     for (let i = 0; i < batches.length; i++) {
       const batch = batches[i];
-      const textToTranslate = batch.map(b => b.text).join(delimiter);
-      
+      // Chaque chaine part masquee : {{placeholders}} et noms de marque sont
+      // remplaces par des jetons opaques, sinon le traducteur les traduit.
+      const masked = batch.map((b) => protectText(b.text));
+      const textToTranslate = masked.map((m) => m.masked).join(delimiter);
+
+      const commit = (index, translated) => {
+        const source = batch[index].text;
+        const restored = restoreText(translated, masked[index].tokens);
+        // Un jeton perdu en route donnerait une phrase amputee en production.
+        // Mieux vaut garder l'anglais, visible et signale, qu'un texte casse.
+        if (!restorationIsIntact(source, restored)) {
+          losses.push(`${lang} ${batch[index].key}`);
+          return;
+        }
+        const keyParts = batch[index].key.split(".");
+        let obj = translatedObj;
+        for (let k = 0; k < keyParts.length - 1; k++) obj = obj[keyParts[k]];
+        obj[keyParts[keyParts.length - 1]] = restored;
+      };
+
       try {
         const res = await translate(textToTranslate, { to: lang });
         const translatedTexts = res.text.split(delimiter).map(s => s.trim());
-        
+
         if (translatedTexts.length !== batch.length) {
           console.warn(`Batch ${i+1}: Mismatch in returned array length! Fallback to individual requests`);
           for (let j = 0; j < batch.length; j++) {
-            const indRes = await translate(batch[j].text, { to: lang });
-            const keyParts = batch[j].key.split(".");
-            let obj = translatedObj;
-            for (let k = 0; k < keyParts.length - 1; k++) obj = obj[keyParts[k]];
-            obj[keyParts[keyParts.length - 1]] = indRes.text;
+            const indRes = await translate(masked[j].masked, { to: lang });
+            commit(j, indRes.text);
           }
         } else {
           for (let j = 0; j < batch.length; j++) {
-            const keyParts = batch[j].key.split(".");
-            let obj = translatedObj;
-            for (let k = 0; k < keyParts.length - 1; k++) obj = obj[keyParts[k]];
-            obj[keyParts[keyParts.length - 1]] = translatedTexts[j];
+            commit(j, translatedTexts[j]);
           }
         }
       } catch (err) {
@@ -86,14 +107,20 @@ async function run() {
       await new Promise(r => setTimeout(r, 1000));
     }
     
-    translatedObj.onboarding.htmlLang = lang;
+    // Il y a deux htmlLang, sous onboarding et sous popup. Seul le premier
+    // etait remis : <html lang> valait « In » en allemand, « в » en russe.
+    for (const dotted of LANG_CODE_KEYS) {
+      const parts = dotted.split(".");
+      let node = translatedObj;
+      for (let i = 0; i < parts.length - 1; i++) node = node?.[parts[i]];
+      if (node) node[parts[parts.length - 1]] = lang;
+    }
     
     const replacer = (obj) => {
         for(const k in obj) {
             if(typeof obj[k] === 'string') {
                 obj[k] = obj[k].replace('streampulse.fr/en/support', `streampulse.fr/${lang}/support`);
                 obj[k] = obj[k].replace('streampulse.fr/support', `streampulse.fr/${lang}/support`);
-                obj[k] = obj[k].replace('{{handle}}', '{{handle}}');
             } else if (typeof obj[k] === 'object') {
                 replacer(obj[k]);
             }
@@ -104,6 +131,23 @@ async function run() {
     translations[lang] = translatedObj;
   }
   
+  if (losses.length) {
+    console.warn(`\n${losses.length} string(s) kept in English, a token was lost in translation:`);
+    for (const l of losses.slice(0, 20)) console.warn(`  ${l}`);
+    if (losses.length > 20) console.warn(`  ... and ${losses.length - 20} more`);
+  }
+
+  // Dernier verrou : on n'ecrit pas un fichier qui casserait la production.
+  const problems = auditTranslations(translations);
+  if (problems.length) {
+    console.error(`\nAudit failed, translations.js NOT written. ${problems.length} problem(s):`);
+    for (const p of problems.slice(0, 30)) console.error(`  ${p}`);
+    if (problems.length > 30) console.error(`  ... and ${problems.length - 30} more`);
+    process.exitCode = 1;
+    return;
+  }
+  console.log("Audit passed: placeholders, brand names and language codes are intact.");
+
   console.log("Writing translations.js...");
   
   const newAllLangs = `export const ALL_LANGUAGES = [

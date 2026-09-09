@@ -58,6 +58,7 @@ const refreshButton = document.getElementById("refresh-button");
 const template = document.getElementById("streamer-item-template");
 const liveNotificationsToggle = document.getElementById("pref-live-notifications");
 const gameAlertsToggle = document.getElementById("pref-game-alerts");
+const titleAlertsToggle = document.getElementById("pref-title-alerts");
 const soundsToggle = document.getElementById("pref-sounds");
 const autoClaimToggle = document.getElementById("pref-auto-claim");
 const autoClaimDropsToggle = document.getElementById("pref-auto-claim-drops");
@@ -556,6 +557,26 @@ function renderStreamers() {
         return true;
       }
     },
+    onToggleTitleNotify: async (id, enabled) => {
+      const result = await sendMessage({
+        type: "toggleTitleNotifications",
+        id,
+        enabled,
+      });
+
+      if (result?.error) {
+        showFeedback(result.error, "error");
+        return false;
+      }
+      const s = state.streamers.find((x) => x.id === id);
+      const messageKey = enabled ? "popup.toast.titleNotifyEnabled" : "popup.toast.titleNotifyDisabled";
+      if (s) {
+        const platformId = s.platform || DEFAULT_PLATFORM;
+        const name = s.displayName || formatHandleForDisplay(platformId, s.handle || s.twitch);
+        showFeedback(t(messageKey, { name }), "success");
+      }
+      return true;
+    },
     onOpen: (url) => {
       chrome.tabs.create({ url }, () => window.close());
     },
@@ -625,6 +646,7 @@ function renderStreamers() {
 
   initDragAndDrop();
   observeLazyIframes();
+  syncStatsAvatarHeight();
 }
 
 function renderGreeting() {
@@ -640,6 +662,51 @@ function renderGreeting() {
   sub.className = "greeting-sub";
   sub.textContent = greetingSub;
   greetingTitleEl.replaceChildren(line1, br, sub);
+  applyStatsAvatar();
+}
+
+/**
+ * Pose l'avatar Twitch de l'utilisateur en filigrane derriere la ligne
+ * Points / Watch time. L'URL vient de l'API Twitch via l'onboarding, mais elle
+ * transite par chrome.storage : on la revalide avant de l'injecter dans une
+ * propriete CSS, une url() n'etant pas un contexte sur.
+ */
+function applyStatsAvatar() {
+  const view = document.getElementById("streamers-view");
+  if (!view) return;
+  const url = safeAvatarUrl(state.userProfile?.avatarUrl);
+  if (!url) {
+    view.style.removeProperty("--stats-avatar");
+    return;
+  }
+  view.style.setProperty("--stats-avatar", `url("${url}")`);
+  syncStatsAvatarHeight();
+}
+
+/**
+ * Hauteur du filigrane : du haut de la vue jusqu'au bas de la ligne de filtres.
+ * Elle est mesuree et non figee, parce qu'elle bouge avec la longueur des
+ * textes traduits et avec la banniere d'evenement, qui s'intercale entre les
+ * deux rangees quand elle est visible.
+ */
+function syncStatsAvatarHeight() {
+  const view = document.getElementById("streamers-view");
+  const lastRow = view?.querySelector(".section-row");
+  if (!view || !lastRow) return;
+  const height = lastRow.getBoundingClientRect().bottom - view.getBoundingClientRect().top;
+  if (height > 0) view.style.setProperty("--stats-photo-height", `${Math.round(height)}px`);
+}
+
+/** Renvoie l'URL si c'est bien du https, sinon une chaine vide. */
+function safeAvatarUrl(raw) {
+  if (typeof raw !== "string" || !raw) return "";
+  try {
+    const parsed = new URL(raw);
+    // new URL() normalise et encode les guillemets : sortie sure dans une url().
+    return parsed.protocol === "https:" ? parsed.href : "";
+  } catch {
+    return "";
+  }
 }
 
 async function handleSavePseudo() {
@@ -673,6 +740,9 @@ function renderPreferences() {
   }
   if (gameAlertsToggle) {
     gameAlertsToggle.checked = Boolean(prefs.gameNotifications);
+  }
+  if (titleAlertsToggle) {
+    titleAlertsToggle.checked = Boolean(prefs.titleNotifications);
   }
   if (soundsToggle) {
     soundsToggle.checked = prefs.soundsEnabled !== false;
@@ -1608,6 +1678,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     gameAlertsToggle?.addEventListener("change", (e) => {
       updatePreferences({ gameNotifications: e.target.checked });
+    });
+    titleAlertsToggle?.addEventListener("change", (e) => {
+      updatePreferences({ titleNotifications: e.target.checked });
     });
     soundsToggle?.addEventListener("change", (e) => {
       updatePreferences({ soundsEnabled: e.target.checked });

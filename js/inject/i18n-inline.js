@@ -228,8 +228,8 @@
       "add": "Aggiungi a StreamPulse",
       "tracked": "Tracciato",
       "remove": "Rimuovi da StreamPulse",
-      "added": "{{nome}} aggiunto a StreamPulse",
-      "removed": "{{nome}} rimosso da StreamPulse",
+      "added": "{{name}} aggiunto a StreamPulse",
+      "removed": "{{name}} rimosso da StreamPulse",
       "error": "Azione fallita. Riprova."
     },
     "player": {

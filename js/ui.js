@@ -210,12 +210,18 @@ export function formatNumber(value) {
 
 function buildIdentityMeta(streamer, status) {
   const parts = [];
-  const platformLabel = getPlatformLabel(streamer.platform || DEFAULT_PLATFORM);
-  if (status?.supportsLiveStatus !== false && status?.game && !status.isLive) {
+  const supportsLiveStatus = status?.supportsLiveStatus !== false;
+  if (supportsLiveStatus && status?.game && !status.isLive) {
     parts.push(status.game);
   }
-  if (platformLabel) {
-    parts.push(platformLabel);
+  // La pastille de statut nomme deja la plateforme (« En live · Twitch »),
+  // sauf sur les cartes hors ligne ou le CSS la masque. On ne redonne le nom
+  // que dans ce cas, sinon il apparait deux fois sur la meme carte.
+  if (supportsLiveStatus && !status?.isLive) {
+    const platformLabel = getPlatformLabel(streamer.platform || DEFAULT_PLATFORM);
+    if (platformLabel) {
+      parts.push(platformLabel);
+    }
   }
   return parts.filter(Boolean).join(" • ");
 }
@@ -322,50 +328,59 @@ function renderSocialLinks(streamer, container) {
 }
 
 
-function bindCardActions(notificationButton, gameNotificationButton, openButton, removeButton, streamer, platformId, displayLabel, callbacks) {
-  if (notificationButton) {
-    notificationButton.addEventListener("click", async () => {
-      const currentlyEnabled = notificationButton.classList.contains("active");
-      const newState = !currentlyEnabled;
+/**
+ * Etat visuel d'un bouton d'alerte : classe active et bascule des deux icones,
+ * la normale et la barree. Les trois boutons d'alerte d'une carte partagent
+ * exactement ce comportement.
+ */
+/**
+ * Infobulle au survol d'un bouton de carte. Le libelle passe du title natif
+ * vers data-tooltip : la bulle du systeme met une seconde a sortir et ignore
+ * le theme. Le aria-label garde l'intitule pour les lecteurs d'ecran.
+ *
+ * C'est aussi ce qui les traduit : applyTranslations() balaie le document, or
+ * le contenu d'un <template> n'est pas atteint par querySelectorAll, donc les
+ * title poses dans le gabarit restaient en francais dans toutes les langues.
+ */
+function setCardTooltip(button, key) {
+  if (!button) return;
+  const label = t(key);
+  if (!label || label === key) return;
+  button.dataset.tooltip = label;
+  button.setAttribute("aria-label", label);
+  button.removeAttribute("title");
+}
 
-      const success = await callbacks.onToggleNotify(streamer.id, newState);
-      if (success) {
-         const bellIcon = notificationButton.querySelector(".bell-icon");
-         const bellOffIcon = notificationButton.querySelector(".bell-off-icon");
-         if (newState) {
-           notificationButton.classList.add("active");
-           if (bellIcon) bellIcon.style.display = "";
-           if (bellOffIcon) bellOffIcon.style.display = "none";
-         } else {
-           notificationButton.classList.remove("active");
-           if (bellIcon) bellIcon.style.display = "none";
-           if (bellOffIcon) bellOffIcon.style.display = "";
-         }
-      }
-    });
-  }
+function setAlertButtonState(button, onSelector, offSelector, enabled) {
+  if (!button) return;
+  const onIcon = button.querySelector(onSelector);
+  const offIcon = button.querySelector(offSelector);
+  button.classList.toggle("active", enabled);
+  if (onIcon) onIcon.style.display = enabled ? "" : "none";
+  if (offIcon) offIcon.style.display = enabled ? "none" : "";
+}
 
-  if (gameNotificationButton) {
-    gameNotificationButton.addEventListener("click", async () => {
-      const currentlyEnabled = gameNotificationButton.classList.contains("active");
-      const newState = !currentlyEnabled;
+/** Branche un bouton d'alerte : l'etat ne change que si le fond a bien repondu. */
+function bindAlertButton(button, onSelector, offSelector, toggle) {
+  if (!button) return;
+  button.addEventListener("click", async () => {
+    const nextState = !button.classList.contains("active");
+    const success = await toggle(nextState);
+    if (success) {
+      setAlertButtonState(button, onSelector, offSelector, nextState);
+    }
+  });
+}
 
-      const success = await callbacks.onToggleGameNotify(streamer.id, newState);
-      if (success) {
-         const gamepadIcon = gameNotificationButton.querySelector(".gamepad-icon");
-         const gamepadOffIcon = gameNotificationButton.querySelector(".gamepad-off-icon");
-         if (newState) {
-           gameNotificationButton.classList.add("active");
-           if (gamepadIcon) gamepadIcon.style.display = "";
-           if (gamepadOffIcon) gamepadOffIcon.style.display = "none";
-         } else {
-           gameNotificationButton.classList.remove("active");
-           if (gamepadIcon) gamepadIcon.style.display = "none";
-           if (gamepadOffIcon) gamepadOffIcon.style.display = "";
-         }
-      }
-    });
-  }
+function bindCardActions(buttons, streamer, platformId, displayLabel, callbacks) {
+  const { notificationButton, gameNotificationButton, titleNotificationButton, openButton, removeButton } = buttons;
+
+  bindAlertButton(notificationButton, ".bell-icon", ".bell-off-icon", (next) =>
+    callbacks.onToggleNotify(streamer.id, next));
+  bindAlertButton(gameNotificationButton, ".gamepad-icon", ".gamepad-off-icon", (next) =>
+    callbacks.onToggleGameNotify(streamer.id, next));
+  bindAlertButton(titleNotificationButton, ".title-icon", ".title-off-icon", (next) =>
+    callbacks.onToggleTitleNotify(streamer.id, next));
 
   if (openButton) {
     openButton.addEventListener("click", () => {
@@ -452,6 +467,7 @@ export function createStreamerCard(streamer, status, template, callbacks) {
   const statusPill = fragment.querySelector(".status-pill");
   const notificationButton = fragment.querySelector(".notification-button");
   const gameNotificationButton = fragment.querySelector(".game-notification-button");
+  const titleNotificationButton = fragment.querySelector(".title-notification-button");
   const openButton = fragment.querySelector(".open-button");
   const removeButton = fragment.querySelector(".remove-button");
   const cardPreview = fragment.querySelector(".card-preview");
@@ -505,35 +521,18 @@ export function createStreamerCard(streamer, status, template, callbacks) {
     this.src = fallbackAvatar || "../images/photos/48px.png";
   };
 
-  const isNotifEnabled = streamer.notificationsEnabled !== false;
-  if (notificationButton) {
-    const bellIcon = notificationButton.querySelector(".bell-icon");
-    const bellOffIcon = notificationButton.querySelector(".bell-off-icon");
-    if (isNotifEnabled) {
-      notificationButton.classList.add("active");
-      if (bellIcon) bellIcon.style.display = "";
-      if (bellOffIcon) bellOffIcon.style.display = "none";
-    } else {
-      notificationButton.classList.remove("active");
-      if (bellIcon) bellIcon.style.display = "none";
-      if (bellOffIcon) bellOffIcon.style.display = "";
-    }
-  }
+  setCardTooltip(notificationButton, "popup.card.notificationsToggle");
+  setCardTooltip(gameNotificationButton, "popup.card.gameNotificationsToggle");
+  setCardTooltip(titleNotificationButton, "popup.card.titleNotificationsToggle");
+  setCardTooltip(openButton, "popup.card.open");
+  setCardTooltip(removeButton, "popup.card.remove");
 
-  const isGameNotifEnabled = streamer.gameNotificationsEnabled !== false;
-  if (gameNotificationButton) {
-    const gamepadIcon = gameNotificationButton.querySelector(".gamepad-icon");
-    const gamepadOffIcon = gameNotificationButton.querySelector(".gamepad-off-icon");
-    if (isGameNotifEnabled) {
-      gameNotificationButton.classList.add("active");
-      if (gamepadIcon) gamepadIcon.style.display = "";
-      if (gamepadOffIcon) gamepadOffIcon.style.display = "none";
-    } else {
-      gameNotificationButton.classList.remove("active");
-      if (gamepadIcon) gamepadIcon.style.display = "none";
-      if (gamepadOffIcon) gamepadOffIcon.style.display = "";
-    }
-  }
+  setAlertButtonState(notificationButton, ".bell-icon", ".bell-off-icon",
+    streamer.notificationsEnabled !== false);
+  setAlertButtonState(gameNotificationButton, ".gamepad-icon", ".gamepad-off-icon",
+    streamer.gameNotificationsEnabled !== false);
+  setAlertButtonState(titleNotificationButton, ".title-icon", ".title-off-icon",
+    streamer.titleNotificationsEnabled !== false);
 
   if (!supportsLiveStatus) {
     statusPill.textContent = t("popup.card.statusUnsupported", {
@@ -718,7 +717,13 @@ export function createStreamerCard(streamer, status, template, callbacks) {
   }
 
   renderSocialLinks(streamer, socialLinksContainer);
-  bindCardActions(notificationButton, gameNotificationButton, openButton, removeButton, streamer, platformId, displayLabel, callbacks);
+  bindCardActions(
+    { notificationButton, gameNotificationButton, titleNotificationButton, openButton, removeButton },
+    streamer,
+    platformId,
+    displayLabel,
+    callbacks
+  );
 
   return fragment;
 }

@@ -205,6 +205,8 @@ export const translations = {
         "liveNotificationsDescription": "Recevoir une alerte lorsqu’un streamer suivi démarre un live.",
         "gameAlertsTitle": "Alertes changement de catégorie",
         "gameAlertsDescription": "Être notifié lorsqu’un streamer change de jeu sur Twitch.",
+        "titleAlertsTitle": "Alertes changement de titre",
+        "titleAlertsDescription": "Être notifié lorsqu’un streamer modifie le titre de son live.",
         "soundsTitle": "Son des notifications",
         "soundsDescription": "Activer ou couper le son lors des alertes.",
         "autoClaimTitle": "Récupération auto des points",
@@ -326,6 +328,7 @@ export const translations = {
         "offline": "Hors ligne",
         "notificationsToggle": "Notifications",
         "gameNotificationsToggle": "Alertes catégorie",
+        "titleNotificationsToggle": "Alertes titre",
         "open": "Ouvrir",
         "remove": "Retirer",
         "confirmRemove": "Supprimer ?",
@@ -342,7 +345,9 @@ export const translations = {
         "notifyEnabled": "Notifications activées pour {{name}}",
         "notifyDisabled": "Notifications désactivées pour {{name}}",
         "gameNotifyEnabled": "Alertes catégorie activées pour {{name}}",
-        "gameNotifyDisabled": "Alertes catégorie désactivées pour {{name}}"
+        "gameNotifyDisabled": "Alertes catégorie désactivées pour {{name}}",
+        "titleNotifyEnabled": "Alertes titre activées pour {{name}}",
+        "titleNotifyDisabled": "Alertes titre désactivées pour {{name}}",
       },
       "preferences": {
         "liveEnabled": "Notifications Chrome activées.",
@@ -421,6 +426,9 @@ export const translations = {
         "raidTitle": "StreamPulse · Raid annulé",
         "raidMessage": "Le transfert vers la chaîne raidée a été annulé.",
         "unknownCategory": "Catégorie inconnue",
+        "titleChangeTitle": "{{name}} change de titre",
+        "titleChangeMessage": "{{to}}",
+        "unknownTitle": "Nouveau titre",
         "newCategory": "Nouvelle catégorie",
         "testSimpleMessage": "Ceci est une notification de test.",
         "test1Title": "StreamPulse – Test 1",
@@ -677,6 +685,8 @@ export const translations = {
         "liveNotificationsDescription": "Get an alert when a followed streamer goes live.",
         "gameAlertsTitle": "Category change alerts",
         "gameAlertsDescription": "Be notified when a streamer switches games on Twitch.",
+        "titleAlertsTitle": "Title change alerts",
+        "titleAlertsDescription": "Be notified when a streamer edits their stream title.",
         "soundsTitle": "Notification sound",
         "soundsDescription": "Play or mute the sound when alerts fire.",
         "autoClaimTitle": "Auto-claim channel points",
@@ -798,6 +808,7 @@ export const translations = {
         "offline": "Offline",
         "notificationsToggle": "Notifications",
         "gameNotificationsToggle": "Category alerts",
+        "titleNotificationsToggle": "Title alerts",
         "open": "Open",
         "remove": "Remove",
         "confirmRemove": "Delete?",
@@ -814,7 +825,9 @@ export const translations = {
         "notifyEnabled": "Notifications enabled for {{name}}",
         "notifyDisabled": "Notifications disabled for {{name}}",
         "gameNotifyEnabled": "Category alerts enabled for {{name}}",
-        "gameNotifyDisabled": "Category alerts disabled for {{name}}"
+        "gameNotifyDisabled": "Category alerts disabled for {{name}}",
+        "titleNotifyEnabled": "Title alerts enabled for {{name}}",
+        "titleNotifyDisabled": "Title alerts disabled for {{name}}",
       },
       "preferences": {
         "liveEnabled": "Chrome notifications enabled.",
@@ -893,6 +906,9 @@ export const translations = {
         "raidTitle": "StreamPulse · Raid cancelled",
         "raidMessage": "The transfer to the raided channel was cancelled.",
         "unknownCategory": "Unknown category",
+        "titleChangeTitle": "{{name}} changed title",
+        "titleChangeMessage": "{{to}}",
+        "unknownTitle": "New title",
         "newCategory": "New category",
         "testSimpleMessage": "This is a test notification.",
         "test1Title": "StreamPulse – Test 1",
@@ -1148,6 +1164,8 @@ export const translations = {
         "liveNotificationsDescription": "Recibe una alerta cuando un streamer que sigues empiece un live.",
         "gameAlertsTitle": "Alertas de cambio de categoría",
         "gameAlertsDescription": "Recibe una notificación cuando un streamer cambie de juego en Twitch.",
+        "titleAlertsTitle": "Alertas de cambio de título",
+        "titleAlertsDescription": "Recibe un aviso cuando un streamer edita el título de su directo.",
         "soundsTitle": "Sonido de las notificaciones",
         "soundsDescription": "Activar o silenciar el sonido de las alertas.",
         "autoClaimTitle": "Auto-reclamo de puntos",
@@ -1269,6 +1287,7 @@ export const translations = {
         "offline": "Offline",
         "notificationsToggle": "Notificaciones",
         "gameNotificationsToggle": "Alertas de categoría",
+        "titleNotificationsToggle": "Alertas de título",
         "open": "Abrir",
         "remove": "Quitar",
         "confirmRemove": "¿Eliminar?",
@@ -1285,7 +1304,9 @@ export const translations = {
         "notifyEnabled": "Notificaciones activadas para {{name}}",
         "notifyDisabled": "Notificaciones desactivadas para {{name}}",
         "gameNotifyEnabled": "Alertas de categoría activadas para {{name}}",
-        "gameNotifyDisabled": "Alertas de categoría desactivadas para {{name}}"
+        "gameNotifyDisabled": "Alertas de categoría desactivadas para {{name}}",
+        "titleNotifyEnabled": "Alertas de título activadas para {{name}}",
+        "titleNotifyDisabled": "Alertas de título desactivadas para {{name}}",
       },
       "preferences": {
         "liveEnabled": "Notificaciones de Chrome activadas.",
@@ -1365,6 +1386,9 @@ export const translations = {
         "raidTitle": "StreamPulse · Raid cancelado",
         "raidMessage": "Se ha cancelado la transferencia al canal del raid.",
         "unknownCategory": "Categoría desconocida",
+        "titleChangeTitle": "{{name}} cambió el título",
+        "titleChangeMessage": "{{to}}",
+        "unknownTitle": "Nuevo título",
         "newCategory": "Nueva categoría",
         "testSimpleMessage": "Esto es una notificación de prueba.",
         "test1Title": "StreamPulse – Prueba 1",
@@ -1620,6 +1644,8 @@ export const translations = {
         "liveNotificationsDescription": "Receba um alerta quando um streamer que você segue ficar ao vivo.",
         "gameAlertsTitle": "Alertas de mudança de categoria",
         "gameAlertsDescription": "Seja notificado quando um streamer mudar de jogo na Twitch.",
+        "titleAlertsTitle": "Alertas de mudança de título",
+        "titleAlertsDescription": "Seja notificado quando um streamer editar o título da live.",
         "soundsTitle": "Som das notificações",
         "soundsDescription": "Ativar ou silenciar o som dos alertas.",
         "autoClaimTitle": "Auto-resgate de pontos",
@@ -1741,6 +1767,7 @@ export const translations = {
         "offline": "Offline",
         "notificationsToggle": "Notificações",
         "gameNotificationsToggle": "Alertas de categoria",
+        "titleNotificationsToggle": "Alertas de título",
         "open": "Abrir",
         "remove": "Remover",
         "confirmRemove": "Apagar?",
@@ -1757,7 +1784,9 @@ export const translations = {
         "notifyEnabled": "Notificações ativadas para {{name}}",
         "notifyDisabled": "Notificações desativadas para {{name}}",
         "gameNotifyEnabled": "Alertas de categoria ativados para {{name}}",
-        "gameNotifyDisabled": "Alertas de categoria desativados para {{name}}"
+        "gameNotifyDisabled": "Alertas de categoria desativados para {{name}}",
+        "titleNotifyEnabled": "Alertas de título ativados para {{name}}",
+        "titleNotifyDisabled": "Alertas de título desativados para {{name}}",
       },
       "preferences": {
         "liveEnabled": "Notificações do Chrome ativadas.",
@@ -1837,6 +1866,9 @@ export const translations = {
         "raidTitle": "StreamPulse · Raid cancelado",
         "raidMessage": "A transferência para o canal do raid foi cancelada.",
         "unknownCategory": "Categoria desconhecida",
+        "titleChangeTitle": "{{name}} mudou o título",
+        "titleChangeMessage": "{{to}}",
+        "unknownTitle": "Novo título",
         "newCategory": "Nova categoria",
         "testSimpleMessage": "Esta é uma notificação de teste.",
         "test1Title": "StreamPulse – Teste 1",
@@ -1936,7 +1968,7 @@ export const translations = {
       "unknown": "Unbekannt"
     },
     "platforms": {
-      "twitch": "Zucken",
+      "twitch": "Twitch",
       "kick": "Kick"
     },
     "onboarding": {
@@ -2032,7 +2064,7 @@ export const translations = {
       "finish": "Starten Sie StreamPulse 🚀",
       "footerText": "Erstellt von <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
-        "invalidHandle": "Bitte geben Sie eine gültige {{Plattform}}-Kennung ein.",
+        "invalidHandle": "Bitte geben Sie eine gültige {{platform}}-Kennung ein.",
         "adding": "Streamer wird hinzugefügt…",
         "addSuccessPlatform": "{{handle}} für {{platform}} hinzugefügt!",
         "removeSuccess": "Ersteller entfernt."
@@ -2044,7 +2076,7 @@ export const translations = {
       "closeWindow": "Fenster schließen"
     },
     "popup": {
-      "htmlLang": "In",
+      "htmlLang": "de",
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Streamer",
@@ -2063,8 +2095,8 @@ export const translations = {
       },
       "platformFilter": {
         "all": "alle",
-        "twitch": "zucken",
-        "kick": "Kick",
+        "twitch": "twitch",
+        "kick": "kick",
         "zevent": "zevent"
       },
       "addStreamerTitleBase": "Fügen Sie einen Streamer hinzu",
@@ -2093,6 +2125,8 @@ export const translations = {
         "liveNotificationsDescription": "Erhalten Sie eine Benachrichtigung, wenn ein Streamer, dem Sie folgen, live geht.",
         "gameAlertsTitle": "Benachrichtigungen zu Kategorieänderungen",
         "gameAlertsDescription": "Werden Sie benachrichtigt, wenn ein Streamer das Spiel auf Twitch wechselt.",
+        "titleAlertsTitle": "Benachrichtigungen bei Titeländerung",
+        "titleAlertsDescription": "Werde benachrichtigt, wenn ein Streamer den Titel seines Streams ändert.",
         "soundsTitle": "Benachrichtigungston",
         "soundsDescription": "Spielen Sie den Ton ab oder schalten Sie ihn stumm, wenn Alarme ausgelöst werden.",
         "autoClaimTitle": "Kanalpunkte automatisch beanspruchen",
@@ -2214,6 +2248,7 @@ export const translations = {
         "offline": "Offline",
         "notificationsToggle": "Benachrichtigungen",
         "gameNotificationsToggle": "Kategoriewarnungen",
+        "titleNotificationsToggle": "Titel-Benachrichtigungen",
         "open": "Öffnen Sie",
         "remove": "Entfernen Sie",
         "confirmRemove": "Löschen?",
@@ -2222,15 +2257,17 @@ export const translations = {
         "defaultLiveTitle": "Jetzt leben",
         "lastUpdateLabel": "Letzte Aktualisierung",
         "noPreview": "Keine Vorschau verfügbar",
-        "statusLive": "Live · {{Plattform}}",
-        "offlinePlatform": "Offline · {{Plattform}}",
+        "statusLive": "Live · {{platform}}",
+        "offlinePlatform": "Offline · {{platform}}",
         "statusUnsupported": "Live-Status auf {{platform}}"
       },
       "toast": {
         "notifyEnabled": "nicht verfügbar Benachrichtigungen für {{name}}",
         "notifyDisabled": "aktiviert Benachrichtigungen für {{name}}",
         "gameNotifyEnabled": "deaktiviert Kategoriebenachrichtigungen für {{name}}",
-        "gameNotifyDisabled": "aktiviert Kategoriewarnungen für {{name}}"
+        "gameNotifyDisabled": "aktiviert Kategoriewarnungen für {{name}}",
+        "titleNotifyEnabled": "Titel-Benachrichtigungen für {{name}} aktiviert",
+        "titleNotifyDisabled": "Titel-Benachrichtigungen für {{name}} deaktiviert",
       },
       "preferences": {
         "liveEnabled": "deaktiviert Chrome-Benachrichtigungen aktiviert.",
@@ -2251,7 +2288,7 @@ export const translations = {
       },
       "errors": {
         "generic": "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut.",
-        "invalidHandle": "Bitte geben Sie eine gültige {{Plattform}}-Kennung ein.",
+        "invalidHandle": "Bitte geben Sie eine gültige {{platform}}-Kennung ein.",
         "streamerExists": "Dieser Ersteller wird bereits verfolgt.",
         "streamerNotFound": "Wir konnten diesen Ersteller auf {{platform}} nicht finden. Überprüfen Sie die Rechtschreibung noch einmal.",
         "apiError": "Verbindungsfehler mit {{platform}}. Bitte versuchen Sie es gleich noch einmal."
@@ -2300,15 +2337,18 @@ export const translations = {
       "notifications": {
         "liveTitle": "{{name}} ist live",
         "liveMessage": "{{game}} • {{viewers}} Zuschauer",
-        "liveMessageNoViewers": "{{Spiel}}",
+        "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} Zuschauer",
         "categoryChangeTitle": "{{name}} hat die Kategorie geändert",
-        "categoryChangeMessage": "{{von}} → {{bis}}",
+        "categoryChangeMessage": "{{from}} → {{to}}",
         "dropTitle": "StreamPulse · Drop eingelöst",
         "dropMessage": "Ein Twitch-Drop wurde automatisch eingelöst.",
         "raidTitle": "StreamPulse · Raid abgebrochen",
         "raidMessage": "Die Weiterleitung zum geraideten Kanal wurde abgebrochen.",
         "unknownCategory": "Unbekannte Kategorie",
+        "titleChangeTitle": "{{name}} hat den Titel geändert",
+        "titleChangeMessage": "{{to}}",
+        "unknownTitle": "Neuer Titel",
         "newCategory": "Neue Kategorie",
         "testSimpleMessage": "Dies ist eine Testbenachrichtigung.",
         "test1Title": "StreamPulse – Test 1",
@@ -2408,8 +2448,8 @@ export const translations = {
       "unknown": "Sconosciuto"
     },
     "platforms": {
-      "twitch": "Contrazione",
-      "kick": "Calcia"
+      "twitch": "Twitch",
+      "kick": "Kick"
     },
     "onboarding": {
       "htmlLang": "it",
@@ -2535,8 +2575,8 @@ export const translations = {
       },
       "platformFilter": {
         "all": "tutto",
-        "twitch": "contrazione",
-        "kick": "calci",
+        "twitch": "twitch",
+        "kick": "kick",
         "zevent": "zevent"
       },
       "addStreamerTitleBase": "Aggiungi uno streamer",
@@ -2565,6 +2605,8 @@ export const translations = {
         "liveNotificationsDescription": "Ricevi un avviso quando uno streamer seguito va in diretta.",
         "gameAlertsTitle": "Avvisi di cambio di categoria",
         "gameAlertsDescription": "Ricevi una notifica quando uno streamer cambia gioco su Twitch.",
+        "titleAlertsTitle": "Avvisi di cambio titolo",
+        "titleAlertsDescription": "Ricevi una notifica quando uno streamer modifica il titolo della diretta.",
         "soundsTitle": "Suono di notifica",
         "soundsDescription": "Riproduci o disattiva il suono quando vengono attivati ​​gli avvisi.",
         "autoClaimTitle": "Rivendica automaticamente i punti canale",
@@ -2686,6 +2728,7 @@ export const translations = {
         "offline": "Non in linea",
         "notificationsToggle": "Notifiche",
         "gameNotificationsToggle": "Avvisi di categoria",
+        "titleNotificationsToggle": "Avvisi titolo",
         "open": "Apri",
         "remove": "Rimuovi",
         "confirmRemove": "Eliminare?",
@@ -2694,15 +2737,17 @@ export const translations = {
         "defaultLiveTitle": "In diretta adesso",
         "lastUpdateLabel": "Ultimo aggiornamento",
         "noPreview": "Nessuna anteprima disponibile",
-        "statusLive": "Dal vivo · {{piattaforma}}",
-        "offlinePlatform": "Non in linea · {{piattaforma}}",
+        "statusLive": "Dal vivo · {{platform}}",
+        "offlinePlatform": "Non in linea · {{platform}}",
         "statusUnsupported": "Stato in tempo reale non disponibile su {{platform}}"
       },
       "toast": {
         "notifyEnabled": "Notifiche abilitate per {{name}}",
         "notifyDisabled": "Notifiche disabilitate per {{name}}",
         "gameNotifyEnabled": "Avvisi di categoria abilitati per {{name}}",
-        "gameNotifyDisabled": "Avvisi di categoria disabilitati per {{name}}"
+        "gameNotifyDisabled": "Avvisi di categoria disabilitati per {{name}}",
+        "titleNotifyEnabled": "Avvisi titolo attivati per {{name}}",
+        "titleNotifyDisabled": "Avvisi titolo disattivati per {{name}}",
       },
       "preferences": {
         "liveEnabled": "Notifiche Chrome abilitate.",
@@ -2748,8 +2793,8 @@ export const translations = {
         "viewers": "{{count}} spettatori",
         "lastUpdateTimePlaceholder": "--",
         "previewAltLive": "Anteprima dal vivo di {{name}}",
-        "previewAltOffline": "Offline – {{nome}}",
-        "avatarAlt": "L'avatar di {{nome}}"
+        "previewAltOffline": "Offline – {{name}}",
+        "avatarAlt": "L'avatar di {{name}}"
       },
       "zeventBanner": {
         "badge": "EVENTO CONCLUSO",
@@ -2770,17 +2815,20 @@ export const translations = {
         "testNotificationFailed": "Impossibile inviare la notifica di prova in questo momento."
       },
       "notifications": {
-        "liveTitle": "{{nome}} è attivo",
-        "liveMessage": "{{gioco}} • {{spettatori}} spettatori",
-        "liveMessageNoViewers": "{{gioco}}",
-        "liveMessageNoGame": "{{spettatori}} spettatori",
+        "liveTitle": "{{name}} è attivo",
+        "liveMessage": "{{game}} • {{viewers}} spettatori",
+        "liveMessageNoViewers": "{{game}}",
+        "liveMessageNoGame": "{{viewers}} spettatori",
         "categoryChangeTitle": "{{name}} ha cambiato categoria",
-        "categoryChangeMessage": "{{da}} → {{a}}",
+        "categoryChangeMessage": "{{from}} → {{to}}",
         "dropTitle": "StreamPulse · Drop riscattato",
         "dropMessage": "Un Drop di Twitch è stato riscattato automaticamente.",
         "raidTitle": "StreamPulse · Raid annullato",
         "raidMessage": "Il trasferimento verso il canale del raid è stato annullato.",
         "unknownCategory": "Categoria sconosciuta",
+        "titleChangeTitle": "{{name}} ha cambiato titolo",
+        "titleChangeMessage": "{{to}}",
+        "unknownTitle": "Nuovo titolo",
         "newCategory": "Nuova categoria",
         "testSimpleMessage": "Questa è una notifica di prova.",
         "test1Title": "StreamPulse – Prova 1",
@@ -2850,8 +2898,8 @@ export const translations = {
         "add": "Aggiungi a StreamPulse",
         "tracked": "Tracciato",
         "remove": "Rimuovi da StreamPulse",
-        "added": "{{nome}} aggiunto a StreamPulse",
-        "removed": "{{nome}} rimosso da StreamPulse",
+        "added": "{{name}} aggiunto a StreamPulse",
+        "removed": "{{name}} rimosso da StreamPulse",
         "error": "Azione fallita. Riprova."
       },
       "player": {
@@ -2880,8 +2928,8 @@ export const translations = {
       "unknown": "Nieznany"
     },
     "platforms": {
-      "twitch": "Skurcz",
-      "kick": "Rzut"
+      "twitch": "Twitch",
+      "kick": "Kick"
     },
     "onboarding": {
       "htmlLang": "pl",
@@ -2891,7 +2939,7 @@ export const translations = {
       "profileInputLabel": "TWOJA NAZWA UŻYTKOWNIKA TWITCHA",
       "profileHintIdle": "Wpisz swój nick: sprawdzimy Twój profil na Twitchu.",
       "profileHintSearching": "Badawczy…",
-      "profileHintFound": "✓ Znaleziono: {{uchwyt}}",
+      "profileHintFound": "✓ Znaleziono: {{handle}}",
       "profileHintNotFound": "Nie znaleziono profilu Twitch. Nadal możesz kontynuować.",
       "profilePreviewSuffix": "Oto, kto jest online.",
       "documentTitle": "Konfiguracja po raz pierwszy",
@@ -2978,7 +3026,7 @@ export const translations = {
       "feedback": {
         "invalidHandle": "Proszę wprowadzić prawidłowy identyfikator {{platform}}.",
         "adding": "Dodawanie streamera…",
-        "addSuccessPlatform": "Dodano {{handle}} dla {{platforma}}!",
+        "addSuccessPlatform": "Dodano {{handle}} dla {{platform}}!",
         "removeSuccess": "Twórca usunięty."
       },
       "errors": {
@@ -3007,8 +3055,8 @@ export const translations = {
       },
       "platformFilter": {
         "all": "wszystko",
-        "twitch": "drgać",
-        "kick": "kopnij",
+        "twitch": "twitch",
+        "kick": "kick",
         "zevent": "zevent"
       },
       "addStreamerTitleBase": "Dodaj streamera",
@@ -3037,6 +3085,8 @@ export const translations = {
         "liveNotificationsDescription": "Otrzymuj powiadomienia, gdy obserwowany streamer rozpocznie transmisję na żywo.",
         "gameAlertsTitle": "Alerty o zmianie kategorii",
         "gameAlertsDescription": "Otrzymuj powiadomienia, gdy streamer zmieni grę na Twitchu.",
+        "titleAlertsTitle": "Alerty o zmianie tytułu",
+        "titleAlertsDescription": "Otrzymuj powiadomienie, gdy streamer zmieni tytuł transmisji.",
         "soundsTitle": "Dźwięk powiadomienia",
         "soundsDescription": "Odtwórz lub wycisz dźwięk po uruchomieniu alertów.",
         "autoClaimTitle": "Automatyczne odbieranie punktów kanału",
@@ -3158,6 +3208,7 @@ export const translations = {
         "offline": "Nieaktywny",
         "notificationsToggle": "Powiadomienia",
         "gameNotificationsToggle": "Alerty kategorii",
+        "titleNotificationsToggle": "Alerty tytułu",
         "open": "Otwórz",
         "remove": "Usuń",
         "confirmRemove": "Usuwać?",
@@ -3166,15 +3217,17 @@ export const translations = {
         "defaultLiveTitle": "Na żywo teraz",
         "lastUpdateLabel": "Ostatnia aktualizacja",
         "noPreview": "Brak podglądu",
-        "statusLive": "Na żywo · {{platforma}}",
-        "offlinePlatform": "Offline · {{platforma}}",
-        "statusUnsupported": "Stan na żywo niedostępny na {{platformie}}"
+        "statusLive": "Na żywo · {{platform}}",
+        "offlinePlatform": "Offline · {{platform}}",
+        "statusUnsupported": "Stan na żywo niedostępny na {{platform}}"
       },
       "toast": {
         "notifyEnabled": "Powiadomienia włączone dla {{name}}",
         "notifyDisabled": "Powiadomienia wyłączone dla {{name}}",
         "gameNotifyEnabled": "Alerty kategorii włączone dla {{name}}",
-        "gameNotifyDisabled": "Alerty kategorii wyłączone dla {{name}}"
+        "gameNotifyDisabled": "Alerty kategorii wyłączone dla {{name}}",
+        "titleNotifyEnabled": "Alerty tytułu włączone dla {{name}}",
+        "titleNotifyDisabled": "Alerty tytułu wyłączone dla {{name}}",
       },
       "preferences": {
         "liveEnabled": "Powiadomienia Chrome włączone.",
@@ -3198,7 +3251,7 @@ export const translations = {
         "invalidHandle": "Proszę wprowadzić prawidłowy identyfikator {{platform}}.",
         "streamerExists": "Ten twórca jest już obserwowany.",
         "streamerNotFound": "Nie znaleźliśmy tego twórcy na {{platform}}. Sprawdź dokładnie pisownię.",
-        "apiError": "Błąd połączenia z {{platformą}}. Spróbuj ponownie za chwilę."
+        "apiError": "Błąd połączenia z {{platform}}. Spróbuj ponownie za chwilę."
       },
       "feedback": {
         "adding": "Dodawanie streamera…",
@@ -3234,25 +3287,28 @@ export const translations = {
     "background": {
       "errors": {
         "notificationsDisabled": "Włącz powiadomienia Chrome, aby przeprowadzić test.",
-        "invalidHandle": "Nieprawidłowy identyfikator {{platforma}}.",
+        "invalidHandle": "Nieprawidłowy identyfikator {{platform}}.",
         "streamerExistsPlatform": "Tego twórcę obserwuje się już na {{platform}}.",
         "streamerNotFound": "Nie znaleźliśmy tego twórcy na {{platform}}. Sprawdź pisownię.",
-        "apiError": "Błąd połączenia z {{platformą}}. Spróbuj ponownie za chwilę.",
+        "apiError": "Błąd połączenia z {{platform}}. Spróbuj ponownie za chwilę.",
         "noPreferencesUpdate": "Brak preferencji do aktualizacji.",
         "testNotificationFailed": "W tej chwili nie można wysłać powiadomienia testowego."
       },
       "notifications": {
         "liveTitle": "{{name}} jest na żywo",
         "liveMessage": "{{game}} • {{viewers}} widzów",
-        "liveMessageNoViewers": "{{gra}}",
+        "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} widzów",
         "categoryChangeTitle": "{{name}} zmienił kategorię",
-        "categoryChangeMessage": "{{od}} → {{do}}",
+        "categoryChangeMessage": "{{from}} → {{to}}",
         "dropTitle": "StreamPulse · Odebrano Drop",
         "dropMessage": "Drop na Twitchu został odebrany automatycznie.",
         "raidTitle": "StreamPulse · Anulowano raid",
         "raidMessage": "Przeniesienie na kanał raidu zostało anulowane.",
         "unknownCategory": "Kategoria nieznana",
+        "titleChangeTitle": "{{name}} zmienił tytuł",
+        "titleChangeMessage": "{{to}}",
+        "unknownTitle": "Nowy tytuł",
         "newCategory": "Nowa kategoria",
         "testSimpleMessage": "To jest powiadomienie testowe.",
         "test1Title": "StreamPulse – Test 1",
@@ -3460,7 +3516,7 @@ export const translations = {
       "closeWindow": "Pencereyi kapat"
     },
     "popup": {
-      "htmlLang": "içinde",
+      "htmlLang": "tr",
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Yayıncılar",
@@ -3479,8 +3535,8 @@ export const translations = {
       },
       "platformFilter": {
         "all": "hepsi",
-        "twitch": "seğirme",
-        "kick": "tekme",
+        "twitch": "twitch",
+        "kick": "kick",
         "zevent": "zevent"
       },
       "addStreamerTitleBase": "Bir flama ekle",
@@ -3509,6 +3565,8 @@ export const translations = {
         "liveNotificationsDescription": "Takip ettiğiniz bir yayıncı canlı yayına başladığında bildirim alın.",
         "gameAlertsTitle": "Kategori değişikliği uyarıları",
         "gameAlertsDescription": "Bir yayıncı Twitch'te oyun değiştirdiğinde bildirim al.",
+        "titleAlertsTitle": "Başlık değişikliği uyarıları",
+        "titleAlertsDescription": "Bir yayıncı yayın başlığını değiştirdiğinde bildirim al.",
         "soundsTitle": "Bildirim sesi",
         "soundsDescription": "Uyarılar geldiğinde sesi çal ya da sessize al.",
         "autoClaimTitle": "Kanal puanlarını otomatik olarak talep et",
@@ -3630,6 +3688,7 @@ export const translations = {
         "offline": "Çevrimdışı",
         "notificationsToggle": "Bildirimler",
         "gameNotificationsToggle": "Kategori uyarıları",
+        "titleNotificationsToggle": "Başlık uyarıları",
         "open": "Aç",
         "remove": "Kaldır",
         "confirmRemove": "Silmek mi?",
@@ -3646,7 +3705,9 @@ export const translations = {
         "notifyEnabled": "{{name}} için bildirimler etkinleştirildi",
         "notifyDisabled": "{{name}} için bildirimler devre dışı bırakıldı",
         "gameNotifyEnabled": "{{name}} için kategori uyarıları etkinleştirildi",
-        "gameNotifyDisabled": "{{name}} için kategori uyarıları devre dışı bırakıldı"
+        "gameNotifyDisabled": "{{name}} için kategori uyarıları devre dışı bırakıldı",
+        "titleNotifyEnabled": "{{name}} için başlık uyarıları açıldı",
+        "titleNotifyDisabled": "{{name}} için başlık uyarıları kapatıldı",
       },
       "preferences": {
         "liveEnabled": "Chrome bildirimleri etkinleştirildi.",
@@ -3716,15 +3777,18 @@ export const translations = {
       "notifications": {
         "liveTitle": "{{name}} yayında",
         "liveMessage": "{{game}} • {{viewers}} izleyici",
-        "liveMessageNoViewers": "Oyun",
+        "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} izleyici",
         "categoryChangeTitle": "{{name}} kategorisi değiştirildi",
-        "categoryChangeMessage": "{{başlangıç}} → {{bitiş}}",
+        "categoryChangeMessage": "{{from}} → {{to}}",
         "dropTitle": "StreamPulse · Drop alındı",
         "dropMessage": "Bir Twitch Drop'u otomatik olarak alındı.",
         "raidTitle": "StreamPulse · Raid iptal edildi",
         "raidMessage": "Raid yapılan kanala aktarım iptal edildi.",
         "unknownCategory": "Bilinmeyen kategori",
+        "titleChangeTitle": "{{name}} başlığı değiştirdi",
+        "titleChangeMessage": "{{to}}",
+        "unknownTitle": "Yeni başlık",
         "newCategory": "Yeni kategori",
         "testSimpleMessage": "Bu bir test bildirimi.",
         "test1Title": "StreamPulse – Test 1",
@@ -3825,7 +3889,7 @@ export const translations = {
     },
     "platforms": {
       "twitch": "Twitch",
-      "kick": "Удар"
+      "kick": "Kick"
     },
     "onboarding": {
       "htmlLang": "ru",
@@ -3932,7 +3996,7 @@ export const translations = {
       "closeWindow": "Закрыть окно"
     },
     "popup": {
-      "htmlLang": "в",
+      "htmlLang": "ru",
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Стримеры",
@@ -3951,8 +4015,8 @@ export const translations = {
       },
       "platformFilter": {
         "all": "все",
-        "twitch": "дергание",
-        "kick": "удар",
+        "twitch": "twitch",
+        "kick": "kick",
         "zevent": "zevent"
       },
       "addStreamerTitleBase": "Добавить серпантин",
@@ -3981,6 +4045,8 @@ export const translations = {
         "liveNotificationsDescription": "Получайте уведомления, когда стример, на которого вы подписаны, выходит в прямой эфир.",
         "gameAlertsTitle": "Уведомления об изменении категории",
         "gameAlertsDescription": "Получайте уведомления, когда стример переключается на другую игру на Twitch.",
+        "titleAlertsTitle": "Оповещения об изменении названия",
+        "titleAlertsDescription": "Получать уведомление, когда стример меняет название трансляции.",
         "soundsTitle": "Звук уведомления",
         "soundsDescription": "Воспроизводить или отключать звук при появлении уведомлений.",
         "autoClaimTitle": "Автоматическое начисление баллов по каналу «Auto-claim»",
@@ -4102,6 +4168,7 @@ export const translations = {
         "offline": "В автономном режиме",
         "notificationsToggle": "Уведомления",
         "gameNotificationsToggle": "Оповещения по категориям",
+        "titleNotificationsToggle": "Оповещения о названии",
         "open": "Открыть",
         "remove": "Удалить",
         "confirmRemove": "Удалить?",
@@ -4118,7 +4185,9 @@ export const translations = {
         "notifyEnabled": "Для {{name}} включены уведомления",
         "notifyDisabled": "Уведомления отключены для {{name}}",
         "gameNotifyEnabled": "Для {{name}} включены оповещения по категориям",
-        "gameNotifyDisabled": "Оповещения по категории отключены для {{name}}"
+        "gameNotifyDisabled": "Оповещения по категории отключены для {{name}}",
+        "titleNotifyEnabled": "Оповещения о названии включены для {{name}}",
+        "titleNotifyDisabled": "Оповещения о названии отключены для {{name}}",
       },
       "preferences": {
         "liveEnabled": "Уведомления Chrome включены.",
@@ -4188,15 +4257,18 @@ export const translations = {
       "notifications": {
         "liveTitle": "{{name}} в эфире",
         "liveMessage": "{{game}} • {{viewers}} зрителей",
-        "liveMessageNoViewers": "Игра",
+        "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} зрителей",
         "categoryChangeTitle": "{{name}} сменил категорию",
-        "categoryChangeMessage": "{{от}} → {{до}}",
+        "categoryChangeMessage": "{{from}} → {{to}}",
         "dropTitle": "StreamPulse · Дроп получен",
         "dropMessage": "Дроп Twitch получен автоматически.",
         "raidTitle": "StreamPulse · Рейд отменён",
         "raidMessage": "Переход на канал рейда отменён.",
         "unknownCategory": "Неизвестная категория",
+        "titleChangeTitle": "{{name}} изменил название",
+        "titleChangeMessage": "{{to}}",
+        "unknownTitle": "Новое название",
         "newCategory": "Новая категория",
         "testSimpleMessage": "Это тестовое уведомление.",
         "test1Title": "StreamPulse – Тест 1",
@@ -4297,7 +4369,7 @@ export const translations = {
     },
     "platforms": {
       "twitch": "Twitch",
-      "kick": "キック"
+      "kick": "Kick"
     },
     "onboarding": {
       "htmlLang": "ja",
@@ -4404,7 +4476,7 @@ export const translations = {
       "closeWindow": "ウィンドウを閉じる"
     },
     "popup": {
-      "htmlLang": "で",
+      "htmlLang": "ja",
       "title": "StreamPulse",
       "tabs": {
         "streamers": "ストリーマー",
@@ -4423,8 +4495,8 @@ export const translations = {
       },
       "platformFilter": {
         "all": "すべて",
-        "twitch": "ピクッ",
-        "kick": "キック",
+        "twitch": "twitch",
+        "kick": "kick",
         "zevent": "zevent"
       },
       "addStreamerTitleBase": "ストリーマーを追加する",
@@ -4453,6 +4525,8 @@ export const translations = {
         "liveNotificationsDescription": "フォローしているストリーマーがライブ配信を開始した際に通知を受け取る。",
         "gameAlertsTitle": "カテゴリ変更の通知",
         "gameAlertsDescription": "Twitchでストリーマーがゲームを切り替えた際に通知を受け取る。",
+        "titleAlertsTitle": "タイトル変更の通知",
+        "titleAlertsDescription": "配信者が配信タイトルを変更したときに通知を受け取ります。",
         "soundsTitle": "通知音",
         "soundsDescription": "アラートが発生した際に、音を再生するか、ミュートにするかを選択します。",
         "autoClaimTitle": "チャンネルポイントの自動獲得",
@@ -4574,6 +4648,7 @@ export const translations = {
         "offline": "オフライン",
         "notificationsToggle": "通知",
         "gameNotificationsToggle": "カテゴリアラート",
+        "titleNotificationsToggle": "タイトル通知",
         "open": "開く",
         "remove": "削除",
         "confirmRemove": "削除しますか？",
@@ -4590,7 +4665,9 @@ export const translations = {
         "notifyEnabled": "{{name}} の通知が有効になっています",
         "notifyDisabled": "{{name}} に対する通知が無効になっています",
         "gameNotifyEnabled": "{{name}} のカテゴリアラートが有効になっています",
-        "gameNotifyDisabled": "{{name}} のカテゴリアラートは無効になっています"
+        "gameNotifyDisabled": "{{name}} のカテゴリアラートは無効になっています",
+        "titleNotifyEnabled": "{{name}} のタイトル通知をオンにしました",
+        "titleNotifyDisabled": "{{name}} のタイトル通知をオフにしました",
       },
       "preferences": {
         "liveEnabled": "Chromeの通知が有効になっています。",
@@ -4660,7 +4737,7 @@ export const translations = {
       "notifications": {
         "liveTitle": "{{name}}が配信中です",
         "liveMessage": "{{game}} • {{viewers}}人の視聴者",
-        "liveMessageNoViewers": "ゲーム",
+        "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} 視聴者",
         "categoryChangeTitle": "{{name}} がカテゴリを変更しました",
         "categoryChangeMessage": "{{from}} → {{to}}",
@@ -4669,6 +4746,9 @@ export const translations = {
         "raidTitle": "StreamPulse · レイドをキャンセルしました",
         "raidMessage": "レイド先チャンネルへの移動をキャンセルしました。",
         "unknownCategory": "カテゴリ不明",
+        "titleChangeTitle": "{{name}} がタイトルを変更しました",
+        "titleChangeMessage": "{{to}}",
+        "unknownTitle": "新しいタイトル",
         "newCategory": "新しいカテゴリ",
         "testSimpleMessage": "これはテスト通知です。",
         "test1Title": "StreamPulse – テスト 1",
@@ -4768,8 +4848,8 @@ export const translations = {
       "unknown": "알 수 없음"
     },
     "platforms": {
-      "twitch": "트위치",
-      "kick": "킥"
+      "twitch": "Twitch",
+      "kick": "Kick"
     },
     "onboarding": {
       "htmlLang": "ko",
@@ -4876,7 +4956,7 @@ export const translations = {
       "closeWindow": "창 닫기"
     },
     "popup": {
-      "htmlLang": "에서",
+      "htmlLang": "ko",
       "title": "StreamPulse",
       "tabs": {
         "streamers": "스트리머",
@@ -4895,8 +4975,8 @@ export const translations = {
       },
       "platformFilter": {
         "all": "모두",
-        "twitch": "트위치",
-        "kick": "킥",
+        "twitch": "twitch",
+        "kick": "kick",
         "zevent": "zevent"
       },
       "addStreamerTitleBase": "스트리머 추가하기",
@@ -4925,6 +5005,8 @@ export const translations = {
         "liveNotificationsDescription": "팔로우 중인 스트리머가 생방송을 시작하면 알림을 받아보세요.",
         "gameAlertsTitle": "카테고리 변경 알림",
         "gameAlertsDescription": "Twitch에서 스트리머가 게임을 변경할 때 알림을 받으세요.",
+        "titleAlertsTitle": "제목 변경 알림",
+        "titleAlertsDescription": "스트리머가 방송 제목을 변경하면 알림을 받습니다.",
         "soundsTitle": "알림 소리",
         "soundsDescription": "알림이 울릴 때 소리를 재생하거나 음소거합니다.",
         "autoClaimTitle": "채널 포인트 자동 적립",
@@ -5046,6 +5128,7 @@ export const translations = {
         "offline": "오프라인",
         "notificationsToggle": "알림",
         "gameNotificationsToggle": "카테고리 알림",
+        "titleNotificationsToggle": "제목 알림",
         "open": "열기",
         "remove": "제거",
         "confirmRemove": "삭제하시겠습니까?",
@@ -5062,7 +5145,9 @@ export const translations = {
         "notifyEnabled": "{{name}}에 대한 알림이 활성화되었습니다.",
         "notifyDisabled": "{{name}}에 대한 알림이 비활성화되었습니다.",
         "gameNotifyEnabled": "{{name}}에 대한 카테고리 알림이 활성화되었습니다.",
-        "gameNotifyDisabled": "{{name}}에 대한 카테고리 알림이 비활성화되었습니다."
+        "gameNotifyDisabled": "{{name}}에 대한 카테고리 알림이 비활성화되었습니다.",
+        "titleNotifyEnabled": "{{name}} 의 제목 알림을 켰습니다",
+        "titleNotifyDisabled": "{{name}} 의 제목 알림을 껐습니다",
       },
       "preferences": {
         "liveEnabled": "Chrome 알림이 활성화되었습니다.",
@@ -5132,7 +5217,7 @@ export const translations = {
       "notifications": {
         "liveTitle": "{{name}}이(가) 생방송 중입니다",
         "liveMessage": "{{game}} • {{viewers}} 명의 시청자",
-        "liveMessageNoViewers": "게임",
+        "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} 명의 시청자",
         "categoryChangeTitle": "{{name}}이(가) 카테고리를 변경했습니다.",
         "categoryChangeMessage": "{{from}} → {{to}}",
@@ -5141,6 +5226,9 @@ export const translations = {
         "raidTitle": "StreamPulse · 레이드 취소",
         "raidMessage": "레이드 대상 채널로의 이동을 취소했습니다.",
         "unknownCategory": "분류 미지정",
+        "titleChangeTitle": "{{name}} 님이 제목을 변경했습니다",
+        "titleChangeMessage": "{{to}}",
+        "unknownTitle": "새 제목",
         "newCategory": "새로운 카테고리",
         "testSimpleMessage": "이것은 테스트 알림입니다.",
         "test1Title": "StreamPulse – 테스트 1",
@@ -5241,7 +5329,7 @@ export const translations = {
     },
     "platforms": {
       "twitch": "Twitch",
-      "kick": "Tendangan"
+      "kick": "Kick"
     },
     "onboarding": {
       "htmlLang": "id",
@@ -5348,7 +5436,7 @@ export const translations = {
       "closeWindow": "Tutup jendela"
     },
     "popup": {
-      "htmlLang": "di",
+      "htmlLang": "id",
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Streamer",
@@ -5367,8 +5455,8 @@ export const translations = {
       },
       "platformFilter": {
         "all": "semua",
-        "twitch": "kedutan",
-        "kick": "tendangan",
+        "twitch": "twitch",
+        "kick": "kick",
         "zevent": "zevent"
       },
       "addStreamerTitleBase": "Tambahkan pita hias",
@@ -5397,6 +5485,8 @@ export const translations = {
         "liveNotificationsDescription": "Dapatkan pemberitahuan saat streamer yang Anda ikuti mulai siaran langsung.",
         "gameAlertsTitle": "Pemberitahuan perubahan kategori",
         "gameAlertsDescription": "Dapatkan pemberitahuan saat seorang streamer mengganti game di Twitch.",
+        "titleAlertsTitle": "Peringatan perubahan judul",
+        "titleAlertsDescription": "Dapatkan notifikasi saat streamer mengubah judul siarannya.",
         "soundsTitle": "Suara notifikasi",
         "soundsDescription": "Putar atau nonaktifkan suara saat peringatan berbunyi.",
         "autoClaimTitle": "Klaim poin saluran secara otomatis",
@@ -5518,6 +5608,7 @@ export const translations = {
         "offline": "Offline",
         "notificationsToggle": "Pemberitahuan",
         "gameNotificationsToggle": "Pemberitahuan kategori",
+        "titleNotificationsToggle": "Peringatan judul",
         "open": "Buka",
         "remove": "Hapus",
         "confirmRemove": "Hapus?",
@@ -5534,7 +5625,9 @@ export const translations = {
         "notifyEnabled": "Pemberitahuan telah diaktifkan untuk {{name}}",
         "notifyDisabled": "Pemberitahuan dinonaktifkan untuk {{name}}",
         "gameNotifyEnabled": "Pemberitahuan kategori telah diaktifkan untuk {{name}}",
-        "gameNotifyDisabled": "Pemberitahuan kategori dinonaktifkan untuk {{name}}"
+        "gameNotifyDisabled": "Pemberitahuan kategori dinonaktifkan untuk {{name}}",
+        "titleNotifyEnabled": "Peringatan judul diaktifkan untuk {{name}}",
+        "titleNotifyDisabled": "Peringatan judul dinonaktifkan untuk {{name}}",
       },
       "preferences": {
         "liveEnabled": "Pemberitahuan Chrome telah diaktifkan.",
@@ -5604,15 +5697,18 @@ export const translations = {
       "notifications": {
         "liveTitle": "{{name}} sedang siaran langsung",
         "liveMessage": "{{game}} • {{viewers}} penonton",
-        "liveMessageNoViewers": "Permainan",
-        "liveMessageNoGame": "{{penonton}} penonton",
+        "liveMessageNoViewers": "{{game}}",
+        "liveMessageNoGame": "{{viewers}} penonton",
         "categoryChangeTitle": "{{name}} telah berpindah kategori",
-        "categoryChangeMessage": "{{dari}} → {{ke}}",
+        "categoryChangeMessage": "{{from}} → {{to}}",
         "dropTitle": "StreamPulse · Drop diklaim",
         "dropMessage": "Drop Twitch diklaim secara otomatis.",
         "raidTitle": "StreamPulse · Raid dibatalkan",
         "raidMessage": "Perpindahan ke kanal raid telah dibatalkan.",
         "unknownCategory": "Kategori tidak diketahui",
+        "titleChangeTitle": "{{name}} mengubah judul",
+        "titleChangeMessage": "{{to}}",
+        "unknownTitle": "Judul baru",
         "newCategory": "Kategori baru",
         "testSimpleMessage": "Ini adalah pemberitahuan uji coba.",
         "test1Title": "StreamPulse – Uji Coba 1",
@@ -5820,7 +5916,7 @@ export const translations = {
       "closeWindow": "Venster sluiten"
     },
     "popup": {
-      "htmlLang": "in",
+      "htmlLang": "nl",
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Streamers",
@@ -5839,7 +5935,7 @@ export const translations = {
       },
       "platformFilter": {
         "all": "alle",
-        "twitch": "spiertrekking",
+        "twitch": "twitch",
         "kick": "kick",
         "zevent": "zevent"
       },
@@ -5869,6 +5965,8 @@ export const translations = {
         "liveNotificationsDescription": "Ontvang een melding wanneer een streamer die je volgt live gaat.",
         "gameAlertsTitle": "Meldingen bij wijzigingen in categorieën",
         "gameAlertsDescription": "Ontvang een melding wanneer een streamer op Twitch van game wisselt.",
+        "titleAlertsTitle": "Meldingen bij titelwijziging",
+        "titleAlertsDescription": "Ontvang een melding wanneer een streamer de titel van de stream wijzigt.",
         "soundsTitle": "Meldingsgeluid",
         "soundsDescription": "Het geluid afspelen of dempen wanneer er meldingen binnenkomen.",
         "autoClaimTitle": "Punten automatisch via het claimkanaal verzamelen",
@@ -5990,6 +6088,7 @@ export const translations = {
         "offline": "Offline",
         "notificationsToggle": "Meldingen",
         "gameNotificationsToggle": "Categorie-meldingen",
+        "titleNotificationsToggle": "Titelmeldingen",
         "open": "Open",
         "remove": "Verwijderen",
         "confirmRemove": "Verwijderen?",
@@ -6006,7 +6105,9 @@ export const translations = {
         "notifyEnabled": "Meldingen ingeschakeld voor {{name}}",
         "notifyDisabled": "Meldingen uitgeschakeld voor {{name}}",
         "gameNotifyEnabled": "Categorie-meldingen ingeschakeld voor {{name}}",
-        "gameNotifyDisabled": "Categorie-meldingen uitgeschakeld voor {{name}}"
+        "gameNotifyDisabled": "Categorie-meldingen uitgeschakeld voor {{name}}",
+        "titleNotifyEnabled": "Titelmeldingen ingeschakeld voor {{name}}",
+        "titleNotifyDisabled": "Titelmeldingen uitgeschakeld voor {{name}}",
       },
       "preferences": {
         "liveEnabled": "Chrome-meldingen zijn ingeschakeld.",
@@ -6076,15 +6177,18 @@ export const translations = {
       "notifications": {
         "liveTitle": "{{name}} is live",
         "liveMessage": "{{game}} • {{viewers}} kijkers",
-        "liveMessageNoViewers": "Spel",
+        "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} kijkers",
         "categoryChangeTitle": "{{name}} is van categorie veranderd",
-        "categoryChangeMessage": "{{van}} → {{tot}}",
+        "categoryChangeMessage": "{{from}} → {{to}}",
         "dropTitle": "StreamPulse · Drop geclaimd",
         "dropMessage": "Een Twitch-Drop is automatisch geclaimd.",
         "raidTitle": "StreamPulse · Raid geannuleerd",
         "raidMessage": "De overgang naar het geraidde kanaal is geannuleerd.",
         "unknownCategory": "Onbekende categorie",
+        "titleChangeTitle": "{{name}} heeft de titel gewijzigd",
+        "titleChangeMessage": "{{to}}",
+        "unknownTitle": "Nieuwe titel",
         "newCategory": "Nieuwe categorie",
         "testSimpleMessage": "Dit is een testmelding.",
         "test1Title": "StreamPulse – Test 1",
@@ -6292,7 +6396,7 @@ export const translations = {
       "closeWindow": "Close window"
     },
     "popup": {
-      "htmlLang": "en",
+      "htmlLang": "hi",
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Streamers",
@@ -6341,6 +6445,8 @@ export const translations = {
         "liveNotificationsDescription": "Get an alert when a followed streamer goes live.",
         "gameAlertsTitle": "Category change alerts",
         "gameAlertsDescription": "Be notified when a streamer switches games on Twitch.",
+        "titleAlertsTitle": "शीर्षक बदलने के अलर्ट",
+        "titleAlertsDescription": "जब कोई स्ट्रीमर अपनी स्ट्रीम का शीर्षक बदले तो सूचना पाएँ।",
         "soundsTitle": "Notification sound",
         "soundsDescription": "Play or mute the sound when alerts fire.",
         "autoClaimTitle": "Auto-claim channel points",
@@ -6462,6 +6568,7 @@ export const translations = {
         "offline": "Offline",
         "notificationsToggle": "Notifications",
         "gameNotificationsToggle": "Category alerts",
+        "titleNotificationsToggle": "शीर्षक अलर्ट",
         "open": "Open",
         "remove": "Remove",
         "confirmRemove": "Delete?",
@@ -6478,7 +6585,9 @@ export const translations = {
         "notifyEnabled": "Notifications enabled for {{name}}",
         "notifyDisabled": "Notifications disabled for {{name}}",
         "gameNotifyEnabled": "Category alerts enabled for {{name}}",
-        "gameNotifyDisabled": "Category alerts disabled for {{name}}"
+        "gameNotifyDisabled": "Category alerts disabled for {{name}}",
+        "titleNotifyEnabled": "{{name}} के लिए शीर्षक अलर्ट चालू",
+        "titleNotifyDisabled": "{{name}} के लिए शीर्षक अलर्ट बंद",
       },
       "preferences": {
         "liveEnabled": "Chrome notifications enabled.",
@@ -6557,6 +6666,9 @@ export const translations = {
         "raidTitle": "StreamPulse · Raid cancelled",
         "raidMessage": "The transfer to the raided channel was cancelled.",
         "unknownCategory": "Unknown category",
+        "titleChangeTitle": "{{name}} ने शीर्षक बदला",
+        "titleChangeMessage": "{{to}}",
+        "unknownTitle": "नया शीर्षक",
         "newCategory": "New category",
         "testSimpleMessage": "This is a test notification.",
         "test1Title": "StreamPulse – Test 1",
@@ -6764,7 +6876,7 @@ export const translations = {
       "closeWindow": "Stäng fönstret"
     },
     "popup": {
-      "htmlLang": "i",
+      "htmlLang": "sv",
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Streamare",
@@ -6783,7 +6895,7 @@ export const translations = {
       },
       "platformFilter": {
         "all": "alla",
-        "twitch": "ryckning",
+        "twitch": "twitch",
         "kick": "kick",
         "zevent": "zevent"
       },
@@ -6813,6 +6925,8 @@ export const translations = {
         "liveNotificationsDescription": "Få ett meddelande när en streamer du följer går live.",
         "gameAlertsTitle": "Varningar om ändring av kategori",
         "gameAlertsDescription": "Få ett meddelande när en streamare byter spel på Twitch.",
+        "titleAlertsTitle": "Aviseringar vid titeländring",
+        "titleAlertsDescription": "Få en avisering när en streamer ändrar titeln på sin sändning.",
         "soundsTitle": "Meddelandeljud",
         "soundsDescription": "Spela upp eller stäng av ljudet när varningar utlöses.",
         "autoClaimTitle": "Automatisk inlösen av kanalpoäng",
@@ -6934,6 +7048,7 @@ export const translations = {
         "offline": "Offline",
         "notificationsToggle": "Meddelanden",
         "gameNotificationsToggle": "Kategorivarningar",
+        "titleNotificationsToggle": "Titelaviseringar",
         "open": "Öppna",
         "remove": "Ta bort",
         "confirmRemove": "Radera?",
@@ -6942,7 +7057,7 @@ export const translations = {
         "defaultLiveTitle": "Sänds just nu",
         "lastUpdateLabel": "Senaste uppdatering",
         "noPreview": "Ingen förhandsvisning tillgänglig",
-        "statusLive": "Live · {{plattform}}",
+        "statusLive": "Live · {{platform}}",
         "offlinePlatform": "Offline · {{platform}}",
         "statusUnsupported": "Livestatus är inte tillgänglig på {{platform}}"
       },
@@ -6950,7 +7065,9 @@ export const translations = {
         "notifyEnabled": "Meddelanden aktiverade för {{name}}",
         "notifyDisabled": "Meddelanden är inaktiverade för {{name}}",
         "gameNotifyEnabled": "Kategorivarningar aktiverade för {{name}}",
-        "gameNotifyDisabled": "Kategorivarningar inaktiverade för {{name}}"
+        "gameNotifyDisabled": "Kategorivarningar inaktiverade för {{name}}",
+        "titleNotifyEnabled": "Titelaviseringar aktiverade för {{name}}",
+        "titleNotifyDisabled": "Titelaviseringar avaktiverade för {{name}}",
       },
       "preferences": {
         "liveEnabled": "Chrome-meddelanden är aktiverade.",
@@ -7019,16 +7136,19 @@ export const translations = {
       },
       "notifications": {
         "liveTitle": "{{name}} är live",
-        "liveMessage": "{{spel}} • {{tittare}} tittare",
-        "liveMessageNoViewers": "Spel",
+        "liveMessage": "{{game}} • {{viewers}} tittare",
+        "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} tittare",
         "categoryChangeTitle": "{{name}} har bytt kategori",
-        "categoryChangeMessage": "{{från}} → {{till}}",
+        "categoryChangeMessage": "{{from}} → {{to}}",
         "dropTitle": "StreamPulse · Drop hämtad",
         "dropMessage": "En Twitch-Drop hämtades automatiskt.",
         "raidTitle": "StreamPulse · Raid avbruten",
         "raidMessage": "Överföringen till den raidade kanalen avbröts.",
         "unknownCategory": "Okänd kategori",
+        "titleChangeTitle": "{{name}} ändrade titeln",
+        "titleChangeMessage": "{{to}}",
+        "unknownTitle": "Ny titel",
         "newCategory": "Ny kategori",
         "testSimpleMessage": "Detta är ett testmeddelande.",
         "test1Title": "StreamPulse – Test 1",
@@ -7236,7 +7356,7 @@ export const translations = {
       "closeWindow": "Zavřít okno"
     },
     "popup": {
-      "htmlLang": "v",
+      "htmlLang": "cs",
       "title": "StreamPulse",
       "tabs": {
         "streamers": "Streameři",
@@ -7255,8 +7375,8 @@ export const translations = {
       },
       "platformFilter": {
         "all": "všechny",
-        "twitch": "záchvěv",
-        "kick": "kop",
+        "twitch": "twitch",
+        "kick": "kick",
         "zevent": "zevent"
       },
       "addStreamerTitleBase": "Přidat stužku",
@@ -7285,6 +7405,8 @@ export const translations = {
         "liveNotificationsDescription": "Nechte si zaslat upozornění, když streamer, kterého sledujete, spustí živé vysílání.",
         "gameAlertsTitle": "Upozornění na změnu kategorie",
         "gameAlertsDescription": "Nechte si zasílat upozornění, když streamer na Twitchi přepne hru.",
+        "titleAlertsTitle": "Upozornění na změnu názvu",
+        "titleAlertsDescription": "Dostávej upozornění, když streamer změní název vysílání.",
         "soundsTitle": "Zvuk upozornění",
         "soundsDescription": "Při spuštění upozornění přehrát zvuk nebo jej ztlumit.",
         "autoClaimTitle": "Automatické získávání bodů v kanálu",
@@ -7406,6 +7528,7 @@ export const translations = {
         "offline": "Offline",
         "notificationsToggle": "Oznámení",
         "gameNotificationsToggle": "Upozornění na kategorie",
+        "titleNotificationsToggle": "Upozornění na název",
         "open": "Otevřít",
         "remove": "Odebrat",
         "confirmRemove": "Smazat?",
@@ -7422,7 +7545,9 @@ export const translations = {
         "notifyEnabled": "U uživatele {{name}} jsou zapnutá oznámení",
         "notifyDisabled": "U uživatele {{name}} jsou oznámení deaktivována",
         "gameNotifyEnabled": "Pro {{name}} jsou zapnutá upozornění na kategorie",
-        "gameNotifyDisabled": "Upozornění na kategorii jsou pro {{name}} deaktivována"
+        "gameNotifyDisabled": "Upozornění na kategorii jsou pro {{name}} deaktivována",
+        "titleNotifyEnabled": "Upozornění na název zapnuto pro {{name}}",
+        "titleNotifyDisabled": "Upozornění na název vypnuto pro {{name}}",
       },
       "preferences": {
         "liveEnabled": "Oznámení v prohlížeči Chrome jsou zapnutá.",
@@ -7492,15 +7617,18 @@ export const translations = {
       "notifications": {
         "liveTitle": "{{name}} je online",
         "liveMessage": "{{game}} • {{viewers}} diváků",
-        "liveMessageNoViewers": "Hra",
+        "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} diváků",
         "categoryChangeTitle": "{{name}} změnil kategorii",
-        "categoryChangeMessage": "{{od}} → {{do}}",
+        "categoryChangeMessage": "{{from}} → {{to}}",
         "dropTitle": "StreamPulse · Drop vyzvednut",
         "dropMessage": "Drop na Twitchi byl vyzvednut automaticky.",
         "raidTitle": "StreamPulse · Raid zrušen",
         "raidMessage": "Přesun na raidovaný kanál byl zrušen.",
         "unknownCategory": "Neznámá kategorie",
+        "titleChangeTitle": "{{name}} změnil název",
+        "titleChangeMessage": "{{to}}",
+        "unknownTitle": "Nový název",
         "newCategory": "Nová kategorie",
         "testSimpleMessage": "Toto je zkušební oznámení.",
         "test1Title": "StreamPulse – Test 1",

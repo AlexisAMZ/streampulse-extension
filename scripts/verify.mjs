@@ -162,6 +162,21 @@ else {
     }
     pass(`language switcher exposes ${published.length}/${declared.length} translated languages (${published.join(", ")})`);
 
+    // Placeholders, noms de marque et codes de langue : trois choses que la
+    // traduction automatique abime sans que ca se voie a la relecture. Le
+    // detail des regles est dans scripts/lib/i18n-audit.mjs.
+    const { auditTranslations } = await import(
+      new URL("./lib/i18n-audit.mjs", import.meta.url).href
+    );
+    const i18nProblems = auditTranslations(translations);
+    if (i18nProblems.length) {
+      const preview = i18nProblems.slice(0, 8).join("; ");
+      const rest = i18nProblems.length > 8 ? ` (+${i18nProblems.length - 8} more)` : "";
+      fail(`translations.js has ${i18nProblems.length} integrity problem(s): ${preview}${rest}`);
+    } else {
+      pass("translations.js: placeholders, brand names and language codes intact in every language");
+    }
+
     // Every language declared here must also reach the content scripts, which
     // read the generated js/inject/i18n-inline.js rather than the ES module.
     const inlinePath = "js/inject/i18n-inline.js";

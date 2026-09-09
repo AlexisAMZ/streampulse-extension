@@ -108,6 +108,7 @@ const PREFERENCES_KEY = "betaGeneralPreferences";
 const DEFAULT_PREFERENCES = {
   liveNotifications: true,
   gameNotifications: false,
+  titleNotifications: false,
   dropAlerts: true,
   predictionAlerts: true,
   raidAlerts: true,
@@ -521,6 +522,7 @@ class PreferenceStore {
     return {
       liveNotifications: preferences.liveNotifications !== false,
       gameNotifications: Boolean(preferences.gameNotifications),
+      titleNotifications: Boolean(preferences.titleNotifications),
       // Ces trois cles etaient absentes de sanitize() : elles etaient acceptees
       // par le handler updatePreferences puis perdues a l'ecriture, et le spread
       // de DEFAULT_PREFERENCES dans set() les remettait a true. Impossible de les
@@ -1430,6 +1432,75 @@ class NotificationSystem {
     });
   }
 
+  static async notifyTitleChange(
+    streamer,
+    fromTitle,
+    toTitle,
+    preferences = DEFAULT_PREFERENCES,
+    platform = null
+  ) {
+    if (
+      preferences.liveNotifications === false ||
+      !preferences.titleNotifications
+    ) {
+      return;
+    }
+
+    const lang = normalizeLanguage(preferences?.language);
+    const platformKey = platform || streamer.platform || "twitch";
+    if (!platformSupportsLiveStatus(platformKey)) {
+      return;
+    }
+    const title = translate(
+      lang,
+      "background.notifications.titleChangeTitle",
+      {
+        name:
+          streamer.displayName ||
+          formatHandleForDisplay(
+            platformKey,
+            streamer.handle || streamer.twitch
+          ),
+      }
+    );
+    // Le corps ne montre que le nouveau titre : un flux Twitch en fait souvent
+    // plusieurs par session et le « avant apres » deborde de la notification.
+    const message = translate(
+      lang,
+      "background.notifications.titleChangeMessage",
+      {
+        to:
+          toTitle ||
+          translate(lang, "background.notifications.unknownTitle"),
+      }
+    );
+
+    const targetUrl = buildProfileUrl(
+      platformKey,
+      streamer.handle || streamer.twitch || streamer.id
+    );
+    const streamerStatus = streamerStates.get(streamer.id);
+    const fallbackIcon =
+      (chrome?.runtime && getPlatformIcon(platformKey)
+        ? chrome.runtime.getURL(getPlatformIcon(platformKey))
+        : null) || NotificationCenter.getDefaultIcon();
+    const iconCandidate =
+      streamerStatus?.avatarUrl || streamer.avatarUrl || fallbackIcon;
+    const iconUrl = NotificationCenter.resolveIcon(iconCandidate);
+
+    await NotificationCenter.show({
+      title,
+      message,
+      streamerId: streamer.id,
+      platform: platformKey,
+      url: targetUrl,
+      iconUrl,
+      requireInteraction: false,
+      priority: 1,
+      playSound: preferences?.soundsEnabled !== false,
+    });
+  }
+
   static async sendTest(preferences = DEFAULT_PREFERENCES) {
     if (preferences.liveNotifications === false) {
       throw new Error(
@@ -1721,6 +1792,29 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
             streamer,
             previousLiveState.game,
             nextLiveState.game,
+            preferences,
+            nextLiveState.platform
+          );
+        }
+
+        const titleNotificationsEnabled = streamer.titleNotificationsEnabled !== false;
+        const shouldNotifyTitle =
+          preferences.titleNotifications &&
+          titleNotificationsEnabled &&
+          preferences.liveNotifications !== false &&
+          previousLiveState.isLive &&
+          previousLiveState.title &&
+          nextLiveState.title &&
+          previousLiveState.title !== nextLiveState.title &&
+          (!previousLiveState.sessionId ||
+            !nextLiveState.sessionId ||
+            previousLiveState.sessionId === nextLiveState.sessionId);
+
+        if (shouldNotifyTitle) {
+          await NotificationSystem.notifyTitleChange(
+            streamer,
+            previousLiveState.title,
+            nextLiveState.title,
             preferences,
             nextLiveState.platform
           );
@@ -2444,6 +2538,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       })();
       return true;
 
+    case "toggleTitleNotifications":
+      (async () => {
+        const preferences = await PreferenceStore.get();
+        const streamers = await DataStore.getStreamers();
+        const idx = streamers.findIndex((s) => s.id === request.id);
+        if (idx === -1) {
+          sendResponse({ error: translateWithPrefs(preferences, "background.errors.streamerNotFound", { platform: "" }) });
+          return;
+        }
+        streamers[idx].titleNotificationsEnabled = Boolean(request.enabled);
+        await DataStore.saveStreamers(streamers);
+        sendResponse({ success: true });
+      })();
+      return true;
+
     case "refreshStatuses":
       PlatformChecker.refreshAll().then(() => {
         sendResponse({ success: true });
@@ -2586,6 +2695,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if ("gameNotifications" in incomingUpdates) {
           updates.gameNotifications =
             incomingUpdates.gameNotifications === true;
+        }
+        if ("titleNotifications" in incomingUpdates) {
+          updates.titleNotifications =
+            incomingUpdates.titleNotifications === true;
         }
         if ("soundsEnabled" in incomingUpdates) {
           updates.soundsEnabled = incomingUpdates.soundsEnabled !== false;

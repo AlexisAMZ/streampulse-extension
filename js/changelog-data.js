@@ -48,6 +48,146 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.10",
+    date: "2026-09-09",
+    title: {
+      fr: "Savoir quand le titre change",
+      en: "Know when the title changes",
+      es: "Sabe cuándo cambia el título",
+      "pt-BR": "Saiba quando o título muda",
+      de: "Wissen, wann der Titel wechselt",
+      it: "Sapere quando cambia il titolo",
+      pl: "Wiedz, kiedy zmienia się tytuł",
+      tr: "Başlık değiştiğinde haberdar ol",
+      ru: "Знать, когда меняется название",
+      ja: "タイトルの変更を見逃さない",
+      ko: "제목이 바뀌면 바로 알림",
+      id: "Tahu saat judul berubah",
+      nl: "Weten wanneer de titel verandert",
+      sv: "Vet när titeln ändras",
+      cs: "Vědět, kdy se změní název"
+    },
+    subtitle: {
+      fr: "De nouvelles alertes quand un streamer change le titre de son live, et une grosse passe de correction sur les traductions.",
+      en: "New alerts when a streamer changes their stream title, plus a big cleanup pass on the translations.",
+      es: "Nuevas alertas cuando un streamer cambia el título de su directo, y una gran tanda de correcciones en las traducciones.",
+      "pt-BR": "Novos alertas quando um streamer muda o título da live, e uma grande rodada de correções nas traduções.",
+      de: "Neue Benachrichtigungen, wenn ein Streamer den Titel ändert, und eine große Korrekturrunde bei den Übersetzungen.",
+      it: "Nuovi avvisi quando uno streamer cambia il titolo della diretta, e una bella tornata di correzioni sulle traduzioni.",
+      pl: "Nowe alerty, gdy streamer zmienia tytuł transmisji, oraz duża porcja poprawek w tłumaczeniach.",
+      tr: "Bir yayıncı yayın başlığını değiştirdiğinde yeni bildirimler ve çevirilerde geniş bir düzeltme turu.",
+      ru: "Новые оповещения, когда стример меняет название трансляции, и большая волна исправлений в переводах.",
+      ja: "配信タイトルの変更を知らせる新しい通知と、翻訳の大規模な修正。",
+      ko: "스트리머가 방송 제목을 바꾸면 알려주는 새 알림, 그리고 번역 대규모 수정.",
+      id: "Notifikasi baru saat streamer mengubah judul siaran, plus banyak perbaikan terjemahan.",
+      nl: "Nieuwe meldingen wanneer een streamer de titel van de stream wijzigt, plus een grote opschoonronde in de vertalingen.",
+      sv: "Nya aviseringar när en streamer ändrar sändningens titel, plus en stor omgång rättningar i översättningarna.",
+      cs: "Nová upozornění, když streamer změní název vysílání, a velká vlna oprav v překladech."
+    },
+    changes: [
+      {
+        type: "new",
+        text: {
+          fr: "Alertes de changement de titre : soyez prévenu quand un streamer modifie le titre de son live. À activer dans les Réglages, puis à couper streamer par streamer avec le nouveau bouton sur chaque carte.",
+          en: "Title change alerts: get notified when a streamer edits their stream title. Turn them on in Settings, then mute them streamer by streamer with the new button on each card.",
+          es: "Alertas de cambio de título: recibe un aviso cuando un streamer edita el título de su directo. Actívalas en Ajustes y siléncialas streamer por streamer con el nuevo botón de cada tarjeta.",
+          "pt-BR": "Alertas de mudança de título: seja avisado quando um streamer editar o título da live. Ative nas Configurações e silencie streamer por streamer com o novo botão em cada card.",
+          de: "Benachrichtigungen bei Titeländerung: Erfahre, wenn ein Streamer den Titel seines Streams ändert. In den Einstellungen aktivieren und pro Streamer über den neuen Button auf jeder Karte stummschalten.",
+          it: "Avvisi di cambio titolo: ricevi una notifica quando uno streamer modifica il titolo della diretta. Attivali nelle Impostazioni e silenziali streamer per streamer con il nuovo pulsante su ogni scheda.",
+          pl: "Alerty o zmianie tytułu: dowiedz się, gdy streamer zmieni tytuł transmisji. Włącz je w Ustawieniach, a potem wyciszaj osobno dla każdego streamera nowym przyciskiem na karcie.",
+          tr: "Başlık değişikliği uyarıları: bir yayıncı yayın başlığını düzenlediğinde haberdar olun. Ayarlar'dan açın, sonra her karttaki yeni düğmeyle yayıncı bazında susturun.",
+          ru: "Оповещения об изменении названия: узнавайте, когда стример меняет название трансляции. Включите их в настройках и отключайте для каждого стримера новой кнопкой на карточке.",
+          ja: "タイトル変更の通知：配信者が配信タイトルを変更したときに知らせます。設定でオンにして、各カードの新しいボタンで配信者ごとにオフにできます。",
+          ko: "제목 변경 알림: 스트리머가 방송 제목을 수정하면 알려줍니다. 설정에서 켜고, 각 카드의 새 버튼으로 스트리머별로 끌 수 있습니다.",
+          id: "Peringatan perubahan judul: dapatkan notifikasi saat streamer mengubah judul siarannya. Aktifkan di Pengaturan, lalu bisukan per streamer lewat tombol baru di tiap kartu.",
+          nl: "Meldingen bij titelwijziging: krijg bericht wanneer een streamer de titel van de stream aanpast. Zet ze aan bij Instellingen en demp ze per streamer met de nieuwe knop op elke kaart.",
+          sv: "Aviseringar vid titeländring: få besked när en streamer ändrar sändningens titel. Slå på dem i Inställningar och tysta dem per streamer med den nya knappen på varje kort.",
+          cs: "Upozornění na změnu názvu: dozvíte se, když streamer změní název vysílání. Zapněte je v Nastavení a ztlumte je u jednotlivých streamerů novým tlačítkem na kartě."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "Votre photo de profil Twitch apparaît désormais en filigrane derrière vos points et votre temps de visionnage.",
+          en: "Your Twitch profile picture now appears as a watermark behind your points and watch time.",
+          es: "Tu foto de perfil de Twitch aparece ahora como marca de agua detrás de tus puntos y tu tiempo de visionado.",
+          "pt-BR": "Sua foto de perfil da Twitch agora aparece como marca-d'água atrás dos seus pontos e do seu tempo assistido.",
+          de: "Dein Twitch-Profilbild erscheint jetzt als Wasserzeichen hinter deinen Punkten und deiner Sehzeit.",
+          it: "La tua foto profilo Twitch appare ora in filigrana dietro i tuoi punti e il tuo tempo di visione.",
+          pl: "Twoje zdjęcie profilowe z Twitcha pojawia się teraz jako znak wodny za punktami i czasem oglądania.",
+          tr: "Twitch profil fotoğrafınız artık puanlarınızın ve izleme sürenizin arkasında filigran olarak görünüyor.",
+          ru: "Ваше фото профиля Twitch теперь видно фоном за очками и временем просмотра.",
+          ja: "Twitchのプロフィール写真が、ポイントと視聴時間の背景に透かしとして表示されるようになりました。",
+          ko: "이제 트위치 프로필 사진이 포인트와 시청 시간 뒤에 워터마크로 표시됩니다.",
+          id: "Foto profil Twitch Anda kini tampil sebagai tanda air di belakang poin dan waktu tonton Anda.",
+          nl: "Je Twitch-profielfoto verschijnt nu als watermerk achter je punten en kijktijd.",
+          sv: "Din Twitch-profilbild visas nu som vattenstämpel bakom dina poäng och din speltid.",
+          cs: "Vaše profilová fotka z Twitche se nyní zobrazuje jako vodoznak za body a časem sledování."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "Les boutons de chaque carte indiquent leur rôle au survol : notifications, alertes catégorie, alertes titre, ouvrir, retirer. Ils étaient restés en français dans toutes les autres langues.",
+          en: "Each card button now says what it does on hover: notifications, category alerts, title alerts, open, remove. They had stayed in French in every other language.",
+          es: "Los botones de cada tarjeta indican su función al pasar el ratón: notificaciones, alertas de categoría, alertas de título, abrir, quitar. Se habían quedado en francés en todos los demás idiomas.",
+          "pt-BR": "Os botões de cada card mostram sua função ao passar o mouse: notificações, alertas de categoria, alertas de título, abrir, remover. Eles tinham ficado em francês em todos os outros idiomas.",
+          de: "Die Buttons jeder Karte zeigen beim Überfahren ihre Funktion: Benachrichtigungen, Kategoriewarnungen, Titel-Benachrichtigungen, Öffnen, Entfernen. Sie waren in allen anderen Sprachen auf Französisch geblieben.",
+          it: "I pulsanti di ogni scheda mostrano la loro funzione al passaggio del mouse: notifiche, avvisi categoria, avvisi titolo, apri, rimuovi. Erano rimasti in francese in tutte le altre lingue.",
+          pl: "Przyciski na każdej karcie pokazują swoją funkcję po najechaniu: powiadomienia, alerty kategorii, alerty tytułu, otwórz, usuń. We wszystkich innych językach pozostawały po francusku.",
+          tr: "Her karttaki düğmeler üzerine gelince ne işe yaradığını gösteriyor: bildirimler, kategori uyarıları, başlık uyarıları, aç, kaldır. Diğer tüm dillerde Fransızca kalmışlardı.",
+          ru: "Кнопки на карточке подсказывают своё назначение при наведении: уведомления, оповещения о категории, оповещения о названии, открыть, удалить. Во всех других языках они оставались на французском.",
+          ja: "各カードのボタンにカーソルを合わせると役割が表示されます：通知、カテゴリー通知、タイトル通知、開く、削除。これまで他の言語ではフランス語のままでした。",
+          ko: "각 카드의 버튼에 마우스를 올리면 기능이 표시됩니다: 알림, 카테고리 알림, 제목 알림, 열기, 삭제. 그동안 다른 모든 언어에서 프랑스어로 남아 있었습니다.",
+          id: "Tombol di tiap kartu kini menunjukkan fungsinya saat disorot: notifikasi, peringatan kategori, peringatan judul, buka, hapus. Sebelumnya tetap berbahasa Prancis di semua bahasa lain.",
+          nl: "De knoppen op elke kaart tonen bij hover waar ze voor dienen: meldingen, categoriemeldingen, titelmeldingen, openen, verwijderen. Ze waren in alle andere talen in het Frans gebleven.",
+          sv: "Knapparna på varje kort visar vad de gör när du håller muspekaren över: aviseringar, kategoriaviseringar, titelaviseringar, öppna, ta bort. De hade blivit kvar på franska i alla andra språk.",
+          cs: "Tlačítka na každé kartě po najetí myší ukážou, k čemu slouží: oznámení, upozornění na kategorii, upozornění na název, otevřít, odebrat. Ve všech ostatních jazycích zůstávala francouzsky."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Sur une carte en live, le nom de la plateforme n'apparaît plus deux fois.",
+          en: "On a live card, the platform name no longer appears twice.",
+          es: "En una tarjeta en directo, el nombre de la plataforma ya no aparece dos veces.",
+          "pt-BR": "Em um card ao vivo, o nome da plataforma não aparece mais duas vezes.",
+          de: "Auf einer Live-Karte erscheint der Plattformname nicht mehr doppelt.",
+          it: "Su una scheda in diretta, il nome della piattaforma non compare più due volte.",
+          pl: "Na karcie transmisji na żywo nazwa platformy nie pojawia się już dwa razy.",
+          tr: "Canlı bir kartta platform adı artık iki kez görünmüyor.",
+          ru: "На карточке трансляции название платформы больше не показывается дважды.",
+          ja: "配信中のカードで、プラットフォーム名が二重に表示されなくなりました。",
+          ko: "라이브 카드에서 플랫폼 이름이 두 번 표시되지 않습니다.",
+          id: "Pada kartu siaran langsung, nama platform tidak lagi muncul dua kali.",
+          nl: "Op een livekaart verschijnt de naam van het platform niet meer twee keer.",
+          sv: "På ett livekort visas plattformens namn inte längre två gånger.",
+          cs: "Na kartě živého vysílání se název platformy už neobjevuje dvakrát."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Grand ménage dans les traductions : « Twitch » et « Kick » étaient traduits en mots courants dans une dizaine de langues, et le nom du jeu ou de la plateforme manquait dans plusieurs notifications.",
+          en: "Big translation cleanup: “Twitch” and “Kick” were being translated into everyday words in about ten languages, and the game or platform name was missing from several notifications.",
+          es: "Gran limpieza en las traducciones: «Twitch» y «Kick» se traducían como palabras comunes en una decena de idiomas, y faltaba el nombre del juego o de la plataforma en varias notificaciones.",
+          "pt-BR": "Grande limpeza nas traduções: “Twitch” e “Kick” eram traduzidos como palavras comuns em uma dezena de idiomas, e faltava o nome do jogo ou da plataforma em várias notificações.",
+          de: "Großer Übersetzungs-Frühjahrsputz: „Twitch“ und „Kick“ wurden in rund zehn Sprachen als Alltagswörter übersetzt, und in mehreren Benachrichtigungen fehlte der Spiel- oder Plattformname.",
+          it: "Grande pulizia nelle traduzioni: «Twitch» e «Kick» venivano tradotti come parole comuni in una decina di lingue, e in diverse notifiche mancava il nome del gioco o della piattaforma.",
+          pl: "Duże porządki w tłumaczeniach: „Twitch” i „Kick” były tłumaczone jako zwykłe słowa w kilkunastu językach, a w kilku powiadomieniach brakowało nazwy gry lub platformy.",
+          tr: "Çevirilerde büyük temizlik: “Twitch” ve “Kick” yaklaşık on dilde günlük kelimelere çevriliyordu ve birkaç bildirimde oyun veya platform adı eksikti.",
+          ru: "Большая уборка в переводах: «Twitch» и «Kick» переводились как обычные слова примерно в десяти языках, а в нескольких уведомлениях пропадало название игры или платформы.",
+          ja: "翻訳の大掃除：10ほどの言語で「Twitch」と「Kick」が普通の単語として翻訳されており、いくつかの通知ではゲーム名やプラットフォーム名が抜けていました。",
+          ko: "번역 대청소: 열 개 남짓한 언어에서 “Twitch”와 “Kick”이 일반 단어로 번역되어 있었고, 일부 알림에서는 게임이나 플랫폼 이름이 빠져 있었습니다.",
+          id: "Pembersihan besar pada terjemahan: “Twitch” dan “Kick” diterjemahkan menjadi kata sehari-hari di sekitar sepuluh bahasa, dan nama game atau platform hilang di beberapa notifikasi.",
+          nl: "Grote opruiming in de vertalingen: “Twitch” en “Kick” werden in een tiental talen als gewone woorden vertaald, en in meerdere meldingen ontbrak de naam van de game of het platform.",
+          sv: "Stor uppstädning i översättningarna: ”Twitch” och ”Kick” översattes till vardagsord på ett tiotal språk, och i flera aviseringar saknades spelets eller plattformens namn.",
+          cs: "Velký úklid v překladech: „Twitch“ a „Kick“ se v deseti jazycích překládaly jako běžná slova a v několika oznámeních chybělo jméno hry nebo platformy."
+        }
+      }
+    ]
+  },
+  {
     version: "26.9.9",
     date: "2026-09-09",
     title: {
