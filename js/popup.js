@@ -1497,9 +1497,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
-    // Watch time summary is rendered lazily when the Settings tab opens
-    // (see setActiveTab) — keeps initial popup paint fast even when the
-    // betaWatchTimeData blob is large.
+    // Le bloc « Temps » de la barre d'accueil vit dans l'onglet Streamers, pas
+    // dans les reglages : le rendre uniquement a l'ouverture des reglages le
+    // laissait bloque sur son « -- » de gabarit tant qu'on n'y etait pas passe.
+    // On le rend donc apres la premiere peinture — la lecture du blob
+    // betaWatchTimeData reste hors du chemin critique, et _watchTimeLoaded
+    // evite un second rendu au premier passage dans les reglages.
+    _watchTimeLoaded = true;
+    renderWatchTimeSummary().catch(() => {});
 
     // 3. Setup UI Components
     const tabs = document.querySelectorAll(".tab-button");
