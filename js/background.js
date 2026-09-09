@@ -2493,21 +2493,26 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             value: value || 1,
           });
 
-          // Event alerts notification check
+          // Alertes d'evenement. On passe par NotificationCenter comme partout
+          // ailleurs : il resout l'icone en URL absolue, retombe sur l'icone
+          // embarquee si le telechargement echoue, et attrape le rejet.
+          //
+          // Les deux appels directs qui vivaient ici passaient un chemin
+          // relatif ("images/photos/128px.png"). Un service worker resout le
+          // relatif contre sa propre URL, soit js/images/photos/128px.png, qui
+          // n'existe pas : Chrome refusait la notification entiere avec
+          // « Unable to download all specified images », et faute de callback
+          // la promesse rejetee remontait en Uncaught (in promise).
           const prefs = await PreferenceStore.get();
           if (type === "drop" && prefs.dropAlerts) {
-            chrome.notifications?.create?.({
-              type: "basic",
-              iconUrl: "images/photos/128px.png",
-              title: "StreamPulse · Drop réclamé !",
-              message: text || "Un Drop Twitch a été réclamé automatiquement.",
+            await NotificationCenter.show({
+              title: translateWithPrefs(prefs, "background.notifications.dropTitle"),
+              message: text || translateWithPrefs(prefs, "background.notifications.dropMessage"),
             });
           } else if (type === "raid" && prefs.raidAlerts) {
-            chrome.notifications?.create?.({
-              type: "basic",
-              iconUrl: "images/photos/128px.png",
-              title: "StreamPulse · Raid annulé",
-              message: text || "Le transfert vers la chaîne raidée a été annulé.",
+            await NotificationCenter.show({
+              title: translateWithPrefs(prefs, "background.notifications.raidTitle"),
+              message: text || translateWithPrefs(prefs, "background.notifications.raidMessage"),
             });
           }
         }

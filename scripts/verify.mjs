@@ -272,6 +272,29 @@ if (!syntaxFails) pass(`${jsFiles.length} JS files parse cleanly`);
       pass(`${defKeys.length} preferences are accepted by the updatePreferences handler`);
     }
   }
+
+  // Le service worker vit dans js/, donc un chemin d'icone relatif se resout
+  // contre js/ et pointe dans le vide. Chrome refuse alors la notification
+  // entiere avec « Unable to download all specified images ».
+  const relativeIcons = [...bgSrc.matchAll(/iconUrl:\s*"([^"]+)"/g)]
+    .map((m) => m[1])
+    .filter((url) => !/^(https?:|chrome-extension:|data:)/.test(url));
+  if (relativeIcons.length) {
+    relativeIcons.forEach((url) =>
+      fail(`js/background.js passes a relative notification icon ("${url}"): a service worker resolves it against js/, so Chrome drops the whole notification. Use chrome.runtime.getURL()`)
+    );
+  } else {
+    pass("notification icons are absolute: none resolve against the service worker's own folder");
+  }
+
+  // Sans callback, chrome.notifications.create renvoie une promesse ; un echec
+  // de telechargement d'image remonte alors en Uncaught (in promise).
+  const uncaughtCreates = [...bgSrc.matchAll(/chrome\.notifications\??\.?\.create\??\.?\(\{/g)];
+  if (uncaughtCreates.length) {
+    fail(`js/background.js calls chrome.notifications.create() with an object literal and no callback (${uncaughtCreates.length}x): a rejected image download becomes an unhandled promise. Go through NotificationCenter.show()`);
+  } else {
+    pass("every notification goes through NotificationCenter, which catches image failures");
+  }
 }
 
 // ── 4. HTML assets + MV3 CSP ────────────────────────────────────────────────
