@@ -4,7 +4,7 @@
  * THE ONLY FILE TO EDIT WHEN YOU SHIP A RELEASE.
  *
  * Add a new entry at the TOP of RELEASES. The `version` MUST match the
- * `version` field in manifest.json — `npm run verify` fails the build if the
+ * `version` field in manifest.json. `npm run verify` fails the build if the
  * manifest version has no matching entry here, so notes can't silently drift
  * out of sync with what users actually install.
  *
@@ -30,12 +30,12 @@
  *   version  string   Must equal manifest.json version, e.g. "26.8.9"
  *   date     string   ISO date, "YYYY-MM-DD"
  *   title    i18n     Short release headline (optional). Rendered as the big
- *                     serif hero, so keep it to ~6 words in every language —
+ *                     serif hero, so keep it to ~6 words in every language:
  *                     the last two are italic + violet, like the onboarding
  *                     welcome screen.
  *   subtitle i18n     One-line summary under the hero (optional). Falls back to
  *                     a count of the changes below.
- *   changes  array    { type, text } — type is "new" | "fix" | "improved",
+ *   changes  array    { type, text }: type is "new" | "fix" | "improved",
  *                     text is an i18n map
  *   thanks   array    Contributor credits, newest release first:
  *                       handle  string  Display name / pseudo (required)
@@ -76,7 +76,7 @@ export const RELEASES = [
       it: "La versione Firefox è online, insieme al riepilogo ZEvent e al badge della comunità nella chat di Twitch.",
       pl: "Wersja na Firefoksa jest już dostępna, razem z podsumowaniem ZEvent i odznaką społeczności na czacie Twitcha.",
       tr: "Firefox sürümü yayında; yanında ZEvent özeti ve Twitch sohbetindeki topluluk rozeti.",
-      ru: "Версия для Firefox доступна — вместе с итогами ZEvent и значком сообщества в чате Twitch.",
+      ru: "Версия для Firefox доступна, вместе с итогами ZEvent и значком сообщества в чате Twitch.",
       ja: "Firefox版を公開しました。ZEventの記録と、Twitchチャットのコミュニティバッジも一緒に。",
       ko: "Firefox 버전이 출시되었습니다. ZEvent 결산과 트위치 채팅의 커뮤니티 배지도 함께.",
       id: "Versi Firefox sudah tersedia, bersama rekap ZEvent dan lencana komunitas di obrolan Twitch.",
@@ -108,21 +108,21 @@ export const RELEASES = [
       {
         type: "new",
         text: {
-          fr: "ZEvent 2026 : pendant le week-end, un bandeau dédié, un filtre et le surlignage vert des streamers participants dans votre sidebar Twitch. L'événement terminé, retrouvez votre récap — le temps passé chez chaque participant — et exportez-le en image, au format Twitter ou story Instagram.",
-          en: "ZEvent 2026: during the weekend, a dedicated banner, a filter and green highlighting of participating streamers in your Twitch sidebar. Now that it is over, open your recap — how long you watched each participant — and export it as an image, in Twitter or Instagram story format.",
-          es: "ZEvent 2026: durante el fin de semana, un banner dedicado, un filtro y el resaltado verde de los streamers participantes en tu barra lateral de Twitch. Terminado el evento, consulta tu resumen —el tiempo pasado con cada participante— y expórtalo como imagen, en formato Twitter o historia de Instagram.",
-          "pt-BR": "ZEvent 2026: durante o fim de semana, um banner dedicado, um filtro e o destaque verde dos streamers participantes na sua barra lateral da Twitch. Encerrado o evento, veja seu resumo — o tempo assistido com cada participante — e exporte como imagem, em formato Twitter ou story do Instagram.",
-          de: "ZEvent 2026: Am Wochenende ein eigenes Banner, ein Filter und die grüne Hervorhebung teilnehmender Streamer in deiner Twitch-Seitenleiste. Nach dem Event öffnest du deinen Rückblick — wie lange du jeden Teilnehmer geschaut hast — und exportierst ihn als Bild im Twitter- oder Instagram-Story-Format.",
-          it: "ZEvent 2026: durante il weekend, un banner dedicato, un filtro e l'evidenziazione verde degli streamer partecipanti nella barra laterale di Twitch. A evento concluso, apri il tuo riepilogo — il tempo passato con ogni partecipante — ed esportalo come immagine, in formato Twitter o storia Instagram.",
-          pl: "ZEvent 2026: w weekend dedykowany baner, filtr i zielone podświetlenie uczestniczących streamerów na pasku bocznym Twitcha. Po zakończeniu otwórz swoje podsumowanie — ile czasu spędziłeś u każdego uczestnika — i wyeksportuj je jako obrazek w formacie Twittera lub relacji na Instagramie.",
-          tr: "ZEvent 2026: hafta sonu boyunca özel bir afiş, bir filtre ve Twitch kenar çubuğunuzda katılan yayıncıların yeşil vurgusu. Etkinlik bittiğinde özetinizi açın — her katılımcıyı ne kadar izlediğinizi — ve Twitter veya Instagram hikâye formatında görsel olarak dışa aktarın.",
-          ru: "ZEvent 2026: в выходные — отдельный баннер, фильтр и зелёная подсветка участвующих стримеров в боковой панели Twitch. После завершения откройте свои итоги — сколько вы смотрели каждого участника — и сохраните картинку в формате Twitter или истории Instagram.",
+          fr: "ZEvent 2026 : pendant le week-end, un bandeau dédié, un filtre et le surlignage vert des streamers participants dans votre sidebar Twitch. L'événement terminé, retrouvez votre récap, le temps passé chez chaque participant, et exportez-le en image, au format Twitter ou story Instagram.",
+          en: "ZEvent 2026: during the weekend, a dedicated banner, a filter and green highlighting of participating streamers in your Twitch sidebar. Now that it is over, open your recap, how long you watched each participant, and export it as an image, in Twitter or Instagram story format.",
+          es: "ZEvent 2026: durante el fin de semana, un banner dedicado, un filtro y el resaltado verde de los streamers participantes en tu barra lateral de Twitch. Terminado el evento, consulta tu resumen, el tiempo pasado con cada participante, y expórtalo como imagen, en formato Twitter o historia de Instagram.",
+          "pt-BR": "ZEvent 2026: durante o fim de semana, um banner dedicado, um filtro e o destaque verde dos streamers participantes na sua barra lateral da Twitch. Encerrado o evento, veja seu resumo, o tempo assistido com cada participante, e exporte como imagem, em formato Twitter ou story do Instagram.",
+          de: "ZEvent 2026: Am Wochenende ein eigenes Banner, ein Filter und die grüne Hervorhebung teilnehmender Streamer in deiner Twitch-Seitenleiste. Nach dem Event öffnest du deinen Rückblick, wie lange du jeden Teilnehmer geschaut hast, und exportierst ihn als Bild im Twitter- oder Instagram-Story-Format.",
+          it: "ZEvent 2026: durante il weekend, un banner dedicato, un filtro e l'evidenziazione verde degli streamer partecipanti nella barra laterale di Twitch. A evento concluso, apri il tuo riepilogo, il tempo passato con ogni partecipante, ed esportalo come immagine, in formato Twitter o storia Instagram.",
+          pl: "ZEvent 2026: w weekend dedykowany baner, filtr i zielone podświetlenie uczestniczących streamerów na pasku bocznym Twitcha. Po zakończeniu otwórz swoje podsumowanie, ile czasu spędziłeś u każdego uczestnika, i wyeksportuj je jako obrazek w formacie Twittera lub relacji na Instagramie.",
+          tr: "ZEvent 2026: hafta sonu boyunca özel bir afiş, bir filtre ve Twitch kenar çubuğunuzda katılan yayıncıların yeşil vurgusu. Etkinlik bittiğinde özetinizi açın, her katılımcıyı ne kadar izlediğinizi görün ve Twitter veya Instagram hikâye formatında görsel olarak dışa aktarın.",
+          ru: "ZEvent 2026: в выходные: отдельный баннер, фильтр и зелёная подсветка участвующих стримеров в боковой панели Twitch. После завершения откройте свои итоги, сколько вы смотрели каждого участника, и сохраните картинку в формате Twitter или истории Instagram.",
           ja: "ZEvent 2026：週末は専用バナー、フィルター、Twitchサイドバーでの参加ストリーマーの緑色ハイライト。終了後は、参加者ごとの視聴時間をまとめた記録を開き、Twitter形式またはInstagramストーリー形式の画像として書き出せます。",
           ko: "ZEvent 2026: 주말 동안 전용 배너, 필터, 트위치 사이드바의 참가 스트리머 초록색 강조. 행사가 끝난 뒤에는 참가자별 시청 시간을 담은 결산을 열어 트위터 또는 인스타그램 스토리 형식의 이미지로 내보낼 수 있습니다.",
-          id: "ZEvent 2026: selama akhir pekan, banner khusus, filter, dan sorotan hijau streamer peserta di bilah sisi Twitch Anda. Setelah acara berakhir, buka rekap Anda — berapa lama Anda menonton tiap peserta — dan ekspor sebagai gambar dalam format Twitter atau story Instagram.",
-          nl: "ZEvent 2026: tijdens het weekend een eigen banner, een filter en groene markering van deelnemende streamers in je Twitch-zijbalk. Nu het voorbij is, open je je overzicht — hoelang je naar elke deelnemer keek — en exporteer je het als afbeelding, in Twitter- of Instagram-storyformaat.",
-          sv: "ZEvent 2026: under helgen en egen banner, ett filter och grön markering av deltagande streamers i ditt Twitch-sidofält. Nu när det är slut öppnar du din sammanfattning — hur länge du tittade på varje deltagare — och exporterar den som bild i Twitter- eller Instagram-storyformat.",
-          cs: "ZEvent 2026: o víkendu vlastní banner, filtr a zelené zvýraznění zúčastněných streamerů v postranním panelu Twitche. Po skončení otevřete svůj přehled — jak dlouho jste sledovali jednotlivé účastníky — a exportujte jej jako obrázek ve formátu Twitteru nebo Instagram story."
+          id: "ZEvent 2026: selama akhir pekan, banner khusus, filter, dan sorotan hijau streamer peserta di bilah sisi Twitch Anda. Setelah acara berakhir, buka rekap Anda, berapa lama Anda menonton tiap peserta, dan ekspor sebagai gambar dalam format Twitter atau story Instagram.",
+          nl: "ZEvent 2026: tijdens het weekend een eigen banner, een filter en groene markering van deelnemende streamers in je Twitch-zijbalk. Nu het voorbij is, open je je overzicht, hoelang je naar elke deelnemer keek, en exporteer je het als afbeelding, in Twitter- of Instagram-storyformaat.",
+          sv: "ZEvent 2026: under helgen en egen banner, ett filter och grön markering av deltagande streamers i ditt Twitch-sidofält. Nu när det är slut öppnar du din sammanfattning, hur länge du tittade på varje deltagare, och exporterar den som bild i Twitter- eller Instagram-storyformat.",
+          cs: "ZEvent 2026: o víkendu vlastní banner, filtr a zelené zvýraznění zúčastněných streamerů v postranním panelu Twitche. Po skončení otevřete svůj přehled, jak dlouho jste sledovali jednotlivé účastníky, a exportujte jej jako obrázek ve formátu Twitteru nebo Instagram story."
         }
       },
       {
@@ -148,21 +148,21 @@ export const RELEASES = [
       {
         type: "new",
         text: {
-          fr: "Panneau de la topbar Twitch repensé : le temps passé sur la chaîne que vous regardez, un bouton pour l'ajouter à vos suivis, vos réglages rapides, et la liste de vos streamers actuellement en direct — cliquables pour basculer sans quitter la page.",
-          en: "Redesigned Twitch top-bar panel: how long you have watched the current channel, a button to add it to your list, your quick settings, and your streamers currently live — click to switch without leaving the page.",
+          fr: "Panneau de la topbar Twitch repensé : le temps passé sur la chaîne que vous regardez, un bouton pour l'ajouter à vos suivis, vos réglages rapides, et la liste de vos streamers actuellement en direct, cliquables pour basculer sans quitter la page.",
+          en: "Redesigned Twitch top-bar panel: how long you have watched the current channel, a button to add it to your list, your quick settings, and your streamers currently live: click to switch without leaving the page.",
           es: "Panel de la barra superior de Twitch rediseñado: el tiempo pasado en el canal actual, un botón para añadirlo a tus seguidos, tus ajustes rápidos y tus streamers en directo, clicables para cambiar sin salir de la página.",
           "pt-BR": "Painel da barra superior da Twitch redesenhado: o tempo assistido no canal atual, um botão para adicioná-lo aos seus seguidos, seus ajustes rápidos e seus streamers ao vivo, clicáveis para trocar sem sair da página.",
-          de: "Neu gestaltetes Twitch-Topbar-Panel: deine Sehzeit im aktuellen Kanal, ein Button zum Hinzufügen, deine Schnelleinstellungen und deine Streamer, die gerade live sind — anklickbar zum Wechseln, ohne die Seite zu verlassen.",
+          de: "Neu gestaltetes Twitch-Topbar-Panel: deine Sehzeit im aktuellen Kanal, ein Button zum Hinzufügen, deine Schnelleinstellungen und deine Streamer, die gerade live sind, anklickbar zum Wechseln, ohne die Seite zu verlassen.",
           it: "Pannello della barra superiore di Twitch ridisegnato: il tempo passato sul canale attuale, un pulsante per aggiungerlo ai seguiti, le impostazioni rapide e i tuoi streamer in diretta, cliccabili per cambiare senza lasciare la pagina.",
-          pl: "Przeprojektowany panel górnego paska Twitcha: czas spędzony na oglądanym kanale, przycisk dodania go do obserwowanych, szybkie ustawienia i lista streamerów na żywo — klikalna, by przełączyć bez opuszczania strony.",
-          tr: "Yeniden tasarlanan Twitch üst çubuk paneli: izlediğiniz kanalda geçirdiğiniz süre, onu listenize ekleme düğmesi, hızlı ayarlarınız ve şu anda yayında olan yayıncılarınız — sayfadan ayrılmadan geçmek için tıklanabilir.",
-          ru: "Обновлённая панель верхней строки Twitch: время, проведённое на текущем канале, кнопка добавления в список, быстрые настройки и стримеры, которые сейчас в эфире — кликните, чтобы переключиться, не покидая страницу.",
+          pl: "Przeprojektowany panel górnego paska Twitcha: czas spędzony na oglądanym kanale, przycisk dodania go do obserwowanych, szybkie ustawienia i lista streamerów na żywo, klikalna, by przełączyć bez opuszczania strony.",
+          tr: "Yeniden tasarlanan Twitch üst çubuk paneli: izlediğiniz kanalda geçirdiğiniz süre, onu listenize ekleme düğmesi, hızlı ayarlarınız ve şu anda yayında olan yayıncılarınız, sayfadan ayrılmadan geçmek için tıklanabilir.",
+          ru: "Обновлённая панель верхней строки Twitch: время, проведённое на текущем канале, кнопка добавления в список, быстрые настройки и стримеры, которые сейчас в эфире: кликните, чтобы переключиться, не покидая страницу.",
           ja: "Twitchトップバーのパネルを刷新：視聴中のチャンネルでの視聴時間、フォローに追加するボタン、クイック設定、そして配信中のストリーマー一覧。クリックでページを離れずに切り替えられます。",
-          ko: "트위치 상단 바 패널 개편: 현재 채널의 시청 시간, 목록에 추가하는 버튼, 빠른 설정, 그리고 방송 중인 스트리머 목록 — 클릭하면 페이지를 벗어나지 않고 이동합니다.",
-          id: "Panel bilah atas Twitch dirancang ulang: waktu tonton di kanal yang sedang Anda tonton, tombol untuk menambahkannya, pengaturan cepat, dan streamer Anda yang sedang live — klik untuk beralih tanpa meninggalkan halaman.",
-          nl: "Vernieuwd Twitch-topbalkpaneel: je kijktijd op het huidige kanaal, een knop om het toe te voegen, je snelle instellingen en je streamers die nu live zijn — klik om te wisselen zonder de pagina te verlaten.",
-          sv: "Omdesignad panel i Twitch-topplisten: din tittartid på kanalen du ser, en knapp för att lägga till den, dina snabbinställningar och dina streamers som sänder nu — klickbara för att byta utan att lämna sidan.",
-          cs: "Přepracovaný panel horní lišty Twitche: čas strávený na sledovaném kanálu, tlačítko pro přidání mezi sledované, rychlá nastavení a streameři, kteří právě vysílají — kliknutím přepnete bez opuštění stránky."
+          ko: "트위치 상단 바 패널 개편: 현재 채널의 시청 시간, 목록에 추가하는 버튼, 빠른 설정, 그리고 방송 중인 스트리머 목록. 클릭하면 페이지를 벗어나지 않고 이동합니다.",
+          id: "Panel bilah atas Twitch dirancang ulang: waktu tonton di kanal yang sedang Anda tonton, tombol untuk menambahkannya, pengaturan cepat, dan streamer Anda yang sedang live: klik untuk beralih tanpa meninggalkan halaman.",
+          nl: "Vernieuwd Twitch-topbalkpaneel: je kijktijd op het huidige kanaal, een knop om het toe te voegen, je snelle instellingen en je streamers die nu live zijn: klik om te wisselen zonder de pagina te verlaten.",
+          sv: "Omdesignad panel i Twitch-topplisten: din tittartid på kanalen du ser, en knapp för att lägga till den, dina snabbinställningar och dina streamers som sänder nu, klickbara för att byta utan att lämna sidan.",
+          cs: "Přepracovaný panel horní lišty Twitche: čas strávený na sledovaném kanálu, tlačítko pro přidání mezi sledované, rychlá nastavení a streameři, kteří právě vysílají: kliknutím přepnete bez opuštění stránky."
         }
       },
       {
@@ -272,11 +272,11 @@ export const RELEASES = [
           en: "Every setting change now shows a confirmation, so there is no doubt about what was applied.",
           es: "Cada cambio de ajuste muestra ahora una confirmación: sin dudas sobre lo que se ha aplicado.",
           "pt-BR": "Cada alteração de configuração agora exibe uma confirmação: sem dúvidas sobre o que foi aplicado.",
-          de: "Jede Einstellungsänderung zeigt jetzt eine Bestätigung — kein Zweifel mehr, was übernommen wurde.",
+          de: "Jede Einstellungsänderung zeigt jetzt eine Bestätigung: kein Zweifel mehr, was übernommen wurde.",
           it: "Ogni modifica alle impostazioni mostra ora una conferma: nessun dubbio su cosa è stato applicato.",
-          pl: "Każda zmiana ustawień pokazuje teraz potwierdzenie — bez wątpliwości, co zostało zapisane.",
+          pl: "Każda zmiana ustawień pokazuje teraz potwierdzenie: bez wątpliwości, co zostało zapisane.",
           tr: "Her ayar değişikliği artık bir onay gösteriyor: neyin uygulandığına dair şüphe kalmıyor.",
-          ru: "Каждое изменение настройки теперь показывает подтверждение — понятно, что именно применилось.",
+          ru: "Каждое изменение настройки теперь показывает подтверждение: понятно, что именно применилось.",
           ja: "設定を変更するたびに確認が表示されます。何が反映されたか迷いません。",
           ko: "설정을 변경할 때마다 확인 메시지가 표시되어 무엇이 적용됐는지 분명해집니다.",
           id: "Setiap perubahan pengaturan kini menampilkan konfirmasi, jadi tidak ada keraguan tentang apa yang diterapkan.",
@@ -759,7 +759,7 @@ export const RELEASES = [
           "it": "Nelle pagine dei canali di Twitch è ora presente un pulsante “Aggiungi a StreamPulse”, proprio accanto al pulsante “Iscriviti”. È di colore viola se lo streamer non è ancora seguito, mentre diventa grigio una volta aggiunto.",
           "pl": "Przycisk „Dodaj do StreamPulse” pojawia się teraz bezpośrednio na stronach kanałów serwisu Twitch, obok przycisku „Subskrybuj”. Jest fioletowy, gdy streamer nie jest jeszcze obserwowany, a szary po dodaniu.",
           "tr": "Artık Twitch kanal sayfalarında, “Abone Ol” düğmesinin hemen yanında bir “StreamPulse’a Ekle” düğmesi görünüyor. Yayıncı henüz takip edilmediğinde mor, eklendiğinde ise gri renkte görünür.",
-          "ru": "Кнопка «Добавить в StreamPulse» теперь отображается прямо на страницах каналов Twitch, рядом с кнопкой «Подписаться». Она имеет фиолетовый цвет, если на стримера ещё не подписаны, и серый — после добавления.",
+          "ru": "Кнопка «Добавить в StreamPulse» теперь отображается прямо на страницах каналов Twitch, рядом с кнопкой «Подписаться». Она имеет фиолетовый цвет, если на стримера ещё не подписаны, и серый после добавления.",
           "ja": "Twitchのチャンネルページに、「StreamPulseに追加」ボタンが、「チャンネル登録」ボタンのすぐ横に表示されるようになりました。まだその配信者をフォローしていない場合は紫色で表示され、追加すると灰色になります。",
           "ko": "이제 Twitch 채널 페이지의 ‘구독’ 버튼 바로 옆에 ‘StreamPulse에 추가’ 버튼이 표시됩니다. 스트리머를 아직 팔로우하지 않은 상태에서는 보라색으로, 추가한 후에는 회색으로 표시됩니다.",
           "id": "Tombol “Tambahkan ke StreamPulse” kini muncul langsung di halaman saluran Twitch, tepat di sebelah tombol “Berlangganan”. Tombol tersebut berwarna ungu jika streamer tersebut belum diikuti, dan berubah menjadi abu-abu setelah ditambahkan.",
@@ -1002,7 +1002,7 @@ export const RELEASES = [
  * fab414f a regenere le fichier pour les 11 nouvelles langues. changelog.js les
  * importe toujours : l'import echouait, le module entier ne s'executait pas, et
  * la page de notes de version ne montrait plus que sa coquille vide. Le controle
- * de `npm run verify` ne l'attrapait pas — il verifie que les fichiers JS
+ * de `npm run verify` ne l'attrapait pas : il verifie que les fichiers JS
  * parsent, pas que leurs imports se resolvent.
  */
 export function pickLocalized(value, lang) {
