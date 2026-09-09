@@ -10,7 +10,7 @@
  *
  * Meme charte que les captures du store (scripts/store-assets/frames.mjs) :
  * fond #08080d, halo violet Twitch, halo vert Kick, grille ambiante, pile de
- * polices systeme. Rendu en 2x puis reduction — le texte reste net.
+ * polices systeme. Rendu en 2x puis reduction, pour garder le texte net.
  */
 
 import fs from "node:fs";
@@ -114,7 +114,7 @@ const COPY = {
   en: {
     chip: "Twitch &amp; Kick",
     h1: `Never miss a live<br>from your streamers.<br><span class="accent">And plenty more.</span>`,
-    sub: "One extension for your Twitch and Kick streamers — plus every viewing comfort on top.",
+    sub: "One extension for your Twitch and Kick streamers, plus every viewing comfort on top.",
     free: "free",
     left: [
       "Live notifications",
