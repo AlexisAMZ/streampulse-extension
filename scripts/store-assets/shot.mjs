@@ -34,7 +34,7 @@ function sizeOrNull(filePath) {
  *
  * Les processus auxiliaires survivent quelques instants au SIGKILL du parent et
  * continuent d'écrire dans le dossier : `rm -rf` échoue alors sur ENOTEMPTY. On
- * réessaie, puis on abandonne en silence — c'est un dossier de /tmp, le laisser
+ * réessaie, puis on abandonne en silence : c'est un dossier de /tmp, le laisser
  * traîner est sans conséquence, alors qu'échouer interromprait la génération.
  */
 async function removeProfile(profile) {
@@ -141,7 +141,7 @@ export async function flattenToRgb(filePath) {
   ]);
 }
 
-/** Renvoie le mode PIL du fichier ("RGB", "RGBA"…) — vérification du 24 bits. */
+/** Renvoie le mode PIL du fichier ("RGB", "RGBA"…) : vérification du 24 bits. */
 export async function colorMode(filePath) {
   const { stdout } = await run("python3", [
     "-c",
@@ -151,7 +151,7 @@ export async function colorMode(filePath) {
   return stdout.trim();
 }
 
-/** Renvoie `{width, height}` en pixels réels — sert de vérification finale. */
+/** Renvoie `{width, height}` en pixels réels : sert de vérification finale. */
 export async function pixelSize(filePath) {
   const { stdout } = await run("sips", [
     "-g",

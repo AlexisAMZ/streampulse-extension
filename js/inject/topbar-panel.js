@@ -1,9 +1,9 @@
 /**
- * StreamPulse — contenu du panneau de la topbar Twitch (monde isolé).
+ * StreamPulse : contenu du panneau de la topbar Twitch (monde isolé).
  *
  * Ce fichier ne construit que le DOM du panneau : il ne connaît ni son
  * positionnement, ni son cycle de vie, qui restent dans topbar.js. Il ne lit
- * rien lui-même — tout arrive par `state`, ce qui le rend testable et évite
+ * rien lui-même : tout arrive par `state`, ce qui le rend testable et évite
  * que topbar.js continue de grossir.
  *
  * Expose `self.__SP_TOPBAR_PANEL__.build(state, deps)`.

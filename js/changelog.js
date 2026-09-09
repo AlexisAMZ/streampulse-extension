@@ -1,8 +1,8 @@
 /**
  * Renders the patch notes page from js/changelog-data.js.
  *
- * Everything is built with textContent and explicit attributes — never innerHTML
- * — because contributor handles and URLs are hand-authored data that could
+ * Everything is built with textContent and explicit attributes, never innerHTML,
+ * because contributor handles and URLs are hand-authored data that could
  * otherwise inject markup into this page.
  */
 
@@ -132,7 +132,7 @@ function renderThanks(release) {
     (entry) => entry && entry.handle,
   );
 
-  // Hide the whole section when there's nobody to credit — an empty
+  // Hide the whole section when there's nobody to credit: an empty
   // "Merci à eux" block looks broken.
   if (!thanks.length) {
     section.hidden = true;
@@ -140,7 +140,7 @@ function renderThanks(release) {
   }
   section.hidden = false;
 
-  // Avec un seul contributeur, « Merci à eux » sonne faux — mais écrire « à lui »
+  // Avec un seul contributeur, « Merci à eux » sonne faux, mais écrire « à lui »
   // supposerait un genre qu'on ne connaît pas. Le titre reste donc neutre, et la
   // phrase d'intro disparaît : sa carte dit déjà qui il est et ce qu'il a fait,
   // la répéter donnait trois fois le même pseudo à l'écran.

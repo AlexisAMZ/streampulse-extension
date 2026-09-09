@@ -1,5 +1,5 @@
 /**
- * StreamPulse — "Add to StreamPulse" button on Twitch channel pages.
+ * StreamPulse: "Add to StreamPulse" button on Twitch channel pages.
  *
  * Renders a standalone, branded pill (logo + label) in the channel action row,
  * next to Twitch's own Follow / Subscribe controls, so a streamer can be tracked
@@ -78,7 +78,7 @@
   /**
    * Résout la préférence stockée ("pt_BR", "EN", "de-DE") vers une langue
    * disponible. Délègue au helper partagé, qui gère l'étiquette complète puis
-   * la sous-étiquette de base — l'ancienne version tronquait d'office sur le
+   * la sous-étiquette de base : l'ancienne version tronquait d'office sur le
    * tiret et confondait donc pt-BR avec pt.
    */
   function langKey(value) {
@@ -160,7 +160,7 @@
    * L'ancienne version passait par un message « getStreamers » au service
    * worker. En MV3 ce worker s'endort : le message échoue alors avec
    * chrome.runtime.lastError, send() résout null, et le null devenait une liste
-   * VIDE — donc « aucune chaîne suivie », donc le bouton violet « Ajouter » sur
+   * VIDE : donc « aucune chaîne suivie », donc le bouton violet « Ajouter » sur
    * une chaîne déjà suivie, sans jamais retenter. Le stockage répond toujours,
    * worker endormi ou non, et c'est déjà la source unique de getStreamers().
    */
@@ -379,8 +379,8 @@
    *
    * The label carries a styled-components class like
    * "ScCoreButtonLabel-sc-s7h2b7-0 bfhate". Only the "ScCoreButtonLabel" prefix
-   * is stable — the `sc-*` hash and the atom class are regenerated on every
-   * Twitch build — and even that is scoped to the channel header here, so we
+   * is stable (the `sc-*` hash and the atom class are regenerated on every
+   * Twitch build), and even that is scoped to the channel header here, so we
    * never grab an unrelated button from the top nav.
    *
    * @returns {{row: Element, ref: Element}|null} ref is the node to insert before.

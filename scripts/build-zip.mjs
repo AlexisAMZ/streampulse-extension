@@ -81,5 +81,5 @@ fs.rmSync(staging, { recursive: true, force: true });
 // Taille en base 1000, comme l'affichent le Finder et ls, pour eviter toute
 // confusion avec les Kio.
 const bytes = fs.statSync(outFile).size;
-console.log(`\nOK — ${outFile}`);
+console.log(`\nOK: ${outFile}`);
 console.log(`     ${packaged.length} fichiers, ${(bytes / 1000).toFixed(0)} kB (${bytes} octets)`);

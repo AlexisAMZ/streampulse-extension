@@ -1,5 +1,5 @@
 (() => {
-  // Guard against running in sub-frames or about:blank iframes — chat lives in the top frame.
+  // Guard against running in sub-frames or about:blank iframes: chat lives in the top frame.
   if (window.top !== window) return;
 
   const PREFERENCES_KEY = "betaGeneralPreferences";
@@ -10,7 +10,7 @@
    * Lit la préférence utilisateur plutôt que navigator.language : ce dernier
    * donne la langue du navigateur, pas celle choisie dans StreamPulse. La valeur
    * est rafraîchie par loadSettings(), déjà rappelé à chaque changement de
-   * préférences — donc aucun aller-retour storage supplémentaire.
+   * préférences : donc aucun aller-retour storage supplémentaire.
    */
   let currentLang = "en";
 
@@ -210,7 +210,7 @@
     }
   }
 
-  // Throttled MutationObserver — batch DOM mutations
+  // Throttled MutationObserver: batch DOM mutations
   let pendingNodes = [];
   let rafId = null;
 

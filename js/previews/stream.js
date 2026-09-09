@@ -1,5 +1,5 @@
 /**
- * StreamPulse — hover previews: Twitch live HLS resolver.
+ * StreamPulse hover previews: Twitch live HLS resolver.
  *
  * Provides pure helpers for resolving a channel's HLS playlist:
  *   GQL PlaybackAccessToken  →  usher .m3u8 master  →  pick a light quality.

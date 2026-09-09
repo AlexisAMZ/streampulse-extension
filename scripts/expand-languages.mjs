@@ -85,7 +85,7 @@ const registry = `export const AVAILABLE_LANGUAGES = [\n${LANGUAGES.map(
 
 const registryPattern = /export const AVAILABLE_LANGUAGES = \[[\s\S]*?\n\];/;
 if (!registryPattern.test(source)) {
-  throw new Error("AVAILABLE_LANGUAGES introuvable — le fichier a changé de forme.");
+  throw new Error("AVAILABLE_LANGUAGES introuvable : le fichier a changé de forme.");
 }
 let output = source.replace(registryPattern, registry);
 
@@ -164,7 +164,7 @@ for (const { code, label } of LANGUAGES) {
 // --- 4. Réécriture de l'objet translations ---------------------------------
 // L'objet est régénéré depuis la structure en mémoire, ce qui applique d'un
 // seul coup les trous comblés (étape 2) et les nouveaux blocs (étape 3).
-// Sûr ici car le bloc ne contient aucun commentaire à préserver — vérifié.
+// Sûr ici car le bloc ne contient aucun commentaire à préserver : vérifié.
 const ordered = {};
 for (const { code } of LANGUAGES) {
   if (translations[code]) ordered[code] = translations[code];

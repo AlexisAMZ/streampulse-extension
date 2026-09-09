@@ -3,7 +3,7 @@
  *
  * On repart de html/popup.html sans le toucher : on retire simplement le module
  * js/popup.js (qui exige les API chrome.*) et on injecte un script classique qui
- * rejoue la partie « rendu » — traductions, cartes streamer, préférences — avec
+ * rejoue la partie « rendu » (traductions, cartes streamer, préférences) avec
  * un jeu de données de démonstration.
  *
  * Les modules ES ne se chargent pas en file:// (CORS), d'où les tables de
@@ -292,7 +292,7 @@ export function buildPopupPage(options) {
   const source = fs.readFileSync(POPUP_SRC, "utf8");
   if (!source.includes(MODULE_TAG)) {
     throw new Error(
-      "html/popup.html ne contient plus la balise script attendue — adapter MODULE_TAG.",
+      "html/popup.html ne contient plus la balise script attendue : adapter MODULE_TAG.",
     );
   }
 

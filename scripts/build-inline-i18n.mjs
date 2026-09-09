@@ -5,7 +5,7 @@
  * Les content scripts sont injectés comme scripts classiques (manifest.json),
  * ils ne peuvent donc pas `import` le module ES i18n/translations.js. Chacun
  * embarquait sa propre petite table de traductions, limitée à 4 langues et
- * dupliquée — impossible à maintenir sur 16 langues.
+ * dupliquée : impossible à maintenir sur 16 langues.
  *
  * Ce script extrait le sous-ensemble de clés dont les content scripts ont
  * besoin et l'émet en script classique exposant window.__SP_I18N__.
@@ -28,13 +28,13 @@ const payload = {};
 for (const { code } of ALL_LANGUAGES) {
   const block = translations[code]?.[NAMESPACE];
   if (!block) {
-    throw new Error(`translations.${code}.${NAMESPACE} manquant — lancer expand-languages d'abord.`);
+    throw new Error(`translations.${code}.${NAMESPACE} manquant : lancer expand-languages d'abord.`);
   }
   payload[code] = block;
 }
 
 const banner = `/**
- * FICHIER GÉNÉRÉ — NE PAS ÉDITER À LA MAIN.
+ * FICHIER GÉNÉRÉ : NE PAS ÉDITER À LA MAIN.
  * Source : i18n/translations.js (clés "${NAMESPACE}.*")
  * Régénérer : node scripts/build-inline-i18n.mjs
  *
@@ -109,4 +109,4 @@ await writeFile(OUT, `${banner}\n${body}`, "utf8");
 
 const langCount = Object.keys(payload).length;
 const keyCount = JSON.stringify(payload[Object.keys(payload)[0]]).match(/":/g)?.length ?? 0;
-console.log(`js/inject/i18n-inline.js généré — ${langCount} langues, ~${keyCount} clés`);
+console.log(`js/inject/i18n-inline.js généré : ${langCount} langues, ~${keyCount} clés`);

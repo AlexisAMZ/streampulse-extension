@@ -1,5 +1,5 @@
 /**
- * StreamPulse — hover previews: Twitch DOM adapter.
+ * StreamPulse hover previews: Twitch DOM adapter.
  *
  * All Twitch-specific selectors and descriptor extraction live here so UI drift
  * is contained to one file. Operates on passed-in nodes (no global document),

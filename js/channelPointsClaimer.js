@@ -80,7 +80,7 @@
 
     if (!btn) return false;
 
-    // Channel points bonus chest found — claim it
+    // Channel points bonus chest found: claim it
     lastClaimTime = Date.now();
     btn.click();
 

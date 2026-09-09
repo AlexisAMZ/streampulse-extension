@@ -120,7 +120,7 @@ Corrections appliquées :
 
 **À faire côté console** : la capture portant « 100% Free and Free forever »
 n'existe que dans le Chrome Web Store, pas dans ce dépôt. Elle doit être
-supprimée à la main dans l'onglet Éléments graphiques — aucune régénération
+supprimée à la main dans l'onglet Éléments graphiques : aucune régénération
 locale ne la retire.
 
 ---
@@ -378,7 +378,7 @@ StreamPulse HİÇBİR kişisel veri toplamaz, hesap GEREKTİRMEZ ve SIFIR reklam
 
 **Detailed Description**:
 ```text
-StreamPulse — браузерное расширение для улучшения вашего опыта просмотра Twitch и Kick. Ультралегкое и невероятно быстрое, оно автоматизирует ваши действия, не замедляя работу браузера.
+StreamPulse: браузерное расширение для улучшения вашего опыта просмотра Twitch и Kick. Ультралегкое и невероятно быстрое, оно автоматизирует ваши действия, не замедляя работу браузера.
 
 ✨ Расширение полностью переведено и доступно более чем на 15 языках!
 

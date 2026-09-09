@@ -7,7 +7,7 @@
  *   KEEP_BUILD=1 node scripts/make-store-assets.mjs fr   # garde les intermédiaires
  *
  * Sortie : images/cws_screenshots/<LANGUE>/01-dashboard.png, 02-automation.png,
- * 03-features.png — trois PNG 1280x800 par langue.
+ * 03-features.png : trois PNG 1280x800 par langue.
  *
  * Le rendu part du vrai popup et des vraies traductions : rien n'est maquetté à
  * la main, donc une évolution de l'UI se répercute au prochain run.
@@ -97,7 +97,7 @@ const POPUP_VARIANTS = [
 /**
  * Clés i18n effectivement rendues dans le popup. Elles apparaissent en clair
  * dans les captures, donc elles tombent sous le même règlement que les textes
- * du cadre — le contrôle serait incomplet sans elles.
+ * du cadre : le contrôle serait incomplet sans elles.
  */
 function popupI18nKeys() {
   const html = fs.readFileSync(path.join(ROOT, "html", "popup.html"), "utf8");
@@ -152,7 +152,7 @@ async function buildLanguage({ lang, translations, platforms, languages, listing
   // 1. Captures du popup réel, une par vue.
   //    Une capture manuelle déposée dans le dossier de la langue sous le nom
   //    `source-<vue>.png` remplace le rendu automatique. Utile quand on veut du
-  //    vrai contenu de stream plutôt que le jeu de démonstration — à condition
+  //    vrai contenu de stream plutôt que le jeu de démonstration : à condition
   //    de fournir une image ~1640px de large, sinon elle sera floue une fois
   //    intégrée au cadre 1280x800.
   const popupShots = {};

@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  // Watch Time Tracker — tracks per-channel watch time.
+  // Watch Time Tracker: tracks per-channel watch time.
   // Heartbeat every 60s; partial seconds captured on page close via pagehide.
 
   if (window.top !== window) return; // skip iframes
@@ -56,7 +56,7 @@
     try {
       chrome.runtime.sendMessage(msg).catch(() => {});
     } catch (_) {
-      // Extension context invalidated (reloaded) — ignore
+      // Extension context invalidated (reloaded): ignore
     }
   }
 
@@ -86,7 +86,7 @@
 
     lastHeartbeatTime = Date.now();
 
-    // Presence ping — records channel start, no seconds
+    // Presence ping: records channel start, no seconds
     if (currentChannel && currentPlatform) {
       safeSend({
         type: "trackWatchTime",

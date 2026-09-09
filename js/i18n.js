@@ -72,7 +72,7 @@ export function getCurrentLanguage() {
 
 export async function initI18n(preloadedLanguage = null) {
   // The caller may hand us a raw stored value ("pt_BR", "EN"), so normalize it
-  // instead of trusting it blindly — an unmatched tag would silently render keys.
+  // instead of trusting it blindly: an unmatched tag would silently render keys.
   const matched = matchLanguage(preloadedLanguage);
   if (matched) {
     currentLanguage = matched;

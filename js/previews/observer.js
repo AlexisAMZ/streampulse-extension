@@ -1,8 +1,8 @@
 /**
- * StreamPulse — hover previews: SPA lifecycle helpers.
+ * StreamPulse hover previews: SPA lifecycle helpers.
  *
  * `attachDelegation` wires ONE delegated mouseover/mouseout pair with hover-intent
- * debounce (survives Twitch's virtualized lists — no per-card listeners).
+ * debounce (survives Twitch's virtualized lists: no per-card listeners).
  * `observeRouteChanges` fires on SPA navigation so the entry can hide a stale card.
  * Attaches to `self.__SP_PREVIEWS__.observe`.
  */

@@ -342,7 +342,7 @@
    * Les conteneurs de badges n'espacent pas tous leurs enfants de la meme
    * facon : Twitch pose une marge sur ses propres badges, 7TV parfois un gap.
    * Plutot que de parier, on mesure l'espace reellement obtenu et on ne pose
-   * une marge que s'il n'y en a pas — sinon le badge est colle au precedent.
+   * une marge que s'il n'y en a pas : sinon le badge est colle au precedent.
    */
   function ensureSpacing(badge) {
     try {

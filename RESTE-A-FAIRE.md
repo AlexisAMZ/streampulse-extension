@@ -4,7 +4,7 @@
 
 ---
 
-## 1. Traductions — FAIT
+## 1. Traductions : FAIT
 
 Les 16 langues sont complètes : 357 clés chacune, 0 clé manquante.
 15 langues sont publiées (`ready: true`), seul `hi` (hindi) reste en
@@ -26,7 +26,7 @@ Pour publier `hi` une fois traduit : passer `ready: true` dans
 
 ---
 
-## 2. Page de notes de version — fait
+## 2. Page de notes de version : fait
 
 Le cadre (`js/changelog.js`, `html/changelog.html`) est en place, les textes
 sont des cartes par langue (4 langues publiées obligatoires), et `verify.mjs`
@@ -34,7 +34,7 @@ refuse une release avec des textes incomplets.
 
 ---
 
-## 3. `_locales/` limité à 4 langues — partiel
+## 3. `_locales/` limité à 4 langues : partiel
 
 `_locales/` contient `en`, `es`, `fr`, `pt_BR` (2 clés : nom et description de
 la fiche Chrome Web Store). Les 12 autres langues voient la fiche en anglais.
@@ -50,12 +50,12 @@ marketing à soigner.
 Ces choses sont codées et passent les contrôles automatiques, mais n'ont
 jamais été observées en fonctionnement :
 
-- **Page de notes de version** — jamais vue s'afficher. Pour la tester :
+- **Page de notes de version** : jamais vue s'afficher. Pour la tester :
   ouvrir `chrome-extension://<ID>/html/changelog.html`.
-- **Correctif des notifications** — `createWithIconFallback` dans
+- **Correctif des notifications** : `createWithIconFallback` dans
   `js/background.js` doit supprimer l'erreur `Unable to download all specified
   images` quand l'avatar distant est bloqué. Non confirmé.
-- **Rendu dans les langues non latines** — `ja`, `ko`, `ru` pas regardées
+- **Rendu dans les langues non latines** : `ja`, `ko`, `ru` pas regardées
   visuellement. Les libellés longs peuvent déborder dans le popup et la topbar.
 
 ---

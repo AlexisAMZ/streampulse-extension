@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════════════════
-   StreamPulse Onboarding — V8 CINEMATIC
+   StreamPulse Onboarding: V8 CINEMATIC
    Editorial serif XL · technical grid · glow pulsant
    ════════════════════════════════════════════════════ */
 
@@ -71,10 +71,10 @@ body {
 }
 
 /* ════════════════════════════════════════════════
-   AMBIENT BACKGROUND — full-viewport, layered
+   AMBIENT BACKGROUND: full-viewport, layered
    ════════════════════════════════════════════════ */
 
-/* Base mesh gradient — deep violet halos, slowly breathing */
+/* Base mesh gradient: deep violet halos, slowly breathing */
 .bg-mesh {
   position: fixed;
   inset: 0;
@@ -101,7 +101,7 @@ body {
   50%      { filter: hue-rotate(-8deg) saturate(1.15); transform: scale(1.04); }
 }
 
-/* Pulsing core glow — pure violet halo behind content */
+/* Pulsing core glow: pure violet halo behind content */
 .bg-pulse {
   position: fixed;
   top: 50%;
@@ -122,7 +122,7 @@ body {
   50%      { opacity: 0.55; transform: translate(-50%, -50%) scale(1.08); }
 }
 
-/* Technical grid — DAW/console style with coordinates */
+/* Technical grid: DAW/console style with coordinates */
 .bg-grid {
   position: fixed;
   inset: 0;
@@ -165,7 +165,7 @@ body {
 .bg-coords-bl { bottom: 18px; left: 22px; }
 .bg-coords-br { bottom: 18px; right: 22px; }
 
-/* Scanline overlay — subtle CRT/broadcast vibe */
+/* Scanline overlay: subtle CRT/broadcast vibe */
 .bg-scan {
   position: fixed;
   inset: 0;
@@ -181,7 +181,7 @@ body {
   mix-blend-mode: overlay;
 }
 
-/* Vignette — focus the eye */
+/* Vignette: focus the eye */
 .bg-vignette {
   position: fixed;
   inset: 0;
@@ -211,7 +211,7 @@ body {
   flex-direction: column;
 }
 
-/* Top bar — minimal, branded, mono */
+/* Top bar: minimal, branded, mono */
 .top-header {
   position: relative;
   z-index: 20;
@@ -304,7 +304,7 @@ body {
 .step-counter-total { color: var(--sp-ink-3); }
 
 /* ════════════════════════════════════════════════
-   STEPPER — minimal horizontal track, glowing dot
+   STEPPER: minimal horizontal track, glowing dot
    ════════════════════════════════════════════════ */
 
 .stepper {
@@ -386,7 +386,7 @@ body {
 .step-link { display: none; }
 
 /* ════════════════════════════════════════════════
-   STAGE — full-bleed step container
+   STAGE: full-bleed step container
    ════════════════════════════════════════════════ */
 
 .stage {
@@ -555,7 +555,7 @@ body {
 }
 
 /* ════════════════════════════════════════════════
-   GLASS PANELS — subtle, blurred, framed
+   GLASS PANELS: subtle, blurred, framed
    ════════════════════════════════════════════════ */
 .glass {
   position: relative;
@@ -573,7 +573,7 @@ body {
   padding: 18px;
 }
 
-/* Corner brackets — like targeting reticle */
+/* Corner brackets: like targeting reticle */
 .frame-brackets::before,
 .frame-brackets::after {
   content: "";
@@ -593,7 +593,7 @@ body {
 }
 
 /* ════════════════════════════════════════════════
-   STEP 0 — WELCOME / LANGUAGE
+   STEP 0: WELCOME / LANGUAGE
    ════════════════════════════════════════════════ */
 
 .welcome-frame {
@@ -753,7 +753,7 @@ body {
 }
 
 /* ════════════════════════════════════════════════
-   STEP 1 — PROFILE / TWITCH HANDLE
+   STEP 1: PROFILE / TWITCH HANDLE
    ════════════════════════════════════════════════ */
 
 .profile-card {
@@ -1008,7 +1008,7 @@ body {
 .profile-hint[data-state="error"]     { color: var(--sp-error); }
 
 /* ════════════════════════════════════════════════
-   STEP 2 — STREAMERS
+   STEP 2: STREAMERS
    ════════════════════════════════════════════════ */
 
 .platform-picker {
@@ -1174,7 +1174,7 @@ body {
 }
 
 /* ════════════════════════════════════════════════
-   STEP 3 — SETTINGS
+   STEP 3: SETTINGS
    ════════════════════════════════════════════════ */
 
 .settings-groups {
@@ -1255,7 +1255,7 @@ body {
 }
 
 /* ════════════════════════════════════════════════
-   STEP 4 — FINISH
+   STEP 4: FINISH
    ════════════════════════════════════════════════ */
 
 .finish-frame {

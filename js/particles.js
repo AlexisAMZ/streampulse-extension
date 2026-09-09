@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════════════
-   StreamPulse — Floating particles
+   StreamPulse: Floating particles
    Subtle drifting violet motes for cinematic depth
    ════════════════════════════════════════════════ */
 (() => {

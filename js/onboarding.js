@@ -189,7 +189,7 @@ function scheduleProfileLookup(rawValue) {
     return;
   }
 
-  /* Optimistic local state — show initials + enable Continue immediately */
+  /* Optimistic local state: show initials + enable Continue immediately */
   userProfile = { handle, displayName: handle, avatarUrl: "" };
   setProfileAvatarImage("");
   renderProfileFromState();

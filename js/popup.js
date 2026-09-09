@@ -971,7 +971,7 @@ async function renderStats(preloadedStats = null) {
     // Settings counter
     if (statPointsEl) statPointsEl.textContent = formatted;
 
-    // Greeting bar points block — animated bump
+    // Greeting bar points block: animated bump
     const headerPointsValue2 = document.getElementById("header-points-value2");
     if (headerPointsValue2) animatePointsValue(headerPointsValue2, points);
   } catch (err) {
@@ -1059,7 +1059,7 @@ function _getCurrentMonthKey() {
 
 async function renderWatchTimeSummary(month = null, preloadedData = null) {
   try {
-    // Read directly from storage — bypasses the service worker (MV3 can be sleeping)
+    // Read directly from storage: bypasses the service worker (MV3 can be sleeping)
     const data = preloadedData !== null
       ? preloadedData
       : (await chrome.storage.local.get("betaWatchTimeData")).betaWatchTimeData || {};
@@ -1412,9 +1412,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Show skeleton placeholders immediately
     showSkeletons(3);
 
-    // Storage round-trip — only the keys needed for first paint.
+    // Storage round-trip: only the keys needed for first paint.
     // betaWatchTimeData can be large (months of records) and is only shown in the
-    // Settings tab — load it lazily when that tab is opened.
+    // Settings tab: load it lazily when that tab is opened.
     const _t0 = performance.now();
     const data = await chrome.storage.local.get([
       "betaGeneralStreamers",
@@ -1440,7 +1440,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     applyTranslations(document);
     syncDocumentLanguage("popup.htmlLang");
 
-    // Setup Greeting V7 — #greeting-title + old header fallback
+    // Setup Greeting V7: #greeting-title + old header fallback
     state.userProfile = data.userProfile || null;
     renderGreeting();
 
@@ -1461,7 +1461,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderPlatformPicker();
     setSelectedPlatform(state.selectedPlatform);
 
-    // Render Stats (settings + header badge + V7 greeting bar) — use pre-fetched data
+    // Render Stats (settings + header badge + V7 greeting bar): use pre-fetched data
     renderStats(data.betaGeneralStats || {}).catch(() => {});
     // V7 live viewers total
     const updateV7Stats = () => {

@@ -1,5 +1,5 @@
 /**
- * StreamPulse — hover previews entry (content script).
+ * StreamPulse hover previews entry (content script).
  *
  * Reads `preferences.previews`, wires the observer → targets → card pipeline,
  * gates by surface, and tears everything down when disabled. Loaded after
@@ -136,7 +136,7 @@
     }
     // mode/size/surfaces/audio are read live in showOpts() on the next hover.
     // If a preview is already on screen, re-render it now so mode/size/surface
-    // changes apply instantly — no re-hover or page reload needed.
+    // changes apply instantly: no re-hover or page reload needed.
     if (
       running &&
       card &&

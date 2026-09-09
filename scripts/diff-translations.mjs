@@ -66,11 +66,11 @@ for (const code of languages) {
 
   for (const [key, value] of oldMap) {
     if (!newMap.has(key)) {
-      problems.push(`${code}: clé supprimée — ${key}`);
+      problems.push(`${code}: clé supprimée : ${key}`);
       continue;
     }
     const issue = compare(value, newMap.get(key));
-    if (issue) problems.push(`${code}: ${key} — ${issue}`);
+    if (issue) problems.push(`${code}: ${key}: ${issue}`);
   }
 
   const added = [...newMap.keys()].filter((k) => !oldMap.has(k));
@@ -79,7 +79,7 @@ for (const code of languages) {
 }
 
 const missingLang = before.AVAILABLE_LANGUAGES.map((l) => l.code).filter((c) => !languages.includes(c));
-for (const code of missingLang) problems.push(`langue supprimée — ${code}`);
+for (const code of missingLang) problems.push(`langue supprimée : ${code}`);
 
 console.log(`\n${languages.length} langues, +${addedTotal} clés au total`);
 

@@ -625,7 +625,7 @@
    *
    * `.raid-banner button` is deliberately not used as a blanket selector: the
    * banner also contains the "Join raid" button, and on some layouts that one
-   * comes first — clicking it would send the viewer to the raid instead of
+   * comes first: clicking it would send the viewer to the raid instead of
    * cancelling it, the exact opposite of the preference.
    */
   function findRaidCancelButton() {
@@ -772,7 +772,7 @@
   async function loadExtensionConfig() {
     try {
       // Request the resolved config from the service worker. We no longer
-      // import config.js directly — it was removed from web_accessible_resources
+      // import config.js directly: it was removed from web_accessible_resources
       // for CWS compliance, and the SW holds the live Vercel credentials.
       const loadedConfig =
         (await chrome.runtime.sendMessage({ type: "getConfig" })) || {};

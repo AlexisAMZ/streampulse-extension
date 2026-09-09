@@ -1,4 +1,4 @@
-/* StreamPulse — Twitch top-bar button + control panel (injected by topbar.js). */
+/* StreamPulse: Twitch top-bar button + control panel (injected by topbar.js). */
 
 /* logosp.png est un glyphe #6200EA sur fond transparent. Toutes les surfaces ou
    on le pose sont sombres ou violettes, et le violet ne s'en detache sur aucune :
@@ -498,7 +498,7 @@
    bouton se lise comme une action primaire a cote de « S'abonner ».
 
    La geometrie est relevee sur les boutons natifs de la barre d'actions de
-   chaine — follow-button, subscribe-button, gift-button, share-button — qui
+   chaine (follow-button, subscribe-button, gift-button, share-button) qui
    partagent tous exactement : border-radius 9000px, height 32px, font-size 14px,
    font-weight 600. Un commentaire precedent affirmait ici que Twitch etait en
    4px et justifiait un 8px « volontairement plus rond » ; c'est caduc, leur

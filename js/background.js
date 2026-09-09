@@ -42,7 +42,7 @@ async function fetchRemoteConfig() {
   try {
     const stored = await chrome.storage.local.get(REMOTE_CONFIG_CACHE_KEY);
     const cached = stored[REMOTE_CONFIG_CACHE_KEY];
-    // Always hydrate from cache FIRST — even if stale — so credentials are
+    // Always hydrate from cache FIRST, even if stale, so credentials are
     // available immediately after an MV3 service-worker restart (which wipes
     // the in-memory CONFIG back to the token-less LOCAL_CONFIG). Without this,
     // an alarm-triggered poll fires before any network fetch and Twitch
@@ -63,7 +63,7 @@ async function fetchRemoteConfig() {
       });
     }
   } catch {
-    // Network error — keep whatever we hydrated from cache (or local fallback)
+    // Network error: keep whatever we hydrated from cache (or local fallback)
   }
 }
 
@@ -162,7 +162,7 @@ function sanitizeLogin(value = "") {
   return sanitizeHandle("twitch", value);
 }
 
-// ─── Kick Official API — App Access Token ─────────────────────────────────────
+// ─── Kick Official API: App Access Token ─────────────────────────────────────
 
 const _kickToken = { value: null, expiresAt: 0 };
 
@@ -729,7 +729,7 @@ async function resolveChannelAvatar(platform, channel) {
       return url;
     }
   } catch {
-    // API failed — cache empty string to avoid retrying every heartbeat
+    // API failed: cache empty string to avoid retrying every heartbeat
     wtAvatarCache.set(cacheKey, "");
   }
 
@@ -1606,7 +1606,7 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
   if (streamers.length === 0) {
     // Don't wipe statuses/live-state here. A transient empty read from
     // chrome.storage (or a single-poll race) shouldn't destroy the dedup state
-    // for genuinely-followed streamers — it would cause every previously-live
+    // for genuinely-followed streamers: it would cause every previously-live
     // streamer to re-fire its "now live" notification on the next poll.
     await ActionBadge.update(0, preferences);
     return [];
@@ -1616,7 +1616,7 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
   // size === 0). MV3 service workers can be terminated between any two polls,
   // and this Map is module-level (lost on every restart). Without restoring
   // from storage, every poll on a fresh SW would see `wasLive = false` and
-  // re-fire the "live" notification — i.e. one notification per poll interval.
+  // re-fire the "live" notification: i.e. one notification per poll interval.
   // Using a dedicated key (vs. piggybacking on STATUSES) means notification
   // dedup survives even if the statuses object is transiently wiped.
   try {
@@ -1644,7 +1644,7 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
     streamerById.set(streamer.id, streamer);
   });
 
-  // Cap concurrency to 3 parallel fetches — lighter on RAM & network
+  // Cap concurrency to 3 parallel fetches: lighter on RAM & network
   const statuses = [];
   const CONCURRENCY = 3;
   for (let i = 0; i < streamers.length; i += CONCURRENCY) {
@@ -1774,7 +1774,7 @@ async function precacheThumbnails(statuses) {
   for (const status of statuses) {
     if (!status.active?.isLive) continue;
 
-    // Pick the best thumbnail URL (no fetch — CORS blocks HEAD from SW)
+    // Pick the best thumbnail URL (no fetch: CORS blocks HEAD from SW)
     const candidates = status.active.thumbnailCandidates || [];
     const mainThumb = status.active.thumbnailUrl;
     const url = candidates[0] || mainThumb;
@@ -1804,7 +1804,7 @@ async function precacheThumbnails(statuses) {
 // every SW restart would call chrome.alarms.create() with the same name,
 // CANCELLING the existing periodic alarm and replacing it with a fresh one
 // using delayInMinutes: 0.1 (clamped to 1 min in production). This means the
-// alarm phase keeps shifting forward by 1 min on every wake-up — the period
+// alarm phase keeps shifting forward by 1 min on every wake-up: the period
 // is no longer the configured 10 min, polls bunch up, and notifications can
 // re-fire on every wake if state restoration lags.
 function scheduleWatcherAlarm() {
@@ -2054,7 +2054,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case "getConfig":
       // Content scripts can no longer import config.js directly (it was removed
       // from web_accessible_resources for CWS compliance). They request the
-      // resolved config here instead — which also gives them the live Vercel
+      // resolved config here instead: which also gives them the live Vercel
       // credentials rather than the empty local fallback.
       (async () => {
         try {
@@ -2457,7 +2457,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           const { channel, platform, seconds } = request;
           if (channel && platform) {
             const secs = Number(seconds) || 0;
-            // Record immediately — never block on avatar resolution
+            // Record immediately: never block on avatar resolution
             await WatchTimeStore.record(platform, channel, secs, "");
             // Best-effort avatar update (fire-and-forget, doesn't block response)
             if (secs > 0) {

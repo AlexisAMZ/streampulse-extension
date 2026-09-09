@@ -1,5 +1,5 @@
 /**
- * StreamPulse — Twitch top-bar button + control panel (isolated world).
+ * StreamPulse: Twitch top-bar button + control panel (isolated world).
  *
  * Injects a StreamPulse button into the Twitch top-nav icon row (next to bits /
  * whispers / notifications, the way 7TV does), re-injecting on SPA re-renders via a
@@ -194,7 +194,7 @@
     }
     // Anchor to the LEFT of the profile avatar: insert before the profile's
     // direct-child wrapper. Fall back to the notifications wrapper. We never
-    // append at the end — that lands the button to the RIGHT of the profile
+    // append at the end: that lands the button to the RIGHT of the profile
     // (the intermittent bug being fixed).
     var ref = directChildOf(row, profile) || directChildOf(row, notif);
     return { row: row, ref: ref };
@@ -376,7 +376,7 @@
   function injectButton() {
     var f = findRow();
     // Require a valid left-of-profile anchor before inserting. If it's not in
-    // the DOM yet (Twitch still rendering), bail and let the observer retry —
+    // the DOM yet (Twitch still rendering), bail and let the observer retry:
     // never insert without a ref, which would land the button at the far right.
     if (!f.row || !f.ref) return false;
     if (f.row.querySelector("#sp-topbar-btn")) return true;

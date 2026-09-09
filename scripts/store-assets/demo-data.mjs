@@ -2,7 +2,7 @@
  * Jeu de démonstration affiché dans les captures.
  *
  * Volontairement fictif : pas de vrais pseudos, pas de vraies vignettes de
- * stream. Une fiche Chrome Web Store est du matériel public — y afficher le
+ * stream. Une fiche Chrome Web Store est du matériel public : y afficher le
  * visage d'un streamer réel ou une capture de jeu sous licence expose à une
  * réclamation droit à l'image / copyright.
  *

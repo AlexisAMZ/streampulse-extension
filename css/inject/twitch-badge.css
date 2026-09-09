@@ -5,7 +5,7 @@
   justify-content: center !important;
   vertical-align: middle !important;
   /* Aucune marge dans un conteneur de badges : Twitch et 7TV appliquent deja
-     leur propre espacement, et la notre s'y ajoutait — 8 px avant notre badge
+     leur propre espacement, et la notre s'y ajoutait : 8 px avant notre badge
      contre 4 px entre les autres. */
   margin: 0 !important;
   position: relative !important;

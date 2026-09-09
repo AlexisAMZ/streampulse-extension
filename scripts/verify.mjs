@@ -156,7 +156,7 @@ else {
       if (ratio > 0.5) {
         fail(
           `translations.js "${code}" is marked ready but ${Math.round(ratio * 100)}% of its strings ` +
-            `are identical to English — set ready:false until it is translated`,
+            `are identical to English: set ready:false until it is translated`,
         );
       }
     }
@@ -166,7 +166,7 @@ else {
     // read the generated js/inject/i18n-inline.js rather than the ES module.
     const inlinePath = "js/inject/i18n-inline.js";
     if (!exists(inlinePath)) {
-      fail(`${inlinePath} is missing — run: node scripts/build-inline-i18n.mjs`);
+      fail(`${inlinePath} is missing. Run: node scripts/build-inline-i18n.mjs`);
     } else {
       const sandbox = {};
       new Function("window", fs.readFileSync(abs(inlinePath), "utf8"))(sandbox);
@@ -176,7 +176,7 @@ else {
       } else {
         const absent = declared.filter((c) => !api.languages.includes(c));
         if (absent.length) {
-          fail(`${inlinePath} is stale, missing: ${absent.join(", ")} — run: node scripts/build-inline-i18n.mjs`);
+          fail(`${inlinePath} is stale, missing: ${absent.join(", ")}. Run: node scripts/build-inline-i18n.mjs`);
         } else {
           pass(`${inlinePath} exposes all ${api.languages.length} languages to content scripts`);
         }
@@ -361,7 +361,7 @@ if (!exists(CHANGELOG_DATA)) {
   } else if (!versions.includes(manifest.version)) {
     fail(
       `${CHANGELOG_DATA} has no entry for manifest version ${manifest.version} ` +
-        `(found: ${versions.slice(0, 5).join(", ")}) — add the patch notes before shipping`
+        `(found: ${versions.slice(0, 5).join(", ")}). Add the patch notes before shipping`
     );
   } else if (versions[0] !== manifest.version) {
     warn(
@@ -491,7 +491,7 @@ function report() {
   console.log(ok.map((m) => `  PASS  ${m}`).join("\n"));
   if (warnings.length) console.log("\n" + warnings.map((m) => `  WARN  ${m}`).join("\n"));
   if (errors.length) console.log("\n" + errors.map((m) => `  FAIL  ${m}`).join("\n"));
-  console.log(`\n${errors.length ? "FAILED" : "OK"} — ${ok.length} passed, ${warnings.length} warnings, ${errors.length} errors`);
+  console.log(`\n${errors.length ? "FAILED" : "OK"}: ${ok.length} passed, ${warnings.length} warnings, ${errors.length} errors`);
   return errors.length ? 1 : 0;
 }
 fs.rmSync(tmp, { recursive: true, force: true });

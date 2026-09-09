@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════
-   StreamPulse — Popup CSS (Refonte V7)
+   StreamPulse: Popup CSS (Refonte V7)
    Editorial dark · mono accents · cards style original
    ══════════════════════════════════════════════════════════════ */
 
@@ -666,7 +666,7 @@ body > * { position: relative; z-index: 1; }
   grid-row: span 2;
 }
 
-/* ── Streamer card (LIVE — card-style original) ── */
+/* ── Streamer card (LIVE: card-style original) ── */
 .streamer-card {
   display: flex;
   flex-direction: column;
@@ -687,7 +687,7 @@ body > * { position: relative; z-index: 1; }
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(145, 70, 255, 0.05);
 }
 
-/* Offline cards — stretch to fill their grid row (half the height of a live card) */
+/* Offline cards: stretch to fill their grid row (half the height of a live card) */
 .streamer-card.offline {
   flex-direction: column;
   justify-content: space-between;
@@ -896,7 +896,7 @@ body > * { position: relative; z-index: 1; }
   letter-spacing: 0.04em;
 }
 
-/* ── Hover previews — settings controls ── */
+/* ── Hover previews: settings controls ── */
 .seg-group {
   display: inline-flex;
   gap: 4px;
@@ -975,7 +975,7 @@ body > * { position: relative; z-index: 1; }
   cursor: pointer;
 }
 
-/* LIVE pill (top-left of thumbnail) — rendered by popup.js, but set baseline */
+/* LIVE pill (top-left of thumbnail): rendered by popup.js, but set baseline */
 .live-preview .live-badge,
 .live-preview::before {
   content: "";
@@ -1158,7 +1158,7 @@ body > * { position: relative; z-index: 1; }
 
 /* ── Remove confirmation (built by ui.js) ────────────────────────────────────
    These classes had NO styling at all, so "Supprimer ? / Oui / Non" rendered as
-   raw browser buttons — the generic look. Covers the card so the confirmation
+   raw browser buttons: the generic look. Covers the card so the confirmation
    is unmissable and the underlying controls can't be clicked by mistake. */
 .confirm-overlay {
   position: absolute;
@@ -1419,7 +1419,7 @@ body > * { position: relative; z-index: 1; }
   border-color: var(--toast-success-border);
 }
 
-/* Platform picker — pill toggle group */
+/* Platform picker: pill toggle group */
 .platform-picker {
   display: flex;
   padding: 2px;
@@ -2110,7 +2110,7 @@ body > * { position: relative; z-index: 1; }
   to { transform: translateX(20px); opacity: 0; }
 }
 
-/* Responsive — onboarding/settings pages only (popup min-width is 750px) */
+/* Responsive: onboarding/settings pages only (popup min-width is 750px) */
 @media (max-width: 600px) {
   .offline-list { grid-template-columns: repeat(3, 1fr); }
 }

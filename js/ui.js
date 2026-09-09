@@ -60,7 +60,7 @@ function setupHoverPreview(cardPreview, platformId, streamer, status, callbacks)
   });
 
   const embedUrl = getEmbedUrl(platformId, streamer, status);
-  if (!embedUrl) return; // No embed available — static thumbnail + click only
+  if (!embedUrl) return; // No embed available: static thumbnail + click only
 
   let hoverTimer = null;
 
@@ -473,7 +473,7 @@ export function createStreamerCard(streamer, status, template, callbacks) {
     streamer.displayName ||
     formatHandleForDisplay(platformId, streamer.handle || streamer.twitch);
 
-  // V7 — data-platform for CSS ring + glyph color
+  // V7: data-platform for CSS ring + glyph color
   if (card) card.dataset.platform = platformId;
 
   // Wrap name in span so it can be truncated independently of the platform glyph
@@ -607,7 +607,7 @@ export function createStreamerCard(streamer, status, template, callbacks) {
       previewImage.alt = t("popup.labels.previewAltLive", { name: displayLabel });
       previewImage.classList.remove("is-offline-preview");
 
-      // Always show fallback avatar immediately — replaced by thumbnail if one loads
+      // Always show fallback avatar immediately: replaced by thumbnail if one loads
       showFallbackPreview();
 
       if (previewImage && candidates.length > 0) {
@@ -642,7 +642,7 @@ export function createStreamerCard(streamer, status, template, callbacks) {
         const cached = getCachedThumb(streamer.id);
         if (cached) {
           // Show cached thumb instantly (browser HTTP cache will likely hit).
-          // Don't re-validate against the network — the next poll will refresh.
+          // Don't re-validate against the network: the next poll will refresh.
           scheduleThumbLoad((release) => {
             const img = new Image();
             img.onload = () => {
@@ -669,7 +669,7 @@ export function createStreamerCard(streamer, status, template, callbacks) {
       statusCategory.hidden = !category.trim();
     }
 
-    // V7 — inject live badge + viewer badge + started-at into livePreview
+    // V7: inject live badge + viewer badge + started-at into livePreview
     if (livePreview) {
       livePreview.querySelectorAll(".live-badge,.viewer-badge,.started-at").forEach(el => el.remove());
       const liveBadge = document.createElement("span");

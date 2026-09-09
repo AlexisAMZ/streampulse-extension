@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   StreamPulse — Patch notes (html/changelog.html)
+   StreamPulse: Patch notes (html/changelog.html)
 
    Loaded AFTER onboarding.css, which supplies the design tokens, ambient
    background layers, .container / .stage / .welcome-* typography, .glass,
@@ -25,7 +25,7 @@
   margin-bottom: 20px;
 }
 
-/* Violet rule under the hero, growing on load — same underlineGrow the
+/* Violet rule under the hero, growing on load: same underlineGrow the
    onboarding uses for its section titles. */
 .cl-hero-rule {
   width: 78px;
@@ -65,7 +65,7 @@
     border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
-/* The angled wash rides on its own element, not ::before — .frame-brackets
+/* The angled wash rides on its own element, not ::before: .frame-brackets
    already claims both pseudo-elements for the violet corner marks. */
 .cl-group-wash {
   position: absolute;
@@ -140,7 +140,7 @@
   line-height: 1.6;
   color: var(--sp-ink-2);
 }
-/* Small violet diamond rather than a bullet — echoes .bg-coords::before. */
+/* Small violet diamond rather than a bullet: echoes .bg-coords::before. */
 .cl-item::before {
   content: "";
   position: absolute;

@@ -1,5 +1,5 @@
 /**
- * FICHIER GÉNÉRÉ — NE PAS ÉDITER À LA MAIN.
+ * FICHIER GÉNÉRÉ : NE PAS ÉDITER À LA MAIN.
  * Source : i18n/translations.js (clés "inject.*")
  * Régénérer : node scripts/build-inline-i18n.mjs
  *

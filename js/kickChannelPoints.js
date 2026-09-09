@@ -10,7 +10,7 @@
   let lastKnownBalance = null;
   let observerInterval = null;
 
-  // Kick changes its DOM structure occasionally — try multiple selectors
+  // Kick changes its DOM structure occasionally: try multiple selectors
   const BALANCE_SELECTORS = [
     "[data-testid='channel-points-balance']",
     ".channel-points-balance",

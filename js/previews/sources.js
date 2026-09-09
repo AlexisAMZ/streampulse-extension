@@ -1,5 +1,5 @@
 /**
- * StreamPulse — hover previews: media source URL builders.
+ * StreamPulse hover previews: media source URL builders.
  *
  * Pure functions only (no DOM). Loaded as a plain MV3 content script; attaches
  * its API to `self.__SP_PREVIEWS__.sources`. All endpoints are public and

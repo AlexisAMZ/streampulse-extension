@@ -1,5 +1,5 @@
 /**
- * StreamPulse — hover previews: the single floating preview card.
+ * StreamPulse hover previews: the single floating preview card.
  *
  * Exposes a pure `computePosition` helper (unit-tested) plus a `createPreviewCard`
  * factory that owns ONE reused DOM node (mount / show / hide / destroy). Attaches
