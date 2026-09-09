@@ -326,6 +326,46 @@ export const RELEASES = [
         }
       },
       {
+        type: "improved",
+        text: {
+          fr: "Les notes de version s'ouvrent aussi depuis l'en-tête du pop-up, à côté du bouton d'actualisation, avec la même pastille de nouveauté que dans les réglages.",
+          en: "Patch notes also open from the popup header, next to the refresh button, with the same new-release dot as in the settings.",
+          es: "Las notas de la versión también se abren desde la cabecera de la ventana emergente, junto al botón de actualizar, con el mismo punto de novedad que en los ajustes.",
+          "pt-BR": "As notas da versão também abrem pelo cabeçalho do pop-up, ao lado do botão de atualizar, com o mesmo ponto de novidade das configurações.",
+          de: "Die Versionshinweise lassen sich jetzt auch über die Kopfzeile des Pop-ups öffnen, neben dem Aktualisieren-Button, mit demselben Neuigkeitspunkt wie in den Einstellungen.",
+          it: "Le note di versione si aprono anche dall'intestazione del pop-up, accanto al pulsante di aggiornamento, con lo stesso pallino di novità delle impostazioni.",
+          pl: "Informacje o wersji otwierają się także z nagłówka okienka, obok przycisku odświeżania, z tą samą kropką nowości co w ustawieniach.",
+          tr: "Sürüm notları artık açılır pencerenin üst şeridinden de, yenileme düğmesinin yanından açılıyor; ayarlardakiyle aynı yenilik noktasıyla.",
+          ru: "Заметки о выпуске теперь открываются и из шапки всплывающего окна, рядом с кнопкой обновления, с той же точкой новизны, что и в настройках.",
+          ja: "リリースノートはポップアップのヘッダー、更新ボタンの隣からも開けます。設定側と同じ新着ドットが付きます。",
+          ko: "릴리스 노트를 팝업 헤더의 새로고침 버튼 옆에서도 열 수 있습니다. 설정에 있는 것과 같은 새 소식 표시가 함께 나타납니다.",
+          id: "Catatan versi kini juga terbuka dari header pop-up, di samping tombol segarkan, dengan titik penanda baru yang sama seperti di pengaturan.",
+          nl: "De release-opmerkingen openen nu ook vanuit de koptekst van de pop-up, naast de vernieuwknop, met hetzelfde nieuwtjesstipje als in de instellingen.",
+          sv: "Versionsnoteringarna öppnas nu även från popupens sidhuvud, bredvid uppdateringsknappen, med samma nyhetsprick som i inställningarna.",
+          cs: "Poznámky k verzi se nově otevřou i ze záhlaví vyskakovacího okna, vedle tlačítka obnovení, se stejnou tečkou novinky jako v nastavení."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "L'ouverture automatique de l'inventaire Drops se déclenche toutes les 24h par défaut, au lieu de toutes les 4h. Les installations restées sur 4h basculent d'elles-mêmes, et la fréquence reste réglable dans les réglages.",
+          en: "Automatic Drops inventory opening now runs every 24h by default instead of every 4h. Installs still set to 4h switch over on their own, and the frequency stays adjustable in the settings.",
+          es: "La apertura automática del inventario de Drops se ejecuta cada 24 h de forma predeterminada, en lugar de cada 4 h. Las instalaciones que seguían en 4 h cambian solas, y la frecuencia sigue siendo ajustable en los ajustes.",
+          "pt-BR": "A abertura automática do inventário de Drops passa a ocorrer a cada 24h por padrão, em vez de a cada 4h. As instalações que continuavam em 4h mudam sozinhas, e a frequência continua ajustável nas configurações.",
+          de: "Das automatische Öffnen des Drops-Inventars läuft jetzt standardmäßig alle 24 Std. statt alle 4 Std. Installationen, die noch auf 4 Std. standen, stellen sich von selbst um, und die Frequenz bleibt in den Einstellungen änderbar.",
+          it: "L'apertura automatica dell'inventario Drops scatta ogni 24 h per impostazione predefinita, invece che ogni 4 h. Le installazioni rimaste a 4 h passano da sole, e la frequenza resta regolabile nelle impostazioni.",
+          pl: "Automatyczne otwieranie ekwipunku Dropów działa domyślnie co 24 h zamiast co 4 h. Instalacje pozostawione na 4 h przełączają się same, a częstotliwość nadal można zmienić w ustawieniach.",
+          tr: "Drops envanterinin otomatik açılışı artık varsayılan olarak 4 saatte bir yerine 24 saatte bir çalışıyor. Hâlâ 4 saatte bir ayarında olan kurulumlar kendiliğinden geçiyor ve sıklık ayarlardan değiştirilebilir kalıyor.",
+          ru: "Автоматическое открытие инвентаря Drops по умолчанию срабатывает раз в 24 часа вместо каждых 4 часов. Установки, оставшиеся на 4 часах, переключаются сами, а частоту по-прежнему можно изменить в настройках.",
+          ja: "Dropsインベントリの自動オープンが、既定で4時間ごとから24時間ごとになりました。4時間のままだった環境は自動的に切り替わり、頻度は設定でいつでも変更できます。",
+          ko: "Drops 인벤토리 자동 열기가 기본값으로 4시간마다에서 24시간마다로 바뀌었습니다. 아직 4시간으로 남아 있던 설치본은 자동으로 전환되며, 주기는 설정에서 계속 변경할 수 있습니다.",
+          id: "Pembukaan otomatis inventaris Drops kini berjalan setiap 24 jam secara bawaan, bukan setiap 4 jam. Pemasangan yang masih di 4 jam berpindah sendiri, dan frekuensinya tetap bisa diatur di pengaturan.",
+          nl: "Het automatisch openen van de Drops-inventaris gebeurt nu standaard elke 24 uur in plaats van elke 4 uur. Installaties die nog op 4 uur stonden schakelen vanzelf om, en de frequentie blijft instelbaar in de instellingen.",
+          sv: "Automatisk öppning av Drops-inventariet körs nu var 24:e timme som standard i stället för var 4:e timme. Installationer som stod kvar på 4 timmar byter av sig själva, och frekvensen går fortfarande att ändra i inställningarna.",
+          cs: "Automatické otevírání inventáře Drops se ve výchozím nastavení spouští každých 24 hodin místo každých čtyř hodin. Instalace, které zůstaly na čtyřech hodinách, se přepnou samy a frekvenci lze dál měnit v nastavení."
+        }
+      },
+      {
         type: "fix",
         text: {
           fr: "Correction du chargement de l'icône Twitch sur les systèmes et navigateurs stricts sur la casse des noms de fichiers.",
@@ -423,6 +463,46 @@ export const RELEASES = [
           nl: "De knop 'voorspellingen' bovenaan de chat is verwijderd: die dupliceerde de interface van Twitch zelf.",
           sv: "Knappen ”förutsägelser” högst upp i chatten har tagits bort: den dubblerade Twitchs eget gränssnitt.",
           cs: "Tlačítko „předpovědi“ přidávané nad chat bylo odstraněno: duplikovalo vlastní rozhraní Twitche."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Les alertes Drop et Raid ne s'affichaient plus : leur icône ne se chargeait pas et Chrome refusait la notification entière. Elles sont de retour, et leurs textes sont traduits dans les 15 langues au lieu de rester en français.",
+          en: "Drop and Raid alerts stopped appearing: their icon failed to load and Chrome rejected the whole notification. They are back, and their text is now translated into all 15 languages instead of staying in French.",
+          es: "Las alertas de Drops y Raids ya no aparecían: su icono no se cargaba y Chrome rechazaba toda la notificación. Vuelven a funcionar, y sus textos están traducidos a los 15 idiomas en lugar de quedarse en francés.",
+          "pt-BR": "Os alertas de Drop e Raid não apareciam mais: o ícone não carregava e o Chrome recusava a notificação inteira. Eles voltaram, e seus textos estão traduzidos nos 15 idiomas em vez de ficarem em francês.",
+          de: "Drop- und Raid-Benachrichtigungen erschienen nicht mehr: Ihr Symbol lud nicht und Chrome lehnte die gesamte Benachrichtigung ab. Sie sind zurück, und ihre Texte liegen jetzt in allen 15 Sprachen vor statt nur auf Französisch.",
+          it: "Gli avvisi Drop e Raid non comparivano più: la loro icona non si caricava e Chrome rifiutava l'intera notifica. Sono tornati, e i loro testi sono tradotti in tutte e 15 le lingue invece di restare in francese.",
+          pl: "Powiadomienia o Dropach i Raidach przestały się pojawiać: ich ikona się nie ładowała, a Chrome odrzucał całe powiadomienie. Wróciły, a ich treść jest teraz przetłumaczona na wszystkie 15 języków zamiast pozostawać po francusku.",
+          tr: "Drop ve Raid bildirimleri artık görünmüyordu: simgeleri yüklenmiyor ve Chrome bildirimin tamamını reddediyordu. Geri geldiler ve metinleri Fransızca kalmak yerine 15 dile çevrildi.",
+          ru: "Уведомления о Drop и Raid перестали появляться: их значок не загружался, и Chrome отклонял уведомление целиком. Они вернулись, а их тексты переведены на все 15 языков вместо французского.",
+          ja: "DropとRaidの通知が表示されなくなっていました。アイコンを読み込めず、Chromeが通知そのものを拒否していたためです。通知が復活し、本文もフランス語のままではなく15言語に翻訳されました。",
+          ko: "Drop과 Raid 알림이 더 이상 표시되지 않았습니다. 아이콘을 불러오지 못해 Chrome이 알림 전체를 거부했기 때문입니다. 알림이 돌아왔고, 문구도 프랑스어 대신 15개 언어로 번역됐습니다.",
+          id: "Notifikasi Drop dan Raid tidak lagi muncul: ikonnya gagal dimuat dan Chrome menolak seluruh notifikasi. Keduanya kembali berfungsi, dan teksnya kini diterjemahkan ke 15 bahasa alih-alih tetap dalam bahasa Prancis.",
+          nl: "Drop- en Raid-meldingen verschenen niet meer: hun pictogram laadde niet en Chrome weigerde de hele melding. Ze zijn terug, en hun teksten zijn nu vertaald in alle 15 talen in plaats van in het Frans te blijven.",
+          sv: "Aviseringar för Drops och Raids visades inte längre: ikonen laddades inte och Chrome avvisade hela aviseringen. De är tillbaka, och texterna är nu översatta till alla 15 språk i stället för att stå kvar på franska.",
+          cs: "Upozornění na Dropy a Raidy se přestala zobrazovat: jejich ikona se nenačetla a Chrome odmítl celé oznámení. Jsou zpět a jejich texty jsou nyní přeložené do všech 15 jazyků místo francouzštiny."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Le temps de visionnage restait sur « -- » à l'ouverture du pop-up et n'apparaissait qu'après un passage par les réglages. Il s'affiche désormais dès l'ouverture.",
+          en: "Watch time stayed on « -- » when the popup opened and only showed up after a trip through the settings. It now appears as soon as the popup opens.",
+          es: "El tiempo de visionado se quedaba en « -- » al abrir la ventana emergente y solo aparecía tras pasar por los ajustes. Ahora se muestra desde la apertura.",
+          "pt-BR": "O tempo de exibição ficava em « -- » ao abrir o pop-up e só aparecia depois de passar pelas configurações. Agora ele aparece assim que o pop-up abre.",
+          de: "Die Sehzeit blieb beim Öffnen des Pop-ups auf „--“ stehen und erschien erst nach einem Besuch der Einstellungen. Jetzt wird sie sofort beim Öffnen angezeigt.",
+          it: "Il tempo di visione restava su « -- » all'apertura del pop-up e compariva solo dopo un passaggio dalle impostazioni. Ora viene mostrato fin dall'apertura.",
+          pl: "Czas oglądania pozostawał na „--” po otwarciu okienka i pojawiał się dopiero po wizycie w ustawieniach. Teraz widać go od razu po otwarciu.",
+          tr: "İzleme süresi, açılır pencere açıldığında « -- » olarak kalıyor ve yalnızca ayarlara girildikten sonra görünüyordu. Artık pencere açılır açılmaz görünüyor.",
+          ru: "Время просмотра оставалось на « -- » при открытии всплывающего окна и появлялось только после захода в настройки. Теперь оно отображается сразу при открытии.",
+          ja: "ポップアップを開いた直後の視聴時間が「--」のままで、設定画面を一度開くまで表示されませんでした。今は開いた時点で表示されます。",
+          ko: "팝업을 열었을 때 시청 시간이 '--'로 남아 있었고, 설정을 한 번 열어야 표시됐습니다. 이제 팝업을 여는 즉시 표시됩니다.",
+          id: "Waktu tonton tetap « -- » saat pop-up dibuka dan baru muncul setelah membuka pengaturan. Kini langsung tampil begitu pop-up dibuka.",
+          nl: "De kijktijd bleef op '--' staan bij het openen van de pop-up en verscheen pas na een bezoek aan de instellingen. Nu staat hij er meteen bij het openen.",
+          sv: "Visningstiden stod kvar på ”--” när popupen öppnades och dök upp först efter en tur via inställningarna. Nu visas den direkt när popupen öppnas.",
+          cs: "Doba sledování zůstávala po otevření vyskakovacího okna na „--“ a objevila se až po návštěvě nastavení. Nyní se zobrazí hned po otevření."
         }
       }
     ]

@@ -116,7 +116,7 @@ const DEFAULT_PREFERENCES = {
   autoClaimDrops: true,
   autoClaimMoments: true,
   autoOpenInventory: false,
-  autoOpenInventoryIntervalHours: 4,
+  autoOpenInventoryIntervalHours: 24,
   hideTwitchExtensions: false,
   autoCancelRaids: true,
   preventTabDiscard: true,
@@ -534,7 +534,7 @@ class PreferenceStore {
       autoClaimDrops: preferences.autoClaimDrops !== false,
       autoClaimMoments: preferences.autoClaimMoments !== false,
       autoOpenInventory: Boolean(preferences.autoOpenInventory),
-      autoOpenInventoryIntervalHours: Number(preferences.autoOpenInventoryIntervalHours) > 0 ? Number(preferences.autoOpenInventoryIntervalHours) : 4,
+      autoOpenInventoryIntervalHours: Number(preferences.autoOpenInventoryIntervalHours) > 0 ? Number(preferences.autoOpenInventoryIntervalHours) : 24,
       hideTwitchExtensions: Boolean(preferences.hideTwitchExtensions),
       autoCancelRaids: preferences.autoCancelRaids !== false,
       preventTabDiscard: preferences.preventTabDiscard !== false,
@@ -1851,11 +1851,41 @@ async function openPatchNotes() {
   }
 }
 
+// Le defaut de la frequence d'ouverture de l'inventaire est passe de 4h a 24h.
+// sanitize() ecrit toujours l'objet complet : les installations existantes ont
+// donc deja 4h en storage et ne verraient jamais le nouveau defaut. On les
+// bascule une seule fois, marquee par un drapeau, pour qu'un retour manuel a 4h
+// ne soit pas ecrase a la mise a jour suivante.
+const INVENTORY_INTERVAL_MIGRATION_KEY = "autoOpenInventoryIntervalMigratedTo24h";
+const LEGACY_AUTO_OPEN_INVENTORY_INTERVAL_HOURS = 4;
+
+async function migrateAutoOpenInventoryInterval() {
+  try {
+    const stored = await chrome.storage.local.get(INVENTORY_INTERVAL_MIGRATION_KEY);
+    if (stored[INVENTORY_INTERVAL_MIGRATION_KEY]) return;
+
+    const preferences = await PreferenceStore.get();
+    if (
+      Number(preferences.autoOpenInventoryIntervalHours) ===
+      LEGACY_AUTO_OPEN_INVENTORY_INTERVAL_HOURS
+    ) {
+      await PreferenceStore.update({
+        autoOpenInventoryIntervalHours:
+          DEFAULT_PREFERENCES.autoOpenInventoryIntervalHours,
+      });
+    }
+    await chrome.storage.local.set({ [INVENTORY_INTERVAL_MIGRATION_KEY]: true });
+  } catch (error) {
+    console.warn("Inventory interval migration failed:", error.message);
+  }
+}
+
 chrome.runtime.onInstalled.addListener(async (details) => {
   initDone = true;
   await fetchRemoteConfig(); // load credentials before first poll
   const streamers = await DataStore.ensureDefaults();
   await PreferenceStore.ensureDefaults();
+  await migrateAutoOpenInventoryInterval();
   await NotificationCenter.init();
   scheduleWatcherAlarm();
   scheduleKeepAliveAlarm();
