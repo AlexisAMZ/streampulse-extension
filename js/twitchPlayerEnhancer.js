@@ -143,7 +143,9 @@
       var next = (changes.betaGeneralPreferences.newValue || {}).language;
       currentLang = api ? api.resolve(next) : "en";
     });
-  } catch (_e) {}
+  } catch (_e) {
+    // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
+  }
 
   function getFastForwardTexts() {
     return {
@@ -464,7 +466,9 @@
       try {
         controls.insertBefore(button, anchor);
         return;
-      } catch (_error) {}
+      } catch (_error) {
+        // Twitch reconstruit son DOM en permanence : le noeud peut disparaitre entre sa selection et son usage.
+      }
     }
 
     if (!controls.contains(button)) {
@@ -668,6 +672,26 @@
     }, 300);
   }
 
+  // L'annulation automatique des raids n'a jamais pu etre confirmee en
+  // conditions reelles : il faut tomber sur une chaine au moment precis ou
+  // elle raide. Ces deux traces sont la pour qu'un vrai raid laisse une preuve
+  // exploitable dans la console de l'onglet, au lieu de ne rien laisser.
+  // Une seule fois par banniere, la verification tournant toutes les 2 s et a
+  // chaque salve de mutations.
+  let unmatchedBannerReported = false;
+
+  function reportUnmatchedBanner(banner) {
+    if (unmatchedBannerReported) return;
+    unmatchedBannerReported = true;
+    const labels = Array.from(banner.querySelectorAll("button")).map((btn) =>
+      `${btn.getAttribute("aria-label") || ""} ${btn.textContent || ""}`.trim()
+    );
+    console.warn(
+      "[SP] Banniere de raid detectee, aucun bouton d'annulation reconnu.",
+      "Libelles presents :", labels
+    );
+  }
+
   function checkAndCancelRaid() {
     if (Date.now() - lastCancelledRaidAt < 8000) return;
 
@@ -675,7 +699,9 @@
     if (raidCancelBtn instanceof HTMLElement) {
       const target = getRaidTarget();
       lastCancelledRaidAt = Date.now();
+      unmatchedBannerReported = false;
       raidCancelBtn.click();
+      console.info("[SP] Raid annule.", { cible: target, chaine: getCurrentChannel() });
       try {
         chrome.runtime.sendMessage({
           type: "incrementStat",
@@ -684,8 +710,17 @@
           channel: getCurrentChannel(),
           raidTarget: target,
         }).catch(() => {});
-      } catch (_) {}
+      } catch (_) {
+        // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
+      }
+      return;
     }
+
+    // Le cas qui nous interesse : la banniere est bien la, mais aucun libelle
+    // ne correspond. C'est ce que les expressions CANCEL_WORDS doivent couvrir.
+    const banner = findRaidBanner();
+    if (banner) reportUnmatchedBanner(banner);
+    else unmatchedBannerReported = false;
   }
 
   function setAutoCancelRaids(enable) {
@@ -720,7 +755,9 @@
   try {
     var legacy = document.getElementById("streampulse-predictions-btn");
     if (legacy) legacy.remove();
-  } catch (_e) {}
+  } catch (_e) {
+    // Twitch reconstruit son DOM en permanence : le noeud peut disparaitre entre sa selection et son usage.
+  }
 
   function handleStorageChange(changes, areaName) {
     if (areaName !== "local" || !changes || !(PREFERENCES_KEY in changes)) {

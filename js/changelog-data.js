@@ -86,6 +86,66 @@ export const RELEASES = [
     },
     changes: [
       {
+        type: "improved",
+        text: {
+          fr: "Les cartes hors ligne affichent la dernière catégorie diffusée, et le dernier titre au survol. Twitch ne renvoie rien pour une chaîne hors ligne : ces informations sont désormais conservées.",
+          en: "Offline cards now show the last category streamed, and the last title on hover. Twitch returns nothing for an offline channel, so this is now remembered.",
+          es: "Las tarjetas offline muestran la última categoría emitida y el último título al pasar el ratón. Twitch no devuelve nada para un canal offline, así que ahora se guarda.",
+          "pt-BR": "Os cards offline mostram a última categoria transmitida e o último título ao passar o mouse. A Twitch não devolve nada para um canal offline, então agora isso fica guardado.",
+          de: "Offline-Karten zeigen die zuletzt gestreamte Kategorie und beim Überfahren den letzten Titel. Twitch liefert für einen Offline-Kanal nichts, das wird jetzt gemerkt.",
+          it: "Le schede offline mostrano l'ultima categoria trasmessa e l'ultimo titolo al passaggio del mouse. Twitch non restituisce nulla per un canale offline, quindi ora viene conservato.",
+          pl: "Karty offline pokazują ostatnią nadawaną kategorię, a po najechaniu myszą ostatni tytuł. Twitch nic nie zwraca dla kanału offline, więc teraz jest to zapamiętywane.",
+          tr: "Çevrimdışı kartlar yayınlanan son kategoriyi, üzerine gelince de son başlığı gösteriyor. Twitch çevrimdışı bir kanal için hiçbir şey döndürmüyor, artık bu bilgi saklanıyor.",
+          ru: "Карточки офлайн показывают последнюю транслировавшуюся категорию, а при наведении и последнее название. Twitch ничего не отдаёт для офлайн-канала, теперь это запоминается.",
+          ja: "オフラインのカードに、最後に配信していたカテゴリーを表示し、カーソルを合わせると最後のタイトルが出ます。Twitchはオフラインのチャンネルについて何も返さないため、この情報を保持するようにしました。",
+          ko: "오프라인 카드에 마지막으로 방송한 카테고리가 표시되고, 마우스를 올리면 마지막 제목이 나옵니다. 트위치는 오프라인 채널 정보를 주지 않기 때문에, 이제 이 정보를 기억합니다.",
+          id: "Kartu offline kini menampilkan kategori terakhir yang disiarkan, dan judul terakhir saat disorot. Twitch tidak mengembalikan apa pun untuk kanal offline, jadi kini disimpan.",
+          nl: "Offline kaarten tonen de laatst gestreamde categorie, en bij hover de laatste titel. Twitch geeft niets terug voor een offline kanaal, dus dit wordt nu onthouden.",
+          sv: "Offlinekort visar den senast sända kategorin, och den senaste titeln när du håller muspekaren över. Twitch returnerar inget för en offlinekanal, så detta sparas nu.",
+          cs: "Karty offline zobrazují naposledy vysílanou kategorii a po najetí myší poslední název. Twitch pro offline kanál nevrací nic, takže se to nyní pamatuje."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Changer votre pseudo dans les Réglages met aussi à jour votre photo de profil. Elle restait celle du compte saisi à l'installation.",
+          en: "Changing your username in Settings now updates your profile picture too. It used to keep the one from the account entered at install time.",
+          es: "Cambiar tu nombre en Ajustes ahora actualiza también tu foto de perfil. Antes se quedaba la de la cuenta indicada al instalar.",
+          "pt-BR": "Mudar seu nome nas Configurações agora também atualiza sua foto de perfil. Antes ficava a da conta informada na instalação.",
+          de: "Wenn du deinen Namen in den Einstellungen änderst, wird jetzt auch dein Profilbild aktualisiert. Vorher blieb das des bei der Installation angegebenen Kontos.",
+          it: "Cambiare il tuo nome nelle Impostazioni aggiorna ora anche la foto profilo. Prima restava quella dell'account indicato all'installazione.",
+          pl: "Zmiana nazwy w Ustawieniach aktualizuje teraz także zdjęcie profilowe. Wcześniej zostawało to z konta podanego przy instalacji.",
+          tr: "Ayarlar'da kullanıcı adınızı değiştirmek artık profil fotoğrafınızı da güncelliyor. Önceden kurulumda girilen hesabınki kalıyordu.",
+          ru: "Смена ника в настройках теперь обновляет и фото профиля. Раньше оставалось фото аккаунта, указанного при установке.",
+          ja: "設定でユーザー名を変更すると、プロフィール写真も更新されるようになりました。これまではインストール時に入力したアカウントの写真が残っていました。",
+          ko: "설정에서 사용자명을 바꾸면 프로필 사진도 함께 갱신됩니다. 이전에는 설치할 때 입력한 계정의 사진이 그대로 남아 있었습니다.",
+          id: "Mengubah nama pengguna di Pengaturan kini juga memperbarui foto profil Anda. Sebelumnya tetap memakai foto akun yang dimasukkan saat pemasangan.",
+          nl: "Je naam wijzigen bij Instellingen werkt nu ook je profielfoto bij. Voorheen bleef die van het account dat bij de installatie was ingevuld.",
+          sv: "Att ändra ditt användarnamn i Inställningar uppdaterar nu även din profilbild. Tidigare låg den kvar från kontot som angavs vid installationen.",
+          cs: "Změna přezdívky v Nastavení nyní aktualizuje i profilovou fotku. Dříve zůstávala fotka účtu zadaného při instalaci."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Le bandeau rouge « Aucune préférence à mettre à jour » n'apparaît plus alors qu'aucun réglage n'a échoué.",
+          en: "The red “No preferences to update” banner no longer appears when nothing actually failed.",
+          es: "El aviso rojo «No hay preferencias que actualizar» ya no aparece cuando en realidad no ha fallado nada.",
+          "pt-BR": "O aviso vermelho “Nenhuma preferência para atualizar” não aparece mais quando nada de fato falhou.",
+          de: "Der rote Hinweis „Keine Einstellungen zu aktualisieren“ erscheint nicht mehr, wenn gar nichts fehlgeschlagen ist.",
+          it: "L'avviso rosso «Nessuna preferenza da aggiornare» non compare più quando in realtà non è fallito nulla.",
+          pl: "Czerwony komunikat „Brak preferencji do zaktualizowania” nie pojawia się już, gdy w rzeczywistości nic się nie nie powiodło.",
+          tr: "Aslında hiçbir şey başarısız olmadığında çıkan kırmızı “Güncellenecek tercih yok” uyarısı artık görünmüyor.",
+          ru: "Красная плашка «Нет настроек для обновления» больше не появляется, когда на самом деле ничего не сорвалось.",
+          ja: "実際には何も失敗していないのに出ていた赤い「更新する設定がありません」の帯を表示しなくなりました。",
+          ko: "실제로는 아무것도 실패하지 않았는데 뜨던 빨간 “업데이트할 설정이 없습니다” 배너가 더 이상 나오지 않습니다.",
+          id: "Spanduk merah “Tidak ada preferensi untuk diperbarui” tidak lagi muncul padahal tidak ada yang gagal.",
+          nl: "De rode melding “Geen voorkeuren om bij te werken” verschijnt niet meer wanneer er niets is misgegaan.",
+          sv: "Den röda rutan ”Inga inställningar att uppdatera” visas inte längre när ingenting faktiskt misslyckats.",
+          cs: "Červený pruh „Žádné předvolby k aktualizaci“ se už neobjevuje, když ve skutečnosti nic neselhalo."
+        }
+      },
+      {
         type: "new",
         text: {
           fr: "Alertes de changement de titre : soyez prévenu quand un streamer modifie le titre de son live. À activer dans les Réglages, puis à couper streamer par streamer avec le nouveau bouton sur chaque carte.",

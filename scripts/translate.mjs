@@ -5,10 +5,17 @@ import {
   protectText,
   restoreText,
   restorationIsIntact,
+  expectedUrlSegment,
   LANG_CODE_KEYS,
 } from "./lib/i18n-audit.mjs";
 
 const FILE = new URL("../i18n/translations.js", import.meta.url);
+
+// Publier une langue est une decision editoriale, pas une consequence du fait
+// qu'une machine a produit du texte. Passer --publish pour lever le drapeau
+// ready des langues traduites par ce run ; sans lui, elles restent masquees
+// dans le selecteur tant qu'une relecture n'a pas eu lieu.
+const PUBLISH_TRANSLATED = process.argv.includes("--publish");
 
 async function run() {
   console.log("Loading translations.js...");
@@ -119,8 +126,14 @@ async function run() {
     const replacer = (obj) => {
         for(const k in obj) {
             if(typeof obj[k] === 'string') {
-                obj[k] = obj[k].replace('streampulse.fr/en/support', `streampulse.fr/${lang}/support`);
-                obj[k] = obj[k].replace('streampulse.fr/support', `streampulse.fr/${lang}/support`);
+                // Global et non positionnel : les deux replace() sur chaine
+                // ne traitaient que la premiere occurrence, et le second
+                // reecrivait ce que le premier venait de produire.
+                const segment = expectedUrlSegment(lang);
+                obj[k] = obj[k].replace(
+                  /streampulse\.fr(\/[a-z-]{2,5})?\/support/g,
+                  `streampulse.fr${segment}/support`
+                );
             } else if (typeof obj[k] === 'object') {
                 replacer(obj[k]);
             }
@@ -139,25 +152,47 @@ async function run() {
 
   // Dernier verrou : on n'ecrit pas un fichier qui casserait la production.
   const problems = auditTranslations(translations);
-  if (problems.length) {
-    console.error(`\nAudit failed, translations.js NOT written. ${problems.length} problem(s):`);
-    for (const p of problems.slice(0, 30)) console.error(`  ${p}`);
-    if (problems.length > 30) console.error(`  ... and ${problems.length - 30} more`);
+  const auditErrors = problems.filter((p) => p.level === "error");
+  const auditWarnings = problems.filter((p) => p.level === "warning");
+  if (auditErrors.length) {
+    console.error(`\nAudit failed, translations.js NOT written. ${auditErrors.length} problem(s):`);
+    for (const p of auditErrors.slice(0, 30)) console.error(`  ${p.message}`);
+    if (auditErrors.length > 30) console.error(`  ... and ${auditErrors.length - 30} more`);
     process.exitCode = 1;
     return;
   }
-  console.log("Audit passed: placeholders, brand names and language codes are intact.");
+  if (auditWarnings.length) {
+    console.warn(`\n${auditWarnings.length} label(s) noticeably longer than English, check they still fit:`);
+    for (const p of auditWarnings.slice(0, 10)) console.warn(`  ${p.message}`);
+    if (auditWarnings.length > 10) console.warn(`  ... and ${auditWarnings.length - 10} more`);
+  }
+  console.log("Audit passed: placeholders, brand names, language codes and site URLs are intact.");
 
   console.log("Writing translations.js...");
   
+  // Le script marquait ready: true toutes les langues sans distinction, y
+  // compris celles volontairement retenues et jamais traduites par ce run.
+  const translatedNow = new Set(targetLangs.filter((code) => !losses.some((l) => l.startsWith(`${code} `))));
   const newAllLangs = `export const ALL_LANGUAGES = [
-${ALL_LANGUAGES.map(l => `  { code: "${l.code}", label: "${l.label}", ready: true },`).join("\n")}
+${ALL_LANGUAGES.map((l) => {
+  const ready = l.ready || (translatedNow.has(l.code) && PUBLISH_TRANSLATED);
+  return `  { code: "${l.code}", label: "${l.label}", ready: ${ready} },`;
+}).join("\n")}
 ];`;
 
   let newSource = source.replace(/export const ALL_LANGUAGES = \[[\s\S]*?\];/, newAllLangs);
   
   const newTranslationsStr = "export const translations = " + JSON.stringify(translations, null, 2) + ";";
-  newSource = newSource.replace(/export const translations = {[\s\S]*};/, newTranslationsStr);
+  // Non gourmand et ancre sur un }; en debut de ligne : la version gourmande
+  // s'etendait jusqu'au dernier }; du fichier, donc jusque dans les fonctions
+  // exportees plus bas des que l'une d'elles declarerait un objet.
+  const translationsBlock = /export const translations = \{[\s\S]*?\n\};/;
+  if (!translationsBlock.test(newSource)) {
+    console.error("Could not locate the translations block, file NOT written.");
+    process.exitCode = 1;
+    return;
+  }
+  newSource = newSource.replace(translationsBlock, newTranslationsStr);
   
   await writeFile(FILE, newSource, "utf8");
   console.log("Done!");

@@ -35,7 +35,9 @@
   function safeSend(msg) {
     try {
       chrome.runtime.sendMessage(msg).catch(() => {});
-    } catch (_) {}
+    } catch (_) {
+      // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
+    }
   }
 
   function check() {

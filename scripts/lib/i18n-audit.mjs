@@ -20,6 +20,26 @@ export const BRAND_LABELS = {
 /** Cles dont la valeur doit etre le code de langue du bloc, pas une traduction. */
 export const LANG_CODE_KEYS = ["popup.htmlLang", "onboarding.htmlLang"];
 
+/** Locale par defaut du site : ses URLs n'ont pas de segment de langue. */
+export const SITE_DEFAULT_LOCALE = "fr";
+
+/** Au-dela de ce rapport, un libelle court deborde de son bouton. */
+export const LENGTH_RATIO_LIMIT = 2.2;
+
+/** On ne compare la longueur que des libelles courts, pas des descriptions. */
+export const SHORT_LABEL_MAX = 30;
+
+/** En dessous, le rapport ne veut rien dire : « Add » fait 3 caracteres. */
+export const SHORT_LABEL_MIN = 8;
+
+/** Un debordement se joue en caracteres, pas seulement en pourcentage. */
+export const MIN_ABSOLUTE_OVERFLOW = 10;
+
+/** Segment de langue attendu dans une URL du site, pour un code donne. */
+export function expectedUrlSegment(code) {
+  return code === SITE_DEFAULT_LOCALE ? "" : `/${code.toLowerCase()}`;
+}
+
 /** Litteraux a soustraire au traducteur, en plus des {{placeholders}}. */
 export const PROTECTED_LITERALS = [
   "StreamPulse",
@@ -46,10 +66,14 @@ export function flattenPairs(node, prefix = "") {
 const at = (obj, dotted) => dotted.split(".").reduce((a, k) => (a == null ? a : a[k]), obj);
 
 /**
- * @returns {string[]} la liste des problemes, vide si tout va bien.
+ * @returns {{level: "error"|"warning", message: string}[]} vide si tout va bien.
+ *   Les erreurs bloquent l'ecriture et le build ; les avertissements se
+ *   contentent d'etre signales, la longueur d'un libelle relevant du jugement.
  */
 export function auditTranslations(translations, referenceCode = "en") {
   const problems = [];
+  const error = (m) => problems.push({ level: "error", message: m });
+  const warning = (m) => problems.push({ level: "warning", message: m });
   const reference = new Map(flattenPairs(translations[referenceCode]));
 
   for (const code of Object.keys(translations)) {
@@ -61,7 +85,32 @@ export function auditTranslations(translations, referenceCode = "en") {
       const want = placeholdersOf(expected).join(",");
       const got = placeholdersOf(value).join(",");
       if (want !== got) {
-        problems.push(`${code} ${key}: placeholders attendus [${want}], trouves [${got}]`);
+        error(`${code} ${key}: placeholders attendus [${want}], trouves [${got}]`);
+      }
+
+      // 4. Un libelle court qui double de longueur deborde de son bouton.
+      //    Avertissement seulement : certaines langues sont naturellement plus
+      //    verbeuses, c'est a l'oeil de trancher.
+      if (
+        code !== referenceCode &&
+        expected.length >= SHORT_LABEL_MIN &&
+        expected.length <= SHORT_LABEL_MAX &&
+        value.length > expected.length * LENGTH_RATIO_LIMIT &&
+        value.length - expected.length >= MIN_ABSOLUTE_OVERFLOW
+      ) {
+        warning(
+          `${code} ${key}: ${value.length} caracteres contre ${expected.length} en ${referenceCode}, ` +
+            `risque de debordement (${JSON.stringify(value)})`
+        );
+      }
+
+      // 5. Les URLs du site portent le segment de langue de leur bloc.
+      for (const url of value.match(/streampulse\.fr\/[^\s"']*/g) ?? []) {
+        const path = url.replace("streampulse.fr", "");
+        const segment = expectedUrlSegment(code);
+        if (!path.startsWith(segment + "/") && path !== segment) {
+          error(`${code} ${key}: URL "${url}" ne porte pas le segment "${segment || "(aucun)"}"`);
+        }
       }
     }
 
@@ -69,7 +118,7 @@ export function auditTranslations(translations, referenceCode = "en") {
     for (const [key, expected] of Object.entries(BRAND_LABELS)) {
       const value = at(translations[code], key);
       if (value !== undefined && value !== expected) {
-        problems.push(`${code} ${key}: marque traduite en "${value}", attendu "${expected}"`);
+        error(`${code} ${key}: marque traduite en "${value}", attendu "${expected}"`);
       }
     }
 
@@ -77,7 +126,7 @@ export function auditTranslations(translations, referenceCode = "en") {
     for (const key of LANG_CODE_KEYS) {
       const value = at(translations[code], key);
       if (value !== undefined && value !== code) {
-        problems.push(`${code} ${key}: vaut "${value}", attendu "${code}"`);
+        error(`${code} ${key}: vaut "${value}", attendu "${code}"`);
       }
     }
   }
@@ -100,7 +149,11 @@ export function protectText(text) {
 
   let masked = String(text).replace(PLACEHOLDER_RE, stash);
   for (const literal of PROTECTED_LITERALS) {
-    masked = masked.replace(new RegExp(`\\b${literal}\\b`, "g"), stash);
+    // Insensible a la casse : les libelles de filtre s'ecrivent « twitch » en
+    // minuscules, et un \bTwitch\b sensible a la casse les laissait passer au
+    // traducteur, qui a rendu « चिकोटी ». stash() memorise le texte reellement
+    // rencontre, donc la casse d'origine est restituee telle quelle.
+    masked = masked.replace(new RegExp(`\\b${literal}\\b`, "gi"), stash);
   }
   return { masked, tokens };
 }
@@ -117,7 +170,7 @@ export function restorationIsIntact(original, restored) {
   if (placeholdersOf(original).join(",") !== placeholdersOf(restored).join(",")) return false;
   if (/[⟦⟧]/.test(restored)) return false;
   for (const literal of PROTECTED_LITERALS) {
-    const count = (s) => (s.match(new RegExp(`\\b${literal}\\b`, "g")) || []).length;
+    const count = (s) => (s.match(new RegExp(`\\b${literal}\\b`, "gi")) || []).length;
     if (count(original) !== count(restored)) return false;
   }
   return true;

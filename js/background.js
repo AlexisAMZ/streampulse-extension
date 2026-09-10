@@ -172,7 +172,18 @@ async function getKickCredentials() {
   return data["streampulse:kickCreds"] || null;
 }
 
-async function getKickAppToken() {
+// Vol unique : sans lui, deux sondages concurrents demandent chacun un jeton
+// a id.kick.com et le second ecrase le premier, pour rien.
+let _kickTokenInFlight = null;
+
+function getKickAppToken() {
+  _kickTokenInFlight ||= fetchKickAppToken().finally(() => {
+    _kickTokenInFlight = null;
+  });
+  return _kickTokenInFlight;
+}
+
+async function fetchKickAppToken() {
   const creds = await getKickCredentials();
   if (!creds?.clientId || !creds?.clientSecret) return null;
 
@@ -185,8 +196,12 @@ async function getKickAppToken() {
   const stored = await chrome.storage.local.get("streampulse:kickToken");
   const cached = stored["streampulse:kickToken"];
   if (cached?.value && Date.now() < cached.expiresAt - 120_000) {
+    /* eslint-disable require-atomic-updates -- getKickAppToken() serialise les
+       appels concurrents par une promesse partagee, aucun entrelacement
+       possible ici. La regle ne voit pas ce garde, place dans l'appelant. */
     _kickToken.value = cached.value;
     _kickToken.expiresAt = cached.expiresAt;
+    /* eslint-enable require-atomic-updates */
     return _kickToken.value;
   }
 
@@ -205,8 +220,10 @@ async function getKickAppToken() {
     const json = await resp.json();
     if (!json.access_token) return null;
     const expiresAt = Date.now() + (json.expires_in ?? 3600) * 1000;
+    /* eslint-disable require-atomic-updates -- meme raison : appel serialise. */
     _kickToken.value = json.access_token;
     _kickToken.expiresAt = expiresAt;
+    /* eslint-enable require-atomic-updates */
     await chrome.storage.local.set({
       "streampulse:kickToken": { value: json.access_token, expiresAt },
     });
@@ -1604,6 +1621,22 @@ class ActionBadge {
   }
 }
 
+/**
+ * Dernier titre et derniere categorie vus en direct pour ce streamer.
+ * Se lit avant que le sondage en cours n'ecrase l'etat, donc renvoie bien
+ * l'avant-dernier passage en direct et non celui d'aujourd'hui.
+ */
+function lastSeenOf(streamerId) {
+  const previous = streamerLiveState.get(streamerId);
+  if (!previous) return {};
+  const lastTitle = previous.title || previous.lastTitle || "";
+  const lastGame = previous.game || previous.lastGame || "";
+  return {
+    ...(lastTitle ? { lastTitle } : {}),
+    ...(lastGame ? { lastGame } : {}),
+  };
+}
+
 async function buildStreamerStatus(streamer) {
   const platform = streamer.platform || "twitch";
   const status = await PlatformChecker.getStatus(streamer);
@@ -1617,6 +1650,11 @@ async function buildStreamerStatus(streamer) {
         avatarUrl: status.avatarUrl || "",
         error: status.error,
         isError: status.isError,
+        // L'API Twitch ne renvoie rien pour une chaine hors ligne : ni titre,
+        // ni categorie. On ressert donc ce qui a ete vu au dernier passage en
+        // direct, conserve dans l'etat live, lui-meme restaure du stockage
+        // juste au-dessus de la boucle de sondage.
+        ...lastSeenOf(streamer.id),
       };
 
   let avatarUrl = streamer.avatarUrl || status.avatarUrl || "";
@@ -1700,6 +1738,8 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
           game: entry.game || "",
           sessionId: entry.sessionId || null,
           title: entry.title || "",
+          lastTitle: entry.lastTitle || "",
+          lastGame: entry.lastGame || "",
           avatarUrl: entry.avatarUrl || "",
           supportsLiveStatus: entry.supportsLiveStatus !== false,
         });
@@ -1741,6 +1781,10 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
       game: status.active?.game || "",
       sessionId: status.active?.sessionId || null,
       title: status.active?.title || "",
+      // Persistes pour survivre aux sondages hors ligne successifs : `title`
+      // et `game` repassent a vide des que la chaine n'est plus en direct.
+      lastTitle: status.active?.title || status.active?.lastTitle || "",
+      lastGame: status.active?.game || status.active?.lastGame || "",
       avatarUrl: status.avatarUrl || streamer.avatarUrl || null,
       supportsLiveStatus: status.active?.supportsLiveStatus !== false,
       isError: Boolean(status.active?.isError),
@@ -2845,6 +2889,24 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         if (Object.keys(updates).length === 0) {
           const preferences = await PreferenceStore.get();
+          const incomingKeys = Object.keys(incomingUpdates);
+
+          // Charge utile vide : il n'y a rien a faire, ce n'est pas une erreur.
+          // Le bandeau rouge sortait ici, sans qu'aucun reglage n'ait echoue.
+          // La serialisation de sendMessage supprime les proprietes valant
+          // undefined, donc un appelant peut envoyer un objet qui arrive vide.
+          if (incomingKeys.length === 0) {
+            sendResponse({ success: true, preferences });
+            return;
+          }
+
+          // Des cles sont bien arrivees mais aucune n'est reconnue : la, c'est
+          // un vrai defaut. On les nomme dans la console du service worker,
+          // faute de quoi le bandeau ne dit pas laquelle est en cause.
+          console.warn(
+            "[SP] updatePreferences: aucune cle reconnue parmi",
+            incomingKeys
+          );
           sendResponse({
             error: translateWithPrefs(
               preferences,
@@ -2924,7 +2986,9 @@ if (chrome.tabs?.onUpdated?.addListener) {
         if (prefs.preventTabDiscard && tab.autoDiscardable !== false) {
           await chrome.tabs.update(tabId, { autoDiscardable: false });
         }
-      } catch (_) {}
+      } catch (_) {
+        // L'onglet peut avoir ete ferme entre la lecture des preferences et l'ecriture.
+      }
     }
   });
 }

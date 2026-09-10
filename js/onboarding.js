@@ -495,6 +495,7 @@ async function updatePreferenceToggle({ element, key }, enabled) {
       if (element) element.checked = previous;
       return;
     }
+    // eslint-disable-next-line require-atomic-updates -- une bascule suit un clic unique, la reponse du fond fait foi.
     currentPreferences = response?.preferences || { ...(currentPreferences || {}), [key]: enabled };
     renderPreferenceToggles(currentPreferences);
   } catch (error) {

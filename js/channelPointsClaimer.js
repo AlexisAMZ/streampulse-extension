@@ -101,7 +101,9 @@
           value: points,
           channel: getCurrentChannel(),
         }).catch(() => {});
-      } catch (_) {}
+      } catch (_) {
+        // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
+      }
     }, 300);
 
     return true;
@@ -118,7 +120,9 @@
           value: 1,
           channel,
         }).catch(() => {});
-      } catch (_) {}
+      } catch (_) {
+        // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
+      }
     }, 300);
   }
 
@@ -214,7 +218,9 @@
               value: 1,
               channel,
             }).catch(() => {});
-          } catch (_) {}
+          } catch (_) {
+            // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
+          }
         }, 300);
         return true;
       }

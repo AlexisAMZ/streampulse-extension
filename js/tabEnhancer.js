@@ -125,7 +125,9 @@
       }
 
       faviconEl.setAttribute("href", canvas.toDataURL("image/png"));
-    } catch (_) {}
+    } catch (_) {
+      // Le canvas est refuse quand la page interdit le rendu hors ecran : on garde la favicon d'origine.
+    }
   }
 
   /** Charge une image une seule fois par URL, puis la garde en mémoire. */

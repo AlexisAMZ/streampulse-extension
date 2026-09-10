@@ -717,13 +717,29 @@ async function handleSavePseudo() {
     return;
   }
   const previous = state.userProfile || {};
-  const next = { ...previous, handle: raw, displayName: raw };
 
   pseudoSaveButton.disabled = true;
+
+  // L'avatar doit suivre le pseudo. Sans ce lookup, le spread de l'ancien
+  // profil conservait la photo posee a l'onboarding : apres un changement de
+  // pseudo, le filigrane des statistiques montrait encore l'ancien compte.
+  const lookup = await sendMessage({ type: "lookupTwitchUser", handle: raw });
+  const user = lookup?.user || null;
+  const next = {
+    ...previous,
+    handle: raw,
+    displayName: user?.display_name || raw,
+    // Compte introuvable ou hors ligne : pas de photo vaut mieux que celle
+    // de quelqu'un d'autre.
+    avatarUrl: user?.profile_image_url || "",
+  };
+
   const result = await sendMessage({ type: "updateUserProfile", profile: next });
+  // eslint-disable-next-line require-atomic-updates -- reactivation du bouton apres le geste qui l'a desactive.
   pseudoSaveButton.disabled = false;
 
   if (result?.success) {
+    // eslint-disable-next-line require-atomic-updates -- profil ecrit par une seule action utilisateur a la fois.
     state.userProfile = next;
     renderGreeting();
     markButtonSuccess(pseudoSaveButton);
@@ -1395,6 +1411,7 @@ async function handleAddStreamer(event) {
   // Track for slide-in animation
   lastAddedId = getHandleComparisonKey(state.selectedPlatform, sanitized);
 
+  // eslint-disable-next-line require-atomic-updates -- vidage du champ apres l'ajout qui vient d'aboutir.
   streamerInput.value = "";
   showFeedback(
     t("popup.feedback.addSuccessPlatform", {
@@ -1407,9 +1424,22 @@ async function handleAddStreamer(event) {
 }
 
 async function updatePreferences(updates) {
+  // Une valeur undefined disparait a la serialisation de sendMessage : la
+  // charge utile arrivait vide au service worker, qui repondait « Aucune
+  // preference a mettre a jour ». On filtre ici et on nomme la cle, pour que
+  // le prochain cas soit lisible dans la console au lieu d'un bandeau muet.
+  const dropped = Object.keys(updates).filter((k) => updates[k] === undefined);
+  if (dropped.length) {
+    console.warn("[SP] updatePreferences: valeur undefined ignoree pour", dropped);
+  }
+  const payload = Object.fromEntries(
+    Object.entries(updates).filter(([, v]) => v !== undefined)
+  );
+  if (Object.keys(payload).length === 0) return false;
+
   const result = await sendMessage({
     type: "updatePreferences",
-    updates,
+    updates: payload,
   });
 
   if (result?.error) {
@@ -1420,7 +1450,7 @@ async function updatePreferences(updates) {
 
   state.preferences = {
     ...state.preferences,
-    ...(result?.preferences || updates),
+    ...(result?.preferences || payload),
   };
   renderPreferences();
   showFeedback(t("popup.settings.saved"));
@@ -1669,6 +1699,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       await sendMessage({ type: "refreshStatuses" });
       await loadStreamers();
       icon.classList.remove("spin");
+      // eslint-disable-next-line require-atomic-updates -- reactivation du bouton apres le rafraichissement qu'il a lance.
       refreshButton.disabled = false;
     });
 

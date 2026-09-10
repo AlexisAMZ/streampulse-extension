@@ -182,7 +182,7 @@ locale ne la retire.
 
 | Version | Date | Description des changements | Statut CWS |
 |---------|------|-----------------------------|------------|
-| 26.9.10 | 2026-09-09 | Alertes de changement de titre (réglage global et bouton par streamer), photo de profil Twitch en filigrane derrière les statistiques, infobulles au survol sur les boutons de carte, correction du nom de plateforme affiché deux fois, et grande passe de correction des traductions dans 12 langues. | Prêt pour publication |
+| 26.9.10 | 2026-09-09 | Alertes de changement de titre (réglage global et bouton par streamer), photo de profil Twitch en filigrane derrière les statistiques, infobulles au survol sur les boutons de carte, correction du nom de plateforme affiché deux fois, et grande passe de correction des traductions dans 12 langues, dernière catégorie et dernier titre conservés sur les cartes hors ligne, photo de profil qui suit le changement de pseudo, et disparition du bandeau « Aucune préférence à mettre à jour » injustifié. | Prêt pour publication |
 | 26.8.11 | 2026-08-11 | Bouton « Ajouter à StreamPulse » sur les pages de chaîne Twitch, page de notes de version localisée, traductions dans 15 langues ajoutées, ajustements d'interface (indicateur de latence). | Prêt pour publication |
 | 26.8.6 | 2026-08-06 | Amélioration des aperçus vidéo Twitch/Kick, optimisation anti-pause du lecteur et gestion i18n FR/EN. | Prêt pour publication |
 

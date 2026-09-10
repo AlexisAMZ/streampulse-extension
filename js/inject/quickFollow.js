@@ -26,14 +26,18 @@
   var DEBUG = false;
   try {
     DEBUG = localStorage.getItem("SP_DEBUG") === "1";
-  } catch (_e) {}
+  } catch (_e) {
+    // localStorage est refuse dans certains contextes, cookies bloques ou iframe cloisonnee : on reste en mode non verbeux.
+  }
 
   function log() {
     if (!DEBUG) return;
     try {
       var args = ["[SP-QF]"].concat(Array.prototype.slice.call(arguments));
       console.log.apply(console, args);
-    } catch (_e) {}
+    } catch (_e) {
+      // La journalisation ne doit jamais casser ce qu'elle observe.
+    }
   }
 
   log("boot", location.pathname);
@@ -239,7 +243,9 @@
           if (toast.parentNode) toast.remove();
         }, 220);
       }, 2400);
-    } catch (_e) {}
+    } catch (_e) {
+      // Twitch reconstruit son DOM en permanence : le noeud peut disparaitre entre sa selection et son usage.
+    }
   }
 
   // ---- button --------------------------------------------------------------
@@ -330,7 +336,9 @@
       if (seenThirdParty.has(key)) return;
       seenThirdParty.add(key);
       log("third-party node:", node.tagName, node.className);
-    } catch (_e) {}
+    } catch (_e) {
+      // Twitch reconstruit son DOM en permanence : le noeud peut disparaitre entre sa selection et son usage.
+    }
   }
 
   function isThirdParty(node) {
@@ -505,7 +513,9 @@
       if (!overflowsAncestor(btn)) return;
       btn.classList.add("is-compact");
       if (overflowsAncestor(btn)) btn.classList.remove("is-compact");
-    } catch (_e) {}
+    } catch (_e) {
+      // Twitch reconstruit son DOM en permanence : le noeud peut disparaitre entre sa selection et son usage.
+    }
   }
 
   var lastChannel = null;
@@ -659,7 +669,9 @@
   });
   try {
     mo.observe(document.documentElement, { childList: true, subtree: true });
-  } catch (_e) {}
+  } catch (_e) {
+    // documentElement disparait pendant une navigation : l'observateur sera repose au passage suivant.
+  }
 
   // Le repli dépend de la largeur de la fenêtre, du panneau de chat ouvert ou
   // non, et de la barre latérale : autant d'états qui changent sans mutation

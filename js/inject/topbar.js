@@ -71,7 +71,9 @@
   try {
     var NS = typeof self !== "undefined" ? self : globalThis;
     NS.__SP_TOPBAR_API__ = { fmtNum: fmtNum, fmtDur: fmtDur, currentMonthWatch: currentMonthWatch, langKey: langKey };
-  } catch (_e) {}
+  } catch (_e) {
+    // globalThis peut etre fige selon le contexte d'injection : l'API reste alors locale au script.
+  }
 
   // ---- browser-only from here ----------------------------------------------
   if (
@@ -273,7 +275,9 @@
       var u = {};
       u[key] = val;
       chrome.runtime.sendMessage({ type: "updatePreferences", updates: u });
-    } catch (_e) {}
+    } catch (_e) {
+      // Ecriture de preference opportuniste : son echec ne doit pas casser le panneau.
+    }
   }
 
   // ---- panel ---------------------------------------------------------------
@@ -283,7 +287,9 @@
     if (panelEl) {
       try {
         panelEl.remove();
-      } catch (_e) {}
+      } catch (_e) {
+        // Twitch reconstruit son DOM en permanence : le noeud peut disparaitre entre sa selection et son usage.
+      }
       panelEl = null;
     }
     document.removeEventListener("click", onDocClick, true);
@@ -335,7 +341,9 @@
         addStreamer: function (login) {
           try {
             chrome.runtime.sendMessage({ type: "addStreamer", platform: "twitch", handle: login });
-          } catch (_e) {}
+          } catch (_e) {
+            // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
+          }
         },
         openChannel: function (login) {
           location.href = "https://www.twitch.tv/" + login;
@@ -343,7 +351,9 @@
         openSettings: function () {
           try {
             chrome.runtime.sendMessage({ type: "openSettings" });
-          } catch (_e) {}
+          } catch (_e) {
+            // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
+          }
           closePanel();
         },
       }
@@ -405,7 +415,9 @@
   function ensure() {
     try {
       if (!document.getElementById("sp-topbar-btn")) injectButton();
-    } catch (_e) {}
+    } catch (_e) {
+      // Twitch reconstruit son DOM en permanence : le noeud peut disparaitre entre sa selection et son usage.
+    }
   }
 
   // Re-inject on Twitch's SPA re-renders (debounced).
@@ -423,7 +435,9 @@
   });
   try {
     mo.observe(document.documentElement, { childList: true, subtree: true });
-  } catch (_e) {}
+  } catch (_e) {
+    // documentElement disparait pendant une navigation : l'observateur sera repose au passage suivant.
+  }
 
   ensure();
 
@@ -447,7 +461,9 @@
         zeventEnabled = p.zeventFeatures !== false;
         highlightZEventSidebarChannels();
       });
-    } catch (_e) {}
+    } catch (_e) {
+      // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
+    }
   }
   try {
     chrome.storage.onChanged.addListener(function (changes, area) {
@@ -455,7 +471,9 @@
         updateZEventPref();
       }
     });
-  } catch (_e) {}
+  } catch (_e) {
+    // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
+  }
 
   function extractSidebarHandle(row) {
     var anchors = row.querySelectorAll ? row.querySelectorAll("a[href]") : [];
@@ -547,7 +565,9 @@
           }
         }
       }
-    } catch (_e) {}
+    } catch (_e) {
+      // Twitch reconstruit son DOM en permanence : le noeud peut disparaitre entre sa selection et son usage.
+    }
   }
 
   updateZEventPref();

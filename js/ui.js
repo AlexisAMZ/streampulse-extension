@@ -113,9 +113,20 @@ function setupHoverPreview(cardPreview, platformId, streamer, status, callbacks)
 const THUMB_CACHE_MAX = 50;
 const thumbCache = new Map(); // insertion order = LRU order
 let thumbCacheLoaded = false;
+// Vol unique : le garde `if (thumbCacheLoaded)` etait franchi avant l'await,
+// donc deux appels concurrents lisaient tous les deux le stockage et
+// remplissaient la Map en double, ce qui evinçait des entrees encore utiles.
+let thumbCacheLoading = null;
 
-async function loadThumbCache() {
-  if (thumbCacheLoaded) return;
+function loadThumbCache() {
+  if (thumbCacheLoaded) return Promise.resolve();
+  thumbCacheLoading ||= readThumbCache().finally(() => {
+    thumbCacheLoading = null;
+  });
+  return thumbCacheLoading;
+}
+
+async function readThumbCache() {
   try {
     const data = await chrome.storage.local.get("streampulse:thumbCache");
     const stored = data["streampulse:thumbCache"] || {};
@@ -211,8 +222,11 @@ export function formatNumber(value) {
 function buildIdentityMeta(streamer, status) {
   const parts = [];
   const supportsLiveStatus = status?.supportsLiveStatus !== false;
-  if (supportsLiveStatus && status?.game && !status.isLive) {
-    parts.push(status.game);
+  if (supportsLiveStatus && !status?.isLive) {
+    // L'API Twitch ne renvoie pas de categorie pour une chaine hors ligne :
+    // sans lastGame, cette ligne se reduisait au nom de la plateforme.
+    const lastGame = status?.game || status?.lastGame;
+    if (lastGame) parts.push(lastGame);
   }
   // La pastille de statut nomme deja la plateforme (« En live · Twitch »),
   // sauf sur les cartes hors ligne ou le CSS la masque. On ne redonne le nom
@@ -510,6 +524,17 @@ export function createStreamerCard(streamer, status, template, callbacks) {
   const identityMetaText = buildIdentityMeta(streamer, activeStatus);
   identityMeta.textContent = identityMetaText;
   identityMeta.hidden = !identityMetaText;
+
+  // Le dernier titre diffuse tient rarement sur une carte hors ligne, qui fait
+  // la moitie de la hauteur d'une carte en direct. Il part donc en infobulle.
+  const lastTitle = !activeStatus.isLive ? activeStatus.lastTitle : "";
+  if (lastTitle) {
+    identityMeta.title = lastTitle;
+    identityMeta.dataset.lastTitle = "true";
+  } else {
+    identityMeta.removeAttribute("title");
+    delete identityMeta.dataset.lastTitle;
+  }
 
   const fallbackAvatar = `../${
     getPlatformDefinition(platformId).icon || "images/photos/48px.png"

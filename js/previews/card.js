@@ -23,7 +23,9 @@
       if (NS.__SP_PREVIEWS_DEBUG__ && typeof console !== "undefined") {
         console.debug.apply(console, ["[SP previews]"].concat([].slice.call(arguments)));
       }
-    } catch (_e) {}
+    } catch (_e) {
+      // La journalisation ne doit jamais casser ce qu'elle observe.
+    }
   }
 
   /**
@@ -204,20 +206,26 @@
       if (hls) {
         try {
           hls.destroy();
-        } catch (_e) {}
+        } catch (_e) {
+          // Le lecteur HLS est deja detruit ou detache : il n'y a rien a liberer.
+        }
         hls = null;
       }
       if (videoEl) {
         videoEl.hidden = true;
         try {
           videoEl.pause();
-        } catch (_e) {}
+        } catch (_e) {
+          // La video est deja detachee du document : la pause n'a plus d'objet.
+        }
         // Detach the source so Chrome actually releases the network connection;
         // leaving `src` set keeps the segment fetches alive in the background.
         videoEl.removeAttribute("src");
         try {
           videoEl.load();
-        } catch (_e) {}
+        } catch (_e) {
+          // Idem : recharger une video detachee leve, sans consequence.
+        }
       }
     }
 

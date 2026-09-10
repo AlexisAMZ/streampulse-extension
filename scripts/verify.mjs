@@ -169,12 +169,21 @@ else {
       new URL("./lib/i18n-audit.mjs", import.meta.url).href
     );
     const i18nProblems = auditTranslations(translations);
-    if (i18nProblems.length) {
-      const preview = i18nProblems.slice(0, 8).join("; ");
-      const rest = i18nProblems.length > 8 ? ` (+${i18nProblems.length - 8} more)` : "";
-      fail(`translations.js has ${i18nProblems.length} integrity problem(s): ${preview}${rest}`);
+    const i18nErrors = i18nProblems.filter((p) => p.level === "error");
+    const i18nWarnings = i18nProblems.filter((p) => p.level === "warning");
+    if (i18nErrors.length) {
+      const preview = i18nErrors.slice(0, 8).map((p) => p.message).join("; ");
+      const rest = i18nErrors.length > 8 ? ` (+${i18nErrors.length - 8} more)` : "";
+      fail(`translations.js has ${i18nErrors.length} integrity problem(s): ${preview}${rest}`);
     } else {
-      pass("translations.js: placeholders, brand names and language codes intact in every language");
+      pass("translations.js: placeholders, brand names, language codes and site URLs intact in every language");
+    }
+    // Les libelles trop longs debordent de leur bouton, mais la limite relevant
+    // du jugement, ils ne font pas echouer le build.
+    if (i18nWarnings.length) {
+      const preview = i18nWarnings.slice(0, 3).map((p) => p.message).join("; ");
+      const rest = i18nWarnings.length > 3 ? ` (+${i18nWarnings.length - 3} more)` : "";
+      warn(`translations.js: ${i18nWarnings.length} label(s) much longer than English: ${preview}${rest}`);
     }
 
     // Every language declared here must also reach the content scripts, which

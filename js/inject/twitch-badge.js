@@ -10,13 +10,17 @@
   var DEBUG = false;
   try {
     DEBUG = localStorage.getItem("SP_DEBUG") === "1";
-  } catch (_e) {}
+  } catch (_e) {
+    // localStorage est refuse dans certains contextes, cookies bloques ou iframe cloisonnee : on reste en mode non verbeux.
+  }
 
   function log() {
     if (!DEBUG) return;
     try {
       console.log.apply(console, [LOG].concat(Array.prototype.slice.call(arguments)));
-    } catch (_e) {}
+    } catch (_e) {
+      // La journalisation ne doit jamais casser ce qu'elle observe.
+    }
   }
   var API_URL = "https://alexisamz.fr/api/streampulse-badges";
   var STORAGE_KEY = "streampulseBadgeHashes";
@@ -95,7 +99,9 @@
         var pm = href.match(/\/([a-zA-Z0-9_]+)/);
         if (pm) return pm[1].toLowerCase();
       }
-    } catch (_e) {}
+    } catch (_e) {
+      // Le cookie peut etre absent ou illisible selon le contexte : on tentera les autres sources.
+    }
     return null;
   }
 
@@ -133,7 +139,9 @@
             });
           }
         });
-      } catch (_e) {}
+      } catch (_e) {
+        // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
+      }
     });
   }
 
@@ -157,7 +165,9 @@
           rescanVisibleMessages();
         })
         .catch(function () {});
-    } catch (_e) {}
+    } catch (_e) {
+      // Le service de badges est optionnel : son indisponibilite ne doit pas gener le tchat.
+    }
   }
 
   /**
@@ -173,7 +183,9 @@
         el.classList.remove("sp-badge-processed");
         processMessageLine(el);
       }
-    } catch (_e) {}
+    } catch (_e) {
+      // Twitch reconstruit son DOM en permanence : le noeud peut disparaitre entre sa selection et son usage.
+    }
   }
 
   function initBadges() {
@@ -196,7 +208,9 @@
         }
         fetchRemoteBadges();
       });
-    } catch (_e) {}
+    } catch (_e) {
+      // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
+    }
   }
 
   // ── Extraction du pseudo depuis un message de tchat ──────────────────────
@@ -247,7 +261,9 @@
         var lm = (anyLink.getAttribute("href") || "").match(/twitch\.tv\/([a-zA-Z0-9_]+)/);
         if (lm) return lm[1].toLowerCase();
       }
-    } catch (_e) {}
+    } catch (_e) {
+      // Twitch reconstruit son DOM en permanence : le noeud peut disparaitre entre sa selection et son usage.
+    }
     return null;
   }
 
@@ -290,7 +306,9 @@
         el = el.parentElement;
         if (el === messageEl) break;
       }
-    } catch (_e) {}
+    } catch (_e) {
+      // Twitch reconstruit son DOM en permanence : le noeud peut disparaitre entre sa selection et son usage.
+    }
     return themeColor();
   }
 
@@ -350,7 +368,9 @@
       if (!prev) return;
       var gap = badge.getBoundingClientRect().left - prev.getBoundingClientRect().right;
       if (gap < 3) badge.classList.add("sp-chat-badge--spaced");
-    } catch (_e) {}
+    } catch (_e) {
+      // Twitch reconstruit son DOM en permanence : le noeud peut disparaitre entre sa selection et son usage.
+    }
   }
 
   function injectBadge(messageEl) {
