@@ -17,7 +17,7 @@
     "https://*.alexisamz.fr/*",
     "https://streampulse.fr/*",
     "https://*.streampulse.fr/*",
-    "http://localhost:3000/*",
+    "http://localhost/*",
     "https://*.instagram.com/*",
     "https://api.twitch.tv/*",
     "https://tmi.twitch.tv/*",
@@ -34,7 +34,7 @@
   ],
   "externally_connectable": {
     "matches": [
-      "http://localhost:3000/*",
+      "http://localhost/*",
       "https://*.streampulse.fr/*",
       "https://streampulse.fr/*",
       "https://*.alexisamz.fr/*",
@@ -129,7 +129,7 @@
     },
     {
       "matches": [
-        "http://localhost:3000/*",
+        "http://localhost/*",
         "https://*.streampulse.fr/*",
         "https://streampulse.fr/*"
       ],
