@@ -23,9 +23,15 @@
   // is only read at script start). Declared first on purpose: if a guard bails,
   // we still need to know which one, otherwise a silent exit is impossible to
   // tell apart from the script never running.
-  var DEBUG = false;
+  //
+  // Deux niveaux, parce qu'un seul ne suffisait pas : "1" ne trace que les
+  // changements d'etat, soit quelques lignes par chargement de page, tandis que
+  // "2" trace en plus chaque passage meme quand il ne change rien. Le niveau 2
+  // sature la console d'un onglet Twitch et ne sert qu'a instruire un cas precis.
+  var DEBUG = 0;
   try {
-    DEBUG = localStorage.getItem("SP_DEBUG") === "1";
+    var flag = localStorage.getItem("SP_DEBUG");
+    DEBUG = flag === "2" || flag === "trace" ? 2 : flag === "1" ? 1 : 0;
   } catch (_e) {
     // localStorage est refuse dans certains contextes, cookies bloques ou iframe cloisonnee : on reste en mode non verbeux.
   }
@@ -38,6 +44,38 @@
     } catch (_e) {
       // La journalisation ne doit jamais casser ce qu'elle observe.
     }
+  }
+
+  // findAnchor() est rappele a chaque salve de mutations Twitch, donc plusieurs
+  // fois par seconde pendant le chargement, et rend le meme verdict des dizaines
+  // de fois d'affilee. Tracer chaque passage enterrait les rares transitions
+  // sous les repetitions. On ne trace donc que les changements, en comptant les
+  // passages identiques pour ne pas perdre le "il a reessaye N fois".
+  var lastOutcomeKey = null;
+  var outcomeRepeats = 0;
+
+  function logOutcome(code, detail) {
+    if (!DEBUG) return;
+    var key;
+    try {
+      key = code + "|" + JSON.stringify(detail === undefined ? null : detail);
+    } catch (_e) {
+      // Un detail non serialisable ne doit pas faire sauter la trace : on se
+      // rabat sur le code seul, quitte a confondre deux etats voisins.
+      key = code;
+    }
+    if (key === lastOutcomeKey && DEBUG < 2) {
+      outcomeRepeats++;
+      return;
+    }
+    var entete =
+      outcomeRepeats > 0
+        ? code + " (previous state repeated " + outcomeRepeats + "x)"
+        : code;
+    lastOutcomeKey = key;
+    outcomeRepeats = 0;
+    if (detail === undefined) log(entete);
+    else log(entete, detail);
   }
 
   log("boot", location.pathname);
@@ -401,7 +439,9 @@
       document.querySelector('[data-a-target="subscribe-button"]') ||
       document.querySelector('[data-a-target="prime-offer-button"]');
 
-    log("anchors", { follow: !!follow, sub: !!sub });
+    // Reporte dans le detail des verdicts ci-dessous plutot que journalise ici :
+    // une ligne par passage pour la meme information, c'etait le gros du bruit.
+    var presents = { follow: !!follow, sub: !!sub };
 
     // Preferred path: two independent controls in the same action row give us
     // their real container via LCA, with no blind parent climbing.
@@ -431,22 +471,22 @@
     }
 
     if (!row || !ref) {
-      log("no anchor resolved");
+      logOutcome("no anchor resolved", presents);
       return null;
     }
     if (isThirdParty(row) || isThirdParty(ref)) {
-      log("anchor rejected as third-party", {
+      logOutcome("anchor rejected as third-party", {
         row: isThirdParty(row),
         ref: isThirdParty(ref),
       });
       return null;
     }
     if (row === document.body || row === document.documentElement) {
-      log("anchor escalated to body, rejected");
+      logOutcome("anchor escalated to body, rejected", presents);
       return null;
     }
 
-    log("anchor ok", { row: row.className, ref: ref.className });
+    logOutcome("anchor ok", { row: row.className, ref: ref.className });
     return { row: row, ref: ref };
   }
 

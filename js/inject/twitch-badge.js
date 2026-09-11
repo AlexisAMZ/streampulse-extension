@@ -6,10 +6,13 @@
   // Journalisation de debogage, muette par defaut. Activer dans la console de
   // l'onglet Twitch avec localStorage.setItem("SP_DEBUG", "1"), comme
   // quickFollow.js. Sans cela le badge imprimait a chaque balayage du tchat,
-  // dans la console de tous les utilisateurs.
+  // dans la console de tous les utilisateurs. On accepte "2" au meme titre que
+  // "1" : le niveau verbeux de quickFollow.js ne doit pas eteindre les traces
+  // des autres scripts injectes.
   var DEBUG = false;
   try {
-    DEBUG = localStorage.getItem("SP_DEBUG") === "1";
+    var flag = localStorage.getItem("SP_DEBUG");
+    DEBUG = flag === "1" || flag === "2" || flag === "trace";
   } catch (_e) {
     // localStorage est refuse dans certains contextes, cookies bloques ou iframe cloisonnee : on reste en mode non verbeux.
   }
