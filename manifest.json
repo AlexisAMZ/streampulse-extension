@@ -9,8 +9,7 @@
     "alarms",
     "notifications",
     "offscreen",
-    "tabs",
-    "cookies"
+    "tabs"
   ],
   "host_permissions": [
     "https://alexisamz.fr/*",
@@ -18,7 +17,6 @@
     "https://streampulse.fr/*",
     "https://*.streampulse.fr/*",
     "http://localhost/*",
-    "https://*.instagram.com/*",
     "https://api.twitch.tv/*",
     "https://tmi.twitch.tv/*",
     "https://gql.twitch.tv/*",
@@ -31,6 +29,9 @@
     "https://stream.kick.com/*",
     "https://id.kick.com/*",
     "https://api.kick.com/*"
+  ],
+  "optional_host_permissions": [
+    "https://*.instagram.com/*"
   ],
   "externally_connectable": {
     "matches": [

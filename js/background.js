@@ -3006,42 +3006,144 @@ function _srShortcodeToMediaId(shortcode) {
   return id.toString();
 }
 
-async function _srGetInstagramSession() {
+const _SR_IG_APP_ID = "936619743392459";
+const _SR_INSTAGRAM_ORIGINS = ["https://*.instagram.com/*"];
+const _SR_PERMISSION_PAGE = "html/instagram-permission.html";
+
+/**
+ * L'utilisateur a-t-il deja accorde l'acces optionnel a Instagram ?
+ * Sans cette permission, la requete echouerait a la fois sur CORS et sur
+ * l'envoi des cookies de session (Chrome ne traite la requete comme same-site
+ * que si l'extension detient la host permission).
+ */
+async function _srHasInstagramPermission() {
   try {
-    let sessionCookie = null;
-    let dsUserId = null;
-    let csrfToken = null;
-
-    if (chrome.cookies?.getAll) {
-      const cookies = await chrome.cookies.getAll({ domain: "instagram.com" });
-      sessionCookie = cookies.find((c) => c.name === "sessionid");
-      dsUserId = cookies.find((c) => c.name === "ds_user_id");
-      const csrfCookie = cookies.find((c) => c.name === "csrftoken");
-      csrfToken = csrfCookie?.value || null;
-    }
-
-    if (!sessionCookie && chrome.cookies?.get) {
-      sessionCookie = await chrome.cookies.get({
-        url: "https://www.instagram.com",
-        name: "sessionid",
-      });
-      if (!dsUserId) {
-        dsUserId = await chrome.cookies.get({
-          url: "https://www.instagram.com",
-          name: "ds_user_id",
-        });
-      }
-    }
-
-    return {
-      isLoggedIn: Boolean(sessionCookie?.value),
-      hasSession: Boolean(sessionCookie?.value),
-      userId: dsUserId?.value || null,
-      csrfToken,
-    };
-  } catch (err) {
-    return { isLoggedIn: false, hasSession: false, error: err?.message };
+    return await chrome.permissions.contains({ origins: _SR_INSTAGRAM_ORIGINS });
+  } catch (_) {
+    return false;
   }
+}
+
+const _SR_PENDING_KEY = "_srIgPermissionWindowId";
+
+/** Fenetre de demande en cours, conservee hors memoire : le service worker
+ *  MV3 peut etre arrete a tout moment pendant que l'utilisateur decide. */
+async function _srGetPendingWindowId() {
+  try {
+    const data = await chrome.storage.session.get(_SR_PENDING_KEY);
+    return data?.[_SR_PENDING_KEY] ?? null;
+  } catch (_) {
+    return null;
+  }
+}
+
+async function _srSetPendingWindowId(windowId) {
+  try {
+    if (windowId === null) {
+      await chrome.storage.session.remove(_SR_PENDING_KEY);
+    } else {
+      await chrome.storage.session.set({ [_SR_PENDING_KEY]: windowId });
+    }
+  } catch (_) {}
+}
+
+// Listener de premier niveau : il doit etre enregistre au chargement du worker
+// pour continuer a fonctionner apres un redemarrage de celui-ci.
+if (chrome.windows?.onRemoved?.addListener) {
+  chrome.windows.onRemoved.addListener(async (closedId) => {
+    if ((await _srGetPendingWindowId()) === closedId) {
+      await _srSetPendingWindowId(null);
+    }
+  });
+}
+
+/**
+ * Ouvre la page d'extension dediee a la demande de permission.
+ *
+ * chrome.permissions.request() exige un geste utilisateur et n'est disponible
+ * ni dans un service worker MV3 ni dans un content script : l'appel doit donc
+ * partir d'une page d'extension, sur un vrai clic.
+ *
+ * La reponse est immediate : la page appelante suit ensuite l'avancement via
+ * CHECK_INSTAGRAM_PERMISSION. Garder sendResponse ouvert pendant que
+ * l'utilisateur decide serait fragile, le worker pouvant etre arrete entre-temps.
+ */
+async function _srRequestInstagramPermission() {
+  if (await _srHasInstagramPermission()) {
+    return { success: true, granted: true, pending: false };
+  }
+
+  // Une fenetre est deja ouverte : on la remet simplement au premier plan.
+  const existingId = await _srGetPendingWindowId();
+  if (existingId !== null) {
+    try {
+      await chrome.windows.update(existingId, { focused: true });
+      return { success: true, granted: false, pending: true };
+    } catch (_) {
+      await _srSetPendingWindowId(null);
+    }
+  }
+
+  try {
+    const win = await chrome.windows.create({
+      url: chrome.runtime.getURL(_SR_PERMISSION_PAGE),
+      type: "popup",
+      width: 460,
+      height: 580,
+    });
+    await _srSetPendingWindowId(win?.id ?? null);
+    return { success: true, granted: false, pending: true };
+  } catch (err) {
+    await _srSetPendingWindowId(null);
+    return {
+      success: false,
+      error: err?.message || "Impossible d'ouvrir la fenetre d'autorisation.",
+    };
+  }
+}
+
+/** Etat courant : permission accordee, et demande encore en cours ou non. */
+async function _srCheckInstagramPermission() {
+  const granted = await _srHasInstagramPermission();
+  if (granted) {
+    await _srSetPendingWindowId(null);
+    return { success: true, granted: true, pending: false };
+  }
+
+  const pendingId = await _srGetPendingWindowId();
+  if (pendingId === null) {
+    return { success: true, granted: false, pending: false };
+  }
+
+  // La fenetre a pu etre fermee pendant un arret du worker : on verifie.
+  try {
+    await chrome.windows.get(pendingId);
+    return { success: true, granted: false, pending: true };
+  } catch (_) {
+    await _srSetPendingWindowId(null);
+    return { success: true, granted: false, pending: false };
+  }
+}
+
+/**
+ * Etat de l'integration Instagram.
+ *
+ * L'extension ne lit plus les cookies (permission "cookies" retiree) : il n'y a
+ * donc plus de moyen fiable et peu couteux de savoir si la session est active
+ * sans lancer une vraie requete. On se limite ici a l'etat de la permission ;
+ * la detection de session se fait au moment du fetch des commentaires, qui
+ * renvoie notLoggedIn sur 401/403/redirection.
+ */
+async function _srGetInstagramSession() {
+  const granted = await _srHasInstagramPermission();
+  return {
+    granted,
+    needsPermission: !granted,
+    // Indeterminable sans requete : l'appelant doit se fier au resultat de
+    // GET_INSTAGRAM_COMMENTS.
+    isLoggedIn: null,
+    hasSession: null,
+  };
 }
 
 async function _srFetchInstagramComments(shortcode) {
@@ -3050,36 +3152,41 @@ async function _srFetchInstagramComments(shortcode) {
     return { success: false, error: "Identifiant Reel Instagram invalide." };
   }
 
-  const session = await _srGetInstagramSession();
-  if (!session.isLoggedIn) {
+  // Verification prealable obligatoire : sans host permission, fetch echoue
+  // avec une erreur reseau opaque (CORS) plutot qu'un statut exploitable.
+  if (!(await _srHasInstagramPermission())) {
     return {
       success: false,
-      notLoggedIn: true,
-      error: "Vous n'êtes pas connecté à Instagram sur ce navigateur.",
+      needsPermission: true,
+      error: "Autorisez l'acces a Instagram pour afficher les commentaires.",
     };
   }
 
   try {
     const url = `https://www.instagram.com/api/v1/media/${mediaId}/comments/?can_support_threading=true`;
-    const headers = {
-      "X-IG-App-ID": "936619743392459",
-      "X-Requested-With": "XMLHttpRequest",
-      "Accept": "*/*",
-    };
-    if (session.csrfToken) {
-      headers["X-CSRFToken"] = session.csrfToken;
-    }
-
     const res = await fetch(url, {
-      headers,
+      headers: {
+        "X-IG-App-ID": _SR_IG_APP_ID,
+        "X-Requested-With": "XMLHttpRequest",
+        "Accept": "*/*",
+      },
       credentials: "include",
     });
 
-    if (res.status === 401 || res.status === 302 || res.redirected) {
+    if (res.status === 401 || res.status === 403 || res.status === 302 || res.redirected) {
       return {
         success: false,
         notLoggedIn: true,
-        error: "Session Instagram expirée. Veuillez vous reconnecter sur instagram.com.",
+        error: "Session Instagram expiree. Veuillez vous reconnecter sur instagram.com.",
+      };
+    }
+
+    // 400 / 429 : endpoint prive non documente, il peut changer ou limiter.
+    if (res.status === 429) {
+      return {
+        success: false,
+        rateLimited: true,
+        error: "Instagram limite temporairement les requetes. Reessayez dans quelques minutes.",
       };
     }
 
@@ -3113,12 +3220,25 @@ async function _srFetchInstagramComments(shortcode) {
   } catch (err) {
     return {
       success: false,
-      error: err?.message || "Erreur réseau lors de la récupération Instagram.",
+      error: err?.message || "Erreur reseau lors de la recuperation Instagram.",
     };
   }
 }
 
+/** Actions acceptees depuis la page StreamPulse React. */
+const _SR_ALLOWED_ACTIONS = new Set([
+  "PING",
+  "GET_INSTAGRAM_SESSION",
+  "GET_INSTAGRAM_COMMENTS",
+  "CHECK_INSTAGRAM_PERMISSION",
+  "REQUEST_INSTAGRAM_PERMISSION",
+]);
+
 function _srHandleMessageAction(request, sendResponse) {
+  if (!_SR_ALLOWED_ACTIONS.has(request.action)) {
+    return null;
+  }
+
   if (request.action === "PING") {
     sendResponse({
       success: true,
@@ -3126,6 +3246,16 @@ function _srHandleMessageAction(request, sendResponse) {
       version: chrome.runtime.getManifest().version,
     });
     return false;
+  }
+
+  if (request.action === "CHECK_INSTAGRAM_PERMISSION") {
+    _srCheckInstagramPermission().then((res) => sendResponse(res));
+    return true;
+  }
+
+  if (request.action === "REQUEST_INSTAGRAM_PERMISSION") {
+    _srRequestInstagramPermission().then((res) => sendResponse(res));
+    return true;
   }
 
   if (request.action === "GET_INSTAGRAM_SESSION") {

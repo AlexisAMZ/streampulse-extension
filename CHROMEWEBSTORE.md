@@ -146,6 +146,16 @@ locale ne la retire.
 | `https://stream.kick.com/*` | `host_permissions` | Permet de récupérer les flux vidéo et prévisualisations de stream Kick. |
 | `https://id.kick.com/*` | `host_permissions` | Permet de vérifier l'état de session utilisateur pour la récolte des récompenses Kick. |
 | `https://api.kick.com/*` | `host_permissions` | Permet d'interroger l'API Kick pour obtenir les statuts en direct des streamers suivis. |
+| `https://*.instagram.com/*` | `optional_host_permissions` | **Optionnelle, jamais demandée à l'installation.** Uniquement proposée aux streamers qui utilisent StreamPulse React (streampulse.fr) et qui cliquent explicitement sur « Activer les commentaires Instagram » pour afficher, dans leur panneau live, les commentaires d'un Reel qu'ils diffusent. |
+
+### Permission optionnelle Instagram — note pour la révision
+
+L'objectif unique de l'extension reste Twitch et Kick. L'accès à Instagram :
+
+- **n'est pas demandé à l'installation** : un spectateur Twitch qui installe StreamPulse ne voit aucune mention d'Instagram ;
+- **n'est demandé que sur action explicite** de l'utilisateur, via `chrome.permissions.request()` déclenché par un clic dans une fenêtre d'extension dédiée (`html/instagram-permission.html`) ;
+- **peut être révoqué à tout moment** depuis les paramètres de l'extension, sans désinstallation ;
+- **ne nécessite aucune permission `cookies`** : l'extension ne lit ni ne stocke le moindre jeton de session en JavaScript. Le navigateur joint lui-même les cookies dans la couche réseau native (`credentials: "include"`), ce qui n'est possible que parce que l'utilisateur a accordé la host permission.
 
 ---
 
@@ -160,6 +170,7 @@ locale ne la retire.
 ### Déclaration d'utilisation des données
 - Toutes les données (options, filtres, streamers enregistrés) sont conservées exclusivement en local via `chrome.storage.local`.
 - Aucun serveur tiers d'analyse, de tracking ou de télémétrie n'est utilisé.
+- **Commentaires Instagram** (permission optionnelle) : lorsqu'un streamer a accordé l'accès, les commentaires d'un Reel sont transmis de l'extension à l'onglet streampulse.fr ouvert par ce même utilisateur, puis affichés. Ils ne sont **ni enregistrés** dans l'extension, **ni envoyés** à un serveur StreamPulse : ils vivent uniquement en mémoire, dans l'onglet, et disparaissent à sa fermeture. Aucun jeton de session Instagram n'est lu, stocké ni transmis.
 
 ---
 
