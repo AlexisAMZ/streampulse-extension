@@ -2992,3 +2992,143 @@ if (chrome.tabs?.onUpdated?.addListener) {
     }
   });
 }
+
+// ─── StreamReact Bridge (Instagram Comments Relay) ──────────────────────────
+
+function _srShortcodeToMediaId(shortcode) {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+  let id = 0n;
+  for (let i = 0; i < shortcode.length; i++) {
+    const idx = alphabet.indexOf(shortcode[i]);
+    if (idx === -1) continue;
+    id = id * 64n + BigInt(idx);
+  }
+  return id.toString();
+}
+
+async function _srGetInstagramSession() {
+  try {
+    const sessionCookie = await chrome.cookies.get({
+      url: "https://www.instagram.com",
+      name: "sessionid",
+    });
+    const dsUserId = await chrome.cookies.get({
+      url: "https://www.instagram.com",
+      name: "ds_user_id",
+    });
+    return {
+      isLoggedIn: Boolean(sessionCookie?.value),
+      hasSession: Boolean(sessionCookie?.value),
+      userId: dsUserId?.value || null,
+    };
+  } catch (err) {
+    return { isLoggedIn: false, hasSession: false, error: err?.message };
+  }
+}
+
+async function _srFetchInstagramComments(shortcode) {
+  const mediaId = _srShortcodeToMediaId(shortcode);
+  if (!mediaId || mediaId === "0") {
+    return { success: false, error: "Identifiant Reel Instagram invalide." };
+  }
+
+  const session = await _srGetInstagramSession();
+  if (!session.isLoggedIn) {
+    return {
+      success: false,
+      notLoggedIn: true,
+      error: "Vous n'êtes pas connecté à Instagram sur ce navigateur.",
+    };
+  }
+
+  try {
+    const url = `https://www.instagram.com/api/v1/media/${mediaId}/comments/?can_support_threading=true`;
+    const res = await fetch(url, {
+      headers: {
+        "X-IG-App-ID": "936619743392459",
+        "Accept": "*/*",
+      },
+      credentials: "include",
+    });
+
+    if (res.status === 401 || res.status === 302 || res.redirected) {
+      return {
+        success: false,
+        notLoggedIn: true,
+        error: "Session Instagram expirée. Veuillez vous reconnecter sur instagram.com.",
+      };
+    }
+
+    if (!res.ok) {
+      return {
+        success: false,
+        error: `Erreur Instagram (${res.status})`,
+      };
+    }
+
+    const data = await res.json().catch(() => null);
+    if (!data || !Array.isArray(data.comments)) {
+      return { success: true, comments: [] };
+    }
+
+    const comments = data.comments
+      .filter((c) => c && c.text && c.text.trim().length > 0)
+      .map((c) => ({
+        id: String(c.pk || c.id || crypto.randomUUID()),
+        authorName: c.user?.full_name || c.user?.username || "Utilisateur Instagram",
+        authorUsername: c.user?.username,
+        authorAvatar: c.user?.profile_pic_url,
+        text: c.text,
+        likesCount: Number(c.comment_like_count || 0),
+        createdAt: c.created_at
+          ? new Date(c.created_at * 1000).toISOString()
+          : undefined,
+      }));
+
+    return { success: true, comments };
+  } catch (err) {
+    return {
+      success: false,
+      error: err?.message || "Erreur réseau lors de la récupération Instagram.",
+    };
+  }
+}
+
+if (chrome.runtime?.onMessageExternal?.addListener) {
+  chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
+    if (!request || !request.action) return false;
+
+    const origin = sender.origin || sender.url || "";
+    const isAllowed =
+      origin.startsWith("http://localhost:3000") ||
+      origin.includes("streampulse.fr") ||
+      origin.includes("alexisamz.fr");
+
+    if (!isAllowed) {
+      sendResponse({ success: false, error: "Origine non autorisée" });
+      return false;
+    }
+
+    if (request.action === "PING") {
+      sendResponse({
+        success: true,
+        name: "StreamPulse",
+        version: chrome.runtime.getManifest().version,
+      });
+      return false;
+    }
+
+    if (request.action === "GET_INSTAGRAM_SESSION") {
+      _srGetInstagramSession().then((res) => sendResponse(res));
+      return true;
+    }
+
+    if (request.action === "GET_INSTAGRAM_COMMENTS") {
+      _srFetchInstagramComments(request.shortcode).then((res) => sendResponse(res));
+      return true;
+    }
+
+    sendResponse({ success: false, error: "Action non reconnue" });
+    return false;
+  });
+}

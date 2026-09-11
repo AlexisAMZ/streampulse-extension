@@ -9,10 +9,16 @@
     "alarms",
     "notifications",
     "offscreen",
-    "tabs"
+    "tabs",
+    "cookies"
   ],
   "host_permissions": [
     "https://alexisamz.fr/*",
+    "https://*.alexisamz.fr/*",
+    "https://streampulse.fr/*",
+    "https://*.streampulse.fr/*",
+    "http://localhost:3000/*",
+    "https://*.instagram.com/*",
     "https://api.twitch.tv/*",
     "https://tmi.twitch.tv/*",
     "https://gql.twitch.tv/*",
@@ -26,6 +32,15 @@
     "https://id.kick.com/*",
     "https://api.kick.com/*"
   ],
+  "externally_connectable": {
+    "matches": [
+      "http://localhost:3000/*",
+      "https://*.streampulse.fr/*",
+      "https://streampulse.fr/*",
+      "https://*.alexisamz.fr/*",
+      "https://alexisamz.fr/*"
+    ]
+  },
   "author": "AlexisAMZ",
   "background": {
     "service_worker": "js/background.js",
