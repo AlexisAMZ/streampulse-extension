@@ -3008,18 +3008,36 @@ function _srShortcodeToMediaId(shortcode) {
 
 async function _srGetInstagramSession() {
   try {
-    const sessionCookie = await chrome.cookies.get({
-      url: "https://www.instagram.com",
-      name: "sessionid",
-    });
-    const dsUserId = await chrome.cookies.get({
-      url: "https://www.instagram.com",
-      name: "ds_user_id",
-    });
+    let sessionCookie = null;
+    let dsUserId = null;
+    let csrfToken = null;
+
+    if (chrome.cookies?.getAll) {
+      const cookies = await chrome.cookies.getAll({ domain: "instagram.com" });
+      sessionCookie = cookies.find((c) => c.name === "sessionid");
+      dsUserId = cookies.find((c) => c.name === "ds_user_id");
+      const csrfCookie = cookies.find((c) => c.name === "csrftoken");
+      csrfToken = csrfCookie?.value || null;
+    }
+
+    if (!sessionCookie && chrome.cookies?.get) {
+      sessionCookie = await chrome.cookies.get({
+        url: "https://www.instagram.com",
+        name: "sessionid",
+      });
+      if (!dsUserId) {
+        dsUserId = await chrome.cookies.get({
+          url: "https://www.instagram.com",
+          name: "ds_user_id",
+        });
+      }
+    }
+
     return {
       isLoggedIn: Boolean(sessionCookie?.value),
       hasSession: Boolean(sessionCookie?.value),
       userId: dsUserId?.value || null,
+      csrfToken,
     };
   } catch (err) {
     return { isLoggedIn: false, hasSession: false, error: err?.message };
@@ -3043,11 +3061,17 @@ async function _srFetchInstagramComments(shortcode) {
 
   try {
     const url = `https://www.instagram.com/api/v1/media/${mediaId}/comments/?can_support_threading=true`;
+    const headers = {
+      "X-IG-App-ID": "936619743392459",
+      "X-Requested-With": "XMLHttpRequest",
+      "Accept": "*/*",
+    };
+    if (session.csrfToken) {
+      headers["X-CSRFToken"] = session.csrfToken;
+    }
+
     const res = await fetch(url, {
-      headers: {
-        "X-IG-App-ID": "936619743392459",
-        "Accept": "*/*",
-      },
+      headers,
       credentials: "include",
     });
 
@@ -3094,6 +3118,38 @@ async function _srFetchInstagramComments(shortcode) {
   }
 }
 
+function _srHandleMessageAction(request, sendResponse) {
+  if (request.action === "PING") {
+    sendResponse({
+      success: true,
+      name: "StreamPulse",
+      version: chrome.runtime.getManifest().version,
+    });
+    return false;
+  }
+
+  if (request.action === "GET_INSTAGRAM_SESSION") {
+    _srGetInstagramSession().then((res) => sendResponse(res));
+    return true;
+  }
+
+  if (request.action === "GET_INSTAGRAM_COMMENTS") {
+    _srFetchInstagramComments(request.shortcode).then((res) => sendResponse(res));
+    return true;
+  }
+
+  return null;
+}
+
+// 1. Écoute interne pour les content scripts (streamreact-bridge.js)
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (!request || !request.action) return false;
+  const handled = _srHandleMessageAction(request, sendResponse);
+  if (handled !== null) return handled;
+  return false;
+});
+
+// 2. Écoute externe pour les pages autorisées
 if (chrome.runtime?.onMessageExternal?.addListener) {
   chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
     if (!request || !request.action) return false;
@@ -3109,24 +3165,8 @@ if (chrome.runtime?.onMessageExternal?.addListener) {
       return false;
     }
 
-    if (request.action === "PING") {
-      sendResponse({
-        success: true,
-        name: "StreamPulse",
-        version: chrome.runtime.getManifest().version,
-      });
-      return false;
-    }
-
-    if (request.action === "GET_INSTAGRAM_SESSION") {
-      _srGetInstagramSession().then((res) => sendResponse(res));
-      return true;
-    }
-
-    if (request.action === "GET_INSTAGRAM_COMMENTS") {
-      _srFetchInstagramComments(request.shortcode).then((res) => sendResponse(res));
-      return true;
-    }
+    const handled = _srHandleMessageAction(request, sendResponse);
+    if (handled !== null) return handled;
 
     sendResponse({ success: false, error: "Action non reconnue" });
     return false;

@@ -126,6 +126,18 @@
         "js/tabEnhancer.js"
       ],
       "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "http://localhost:3000/*",
+        "https://*.streampulse.fr/*",
+        "https://streampulse.fr/*"
+      ],
+      "all_frames": false,
+      "js": [
+        "js/inject/streamreact-bridge.js"
+      ],
+      "run_at": "document_start"
     }
   ],
   "action": {
