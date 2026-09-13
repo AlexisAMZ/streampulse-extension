@@ -86,6 +86,26 @@ export const RELEASES = [
     },
     changes: [
       {
+        type: "fix",
+        text: {
+          fr: "Le badge communautaire StreamPulse ne s'affichait pas à côté des pseudos qui ont déjà des badges Twitch (abonné, Prime…) après un changement du tchat Twitch. Il apparaît de nouveau pour tout le monde.",
+          en: "The StreamPulse community badge was not shown next to usernames that already have Twitch badges (subscriber, Prime…) after a Twitch chat change. It now appears for everyone again.",
+          es: "La insignia comunitaria de StreamPulse no se mostraba junto a los nombres que ya tienen insignias de Twitch (suscriptor, Prime…) tras un cambio en el chat de Twitch. Ahora vuelve a aparecer para todos.",
+          "pt-BR": "O distintivo comunitário do StreamPulse não aparecia ao lado de nomes que já têm distintivos da Twitch (inscrito, Prime…) após uma mudança no chat da Twitch. Agora ele volta a aparecer para todos.",
+          de: "Das StreamPulse-Community-Abzeichen wurde nach einer Änderung am Twitch-Chat nicht neben Namen angezeigt, die bereits Twitch-Abzeichen haben (Abonnent, Prime…). Es erscheint jetzt wieder bei allen.",
+          it: "Il badge della comunità StreamPulse non compariva accanto ai nomi che hanno già badge Twitch (abbonato, Prime…) dopo una modifica alla chat di Twitch. Ora appare di nuovo per tutti.",
+          pl: "Odznaka społeczności StreamPulse nie pojawiała się przy nickach, które mają już odznaki Twitcha (subskrybent, Prime…), po zmianie czatu Twitcha. Teraz znów widać ją u wszystkich.",
+          tr: "Twitch sohbetindeki bir değişiklikten sonra StreamPulse topluluk rozeti, zaten Twitch rozeti (abone, Prime…) olan kullanıcı adlarının yanında görünmüyordu. Artık herkes için yeniden görünüyor.",
+          ru: "После изменения чата Twitch значок сообщества StreamPulse не отображался рядом с никами, у которых уже есть значки Twitch (подписчик, Prime…). Теперь он снова виден у всех.",
+          ja: "Twitchチャットの変更により、すでにTwitchバッジ（サブスク、Primeなど）を持つユーザー名の横にStreamPulseコミュニティバッジが表示されていませんでした。再びすべての人に表示されます。",
+          ko: "트위치 채팅 변경 이후 이미 트위치 배지(구독자, Prime 등)가 있는 닉네임 옆에 StreamPulse 커뮤니티 배지가 표시되지 않았습니다. 이제 다시 모두에게 표시됩니다.",
+          id: "Lencana komunitas StreamPulse tidak muncul di samping nama yang sudah memiliki lencana Twitch (pelanggan, Prime…) setelah perubahan pada obrolan Twitch. Kini lencana muncul kembali untuk semua orang.",
+          nl: "De StreamPulse-community-badge verscheen na een wijziging in de Twitch-chat niet naast namen die al Twitch-badges hebben (abonnee, Prime…). Hij is nu weer bij iedereen zichtbaar.",
+          sv: "StreamPulse-gemenskapsmärket visades inte bredvid namn som redan har Twitch-märken (prenumerant, Prime…) efter en ändring i Twitch-chatten. Nu syns det igen för alla.",
+          cs: "Komunitní odznak StreamPulse se po změně chatu Twitche nezobrazoval u přezdívek, které už mají odznaky Twitche (odběratel, Prime…). Nyní se znovu zobrazuje u všech."
+        }
+      },
+      {
         type: "new",
         text: {
           fr: "Récap à la demande : choisissez les 7 ou 30 derniers jours ou un mois, en format PC (16:9) ou mobile (9:16), puis téléchargez l'image ou partagez-la sur X. Accessible depuis Réglages, Temps de visionnage.",

@@ -376,40 +376,50 @@
     }
   }
 
-  function injectBadge(messageEl) {
-    // 1. Conteneur de badges Twitch natif
-    var badgesContainer = messageEl.querySelector(
+  /**
+   * Emplacement des badges d'une ligne de tchat.
+   *
+   * Depuis 2026, Twitch n'a plus de conteneur .chat-line__message--badges : les
+   * badges vivent dans le <span> qui precede .chat-line__username, vide quand
+   * l'auteur n'en a aucun. L'ancien repli [class*="chat-badge"] attrapait alors
+   * l'<img class="chat-badge"> d'un badge d'abonne, et le logo, insere dans une
+   * image, ne s'affichait jamais. Un repli ne doit donc jamais viser une image.
+   */
+  function findBadgeSlot(messageEl) {
+    var username = messageEl.querySelector(".chat-line__username");
+    var slot = username && username.previousElementSibling;
+    if (slot && slot.tagName === "SPAN") return slot;
+
+    // Anciennes structures Twitch, puis 7TV.
+    return messageEl.querySelector(
       '.chat-line__message--badges, ' +
-      '[data-a-target="chat-badges"]'
-    );
-    if (badgesContainer && !badgesContainer.querySelector(".sp-chat-badge")) {
-      var nativeBadge = createBadgeElement(messageEl);
-      badgesContainer.appendChild(nativeBadge);
-      ensureSpacing(nativeBadge);
-      return;
-    }
-
-    // 2. Conteneur de badges 7TV
-    var stvBadges = messageEl.querySelector(
+      '[data-a-target="chat-badges"], ' +
       '.seventv-chat-user-badge-list, ' +
-      '[class*="badge-list"], ' +
-      '[class*="chat-badge"]'
+      '[class*="badge-list"]:not(img)'
     );
-    if (stvBadges && !stvBadges.querySelector(".sp-chat-badge")) {
-      var stvBadge = createBadgeElement(messageEl);
-      stvBadges.appendChild(stvBadge);
-      ensureSpacing(stvBadge);
+  }
+
+  function injectBadge(messageEl) {
+    if (messageEl.querySelector(".sp-chat-badge")) return;
+
+    var slot = findBadgeSlot(messageEl);
+    if (slot) {
+      var badge = createBadgeElement(messageEl);
+      // Seul dans son emplacement, rien ne l'espace du pseudo qui suit.
+      if (!slot.children.length) badge.classList.add("sp-chat-badge--standalone");
+      slot.appendChild(badge);
+      ensureSpacing(badge);
       return;
     }
 
-    // 3. Fallback : inserer juste avant le pseudo
+    // Repli : inserer juste avant le pseudo
     var usernameEl = messageEl.querySelector(
       '[data-a-target="chat-message-username"], ' +
       '.chat-author__display-name, ' +
       '.seventv-chat-user, ' +
-      '[class*="chat-user"]'
+      '[class*="chat-user"]:not(img)'
     );
-    if (usernameEl && usernameEl.parentNode && !usernameEl.parentNode.querySelector(".sp-chat-badge")) {
+    if (usernameEl && usernameEl.parentNode) {
       var standalone = createBadgeElement(messageEl);
       standalone.classList.add("sp-chat-badge--standalone");
       usernameEl.parentNode.insertBefore(standalone, usernameEl);
