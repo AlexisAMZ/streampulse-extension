@@ -449,7 +449,7 @@ if (!exists(CHANGELOG_DATA)) {
 // traduits. Les libellés purement décoratifs (codes, marques, coordonnées)
 // vivent dans l'allowlist ci-dessous.
 {
-  const I18N_PAGES = ["html/popup.html", "html/onboarding.html", "html/changelog.html"];
+  const I18N_PAGES = ["html/popup.html", "html/onboarding.html", "html/changelog.html", "html/recap.html"];
   // Étiquettes de design volontairement non traduites : sigles, noms propres,
   // repères type console. Les ajouter ici est un choix, pas un oubli.
   const DECORATIVE = new Set([

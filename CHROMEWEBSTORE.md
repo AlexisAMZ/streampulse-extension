@@ -134,28 +134,19 @@ locale ne la retire.
 | `notifications` | `permissions` | Permet d'afficher des notifications système natives à l'utilisateur lorsqu'un streamer suivi démarre son direct. |
 | `offscreen` | `permissions` | Permet de créer un document hors écran dédié à la lecture des sons d'alerte et à la gestion audio sans bloquer le service worker. |
 | `tabs` | `permissions` | Permet de détecter si des onglets Twitch ou Kick sont ouverts afin d'appliquer l'anti-pause vidéo et la synchronisation du lecteur. |
+| `https://alexisamz.fr/*` | `host_permissions` | Permet de lire la configuration distante (`/api/streampulse-config`), qui fournit les identifiants d'API Twitch afin de pouvoir les faire tourner sans republier l'extension, et la liste des badges communautaires (`/api/streampulse-badges`). Aucune donnee utilisateur n'est envoyee a ce domaine. |
 | `https://api.twitch.tv/*` | `host_permissions` | Permet d'interroger l'API officielle Twitch pour vérifier l'état en direct des chaînes et obtenir les métadonnées des streams. |
 | `https://tmi.twitch.tv/*` | `host_permissions` | Permet de communiquer avec les serveurs de messagerie Twitch pour les fonctionnalités de chat et d'interaction. |
 | `https://gql.twitch.tv/*` | `host_permissions` | Permet d'interagir avec l'API GraphQL Twitch pour la récupération automatique des Channel Points et l'affichage des prévisualisations. |
 | `https://www.twitch.tv/*` | `host_permissions` | Permet d'injecter les scripts de prévisualisation au survol, l'anti-pause et le filtre de chat directement sur les pages Twitch. |
 | `https://clips.twitch.tv/*` | `host_permissions` | Permet d'afficher les aperçus et lecteurs légers sur les clips Twitch. |
 | `https://kick.com/*` | `host_permissions` | Permet d'injecter les scripts d'amélioration de lecteur, la récolte des points et le filtre de chat sur Kick.com. |
-| `https/*.kick.com/*` | `host_permissions` | Permet de prendre en compte l'ensemble des sous-domaines Kick pour le monitoring et la prévisualisation. |
+| `https://*.kick.com/*` | `host_permissions` | Permet de prendre en compte l'ensemble des sous-domaines Kick pour le monitoring et la prévisualisation. |
 | `https://files.kick.com/*` | `host_permissions` | Permet de charger les images de profil, avatars et badges des streamers Kick. |
 | `https://images.kick.com/*` | `host_permissions` | Permet d'afficher les vignettes et captures de couverture des lives Kick dans la pop-up. |
 | `https://stream.kick.com/*` | `host_permissions` | Permet de récupérer les flux vidéo et prévisualisations de stream Kick. |
 | `https://id.kick.com/*` | `host_permissions` | Permet de vérifier l'état de session utilisateur pour la récolte des récompenses Kick. |
 | `https://api.kick.com/*` | `host_permissions` | Permet d'interroger l'API Kick pour obtenir les statuts en direct des streamers suivis. |
-| `https://*.instagram.com/*` | `optional_host_permissions` | **Optionnelle, jamais demandée à l'installation.** Uniquement proposée aux streamers qui utilisent StreamPulse React (streampulse.fr) et qui cliquent explicitement sur « Activer les commentaires Instagram » pour afficher, dans leur panneau live, les commentaires d'un Reel qu'ils diffusent. |
-
-### Permission optionnelle Instagram — note pour la révision
-
-L'objectif unique de l'extension reste Twitch et Kick. L'accès à Instagram :
-
-- **n'est pas demandé à l'installation** : un spectateur Twitch qui installe StreamPulse ne voit aucune mention d'Instagram ;
-- **n'est demandé que sur action explicite** de l'utilisateur, via `chrome.permissions.request()` déclenché par un clic dans une fenêtre d'extension dédiée (`html/instagram-permission.html`) ;
-- **peut être révoqué à tout moment** depuis les paramètres de l'extension, sans désinstallation ;
-- **ne nécessite aucune permission `cookies`** : l'extension ne lit ni ne stocke le moindre jeton de session en JavaScript. Le navigateur joint lui-même les cookies dans la couche réseau native (`credentials: "include"`), ce qui n'est possible que parce que l'utilisateur a accordé la host permission.
 
 ---
 
@@ -170,7 +161,6 @@ L'objectif unique de l'extension reste Twitch et Kick. L'accès à Instagram :
 ### Déclaration d'utilisation des données
 - Toutes les données (options, filtres, streamers enregistrés) sont conservées exclusivement en local via `chrome.storage.local`.
 - Aucun serveur tiers d'analyse, de tracking ou de télémétrie n'est utilisé.
-- **Commentaires Instagram** (permission optionnelle) : lorsqu'un streamer a accordé l'accès, les commentaires d'un Reel sont transmis de l'extension à l'onglet streampulse.fr ouvert par ce même utilisateur, puis affichés. Ils ne sont **ni enregistrés** dans l'extension, **ni envoyés** à un serveur StreamPulse : ils vivent uniquement en mémoire, dans l'onglet, et disparaissent à sa fermeture. Aucun jeton de session Instagram n'est lu, stocké ni transmis.
 
 ---
 
@@ -193,7 +183,7 @@ L'objectif unique de l'extension reste Twitch et Kick. L'accès à Instagram :
 
 | Version | Date | Description des changements | Statut CWS |
 |---------|------|-----------------------------|------------|
-| 26.9.10 | 2026-09-09 | Alertes de changement de titre (réglage global et bouton par streamer), photo de profil Twitch en filigrane derrière les statistiques, infobulles au survol sur les boutons de carte, correction du nom de plateforme affiché deux fois, et grande passe de correction des traductions dans 12 langues, dernière catégorie et dernier titre conservés sur les cartes hors ligne, photo de profil qui suit le changement de pseudo, et disparition du bandeau « Aucune préférence à mettre à jour » injustifié. | Prêt pour publication |
+| 26.9.13 | 2026-09-13 | Alertes de changement de titre (réglage global et bouton par streamer), photo de profil Twitch en filigrane derrière les statistiques, infobulles au survol sur les boutons de carte, correction du nom de plateforme affiché deux fois, et grande passe de correction des traductions dans 12 langues, dernière catégorie et dernier titre conservés sur les cartes hors ligne, photo de profil qui suit le changement de pseudo, et disparition du bandeau « Aucune préférence à mettre à jour » injustifié. | Prêt pour publication |
 | 26.8.11 | 2026-08-11 | Bouton « Ajouter à StreamPulse » sur les pages de chaîne Twitch, page de notes de version localisée, traductions dans 15 langues ajoutées, ajustements d'interface (indicateur de latence). | Prêt pour publication |
 | 26.8.6 | 2026-08-06 | Amélioration des aperçus vidéo Twitch/Kick, optimisation anti-pause du lecteur et gestion i18n FR/EN. | Prêt pour publication |
 

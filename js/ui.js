@@ -7,29 +7,9 @@ import {
   formatHandleForDisplay,
   buildProfileUrl
 } from "./platforms.js";
-import { ZEVENT_PARTICIPANTS, ZEVENT_END_TIMESTAMP, isZEventActive } from "./zevent-participants.js";
-
-export { ZEVENT_PARTICIPANTS, ZEVENT_END_TIMESTAMP, isZEventActive };
-
 // Helper to replace the missing getPlatformLabel export
 function getPlatformLabel(platform) {
   return t(getPlatformLabelKey(platform));
-}
-
-export function isZEventStream(streamer, activeStatus) {
-  if (!isZEventActive()) return false;
-  if (!activeStatus?.isLive) return false;
-  const candidates = [
-    streamer.handle,
-    streamer.twitch,
-    streamer.login,
-    streamer.id ? String(streamer.id).replace(/^twitch:/i, "") : ""
-  ];
-  for (let i = 0; i < candidates.length; i++) {
-    const c = candidates[i];
-    if (c && ZEVENT_PARTICIPANTS.has(c.toLowerCase().trim())) return true;
-  }
-  return false;
 }
 
 // --- Hover-to-play live preview ---
@@ -512,14 +492,6 @@ export function createStreamerCard(streamer, status, template, callbacks) {
   nameText.className = "name-text";
   nameText.textContent = displayLabel;
   displayName.appendChild(nameText);
-
-  if (callbacks?.zeventEnabled !== false && isZEventStream(streamer, activeStatus)) {
-    if (card) card.dataset.zevent = "true";
-    const zBadge = document.createElement("span");
-    zBadge.className = "zevent-card-badge";
-    zBadge.textContent = "ZEVENT";
-    displayName.appendChild(zBadge);
-  }
 
   const identityMetaText = buildIdentityMeta(streamer, activeStatus);
   identityMeta.textContent = identityMetaText;

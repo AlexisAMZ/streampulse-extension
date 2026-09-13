@@ -1,127 +1,130 @@
-// Mise en page paysage 1600x900 (format Twitter) de la carte de recap.
+// Mise en page PC : paysage 1600x900 (16:9), adaptee a X, Discord ou un fond d'ecran.
 
-import { formatHours } from "./recap-data.js";
+import { formatDuration } from "./recap-data.js";
 import {
-  GREEN,
   INK,
   MUTED,
   FAINT,
+  MONO,
   drawAvatar,
   drawBackground,
   drawBar,
-  drawDonationBadge,
+  drawBrand,
+  drawEyebrow,
+  drawPanel,
+  drawPlatformSplit,
+  fitText,
+  setFont,
 } from "./recap-draw.js";
 
 export const CARD_WIDTH = 1600;
 export const CARD_HEIGHT = 900;
 
-const ROW_TOP = 286;
-const ROW_HEIGHT = 62;
-const MAX_ROWS = 8;
-const FOOTER_TOP = CARD_HEIGHT - 100;
-const ROW_LEFT = 84;
-const ROW_RIGHT = 1516;
-const AVATAR_SIZE = 46;
+const PAD = 84;
+const SPLIT_X = 760;
+const MAX_ROWS = 7;
 
-function drawHeader(ctx, model) {
-  ctx.textBaseline = "alphabetic";
-  ctx.textAlign = "left";
+function drawLeftColumn(ctx, model) {
+  const { labels } = model;
+  const maxWidth = SPLIT_X - PAD - 60;
 
-  ctx.fillStyle = GREEN;
-  ctx.font = "700 20px ui-monospace, Menlo, monospace";
-  ctx.fillText("MON ZEVENT 2026", ROW_LEFT, 108);
+  drawEyebrow(ctx, labels.eyebrow, PAD, 112, 20);
 
   ctx.fillStyle = INK;
-  ctx.font = "800 64px -apple-system, Segoe UI, Roboto, sans-serif";
-  const heading = model.pseudo ? `${model.pseudo}, voici ton ZEvent.` : "Voici mon ZEvent.";
-  ctx.fillText(heading, ROW_LEFT, 178);
+  setFont(ctx, 800, 58);
+  ctx.fillText(fitText(ctx, labels.heading, maxWidth), PAD, 186);
 
   ctx.fillStyle = MUTED;
-  ctx.font = "400 24px -apple-system, Segoe UI, Roboto, sans-serif";
-  ctx.fillText(
-    `${formatHours(model.totalSeconds)} de stream · ${model.streamerCount} streamer${model.streamerCount > 1 ? "s" : ""} du ZEvent · septembre 2026`,
-    ROW_LEFT,
-    222
-  );
-}
+  setFont(ctx, 500, 26);
+  ctx.fillText(fitText(ctx, labels.period, maxWidth), PAD, 232);
 
-/** Bandeau de la cagnotte finale, a droite de l'en-tete. */
-function drawHeaderDonation(ctx, amountLabel) {
-  const w = 420;
-  const h = 104;
-  drawDonationBadge(ctx, ROW_RIGHT - w, 84, w, h, amountLabel);
-}
+  // Le total est le chiffre que l'on retient.
+  ctx.fillStyle = FAINT;
+  setFont(ctx, 700, 18, MONO);
+  ctx.fillText(labels.statTime.toUpperCase(), PAD, 330);
+  ctx.fillStyle = INK;
+  setFont(ctx, 800, 124);
+  ctx.fillText(formatDuration(model.totalSeconds), PAD - 4, 450);
 
-function drawRow(ctx, entry, index, maxSeconds, image) {
-  const y = ROW_TOP + index * ROW_HEIGHT;
+  // Deux tuiles : nombre de chaines et chaine favorite.
+  const tileY = 500;
+  const tileH = 128;
+  const tileW = (maxWidth - 20) / 2;
+  const tiles = [
+    { label: labels.statChannels, value: String(model.streamerCount) },
+    { label: labels.statTop, value: model.top[0]?.channel || "—" },
+  ];
+  tiles.forEach((tile, i) => {
+    const x = PAD + i * (tileW + 20);
+    drawPanel(ctx, x, tileY, tileW, tileH, 16);
+    ctx.fillStyle = FAINT;
+    setFont(ctx, 700, 16, MONO);
+    ctx.fillText(fitText(ctx, tile.label.toUpperCase(), tileW - 48), x + 24, tileY + 42);
+    ctx.fillStyle = INK;
+    setFont(ctx, 800, 44);
+    ctx.fillText(fitText(ctx, tile.value, tileW - 48), x + 24, tileY + 100);
+  });
 
   ctx.fillStyle = FAINT;
-  ctx.font = "700 26px ui-monospace, Menlo, monospace";
-  ctx.textAlign = "right";
-  ctx.fillText(String(index + 1).padStart(2, "0"), ROW_LEFT + 34, y + 32);
-  ctx.textAlign = "left";
-
-  drawAvatar(ctx, ROW_LEFT + 52, y, AVATAR_SIZE, entry.channel, image);
-
-  ctx.fillStyle = INK;
-  ctx.font = "600 27px -apple-system, Segoe UI, Roboto, sans-serif";
-  ctx.fillText(entry.channel, ROW_LEFT + 116, y + 32);
-
-  // Barre proportionnelle au plus regarde, pour que le premier remplisse la ligne.
-  const barLeft = 620;
-  const barRight = ROW_RIGHT - 170;
-  const barWidth = barRight - barLeft;
-  const ratio = maxSeconds > 0 ? entry.watchSeconds / maxSeconds : 0;
-
-  drawBar(ctx, barLeft, y + 14, barWidth, 18, ratio);
-
-  ctx.fillStyle = INK;
-  ctx.font = "700 25px -apple-system, Segoe UI, Roboto, sans-serif";
-  ctx.textAlign = "right";
-  ctx.fillText(formatHours(entry.watchSeconds), ROW_RIGHT, y + 32);
-  ctx.textAlign = "left";
+  setFont(ctx, 700, 16, MONO);
+  ctx.fillText(labels.statPlatforms.toUpperCase(), PAD, 690);
+  drawPlatformSplit(ctx, PAD, 708, maxWidth, 16, model.platforms, model.totalSeconds, { legendSize: 20 });
 }
 
-function drawFooter(ctx, logo, zeventLogo) {
-  const y = FOOTER_TOP;
+function drawTopList(ctx, model, avatars) {
+  const x = SPLIT_X;
+  const y = 84;
+  const w = CARD_WIDTH - PAD - SPLIT_X;
+  const h = 640;
+  drawPanel(ctx, x, y, w, h, 22);
 
-  if (logo) ctx.drawImage(logo, ROW_LEFT, y, 44, 44);
+  drawEyebrow(ctx, model.labels.topTitle, x + 36, y + 56, 18);
 
-  ctx.fillStyle = INK;
-  ctx.font = "800 30px -apple-system, Segoe UI, Roboto, sans-serif";
-  ctx.fillText("StreamPulse", ROW_LEFT + (logo ? 58 : 0), y + 32);
+  const rows = model.top.slice(0, MAX_ROWS);
+  const maxSeconds = rows[0]?.watchSeconds || 0;
+  const rowTop = y + 92;
+  const rowH = 76;
+  const avatar = 48;
 
-  ctx.fillStyle = FAINT;
-  ctx.font = "400 20px -apple-system, Segoe UI, Roboto, sans-serif";
-  ctx.fillText("streampulse.fr", ROW_LEFT + (logo ? 58 : 0) + 195, y + 32);
+  rows.forEach((entry, i) => {
+    const ry = rowTop + i * rowH;
+    ctx.fillStyle = FAINT;
+    setFont(ctx, 700, 22, MONO);
+    ctx.textAlign = "right";
+    ctx.fillText(String(i + 1).padStart(2, "0"), x + 70, ry + 34);
+    ctx.textAlign = "left";
 
-  if (zeventLogo) {
-    const h = 96;
-    const w = (zeventLogo.width / zeventLogo.height) * h;
-    ctx.drawImage(zeventLogo, ROW_RIGHT - w, y - 26, w, h);
-  }
+    drawAvatar(ctx, x + 88, ry + 2, avatar, entry.channel, avatars.get(`${entry.platform}:${entry.channel}`), entry.platform);
+
+    const timeText = formatDuration(entry.watchSeconds);
+    setFont(ctx, 700, 24);
+    const timeWidth = ctx.measureText(timeText).width;
+    ctx.fillStyle = INK;
+    ctx.textAlign = "right";
+    ctx.fillText(timeText, x + w - 36, ry + 30);
+    ctx.textAlign = "left";
+
+    ctx.fillStyle = INK;
+    setFont(ctx, 600, 26);
+    const nameX = x + 156;
+    ctx.fillText(fitText(ctx, entry.channel, w - 156 - 36 - timeWidth - 24), nameX, ry + 30);
+
+    const ratio = maxSeconds > 0 ? entry.watchSeconds / maxSeconds : 0;
+    drawBar(ctx, nameX, ry + 44, w - 156 - 36, 10, ratio);
+  });
 }
 
 /**
- * Dessine la carte complete.
+ * Dessine la carte PC complete.
  *
  * @param {CanvasRenderingContext2D} ctx contexte d'un canvas 1600x900
- * @param {object} model recap issu de buildRecap, plus `pseudo` et `donationLabel`
- * @param {{avatars?: Map<string, CanvasImageSource>, logo?: CanvasImageSource,
- *          zeventLogo?: CanvasImageSource}} [assets] images deja chargees
+ * @param {object} model recap (buildRecap) + `labels` deja traduits
+ * @param {{avatars?: Map<string, CanvasImageSource>, logo?: CanvasImageSource}} [assets]
  */
 export function drawRecapCard(ctx, model, assets = {}) {
   const avatars = assets.avatars || new Map();
-
   drawBackground(ctx, CARD_WIDTH, CARD_HEIGHT);
-  drawHeader(ctx, model);
-  if (model.donationLabel) drawHeaderDonation(ctx, model.donationLabel);
-
-  const rows = model.top.slice(0, MAX_ROWS);
-  const maxSeconds = rows.length > 0 ? rows[0].watchSeconds : 0;
-  rows.forEach((entry, index) => {
-    drawRow(ctx, entry, index, maxSeconds, avatars.get(entry.channel));
-  });
-
-  drawFooter(ctx, assets.logo, assets.zeventLogo);
+  drawLeftColumn(ctx, model);
+  drawTopList(ctx, model, avatars);
+  drawBrand(ctx, assets.logo, PAD, CARD_HEIGHT - 70, { size: 44, nameSize: 30, urlSize: 20 });
 }

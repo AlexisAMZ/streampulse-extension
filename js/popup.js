@@ -23,7 +23,6 @@ import {
   sanitizeHandle,
 } from "./platforms.js";
 import { createStreamerCard, formatNumber } from "./ui.js";
-import { isZEventActive, isZEventRecapActive } from "./zevent-participants.js";
 
 const PREFERENCES_STORAGE_KEY = "betaGeneralPreferences";
 
@@ -85,7 +84,6 @@ const previewsDelayValue = document.getElementById("previews-delay-value");
 const previewsAnimationsToggle = document.getElementById("pref-previews-animations");
 const chatKeywordsInput = document.getElementById("pref-chat-keywords");
 const blockedUsersInput = document.getElementById("pref-blocked-users");
-const zeventFeaturesToggle = document.getElementById("pref-zevent-features");
 const saveChatFilterButton = document.getElementById("save-chat-filter");
 const saveBlockedUsersButton = document.getElementById("save-blocked-users");
 const testNotificationButton = document.getElementById("test-notification");
@@ -104,7 +102,6 @@ const wtTotalChannels = document.getElementById("wt-total-channels");
 const wtTopWatched = document.getElementById("wt-top-watched");
 const wtEmpty = document.getElementById("wt-empty");
 const watchTimeToggle = document.getElementById("pref-watch-time");
-const zeventRecapButton = document.getElementById("open-zevent-recap");
 const communityBadgeToggle = document.getElementById("pref-community-badge");
 const badgeColorMode = document.getElementById("pref-badge-color-mode");
 const badgeColorValue = document.getElementById("pref-badge-color-value");
@@ -589,7 +586,6 @@ function renderStreamers() {
         showFeedback(result.error, "error");
       }
     },
-    zeventEnabled: isZEventActive() && (state.preferences || defaultPreferences).zeventFeatures !== false,
   };
 
   const currentLiveIds = new Set();
@@ -636,13 +632,6 @@ function renderStreamers() {
   previousLiveIds = currentLiveIds;
 
   streamerListEl.appendChild(fragment);
-
-  // Mise à jour de la visibilité du filtre ZEvent s'il y a des streamers de l'événement
-  const zeventCount = streamerListEl.querySelectorAll('.streamer-card[data-zevent="true"]').length;
-  const zeventFilterBtn = document.getElementById("pf-btn-zevent");
-  if (zeventFilterBtn) {
-    zeventFilterBtn.hidden = zeventCount === 0;
-  }
 
   initDragAndDrop();
   observeLazyIframes();
@@ -857,80 +846,13 @@ function renderPreferences() {
   if (blockedUsersInput) {
     blockedUsersInput.value = prefs.chatBlockedUsers || "";
   }
-  if (zeventFeaturesToggle) {
-    zeventFeaturesToggle.checked = prefs.zeventFeatures !== false;
-  }
   const sortSelect = document.getElementById("sort-order");
   if (sortSelect && prefs.sortOrder) {
     sortSelect.value = prefs.sortOrder;
   }
   updateLanguageButtonsState();
-  updateZEventVisibility();
 }
 
-
-/**
- * Cle de fermeture du bandeau, distincte selon le mode : le bandeau du direct
- * et celui du recapitulatif ne portent pas le meme message.
- */
-function zeventBannerClosedKey(live) {
-  return live ? "zeventBannerClosed" : "zeventRecapBannerClosed";
-}
-
-function updateZEventVisibility() {
-  const prefs = state.preferences || defaultPreferences;
-  const optedIn = prefs.zeventFeatures !== false;
-  // Pendant l'evenement : direct, filtre et surlignage. Apres : le bandeau
-  // reste, en mode recapitulatif, jusqu'a la fin de la fenetre de recap.
-  const isEnabled = isZEventActive() && optedIn;
-  const isRecap = isZEventRecapActive() && optedIn;
-  document.body.classList.toggle("zevent-active", isEnabled);
-  document.body.classList.toggle("zevent-recap", isRecap && !isEnabled);
-  const zeventGreetingLogo = document.getElementById("zevent-greeting-logo");
-  const zeventBanner = document.getElementById("zevent-banner");
-  const zeventFilterBtn = document.getElementById("pf-btn-zevent");
-  const zeventGroup = document.querySelector(".settings-group-header[data-i18n='popup.settings.groupEvents']");
-  const zeventToggleLabel = zeventFeaturesToggle?.closest(".settings-toggle");
-
-  // Le reglage disparait seulement quand plus rien de ZEvent n'est affichable.
-  if (!isZEventRecapActive()) {
-    if (zeventGroup) zeventGroup.hidden = true;
-    if (zeventToggleLabel) zeventToggleLabel.hidden = true;
-  }
-
-  // Le filtre "zevent" depend des cartes live : il ne survit pas a l'evenement.
-  if (!isEnabled && zeventFilterBtn) zeventFilterBtn.hidden = true;
-
-  if (!isRecap) {
-    if (zeventGreetingLogo) zeventGreetingLogo.hidden = true;
-    if (zeventBanner) zeventBanner.hidden = true;
-    // Le filtre actif n'est pas stocke en variable : il vit sur le bouton porteur
-    // de la classe .active, seule source de verite du groupe de filtres.
-    const activeFilterBtn = document.querySelector("#platform-filter-group .pf-btn.active");
-    if (activeFilterBtn?.dataset.filter === "zevent") {
-      const group = document.getElementById("platform-filter-group");
-      group?.querySelectorAll(".pf-btn").forEach((b) => b.classList.remove("active"));
-      group?.querySelector('.pf-btn[data-filter="all"]')?.classList.add("active");
-      document
-        .querySelectorAll("#streamer-list .streamer-card")
-        .forEach((c) => (c.hidden = false));
-    }
-  } else {
-    // Le logo dans l'en-tete signale l'evenement en cours : il disparait des
-    // que le direct est termine. Seul le bandeau survit, pour porter le recap.
-    if (zeventGreetingLogo) zeventGreetingLogo.hidden = !isEnabled;
-
-    // Le bandeau de recap a son propre drapeau : sinon, quiconque a ferme le
-    // bandeau pendant l'evenement ne verrait jamais le recap, alors que le
-    // contenu n'est plus le meme.
-    const closedKey = zeventBannerClosedKey(isEnabled);
-    chrome.storage.local.get(closedKey, (res) => {
-      const closed = !!res?.[closedKey];
-      if (zeventBanner) zeventBanner.hidden = closed;
-      zeventGreetingLogo?.classList.toggle("active", isEnabled && !closed);
-    });
-  }
-}
 
 let _watchTimeLoaded = false;
 let currentLogFilter = "all";
@@ -1278,6 +1200,7 @@ const ALLOWED_STORAGE_KEYS = new Set([
   "betaGeneralStats",
   "betaGeneralPreferences",
   "betaWatchTimeData",
+  "streamPulseWatchTimeDaily",
   "streampulse:scheduled",
   "streampulse:thumbCache",
 ]);
@@ -1655,26 +1578,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.querySelectorAll("#streamer-list .streamer-card").forEach(card => {
         if (filter === "all") {
           card.hidden = false;
-        } else if (filter === "zevent") {
-          card.hidden = card.dataset.zevent !== "true";
         } else {
           card.hidden = card.dataset.platform !== filter;
         }
       });
-    });
-
-    // Bandeau ZEvent. Sa visibilite appartient a updateZEventVisibility() seule :
-    // un second lecteur du storage le rouvrait en concurrence, y compris quand
-    // la fenetre de recapitulatif etait passee.
-    // La fermeture est definitive : rien ne le rouvre, le recap restant
-    // accessible depuis Reglages -> Temps de visionnage.
-    const zeventBanner = document.getElementById("zevent-banner");
-    const zeventClose = document.getElementById("zevent-banner-close");
-
-    zeventClose?.addEventListener("click", () => {
-      if (zeventBanner) zeventBanner.hidden = true;
-      const live = isZEventActive() && (state.preferences || defaultPreferences).zeventFeatures !== false;
-      chrome.storage.local.set({ [zeventBannerClosedKey(live)]: true });
     });
 
     // Log filter buttons
@@ -1715,11 +1622,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     soundsToggle?.addEventListener("change", (e) => {
       updatePreferences({ soundsEnabled: e.target.checked });
-    });
-    zeventFeaturesToggle?.addEventListener("change", async (e) => {
-      await updatePreferences({ zeventFeatures: e.target.checked });
-      updateZEventVisibility();
-      renderStreamers();
     });
     autoClaimToggle?.addEventListener("change", (e) => {
       updatePreferences({ autoClaimChannelPoints: e.target.checked });
@@ -1928,14 +1830,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-// Recap ZEvent : page dediee, ouverte dans un onglet (le popup se ferme au clic).
-function openZEventRecap() {
-  chrome.tabs.create({ url: chrome.runtime.getURL("html/recap.html") });
-}
-
-zeventRecapButton?.addEventListener("click", openZEventRecap);
-document.getElementById("zevent-recap-cta")?.addEventListener("click", openZEventRecap);
-
 // Notes de version : elles ne s'ouvrent plus d'elles-memes a chaque mise a
 // jour. Deux acces, l'un dans l'en-tete et l'autre dans les reglages, et une
 // pastille sur les deux tant que la version n'a pas ete consultee.
@@ -1957,3 +1851,8 @@ document.getElementById("zevent-recap-cta")?.addEventListener("click", openZEven
     headerButton?.addEventListener("click", open);
   }
 }
+
+// Recap : page dediee, ouverte dans un onglet (le popup se ferme au clic).
+document.getElementById("open-recap")?.addEventListener("click", () => {
+  chrome.tabs.create({ url: chrome.runtime.getURL("html/recap.html") }, () => window.close());
+});

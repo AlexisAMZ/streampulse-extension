@@ -3,7 +3,7 @@
   "default_locale": "en",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "26.9.10",
+  "version": "26.9.13",
   "permissions": [
     "storage",
     "alarms",
@@ -13,10 +13,6 @@
   ],
   "host_permissions": [
     "https://alexisamz.fr/*",
-    "https://*.alexisamz.fr/*",
-    "https://streampulse.fr/*",
-    "https://*.streampulse.fr/*",
-    "http://localhost/*",
     "https://api.twitch.tv/*",
     "https://tmi.twitch.tv/*",
     "https://gql.twitch.tv/*",
@@ -30,18 +26,6 @@
     "https://id.kick.com/*",
     "https://api.kick.com/*"
   ],
-  "optional_host_permissions": [
-    "https://*.instagram.com/*"
-  ],
-  "externally_connectable": {
-    "matches": [
-      "http://localhost/*",
-      "https://*.streampulse.fr/*",
-      "https://streampulse.fr/*",
-      "https://*.alexisamz.fr/*",
-      "https://alexisamz.fr/*"
-    ]
-  },
   "author": "AlexisAMZ",
   "background": {
     "service_worker": "js/background.js",
@@ -127,18 +111,6 @@
         "js/tabEnhancer.js"
       ],
       "run_at": "document_idle"
-    },
-    {
-      "matches": [
-        "http://localhost/*",
-        "https://*.streampulse.fr/*",
-        "https://streampulse.fr/*"
-      ],
-      "all_frames": false,
-      "js": [
-        "js/inject/streamreact-bridge.js"
-      ],
-      "run_at": "document_start"
     }
   ],
   "action": {
@@ -163,8 +135,7 @@
         "html/changelog.html",
         "sons/notification.mp3",
         "images/photos/128px.png",
-        "images/photos/logosp.png",
-        "images/zevent26.png"
+        "images/photos/logosp.png"
       ],
       "matches": [
         "<all_urls>"

@@ -176,8 +176,7 @@ export const translations = {
       "platformFilter": {
         "all": "tous",
         "twitch": "twitch",
-        "kick": "kick",
-        "zevent": "zevent"
+        "kick": "kick"
       },
       "addStreamerTitleBase": "Ajouter un streamer",
       "addStreamerTitlePlatform": "Ajouter un streamer {{platform}}",
@@ -298,10 +297,7 @@ export const translations = {
         "groupData": "Données",
         "groupWatchTime": "Temps de visionnage",
         "watchTimeTitle": "Watch Time Tracker",
-        "watchTimeDescription": "Suivi du temps passé sur chaque chaîne.",
-        "groupEvents": "Événement ZEvent",
-        "zeventFeaturesTitle": "Dispositif ZEvent 2026",
-        "zeventFeaturesDescription": "Afficher le logo, le bandeau, le filtre et le surlignage des streamers."
+        "watchTimeDescription": "Suivi du temps passé sur chaque chaîne."
       },
       "watchTime": {
         "totalTime": "Temps total",
@@ -395,13 +391,6 @@ export const translations = {
         "previewAltLive": "Aperçu du stream de {{name}}",
         "previewAltOffline": "Hors ligne - {{name}}",
         "avatarAlt": "Avatar de {{name}}"
-      },
-      "zeventBanner": {
-        "badge": "ÉVÉNEMENT TERMINÉ",
-        "title": "ZEvent 2026",
-        "subtitle": "Le marathon caritatif s'est achevé sur 32 891 874 € récoltés pour les associations.",
-        "cta": "Voir mon récap",
-        "dismiss": "Masquer"
       }
     },
     "background": {
@@ -449,9 +438,39 @@ export const translations = {
         "idle": "StreamPulse"
       }
     },
+    "recap": {
+      "documentTitle": "Mon récap · StreamPulse",
+      "title": "Ton récap",
+      "subtitle": "Choisis une période et un format, puis télécharge ton image.",
+      "periodLabel": "Période",
+      "formatLabel": "Format",
+      "period7d": "7 derniers jours",
+      "period30d": "30 derniers jours",
+      "formatDesktop": "PC · 16:9",
+      "formatMobile": "Mobile · 9:16",
+      "loading": "Chargement de tes statistiques…",
+      "emptyTitle": "Rien à afficher pour cette période.",
+      "emptyBody": "Le Watch Time Tracker n'a rien enregistré sur cette période. Vérifie qu'il est activé dans les réglages.",
+      "download": "Télécharger l'image",
+      "share": "Partager sur X",
+      "shareHint": "X ne récupère pas l'image tout seul : télécharge-la, puis ajoute-la à ton post.",
+      "dailyHint": "Le suivi jour par jour a commencé avec cette mise à jour : les périodes de 7 et 30 jours se remplissent à partir de maintenant.",
+      "error": "Impossible de générer le récap. Recharge la page et réessaie.",
+      "openButton": "Créer mon récap",
+      "shareText": "Mon récap StreamPulse ({{period}}) : {{time}} de stream sur {{count}} chaînes. Le plus regardé : {{top}}.",
+      "card": {
+        "eyebrow": "Mon récap StreamPulse",
+        "heading": "{{name}}, voici ton récap.",
+        "headingAnon": "Voici mon récap.",
+        "statTime": "Temps regardé",
+        "statChannels": "Chaînes",
+        "statTop": "Le plus regardé",
+        "statPlatforms": "Plateformes",
+        "topTitle": "Top chaînes"
+      }
+    },
     "changelog": {
       "documentTitle": "StreamPulse : Nouveautés",
-      "recapCta": "Voir mon récap ZEvent",
       "brandSub": "Notes de version",
       "supportIntro": "Un bug, une idée ?",
       "supportLink": "Écrivez-nous",
@@ -656,8 +675,7 @@ export const translations = {
       "platformFilter": {
         "all": "all",
         "twitch": "twitch",
-        "kick": "kick",
-        "zevent": "zevent"
+        "kick": "kick"
       },
       "addStreamerTitleBase": "Add a streamer",
       "addStreamerTitlePlatform": "Add a {{platform}} streamer",
@@ -778,10 +796,7 @@ export const translations = {
         "groupData": "Data",
         "groupWatchTime": "Watch Time",
         "watchTimeTitle": "Watch Time Tracker",
-        "watchTimeDescription": "Track time spent on each channel.",
-        "groupEvents": "ZEvent Event",
-        "zeventFeaturesTitle": "ZEvent 2026 features",
-        "zeventFeaturesDescription": "Show the logo, banner, filter, and participant streamer highlights."
+        "watchTimeDescription": "Track time spent on each channel."
       },
       "watchTime": {
         "totalTime": "Total time",
@@ -875,13 +890,6 @@ export const translations = {
         "previewAltLive": "{{name}}’s live preview",
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "{{name}}’s avatar"
-      },
-      "zeventBanner": {
-        "badge": "EVENT ENDED",
-        "title": "ZEvent 2026",
-        "subtitle": "The charity marathon wrapped up with 32 891 874 € raised for the charities.",
-        "cta": "See my recap",
-        "dismiss": "Hide"
       }
     },
     "background": {
@@ -929,9 +937,39 @@ export const translations = {
         "idle": "StreamPulse"
       }
     },
+    "recap": {
+      "documentTitle": "My recap · StreamPulse",
+      "title": "Your recap",
+      "subtitle": "Pick a period and a format, then download your image.",
+      "periodLabel": "Period",
+      "formatLabel": "Format",
+      "period7d": "Last 7 days",
+      "period30d": "Last 30 days",
+      "formatDesktop": "Desktop · 16:9",
+      "formatMobile": "Mobile · 9:16",
+      "loading": "Loading your stats…",
+      "emptyTitle": "Nothing to show for this period.",
+      "emptyBody": "The Watch Time Tracker has not recorded anything for this period. Make sure it is turned on in the settings.",
+      "download": "Download image",
+      "share": "Share on X",
+      "shareHint": "X cannot fetch the image by itself: download it, then add it to your post.",
+      "dailyHint": "Day-by-day tracking started with this update: the 7 and 30 day periods fill up from now on.",
+      "error": "Could not generate the recap. Reload the page and try again.",
+      "openButton": "Create my recap",
+      "shareText": "My StreamPulse recap ({{period}}): {{time}} watched across {{count}} channels. Most watched: {{top}}.",
+      "card": {
+        "eyebrow": "My StreamPulse recap",
+        "heading": "{{name}}, here's your recap.",
+        "headingAnon": "Here's my recap.",
+        "statTime": "Time watched",
+        "statChannels": "Channels",
+        "statTop": "Most watched",
+        "statPlatforms": "Platforms",
+        "topTitle": "Top channels"
+      }
+    },
     "changelog": {
       "documentTitle": "StreamPulse: What's new",
-      "recapCta": "See my ZEvent recap",
       "brandSub": "Release notes",
       "supportIntro": "Found a bug, got an idea?",
       "supportLink": "Write to us",
@@ -1135,8 +1173,7 @@ export const translations = {
       "platformFilter": {
         "all": "todos",
         "twitch": "twitch",
-        "kick": "kick",
-        "zevent": "zevent"
+        "kick": "kick"
       },
       "addStreamerTitleBase": "Añadir un streamer",
       "addStreamerTitlePlatform": "Añadir un streamer de {{platform}}",
@@ -1257,10 +1294,7 @@ export const translations = {
         "hideTwitchExtensionsTitle": "Ocultar extensiones de Twitch",
         "hideTwitchExtensionsDescription": "Oculta las superposiciones de extensiones de Twitch en el reproductor de vídeo.",
         "preventTabDiscardTitle": "Evitar la suspensión de pestañas",
-        "preventTabDiscardDescription": "Evita que Chrome descarte las pestañas inactivas de Twitch o Kick.",
-        "groupEvents": "Evento ZEvent",
-        "zeventFeaturesTitle": "Funciones ZEvent 2026",
-        "zeventFeaturesDescription": "Mostrar el logo, el banner, el filtro y el resaltado de streamers."
+        "preventTabDiscardDescription": "Evita que Chrome descarte las pestañas inactivas de Twitch o Kick."
       },
       "watchTime": {
         "totalTime": "Tiempo total",
@@ -1355,14 +1389,7 @@ export const translations = {
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "Avatar de {{name}}"
       },
-      "htmlLang": "es",
-      "zeventBanner": {
-        "badge": "EVENTO FINALIZADO",
-        "title": "ZEvent 2026",
-        "subtitle": "El maratón solidario terminó con 32 891 874 € recaudados para las asociaciones.",
-        "cta": "Ver mi resumen",
-        "dismiss": "Ocultar"
-      }
+      "htmlLang": "es"
     },
     "background": {
       "errors": {
@@ -1409,9 +1436,39 @@ export const translations = {
         "idle": "StreamPulse"
       }
     },
+    "recap": {
+      "documentTitle": "Mi resumen · StreamPulse",
+      "title": "Tu resumen",
+      "subtitle": "Elige un periodo y un formato, y descarga tu imagen.",
+      "periodLabel": "Periodo",
+      "formatLabel": "Formato",
+      "period7d": "Últimos 7 días",
+      "period30d": "Últimos 30 días",
+      "formatDesktop": "PC · 16:9",
+      "formatMobile": "Móvil · 9:16",
+      "loading": "Cargando tus estadísticas…",
+      "emptyTitle": "No hay nada que mostrar en este periodo.",
+      "emptyBody": "El Watch Time Tracker no ha registrado nada en este periodo. Comprueba que esté activado en los ajustes.",
+      "download": "Descargar imagen",
+      "share": "Compartir en X",
+      "shareHint": "X no puede obtener la imagen por sí solo: descárgala y añádela a tu publicación.",
+      "dailyHint": "El seguimiento diario empezó con esta actualización: los periodos de 7 y 30 días se llenan a partir de ahora.",
+      "error": "No se pudo generar el resumen. Recarga la página e inténtalo de nuevo.",
+      "openButton": "Crear mi resumen",
+      "shareText": "Mi resumen de StreamPulse ({{period}}): {{time}} de stream en {{count}} canales. Lo más visto: {{top}}.",
+      "card": {
+        "eyebrow": "Mi resumen StreamPulse",
+        "heading": "{{name}}, este es tu resumen.",
+        "headingAnon": "Este es mi resumen.",
+        "statTime": "Tiempo visto",
+        "statChannels": "Canales",
+        "statTop": "Lo más visto",
+        "statPlatforms": "Plataformas",
+        "topTitle": "Top canales"
+      }
+    },
     "changelog": {
       "documentTitle": "StreamPulse: Novedades",
-      "recapCta": "Ver mi resumen del ZEvent",
       "brandSub": "Notas de la versión",
       "supportIntro": "¿Un fallo, una idea?",
       "supportLink": "Escríbenos",
@@ -1615,8 +1672,7 @@ export const translations = {
       "platformFilter": {
         "all": "todos",
         "twitch": "twitch",
-        "kick": "kick",
-        "zevent": "zevent"
+        "kick": "kick"
       },
       "addStreamerTitleBase": "Adicionar um streamer",
       "addStreamerTitlePlatform": "Adicionar um streamer de {{platform}}",
@@ -1737,10 +1793,7 @@ export const translations = {
         "hideTwitchExtensionsTitle": "Ocultar extensões da Twitch",
         "hideTwitchExtensionsDescription": "Oculta as sobreposições de extensões da Twitch no player de vídeo.",
         "preventTabDiscardTitle": "Impedir a suspensão de abas",
-        "preventTabDiscardDescription": "Impede que o Chrome descarte abas inativas da Twitch ou Kick.",
-        "groupEvents": "Evento ZEvent",
-        "zeventFeaturesTitle": "Recursos do ZEvent 2026",
-        "zeventFeaturesDescription": "Exibir o logotipo, banner, filtro e destaque dos streamers."
+        "preventTabDiscardDescription": "Impede que o Chrome descarte abas inativas da Twitch ou Kick."
       },
       "watchTime": {
         "totalTime": "Tempo total",
@@ -1835,14 +1888,7 @@ export const translations = {
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "Avatar de {{name}}"
       },
-      "htmlLang": "pt-BR",
-      "zeventBanner": {
-        "badge": "EVENTO ENCERRADO",
-        "title": "ZEvent 2026",
-        "subtitle": "A maratona beneficente terminou com 32 891 874 € arrecadados para as instituições.",
-        "cta": "Ver meu resumo",
-        "dismiss": "Ocultar"
-      }
+      "htmlLang": "pt-BR"
     },
     "background": {
       "errors": {
@@ -1889,9 +1935,39 @@ export const translations = {
         "idle": "StreamPulse"
       }
     },
+    "recap": {
+      "documentTitle": "Meu resumo · StreamPulse",
+      "title": "Seu resumo",
+      "subtitle": "Escolha um período e um formato e baixe sua imagem.",
+      "periodLabel": "Período",
+      "formatLabel": "Formato",
+      "period7d": "Últimos 7 dias",
+      "period30d": "Últimos 30 dias",
+      "formatDesktop": "PC · 16:9",
+      "formatMobile": "Celular · 9:16",
+      "loading": "Carregando suas estatísticas…",
+      "emptyTitle": "Nada para mostrar neste período.",
+      "emptyBody": "O Watch Time Tracker não registrou nada neste período. Verifique se ele está ativado nas configurações.",
+      "download": "Baixar imagem",
+      "share": "Compartilhar no X",
+      "shareHint": "O X não consegue buscar a imagem sozinho: baixe-a e adicione ao seu post.",
+      "dailyHint": "O acompanhamento diário começou com esta atualização: os períodos de 7 e 30 dias são preenchidos a partir de agora.",
+      "error": "Não foi possível gerar o resumo. Recarregue a página e tente novamente.",
+      "openButton": "Criar meu resumo",
+      "shareText": "Meu resumo do StreamPulse ({{period}}): {{time}} de stream em {{count}} canais. Mais assistido: {{top}}.",
+      "card": {
+        "eyebrow": "Meu resumo StreamPulse",
+        "heading": "{{name}}, aqui está seu resumo.",
+        "headingAnon": "Aqui está meu resumo.",
+        "statTime": "Tempo assistido",
+        "statChannels": "Canais",
+        "statTop": "Mais assistido",
+        "statPlatforms": "Plataformas",
+        "topTitle": "Top canais"
+      }
+    },
     "changelog": {
       "documentTitle": "StreamPulse: Novidades",
-      "recapCta": "Ver meu resumo do ZEvent",
       "brandSub": "Notas da versão",
       "supportIntro": "Um bug, uma ideia?",
       "supportLink": "Escreva para nós",
@@ -2096,8 +2172,7 @@ export const translations = {
       "platformFilter": {
         "all": "alle",
         "twitch": "twitch",
-        "kick": "kick",
-        "zevent": "zevent"
+        "kick": "kick"
       },
       "addStreamerTitleBase": "Fügen Sie einen Streamer hinzu",
       "addStreamerTitlePlatform": "Fügen Sie einen {{platform}}-Streamer hinzu",
@@ -2218,10 +2293,7 @@ export const translations = {
         "groupData": "Daten",
         "groupWatchTime": "Wiedergabezeit",
         "watchTimeTitle": "Zeiterfassung ansehen",
-        "watchTimeDescription": "Verfolgen Sie die auf jedem Kanal verbrachte Zeit.",
-        "groupEvents": "ZEvent-Event",
-        "zeventFeaturesTitle": "ZEvent 2026 Funktionen",
-        "zeventFeaturesDescription": "Logo, Banner, Filter und Streamer-Hervorhebung anzeigen."
+        "watchTimeDescription": "Verfolgen Sie die auf jedem Kanal verbrachte Zeit."
       },
       "watchTime": {
         "totalTime": "Gesamtzeit",
@@ -2315,13 +2387,6 @@ export const translations = {
         "previewAltLive": "Live-Vorschau von {{name}}",
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "{{name}}s Avatar"
-      },
-      "zeventBanner": {
-        "badge": "EVENT BEENDET",
-        "title": "ZEvent 2026",
-        "subtitle": "Der Charity-Marathon endete mit 32 891 874 € für die Hilfsorganisationen.",
-        "cta": "Meine Bilanz ansehen",
-        "dismiss": "Ausblenden"
       }
     },
     "background": {
@@ -2369,9 +2434,39 @@ export const translations = {
         "idle": "StreamPulse"
       }
     },
+    "recap": {
+      "documentTitle": "Mein Rückblick · StreamPulse",
+      "title": "Dein Rückblick",
+      "subtitle": "Wähle einen Zeitraum und ein Format und lade dann dein Bild herunter.",
+      "periodLabel": "Zeitraum",
+      "formatLabel": "Format",
+      "period7d": "Letzte 7 Tage",
+      "period30d": "Letzte 30 Tage",
+      "formatDesktop": "PC · 16:9",
+      "formatMobile": "Mobil · 9:16",
+      "loading": "Deine Statistiken werden geladen…",
+      "emptyTitle": "Für diesen Zeitraum gibt es nichts anzuzeigen.",
+      "emptyBody": "Der Watch Time Tracker hat in diesem Zeitraum nichts erfasst. Prüfe, ob er in den Einstellungen aktiviert ist.",
+      "download": "Bild herunterladen",
+      "share": "Auf X teilen",
+      "shareHint": "X kann das Bild nicht selbst abrufen: Lade es herunter und füge es deinem Post hinzu.",
+      "dailyHint": "Die tägliche Erfassung hat mit diesem Update begonnen: Die Zeiträume von 7 und 30 Tagen füllen sich ab jetzt.",
+      "error": "Der Rückblick konnte nicht erstellt werden. Lade die Seite neu und versuche es erneut.",
+      "openButton": "Meinen Rückblick erstellen",
+      "shareText": "Mein StreamPulse-Rückblick ({{period}}): {{time}} Stream auf {{count}} Kanälen. Am meisten geschaut: {{top}}.",
+      "card": {
+        "eyebrow": "Mein StreamPulse-Rückblick",
+        "heading": "{{name}}, hier ist dein Rückblick.",
+        "headingAnon": "Mein Rückblick.",
+        "statTime": "Zuschauzeit",
+        "statChannels": "Kanäle",
+        "statTop": "Am meisten geschaut",
+        "statPlatforms": "Plattformen",
+        "topTitle": "Top-Kanäle"
+      }
+    },
     "changelog": {
       "documentTitle": "StreamPulse: Was ist neu",
-      "recapCta": "Meinen ZEvent-Rückblick ansehen",
       "brandSub": "Versionshinweise",
       "supportIntro": "Einen Fehler gefunden, eine Idee?",
       "supportLink": "Schreiben Sie uns",
@@ -2576,8 +2671,7 @@ export const translations = {
       "platformFilter": {
         "all": "tutto",
         "twitch": "twitch",
-        "kick": "kick",
-        "zevent": "zevent"
+        "kick": "kick"
       },
       "addStreamerTitleBase": "Aggiungi uno streamer",
       "addStreamerTitlePlatform": "Aggiungi uno streamer {{platform}}",
@@ -2698,10 +2792,7 @@ export const translations = {
         "groupData": "Dati",
         "groupWatchTime": "Guarda l'ora",
         "watchTimeTitle": "Guarda il monitoraggio del tempo",
-        "watchTimeDescription": "Tieni traccia del tempo trascorso su ciascun canale.",
-        "groupEvents": "Evento ZEvent",
-        "zeventFeaturesTitle": "Funzioni ZEvent 2026",
-        "zeventFeaturesDescription": "Mostra il logo, banner, filtro ed evidenziazione degli streamer."
+        "watchTimeDescription": "Tieni traccia del tempo trascorso su ciascun canale."
       },
       "watchTime": {
         "totalTime": "Tempo totale",
@@ -2795,13 +2886,6 @@ export const translations = {
         "previewAltLive": "Anteprima dal vivo di {{name}}",
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "L'avatar di {{name}}"
-      },
-      "zeventBanner": {
-        "badge": "EVENTO CONCLUSO",
-        "title": "ZEvent 2026",
-        "subtitle": "La maratona benefica si è chiusa con 32 891 874 € raccolti per le associazioni.",
-        "cta": "Vedi il mio riepilogo",
-        "dismiss": "Nascondi"
       }
     },
     "background": {
@@ -2849,9 +2933,39 @@ export const translations = {
         "idle": "StreamPulse"
       }
     },
+    "recap": {
+      "documentTitle": "Il mio riepilogo · StreamPulse",
+      "title": "Il tuo riepilogo",
+      "subtitle": "Scegli un periodo e un formato, poi scarica la tua immagine.",
+      "periodLabel": "Periodo",
+      "formatLabel": "Formato",
+      "period7d": "Ultimi 7 giorni",
+      "period30d": "Ultimi 30 giorni",
+      "formatDesktop": "PC · 16:9",
+      "formatMobile": "Mobile · 9:16",
+      "loading": "Caricamento delle statistiche…",
+      "emptyTitle": "Niente da mostrare per questo periodo.",
+      "emptyBody": "Il Watch Time Tracker non ha registrato nulla in questo periodo. Verifica che sia attivo nelle impostazioni.",
+      "download": "Scarica immagine",
+      "share": "Condividi su X",
+      "shareHint": "X non può recuperare l'immagine da solo: scaricala e aggiungila al tuo post.",
+      "dailyHint": "Il monitoraggio giornaliero è iniziato con questo aggiornamento: i periodi di 7 e 30 giorni si riempiono da ora in poi.",
+      "error": "Impossibile generare il riepilogo. Ricarica la pagina e riprova.",
+      "openButton": "Crea il mio riepilogo",
+      "shareText": "Il mio riepilogo StreamPulse ({{period}}): {{time}} di stream su {{count}} canali. Il più visto: {{top}}.",
+      "card": {
+        "eyebrow": "Il mio riepilogo StreamPulse",
+        "heading": "{{name}}, ecco il tuo riepilogo.",
+        "headingAnon": "Ecco il mio riepilogo.",
+        "statTime": "Tempo guardato",
+        "statChannels": "Canali",
+        "statTop": "Il più visto",
+        "statPlatforms": "Piattaforme",
+        "topTitle": "Top canali"
+      }
+    },
     "changelog": {
       "documentTitle": "StreamPulse: Novità",
-      "recapCta": "Vedi il mio riepilogo ZEvent",
       "brandSub": "Note sulla versione",
       "supportIntro": "Hai trovato un bug, hai un'idea?",
       "supportLink": "Scrivici",
@@ -3056,8 +3170,7 @@ export const translations = {
       "platformFilter": {
         "all": "wszystko",
         "twitch": "twitch",
-        "kick": "kick",
-        "zevent": "zevent"
+        "kick": "kick"
       },
       "addStreamerTitleBase": "Dodaj streamera",
       "addStreamerTitlePlatform": "Dodaj streamera {{platform}}",
@@ -3178,10 +3291,7 @@ export const translations = {
         "groupData": "Dane",
         "groupWatchTime": "Czas oglądania",
         "watchTimeTitle": "Obejrzyj Śledzenie czasu",
-        "watchTimeDescription": "Śledź czas spędzony na każdym kanale.",
-        "groupEvents": "Wydarzenie ZEvent",
-        "zeventFeaturesTitle": "Funkcje ZEvent 2026",
-        "zeventFeaturesDescription": "Pokaż logo, baner, filtr i wyróżnienie streamerów."
+        "watchTimeDescription": "Śledź czas spędzony na każdym kanale."
       },
       "watchTime": {
         "totalTime": "Całkowity czas",
@@ -3275,13 +3385,6 @@ export const translations = {
         "previewAltLive": "Podgląd na żywo {{name}}",
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "Awatar {{name}}"
-      },
-      "zeventBanner": {
-        "badge": "WYDARZENIE ZAKOŃCZONE",
-        "title": "ZEvent 2026",
-        "subtitle": "Charytatywny maraton zakończył się kwotą 32 891 874 € zebraną dla organizacji.",
-        "cta": "Zobacz moje podsumowanie",
-        "dismiss": "Ukryj"
       }
     },
     "background": {
@@ -3329,9 +3432,39 @@ export const translations = {
         "idle": "StreamPulse"
       }
     },
+    "recap": {
+      "documentTitle": "Moje podsumowanie · StreamPulse",
+      "title": "Twoje podsumowanie",
+      "subtitle": "Wybierz okres i format, a następnie pobierz obraz.",
+      "periodLabel": "Okres",
+      "formatLabel": "Format",
+      "period7d": "Ostatnie 7 dni",
+      "period30d": "Ostatnie 30 dni",
+      "formatDesktop": "PC · 16:9",
+      "formatMobile": "Telefon · 9:16",
+      "loading": "Wczytywanie statystyk…",
+      "emptyTitle": "Brak danych dla tego okresu.",
+      "emptyBody": "Watch Time Tracker nic nie zarejestrował w tym okresie. Sprawdź, czy jest włączony w ustawieniach.",
+      "download": "Pobierz obraz",
+      "share": "Udostępnij na X",
+      "shareHint": "X nie pobierze obrazu sam: pobierz go i dodaj do swojego posta.",
+      "dailyHint": "Śledzenie dzienne zaczęło się od tej aktualizacji: okresy 7 i 30 dni będą się zapełniać od teraz.",
+      "error": "Nie udało się wygenerować podsumowania. Odśwież stronę i spróbuj ponownie.",
+      "openButton": "Utwórz podsumowanie",
+      "shareText": "Moje podsumowanie StreamPulse ({{period}}): {{time}} oglądania na {{count}} kanałach. Najczęściej oglądany: {{top}}.",
+      "card": {
+        "eyebrow": "Moje podsumowanie StreamPulse",
+        "heading": "{{name}}, oto Twoje podsumowanie.",
+        "headingAnon": "Oto moje podsumowanie.",
+        "statTime": "Czas oglądania",
+        "statChannels": "Kanały",
+        "statTop": "Najczęściej oglądany",
+        "statPlatforms": "Platformy",
+        "topTitle": "Top kanały"
+      }
+    },
     "changelog": {
       "documentTitle": "StreamPulse: Co nowego",
-      "recapCta": "Zobacz moje podsumowanie ZEvent",
       "brandSub": "Informacje o wydaniu",
       "supportIntro": "Znalazłeś błąd, masz pomysł?",
       "supportLink": "Napisz do nas",
@@ -3536,8 +3669,7 @@ export const translations = {
       "platformFilter": {
         "all": "hepsi",
         "twitch": "twitch",
-        "kick": "kick",
-        "zevent": "zevent"
+        "kick": "kick"
       },
       "addStreamerTitleBase": "Bir flama ekle",
       "addStreamerTitlePlatform": "Bir {{platform}} yayıncısı ekle",
@@ -3658,10 +3790,7 @@ export const translations = {
         "groupData": "Veriler",
         "groupWatchTime": "İzleme Süresi",
         "watchTimeTitle": "Zaman Takipçisi'ni İzle",
-        "watchTimeDescription": "Her bir kanalda geçirilen süreyi takip edin.",
-        "groupEvents": "ZEvent Etkinliği",
-        "zeventFeaturesTitle": "ZEvent 2026 özellikleri",
-        "zeventFeaturesDescription": "Logo, afiş, filtre ve yayıncı vurgulamalarını göster."
+        "watchTimeDescription": "Her bir kanalda geçirilen süreyi takip edin."
       },
       "watchTime": {
         "totalTime": "Toplam süre",
@@ -3755,13 +3884,6 @@ export const translations = {
         "previewAltLive": "{{name}}’ın canlı önizlemesi",
         "previewAltOffline": "Çevrimdışı – {{name}}",
         "avatarAlt": "{{name}}’in avatarı"
-      },
-      "zeventBanner": {
-        "badge": "ETKİNLİK SONA ERDİ",
-        "title": "ZEvent 2026",
-        "subtitle": "Yardım maratonu dernekler için toplanan 32 891 874 € ile sona erdi.",
-        "cta": "Özetimi gör",
-        "dismiss": "Gizle"
       }
     },
     "background": {
@@ -3809,9 +3931,39 @@ export const translations = {
         "idle": "StreamPulse"
       }
     },
+    "recap": {
+      "documentTitle": "Özetim · StreamPulse",
+      "title": "Özetin",
+      "subtitle": "Bir dönem ve format seç, ardından görselini indir.",
+      "periodLabel": "Dönem",
+      "formatLabel": "Format",
+      "period7d": "Son 7 gün",
+      "period30d": "Son 30 gün",
+      "formatDesktop": "PC · 16:9",
+      "formatMobile": "Mobil · 9:16",
+      "loading": "İstatistiklerin yükleniyor…",
+      "emptyTitle": "Bu dönem için gösterilecek bir şey yok.",
+      "emptyBody": "Watch Time Tracker bu dönemde hiçbir şey kaydetmedi. Ayarlarda açık olduğundan emin ol.",
+      "download": "Görseli indir",
+      "share": "X'te paylaş",
+      "shareHint": "X görseli kendisi alamaz: indir, sonra gönderine ekle.",
+      "dailyHint": "Günlük takip bu güncellemeyle başladı: 7 ve 30 günlük dönemler bundan sonra dolacak.",
+      "error": "Özet oluşturulamadı. Sayfayı yenileyip tekrar dene.",
+      "openButton": "Özetimi oluştur",
+      "shareText": "StreamPulse özetim ({{period}}): {{count}} kanalda {{time}} yayın. En çok izlenen: {{top}}.",
+      "card": {
+        "eyebrow": "StreamPulse özetim",
+        "heading": "{{name}}, işte özetin.",
+        "headingAnon": "İşte özetim.",
+        "statTime": "İzleme süresi",
+        "statChannels": "Kanallar",
+        "statTop": "En çok izlenen",
+        "statPlatforms": "Platformlar",
+        "topTitle": "En iyi kanallar"
+      }
+    },
     "changelog": {
       "documentTitle": "StreamPulse: Yenilikler",
-      "recapCta": "ZEvent özetimi gör",
       "brandSub": "Sürüm notları",
       "supportIntro": "Bir hata mı buldunuz, bir fikriniz mi var?",
       "supportLink": "Bize yazın",
@@ -4016,8 +4168,7 @@ export const translations = {
       "platformFilter": {
         "all": "все",
         "twitch": "twitch",
-        "kick": "kick",
-        "zevent": "zevent"
+        "kick": "kick"
       },
       "addStreamerTitleBase": "Добавить серпантин",
       "addStreamerTitlePlatform": "Добавить стримера {{platform}}",
@@ -4138,10 +4289,7 @@ export const translations = {
         "groupData": "Данные",
         "groupWatchTime": "Время просмотра",
         "watchTimeTitle": "Учетник рабочего времени",
-        "watchTimeDescription": "Отслеживайте время, затраченное на каждый канал.",
-        "groupEvents": "Событие ZEvent",
-        "zeventFeaturesTitle": "Функции ZEvent 2026",
-        "zeventFeaturesDescription": "Показывать логотип, баннер, фильтр и подсветку стримеров."
+        "watchTimeDescription": "Отслеживайте время, затраченное на каждый канал."
       },
       "watchTime": {
         "totalTime": "Общее время",
@@ -4235,13 +4383,6 @@ export const translations = {
         "previewAltLive": "Предварительный просмотр в режиме реального времени {{name}}",
         "previewAltOffline": "Не в сети – {{name}}",
         "avatarAlt": "Аватар {{name}}"
-      },
-      "zeventBanner": {
-        "badge": "СОБЫТИЕ ЗАВЕРШЕНО",
-        "title": "ZEvent 2026",
-        "subtitle": "Благотворительный марафон завершился суммой 32 891 874 € для фондов.",
-        "cta": "Мои итоги",
-        "dismiss": "Скрыть"
       }
     },
     "background": {
@@ -4289,9 +4430,39 @@ export const translations = {
         "idle": "StreamPulse"
       }
     },
+    "recap": {
+      "documentTitle": "Мои итоги · StreamPulse",
+      "title": "Твои итоги",
+      "subtitle": "Выбери период и формат, затем скачай изображение.",
+      "periodLabel": "Период",
+      "formatLabel": "Формат",
+      "period7d": "Последние 7 дней",
+      "period30d": "Последние 30 дней",
+      "formatDesktop": "ПК · 16:9",
+      "formatMobile": "Телефон · 9:16",
+      "loading": "Загрузка статистики…",
+      "emptyTitle": "За этот период нечего показать.",
+      "emptyBody": "Watch Time Tracker ничего не записал за этот период. Проверь, что он включён в настройках.",
+      "download": "Скачать изображение",
+      "share": "Поделиться в X",
+      "shareHint": "X не может сам получить изображение: скачай его и добавь в пост.",
+      "dailyHint": "Учёт по дням начался с этого обновления: периоды 7 и 30 дней будут заполняться с этого момента.",
+      "error": "Не удалось создать итоги. Перезагрузи страницу и попробуй снова.",
+      "openButton": "Создать мои итоги",
+      "shareText": "Мои итоги StreamPulse ({{period}}): {{time}} стримов на {{count}} каналах. Больше всего: {{top}}.",
+      "card": {
+        "eyebrow": "Мои итоги StreamPulse",
+        "heading": "{{name}}, вот твои итоги.",
+        "headingAnon": "Мои итоги.",
+        "statTime": "Время просмотра",
+        "statChannels": "Каналы",
+        "statTop": "Любимый канал",
+        "statPlatforms": "Платформы",
+        "topTitle": "Топ каналов"
+      }
+    },
     "changelog": {
       "documentTitle": "StreamPulse: Что нового",
-      "recapCta": "Мои итоги ZEvent",
       "brandSub": "Примечания к выпуску",
       "supportIntro": "Нашли ошибку или у вас есть идея?",
       "supportLink": "Напишите нам",
@@ -4496,8 +4667,7 @@ export const translations = {
       "platformFilter": {
         "all": "すべて",
         "twitch": "twitch",
-        "kick": "kick",
-        "zevent": "zevent"
+        "kick": "kick"
       },
       "addStreamerTitleBase": "ストリーマーを追加する",
       "addStreamerTitlePlatform": "{{platform}}のストリーマーを追加する",
@@ -4618,10 +4788,7 @@ export const translations = {
         "groupData": "データ",
         "groupWatchTime": "視聴時間",
         "watchTimeTitle": "視聴時間トラッカー",
-        "watchTimeDescription": "各チャネルに費やした時間を追跡します。",
-        "groupEvents": "ZEventイベント",
-        "zeventFeaturesTitle": "ZEvent 2026機能",
-        "zeventFeaturesDescription": "ロゴ、バナー、フィルター、配信者の強調表示を有効化。"
+        "watchTimeDescription": "各チャネルに費やした時間を追跡します。"
       },
       "watchTime": {
         "totalTime": "合計時間",
@@ -4715,13 +4882,6 @@ export const translations = {
         "previewAltLive": "{{name}}のライブプレビュー",
         "previewAltOffline": "オフライン – {{name}}",
         "avatarAlt": "{{name}}さんのアバター"
-      },
-      "zeventBanner": {
-        "badge": "イベント終了",
-        "title": "ZEvent 2026",
-        "subtitle": "チャリティマラソンは団体への寄付総額 32 891 874 € で幕を閉じました。",
-        "cta": "自分の記録を見る",
-        "dismiss": "非表示"
       }
     },
     "background": {
@@ -4769,9 +4929,39 @@ export const translations = {
         "idle": "StreamPulse"
       }
     },
+    "recap": {
+      "documentTitle": "マイまとめ · StreamPulse",
+      "title": "あなたのまとめ",
+      "subtitle": "期間とフォーマットを選んで、画像をダウンロードしましょう。",
+      "periodLabel": "期間",
+      "formatLabel": "フォーマット",
+      "period7d": "過去7日間",
+      "period30d": "過去30日間",
+      "formatDesktop": "PC · 16:9",
+      "formatMobile": "モバイル · 9:16",
+      "loading": "統計を読み込み中…",
+      "emptyTitle": "この期間に表示するデータはありません。",
+      "emptyBody": "この期間、Watch Time Trackerは何も記録していません。設定で有効になっているか確認してください。",
+      "download": "画像をダウンロード",
+      "share": "Xでシェア",
+      "shareHint": "Xは画像を自動で取得できません。ダウンロードして投稿に追加してください。",
+      "dailyHint": "日ごとの記録はこのアップデートから始まりました。7日間と30日間の期間はこれから埋まっていきます。",
+      "error": "まとめを作成できませんでした。ページを再読み込みしてもう一度お試しください。",
+      "openButton": "まとめを作成",
+      "shareText": "StreamPulseのまとめ（{{period}}）：{{count}}チャンネルで{{time}}視聴。一番見たのは{{top}}。",
+      "card": {
+        "eyebrow": "StreamPulse まとめ",
+        "heading": "{{name}}さんのまとめ",
+        "headingAnon": "私のまとめ",
+        "statTime": "視聴時間",
+        "statChannels": "チャンネル",
+        "statTop": "一番見た",
+        "statPlatforms": "プラットフォーム",
+        "topTitle": "トップチャンネル"
+      }
+    },
     "changelog": {
       "documentTitle": "StreamPulse：新機能",
-      "recapCta": "ZEventの記録を見る",
       "brandSub": "リリースノート",
       "supportIntro": "バグを見つけましたか？ 何かアイデアはありますか？",
       "supportLink": "お問い合わせ",
@@ -4976,8 +5166,7 @@ export const translations = {
       "platformFilter": {
         "all": "모두",
         "twitch": "twitch",
-        "kick": "kick",
-        "zevent": "zevent"
+        "kick": "kick"
       },
       "addStreamerTitleBase": "스트리머 추가하기",
       "addStreamerTitlePlatform": "{{platform}} 스트리머 추가하기",
@@ -5098,10 +5287,7 @@ export const translations = {
         "groupData": "데이터",
         "groupWatchTime": "시청 시간",
         "watchTimeTitle": "시청 시간 추적기",
-        "watchTimeDescription": "각 채널별로 소요된 시간을 추적합니다.",
-        "groupEvents": "ZEvent 이벤트",
-        "zeventFeaturesTitle": "ZEvent 2026 기능",
-        "zeventFeaturesDescription": "로고, 배너, 필터 및 스트리머 강조 표시 활성화."
+        "watchTimeDescription": "각 채널별로 소요된 시간을 추적합니다."
       },
       "watchTime": {
         "totalTime": "총 소요 시간",
@@ -5195,13 +5381,6 @@ export const translations = {
         "previewAltLive": "{{name}}의 실시간 미리보기",
         "previewAltOffline": "오프라인 – {{name}}",
         "avatarAlt": "{{name}}의 아바타"
-      },
-      "zeventBanner": {
-        "badge": "이벤트 종료",
-        "title": "ZEvent 2026",
-        "subtitle": "자선 마라톤이 단체를 위한 32 891 874 € 모금으로 마무리되었습니다.",
-        "cta": "내 기록 보기",
-        "dismiss": "숨기기"
       }
     },
     "background": {
@@ -5249,9 +5428,39 @@ export const translations = {
         "idle": "StreamPulse"
       }
     },
+    "recap": {
+      "documentTitle": "나의 결산 · StreamPulse",
+      "title": "나의 결산",
+      "subtitle": "기간과 형식을 고른 뒤 이미지를 다운로드하세요.",
+      "periodLabel": "기간",
+      "formatLabel": "형식",
+      "period7d": "최근 7일",
+      "period30d": "최근 30일",
+      "formatDesktop": "PC · 16:9",
+      "formatMobile": "모바일 · 9:16",
+      "loading": "통계를 불러오는 중…",
+      "emptyTitle": "이 기간에 표시할 내용이 없습니다.",
+      "emptyBody": "이 기간 동안 Watch Time Tracker가 기록한 내용이 없습니다. 설정에서 켜져 있는지 확인하세요.",
+      "download": "이미지 다운로드",
+      "share": "X에 공유",
+      "shareHint": "X는 이미지를 자동으로 가져오지 못합니다. 다운로드한 뒤 게시물에 추가하세요.",
+      "dailyHint": "일별 기록은 이번 업데이트부터 시작되었습니다. 7일 및 30일 기간은 지금부터 채워집니다.",
+      "error": "결산을 만들 수 없습니다. 페이지를 새로고침한 뒤 다시 시도하세요.",
+      "openButton": "내 결산 만들기",
+      "shareText": "나의 StreamPulse 결산 ({{period}}): {{count}}개 채널에서 {{time}} 시청. 가장 많이 본 채널: {{top}}.",
+      "card": {
+        "eyebrow": "나의 StreamPulse 결산",
+        "heading": "{{name}}님의 결산",
+        "headingAnon": "나의 결산",
+        "statTime": "시청 시간",
+        "statChannels": "채널",
+        "statTop": "가장 많이 본",
+        "statPlatforms": "플랫폼",
+        "topTitle": "인기 채널"
+      }
+    },
     "changelog": {
       "documentTitle": "StreamPulse: 새로운 소식",
-      "recapCta": "내 ZEvent 결산 보기",
       "brandSub": "릴리스 노트",
       "supportIntro": "버그를 발견하셨나요, 아니면 좋은 아이디어가 있으신가요?",
       "supportLink": "문의하기",
@@ -5456,8 +5665,7 @@ export const translations = {
       "platformFilter": {
         "all": "semua",
         "twitch": "twitch",
-        "kick": "kick",
-        "zevent": "zevent"
+        "kick": "kick"
       },
       "addStreamerTitleBase": "Tambahkan pita hias",
       "addStreamerTitlePlatform": "Tambahkan streamer {{platform}}",
@@ -5578,10 +5786,7 @@ export const translations = {
         "groupData": "Data",
         "groupWatchTime": "Waktu Tonton",
         "watchTimeTitle": "Pelacak Waktu Menonton",
-        "watchTimeDescription": "Lacak waktu yang dihabiskan di setiap saluran.",
-        "groupEvents": "Acara ZEvent",
-        "zeventFeaturesTitle": "Fitur ZEvent 2026",
-        "zeventFeaturesDescription": "Tampilkan logo, banner, filter, dan sorotan streamer."
+        "watchTimeDescription": "Lacak waktu yang dihabiskan di setiap saluran."
       },
       "watchTime": {
         "totalTime": "Waktu total",
@@ -5675,13 +5880,6 @@ export const translations = {
         "previewAltLive": "Pratinjau langsung {{name}}",
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "Avatar {{name}}"
-      },
-      "zeventBanner": {
-        "badge": "ACARA BERAKHIR",
-        "title": "ZEvent 2026",
-        "subtitle": "Maraton amal berakhir dengan 32 891 874 € terkumpul untuk lembaga amal.",
-        "cta": "Lihat rekap saya",
-        "dismiss": "Sembunyikan"
       }
     },
     "background": {
@@ -5729,9 +5927,39 @@ export const translations = {
         "idle": "StreamPulse"
       }
     },
+    "recap": {
+      "documentTitle": "Rekap saya · StreamPulse",
+      "title": "Rekap kamu",
+      "subtitle": "Pilih periode dan format, lalu unduh gambarmu.",
+      "periodLabel": "Periode",
+      "formatLabel": "Format",
+      "period7d": "7 hari terakhir",
+      "period30d": "30 hari terakhir",
+      "formatDesktop": "PC · 16:9",
+      "formatMobile": "Ponsel · 9:16",
+      "loading": "Memuat statistikmu…",
+      "emptyTitle": "Tidak ada yang bisa ditampilkan untuk periode ini.",
+      "emptyBody": "Watch Time Tracker tidak mencatat apa pun pada periode ini. Pastikan fitur ini aktif di pengaturan.",
+      "download": "Unduh gambar",
+      "share": "Bagikan di X",
+      "shareHint": "X tidak bisa mengambil gambar sendiri: unduh, lalu tambahkan ke postinganmu.",
+      "dailyHint": "Pencatatan harian dimulai dengan pembaruan ini: periode 7 dan 30 hari akan terisi mulai sekarang.",
+      "error": "Rekap tidak dapat dibuat. Muat ulang halaman dan coba lagi.",
+      "openButton": "Buat rekap saya",
+      "shareText": "Rekap StreamPulse saya ({{period}}): {{time}} menonton di {{count}} channel. Paling sering ditonton: {{top}}.",
+      "card": {
+        "eyebrow": "Rekap StreamPulse saya",
+        "heading": "{{name}}, ini rekapmu.",
+        "headingAnon": "Ini rekap saya.",
+        "statTime": "Waktu menonton",
+        "statChannels": "Channel",
+        "statTop": "Paling sering",
+        "statPlatforms": "Platform",
+        "topTitle": "Channel teratas"
+      }
+    },
     "changelog": {
       "documentTitle": "StreamPulse: Apa yang baru",
-      "recapCta": "Lihat rekap ZEvent saya",
       "brandSub": "Catatan Rilis",
       "supportIntro": "Menemukan bug, punya ide?",
       "supportLink": "Silakan kirimkan pesan kepada kami",
@@ -5936,8 +6164,7 @@ export const translations = {
       "platformFilter": {
         "all": "alle",
         "twitch": "twitch",
-        "kick": "kick",
-        "zevent": "zevent"
+        "kick": "kick"
       },
       "addStreamerTitleBase": "Een slinger toevoegen",
       "addStreamerTitlePlatform": "Voeg een {{platform}}-streamer toe",
@@ -6058,10 +6285,7 @@ export const translations = {
         "groupData": "Gegevens",
         "groupWatchTime": "Kijktijd",
         "watchTimeTitle": "Tijdregistratie-app",
-        "watchTimeDescription": "Houd bij hoeveel tijd er aan elk kanaal wordt besteed.",
-        "groupEvents": "ZEvent-evenement",
-        "zeventFeaturesTitle": "ZEvent 2026-functies",
-        "zeventFeaturesDescription": "Logo, banner, filter en streamer-markeringen weergeven."
+        "watchTimeDescription": "Houd bij hoeveel tijd er aan elk kanaal wordt besteed."
       },
       "watchTime": {
         "totalTime": "Totale tijd",
@@ -6155,13 +6379,6 @@ export const translations = {
         "previewAltLive": "Live-voorbeeld van {{name}}",
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "De avatar van {{name}}"
-      },
-      "zeventBanner": {
-        "badge": "EVENEMENT AFGELOPEN",
-        "title": "ZEvent 2026",
-        "subtitle": "De liefdadigheidsmarathon eindigde met 32 891 874 € voor de goede doelen.",
-        "cta": "Bekijk mijn overzicht",
-        "dismiss": "Verbergen"
       }
     },
     "background": {
@@ -6209,9 +6426,39 @@ export const translations = {
         "idle": "StreamPulse"
       }
     },
+    "recap": {
+      "documentTitle": "Mijn overzicht · StreamPulse",
+      "title": "Jouw overzicht",
+      "subtitle": "Kies een periode en een formaat en download dan je afbeelding.",
+      "periodLabel": "Periode",
+      "formatLabel": "Formaat",
+      "period7d": "Laatste 7 dagen",
+      "period30d": "Laatste 30 dagen",
+      "formatDesktop": "PC · 16:9",
+      "formatMobile": "Mobiel · 9:16",
+      "loading": "Je statistieken worden geladen…",
+      "emptyTitle": "Niets te tonen voor deze periode.",
+      "emptyBody": "De Watch Time Tracker heeft in deze periode niets geregistreerd. Controleer of hij aanstaat in de instellingen.",
+      "download": "Afbeelding downloaden",
+      "share": "Delen op X",
+      "shareHint": "X kan de afbeelding niet zelf ophalen: download hem en voeg hem toe aan je post.",
+      "dailyHint": "Het bijhouden per dag is met deze update begonnen: de periodes van 7 en 30 dagen vullen zich vanaf nu.",
+      "error": "Het overzicht kon niet worden gemaakt. Herlaad de pagina en probeer het opnieuw.",
+      "openButton": "Mijn overzicht maken",
+      "shareText": "Mijn StreamPulse-overzicht ({{period}}): {{time}} gekeken op {{count}} kanalen. Meest bekeken: {{top}}.",
+      "card": {
+        "eyebrow": "Mijn StreamPulse-overzicht",
+        "heading": "{{name}}, dit is je overzicht.",
+        "headingAnon": "Mijn overzicht.",
+        "statTime": "Kijktijd",
+        "statChannels": "Kanalen",
+        "statTop": "Meest bekeken",
+        "statPlatforms": "Platforms",
+        "topTitle": "Topkanalen"
+      }
+    },
     "changelog": {
       "documentTitle": "StreamPulse: Wat is er nieuw?",
-      "recapCta": "Bekijk mijn ZEvent-overzicht",
       "brandSub": "Release-opmerkingen",
       "supportIntro": "Heb je een fout gevonden of een idee?",
       "supportLink": "Schrijf ons",
@@ -6416,8 +6663,7 @@ export const translations = {
       "platformFilter": {
         "all": "सभी",
         "twitch": "twitch",
-        "kick": "kick",
-        "zevent": "zevent"
+        "kick": "kick"
       },
       "addStreamerTitleBase": "एक स्ट्रीमर जोड़ें",
       "addStreamerTitlePlatform": "एक {{platform}} स्ट्रीमर जोड़ें",
@@ -6538,10 +6784,7 @@ export const translations = {
         "groupData": "डेटा",
         "groupWatchTime": "देखने का समय",
         "watchTimeTitle": "टाइम ट्रैकर देखें",
-        "watchTimeDescription": "प्रत्येक चैनल पर बिताया गया समय ट्रैक करें।",
-        "groupEvents": "ZEvent घटना",
-        "zeventFeaturesTitle": "ZEvent 2026 विशेषताएं",
-        "zeventFeaturesDescription": "लोगो, बैनर, फ़िल्टर और प्रतिभागी स्ट्रीमर हाइलाइट्स दिखाएँ।"
+        "watchTimeDescription": "प्रत्येक चैनल पर बिताया गया समय ट्रैक करें।"
       },
       "watchTime": {
         "totalTime": "कुल समय",
@@ -6635,13 +6878,6 @@ export const translations = {
         "previewAltLive": "{{name}} का लाइव पूर्वावलोकन",
         "previewAltOffline": "ऑफ़लाइन - {{name}}",
         "avatarAlt": "{{name}} का अवतार"
-      },
-      "zeventBanner": {
-        "badge": "ईवेंट समाप्त",
-        "title": "ZEvent 2026",
-        "subtitle": "चैरिटी मैराथन में चैरिटी के लिए 32 891 874 € जुटाए गए।",
-        "cta": "मेरा पुनर्कथन देखें",
-        "dismiss": "छिपाओ"
       }
     },
     "background": {
@@ -6689,9 +6925,39 @@ export const translations = {
         "idle": "StreamPulse"
       }
     },
+    "recap": {
+      "documentTitle": "My recap · StreamPulse",
+      "title": "Your recap",
+      "subtitle": "Pick a period and a format, then download your image.",
+      "periodLabel": "Period",
+      "formatLabel": "Format",
+      "period7d": "Last 7 days",
+      "period30d": "Last 30 days",
+      "formatDesktop": "Desktop · 16:9",
+      "formatMobile": "Mobile · 9:16",
+      "loading": "Loading your stats…",
+      "emptyTitle": "Nothing to show for this period.",
+      "emptyBody": "The Watch Time Tracker has not recorded anything for this period. Make sure it is turned on in the settings.",
+      "download": "Download image",
+      "share": "Share on X",
+      "shareHint": "X cannot fetch the image by itself: download it, then add it to your post.",
+      "dailyHint": "Day-by-day tracking started with this update: the 7 and 30 day periods fill up from now on.",
+      "error": "Could not generate the recap. Reload the page and try again.",
+      "openButton": "Create my recap",
+      "shareText": "My StreamPulse recap ({{period}}): {{time}} watched across {{count}} channels. Most watched: {{top}}.",
+      "card": {
+        "eyebrow": "My StreamPulse recap",
+        "heading": "{{name}}, here's your recap.",
+        "headingAnon": "Here's my recap.",
+        "statTime": "Time watched",
+        "statChannels": "Channels",
+        "statTop": "Most watched",
+        "statPlatforms": "Platforms",
+        "topTitle": "Top channels"
+      }
+    },
     "changelog": {
       "documentTitle": "StreamPulse: नया क्या है",
-      "recapCta": "मेरा ZEvent पुनर्कथन देखें",
       "brandSub": "रिलीज़ नोट्स",
       "supportIntro": "एक बग मिला, कोई विचार आया?",
       "supportLink": "हमें लिखें",
@@ -6896,8 +7162,7 @@ export const translations = {
       "platformFilter": {
         "all": "alla",
         "twitch": "twitch",
-        "kick": "kick",
-        "zevent": "zevent"
+        "kick": "kick"
       },
       "addStreamerTitleBase": "Lägg till en serpentinslinga",
       "addStreamerTitlePlatform": "Lägg till en {{platform}}-streamer",
@@ -7018,10 +7283,7 @@ export const translations = {
         "groupData": "Data",
         "groupWatchTime": "Visningstid",
         "watchTimeTitle": "Tidsmätare för tittartid",
-        "watchTimeDescription": "Spåra hur mycket tid som läggs ner på varje kanal.",
-        "groupEvents": "ZEvent-evenemang",
-        "zeventFeaturesTitle": "ZEvent 2026-funktioner",
-        "zeventFeaturesDescription": "Visa logotyp, banner, filter och markering av streamers."
+        "watchTimeDescription": "Spåra hur mycket tid som läggs ner på varje kanal."
       },
       "watchTime": {
         "totalTime": "Total tid",
@@ -7115,13 +7377,6 @@ export const translations = {
         "previewAltLive": "{{name}}:s liveförhandsvisning",
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "{{name}}:s avatar"
-      },
-      "zeventBanner": {
-        "badge": "EVENEMANGET ÄR SLUT",
-        "title": "ZEvent 2026",
-        "subtitle": "Välgörenhetsmaratonet avslutades med 32 891 874 € insamlat till organisationerna.",
-        "cta": "Se min sammanfattning",
-        "dismiss": "Dölj"
       }
     },
     "background": {
@@ -7169,9 +7424,39 @@ export const translations = {
         "idle": "StreamPulse"
       }
     },
+    "recap": {
+      "documentTitle": "Min sammanfattning · StreamPulse",
+      "title": "Din sammanfattning",
+      "subtitle": "Välj en period och ett format och ladda sedan ner din bild.",
+      "periodLabel": "Period",
+      "formatLabel": "Format",
+      "period7d": "Senaste 7 dagarna",
+      "period30d": "Senaste 30 dagarna",
+      "formatDesktop": "Dator · 16:9",
+      "formatMobile": "Mobil · 9:16",
+      "loading": "Läser in din statistik…",
+      "emptyTitle": "Inget att visa för den här perioden.",
+      "emptyBody": "Watch Time Tracker har inte registrerat något under den här perioden. Kontrollera att den är aktiverad i inställningarna.",
+      "download": "Ladda ner bild",
+      "share": "Dela på X",
+      "shareHint": "X kan inte hämta bilden själv: ladda ner den och lägg till den i ditt inlägg.",
+      "dailyHint": "Spårningen per dag började med den här uppdateringen: perioderna på 7 och 30 dagar fylls på från och med nu.",
+      "error": "Det gick inte att skapa sammanfattningen. Ladda om sidan och försök igen.",
+      "openButton": "Skapa min sammanfattning",
+      "shareText": "Min StreamPulse-sammanfattning ({{period}}): {{time}} tittat på {{count}} kanaler. Mest sedd: {{top}}.",
+      "card": {
+        "eyebrow": "Min StreamPulse-sammanfattning",
+        "heading": "{{name}}, här är din sammanfattning.",
+        "headingAnon": "Min sammanfattning.",
+        "statTime": "Tittartid",
+        "statChannels": "Kanaler",
+        "statTop": "Mest sedd",
+        "statPlatforms": "Plattformar",
+        "topTitle": "Toppkanaler"
+      }
+    },
     "changelog": {
       "documentTitle": "StreamPulse: Nyheter",
-      "recapCta": "Se min ZEvent-sammanfattning",
       "brandSub": "Versionsinformation",
       "supportIntro": "Har du hittat ett fel eller har du ett förslag?",
       "supportLink": "Skriv till oss",
@@ -7376,8 +7661,7 @@ export const translations = {
       "platformFilter": {
         "all": "všechny",
         "twitch": "twitch",
-        "kick": "kick",
-        "zevent": "zevent"
+        "kick": "kick"
       },
       "addStreamerTitleBase": "Přidat stužku",
       "addStreamerTitlePlatform": "Přidat streamera z {{platform}}",
@@ -7498,10 +7782,7 @@ export const translations = {
         "groupData": "Údaje",
         "groupWatchTime": "Doba sledování",
         "watchTimeTitle": "Sledování času",
-        "watchTimeDescription": "Sledujte čas strávený na jednotlivých kanálech.",
-        "groupEvents": "Událost ZEvent",
-        "zeventFeaturesTitle": "Funkce ZEvent 2026",
-        "zeventFeaturesDescription": "Zobrazit logo, banner, filtr a zvýraznění streamerů."
+        "watchTimeDescription": "Sledujte čas strávený na jednotlivých kanálech."
       },
       "watchTime": {
         "totalTime": "Celková doba",
@@ -7595,13 +7876,6 @@ export const translations = {
         "previewAltLive": "Živý náhled {{name}}",
         "previewAltOffline": "Offline – {{name}}",
         "avatarAlt": "Avatar uživatele {{name}}"
-      },
-      "zeventBanner": {
-        "badge": "UDÁLOST SKONČILA",
-        "title": "ZEvent 2026",
-        "subtitle": "Charitativní maraton skončil s částkou 32 891 874 € pro organizace.",
-        "cta": "Zobrazit můj přehled",
-        "dismiss": "Skrýt"
       }
     },
     "background": {
@@ -7649,9 +7923,39 @@ export const translations = {
         "idle": "StreamPulse"
       }
     },
+    "recap": {
+      "documentTitle": "Můj přehled · StreamPulse",
+      "title": "Tvůj přehled",
+      "subtitle": "Vyber období a formát a pak si stáhni obrázek.",
+      "periodLabel": "Období",
+      "formatLabel": "Formát",
+      "period7d": "Posledních 7 dní",
+      "period30d": "Posledních 30 dní",
+      "formatDesktop": "PC · 16:9",
+      "formatMobile": "Mobil · 9:16",
+      "loading": "Načítání statistik…",
+      "emptyTitle": "Pro toto období není co zobrazit.",
+      "emptyBody": "Watch Time Tracker v tomto období nic nezaznamenal. Zkontroluj, že je v nastavení zapnutý.",
+      "download": "Stáhnout obrázek",
+      "share": "Sdílet na X",
+      "shareHint": "X si obrázek sám nenačte: stáhni ho a přidej do příspěvku.",
+      "dailyHint": "Denní sledování začalo touto aktualizací: období 7 a 30 dní se budou plnit od teď.",
+      "error": "Přehled se nepodařilo vytvořit. Obnov stránku a zkus to znovu.",
+      "openButton": "Vytvořit můj přehled",
+      "shareText": "Můj přehled StreamPulse ({{period}}): {{time}} sledování na {{count}} kanálech. Nejsledovanější: {{top}}.",
+      "card": {
+        "eyebrow": "Můj přehled StreamPulse",
+        "heading": "{{name}}, tady je tvůj přehled.",
+        "headingAnon": "Můj přehled.",
+        "statTime": "Doba sledování",
+        "statChannels": "Kanály",
+        "statTop": "Nejsledovanější",
+        "statPlatforms": "Platformy",
+        "topTitle": "Top kanály"
+      }
+    },
     "changelog": {
       "documentTitle": "StreamPulse: Co je nového",
-      "recapCta": "Zobrazit můj přehled ZEvent",
       "brandSub": "Poznámky k vydání",
       "supportIntro": "Našli jste chybu nebo máte nějaký nápad?",
       "supportLink": "Napište nám",

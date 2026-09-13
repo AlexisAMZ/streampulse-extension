@@ -1,147 +1,147 @@
-// Mise en page portrait 1080x1920 (story Instagram) de la carte de recap.
+// Mise en page mobile : portrait 1080x1920 (9:16), adaptee aux stories Instagram et TikTok.
 
-import { formatHours } from "./recap-data.js";
+import { formatDuration } from "./recap-data.js";
 import {
-  GREEN,
   INK,
   MUTED,
   FAINT,
+  MONO,
   drawAvatar,
   drawBackground,
   drawBar,
-  drawDonationBadge,
+  drawBrand,
+  drawEyebrow,
+  drawPanel,
+  drawPlatformSplit,
+  fitText,
+  setFont,
 } from "./recap-draw.js";
 
 export const STORY_WIDTH = 1080;
 export const STORY_HEIGHT = 1920;
 
-// Les stories sont rognees par l'interface d'Instagram en haut et en bas :
+// Les stories sont rognees par l'interface en haut et en bas :
 // tout le contenu utile reste dans la zone sure.
-const SAFE_TOP = 380;
-
+const SAFE_TOP = 250;
 const LEFT = 84;
 const RIGHT = STORY_WIDTH - 84;
-const MAX_ROWS = 6;
-const ROW_HEIGHT = 108;
-const AVATAR_SIZE = 64;
-
-function drawZEventLogo(ctx, logo) {
-  if (!logo) return;
-  const w = 420;
-  const h = (logo.height / logo.width) * w;
-  ctx.drawImage(logo, (STORY_WIDTH - w) / 2, SAFE_TOP - h - 24, w, h);
-}
+const CONTENT_W = RIGHT - LEFT;
+// 5 lignes : au-dela, le pied de page sortirait de la zone sure du bas.
+const MAX_ROWS = 5;
 
 function drawHeader(ctx, model) {
+  const { labels } = model;
+  const cx = STORY_WIDTH / 2;
   ctx.textAlign = "center";
 
-  ctx.fillStyle = GREEN;
-  ctx.font = "700 26px ui-monospace, Menlo, monospace";
-  ctx.fillText("MON ZEVENT 2026", STORY_WIDTH / 2, SAFE_TOP + 34);
+  setFont(ctx, 700, 26, MONO);
+  const eyebrow = labels.eyebrow.toUpperCase();
+  drawEyebrow(ctx, eyebrow, cx, SAFE_TOP, 26);
 
   ctx.fillStyle = INK;
-  ctx.font = "800 62px -apple-system, Segoe UI, Roboto, sans-serif";
-  ctx.fillText(model.pseudo || "Mon récap", STORY_WIDTH / 2, SAFE_TOP + 116);
-
-  // Le total est le chiffre que l'on retient : il occupe le haut de la story.
-  ctx.fillStyle = INK;
-  ctx.font = "800 132px -apple-system, Segoe UI, Roboto, sans-serif";
-  ctx.fillText(formatHours(model.totalSeconds), STORY_WIDTH / 2, SAFE_TOP + 262);
+  setFont(ctx, 800, 64);
+  ctx.fillText(fitText(ctx, labels.heading, CONTENT_W), cx, SAFE_TOP + 92);
 
   ctx.fillStyle = MUTED;
-  ctx.font = "400 30px -apple-system, Segoe UI, Roboto, sans-serif";
-  const plural = model.streamerCount > 1 ? "s" : "";
-  ctx.fillText(
-    `de stream chez ${model.streamerCount} streamer${plural} du ZEvent`,
-    STORY_WIDTH / 2,
-    SAFE_TOP + 312
-  );
+  setFont(ctx, 500, 32);
+  ctx.fillText(fitText(ctx, labels.period, CONTENT_W), cx, SAFE_TOP + 146);
+
+  ctx.fillStyle = FAINT;
+  setFont(ctx, 700, 22, MONO);
+  ctx.fillText(labels.statTime.toUpperCase(), cx, SAFE_TOP + 252);
+  ctx.fillStyle = INK;
+  setFont(ctx, 800, 150);
+  ctx.fillText(formatDuration(model.totalSeconds), cx, SAFE_TOP + 394);
 
   ctx.textAlign = "left";
 }
 
-function drawRow(ctx, entry, index, maxSeconds, top, image) {
-  const y = top + index * ROW_HEIGHT;
-
-  ctx.fillStyle = FAINT;
-  ctx.font = "700 30px ui-monospace, Menlo, monospace";
-  ctx.textAlign = "right";
-  ctx.fillText(String(index + 1).padStart(2, "0"), LEFT + 38, y + 42);
-  ctx.textAlign = "left";
-
-  drawAvatar(ctx, LEFT + 60, y + 8, AVATAR_SIZE, entry.channel, image);
-
-  ctx.fillStyle = INK;
-  ctx.font = "600 34px -apple-system, Segoe UI, Roboto, sans-serif";
-  ctx.fillText(entry.channel, LEFT + 144, y + 40);
-
-  ctx.fillStyle = INK;
-  ctx.font = "700 32px -apple-system, Segoe UI, Roboto, sans-serif";
-  ctx.textAlign = "right";
-  ctx.fillText(formatHours(entry.watchSeconds), RIGHT, y + 40);
-  ctx.textAlign = "left";
-
-  const ratio = maxSeconds > 0 ? entry.watchSeconds / maxSeconds : 0;
-  drawBar(ctx, LEFT + 144, y + 60, RIGHT - LEFT - 144, 16, ratio);
+function drawTiles(ctx, model, top) {
+  const { labels } = model;
+  const gap = 24;
+  const w = (CONTENT_W - gap) / 2;
+  const h = 150;
+  const tiles = [
+    { label: labels.statChannels, value: String(model.streamerCount) },
+    { label: labels.statTop, value: model.top[0]?.channel || "—" },
+  ];
+  tiles.forEach((tile, i) => {
+    const x = LEFT + i * (w + gap);
+    drawPanel(ctx, x, top, w, h, 20);
+    ctx.fillStyle = FAINT;
+    setFont(ctx, 700, 20, MONO);
+    ctx.fillText(fitText(ctx, tile.label.toUpperCase(), w - 56), x + 28, top + 50);
+    ctx.fillStyle = INK;
+    setFont(ctx, 800, 54);
+    ctx.fillText(fitText(ctx, tile.value, w - 56), x + 28, top + 118);
+  });
+  return top + h;
 }
 
-function drawFooter(ctx, logo, y) {
-  ctx.textAlign = "center";
+function drawTopList(ctx, model, avatars, top) {
+  const rows = model.top.slice(0, MAX_ROWS);
+  const rowH = 98;
+  const h = 96 + rows.length * rowH + 12;
+  drawPanel(ctx, LEFT, top, CONTENT_W, h, 24);
+  drawEyebrow(ctx, model.labels.topTitle, LEFT + 40, top + 62, 22);
 
-  const label = "StreamPulse";
-  ctx.font = "800 34px -apple-system, Segoe UI, Roboto, sans-serif";
-  const textWidth = ctx.measureText(label).width;
-  const logoSize = logo ? 44 : 0;
-  const totalWidth = textWidth + (logo ? logoSize + 16 : 0);
-  const startX = (STORY_WIDTH - totalWidth) / 2;
+  const maxSeconds = rows[0]?.watchSeconds || 0;
+  const avatar = 64;
+  rows.forEach((entry, i) => {
+    const y = top + 96 + i * rowH;
+    ctx.fillStyle = FAINT;
+    setFont(ctx, 700, 26, MONO);
+    ctx.textAlign = "right";
+    ctx.fillText(String(i + 1).padStart(2, "0"), LEFT + 82, y + 44);
+    ctx.textAlign = "left";
 
-  if (logo) ctx.drawImage(logo, startX, y - 34, logoSize, logoSize);
+    drawAvatar(ctx, LEFT + 102, y + 4, avatar, entry.channel, avatars.get(`${entry.platform}:${entry.channel}`), entry.platform);
 
-  ctx.fillStyle = INK;
-  ctx.textAlign = "left";
-  ctx.fillText(label, startX + (logo ? logoSize + 16 : 0), y);
+    const timeText = formatDuration(entry.watchSeconds);
+    setFont(ctx, 700, 30);
+    const timeWidth = ctx.measureText(timeText).width;
+    ctx.fillStyle = INK;
+    ctx.textAlign = "right";
+    ctx.fillText(timeText, RIGHT - 40, y + 40);
+    ctx.textAlign = "left";
 
-  ctx.fillStyle = FAINT;
-  ctx.font = "400 24px -apple-system, Segoe UI, Roboto, sans-serif";
-  ctx.textAlign = "center";
-  ctx.fillText("streampulse.fr · septembre 2026", STORY_WIDTH / 2, y + 42);
-  ctx.textAlign = "left";
+    const nameX = LEFT + 190;
+    ctx.fillStyle = INK;
+    setFont(ctx, 600, 32);
+    ctx.fillText(fitText(ctx, entry.channel, RIGHT - 40 - nameX - timeWidth - 24), nameX, y + 40);
+
+    const ratio = maxSeconds > 0 ? entry.watchSeconds / maxSeconds : 0;
+    drawBar(ctx, nameX, y + 60, RIGHT - 40 - nameX, 12, ratio);
+  });
+  return top + h;
 }
 
 /**
  * Dessine la story complete.
  *
  * @param {CanvasRenderingContext2D} ctx contexte d'un canvas 1080x1920
- * @param {object} model recap issu de buildRecap, plus `pseudo` et `donationLabel`
- * @param {{avatars?: Map<string, CanvasImageSource>, logo?: CanvasImageSource,
- *          zeventLogo?: CanvasImageSource}} [assets] images deja chargees
+ * @param {object} model recap (buildRecap) + `labels` deja traduits
+ * @param {{avatars?: Map<string, CanvasImageSource>, logo?: CanvasImageSource}} [assets]
  */
 export function drawRecapStory(ctx, model, assets = {}) {
   const avatars = assets.avatars || new Map();
-
   drawBackground(ctx, STORY_WIDTH, STORY_HEIGHT);
-  drawZEventLogo(ctx, assets.zeventLogo);
   drawHeader(ctx, model);
 
-  const rows = model.top.slice(0, MAX_ROWS);
-  const rowsTop = SAFE_TOP + 396;
-  const maxSeconds = rows.length > 0 ? rows[0].watchSeconds : 0;
-  rows.forEach((entry, index) => {
-    drawRow(ctx, entry, index, maxSeconds, rowsTop, avatars.get(entry.channel));
+  let y = drawTiles(ctx, model, SAFE_TOP + 460);
+
+  ctx.fillStyle = FAINT;
+  setFont(ctx, 700, 20, MONO);
+  ctx.fillText(model.labels.statPlatforms.toUpperCase(), LEFT, y + 70);
+  drawPlatformSplit(ctx, LEFT, y + 92, CONTENT_W, 20, model.platforms, model.totalSeconds, { legendSize: 24 });
+
+  y = drawTopList(ctx, model, avatars, y + 190);
+
+  drawBrand(ctx, assets.logo, 0, y + 100, {
+    size: 52,
+    nameSize: 36,
+    urlSize: 24,
+    align: "center",
+    width: STORY_WIDTH,
   });
-
-  let bottom = rowsTop + rows.length * ROW_HEIGHT;
-
-  if (model.donationLabel) {
-    const w = 520;
-    const h = 132;
-    const y = bottom + 40;
-    drawDonationBadge(ctx, (STORY_WIDTH - w) / 2, y, w, h, model.donationLabel, {
-      labelSize: 20,
-      valueSize: 52,
-    });
-    bottom = y + h;
-  }
-
-  drawFooter(ctx, assets.logo, bottom + 70);
 }

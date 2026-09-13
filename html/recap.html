@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mon ZEvent 2026 · StreamPulse</title>
+    <title data-i18n="recap.documentTitle">My recap · StreamPulse</title>
     <link rel="icon" href="../images/photos/128px.png" />
     <link rel="stylesheet" href="../css/recap.css" />
   </head>
@@ -11,46 +11,56 @@
     <main class="page">
       <header class="page-head">
         <div class="brand">
-          <img src="../images/photos/128px.png" alt="" />
+          <img src="../images/photos/logosp.png" alt="" />
           <span>StreamPulse</span>
         </div>
-        <p class="page-title">Ton récap ZEvent 2026</p>
-        <p class="page-sub">
-          Le temps que tu as passé chez les streamers du ZEvent, d'après ton Watch Time Tracker.
-        </p>
+        <h1 class="page-title" data-i18n="recap.title">Your recap</h1>
+        <p class="page-sub" data-i18n="recap.subtitle">Pick a period and a format, then download your image.</p>
       </header>
 
-      <div class="formats" id="formats" hidden role="group" aria-label="Format de l'image">
-        <button class="format-btn active" data-format="twitter" type="button">Twitter · 16:9</button>
-        <button class="format-btn" data-format="story" type="button">Story Insta · 9:16</button>
+      <div class="controls">
+        <label class="control">
+          <span class="control-label" data-i18n="recap.periodLabel">Period</span>
+          <select id="period" class="select"></select>
+        </label>
+        <div class="control">
+          <span class="control-label" data-i18n="recap.formatLabel">Format</span>
+          <div class="segmented" id="formats" role="group">
+            <button class="seg-btn active" data-format="desktop" type="button">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="13" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              <span data-i18n="recap.formatDesktop">Desktop · 16:9</span>
+            </button>
+            <button class="seg-btn" data-format="mobile" type="button">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+              <span data-i18n="recap.formatMobile">Mobile · 9:16</span>
+            </button>
+          </div>
+        </div>
       </div>
 
+      <p class="state" id="state" data-i18n="recap.loading">Loading your stats…</p>
+
       <section class="stage" id="stage" hidden>
-        <canvas id="recap-canvas" width="1600" height="900" aria-label="Carte récapitulative"></canvas>
+        <canvas id="recap-canvas" width="1600" height="900"></canvas>
       </section>
 
-      <p class="state" id="state">Chargement de tes statistiques…</p>
-
       <section class="empty" id="empty" hidden>
-        <p class="empty-title">Aucun temps de visionnage ZEvent enregistré.</p>
-        <p class="empty-body">
-          Le Watch Time Tracker n'a rien relevé sur une chaîne participante ce mois-ci.
-          Vérifie qu'il est activé dans les réglages de l'extension.
-        </p>
+        <p class="empty-title" data-i18n="recap.emptyTitle">Nothing to show for this period.</p>
+        <p class="empty-body" data-i18n="recap.emptyBody">The Watch Time Tracker has not recorded anything for this period. Make sure it is turned on in the settings.</p>
       </section>
 
       <div class="actions" id="actions" hidden>
-        <button id="download" class="btn btn-primary" type="button">Télécharger l'image</button>
-        <button id="tweet" class="btn" type="button">Ouvrir Twitter</button>
-        <p class="hint">
-          Twitter ne peut pas récupérer l'image tout seul : télécharge-la, puis glisse-la dans ton tweet.
-        </p>
+        <button id="download" class="btn btn-primary" type="button">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          <span data-i18n="recap.download">Download image</span>
+        </button>
+        <button id="share" class="btn" type="button">
+          <span data-i18n="recap.share">Share on X</span>
+        </button>
+        <p class="hint" data-i18n="recap.shareHint">X cannot fetch the image by itself: download it, then add it to your post.</p>
       </div>
 
-      <p class="disclaimer">
-        Les durées sont agrégées par mois : elles couvrent septembre 2026, pas uniquement le week-end.
-        StreamPulse n'est pas affilié au ZEvent.
-      </p>
+      <p class="disclaimer" id="daily-hint" hidden data-i18n="recap.dailyHint">Day-by-day tracking started with this update: the 7 and 30 day periods fill up from now on.</p>
     </main>
     <script type="module" src="../js/recap.js"></script>
   </body>

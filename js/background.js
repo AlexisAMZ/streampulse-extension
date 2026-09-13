@@ -23,6 +23,9 @@ const STORAGE_KEYS = {
   STATUSES: "betaGeneralStatuses",
   STATS: "betaGeneralStats",
   WATCH_TIME: "betaWatchTimeData",
+  // Meme forme que WATCH_TIME, mais par jour ("AAAA-MM-JJ") : alimente les
+  // periodes glissantes de la page de recap (7 et 30 jours).
+  WATCH_TIME_DAILY: "streamPulseWatchTimeDaily",
   // Dedicated key for live-state notification dedup. Separate from STATUSES
   // (which is the popup display data) so it survives even if statuses are
   // wiped/reset. This is critical for MV3: every SW restart wipes the
@@ -141,7 +144,6 @@ const DEFAULT_PREFERENCES = {
   previewsAudio: false,
   previewsShowDelayMs: 200,
   previewsAnimations: true,
-  zeventFeatures: true,
   communityBadge: true,
   // "author" = couleur du pseudo, "theme" = blanc/noir selon Twitch,
   // ou une couleur hexadecimale fixe.
@@ -579,7 +581,6 @@ class PreferenceStore {
         ? Math.min(2000, Math.max(0, previewsDelay))
         : 200,
       previewsAnimations: preferences.previewsAnimations !== false,
-      zeventFeatures: preferences.zeventFeatures !== false,
       communityBadge: preferences.communityBadge !== false,
       communityBadgeColor: sanitizeBadgeColor(preferences.communityBadgeColor),
     };
@@ -772,6 +773,40 @@ class WatchTimeStore {
     await chrome.storage.local.set({ [STORAGE_KEYS.WATCH_TIME]: data });
   }
 
+  static _getDayKey() {
+    const now = new Date();
+    const m = String(now.getMonth() + 1).padStart(2, "0");
+    const d = String(now.getDate()).padStart(2, "0");
+    return `${now.getFullYear()}-${m}-${d}`;
+  }
+
+  /** Ajoute la duree au jour courant et ne garde que les DAILY_RETENTION derniers jours. */
+  static async _recordDaily(platform, channel, seconds, avatarUrl) {
+    const DAILY_RETENTION = 400;
+    const stored = await chrome.storage.local.get(STORAGE_KEYS.WATCH_TIME_DAILY);
+    const daily = stored[STORAGE_KEYS.WATCH_TIME_DAILY] || {};
+    const day = this._getDayKey();
+    const key = `${platform}:${channel}`;
+    const bucket = daily[day] || {};
+    const previous = bucket[key] || { watchSeconds: 0, platform, channel, avatarUrl: "" };
+    const next = {
+      ...daily,
+      [day]: {
+        ...bucket,
+        [key]: {
+          ...previous,
+          watchSeconds: previous.watchSeconds + seconds,
+          avatarUrl: avatarUrl || previous.avatarUrl,
+        },
+      },
+    };
+    const days = Object.keys(next).sort();
+    for (const old of days.slice(0, Math.max(0, days.length - DAILY_RETENTION))) {
+      delete next[old];
+    }
+    await chrome.storage.local.set({ [STORAGE_KEYS.WATCH_TIME_DAILY]: next });
+  }
+
   static async record(platform, channel, seconds, avatarUrl = "") {
     // Skip pure presence pings (no actual data to record)
     if (seconds <= 0) return;
@@ -796,6 +831,12 @@ class WatchTimeStore {
     }
 
     await this._saveData(data);
+    try {
+      await this._recordDaily(platform, channel, seconds, avatarUrl);
+    } catch (error) {
+      // Le suivi mensuel est deja enregistre : un echec ici ne prive que les periodes glissantes du recap.
+      console.warn("[WatchTime] daily record failed:", error);
+    }
   }
 
   static async getSummary(monthKey = null) {
@@ -2875,9 +2916,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           updates.previewsAnimations =
             incomingUpdates.previewsAnimations !== false;
         }
-        if ("zeventFeatures" in incomingUpdates) {
-          updates.zeventFeatures = incomingUpdates.zeventFeatures !== false;
-        }
         if ("communityBadge" in incomingUpdates) {
           updates.communityBadge = incomingUpdates.communityBadge !== false;
         }
@@ -2990,315 +3028,5 @@ if (chrome.tabs?.onUpdated?.addListener) {
         // L'onglet peut avoir ete ferme entre la lecture des preferences et l'ecriture.
       }
     }
-  });
-}
-
-// ─── StreamReact Bridge (Instagram Comments Relay) ──────────────────────────
-
-function _srShortcodeToMediaId(shortcode) {
-  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-  let id = 0n;
-  for (let i = 0; i < shortcode.length; i++) {
-    const idx = alphabet.indexOf(shortcode[i]);
-    if (idx === -1) continue;
-    id = id * 64n + BigInt(idx);
-  }
-  return id.toString();
-}
-
-const _SR_IG_APP_ID = "936619743392459";
-const _SR_INSTAGRAM_ORIGINS = ["https://*.instagram.com/*"];
-const _SR_PERMISSION_PAGE = "html/instagram-permission.html";
-
-/**
- * L'utilisateur a-t-il deja accorde l'acces optionnel a Instagram ?
- * Sans cette permission, la requete echouerait a la fois sur CORS et sur
- * l'envoi des cookies de session (Chrome ne traite la requete comme same-site
- * que si l'extension detient la host permission).
- */
-async function _srHasInstagramPermission() {
-  try {
-    return await chrome.permissions.contains({ origins: _SR_INSTAGRAM_ORIGINS });
-  } catch (_) {
-    return false;
-  }
-}
-
-const _SR_PENDING_KEY = "_srIgPermissionWindowId";
-
-/** Fenetre de demande en cours, conservee hors memoire : le service worker
- *  MV3 peut etre arrete a tout moment pendant que l'utilisateur decide. */
-async function _srGetPendingWindowId() {
-  try {
-    const data = await chrome.storage.session.get(_SR_PENDING_KEY);
-    return data?.[_SR_PENDING_KEY] ?? null;
-  } catch (_) {
-    return null;
-  }
-}
-
-async function _srSetPendingWindowId(windowId) {
-  try {
-    if (windowId === null) {
-      await chrome.storage.session.remove(_SR_PENDING_KEY);
-    } else {
-      await chrome.storage.session.set({ [_SR_PENDING_KEY]: windowId });
-    }
-  } catch (_) {}
-}
-
-// Listener de premier niveau : il doit etre enregistre au chargement du worker
-// pour continuer a fonctionner apres un redemarrage de celui-ci.
-if (chrome.windows?.onRemoved?.addListener) {
-  chrome.windows.onRemoved.addListener(async (closedId) => {
-    if ((await _srGetPendingWindowId()) === closedId) {
-      await _srSetPendingWindowId(null);
-    }
-  });
-}
-
-/**
- * Ouvre la page d'extension dediee a la demande de permission.
- *
- * chrome.permissions.request() exige un geste utilisateur et n'est disponible
- * ni dans un service worker MV3 ni dans un content script : l'appel doit donc
- * partir d'une page d'extension, sur un vrai clic.
- *
- * La reponse est immediate : la page appelante suit ensuite l'avancement via
- * CHECK_INSTAGRAM_PERMISSION. Garder sendResponse ouvert pendant que
- * l'utilisateur decide serait fragile, le worker pouvant etre arrete entre-temps.
- */
-async function _srRequestInstagramPermission() {
-  if (await _srHasInstagramPermission()) {
-    return { success: true, granted: true, pending: false };
-  }
-
-  // Une fenetre est deja ouverte : on la remet simplement au premier plan.
-  const existingId = await _srGetPendingWindowId();
-  if (existingId !== null) {
-    try {
-      await chrome.windows.update(existingId, { focused: true });
-      return { success: true, granted: false, pending: true };
-    } catch (_) {
-      await _srSetPendingWindowId(null);
-    }
-  }
-
-  try {
-    const win = await chrome.windows.create({
-      url: chrome.runtime.getURL(_SR_PERMISSION_PAGE),
-      type: "popup",
-      width: 460,
-      height: 580,
-    });
-    await _srSetPendingWindowId(win?.id ?? null);
-    return { success: true, granted: false, pending: true };
-  } catch (err) {
-    await _srSetPendingWindowId(null);
-    return {
-      success: false,
-      error: err?.message || "Impossible d'ouvrir la fenetre d'autorisation.",
-    };
-  }
-}
-
-/** Etat courant : permission accordee, et demande encore en cours ou non. */
-async function _srCheckInstagramPermission() {
-  const granted = await _srHasInstagramPermission();
-  if (granted) {
-    await _srSetPendingWindowId(null);
-    return { success: true, granted: true, pending: false };
-  }
-
-  const pendingId = await _srGetPendingWindowId();
-  if (pendingId === null) {
-    return { success: true, granted: false, pending: false };
-  }
-
-  // La fenetre a pu etre fermee pendant un arret du worker : on verifie.
-  try {
-    await chrome.windows.get(pendingId);
-    return { success: true, granted: false, pending: true };
-  } catch (_) {
-    await _srSetPendingWindowId(null);
-    return { success: true, granted: false, pending: false };
-  }
-}
-
-/**
- * Etat de l'integration Instagram.
- *
- * L'extension ne lit plus les cookies (permission "cookies" retiree) : il n'y a
- * donc plus de moyen fiable et peu couteux de savoir si la session est active
- * sans lancer une vraie requete. On se limite ici a l'etat de la permission ;
- * la detection de session se fait au moment du fetch des commentaires, qui
- * renvoie notLoggedIn sur 401/403/redirection.
- */
-async function _srGetInstagramSession() {
-  const granted = await _srHasInstagramPermission();
-  return {
-    granted,
-    needsPermission: !granted,
-    // Indeterminable sans requete : l'appelant doit se fier au resultat de
-    // GET_INSTAGRAM_COMMENTS.
-    isLoggedIn: null,
-    hasSession: null,
-  };
-}
-
-async function _srFetchInstagramComments(shortcode) {
-  const mediaId = _srShortcodeToMediaId(shortcode);
-  if (!mediaId || mediaId === "0") {
-    return { success: false, error: "Identifiant Reel Instagram invalide." };
-  }
-
-  // Verification prealable obligatoire : sans host permission, fetch echoue
-  // avec une erreur reseau opaque (CORS) plutot qu'un statut exploitable.
-  if (!(await _srHasInstagramPermission())) {
-    return {
-      success: false,
-      needsPermission: true,
-      error: "Autorisez l'acces a Instagram pour afficher les commentaires.",
-    };
-  }
-
-  try {
-    const url = `https://www.instagram.com/api/v1/media/${mediaId}/comments/?can_support_threading=true`;
-    const res = await fetch(url, {
-      headers: {
-        "X-IG-App-ID": _SR_IG_APP_ID,
-        "X-Requested-With": "XMLHttpRequest",
-        "Accept": "*/*",
-      },
-      credentials: "include",
-    });
-
-    if (res.status === 401 || res.status === 403 || res.status === 302 || res.redirected) {
-      return {
-        success: false,
-        notLoggedIn: true,
-        error: "Session Instagram expiree. Veuillez vous reconnecter sur instagram.com.",
-      };
-    }
-
-    // 400 / 429 : endpoint prive non documente, il peut changer ou limiter.
-    if (res.status === 429) {
-      return {
-        success: false,
-        rateLimited: true,
-        error: "Instagram limite temporairement les requetes. Reessayez dans quelques minutes.",
-      };
-    }
-
-    if (!res.ok) {
-      return {
-        success: false,
-        error: `Erreur Instagram (${res.status})`,
-      };
-    }
-
-    const data = await res.json().catch(() => null);
-    if (!data || !Array.isArray(data.comments)) {
-      return { success: true, comments: [] };
-    }
-
-    const comments = data.comments
-      .filter((c) => c && c.text && c.text.trim().length > 0)
-      .map((c) => ({
-        id: String(c.pk || c.id || crypto.randomUUID()),
-        authorName: c.user?.full_name || c.user?.username || "Utilisateur Instagram",
-        authorUsername: c.user?.username,
-        authorAvatar: c.user?.profile_pic_url,
-        text: c.text,
-        likesCount: Number(c.comment_like_count || 0),
-        createdAt: c.created_at
-          ? new Date(c.created_at * 1000).toISOString()
-          : undefined,
-      }));
-
-    return { success: true, comments };
-  } catch (err) {
-    return {
-      success: false,
-      error: err?.message || "Erreur reseau lors de la recuperation Instagram.",
-    };
-  }
-}
-
-/** Actions acceptees depuis la page StreamPulse React. */
-const _SR_ALLOWED_ACTIONS = new Set([
-  "PING",
-  "GET_INSTAGRAM_SESSION",
-  "GET_INSTAGRAM_COMMENTS",
-  "CHECK_INSTAGRAM_PERMISSION",
-  "REQUEST_INSTAGRAM_PERMISSION",
-]);
-
-function _srHandleMessageAction(request, sendResponse) {
-  if (!_SR_ALLOWED_ACTIONS.has(request.action)) {
-    return null;
-  }
-
-  if (request.action === "PING") {
-    sendResponse({
-      success: true,
-      name: "StreamPulse",
-      version: chrome.runtime.getManifest().version,
-    });
-    return false;
-  }
-
-  if (request.action === "CHECK_INSTAGRAM_PERMISSION") {
-    _srCheckInstagramPermission().then((res) => sendResponse(res));
-    return true;
-  }
-
-  if (request.action === "REQUEST_INSTAGRAM_PERMISSION") {
-    _srRequestInstagramPermission().then((res) => sendResponse(res));
-    return true;
-  }
-
-  if (request.action === "GET_INSTAGRAM_SESSION") {
-    _srGetInstagramSession().then((res) => sendResponse(res));
-    return true;
-  }
-
-  if (request.action === "GET_INSTAGRAM_COMMENTS") {
-    _srFetchInstagramComments(request.shortcode).then((res) => sendResponse(res));
-    return true;
-  }
-
-  return null;
-}
-
-// 1. Écoute interne pour les content scripts (streamreact-bridge.js)
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (!request || !request.action) return false;
-  const handled = _srHandleMessageAction(request, sendResponse);
-  if (handled !== null) return handled;
-  return false;
-});
-
-// 2. Écoute externe pour les pages autorisées
-if (chrome.runtime?.onMessageExternal?.addListener) {
-  chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
-    if (!request || !request.action) return false;
-
-    const origin = sender.origin || sender.url || "";
-    const isAllowed =
-      origin.startsWith("http://localhost:3000") ||
-      origin.includes("streampulse.fr") ||
-      origin.includes("alexisamz.fr");
-
-    if (!isAllowed) {
-      sendResponse({ success: false, error: "Origine non autorisée" });
-      return false;
-    }
-
-    const handled = _srHandleMessageAction(request, sendResponse);
-    if (handled !== null) return handled;
-
-    sendResponse({ success: false, error: "Action non reconnue" });
-    return false;
   });
 }

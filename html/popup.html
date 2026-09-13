@@ -43,12 +43,6 @@
           </div>
           <h1 class="greeting-title" id="greeting-title">Bonsoir.<br><span class="greeting-sub">Voici qui est en ligne.</span></h1>
         </div>
-        <!-- Masques par defaut : updateZEventVisibility() les revele apres lecture
-             des preferences. Sans cela ils sont peints une fraction de seconde
-             avant d'etre caches. -->
-        <button id="zevent-greeting-logo" class="zevent-greeting-btn" type="button" aria-label="ZEvent 2026" title="ZEvent 2026" hidden>
-          <img src="../images/zevent26.png" class="zevent-greeting-img" alt="ZEvent 2026" />
-        </button>
         <div class="stats-row">
           <div class="stat-block">
             <div class="stat-block-label" data-i18n="popup.statBlock.points">Points</div>
@@ -63,35 +57,6 @@
 
       <!-- Scrollable area -->
       <div class="streamers-scroll-area">
-        <!-- ZEvent 2026 Event Banner -->
-        <div class="zevent-banner glass frame-brackets" id="zevent-banner" hidden>
-          <button class="zevent-banner-close" id="zevent-banner-close" type="button" aria-label="Fermer" title="Fermer">
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          </button>
-          <div class="zevent-banner-content">
-            <div class="zevent-banner-top">
-              <span class="zevent-live-badge zevent-ended">
-                <span data-i18n="popup.zeventBanner.badge">ÉVÉNEMENT TERMINÉ</span>
-              </span>
-            </div>
-            <div class="zevent-banner-body">
-              <div class="zevent-banner-visual">
-                <img src="../images/zevent26.png" class="zevent-banner-img" alt="ZEvent 2026" />
-              </div>
-              <div class="zevent-banner-info">
-                <h3 class="zevent-banner-title" data-i18n="popup.zeventBanner.title">ZEvent 2026</h3>
-                <p class="zevent-banner-subtitle" data-i18n="popup.zeventBanner.subtitle">Le marathon caritatif s'est achevé sur 32 891 874 € récoltés pour les associations.</p>
-              </div>
-            </div>
-            <div class="zevent-banner-actions">
-              <button id="zevent-recap-cta" class="zevent-btn primary" type="button">
-                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="13"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="18" y1="20" x2="18" y2="9"></line></svg>
-                <span data-i18n="popup.zeventBanner.cta">Voir mon récap</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
         <!-- Live section -->
         <div class="stream-section">
           <div class="section-row">
@@ -101,10 +66,6 @@
               <button class="pf-btn active" data-filter="all" data-i18n="popup.platformFilter.all">tous</button>
               <button class="pf-btn" data-filter="twitch" data-i18n="popup.platformFilter.twitch">twitch</button>
               <button class="pf-btn" data-filter="kick" data-i18n="popup.platformFilter.kick">kick</button>
-              <button class="pf-btn pf-zevent" data-filter="zevent" id="pf-btn-zevent" hidden>
-                <span class="pf-zevent-dot"></span>
-                <span data-i18n="popup.platformFilter.zevent">zevent</span>
-              </button>
             </div>
             <span class="section-count" id="live-count">00</span>
           </div>
@@ -235,17 +196,6 @@
             <span class="settings-description" data-i18n="popup.settings.soundsDescription">Activer ou couper le son lors des alertes.</span>
           </div>
           <input id="pref-sounds" type="checkbox" />
-        </label>
-
-        <!-- Group: ZEvent -->
-        <p class="settings-group-header" data-i18n="popup.settings.groupEvents">Événement ZEvent</p>
-
-        <label class="settings-toggle">
-          <div class="settings-text">
-            <span class="settings-title" data-i18n="popup.settings.zeventFeaturesTitle">Dispositif ZEvent 2026</span>
-            <span class="settings-description" data-i18n="popup.settings.zeventFeaturesDescription">Afficher le logo, le bandeau, le filtre et le surlignage des streamers.</span>
-          </div>
-          <input id="pref-zevent-features" type="checkbox" />
         </label>
 
         <!-- Group: Automation -->
@@ -499,10 +449,7 @@
           </div>
         </div>
         <p class="wt-empty-state hidden" id="wt-empty" data-i18n="popup.watchTime.empty">Aucune donnée ce mois-ci. Regarde un stream pour commencer !</p>
-        <button id="open-zevent-recap" class="zevent-recap-button" type="button">
-          <span class="zevent-recap-dot"></span>
-          Voir mon récap ZEvent 2026
-        </button>
+        <button id="open-recap" type="button" class="test-notification" data-i18n="recap.openButton">Créer mon récap</button>
       </div>
 
       <label class="settings-toggle">

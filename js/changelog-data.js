@@ -48,8 +48,8 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
-    version: "26.9.10",
-    date: "2026-09-09",
+    version: "26.9.13",
+    date: "2026-09-13",
     title: {
       fr: "Savoir quand le titre change",
       en: "Know when the title changes",
@@ -85,6 +85,26 @@ export const RELEASES = [
       cs: "Nová upozornění, když streamer změní název vysílání, a velká vlna oprav v překladech."
     },
     changes: [
+      {
+        type: "new",
+        text: {
+          fr: "Récap à la demande : choisissez les 7 ou 30 derniers jours ou un mois, en format PC (16:9) ou mobile (9:16), puis téléchargez l'image ou partagez-la sur X. Accessible depuis Réglages, Temps de visionnage.",
+          en: "On-demand recap: pick the last 7 or 30 days or a month, in desktop (16:9) or mobile (9:16) format, then download the image or share it on X. Available from Settings, Watch time.",
+          es: "Resumen a la carta: elige los últimos 7 o 30 días o un mes, en formato PC (16:9) o móvil (9:16), y descarga la imagen o compártela en X. Disponible en Ajustes, Tiempo de visualización.",
+          "pt-BR": "Resumo sob demanda: escolha os últimos 7 ou 30 dias ou um mês, no formato PC (16:9) ou celular (9:16), e baixe a imagem ou compartilhe no X. Disponível em Configurações, Tempo assistido.",
+          de: "Rückblick auf Abruf: Wähle die letzten 7 oder 30 Tage oder einen Monat, im PC- (16:9) oder Mobilformat (9:16), und lade das Bild herunter oder teile es auf X. Zu finden unter Einstellungen, Zuschauzeit.",
+          it: "Riepilogo su richiesta: scegli gli ultimi 7 o 30 giorni o un mese, in formato PC (16:9) o mobile (9:16), poi scarica l'immagine o condividila su X. Disponibile in Impostazioni, Tempo di visione.",
+          pl: "Podsumowanie na żądanie: wybierz ostatnie 7 lub 30 dni albo miesiąc, w formacie PC (16:9) lub telefonu (9:16), a potem pobierz obraz lub udostępnij go na X. Dostępne w Ustawieniach, Czas oglądania.",
+          tr: "İsteğe bağlı özet: son 7 veya 30 günü ya da bir ayı seç, PC (16:9) veya mobil (9:16) formatında, ardından görseli indir ya da X'te paylaş. Ayarlar, İzleme süresi bölümünden erişilebilir.",
+          ru: "Итоги по запросу: выбери последние 7 или 30 дней или месяц, в формате ПК (16:9) или телефона (9:16), затем скачай изображение или поделись им в X. Доступно в Настройках, Время просмотра.",
+          ja: "いつでも作れるまとめ：過去7日間・30日間または月を選び、PC（16:9）かモバイル（9:16）形式で画像をダウンロード、またはXでシェアできます。設定の「視聴時間」から利用できます。",
+          ko: "원할 때 만드는 결산: 최근 7일, 30일 또는 한 달을 고르고 PC(16:9) 또는 모바일(9:16) 형식으로 이미지를 다운로드하거나 X에 공유하세요. 설정의 시청 시간에서 이용할 수 있습니다.",
+          id: "Rekap kapan saja: pilih 7 atau 30 hari terakhir atau satu bulan, dalam format PC (16:9) atau ponsel (9:16), lalu unduh gambarnya atau bagikan di X. Tersedia di Pengaturan, Waktu menonton.",
+          nl: "Overzicht op aanvraag: kies de laatste 7 of 30 dagen of een maand, in pc- (16:9) of mobiel formaat (9:16), en download de afbeelding of deel hem op X. Te vinden onder Instellingen, Kijktijd.",
+          sv: "Sammanfattning när du vill: välj de senaste 7 eller 30 dagarna eller en månad, i datorformat (16:9) eller mobilformat (9:16), och ladda ner bilden eller dela den på X. Finns under Inställningar, Tittartid.",
+          cs: "Přehled na požádání: vyber posledních 7 nebo 30 dní nebo měsíc, ve formátu PC (16:9) nebo mobil (9:16), a stáhni obrázek nebo ho sdílej na X. Najdeš ho v Nastavení, Doba sledování."
+        }
+      },
       {
         type: "improved",
         text: {
@@ -268,21 +288,21 @@ export const RELEASES = [
       cs: "StreamPulse míří do Firefoxu"
     },
     subtitle: {
-      fr: "La version Firefox est en ligne, avec le récap ZEvent et le badge communautaire dans le tchat Twitch.",
-      en: "The Firefox version is live, along with the ZEvent recap and the community badge in Twitch chat.",
-      es: "La versión para Firefox ya está disponible, junto al resumen del ZEvent y la insignia comunitaria en el chat de Twitch.",
-      "pt-BR": "A versão para Firefox está no ar, junto com o resumo do ZEvent e o distintivo comunitário no chat da Twitch.",
-      de: "Die Firefox-Version ist da, zusammen mit dem ZEvent-Rückblick und dem Community-Abzeichen im Twitch-Chat.",
-      it: "La versione Firefox è online, insieme al riepilogo ZEvent e al badge della comunità nella chat di Twitch.",
-      pl: "Wersja na Firefoksa jest już dostępna, razem z podsumowaniem ZEvent i odznaką społeczności na czacie Twitcha.",
-      tr: "Firefox sürümü yayında; yanında ZEvent özeti ve Twitch sohbetindeki topluluk rozeti.",
-      ru: "Версия для Firefox доступна, вместе с итогами ZEvent и значком сообщества в чате Twitch.",
-      ja: "Firefox版を公開しました。ZEventの記録と、Twitchチャットのコミュニティバッジも一緒に。",
-      ko: "Firefox 버전이 출시되었습니다. ZEvent 결산과 트위치 채팅의 커뮤니티 배지도 함께.",
-      id: "Versi Firefox sudah tersedia, bersama rekap ZEvent dan lencana komunitas di obrolan Twitch.",
-      nl: "De Firefox-versie is live, samen met het ZEvent-overzicht en de community-badge in de Twitch-chat.",
-      sv: "Firefox-versionen är live, tillsammans med ZEvent-sammanfattningen och gemenskapsmärket i Twitch-chatten.",
-      cs: "Verze pro Firefox je online, spolu s přehledem ZEvent a komunitním odznakem v chatu Twitche."
+      fr: "La version Firefox est en ligne, avec le badge communautaire dans le tchat Twitch.",
+      en: "The Firefox version is live, along with the community badge in Twitch chat.",
+      es: "La versión para Firefox ya está disponible, junto a la insignia comunitaria en el chat de Twitch.",
+      "pt-BR": "A versão para Firefox está no ar, junto com o distintivo comunitário no chat da Twitch.",
+      de: "Die Firefox-Version ist da, zusammen mit dem Community-Abzeichen im Twitch-Chat.",
+      it: "La versione Firefox è online, insieme al badge della comunità nella chat di Twitch.",
+      pl: "Wersja na Firefoksa jest już dostępna, razem z odznaką społeczności na czacie Twitcha.",
+      tr: "Firefox sürümü yayında; yanında Twitch sohbetindeki topluluk rozeti.",
+      ru: "Версия для Firefox доступна, вместе со значком сообщества в чате Twitch.",
+      ja: "Firefox版を公開しました。Twitchチャットのコミュニティバッジも一緒に。",
+      ko: "Firefox 버전이 출시되었습니다. 트위치 채팅의 커뮤니티 배지도 함께.",
+      id: "Versi Firefox sudah tersedia, bersama lencana komunitas di obrolan Twitch.",
+      nl: "De Firefox-versie is live, samen met de community-badge in de Twitch-chat.",
+      sv: "Firefox-versionen är live, tillsammans med gemenskapsmärket i Twitch-chatten.",
+      cs: "Verze pro Firefox je online, spolu s komunitním odznakem v chatu Twitche."
     },
     changes: [
       {
@@ -303,26 +323,6 @@ export const RELEASES = [
           nl: "Officiële ondersteuning voor Mozilla Firefox: native audio-engine zonder offscreen-documenten en strikte naleving van de Mozilla-machtigingsregels.",
           sv: "Officiellt stöd för Mozilla Firefox: inbyggd ljudmotor utan offscreen-dokument och full överensstämmelse med Mozillas behörighetsregler.",
           cs: "Oficiální podpora pro Mozilla Firefox: nativní zvukový modul bez offscreen dokumentů a přísné dodržení pravidel oprávnění Mozilla."
-        }
-      },
-      {
-        type: "new",
-        text: {
-          fr: "ZEvent 2026 : pendant le week-end, un bandeau dédié, un filtre et le surlignage vert des streamers participants dans votre sidebar Twitch. L'événement terminé, retrouvez votre récap, le temps passé chez chaque participant, et exportez-le en image, au format Twitter ou story Instagram.",
-          en: "ZEvent 2026: during the weekend, a dedicated banner, a filter and green highlighting of participating streamers in your Twitch sidebar. Now that it is over, open your recap, how long you watched each participant, and export it as an image, in Twitter or Instagram story format.",
-          es: "ZEvent 2026: durante el fin de semana, un banner dedicado, un filtro y el resaltado verde de los streamers participantes en tu barra lateral de Twitch. Terminado el evento, consulta tu resumen, el tiempo pasado con cada participante, y expórtalo como imagen, en formato Twitter o historia de Instagram.",
-          "pt-BR": "ZEvent 2026: durante o fim de semana, um banner dedicado, um filtro e o destaque verde dos streamers participantes na sua barra lateral da Twitch. Encerrado o evento, veja seu resumo, o tempo assistido com cada participante, e exporte como imagem, em formato Twitter ou story do Instagram.",
-          de: "ZEvent 2026: Am Wochenende ein eigenes Banner, ein Filter und die grüne Hervorhebung teilnehmender Streamer in deiner Twitch-Seitenleiste. Nach dem Event öffnest du deinen Rückblick, wie lange du jeden Teilnehmer geschaut hast, und exportierst ihn als Bild im Twitter- oder Instagram-Story-Format.",
-          it: "ZEvent 2026: durante il weekend, un banner dedicato, un filtro e l'evidenziazione verde degli streamer partecipanti nella barra laterale di Twitch. A evento concluso, apri il tuo riepilogo, il tempo passato con ogni partecipante, ed esportalo come immagine, in formato Twitter o storia Instagram.",
-          pl: "ZEvent 2026: w weekend dedykowany baner, filtr i zielone podświetlenie uczestniczących streamerów na pasku bocznym Twitcha. Po zakończeniu otwórz swoje podsumowanie, ile czasu spędziłeś u każdego uczestnika, i wyeksportuj je jako obrazek w formacie Twittera lub relacji na Instagramie.",
-          tr: "ZEvent 2026: hafta sonu boyunca özel bir afiş, bir filtre ve Twitch kenar çubuğunuzda katılan yayıncıların yeşil vurgusu. Etkinlik bittiğinde özetinizi açın, her katılımcıyı ne kadar izlediğinizi görün ve Twitter veya Instagram hikâye formatında görsel olarak dışa aktarın.",
-          ru: "ZEvent 2026: в выходные: отдельный баннер, фильтр и зелёная подсветка участвующих стримеров в боковой панели Twitch. После завершения откройте свои итоги, сколько вы смотрели каждого участника, и сохраните картинку в формате Twitter или истории Instagram.",
-          ja: "ZEvent 2026：週末は専用バナー、フィルター、Twitchサイドバーでの参加ストリーマーの緑色ハイライト。終了後は、参加者ごとの視聴時間をまとめた記録を開き、Twitter形式またはInstagramストーリー形式の画像として書き出せます。",
-          ko: "ZEvent 2026: 주말 동안 전용 배너, 필터, 트위치 사이드바의 참가 스트리머 초록색 강조. 행사가 끝난 뒤에는 참가자별 시청 시간을 담은 결산을 열어 트위터 또는 인스타그램 스토리 형식의 이미지로 내보낼 수 있습니다.",
-          id: "ZEvent 2026: selama akhir pekan, banner khusus, filter, dan sorotan hijau streamer peserta di bilah sisi Twitch Anda. Setelah acara berakhir, buka rekap Anda, berapa lama Anda menonton tiap peserta, dan ekspor sebagai gambar dalam format Twitter atau story Instagram.",
-          nl: "ZEvent 2026: tijdens het weekend een eigen banner, een filter en groene markering van deelnemende streamers in je Twitch-zijbalk. Nu het voorbij is, open je je overzicht, hoelang je naar elke deelnemer keek, en exporteer je het als afbeelding, in Twitter- of Instagram-storyformaat.",
-          sv: "ZEvent 2026: under helgen en egen banner, ett filter och grön markering av deltagande streamers i ditt Twitch-sidofält. Nu när det är slut öppnar du din sammanfattning, hur länge du tittade på varje deltagare, och exporterar den som bild i Twitter- eller Instagram-storyformat.",
-          cs: "ZEvent 2026: o víkendu vlastní banner, filtr a zelené zvýraznění zúčastněných streamerů v postranním panelu Twitche. Po skončení otevřete svůj přehled, jak dlouho jste sledovali jednotlivé účastníky, a exportujte jej jako obrázek ve formátu Twitteru nebo Instagram story."
         }
       },
       {
@@ -583,26 +583,6 @@ export const RELEASES = [
           nl: "Oplossing voor het laden van het Twitch-pictogram op systemen en browsers die hoofdlettergevoelig zijn voor bestandsnamen.",
           sv: "Fixat laddning av Twitch-ikonen på system och webbläsare som skiljer på stora och små bokstäver.",
           cs: "Oprava načítání ikony Twitche na systémech a v prohlížečích citlivých na velikost písmen v názvech souborů."
-        }
-      },
-      {
-        type: "fix",
-        text: {
-          fr: "Les réglages « Dispositif ZEvent » et « Badge communautaire » ne s'enregistraient pas : les activer ou les désactiver restait sans effet et affichait une erreur. Corrigé, avec un contrôle automatique qui empêche le problème de revenir sur les autres réglages.",
-          en: "The « ZEvent features » and « Community badge » settings were not saved: turning them on or off did nothing and showed an error. Fixed, with an automated check that prevents the same problem on other settings.",
-          es: "Los ajustes «Dispositivo ZEvent» y «Insignia comunitaria» no se guardaban: activarlos o desactivarlos no hacía nada y mostraba un error. Corregido, con una comprobación automática que evita el problema en los demás ajustes.",
-          "pt-BR": "As configurações «Recursos do ZEvent» e «Distintivo comunitário» não eram salvas: ativá-las ou desativá-las não fazia nada e exibia um erro. Corrigido, com uma verificação automática que evita o problema nas demais configurações.",
-          de: "Die Einstellungen „ZEvent-Funktionen“ und „Community-Abzeichen“ wurden nicht gespeichert: Ein- oder Ausschalten bewirkte nichts und zeigte einen Fehler. Behoben, mit einer automatischen Prüfung, die das Problem bei anderen Einstellungen verhindert.",
-          it: "Le impostazioni «Funzioni ZEvent» e «Badge della comunità» non venivano salvate: attivarle o disattivarle non faceva nulla e mostrava un errore. Corretto, con un controllo automatico che previene lo stesso problema altrove.",
-          pl: "Ustawienia „Funkcje ZEvent” i „Odznaka społeczności” nie zapisywały się: włączenie lub wyłączenie nic nie dawało i pokazywało błąd. Naprawione, wraz z automatyczną kontrolą zapobiegającą temu w innych ustawieniach.",
-          tr: "«ZEvent özellikleri» ve «Topluluk rozeti» ayarları kaydedilmiyordu: açmak veya kapatmak hiçbir şey yapmıyor ve hata veriyordu. Düzeltildi; diğer ayarlarda tekrarlanmasını önleyen otomatik bir denetim eklendi.",
-          ru: "Настройки «Функции ZEvent» и «Значок сообщества» не сохранялись: включение или выключение ничего не давало и показывало ошибку. Исправлено, добавлена автоматическая проверка, чтобы это не повторилось с другими настройками.",
-          ja: "「ZEvent機能」と「コミュニティバッジ」の設定が保存されず、オンオフしても何も起きずエラーが出ていました。修正し、他の設定でも再発しないよう自動チェックを追加しました。",
-          ko: "「ZEvent 기능」과 「커뮤니티 배지」 설정이 저장되지 않아, 켜거나 꺼도 반응이 없고 오류가 표시됐습니다. 수정했으며, 다른 설정에서도 재발하지 않도록 자동 검사를 추가했습니다.",
-          id: "Pengaturan «Fitur ZEvent» dan «Lencana komunitas» tidak tersimpan: menyalakan atau mematikannya tidak berpengaruh dan menampilkan galat. Diperbaiki, dengan pemeriksaan otomatis agar tidak terulang pada pengaturan lain.",
-          nl: "De instellingen 'ZEvent-functies' en 'Community-badge' werden niet opgeslagen: aan- of uitzetten deed niets en gaf een fout. Opgelost, met een automatische controle die dit bij andere instellingen voorkomt.",
-          sv: "Inställningarna ”ZEvent-funktioner” och ”Gemenskapsmärke” sparades inte: att slå på eller av gjorde ingenting och visade ett fel. Åtgärdat, med en automatisk kontroll som förhindrar samma sak för andra inställningar.",
-          cs: "Nastavení „Funkce ZEvent“ a „Komunitní odznak“ se neukládala: zapnutí ani vypnutí nic neudělalo a zobrazilo chybu. Opraveno, včetně automatické kontroly, která problém u dalších nastavení zastaví."
         }
       },
       {
