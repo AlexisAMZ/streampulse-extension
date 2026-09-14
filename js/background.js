@@ -38,7 +38,7 @@ const STORAGE_KEYS = {
 };
 
 // ─── Remote config (credentials hosted on Vercel, never in the zip) ──────────
-const REMOTE_CONFIG_URL = "https://www.streampulse.fr/api/streampulse-config";
+const REMOTE_CONFIG_URL = "https://streampulse.fr/api/streampulse-config";
 const REMOTE_CONFIG_CACHE_KEY = "streampulse:remoteConfig";
 const REMOTE_CONFIG_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
 

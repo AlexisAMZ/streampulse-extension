@@ -20,7 +20,7 @@
 <p align="center">
   <a href="https://chromewebstore.google.com/detail/streampulse-multi-streame/ipfhbfabadbpkjimhdcjadopnahdpddh"><b>Chrome</b></a> ·
   <a href="https://addons.mozilla.org/firefox/addon/streampulse-twitch-kick/"><b>Firefox</b></a> ·
-  <a href="https://www.streampulse.fr/">Website</a> ·
+  <a href="https://streampulse.fr/">Website</a> ·
   <a href="#features">Features</a> ·
   <a href="#privacy">Privacy</a> ·
   <a href="#contributing">Contributing</a>
@@ -107,7 +107,7 @@ Then open `chrome://extensions`, turn on **Developer mode**, click **Load unpack
 - The **community badge** sends a hash of your Twitch username (never the name itself) to our server at most once a day. Turn it off in Settings.
 - **StreamPulse+** checks your license key with our server.
 
-Full policy: [streampulse.fr/privacy](https://www.streampulse.fr/privacy)
+Full policy: [streampulse.fr/privacy](https://streampulse.fr/privacy)
 
 ## Contributing
 
@@ -130,5 +130,5 @@ StreamPulse is free software under the [GNU General Public License v3.0](LICENSE
 ---
 
 <p align="center">
-  Made by <a href="https://github.com/AlexisAMZ">AlexisAMZ</a> · <a href="https://x.com/alexisamz_">X</a> · <a href="https://instagram.com/alexisamz">Instagram</a> · <a href="https://www.streampulse.fr/support">Support</a>
+  Made by <a href="https://github.com/AlexisAMZ">AlexisAMZ</a> · <a href="https://x.com/alexisamz_">X</a> · <a href="https://instagram.com/alexisamz">Instagram</a> · <a href="https://streampulse.fr/support">Support</a>
 </p>

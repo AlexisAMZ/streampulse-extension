@@ -25,7 +25,7 @@
       // La journalisation ne doit jamais casser ce qu'elle observe.
     }
   }
-  var API_URL = "https://www.streampulse.fr/api/streampulse-badges";
+  var API_URL = "https://streampulse.fr/api/streampulse-badges";
   var STORAGE_KEY = "streampulseBadgeHashes";
   var LEGACY_STORAGE_KEY = "streampulseBadgeUsers"; // pseudos en clair, a purger
 
