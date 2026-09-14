@@ -216,7 +216,6 @@ function initPlus() {
       const result = await verifyLicense(input.value, fetch, Date.now(), await getDeviceId(chrome.storage.local));
       if (result.ok) {
         await chrome.storage.local.set({ [PLUS_KEY]: result.record });
-        // eslint-disable-next-line require-atomic-updates -- la dernière vérification fait foi.
         plusRecord = result.record;
         input.value = "";
         renderPlus();
