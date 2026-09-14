@@ -15,6 +15,7 @@ import { DISPLAY,
   drawPlatformSplit,
   fitText,
   setFont,
+  setFittedFont,
 } from "./recap-draw.js";
 
 export const STORY_WIDTH = 1080;
@@ -72,7 +73,7 @@ function drawTiles(ctx, model, top) {
     setFont(ctx, 700, 20, MONO);
     ctx.fillText(fitText(ctx, tile.label.toUpperCase(), w - 56), x + 28, top + 50);
     ctx.fillStyle = INK;
-    setFont(ctx, 800, 54, DISPLAY);
+    setFittedFont(ctx, tile.value, w - 56, 800, 54, DISPLAY);
     ctx.fillText(fitText(ctx, tile.value, w - 56), x + 28, top + 118);
   });
   return top + h;

@@ -47,6 +47,11 @@
   var PUBLISHED_KEY = "streampulseBadgePublished";
   var HEX_RE = /^#[0-9a-f]{6}$/i;
   var PLUS_GRACE_MS = 30 * 24 * 60 * 60 * 1000;
+  // Effets publics des abonnes : empreinte -> { b: effet du badge, n: pseudo special }.
+  var badgeStyles = new Map();
+  var COSMETICS_KEY = "streamPulseCosmetics";
+  var BADGE_FX = ["pulse", "shine", "rainbow"];
+  var NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow"];
 
   // "author" (couleur du pseudo), "theme" (blanc/noir), ou une couleur hexa.
   var badgeColorMode = "author";
@@ -173,6 +178,15 @@
             if (/^[a-f0-9]{12}$/.test(h) && HEX_RE.test(color)) nextColors.set(h, color);
           });
           badgeColors = nextColors;
+          var styles = data && !Array.isArray(data) && data.styles && typeof data.styles === "object" ? data.styles : {};
+          var nextStyles = new Map();
+          Object.keys(styles).forEach(function (h) {
+            var style = styles[h] || {};
+            var b = BADGE_FX.indexOf(style.b) !== -1 ? style.b : "";
+            var n = NAME_FX.indexOf(style.n) !== -1 ? style.n : "";
+            if (/^[a-f0-9]{12}$/.test(h) && (b || n)) nextStyles.set(h, { b: b, n: n });
+          });
+          badgeStyles = nextStyles;
           if (!list.length) return;
           for (var i = 0; i < list.length; i++) {
             var hash = String(list[i] || "").toLowerCase().trim();
@@ -205,18 +219,21 @@
   function publishBadgeColor(hash) {
     if (!hash) return;
     try {
-      chrome.storage.local.get([PLUS_KEY, PUBLISHED_KEY, "betaGeneralPreferences"], function (res) {
+      chrome.storage.local.get([PLUS_KEY, PUBLISHED_KEY, COSMETICS_KEY, "betaGeneralPreferences"], function (res) {
         var key = activePlusKey(res && res[PLUS_KEY]);
         if (!key) return;
         var prefs = (res && res.betaGeneralPreferences) || {};
         var color = HEX_RE.test(prefs.communityBadgeColor || "") ? prefs.communityBadgeColor.toLowerCase() : null;
+        var cosmetics = (res && res[COSMETICS_KEY]) || {};
+        var badgeFx = BADGE_FX.indexOf(cosmetics.badgeFx) !== -1 ? cosmetics.badgeFx : "";
+        var nameFx = NAME_FX.indexOf(cosmetics.nameFx) !== -1 ? cosmetics.nameFx : "";
         var today = new Date().toISOString().slice(0, 10);
-        var wanted = hash + "|" + (color || "none") + "|" + today;
+        var wanted = [hash, color || "none", badgeFx, nameFx, today].join("|");
         if ((res && res[PUBLISHED_KEY]) === wanted) return;
         fetch(API_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ hash: hash, color: color, key: key })
+          body: JSON.stringify({ hash: hash, color: color, badgeFx: badgeFx, nameFx: nameFx, key: key })
         }).then(function (response) {
           if (!response.ok) throw new Error("HTTP " + response.status);
           var saved = {};
@@ -224,6 +241,8 @@
           chrome.storage.local.set(saved);
           if (color) badgeColors.set(hash, color);
           else badgeColors.delete(hash);
+          if (badgeFx || nameFx) badgeStyles.set(hash, { b: badgeFx, n: nameFx });
+          else badgeStyles.delete(hash);
           log("couleur publiee");
         }).catch(function (e) {
           log("couleur non publiee :", e.message);
@@ -400,6 +419,8 @@
     mark.style.setProperty("-webkit-mask-image", mask);
     mark.style.setProperty("mask-image", mask);
     mark.style.setProperty("--sp-badge-color", resolveBadgeColor(messageEl, hash));
+    var style = hash && badgeStyles.get(hash);
+    if (style && style.b) badge.classList.add("sp-chat-badge--fx-" + style.b);
 
     badge.appendChild(mark);
     return badge;
@@ -417,7 +438,10 @@
     // Le hachage est asynchrone : la ligne est marquee traitee tout de suite
     // pour ne pas la reprendre, et le badge arrive au tour suivant.
     hashLogin(username).then(function (hash) {
-      if (hash && badgeHashes.has(hash)) injectBadge(messageEl, hash);
+      if (hash && badgeHashes.has(hash)) {
+        injectBadge(messageEl, hash);
+        applyPaint(messageEl, hash);
+      }
     });
   }
 
@@ -459,6 +483,23 @@
       '.seventv-chat-user-badge-list, ' +
       '[class*="badge-list"]:not(img)'
     );
+  }
+
+  /** Pseudo special d'un abonne StreamPulse+ (degrade, neon…), comme les « paints » de 7TV. */
+  function applyPaint(messageEl, hash) {
+    var style = badgeStyles.get(hash);
+    if (!style || !style.n) return;
+    try {
+      var name = messageEl.querySelector(
+        '[data-a-target="chat-message-username"], .chat-author__display-name, .seventv-chat-user-username'
+      );
+      if (!name || name.classList.contains("sp-paint")) return;
+      name.classList.add("sp-paint", "sp-paint--" + style.n);
+      var glow = badgeColors.get(hash) || authorColor(messageEl);
+      if (glow) name.style.setProperty("--sp-paint-glow", glow);
+    } catch (_e) {
+      // Twitch reconstruit son DOM en permanence : le noeud peut disparaitre entre sa selection et son usage.
+    }
   }
 
   function injectBadge(messageEl, hash) {
@@ -583,7 +624,7 @@
         if (changes.betaGeneralPreferences) {
           badgeColorMode = normalizeColorMode((changes.betaGeneralPreferences.newValue || {}).communityBadgeColor);
         }
-        if ((changes.betaGeneralPreferences || changes[PLUS_KEY]) && currentTwitchUser) {
+        if ((changes.betaGeneralPreferences || changes[PLUS_KEY] || changes[COSMETICS_KEY]) && currentTwitchUser) {
           hashLogin(currentTwitchUser).then(publishBadgeColor);
         }
       });

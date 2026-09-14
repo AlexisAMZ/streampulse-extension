@@ -575,6 +575,37 @@
             </span>
           </div>
           <p class="settings-description badge-plus-note" id="badge-plus-note" data-i18n="popup.settings.badgePlusOff">Avec StreamPulse+, ta couleur personnalisée est visible par tous les utilisateurs de StreamPulse.</p>
+          <div class="settings-row">
+            <span class="settings-text">
+              <label class="settings-title" for="cosmetic-badge-fx" data-i18n="popup.cosmetics.badgeTitle">Effet du badge</label>
+              <span class="settings-description" data-i18n="popup.cosmetics.badgeBody">Anime le logo StreamPulse à côté de ton pseudo.</span>
+            </span>
+            <select id="cosmetic-badge-fx" class="settings-select">
+              <option value="" data-i18n="popup.cosmetics.none">Aucun</option>
+              <option value="pulse" data-i18n="popup.cosmetics.pulse">Pulsation</option>
+              <option value="shine" data-i18n="popup.cosmetics.shine">Reflet</option>
+              <option value="rainbow" data-i18n="popup.cosmetics.rainbow">Arc-en-ciel</option>
+            </select>
+          </div>
+          <div class="settings-row">
+            <span class="settings-text">
+              <label class="settings-title" for="cosmetic-name-fx" data-i18n="popup.cosmetics.nameTitle">Pseudo spécial</label>
+              <span class="settings-description" data-i18n="popup.cosmetics.nameBody">Un dégradé ou un effet sur ton pseudo, vu par les utilisateurs de StreamPulse.</span>
+            </span>
+            <select id="cosmetic-name-fx" class="settings-select">
+              <option value="" data-i18n="popup.cosmetics.none">Aucun</option>
+              <option value="aurora" data-i18n="popup.cosmetics.aurora">Aurore</option>
+              <option value="sunset" data-i18n="popup.cosmetics.sunset">Coucher de soleil</option>
+              <option value="lcd" data-i18n="popup.cosmetics.lcd">Écran LCD</option>
+              <option value="gold" data-i18n="popup.cosmetics.gold">Or</option>
+              <option value="neon" data-i18n="popup.cosmetics.neon">Néon</option>
+              <option value="rainbow" data-i18n="popup.cosmetics.rainbow">Arc-en-ciel</option>
+            </select>
+          </div>
+          <div class="cosmetic-preview">
+            <span class="cosmetic-preview-label" data-i18n="popup.cosmetics.preview">Aperçu dans le tchat</span>
+            <span class="cosmetic-line" aria-hidden="true"><span class="cosmetic-badge" id="cosmetic-badge"></span><b class="cosmetic-name" id="cosmetic-name" data-i18n="popup.cosmetics.sampleName">TonPseudo</b><span class="cosmetic-msg">: gg !</span></span>
+          </div>
 
           <h3 class="settings-group-header smart-head"><span data-i18n="popup.smart.title">Alertes intelligentes</span></h3>
           <div class="smart-locked" id="smart-locked">

@@ -492,6 +492,44 @@ function renderAccent() {
   if (note) note.textContent = t(active ? "popup.settings.badgePlusOn" : "popup.settings.badgePlusOff");
 }
 
+export const COSMETICS_KEY = "streamPulseCosmetics";
+const BADGE_FX = ["pulse", "shine", "rainbow"];
+const NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow"];
+let cosmetics = { badgeFx: "", nameFx: "" };
+
+function normalizeCosmetics(value) {
+  const input = value && typeof value === "object" ? value : {};
+  return {
+    badgeFx: BADGE_FX.includes(input.badgeFx) ? input.badgeFx : "",
+    nameFx: NAME_FX.includes(input.nameFx) ? input.nameFx : "",
+  };
+}
+
+function renderCosmetics() {
+  const shown = plusActive() ? cosmetics : { badgeFx: "", nameFx: "" };
+  if ($("cosmetic-badge-fx")) $("cosmetic-badge-fx").value = shown.badgeFx;
+  if ($("cosmetic-name-fx")) $("cosmetic-name-fx").value = shown.nameFx;
+  if ($("cosmetic-badge")) $("cosmetic-badge").className = `cosmetic-badge${shown.badgeFx ? ` sp-fx-${shown.badgeFx}` : ""}`;
+  if ($("cosmetic-name")) $("cosmetic-name").className = `cosmetic-name${shown.nameFx ? ` sp-paint sp-paint--${shown.nameFx}` : ""}`;
+}
+
+function initCosmetics() {
+  const fields = { "cosmetic-badge-fx": "badgeFx", "cosmetic-name-fx": "nameFx" };
+  Object.entries(fields).forEach(([id, field]) => {
+    $(id)?.addEventListener("change", (event) => {
+      if (!plusActive()) {
+        event.target.value = "";
+        openPlus();
+        return;
+      }
+      cosmetics = normalizeCosmetics({ ...cosmetics, [field]: event.target.value });
+      chrome.storage.local.set({ [COSMETICS_KEY]: cosmetics });
+      renderCosmetics();
+    });
+  });
+  plusListeners.add(() => renderCosmetics());
+}
+
 function initAccent() {
   $("accent-swatches")?.addEventListener("click", (event) => {
     const swatch = event.target.closest(".accent-swatch");
@@ -633,11 +671,13 @@ export async function initFeatures() {
   initPlus();
   initSmartAlerts();
   initAccent();
+  initCosmetics();
   initPredictions();
 
-  const stored = await chrome.storage.local.get([PLUS_KEY, SMART_ALERTS_KEY, ACCENT_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers"]);
+  const stored = await chrome.storage.local.get([PLUS_KEY, SMART_ALERTS_KEY, ACCENT_KEY, COSMETICS_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers"]);
   plusRecord = stored[PLUS_KEY] || null;
   accentChoice = stored[ACCENT_KEY] || "violet";
+  cosmetics = normalizeCosmetics(stored[COSMETICS_KEY]);
   predictionRule = normalizePredictionRule(stored[PREDICTION_RULE_KEY]);
   predictionHistory = Array.isArray(stored[PREDICTION_HISTORY_KEY]) ? stored[PREDICTION_HISTORY_KEY] : [];
   recheckOnOpen().catch(() => {});

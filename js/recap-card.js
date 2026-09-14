@@ -15,6 +15,7 @@ import { DISPLAY,
   drawPlatformSplit,
   fitText,
   setFont,
+  setFittedFont,
 } from "./recap-draw.js";
 
 export const CARD_WIDTH = 1600;
@@ -61,7 +62,7 @@ function drawLeftColumn(ctx, model) {
     setFont(ctx, 700, 16, MONO);
     ctx.fillText(fitText(ctx, tile.label.toUpperCase(), tileW - 48), x + 24, tileY + 42);
     ctx.fillStyle = INK;
-    setFont(ctx, 800, 44, DISPLAY);
+    setFittedFont(ctx, tile.value, tileW - 48, 800, 44, DISPLAY);
     ctx.fillText(fitText(ctx, tile.value, tileW - 48), x + 24, tileY + 100);
   });
 

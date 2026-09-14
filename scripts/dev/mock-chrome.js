@@ -157,6 +157,7 @@
     ...(params.get("plus") === "1"
       ? {
           streamPulsePlus: { licenseKey: "SP-DEMO-2026-PLUS-0001", plan: "lifetime", status: "active", verifiedAt: now },
+          streamPulseCosmetics: { badgeFx: "shine", nameFx: "aurora" },
           streamPulsePredictionRule: { enabled: true, strategy: "majority", percent: 5, maxPoints: 2000, reserve: 1000, secondsBeforeEnd: 20 },
           streamPulsePredictionHistory: [
             { eventId: "p1", channel: "novastream", title: "Top 1 sur cette game ?", outcomeTitle: "Oui", points: 850, payout: 1540, status: "won", placedAt: now - 3600e3 },

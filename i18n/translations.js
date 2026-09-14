@@ -253,6 +253,23 @@ export const translations = {
         "recapBody": "Heures par catégorie, courbe d'activité et ton année entière.",
         "openRecap": "Ouvrir mon récap"
       },
+      "cosmetics": {
+        "badgeTitle": "Effet du badge",
+        "badgeBody": "Anime le logo StreamPulse à côté de ton pseudo.",
+        "nameTitle": "Pseudo spécial",
+        "nameBody": "Un dégradé ou un effet sur ton pseudo, vu par les utilisateurs de StreamPulse.",
+        "none": "Aucun",
+        "pulse": "Pulsation",
+        "shine": "Reflet",
+        "rainbow": "Arc-en-ciel",
+        "aurora": "Aurore",
+        "sunset": "Coucher de soleil",
+        "lcd": "Écran LCD",
+        "gold": "Or",
+        "neon": "Néon",
+        "preview": "Aperçu dans le tchat",
+        "sampleName": "TonPseudo"
+      },
       "smart": {
         "title": "Alertes intelligentes",
         "lockedBody": "Choisis quand être prévenu : un jeu précis, un mot dans le titre, un nombre de viewers. Réservé à StreamPulse+.",
@@ -1030,6 +1047,23 @@ export const translations = {
         "recapTitle": "Advanced recap and yearly Wrapped",
         "recapBody": "Hours by category, activity curve and your whole year.",
         "openRecap": "Open my recap"
+      },
+      "cosmetics": {
+        "badgeTitle": "Badge effect",
+        "badgeBody": "Animates the StreamPulse logo next to your name.",
+        "nameTitle": "Special name",
+        "nameBody": "A gradient or effect on your name, seen by StreamPulse users.",
+        "none": "None",
+        "pulse": "Pulse",
+        "shine": "Shine",
+        "rainbow": "Rainbow",
+        "aurora": "Aurora",
+        "sunset": "Sunset",
+        "lcd": "LCD screen",
+        "gold": "Gold",
+        "neon": "Neon",
+        "preview": "Chat preview",
+        "sampleName": "YourName"
       },
       "smart": {
         "title": "Smart alerts",
@@ -1809,6 +1843,23 @@ export const translations = {
         "recapBody": "Horas por categoría, curva de actividad y todo tu año.",
         "openRecap": "Abrir mi resumen"
       },
+      "cosmetics": {
+        "badgeTitle": "Efecto de la insignia",
+        "badgeBody": "Anima el logo de StreamPulse junto a tu nombre.",
+        "nameTitle": "Nombre especial",
+        "nameBody": "Un degradado o efecto en tu nombre, visto por los usuarios de StreamPulse.",
+        "none": "Ninguno",
+        "pulse": "Pulso",
+        "shine": "Brillo",
+        "rainbow": "Arcoíris",
+        "aurora": "Aurora",
+        "sunset": "Atardecer",
+        "lcd": "Pantalla LCD",
+        "gold": "Oro",
+        "neon": "Neón",
+        "preview": "Vista previa del chat",
+        "sampleName": "TuNombre"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -2586,6 +2637,23 @@ export const translations = {
         "recapTitle": "Resumo avançado e Wrapped anual",
         "recapBody": "Horas por categoria, curva de atividade e o seu ano inteiro.",
         "openRecap": "Abrir meu resumo"
+      },
+      "cosmetics": {
+        "badgeTitle": "Efeito do emblema",
+        "badgeBody": "Anima o logo do StreamPulse ao lado do seu nome.",
+        "nameTitle": "Nome especial",
+        "nameBody": "Um degradê ou efeito no seu nome, visto pelos usuários do StreamPulse.",
+        "none": "Nenhum",
+        "pulse": "Pulso",
+        "shine": "Brilho",
+        "rainbow": "Arco-íris",
+        "aurora": "Aurora",
+        "sunset": "Pôr do sol",
+        "lcd": "Tela LCD",
+        "gold": "Ouro",
+        "neon": "Neon",
+        "preview": "Prévia no chat",
+        "sampleName": "SeuNome"
       },
       "smart": {
         "title": "Smart alerts",
@@ -3365,6 +3433,23 @@ export const translations = {
         "recapBody": "Stunden pro Kategorie, Aktivitätskurve und dein ganzes Jahr.",
         "openRecap": "Rückblick öffnen"
       },
+      "cosmetics": {
+        "badgeTitle": "Abzeichen-Effekt",
+        "badgeBody": "Animiert das StreamPulse-Logo neben deinem Namen.",
+        "nameTitle": "Spezieller Name",
+        "nameBody": "Ein Verlauf oder Effekt auf deinem Namen, sichtbar für StreamPulse-Nutzer.",
+        "none": "Keiner",
+        "pulse": "Pulsieren",
+        "shine": "Glanz",
+        "rainbow": "Regenbogen",
+        "aurora": "Aurora",
+        "sunset": "Sonnenuntergang",
+        "lcd": "LCD-Bildschirm",
+        "gold": "Gold",
+        "neon": "Neon",
+        "preview": "Chat-Vorschau",
+        "sampleName": "DeinName"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -4142,6 +4227,23 @@ export const translations = {
         "recapTitle": "Riepilogo avanzato e Wrapped annuale",
         "recapBody": "Ore per categoria, curva di attività e il tuo anno intero.",
         "openRecap": "Apri il riepilogo"
+      },
+      "cosmetics": {
+        "badgeTitle": "Effetto del badge",
+        "badgeBody": "Anima il logo StreamPulse accanto al tuo nome.",
+        "nameTitle": "Nome speciale",
+        "nameBody": "Un gradiente o un effetto sul tuo nome, visto dagli utenti StreamPulse.",
+        "none": "Nessuno",
+        "pulse": "Pulsazione",
+        "shine": "Riflesso",
+        "rainbow": "Arcobaleno",
+        "aurora": "Aurora",
+        "sunset": "Tramonto",
+        "lcd": "Schermo LCD",
+        "gold": "Oro",
+        "neon": "Neon",
+        "preview": "Anteprima in chat",
+        "sampleName": "IlTuoNome"
       },
       "smart": {
         "title": "Smart alerts",
@@ -4921,6 +5023,23 @@ export const translations = {
         "recapBody": "Godziny według kategorii, krzywa aktywności i cały Twój rok.",
         "openRecap": "Otwórz podsumowanie"
       },
+      "cosmetics": {
+        "badgeTitle": "Efekt odznaki",
+        "badgeBody": "Animuje logo StreamPulse obok Twojej nazwy.",
+        "nameTitle": "Specjalna nazwa",
+        "nameBody": "Gradient lub efekt na Twojej nazwie, widoczny dla użytkowników StreamPulse.",
+        "none": "Brak",
+        "pulse": "Pulsowanie",
+        "shine": "Połysk",
+        "rainbow": "Tęcza",
+        "aurora": "Zorza",
+        "sunset": "Zachód słońca",
+        "lcd": "Ekran LCD",
+        "gold": "Złoto",
+        "neon": "Neon",
+        "preview": "Podgląd czatu",
+        "sampleName": "TwojaNazwa"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -5698,6 +5817,23 @@ export const translations = {
         "recapTitle": "Gelişmiş özet ve yıllık Wrapped",
         "recapBody": "Kategoriye göre saatler, etkinlik eğrisi ve tüm yılın.",
         "openRecap": "Özetimi aç"
+      },
+      "cosmetics": {
+        "badgeTitle": "Rozet efekti",
+        "badgeBody": "Adının yanındaki StreamPulse logosunu canlandırır.",
+        "nameTitle": "Özel ad",
+        "nameBody": "Adında StreamPulse kullanıcılarının göreceği bir renk geçişi ya da efekt.",
+        "none": "Yok",
+        "pulse": "Nabız",
+        "shine": "Parıltı",
+        "rainbow": "Gökkuşağı",
+        "aurora": "Kutup ışığı",
+        "sunset": "Gün batımı",
+        "lcd": "LCD ekran",
+        "gold": "Altın",
+        "neon": "Neon",
+        "preview": "Sohbet önizlemesi",
+        "sampleName": "AdınBurada"
       },
       "smart": {
         "title": "Smart alerts",
@@ -6477,6 +6613,23 @@ export const translations = {
         "recapBody": "Часы по категориям, кривая активности и весь ваш год.",
         "openRecap": "Открыть сводку"
       },
+      "cosmetics": {
+        "badgeTitle": "Эффект значка",
+        "badgeBody": "Анимирует логотип StreamPulse рядом с вашим ником.",
+        "nameTitle": "Особый ник",
+        "nameBody": "Градиент или эффект на вашем нике, видимый пользователям StreamPulse.",
+        "none": "Нет",
+        "pulse": "Пульсация",
+        "shine": "Блеск",
+        "rainbow": "Радуга",
+        "aurora": "Сияние",
+        "sunset": "Закат",
+        "lcd": "Экран LCD",
+        "gold": "Золото",
+        "neon": "Неон",
+        "preview": "Предпросмотр чата",
+        "sampleName": "ВашНик"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -7254,6 +7407,23 @@ export const translations = {
         "recapTitle": "詳細な振り返りと年間 Wrapped",
         "recapBody": "カテゴリ別の時間、アクティビティの推移、1年分。",
         "openRecap": "振り返りを開く"
+      },
+      "cosmetics": {
+        "badgeTitle": "バッジのエフェクト",
+        "badgeBody": "名前の横の StreamPulse ロゴをアニメーションさせます。",
+        "nameTitle": "スペシャルネーム",
+        "nameBody": "StreamPulse ユーザーに見える、名前のグラデーションやエフェクト。",
+        "none": "なし",
+        "pulse": "パルス",
+        "shine": "きらめき",
+        "rainbow": "レインボー",
+        "aurora": "オーロラ",
+        "sunset": "サンセット",
+        "lcd": "LCD 画面",
+        "gold": "ゴールド",
+        "neon": "ネオン",
+        "preview": "チャットのプレビュー",
+        "sampleName": "あなたの名前"
       },
       "smart": {
         "title": "Smart alerts",
@@ -8033,6 +8203,23 @@ export const translations = {
         "recapBody": "카테고리별 시간, 활동 곡선, 한 해 전체.",
         "openRecap": "요약 열기"
       },
+      "cosmetics": {
+        "badgeTitle": "배지 효과",
+        "badgeBody": "닉네임 옆 StreamPulse 로고에 애니메이션을 줍니다.",
+        "nameTitle": "특별 닉네임",
+        "nameBody": "StreamPulse 사용자에게 보이는 닉네임 그라데이션이나 효과.",
+        "none": "없음",
+        "pulse": "펄스",
+        "shine": "반짝임",
+        "rainbow": "무지개",
+        "aurora": "오로라",
+        "sunset": "노을",
+        "lcd": "LCD 화면",
+        "gold": "골드",
+        "neon": "네온",
+        "preview": "채팅 미리보기",
+        "sampleName": "내닉네임"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -8810,6 +8997,23 @@ export const translations = {
         "recapTitle": "Rekap lanjutan dan Wrapped tahunan",
         "recapBody": "Jam per kategori, kurva aktivitas, dan setahun penuh.",
         "openRecap": "Buka rekapku"
+      },
+      "cosmetics": {
+        "badgeTitle": "Efek lencana",
+        "badgeBody": "Menganimasikan logo StreamPulse di samping namamu.",
+        "nameTitle": "Nama spesial",
+        "nameBody": "Gradasi atau efek pada namamu, dilihat oleh pengguna StreamPulse.",
+        "none": "Tidak ada",
+        "pulse": "Denyut",
+        "shine": "Kilau",
+        "rainbow": "Pelangi",
+        "aurora": "Aurora",
+        "sunset": "Senja",
+        "lcd": "Layar LCD",
+        "gold": "Emas",
+        "neon": "Neon",
+        "preview": "Pratinjau chat",
+        "sampleName": "NamaMu"
       },
       "smart": {
         "title": "Smart alerts",
@@ -9589,6 +9793,23 @@ export const translations = {
         "recapBody": "Uren per categorie, activiteitscurve en je hele jaar.",
         "openRecap": "Overzicht openen"
       },
+      "cosmetics": {
+        "badgeTitle": "Badge-effect",
+        "badgeBody": "Animeert het StreamPulse-logo naast je naam.",
+        "nameTitle": "Speciale naam",
+        "nameBody": "Een verloop of effect op je naam, zichtbaar voor StreamPulse-gebruikers.",
+        "none": "Geen",
+        "pulse": "Pulseren",
+        "shine": "Glans",
+        "rainbow": "Regenboog",
+        "aurora": "Aurora",
+        "sunset": "Zonsondergang",
+        "lcd": "LCD-scherm",
+        "gold": "Goud",
+        "neon": "Neon",
+        "preview": "Chatvoorbeeld",
+        "sampleName": "JouwNaam"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -10366,6 +10587,23 @@ export const translations = {
         "recapTitle": "Advanced recap and yearly Wrapped",
         "recapBody": "Hours by category, activity curve and your whole year.",
         "openRecap": "Open my recap"
+      },
+      "cosmetics": {
+        "badgeTitle": "Badge effect",
+        "badgeBody": "Animates the StreamPulse logo next to your name.",
+        "nameTitle": "Special name",
+        "nameBody": "A gradient or effect on your name, seen by StreamPulse users.",
+        "none": "None",
+        "pulse": "Pulse",
+        "shine": "Shine",
+        "rainbow": "Rainbow",
+        "aurora": "Aurora",
+        "sunset": "Sunset",
+        "lcd": "LCD screen",
+        "gold": "Gold",
+        "neon": "Neon",
+        "preview": "Chat preview",
+        "sampleName": "YourName"
       },
       "smart": {
         "title": "Smart alerts",
@@ -11145,6 +11383,23 @@ export const translations = {
         "recapBody": "Timmar per kategori, aktivitetskurva och hela ditt år.",
         "openRecap": "Öppna sammanfattning"
       },
+      "cosmetics": {
+        "badgeTitle": "Märkeseffekt",
+        "badgeBody": "Animerar StreamPulse-loggan bredvid ditt namn.",
+        "nameTitle": "Specialnamn",
+        "nameBody": "En tonad färg eller effekt på ditt namn, synlig för StreamPulse-användare.",
+        "none": "Ingen",
+        "pulse": "Puls",
+        "shine": "Glans",
+        "rainbow": "Regnbåge",
+        "aurora": "Norrsken",
+        "sunset": "Solnedgång",
+        "lcd": "LCD-skärm",
+        "gold": "Guld",
+        "neon": "Neon",
+        "preview": "Förhandsvisning i chatten",
+        "sampleName": "DittNamn"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -11922,6 +12177,23 @@ export const translations = {
         "recapTitle": "Rozšířený přehled a roční Wrapped",
         "recapBody": "Hodiny podle kategorie, křivka aktivity a celý tvůj rok.",
         "openRecap": "Otevřít přehled"
+      },
+      "cosmetics": {
+        "badgeTitle": "Efekt odznaku",
+        "badgeBody": "Animuje logo StreamPulse vedle tvého jména.",
+        "nameTitle": "Speciální jméno",
+        "nameBody": "Přechod nebo efekt na tvém jménu, viditelný pro uživatele StreamPulse.",
+        "none": "Žádný",
+        "pulse": "Pulzování",
+        "shine": "Lesk",
+        "rainbow": "Duha",
+        "aurora": "Polární záře",
+        "sunset": "Západ slunce",
+        "lcd": "LCD displej",
+        "gold": "Zlato",
+        "neon": "Neon",
+        "preview": "Náhled v chatu",
+        "sampleName": "TvojeJméno"
       },
       "smart": {
         "title": "Smart alerts",

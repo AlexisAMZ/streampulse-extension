@@ -46,6 +46,17 @@ export function setFont(ctx, weight, size, family = SANS) {
 }
 
 /** Tronque avec une ellipse pour tenir dans maxWidth (police deja posee). */
+/** Reduit la police jusqu'a ce que le texte tienne (le nom d'une chaine longue), sans descendre sous minSize. */
+export function setFittedFont(ctx, text, maxWidth, weight, size, family = SANS, minSize = Math.round(size * 0.55)) {
+  let current = size;
+  setFont(ctx, weight, current, family);
+  while (current > minSize && ctx.measureText(String(text)).width > maxWidth) {
+    current -= 2;
+    setFont(ctx, weight, current, family);
+  }
+  return current;
+}
+
 export function fitText(ctx, text, maxWidth) {
   const value = String(text ?? "");
   if (ctx.measureText(value).width <= maxWidth) return value;
