@@ -233,9 +233,12 @@ function initPlus() {
   });
 
   $("plus-deactivate")?.addEventListener("click", async () => {
-    await chrome.runtime.sendMessage({ type: "deactivatePlus" });
+    // Directement dans le stockage, comme l'activation : le service worker
+    // n'a pas besoin d'être à jour pour que le bouton marche.
+    await chrome.storage.local.remove(PLUS_KEY);
     plusRecord = null;
     renderPlus();
+    chrome.runtime.sendMessage({ type: "refreshStatuses" }).catch?.(() => {});
   });
 }
 
