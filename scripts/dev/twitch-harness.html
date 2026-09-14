@@ -4,14 +4,16 @@
     <meta charset="UTF-8" />
     <!-- Prévisualise les éléments injectés sur twitch.tv (panneau de la topbar,
          aperçu au survol, widget de prédiction, bouton d'ajout) sur un fond
-         façon Twitch. Données fictives. Les polices chrome-extension:// ne se
-         chargent pas ici : le rendu retombe sur les polices système. -->
+         façon Twitch. Données fictives. Les polices sont chargées depuis /font. -->
     <title>StreamPulse · banc Twitch</title>
     <link rel="stylesheet" href="/css/topbar.css" />
     <link rel="stylesheet" href="/css/previews.css" />
     <link rel="stylesheet" href="/css/inject/predictions.css" />
     <style>
-      body { margin: 0; min-height: 100vh; background: #0e0e10; color: #efeff1; font-family: system-ui, sans-serif; }
+      /* Sur twitch.tv les polices viennent de chrome-extension:// ; ici du serveur local. */
+      @font-face { font-family: "SP Unbounded"; font-weight: 400 900; src: url("/font/unbounded-latin-10.woff2") format("woff2"); }
+      @font-face { font-family: "SP Onest"; font-weight: 400 700; src: url("/font/onest-latin-6.woff2") format("woff2"); }
+      body { margin: 0; min-height: 100vh; background: #0e0e10; color: #efeff1; font-family: "SP Onest", system-ui, sans-serif; }
       .fake-nav { display: flex; align-items: center; height: 50px; padding: 0 16px; background: #18181b; box-shadow: 0 1px 2px #000; }
       .fake-nav .sp-topbar-wrap { margin-left: auto; }
       .scene { position: relative; display: grid; grid-template-columns: 340px 380px 1fr; gap: 32px; padding: 24px; }
@@ -21,6 +23,14 @@
       .player .sp-pred { display: block !important; }
       .actions { display: flex; gap: 8px; margin-top: 24px; }
       .toast-demo .sp-qf-toast { position: static; opacity: 1; transform: none; margin-top: 16px; }
+      /* ?shot=1 : scène compacte pour les captures du store. */
+      .shot .scene { grid-template-columns: 340px 1fr; grid-template-rows: auto 1fr; align-items: start; }
+      .shot #panel-host { grid-row: 1 / 3; }
+      .shot .player { grid-column: 2; grid-row: 2; width: 320px; height: auto; background: none; }
+      .shot .player .sp-pred { position: static; width: 100%; }
+      .shot .sp-preview { width: 100%; }
+      .shot .sp-preview__media { height: 240px; }
+      .shot .sp-preview__fallback { display: none; }
     </style>
     <script src="/js/inject/topbar-panel.js"></script>
   </head>
@@ -33,6 +43,7 @@
       <div>
         <div class="sp-preview">
           <div class="sp-preview__media">
+            <img class="sp-preview__img" id="demo-thumb" alt="" hidden />
             <div class="sp-preview__fallback"><img class="sp-preview__fallback-avatar" alt="" src="/images/photos/128px.png" /><span class="sp-preview__fallback-loading">Chargement…</span></div>
             <span class="sp-preview__badge">Live</span>
             <div class="sp-preview__overlay"><p class="sp-preview__title">RP sur le serveur, on reprend l'enquête</p><p class="sp-preview__category">Grand Theft Auto V</p></div>
@@ -52,8 +63,38 @@
       </div>
     </div>
     <script>
+      if (new URLSearchParams(location.search).get("shot") === "1") {
+        document.body.classList.add("shot");
+        const thumb = document.getElementById("demo-thumb");
+        thumb.src = "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b3a4b"/><stop offset="1" stop-color="#0b0c22"/></linearGradient><filter id="f"><feGaussianBlur stdDeviation="26"/></filter></defs><rect width="640" height="360" fill="url(#g)"/><g filter="url(#f)"><circle cx="190" cy="150" r="120" fill="#e0a43a" fill-opacity=".55"/><circle cx="470" cy="220" r="130" fill="#9146ff" fill-opacity=".5"/><rect x="300" y="40" width="220" height="120" fill="#3fb6c9" fill-opacity=".35"/></g></svg>');
+        thumb.hidden = false;
+      }
+      // ?lang=en : même scène, textes en anglais (captures du store).
+      const EN = new URLSearchParams(location.search).get("lang") === "en";
+      if (EN) {
+        document.documentElement.lang = "en";
+        const swap = {
+          "Chargement…": "Loading…",
+          "RP sur le serveur, on reprend l'enquête": "RP on the server, back on the case",
+          "Ajouter à StreamPulse": "Add to StreamPulse",
+          "Suivi": "Tracked",
+          "Pixelkat ajouté à StreamPulse": "Pixelkat added to StreamPulse",
+          "Prédiction en cours": "Prediction in progress",
+          "Qui gagne la prochaine manche ?": "Who wins the next round?",
+          "L'équipe bleue": "Blue team",
+          "L'équipe rose": "Pink team",
+          "Miser / Voter dans le Chat": "Bet / Vote in chat",
+        };
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+          const text = node.nodeValue.trim();
+          if (swap[text]) node.nodeValue = swap[text];
+        }
+      }
       const icon = (d) => `<svg class="sp-tb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
-      const labels = { thisChannel: "Cette chaîne", watchedHere: "Regardé ici", followed: "Suivi", follow: "Suivre", previews: "Aperçus au survol", autoClaim: "Points auto", fastForward: "Avance rapide", badgeColor: "Couleur du badge", badgeAuthor: "Pseudo", badgeTheme: "Thème", badgeCustom: "Perso", liveNow: "En direct", noneLive: "Personne en live", more: "+{{count}} autres", tip: "Offrir un Bubble Tea", settings: "Tous les réglages" };
+      const labelsFr = { thisChannel: "Cette chaîne", watchedHere: "Regardé ici", followed: "Suivi", follow: "Suivre", previews: "Aperçus au survol", autoClaim: "Points auto", fastForward: "Avance rapide", badgeColor: "Couleur du badge", badgeAuthor: "Pseudo", badgeTheme: "Thème", badgeCustom: "Perso", liveNow: "En direct", noneLive: "Personne en live", more: "+{{count}} autres", tip: "Offrir un Bubble Tea", settings: "Tous les réglages" };
+      const labelsEn = { thisChannel: "This channel", watchedHere: "Watched here", followed: "Tracked", follow: "Track", previews: "Hover previews", autoClaim: "Auto points", fastForward: "Fast-forward", badgeColor: "Badge color", badgeAuthor: "Username", badgeTheme: "Theme", badgeCustom: "Custom", liveNow: "Live now", noneLive: "Nobody live", more: "+{{count}} more", tip: "Buy me a Bubble Tea", settings: "All settings" };
+      const labels = EN ? labelsEn : labelsFr;
       const panel = self.__SP_TOPBAR_PANEL__.build(
         {
           points: 12480,
@@ -70,7 +111,7 @@
         },
         {
           tr: (key) => labels[key] || key,
-          fmtNum: (n) => new Intl.NumberFormat("fr").format(n),
+          fmtNum: (n) => new Intl.NumberFormat(EN ? "en" : "fr").format(n),
           fmtDur: (s) => `${Math.floor(s / 3600)}h${String(Math.floor((s % 3600) / 60)).padStart(2, "0")}`,
           logoUrl: "/images/photos/logosp.png",
           tipLinks: [{ label: "Revolut", url: "#" }, { label: "PayPal", url: "#" }],

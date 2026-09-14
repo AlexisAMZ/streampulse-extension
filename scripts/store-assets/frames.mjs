@@ -53,19 +53,20 @@ const PRODUCT_CSS = `
   min-height: 0;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 28px 72px 0;
-  overflow: hidden;
+  align-items: center;
+  padding: 26px 72px 40px;
 }
 .stage img {
-  width: 880px;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
   height: auto;
   display: block;
-  border-radius: 20px 20px 0 0;
+  border-radius: 18px;
   box-shadow:
     0 0 0 1px ${COLORS.line2},
-    0 40px 90px rgba(0, 0, 0, 0.6),
-    0 0 120px rgba(145, 70, 255, 0.28);
+    0 34px 80px rgba(0, 0, 0, 0.6),
+    0 0 110px rgba(145, 70, 255, 0.26);
 }
 `;
 
@@ -143,7 +144,7 @@ function head({ logoPath, tagline, title, subtitle }) {
 </div>`;
 }
 
-/** Cadre « produit » : bandeau de texte puis capture du popup, coupée en bas. */
+/** Cadre « produit » : bandeau de texte puis capture entière du popup. */
 export function buildProductFrame({ logoPath, tagline, title, subtitle, shotPath }) {
   return page({
     css: PRODUCT_CSS,

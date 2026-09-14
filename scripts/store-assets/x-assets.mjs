@@ -135,8 +135,8 @@ li { display: flex; align-items: flex-start; gap: 9px; font-size: 15.5px; line-h
 .dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.25); }
 .browsers { display: flex; align-items: center; gap: 13px; color: ${COLORS.text3}; }
 .site { font-size: 15px; font-weight: 600; color: ${COLORS.violetText}; }
-.stage { height: 100%; display: flex; align-items: center; overflow: hidden; }
-.frame { width: 960px; flex: none; border-radius: 22px; overflow: hidden; box-shadow: 0 0 0 1px ${COLORS.line2}, 0 50px 110px rgba(0,0,0,0.6), 0 0 140px rgba(145,70,255,0.3); }
+.stage { height: 100%; display: flex; align-items: center; justify-content: center; padding: 60px 60px 60px 10px; }
+.frame { width: 100%; border-radius: 20px; overflow: hidden; box-shadow: 0 0 0 1px ${COLORS.line2}, 0 50px 110px rgba(0,0,0,0.6), 0 0 140px rgba(145,70,255,0.3); }
 .frame img { display: block; width: 100%; }
 </style></head><body>
   <div>

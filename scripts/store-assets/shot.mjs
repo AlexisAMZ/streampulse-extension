@@ -59,12 +59,14 @@ export function assertChromeAvailable() {
 
 /**
  * @param {object} options
- * @param {string} options.htmlPath  fichier local à rendre
- * @param {string} options.outPath   PNG produit
- * @param {number} options.width     largeur CSS
- * @param {number} options.height    hauteur CSS
+ * @param {string} [options.htmlPath] fichier local à rendre
+ * @param {string} [options.url]      ou page servie en http (modules ES, harness)
+ * @param {string} options.outPath    PNG produit
+ * @param {number} options.width      largeur CSS
+ * @param {number} options.height     hauteur CSS
+ * @param {number} [options.budgetMs] temps laissé à la page pour se dessiner
  */
-export async function capture({ htmlPath, outPath, width, height }) {
+export async function capture({ htmlPath, url, outPath, width, height, budgetMs }) {
   fs.rmSync(outPath, { force: true });
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), "sp-shot-"));
 
@@ -81,7 +83,8 @@ export async function capture({ htmlPath, outPath, width, height }) {
       `--force-device-scale-factor=${SCALE}`,
       `--window-size=${width},${height}`,
       `--screenshot=${outPath}`,
-      `file://${htmlPath}`,
+      ...(budgetMs ? [`--virtual-time-budget=${budgetMs}`, "--run-all-compositor-stages-before-draw"] : []),
+      url || `file://${htmlPath}`,
     ],
     { stdio: "ignore" },
   );
@@ -99,7 +102,7 @@ export async function capture({ htmlPath, outPath, width, height }) {
       previousSize = size;
     }
     throw new Error(
-      `Chrome n'a produit aucune capture pour ${htmlPath} en ${CAPTURE_TIMEOUT_MS / 1000}s`,
+      `Chrome n'a produit aucune capture pour ${url || htmlPath} en ${CAPTURE_TIMEOUT_MS / 1000}s`,
     );
   } finally {
     child.kill("SIGKILL");

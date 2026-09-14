@@ -98,6 +98,19 @@
     watchTime[monthKey][s.id] = { channel: s.handle, platform: s.platform, watchSeconds: (6 - i) * 5400 + 900, avatarUrl: s.avatarUrl };
   });
 
+  // Jour par jour sur la semaine : la période « 7 derniers jours » du récap en dépend.
+  const pad = (n) => String(n).padStart(2, "0");
+  const watchDaily = {};
+  for (let d = 0; d < 7; d++) {
+    const date = new Date(now - d * 86400000);
+    const key = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+    watchDaily[key] = {};
+    channels.streamers.slice(0, 6).forEach((s, i) => {
+      if ((d + i) % 3 === 2) return;
+      watchDaily[key][s.id] = { channel: s.handle, platform: s.platform, watchSeconds: (6 - i) * 900 + d * 300, avatarUrl: s.avatarUrl };
+    });
+  }
+
   const store = {
     betaGeneralStreamers: channels.streamers,
     betaGeneralStatuses: channels.statuses,
@@ -108,6 +121,7 @@
     },
     betaGeneralStats: { channelPointsClaimed: scenario === "empty" ? 0 : 12480 },
     betaWatchTimeData: scenario === "empty" ? {} : watchTime,
+    streamPulseWatchTimeDaily: scenario === "empty" ? {} : watchDaily,
     userProfile: { displayName: "AlexisAMZ" },
     patchNotesUnread: true,
     betaPinnedIds: channels.streamers[1] ? [channels.streamers[1].id] : [],

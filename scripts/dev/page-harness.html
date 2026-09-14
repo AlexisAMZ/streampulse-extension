@@ -29,6 +29,13 @@
       for (const src of scripts) await import(new URL(src, document.baseURI).href);
       document.dispatchEvent(new Event("DOMContentLoaded"));
 
+      // ?shot=1 : sans en-tête ni intro, pour les captures du store (le cadre porte déjà le titre).
+      if (params.get("shot") === "1") {
+        const style = document.createElement("style");
+        style.textContent = ".site-head, .recap-intro, .hint, .disclaimer { display: none !important; } .recap { margin-top: 0 !important; } .page-shell { padding-top: 40px !important; }";
+        document.head.append(style);
+      }
+
       const step = Number(params.get("step") || 0);
       if (page === "onboarding" && step > 0) {
         await new Promise((resolve) => setTimeout(resolve, 600));

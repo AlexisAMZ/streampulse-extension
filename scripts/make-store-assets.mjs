@@ -32,7 +32,7 @@ import {
 } from "./store-assets/copy.mjs";
 import { buildPopupPage } from "./store-assets/popup-page.mjs";
 import { buildProductFrame, buildFeaturesFrame } from "./store-assets/frames.mjs";
-import { buildPromoTile, PROMO_TILE } from "./store-assets/promo.mjs";
+import { buildPromoTile, PROMO_TILE, buildPromoMarquee, PROMO_MARQUEE } from "./store-assets/promo.mjs";
 import { findBannedTerms, stripPromotionalSentences } from "./store-assets/policy.mjs";
 import {
   assertChromeAvailable,
@@ -44,6 +44,39 @@ import {
 } from "./store-assets/shot.mjs";
 
 const LOGO = path.join(ROOT, "images", "photos", "logosp.png");
+
+/**
+ * Serveur local qui sert la racine du dépôt (Portly : StreamPulseMain/harness).
+ * La page récap et la scène Twitch utilisent des modules ES et un faux chrome.* :
+ * elles ne s'ouvrent pas en file://.
+ */
+const HARNESS_URL = process.env.STORE_HARNESS_URL || "http://127.0.0.1:5179";
+
+async function assertHarnessUp() {
+  try {
+    const response = await fetch(`${HARNESS_URL}/scripts/dev/page-harness.html`);
+    if (response.ok) return;
+  } catch {
+    // traité ci-dessous
+  }
+  throw new Error(
+    `Harness injoignable sur ${HARNESS_URL} : lancer « portly start StreamPulseMain/harness » ` +
+      "ou définir STORE_HARNESS_URL.",
+  );
+}
+
+/** Capture une page du harness (taille CSS, rendue en 2x). */
+async function captureHarness(name, pagePath, size = CANVAS) {
+  const outPath = path.join(WORK_DIR, `${name}.png`);
+  await capture({
+    url: `${HARNESS_URL}${pagePath}`,
+    outPath,
+    width: size.width,
+    height: size.height,
+    budgetMs: 5000,
+  });
+  return outPath;
+}
 
 /** Langue de la tuile promotionnelle : celle déclarée comme principale au store. */
 const PROMO_LANG = "fr";
@@ -226,6 +259,7 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
   await renderFrame({
     name: `frame-${lang}-01`,
     outPath: path.join(outDir, "01-dashboard.png"),
+    flatten: true,
     html: buildProductFrame({
       logoPath: LOGO,
       tagline,
@@ -238,6 +272,7 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
   await renderFrame({
     name: `frame-${lang}-02`,
     outPath: path.join(outDir, "02-automation.png"),
+    flatten: true,
     html: buildProductFrame({
       logoPath: LOGO,
       tagline,
@@ -250,12 +285,61 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
   await renderFrame({
     name: `frame-${lang}-03`,
     outPath: path.join(outDir, "03-features.png"),
+    flatten: true,
     html: buildFeaturesFrame({
       logoPath: LOGO,
       tagline,
       title: t("onboarding.welcomeTitle"),
       subtitle: applyTypography(featuresSubtitle, lang),
       features: bullets,
+    }),
+  });
+
+  // 3. Page « Mon récap » avec des données de démonstration.
+  const recapShot = await captureHarness(
+    `recap-${lang}`,
+    `/scripts/dev/page-harness.html?page=recap&shot=1&lang=${encodeURIComponent(lang)}`,
+    { width: 1280, height: 520 },
+  );
+  const recapTitle = t("recap.title");
+  const recapSubtitle = t("recap.subtitle");
+
+  // 4. Éléments ajoutés sur Twitch : la scène n'existe qu'en français et anglais.
+  const twitchShot = await captureHarness(
+    `twitch-${lang}`,
+    `/scripts/dev/twitch-harness.html?shot=1&lang=${lang === "fr" ? "fr" : "en"}`,
+    { width: 1000, height: 820 },
+  );
+  // Puce « Bouton Ajouter à StreamPulse » : la scène montre le panneau et le bouton.
+  const twitchBullet = bullets[2];
+
+  assertPolicyClean(
+    [
+      { label: "titre 04", text: recapTitle },
+      { label: "sous-titre 04", text: recapSubtitle },
+      { label: "titre 05", text: twitchBullet.title },
+      { label: "sous-titre 05", text: twitchBullet.body },
+    ],
+    lang,
+  );
+
+  await renderFrame({
+    name: `frame-${lang}-04`,
+    outPath: path.join(outDir, "04-recap.png"),
+    flatten: true,
+    html: buildProductFrame({ logoPath: LOGO, tagline, title: recapTitle, subtitle: recapSubtitle, shotPath: recapShot }),
+  });
+
+  await renderFrame({
+    name: `frame-${lang}-05`,
+    outPath: path.join(outDir, "05-twitch.png"),
+    flatten: true,
+    html: buildProductFrame({
+      logoPath: LOGO,
+      tagline,
+      title: twitchBullet.title,
+      subtitle: twitchBullet.body,
+      shotPath: twitchShot,
     }),
   });
 
@@ -267,41 +351,68 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
  * langue. Rédigé dans la langue principale du store (français, cf.
  * CHROMEWEBSTORE.md § 1). Seul asset qui doit être sans canal alpha.
  */
-async function buildPromo({ translations, listing }) {
-  const t = makeTranslator(translations, PROMO_LANG);
+async function buildPromo({ translations, listing, lang = PROMO_LANG }) {
+  const t = makeTranslator(translations, lang);
+  const suffix = lang === PROMO_LANG ? "" : `_${lang}`;
   const outDir = path.join(ROOT, "images", "promo");
   fs.mkdirSync(outDir, { recursive: true });
-  const outPath = path.join(outDir, "small_tile.png");
+  const outPath = path.join(outDir, `small_tile${suffix}.png`);
 
   // Points de chaîne, alertes live, aperçus au survol : les trois arguments les
   // plus vendeurs parmi les puces du listing, dans leur ordre d'origine.
-  const bullets = listing[PROMO_LANG].bullets;
+  const bullets = listing[lang].bullets;
   const benefits = [bullets[0], bullets[1], bullets[3]].map((bullet) =>
-    applyTypography(bullet.title, PROMO_LANG),
+    applyTypography(bullet.title, lang),
   );
-  const tagline = resolveTagline(t("onboarding.welcomeTagline"), PROMO_LANG);
+  const tagline = resolveTagline(t("onboarding.welcomeTagline"), lang);
 
   assertPolicyClean(
     [
       { label: "tagline", text: tagline },
       ...benefits.map((text, index) => ({ label: `bénéfice ${index + 1}`, text })),
     ],
-    PROMO_LANG,
+    lang,
   );
 
   await renderFrame({
-    name: "promo-small",
+    name: `promo-small${suffix}`,
     outPath,
     size: PROMO_TILE,
     flatten: true,
     html: buildPromoTile({ logoPath: LOGO, tagline, benefits }),
   });
 
-  return outPath;
+  // Grande image en haut de la fiche, avec la vraie capture du popup.
+  const marqueePath = path.join(outDir, `marquee_1400x560${suffix}.png`);
+  const title = lang === "fr" ? "Ne rate aucun live." : "Never miss a live.";
+  const accent = lang === "fr" ? "Et bien plus." : "And plenty more.";
+  assertPolicyClean(
+    [
+      { label: "marquee titre", text: title },
+      { label: "marquee accent", text: accent },
+    ],
+    lang,
+  );
+  await renderFrame({
+    name: `promo-marquee${suffix}`,
+    outPath: marqueePath,
+    size: PROMO_MARQUEE,
+    flatten: true,
+    html: buildPromoMarquee({
+      logoPath: LOGO,
+      title,
+      accent,
+      benefits,
+      shotPath: path.join(OUT_DIR, LANG_DIRS[lang], "source-dashboard.png"),
+    }),
+  });
+
+  return [outPath, marqueePath];
 }
 
 async function main() {
   assertChromeAvailable();
+  await assertHarnessUp();
 
   const i18n = await import(path.join(ROOT, "i18n", "translations.js"));
   const listing = loadListingCopy();
@@ -332,8 +443,10 @@ async function main() {
       console.log(`✓ ${lang.padEnd(6)} → ${path.relative(ROOT, outDir)}`);
     }
 
-    const promoPath = await buildPromo({ translations: i18n.translations, listing });
-    console.log(`✓ promo  → ${path.relative(ROOT, promoPath)} (440x280, 24 bits)`);
+    for (const lang of [PROMO_LANG, "en"]) {
+      const promoPaths = await buildPromo({ translations: i18n.translations, listing, lang });
+      for (const promoPath of promoPaths) console.log(`✓ promo  → ${path.relative(ROOT, promoPath)} (24 bits)`);
+    }
   } finally {
     if (!process.env.KEEP_BUILD) {
       fs.rmSync(WORK_DIR, { recursive: true, force: true });
@@ -342,7 +455,7 @@ async function main() {
     }
   }
 
-  console.log(`\n${targets.length} langue(s) · 3 captures 1280x800 chacune.`);
+  console.log(`\n${targets.length} langue(s) · 5 captures 1280x800 chacune.`);
 }
 
 main().catch((error) => {
