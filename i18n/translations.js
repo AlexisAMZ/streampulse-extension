@@ -279,6 +279,7 @@ export const translations = {
         "lockedBody": "Choisis quand être prévenu : un jeu précis, un mot dans le titre, un nombre de viewers. Réservé à StreamPulse+.",
         "unlock": "Débloquer",
         "replacesNote": "Tant qu'un streamer a une règle active, elle remplace son alerte classique.",
+        "replacesStreamer": "Règle active pour {{name}} : son alerte classique est coupée. Tu ne seras prévenu que si une règle correspond au live.",
         "streamersLabel": "Streamers",
         "rulesFor": "Alertes pour {{name}}",
         "addRule": "Nouvelle règle",
@@ -577,6 +578,8 @@ export const translations = {
       },
       "supportDev": "Offrir un Bubble Tea au développeur",
       "testNotification": "Tester une notification",
+      "notifBlockedBody": "Chrome bloque les notifications de StreamPulse : tu ne seras pas prévenu des lives.",
+      "notifBlockedAction": "Réglages",
       "card": {
         "offline": "Hors ligne",
         "notificationsToggle": "Notifications",
@@ -677,19 +680,10 @@ export const translations = {
         "unknownTitle": "Nouveau titre",
         "newCategory": "Nouvelle catégorie",
         "testSimpleMessage": "Ceci est une notification de test.",
-        "test1Title": "StreamPulse – Test 1",
-        "test1Message": "Notification de test immédiate 1",
-        "test2Title": "StreamPulse – Test 2",
-        "test2Message": "Notification requiert un clic",
-        "test3Title": "StreamPulse – Test 3",
-        "test3Message": "Notification planifiée toutes les 1 minute",
-        "test4Title": "StreamPulse – Test 4",
-        "test4Message": "Notification planifiée toutes les 30 secondes",
-        "test5Title": "StreamPulse – Test 5",
-        "test5Message": "Notification silencieuse"
+        "plusThanksTitle": "Merci du fond du cœur ❤️",
+        "plusThanksMessage": "Ton abonnement StreamPulse+ me touche vraiment. Grâce à toi, je peux continuer à faire grandir l'extension. Merci ! Alexis",
       },
       "diagnostics": {
-        "scheduleName": "test{{id}}"
       },
       "badge": {
         "idle": "StreamPulse"
@@ -1103,6 +1097,7 @@ export const translations = {
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
         "unlock": "Unlock",
         "replacesNote": "While a streamer has an active rule, it replaces their regular alert.",
+        "replacesStreamer": "{{name}} has an active rule: their regular alert is off. You'll only be notified when a rule matches the stream.",
         "streamersLabel": "Streamers",
         "rulesFor": "Alerts for {{name}}",
         "addRule": "New rule",
@@ -1401,6 +1396,8 @@ export const translations = {
       },
       "supportDev": "Offer a Bubble Tea to the developer",
       "testNotification": "Send a test notification",
+      "notifBlockedBody": "Chrome is blocking StreamPulse notifications: you won't be alerted when streamers go live.",
+      "notifBlockedAction": "Settings",
       "card": {
         "offline": "Offline",
         "notificationsToggle": "Notifications",
@@ -1501,19 +1498,10 @@ export const translations = {
         "unknownTitle": "New title",
         "newCategory": "New category",
         "testSimpleMessage": "This is a test notification.",
-        "test1Title": "StreamPulse – Test 1",
-        "test1Message": "Instant test notification 1",
-        "test2Title": "StreamPulse – Test 2",
-        "test2Message": "Notification requires a click",
-        "test3Title": "StreamPulse – Test 3",
-        "test3Message": "Notification scheduled every 1 minute",
-        "test4Title": "StreamPulse – Test 4",
-        "test4Message": "Notification scheduled every 30 seconds",
-        "test5Title": "StreamPulse – Test 5",
-        "test5Message": "Silent notification"
+        "plusThanksTitle": "Thank you from the bottom of my heart ❤️",
+        "plusThanksMessage": "Your StreamPulse+ subscription truly means a lot to me. Thanks to you, I can keep making the extension better. Thank you! Alexis",
       },
       "diagnostics": {
-        "scheduleName": "test{{id}}"
       },
       "badge": {
         "idle": "StreamPulse"
@@ -1927,6 +1915,7 @@ export const translations = {
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
         "unlock": "Unlock",
         "replacesNote": "While a streamer has an active rule, it replaces their regular alert.",
+        "replacesStreamer": "{{name}} tiene una regla activa: su alerta normal está desactivada. Solo recibirás un aviso si una regla coincide con el directo.",
         "streamersLabel": "Streamers",
         "rulesFor": "Alerts for {{name}}",
         "addRule": "New rule",
@@ -2224,6 +2213,8 @@ export const translations = {
       },
       "supportDev": "Invitar a un Bubble Tea al desarrollador",
       "testNotification": "Probar una notificación",
+      "notifBlockedBody": "Chrome bloquea las notificaciones de StreamPulse: no recibirás avisos de los directos.",
+      "notifBlockedAction": "Ajustes",
       "card": {
         "offline": "Offline",
         "notificationsToggle": "Notificaciones",
@@ -2325,19 +2316,10 @@ export const translations = {
         "unknownTitle": "Nuevo título",
         "newCategory": "Nueva categoría",
         "testSimpleMessage": "Esto es una notificación de prueba.",
-        "test1Title": "StreamPulse – Prueba 1",
-        "test1Message": "Notificación de prueba inmediata 1",
-        "test2Title": "StreamPulse – Prueba 2",
-        "test2Message": "La notificación requiere un clic",
-        "test3Title": "StreamPulse – Prueba 3",
-        "test3Message": "Notificación programada cada 1 minuto",
-        "test4Title": "StreamPulse – Prueba 4",
-        "test4Message": "Notificación programada cada 30 segundos",
-        "test5Title": "StreamPulse – Prueba 5",
-        "test5Message": "Notificación silenciosa"
+        "plusThanksTitle": "¡Gracias de todo corazón ❤️",
+        "plusThanksMessage": "Tu suscripción a StreamPulse+ me emociona de verdad. Gracias a ti puedo seguir mejorando la extensión. ¡Gracias! Alexis",
       },
       "diagnostics": {
-        "scheduleName": "prueba{{id}}"
       },
       "badge": {
         "idle": "StreamPulse"
@@ -2751,6 +2733,7 @@ export const translations = {
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
         "unlock": "Unlock",
         "replacesNote": "While a streamer has an active rule, it replaces their regular alert.",
+        "replacesStreamer": "{{name}} tem uma regra ativa: o alerta normal está desligado. Você só será avisado se uma regra corresponder à live.",
         "streamersLabel": "Streamers",
         "rulesFor": "Alerts for {{name}}",
         "addRule": "New rule",
@@ -3048,6 +3031,8 @@ export const translations = {
       },
       "supportDev": "Pagar um Bubble Tea para o dev",
       "testNotification": "Testar uma notificação",
+      "notifBlockedBody": "O Chrome está bloqueando as notificações do StreamPulse: você não será avisado das lives.",
+      "notifBlockedAction": "Configurações",
       "card": {
         "offline": "Offline",
         "notificationsToggle": "Notificações",
@@ -3149,19 +3134,10 @@ export const translations = {
         "unknownTitle": "Novo título",
         "newCategory": "Nova categoria",
         "testSimpleMessage": "Esta é uma notificação de teste.",
-        "test1Title": "StreamPulse – Teste 1",
-        "test1Message": "Notificação de teste imediata 1",
-        "test2Title": "StreamPulse – Teste 2",
-        "test2Message": "A notificação requer um clique",
-        "test3Title": "StreamPulse – Teste 3",
-        "test3Message": "Notificação programada a cada 1 minuto",
-        "test4Title": "StreamPulse – Teste 4",
-        "test4Message": "Notificação programada a cada 30 segundos",
-        "test5Title": "StreamPulse – Teste 5",
-        "test5Message": "Notificação silenciosa"
+        "plusThanksTitle": "Obrigado de coração ❤️",
+        "plusThanksMessage": "Sua assinatura do StreamPulse+ me emociona de verdade. Graças a você, posso continuar melhorando a extensão. Obrigado! Alexis",
       },
       "diagnostics": {
-        "scheduleName": "teste{{id}}"
       },
       "badge": {
         "idle": "StreamPulse"
@@ -3575,6 +3551,7 @@ export const translations = {
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
         "unlock": "Unlock",
         "replacesNote": "While a streamer has an active rule, it replaces their regular alert.",
+        "replacesStreamer": "{{name}} hat eine aktive Regel: Die normale Benachrichtigung ist aus. Du wirst nur benachrichtigt, wenn eine Regel zum Stream passt.",
         "streamersLabel": "Streamers",
         "rulesFor": "Alerts for {{name}}",
         "addRule": "New rule",
@@ -3873,6 +3850,8 @@ export const translations = {
       },
       "supportDev": "Bieten Sie dem Entwickler einen Bubble Tea an",
       "testNotification": "Senden Sie eine Testbenachrichtigung",
+      "notifBlockedBody": "Chrome blockiert die Benachrichtigungen von StreamPulse: Du wirst nicht über Livestreams informiert.",
+      "notifBlockedAction": "Einstellungen",
       "card": {
         "offline": "Offline",
         "notificationsToggle": "Benachrichtigungen",
@@ -3973,19 +3952,10 @@ export const translations = {
         "unknownTitle": "Neuer Titel",
         "newCategory": "Neue Kategorie",
         "testSimpleMessage": "Dies ist eine Testbenachrichtigung.",
-        "test1Title": "StreamPulse – Test 1",
-        "test1Message": "Sofortige Testbenachrichtigung 1",
-        "test2Title": "StreamPulse – Test 2",
-        "test2Message": "Die Benachrichtigung erfordert einen Klick",
-        "test3Title": "StreamPulse – Test 3",
-        "test3Message": "Benachrichtigung alle 1 Minute geplant",
-        "test4Title": "StreamPulse – Test 4",
-        "test4Message": "Benachrichtigung alle 30 Sekunden geplant",
-        "test5Title": "StreamPulse – Test 5",
-        "test5Message": "Stille Benachrichtigung"
+        "plusThanksTitle": "Von Herzen danke ❤️",
+        "plusThanksMessage": "Dein StreamPulse+ Abo bedeutet mir wirklich viel. Dank dir kann ich die Erweiterung weiter verbessern. Danke! Alexis",
       },
       "diagnostics": {
-        "scheduleName": "test{{id}}"
       },
       "badge": {
         "idle": "StreamPulse"
@@ -4399,6 +4369,7 @@ export const translations = {
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
         "unlock": "Unlock",
         "replacesNote": "While a streamer has an active rule, it replaces their regular alert.",
+        "replacesStreamer": "{{name}} ha una regola attiva: l'avviso normale è disattivato. Riceverai un avviso solo se una regola corrisponde alla live.",
         "streamersLabel": "Streamers",
         "rulesFor": "Alerts for {{name}}",
         "addRule": "New rule",
@@ -4697,6 +4668,8 @@ export const translations = {
       },
       "supportDev": "Offri un Bubble Tea allo sviluppatore",
       "testNotification": "Invia una notifica di prova",
+      "notifBlockedBody": "Chrome blocca le notifiche di StreamPulse: non riceverai avvisi sulle live.",
+      "notifBlockedAction": "Impostazioni",
       "card": {
         "offline": "Non in linea",
         "notificationsToggle": "Notifiche",
@@ -4797,19 +4770,10 @@ export const translations = {
         "unknownTitle": "Nuovo titolo",
         "newCategory": "Nuova categoria",
         "testSimpleMessage": "Questa è una notifica di prova.",
-        "test1Title": "StreamPulse – Prova 1",
-        "test1Message": "Notifica immediata del test 1",
-        "test2Title": "StreamPulse – Prova 2",
-        "test2Message": "La notifica richiede un clic",
-        "test3Title": "StreamPulse – Prova 3",
-        "test3Message": "Notifica programmata ogni 1 minuto",
-        "test4Title": "StreamPulse – Prova 4",
-        "test4Message": "Notifica programmata ogni 30 secondi",
-        "test5Title": "StreamPulse – Prova 5",
-        "test5Message": "Notifica silenziosa"
+        "plusThanksTitle": "Grazie di cuore ❤️",
+        "plusThanksMessage": "Il tuo abbonamento a StreamPulse+ mi tocca davvero. Grazie a te posso continuare a migliorare l'estensione. Grazie! Alexis",
       },
       "diagnostics": {
-        "scheduleName": "prova{{id}}"
       },
       "badge": {
         "idle": "StreamPulse"
@@ -5223,6 +5187,7 @@ export const translations = {
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
         "unlock": "Unlock",
         "replacesNote": "While a streamer has an active rule, it replaces their regular alert.",
+        "replacesStreamer": "{{name}} ma aktywną regułę: zwykłe powiadomienie jest wyłączone. Dostaniesz powiadomienie tylko, gdy reguła pasuje do transmisji.",
         "streamersLabel": "Streamers",
         "rulesFor": "Alerts for {{name}}",
         "addRule": "New rule",
@@ -5521,6 +5486,8 @@ export const translations = {
       },
       "supportDev": "Zaoferuj deweloperowi herbatę bąbelkową",
       "testNotification": "Wyślij powiadomienie testowe",
+      "notifBlockedBody": "Chrome blokuje powiadomienia StreamPulse: nie dostaniesz informacji o transmisjach.",
+      "notifBlockedAction": "Ustawienia",
       "card": {
         "offline": "Nieaktywny",
         "notificationsToggle": "Powiadomienia",
@@ -5621,19 +5588,10 @@ export const translations = {
         "unknownTitle": "Nowy tytuł",
         "newCategory": "Nowa kategoria",
         "testSimpleMessage": "To jest powiadomienie testowe.",
-        "test1Title": "StreamPulse – Test 1",
-        "test1Message": "Natychmiastowe powiadomienie o teście 1",
-        "test2Title": "StreamPulse – Test 2",
-        "test2Message": "Powiadomienie wymaga kliknięcia",
-        "test3Title": "StreamPulse – Test 3",
-        "test3Message": "Powiadomienie zaplanowane co 1 minutę",
-        "test4Title": "StreamPulse – Test 4",
-        "test4Message": "Powiadomienie zaplanowane co 30 sekund",
-        "test5Title": "StreamPulse – Test 5",
-        "test5Message": "Ciche powiadomienie"
+        "plusThanksTitle": "Dziękuję z całego serca ❤️",
+        "plusThanksMessage": "Twoja subskrypcja StreamPulse+ naprawdę wiele dla mnie znaczy. Dzięki Tobie mogę dalej rozwijać rozszerzenie. Dziękuję! Alexis",
       },
       "diagnostics": {
-        "scheduleName": "test{{id}}"
       },
       "badge": {
         "idle": "StreamPulse"
@@ -6047,6 +6005,7 @@ export const translations = {
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
         "unlock": "Unlock",
         "replacesNote": "While a streamer has an active rule, it replaces their regular alert.",
+        "replacesStreamer": "{{name}} için etkin bir kural var: normal bildirimi kapalı. Yalnızca bir kural yayına uyduğunda bildirim alacaksın.",
         "streamersLabel": "Streamers",
         "rulesFor": "Alerts for {{name}}",
         "addRule": "New rule",
@@ -6345,6 +6304,8 @@ export const translations = {
       },
       "supportDev": "Geliştiriciye bir Bubble Tea ikram et",
       "testNotification": "Deneme bildirimi gönder",
+      "notifBlockedBody": "Chrome, StreamPulse bildirimlerini engelliyor: yayınlardan haberdar olmayacaksın.",
+      "notifBlockedAction": "Ayarlar",
       "card": {
         "offline": "Çevrimdışı",
         "notificationsToggle": "Bildirimler",
@@ -6445,19 +6406,10 @@ export const translations = {
         "unknownTitle": "Yeni başlık",
         "newCategory": "Yeni kategori",
         "testSimpleMessage": "Bu bir test bildirimi.",
-        "test1Title": "StreamPulse – Test 1",
-        "test1Message": "Anlık test bildirimi 1",
-        "test2Title": "StreamPulse – Test 2",
-        "test2Message": "Bildirim için tıklama gerekiyor",
-        "test3Title": "StreamPulse – Test 3",
-        "test3Message": "Bildirim her 1 dakikada bir planlanmıştır",
-        "test4Title": "StreamPulse – Test 4",
-        "test4Message": "Bildirim her 30 saniyede bir planlanmıştır",
-        "test5Title": "StreamPulse – Test 5",
-        "test5Message": "Sessiz bildirim"
+        "plusThanksTitle": "Yürekten teşekkürler ❤️",
+        "plusThanksMessage": "StreamPulse+ aboneliğin benim için gerçekten çok değerli. Senin sayende eklentiyi geliştirmeye devam edebiliyorum. Teşekkürler! Alexis",
       },
       "diagnostics": {
-        "scheduleName": "test{{id}}"
       },
       "badge": {
         "idle": "StreamPulse"
@@ -6871,6 +6823,7 @@ export const translations = {
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
         "unlock": "Unlock",
         "replacesNote": "While a streamer has an active rule, it replaces their regular alert.",
+        "replacesStreamer": "У {{name}} есть активное правило: обычное уведомление отключено. Ты получишь уведомление, только если правило совпадёт с трансляцией.",
         "streamersLabel": "Streamers",
         "rulesFor": "Alerts for {{name}}",
         "addRule": "New rule",
@@ -7169,6 +7122,8 @@ export const translations = {
       },
       "supportDev": "Предложите разработчику чашку «бабл-ти»",
       "testNotification": "Отправить тестовое уведомление",
+      "notifBlockedBody": "Chrome блокирует уведомления StreamPulse: ты не узнаешь о начале трансляций.",
+      "notifBlockedAction": "Настройки",
       "card": {
         "offline": "В автономном режиме",
         "notificationsToggle": "Уведомления",
@@ -7269,19 +7224,10 @@ export const translations = {
         "unknownTitle": "Новое название",
         "newCategory": "Новая категория",
         "testSimpleMessage": "Это тестовое уведомление.",
-        "test1Title": "StreamPulse – Тест 1",
-        "test1Message": "Уведомление о мгновенном тесте 1",
-        "test2Title": "StreamPulse – Тест 2",
-        "test2Message": "Для подтверждения необходимо нажать кнопку",
-        "test3Title": "StreamPulse – Тест 3",
-        "test3Message": "Уведомление отправляется каждые 1 минуту",
-        "test4Title": "StreamPulse – Тест 4",
-        "test4Message": "Уведомление отправляется каждые 30 секунд",
-        "test5Title": "StreamPulse – Тест 5",
-        "test5Message": "Уведомление в фоновом режиме"
+        "plusThanksTitle": "Спасибо от всего сердца ❤️",
+        "plusThanksMessage": "Твоя подписка StreamPulse+ очень много для меня значит. Благодаря тебе я могу и дальше развивать расширение. Спасибо! Alexis",
       },
       "diagnostics": {
-        "scheduleName": "test{{id}}"
       },
       "badge": {
         "idle": "StreamPulse"
@@ -7695,6 +7641,7 @@ export const translations = {
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
         "unlock": "Unlock",
         "replacesNote": "While a streamer has an active rule, it replaces their regular alert.",
+        "replacesStreamer": "{{name}} には有効なルールがあります。通常の通知はオフです。ルールが配信に一致したときだけ通知されます。",
         "streamersLabel": "Streamers",
         "rulesFor": "Alerts for {{name}}",
         "addRule": "New rule",
@@ -7993,6 +7940,8 @@ export const translations = {
       },
       "supportDev": "開発者にバブルティーをご馳走する",
       "testNotification": "テスト通知を送信する",
+      "notifBlockedBody": "Chrome が StreamPulse の通知をブロックしています。配信開始の通知が届きません。",
+      "notifBlockedAction": "設定",
       "card": {
         "offline": "オフライン",
         "notificationsToggle": "通知",
@@ -8093,19 +8042,10 @@ export const translations = {
         "unknownTitle": "新しいタイトル",
         "newCategory": "新しいカテゴリ",
         "testSimpleMessage": "これはテスト通知です。",
-        "test1Title": "StreamPulse – テスト 1",
-        "test1Message": "即時テスト通知 1",
-        "test2Title": "StreamPulse – テスト 2",
-        "test2Message": "通知を表示するにはクリックが必要です",
-        "test3Title": "StreamPulse – テスト 3",
-        "test3Message": "1分ごとに通知が送信されるように設定されています",
-        "test4Title": "StreamPulse – テスト 4",
-        "test4Message": "30秒ごとに通知が送信されるように設定されています",
-        "test5Title": "StreamPulse – テスト 5",
-        "test5Message": "サイレント通知"
+        "plusThanksTitle": "心から感謝します ❤️",
+        "plusThanksMessage": "StreamPulse+ へのご登録、本当に嬉しいです。おかげで拡張機能をさらに良くしていけます。ありがとうございます！ Alexis",
       },
       "diagnostics": {
-        "scheduleName": "test{{id}}"
       },
       "badge": {
         "idle": "StreamPulse"
@@ -8519,6 +8459,7 @@ export const translations = {
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
         "unlock": "Unlock",
         "replacesNote": "While a streamer has an active rule, it replaces their regular alert.",
+        "replacesStreamer": "{{name}}에게 활성 규칙이 있어요. 기본 알림은 꺼져 있으며, 규칙이 방송과 일치할 때만 알림을 받습니다.",
         "streamersLabel": "Streamers",
         "rulesFor": "Alerts for {{name}}",
         "addRule": "New rule",
@@ -8817,6 +8758,8 @@ export const translations = {
       },
       "supportDev": "개발자에게 버블티 한 잔을 대접하세요",
       "testNotification": "테스트 알림 보내기",
+      "notifBlockedBody": "Chrome이 StreamPulse 알림을 차단하고 있어요. 방송 시작 알림을 받을 수 없습니다.",
+      "notifBlockedAction": "설정",
       "card": {
         "offline": "오프라인",
         "notificationsToggle": "알림",
@@ -8917,19 +8860,10 @@ export const translations = {
         "unknownTitle": "새 제목",
         "newCategory": "새로운 카테고리",
         "testSimpleMessage": "이것은 테스트 알림입니다.",
-        "test1Title": "StreamPulse – 테스트 1",
-        "test1Message": "즉시 테스트 알림 1",
-        "test2Title": "StreamPulse – 테스트 2",
-        "test2Message": "알림을 보려면 클릭해야 합니다",
-        "test3Title": "StreamPulse – 테스트 3",
-        "test3Message": "1분마다 알림이 설정됨",
-        "test4Title": "StreamPulse – 테스트 4",
-        "test4Message": "30초마다 알림이 전송되도록 설정됨",
-        "test5Title": "StreamPulse – 테스트 5",
-        "test5Message": "무음 알림"
+        "plusThanksTitle": "진심으로 감사합니다 ❤️",
+        "plusThanksMessage": "StreamPulse+ 구독이 저에게 정말 큰 의미가 있어요. 덕분에 확장 프로그램을 계속 발전시킬 수 있습니다. 감사합니다! Alexis",
       },
       "diagnostics": {
-        "scheduleName": "test{{id}}"
       },
       "badge": {
         "idle": "StreamPulse"
@@ -9343,6 +9277,7 @@ export const translations = {
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
         "unlock": "Unlock",
         "replacesNote": "While a streamer has an active rule, it replaces their regular alert.",
+        "replacesStreamer": "{{name}} punya aturan aktif: notifikasi biasanya dimatikan. Kamu hanya diberi tahu jika aturan cocok dengan siaran.",
         "streamersLabel": "Streamers",
         "rulesFor": "Alerts for {{name}}",
         "addRule": "New rule",
@@ -9641,6 +9576,8 @@ export const translations = {
       },
       "supportDev": "Tawarkan secangkir bubble tea kepada pengembang",
       "testNotification": "Kirim pemberitahuan uji coba",
+      "notifBlockedBody": "Chrome memblokir notifikasi StreamPulse: kamu tidak akan diberi tahu saat ada siaran langsung.",
+      "notifBlockedAction": "Pengaturan",
       "card": {
         "offline": "Offline",
         "notificationsToggle": "Pemberitahuan",
@@ -9741,19 +9678,10 @@ export const translations = {
         "unknownTitle": "Judul baru",
         "newCategory": "Kategori baru",
         "testSimpleMessage": "Ini adalah pemberitahuan uji coba.",
-        "test1Title": "StreamPulse – Uji Coba 1",
-        "test1Message": "Pemberitahuan tes instan 1",
-        "test2Title": "StreamPulse – Uji Coba 2",
-        "test2Message": "Pemberitahuan ini memerlukan satu klik",
-        "test3Title": "StreamPulse – Uji Coba 3",
-        "test3Message": "Pemberitahuan dijadwalkan setiap 1 menit",
-        "test4Title": "StreamPulse – Uji Coba 4",
-        "test4Message": "Pemberitahuan dijadwalkan setiap 30 detik",
-        "test5Title": "StreamPulse – Uji Coba 5",
-        "test5Message": "Pemberitahuan tanpa suara"
+        "plusThanksTitle": "Terima kasih dari lubuk hati ❤️",
+        "plusThanksMessage": "Langganan StreamPulse+ kamu sangat berarti bagi saya. Berkat kamu, saya bisa terus mengembangkan ekstensi ini. Terima kasih! Alexis",
       },
       "diagnostics": {
-        "scheduleName": "tes{{id}}"
       },
       "badge": {
         "idle": "StreamPulse"
@@ -10167,6 +10095,7 @@ export const translations = {
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
         "unlock": "Unlock",
         "replacesNote": "While a streamer has an active rule, it replaces their regular alert.",
+        "replacesStreamer": "{{name}} heeft een actieve regel: de gewone melding staat uit. Je krijgt alleen een melding als een regel bij de stream past.",
         "streamersLabel": "Streamers",
         "rulesFor": "Alerts for {{name}}",
         "addRule": "New rule",
@@ -10465,6 +10394,8 @@ export const translations = {
       },
       "supportDev": "Bied de ontwikkelaar een bubble tea aan",
       "testNotification": "Een testmelding versturen",
+      "notifBlockedBody": "Chrome blokkeert de meldingen van StreamPulse: je krijgt geen melding van livestreams.",
+      "notifBlockedAction": "Instellingen",
       "card": {
         "offline": "Offline",
         "notificationsToggle": "Meldingen",
@@ -10565,19 +10496,10 @@ export const translations = {
         "unknownTitle": "Nieuwe titel",
         "newCategory": "Nieuwe categorie",
         "testSimpleMessage": "Dit is een testmelding.",
-        "test1Title": "StreamPulse – Test 1",
-        "test1Message": "Melding van een sneltest 1",
-        "test2Title": "StreamPulse – Test 2",
-        "test2Message": "Voor de melding is een klik vereist",
-        "test3Title": "StreamPulse – Test 3",
-        "test3Message": "Melding gepland om de minuut",
-        "test4Title": "StreamPulse – Test 4",
-        "test4Message": "Melding gepland om de 30 seconden",
-        "test5Title": "StreamPulse – Test 5",
-        "test5Message": "Stille melding"
+        "plusThanksTitle": "Heel hartelijk bedankt ❤️",
+        "plusThanksMessage": "Je StreamPulse+ abonnement raakt me echt. Dankzij jou kan ik de extensie blijven verbeteren. Bedankt! Alexis",
       },
       "diagnostics": {
-        "scheduleName": "test{{id}}"
       },
       "badge": {
         "idle": "StreamPulse"
@@ -10991,6 +10913,7 @@ export const translations = {
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
         "unlock": "Unlock",
         "replacesNote": "While a streamer has an active rule, it replaces their regular alert.",
+        "replacesStreamer": "{{name}} का एक सक्रिय नियम है: सामान्य सूचना बंद है। आपको सूचना तभी मिलेगी जब कोई नियम स्ट्रीम से मेल खाए।",
         "streamersLabel": "Streamers",
         "rulesFor": "Alerts for {{name}}",
         "addRule": "New rule",
@@ -11289,6 +11212,8 @@ export const translations = {
       },
       "supportDev": "डेवलपर को बबल टी ऑफ़र करें",
       "testNotification": "एक परीक्षण अधिसूचना भेजें",
+      "notifBlockedBody": "Chrome StreamPulse की सूचनाएँ ब्लॉक कर रहा है: आपको लाइव स्ट्रीम की सूचना नहीं मिलेगी।",
+      "notifBlockedAction": "सेटिंग्स",
       "card": {
         "offline": "ऑफ़लाइन",
         "notificationsToggle": "सूचनाएं",
@@ -11389,19 +11314,10 @@ export const translations = {
         "unknownTitle": "नया शीर्षक",
         "newCategory": "नई श्रेणी",
         "testSimpleMessage": "यह एक परीक्षण अधिसूचना है.",
-        "test1Title": "StreamPulse – टेस्ट 1",
-        "test1Message": "त्वरित परीक्षण अधिसूचना 1",
-        "test2Title": "StreamPulse – टेस्ट 2",
-        "test2Message": "अधिसूचना के लिए एक क्लिक की आवश्यकता है",
-        "test3Title": "StreamPulse – टेस्ट 3",
-        "test3Message": "अधिसूचना हर 1 मिनट में निर्धारित होती है",
-        "test4Title": "StreamPulse – टेस्ट 4",
-        "test4Message": "अधिसूचना हर 30 सेकंड में निर्धारित होती है",
-        "test5Title": "StreamPulse – टेस्ट 5",
-        "test5Message": "मौन सूचना"
+        "plusThanksTitle": "दिल से धन्यवाद ❤️",
+        "plusThanksMessage": "आपकी StreamPulse+ सदस्यता मेरे लिए सच में बहुत मायने रखती है। आपकी वजह से मैं एक्सटेंशन को बेहतर बनाता रह सकता हूँ। धन्यवाद! Alexis",
       },
       "diagnostics": {
-        "scheduleName": "test{{id}}"
       },
       "badge": {
         "idle": "StreamPulse"
@@ -11815,6 +11731,7 @@ export const translations = {
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
         "unlock": "Unlock",
         "replacesNote": "While a streamer has an active rule, it replaces their regular alert.",
+        "replacesStreamer": "{{name}} har en aktiv regel: den vanliga aviseringen är av. Du aviseras bara när en regel matchar sändningen.",
         "streamersLabel": "Streamers",
         "rulesFor": "Alerts for {{name}}",
         "addRule": "New rule",
@@ -12113,6 +12030,8 @@ export const translations = {
       },
       "supportDev": "Bjud utvecklaren på en bubbelte",
       "testNotification": "Skicka ett testmeddelande",
+      "notifBlockedBody": "Chrome blockerar aviseringar från StreamPulse: du får ingen avisering när någon går live.",
+      "notifBlockedAction": "Inställningar",
       "card": {
         "offline": "Offline",
         "notificationsToggle": "Meddelanden",
@@ -12213,19 +12132,10 @@ export const translations = {
         "unknownTitle": "Ny titel",
         "newCategory": "Ny kategori",
         "testSimpleMessage": "Detta är ett testmeddelande.",
-        "test1Title": "StreamPulse – Test 1",
-        "test1Message": "Meddelande om snabbtest 1",
-        "test2Title": "StreamPulse – Test 2",
-        "test2Message": "Meddelandet kräver ett klick",
-        "test3Title": "StreamPulse – Test 3",
-        "test3Message": "Meddelande schemalagt varje minut",
-        "test4Title": "StreamPulse – Test 4",
-        "test4Message": "Meddelande schemalagt var 30:e sekund",
-        "test5Title": "StreamPulse – Test 5",
-        "test5Message": "Tyst avisering"
+        "plusThanksTitle": "Varmt tack ❤️",
+        "plusThanksMessage": "Din StreamPulse+ prenumeration betyder verkligen mycket för mig. Tack vare dig kan jag fortsätta förbättra tillägget. Tack! Alexis",
       },
       "diagnostics": {
-        "scheduleName": "test{{id}}"
       },
       "badge": {
         "idle": "StreamPulse"
@@ -12639,6 +12549,7 @@ export const translations = {
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
         "unlock": "Unlock",
         "replacesNote": "While a streamer has an active rule, it replaces their regular alert.",
+        "replacesStreamer": "{{name}} má aktivní pravidlo: běžné oznámení je vypnuté. Oznámení dostaneš jen tehdy, když pravidlo odpovídá vysílání.",
         "streamersLabel": "Streamers",
         "rulesFor": "Alerts for {{name}}",
         "addRule": "New rule",
@@ -12937,6 +12848,8 @@ export const translations = {
       },
       "supportDev": "Nabídněte vývojáři bubble tea",
       "testNotification": "Odeslat zkušební oznámení",
+      "notifBlockedBody": "Chrome blokuje oznámení StreamPulse: nedozvíš se o živých vysíláních.",
+      "notifBlockedAction": "Nastavení",
       "card": {
         "offline": "Offline",
         "notificationsToggle": "Oznámení",
@@ -13037,19 +12950,10 @@ export const translations = {
         "unknownTitle": "Nový název",
         "newCategory": "Nová kategorie",
         "testSimpleMessage": "Toto je zkušební oznámení.",
-        "test1Title": "StreamPulse – Test 1",
-        "test1Message": "Okamžité oznámení o testu 1",
-        "test2Title": "StreamPulse – Test 2",
-        "test2Message": "Oznámení vyžaduje kliknutí",
-        "test3Title": "StreamPulse – Test 3",
-        "test3Message": "Oznámení je naplánováno každou 1 minutu",
-        "test4Title": "StreamPulse – Test 4",
-        "test4Message": "Oznámení je naplánováno každých 30 sekund",
-        "test5Title": "StreamPulse – Test 5",
-        "test5Message": "Tiché oznámení"
+        "plusThanksTitle": "Děkuji z celého srdce ❤️",
+        "plusThanksMessage": "Tvé předplatné StreamPulse+ pro mě opravdu hodně znamená. Díky tobě můžu rozšíření dál vylepšovat. Děkuji! Alexis",
       },
       "diagnostics": {
-        "scheduleName": "test{{id}}"
       },
       "badge": {
         "idle": "StreamPulse"

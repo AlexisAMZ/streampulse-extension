@@ -3,6 +3,7 @@
 // chrome.storage, que le service worker alimente.
 
 import { t, getCurrentLanguage } from "./i18n.js";
+import { thankPlusSubscriber } from "./plus-thanks.js";
 import { HISTORY_KEY, formatClock, selectMissed, summarize } from "./history-data.js";
 import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalizePredictionRule, summarize as summarizePredictions } from "./predictions-data.js";
 import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
@@ -226,6 +227,7 @@ function initPlus() {
         plusRecord = result.record;
         input.value = "";
         renderPlus();
+        thankPlusSubscriber(result.record.licenseKey, t).catch(() => {});
         chrome.runtime.sendMessage({ type: "refreshStatuses" }).catch?.(() => {});
       } else {
         const errors = {
@@ -458,6 +460,9 @@ function renderSmartRules() {
   head.append(node("b", null, t("popup.smart.rulesFor", { name: streamer.displayName || streamer.handle })), add);
 
   const children = [head];
+  if (rules.some((rule) => rule.enabled)) {
+    children.push(node("p", "smart-replaces", t("popup.smart.replacesStreamer", { name: streamer.displayName || streamer.handle })));
+  }
   if (!rules.length) children.push(node("p", "smart-empty", t("popup.smart.noRules")));
   rules.forEach((rule) => children.push(createRuleCard(rule, streamer.id)));
   host.replaceChildren(...children);
@@ -689,7 +694,23 @@ async function recheckOnOpen() {
 
 // ─── Initialisation ────────────────────────────────────────────────────────────
 
+/** Bandeau quand Chrome bloque les notifications de l'extension. */
+function initNotificationPermissionBanner() {
+  const banner = $("notif-blocked");
+  if (!banner || !chrome?.notifications?.getPermissionLevel) return;
+  const check = () =>
+    chrome.notifications.getPermissionLevel((level) => {
+      banner.hidden = level !== "denied";
+    });
+  $("notif-blocked-open")?.addEventListener("click", () => {
+    chrome.tabs.create({ url: `chrome://settings/content/siteDetails?site=chrome-extension://${chrome.runtime.id}` });
+  });
+  chrome.notifications.onPermissionLevelChanged?.addListener(check);
+  check();
+}
+
 export async function initFeatures() {
+  initNotificationPermissionBanner();
   initHistory();
   initPlus();
   initSmartAlerts();

@@ -18,6 +18,7 @@ import {
   sanitizeHandle,
 } from "./platforms.js";
 import { HISTORY_KEY, addSession, emptyHistory, markSeen, patchSession } from "./history-data.js";
+import { thankPlusSubscriber } from "./plus-thanks.js";
 import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-alerts.js";
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "./plus.js";
 
@@ -2376,10 +2377,6 @@ async function openStreamerFromNotification(streamerId) {
   }
 }
 
-function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request?.type) {
     case "notify":
@@ -2446,58 +2443,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         } catch {
           sendResponse({ clientId: "", accessToken: "", features: {} });
         }
-      })();
-      return true;
-
-    case "diagnosticTests":
-      (async () => {
-        const preferences = await PreferenceStore.get();
-        const lang = normalizeLanguage(preferences.language);
-        await NotificationCenter.show({
-          title: translate(lang, "background.notifications.test1Title"),
-          message: translate(lang, "background.notifications.test1Message"),
-          url: "https://www.twitch.tv/",
-          playSound: true,
-        });
-        await delay(400);
-        await NotificationCenter.show({
-          title: translate(lang, "background.notifications.test2Title"),
-          message: translate(lang, "background.notifications.test2Message"),
-          url: "https://www.youtube.com/",
-          requireInteraction: true,
-          priority: 2,
-          playSound: true,
-        });
-        await NotificationCenter.schedule({
-          name: translate(lang, "background.diagnostics.scheduleName", {
-            id: 3,
-          }),
-          title: translate(lang, "background.notifications.test3Title"),
-          message: translate(lang, "background.notifications.test3Message"),
-          url: "https://www.twitch.tv/directory/following/live",
-          intervalMinutes: 1,
-          requireInteraction: false,
-          playSound: true,
-        });
-        await NotificationCenter.schedule({
-          name: translate(lang, "background.diagnostics.scheduleName", {
-            id: 4,
-          }),
-          title: translate(lang, "background.notifications.test4Title"),
-          message: translate(lang, "background.notifications.test4Message"),
-          url: "https://www.twitch.tv/directory",
-          intervalMinutes: 0.5,
-          requireInteraction: true,
-          priority: 2,
-          playSound: true,
-        });
-        await delay(400);
-        await NotificationCenter.show({
-          title: translate(lang, "background.notifications.test5Title"),
-          message: translate(lang, "background.notifications.test5Message"),
-          playSound: false,
-        });
-        sendResponse({ success: true });
       })();
       return true;
 
@@ -2890,6 +2835,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const result = await verifyLicense(request.key, fetch, Date.now(), await getDeviceId(chrome.storage.local));
         if (result.ok) await chrome.storage.local.set({ [PLUS_KEY]: result.record });
         sendResponse(result);
+        if (result.ok) {
+          const prefs = await PreferenceStore.get();
+          const lang = normalizeLanguage(prefs?.language);
+          thankPlusSubscriber(result.record.licenseKey, (key) => translate(lang, key)).catch(() => {});
+        }
         if (result.ok) pollStreamers().catch(() => {});
       })();
       return true;
