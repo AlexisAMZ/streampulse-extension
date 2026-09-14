@@ -10,6 +10,9 @@
     "verify": "node scripts/verify.mjs",
     "store:assets": "node scripts/make-store-assets.mjs",
     "publish:edge": "node scripts/publish-edge.mjs",
+    "publish:chrome": "node scripts/publish-chrome.mjs",
+    "publish:firefox": "node scripts/publish-firefox.mjs",
+    "publish:all": "node scripts/publish-edge.mjs && node scripts/publish-chrome.mjs && node scripts/publish-firefox.mjs",
     "build": "npm run lint && npm test && node scripts/build-zip.mjs",
     "test": "node --test \"tests/*.test.mjs\""
   },
