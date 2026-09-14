@@ -17,8 +17,12 @@
 
   const CLIENT_ID = "kimne78kx3ncx6brgo4mv6wki5h1ko"; // Twitch public web client id
   const GQL_URL = "https://gql.twitch.tv/gql";
-  const PERSISTED_HASH =
-    "0828119ded1c13477966434e15800ff57ddacf13ba1911c129dc2200705b0712";
+  // Requete complete plutot qu'un identifiant persiste : Twitch retire ces
+  // identifiants sans prevenir (PersistedQueryNotFound), la requete reste valide.
+  const ACCESS_TOKEN_QUERY =
+    "query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!) {" +
+    " streamPlaybackAccessToken(channelName: $login, params: {platform: \"web\", playerBackend: \"mediaplayer\", playerType: $playerType}) @include(if: $isLive) { value signature }" +
+    " videoPlaybackAccessToken(id: $vodID, params: {platform: \"web\", playerBackend: \"mediaplayer\", playerType: $playerType}) @include(if: $isVod) { value signature } }";
 
   function safeLogin(login) {
     return String(login || "").trim().toLowerCase().replace(/[^a-z0-9_]/g, "");
@@ -26,10 +30,8 @@
 
   function accessTokenRequest(login) {
     return {
-      operationName: "PlaybackAccessToken",
-      extensions: {
-        persistedQuery: { version: 1, sha256Hash: PERSISTED_HASH },
-      },
+      operationName: "PlaybackAccessToken_Template",
+      query: ACCESS_TOKEN_QUERY,
       variables: {
         isLive: true,
         login: safeLogin(login),
