@@ -450,10 +450,10 @@ function initSmartAlerts() {
 
 /**
  * À l'ouverture du popup, revérifie la licence si le dernier contrôle date de
- * plus d'une heure : un client supprimé ou un abonnement résilié perd l'accès
+ * plus de 5 minutes : un client supprimé ou un abonnement résilié perd l'accès
  * dès la prochaine ouverture, sans attendre le contrôle quotidien.
  */
-const OPEN_RECHECK_MS = 60 * 60 * 1000;
+const OPEN_RECHECK_MS = 5 * 60 * 1000;
 
 async function recheckOnOpen() {
   if (!plusRecord?.licenseKey || plusRecord.status !== "active") return;
