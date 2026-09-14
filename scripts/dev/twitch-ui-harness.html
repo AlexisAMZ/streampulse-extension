@@ -32,7 +32,7 @@
           { id: "kamet0", platform: "twitch", handle: "kamet0", displayName: "Kamet0" },
           { id: "gotaga", platform: "twitch", handle: "gotaga", displayName: "Gotaga" },
         ],
-        betaGeneralStatuses: { kamet0: { isLive: true, game: "League of Legends", viewers: 12480 }, gotaga: { isLive: false } },
+        betaGeneralStatuses: { kamet0: { id: "kamet0", active: { isLive: true, game: "League of Legends", viewers: 12480 } }, gotaga: { id: "gotaga", active: { isLive: false } } },
         streamPulseCosmetics: { badgeFx: "glow", nameFx: "neon" },
         ...(params.get("plus") === "0" ? {} : { streamPulsePlus: { licenseKey: "SP-DEMO", plan: "lifetime", status: "active", verifiedAt: Date.now() } }),
       };

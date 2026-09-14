@@ -115,7 +115,10 @@
       .map(function (id) {
         var s = null;
         for (var i = 0; i < state.streamers.length; i++) if (state.streamers[i].id === id) s = state.streamers[i];
-        return s && s.platform === "twitch" ? { s: s, st: state.statuses[s.id] || {} } : null;
+        if (!s || s.platform !== "twitch") return null;
+        // Le service worker range le live dans `active` (voir background.js).
+        var raw = state.statuses[s.id] || {};
+        return { s: s, st: raw.active || raw };
       })
       .filter(Boolean)
       .sort(function (a, b) {

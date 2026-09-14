@@ -256,7 +256,8 @@
       var handle = String(s.handle || s.login || "").toLowerCase();
       if (channel && handle === channel) base.channelTracked = true;
 
-      var st = statuses[s.id] || statuses[handle] || {};
+      var rawStatus = statuses[s.id] || statuses[handle] || {};
+      var st = rawStatus.active || rawStatus;
       if (!st.isLive) continue;
       live.push({
         login: handle,
