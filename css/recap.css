@@ -80,5 +80,5 @@
   .recap-side { position: static; }
 }
 
-/* StreamPulse+ : le « + » du logo, en vert LCD comme le badge PLUS. */
-.brand-plus { color: var(--lcd); }
+/* StreamPulse+ : le « + » du logo, plus grand que le nom. */
+.brand-plus { display: inline-block; margin-left: 3px; color: #ffffff; font-size: 1.35em; line-height: 0; vertical-align: -0.06em; }
