@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Banc du badge communautaire : faux tchat Twitch, licence Plus et effets choisis.
+         ?badge=glow&name=neon&plus=1 -->
+    <title>badge-harness</title>
+    <link rel="stylesheet" href="/css/inject/twitch-badge.css" />
+    <style>
+      body { background: #0e0e10; color: #efeff1; font: 14px/1.5 sans-serif; padding: 24px; }
+      .chat-line__message { padding: 4px 0; }
+    </style>
+    <script>
+      const params = new URLSearchParams(location.search);
+      document.cookie = "login=spdemo; path=/";
+      const store = {
+        betaGeneralPreferences: { communityBadge: true, communityBadgeColor: "author" },
+        streamPulseCosmetics: { badgeFx: params.get("badge") || "glow", nameFx: params.get("name") || "neon" },
+        ...(params.get("plus") === "0" ? {} : { streamPulsePlus: { licenseKey: "SP-DEMO-2026-PLUS-0001", plan: "lifetime", status: "active", verifiedAt: Date.now() } }),
+      };
+      const pick = (keys) => {
+        if (keys == null) return { ...store };
+        const list = Array.isArray(keys) ? keys : typeof keys === "string" ? [keys] : Object.keys(keys);
+        return Object.fromEntries(list.filter((k) => k in store).map((k) => [k, store[k]]));
+      };
+      window.chrome = {
+        runtime: { id: "harness", getURL: (p) => `/${p}` },
+        storage: {
+          local: {
+            get: (keys, cb) => { const r = pick(keys); if (cb) setTimeout(() => cb(r)); return Promise.resolve(r); },
+            set: (obj, cb) => { Object.assign(store, obj); if (cb) setTimeout(cb); return Promise.resolve(); },
+            remove: (k, cb) => { if (cb) setTimeout(cb); return Promise.resolve(); },
+          },
+          onChanged: { addListener: () => {} },
+        },
+      };
+      window.fetch = async (url, init) => ({
+        ok: true,
+        status: 200,
+        json: async () => (init && init.method === "POST" ? { ok: true } : { hashes: [], colors: {}, styles: {} }),
+      });
+    </script>
+  </head>
+  <body>
+    <div class="chat-scrollable-area__message-container">
+      <div class="chat-line__message"><span></span><span class="chat-line__username"><span class="chat-author__display-name" data-a-target="chat-message-username" data-a-user="spdemo" style="color:#ff4d8d">SpDemo</span></span><span>: test du badge</span></div>
+      <div class="chat-line__message"><span></span><span class="chat-line__username"><span class="chat-author__display-name" data-a-target="chat-message-username" data-a-user="quelquun" style="color:#1e90ff">Quelquun</span></span><span>: sans StreamPulse</span></div>
+    </div>
+    <script src="/js/inject/twitch-badge.js"></script>
+    <script>
+      // Message arrive apres le chargement : chemin de l'observateur du tchat.
+      setTimeout(() => {
+        const line = document.querySelector(".chat-line__message").cloneNode(true);
+        line.classList.remove("sp-badge-processed");
+        line.querySelector(".sp-chat-badge")?.remove();
+        const name = line.querySelector(".chat-author__display-name");
+        name.className = "chat-author__display-name";
+        line.lastElementChild.textContent = ": nouveau message";
+        document.querySelector(".chat-scrollable-area__message-container").appendChild(line);
+      }, 3000);
+      setTimeout(() => {
+        const lines = [...document.querySelectorAll(".chat-line__message")].map((line) => ({
+          user: line.querySelector("[data-a-user]").dataset.aUser,
+          badge: line.querySelector(".sp-chat-badge")?.className || null,
+          name: line.querySelector(".chat-author__display-name").className,
+        }));
+        document.title = JSON.stringify(lines);
+      }, 7000);
+    </script>
+  </body>
+</html>

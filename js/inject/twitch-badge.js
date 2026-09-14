@@ -155,17 +155,21 @@
       badgeHashes.add(hash);
       ownHash = hash;
       applyOwnLocal();
+      // Les messages deja affiches ont ete lus avant que le compte soit reconnu :
+      // on reprend ceux restes sans badge, puis on applique les effets.
+      rescanVisibleMessages();
       refreshVisibleCosmetics();
       log("utilisateur detecte, empreinte enregistree");
       publishBadgeColor(hash);
 
       try {
         chrome.storage.local.get([STORAGE_KEY, "lastBadgeSync"], function (res) {
-          var stored = (res && res[STORAGE_KEY]) || [];
-          var set = new Set(stored);
-          set.add(hash);
-          badgeHashes = set;
-          chrome.storage.local.set({ [STORAGE_KEY]: Array.from(set) });
+          // Ajout, jamais remplacement : la liste distante a pu arriver entre-temps.
+          ((res && res[STORAGE_KEY]) || []).forEach(function (h) {
+            badgeHashes.add(String(h).toLowerCase().trim());
+          });
+          badgeHashes.add(hash);
+          chrome.storage.local.set({ [STORAGE_KEY]: Array.from(badgeHashes) });
 
           var now = Date.now();
           var lastSync = res && res.lastBadgeSync ? res.lastBadgeSync : 0;
@@ -217,7 +221,10 @@
           badgeStyles = nextStyles;
           applyOwnLocal();
           refreshVisibleCosmetics();
-          if (!list.length) return;
+          if (!list.length) {
+            rescanVisibleMessages();
+            return;
+          }
           for (var i = 0; i < list.length; i++) {
             var hash = String(list[i] || "").toLowerCase().trim();
             // Ignorer tout ce qui n'a pas la forme d'une empreinte : une
