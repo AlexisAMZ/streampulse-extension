@@ -632,3 +632,7 @@ body.is-settings .plus-badge:not(.is-active) { background: var(--surface-2); box
 @keyframes sp-paint-slide { to { background-position: -200% 0; } }
 @media (prefers-reduced-motion: reduce) { .cosmetic-badge, .sp-paint { animation: none !important; } }
 
+
+/* Lien étoile GitHub sous les contacts : pleine largeur, étoile en accent. */
+.github-star { display: flex; width: 100%; justify-content: center; gap: 8px; margin-top: 10px; }
+.github-star svg { width: 14px; height: 14px; color: var(--violet-text); }
