@@ -94,7 +94,8 @@
   background: none !important;
   -webkit-text-fill-color: #ffffff !important;
   color: #ffffff !important;
-  text-shadow: 0 0 3px var(--sp-paint-glow, #9146ff), 0 0 9px var(--sp-paint-glow, #9146ff), 0 0 16px var(--sp-paint-glow, #9146ff);
+  /* Lueur courte et translucide : le pseudo reste lisible au milieu du tchat. */
+  text-shadow: 0 0 2px color-mix(in srgb, var(--sp-paint-glow, #9146ff) 80%, transparent), 0 0 6px color-mix(in srgb, var(--sp-paint-glow, #9146ff) 45%, transparent);
 }
 .sp-paint--rainbow { background-image: linear-gradient(90deg, #ff5f6d, #ffc371, #c6f15a, #4fd1ff, #9146ff, #ff5f6d) !important; animation: sp-paint-slide 4s linear infinite; }
 @keyframes sp-paint-slide { to { background-position: -200% 0; } }
