@@ -1,0 +1,84 @@
+/* StreamPulse design tokens, aligned with streampulse.fr: Twitch violet,
+   LCD green, deep navy, Unbounded for display and Onest for text.
+   Shared by every extension page. Fonts are bundled in /font (OFL). */
+
+@font-face { font-family: "Unbounded"; font-style: normal; font-weight: 400 900; font-display: swap; src: url("../font/unbounded-latin-10.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Unbounded"; font-style: normal; font-weight: 400 900; font-display: swap; src: url("../font/unbounded-latin-ext-9.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Unbounded"; font-style: normal; font-weight: 400 900; font-display: swap; src: url("../font/unbounded-cyrillic-8.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "Unbounded"; font-style: normal; font-weight: 400 900; font-display: swap; src: url("../font/unbounded-cyrillic-ext-7.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+@font-face { font-family: "Onest"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("../font/onest-latin-6.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Onest"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("../font/onest-latin-ext-5.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Onest"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("../font/onest-cyrillic-4.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "Onest"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("../font/onest-cyrillic-ext-3.woff2") format("woff2"); unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F; }
+
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --violet: #9146ff;
+  --violet-strong: #7b35e8;
+  --violet-soft: rgba(145, 70, 255, 0.24);
+  --violet-line: rgba(181, 139, 255, 0.5);
+  --violet-text: #c4a3ff;
+
+  --lcd: #c6d4a0;
+  --lcd-ink: #1c2615;
+  --lcd-accent: #c6d4a0;
+  --lcd-soft: rgba(198, 212, 160, 0.12);
+  --lcd-line: rgba(198, 212, 160, 0.32);
+
+  --bg: #0b0c22;
+  --surface: #15173d;
+  --surface-2: #1e2150;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-2: rgba(255, 255, 255, 0.15);
+
+  --text: #f4f2f7;
+  --text-2: rgba(244, 242, 247, 0.74);
+  --text-3: rgba(244, 242, 247, 0.58);
+
+  --danger: #ff8a80;
+  --danger-bg: #c93035;
+  --star: #ffd23f;
+  --focus: #c6d4a0;
+  --twitch: #9146ff;
+  --kick: #53fc18;
+
+  --shadow-pop: 0 18px 36px -18px rgba(0, 0, 0, 0.75);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --violet-soft: rgba(145, 70, 255, 0.12);
+  --violet-line: rgba(106, 43, 201, 0.42);
+  --violet-text: #6a2bc9;
+
+  --lcd-accent: #3e5a1f;
+  --lcd-soft: rgba(28, 38, 21, 0.06);
+  --lcd-line: rgba(28, 38, 21, 0.22);
+
+  --bg: #f4f2f7;
+  --surface: #ffffff;
+  --surface-2: #ece9f2;
+  --line: rgba(26, 11, 20, 0.09);
+  --line-2: rgba(26, 11, 20, 0.17);
+
+  --text: #1a0b14;
+  --text-2: #4a2a3b;
+  --text-3: #6b5563;
+
+  --danger: #b3261e;
+  --star: #b07a00;
+  --focus: #6a2bc9;
+
+  --shadow-pop: 0 18px 36px -20px rgba(27, 31, 74, 0.35);
+}
+
+:root {
+  --display: "Unbounded", system-ui, sans-serif;
+  --body: "Onest", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 140ms;
+  --dur-base: 220ms;
+}

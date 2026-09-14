@@ -243,6 +243,11 @@ async function init() {
   const firstMonth = periods.find((p) => p.kind === "month");
   currentPeriod = !hasDaily && firstMonth ? firstMonth.id : "7d";
 
+  // The canvas only draws with fonts that are already loaded.
+  await Promise.all([
+    document.fonts.load('700 48px "Unbounded"'),
+    document.fonts.load('600 24px "Onest"'),
+  ]).catch(() => {});
   currentAssets = { avatars: new Map(), logo: await loadImage("../images/photos/logosp.png") };
   populatePeriods();
 

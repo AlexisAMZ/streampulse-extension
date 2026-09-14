@@ -1,7 +1,7 @@
 // Mise en page mobile : portrait 1080x1920 (9:16), adaptee aux stories Instagram et TikTok.
 
 import { formatDuration } from "./recap-data.js";
-import {
+import { DISPLAY,
   INK,
   MUTED,
   FAINT,
@@ -39,7 +39,7 @@ function drawHeader(ctx, model) {
   drawEyebrow(ctx, eyebrow, cx, SAFE_TOP, 26);
 
   ctx.fillStyle = INK;
-  setFont(ctx, 800, 64);
+  setFont(ctx, 800, 64, DISPLAY);
   ctx.fillText(fitText(ctx, labels.heading, CONTENT_W), cx, SAFE_TOP + 92);
 
   ctx.fillStyle = MUTED;
@@ -50,7 +50,7 @@ function drawHeader(ctx, model) {
   setFont(ctx, 700, 22, MONO);
   ctx.fillText(labels.statTime.toUpperCase(), cx, SAFE_TOP + 252);
   ctx.fillStyle = INK;
-  setFont(ctx, 800, 150);
+  setFont(ctx, 800, 150, DISPLAY);
   ctx.fillText(formatDuration(model.totalSeconds), cx, SAFE_TOP + 394);
 
   ctx.textAlign = "left";
@@ -72,7 +72,7 @@ function drawTiles(ctx, model, top) {
     setFont(ctx, 700, 20, MONO);
     ctx.fillText(fitText(ctx, tile.label.toUpperCase(), w - 56), x + 28, top + 50);
     ctx.fillStyle = INK;
-    setFont(ctx, 800, 54);
+    setFont(ctx, 800, 54, DISPLAY);
     ctx.fillText(fitText(ctx, tile.value, w - 56), x + 28, top + 118);
   });
   return top + h;

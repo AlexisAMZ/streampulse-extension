@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Prévisualisation du vrai popup hors extension. Servir la racine du projet,
+         puis ouvrir /scripts/dev/popup-harness.html?state=live|offline|empty|many|loading
+         &theme=light&lang=en&tab=menu&panel=data&next=1&sheet=1&query=lu -->
+    <base href="/html/" />
+    <title>StreamPulse · banc du popup</title>
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/popup.css" />
+    <script src="/scripts/dev/mock-chrome.js"></script>
+  </head>
+  <body data-theme="dark">
+    <script type="module">
+      const params = new URLSearchParams(location.search);
+      const source = await (await fetch("/html/popup.html")).text();
+      const parsed = new DOMParser().parseFromString(source, "text/html");
+      parsed.querySelectorAll("script").forEach((node) => node.remove());
+      document.body.innerHTML = parsed.body.innerHTML;
+
+      await import("/js/popup.js");
+      document.dispatchEvent(new Event("DOMContentLoaded"));
+
+      const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+      // popup.js wires its buttons after an async storage read: let it finish.
+      await wait(900);
+
+      for (let i = 0; i < Number(params.get("next") || 0); i++) document.getElementById("stage-next")?.click();
+      if (params.get("tab") === "menu") document.getElementById("tab-settings")?.click();
+      const panel = params.get("panel");
+      if (panel) document.querySelector(`.menu-tab[data-panel="${panel}"]`)?.click();
+      if (params.get("sheet")) document.getElementById("open-all-channels")?.click();
+      const query = params.get("query");
+      if (query) {
+        const search = document.getElementById("sheet-search");
+        search.value = query;
+        search.dispatchEvent(new Event("input"));
+      }
+
+      await wait(400);
+      document.documentElement.dataset.ready = "1";
+    </script>
+  </body>
+</html>

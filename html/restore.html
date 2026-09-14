@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="backup.restorePage.documentTitle">Restaurer une sauvegarde · StreamPulse</title>
+    <link rel="icon" href="../images/photos/128px.png" />
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/pages.css" />
+    <link rel="stylesheet" href="../css/restore.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-head">
+        <span class="brand">
+          <img class="brand-mark" src="../images/photos/logosp.png" alt="" />
+          <span>StreamPulse</span>
+          <span class="brand-sub" data-i18n="backup.title">Sauvegarde</span>
+        </span>
+      </header>
+
+      <main class="restore">
+        <section class="restore-intro">
+          <h1 class="display" data-i18n="backup.restorePage.title">Importe une sauvegarde</h1>
+          <p class="lede" data-i18n="backup.restorePage.intro">Choisis le fichier .json téléchargé avec « Sauvegarder mes données ».</p>
+        </section>
+
+        <section class="panel restore-card" id="restore-pick">
+          <label class="drop-zone" id="drop-zone" for="file-input">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M20 15v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4"/></svg>
+            <span class="drop-title" data-i18n="backup.restorePage.drop">Glisse ton fichier de sauvegarde ici</span>
+            <span class="drop-or" data-i18n="backup.restorePage.or">ou</span>
+            <span class="btn btn-primary" data-i18n="backup.restorePage.choose">Choisir un fichier</span>
+            <span class="drop-hint" data-i18n="backup.restorePage.hint">Fichier .json de 5 Mo maximum</span>
+          </label>
+          <input class="file-input" id="file-input" type="file" accept=".json,application/json" />
+        </section>
+
+        <section class="panel restore-card" id="restore-review" hidden>
+          <p class="file-line">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+            <span id="file-name"></span>
+          </p>
+          <dl class="summary">
+            <div><dt data-i18n="backup.restorePage.streamers">Nouveaux streamers</dt><dd id="sum-streamers">0</dd></div>
+            <div><dt data-i18n="backup.restorePage.months">Mois de visionnage</dt><dd id="sum-months">0</dd></div>
+            <div><dt data-i18n="backup.restorePage.exportedAt">Sauvegardée le</dt><dd id="sum-date">—</dd></div>
+          </dl>
+          <p class="note" data-i18n="backup.restorePage.warning">Les streamers et le temps de visionnage de la sauvegarde s'ajoutent à ceux déjà présents. Tes réglages actuels sont conservés.</p>
+          <div class="restore-actions">
+            <button class="btn btn-ghost" id="restore-cancel" type="button" data-i18n="backup.restorePage.other">Choisir un autre fichier</button>
+            <button class="btn btn-primary" id="restore-confirm" type="button" data-i18n="backup.restorePage.restore">Ajouter à mes données</button>
+          </div>
+        </section>
+
+        <section class="panel restore-card restore-done" id="restore-done" hidden>
+          <div class="done-check" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17 19 7"/></svg>
+          </div>
+          <h2 class="headline" data-i18n="backup.restorePage.doneTitle">Données ajoutées !</h2>
+          <p class="lede" data-i18n="backup.restorePage.doneBody">Ouvre StreamPulse depuis la barre d'outils pour retrouver tes streamers.</p>
+          <button class="btn btn-primary" id="restore-close" type="button" data-i18n="backup.restorePage.close">Fermer l'onglet</button>
+        </section>
+
+        <p class="restore-error" id="restore-error" role="alert" hidden></p>
+      </main>
+    </div>
+    <script type="module" src="../js/restore.js"></script>
+  </body>
+</html>

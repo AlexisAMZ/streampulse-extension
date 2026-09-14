@@ -1,3 +1,4 @@
+import { BACKUP_KEYS, buildBackup, backupFileName } from "./backup.js";
 import {
   initI18n,
   applyTranslations,
@@ -14,7 +15,6 @@ import {
   AVAILABLE_PLATFORMS,
   DEFAULT_PLATFORM,
   PLATFORM_DEFINITIONS,
-  buildProfileUrl,
   formatHandleForDisplay,
   getHandleComparisonKey,
   getPlatformLabelKey,
@@ -22,7 +22,7 @@ import {
   normalizePlatform,
   sanitizeHandle,
 } from "./platforms.js";
-import { createStreamerCard, formatNumber } from "./ui.js";
+import { createAllChannelsTile, createChannelRow, createMiniCard, formatNumber, renderStage, renderStageEmpty } from "./ui.js";
 
 const PREFERENCES_STORAGE_KEY = "betaGeneralPreferences";
 
@@ -44,6 +44,12 @@ const state = {
   preferences: { ...defaultPreferences },
   selectedPlatform: DEFAULT_PLATFORM,
   userProfile: null,
+  selectedId: null,
+  platformFilter: "all",
+  pinnedIds: [],
+  groups: [],
+  groupFilter: "all",
+  sheetQuery: "",
 };
 
 const streamerListEl = document.getElementById("streamer-list");
@@ -54,7 +60,17 @@ const handlePrefix = document.getElementById("handle-prefix");
 const addStreamerLabel = addStreamerForm?.querySelector("label[for='streamer-input']");
 const helperTextEl = addStreamerForm?.querySelector(".helper-text");
 const refreshButton = document.getElementById("refresh-button");
-const template = document.getElementById("streamer-item-template");
+const stageEl = document.getElementById("stage");
+const stageMediaEl = document.getElementById("stage-media");
+const stageFeatureEl = document.getElementById("stage-feature");
+const stagePagerEl = document.getElementById("stage-pager");
+const stageCountEl = document.getElementById("stage-count");
+const sheetEl = document.getElementById("channels-sheet");
+const sheetScrimEl = document.getElementById("sheet-scrim");
+const sheetListEl = document.getElementById("sheet-list");
+const sheetSearchEl = document.getElementById("sheet-search");
+const sheetGroupsEl = document.getElementById("sheet-groups");
+const sheetTotalEl = document.getElementById("sheet-total");
 const liveNotificationsToggle = document.getElementById("pref-live-notifications");
 const gameAlertsToggle = document.getElementById("pref-game-alerts");
 const titleAlertsToggle = document.getElementById("pref-title-alerts");
@@ -94,7 +110,6 @@ const statPointsEl = document.getElementById("stat-points");
 const btnExport = document.getElementById("btn-export");
 const btnImport = document.getElementById("btn-import");
 const btnResetStats = document.getElementById("btn-reset-stats");
-const fileImport = document.getElementById("file-import");
 
 const watchTimeMonthSelect = document.getElementById("watch-time-month");
 const wtTotalTime = document.getElementById("wt-total-time");
@@ -145,6 +160,7 @@ function showFeedback(message, type = "success") {
 
   const toast = document.createElement("div");
   toast.className = `toast ${type === "error" ? "error" : "success"}`;
+  if (type === "error") toast.setAttribute("role", "alert");
   toast.textContent = message;
   toast.addEventListener("click", () => removeToast(toast));
   toastContainer.appendChild(toast);
@@ -167,7 +183,9 @@ function removeToast(toast) {
 function applyTheme(theme) {
   document.body.dataset.theme = theme;
   document.querySelectorAll(".theme-toggle-btn").forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.themeValue === theme);
+    const isActive = btn.dataset.themeValue === theme;
+    btn.classList.toggle("active", isActive);
+    btn.setAttribute("aria-pressed", isActive ? "true" : "false");
   });
 }
 
@@ -194,14 +212,15 @@ function showSkeletons(count = 3) {
   streamerListEl.innerHTML = "";
   streamerListEl.classList.remove("empty");
   for (let i = 0; i < count; i++) {
-    const skeleton = document.createElement("div");
+    const skeleton = document.createElement("li");
     skeleton.className = "skeleton-card";
+    skeleton.setAttribute("aria-hidden", "true");
     skeleton.innerHTML = `
-      <div class="skeleton-avatar"></div>
-      <div class="skeleton-lines">
-        <div class="skeleton-line" style="width:70%"></div>
-        <div class="skeleton-line" style="width:50%"></div>
-      </div>
+      <span class="skeleton-avatar"></span>
+      <span class="skeleton-lines">
+        <span class="skeleton-line" style="width:${70 - i * 8}%"></span>
+        <span class="skeleton-line" style="width:${45 - i * 5}%"></span>
+      </span>
     `;
     streamerListEl.appendChild(skeleton);
   }
@@ -320,147 +339,59 @@ async function sendMessage(payload) {
   }
 }
 
-let lazyObserver = null;
-
-function observeLazyIframes() {
-  if (lazyObserver) {
-    lazyObserver.disconnect();
-  }
-
-  lazyObserver = new IntersectionObserver((entries, observer) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const iframe = entry.target;
-        if (iframe.dataset.src) {
-          requestAnimationFrame(() => {
-            iframe.src = iframe.dataset.src;
-            iframe.removeAttribute("data-src");
-            iframe.classList.remove("lazy-iframe");
-            observer.unobserve(iframe);
-          });
-        }
-      }
-    });
-  }, {
-    root: streamerListEl ? streamerListEl.parentNode : null,
-    rootMargin: "200px",
-    threshold: 0,
-  });
-
-  const candidates = document.querySelectorAll(".lazy-iframe");
-  candidates.forEach((iframe) => lazyObserver.observe(iframe));
-}
-
-// --- Drag & Drop with ghost card preview ---
+// --- Drag & drop in the "all channels" sheet (custom order only) ---
 let dragSrcEl = null;
-let dragGhost = null;
 
-function removeGhost() {
-  if (dragGhost) {
-    dragGhost.remove();
-    dragGhost = null;
-  }
-}
-
-function createGhostClone(card) {
-  const clone = card.cloneNode(true);
-  clone.classList.remove("dragging");
-  clone.classList.add("drag-ghost");
-  clone.removeAttribute("draggable");
-  // Strip interactive elements from clone
-  clone.querySelectorAll("button, input, a, iframe").forEach((el) => {
-    el.removeAttribute("onclick");
-    el.style.pointerEvents = "none";
+function clearDropMarkers() {
+  sheetListEl?.querySelectorAll(".drop-before, .drop-after").forEach((row) => {
+    row.classList.remove("drop-before", "drop-after");
   });
-  return clone;
 }
-
-const REAL_CARDS = ".streamer-card:not(.dragging):not(.drag-ghost)";
-
 
 function initDragAndDrop() {
-  if (!streamerListEl || streamerListEl._dragInit) return;
-  streamerListEl._dragInit = true;
+  if (!sheetListEl || sheetListEl._dragInit) return;
+  sheetListEl._dragInit = true;
 
-  streamerListEl.addEventListener("dragstart", (e) => {
-    const card = e.target.closest(".streamer-card");
-    if (!card) return;
-    dragSrcEl = card;
-    e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("text/plain", card.dataset.index);
-    // Slight delay so browser captures drag image first
-    requestAnimationFrame(() => card.classList.add("dragging"));
+  sheetListEl.addEventListener("dragstart", (event) => {
+    const row = event.target.closest(".channel-row");
+    if (!row) return;
+    dragSrcEl = row;
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", row.dataset.index);
+    requestAnimationFrame(() => row.classList.add("dragging"));
   });
 
-  streamerListEl.addEventListener("dragend", () => {
-    if (dragSrcEl) dragSrcEl.classList.remove("dragging");
-    removeGhost();
+  sheetListEl.addEventListener("dragend", () => {
+    dragSrcEl?.classList.remove("dragging");
+    clearDropMarkers();
     dragSrcEl = null;
   });
 
-  streamerListEl.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-  });
-
-  streamerListEl.addEventListener("dragenter", (e) => {
+  sheetListEl.addEventListener("dragover", (event) => {
     if (!dragSrcEl) return;
-    const card = e.target.closest(REAL_CARDS);
-    if (!card || card === dragSrcEl) return;
-
-    if (!dragGhost) dragGhost = createGhostClone(dragSrcEl);
-
-    const rect = card.getBoundingClientRect();
-    const insertAfter = e.clientY > rect.top + rect.height / 2;
-    if (insertAfter) {
-      card.after(dragGhost);
-    } else {
-      card.before(dragGhost);
-    }
+    event.preventDefault();
+    clearDropMarkers();
+    const row = event.target.closest(".channel-row");
+    if (!row || row === dragSrcEl) return;
+    const rect = row.getBoundingClientRect();
+    row.classList.add(event.clientY > rect.top + rect.height / 2 ? "drop-after" : "drop-before");
   });
 
-  streamerListEl.addEventListener("dragleave", (e) => {
-    if (e.relatedTarget && !streamerListEl.contains(e.relatedTarget)) {
-      removeGhost();
-    }
-  });
+  sheetListEl.addEventListener("drop", async (event) => {
+    event.preventDefault();
+    const row = event.target.closest(".channel-row");
+    if (!dragSrcEl || !row || row === dragSrcEl) return;
+    const from = Number(dragSrcEl.dataset.index);
+    let to = Number(row.dataset.index) + (row.classList.contains("drop-after") ? 1 : 0);
+    if (to > from) to -= 1;
+    clearDropMarkers();
+    if (!Number.isInteger(from) || !Number.isInteger(to) || from === to) return;
 
-  streamerListEl.addEventListener("drop", async (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-
-    if (!dragSrcEl) return;
-    const fromIndex = parseInt(e.dataTransfer.getData("text/plain"), 10);
-    if (isNaN(fromIndex)) { removeGhost(); return; }
-
-    // Determine target index from ghost position
-    const allCards = [...streamerListEl.querySelectorAll(REAL_CARDS)];
-    let toIndex = allCards.length;
-
-    if (dragGhost) {
-      // Walk forward from ghost to find the next real card
-      let sibling = dragGhost.nextElementSibling;
-      while (sibling && sibling.classList.contains("drag-ghost")) {
-        sibling = sibling.nextElementSibling;
-      }
-      if (sibling && sibling.classList.contains("streamer-card") && !sibling.classList.contains("dragging")) {
-        const nextIdx = parseInt(sibling.dataset.index, 10);
-        if (!isNaN(nextIdx)) toIndex = nextIdx;
-      }
-    }
-
-    removeGhost();
-
-    const adjustedTo = toIndex > fromIndex ? toIndex - 1 : toIndex;
-    if (adjustedTo === fromIndex) return;
-
-    const movedItem = state.streamers[fromIndex];
-    const newStreamers = [...state.streamers];
-    newStreamers.splice(fromIndex, 1);
-    newStreamers.splice(adjustedTo, 0, movedItem);
-    state.streamers = newStreamers;
-
-    await chrome.storage.local.set({ betaGeneralStreamers: newStreamers });
+    const reordered = [...state.streamers];
+    const [moved] = reordered.splice(from, 1);
+    reordered.splice(to, 0, moved);
+    state.streamers = reordered;
+    await chrome.storage.local.set({ betaGeneralStreamers: reordered });
     renderStreamers();
   });
 }
@@ -489,213 +420,421 @@ function sortStreamers(list, mode) {
   }
 }
 
-function renderStreamers() {
-  if (!streamerListEl) return;
-  streamerListEl.innerHTML = "";
+const PINS_KEY = "betaPinnedIds";
+const GROUPS_KEY = "betaChannelGroups";
+const JUST_LIVE_MINUTES = 15;
+const CLOSE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
 
-  if (!state.streamers.length) {
-    streamerListEl.classList.add("empty");
-    const emptyState = document.createElement("p");
-    emptyState.className = "empty-state";
-    emptyState.dataset.i18n = "popup.emptyState";
-    applyTranslations(emptyState);
-    streamerListEl.appendChild(emptyState);
-    return;
+let liveOrder = [];
+let justLiveIds = new Set();
+let activityRequest = 0;
+
+function getSortMode() {
+  return document.getElementById("sort-order")?.value || "live";
+}
+
+function isLiveId(id) {
+  return Boolean(state.statuses[id]?.active?.isLive);
+}
+
+function isPinned(id) {
+  return state.pinnedIds.includes(id);
+}
+
+function nameFor(id) {
+  const streamer = state.streamers.find((s) => s.id === id);
+  if (!streamer) return "";
+  const platformId = streamer.platform || DEFAULT_PLATFORM;
+  return streamer.displayName || formatHandleForDisplay(platformId, streamer.handle || streamer.twitch);
+}
+
+function viewersOf(id) {
+  const status = state.statuses[id];
+  const viewers = status?.active?.viewers ?? status?.viewers;
+  return Number.isFinite(viewers) ? viewers : 0;
+}
+
+function startedMinutesAgo(id) {
+  const start = Date.parse(state.statuses[id]?.active?.startedAt);
+  return Number.isFinite(start) ? (Date.now() - start) / 60000 : null;
+}
+
+async function toggleStreamerAlert(id, enabled, { type, key, onKey, offKey }) {
+  const result = await sendMessage({ type, id, enabled });
+  if (!result || result.error) {
+    if (result?.error) showFeedback(result.error, "error");
+    return false;
   }
+  // Views re-render from state: keep the accepted flag there.
+  state.streamers = state.streamers.map((s) => (s.id === id ? { ...s, [key]: enabled } : s));
+  showFeedback(t(enabled ? onKey : offKey, { name: nameFor(id) }), "success");
+  return true;
+}
 
-  streamerListEl.classList.remove("empty");
-  const fragment = document.createDocumentFragment();
-
-  // Sort streamers based on selected order (live-first keeps live cards before offline)
-  const sortSelect = document.getElementById("sort-order");
-  const sortMode = sortSelect?.value || "live";
-  const streamersToRender = sortStreamers([...state.streamers], sortMode);
-
-  const callbacks = {
-    onToggleNotify: async (id, enabled) => {
-      const result = await sendMessage({
-        type: "toggleNotifications",
-        id,
-        enabled,
-      });
-
-      if (result?.error) {
-        showFeedback(result.error, "error");
-        return false;
-      } else {
-        const s = state.streamers.find((x) => x.id === id);
-        const messageKey = enabled ? "popup.toast.notifyEnabled" : "popup.toast.notifyDisabled";
-        if (s) {
-          const platformId = s.platform || DEFAULT_PLATFORM;
-          const name = s.displayName || formatHandleForDisplay(platformId, s.handle || s.twitch);
-          showFeedback(t(messageKey, { name }), "success");
-        }
-        return true;
-      }
-    },
-    onToggleGameNotify: async (id, enabled) => {
-      const result = await sendMessage({
-        type: "toggleGameNotifications",
-        id,
-        enabled,
-      });
-
-      if (result?.error) {
-        showFeedback(result.error, "error");
-        return false;
-      } else {
-        const s = state.streamers.find((x) => x.id === id);
-        const messageKey = enabled ? "popup.toast.gameNotifyEnabled" : "popup.toast.gameNotifyDisabled";
-        if (s) {
-          const platformId = s.platform || DEFAULT_PLATFORM;
-          const name = s.displayName || formatHandleForDisplay(platformId, s.handle || s.twitch);
-          showFeedback(t(messageKey, { name }), "success");
-        }
-        return true;
-      }
-    },
-    onToggleTitleNotify: async (id, enabled) => {
-      const result = await sendMessage({
-        type: "toggleTitleNotifications",
-        id,
-        enabled,
-      });
-
-      if (result?.error) {
-        showFeedback(result.error, "error");
-        return false;
-      }
-      const s = state.streamers.find((x) => x.id === id);
-      const messageKey = enabled ? "popup.toast.titleNotifyEnabled" : "popup.toast.titleNotifyDisabled";
-      if (s) {
-        const platformId = s.platform || DEFAULT_PLATFORM;
-        const name = s.displayName || formatHandleForDisplay(platformId, s.handle || s.twitch);
-        showFeedback(t(messageKey, { name }), "success");
-      }
-      return true;
-    },
-    onOpen: (url) => {
-      chrome.tabs.create({ url }, () => window.close());
-    },
-    onRemove: async (id, name) => {
-      const result = await sendMessage({ type: "removeStreamer", id });
-      if (result?.success) {
-        showFeedback(t("popup.feedback.removeSuccess", { name }), "success");
-        await loadStreamers();
-      } else if (result?.error) {
-        showFeedback(result.error, "error");
-      }
-    },
-  };
-
-  const currentLiveIds = new Set();
-
-  streamersToRender.forEach((streamer, index) => {
-    const status = state.statuses[streamer.id] || {};
-    const activeStatus = status?.active || {};
-    const cardFragment = createStreamerCard(streamer, status, template, callbacks);
-    const card = cardFragment.querySelector(".streamer-card");
-    card.dataset.id = streamer.id;
-    card.dataset.index = index;
-    if (sortMode !== "custom") card.removeAttribute("draggable");
-
-    if (activeStatus.isLive) currentLiveIds.add(streamer.id);
-
-    if (activeStatus.isLive && previousLiveIds.size > 0 && !previousLiveIds.has(streamer.id)) {
-      card.classList.add("just-went-live");
-      card.addEventListener("animationend", () => card.classList.remove("just-went-live"), { once: true });
+const streamerCallbacks = {
+  onToggleNotify: (id, enabled) => toggleStreamerAlert(id, enabled, {
+    type: "toggleNotifications",
+    key: "notificationsEnabled",
+    onKey: "popup.toast.notifyEnabled",
+    offKey: "popup.toast.notifyDisabled",
+  }),
+  onToggleGameNotify: (id, enabled) => toggleStreamerAlert(id, enabled, {
+    type: "toggleGameNotifications",
+    key: "gameNotificationsEnabled",
+    onKey: "popup.toast.gameNotifyEnabled",
+    offKey: "popup.toast.gameNotifyDisabled",
+  }),
+  onToggleTitleNotify: (id, enabled) => toggleStreamerAlert(id, enabled, {
+    type: "toggleTitleNotifications",
+    key: "titleNotificationsEnabled",
+    onKey: "popup.toast.titleNotifyEnabled",
+    offKey: "popup.toast.titleNotifyDisabled",
+  }),
+  onOpen: (url) => {
+    chrome.tabs.create({ url }, () => window.close());
+  },
+  onRemove: async (id, name) => {
+    const result = await sendMessage({ type: "removeStreamer", id });
+    if (result?.success) {
+      showFeedback(t("popup.feedback.removeSuccess", { name }), "success");
+      await loadStreamers();
+    } else if (result?.error) {
+      showFeedback(result.error, "error");
     }
+  },
+};
 
-    card.addEventListener("click", (e) => {
-      if (e.target.closest("button, .card-actions, .confirm-overlay, input, .hover-player-wrap")) return;
-      const platformId = streamer.platform || DEFAULT_PLATFORM;
-      const url = buildProfileUrl(platformId, streamer.handle || streamer.twitch || streamer.id);
-      chrome.tabs.create({ url }, () => window.close());
-    });
-    card.style.cursor = "pointer";
-
-    if (lastAddedId) {
-      const compKey = getHandleComparisonKey(
-        streamer.platform || DEFAULT_PLATFORM,
-        streamer.handle || streamer.twitch
-      );
-      if (compKey === lastAddedId) {
-        card.classList.add("card-enter");
-        card.addEventListener("animationend", () => card.classList.remove("card-enter"), { once: true });
-        lastAddedId = null;
-      }
-    }
-
-    fragment.appendChild(cardFragment);
-  });
-
-  previousLiveIds = currentLiveIds;
-
-  streamerListEl.appendChild(fragment);
-
-  initDragAndDrop();
-  observeLazyIframes();
-  syncStatsAvatarHeight();
+// --- Pins and groups: popup-only data, stored beside the streamer list ---
+async function togglePin(id) {
+  const pinned = !isPinned(id);
+  state.pinnedIds = pinned ? [...state.pinnedIds, id] : state.pinnedIds.filter((x) => x !== id);
+  await chrome.storage.local.set({ [PINS_KEY]: state.pinnedIds });
+  showFeedback(t(pinned ? "popup.cplus.pinned" : "popup.cplus.unpinned", { name: nameFor(id) }), "success");
+  renderStreamers();
 }
 
-function renderGreeting() {
-  const greetingTitleEl = document.getElementById("greeting-title");
-  if (!greetingTitleEl) return;
-  const greetingName = state.userProfile?.displayName || state.userProfile?.handle || "";
-  const hour = new Date().getHours();
-  const salut = hour < 18 ? t("popup.greetingMorning") : t("popup.greetingEvening");
-  const greetingSub = t("popup.greetingSub");
-  const line1 = document.createTextNode(greetingName ? `${salut} ${greetingName}.` : `${salut}.`);
-  const br = document.createElement("br");
-  const sub = document.createElement("span");
-  sub.className = "greeting-sub";
-  sub.textContent = greetingSub;
-  greetingTitleEl.replaceChildren(line1, br, sub);
-  applyStatsAvatar();
+async function saveGroups(groups) {
+  state.groups = groups;
+  await chrome.storage.local.set({ [GROUPS_KEY]: groups });
 }
 
-/**
- * Pose l'avatar Twitch de l'utilisateur en filigrane derriere la ligne
- * Points / Watch time. L'URL vient de l'API Twitch via l'onboarding, mais elle
- * transite par chrome.storage : on la revalide avant de l'injecter dans une
- * propriete CSS, une url() n'etant pas un contexte sur.
- */
-function applyStatsAvatar() {
-  const view = document.getElementById("streamers-view");
-  if (!view) return;
-  const url = safeAvatarUrl(state.userProfile?.avatarUrl);
-  if (!url) {
-    view.style.removeProperty("--stats-avatar");
-    return;
-  }
-  view.style.setProperty("--stats-avatar", `url("${url}")`);
-  syncStatsAvatarHeight();
+async function createGroup(name) {
+  const clean = name.trim().slice(0, 24);
+  if (!clean) return;
+  const group = { id: `g_${Date.now().toString(36)}`, name: clean, memberIds: [] };
+  await saveGroups([...state.groups, group]);
+  // eslint-disable-next-line require-atomic-updates -- filtre posé par le geste qui vient de créer le groupe.
+  state.groupFilter = group.id;
+  renderSheet();
 }
 
-/**
- * Hauteur du filigrane : du haut de la vue jusqu'au bas de la ligne de filtres.
- * Elle est mesuree et non figee, parce qu'elle bouge avec la longueur des
- * textes traduits et avec la banniere d'evenement, qui s'intercale entre les
- * deux rangees quand elle est visible.
- */
-function syncStatsAvatarHeight() {
-  const view = document.getElementById("streamers-view");
-  const lastRow = view?.querySelector(".section-row");
-  if (!view || !lastRow) return;
-  const height = lastRow.getBoundingClientRect().bottom - view.getBoundingClientRect().top;
-  if (height > 0) view.style.setProperty("--stats-photo-height", `${Math.round(height)}px`);
+async function deleteGroup(id) {
+  await saveGroups(state.groups.filter((group) => group.id !== id));
+  if (state.groupFilter === id) state.groupFilter = "all";
+  renderSheet();
 }
 
-/** Renvoie l'URL si c'est bien du https, sinon une chaine vide. */
+async function setStreamerGroup(streamerId, groupId) {
+  await saveGroups(state.groups.map((group) => {
+    const members = group.memberIds.filter((member) => member !== streamerId);
+    return { ...group, memberIds: group.id === groupId ? [...members, streamerId] : members };
+  }));
+  renderSheet();
+}
+
+function groupOf(id) {
+  return state.groups.find((group) => group.memberIds.includes(id)) || null;
+}
+
+const miniCallbacks = {
+  onSelect: (id) => {
+    state.selectedId = id;
+    renderStreamers();
+  },
+  onTogglePin: togglePin,
+};
+
+const rowCallbacks = {
+  ...streamerCallbacks,
+  onTogglePin: togglePin,
+  onSetGroup: setStreamerGroup,
+  onFeature: (id) => {
+    state.selectedId = id;
+    closeSheet({ restoreFocus: false });
+    renderStreamers();
+  },
+};
+
+/** Sorted list with pinned channels first. */
+function orderStreamers() {
+  const sorted = sortStreamers([...state.streamers], getSortMode());
+  return [...sorted.filter((s) => isPinned(s.id)), ...sorted.filter((s) => !isPinned(s.id))];
+}
+
+function passesPlatformFilter(streamer) {
+  if (state.platformFilter === "all") return true;
+  if (state.platformFilter === "pinned") return isPinned(streamer.id);
+  return (streamer.platform || DEFAULT_PLATFORM) === state.platformFilter;
+}
+
+/** Returns the URL if it is https, otherwise an empty string. */
 function safeAvatarUrl(raw) {
   if (typeof raw !== "string" || !raw) return "";
   try {
     const parsed = new URL(raw);
-    // new URL() normalise et encode les guillemets : sortie sure dans une url().
     return parsed.protocol === "https:" ? parsed.href : "";
   } catch {
     return "";
   }
+}
+
+function renderGreeting(live = state.streamers.filter((s) => isLiveId(s.id))) {
+  const titleEl = document.getElementById("greeting-title");
+  if (titleEl) {
+    const name = state.userProfile?.displayName || state.userProfile?.handle || "";
+    const hello = new Date().getHours() < 18 ? t("popup.greetingMorning") : t("popup.greetingEvening");
+    const sub = document.createElement("span");
+    sub.className = "greeting-sub";
+    sub.textContent = t("popup.greetingSub");
+    titleEl.replaceChildren(document.createTextNode(name ? `${hello} ${name}.` : `${hello}.`), document.createElement("br"), sub);
+  }
+  const hintEl = document.getElementById("greeting-live-count");
+  if (hintEl) {
+    const countKey = live.length > 1 ? "popup.greetingLiveCountPlural" : "popup.greetingLiveCountSingular";
+    const parts = [t(countKey, { count: live.length })];
+    const newest = live.find((s) => justLiveIds.has(s.id));
+    if (newest) parts.push(t("popup.cplus.justStarted", { name: nameFor(newest.id) }));
+    hintEl.textContent = parts.join(" · ");
+  }
+}
+
+function renderFeatured() {
+  if (!stageEl || !stageMediaEl || !stageFeatureEl) return;
+  const index = liveOrder.indexOf(state.selectedId);
+  if (stagePagerEl) stagePagerEl.hidden = liveOrder.length < 2;
+  if (stageCountEl) stageCountEl.textContent = `${index + 1} / ${liveOrder.length}`;
+
+  const streamer = state.streamers.find((s) => s.id === state.selectedId);
+  if (!streamer) {
+    renderStageEmpty(stageEl, stageMediaEl, stageFeatureEl, {
+      kind: state.streamers.length ? "nobody" : "empty",
+      offlineCount: state.streamers.length,
+      avatarUrl: safeAvatarUrl(state.userProfile?.avatarUrl),
+      onOpenSheet: openSheet,
+    });
+    return;
+  }
+  renderStage(stageEl, stageMediaEl, stageFeatureEl, streamer, state.statuses[streamer.id], {
+    isNew: justLiveIds.has(streamer.id),
+  }, streamerCallbacks);
+}
+
+function stepFeatured(delta) {
+  if (liveOrder.length < 2) return;
+  const index = liveOrder.indexOf(state.selectedId);
+  state.selectedId = liveOrder[(index + delta + liveOrder.length) % liveOrder.length];
+  renderStreamers();
+}
+
+function renderStreamers() {
+  if (!streamerListEl) return;
+  const ordered = orderStreamers();
+  const live = ordered.filter((s) => isLiveId(s.id));
+  const offline = ordered.filter((s) => !isLiveId(s.id));
+  const shownLive = live.filter(passesPlatformFilter);
+
+  justLiveIds = new Set(live.filter((s) => {
+    const minutes = startedMinutesAgo(s.id);
+    const appeared = previousLiveIds.size > 0 && !previousLiveIds.has(s.id);
+    return appeared || (minutes !== null && minutes <= JUST_LIVE_MINUTES);
+  }).map((s) => s.id));
+  previousLiveIds = new Set(live.map((s) => s.id));
+
+  if (lastAddedId) {
+    const added = state.streamers.find((s) => getHandleComparisonKey(s.platform || DEFAULT_PLATFORM, s.handle || s.twitch) === lastAddedId);
+    if (added && isLiveId(added.id)) state.selectedId = added.id;
+    lastAddedId = null;
+  }
+
+  liveOrder = shownLive.map((s) => s.id);
+  if (!liveOrder.includes(state.selectedId)) {
+    const best = [...shownLive].sort((a, b) => (Number(isPinned(b.id)) - Number(isPinned(a.id))) || (viewersOf(b.id) - viewersOf(a.id)))[0];
+    state.selectedId = best ? best.id : null;
+  }
+
+  const fragment = document.createDocumentFragment();
+  shownLive.forEach((streamer) => {
+    fragment.appendChild(createMiniCard(streamer, state.statuses[streamer.id], {
+      selected: streamer.id === state.selectedId,
+      pinned: isPinned(streamer.id),
+      isNew: justLiveIds.has(streamer.id),
+    }, miniCallbacks));
+  });
+  if (state.streamers.length) {
+    fragment.appendChild(createAllChannelsTile(offline.slice(0, 3), offline.length, openSheet));
+  }
+  streamerListEl.replaceChildren(fragment);
+
+  const liveCountEl = document.getElementById("live-count");
+  if (liveCountEl) liveCountEl.textContent = t("popup.cplus.liveOf", { live: live.length, total: state.streamers.length });
+
+  renderGreeting(live);
+  renderFeatured();
+  if (sheetEl && !sheetEl.hidden) renderSheet();
+  renderActivity();
+}
+
+function setChip(id, visible, text) {
+  const chip = document.getElementById(id);
+  if (!chip) return;
+  chip.hidden = !visible;
+  const label = chip.querySelector(".chip-label");
+  if (label) label.textContent = text;
+}
+
+/** Today's work, read from the event log the background already keeps. */
+async function renderActivity() {
+  document.getElementById("activity-auto")?.toggleAttribute("hidden", state.preferences.autoClaimChannelPoints === false);
+  const request = ++activityRequest;
+  let logs;
+  try {
+    logs = (await chrome.runtime.sendMessage({ type: "getEventLogs" }))?.logs || [];
+  } catch {
+    logs = [];
+  }
+  if (request !== activityRequest) return;
+  const midnight = new Date();
+  midnight.setHours(0, 0, 0, 0);
+  const today = logs.filter((log) => log.timestamp >= midnight.getTime());
+  const points = today.filter((log) => log.type === "points").reduce((sum, log) => sum + (Number(log.value) || 0), 0);
+  const drops = today.filter((log) => log.type === "drop").length;
+  setChip("activity-points", points > 0, t("popup.cplus.pointsToday", { count: formatNumber(points) }));
+  setChip("activity-drops", drops > 0, t(drops > 1 ? "popup.cplus.dropsTodayPlural" : "popup.cplus.dropsToday", { count: drops }));
+}
+
+// --- All channels sheet ---
+function openSheet() {
+  if (!sheetEl) return;
+  sheetEl.hidden = false;
+  if (sheetScrimEl) sheetScrimEl.hidden = false;
+  renderSheet();
+  sheetSearchEl?.focus();
+}
+
+function closeSheet({ restoreFocus = true } = {}) {
+  if (!sheetEl || sheetEl.hidden) return;
+  sheetEl.hidden = true;
+  if (sheetScrimEl) sheetScrimEl.hidden = true;
+  state.sheetQuery = "";
+  if (sheetSearchEl) sheetSearchEl.value = "";
+  if (restoreFocus) document.getElementById("open-all-channels")?.focus();
+}
+
+function renderGroupChips() {
+  if (!sheetGroupsEl) return;
+  const chips = [
+    { id: "all", label: t("popup.osd.filterAll") },
+    { id: "pinned", label: t("popup.cplus.pinnedFilter") },
+    ...state.groups.map((group) => ({ id: group.id, label: group.name, removable: true })),
+  ];
+  const fragment = document.createDocumentFragment();
+  chips.forEach((chip) => {
+    const wrap = document.createElement("span");
+    wrap.className = "group-chip-wrap";
+    const chipButton = document.createElement("button");
+    chipButton.type = "button";
+    chipButton.className = "group-chip";
+    chipButton.textContent = chip.label;
+    chipButton.setAttribute("aria-pressed", String(state.groupFilter === chip.id));
+    chipButton.addEventListener("click", () => {
+      state.groupFilter = chip.id;
+      renderSheet();
+    });
+    wrap.appendChild(chipButton);
+    if (chip.removable && state.groupFilter === chip.id) {
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "group-chip-remove";
+      remove.innerHTML = CLOSE_ICON;
+      remove.setAttribute("aria-label", t("popup.cplus.deleteGroup", { name: chip.label }));
+      remove.title = remove.getAttribute("aria-label");
+      remove.addEventListener("click", () => deleteGroup(chip.id));
+      wrap.appendChild(remove);
+    }
+    fragment.appendChild(wrap);
+  });
+
+  const add = document.createElement("button");
+  add.type = "button";
+  add.className = "group-chip group-chip-add";
+  add.textContent = t("popup.cplus.newGroup");
+  add.addEventListener("click", () => {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.className = "group-input";
+    input.maxLength = 24;
+    input.placeholder = t("popup.cplus.groupPlaceholder");
+    input.setAttribute("aria-label", t("popup.cplus.groupPlaceholder"));
+    let done = false;
+    const commit = async () => {
+      if (done) return;
+      done = true;
+      if (input.value.trim()) await createGroup(input.value);
+      else renderSheet();
+    };
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        commit();
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        done = true;
+        renderSheet();
+      }
+    });
+    input.addEventListener("blur", commit);
+    add.replaceWith(input);
+    input.focus();
+  });
+  fragment.appendChild(add);
+  sheetGroupsEl.replaceChildren(fragment);
+}
+
+function renderSheet() {
+  if (!sheetListEl) return;
+  const query = state.sheetQuery.trim().toLowerCase();
+  const groupMembers = state.groups.find((group) => group.id === state.groupFilter)?.memberIds || [];
+  const inFilter = (s) => {
+    if (state.groupFilter === "all") return true;
+    if (state.groupFilter === "pinned") return isPinned(s.id);
+    return groupMembers.includes(s.id);
+  };
+  const matches = orderStreamers()
+    .filter(inFilter)
+    .filter((s) => !query || nameFor(s.id).toLowerCase().includes(query) || String(s.handle || "").toLowerCase().includes(query));
+  const rows = [...matches.filter((s) => isLiveId(s.id)), ...matches.filter((s) => !isLiveId(s.id))];
+
+  if (sheetTotalEl) sheetTotalEl.textContent = String(rows.length);
+  renderGroupChips();
+
+  const fragment = document.createDocumentFragment();
+  if (rows.length === 0) {
+    const empty = document.createElement("li");
+    empty.className = "empty-state";
+    empty.textContent = t(state.streamers.length ? "popup.cplus.noMatch" : "popup.emptyState");
+    fragment.appendChild(empty);
+  }
+  rows.forEach((streamer) => {
+    fragment.appendChild(createChannelRow(streamer, state.statuses[streamer.id], {
+      query,
+      pinned: isPinned(streamer.id),
+      groups: state.groups,
+      groupId: groupOf(streamer.id)?.id || "",
+      index: state.streamers.findIndex((s) => s.id === streamer.id),
+      draggable: getSortMode() === "custom" && !query,
+    }, rowCallbacks));
+  });
+  sheetListEl.replaceChildren(fragment);
 }
 
 async function handleSavePseudo() {
@@ -730,7 +869,6 @@ async function handleSavePseudo() {
   if (result?.success) {
     // eslint-disable-next-line require-atomic-updates -- profil ecrit par une seule action utilisateur a la fois.
     state.userProfile = next;
-    renderGreeting();
     markButtonSuccess(pseudoSaveButton);
     showFeedback(t("popup.settings.pseudoSaved") || "Pseudo mis à jour", "success");
   } else {
@@ -828,11 +966,15 @@ function renderPreferences() {
   {
     const pvMode = prefs.previewsMode === "video" ? "video" : "image";
     previewsModeGroup?.querySelectorAll(".seg-btn").forEach((b) => {
-      b.classList.toggle("active", b.dataset.previewsMode === pvMode);
+      const isActive = b.dataset.previewsMode === pvMode;
+      b.classList.toggle("active", isActive);
+      b.setAttribute("aria-pressed", isActive ? "true" : "false");
     });
     const pvSize = ["s", "m", "l"].includes(prefs.previewsSize) ? prefs.previewsSize : "m";
     previewsSizeGroup?.querySelectorAll(".seg-btn").forEach((b) => {
-      b.classList.toggle("active", b.dataset.previewsSize === pvSize);
+      const isActive = b.dataset.previewsSize === pvSize;
+      b.classList.toggle("active", isActive);
+      b.setAttribute("aria-pressed", isActive ? "true" : "false");
     });
     if (previewsDelayInput) {
       const d = Number.isFinite(prefs.previewsShowDelayMs) ? prefs.previewsShowDelayMs : 200;
@@ -857,6 +999,15 @@ function renderPreferences() {
 let _watchTimeLoaded = false;
 let currentLogFilter = "all";
 
+const LOG_ICON_ATTRS = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+const LOG_ICONS = {
+  drop: `<svg ${LOG_ICON_ATTRS}><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>`,
+  moment: `<svg ${LOG_ICON_ATTRS}><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/></svg>`,
+  raid: `<svg ${LOG_ICON_ATTRS}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+  points: `<svg ${LOG_ICON_ATTRS}><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20"/></svg>`,
+  default: `<svg ${LOG_ICON_ATTRS}><circle cx="12" cy="12" r="4"/></svg>`,
+};
+
 async function renderEventLogs() {
   const container = document.getElementById("logs-container");
   if (!container) return;
@@ -877,28 +1028,24 @@ async function renderEventLogs() {
 
     container.innerHTML = filtered
       .map((log) => {
-        const timeStr = new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        let icon = "📌";
-        if (log.type === "drop") icon = "🎁";
-        else if (log.type === "moment") icon = "📸";
-        else if (log.type === "raid") icon = "🛡️";
-        else if (log.type === "points") icon = "💎";
-
+        const timeStr = new Date(log.timestamp).toLocaleTimeString(resolveLocale(getCurrentLanguage()), {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
         // log.text and log.channel originate from the Twitch DOM, so they must
         // be escaped before being interpolated into innerHTML.
         const label = escapeHtml(String(log.text || log.type || ""));
         const channel = log.channel ? escapeHtml(String(log.channel)) : "";
+        const icon = LOG_ICONS[log.type] || LOG_ICONS.default;
 
         return `
-          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:6px; font-size:12px;">
-            <div style="display:flex; align-items:center; gap:8px; min-width:0;">
-              <span>${icon}</span>
-              <div style="display:flex; flex-direction:column; min-width:0;">
-                <span style="font-weight:600; color:#efeff1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${label}</span>
-                ${channel ? `<span style="color:#bf94ff; font-size:11px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${channel}</span>` : ""}
-              </div>
-            </div>
-            <span style="color:#772ce8; font-size:11px; flex-shrink:0;">${timeStr}</span>
+          <div class="log-entry">
+            ${icon}
+            <span class="log-text">
+              <span class="log-label">${label}</span>
+              ${channel ? `<span class="log-channel">${channel}</span>` : ""}
+            </span>
+            <span class="log-time">${timeStr}</span>
           </div>
         `;
       })
@@ -913,7 +1060,12 @@ function setActiveTab(tabName) {
   tabButtons.forEach((button) => {
     const isActive = button.dataset.tab === tabName;
     button.classList.toggle("active", isActive);
+    button.setAttribute("aria-selected", isActive ? "true" : "false");
+    button.tabIndex = isActive ? 0 : -1;
   });
+
+  document.body.classList.toggle("is-settings", tabName !== "streamers");
+  if (tabName !== "streamers") closeSheet({ restoreFocus: false });
 
   const streamersView = document.getElementById("streamers-view");
   const settingsSection = document.getElementById("settings-section");
@@ -938,10 +1090,14 @@ async function loadStreamers() {
       "betaGeneralStreamers",
       "betaGeneralStatuses",
       "betaGeneralPreferences",
+      "betaPinnedIds",
+      "betaChannelGroups",
     ]);
 
     state.streamers = data.betaGeneralStreamers || [];
     state.statuses = data.betaGeneralStatuses || {};
+    if (Array.isArray(data.betaPinnedIds)) state.pinnedIds = data.betaPinnedIds;
+    if (Array.isArray(data.betaChannelGroups)) state.groups = data.betaChannelGroups;
     state.preferences = {
       ...state.preferences,
       ...(data.betaGeneralPreferences || {}),
@@ -1157,20 +1313,25 @@ function escapeHtml(str) {
 }
 
 async function handleExport() {
-  const raw = await chrome.storage.local.get([...ALLOWED_STORAGE_KEYS]);
-  const data = {};
-  for (const key of ALLOWED_STORAGE_KEYS) {
-    if (key in raw) data[key] = raw[key];
+  try {
+    const stored = await chrome.storage.local.get(BACKUP_KEYS);
+    const backup = buildBackup(stored, { version: chrome.runtime.getManifest().version });
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = backupFileName();
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    // Liberer l'URL tout de suite annulait parfois le telechargement : le
+    // navigateur n'avait pas encore lu le blob.
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    showFeedback(t("backup.exported"), "success");
+  } catch (error) {
+    console.error("Export error:", error);
+    showFeedback(t("popup.osd.exportError"), "error");
   }
-  const blob = new Blob([JSON.stringify(data, null, 2)], {
-    type: "application/json",
-  });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `streampulse-backup-${new Date().toISOString().slice(0, 10)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
 }
 
 async function handleResetStats() {
@@ -1191,56 +1352,9 @@ async function handleResetStats() {
 }
 
 function handleImportClick() {
-  fileImport?.click();
-}
-
-const ALLOWED_STORAGE_KEYS = new Set([
-  "betaGeneralStreamers",
-  "betaGeneralStatuses",
-  "betaGeneralStats",
-  "betaGeneralPreferences",
-  "betaWatchTimeData",
-  "streamPulseWatchTimeDaily",
-  "streampulse:scheduled",
-  "streampulse:thumbCache",
-]);
-
-function sanitizeImportData(raw) {
-  if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return null;
-  const cleaned = {};
-  for (const [key, value] of Object.entries(raw)) {
-    if (ALLOWED_STORAGE_KEYS.has(key)) {
-      cleaned[key] = value;
-    }
-  }
-  return Object.keys(cleaned).length > 0 ? cleaned : null;
-}
-
-function handleFileImport(event) {
-  const file = event.target.files?.[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = async (e) => {
-    try {
-      const json = JSON.parse(e.target.result);
-      const sanitized = sanitizeImportData(json);
-      if (!sanitized) {
-        throw new Error("Invalid or empty backup file");
-      }
-      const { onboardingShown } = await chrome.storage.local.get("onboardingShown");
-      await chrome.storage.local.clear();
-      if (onboardingShown) sanitized.onboardingShown = true;
-      await chrome.storage.local.set(sanitized);
-      showFeedback(t("popup.feedback.importSuccess"), "success");
-      setTimeout(() => window.location.reload(), 1000);
-    } catch (error) {
-      console.error("Import error:", error);
-      showFeedback(t("popup.feedback.importError"), "error");
-    }
-  };
-  reader.readAsText(file);
-  event.target.value = "";
+  // A file picker opened from the popup makes Chrome close the popup, which
+  // dropped the chosen file without a word: restoring runs in its own tab.
+  chrome.tabs.create({ url: chrome.runtime.getURL("html/restore.html") }, () => window.close());
 }
 
 function updateLanguageButtonsState() {
@@ -1278,7 +1392,6 @@ function refreshTranslations() {
   renderStats();
   renderPlatformPicker();
   setSelectedPlatform(state.selectedPlatform);
-  renderGreeting();
 }
 
 async function handleLanguageClick(event) {
@@ -1430,6 +1543,102 @@ async function updatePreferences(updates) {
   return true;
 }
 
+function showMenuPanel(panelName, { focus = false } = {}) {
+  document.querySelectorAll(".menu-tab").forEach((tab) => {
+    const isActive = tab.dataset.panel === panelName;
+    tab.setAttribute("aria-selected", isActive ? "true" : "false");
+    tab.tabIndex = isActive ? 0 : -1;
+    if (isActive && focus) tab.focus();
+  });
+  document.querySelectorAll(".menu-panel").forEach((panel) => {
+    panel.hidden = panel.id !== `menu-${panelName}`;
+  });
+  const panels = document.getElementById("menu-panels");
+  if (panels) panels.scrollTop = 0;
+}
+
+function initMenuNav() {
+  const nav = document.querySelector(".menu-nav");
+  if (!nav) return;
+  nav.addEventListener("click", (event) => {
+    const tab = event.target.closest(".menu-tab");
+    if (tab) showMenuPanel(tab.dataset.panel);
+  });
+  nav.addEventListener("keydown", (event) => {
+    const list = Array.from(nav.querySelectorAll(".menu-tab"));
+    const index = list.indexOf(document.activeElement);
+    if (index === -1) return;
+    const targets = {
+      ArrowDown: list[(index + 1) % list.length],
+      ArrowUp: list[(index - 1 + list.length) % list.length],
+      Home: list[0],
+      End: list[list.length - 1],
+    };
+    const next = targets[event.key];
+    if (!next) return;
+    event.preventDefault();
+    showMenuPanel(next.dataset.panel, { focus: true });
+  });
+}
+
+/**
+ * A vertical mouse wheel scrolls the live strip sideways, eased toward a target
+ * so it glides instead of jumping 100px per notch. Trackpads keep their native
+ * horizontal scrolling (deltaX), and reduced motion jumps straight there.
+ */
+function initStripWheel() {
+  if (!streamerListEl) return;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let target = 0;
+  let frame = 0;
+
+  const glide = () => {
+    const current = streamerListEl.scrollLeft;
+    const distance = target - current;
+    if (Math.abs(distance) < 1) {
+      streamerListEl.scrollLeft = target;
+      frame = 0;
+      return;
+    }
+    streamerListEl.scrollLeft = current + distance * 0.2;
+    frame = requestAnimationFrame(glide);
+  };
+
+  streamerListEl.addEventListener("wheel", (event) => {
+    if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+    event.preventDefault();
+    const max = streamerListEl.scrollWidth - streamerListEl.clientWidth;
+    const step = event.deltaMode === 1 ? event.deltaY * 40 : event.deltaY;
+    if (!frame) target = streamerListEl.scrollLeft;
+    target = Math.round(Math.max(0, Math.min(max, target + step)));
+    if (reduceMotion.matches) {
+      streamerListEl.scrollLeft = target;
+      return;
+    }
+    // Re-arm on every notch: a frame the browser dropped can never leave the
+    // strip stuck.
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(glide);
+  }, { passive: false });
+}
+
+function initHomeInteractions() {
+  document.getElementById("stage-prev")?.addEventListener("click", () => stepFeatured(-1));
+  document.getElementById("stage-next")?.addEventListener("click", () => stepFeatured(1));
+  document.getElementById("open-all-channels")?.addEventListener("click", openSheet);
+  document.getElementById("sheet-close")?.addEventListener("click", () => closeSheet());
+  sheetScrimEl?.addEventListener("click", () => closeSheet());
+  sheetEl?.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !event.defaultPrevented) closeSheet();
+  });
+  sheetSearchEl?.addEventListener("input", (event) => {
+    state.sheetQuery = event.target.value;
+    renderSheet();
+  });
+  initStripWheel();
+  initDragAndDrop();
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     // Show skeleton placeholders immediately
@@ -1445,6 +1654,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       "betaGeneralPreferences",
       "betaGeneralStats",
       "userProfile",
+      "betaPinnedIds",
+      "betaChannelGroups",
     ]);
     const _storageMs = performance.now() - _t0;
     if (_storageMs > 200) {
@@ -1463,9 +1674,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     applyTranslations(document);
     syncDocumentLanguage("popup.htmlLang");
 
-    // Setup Greeting V7: #greeting-title + old header fallback
     state.userProfile = data.userProfile || null;
-    renderGreeting();
 
     // Pre-fill pseudo input in settings
     if (pseudoInput) {
@@ -1475,6 +1684,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 2. Setup State & Render UI Immediately
     state.streamers = data.betaGeneralStreamers || [];
     state.statuses = data.betaGeneralStatuses || {};
+    if (Array.isArray(data.betaPinnedIds)) state.pinnedIds = data.betaPinnedIds;
+    if (Array.isArray(data.betaChannelGroups)) state.groups = data.betaChannelGroups;
     state.preferences = { ...defaultPreferences, ...prefs };
 
     removeSkeletons();
@@ -1486,32 +1697,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Render Stats (settings + header badge + V7 greeting bar): use pre-fetched data
     renderStats(data.betaGeneralStats || {}).catch(() => {});
-    // V7 live viewers total
-    const updateV7Stats = () => {
-      const liveStreamers = state.streamers.filter(s => state.statuses[s.id]?.active?.isLive);
-      const totalViewers = liveStreamers.reduce((acc, s) => acc + (state.statuses[s.id]?.viewers || 0), 0);
-      const statViewersEl = document.getElementById("stat-viewers");
-      if (statViewersEl) statViewersEl.textContent = totalViewers > 0 ? formatNumber(totalViewers) : "--";
-      const liveCountEl = document.getElementById("live-count");
-      if (liveCountEl) liveCountEl.textContent = String(liveStreamers.length).padStart(2, "0");
-      const offlineCountEl = document.getElementById("offline-count");
-      if (offlineCountEl) offlineCountEl.textContent = String(state.streamers.length - liveStreamers.length).padStart(2, "0");
-      const greetingLiveCountEl = document.getElementById("greeting-live-count");
-      if (greetingLiveCountEl) {
-        const count = liveStreamers.length;
-        const countKey = count > 1
-          ? "popup.greetingLiveCountPlural"
-          : "popup.greetingLiveCountSingular";
-        greetingLiveCountEl.textContent = t(countKey, { count });
-      }
-    };
-    updateV7Stats();
-
     // Live-update stats when storage changes (points claimed while popup open)
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area !== "local") return;
       if (changes.betaGeneralStats) {
         renderStats();
+      }
+      // Statuses refreshed by the background while the popup is open.
+      if (changes.betaGeneralStatuses) {
+        state.statuses = changes.betaGeneralStatuses.newValue || {};
+        renderStreamers();
       }
       // Only re-render watch time if the user is actually looking at it.
       // Otherwise we'd reload a potentially-large blob every 60s for nothing.
@@ -1537,6 +1732,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         setActiveTab(tabName);
       });
     });
+    initMenuNav();
+    initHomeInteractions();
 
     if (streamerInput) {
       streamerInput.addEventListener("input", (e) => {
@@ -1572,24 +1769,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("platform-filter-group")?.addEventListener("click", (e) => {
       const btn = e.target.closest(".pf-btn");
       if (!btn) return;
-      document.querySelectorAll("#platform-filter-group .pf-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      const filter = btn.dataset.filter;
-      document.querySelectorAll("#streamer-list .streamer-card").forEach(card => {
-        if (filter === "all") {
-          card.hidden = false;
-        } else {
-          card.hidden = card.dataset.platform !== filter;
-        }
+      document.querySelectorAll("#platform-filter-group .pf-btn").forEach((b) => {
+        const isActive = b === btn;
+        b.classList.toggle("active", isActive);
+        b.setAttribute("aria-pressed", isActive ? "true" : "false");
       });
+      state.platformFilter = btn.dataset.filter || "all";
+      renderStreamers();
     });
 
     // Log filter buttons
     document.getElementById("log-filter-group")?.addEventListener("click", (e) => {
       const btn = e.target.closest(".pf-btn");
       if (!btn) return;
-      document.querySelectorAll("#log-filter-group .pf-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
+      document.querySelectorAll("#log-filter-group .pf-btn").forEach((b) => {
+        const isActive = b === btn;
+        b.classList.toggle("active", isActive);
+        b.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
       currentLogFilter = btn.dataset.logFilter || "all";
       renderEventLogs().catch(() => {});
     });
@@ -1793,7 +1990,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     btnExport?.addEventListener("click", handleExport);
     btnImport?.addEventListener("click", handleImportClick);
     btnResetStats?.addEventListener("click", handleResetStats);
-    fileImport?.addEventListener("change", handleFileImport);
 
     pseudoSaveButton?.addEventListener("click", handleSavePseudo);
     pseudoInput?.addEventListener("keydown", (e) => {

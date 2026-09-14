@@ -1,125 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title data-i18n="changelog.documentTitle">StreamPulse: What's new</title>
-    <!-- Inherit the onboarding design system, then layer only the patch-notes
-         specifics on top. Duplicating the tokens and ambient layers would mean
-         two files to keep in sync every time the look changes. -->
-    <link rel="stylesheet" href="../css/onboarding.css" />
+    <title data-i18n="changelog.documentTitle">StreamPulse : nouveautés</title>
+    <link rel="icon" href="../images/photos/128px.png" />
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/pages.css" />
     <link rel="stylesheet" href="../css/changelog.css" />
   </head>
   <body>
-    <!-- ═══ AMBIENT BACKGROUND LAYERS (identical to onboarding step 0) ═══ -->
-    <div class="bg-mesh"></div>
-    <div class="bg-pulse"></div>
-    <div class="bg-grid"></div>
-    <canvas id="particles"></canvas>
-    <div class="bg-scan"></div>
-    <div class="bg-vignette"></div>
-
-    <!-- Coordinate markers (DAW/console vibe) -->
-    <span class="bg-coords bg-coords-tl">N · 48°51′24″ · LIVE</span>
-    <span class="bg-coords bg-coords-tr">SYS / STREAMPULSE / <span id="cl-sys-version">V1.0</span></span>
-    <span class="bg-coords bg-coords-bl">CH 02 · CHANGELOG</span>
-    <span class="bg-coords bg-coords-br">REC · 0.0 dB · 60FPS</span>
-
-    <main class="container">
-      <!-- ═══ TOP HEADER ═══ -->
-      <header class="top-header">
-        <div class="brand">
-          <img class="brand-mark" src="../images/photos/logosp.png" alt="StreamPulse" />
-          <span class="brand-name">STREAMPULSE</span>
-          <span class="brand-sep"></span>
-          <span class="brand-sub" data-i18n="changelog.brandSub">Release notes</span>
-          <span class="brand-live">ON AIR</span>
-        </div>
-        <span class="step-counter">
-          <span class="step-counter-label" data-i18n="changelog.build">BUILD</span>
-          <span class="step-counter-current-wrap">
-            <span id="cl-version">—</span>
-          </span>
+    <div class="page-shell">
+      <header class="site-head">
+        <span class="brand">
+          <img class="brand-mark" src="../images/photos/logosp.png" alt="" />
+          <span>StreamPulse</span>
+          <span class="brand-sub" data-i18n="changelog.brandSub">Notes de version</span>
+        </span>
+        <span class="head-end">
+          <span class="pill pill-lcd"><i></i><span id="cl-version">—</span></span>
         </span>
       </header>
 
-      <div class="stage">
-        <section class="wizard-step active">
-          <div class="step-frame step-frame-single">
-            <div class="welcome-frame">
-              <p class="welcome-tagline" id="cl-date">UPDATE INSTALLED</p>
-
-              <!-- Same oversized serif display as onboarding step 0. Words are
-                   injected by changelog.js so each one keeps its stagger. -->
-              <h1 class="welcome-display" id="cl-display"></h1>
-
-              <div class="cl-hero-rule"></div>
-
-              <p class="welcome-sub" id="cl-subtitle"></p>
-
-              <!-- Populated by changelog.js. No inline handlers: verify.mjs
-                   rejects them. -->
-              <div class="cl-changes" id="cl-changes" aria-label="Changements"></div>
-
-              <section class="cl-thanks" id="cl-thanks" hidden>
-                <h2 class="cl-section-title">
-                  <span class="cl-section-rule"></span>
-                  <span id="cl-thanks-title" data-i18n="changelog.thanksTitle">Thanks to them</span>
-                  <span class="cl-section-rule"></span>
-                </h2>
-                <p class="cl-thanks-intro" id="cl-thanks-intro" data-i18n="changelog.thanksIntro">
-                  These people reported bugs or suggested ideas that shaped this release.
-                </p>
-                <ul class="cl-thanks-list" id="cl-thanks-list"></ul>
-              </section>
-
-              <section class="cl-history" id="cl-history" hidden>
-                <h2 class="cl-section-title">
-                  <span class="cl-section-rule"></span>
-                  <span data-i18n="changelog.historyTitle">Previous versions</span>
-                  <span class="cl-section-rule"></span>
-                </h2>
-                <div class="cl-history-list" id="cl-history-list"></div>
-              </section>
-
-
-              <!-- Support / Donations -->
-              <div class="cl-donation-card glass frame-brackets">
-                <div class="cl-donation-title">
-                  <span class="cl-donation-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-                  </span>
-                  <span data-i18n="popup.supportDev">Offrir un Bubble Tea au développeur</span>
-                </div>
-                <div class="cl-donation-buttons">
-                  <a href="https://revolut.me/alexisamz" target="_blank" rel="noopener noreferrer" class="cl-donation-btn revolut" title="Revolut">
-                    <svg class="cl-donation-btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20.9133 6.9566C20.9133 3.1208 17.7898 0 13.9503 0H2.424v3.8605h10.9782c1.7376 0 3.177 1.3651 3.2087 3.043.016.84-.2994 1.633-.8878 2.2324-.5886.5998-1.375.9303-2.2144.9303H9.2322a.2756.2756 0 0 0-.2755.2752v3.431c0 .0585.018.1142.052.1612L16.2646 24h5.3114l-7.2727-10.094c3.6625-.1838 6.61-3.2612 6.61-6.9494zM6.8943 5.9229H2.424V24h4.4704z"/></svg>
-                    <span>Revolut</span>
-                  </a>
-                  <a href="https://paypal.me/alexisamzdcrz" target="_blank" rel="noopener noreferrer" class="cl-donation-btn paypal" title="PayPal">
-                    <svg class="cl-donation-btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M15.607 4.653H8.941L6.645 19.251H1.82L4.862 0h7.995c3.754 0 6.375 2.294 6.473 5.513-.648-.478-2.105-.86-3.722-.86m6.57 5.546c0 3.41-3.01 6.853-6.958 6.853h-2.493L11.595 24H6.74l1.845-11.538h3.592c4.208 0 7.346-3.634 7.153-6.949a5.24 5.24 0 0 1 2.848 4.686M9.653 5.546h6.408c.907 0 1.942.222 2.363.541-.195 2.741-2.655 5.483-6.441 5.483H8.714Z"/></svg>
-                    <span>PayPal</span>
-                  </a>
-                </div>
-              </div>
-
-              <!-- Rempli par changelog.js : le texte et l'URL changent tous les
-                   deux avec la langue, et le lien est construit sans innerHTML. -->
-              <p class="cl-support" id="cl-support"></p>
-
-              <div class="step-nav" style="justify-content: center;">
-                <button class="btn btn-primary" id="cl-close" type="button">
-                  <span data-i18n="changelog.continueBtn">Continue</span>
-                  <span class="btn-icon">→</span>
-                </button>
-              </div>
-            </div>
-          </div>
+      <main class="cl">
+        <section class="cl-hero">
+          <h1 class="display" id="cl-display"></h1>
+          <p class="lede" id="cl-subtitle"></p>
+          <p class="pill pill-soft cl-date" id="cl-date"></p>
         </section>
-      </div>
-    </main>
 
-    <script src="../js/particles.js"></script>
+        <div class="cl-changes" id="cl-changes" data-i18n-attr-ariaLabel="changelog.brandSub"></div>
+
+        <section class="cl-thanks" id="cl-thanks" hidden>
+          <h2 class="cl-section-title">
+            <span class="cl-section-rule"></span>
+            <span id="cl-thanks-title" data-i18n="changelog.thanksTitle">Merci à eux</span>
+            <span class="cl-section-rule"></span>
+          </h2>
+          <p class="cl-thanks-intro" id="cl-thanks-intro" data-i18n="changelog.thanksIntro">Ces personnes ont signalé des bugs ou proposé des idées qui ont façonné cette version.</p>
+          <ul class="cl-thanks-list" id="cl-thanks-list"></ul>
+        </section>
+
+        <section class="cl-history" id="cl-history" hidden>
+          <h2 class="cl-section-title">
+            <span class="cl-section-rule"></span>
+            <span data-i18n="changelog.historyTitle">Versions précédentes</span>
+            <span class="cl-section-rule"></span>
+          </h2>
+          <div class="cl-history-list" id="cl-history-list"></div>
+        </section>
+
+        <div class="cl-donation-card">
+          <p class="cl-donation-title">
+            <span class="cl-donation-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+            </span>
+            <span data-i18n="popup.supportDev">Offrir un Bubble Tea au développeur</span>
+          </p>
+          <div class="cl-donation-buttons">
+            <a href="https://revolut.me/alexisamz" target="_blank" rel="noopener noreferrer" class="cl-donation-btn">
+              <svg class="cl-donation-btn-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.9133 6.9566C20.9133 3.1208 17.7898 0 13.9503 0H2.424v3.8605h10.9782c1.7376 0 3.177 1.3651 3.2087 3.043.016.84-.2994 1.633-.8878 2.2324-.5886.5998-1.375.9303-2.2144.9303H9.2322a.2756.2756 0 0 0-.2755.2752v3.431c0 .0585.018.1142.052.1612L16.2646 24h5.3114l-7.2727-10.094c3.6625-.1838 6.61-3.2612 6.61-6.9494zM6.8943 5.9229H2.424V24h4.4704z"/></svg>
+              <span>Revolut</span>
+            </a>
+            <a href="https://paypal.me/alexisamzdcrz" target="_blank" rel="noopener noreferrer" class="cl-donation-btn">
+              <svg class="cl-donation-btn-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.607 4.653H8.941L6.645 19.251H1.82L4.862 0h7.995c3.754 0 6.375 2.294 6.473 5.513-.648-.478-2.105-.86-3.722-.86m6.57 5.546c0 3.41-3.01 6.853-6.958 6.853h-2.493L11.595 24H6.74l1.845-11.538h3.592c4.208 0 7.346-3.634 7.153-6.949a5.24 5.24 0 0 1 2.848 4.686M9.653 5.546h6.408c.907 0 1.942.222 2.363.541-.195 2.741-2.655 5.483-6.441 5.483H8.714Z"/></svg>
+              <span>PayPal</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="cl-support" id="cl-support"></div>
+
+        <div class="cl-close-row">
+          <button class="btn btn-primary" id="cl-close" type="button">
+            <span data-i18n="changelog.continueBtn">Continuer</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+          </button>
+        </div>
+      </main>
+    </div>
+
     <script type="module" src="../js/changelog.js"></script>
   </body>
 </html>

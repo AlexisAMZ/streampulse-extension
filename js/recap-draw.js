@@ -2,12 +2,15 @@
 // Aucune mise en page ici : uniquement des briques reutilisables.
 
 export const VIOLET = "#9146ff";
-export const VIOLET_LIGHT = "#b98cff";
-export const INK = "#efeff1";
-export const MUTED = "#b9b6c4";
-export const FAINT = "#8a8697";
-export const SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
-export const MONO = "ui-monospace, Menlo, Consolas, monospace";
+export const VIOLET_LIGHT = "#c4a3ff";
+export const INK = "#f4f2f7";
+export const MUTED = "#c0b9d2";
+export const FAINT = "#8f88a6";
+export const LCD = "#c6d4a0";
+// Fonts of streampulse.fr, bundled with the extension (css/tokens.css).
+export const SANS = "Onest, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+export const DISPLAY = "Unbounded, Onest, -apple-system, 'Segoe UI', sans-serif";
+export const MONO = SANS;
 
 export const PLATFORM_COLORS = {
   twitch: "#9146ff",
@@ -56,46 +59,31 @@ export function fitText(ctx, text, maxWidth) {
   return `${value.slice(0, lo)}…`;
 }
 
-/** Fond commun : halo violet en haut a gauche, halo plus discret en bas a droite. */
+/** Fond commun : bleu nuit du site, halo violet en haut a gauche, reflet vert LCD en bas a droite. */
 export function drawBackground(ctx, width, height) {
-  ctx.fillStyle = "#0a0a0e";
+  ctx.fillStyle = "#0b0c22";
   ctx.fillRect(0, 0, width, height);
 
-  const glow = ctx.createRadialGradient(width * 0.12, 0, 0, width * 0.12, 0, Math.max(width, height) * 0.75);
-  glow.addColorStop(0, "rgba(98, 38, 196, 0.85)");
-  glow.addColorStop(0.45, "rgba(40, 18, 80, 0.55)");
-  glow.addColorStop(1, "rgba(10, 10, 14, 0)");
+  const glow = ctx.createRadialGradient(width * 0.1, 0, 0, width * 0.1, 0, Math.max(width, height) * 0.8);
+  glow.addColorStop(0, "rgba(145, 70, 255, 0.55)");
+  glow.addColorStop(0.5, "rgba(70, 30, 150, 0.22)");
+  glow.addColorStop(1, "rgba(11, 12, 34, 0)");
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, width, height);
 
-  const glow2 = ctx.createRadialGradient(width, height, 0, width, height, Math.max(width, height) * 0.55);
-  glow2.addColorStop(0, "rgba(145, 70, 255, 0.22)");
-  glow2.addColorStop(1, "rgba(10, 10, 14, 0)");
+  const glow2 = ctx.createRadialGradient(width, height, 0, width, height, Math.max(width, height) * 0.5);
+  glow2.addColorStop(0, "rgba(198, 212, 160, 0.12)");
+  glow2.addColorStop(1, "rgba(11, 12, 34, 0)");
   ctx.fillStyle = glow2;
   ctx.fillRect(0, 0, width, height);
-
-  // Grille tres legere, rappel du design de l'extension.
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.025)";
-  ctx.lineWidth = 1;
-  const step = 60;
-  ctx.beginPath();
-  for (let x = step; x < width; x += step) {
-    ctx.moveTo(x + 0.5, 0);
-    ctx.lineTo(x + 0.5, height);
-  }
-  for (let y = step; y < height; y += step) {
-    ctx.moveTo(0, y + 0.5);
-    ctx.lineTo(width, y + 0.5);
-  }
-  ctx.stroke();
 }
 
 /** Panneau vitre : fond translucide et bordure fine. */
 export function drawPanel(ctx, x, y, w, h, radius = 18) {
-  ctx.fillStyle = "rgba(255, 255, 255, 0.04)";
+  ctx.fillStyle = "rgba(21, 23, 61, 0.86)";
   roundRect(ctx, x, y, w, h, radius);
   ctx.fill();
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.09)";
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
   ctx.lineWidth = 1.5;
   ctx.stroke();
 }
@@ -144,7 +132,7 @@ export function drawBar(ctx, x, y, width, height, ratio) {
 
   const fill = ctx.createLinearGradient(x, 0, x + width, 0);
   fill.addColorStop(0, VIOLET);
-  fill.addColorStop(1, VIOLET_LIGHT);
+  fill.addColorStop(1, LCD);
   ctx.fillStyle = fill;
   roundRect(ctx, x, y, Math.max(height, width * Math.min(1, ratio)), height, height / 2);
   ctx.fill();
@@ -190,14 +178,14 @@ export function drawPlatformSplit(ctx, x, y, width, height, platforms, totalSeco
 
 /** Petite etiquette en capitales, style console. */
 export function drawEyebrow(ctx, text, x, y, size) {
-  ctx.fillStyle = VIOLET_LIGHT;
-  setFont(ctx, 700, size, MONO);
+  ctx.fillStyle = LCD;
+  setFont(ctx, 700, size, SANS);
   ctx.fillText(String(text).toUpperCase(), x, y);
 }
 
 /** Logo + nom de marque + url. Renvoie la largeur occupee. */
 export function drawBrand(ctx, logo, x, y, { size = 44, nameSize = 30, urlSize = 20, align = "left", width = 0 } = {}) {
-  setFont(ctx, 800, nameSize);
+  setFont(ctx, 700, nameSize, DISPLAY);
   const nameWidth = ctx.measureText("StreamPulse").width;
   setFont(ctx, 400, urlSize);
   const urlWidth = ctx.measureText("streampulse.fr").width;
@@ -208,7 +196,7 @@ export function drawBrand(ctx, logo, x, y, { size = 44, nameSize = 30, urlSize =
   if (logo) ctx.drawImage(logo, startX, y - size * 0.78, size, size);
   const textX = startX + (logo ? size + gap : 0);
   ctx.fillStyle = INK;
-  setFont(ctx, 800, nameSize);
+  setFont(ctx, 700, nameSize, DISPLAY);
   ctx.fillText("StreamPulse", textX, y);
   ctx.fillStyle = FAINT;
   setFont(ctx, 400, urlSize);

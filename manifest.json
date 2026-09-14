@@ -94,7 +94,10 @@
         "js/tabEnhancer.js",
         "js/inject/predictionsOverlay.js"
       ],
-      "run_at": "document_idle"
+      "run_at": "document_idle",
+      "css": [
+        "css/inject/predictions.css"
+      ]
     },
     {
       "matches": [
@@ -139,6 +142,18 @@
       ],
       "matches": [
         "<all_urls>"
+      ]
+    },
+    {
+      "resources": [
+        "font/unbounded-latin-10.woff2",
+        "font/unbounded-latin-ext-9.woff2",
+        "font/onest-latin-6.woff2",
+        "font/onest-latin-ext-5.woff2"
+      ],
+      "matches": [
+        "https://www.twitch.tv/*",
+        "https://clips.twitch.tv/*"
       ]
     }
   ]

@@ -86,6 +86,26 @@ export const RELEASES = [
     },
     changes: [
       {
+        type: "new",
+        text: {
+          fr: "Sauvegarde de vos données : téléchargez un fichier avec vos streamers, réglages, statistiques et temps de visionnage, puis restaurez-le plus tard ou sur un autre navigateur. Réglages, section Données.",
+          en: "Data backup: download a file with your streamers, settings, stats and watch time, then restore it later or in another browser. Settings, Data section.",
+          es: "Copia de seguridad de tus datos: descarga un archivo con tus streamers, ajustes, estadísticas y tiempo de visualización, y restáuralo más tarde o en otro navegador. Ajustes, sección Datos.",
+          "pt-BR": "Backup dos seus dados: baixe um arquivo com seus streamers, configurações, estatísticas e tempo assistido e restaure depois ou em outro navegador. Configurações, seção Dados.",
+          de: "Datensicherung: Lade eine Datei mit deinen Streamern, Einstellungen, Statistiken und deiner Zuschauzeit herunter und stelle sie später oder in einem anderen Browser wieder her. Einstellungen, Bereich Daten.",
+          it: "Backup dei dati: scarica un file con i tuoi streamer, le impostazioni, le statistiche e il tempo di visione, poi ripristinalo in seguito o su un altro browser. Impostazioni, sezione Dati.",
+          pl: "Kopia zapasowa danych: pobierz plik ze streamerami, ustawieniami, statystykami i czasem oglądania, a potem przywróć go później lub w innej przeglądarce. Ustawienia, sekcja Dane.",
+          tr: "Veri yedekleme: yayıncılarını, ayarlarını, istatistiklerini ve izleme süreni içeren bir dosya indir, sonra ya da başka bir tarayıcıda geri yükle. Ayarlar, Veriler bölümü.",
+          ru: "Резервная копия данных: скачайте файл со стримерами, настройками, статистикой и временем просмотра и восстановите его позже или в другом браузере. Настройки, раздел «Данные».",
+          ja: "データのバックアップ：配信者リスト、設定、統計、視聴時間をファイルに保存し、あとで、または別のブラウザで復元できます。設定の「データ」から。",
+          ko: "데이터 백업: 스트리머 목록, 설정, 통계, 시청 시간을 파일로 내려받고 나중에 또는 다른 브라우저에서 복원하세요. 설정의 데이터 항목에서.",
+          id: "Cadangan data: unduh file berisi streamer, pengaturan, statistik, dan waktu menontonmu, lalu pulihkan nanti atau di browser lain. Pengaturan, bagian Data.",
+          nl: "Back-up van je gegevens: download een bestand met je streamers, instellingen, statistieken en kijktijd en herstel het later of in een andere browser. Instellingen, sectie Gegevens.",
+          sv: "Säkerhetskopiering: ladda ner en fil med dina streamers, inställningar, statistik och tittartid och återställ den senare eller i en annan webbläsare. Inställningar, avsnittet Data.",
+          cs: "Záloha dat: stáhni soubor se streamery, nastavením, statistikami a dobou sledování a obnov ho později nebo v jiném prohlížeči. Nastavení, sekce Data."
+        }
+      },
+      {
         type: "fix",
         text: {
           fr: "Le badge communautaire StreamPulse ne s'affichait pas à côté des pseudos qui ont déjà des badges Twitch (abonné, Prime…) après un changement du tchat Twitch. Il apparaît de nouveau pour tout le monde.",

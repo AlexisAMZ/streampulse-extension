@@ -591,7 +591,8 @@
 
   const CANCEL_SELECTORS =
     'button[data-a-target="cancel-raid-button"], [data-test-selector="raid-banner-cancel-button"]';
-  const CANCEL_WORDS = /annuler|cancel|quitter|leave|refuser|decline|no thanks|cancelar|abbrechen/i;
+  // « Partir » est le libellé français du bouton « Leave » de la bannière de raid.
+  const CANCEL_WORDS = /annuler|cancel|quitter|partir|leave|refuser|decline|no thanks|cancelar|salir|sair|abbrechen|verlassen/i;
   const JOIN_WORDS = /rejoindre|join|participer|go now|regarder|unirse|entrar|mitmachen/i;
 
   /**

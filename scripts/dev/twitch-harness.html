@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Prévisualise les éléments injectés sur twitch.tv (panneau de la topbar,
+         aperçu au survol, widget de prédiction, bouton d'ajout) sur un fond
+         façon Twitch. Données fictives. Les polices chrome-extension:// ne se
+         chargent pas ici : le rendu retombe sur les polices système. -->
+    <title>StreamPulse · banc Twitch</title>
+    <link rel="stylesheet" href="/css/topbar.css" />
+    <link rel="stylesheet" href="/css/previews.css" />
+    <link rel="stylesheet" href="/css/inject/predictions.css" />
+    <style>
+      body { margin: 0; min-height: 100vh; background: #0e0e10; color: #efeff1; font-family: system-ui, sans-serif; }
+      .fake-nav { display: flex; align-items: center; height: 50px; padding: 0 16px; background: #18181b; box-shadow: 0 1px 2px #000; }
+      .fake-nav .sp-topbar-wrap { margin-left: auto; }
+      .scene { position: relative; display: grid; grid-template-columns: 340px 380px 1fr; gap: 32px; padding: 24px; }
+      .scene .sp-topbar-panel { position: static; }
+      .scene .sp-preview { position: static; opacity: 1; transform: none; }
+      .player { position: relative; height: 330px; border-radius: 8px; background: #26262c; }
+      .player .sp-pred { display: block !important; }
+      .actions { display: flex; gap: 8px; margin-top: 24px; }
+      .toast-demo .sp-qf-toast { position: static; opacity: 1; transform: none; margin-top: 16px; }
+    </style>
+    <script src="/js/inject/topbar-panel.js"></script>
+  </head>
+  <body>
+    <div class="fake-nav">
+      <span class="sp-topbar-wrap"><button class="sp-topbar-btn" type="button"><img class="sp-topbar-logo" src="/images/photos/logosp.png" alt="StreamPulse" /></button></span>
+    </div>
+    <div class="scene">
+      <div id="panel-host"></div>
+      <div>
+        <div class="sp-preview">
+          <div class="sp-preview__media">
+            <div class="sp-preview__fallback"><img class="sp-preview__fallback-avatar" alt="" src="/images/photos/128px.png" /><span class="sp-preview__fallback-loading">Chargement…</span></div>
+            <span class="sp-preview__badge">Live</span>
+            <div class="sp-preview__overlay"><p class="sp-preview__title">RP sur le serveur, on reprend l'enquête</p><p class="sp-preview__category">Grand Theft Auto V</p></div>
+          </div>
+        </div>
+        <div class="actions">
+          <span class="sp-qf-wrap"><button class="sp-qf-btn" type="button"><img class="sp-qf-logo" src="/images/photos/logosp.png" alt="" /><span class="sp-qf-label">Ajouter à StreamPulse</span></button></span>
+          <span class="sp-qf-wrap"><button class="sp-qf-btn is-tracked" type="button"><img class="sp-qf-logo" src="/images/photos/logosp.png" alt="" /><span class="sp-qf-label">Suivi</span></button></span>
+        </div>
+        <div class="toast-demo"><div class="sp-qf-toast show"><img class="sp-qf-toast-logo" src="/images/photos/logosp.png" alt="" /><span>Pixelkat ajouté à StreamPulse</span></div></div>
+      </div>
+      <div class="player">
+        <div id="streampulse-prediction-overlay" class="sp-pred">
+          <div class="sp-pred-head"><span class="sp-pred-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg>Prédiction en cours</span><button class="sp-pred-close" type="button" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+          <div class="sp-pred-body"><div class="sp-pred-title">Qui gagne la prochaine manche ?</div><div class="sp-pred-options"><div class="sp-pred-opt sp-pred-opt-a">L'équipe bleue</div><div class="sp-pred-opt sp-pred-opt-b">L'équipe rose</div></div><button class="sp-pred-action" type="button">Miser / Voter dans le Chat</button></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const icon = (d) => `<svg class="sp-tb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+      const labels = { thisChannel: "Cette chaîne", watchedHere: "Regardé ici", followed: "Suivi", follow: "Suivre", previews: "Aperçus au survol", autoClaim: "Points auto", fastForward: "Avance rapide", badgeColor: "Couleur du badge", badgeAuthor: "Pseudo", badgeTheme: "Thème", badgeCustom: "Perso", liveNow: "En direct", noneLive: "Personne en live", more: "+{{count}} autres", tip: "Offrir un Bubble Tea", settings: "Tous les réglages" };
+      const panel = self.__SP_TOPBAR_PANEL__.build(
+        {
+          points: 12480,
+          watchSeconds: 34080,
+          prefs: { previewsEnabled: true, autoClaimChannelPoints: true, enableFastForwardButton: false, communityBadgeColor: "author" },
+          channel: "pixelkat",
+          channelTracked: false,
+          channelWatchSeconds: 5400,
+          live: [
+            { login: "novastream", name: "Novastream", category: "Just Chatting" },
+            { login: "kamet0", name: "Kamet0", category: "Grand Theft Auto V" },
+            { login: "lunaplays", name: "Lunaplays", category: "Minecraft" },
+          ],
+        },
+        {
+          tr: (key) => labels[key] || key,
+          fmtNum: (n) => new Intl.NumberFormat("fr").format(n),
+          fmtDur: (s) => `${Math.floor(s / 3600)}h${String(Math.floor((s % 3600) / 60)).padStart(2, "0")}`,
+          logoUrl: "/images/photos/logosp.png",
+          tipLinks: [{ label: "Revolut", url: "#" }, { label: "PayPal", url: "#" }],
+          icon: {
+            gem: icon('<path d="M6 3h12l4 6-10 12L2 9z"/>'),
+            clock: icon('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),
+            coffee: icon('<path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>'),
+            gear: icon('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>'),
+          },
+          addStreamer: () => {},
+          openChannel: () => {},
+          openSettings: () => {},
+          onToggle: () => {},
+        },
+      );
+      document.getElementById("panel-host").append(panel);
+    </script>
+  </body>
+</html>

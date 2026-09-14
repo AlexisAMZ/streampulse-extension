@@ -18,87 +18,26 @@
 
     overlayEl = document.createElement("div");
     overlayEl.id = WIDGET_ID;
-    overlayEl.style.cssText = `
-      position: absolute;
-      top: 70px;
-      right: 20px;
-      z-index: 9999;
-      width: 280px;
-      background: rgba(15, 15, 23, 0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(145, 71, 255, 0.3);
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-      color: #ffffff;
-      font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      font-size: 13px;
-      user-select: none;
-      transition: border-color 0.2s ease, transform 0.1s ease;
-      overflow: hidden;
-      display: none;
-    `;
+    overlayEl.className = "sp-pred";
+    overlayEl.style.display = "none";
 
     overlayEl.innerHTML = `
-      <div id="${WIDGET_ID}-header" style="
-        padding: 8px 12px;
-        background: rgba(145, 71, 255, 0.2);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        cursor: move;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      ">
-        <span style="font-weight: 700; display: flex; align-items: center; gap: 6px; color: #a970ff;">
-          🔮 Prédiction en cours
+      <div class="sp-pred-head" id="${WIDGET_ID}-header">
+        <span class="sp-pred-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg>
+          Prédiction en cours
         </span>
-        <button id="${WIDGET_ID}-close" style="
-          background: transparent;
-          border: none;
-          color: #aaa;
-          cursor: pointer;
-          font-size: 14px;
-          padding: 0 4px;
-        ">✕</button>
+        <button class="sp-pred-close" id="${WIDGET_ID}-close" type="button" aria-label="Fermer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
       </div>
-      <div id="${WIDGET_ID}-body" style="padding: 12px;">
-        <div id="${WIDGET_ID}-title" style="font-weight: 600; margin-bottom: 8px; font-size: 12px; line-height: 1.3; color: #efeff1;">
-          Chargement...
+      <div class="sp-pred-body" id="${WIDGET_ID}-body">
+        <div class="sp-pred-title" id="${WIDGET_ID}-title">Chargement…</div>
+        <div class="sp-pred-options" id="${WIDGET_ID}-options">
+          <div class="sp-pred-opt sp-pred-opt-a" id="${WIDGET_ID}-opt1">--</div>
+          <div class="sp-pred-opt sp-pred-opt-b" id="${WIDGET_ID}-opt2">--</div>
         </div>
-        <div id="${WIDGET_ID}-options" style="display: flex; gap: 8px; margin-bottom: 10px;">
-          <div id="${WIDGET_ID}-opt1" style="
-            flex: 1;
-            padding: 8px;
-            background: rgba(59, 130, 246, 0.2);
-            border: 1px solid rgba(59, 130, 246, 0.5);
-            border-radius: 6px;
-            text-align: center;
-            font-weight: 700;
-            color: #60a5fa;
-            cursor: pointer;
-          ">--</div>
-          <div id="${WIDGET_ID}-opt2" style="
-            flex: 1;
-            padding: 8px;
-            background: rgba(236, 72, 153, 0.2);
-            border: 1px solid rgba(236, 72, 153, 0.5);
-            border-radius: 6px;
-            text-align: center;
-            font-weight: 700;
-            color: #f472b6;
-            cursor: pointer;
-          ">--</div>
-        </div>
-        <button id="${WIDGET_ID}-action" style="
-          width: 100%;
-          padding: 8px;
-          background: #9147ff;
-          border: none;
-          border-radius: 6px;
-          color: #fff;
-          font-weight: 700;
-          cursor: pointer;
-          transition: background 0.2s ease;
-        ">Miser / Voter dans le Chat</button>
+        <button class="sp-pred-action" id="${WIDGET_ID}-action" type="button">Miser / Voter dans le Chat</button>
       </div>
     `;
 

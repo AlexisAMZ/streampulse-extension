@@ -1,67 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title data-i18n="recap.documentTitle">My recap · StreamPulse</title>
+    <title data-i18n="recap.documentTitle">Mon récap · StreamPulse</title>
     <link rel="icon" href="../images/photos/128px.png" />
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/pages.css" />
     <link rel="stylesheet" href="../css/recap.css" />
   </head>
   <body>
-    <main class="page">
-      <header class="page-head">
-        <div class="brand">
-          <img src="../images/photos/logosp.png" alt="" />
+    <div class="page-shell">
+      <header class="site-head">
+        <span class="brand">
+          <img class="brand-mark" src="../images/photos/logosp.png" alt="" />
           <span>StreamPulse</span>
-        </div>
-        <h1 class="page-title" data-i18n="recap.title">Your recap</h1>
-        <p class="page-sub" data-i18n="recap.subtitle">Pick a period and a format, then download your image.</p>
+        </span>
       </header>
 
-      <div class="controls">
-        <label class="control">
-          <span class="control-label" data-i18n="recap.periodLabel">Period</span>
-          <select id="period" class="select"></select>
-        </label>
-        <div class="control">
-          <span class="control-label" data-i18n="recap.formatLabel">Format</span>
-          <div class="segmented" id="formats" role="group">
-            <button class="seg-btn active" data-format="desktop" type="button">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="13" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-              <span data-i18n="recap.formatDesktop">Desktop · 16:9</span>
-            </button>
-            <button class="seg-btn" data-format="mobile" type="button">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
-              <span data-i18n="recap.formatMobile">Mobile · 9:16</span>
-            </button>
+      <main class="recap">
+        <aside class="recap-side">
+          <header class="recap-intro">
+            <h1 class="display page-title" data-i18n="recap.title">Ton récap</h1>
+            <p class="lede page-sub" data-i18n="recap.subtitle">Choisis une période et un format, puis télécharge ton image.</p>
+          </header>
+
+          <div class="panel controls">
+            <label class="control">
+              <span class="control-label" data-i18n="recap.periodLabel">Période</span>
+              <select id="period" class="select"></select>
+            </label>
+            <div class="control">
+              <span class="control-label" id="format-label" data-i18n="recap.formatLabel">Format</span>
+              <div class="segmented" id="formats" role="group" aria-labelledby="format-label">
+                <button class="seg-btn active" data-format="desktop" type="button">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="13" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                  <span data-i18n="recap.formatDesktop">PC · 16:9</span>
+                </button>
+                <button class="seg-btn" data-format="mobile" type="button">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+                  <span data-i18n="recap.formatMobile">Mobile · 9:16</span>
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <p class="state" id="state" data-i18n="recap.loading">Loading your stats…</p>
+          <div class="actions" id="actions" hidden>
+            <button id="download" class="btn btn-primary" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+              <span data-i18n="recap.download">Télécharger l'image</span>
+            </button>
+            <button id="share" class="btn btn-ghost" type="button">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              <span data-i18n="recap.share">Partager sur X</span>
+            </button>
+            <p class="hint" data-i18n="recap.shareHint">X ne récupère pas l'image tout seul : télécharge-la, puis ajoute-la à ton post.</p>
+          </div>
 
-      <section class="stage" id="stage" hidden>
-        <canvas id="recap-canvas" width="1600" height="900"></canvas>
-      </section>
+          <p class="disclaimer" id="daily-hint" hidden data-i18n="recap.dailyHint">Le suivi jour par jour a commencé avec cette mise à jour.</p>
+        </aside>
 
-      <section class="empty" id="empty" hidden>
-        <p class="empty-title" data-i18n="recap.emptyTitle">Nothing to show for this period.</p>
-        <p class="empty-body" data-i18n="recap.emptyBody">The Watch Time Tracker has not recorded anything for this period. Make sure it is turned on in the settings.</p>
-      </section>
+        <section class="recap-preview">
+          <p class="state" id="state" data-i18n="recap.loading">Chargement de tes stats…</p>
 
-      <div class="actions" id="actions" hidden>
-        <button id="download" class="btn btn-primary" type="button">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
-          <span data-i18n="recap.download">Download image</span>
-        </button>
-        <button id="share" class="btn" type="button">
-          <span data-i18n="recap.share">Share on X</span>
-        </button>
-        <p class="hint" data-i18n="recap.shareHint">X cannot fetch the image by itself: download it, then add it to your post.</p>
-      </div>
+          <div class="stage" id="stage" hidden>
+            <canvas id="recap-canvas" width="1600" height="900"></canvas>
+          </div>
 
-      <p class="disclaimer" id="daily-hint" hidden data-i18n="recap.dailyHint">Day-by-day tracking started with this update: the 7 and 30 day periods fill up from now on.</p>
-    </main>
+          <div class="panel empty" id="empty" hidden>
+            <p class="empty-title" data-i18n="recap.emptyTitle">Rien à afficher pour cette période.</p>
+            <p class="empty-body" data-i18n="recap.emptyBody">Le suivi du temps de visionnage n'a rien enregistré sur cette période.</p>
+          </div>
+        </section>
+      </main>
+    </div>
     <script type="module" src="../js/recap.js"></script>
   </body>
 </html>

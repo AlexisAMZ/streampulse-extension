@@ -1,7 +1,7 @@
 // Mise en page PC : paysage 1600x900 (16:9), adaptee a X, Discord ou un fond d'ecran.
 
 import { formatDuration } from "./recap-data.js";
-import {
+import { DISPLAY,
   INK,
   MUTED,
   FAINT,
@@ -31,7 +31,7 @@ function drawLeftColumn(ctx, model) {
   drawEyebrow(ctx, labels.eyebrow, PAD, 112, 20);
 
   ctx.fillStyle = INK;
-  setFont(ctx, 800, 58);
+  setFont(ctx, 800, 58, DISPLAY);
   ctx.fillText(fitText(ctx, labels.heading, maxWidth), PAD, 186);
 
   ctx.fillStyle = MUTED;
@@ -43,7 +43,7 @@ function drawLeftColumn(ctx, model) {
   setFont(ctx, 700, 18, MONO);
   ctx.fillText(labels.statTime.toUpperCase(), PAD, 330);
   ctx.fillStyle = INK;
-  setFont(ctx, 800, 124);
+  setFont(ctx, 800, 124, DISPLAY);
   ctx.fillText(formatDuration(model.totalSeconds), PAD - 4, 450);
 
   // Deux tuiles : nombre de chaines et chaine favorite.
@@ -61,7 +61,7 @@ function drawLeftColumn(ctx, model) {
     setFont(ctx, 700, 16, MONO);
     ctx.fillText(fitText(ctx, tile.label.toUpperCase(), tileW - 48), x + 24, tileY + 42);
     ctx.fillStyle = INK;
-    setFont(ctx, 800, 44);
+    setFont(ctx, 800, 44, DISPLAY);
     ctx.fillText(fitText(ctx, tile.value, tileW - 48), x + 24, tileY + 100);
   });
 

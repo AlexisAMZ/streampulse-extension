@@ -1,0 +1,147 @@
+/* Shared layer for the full-tab extension pages (onboarding, changelog, recap).
+   Same world as the popup: navy ground, Twitch violet, LCD green, Unbounded
+   headlines over Onest text. Tokens live in tokens.css. */
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { background: var(--bg); }
+body {
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 15px/1.55 var(--body);
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: -1;
+  height: 620px;
+  background:
+    radial-gradient(ellipse 60% 70% at 12% 0%, rgba(145, 70, 255, 0.26), transparent 70%),
+    radial-gradient(ellipse 40% 50% at 92% 8%, rgba(198, 212, 160, 0.07), transparent 70%);
+  pointer-events: none;
+}
+img { display: block; max-width: 100%; }
+h1, h2, h3, p, ol, ul { margin: 0; }
+a { color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
+svg { flex: none; }
+::selection { background: var(--violet); color: #ffffff; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 6px; }
+
+.page-shell { width: min(1120px, 92vw); margin: 0 auto; padding: 22px 0 56px; }
+
+/* Head */
+.site-head { display: flex; align-items: center; gap: 16px; min-height: 60px; }
+.brand { display: flex; align-items: center; gap: 11px; color: var(--text); font-family: var(--display); font-size: 16px; font-weight: 700; letter-spacing: -0.01em; text-decoration: none; }
+.brand-mark { width: 36px; height: 36px; padding: 6px; border-radius: 11px; background: var(--lcd); }
+.brand-sub { color: var(--text-3); font-family: var(--body); font-size: 14px; font-weight: 500; letter-spacing: 0; }
+.brand-sub::before { content: ""; display: inline-block; width: 1px; height: 16px; margin-right: 12px; vertical-align: -3px; background: var(--line-2); }
+.head-end { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+
+/* Type */
+.display { font-family: var(--display); font-size: clamp(44px, 6.4vw, 84px); font-weight: 800; line-height: 0.98; letter-spacing: -0.045em; text-wrap: balance; }
+.display .accent,
+.display .italic { color: var(--violet-text); }
+.lede { max-width: 48ch; color: var(--text-2); font-size: clamp(16px, 1.4vw, 19px); line-height: 1.55; }
+.headline { font-family: var(--display); font-size: clamp(32px, 4vw, 52px); font-weight: 800; line-height: 1; letter-spacing: -0.04em; text-wrap: balance; }
+.headline .accent { color: var(--violet-text); }
+.section-title { font-family: var(--display); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+
+.word { display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+  .word { animation: word-in 700ms var(--ease-out) both; }
+  .rise { animation: rise 520ms var(--ease-out) both; }
+}
+@keyframes word-in { from { opacity: 0; transform: translateY(0.35em); filter: blur(6px); } }
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } }
+
+/* Pills */
+.pill { display: inline-flex; align-items: center; gap: 7px; height: 28px; padding: 0 12px; border-radius: 999px; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pill i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.pill-lcd { background: var(--lcd); color: var(--lcd-ink); }
+.pill-soft { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text-2); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 50px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 14px;
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease, color var(--dur-fast) ease, transform var(--dur-fast) ease;
+}
+.btn svg { width: 18px; height: 18px; }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { cursor: not-allowed; opacity: 0.45; transform: none; }
+.btn-primary { background: var(--violet); color: #ffffff; box-shadow: 0 14px 28px -16px rgba(145, 70, 255, 0.95); }
+.btn-primary:hover:not(:disabled) { background: var(--violet-strong); }
+.btn-ghost { background: transparent; box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text-2); }
+.btn-ghost:hover:not(:disabled) { background: var(--surface); color: var(--text); }
+.btn-light { background: #ffffff; color: #1a0b14; }
+.btn-light:hover { background: var(--lcd); }
+
+/* Surfaces */
+.panel,
+.glass { border-radius: 22px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+.glass { padding: 24px; }
+
+/* Switch (checkbox inside a settings row) */
+.settings-toggle input[type="checkbox"],
+input[type="checkbox"][role="switch"] {
+  position: relative;
+  flex: none;
+  width: 42px;
+  height: 24px;
+  margin: 0;
+  border-radius: 12px;
+  background: var(--line-2);
+  cursor: pointer;
+  appearance: none;
+  transition: background-color var(--dur-fast) ease;
+}
+.settings-toggle input[type="checkbox"]::before,
+input[type="checkbox"][role="switch"]::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.settings-toggle input[type="checkbox"]:checked,
+input[type="checkbox"][role="switch"]:checked { background: var(--violet); }
+.settings-toggle input[type="checkbox"]:checked::before,
+input[type="checkbox"][role="switch"]:checked::before { transform: translateX(18px); }
+
+/* Footer */
+.site-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; margin-top: 64px; padding-top: 22px; box-shadow: inset 0 1px 0 var(--line); color: var(--text-3); font-size: 13px; }
+.site-foot a { color: var(--text-2); text-underline-offset: 3px; }
+.site-foot a:hover { color: var(--text); }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pop { from { opacity: 0; transform: scale(0.6); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .settings-toggle input[type="checkbox"]::before,
+  input[type="checkbox"][role="switch"]::before { transition: none; }
+}

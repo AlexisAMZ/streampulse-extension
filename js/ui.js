@@ -5,98 +5,156 @@ import {
   getPlatformLabelKey,
   platformSupportsLiveStatus,
   formatHandleForDisplay,
-  buildProfileUrl
+  buildProfileUrl,
 } from "./platforms.js";
-// Helper to replace the missing getPlatformLabel export
+
+// Popup rendering: the featured live on stage, the live strip tiles and the
+// rows of the "all channels" sheet. popup.js owns state and storage.
+
+const HOVER_DELAY = 500;
+const THUMB_CACHE_MAX = 50;
+const MAX_THUMB_CONCURRENCY = 3;
+const FALLBACK_ICON = "images/photos/48px.png";
+
+const STROKE = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+const ICONS = {
+  bell: `<svg ${STROKE}><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>`,
+  game: `<svg ${STROKE}><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4"/><path d="M15 13h.01M18 11h.01"/></svg>`,
+  title: `<svg ${STROKE}><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>`,
+  play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',
+  star: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2.5 2.9 6.2 6.6.7-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.7z"/></svg>',
+  open: `<svg ${STROKE}><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>`,
+  trash: `<svg ${STROKE}><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4h8v2"/></svg>`,
+  grip: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>',
+  list: `<svg ${STROKE}><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg>`,
+};
+
+const ALERTS = [
+  { key: "notificationsEnabled", icon: "bell", label: "popup.osd.alertLive", hint: "popup.card.notificationsToggle", callback: "onToggleNotify" },
+  { key: "gameNotificationsEnabled", icon: "game", label: "popup.osd.alertCategory", hint: "popup.card.gameNotificationsToggle", callback: "onToggleGameNotify" },
+  { key: "titleNotificationsEnabled", icon: "title", label: "popup.osd.alertTitle", hint: "popup.card.titleNotificationsToggle", callback: "onToggleTitleNotify" },
+];
+
+function el(tag, className = "", text = "") {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text) node.textContent = text;
+  return node;
+}
+
+function button(className, { label = "", icon = "", text = "" } = {}) {
+  const node = el("button", className);
+  node.type = "button";
+  if (icon) node.innerHTML = ICONS[icon];
+  if (text) node.append(document.createTextNode(text));
+  if (label) {
+    node.setAttribute("aria-label", label);
+    node.title = label;
+  }
+  return node;
+}
+
 function getPlatformLabel(platform) {
   return t(getPlatformLabelKey(platform));
 }
 
-// --- Hover-to-play live preview ---
-// Static thumbnail by default; iframe player loads only on hover (500ms delay)
-// and is destroyed on mouseleave to free RAM.
+function currentLocale() {
+  return resolveLocale(getCurrentLanguage());
+}
 
-const HOVER_DELAY = 500;
-
-function getEmbedUrl(platformId, streamer, status) {
-  if (platformId === "kick" && status?.isLive) {
-    const slug = streamer.handle;
-    if (slug) return `https://player.kick.com/${encodeURIComponent(slug)}?muted=true`;
+export function formatNumber(value) {
+  try {
+    return new Intl.NumberFormat(currentLocale()).format(value);
+  } catch {
+    return String(value);
   }
-  return null;
 }
 
-function setupHoverPreview(cardPreview, platformId, streamer, status, callbacks) {
-  const openStream = () => {
-    const url = buildProfileUrl(platformId, streamer.handle || streamer.twitch || streamer.id);
-    callbacks?.onOpen?.(url);
-  };
-
-  // Always allow clicking the card preview to open the stream
-  cardPreview.style.cursor = "pointer";
-  cardPreview.addEventListener("click", (e) => {
-    e.stopPropagation();
-    openStream();
-  });
-
-  const embedUrl = getEmbedUrl(platformId, streamer, status);
-  if (!embedUrl) return; // No embed available: static thumbnail + click only
-
-  let hoverTimer = null;
-
-  const teardownIframe = () => {
-    const wrap = cardPreview.querySelector(".hover-player-wrap");
-    if (wrap) {
-      const iframe = wrap.querySelector("iframe");
-      if (iframe) iframe.src = "about:blank"; // stop streaming + free RAM
-      wrap.remove();
-    }
-  };
-
-  cardPreview.addEventListener("mouseenter", () => {
-    if (cardPreview.querySelector(".hover-player-wrap")) return;
-    hoverTimer = setTimeout(() => {
-      const wrap = document.createElement("div");
-      wrap.className = "hover-player-wrap";
-
-      const iframe = document.createElement("iframe");
-      iframe.allow = "autoplay; encrypted-media; picture-in-picture";
-      iframe.setAttribute("scrolling", "no");
-      iframe.setAttribute("muted", "");
-      iframe.src = embedUrl;
-      wrap.appendChild(iframe);
-
-      // Transparent overlay above iframe captures clicks (iframes block bubbling)
-      const clickOverlay = document.createElement("div");
-      clickOverlay.className = "embed-click-overlay";
-      clickOverlay.addEventListener("click", (e) => {
-        e.stopPropagation();
-        openStream();
-      });
-      wrap.appendChild(clickOverlay);
-
-      cardPreview.appendChild(wrap);
-    }, HOVER_DELAY);
-  });
-
-  cardPreview.addEventListener("mouseleave", () => {
-    if (hoverTimer) {
-      clearTimeout(hoverTimer);
-      hoverTimer = null;
-    }
-    teardownIframe();
-  });
+export function formatCompactNumber(value) {
+  try {
+    return new Intl.NumberFormat(currentLocale(), { notation: "compact", maximumFractionDigits: 1 }).format(value);
+  } catch {
+    return String(value);
+  }
 }
 
-// --- Thumbnail cache (survive popup close/reopen) ---
-// LRU-bounded to keep memory under control on low-end machines.
-const THUMB_CACHE_MAX = 50;
-const thumbCache = new Map(); // insertion order = LRU order
+function formatMinutes(totalMinutes) {
+  const minutes = Math.max(0, Math.floor(totalMinutes));
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  if (hours > 0) return t("popup.osd.durationHM", { h: hours, m: String(rest).padStart(2, "0") });
+  return t("popup.osd.durationM", { m: rest });
+}
+
+function minutesSince(isoDate) {
+  const start = Date.parse(isoDate);
+  if (!Number.isFinite(start)) return null;
+  const minutes = (Date.now() - start) / 60000;
+  return minutes >= 0 ? minutes : null;
+}
+
+export function getDisplayLabel(streamer) {
+  const platformId = streamer.platform || DEFAULT_PLATFORM;
+  return streamer.displayName || formatHandleForDisplay(platformId, streamer.handle || streamer.twitch);
+}
+
+export function getStreamerUrl(streamer) {
+  const platformId = streamer.platform || DEFAULT_PLATFORM;
+  return buildProfileUrl(platformId, streamer.handle || streamer.twitch || streamer.id);
+}
+
+function getLiveState(streamer, status) {
+  const active = status?.active || { isLive: false };
+  const platformId = streamer.platform || DEFAULT_PLATFORM;
+  const supported = platformSupportsLiveStatus(platformId) && active.supportsLiveStatus !== false;
+  const viewers = Number.isFinite(active.viewers) ? active.viewers : status?.viewers;
+  return {
+    active,
+    platformId,
+    supported,
+    isLive: supported && Boolean(active.isLive),
+    viewers: Number.isFinite(viewers) ? viewers : null,
+  };
+}
+
+function platformIcon(platformId) {
+  return `../${getPlatformDefinition(platformId).icon || FALLBACK_ICON}`;
+}
+
+function avatarImage(className, streamer, platformId) {
+  const img = el("img", className);
+  const fallback = platformIcon(platformId);
+  img.alt = "";
+  img.decoding = "async";
+  img.src = streamer.avatarUrl || fallback;
+  img.onerror = function onAvatarError() {
+    this.onerror = null;
+    this.src = fallback;
+  };
+  return img;
+}
+
+// --- Thumbnail cache (survives popup close/reopen, LRU-bounded) ---
+const thumbCache = new Map();
 let thumbCacheLoaded = false;
-// Vol unique : le garde `if (thumbCacheLoaded)` etait franchi avant l'await,
-// donc deux appels concurrents lisaient tous les deux le stockage et
-// remplissaient la Map en double, ce qui evinçait des entrees encore utiles.
 let thumbCacheLoading = null;
+let thumbSaveTimer = null;
+
+function rememberThumb(key, url) {
+  if (thumbCache.has(key)) thumbCache.delete(key);
+  thumbCache.set(key, url);
+  if (thumbCache.size > THUMB_CACHE_MAX) thumbCache.delete(thumbCache.keys().next().value);
+}
+
+async function readThumbCache() {
+  try {
+    const data = await chrome.storage.local.get("streampulse:thumbCache");
+    for (const [key, url] of Object.entries(data["streampulse:thumbCache"] || {})) rememberThumb(key, url);
+  } catch {
+    // A missing cache only costs one network fetch.
+  }
+  thumbCacheLoaded = true;
+}
 
 function loadThumbCache() {
   if (thumbCacheLoaded) return Promise.resolve();
@@ -106,621 +164,392 @@ function loadThumbCache() {
   return thumbCacheLoading;
 }
 
-async function readThumbCache() {
-  try {
-    const data = await chrome.storage.local.get("streampulse:thumbCache");
-    const stored = data["streampulse:thumbCache"] || {};
-    for (const [k, v] of Object.entries(stored)) {
-      thumbCache.set(k, v);
-      if (thumbCache.size > THUMB_CACHE_MAX) {
-        const oldestKey = thumbCache.keys().next().value;
-        thumbCache.delete(oldestKey);
-      }
-    }
-  } catch (_) { /* ignore */ }
-  thumbCacheLoaded = true;
-}
-
-let thumbSaveTimer = null;
-function saveThumbCache() {
+function setCachedThumb(key, url) {
+  if (url) rememberThumb(key, url);
+  else thumbCache.delete(key);
   clearTimeout(thumbSaveTimer);
   thumbSaveTimer = setTimeout(() => {
-    chrome.storage.local.set({
-      "streampulse:thumbCache": Object.fromEntries(thumbCache),
-    }).catch(() => {});
+    chrome.storage.local.set({ "streampulse:thumbCache": Object.fromEntries(thumbCache) }).catch(() => {});
   }, 1000);
 }
 
-function getCachedThumb(streamerId) {
-  if (!thumbCache.has(streamerId)) return null;
-  // Refresh LRU position
-  const url = thumbCache.get(streamerId);
-  thumbCache.delete(streamerId);
-  thumbCache.set(streamerId, url);
-  return url;
-}
-
-function setCachedThumb(streamerId, url) {
-  if (url) {
-    if (thumbCache.has(streamerId)) thumbCache.delete(streamerId);
-    thumbCache.set(streamerId, url);
-    if (thumbCache.size > THUMB_CACHE_MAX) {
-      const oldestKey = thumbCache.keys().next().value;
-      thumbCache.delete(oldestKey);
-    }
-  } else {
-    thumbCache.delete(streamerId);
-  }
-  saveThumbCache();
-}
-
-// Load cache on module init
 loadThumbCache();
 
-function buildThumbnailUrl(rawUrl, width = 320, height = 180) {
-  if (!rawUrl) return "";
-  return rawUrl
-    .replace("{width}", String(width))
-    .replace("{height}", String(height));
-}
+let activeThumbLoads = 0;
+const thumbQueue = [];
 
-// --- Thumbnail load queue ---
-// Limits concurrent network fetches so the popup doesn't stall on
-// users with many live streamers.
-const MAX_THUMB_CONCURRENCY = 3;
-let _activeThumbs = 0;
-const _thumbQueue = [];
-
-function _drainThumbQueue() {
-  while (_activeThumbs < MAX_THUMB_CONCURRENCY && _thumbQueue.length > 0) {
-    const fn = _thumbQueue.shift();
-    _activeThumbs++;
+function drainThumbQueue() {
+  while (activeThumbLoads < MAX_THUMB_CONCURRENCY && thumbQueue.length > 0) {
+    const job = thumbQueue.shift();
+    activeThumbLoads++;
     let released = false;
     const release = () => {
       if (released) return;
       released = true;
-      _activeThumbs--;
-      _drainThumbQueue();
+      activeThumbLoads--;
+      drainThumbQueue();
     };
-    try { fn(release); } catch (_) { release(); }
-  }
-}
-
-function scheduleThumbLoad(fn) {
-  _thumbQueue.push(fn);
-  _drainThumbQueue();
-}
-
-export function formatNumber(value) {
-  try {
-    return new Intl.NumberFormat(resolveLocale(getCurrentLanguage())).format(value);
-  } catch {
-    return String(value);
-  }
-}
-
-function buildIdentityMeta(streamer, status) {
-  const parts = [];
-  const supportsLiveStatus = status?.supportsLiveStatus !== false;
-  if (supportsLiveStatus && !status?.isLive) {
-    // L'API Twitch ne renvoie pas de categorie pour une chaine hors ligne :
-    // sans lastGame, cette ligne se reduisait au nom de la plateforme.
-    const lastGame = status?.game || status?.lastGame;
-    if (lastGame) parts.push(lastGame);
-  }
-  // La pastille de statut nomme deja la plateforme (« En live · Twitch »),
-  // sauf sur les cartes hors ligne ou le CSS la masque. On ne redonne le nom
-  // que dans ce cas, sinon il apparait deux fois sur la meme carte.
-  if (supportsLiveStatus && !status?.isLive) {
-    const platformLabel = getPlatformLabel(streamer.platform || DEFAULT_PLATFORM);
-    if (platformLabel) {
-      parts.push(platformLabel);
+    try {
+      job(release);
+    } catch {
+      release();
     }
   }
-  return parts.filter(Boolean).join(" • ");
 }
 
-function formatUpdatedAt(timestamp) {
-  const label = t("popup.card.lastUpdateLabel");
-  if (!timestamp) {
-    return { label, time: t("popup.labels.lastUpdateTimePlaceholder") };
-  }
-  const date = new Date(timestamp);
-  return {
-    label,
-    time: date.toLocaleTimeString(resolveLocale(getCurrentLanguage()), {
-      hour: "2-digit",
-      minute: "2-digit",
-    }),
+function probeImage(url, onOk, onFail) {
+  thumbQueue.push((release) => {
+    const probe = new Image();
+    probe.onload = () => {
+      release();
+      if (probe.naturalWidth < 100) onFail();
+      else onOk();
+    };
+    probe.onerror = () => {
+      release();
+      onFail();
+    };
+    probe.src = url;
+  });
+  drainThumbQueue();
+}
+
+function loadThumbnail(streamer, active, image, width, height) {
+  const candidates = (active.thumbnailCandidates || [active.thumbnailUrl])
+    .filter(Boolean)
+    .map((url) => url.replace("{width}", String(width)).replace("{height}", String(height)));
+  if (candidates.length === 0) return;
+
+  const apply = (url) => {
+    if (!image.isConnected) return;
+    image.src = url;
+    image.hidden = false;
   };
-}
+  let index = 0;
+  const tryNext = () => {
+    if (index >= candidates.length) {
+      setCachedThumb(streamer.id, null);
+      return;
+    }
+    const url = candidates[index++];
+    probeImage(url, () => {
+      apply(url);
+      setCachedThumb(streamer.id, url);
+    }, tryNext);
+  };
 
-function renderLastUpdate(element, timestamp, status) {
-  if (!element) return;
-  const { label, time } = formatUpdatedAt(timestamp);
-  element.innerHTML = "";
-
-  const labelEl = document.createElement("span");
-  labelEl.className = "last-update-label";
-  labelEl.textContent = label;
-
-  const timeEl = document.createElement("span");
-  timeEl.className = "last-update-time";
-  timeEl.textContent = time;
-
-  if (Number.isFinite(status?.viewers)) {
-    timeEl.appendChild(document.createElement("br"));
-    const viewersEl = document.createElement("span");
-    viewersEl.className = "last-update-viewers";
-    viewersEl.textContent = t("popup.labels.viewers", {
-      count: formatNumber(status.viewers),
+  const cached = thumbCache.get(streamer.id);
+  if (cached) {
+    probeImage(cached, () => apply(cached), () => {
+      setCachedThumb(streamer.id, null);
+      tryNext();
     });
-    timeEl.appendChild(viewersEl);
+  } else {
+    tryNext();
   }
-
-  element.append(labelEl, timeEl);
 }
 
-const SOCIAL_ORDER = [
-  "twitch",
-  "youtube",
-  "kick",
-  "instagram",
-  "twitter",
-  "tiktok",
-  "discord",
-  "spotify",
-];
+// --- Kick hover preview on the stage: iframe after a short hover, freed on leave ---
+function setupHoverPlayer(stage, media, platformId, streamer, onOpen) {
+  stage._hoverAbort?.abort();
+  if (platformId !== "kick" || !streamer.handle) return;
+  const controller = new AbortController();
+  stage._hoverAbort = controller;
+  const { signal } = controller;
+  const embedUrl = `https://player.kick.com/${encodeURIComponent(streamer.handle)}?muted=true`;
+  let timer = null;
 
-const SOCIAL_DEFINITIONS = {
-  twitch: { label: "Twitch", icon: "../images/social/Twitch.png" },
-  youtube: { label: "YouTube", icon: "../images/social/youtube.png" },
-  kick: { label: "Kick", icon: "../images/social/Kick.png" },
-  instagram: { label: "Instagram", icon: "../images/social/instagram.png" },
-  twitter: { label: "Twitter", icon: "../images/social/twitter.png" },
-  tiktok: { label: "TikTok", icon: "../images/social/tiktok.png" },
-  discord: { label: "Discord", icon: "../images/social/discord.png" },
-  spotify: { label: "Spotify", icon: "../images/social/spotify.png" },
-};
+  media.style.pointerEvents = "auto";
+  media.addEventListener("mouseenter", () => {
+    if (media.querySelector(".hover-player-wrap")) return;
+    timer = setTimeout(() => {
+      const wrap = el("div", "hover-player-wrap");
+      const frame = document.createElement("iframe");
+      frame.allow = "autoplay; encrypted-media; picture-in-picture";
+      frame.setAttribute("scrolling", "no");
+      frame.src = embedUrl;
+      // Iframes swallow clicks: a transparent layer keeps "click to watch".
+      const overlay = el("div", "embed-click-overlay");
+      overlay.addEventListener("click", onOpen);
+      wrap.append(frame, overlay);
+      media.appendChild(wrap);
+      stage.classList.add("is-playing");
+    }, HOVER_DELAY);
+  }, { signal });
+  stage.addEventListener("mouseleave", () => {
+    clearTimeout(timer);
+    stopHoverPlayer(stage, media);
+  }, { signal });
+}
 
-function renderSocialLinks(streamer, container) {
-  if (!container) return;
-  container.innerHTML = "";
-  const socials = streamer.socials || {};
-
-  const entries = SOCIAL_ORDER.filter((key) => {
-    const url = socials[key];
-    return typeof url === "string" && url;
+function stopHoverPlayer(stage, media) {
+  media.querySelectorAll(".hover-player-wrap").forEach((wrap) => {
+    const frame = wrap.querySelector("iframe");
+    if (frame) frame.src = "about:blank";
+    wrap.remove();
   });
-
-  if (entries.length === 0) {
-    container.hidden = true;
-    return;
-  }
-
-  container.hidden = false;
-
-  entries.forEach((key) => {
-    const url = socials[key];
-    const definition = SOCIAL_DEFINITIONS[key];
-    if (!definition) return;
-
-    const link = document.createElement("a");
-    link.className = "social-link";
-    link.href = url;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.title = definition.label;
-
-    const icon = document.createElement("img");
-    icon.alt = definition.label;
-    icon.src = definition.icon;
-
-    link.appendChild(icon);
-    container.appendChild(link);
-  });
+  stage.classList.remove("is-playing");
 }
 
-
-/**
- * Etat visuel d'un bouton d'alerte : classe active et bascule des deux icones,
- * la normale et la barree. Les trois boutons d'alerte d'une carte partagent
- * exactement ce comportement.
- */
-/**
- * Infobulle au survol d'un bouton de carte. Le libelle passe du title natif
- * vers data-tooltip : la bulle du systeme met une seconde a sortir et ignore
- * le theme. Le aria-label garde l'intitule pour les lecteurs d'ecran.
- *
- * C'est aussi ce qui les traduit : applyTranslations() balaie le document, or
- * le contenu d'un <template> n'est pas atteint par querySelectorAll, donc les
- * title poses dans le gabarit restaient en francais dans toutes les langues.
- */
-function setCardTooltip(button, key) {
-  if (!button) return;
-  const label = t(key);
-  if (!label || label === key) return;
-  button.dataset.tooltip = label;
-  button.setAttribute("aria-label", label);
-  button.removeAttribute("title");
-}
-
-function setAlertButtonState(button, onSelector, offSelector, enabled) {
-  if (!button) return;
-  const onIcon = button.querySelector(onSelector);
-  const offIcon = button.querySelector(offSelector);
-  button.classList.toggle("active", enabled);
-  if (onIcon) onIcon.style.display = enabled ? "" : "none";
-  if (offIcon) offIcon.style.display = enabled ? "none" : "";
-}
-
-/** Branche un bouton d'alerte : l'etat ne change que si le fond a bien repondu. */
-function bindAlertButton(button, onSelector, offSelector, toggle) {
-  if (!button) return;
-  button.addEventListener("click", async () => {
-    const nextState = !button.classList.contains("active");
-    const success = await toggle(nextState);
-    if (success) {
-      setAlertButtonState(button, onSelector, offSelector, nextState);
+// --- Alerts ---
+function alertToggle(className, streamer, alert, callbacks, withLabel) {
+  const enabled = streamer[alert.key] !== false;
+  const node = button(className, { icon: alert.icon, label: t(alert.hint) });
+  if (withLabel) node.append(document.createTextNode(t(alert.label)));
+  node.setAttribute("aria-pressed", String(enabled));
+  node.addEventListener("click", async () => {
+    const next = node.getAttribute("aria-pressed") !== "true";
+    if (await callbacks[alert.callback](streamer.id, next)) {
+      node.setAttribute("aria-pressed", String(next));
     }
   });
+  return node;
 }
 
-function bindCardActions(buttons, streamer, platformId, displayLabel, callbacks) {
-  const { notificationButton, gameNotificationButton, titleNotificationButton, openButton, removeButton } = buttons;
-
-  bindAlertButton(notificationButton, ".bell-icon", ".bell-off-icon", (next) =>
-    callbacks.onToggleNotify(streamer.id, next));
-  bindAlertButton(gameNotificationButton, ".gamepad-icon", ".gamepad-off-icon", (next) =>
-    callbacks.onToggleGameNotify(streamer.id, next));
-  bindAlertButton(titleNotificationButton, ".title-icon", ".title-off-icon", (next) =>
-    callbacks.onToggleTitleNotify(streamer.id, next));
-
-  if (openButton) {
-    openButton.addEventListener("click", () => {
-       const url = buildProfileUrl(platformId, streamer.handle || streamer.twitch || streamer.id);
-       callbacks.onOpen(url);
-    });
-  }
-
-  if (removeButton) {
-    removeButton.addEventListener("click", () => {
-      const card = removeButton.closest(".streamer-card");
-      if (!card || card.querySelector(".confirm-overlay")) return;
-
-      const overlay = document.createElement("div");
-      overlay.className = "confirm-overlay";
-      // Modal-ish semantics: this traps the card until answered.
-      overlay.setAttribute("role", "alertdialog");
-      overlay.setAttribute("aria-label", t("popup.card.confirmRemove") || "Supprimer ?");
-
-      const text = document.createElement("span");
-      text.className = "confirm-text";
-      // Name the streamer being removed. "Supprimer ?" alone is ambiguous once
-      // several cards are on screen.
-      text.textContent = displayLabel
-        ? `${t("popup.card.confirmRemove") || "Supprimer"} ${displayLabel}`
-        : t("popup.card.confirmRemove") || "Supprimer ?";
-
-      const actions = document.createElement("div");
-      actions.className = "confirm-actions";
-
-      const btnYes = document.createElement("button");
-      btnYes.className = "confirm-yes";
-      btnYes.type = "button";
-      btnYes.textContent = t("popup.card.confirmYes") || "Oui";
-
-      const btnNo = document.createElement("button");
-      btnNo.className = "confirm-no";
-      btnNo.type = "button";
-      btnNo.textContent = t("popup.card.confirmNo") || "Non";
-
-      // Cancel first in the DOM: it is the safe default, so it gets initial
-      // focus and Tab reaches it before the destructive action.
-      actions.append(btnNo, btnYes);
-      overlay.append(text, actions);
-      card.appendChild(overlay);
-      btnNo.focus();
-
-      const close = () => {
-        overlay.classList.remove("show");
-        setTimeout(() => overlay.remove(), 140);
-      };
-
-      requestAnimationFrame(() => overlay.classList.add("show"));
-
-      // No auto-dismiss timer: it used to yank the dialog away after 3s while
-      // the user was still reading. Escape and "Non" are the ways out.
-      overlay.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-          e.stopPropagation();
-          close();
-        }
-      });
-
-      btnYes.addEventListener("click", (e) => {
-        e.stopPropagation();
-        close();
-        callbacks.onRemove(streamer.id, displayLabel);
-      });
-
-      btnNo.addEventListener("click", (e) => {
-        e.stopPropagation();
-        close();
-      });
-    });
-  }
-}
-
-export function createStreamerCard(streamer, status, template, callbacks) {
-  const fragment = template.content.cloneNode(true);
-
-  const card = fragment.querySelector(".streamer-card");
-  const avatar = fragment.querySelector(".avatar");
-  const displayName = fragment.querySelector(".display-name");
-  const statusPill = fragment.querySelector(".status-pill");
-  const notificationButton = fragment.querySelector(".notification-button");
-  const gameNotificationButton = fragment.querySelector(".game-notification-button");
-  const titleNotificationButton = fragment.querySelector(".title-notification-button");
-  const openButton = fragment.querySelector(".open-button");
-  const removeButton = fragment.querySelector(".remove-button");
-  const cardPreview = fragment.querySelector(".card-preview");
-  const livePreview = cardPreview?.querySelector(".live-preview");
-  const previewImage = cardPreview?.querySelector(".preview-image");
-  const liveTitle = fragment.querySelector(".live-title");
-  const identityMeta = fragment.querySelector(".identity-meta");
-  const lastUpdate = fragment.querySelector(".last-update");
-  const socialLinksContainer = fragment.querySelector(".social-links");
-  const statusCategory = fragment.querySelector(".status-category");
-
-  const activeStatus = status?.active || { isLive: false };
-  const platformId = streamer.platform || DEFAULT_PLATFORM;
+// --- Stage ---
+export function renderStage(stage, media, feature, streamer, status, { isNew }, callbacks) {
+  stopHoverPlayer(stage, media);
+  const { active, platformId, viewers } = getLiveState(streamer, status);
+  const label = getDisplayLabel(streamer);
   const platformLabel = getPlatformLabel(platformId);
-  const supportsLiveStatus =
-    platformSupportsLiveStatus(platformId) &&
-    activeStatus.supportsLiveStatus !== false;
-  const displayLabel =
-    streamer.displayName ||
-    formatHandleForDisplay(platformId, streamer.handle || streamer.twitch);
+  const open = () => callbacks.onOpen(getStreamerUrl(streamer));
+  stage.dataset.state = "live";
 
-  // V7: data-platform for CSS ring + glyph color
-  if (card) card.dataset.platform = platformId;
+  const image = el("img", "stage-image");
+  image.alt = t("popup.labels.previewAltLive", { name: label });
+  image.hidden = true;
+  media.replaceChildren(image);
+  loadThumbnail(streamer, active, image, 960, 540);
+  setupHoverPlayer(stage, media, platformId, streamer, open);
 
-  // Wrap name in span so it can be truncated independently of the platform glyph
-  displayName.innerHTML = "";
-  const nameText = document.createElement("span");
-  nameText.className = "name-text";
-  nameText.textContent = displayLabel;
-  displayName.appendChild(nameText);
-
-  const identityMetaText = buildIdentityMeta(streamer, activeStatus);
-  identityMeta.textContent = identityMetaText;
-  identityMeta.hidden = !identityMetaText;
-
-  // Le dernier titre diffuse tient rarement sur une carte hors ligne, qui fait
-  // la moitie de la hauteur d'une carte en direct. Il part donc en infobulle.
-  const lastTitle = !activeStatus.isLive ? activeStatus.lastTitle : "";
-  if (lastTitle) {
-    identityMeta.title = lastTitle;
-    identityMeta.dataset.lastTitle = "true";
-  } else {
-    identityMeta.removeAttribute("title");
-    delete identityMeta.dataset.lastTitle;
+  const pills = el("div", "feature-pills");
+  // The time on air rides inside the live pill so the row never wraps.
+  const onAir = minutesSince(active.startedAt);
+  const liveText = onAir !== null ? `${t("popup.osd.onAirChip")} · ${formatMinutes(onAir)}` : t("popup.osd.onAirChip");
+  const live = el("span", "pill pill-live");
+  live.append(el("i"), document.createTextNode(liveText));
+  pills.append(live);
+  if (viewers !== null) {
+    const chip = el("span", "pill pill-dark");
+    chip.title = t("popup.labels.viewers", { count: formatNumber(viewers) });
+    chip.append(el("i"), document.createTextNode(t("popup.labels.viewers", { count: formatCompactNumber(viewers) })));
+    pills.append(chip);
   }
+  if (isNew) pills.append(el("span", "pill pill-new", t("popup.cplus.newBadge")));
 
-  const fallbackAvatar = `../${
-    getPlatformDefinition(platformId).icon || "images/photos/48px.png"
-  }`;
-  avatar.src = streamer.avatarUrl || fallbackAvatar || "../images/photos/48px.png";
-  avatar.alt = t("popup.labels.avatarAlt", { name: displayLabel });
-  avatar.onerror = function() {
-    this.onerror = null; // prevent infinite loop & release closure
-    this.src = fallbackAvatar || "../images/photos/48px.png";
-  };
-
-  setCardTooltip(notificationButton, "popup.card.notificationsToggle");
-  setCardTooltip(gameNotificationButton, "popup.card.gameNotificationsToggle");
-  setCardTooltip(titleNotificationButton, "popup.card.titleNotificationsToggle");
-  setCardTooltip(openButton, "popup.card.open");
-  setCardTooltip(removeButton, "popup.card.remove");
-
-  setAlertButtonState(notificationButton, ".bell-icon", ".bell-off-icon",
-    streamer.notificationsEnabled !== false);
-  setAlertButtonState(gameNotificationButton, ".gamepad-icon", ".gamepad-off-icon",
-    streamer.gameNotificationsEnabled !== false);
-  setAlertButtonState(titleNotificationButton, ".title-icon", ".title-off-icon",
-    streamer.titleNotificationsEnabled !== false);
-
-  if (!supportsLiveStatus) {
-    statusPill.textContent = t("popup.card.statusUnsupported", {
-      platform: platformLabel,
-    });
-    statusPill.classList.remove("online", "offline");
-    statusPill.classList.add("unsupported");
-    card.classList.remove("live", "offline");
-    card.classList.add("unsupported");
-    if (cardPreview) {
-      cardPreview.hidden = true;
-      if (livePreview) livePreview.hidden = true;
-      if (previewImage) {
-        previewImage.removeAttribute("src");
-        previewImage.alt = "";
-      }
-    }
-    liveTitle.textContent = "";
-    if (statusCategory) {
-      statusCategory.textContent = "";
-      statusCategory.hidden = true;
-    }
-    renderLastUpdate(lastUpdate, status?.updatedAt, activeStatus);
-  } else if (activeStatus.isLive) {
-    statusPill.textContent = t("popup.card.statusLive", {
-      platform: platformLabel,
-    });
-    statusPill.classList.remove("offline", "unsupported");
-    statusPill.classList.add("online");
-    card.classList.remove("offline", "unsupported");
-    card.classList.add("live");
-
-    const candidates = (activeStatus.thumbnailCandidates || [activeStatus.thumbnailUrl])
-      .filter(Boolean)
-      .map(url => buildThumbnailUrl(url, 480, 270));
-
-    const showFallbackPreview = () => {
-      if (!cardPreview || !livePreview) return;
-      cardPreview.hidden = false;
-      livePreview.hidden = false;
-      cardPreview.classList.remove("is-loading");
-      cardPreview.classList.add("is-fallback");
-      if (previewImage) {
-        previewImage.hidden = true;
-        previewImage.removeAttribute("src");
-      }
-      if (livePreview.querySelector(".fallback-content")) return;
-      const fallbackContent = document.createElement("div");
-      fallbackContent.className = "fallback-content";
-      const fbAvatar = document.createElement("img");
-      fbAvatar.className = "fallback-avatar";
-      fbAvatar.src = streamer.avatarUrl || `../${getPlatformDefinition(platformId).icon || "images/photos/48px.png"}`;
-      fbAvatar.onerror = () => { fbAvatar.src = `../images/social/${platformId === "kick" ? "Kick" : "twitch"}.png`; };
-      fbAvatar.alt = displayLabel;
-      fallbackContent.appendChild(fbAvatar);
-      if (activeStatus.game) {
-        const fbGame = document.createElement("span");
-        fbGame.className = "fallback-game";
-        fbGame.textContent = activeStatus.game;
-        fallbackContent.appendChild(fbGame);
-      }
-      livePreview.appendChild(fallbackContent);
-    };
-
-    if (cardPreview) {
-      cardPreview.hidden = false;
-      if (livePreview) livePreview.hidden = false;
-      previewImage.onerror = null;
-
-      cardPreview.querySelector("iframe")?.remove();
-      previewImage.alt = t("popup.labels.previewAltLive", { name: displayLabel });
-      previewImage.classList.remove("is-offline-preview");
-
-      // Always show fallback avatar immediately: replaced by thumbnail if one loads
-      showFallbackPreview();
-
-      if (previewImage && candidates.length > 0) {
-        let candidateIdx = 0;
-
-        const applyThumb = (url) => {
-          livePreview?.querySelector(".fallback-content")?.remove();
-          cardPreview.classList.remove("is-fallback", "is-loading");
-          previewImage.src = url;
-          previewImage.hidden = false;
-        };
-
-        const tryCandidate = () => {
-          if (candidateIdx >= candidates.length) {
-            setCachedThumb(streamer.id, null);
-            return; // keep fallback avatar
-          }
-          const url = candidates[candidateIdx++];
-          scheduleThumbLoad((release) => {
-            const img = new Image();
-            img.onload = () => {
-              release();
-              if (img.naturalWidth < 100) { tryCandidate(); return; }
-              applyThumb(url);
-              setCachedThumb(streamer.id, url);
-            };
-            img.onerror = () => { release(); tryCandidate(); };
-            img.src = url;
-          });
-        };
-
-        const cached = getCachedThumb(streamer.id);
-        if (cached) {
-          // Show cached thumb instantly (browser HTTP cache will likely hit).
-          // Don't re-validate against the network: the next poll will refresh.
-          scheduleThumbLoad((release) => {
-            const img = new Image();
-            img.onload = () => {
-              release();
-              if (img.naturalWidth < 100) { tryCandidate(); return; }
-              applyThumb(cached);
-            };
-            img.onerror = () => {
-              release();
-              setCachedThumb(streamer.id, null);
-              tryCandidate();
-            };
-            img.src = cached;
-          });
-        } else {
-          tryCandidate();
-        }
-      }
-    }
-    liveTitle.textContent = activeStatus.title || t("popup.card.defaultLiveTitle");
-    if (statusCategory) {
-      const category = activeStatus.game || "";
-      statusCategory.textContent = category;
-      statusCategory.hidden = !category.trim();
-    }
-
-    // V7: inject live badge + viewer badge + started-at into livePreview
-    if (livePreview) {
-      livePreview.querySelectorAll(".live-badge,.viewer-badge,.started-at").forEach(el => el.remove());
-      const liveBadge = document.createElement("span");
-      liveBadge.className = "live-badge";
-      liveBadge.innerHTML = `<span class="live-dot"></span>LIVE`;
-      livePreview.appendChild(liveBadge);
-      if (activeStatus.viewers != null) {
-        const viewerBadge = document.createElement("span");
-        viewerBadge.className = "viewer-badge";
-        viewerBadge.textContent = `👁 ${formatNumber ? formatNumber(activeStatus.viewers) : activeStatus.viewers}`;
-        livePreview.appendChild(viewerBadge);
-      }
-    }
-
-    renderLastUpdate(lastUpdate, status?.updatedAt, activeStatus);
-
-    // Hover-to-play on live cards (iframe loads on hover, frees RAM on leave)
-    if (cardPreview) {
-      setupHoverPreview(cardPreview, platformId, streamer, activeStatus, callbacks);
-    }
-  } else {
-    statusPill.textContent = t("popup.card.offlinePlatform", {
-      platform: platformLabel,
-    });
-    statusPill.classList.remove("online", "unsupported");
-    statusPill.classList.add("offline");
-    card.classList.add("offline");
-    card.classList.remove("live", "unsupported");
-
-    if (cardPreview) {
-      cardPreview.hidden = true;
-      if (livePreview) livePreview.hidden = true;
-      if (previewImage) {
-        previewImage.removeAttribute("src");
-        previewImage.alt = "";
-        previewImage.classList.remove("is-offline-preview");
-      }
-    }
-
-    liveTitle.textContent = t("popup.card.offline");
-    if (statusCategory) {
-      statusCategory.textContent = "";
-      statusCategory.hidden = true;
-    }
-    renderLastUpdate(lastUpdate, status?.updatedAt, activeStatus);
-  }
-
-  renderSocialLinks(streamer, socialLinksContainer);
-  bindCardActions(
-    { notificationButton, gameNotificationButton, titleNotificationButton, openButton, removeButton },
-    streamer,
-    platformId,
-    displayLabel,
-    callbacks
+  const text = el("div", "feature-text");
+  text.append(
+    pills,
+    el("p", "feature-name", label),
+    el("p", "feature-sub", [active.title || t("popup.card.defaultLiveTitle"), active.game, platformLabel].filter(Boolean).join(" · ")),
   );
 
-  return fragment;
+  const alerts = el("div", "feature-alerts");
+  alerts.setAttribute("role", "group");
+  alerts.setAttribute("aria-label", t("popup.osd.alerts"));
+  ALERTS.forEach((alert) => alerts.append(alertToggle("alert-toggle", streamer, alert, callbacks, true)));
+
+  const watch = button("watch-button", { icon: "play", text: t("popup.osd.watch") });
+  watch.addEventListener("click", open);
+
+  feature.replaceChildren(el("div", "feature"));
+  feature.firstChild.append(avatarImage(`feature-avatar ring-${platformId}`, streamer, platformId), text, alerts, watch);
+}
+
+export function renderStageEmpty(stage, media, feature, { kind, offlineCount, avatarUrl, onOpenSheet }) {
+  stopHoverPlayer(stage, media);
+  stage._hoverAbort?.abort();
+  stage.dataset.state = kind;
+  if (avatarUrl) {
+    const image = el("img", "stage-image is-avatar");
+    image.alt = "";
+    image.src = avatarUrl;
+    media.replaceChildren(image);
+  } else {
+    media.replaceChildren();
+  }
+
+  const box = el("div", "stage-empty");
+  if (kind === "empty") {
+    box.append(el("p", "stage-empty-title", t("popup.cplus.emptyTitle")), el("p", "stage-empty-body", t("popup.cplus.emptyBody")));
+  } else {
+    box.append(
+      el("p", "stage-empty-title", t("popup.cplus.nobodyTitle")),
+      el("p", "stage-empty-body", t("popup.cplus.nobodyBody", { count: offlineCount })),
+    );
+    const all = button("button", { icon: "list", text: t("popup.cplus.seeAll") });
+    all.addEventListener("click", onOpenSheet);
+    box.append(all);
+  }
+  feature.replaceChildren(box);
+}
+
+// --- Live strip ---
+export function createMiniCard(streamer, status, { selected, pinned, isNew }, callbacks) {
+  const { active, platformId, viewers } = getLiveState(streamer, status);
+  const label = getDisplayLabel(streamer);
+  const item = el("li", "mini");
+  item.dataset.id = streamer.id;
+  item.classList.toggle("is-selected", selected);
+  item.classList.toggle("is-pinned", pinned);
+
+  const hit = button("mini-hit", { label: t("popup.osd.rowLive", { name: label, platform: getPlatformLabel(platformId), game: active.game || "" }) });
+  hit.removeAttribute("title");
+  hit.setAttribute("aria-pressed", String(selected));
+  const image = el("img", "mini-image");
+  image.alt = "";
+  image.hidden = true;
+  hit.append(image);
+  loadThumbnail(streamer, active, image, 440, 248);
+  if (viewers !== null) {
+    const chip = el("span", "pill pill-dark mini-viewers");
+    chip.append(el("i"), document.createTextNode(formatCompactNumber(viewers)));
+    hit.append(chip);
+  }
+  if (isNew) hit.append(el("span", "pill pill-new mini-new", t("popup.cplus.newBadge")));
+  const who = el("span", "mini-who");
+  const text = el("span", "mini-text");
+  text.append(el("span", "mini-name", label), el("span", "mini-game", active.game || getPlatformLabel(platformId)));
+  who.append(avatarImage(`mini-avatar ring-${platformId}`, streamer, platformId), text);
+  hit.append(who);
+  hit.addEventListener("click", () => callbacks.onSelect(streamer.id));
+
+  const pinLabel = t(pinned ? "popup.cplus.unpin" : "popup.cplus.pin", { name: label });
+  const pin = button("mini-pin", { icon: "star", label: pinLabel });
+  pin.setAttribute("aria-pressed", String(pinned));
+  pin.addEventListener("click", () => callbacks.onTogglePin(streamer.id));
+
+  item.append(hit, pin);
+  return item;
+}
+
+export function createAllChannelsTile(offlineStreamers, offlineCount, onOpen) {
+  const item = el("li", "mini mini-all");
+  const hit = button("mini-hit");
+  const stack = el("span", "avatar-stack");
+  offlineStreamers.forEach((streamer) => stack.append(avatarImage("", streamer, streamer.platform || DEFAULT_PLATFORM)));
+  const text = el("span", "");
+  text.append(
+    el("span", "mini-all-title", offlineCount > 0 ? t("popup.cplus.offlineTile", { count: offlineCount }) : t("popup.cplus.allChannels")),
+    el("span", "mini-all-action", `${t("popup.cplus.seeAll")} ›`),
+  );
+  hit.append(stack, text);
+  hit.addEventListener("click", onOpen);
+  item.append(hit);
+  return item;
+}
+
+// --- All channels sheet ---
+function highlight(target, text, query) {
+  const index = query ? text.toLowerCase().indexOf(query) : -1;
+  if (index < 0) {
+    target.textContent = text;
+    return;
+  }
+  target.append(
+    document.createTextNode(text.slice(0, index)),
+    el("mark", "", text.slice(index, index + query.length)),
+    document.createTextNode(text.slice(index + query.length)),
+  );
+}
+
+function rowMeta(active, supported, isLive, viewers, platformLabel) {
+  if (!supported) return t("popup.card.statusUnsupported", { platform: platformLabel });
+  if (isLive) {
+    const audience = viewers !== null ? t("popup.labels.viewers", { count: formatNumber(viewers) }) : "";
+    return [active.game, audience, platformLabel].filter(Boolean).join(" · ");
+  }
+  const lastGame = active.lastGame || active.game;
+  return [lastGame ? t("popup.osd.lastCategory", { game: lastGame }) : "", platformLabel].filter(Boolean).join(" · ");
+}
+
+function groupSelect(streamer, label, groups, groupId, onSetGroup) {
+  const select = el("select", "settings-select row-group");
+  select.setAttribute("aria-label", t("popup.cplus.groupLabel", { name: label }));
+  const none = el("option", "", t("popup.cplus.noGroup"));
+  none.value = "";
+  select.append(none);
+  groups.forEach((group) => {
+    const option = el("option", "", group.name);
+    option.value = group.id;
+    select.append(option);
+  });
+  select.value = groupId;
+  select.addEventListener("change", () => onSetGroup(streamer.id, select.value));
+  return select;
+}
+
+export function createChannelRow(streamer, status, options, callbacks) {
+  const { query, pinned, groups, groupId, index, draggable } = options;
+  const { active, platformId, supported, isLive, viewers } = getLiveState(streamer, status);
+  const label = getDisplayLabel(streamer);
+  const platformLabel = getPlatformLabel(platformId);
+
+  const row = el("li", `channel-row ${isLive ? "live" : "offline"}`);
+  row.dataset.id = streamer.id;
+  row.dataset.index = String(index);
+  if (draggable) {
+    row.draggable = true;
+    const grip = el("span", "row-grip");
+    grip.innerHTML = ICONS.grip;
+    grip.title = t("popup.cplus.drag", { name: label });
+    row.append(grip);
+  }
+
+  const main = el(isLive ? "button" : "span", "row-main");
+  if (isLive) {
+    main.type = "button";
+    main.title = t("popup.cplus.feature", { name: label });
+    main.addEventListener("click", () => callbacks.onFeature(streamer.id));
+  }
+  const name = el("span", "row-name");
+  highlight(name, label, query);
+  main.append(name, el("span", "row-meta", rowMeta(active, supported, isLive, viewers, platformLabel)));
+
+  const state = el("span", `row-state${isLive ? " is-live" : ""}`);
+  state.append(el("i"), document.createTextNode(t(isLive ? "popup.cplus.stateLive" : "popup.cplus.stateOffline")));
+
+  const actions = el("span", "row-actions");
+  const pin = button("row-icon pin", { icon: "star", label: t(pinned ? "popup.cplus.unpin" : "popup.cplus.pin", { name: label }) });
+  pin.setAttribute("aria-pressed", String(pinned));
+  pin.addEventListener("click", () => callbacks.onTogglePin(streamer.id));
+  actions.append(pin);
+  ALERTS.forEach((alert) => actions.append(alertToggle("row-icon", streamer, alert, callbacks, false)));
+  if (groups.length) actions.append(groupSelect(streamer, label, groups, groupId, callbacks.onSetGroup));
+  const open = button("row-icon", { icon: "open", label: t("popup.cplus.open", { name: label }) });
+  open.addEventListener("click", () => callbacks.onOpen(getStreamerUrl(streamer)));
+  const remove = button("row-icon remove", { icon: "trash", label: t("popup.cplus.remove", { name: label }) });
+  actions.append(open, remove);
+
+  const confirm = el("span", "row-confirm");
+  confirm.hidden = true;
+  confirm.setAttribute("role", "alertdialog");
+  confirm.setAttribute("aria-label", t("popup.osd.confirmRemove", { name: label }));
+  const cancel = button("button button-ghost", { text: t("popup.osd.cancel") });
+  const confirmRemove = button("button button-danger", { text: t("popup.osd.remove") });
+  confirm.append(el("p", "", t("popup.osd.confirmRemove", { name: label })), cancel, confirmRemove);
+
+  remove.addEventListener("click", () => {
+    actions.hidden = true;
+    state.hidden = true;
+    confirm.hidden = false;
+    cancel.focus();
+  });
+  const closeConfirm = () => {
+    confirm.hidden = true;
+    actions.hidden = false;
+    state.hidden = false;
+    remove.focus();
+  };
+  cancel.addEventListener("click", closeConfirm);
+  confirm.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      event.stopPropagation();
+      closeConfirm();
+    }
+  });
+  confirmRemove.addEventListener("click", () => callbacks.onRemove(streamer.id, label));
+
+  row.append(avatarImage(`row-avatar${isLive ? ` ring-${platformId}` : ""}`, streamer, platformId), main, state, actions, confirm);
+  return row;
 }

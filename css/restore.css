@@ -1,0 +1,53 @@
+/* Restore page: pick or drop a backup file, review it, confirm. It lives in a
+   tab because a file picker opened from the popup closes the popup. */
+
+.restore { display: grid; gap: 24px; width: min(680px, 100%); margin: 48px auto 0; }
+.restore-intro { display: grid; gap: 16px; }
+.restore-intro .display { font-size: clamp(40px, 5.4vw, 64px); }
+.restore-card { padding: 24px; }
+
+.drop-zone {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 44px 24px;
+  border: 2px dashed var(--line-2);
+  border-radius: 18px;
+  background: var(--bg);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) ease, background-color var(--dur-fast) ease;
+}
+.drop-zone:hover,
+.drop-zone.is-over { border-color: var(--violet); background: var(--violet-soft); }
+.drop-zone:focus-within { outline: 2px solid var(--focus); outline-offset: 3px; }
+.drop-zone > svg { width: 40px; height: 40px; color: var(--violet-text); }
+.drop-title { font-family: var(--display); font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+.drop-or,
+.drop-hint { color: var(--text-3); font-size: 13px; }
+.file-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+.file-line { display: flex; align-items: center; gap: 10px; font-weight: 600; overflow-wrap: anywhere; }
+.file-line svg { width: 20px; height: 20px; color: var(--violet-text); }
+.summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 18px 0; }
+.summary div { padding: 14px 16px; border-radius: 14px; background: var(--bg); box-shadow: inset 0 0 0 1px var(--line); }
+.summary dt { color: var(--text-2); font-size: 12px; }
+.summary dd { margin: 4px 0 0; font-family: var(--display); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.note { padding: 12px 14px; border-radius: 12px; background: var(--lcd-soft); box-shadow: inset 0 0 0 1px var(--lcd-line); color: var(--text); font-size: 14px; }
+.restore-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+
+.restore-done { display: grid; justify-items: center; gap: 16px; padding: 40px 24px; text-align: center; }
+.done-check { display: grid; place-items: center; width: 80px; height: 80px; border-radius: 50%; background: var(--lcd); color: var(--lcd-ink); }
+.done-check svg { width: 36px; height: 36px; }
+@media (prefers-reduced-motion: no-preference) {
+  .done-check { animation: pop 520ms var(--ease-out) both; }
+}
+
+.restore-error { padding: 12px 14px; border-radius: 12px; background: rgba(255, 138, 128, 0.1); box-shadow: inset 0 0 0 1px rgba(255, 138, 128, 0.3); color: var(--danger); font-weight: 600; }
+
+@media (max-width: 600px) {
+  .summary { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .drop-zone { transition: none; }
+}

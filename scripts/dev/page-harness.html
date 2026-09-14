@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Prévisualise une page d'extension (onboarding, changelog, recap) hors
+         extension. Servir la racine du projet, puis ouvrir
+         /scripts/dev/page-harness.html?page=changelog&state=live&step=2 -->
+    <base href="/html/" />
+    <title>StreamPulse · banc des pages</title>
+    <script src="/scripts/dev/mock-chrome.js"></script>
+  </head>
+  <body>
+    <script type="module">
+      const params = new URLSearchParams(location.search);
+      const page = ["onboarding", "changelog", "recap", "restore"].includes(params.get("page")) ? params.get("page") : "changelog";
+      const source = await (await fetch(`/html/${page}.html`)).text();
+      const parsed = new DOMParser().parseFromString(source, "text/html");
+
+      parsed.head.querySelectorAll('link[rel="stylesheet"]').forEach((link) => {
+        const copy = document.createElement("link");
+        copy.rel = "stylesheet";
+        copy.href = link.getAttribute("href");
+        document.head.append(copy);
+      });
+      const scripts = [...parsed.querySelectorAll("script[src]")].map((node) => node.getAttribute("src"));
+      parsed.querySelectorAll("script").forEach((node) => node.remove());
+      document.body.innerHTML = parsed.body.innerHTML;
+
+      for (const src of scripts) await import(new URL(src, document.baseURI).href);
+      document.dispatchEvent(new Event("DOMContentLoaded"));
+
+      const step = Number(params.get("step") || 0);
+      if (page === "onboarding" && step > 0) {
+        await new Promise((resolve) => setTimeout(resolve, 600));
+        document.querySelectorAll(".wizard-step").forEach((section) => {
+          section.classList.toggle("active", Number(section.dataset.step) === step);
+        });
+        document.querySelectorAll(".step-pill").forEach((pill) => {
+          const index = Number(pill.dataset.step);
+          pill.classList.toggle("active", index === step);
+          pill.classList.toggle("completed", index < step);
+        });
+      }
+    </script>
+  </body>
+</html>

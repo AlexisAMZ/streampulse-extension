@@ -1,28 +1,21 @@
-/* StreamPulse: Twitch top-bar button + control panel (injected by topbar.js). */
+/* StreamPulse on twitch.tv: top-bar button, control panel (topbar.js /
+   topbar-panel.js) and the "Add to StreamPulse" button (quickFollow.js).
+   Same world as the extension pages; tokens are redefined here because the
+   Twitch page does not load tokens.css. Fonts are bundled web-accessible. */
 
-/* logosp.png est un glyphe #6200EA sur fond transparent. Toutes les surfaces ou
-   on le pose sont sombres ou violettes, et le violet ne s'en detache sur aucune :
-   2,28:1 sur le #18181b de la nav Twitch (et 1,42:1 au survol, le fond
-   s'eclaircissant vers la luminance du glyphe), 1,68:1 sur le #9147ff du bouton
-   d'ajout, 1,65:1 sur le gris de l'etat suivi. Les trois sont sous le seuil
-   WCAG de 3:1 pour un element d'interface.
+@font-face { font-family: "SP Unbounded"; font-weight: 400 900; font-display: swap; src: url("chrome-extension://__MSG_@@extension_id__/font/unbounded-latin-10.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "SP Unbounded"; font-weight: 400 900; font-display: swap; src: url("chrome-extension://__MSG_@@extension_id__/font/unbounded-latin-ext-9.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "SP Onest"; font-weight: 400 700; font-display: swap; src: url("chrome-extension://__MSG_@@extension_id__/font/onest-latin-6.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "SP Onest"; font-weight: 400 700; font-display: swap; src: url("chrome-extension://__MSG_@@extension_id__/font/onest-latin-ext-5.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
 
-   brightness(0) ecrase le RGB a zero, invert(1) le remonte a blanc ; le canal
-   alpha n'est touche par aucun des deux, donc l'antialiasing du glyphe survit.
-   Le logo s'aligne ainsi sur les icones de Twitch et sur nos propres libelles,
-   deja en #fff / #efeff1. */
+/* The violet logo glyph disappears on Twitch's dark nav and on violet fills:
+   rendered white there (brightness(0) invert(1) keeps the alpha edges). */
 .sp-topbar-logo,
-.sp-tb-head .sp-tb-logo,
 .sp-qf-logo,
-.sp-qf-toast-logo {
-  filter: brightness(0) invert(1);
-}
+.sp-qf-toast-logo { filter: brightness(0) invert(1); }
 
-.sp-topbar-wrap {
-  display: flex;
-  align-items: center;
-  margin: 0 5px;
-}
+/* ── Top-bar button: Twitch's own nav geometry ── */
+.sp-topbar-wrap { display: flex; align-items: center; margin: 0 5px; }
 .sp-topbar-btn {
   display: inline-flex;
   align-items: center;
@@ -36,477 +29,115 @@
   cursor: pointer;
   transition: background 0.12s ease;
 }
-.sp-topbar-btn:hover {
-  background: rgba(255, 255, 255, 0.16);
-}
-.sp-topbar-logo {
-  width: 21px;
-  height: 21px;
-  border-radius: 5px;
-  object-fit: cover;
-  display: block;
-}
+.sp-topbar-btn:hover { background: rgba(255, 255, 255, 0.16); }
+.sp-topbar-btn:focus-visible { outline: 2px solid #c6d4a0; outline-offset: 2px; }
+.sp-topbar-logo { display: block; width: 21px; height: 21px; border-radius: 5px; object-fit: cover; }
 
-/* ── Panneau deroulant ────────────────────────────────────────────────────
-   Meme direction artistique que le popup : les jetons sont redefinis ici
-   parce que le panneau vit dans la page Twitch, qui ne charge pas popup.css.
-   Toute evolution de la palette du popup doit etre repercutee ici. */
+/* ── Panel ── */
 .sp-topbar-panel {
-  --sp-bg-base: #08080d;
-  --sp-bg-card: rgba(255, 255, 255, 0.025);
-  --sp-bg-card-hover: rgba(255, 255, 255, 0.05);
-  --sp-bg-elev: rgba(255, 255, 255, 0.04);
-  --sp-border-subtle: rgba(255, 255, 255, 0.05);
-  --sp-border-medium: rgba(255, 255, 255, 0.08);
-  --sp-text-primary: #f0f0f4;
-  --sp-text-secondary: #c8c8d2;
-  --sp-text-muted: #7a7a8a;
-  --sp-accent: #9146ff;
-  --sp-accent-soft: rgba(145, 70, 255, 0.16);
-  --sp-accent-border: rgba(145, 70, 255, 0.35);
-  --sp-radius-xs: 4px;
-  --sp-radius-sm: 6px;
-  --sp-radius-md: 10px;
-  --sp-radius-lg: 14px;
+  --sp-bg: #0b0c22;
+  --sp-surface: #15173d;
+  --sp-surface-2: #1e2150;
+  --sp-line: rgba(255, 255, 255, 0.08);
+  --sp-line-2: rgba(255, 255, 255, 0.15);
+  --sp-text: #f4f2f7;
+  --sp-text-2: rgba(244, 242, 247, 0.74);
+  --sp-text-3: rgba(244, 242, 247, 0.58);
+  --sp-violet: #9146ff;
+  --sp-violet-strong: #7b35e8;
+  --sp-violet-soft: rgba(145, 70, 255, 0.24);
+  --sp-violet-line: rgba(181, 139, 255, 0.5);
+  --sp-violet-text: #c4a3ff;
+  --sp-lcd: #c6d4a0;
+  --sp-lcd-ink: #1c2615;
+  --sp-display: "SP Unbounded", Roobert, system-ui, sans-serif;
+  --sp-body: "SP Onest", Roobert, -apple-system, "Segoe UI", sans-serif;
 
   position: absolute;
   z-index: 9999;
-  width: 300px;
-  padding: 12px;
-  background: var(--sp-bg-base);
-  border: 1px solid var(--sp-border-medium);
-  border-radius: var(--sp-radius-lg);
-  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.04);
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  color: var(--sp-text-primary);
+  width: 320px;
   max-height: calc(100vh - 80px);
+  padding: 14px;
   overflow-y: auto;
   overscroll-behavior: contain;
+  border-radius: 18px;
+  background: radial-gradient(120% 70% at 0% 0%, rgba(145, 70, 255, 0.22), transparent 62%), var(--sp-bg);
+  box-shadow: 0 0 0 1px var(--sp-line-2), 0 28px 56px -16px rgba(0, 0, 0, 0.8);
+  color: var(--sp-text);
+  font: 400 13px/1.4 var(--sp-body);
+  -webkit-font-smoothing: antialiased;
 }
+.sp-topbar-panel * { box-sizing: border-box; }
+.sp-topbar-panel svg { flex-shrink: 0; }
+.sp-topbar-panel :focus-visible { outline: 2px solid var(--sp-lcd); outline-offset: 2px; }
+.sp-topbar-panel::-webkit-scrollbar { width: 6px; }
+.sp-topbar-panel::-webkit-scrollbar-thumb { border-radius: 3px; background: var(--sp-line-2); }
 
-.sp-topbar-panel::-webkit-scrollbar {
-  width: 6px;
-}
+.sp-tb-head { display: flex; align-items: center; gap: 10px; padding: 2px 2px 14px; font-family: var(--sp-display); font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+.sp-tb-head .sp-tb-logo { width: 28px; height: 28px; padding: 5px; border-radius: 9px; background: var(--sp-lcd); }
 
-.sp-topbar-panel::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.14);
-  border-radius: 3px;
-}
+.sp-tb-stats { display: flex; gap: 6px; margin-bottom: 14px; }
+.sp-tb-stat { display: flex; flex: 1; align-items: center; justify-content: center; gap: 7px; height: 40px; border-radius: 999px; background: var(--sp-surface); box-shadow: inset 0 0 0 1px var(--sp-line); color: var(--sp-text-2); }
+.sp-tb-stat:first-child { background: var(--sp-lcd); box-shadow: none; color: var(--sp-lcd-ink); }
+.sp-tb-stat b { color: inherit; font-family: var(--sp-display); font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sp-tb-ic { width: 14px; height: 14px; }
 
-.sp-tb-head {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 2px 2px 12px;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
+.sp-tb-section { margin-bottom: 14px; }
+.sp-tb-section-title { padding: 0 2px 8px; color: var(--sp-text-2); font-family: var(--sp-display); font-size: 12px; font-weight: 700; letter-spacing: -0.005em; }
 
-.sp-tb-head .sp-tb-logo {
-  width: 20px;
-  height: 20px;
-}
-
-/* ── Cartes de statistiques ─────────────────────────────────────────────── */
-.sp-tb-stats {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 10px;
-}
-
-.sp-tb-stat {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 10px 8px;
-  background: var(--sp-bg-card);
-  border: 1px solid var(--sp-border-subtle);
-  border-radius: var(--sp-radius-md);
-  color: var(--sp-text-muted);
-}
-
-.sp-tb-stat b {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--sp-text-primary);
-  font-variant-numeric: tabular-nums;
-}
-
-.sp-tb-ic {
-  width: 14px;
-  height: 14px;
-}
-
-/* ── Sections ───────────────────────────────────────────────────────────── */
-.sp-tb-section {
-  margin-bottom: 10px;
-}
-
-.sp-tb-section-title {
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--sp-text-muted);
-  padding: 2px 2px 7px;
-}
-
-/* ── Ligne « cette chaine » ─────────────────────────────────────────────── */
-.sp-tb-channel {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 11px 12px;
-  margin-bottom: 6px;
-  background: var(--sp-bg-card);
-  border: 1px solid var(--sp-border-subtle);
-  border-radius: var(--sp-radius-md);
-}
-
-.sp-tb-channel-name {
-  font-size: 12.5px;
-  font-weight: 600;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.sp-tb-channel-time {
-  font-size: 11px;
-  color: var(--sp-text-muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.sp-tb-follow {
-  margin-left: auto;
-  flex-shrink: 0;
-  border: 1px solid var(--sp-accent-border);
-  background: var(--sp-accent-soft);
-  color: var(--sp-text-primary);
-  font: inherit;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 5px 11px;
-  border-radius: var(--sp-radius-sm);
-  cursor: pointer;
-  transition: background 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.sp-tb-follow:hover:not(:disabled) {
-  background: rgba(145, 70, 255, 0.28);
-}
-
+.sp-tb-channel,
+.sp-tb-row,
+.sp-tb-badge-row,
+.sp-tb-empty { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; padding: 10px 12px; border-radius: 12px; background: var(--sp-surface); box-shadow: inset 0 0 0 1px var(--sp-line); }
+.sp-tb-channel { padding: 10px 10px 10px 12px; }
+.sp-tb-channel-name { overflow: hidden; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.sp-tb-channel-time { color: var(--sp-text-3); font-size: 12px; font-variant-numeric: tabular-nums; }
+.sp-tb-follow { flex-shrink: 0; margin-left: auto; padding: 0 12px; height: 30px; border: 0; border-radius: 999px; background: var(--sp-violet); color: #ffffff; font: 700 12px/1 var(--sp-body); cursor: pointer; transition: background 0.15s ease; }
+.sp-tb-follow:hover:not(:disabled) { background: var(--sp-violet-strong); }
 .sp-tb-follow.tracked,
-.sp-tb-follow:disabled {
-  border-color: var(--sp-border-medium);
-  background: var(--sp-bg-elev);
-  color: var(--sp-text-muted);
-  cursor: default;
-}
+.sp-tb-follow:disabled { background: var(--sp-surface-2); color: var(--sp-text-3); cursor: default; }
 
-/* ── Interrupteurs, calques sur .settings-toggle du popup ──────────────── */
-.sp-tb-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  width: 100%;
-  padding: 11px 12px;
-  margin-bottom: 6px;
-  background: var(--sp-bg-card);
-  border: 1px solid var(--sp-border-subtle);
-  border-radius: var(--sp-radius-md);
-  color: var(--sp-text-primary);
-  font: inherit;
-  font-size: 12.5px;
-  text-align: left;
-  cursor: pointer;
-  transition: background 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-}
+.sp-tb-row { justify-content: space-between; width: 100%; border: 0; color: var(--sp-text); font: 500 13px/1.3 var(--sp-body); text-align: left; cursor: pointer; transition: background 0.15s ease; }
+.sp-tb-row:hover { background: var(--sp-surface-2); }
+.sp-tb-sw { position: relative; flex-shrink: 0; width: 36px; height: 20px; border-radius: 999px; background: var(--sp-line-2); transition: background 0.18s ease; }
+.sp-tb-sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #ffffff; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35); transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1); }
+.sp-tb-sw.on { background: var(--sp-violet); }
+.sp-tb-sw.on::after { transform: translateX(16px); }
 
-.sp-tb-row:hover {
-  background: var(--sp-bg-card-hover);
-}
+.sp-tb-badge-row { justify-content: space-between; }
+.sp-tb-badge-label { font-weight: 500; }
+.sp-tb-badge-modes { display: inline-flex; flex-shrink: 0; align-items: center; gap: 2px; padding: 3px; border-radius: 9px; background: var(--sp-bg); box-shadow: inset 0 0 0 1px var(--sp-line); }
+.sp-tb-badge-mode { padding: 4px 8px; border: 0; border-radius: 7px; background: transparent; color: var(--sp-text-2); font: 600 11px/1.2 var(--sp-body); cursor: pointer; appearance: none; transition: background 0.15s ease, color 0.15s ease; }
+.sp-tb-badge-mode:hover { color: var(--sp-text); }
+.sp-tb-badge-mode.on { background: var(--sp-violet); color: #ffffff; }
+.sp-tb-badge-picker { width: 22px; height: 20px; padding: 1px; border: 0; border-radius: 6px; background: transparent; cursor: pointer; }
+.sp-tb-badge-picker[hidden] { display: none !important; }
 
-.sp-tb-sw {
-  position: relative;
-  width: 36px;
-  height: 20px;
-  flex-shrink: 0;
-  background: var(--sp-bg-elev);
-  border: 1px solid var(--sp-border-medium);
-  border-radius: 999px;
-  transition: background 0.18s, border-color 0.18s;
-}
+.sp-tb-live { display: flex; align-items: center; gap: 10px; width: 100%; margin-bottom: 2px; padding: 7px 8px; border: 0; border-radius: 12px; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; transition: background 0.15s ease; }
+.sp-tb-live:hover { background: var(--sp-surface); }
+.sp-tb-live-av { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 30px; height: 30px; overflow: hidden; border-radius: 50%; background: var(--sp-violet-soft); box-shadow: 0 0 0 2px var(--sp-bg), 0 0 0 3.5px var(--sp-violet); color: var(--sp-text); font: 800 12px/1 var(--sp-display); }
+.sp-tb-live-av img { width: 100%; height: 100%; object-fit: cover; }
+.sp-tb-live-meta { display: flex; flex-direction: column; min-width: 0; margin-left: 2px; line-height: 1.3; }
+.sp-tb-live-name,
+.sp-tb-live-cat { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sp-tb-live-name { font-weight: 700; }
+.sp-tb-live-cat { color: var(--sp-text-3); font-size: 12px; }
+.sp-tb-empty { color: var(--sp-text-3); }
+.sp-tb-more { width: 100%; padding: 8px 10px; border: 0; background: transparent; color: var(--sp-violet-text); font: 600 12px/1.3 var(--sp-body); text-align: left; cursor: pointer; }
+.sp-tb-more:hover { color: var(--sp-text); }
 
-.sp-tb-sw::after {
-  content: "";
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--sp-text-muted);
-  transition: transform 0.18s, background 0.18s;
-}
+.sp-tb-tip-block { margin-bottom: 8px; padding: 14px; border-radius: 14px; background: var(--sp-violet); color: #ffffff; }
+.sp-tb-tip-label { display: flex; align-items: center; gap: 8px; font-family: var(--sp-display); font-size: 13px; font-weight: 700; letter-spacing: -0.01em; }
+.sp-tb-tip-links { display: flex; gap: 6px; margin-top: 10px; }
+.sp-tb-tip-link { flex: 1; padding: 8px 10px; border-radius: 10px; background: #ffffff; color: #1a0b14; font: 700 12px/1.2 var(--sp-body); text-align: center; text-decoration: none; transition: background 0.15s ease; }
+.sp-tb-tip-link:hover { background: var(--sp-lcd); }
 
-.sp-tb-sw.on {
-  background: var(--sp-accent-soft);
-  border-color: var(--sp-accent-border);
-}
+.sp-tb-settings { display: flex; align-items: center; justify-content: center; gap: 8px; height: 38px; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--sp-line-2); color: var(--sp-text-2); font-weight: 600; text-decoration: none; transition: background 0.15s ease, color 0.15s ease; }
+.sp-tb-settings:hover { background: var(--sp-surface); color: var(--sp-text); }
 
-.sp-tb-sw.on::after {
-  background: var(--sp-accent);
-  transform: translateX(16px);
-}
-
-/* ── Couleur du badge, calquee sur .seg-group du popup ─────────────────── */
-.sp-tb-badge-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 11px 12px;
-  margin-bottom: 6px;
-  background: var(--sp-bg-card);
-  border: 1px solid var(--sp-border-subtle);
-  border-radius: var(--sp-radius-md);
-}
-
-.sp-tb-badge-label {
-  font-size: 12.5px;
-  color: var(--sp-text-primary);
-}
-
-.sp-tb-badge-modes {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px;
-  background: var(--sp-bg-elev);
-  border: 1px solid var(--sp-border-subtle);
-  border-radius: var(--sp-radius-sm);
-  flex-shrink: 0;
-}
-
-.sp-tb-badge-mode {
-  appearance: none;
-  border: 0;
-  background: transparent;
-  color: var(--sp-text-secondary);
-  font: inherit;
-  font-size: 10.5px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: var(--sp-radius-xs);
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-}
-
-.sp-tb-badge-mode:hover {
-  color: var(--sp-text-primary);
-}
-
-.sp-tb-badge-mode.on {
-  background: var(--sp-accent-soft);
-  color: var(--sp-text-primary);
-  box-shadow: inset 0 0 0 1px var(--sp-accent-border);
-}
-
-.sp-tb-badge-picker {
-  width: 22px;
-  height: 20px;
-  padding: 1px;
-  border: 1px solid var(--sp-border-medium);
-  border-radius: var(--sp-radius-xs);
-  background: var(--sp-bg-elev);
-  cursor: pointer;
-}
-
-.sp-tb-badge-picker[hidden] {
-  display: none !important;
-}
-
-/* ── Liste des lives ────────────────────────────────────────────────────── */
-.sp-tb-live {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  width: 100%;
-  padding: 8px 10px;
-  margin-bottom: 4px;
-  border: 1px solid transparent;
-  border-radius: var(--sp-radius-md);
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-}
-
-.sp-tb-live:hover {
-  background: var(--sp-bg-card-hover);
-  border-color: var(--sp-border-subtle);
-}
-
-.sp-tb-live-av {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  overflow: hidden;
-  background: var(--sp-accent-soft);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--sp-text-primary);
-}
-
-.sp-tb-live-av img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.sp-tb-live-meta {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  line-height: 1.3;
-}
-
-.sp-tb-live-name {
-  font-size: 12.5px;
-  font-weight: 600;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.sp-tb-live-cat {
-  font-size: 10.5px;
-  color: var(--sp-text-muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.sp-tb-empty {
-  padding: 10px 12px;
-  font-size: 11.5px;
-  color: var(--sp-text-muted);
-  background: var(--sp-bg-card);
-  border: 1px solid var(--sp-border-subtle);
-  border-radius: var(--sp-radius-md);
-}
-
-.sp-tb-more {
-  width: 100%;
-  padding: 7px 12px;
-  border: 0;
-  background: transparent;
-  color: var(--sp-text-muted);
-  font: inherit;
-  font-size: 11.5px;
-  text-align: left;
-  cursor: pointer;
-}
-
-.sp-tb-more:hover {
-  color: var(--sp-text-primary);
-}
-
-/* ── Soutien : les deux memes destinations que le popup ─────────────────── */
-.sp-tb-tip-block {
-  padding: 11px 12px;
-  margin-bottom: 6px;
-  background: var(--sp-bg-card);
-  border: 1px solid var(--sp-border-subtle);
-  border-radius: var(--sp-radius-md);
-}
-
-.sp-tb-tip-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #ffd300;
-}
-
-.sp-tb-tip-links {
-  display: flex;
-  gap: 6px;
-  margin-top: 9px;
-}
-
-.sp-tb-tip-link {
-  flex: 1;
-  text-align: center;
-  padding: 7px 10px;
-  border: 1px solid var(--sp-border-medium);
-  border-radius: var(--sp-radius-sm);
-  background: var(--sp-bg-elev);
-  color: var(--sp-text-primary);
-  font-size: 11.5px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.15s, border-color 0.15s;
-}
-
-.sp-tb-tip-link:hover {
-  background: rgba(255, 211, 0, 0.1);
-  border-color: rgba(255, 211, 0, 0.32);
-}
-
-.sp-tb-settings {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 9px 12px;
-  border-radius: var(--sp-radius-md);
-  color: var(--sp-text-secondary);
-  font-size: 12px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.15s, color 0.15s;
-}
-
-.sp-tb-settings:hover {
-  background: var(--sp-bg-card-hover);
-  color: var(--sp-text-primary);
-}
-
-/* ── "Add to StreamPulse" button on channel pages (quickFollow.js) ───────── */
-/* Sits to the LEFT of Twitch's Follow / Subscribe control, so the gap is on
-   the right. Scoped tightly to avoid clashing with 7TV / FFZ injections. */
-.sp-qf-wrap {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 8px;
-  flex-shrink: 0;
-}
-/* Etat par defaut, chaine pas encore ajoutee : violet Twitch plein, pour que le
-   bouton se lise comme une action primaire a cote de « S'abonner ».
-
-   La geometrie est relevee sur les boutons natifs de la barre d'actions de
-   chaine (follow-button, subscribe-button, gift-button, share-button) qui
-   partagent tous exactement : border-radius 9000px, height 32px, font-size 14px,
-   font-weight 600. Un commentaire precedent affirmait ici que Twitch etait en
-   4px et justifiait un 8px « volontairement plus rond » ; c'est caduc, leur
-   design system est passe aux pilules pleines, et notre rectangle arrondi de
-   30px se repererait au premier coup d'oeil au milieu d'elles.
-
-   9000px est le jeton de Twitch lui-meme, repris tel quel plutot qu'un 9999px
-   equivalent, pour que la filiation reste lisible si leur design bouge. */
+/* ── "Add to StreamPulse" on channel pages: geometry of Twitch's own action
+   buttons (pill 32px, 14px, 600), so it reads as a native control ── */
+.sp-qf-wrap { display: inline-flex; flex-shrink: 0; align-items: center; margin-right: 8px; }
 .sp-qf-btn {
   display: inline-flex;
   align-items: center;
@@ -516,70 +147,26 @@
   border: none;
   border-radius: 9000px;
   background: #9147ff;
-  color: #fff;
+  color: #ffffff;
   font-family: inherit;
   font-size: 14px;
   font-weight: 600;
   line-height: 1;
+  white-space: nowrap;
   cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+  transition: background 0.12s ease, color 0.12s ease;
 }
-/* Darker purple on hover, the same shade Twitch uses for Subscribe. */
-.sp-qf-btn:hover:not(:disabled) {
-  background: #772ce8;
-}
-.sp-qf-btn:focus-visible {
-  outline: 2px solid #efeff1;
-  outline-offset: 2px;
-}
-.sp-qf-btn:disabled {
-  cursor: default;
-}
-.sp-qf-btn.is-busy {
-  opacity: 0.6;
-}
-.sp-qf-logo {
-  width: 16px;
-  height: 16px;
-  border-radius: 5px;
-  object-fit: cover;
-  display: block;
-  flex-shrink: 0;
-}
-/* Longer locales ("Adicionar ao StreamPulse") must not stretch the action row. */
-.sp-qf-label {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 190px;
-}
-/* Place contrainte : le libellé disparaît, le logo suffit à identifier le
-   bouton. Le texte complet reste dans title/aria-label, donc rien n'est perdu
-   pour le survol ni pour un lecteur d'écran. Bascule pilotée par fitButton()
-   dans quickFollow.js, qui mesure le débordement réel plutôt que de parier sur
-   un point de rupture fixe. */
-.sp-qf-btn.is-compact {
-  gap: 0;
-  padding: 0 8px;
-  width: 32px;
-  justify-content: center;
-}
-.sp-qf-btn.is-compact .sp-qf-label {
-  display: none;
-}
-/* Already added: drop to the neutral grey fill. The job is done, so it steps
-   back and stops competing with Twitch's own Follow / Subscribe buttons. */
-.sp-qf-btn.is-tracked {
-  background: rgba(83, 83, 95, 0.38);
-  color: #efeff1;
-}
-/* Hover on the tracked state hints at removal without shouting: slightly
-   lighter, no red, since this sits next to Twitch's own controls. */
-.sp-qf-btn.is-tracked:hover:not(:disabled) {
-  background: rgba(83, 83, 95, 0.58);
-  color: #fff;
-}
+.sp-qf-btn:hover:not(:disabled) { background: #772ce8; }
+.sp-qf-btn:focus-visible { outline: 2px solid #c6d4a0; outline-offset: 2px; }
+.sp-qf-btn:disabled { cursor: default; }
+.sp-qf-btn.is-busy { opacity: 0.6; }
+.sp-qf-logo { display: block; flex-shrink: 0; width: 16px; height: 16px; border-radius: 5px; object-fit: cover; }
+.sp-qf-label { max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sp-qf-btn.is-compact { justify-content: center; gap: 0; width: 32px; padding: 0 8px; }
+.sp-qf-btn.is-compact .sp-qf-label { display: none; }
+/* Added: LCD green tick state, steps back from Twitch's own Follow button. */
+.sp-qf-btn.is-tracked { background: rgba(198, 212, 160, 0.16); box-shadow: inset 0 0 0 1px rgba(198, 212, 160, 0.38); color: #e4ecc8; }
+.sp-qf-btn.is-tracked:hover:not(:disabled) { background: rgba(198, 212, 160, 0.26); color: #ffffff; }
 
 .sp-qf-toast {
   position: fixed;
@@ -588,30 +175,28 @@
   z-index: 2147483647;
   display: flex;
   align-items: center;
-  gap: 9px;
-  max-width: 340px;
-  padding: 11px 16px;
-  border-radius: 10px;
-  background: #18181b;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #efeff1;
-  font: 13px/1.3 Inter, -apple-system, system-ui, "Segoe UI", sans-serif;
-  font-weight: 600;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+  gap: 10px;
+  max-width: 360px;
+  padding: 10px 16px 10px 10px;
+  border-radius: 14px;
+  background: #0b0c22;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15), 0 18px 40px -12px rgba(0, 0, 0, 0.7);
+  color: #f4f2f7;
+  font: 600 13px/1.3 "SP Onest", Roobert, -apple-system, system-ui, sans-serif;
   opacity: 0;
-  transform: translate(-50%, 8px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
   pointer-events: none;
+  transform: translate(-50%, 8px);
+  transition: opacity 0.2s ease, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.sp-qf-toast.show {
-  opacity: 1;
-  transform: translate(-50%, 0);
-}
-.sp-qf-toast-logo {
-  width: 18px;
-  height: 18px;
-  border-radius: 5px;
-  object-fit: cover;
-  display: block;
-  flex-shrink: 0;
+.sp-qf-toast.show { opacity: 1; transform: translate(-50%, 0); }
+.sp-qf-toast-logo { display: block; flex-shrink: 0; width: 28px; height: 28px; padding: 5px; border-radius: 9px; background: #c6d4a0; filter: none; object-fit: contain; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sp-topbar-btn,
+  .sp-tb-row,
+  .sp-tb-sw,
+  .sp-tb-sw::after,
+  .sp-tb-follow,
+  .sp-qf-btn,
+  .sp-qf-toast { transition: none; }
 }
