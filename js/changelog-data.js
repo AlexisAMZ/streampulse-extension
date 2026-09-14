@@ -128,21 +128,101 @@ export const RELEASES = [
       {
         type: "new",
         text: {
-          fr: "Alertes intelligentes (StreamPulse+) : sois prévenu seulement quand un streamer lance un jeu précis, met un mot dans son titre ou dépasse un nombre de viewers. Réglages, Alertes.",
-          en: "Smart alerts (StreamPulse+): only get notified when a streamer starts a specific game, puts a word in their title or passes a viewer count. Settings, Alerts.",
-          es: "Alertas inteligentes (StreamPulse+): recibe un aviso solo cuando un streamer empieza un juego concreto, pone una palabra en el título o supera un número de espectadores. Ajustes, Alertas.",
-          "pt-BR": "Alertas inteligentes (StreamPulse+): seja avisado só quando um streamer começa um jogo específico, coloca uma palavra no título ou passa de um número de espectadores. Configurações, Alertas.",
-          de: "Intelligente Benachrichtigungen (StreamPulse+): nur benachrichtigt werden, wenn ein Streamer ein bestimmtes Spiel startet, ein Wort im Titel nutzt oder eine Zuschauerzahl überschreitet. Einstellungen, Benachrichtigungen.",
-          it: "Avvisi intelligenti (StreamPulse+): ricevi un avviso solo quando uno streamer avvia un gioco preciso, mette una parola nel titolo o supera un numero di spettatori. Impostazioni, Avvisi.",
-          pl: "Inteligentne alerty (StreamPulse+): powiadomienie tylko wtedy, gdy streamer uruchomi konkretną grę, doda słowo do tytułu lub przekroczy liczbę widzów. Ustawienia, Alerty.",
-          tr: "Akıllı bildirimler (StreamPulse+): yalnızca bir yayıncı belirli bir oyunu açtığında, başlığa bir kelime eklediğinde veya izleyici sayısını aştığında haberdar ol. Ayarlar, Bildirimler.",
-          ru: "Умные оповещения (StreamPulse+): уведомление только когда стример запускает нужную игру, добавляет слово в название или превышает число зрителей. Настройки, Оповещения.",
-          ja: "スマート通知（StreamPulse+）：配信者が特定のゲームを始めたとき、タイトルに特定の言葉を入れたとき、視聴者数を超えたときだけ通知します。設定の「通知」から。",
-          ko: "스마트 알림(StreamPulse+): 스트리머가 특정 게임을 시작하거나, 제목에 단어를 넣거나, 시청자 수를 넘을 때만 알림을 받습니다. 설정, 알림.",
-          id: "Notifikasi pintar (StreamPulse+): hanya diberi tahu saat streamer memulai game tertentu, menaruh kata di judul, atau melewati jumlah penonton. Pengaturan, Notifikasi.",
-          nl: "Slimme meldingen (StreamPulse+): krijg alleen een melding als een streamer een bepaalde game start, een woord in de titel zet of een aantal kijkers overschrijdt. Instellingen, Meldingen.",
-          sv: "Smarta aviseringar (StreamPulse+): få besked bara när en streamer startar ett visst spel, har ett ord i titeln eller passerar ett antal tittare. Inställningar, Aviseringar.",
-          cs: "Chytrá upozornění (StreamPulse+): upozornění jen tehdy, když streamer spustí konkrétní hru, dá do názvu slovo nebo překročí počet diváků. Nastavení, Upozornění."
+          fr: "Alertes intelligentes (StreamPulse+) : sois prévenu seulement quand un streamer lance un jeu précis, met un mot dans son titre ou dépasse un nombre de viewers. Réglages, StreamPulse+.",
+          en: "Smart alerts (StreamPulse+): only get notified when a streamer starts a specific game, puts a word in their title or passes a viewer count. Settings, StreamPulse+.",
+          es: "Alertas inteligentes (StreamPulse+): recibe un aviso solo cuando un streamer empieza un juego concreto, pone una palabra en el título o supera un número de espectadores. Ajustes, StreamPulse+.",
+          "pt-BR": "Alertas inteligentes (StreamPulse+): seja avisado só quando um streamer começa um jogo específico, coloca uma palavra no título ou passa de um número de espectadores. Configurações, StreamPulse+.",
+          de: "Intelligente Benachrichtigungen (StreamPulse+): nur benachrichtigt werden, wenn ein Streamer ein bestimmtes Spiel startet, ein Wort im Titel nutzt oder eine Zuschauerzahl überschreitet. Einstellungen, StreamPulse+.",
+          it: "Avvisi intelligenti (StreamPulse+): ricevi un avviso solo quando uno streamer avvia un gioco preciso, mette una parola nel titolo o supera un numero di spettatori. Impostazioni, StreamPulse+.",
+          pl: "Inteligentne alerty (StreamPulse+): powiadomienie tylko wtedy, gdy streamer uruchomi konkretną grę, doda słowo do tytułu lub przekroczy liczbę widzów. Ustawienia, StreamPulse+.",
+          tr: "Akıllı bildirimler (StreamPulse+): yalnızca bir yayıncı belirli bir oyunu açtığında, başlığa bir kelime eklediğinde veya izleyici sayısını aştığında haberdar ol. Ayarlar, StreamPulse+.",
+          ru: "Умные оповещения (StreamPulse+): уведомление только когда стример запускает нужную игру, добавляет слово в название или превышает число зрителей. Настройки, StreamPulse+.",
+          ja: "スマート通知（StreamPulse+）：配信者が特定のゲームを始めたとき、タイトルに特定の言葉を入れたとき、視聴者数を超えたときだけ通知します。設定の「StreamPulse+」から。",
+          ko: "스마트 알림(StreamPulse+): 스트리머가 특정 게임을 시작하거나, 제목에 단어를 넣거나, 시청자 수를 넘을 때만 알림을 받습니다. 설정, StreamPulse+.",
+          id: "Notifikasi pintar (StreamPulse+): hanya diberi tahu saat streamer memulai game tertentu, menaruh kata di judul, atau melewati jumlah penonton. Pengaturan, StreamPulse+.",
+          nl: "Slimme meldingen (StreamPulse+): krijg alleen een melding als een streamer een bepaalde game start, een woord in de titel zet of een aantal kijkers overschrijdt. Instellingen, StreamPulse+.",
+          sv: "Smarta aviseringar (StreamPulse+): få besked bara när en streamer startar ett visst spel, har ett ord i titeln eller passerar ett antal tittare. Inställningar, StreamPulse+.",
+          cs: "Chytrá upozornění (StreamPulse+): upozornění jen tehdy, když streamer spustí konkrétní hru, dá do názvu slovo nebo překročí počet diváků. Nastavení, StreamPulse+."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "Menu StreamPulse+ dans les réglages : couleur d'accent du popup, couleur du badge, 7 effets animés pour le badge et 6 pseudos spéciaux (aurore, or, néon…), visibles par tous les utilisateurs de StreamPulse et mis à jour en direct dans le tchat.",
+          en: "StreamPulse+ menu in settings: popup accent color, badge color, 7 animated badge effects and 6 special names (aurora, gold, neon…), visible to every StreamPulse user and updated live in chat.",
+          es: "Menú StreamPulse+ en los ajustes: color de acento del popup, color de la insignia, 7 efectos animados para la insignia y 6 nombres especiales (aurora, oro, neón…), visibles para todos los usuarios de StreamPulse y actualizados al instante en el chat.",
+          "pt-BR": "Menu StreamPulse+ nas configurações: cor de destaque do popup, cor do emblema, 7 efeitos animados para o emblema e 6 nomes especiais (aurora, ouro, neon…), visíveis para todos os usuários do StreamPulse e atualizados na hora no chat.",
+          de: "StreamPulse+-Menü in den Einstellungen: Akzentfarbe des Popups, Abzeichenfarbe, 7 animierte Abzeichen-Effekte und 6 spezielle Namen (Aurora, Gold, Neon…), sichtbar für alle StreamPulse-Nutzer und sofort im Chat aktualisiert.",
+          it: "Menu StreamPulse+ nelle impostazioni: colore d'accento del popup, colore del badge, 7 effetti animati per il badge e 6 nomi speciali (aurora, oro, neon…), visibili a tutti gli utenti StreamPulse e aggiornati subito in chat.",
+          pl: "Menu StreamPulse+ w ustawieniach: kolor akcentu okna, kolor odznaki, 7 animowanych efektów odznaki i 6 specjalnych nazw (zorza, złoto, neon…), widocznych dla wszystkich użytkowników StreamPulse i od razu aktualizowanych na czacie.",
+          tr: "Ayarlarda StreamPulse+ menüsü: açılır pencere vurgu rengi, rozet rengi, 7 animasyonlu rozet efekti ve 6 özel ad (kutup ışığı, altın, neon…); tüm StreamPulse kullanıcılarına görünür ve sohbette anında güncellenir.",
+          ru: "Меню StreamPulse+ в настройках: цвет акцента окна, цвет значка, 7 анимированных эффектов значка и 6 особых ников (сияние, золото, неон…), видимых всем пользователям StreamPulse и сразу обновляемых в чате.",
+          ja: "設定に StreamPulse+ メニュー：ポップアップのアクセントカラー、バッジの色、7種類のバッジアニメーション、6種類のスペシャルネーム（オーロラ、ゴールド、ネオンなど）。すべての StreamPulse ユーザーに表示され、チャットにすぐ反映されます。",
+          ko: "설정에 StreamPulse+ 메뉴: 팝업 강조 색상, 배지 색상, 7가지 배지 애니메이션 효과와 6가지 특별 닉네임(오로라, 골드, 네온 등). 모든 StreamPulse 사용자에게 보이며 채팅에 바로 반영됩니다.",
+          id: "Menu StreamPulse+ di pengaturan: warna aksen popup, warna lencana, 7 efek animasi lencana, dan 6 nama spesial (aurora, emas, neon…), terlihat oleh semua pengguna StreamPulse dan langsung diperbarui di chat.",
+          nl: "StreamPulse+-menu in de instellingen: accentkleur van de popup, badgekleur, 7 geanimeerde badge-effecten en 6 speciale namen (aurora, goud, neon…), zichtbaar voor alle StreamPulse-gebruikers en direct bijgewerkt in de chat.",
+          sv: "StreamPulse+-meny i inställningarna: accentfärg för popupen, märkesfärg, 7 animerade märkeseffekter och 6 specialnamn (norrsken, guld, neon…), synliga för alla StreamPulse-användare och uppdaterade direkt i chatten.",
+          cs: "Nabídka StreamPulse+ v nastavení: barva zvýraznění okna, barva odznaku, 7 animovaných efektů odznaku a 6 speciálních jmen (polární záře, zlato, neon…), viditelné všem uživatelům StreamPulse a hned aktualizované v chatu."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "Récap avancé et Wrapped annuel (StreamPulse+) : tes heures par catégorie, la courbe de ton activité et ton année entière dans le récap.",
+          en: "Advanced recap and yearly Wrapped (StreamPulse+): your hours by category, your activity curve and your whole year in the recap.",
+          es: "Resumen avanzado y Wrapped anual (StreamPulse+): tus horas por categoría, la curva de tu actividad y todo tu año en el resumen.",
+          "pt-BR": "Resumo avançado e Wrapped anual (StreamPulse+): suas horas por categoria, a curva da sua atividade e o seu ano inteiro no resumo.",
+          de: "Erweiterter Rückblick und Jahres-Wrapped (StreamPulse+): deine Stunden pro Kategorie, deine Aktivitätskurve und dein ganzes Jahr im Rückblick.",
+          it: "Riepilogo avanzato e Wrapped annuale (StreamPulse+): le tue ore per categoria, la curva della tua attività e il tuo anno intero nel riepilogo.",
+          pl: "Rozszerzone podsumowanie i roczny Wrapped (StreamPulse+): godziny według kategorii, krzywa aktywności i cały Twój rok w podsumowaniu.",
+          tr: "Gelişmiş özet ve yıllık Wrapped (StreamPulse+): kategoriye göre saatlerin, etkinlik eğrin ve tüm yılın özette.",
+          ru: "Расширенная сводка и годовой Wrapped (StreamPulse+): часы по категориям, кривая активности и весь ваш год в сводке.",
+          ja: "詳細な振り返りと年間 Wrapped（StreamPulse+）：カテゴリ別の時間、アクティビティの推移、1年分を振り返りに。",
+          ko: "고급 요약과 연간 Wrapped(StreamPulse+): 카테고리별 시간, 활동 곡선, 한 해 전체를 요약에서 확인하세요.",
+          id: "Rekap lanjutan dan Wrapped tahunan (StreamPulse+): jam per kategori, kurva aktivitasmu, dan setahun penuh di rekap.",
+          nl: "Uitgebreid overzicht en jaarlijkse Wrapped (StreamPulse+): je uren per categorie, je activiteitscurve en je hele jaar in het overzicht.",
+          sv: "Utökad sammanfattning och årlig Wrapped (StreamPulse+): dina timmar per kategori, din aktivitetskurva och hela ditt år i sammanfattningen.",
+          cs: "Rozšířený přehled a roční Wrapped (StreamPulse+): hodiny podle kategorie, křivka aktivity a celý tvůj rok v přehledu."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "Prédictions assistées (StreamPulse+) : mise automatique quelques secondes avant la fin selon ta règle, historique de tes paris, taux de réussite et gain net.",
+          en: "Assisted predictions (StreamPulse+): automatic bet a few seconds before the end based on your rule, betting history, win rate and net gain.",
+          es: "Predicciones asistidas (StreamPulse+): apuesta automática unos segundos antes del final según tu regla, historial de apuestas, tasa de acierto y ganancia neta.",
+          "pt-BR": "Palpites assistidos (StreamPulse+): aposta automática alguns segundos antes do fim pela sua regra, histórico de apostas, taxa de acerto e ganho líquido.",
+          de: "Unterstützte Vorhersagen (StreamPulse+): automatische Wette kurz vor Schluss nach deiner Regel, Wettverlauf, Trefferquote und Nettogewinn.",
+          it: "Previsioni assistite (StreamPulse+): puntata automatica pochi secondi prima della fine secondo la tua regola, storico delle puntate, percentuale di vittorie e guadagno netto.",
+          pl: "Wspomagane przewidywania (StreamPulse+): automatyczny zakład kilka sekund przed końcem według Twojej reguły, historia zakładów, skuteczność i zysk netto.",
+          tr: "Destekli tahminler (StreamPulse+): kuralına göre bitişten birkaç saniye önce otomatik tahmin, tahmin geçmişi, başarı oranı ve net kazanç.",
+          ru: "Помощь с прогнозами (StreamPulse+): автоставка за несколько секунд до конца по вашему правилу, история ставок, процент побед и чистый выигрыш.",
+          ja: "予想アシスト（StreamPulse+）：ルールに沿って締め切り数秒前に自動ベット。ベット履歴、的中率、純利益も確認できます。",
+          ko: "예측 도우미(StreamPulse+): 내 규칙에 따라 마감 몇 초 전에 자동 베팅하고, 베팅 기록과 적중률, 순이익을 보여 줍니다.",
+          id: "Prediksi terbantu (StreamPulse+): taruhan otomatis beberapa detik sebelum berakhir sesuai aturanmu, riwayat taruhan, tingkat kemenangan, dan untung bersih.",
+          nl: "Voorspellingshulp (StreamPulse+): automatisch inzetten vlak voor het einde volgens jouw regel, inzetgeschiedenis, winpercentage en nettowinst.",
+          sv: "Förutsägelsehjälp (StreamPulse+): automatisk insats några sekunder före slutet enligt din regel, insatshistorik, vinstprocent och nettovinst.",
+          cs: "Asistované predikce (StreamPulse+): automatická sázka pár sekund před koncem podle tvého pravidla, historie sázek, úspěšnost a čistý zisk."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Le nom de la chaîne la plus regardée n'est plus coupé dans le récap, et l'onglet Nouveautés est aligné avec les autres.",
+          en: "The most watched channel's name is no longer cut off in the recap, and the What's new tab lines up with the others.",
+          es: "El nombre del canal más visto ya no se corta en el resumen, y la pestaña Novedades queda alineada con las demás.",
+          "pt-BR": "O nome do canal mais assistido não é mais cortado no resumo, e a aba Novidades fica alinhada com as outras.",
+          de: "Der Name des meistgesehenen Kanals wird im Rückblick nicht mehr abgeschnitten, und der Tab Neuigkeiten ist mit den anderen ausgerichtet.",
+          it: "Il nome del canale più visto non viene più tagliato nel riepilogo, e la scheda Novità è allineata alle altre.",
+          pl: "Nazwa najczęściej oglądanego kanału nie jest już ucinana w podsumowaniu, a karta Nowości jest wyrównana z pozostałymi.",
+          tr: "Özette en çok izlenen kanalın adı artık kesilmiyor ve Yenilikler sekmesi diğerleriyle hizalı.",
+          ru: "Название самого просматриваемого канала больше не обрезается в сводке, а вкладка «Новое» выровнена с остальными.",
+          ja: "振り返りで最も視聴したチャンネル名が途中で切れなくなり、「新着」タブがほかのタブと揃いました。",
+          ko: "요약에서 가장 많이 본 채널 이름이 더 이상 잘리지 않으며, 새 소식 탭이 다른 탭과 나란히 정렬됩니다.",
+          id: "Nama channel yang paling sering ditonton tidak lagi terpotong di rekap, dan tab Yang baru sejajar dengan tab lainnya.",
+          nl: "De naam van het meest bekeken kanaal wordt niet meer afgekapt in het overzicht, en het tabblad Nieuw staat gelijk met de andere.",
+          sv: "Namnet på den mest tittade kanalen klipps inte längre av i sammanfattningen, och fliken Nyheter ligger i linje med de andra.",
+          cs: "Název nejsledovanějšího kanálu se už v přehledu neořezává a karta Novinky je zarovnaná s ostatními."
         }
       },
       {

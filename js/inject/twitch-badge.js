@@ -56,6 +56,27 @@
   // Empreinte du compte Twitch connecte et licence de ce navigateur.
   var ownHash = "";
   var viewerPlus = false;
+  // Reglages locaux de son propre badge : appliques tout de suite, sans attendre le serveur.
+  var ownLocal = { color: null, b: "", n: "" };
+
+  function readOwnLocal(prefs, cosmetics) {
+    var color = prefs && HEX_RE.test(prefs.communityBadgeColor || "") ? prefs.communityBadgeColor.toLowerCase() : null;
+    var c = cosmetics || {};
+    ownLocal = {
+      color: color,
+      b: BADGE_FX.indexOf(c.badgeFx) !== -1 ? c.badgeFx : "",
+      n: NAME_FX.indexOf(c.nameFx) !== -1 ? c.nameFx : ""
+    };
+  }
+
+  /** Son propre badge suit les reglages de ce navigateur, meme avant la reponse du serveur. */
+  function applyOwnLocal() {
+    if (!ownHash) return;
+    if (viewerPlus && ownLocal.color) badgeColors.set(ownHash, ownLocal.color);
+    else badgeColors.delete(ownHash);
+    if (viewerPlus && (ownLocal.b || ownLocal.n)) badgeStyles.set(ownHash, { b: ownLocal.b, n: ownLocal.n });
+    else badgeStyles.delete(ownHash);
+  }
 
   // "author" (couleur du pseudo), "theme" (blanc/noir), ou une couleur hexa.
   var badgeColorMode = "author";
@@ -133,6 +154,8 @@
       if (!hash) return;
       badgeHashes.add(hash);
       ownHash = hash;
+      applyOwnLocal();
+      refreshVisibleCosmetics();
       log("utilisateur detecte, empreinte enregistree");
       publishBadgeColor(hash);
 
@@ -192,6 +215,7 @@
             if (/^[a-f0-9]{12}$/.test(h) && (b || n)) nextStyles.set(h, { b: b, n: n });
           });
           badgeStyles = nextStyles;
+          applyOwnLocal();
           refreshVisibleCosmetics();
           if (!list.length) return;
           for (var i = 0; i < list.length; i++) {
@@ -245,11 +269,7 @@
           var saved = {};
           saved[PUBLISHED_KEY] = wanted;
           chrome.storage.local.set(saved);
-          if (color) badgeColors.set(hash, color);
-          else badgeColors.delete(hash);
-          if (badgeFx || nameFx) badgeStyles.set(hash, { b: badgeFx, n: nameFx });
-          else badgeStyles.delete(hash);
-          refreshVisibleCosmetics();
+          log("reglages publies");
           log("couleur publiee");
         }).catch(function (e) {
           log("couleur non publiee :", e.message);
@@ -647,9 +667,10 @@
     // Les preferences vivent sous "betaGeneralPreferences" (PREFERENCES_KEY dans
     // background.js) : lire "preferences" renvoyait toujours undefined, donc le
     // reglage "Badge communautaire" ne desactivait jamais rien.
-    chrome.storage.local.get(["betaGeneralPreferences", PLUS_KEY], function (res) {
+    chrome.storage.local.get(["betaGeneralPreferences", PLUS_KEY, COSMETICS_KEY], function (res) {
       var prefs = (res && res.betaGeneralPreferences) || {};
       viewerPlus = !!activePlusKey(res && res[PLUS_KEY]);
+      readOwnLocal(prefs, res && res[COSMETICS_KEY]);
       if (prefs.communityBadge === false) {
         log("desactive par l utilisateur");
         return;
@@ -664,14 +685,19 @@
 
       chrome.storage.onChanged.addListener(function (changes, area) {
         if (area !== "local") return;
-        if (changes.betaGeneralPreferences) {
-          badgeColorMode = normalizeColorMode((changes.betaGeneralPreferences.newValue || {}).communityBadgeColor);
-        }
-        if (changes[PLUS_KEY]) viewerPlus = !!activePlusKey(changes[PLUS_KEY].newValue);
-        if (changes.betaGeneralPreferences || changes[PLUS_KEY]) refreshVisibleCosmetics();
-        if ((changes.betaGeneralPreferences || changes[PLUS_KEY] || changes[COSMETICS_KEY]) && currentTwitchUser) {
-          hashLogin(currentTwitchUser).then(publishBadgeColor);
-        }
+        var prefsChange = changes.betaGeneralPreferences;
+        var cosmeticsChange = changes[COSMETICS_KEY];
+        var plusChange = changes[PLUS_KEY];
+        if (!prefsChange && !cosmeticsChange && !plusChange) return;
+        if (prefsChange) badgeColorMode = normalizeColorMode((prefsChange.newValue || {}).communityBadgeColor);
+        if (plusChange) viewerPlus = !!activePlusKey(plusChange.newValue);
+        chrome.storage.local.get(["betaGeneralPreferences", COSMETICS_KEY], function (res) {
+          readOwnLocal((res && res.betaGeneralPreferences) || {}, res && res[COSMETICS_KEY]);
+          // Aucune requete ni boucle : seuls les messages deja affiches sont retouches.
+          applyOwnLocal();
+          refreshVisibleCosmetics();
+          if (currentTwitchUser) hashLogin(currentTwitchUser).then(publishBadgeColor);
+        });
       });
 
       setInterval(function () {
