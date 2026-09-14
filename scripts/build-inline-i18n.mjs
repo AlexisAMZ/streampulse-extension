@@ -22,6 +22,27 @@ const OUT = new URL("../js/inject/i18n-inline.js", import.meta.url);
 /** Espace de noms exporté vers les content scripts. */
 const NAMESPACE = "inject";
 
+/**
+ * Libellés du popup réutilisés tels quels par les panneaux injectés dans Twitch
+ * (tiroir de réglages, effets du tchat) : une seule traduction à maintenir.
+ */
+const SHARED_SETTINGS = [
+  "groupAutomation", "groupPreviews", "groupNotifications", "groupChat",
+  "autoClaimTitle", "autoClaimDropsTitle", "autoClaimMomentsTitle", "autoCancelRaidsTitle",
+  "autoRefreshTitle", "fastForwardTitle", "hideTwitchExtensionsTitle", "communityBadgeTitle",
+  "previewsEnableTitle", "previewsModeTitle", "previewsModeImage", "previewsModeVideo",
+  "previewsSurfaceDirectory", "previewsSurfaceSidebar", "previewsAudioTitle",
+  "liveNotificationsTitle", "gameAlertsTitle", "titleAlertsTitle", "soundsTitle",
+];
+
+function sharedPopupStrings(popup) {
+  const settings = {};
+  for (const key of SHARED_SETTINGS) {
+    if (popup?.settings?.[key]) settings[key] = popup.settings[key];
+  }
+  return { settings, cosmetics: popup?.cosmetics || {} };
+}
+
 const payload = {};
 // ALL_LANGUAGES et non AVAILABLE_LANGUAGES : les langues pas encore publiées
 // doivent quand même être résolvables si Chrome les demande.
@@ -30,7 +51,7 @@ for (const { code } of ALL_LANGUAGES) {
   if (!block) {
     throw new Error(`translations.${code}.${NAMESPACE} manquant : lancer expand-languages d'abord.`);
   }
-  payload[code] = block;
+  payload[code] = { ...block, shared: sharedPopupStrings(translations[code]?.popup) };
 }
 
 const banner = `/**

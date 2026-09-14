@@ -60,13 +60,17 @@
       "js": [
         "js/inject/i18n-inline.js",
         "js/inject/topbar-panel.js",
+        "js/inject/settings-drawer.js",
         "js/inject/topbar.js",
         "js/inject/quickFollow.js",
-        "js/inject/twitch-badge.js"
+        "js/inject/twitch-badge.js",
+        "js/inject/chat-plus.js",
+        "js/inject/sidebar-favorites.js"
       ],
       "css": [
         "css/topbar.css",
-        "css/inject/twitch-badge.css"
+        "css/inject/twitch-badge.css",
+        "css/inject/twitch-ui.css"
       ],
       "run_at": "document_idle"
     },

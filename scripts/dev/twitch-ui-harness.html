@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Banc des intégrations Twitch : tiroir de réglages, effets dans les paramètres
+         du tchat, favoris de la barre latérale. ?plus=0 pour l'état verrouillé. -->
+    <title>twitch-ui-harness</title>
+    <link rel="stylesheet" href="/css/topbar.css" />
+    <link rel="stylesheet" href="/css/inject/twitch-badge.css" />
+    <link rel="stylesheet" href="/css/inject/twitch-ui.css" />
+    <style>
+      body { margin: 0; background: #0e0e10; color: #efeff1; font: 14px/1.5 Inter, sans-serif; }
+      .layout { display: flex; min-height: 100vh; padding-top: 50px; }
+      .nav { position: fixed; inset: 0 0 auto 0; height: 50px; background: #18181b; box-shadow: 0 1px 0 rgba(0,0,0,.5); }
+      .side-nav { width: 240px; background: #1f1f23; flex-shrink: 0; }
+      .followed-side-nav-header { padding: 10px; font-size: 13px; font-weight: 600; }
+      .side-nav-card a { display: flex; gap: 10px; align-items: center; padding: 5px 10px; color: #efeff1; text-decoration: none; }
+      .side-nav-card img { width: 30px; height: 30px; border-radius: 50%; background: #444; }
+      .side-nav-card p { margin: 0; }
+      .meta { flex: 1; font-size: 14px; font-weight: 600; } .meta small { display: block; color: #adadb8; font-weight: 400; font-size: 13px; }
+      .chat { margin-left: auto; width: 340px; background: #18181b; position: relative; }
+      [data-a-target="chat-settings-balloon"] { position: absolute; bottom: 60px; right: 10px; width: 320px; padding: 10px; border-radius: 6px; background: rgb(50, 50, 57); }
+      [data-a-target="chat-settings-balloon"] button.native { display: flex; width: 100%; min-height: 32px; padding: 5px 10px; border: 0; background: transparent; color: #efeff1; font: 14px Inter, sans-serif; text-align: left; border-radius: 4px; }
+    </style>
+    <script>
+      const params = new URLSearchParams(location.search);
+      document.cookie = "login=AlexisAMZ; path=/";
+      const store = {
+        betaGeneralPreferences: { language: "fr", previewsMode: "video", autoClaimDrops: true },
+        betaPinnedIds: ["kamet0"],
+        betaGeneralStreamers: [
+          { id: "kamet0", platform: "twitch", handle: "kamet0", displayName: "Kamet0" },
+          { id: "gotaga", platform: "twitch", handle: "gotaga", displayName: "Gotaga" },
+        ],
+        betaGeneralStatuses: { kamet0: { isLive: true, game: "League of Legends", viewers: 12480 }, gotaga: { isLive: false } },
+        streamPulseCosmetics: { badgeFx: "glow", nameFx: "neon" },
+        ...(params.get("plus") === "0" ? {} : { streamPulsePlus: { licenseKey: "SP-DEMO", plan: "lifetime", status: "active", verifiedAt: Date.now() } }),
+      };
+      const listeners = [];
+      const pick = (keys) => {
+        const list = Array.isArray(keys) ? keys : typeof keys === "string" ? [keys] : Object.keys(store);
+        return Object.fromEntries(list.filter((k) => k in store).map((k) => [k, structuredClone(store[k])]));
+      };
+      window.chrome = {
+        runtime: {
+          id: "harness",
+          getURL: (p) => `/${p}`,
+          lastError: null,
+          sendMessage: (msg, cb) => {
+            if (msg.type === "updatePreferences") {
+              const next = { ...store.betaGeneralPreferences, ...msg.updates };
+              window.chrome.storage.local.set({ betaGeneralPreferences: next });
+            }
+            if (msg.type === "addStreamer") {
+              const s = { id: msg.handle, platform: "twitch", handle: msg.handle, displayName: msg.handle };
+              store.betaGeneralStreamers = [...store.betaGeneralStreamers, s];
+              cb && setTimeout(() => cb({ success: true, streamers: store.betaGeneralStreamers }));
+            }
+          },
+        },
+        storage: {
+          local: {
+            get: (keys, cb) => { const r = pick(keys); if (cb) setTimeout(() => cb(r)); return Promise.resolve(r); },
+            set: (obj, cb) => {
+              const changes = Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, { newValue: v }]));
+              Object.assign(store, obj);
+              setTimeout(() => listeners.forEach((fn) => fn(changes, "local")));
+              if (cb) setTimeout(cb);
+              return Promise.resolve();
+            },
+          },
+          onChanged: { addListener: (fn) => listeners.push(fn) },
+        },
+      };
+      window.__store = store;
+    </script>
+  </head>
+  <body>
+    <div class="nav"></div>
+    <div class="layout">
+      <nav class="side-nav">
+        <div class="side-nav-section" style="width:240px">
+          <div class="followed-side-nav-header">Chaînes suivies</div>
+          <div class="side-nav-card"><a href="/kamet0"><img alt="" /><p class="meta">Kamet0<small>League of Legends</small></p><span>● 12,4 k</span></a></div>
+          <div class="side-nav-card"><a href="/squeezie"><img alt="" /><p class="meta">Squeezie<small>Just Chatting</small></p><span>● 48 k</span></a></div>
+          <div class="side-nav-card"><a href="/gotaga"><img alt="" /><p class="meta">Gotaga<small>Valorant</small></p><span>● 9,1 k</span></a></div>
+        </div>
+      </nav>
+      <main style="flex:1"></main>
+      <section class="chat">
+        <div data-a-target="chat-settings-balloon">
+          <p style="margin:0 0 8px;font-weight:600">Paramètres du chat</p>
+          <div><button class="native">Filtres de chat</button></div>
+          <div><button class="native" data-a-target="chat-appearance-selector">Aspect du chat</button></div>
+          <div><button class="native">Masquer discussion</button></div>
+        </div>
+      </section>
+    </div>
+    <script src="/js/inject/i18n-inline.js"></script>
+    <script src="/js/inject/settings-drawer.js"></script>
+    <script src="/js/inject/chat-plus.js"></script>
+    <script src="/js/inject/sidebar-favorites.js"></script>
+    <script>
+      setTimeout(() => {
+        if (params.get("drawer") !== "0") window.__SP_DRAWER__.open(params.get("tab") || "general");
+        document.querySelector(".sp-chatplus-row")?.click();
+      }, 600);
+    </script>
+  </body>
+</html>

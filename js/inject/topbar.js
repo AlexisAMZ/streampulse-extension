@@ -349,12 +349,19 @@
           location.href = "https://www.twitch.tv/" + login;
         },
         openSettings: function () {
+          closePanel();
+          // Tiroir de reglages sur la page (settings-drawer.js) ; la page
+          // complete de l'extension ne reste qu'un repli.
+          var drawer = (typeof self !== "undefined" ? self : globalThis).__SP_DRAWER__;
+          if (drawer) {
+            drawer.open();
+            return;
+          }
           try {
             chrome.runtime.sendMessage({ type: "openSettings" });
           } catch (_e) {
             // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
           }
-          closePanel();
         },
       }
     );

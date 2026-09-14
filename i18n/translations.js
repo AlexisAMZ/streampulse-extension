@@ -795,6 +795,23 @@ export const translations = {
       "noNotesBody": "Les notes de cette version n'ont pas encore été publiées."
     },
     "inject": {
+      "twitchUi": {
+        "favorites": "Favoris StreamPulse",
+        "pin": "Ajouter aux favoris StreamPulse",
+        "unpin": "Retirer des favoris StreamPulse",
+        "offline": "Hors ligne",
+        "emptyFavorites": "Survole une chaîne suivie et clique sur l'étoile.",
+        "drawerTitle": "Réglages",
+        "tabGeneral": "Général",
+        "tabPreviews": "Aperçus",
+        "tabAlerts": "Alertes",
+        "close": "Fermer",
+        "fullPage": "Page complète",
+        "plusOnly": "Réservé à StreamPulse+",
+        "discoverPlus": "Découvrir StreamPulse+",
+        "chatRow": "Effets StreamPulse+",
+        "chatRowNote": "Vu par les autres utilisateurs de StreamPulse."
+      },
       "badge": {
         "lifetime": "Membre à vie",
         "months": "Abonné depuis {{count}} mois",
@@ -1601,6 +1618,23 @@ export const translations = {
       "noNotesBody": "The notes for this version have not been published yet."
     },
     "inject": {
+      "twitchUi": {
+        "favorites": "StreamPulse favorites",
+        "pin": "Add to StreamPulse favorites",
+        "unpin": "Remove from StreamPulse favorites",
+        "offline": "Offline",
+        "emptyFavorites": "Hover a followed channel and click the star.",
+        "drawerTitle": "Settings",
+        "tabGeneral": "General",
+        "tabPreviews": "Previews",
+        "tabAlerts": "Alerts",
+        "close": "Close",
+        "fullPage": "Full page",
+        "plusOnly": "StreamPulse+ only",
+        "discoverPlus": "Discover StreamPulse+",
+        "chatRow": "StreamPulse+ effects",
+        "chatRowNote": "Seen by other StreamPulse users."
+      },
       "badge": {
         "lifetime": "Lifetime member",
         "months": "Subscribed for {{count}} months",
@@ -2407,6 +2441,23 @@ export const translations = {
       "noNotesBody": "Las notas de esta versión aún no se han publicado."
     },
     "inject": {
+      "twitchUi": {
+        "favorites": "Favoritos de StreamPulse",
+        "pin": "Añadir a favoritos de StreamPulse",
+        "unpin": "Quitar de favoritos de StreamPulse",
+        "offline": "Desconectado",
+        "emptyFavorites": "Pasa el ratón por un canal seguido y pulsa la estrella.",
+        "drawerTitle": "Ajustes",
+        "tabGeneral": "General",
+        "tabPreviews": "Vistas previas",
+        "tabAlerts": "Alertas",
+        "close": "Cerrar",
+        "fullPage": "Página completa",
+        "plusOnly": "Solo StreamPulse+",
+        "discoverPlus": "Descubrir StreamPulse+",
+        "chatRow": "Efectos StreamPulse+",
+        "chatRowNote": "Visto por otros usuarios de StreamPulse."
+      },
       "badge": {
         "lifetime": "Miembro de por vida",
         "months": "Suscrito desde hace {{count}} meses",
@@ -3213,6 +3264,23 @@ export const translations = {
       "noNotesBody": "As notas desta versão ainda não foram publicadas."
     },
     "inject": {
+      "twitchUi": {
+        "favorites": "Favoritos do StreamPulse",
+        "pin": "Adicionar aos favoritos do StreamPulse",
+        "unpin": "Remover dos favoritos do StreamPulse",
+        "offline": "Offline",
+        "emptyFavorites": "Passe o mouse num canal seguido e clique na estrela.",
+        "drawerTitle": "Configurações",
+        "tabGeneral": "Geral",
+        "tabPreviews": "Prévias",
+        "tabAlerts": "Alertas",
+        "close": "Fechar",
+        "fullPage": "Página completa",
+        "plusOnly": "Exclusivo StreamPulse+",
+        "discoverPlus": "Conhecer o StreamPulse+",
+        "chatRow": "Efeitos StreamPulse+",
+        "chatRowNote": "Visto por outros usuários do StreamPulse."
+      },
       "badge": {
         "lifetime": "Membro vitalício",
         "months": "Assinante há {{count}} meses",
@@ -4019,6 +4087,23 @@ export const translations = {
       "noNotesBody": "Die Hinweise zu dieser Version wurden noch nicht veröffentlicht."
     },
     "inject": {
+      "twitchUi": {
+        "favorites": "StreamPulse-Favoriten",
+        "pin": "Zu StreamPulse-Favoriten hinzufügen",
+        "unpin": "Aus StreamPulse-Favoriten entfernen",
+        "offline": "Offline",
+        "emptyFavorites": "Fahre über einen gefolgten Kanal und klicke auf den Stern.",
+        "drawerTitle": "Einstellungen",
+        "tabGeneral": "Allgemein",
+        "tabPreviews": "Vorschauen",
+        "tabAlerts": "Benachrichtigungen",
+        "close": "Schließen",
+        "fullPage": "Ganze Seite",
+        "plusOnly": "Nur mit StreamPulse+",
+        "discoverPlus": "StreamPulse+ entdecken",
+        "chatRow": "StreamPulse+-Effekte",
+        "chatRowNote": "Für andere StreamPulse-Nutzer sichtbar."
+      },
       "badge": {
         "lifetime": "Mitglied auf Lebenszeit",
         "months": "Seit {{count}} Monaten dabei",
@@ -4825,6 +4910,23 @@ export const translations = {
       "noNotesBody": "Le note per questa versione non sono state ancora pubblicate."
     },
     "inject": {
+      "twitchUi": {
+        "favorites": "Preferiti StreamPulse",
+        "pin": "Aggiungi ai preferiti StreamPulse",
+        "unpin": "Rimuovi dai preferiti StreamPulse",
+        "offline": "Offline",
+        "emptyFavorites": "Passa sopra un canale seguito e clicca la stella.",
+        "drawerTitle": "Impostazioni",
+        "tabGeneral": "Generale",
+        "tabPreviews": "Anteprime",
+        "tabAlerts": "Avvisi",
+        "close": "Chiudi",
+        "fullPage": "Pagina completa",
+        "plusOnly": "Solo StreamPulse+",
+        "discoverPlus": "Scopri StreamPulse+",
+        "chatRow": "Effetti StreamPulse+",
+        "chatRowNote": "Visto dagli altri utenti StreamPulse."
+      },
       "badge": {
         "lifetime": "Membro a vita",
         "months": "Abbonato da {{count}} mesi",
@@ -5631,6 +5733,23 @@ export const translations = {
       "noNotesBody": "Uwagi do tej wersji nie zostały jeszcze opublikowane."
     },
     "inject": {
+      "twitchUi": {
+        "favorites": "Ulubione StreamPulse",
+        "pin": "Dodaj do ulubionych StreamPulse",
+        "unpin": "Usuń z ulubionych StreamPulse",
+        "offline": "Offline",
+        "emptyFavorites": "Najedź na obserwowany kanał i kliknij gwiazdkę.",
+        "drawerTitle": "Ustawienia",
+        "tabGeneral": "Ogólne",
+        "tabPreviews": "Podglądy",
+        "tabAlerts": "Alerty",
+        "close": "Zamknij",
+        "fullPage": "Pełna strona",
+        "plusOnly": "Tylko StreamPulse+",
+        "discoverPlus": "Poznaj StreamPulse+",
+        "chatRow": "Efekty StreamPulse+",
+        "chatRowNote": "Widoczne dla innych użytkowników StreamPulse."
+      },
       "badge": {
         "lifetime": "Członek dożywotni",
         "months": "Subskrybuje od {{count}} mies.",
@@ -6437,6 +6556,23 @@ export const translations = {
       "noNotesBody": "Bu sürümün notları henüz yayınlanmamıştır."
     },
     "inject": {
+      "twitchUi": {
+        "favorites": "StreamPulse favorileri",
+        "pin": "StreamPulse favorilerine ekle",
+        "unpin": "StreamPulse favorilerinden çıkar",
+        "offline": "Çevrimdışı",
+        "emptyFavorites": "Takip ettiğin bir kanalın üzerine gel ve yıldıza tıkla.",
+        "drawerTitle": "Ayarlar",
+        "tabGeneral": "Genel",
+        "tabPreviews": "Önizlemeler",
+        "tabAlerts": "Uyarılar",
+        "close": "Kapat",
+        "fullPage": "Tam sayfa",
+        "plusOnly": "Yalnızca StreamPulse+",
+        "discoverPlus": "StreamPulse+'ı keşfet",
+        "chatRow": "StreamPulse+ efektleri",
+        "chatRowNote": "Diğer StreamPulse kullanıcıları görür."
+      },
       "badge": {
         "lifetime": "Ömür boyu üye",
         "months": "{{count}} aydır abone",
@@ -7243,6 +7379,23 @@ export const translations = {
       "noNotesBody": "Примечания к этой версии пока не опубликованы."
     },
     "inject": {
+      "twitchUi": {
+        "favorites": "Избранное StreamPulse",
+        "pin": "Добавить в избранное StreamPulse",
+        "unpin": "Убрать из избранного StreamPulse",
+        "offline": "Не в сети",
+        "emptyFavorites": "Наведи на отслеживаемый канал и нажми на звезду.",
+        "drawerTitle": "Настройки",
+        "tabGeneral": "Общие",
+        "tabPreviews": "Превью",
+        "tabAlerts": "Оповещения",
+        "close": "Закрыть",
+        "fullPage": "Полная страница",
+        "plusOnly": "Только StreamPulse+",
+        "discoverPlus": "Узнать о StreamPulse+",
+        "chatRow": "Эффекты StreamPulse+",
+        "chatRowNote": "Видно другим пользователям StreamPulse."
+      },
       "badge": {
         "lifetime": "Пожизненный участник",
         "months": "Подписка {{count}} мес.",
@@ -8049,6 +8202,23 @@ export const translations = {
       "noNotesBody": "このバージョンのリリースノートはまだ公開されていません。"
     },
     "inject": {
+      "twitchUi": {
+        "favorites": "StreamPulse お気に入り",
+        "pin": "StreamPulse お気に入りに追加",
+        "unpin": "StreamPulse お気に入りから削除",
+        "offline": "オフライン",
+        "emptyFavorites": "フォロー中のチャンネルにカーソルを合わせて星をクリック。",
+        "drawerTitle": "設定",
+        "tabGeneral": "一般",
+        "tabPreviews": "プレビュー",
+        "tabAlerts": "通知",
+        "close": "閉じる",
+        "fullPage": "全画面ページ",
+        "plusOnly": "StreamPulse+ 限定",
+        "discoverPlus": "StreamPulse+ を見る",
+        "chatRow": "StreamPulse+ エフェクト",
+        "chatRowNote": "他の StreamPulse ユーザーに表示されます。"
+      },
       "badge": {
         "lifetime": "永久メンバー",
         "months": "{{count}}か月利用中",
@@ -8855,6 +9025,23 @@ export const translations = {
       "noNotesBody": "이 버전에 대한 변경 내역은 아직 공개되지 않았습니다."
     },
     "inject": {
+      "twitchUi": {
+        "favorites": "StreamPulse 즐겨찾기",
+        "pin": "StreamPulse 즐겨찾기에 추가",
+        "unpin": "StreamPulse 즐겨찾기에서 제거",
+        "offline": "오프라인",
+        "emptyFavorites": "팔로우한 채널에 마우스를 올리고 별을 누르세요.",
+        "drawerTitle": "설정",
+        "tabGeneral": "일반",
+        "tabPreviews": "미리보기",
+        "tabAlerts": "알림",
+        "close": "닫기",
+        "fullPage": "전체 페이지",
+        "plusOnly": "StreamPulse+ 전용",
+        "discoverPlus": "StreamPulse+ 알아보기",
+        "chatRow": "StreamPulse+ 효과",
+        "chatRowNote": "다른 StreamPulse 사용자에게 보입니다."
+      },
       "badge": {
         "lifetime": "평생 멤버",
         "months": "{{count}}개월째 구독 중",
@@ -9661,6 +9848,23 @@ export const translations = {
       "noNotesBody": "Catatan untuk versi ini belum diterbitkan."
     },
     "inject": {
+      "twitchUi": {
+        "favorites": "Favorit StreamPulse",
+        "pin": "Tambahkan ke favorit StreamPulse",
+        "unpin": "Hapus dari favorit StreamPulse",
+        "offline": "Offline",
+        "emptyFavorites": "Arahkan ke kanal yang diikuti lalu klik bintang.",
+        "drawerTitle": "Pengaturan",
+        "tabGeneral": "Umum",
+        "tabPreviews": "Pratinjau",
+        "tabAlerts": "Peringatan",
+        "close": "Tutup",
+        "fullPage": "Halaman penuh",
+        "plusOnly": "Khusus StreamPulse+",
+        "discoverPlus": "Lihat StreamPulse+",
+        "chatRow": "Efek StreamPulse+",
+        "chatRowNote": "Dilihat pengguna StreamPulse lain."
+      },
       "badge": {
         "lifetime": "Anggota seumur hidup",
         "months": "Berlangganan {{count}} bulan",
@@ -10467,6 +10671,23 @@ export const translations = {
       "noNotesBody": "De toelichting bij deze versie is nog niet gepubliceerd."
     },
     "inject": {
+      "twitchUi": {
+        "favorites": "StreamPulse-favorieten",
+        "pin": "Toevoegen aan StreamPulse-favorieten",
+        "unpin": "Verwijderen uit StreamPulse-favorieten",
+        "offline": "Offline",
+        "emptyFavorites": "Beweeg over een gevolgd kanaal en klik op de ster.",
+        "drawerTitle": "Instellingen",
+        "tabGeneral": "Algemeen",
+        "tabPreviews": "Voorbeelden",
+        "tabAlerts": "Meldingen",
+        "close": "Sluiten",
+        "fullPage": "Volledige pagina",
+        "plusOnly": "Alleen StreamPulse+",
+        "discoverPlus": "Ontdek StreamPulse+",
+        "chatRow": "StreamPulse+-effecten",
+        "chatRowNote": "Zichtbaar voor andere StreamPulse-gebruikers."
+      },
       "badge": {
         "lifetime": "Lid voor het leven",
         "months": "{{count}} maanden abonnee",
@@ -11273,6 +11494,23 @@ export const translations = {
       "noNotesBody": "इस संस्करण के नोट्स अभी तक प्रकाशित नहीं किये गये हैं।"
     },
     "inject": {
+      "twitchUi": {
+        "favorites": "StreamPulse favorites",
+        "pin": "Add to StreamPulse favorites",
+        "unpin": "Remove from StreamPulse favorites",
+        "offline": "Offline",
+        "emptyFavorites": "Hover a followed channel and click the star.",
+        "drawerTitle": "Settings",
+        "tabGeneral": "General",
+        "tabPreviews": "Previews",
+        "tabAlerts": "Alerts",
+        "close": "Close",
+        "fullPage": "Full page",
+        "plusOnly": "StreamPulse+ only",
+        "discoverPlus": "Discover StreamPulse+",
+        "chatRow": "StreamPulse+ effects",
+        "chatRowNote": "Seen by other StreamPulse users."
+      },
       "badge": {
         "lifetime": "Lifetime member",
         "months": "Subscribed for {{count}} months",
@@ -12079,6 +12317,23 @@ export const translations = {
       "noNotesBody": "Informationen om den här versionen har ännu inte publicerats."
     },
     "inject": {
+      "twitchUi": {
+        "favorites": "StreamPulse-favoriter",
+        "pin": "Lägg till i StreamPulse-favoriter",
+        "unpin": "Ta bort från StreamPulse-favoriter",
+        "offline": "Offline",
+        "emptyFavorites": "Hovra över en följd kanal och klicka på stjärnan.",
+        "drawerTitle": "Inställningar",
+        "tabGeneral": "Allmänt",
+        "tabPreviews": "Förhandsvisningar",
+        "tabAlerts": "Aviseringar",
+        "close": "Stäng",
+        "fullPage": "Hel sida",
+        "plusOnly": "Endast StreamPulse+",
+        "discoverPlus": "Upptäck StreamPulse+",
+        "chatRow": "StreamPulse+-effekter",
+        "chatRowNote": "Syns för andra StreamPulse-användare."
+      },
       "badge": {
         "lifetime": "Livstidsmedlem",
         "months": "Prenumerant i {{count}} månader",
@@ -12885,6 +13140,23 @@ export const translations = {
       "noNotesBody": "Poznámky k této verzi zatím nebyly zveřejněny."
     },
     "inject": {
+      "twitchUi": {
+        "favorites": "Oblíbené StreamPulse",
+        "pin": "Přidat do oblíbených StreamPulse",
+        "unpin": "Odebrat z oblíbených StreamPulse",
+        "offline": "Offline",
+        "emptyFavorites": "Najeď na sledovaný kanál a klikni na hvězdu.",
+        "drawerTitle": "Nastavení",
+        "tabGeneral": "Obecné",
+        "tabPreviews": "Náhledy",
+        "tabAlerts": "Upozornění",
+        "close": "Zavřít",
+        "fullPage": "Celá stránka",
+        "plusOnly": "Jen StreamPulse+",
+        "discoverPlus": "Objevit StreamPulse+",
+        "chatRow": "Efekty StreamPulse+",
+        "chatRowNote": "Vidí to ostatní uživatelé StreamPulse."
+      },
       "badge": {
         "lifetime": "Doživotní člen",
         "months": "Předplatitel {{count}} měs.",

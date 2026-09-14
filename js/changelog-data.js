@@ -51,21 +51,21 @@ export const RELEASES = [
     version: "26.9.16",
     date: "2026-09-14",
     title: {
-      fr: "Badge StreamPulse+ réparé",
-      en: "StreamPulse+ badge fixed",
-      es: "Insignia StreamPulse+ reparada",
-      "pt-BR": "Emblema StreamPulse+ corrigido",
-      de: "StreamPulse+-Abzeichen repariert",
-      it: "Badge StreamPulse+ riparato",
-      pl: "Naprawiona odznaka StreamPulse+",
-      tr: "StreamPulse+ rozeti düzeltildi",
-      ru: "Значок StreamPulse+ исправлен",
-      ja: "StreamPulse+ バッジを修正",
-      ko: "StreamPulse+ 배지 수정",
-      id: "Lencana StreamPulse+ diperbaiki",
-      nl: "StreamPulse+-badge hersteld",
-      sv: "StreamPulse+-märket lagat",
-      cs: "Odznak StreamPulse+ opraven"
+      fr: "Favoris sur Twitch et réglages intégrés",
+      en: "Favorites on Twitch and built-in settings",
+      es: "Favoritos en Twitch y ajustes integrados",
+      "pt-BR": "Favoritos na Twitch e configurações integradas",
+      de: "Favoriten auf Twitch und integrierte Einstellungen",
+      it: "Preferiti su Twitch e impostazioni integrate",
+      pl: "Ulubione na Twitchu i wbudowane ustawienia",
+      tr: "Twitch'te favoriler ve yerleşik ayarlar",
+      ru: "Избранное на Twitch и встроенные настройки",
+      ja: "Twitch のお気に入りと内蔵設定",
+      ko: "트위치 즐겨찾기와 내장 설정",
+      id: "Favorit di Twitch dan pengaturan bawaan",
+      nl: "Favorieten op Twitch en ingebouwde instellingen",
+      sv: "Favoriter på Twitch och inbyggda inställningar",
+      cs: "Oblíbené na Twitchi a vestavěná nastavení"
     },
     subtitle: {
       fr: "Ton badge et tes effets s'affichent de nouveau dans le tchat Twitch.",
@@ -103,6 +103,86 @@ export const RELEASES = [
           nl: "Badge, kleur, effecten en speciale naam ontbraken bij berichten die al zichtbaar waren bij het laden van Twitch: ze verschijnen nu meteen.",
           sv: "Märket, färgen, effekterna och specialnamnet saknades på meddelanden som redan syntes när Twitch laddades: nu visas de direkt.",
           cs: "Odznak, jeho barva, efekty a speciální jméno chyběly u zpráv zobrazených při načtení Twitche: teď se objeví hned."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "Favoris StreamPulse dans la liste de gauche de Twitch : une étoile au survol d'une chaîne suivie, et tes favoris en direct remontent en haut. C'est la même liste que les favoris de la pop-up.",
+          en: "StreamPulse favorites in Twitch's left sidebar: a star appears when you hover a followed channel, and your live favorites move to the top. It's the same list as the popup favorites.",
+          es: "Favoritos de StreamPulse en la barra izquierda de Twitch: una estrella al pasar el ratón por un canal seguido, y tus favoritos en directo suben arriba. Es la misma lista que los favoritos del popup.",
+          "pt-BR": "Favoritos do StreamPulse na barra esquerda da Twitch: uma estrela aparece ao passar o mouse num canal seguido, e seus favoritos ao vivo sobem para o topo. É a mesma lista dos favoritos do popup.",
+          de: "StreamPulse-Favoriten in der linken Twitch-Leiste: Ein Stern erscheint beim Überfahren eines gefolgten Kanals, und deine Live-Favoriten stehen oben. Es ist dieselbe Liste wie im Popup.",
+          it: "Preferiti StreamPulse nella barra sinistra di Twitch: una stella appare passando su un canale seguito, e i tuoi preferiti in diretta salgono in cima. È la stessa lista dei preferiti del popup.",
+          pl: "Ulubione StreamPulse w lewym pasku Twitcha: gwiazdka pojawia się po najechaniu na obserwowany kanał, a ulubione na żywo trafiają na górę. To ta sama lista co w oknie rozszerzenia.",
+          tr: "Twitch sol menüsünde StreamPulse favorileri: takip ettiğin bir kanalın üzerine gelince yıldız çıkar, canlı favorilerin en üste çıkar. Açılır penceredeki favorilerle aynı liste.",
+          ru: "Избранное StreamPulse в левой панели Twitch: при наведении на отслеживаемый канал появляется звезда, а избранные в эфире поднимаются наверх. Это тот же список, что и во всплывающем окне.",
+          ja: "Twitch 左サイドバーに StreamPulse お気に入り：フォロー中のチャンネルにカーソルを合わせると星が表示され、配信中のお気に入りが上に並びます。ポップアップのお気に入りと同じリストです。",
+          ko: "트위치 왼쪽 목록에 StreamPulse 즐겨찾기: 팔로우한 채널에 마우스를 올리면 별이 나타나고, 방송 중인 즐겨찾기가 위로 올라갑니다. 팝업의 즐겨찾기와 같은 목록입니다.",
+          id: "Favorit StreamPulse di bilah kiri Twitch: bintang muncul saat mengarahkan ke kanal yang diikuti, dan favorit yang sedang live naik ke atas. Daftarnya sama dengan favorit di popup.",
+          nl: "StreamPulse-favorieten in de linkerbalk van Twitch: er verschijnt een ster als je over een gevolgd kanaal beweegt, en je live favorieten staan bovenaan. Het is dezelfde lijst als in de pop-up.",
+          sv: "StreamPulse-favoriter i Twitchs vänsterlist: en stjärna visas när du hovrar över en följd kanal, och dina favoriter som sänder hamnar överst. Det är samma lista som i popupen.",
+          cs: "Oblíbené StreamPulse v levém panelu Twitche: po najetí na sledovaný kanál se objeví hvězda a oblíbení v přímém přenosu jsou nahoře. Je to stejný seznam jako v okně rozšíření."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "« Tous les réglages » ouvre maintenant un panneau directement sur Twitch, au lieu d'une nouvelle fenêtre.",
+          en: "\"All settings\" now opens a panel right on Twitch instead of a new window.",
+          es: "\"Todos los ajustes\" ahora abre un panel directamente en Twitch en lugar de una ventana nueva.",
+          "pt-BR": "\"Todas as configurações\" agora abre um painel direto na Twitch em vez de uma nova janela.",
+          de: "„Alle Einstellungen“ öffnet jetzt ein Panel direkt auf Twitch statt eines neuen Fensters.",
+          it: "\"Tutte le impostazioni\" ora apre un pannello direttamente su Twitch invece di una nuova finestra.",
+          pl: "„Wszystkie ustawienia” otwierają teraz panel bezpośrednio na Twitchu zamiast nowego okna.",
+          tr: "\"Tüm ayarlar\" artık yeni pencere yerine doğrudan Twitch üzerinde bir panel açıyor.",
+          ru: "«Все настройки» теперь открывают панель прямо на Twitch, а не новое окно.",
+          ja: "「すべての設定」は新しいウィンドウではなく、Twitch 上で直接パネルを開くようになりました。",
+          ko: "'모든 설정'이 이제 새 창 대신 트위치 화면에서 바로 패널을 엽니다.",
+          id: "\"Semua pengaturan\" kini membuka panel langsung di Twitch, bukan jendela baru.",
+          nl: "\"Alle instellingen\" opent nu een paneel direct op Twitch in plaats van een nieuw venster.",
+          sv: "\"Alla inställningar\" öppnar nu en panel direkt på Twitch i stället för ett nytt fönster.",
+          cs: "„Všechna nastavení“ nyní otevírají panel přímo na Twitchi místo nového okna."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "StreamPulse+ : choisis les effets de ton pseudo et de ton badge directement dans les paramètres du tchat Twitch, avec un aperçu en direct.",
+          en: "StreamPulse+: pick your name and badge effects right in Twitch's chat settings, with a live preview.",
+          es: "StreamPulse+: elige los efectos de tu nombre y tu insignia directamente en los ajustes del chat de Twitch, con vista previa en vivo.",
+          "pt-BR": "StreamPulse+: escolha os efeitos do seu nome e do seu emblema direto nas configurações do chat da Twitch, com prévia ao vivo.",
+          de: "StreamPulse+: Wähle die Effekte für Namen und Abzeichen direkt in den Twitch-Chateinstellungen, mit Live-Vorschau.",
+          it: "StreamPulse+: scegli gli effetti del nome e del badge direttamente nelle impostazioni della chat di Twitch, con anteprima dal vivo.",
+          pl: "StreamPulse+: wybierz efekty nazwy i odznaki bezpośrednio w ustawieniach czatu Twitcha, z podglądem na żywo.",
+          tr: "StreamPulse+: adının ve rozetinin efektlerini canlı önizlemeyle doğrudan Twitch sohbet ayarlarından seç.",
+          ru: "StreamPulse+: выбирай эффекты ника и значка прямо в настройках чата Twitch, с живым предпросмотром.",
+          ja: "StreamPulse+：名前とバッジのエフェクトを Twitch のチャット設定から直接、ライブプレビュー付きで選べます。",
+          ko: "StreamPulse+: 트위치 채팅 설정에서 바로 닉네임과 배지 효과를 실시간 미리보기와 함께 고르세요.",
+          id: "StreamPulse+: pilih efek nama dan lencanamu langsung di pengaturan chat Twitch, dengan pratinjau langsung.",
+          nl: "StreamPulse+: kies de effecten van je naam en badge direct in de chatinstellingen van Twitch, met live voorbeeld.",
+          sv: "StreamPulse+: välj effekter för ditt namn och märke direkt i Twitchs chattinställningar, med liveförhandsvisning.",
+          cs: "StreamPulse+: vyber efekty jména a odznaku přímo v nastavení chatu Twitche, s živým náhledem."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "L'aperçu vidéo au survol des chaînes fonctionne de nouveau, et l'effet Néon du pseudo est plus lisible.",
+          en: "The video preview when hovering channels works again, and the Neon name effect is easier to read.",
+          es: "La vista previa en vídeo al pasar sobre los canales vuelve a funcionar, y el efecto Neón del nombre se lee mejor.",
+          "pt-BR": "A prévia em vídeo ao passar o mouse nos canais voltou a funcionar, e o efeito Neon do nome está mais legível.",
+          de: "Die Videovorschau beim Überfahren von Kanälen funktioniert wieder, und der Neon-Namenseffekt ist besser lesbar.",
+          it: "L'anteprima video al passaggio sui canali funziona di nuovo, e l'effetto Neon del nome è più leggibile.",
+          pl: "Podgląd wideo po najechaniu na kanał znów działa, a efekt Neon nazwy jest czytelniejszy.",
+          tr: "Kanalların üzerine gelince açılan video önizleme yeniden çalışıyor, Neon ad efekti de daha okunaklı.",
+          ru: "Видеопревью при наведении на каналы снова работает, а эффект «Неон» для ника стал читабельнее.",
+          ja: "チャンネルにカーソルを合わせたときの動画プレビューが再び動作し、ネオンの名前エフェクトが読みやすくなりました。",
+          ko: "채널에 마우스를 올릴 때 영상 미리보기가 다시 작동하고, 네온 닉네임 효과가 더 읽기 쉬워졌습니다.",
+          id: "Pratinjau video saat mengarahkan ke kanal kembali berfungsi, dan efek nama Neon lebih mudah dibaca.",
+          nl: "De videovoorbeeld bij het bewegen over kanalen werkt weer, en het Neon-naameffect is beter leesbaar.",
+          sv: "Videoförhandsvisningen när du hovrar över kanaler fungerar igen, och Neon-namneffekten är lättare att läsa.",
+          cs: "Video náhled po najetí na kanál znovu funguje a efekt jména Neon je čitelnější."
         }
       }
     ]
