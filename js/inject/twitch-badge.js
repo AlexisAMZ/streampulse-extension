@@ -52,6 +52,10 @@
   var COSMETICS_KEY = "streamPulseCosmetics";
   var BADGE_FX = ["pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker"];
   var NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow"];
+  var REFRESH_MS = 5 * 60 * 1000;
+  // Empreinte du compte Twitch connecte et licence de ce navigateur.
+  var ownHash = "";
+  var viewerPlus = false;
 
   // "author" (couleur du pseudo), "theme" (blanc/noir), ou une couleur hexa.
   var badgeColorMode = "author";
@@ -128,6 +132,7 @@
     hashLogin(username).then(function (hash) {
       if (!hash) return;
       badgeHashes.add(hash);
+      ownHash = hash;
       log("utilisateur detecte, empreinte enregistree");
       publishBadgeColor(hash);
 
@@ -187,6 +192,7 @@
             if (/^[a-f0-9]{12}$/.test(h) && (b || n)) nextStyles.set(h, { b: b, n: n });
           });
           badgeStyles = nextStyles;
+          refreshVisibleCosmetics();
           if (!list.length) return;
           for (var i = 0; i < list.length; i++) {
             var hash = String(list[i] || "").toLowerCase().trim();
@@ -243,6 +249,7 @@
           else badgeColors.delete(hash);
           if (badgeFx || nameFx) badgeStyles.set(hash, { b: badgeFx, n: nameFx });
           else badgeStyles.delete(hash);
+          refreshVisibleCosmetics();
           log("couleur publiee");
         }).catch(function (e) {
           log("couleur non publiee :", e.message);
@@ -395,16 +402,23 @@
     return themeColor();
   }
 
+  /**
+   * Couleur d'un badge. Celle qu'un abonne StreamPulse+ a choisie pour son
+   * propre badge l'emporte toujours ; sinon le reglage de ce navigateur
+   * (couleur du pseudo ou selon le theme) s'applique. La couleur personnalisee
+   * ne concerne que son propre badge, et seulement avec StreamPulse+.
+   */
   function resolveBadgeColor(messageEl, hash) {
-    // Par defaut, la couleur choisie par l'abonne StreamPulse+ l'emporte sur celle de son pseudo.
-    if (badgeColorMode === "author") return (hash && badgeColors.get(hash)) || authorColor(messageEl);
-    if (badgeColorMode === "theme") return themeColor();
-    return badgeColorMode;
+    if (hash && hash === ownHash && viewerPlus && HEX_RE.test(badgeColorMode)) return badgeColorMode;
+    var publicColor = hash && badgeColors.get(hash);
+    if (publicColor) return publicColor;
+    return badgeColorMode === "theme" ? themeColor() : authorColor(messageEl);
   }
 
   function createBadgeElement(messageEl, hash) {
     var badge = document.createElement("span");
     badge.className = "sp-chat-badge";
+    if (hash) badge.setAttribute("data-sp-hash", hash);
     badge.setAttribute("title", "Utilisateur StreamPulse");
     badge.setAttribute("aria-label", "Utilisateur StreamPulse");
 
@@ -497,6 +511,32 @@
       name.classList.add("sp-paint", "sp-paint--" + style.n);
       var glow = badgeColors.get(hash) || authorColor(messageEl);
       if (glow) name.style.setProperty("--sp-paint-glow", glow);
+    } catch (_e) {
+      // Twitch reconstruit son DOM en permanence : le noeud peut disparaitre entre sa selection et son usage.
+    }
+  }
+
+  /** Reapplique couleur, effet et pseudo special aux messages deja affiches. */
+  function refreshVisibleCosmetics() {
+    try {
+      var badges = document.querySelectorAll(".sp-chat-badge[data-sp-hash]");
+      for (var i = 0; i < badges.length; i++) {
+        var badge = badges[i];
+        var hash = badge.getAttribute("data-sp-hash");
+        var line = badge.closest(MESSAGE_SELECTORS);
+        if (!line) continue;
+        var mark = badge.querySelector(".sp-chat-badge-img");
+        if (mark) mark.style.setProperty("--sp-badge-color", resolveBadgeColor(line, hash));
+        badge.className = badge.className.replace(/\bsp-chat-badge--fx-\S+/g, "").replace(/\s+/g, " ").trim();
+        var style = badgeStyles.get(hash);
+        if (style && style.b) badge.classList.add("sp-chat-badge--fx-" + style.b);
+        var name = line.querySelector('[data-a-target="chat-message-username"], .chat-author__display-name, .seventv-chat-user-username');
+        if (name) {
+          name.className = name.className.replace(/\bsp-paint(--\S+)?/g, "").replace(/\s+/g, " ").trim();
+          name.style.removeProperty("--sp-paint-glow");
+        }
+        applyPaint(line, hash);
+      }
     } catch (_e) {
       // Twitch reconstruit son DOM en permanence : le noeud peut disparaitre entre sa selection et son usage.
     }
@@ -607,8 +647,9 @@
     // Les preferences vivent sous "betaGeneralPreferences" (PREFERENCES_KEY dans
     // background.js) : lire "preferences" renvoyait toujours undefined, donc le
     // reglage "Badge communautaire" ne desactivait jamais rien.
-    chrome.storage.local.get("betaGeneralPreferences", function (res) {
+    chrome.storage.local.get(["betaGeneralPreferences", PLUS_KEY], function (res) {
       var prefs = (res && res.betaGeneralPreferences) || {};
+      viewerPlus = !!activePlusKey(res && res[PLUS_KEY]);
       if (prefs.communityBadge === false) {
         log("desactive par l utilisateur");
         return;
@@ -618,12 +659,16 @@
       log("init", badgeIconUrl ? "icone OK" : "icone MANQUANTE", "| couleur :", badgeColorMode);
       initBadges();
       setupChatObserver();
+      // Les reglages des autres abonnes arrivent sans recharger la page.
+      setInterval(fetchRemoteBadges, REFRESH_MS);
 
       chrome.storage.onChanged.addListener(function (changes, area) {
         if (area !== "local") return;
         if (changes.betaGeneralPreferences) {
           badgeColorMode = normalizeColorMode((changes.betaGeneralPreferences.newValue || {}).communityBadgeColor);
         }
+        if (changes[PLUS_KEY]) viewerPlus = !!activePlusKey(changes[PLUS_KEY].newValue);
+        if (changes.betaGeneralPreferences || changes[PLUS_KEY]) refreshVisibleCosmetics();
         if ((changes.betaGeneralPreferences || changes[PLUS_KEY] || changes[COSMETICS_KEY]) && currentTwitchUser) {
           hashLogin(currentTwitchUser).then(publishBadgeColor);
         }

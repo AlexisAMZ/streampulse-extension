@@ -530,6 +530,29 @@ function initCosmetics() {
   plusListeners.add(() => renderCosmetics());
 }
 
+/**
+ * La couleur personnalisée du badge est un avantage StreamPulse+ : sans licence,
+ * la choisir ouvre l'écran d'abonnement. Écouté en capture, avant le gestionnaire
+ * de popup.js qui enregistrerait le réglage.
+ */
+function initBadgeColorLock() {
+  document.addEventListener(
+    "change",
+    (event) => {
+      const select = event.target;
+      if (select?.id !== "pref-badge-color-mode" || select.value !== "custom" || plusActive()) return;
+      event.stopImmediatePropagation();
+      select.value = "author";
+      openPlus();
+    },
+    true,
+  );
+  plusListeners.add((active) => {
+    const option = document.querySelector('#pref-badge-color-mode option[value="custom"]');
+    if (option) option.textContent = `${t("popup.settings.badgeColorCustom")}${active ? "" : " · PLUS"}`;
+  });
+}
+
 function initAccent() {
   $("accent-swatches")?.addEventListener("click", (event) => {
     const swatch = event.target.closest(".accent-swatch");
@@ -671,6 +694,7 @@ export async function initFeatures() {
   initPlus();
   initSmartAlerts();
   initAccent();
+  initBadgeColorLock();
   initCosmetics();
   initPredictions();
 
