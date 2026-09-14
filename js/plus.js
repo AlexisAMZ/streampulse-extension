@@ -30,6 +30,14 @@ export function normalizeLicenseKey(input) {
   return KEY_PATTERN.test(key) ? key : null;
 }
 
+/** Revérification quotidienne : une résiliation ou un remboursement se voit sous 24 h. */
+export const PLUS_RECHECK_MS = 24 * 60 * 60 * 1000;
+
+export function needsRecheck(record, now = Date.now()) {
+  if (!record || record.status !== "active" || !record.licenseKey) return false;
+  return now - (Number(record.checkedAt || record.verifiedAt) || 0) >= PLUS_RECHECK_MS;
+}
+
 export function isPlusActive(record, now = Date.now()) {
   if (!record || record.status !== "active" || !record.licenseKey) return false;
   const verifiedAt = Number(record.verifiedAt) || 0;

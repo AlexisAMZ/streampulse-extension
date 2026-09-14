@@ -19,7 +19,7 @@ import {
 } from "./platforms.js";
 import { HISTORY_KEY, addSession, emptyHistory, markSeen, patchSession } from "./history-data.js";
 import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-alerts.js";
-import { PLUS_KEY, isPlusActive, verifyLicense } from "./plus.js";
+import { PLUS_KEY, isPlusActive, needsRecheck, verifyLicense } from "./plus.js";
 
 const STORAGE_KEYS = {
   STREAMERS: "betaGeneralStreamers",
@@ -864,6 +864,24 @@ class HistoryStore {
         })
       )
     );
+  }
+}
+
+/**
+ * Revérifie la licence StreamPulse+ une fois par jour. Clé refusée (abonnement
+ * résilié, remboursement) : la licence est retirée. Erreur réseau : on garde
+ * la licence, isPlusActive applique alors le délai de grâce hors ligne.
+ */
+async function recheckPlusLicense(record) {
+  if (!needsRecheck(record)) return;
+  const now = Date.now();
+  const result = await verifyLicense(record.licenseKey, fetch, now);
+  if (result.ok) {
+    await chrome.storage.local.set({ [PLUS_KEY]: { ...result.record, checkedAt: now } });
+  } else if (result.error === "invalid" || result.error === "format") {
+    await chrome.storage.local.remove(PLUS_KEY);
+  } else {
+    await chrome.storage.local.set({ [PLUS_KEY]: { ...record, checkedAt: now } });
   }
 }
 
@@ -1913,7 +1931,8 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
 
   // Alertes intelligentes : actives seulement avec StreamPulse+.
   const plusStored = await chrome.storage.local.get([PLUS_KEY, SMART_ALERTS_KEY]);
-  const plusActive = isPlusActive(plusStored[PLUS_KEY]);
+  await recheckPlusLicense(plusStored[PLUS_KEY]);
+  const plusActive = isPlusActive((await chrome.storage.local.get(PLUS_KEY))[PLUS_KEY]);
   const smartRules = plusActive ? normalizeRules(plusStored[SMART_ALERTS_KEY]) : {};
 
   const streamerById = new Map();

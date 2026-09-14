@@ -11,7 +11,7 @@ import {
   HISTORY_MAX_AGE_MS,
 } from "../js/history-data.js";
 import { normalizeRules, ruleMatches, decideSmartAlert, normalizeRule } from "../js/smart-alerts.js";
-import { normalizeLicenseKey, isPlusActive, verifyLicense, PLUS_GRACE_MS } from "../js/plus.js";
+import { normalizeLicenseKey, isPlusActive, verifyLicense, needsRecheck, PLUS_GRACE_MS, PLUS_RECHECK_MS } from "../js/plus.js";
 
 const NOW = Date.parse("2026-09-14T12:00:00Z");
 const session = (over = {}) => ({
@@ -118,6 +118,14 @@ test("isPlusActive : à vie toujours actif, mensuel tant que la vérification es
   assert.equal(isPlusActive({ ...base, plan: "monthly" }, NOW + PLUS_GRACE_MS - 1), true);
   assert.equal(isPlusActive({ ...base, plan: "monthly" }, NOW + PLUS_GRACE_MS + 1), false);
   assert.equal(isPlusActive(null, NOW), false);
+});
+
+test("needsRecheck revérifie une licence active au bout de 24 h", () => {
+  const record = { licenseKey: "SP-ABCD-1234-EFGH-5678", status: "active", plan: "monthly", verifiedAt: NOW };
+  assert.equal(needsRecheck(record, NOW + PLUS_RECHECK_MS - 1), false);
+  assert.equal(needsRecheck(record, NOW + PLUS_RECHECK_MS), true);
+  assert.equal(needsRecheck({ ...record, checkedAt: NOW + PLUS_RECHECK_MS }, NOW + PLUS_RECHECK_MS + 1), false);
+  assert.equal(needsRecheck(null, NOW), false);
 });
 
 test("verifyLicense gère format, clé refusée, réseau et succès", async () => {
