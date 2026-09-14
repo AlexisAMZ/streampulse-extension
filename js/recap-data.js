@@ -38,13 +38,20 @@ function isValidEntry(entry) {
  * Periodes proposees : les deux glissantes d'abord, puis chaque mois present
  * dans le stockage mensuel, du plus recent au plus ancien.
  */
-export function listPeriods(monthly, _daily, _now = new Date()) {
+export function listPeriods(monthly, daily, _now = new Date(), options = {}) {
   const months = Object.keys(monthly || {})
     .filter((key) => /^\d{4}-\d{2}$/.test(key))
     .sort()
     .reverse();
+  // Wrapped annuel (StreamPulse+) : une entree par annee presente dans les donnees.
+  const years = options.years
+    ? [...new Set([...Object.keys(daily || {}), ...months].map((key) => key.slice(0, 4)).filter((y) => /^\d{4}$/.test(y)))]
+        .sort()
+        .reverse()
+    : [];
   return [
     ...ROLLING_PERIODS.map((p) => ({ id: p.id, kind: "rolling", days: p.days })),
+    ...years.map((year) => ({ id: `year:${year}`, kind: "year", year })),
     ...months.map((month) => ({ id: `month:${month}`, kind: "month", month })),
   ];
 }
@@ -59,6 +66,17 @@ export function rollingDayKeys(days, now = new Date()) {
   return keys;
 }
 
+/** Additionne deux tables { jeu: secondes } sans modifier les originales. */
+export function mergeGames(a, b) {
+  const out = { ...(a || {}) };
+  for (const [game, seconds] of Object.entries(b || {})) {
+    const value = Number(seconds);
+    if (!game || !Number.isFinite(value) || value <= 0) continue;
+    out[game] = (out[game] || 0) + value;
+  }
+  return out;
+}
+
 function mergeBuckets(buckets) {
   const merged = new Map();
   for (const bucket of buckets) {
@@ -71,6 +89,7 @@ function mergeBuckets(buckets) {
           ...current,
           watchSeconds: current.watchSeconds + entry.watchSeconds,
           avatarUrl: entry.avatarUrl || current.avatarUrl,
+          games: mergeGames(current.games, entry.games),
         });
       } else {
         merged.set(key, {
@@ -78,6 +97,7 @@ function mergeBuckets(buckets) {
           channel: entry.channel,
           watchSeconds: entry.watchSeconds,
           avatarUrl: entry.avatarUrl || "",
+          games: mergeGames({}, entry.games),
         });
       }
     }
@@ -94,6 +114,51 @@ export function collectEntries(monthly, daily, periodId, now = new Date()) {
   }
   const match = /^month:(\d{4}-\d{2})$/.exec(periodId || "");
   if (match) return mergeBuckets([(monthly || {})[match[1]]]);
+  const year = /^year:(\d{4})$/.exec(periodId || "");
+  if (year) return mergeBuckets(yearBuckets(monthly, daily, year[1]).map((m) => m.bucket));
+  return [];
+}
+
+/**
+ * Un seau par mois de l'annee : le detail journalier quand il existe, sinon le
+ * total mensuel (historique d'avant le suivi par jour).
+ */
+function yearBuckets(monthly, daily, year) {
+  const out = [];
+  for (let m = 1; m <= 12; m++) {
+    const month = `${year}-${pad(m)}`;
+    const days = Object.keys(daily || {}).filter((key) => key.startsWith(`${month}-`));
+    const bucket = days.length ? mergeBuckets(days.map((key) => daily[key])) : Object.values((monthly || {})[month] || {});
+    out.push({ month, bucket });
+  }
+  return out;
+}
+
+const sumSeconds = (entries) => (entries || []).filter(isValidEntry).reduce((sum, e) => sum + e.watchSeconds, 0);
+
+/**
+ * Courbe d'activite d'une periode : un point par jour (7 et 30 jours, mois) ou
+ * par mois (annee). Chaque point : { key, seconds }.
+ */
+export function buildTimeline(monthly, daily, periodId, now = new Date()) {
+  const rolling = ROLLING_PERIODS.find((p) => p.id === periodId);
+  if (rolling) {
+    return rollingDayKeys(rolling.days, now)
+      .reverse()
+      .map((key) => ({ key, seconds: sumSeconds(Object.values((daily || {})[key] || {})) }));
+  }
+  const month = /^month:(\d{4})-(\d{2})$/.exec(periodId || "");
+  if (month) {
+    const count = new Date(Number(month[1]), Number(month[2]), 0).getDate();
+    return Array.from({ length: count }, (_, i) => {
+      const key = `${month[1]}-${month[2]}-${pad(i + 1)}`;
+      return { key, seconds: sumSeconds(Object.values((daily || {})[key] || {})) };
+    });
+  }
+  const year = /^year:(\d{4})$/.exec(periodId || "");
+  if (year) {
+    return yearBuckets(monthly, daily, year[1]).map(({ month: key, bucket }) => ({ key, seconds: sumSeconds(bucket) }));
+  }
   return [];
 }
 
@@ -126,11 +191,19 @@ export function buildRecap(entries, options = {}) {
       share: totalSeconds > 0 ? e.watchSeconds / totalSeconds : 0,
     }));
 
+  const games = valid.reduce((acc, e) => mergeGames(acc, e.games), {});
+  const trackedSeconds = Object.values(games).reduce((sum, value) => sum + value, 0);
+  const categories = Object.entries(games)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, options.categoryLimit ?? DEFAULT_LIMIT)
+    .map(([name, seconds]) => ({ name, seconds, share: trackedSeconds > 0 ? seconds / trackedSeconds : 0 }));
+
   return {
     totalSeconds,
     streamerCount: valid.length,
     top,
     platforms,
+    categories,
     isEmpty: valid.length === 0,
   };
 }

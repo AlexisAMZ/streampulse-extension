@@ -47,6 +47,17 @@
       ],
       "all_frames": false,
       "js": [
+        "js/inject/predictions-bridge.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://www.twitch.tv/*"
+      ],
+      "all_frames": false,
+      "js": [
         "js/inject/i18n-inline.js",
         "js/inject/topbar-panel.js",
         "js/inject/topbar.js",
@@ -91,7 +102,8 @@
         "js/chatFilter.js",
         "js/watchTimeTracker.js",
         "js/tabEnhancer.js",
-        "js/inject/predictionsOverlay.js"
+        "js/inject/predictionsOverlay.js",
+        "js/inject/predictionsAssist.js"
       ],
       "run_at": "document_idle",
       "css": [
@@ -153,6 +165,14 @@
       "matches": [
         "https://www.twitch.tv/*",
         "https://clips.twitch.tv/*"
+      ]
+    },
+    {
+      "resources": [
+        "js/predictions-data.js"
+      ],
+      "matches": [
+        "https://www.twitch.tv/*"
       ]
     }
   ]

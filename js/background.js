@@ -893,6 +893,24 @@ function sizeThumbnail(url) {
     .replace(/%?\{height\}/g, "248");
 }
 
+/**
+ * Categorie en cours d'une chaine suivie, d'apres le dernier etat live connu.
+ * Repli quand la page n'a pas pu lire le jeu elle-meme.
+ */
+async function currentGameOf(platform, channel) {
+  try {
+    const [streamers, liveState] = await Promise.all([DataStore.getStreamers(), DataStore.getLiveState()]);
+    const handle = String(channel).toLowerCase();
+    const streamer = streamers.find(
+      (item) => normalizePlatform(item.platform) === platform && String(item.handle || item.twitch || "").toLowerCase() === handle,
+    );
+    const state = streamer && liveState[streamer.id];
+    return state ? String(state.game || state.lastGame || "") : "";
+  } catch {
+    return "";
+  }
+}
+
 class WatchTimeStore {
   static _getMonthKey() {
     const now = new Date();
@@ -918,7 +936,14 @@ class WatchTimeStore {
   }
 
   /** Ajoute la duree au jour courant et ne garde que les DAILY_RETENTION derniers jours. */
-  static async _recordDaily(platform, channel, seconds, avatarUrl) {
+  /** Secondes par categorie (recap avance) : { "Just Chatting": 1200 }. */
+  static _addGame(games, game, seconds) {
+    const name = String(game || "").trim().slice(0, 80);
+    if (!name) return games || {};
+    return { ...(games || {}), [name]: ((games || {})[name] || 0) + seconds };
+  }
+
+  static async _recordDaily(platform, channel, seconds, avatarUrl, game = "") {
     const DAILY_RETENTION = 400;
     const stored = await chrome.storage.local.get(STORAGE_KEYS.WATCH_TIME_DAILY);
     const daily = stored[STORAGE_KEYS.WATCH_TIME_DAILY] || {};
@@ -934,6 +959,7 @@ class WatchTimeStore {
           ...previous,
           watchSeconds: previous.watchSeconds + seconds,
           avatarUrl: avatarUrl || previous.avatarUrl,
+          games: this._addGame(previous.games, game, seconds),
         },
       },
     };
@@ -944,7 +970,7 @@ class WatchTimeStore {
     await chrome.storage.local.set({ [STORAGE_KEYS.WATCH_TIME_DAILY]: next });
   }
 
-  static async record(platform, channel, seconds, avatarUrl = "") {
+  static async record(platform, channel, seconds, avatarUrl = "", game = "") {
     // Skip pure presence pings (no actual data to record)
     if (seconds <= 0) return;
 
@@ -958,6 +984,7 @@ class WatchTimeStore {
     }
 
     data[month][key].watchSeconds += seconds;
+    data[month][key].games = this._addGame(data[month][key].games, game, seconds);
     // Update avatar if we got a fresher one
     if (avatarUrl) data[month][key].avatarUrl = avatarUrl;
 
@@ -969,7 +996,7 @@ class WatchTimeStore {
 
     await this._saveData(data);
     try {
-      await this._recordDaily(platform, channel, seconds, avatarUrl);
+      await this._recordDaily(platform, channel, seconds, avatarUrl, game);
     } catch (error) {
       // Le suivi mensuel est deja enregistre : un echec ici ne prive que les periodes glissantes du recap.
       console.warn("[WatchTime] daily record failed:", error);
@@ -2824,8 +2851,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           const { channel, platform, seconds } = request;
           if (channel && platform) {
             const secs = Number(seconds) || 0;
+            const game = secs > 0 ? String(request.game || "") || (await currentGameOf(platform, channel)) : "";
             // Record immediately: never block on avatar resolution
-            await WatchTimeStore.record(platform, channel, secs, "");
+            await WatchTimeStore.record(platform, channel, secs, "", game);
             HistoryStore.markWatched(platform, channel).catch(() => {});
             // Best-effort avatar update (fire-and-forget, doesn't block response)
             if (secs > 0) {

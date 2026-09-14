@@ -50,6 +50,26 @@
     return { platform, channel: segment };
   }
 
+  // ── Categorie du live (recap avance) ──
+
+  const GAME_SELECTORS = {
+    twitch: ['[data-a-target="stream-game-link"]', 'a[href^="/directory/category/"]'],
+    kick: ['a[href^="/category/"]', 'a[href*="/categories/"]'],
+  };
+
+  /** Jeu affiche sous le lecteur ; chaine vide si la page ne l'indique pas. */
+  function currentGame() {
+    try {
+      for (const selector of GAME_SELECTORS[currentPlatform] || []) {
+        const text = document.querySelector(selector)?.textContent?.trim();
+        if (text) return text.slice(0, 80);
+      }
+    } catch {
+      // Le DOM de la plateforme change sans prevenir : le background prendra le relais.
+    }
+    return "";
+  }
+
   // ── Messaging ──
 
   function safeSend(msg) {
@@ -70,6 +90,7 @@
       channel: currentChannel,
       platform: currentPlatform,
       seconds: Math.round(HEARTBEAT_INTERVAL / 1000),
+      game: currentGame(),
     });
   }
 
@@ -153,6 +174,7 @@
         channel: currentChannel,
         platform: currentPlatform,
         seconds: elapsed,
+        game: currentGame(),
       });
     }
   });

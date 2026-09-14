@@ -4,6 +4,7 @@
 
 import { t, getCurrentLanguage } from "./i18n.js";
 import { HISTORY_KEY, formatClock, selectMissed, summarize } from "./history-data.js";
+import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalizePredictionRule, summarize as summarizePredictions } from "./predictions-data.js";
 import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
 import {
   SMART_ALERTS_KEY,
@@ -466,6 +467,128 @@ function renderSmart() {
   renderSmartRules();
 }
 
+// ─── Couleur d'accent et badge (StreamPulse+) ─────────────────────────────────
+
+export const ACCENT_KEY = "streamPulseAccent";
+const ACCENTS = ["violet", "lcd", "ocean", "ember", "crimson"];
+let accentChoice = "violet";
+
+function renderAccent() {
+  const active = plusActive();
+  const applied = active && ACCENTS.includes(accentChoice) ? accentChoice : "violet";
+  if (applied === "violet") delete document.body.dataset.accent;
+  else document.body.dataset.accent = applied;
+  $("accent-row")?.classList.toggle("is-locked", !active);
+  document.querySelectorAll(".accent-swatch").forEach((swatch) => {
+    swatch.setAttribute("aria-checked", String(swatch.dataset.accent === applied));
+  });
+  const note = $("badge-plus-note");
+  if (note) note.textContent = t(active ? "popup.settings.badgePlusOn" : "popup.settings.badgePlusOff");
+}
+
+function initAccent() {
+  $("accent-swatches")?.addEventListener("click", (event) => {
+    const swatch = event.target.closest(".accent-swatch");
+    if (!swatch) return;
+    if (!plusActive()) {
+      if (swatch.dataset.accent !== "violet") openPlus();
+      return;
+    }
+    accentChoice = swatch.dataset.accent;
+    chrome.storage.local.set({ [ACCENT_KEY]: accentChoice });
+    renderAccent();
+  });
+  plusListeners.add(() => renderAccent());
+}
+
+// ─── Prédictions assistées (StreamPulse+) ────────────────────────────────────
+
+let predictionRule = normalizePredictionRule(null);
+let predictionHistory = [];
+
+function savePredictionRule() {
+  predictionRule = normalizePredictionRule(predictionRule);
+  chrome.storage.local.set({ [PREDICTION_RULE_KEY]: predictionRule });
+}
+
+function formatPoints(value) {
+  return new Intl.NumberFormat(getCurrentLanguage()).format(Math.round(value));
+}
+
+function predictionResult(bet) {
+  const labels = {
+    won: `+${formatPoints(bet.payout - bet.points)}`,
+    lost: `−${formatPoints(bet.points)}`,
+    refunded: t("popup.pred.refunded"),
+    pending: t("popup.pred.pending"),
+    unknown: t("popup.pred.unknown"),
+    failed: t("popup.pred.failed"),
+  };
+  const chip = node("span", `pred-result is-${bet.status}`, labels[bet.status] || "");
+  if (bet.status === "failed" && bet.error) chip.title = bet.error;
+  return chip;
+}
+
+function renderPredictions() {
+  const active = plusActive();
+  if ($("pred-locked")) $("pred-locked").hidden = active;
+  if ($("pred-editor")) $("pred-editor").hidden = !active;
+  if (!active) return;
+
+  if ($("pred-enabled")) $("pred-enabled").checked = predictionRule.enabled;
+  if ($("pred-strategy")) $("pred-strategy").value = predictionRule.strategy;
+  const fields = { "pred-percent": "percent", "pred-max": "maxPoints", "pred-reserve": "reserve" };
+  Object.entries(fields).forEach(([id, field]) => {
+    const input = $(id);
+    if (input && document.activeElement !== input) input.value = String(predictionRule[field]);
+  });
+
+  const stats = summarizePredictions(predictionHistory);
+  if ($("pred-stat-bets")) $("pred-stat-bets").textContent = formatPoints(stats.bets);
+  if ($("pred-stat-rate")) $("pred-stat-rate").textContent = stats.rate === null ? "–" : `${Math.round(stats.rate * 100)} %`;
+  if ($("pred-stat-net")) $("pred-stat-net").textContent = `${stats.net > 0 ? "+" : stats.net < 0 ? "−" : ""}${formatPoints(Math.abs(stats.net))}`;
+
+  const list = $("pred-history");
+  if (!list) return;
+  const recent = predictionHistory.slice(0, 6);
+  if (!recent.length) {
+    list.replaceChildren(node("li", "pred-empty", t("popup.pred.empty")));
+    return;
+  }
+  list.replaceChildren(
+    ...recent.map((bet) => {
+      const item = node("li", "pred-bet");
+      item.append(
+        node("b", null, bet.title || "—"),
+        node("small", null, t("popup.pred.betLine", { outcome: bet.outcomeTitle || "—", points: formatPoints(bet.points), channel: bet.channel })),
+        predictionResult(bet),
+      );
+      return item;
+    }),
+  );
+}
+
+function initPredictions() {
+  $("pred-unlock")?.addEventListener("click", openPlus);
+  $("pred-enabled")?.addEventListener("change", (event) => {
+    predictionRule = { ...predictionRule, enabled: event.target.checked };
+    savePredictionRule();
+  });
+  $("pred-strategy")?.addEventListener("change", (event) => {
+    predictionRule = { ...predictionRule, strategy: event.target.value };
+    savePredictionRule();
+  });
+  const fields = { "pred-percent": "percent", "pred-max": "maxPoints", "pred-reserve": "reserve" };
+  Object.entries(fields).forEach(([id, field]) => {
+    $(id)?.addEventListener("change", (event) => {
+      predictionRule = { ...predictionRule, [field]: event.target.value };
+      savePredictionRule();
+      renderPredictions();
+    });
+  });
+  plusListeners.add(() => renderPredictions());
+}
+
 function initSmartAlerts() {
   $("smart-unlock")?.addEventListener("click", openPlus);
   plusListeners.add(() => renderSmart());
@@ -503,9 +626,14 @@ export async function initFeatures() {
   initHistory();
   initPlus();
   initSmartAlerts();
+  initAccent();
+  initPredictions();
 
-  const stored = await chrome.storage.local.get([PLUS_KEY, SMART_ALERTS_KEY, "betaGeneralStreamers"]);
+  const stored = await chrome.storage.local.get([PLUS_KEY, SMART_ALERTS_KEY, ACCENT_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers"]);
   plusRecord = stored[PLUS_KEY] || null;
+  accentChoice = stored[ACCENT_KEY] || "violet";
+  predictionRule = normalizePredictionRule(stored[PREDICTION_RULE_KEY]);
+  predictionHistory = Array.isArray(stored[PREDICTION_HISTORY_KEY]) ? stored[PREDICTION_HISTORY_KEY] : [];
   recheckOnOpen().catch(() => {});
   smartRules = normalizeRules(stored[SMART_ALERTS_KEY]);
   smartStreamers = Array.isArray(stored.betaGeneralStreamers) ? stored.betaGeneralStreamers : [];
@@ -519,6 +647,14 @@ export async function initFeatures() {
     if (changes[PLUS_KEY]) {
       plusRecord = changes[PLUS_KEY].newValue || null;
       renderPlus();
+    }
+    if (changes[PREDICTION_HISTORY_KEY]) {
+      predictionHistory = changes[PREDICTION_HISTORY_KEY].newValue || [];
+      renderPredictions();
+    }
+    if (changes[ACCENT_KEY]) {
+      accentChoice = changes[ACCENT_KEY].newValue || "violet";
+      renderAccent();
     }
     if (changes.betaGeneralStreamers) {
       smartStreamers = changes.betaGeneralStreamers.newValue || [];

@@ -47,6 +47,34 @@
 .empty-title { font-family: var(--display); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
 .empty-body { max-width: 52ch; color: var(--text-2); }
 
+/* Recap avance (StreamPulse+) */
+.insights { display: grid; gap: 22px; padding: 26px; }
+.insights-head { display: flex; align-items: center; gap: 10px; }
+.insights-title { font-family: var(--display); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+.plus-tag { display: inline-block; padding: 2px 8px; border-radius: 999px; background: var(--lcd); color: var(--lcd-ink); font-family: var(--body); font-size: 12px; font-weight: 700; letter-spacing: 0; vertical-align: 3px; }
+.insights-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px; }
+.insight { display: grid; align-content: start; gap: 12px; min-width: 0; }
+.insight-title { color: var(--text-2); font-family: var(--body); font-size: 13px; font-weight: 600; }
+.cat-list { display: grid; gap: 12px; padding: 0; list-style: none; }
+.cat-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; }
+.cat-name { overflow: hidden; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.cat-time { color: var(--text-2); font-variant-numeric: tabular-nums; }
+.cat-bar { grid-column: 1 / -1; height: 6px; overflow: hidden; border-radius: 999px; background: var(--line); }
+.cat-bar i { display: block; height: 100%; border-radius: inherit; background: var(--lcd); }
+.cat-list .cat-empty { display: block; color: var(--text-3); font-size: 13px; }
+.timeline { display: flex; align-items: flex-end; gap: 3px; height: 150px; box-shadow: inset 0 -1px 0 var(--line-2); }
+.tl-bar { flex: 1; min-width: 2px; border-radius: 3px 3px 0 0; background: var(--violet); }
+.tl-bar.is-empty { background: var(--line-2); }
+.timeline-axis { display: flex; justify-content: space-between; color: var(--text-3); font-size: 12px; }
+.timeline-peak { color: var(--text-2); font-size: 13px; }
+.insights-locked { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 22px 26px; }
+.insights-locked-text { display: grid; gap: 6px; }
+.insights-locked .btn { flex: none; }
+
+@media (max-width: 1100px) {
+  .insights-grid { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 920px) {
   .recap { grid-template-columns: 1fr; gap: 32px; }
   .recap-side { position: static; }

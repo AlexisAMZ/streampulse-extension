@@ -95,7 +95,9 @@
   const monthKey = new Date().toISOString().slice(0, 7);
   const watchTime = { [monthKey]: {} };
   channels.streamers.slice(0, 6).forEach((s, i) => {
-    watchTime[monthKey][s.id] = { channel: s.handle, platform: s.platform, watchSeconds: (6 - i) * 5400 + 900, avatarUrl: s.avatarUrl };
+    const monthSeconds = (6 - i) * 5400 + 900;
+    const games = ["Grand Theft Auto V", "Just Chatting", "VALORANT", "League of Legends", "Minecraft", "Fortnite"];
+    watchTime[monthKey][s.id] = { channel: s.handle, platform: s.platform, watchSeconds: monthSeconds, avatarUrl: s.avatarUrl, games: { [games[i % 6]]: monthSeconds * 0.7, [games[(i + 1) % 6]]: monthSeconds * 0.3 } };
   });
 
   // Jour par jour sur la semaine : la période « 7 derniers jours » du récap en dépend.
@@ -107,7 +109,9 @@
     watchDaily[key] = {};
     channels.streamers.slice(0, 6).forEach((s, i) => {
       if ((d + i) % 3 === 2) return;
-      watchDaily[key][s.id] = { channel: s.handle, platform: s.platform, watchSeconds: (6 - i) * 900 + d * 300, avatarUrl: s.avatarUrl };
+      const daySeconds = (6 - i) * 900 + d * 300;
+      const dayGames = ["Grand Theft Auto V", "Just Chatting", "VALORANT", "League of Legends", "Minecraft", "Fortnite"];
+      watchDaily[key][s.id] = { channel: s.handle, platform: s.platform, watchSeconds: daySeconds, avatarUrl: s.avatarUrl, games: { [dayGames[i % 6]]: daySeconds * 0.65, [dayGames[(i + 2) % 6]]: daySeconds * 0.35 } };
     });
   }
 
@@ -153,6 +157,13 @@
     ...(params.get("plus") === "1"
       ? {
           streamPulsePlus: { licenseKey: "SP-DEMO-2026-PLUS-0001", plan: "lifetime", status: "active", verifiedAt: now },
+          streamPulsePredictionRule: { enabled: true, strategy: "majority", percent: 5, maxPoints: 2000, reserve: 1000, secondsBeforeEnd: 20 },
+          streamPulsePredictionHistory: [
+            { eventId: "p1", channel: "novastream", title: "Top 1 sur cette game ?", outcomeTitle: "Oui", points: 850, payout: 1540, status: "won", placedAt: now - 3600e3 },
+            { eventId: "p2", channel: "pixelkat", title: "Boss battu en moins de 3 essais ?", outcomeTitle: "Non", points: 600, payout: 0, status: "lost", placedAt: now - 7200e3 },
+            { eventId: "p3", channel: "novastream", title: "Plus de 15 kills ?", outcomeTitle: "Oui", points: 900, payout: 0, status: "pending", placedAt: now - 60e3 },
+            { eventId: "p4", channel: "lunaplays", title: "Victoire en ranked ?", outcomeTitle: "Oui", points: 400, payout: 400, status: "refunded", placedAt: now - 86400e3 },
+          ],
           streamPulseSmartAlerts: channels.streamers[0]
             ? {
                 [channels.streamers[0].id]: [

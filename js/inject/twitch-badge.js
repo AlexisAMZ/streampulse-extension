@@ -41,6 +41,13 @@
   var hashCache = new Map();
   var currentTwitchUser = null;
 
+  // Couleurs publiques des abonnes StreamPulse+ : empreinte -> couleur hexa.
+  var badgeColors = new Map();
+  var PLUS_KEY = "streamPulsePlus";
+  var PUBLISHED_KEY = "streampulseBadgePublished";
+  var HEX_RE = /^#[0-9a-f]{6}$/i;
+  var PLUS_GRACE_MS = 30 * 24 * 60 * 60 * 1000;
+
   // "author" (couleur du pseudo), "theme" (blanc/noir), ou une couleur hexa.
   var badgeColorMode = "author";
   var badgeIconUrl = (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getURL)
@@ -117,6 +124,7 @@
       if (!hash) return;
       badgeHashes.add(hash);
       log("utilisateur detecte, empreinte enregistree");
+      publishBadgeColor(hash);
 
       try {
         chrome.storage.local.get([STORAGE_KEY, "lastBadgeSync"], function (res) {
@@ -150,26 +158,79 @@
 
   function fetchRemoteBadges() {
     try {
-      fetch(API_URL)
+      fetch(API_URL + "?v=2")
         .then(function (res) {
           if (!res.ok) return [];
           return res.json();
         })
         .then(function (data) {
-          if (!Array.isArray(data) || !data.length) return;
-          for (var i = 0; i < data.length; i++) {
-            var hash = String(data[i] || "").toLowerCase().trim();
+          // v2 : { hashes, colors } ; une ancienne reponse reste un tableau.
+          var list = Array.isArray(data) ? data : (data && Array.isArray(data.hashes) ? data.hashes : []);
+          var colors = data && !Array.isArray(data) && data.colors && typeof data.colors === "object" ? data.colors : {};
+          var nextColors = new Map();
+          Object.keys(colors).forEach(function (h) {
+            var color = String(colors[h] || "").toLowerCase();
+            if (/^[a-f0-9]{12}$/.test(h) && HEX_RE.test(color)) nextColors.set(h, color);
+          });
+          badgeColors = nextColors;
+          if (!list.length) return;
+          for (var i = 0; i < list.length; i++) {
+            var hash = String(list[i] || "").toLowerCase().trim();
             // Ignorer tout ce qui n'a pas la forme d'une empreinte : une
             // reponse d'une ancienne version contiendrait des pseudos.
             if (/^[a-f0-9]{12}$/.test(hash)) badgeHashes.add(hash);
           }
           chrome.storage.local.set({ [STORAGE_KEY]: Array.from(badgeHashes) });
-          log(badgeHashes.size, "empreintes chargees");
+          log(badgeHashes.size, "empreintes chargees,", badgeColors.size, "couleurs");
           rescanVisibleMessages();
         })
         .catch(function () {});
     } catch (_e) {
       // Le service de badges est optionnel : son indisponibilite ne doit pas gener le tchat.
+    }
+  }
+
+  /** Cle de licence si StreamPulse+ est actif (meme regle que js/plus.js). */
+  function activePlusKey(record) {
+    if (!record || record.status !== "active" || !record.licenseKey) return null;
+    if (record.plan === "lifetime") return record.licenseKey;
+    return Date.now() - (Number(record.verifiedAt) || 0) <= PLUS_GRACE_MS ? record.licenseKey : null;
+  }
+
+  /**
+   * Publie la couleur personnalisee d'un abonne StreamPulse+ pour que les
+   * autres utilisateurs la voient. Republiee chaque jour : le serveur oublie
+   * une couleur non confirmee depuis 3 jours, donc a la fin de l'abonnement.
+   */
+  function publishBadgeColor(hash) {
+    if (!hash) return;
+    try {
+      chrome.storage.local.get([PLUS_KEY, PUBLISHED_KEY, "betaGeneralPreferences"], function (res) {
+        var key = activePlusKey(res && res[PLUS_KEY]);
+        if (!key) return;
+        var prefs = (res && res.betaGeneralPreferences) || {};
+        var color = HEX_RE.test(prefs.communityBadgeColor || "") ? prefs.communityBadgeColor.toLowerCase() : null;
+        var today = new Date().toISOString().slice(0, 10);
+        var wanted = hash + "|" + (color || "none") + "|" + today;
+        if ((res && res[PUBLISHED_KEY]) === wanted) return;
+        fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ hash: hash, color: color, key: key })
+        }).then(function (response) {
+          if (!response.ok) throw new Error("HTTP " + response.status);
+          var saved = {};
+          saved[PUBLISHED_KEY] = wanted;
+          chrome.storage.local.set(saved);
+          if (color) badgeColors.set(hash, color);
+          else badgeColors.delete(hash);
+          log("couleur publiee");
+        }).catch(function (e) {
+          log("couleur non publiee :", e.message);
+        });
+      });
+    } catch (_e) {
+      // Contexte d'extension invalide apres une mise a jour : on reessaiera au prochain chargement.
     }
   }
 
@@ -315,13 +376,14 @@
     return themeColor();
   }
 
-  function resolveBadgeColor(messageEl) {
-    if (badgeColorMode === "author") return authorColor(messageEl);
+  function resolveBadgeColor(messageEl, hash) {
+    // Par defaut, la couleur choisie par l'abonne StreamPulse+ l'emporte sur celle de son pseudo.
+    if (badgeColorMode === "author") return (hash && badgeColors.get(hash)) || authorColor(messageEl);
     if (badgeColorMode === "theme") return themeColor();
     return badgeColorMode;
   }
 
-  function createBadgeElement(messageEl) {
+  function createBadgeElement(messageEl, hash) {
     var badge = document.createElement("span");
     badge.className = "sp-chat-badge";
     badge.setAttribute("title", "Utilisateur StreamPulse");
@@ -337,7 +399,7 @@
     var mask = "url(" + badgeIconUrl + ")";
     mark.style.setProperty("-webkit-mask-image", mask);
     mark.style.setProperty("mask-image", mask);
-    mark.style.setProperty("--sp-badge-color", resolveBadgeColor(messageEl));
+    mark.style.setProperty("--sp-badge-color", resolveBadgeColor(messageEl, hash));
 
     badge.appendChild(mark);
     return badge;
@@ -355,7 +417,7 @@
     // Le hachage est asynchrone : la ligne est marquee traitee tout de suite
     // pour ne pas la reprendre, et le badge arrive au tour suivant.
     hashLogin(username).then(function (hash) {
-      if (hash && badgeHashes.has(hash)) injectBadge(messageEl);
+      if (hash && badgeHashes.has(hash)) injectBadge(messageEl, hash);
     });
   }
 
@@ -399,12 +461,12 @@
     );
   }
 
-  function injectBadge(messageEl) {
+  function injectBadge(messageEl, hash) {
     if (messageEl.querySelector(".sp-chat-badge")) return;
 
     var slot = findBadgeSlot(messageEl);
     if (slot) {
-      var badge = createBadgeElement(messageEl);
+      var badge = createBadgeElement(messageEl, hash);
       // Seul dans son emplacement, rien ne l'espace du pseudo qui suit.
       if (!slot.children.length) badge.classList.add("sp-chat-badge--standalone");
       slot.appendChild(badge);
@@ -420,7 +482,7 @@
       '[class*="chat-user"]:not(img)'
     );
     if (usernameEl && usernameEl.parentNode) {
-      var standalone = createBadgeElement(messageEl);
+      var standalone = createBadgeElement(messageEl, hash);
       standalone.classList.add("sp-chat-badge--standalone");
       usernameEl.parentNode.insertBefore(standalone, usernameEl);
     }
@@ -515,6 +577,16 @@
       log("init", badgeIconUrl ? "icone OK" : "icone MANQUANTE", "| couleur :", badgeColorMode);
       initBadges();
       setupChatObserver();
+
+      chrome.storage.onChanged.addListener(function (changes, area) {
+        if (area !== "local") return;
+        if (changes.betaGeneralPreferences) {
+          badgeColorMode = normalizeColorMode((changes.betaGeneralPreferences.newValue || {}).communityBadgeColor);
+        }
+        if ((changes.betaGeneralPreferences || changes[PLUS_KEY]) && currentTwitchUser) {
+          hashLogin(currentTwitchUser).then(publishBadgeColor);
+        }
+      });
 
       setInterval(function () {
         if (!currentTwitchUser) {

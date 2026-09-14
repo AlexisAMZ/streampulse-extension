@@ -211,6 +211,37 @@ export const translations = {
       "deactivate": "Retirer la licence de ce navigateur",
         "close": "Fermer"
       },
+      "accent": {
+        "title": "Couleur d'accent",
+        "hint": "Change la couleur des boutons et des repères du popup.",
+        "violet": "Violet",
+        "lcd": "Vert LCD",
+        "ocean": "Bleu",
+        "ember": "Orange",
+        "crimson": "Rouge"
+      },
+      "pred": {
+        "title": "Prédictions assistées",
+        "lockedBody": "Mise automatique selon ta règle, historique de tes paris et taux de réussite. Réservé à StreamPulse+.",
+        "autoTitle": "Miser automatiquement",
+        "autoBody": "StreamPulse mise quelques secondes avant la fin de chaque prédiction, sur la chaîne ouverte dans un onglet Twitch.",
+        "strategy": "Option choisie",
+        "majority": "La plus jouée",
+        "underdog": "La moins jouée (meilleure cote)",
+        "percent": "Mise (% du solde)",
+        "max": "Mise maximum",
+        "reserve": "Toujours garder",
+        "bets": "Paris",
+        "rate": "Réussite",
+        "net": "Gain net",
+        "empty": "Aucun pari pour l'instant.",
+        "betLine": "{{outcome}} · {{points}} pts · {{channel}}",
+        "refunded": "Remboursé",
+        "pending": "En attente",
+        "unknown": "Inconnu",
+        "failed": "Refusé",
+        "note": "Résultats estimés d'après l'évolution de ton solde de points."
+      },
       "smart": {
         "title": "Alertes intelligentes",
         "lockedBody": "Choisis quand être prévenu : un jeu précis, un mot dans le titre, un nombre de viewers. Réservé à StreamPulse+.",
@@ -390,6 +421,8 @@ export const translations = {
       "greetingMorning": "Bonjour",
       "greetingSub": "Voici qui est en ligne.",
       "settings": {
+        "badgePlusOn": "StreamPulse+ actif : ta couleur personnalisée est visible par tous les utilisateurs de StreamPulse.",
+        "badgePlusOff": "Avec StreamPulse+, ta couleur personnalisée est visible par tous les utilisateurs de StreamPulse.",
         "liveNotificationsTitle": "Notifications Chrome",
         "liveNotificationsDescription": "Recevoir une alerte lorsqu’un streamer suivi démarre un live.",
         "gameAlertsTitle": "Alertes changement de catégorie",
@@ -629,6 +662,19 @@ export const translations = {
       }
     },
     "recap": {
+      "periodYear": "Wrapped {{year}}",
+      "plus": {
+        "title": "Récap avancé",
+        "categories": "Heures par catégorie",
+        "activity": "Ton activité",
+        "noCategories": "Les catégories apparaissent pour le temps regardé depuis cette mise à jour.",
+        "peakDay": "Jour le plus actif : {{label}} · {{time}}",
+        "peakMonth": "Mois le plus actif : {{label}} · {{time}}",
+        "noActivity": "Aucune activité sur cette période.",
+        "lockedTitle": "Récap avancé et Wrapped annuel",
+        "lockedBody": "Tes heures par catégorie, la courbe de ton activité et ton année entière en un récap.",
+        "unlock": "Débloquer"
+      },
       "documentTitle": "Mon récap · StreamPulse",
       "title": "Ton récap",
       "subtitle": "Choisis une période et un format, puis télécharge ton image.",
@@ -931,6 +977,37 @@ export const translations = {
       "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
+      "accent": {
+        "title": "Accent color",
+        "hint": "Changes the color of the popup's buttons and highlights.",
+        "violet": "Violet",
+        "lcd": "LCD green",
+        "ocean": "Blue",
+        "ember": "Orange",
+        "crimson": "Red"
+      },
+      "pred": {
+        "title": "Assisted predictions",
+        "lockedBody": "Automatic bets based on your rule, your betting history and win rate. StreamPulse+ only.",
+        "autoTitle": "Bet automatically",
+        "autoBody": "StreamPulse places your bet a few seconds before each prediction closes, on the channel open in a Twitch tab.",
+        "strategy": "Pick",
+        "majority": "Most backed option",
+        "underdog": "Least backed option (best odds)",
+        "percent": "Bet (% of balance)",
+        "max": "Maximum bet",
+        "reserve": "Always keep",
+        "bets": "Bets",
+        "rate": "Win rate",
+        "net": "Net gain",
+        "empty": "No bets yet.",
+        "betLine": "{{outcome}} · {{points}} pts · {{channel}}",
+        "refunded": "Refunded",
+        "pending": "Pending",
+        "unknown": "Unknown",
+        "failed": "Rejected",
+        "note": "Results are estimated from how your points balance changes."
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -1110,6 +1187,8 @@ export const translations = {
       "greetingMorning": "Good morning",
       "greetingSub": "Here's who's online.",
       "settings": {
+        "badgePlusOn": "StreamPulse+ is active: your custom color is visible to every StreamPulse user.",
+        "badgePlusOff": "With StreamPulse+, your custom color is visible to every StreamPulse user.",
         "liveNotificationsTitle": "Chrome notifications",
         "liveNotificationsDescription": "Get an alert when a followed streamer goes live.",
         "gameAlertsTitle": "Category change alerts",
@@ -1349,6 +1428,19 @@ export const translations = {
       }
     },
     "recap": {
+      "periodYear": "Wrapped {{year}}",
+      "plus": {
+        "title": "Advanced recap",
+        "categories": "Hours by category",
+        "activity": "Your activity",
+        "noCategories": "Categories show up for time watched since this update.",
+        "peakDay": "Busiest day: {{label}} · {{time}}",
+        "peakMonth": "Busiest month: {{label}} · {{time}}",
+        "noActivity": "No activity in this period.",
+        "lockedTitle": "Advanced recap and yearly Wrapped",
+        "lockedBody": "Your hours by category, your activity curve and your whole year in one recap.",
+        "unlock": "Unlock"
+      },
       "documentTitle": "My recap · StreamPulse",
       "title": "Your recap",
       "subtitle": "Pick a period and a format, then download your image.",
@@ -1651,6 +1743,37 @@ export const translations = {
       "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
+      "accent": {
+        "title": "Color de acento",
+        "hint": "Cambia el color de los botones y detalles del popup.",
+        "violet": "Violeta",
+        "lcd": "Verde LCD",
+        "ocean": "Azul",
+        "ember": "Naranja",
+        "crimson": "Rojo"
+      },
+      "pred": {
+        "title": "Predicciones asistidas",
+        "lockedBody": "Apuesta automática según tu regla, historial de apuestas y tasa de acierto. Exclusivo de StreamPulse+.",
+        "autoTitle": "Apostar automáticamente",
+        "autoBody": "StreamPulse apuesta unos segundos antes del cierre de cada predicción, en el canal abierto en una pestaña de Twitch.",
+        "strategy": "Opción elegida",
+        "majority": "La más apostada",
+        "underdog": "La menos apostada (mejor cuota)",
+        "percent": "Apuesta (% del saldo)",
+        "max": "Apuesta máxima",
+        "reserve": "Conservar siempre",
+        "bets": "Apuestas",
+        "rate": "Aciertos",
+        "net": "Ganancia neta",
+        "empty": "Aún no hay apuestas.",
+        "betLine": "{{outcome}} · {{points}} pts · {{channel}}",
+        "refunded": "Reembolsada",
+        "pending": "Pendiente",
+        "unknown": "Desconocido",
+        "failed": "Rechazada",
+        "note": "Resultados estimados a partir de la evolución de tu saldo de puntos."
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -1829,6 +1952,8 @@ export const translations = {
       "greetingMorning": "Buenos días",
       "greetingSub": "Aquí tienes quién está en línea.",
       "settings": {
+        "badgePlusOn": "StreamPulse+ activo: tu color personalizado es visible para todos los usuarios de StreamPulse.",
+        "badgePlusOff": "Con StreamPulse+, tu color personalizado es visible para todos los usuarios de StreamPulse.",
         "liveNotificationsTitle": "Notificaciones de Chrome",
         "liveNotificationsDescription": "Recibe una alerta cuando un streamer que sigues empiece un live.",
         "gameAlertsTitle": "Alertas de cambio de categoría",
@@ -2069,6 +2194,19 @@ export const translations = {
       }
     },
     "recap": {
+      "periodYear": "Wrapped {{year}}",
+      "plus": {
+        "title": "Resumen avanzado",
+        "categories": "Horas por categoría",
+        "activity": "Tu actividad",
+        "noCategories": "Las categorías aparecen para el tiempo visto desde esta actualización.",
+        "peakDay": "Día más activo: {{label}} · {{time}}",
+        "peakMonth": "Mes más activo: {{label}} · {{time}}",
+        "noActivity": "Sin actividad en este periodo.",
+        "lockedTitle": "Resumen avanzado y Wrapped anual",
+        "lockedBody": "Tus horas por categoría, la curva de tu actividad y todo tu año en un resumen.",
+        "unlock": "Desbloquear"
+      },
       "documentTitle": "Mi resumen · StreamPulse",
       "title": "Tu resumen",
       "subtitle": "Elige un periodo y un formato, y descarga tu imagen.",
@@ -2371,6 +2509,37 @@ export const translations = {
       "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
+      "accent": {
+        "title": "Cor de destaque",
+        "hint": "Muda a cor dos botões e detalhes do popup.",
+        "violet": "Violeta",
+        "lcd": "Verde LCD",
+        "ocean": "Azul",
+        "ember": "Laranja",
+        "crimson": "Vermelho"
+      },
+      "pred": {
+        "title": "Palpites assistidos",
+        "lockedBody": "Aposta automática pela sua regra, histórico de apostas e taxa de acerto. Exclusivo do StreamPulse+.",
+        "autoTitle": "Apostar automaticamente",
+        "autoBody": "O StreamPulse aposta alguns segundos antes do fim de cada palpite, no canal aberto em uma aba da Twitch.",
+        "strategy": "Opção escolhida",
+        "majority": "A mais apostada",
+        "underdog": "A menos apostada (melhor cotação)",
+        "percent": "Aposta (% do saldo)",
+        "max": "Aposta máxima",
+        "reserve": "Sempre manter",
+        "bets": "Apostas",
+        "rate": "Acertos",
+        "net": "Ganho líquido",
+        "empty": "Nenhuma aposta ainda.",
+        "betLine": "{{outcome}} · {{points}} pts · {{channel}}",
+        "refunded": "Reembolsada",
+        "pending": "Pendente",
+        "unknown": "Desconhecido",
+        "failed": "Recusada",
+        "note": "Resultados estimados pela variação do seu saldo de pontos."
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -2549,6 +2718,8 @@ export const translations = {
       "greetingMorning": "Bom dia",
       "greetingSub": "Veja quem está online.",
       "settings": {
+        "badgePlusOn": "StreamPulse+ ativo: sua cor personalizada fica visível para todos os usuários do StreamPulse.",
+        "badgePlusOff": "Com o StreamPulse+, sua cor personalizada fica visível para todos os usuários do StreamPulse.",
         "liveNotificationsTitle": "Notificações do Chrome",
         "liveNotificationsDescription": "Receba um alerta quando um streamer que você segue ficar ao vivo.",
         "gameAlertsTitle": "Alertas de mudança de categoria",
@@ -2789,6 +2960,19 @@ export const translations = {
       }
     },
     "recap": {
+      "periodYear": "Wrapped {{year}}",
+      "plus": {
+        "title": "Resumo avançado",
+        "categories": "Horas por categoria",
+        "activity": "Sua atividade",
+        "noCategories": "As categorias aparecem para o tempo assistido desde esta atualização.",
+        "peakDay": "Dia mais ativo: {{label}} · {{time}}",
+        "peakMonth": "Mês mais ativo: {{label}} · {{time}}",
+        "noActivity": "Nenhuma atividade neste período.",
+        "lockedTitle": "Resumo avançado e Wrapped anual",
+        "lockedBody": "Suas horas por categoria, a curva da sua atividade e o seu ano inteiro em um resumo.",
+        "unlock": "Desbloquear"
+      },
       "documentTitle": "Meu resumo · StreamPulse",
       "title": "Seu resumo",
       "subtitle": "Escolha um período e um formato e baixe sua imagem.",
@@ -3091,6 +3275,37 @@ export const translations = {
       "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
+      "accent": {
+        "title": "Akzentfarbe",
+        "hint": "Ändert die Farbe der Schaltflächen und Hervorhebungen im Popup.",
+        "violet": "Violett",
+        "lcd": "LCD-Grün",
+        "ocean": "Blau",
+        "ember": "Orange",
+        "crimson": "Rot"
+      },
+      "pred": {
+        "title": "Unterstützte Vorhersagen",
+        "lockedBody": "Automatische Wetten nach deiner Regel, Wettverlauf und Trefferquote. Nur mit StreamPulse+.",
+        "autoTitle": "Automatisch wetten",
+        "autoBody": "StreamPulse setzt wenige Sekunden vor Ende jeder Vorhersage, auf dem Kanal, der in einem Twitch-Tab geöffnet ist.",
+        "strategy": "Gewählte Option",
+        "majority": "Am meisten gesetzt",
+        "underdog": "Am wenigsten gesetzt (beste Quote)",
+        "percent": "Einsatz (% des Guthabens)",
+        "max": "Maximaler Einsatz",
+        "reserve": "Immer behalten",
+        "bets": "Wetten",
+        "rate": "Trefferquote",
+        "net": "Nettogewinn",
+        "empty": "Noch keine Wetten.",
+        "betLine": "{{outcome}} · {{points}} Pkt. · {{channel}}",
+        "refunded": "Erstattet",
+        "pending": "Ausstehend",
+        "unknown": "Unbekannt",
+        "failed": "Abgelehnt",
+        "note": "Ergebnisse geschätzt anhand der Entwicklung deines Kanalpunkte-Guthabens."
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -3270,6 +3485,8 @@ export const translations = {
       "greetingMorning": "Guten Morgen",
       "greetingSub": "Hier erfahren Sie, wer online ist.",
       "settings": {
+        "badgePlusOn": "StreamPulse+ aktiv: Deine eigene Farbe ist für alle StreamPulse-Nutzer sichtbar.",
+        "badgePlusOff": "Mit StreamPulse+ ist deine eigene Farbe für alle StreamPulse-Nutzer sichtbar.",
         "liveNotificationsTitle": "Chrome-Benachrichtigungen",
         "liveNotificationsDescription": "Erhalten Sie eine Benachrichtigung, wenn ein Streamer, dem Sie folgen, live geht.",
         "gameAlertsTitle": "Benachrichtigungen zu Kategorieänderungen",
@@ -3509,6 +3726,19 @@ export const translations = {
       }
     },
     "recap": {
+      "periodYear": "Wrapped {{year}}",
+      "plus": {
+        "title": "Erweiterter Rückblick",
+        "categories": "Stunden pro Kategorie",
+        "activity": "Deine Aktivität",
+        "noCategories": "Kategorien erscheinen für die Zeit, die seit diesem Update geschaut wurde.",
+        "peakDay": "Aktivster Tag: {{label}} · {{time}}",
+        "peakMonth": "Aktivster Monat: {{label}} · {{time}}",
+        "noActivity": "Keine Aktivität in diesem Zeitraum.",
+        "lockedTitle": "Erweiterter Rückblick und Jahres-Wrapped",
+        "lockedBody": "Deine Stunden pro Kategorie, deine Aktivitätskurve und dein ganzes Jahr in einem Rückblick.",
+        "unlock": "Freischalten"
+      },
       "documentTitle": "Mein Rückblick · StreamPulse",
       "title": "Dein Rückblick",
       "subtitle": "Wähle einen Zeitraum und ein Format und lade dann dein Bild herunter.",
@@ -3811,6 +4041,37 @@ export const translations = {
       "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
+      "accent": {
+        "title": "Colore d'accento",
+        "hint": "Cambia il colore dei pulsanti e dei dettagli del popup.",
+        "violet": "Viola",
+        "lcd": "Verde LCD",
+        "ocean": "Blu",
+        "ember": "Arancione",
+        "crimson": "Rosso"
+      },
+      "pred": {
+        "title": "Previsioni assistite",
+        "lockedBody": "Puntata automatica secondo la tua regola, storico delle puntate e percentuale di vittorie. Solo con StreamPulse+.",
+        "autoTitle": "Punta automaticamente",
+        "autoBody": "StreamPulse punta pochi secondi prima della chiusura di ogni previsione, sul canale aperto in una scheda Twitch.",
+        "strategy": "Opzione scelta",
+        "majority": "La più puntata",
+        "underdog": "La meno puntata (quota migliore)",
+        "percent": "Puntata (% del saldo)",
+        "max": "Puntata massima",
+        "reserve": "Tieni sempre",
+        "bets": "Puntate",
+        "rate": "Vittorie",
+        "net": "Guadagno netto",
+        "empty": "Ancora nessuna puntata.",
+        "betLine": "{{outcome}} · {{points}} pt · {{channel}}",
+        "refunded": "Rimborsata",
+        "pending": "In attesa",
+        "unknown": "Sconosciuto",
+        "failed": "Rifiutata",
+        "note": "Risultati stimati in base all'andamento del tuo saldo punti."
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -3990,6 +4251,8 @@ export const translations = {
       "greetingMorning": "Buongiorno",
       "greetingSub": "Ecco chi è online.",
       "settings": {
+        "badgePlusOn": "StreamPulse+ attivo: il tuo colore personalizzato è visibile a tutti gli utenti StreamPulse.",
+        "badgePlusOff": "Con StreamPulse+, il tuo colore personalizzato è visibile a tutti gli utenti StreamPulse.",
         "liveNotificationsTitle": "Notifiche di Chrome",
         "liveNotificationsDescription": "Ricevi un avviso quando uno streamer seguito va in diretta.",
         "gameAlertsTitle": "Avvisi di cambio di categoria",
@@ -4229,6 +4492,19 @@ export const translations = {
       }
     },
     "recap": {
+      "periodYear": "Wrapped {{year}}",
+      "plus": {
+        "title": "Riepilogo avanzato",
+        "categories": "Ore per categoria",
+        "activity": "La tua attività",
+        "noCategories": "Le categorie compaiono per il tempo guardato da questo aggiornamento.",
+        "peakDay": "Giorno più attivo: {{label}} · {{time}}",
+        "peakMonth": "Mese più attivo: {{label}} · {{time}}",
+        "noActivity": "Nessuna attività in questo periodo.",
+        "lockedTitle": "Riepilogo avanzato e Wrapped annuale",
+        "lockedBody": "Le tue ore per categoria, la curva della tua attività e il tuo anno intero in un riepilogo.",
+        "unlock": "Sblocca"
+      },
       "documentTitle": "Il mio riepilogo · StreamPulse",
       "title": "Il tuo riepilogo",
       "subtitle": "Scegli un periodo e un formato, poi scarica la tua immagine.",
@@ -4531,6 +4807,37 @@ export const translations = {
       "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
+      "accent": {
+        "title": "Kolor akcentu",
+        "hint": "Zmienia kolor przycisków i wyróżnień w oknie.",
+        "violet": "Fioletowy",
+        "lcd": "Zielony LCD",
+        "ocean": "Niebieski",
+        "ember": "Pomarańczowy",
+        "crimson": "Czerwony"
+      },
+      "pred": {
+        "title": "Wspomagane przewidywania",
+        "lockedBody": "Automatyczne zakłady według Twojej reguły, historia zakładów i skuteczność. Tylko w StreamPulse+.",
+        "autoTitle": "Obstawiaj automatycznie",
+        "autoBody": "StreamPulse obstawia kilka sekund przed końcem każdego przewidywania, na kanale otwartym w karcie Twitcha.",
+        "strategy": "Wybrana opcja",
+        "majority": "Najczęściej obstawiana",
+        "underdog": "Najrzadziej obstawiana (najlepszy kurs)",
+        "percent": "Stawka (% salda)",
+        "max": "Maksymalna stawka",
+        "reserve": "Zawsze zostaw",
+        "bets": "Zakłady",
+        "rate": "Skuteczność",
+        "net": "Zysk netto",
+        "empty": "Brak zakładów.",
+        "betLine": "{{outcome}} · {{points}} pkt · {{channel}}",
+        "refunded": "Zwrócony",
+        "pending": "Oczekuje",
+        "unknown": "Nieznany",
+        "failed": "Odrzucony",
+        "note": "Wyniki szacowane na podstawie zmian salda punktów."
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -4710,6 +5017,8 @@ export const translations = {
       "greetingMorning": "Dzień dobry",
       "greetingSub": "Oto, kto jest online.",
       "settings": {
+        "badgePlusOn": "StreamPulse+ aktywny: Twój kolor jest widoczny dla wszystkich użytkowników StreamPulse.",
+        "badgePlusOff": "Ze StreamPulse+ Twój kolor jest widoczny dla wszystkich użytkowników StreamPulse.",
         "liveNotificationsTitle": "Powiadomienia Chrome",
         "liveNotificationsDescription": "Otrzymuj powiadomienia, gdy obserwowany streamer rozpocznie transmisję na żywo.",
         "gameAlertsTitle": "Alerty o zmianie kategorii",
@@ -4949,6 +5258,19 @@ export const translations = {
       }
     },
     "recap": {
+      "periodYear": "Wrapped {{year}}",
+      "plus": {
+        "title": "Rozszerzone podsumowanie",
+        "categories": "Godziny według kategorii",
+        "activity": "Twoja aktywność",
+        "noCategories": "Kategorie pojawiają się dla czasu oglądania od tej aktualizacji.",
+        "peakDay": "Najbardziej aktywny dzień: {{label}} · {{time}}",
+        "peakMonth": "Najbardziej aktywny miesiąc: {{label}} · {{time}}",
+        "noActivity": "Brak aktywności w tym okresie.",
+        "lockedTitle": "Rozszerzone podsumowanie i roczny Wrapped",
+        "lockedBody": "Godziny według kategorii, krzywa aktywności i cały Twój rok w jednym podsumowaniu.",
+        "unlock": "Odblokuj"
+      },
       "documentTitle": "Moje podsumowanie · StreamPulse",
       "title": "Twoje podsumowanie",
       "subtitle": "Wybierz okres i format, a następnie pobierz obraz.",
@@ -5251,6 +5573,37 @@ export const translations = {
       "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
+      "accent": {
+        "title": "Vurgu rengi",
+        "hint": "Açılır penceredeki düğmelerin ve vurguların rengini değiştirir.",
+        "violet": "Mor",
+        "lcd": "LCD yeşili",
+        "ocean": "Mavi",
+        "ember": "Turuncu",
+        "crimson": "Kırmızı"
+      },
+      "pred": {
+        "title": "Destekli tahminler",
+        "lockedBody": "Kuralına göre otomatik tahmin, tahmin geçmişi ve başarı oranı. Yalnızca StreamPulse+.",
+        "autoTitle": "Otomatik tahmin yap",
+        "autoBody": "StreamPulse, Twitch sekmesinde açık kanaldaki her tahmin kapanmadan birkaç saniye önce puan koyar.",
+        "strategy": "Seçilen seçenek",
+        "majority": "En çok oynanan",
+        "underdog": "En az oynanan (en iyi oran)",
+        "percent": "Puan (% bakiye)",
+        "max": "En fazla puan",
+        "reserve": "Her zaman ayır",
+        "bets": "Tahminler",
+        "rate": "Başarı",
+        "net": "Net kazanç",
+        "empty": "Henüz tahmin yok.",
+        "betLine": "{{outcome}} · {{points}} puan · {{channel}}",
+        "refunded": "İade edildi",
+        "pending": "Bekliyor",
+        "unknown": "Bilinmiyor",
+        "failed": "Reddedildi",
+        "note": "Sonuçlar puan bakiyendeki değişime göre tahmin edilir."
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -5430,6 +5783,8 @@ export const translations = {
       "greetingMorning": "Günaydın",
       "greetingSub": "İşte şu anda çevrimiçi olanlar.",
       "settings": {
+        "badgePlusOn": "StreamPulse+ etkin: özel rengin tüm StreamPulse kullanıcılarına görünür.",
+        "badgePlusOff": "StreamPulse+ ile özel rengin tüm StreamPulse kullanıcılarına görünür.",
         "liveNotificationsTitle": "Chrome bildirimleri",
         "liveNotificationsDescription": "Takip ettiğiniz bir yayıncı canlı yayına başladığında bildirim alın.",
         "gameAlertsTitle": "Kategori değişikliği uyarıları",
@@ -5669,6 +6024,19 @@ export const translations = {
       }
     },
     "recap": {
+      "periodYear": "Wrapped {{year}}",
+      "plus": {
+        "title": "Gelişmiş özet",
+        "categories": "Kategoriye göre saat",
+        "activity": "Etkinliğin",
+        "noCategories": "Kategoriler bu güncellemeden sonra izlenen süre için görünür.",
+        "peakDay": "En yoğun gün: {{label}} · {{time}}",
+        "peakMonth": "En yoğun ay: {{label}} · {{time}}",
+        "noActivity": "Bu dönemde etkinlik yok.",
+        "lockedTitle": "Gelişmiş özet ve yıllık Wrapped",
+        "lockedBody": "Kategoriye göre saatlerin, etkinlik eğrin ve tüm yılın tek bir özette.",
+        "unlock": "Kilidi aç"
+      },
       "documentTitle": "Özetim · StreamPulse",
       "title": "Özetin",
       "subtitle": "Bir dönem ve format seç, ardından görselini indir.",
@@ -5971,6 +6339,37 @@ export const translations = {
       "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
+      "accent": {
+        "title": "Цвет акцента",
+        "hint": "Меняет цвет кнопок и выделений во всплывающем окне.",
+        "violet": "Фиолетовый",
+        "lcd": "Зелёный LCD",
+        "ocean": "Синий",
+        "ember": "Оранжевый",
+        "crimson": "Красный"
+      },
+      "pred": {
+        "title": "Помощь с прогнозами",
+        "lockedBody": "Автоставки по вашему правилу, история ставок и процент побед. Только в StreamPulse+.",
+        "autoTitle": "Ставить автоматически",
+        "autoBody": "StreamPulse делает ставку за несколько секунд до конца каждого прогноза на канале, открытом во вкладке Twitch.",
+        "strategy": "Выбираемый вариант",
+        "majority": "Самый популярный",
+        "underdog": "Наименее популярный (лучший коэффициент)",
+        "percent": "Ставка (% баланса)",
+        "max": "Максимальная ставка",
+        "reserve": "Всегда оставлять",
+        "bets": "Ставки",
+        "rate": "Побед",
+        "net": "Чистый выигрыш",
+        "empty": "Ставок пока нет.",
+        "betLine": "{{outcome}} · {{points}} баллов · {{channel}}",
+        "refunded": "Возврат",
+        "pending": "Ожидание",
+        "unknown": "Неизвестно",
+        "failed": "Отклонена",
+        "note": "Результаты оцениваются по изменению баланса баллов."
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -6150,6 +6549,8 @@ export const translations = {
       "greetingMorning": "Доброе утро",
       "greetingSub": "Вот кто сейчас в сети.",
       "settings": {
+        "badgePlusOn": "StreamPulse+ активен: ваш цвет виден всем пользователям StreamPulse.",
+        "badgePlusOff": "Со StreamPulse+ ваш цвет виден всем пользователям StreamPulse.",
         "liveNotificationsTitle": "Уведомления Chrome",
         "liveNotificationsDescription": "Получайте уведомления, когда стример, на которого вы подписаны, выходит в прямой эфир.",
         "gameAlertsTitle": "Уведомления об изменении категории",
@@ -6389,6 +6790,19 @@ export const translations = {
       }
     },
     "recap": {
+      "periodYear": "Wrapped {{year}}",
+      "plus": {
+        "title": "Расширенная сводка",
+        "categories": "Часы по категориям",
+        "activity": "Ваша активность",
+        "noCategories": "Категории появляются для времени просмотра после этого обновления.",
+        "peakDay": "Самый активный день: {{label}} · {{time}}",
+        "peakMonth": "Самый активный месяц: {{label}} · {{time}}",
+        "noActivity": "Нет активности за этот период.",
+        "lockedTitle": "Расширенная сводка и годовой Wrapped",
+        "lockedBody": "Часы по категориям, кривая активности и весь ваш год в одной сводке.",
+        "unlock": "Открыть"
+      },
       "documentTitle": "Мои итоги · StreamPulse",
       "title": "Твои итоги",
       "subtitle": "Выбери период и формат, затем скачай изображение.",
@@ -6691,6 +7105,37 @@ export const translations = {
       "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
+      "accent": {
+        "title": "アクセントカラー",
+        "hint": "ポップアップのボタンや強調表示の色を変更します。",
+        "violet": "バイオレット",
+        "lcd": "LCDグリーン",
+        "ocean": "ブルー",
+        "ember": "オレンジ",
+        "crimson": "レッド"
+      },
+      "pred": {
+        "title": "予想アシスト",
+        "lockedBody": "ルールに沿った自動ベット、ベット履歴、的中率。StreamPulse+ 限定。",
+        "autoTitle": "自動でベットする",
+        "autoBody": "Twitch のタブで開いているチャンネルで、各予想の締め切り数秒前に StreamPulse がベットします。",
+        "strategy": "選ぶ選択肢",
+        "majority": "最も多く賭けられた方",
+        "underdog": "最も少なく賭けられた方（高倍率）",
+        "percent": "ベット（残高の %）",
+        "max": "最大ベット",
+        "reserve": "常に残す",
+        "bets": "ベット数",
+        "rate": "的中率",
+        "net": "純利益",
+        "empty": "まだベットはありません。",
+        "betLine": "{{outcome}} · {{points}} pt · {{channel}}",
+        "refunded": "返金",
+        "pending": "結果待ち",
+        "unknown": "不明",
+        "failed": "拒否",
+        "note": "結果はポイント残高の変化から推定しています。"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -6870,6 +7315,8 @@ export const translations = {
       "greetingMorning": "おはようございます",
       "greetingSub": "現在オンライン中のユーザーはこちらです。",
       "settings": {
+        "badgePlusOn": "StreamPulse+ 有効：カスタムカラーはすべての StreamPulse ユーザーに表示されます。",
+        "badgePlusOff": "StreamPulse+ なら、カスタムカラーがすべての StreamPulse ユーザーに表示されます。",
         "liveNotificationsTitle": "Chromeの通知",
         "liveNotificationsDescription": "フォローしているストリーマーがライブ配信を開始した際に通知を受け取る。",
         "gameAlertsTitle": "カテゴリ変更の通知",
@@ -7109,6 +7556,19 @@ export const translations = {
       }
     },
     "recap": {
+      "periodYear": "Wrapped {{year}}",
+      "plus": {
+        "title": "詳細な振り返り",
+        "categories": "カテゴリ別の時間",
+        "activity": "アクティビティ",
+        "noCategories": "カテゴリはこのアップデート以降の視聴時間から表示されます。",
+        "peakDay": "最も視聴した日：{{label}} · {{time}}",
+        "peakMonth": "最も視聴した月：{{label}} · {{time}}",
+        "noActivity": "この期間のアクティビティはありません。",
+        "lockedTitle": "詳細な振り返りと年間 Wrapped",
+        "lockedBody": "カテゴリ別の時間、アクティビティの推移、1年分をひとつの振り返りに。",
+        "unlock": "アンロック"
+      },
       "documentTitle": "マイまとめ · StreamPulse",
       "title": "あなたのまとめ",
       "subtitle": "期間とフォーマットを選んで、画像をダウンロードしましょう。",
@@ -7411,6 +7871,37 @@ export const translations = {
       "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
+      "accent": {
+        "title": "강조 색상",
+        "hint": "팝업의 버튼과 강조 표시 색상을 바꿉니다.",
+        "violet": "바이올렛",
+        "lcd": "LCD 그린",
+        "ocean": "블루",
+        "ember": "오렌지",
+        "crimson": "레드"
+      },
+      "pred": {
+        "title": "예측 도우미",
+        "lockedBody": "내 규칙에 따른 자동 베팅, 베팅 기록과 적중률. StreamPulse+ 전용.",
+        "autoTitle": "자동으로 베팅",
+        "autoBody": "Twitch 탭에 열린 채널에서 각 예측이 마감되기 몇 초 전에 StreamPulse가 베팅합니다.",
+        "strategy": "선택할 항목",
+        "majority": "가장 많이 베팅된 항목",
+        "underdog": "가장 적게 베팅된 항목(높은 배당)",
+        "percent": "베팅(잔액의 %)",
+        "max": "최대 베팅",
+        "reserve": "항상 남길 포인트",
+        "bets": "베팅",
+        "rate": "적중률",
+        "net": "순이익",
+        "empty": "아직 베팅이 없습니다.",
+        "betLine": "{{outcome}} · {{points}}포인트 · {{channel}}",
+        "refunded": "환불됨",
+        "pending": "대기 중",
+        "unknown": "알 수 없음",
+        "failed": "거부됨",
+        "note": "결과는 포인트 잔액 변화로 추정합니다."
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -7590,6 +8081,8 @@ export const translations = {
       "greetingMorning": "좋은 아침입니다",
       "greetingSub": "현재 온라인 상태인 사용자는 다음과 같습니다.",
       "settings": {
+        "badgePlusOn": "StreamPulse+ 활성: 내 맞춤 색상이 모든 StreamPulse 사용자에게 보입니다.",
+        "badgePlusOff": "StreamPulse+를 사용하면 내 맞춤 색상이 모든 StreamPulse 사용자에게 보입니다.",
         "liveNotificationsTitle": "Chrome 알림",
         "liveNotificationsDescription": "팔로우 중인 스트리머가 생방송을 시작하면 알림을 받아보세요.",
         "gameAlertsTitle": "카테고리 변경 알림",
@@ -7829,6 +8322,19 @@ export const translations = {
       }
     },
     "recap": {
+      "periodYear": "Wrapped {{year}}",
+      "plus": {
+        "title": "고급 요약",
+        "categories": "카테고리별 시간",
+        "activity": "내 활동",
+        "noCategories": "카테고리는 이번 업데이트 이후 시청한 시간부터 표시됩니다.",
+        "peakDay": "가장 활발한 날: {{label}} · {{time}}",
+        "peakMonth": "가장 활발한 달: {{label}} · {{time}}",
+        "noActivity": "이 기간에는 활동이 없습니다.",
+        "lockedTitle": "고급 요약과 연간 Wrapped",
+        "lockedBody": "카테고리별 시간, 활동 곡선, 한 해 전체를 하나의 요약으로.",
+        "unlock": "잠금 해제"
+      },
       "documentTitle": "나의 결산 · StreamPulse",
       "title": "나의 결산",
       "subtitle": "기간과 형식을 고른 뒤 이미지를 다운로드하세요.",
@@ -8131,6 +8637,37 @@ export const translations = {
       "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
+      "accent": {
+        "title": "Warna aksen",
+        "hint": "Mengubah warna tombol dan sorotan di popup.",
+        "violet": "Ungu",
+        "lcd": "Hijau LCD",
+        "ocean": "Biru",
+        "ember": "Oranye",
+        "crimson": "Merah"
+      },
+      "pred": {
+        "title": "Prediksi terbantu",
+        "lockedBody": "Taruhan otomatis sesuai aturanmu, riwayat taruhan, dan tingkat kemenangan. Khusus StreamPulse+.",
+        "autoTitle": "Bertaruh otomatis",
+        "autoBody": "StreamPulse bertaruh beberapa detik sebelum setiap prediksi ditutup, di channel yang terbuka di tab Twitch.",
+        "strategy": "Opsi yang dipilih",
+        "majority": "Paling banyak dipilih",
+        "underdog": "Paling sedikit dipilih (odds terbaik)",
+        "percent": "Taruhan (% saldo)",
+        "max": "Taruhan maksimum",
+        "reserve": "Selalu sisakan",
+        "bets": "Taruhan",
+        "rate": "Menang",
+        "net": "Untung bersih",
+        "empty": "Belum ada taruhan.",
+        "betLine": "{{outcome}} · {{points}} poin · {{channel}}",
+        "refunded": "Dikembalikan",
+        "pending": "Menunggu",
+        "unknown": "Tidak diketahui",
+        "failed": "Ditolak",
+        "note": "Hasil diperkirakan dari perubahan saldo poinmu."
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -8310,6 +8847,8 @@ export const translations = {
       "greetingMorning": "Selamat pagi",
       "greetingSub": "Berikut ini daftar pengguna yang sedang online.",
       "settings": {
+        "badgePlusOn": "StreamPulse+ aktif: warna kustommu terlihat oleh semua pengguna StreamPulse.",
+        "badgePlusOff": "Dengan StreamPulse+, warna kustommu terlihat oleh semua pengguna StreamPulse.",
         "liveNotificationsTitle": "Pemberitahuan Chrome",
         "liveNotificationsDescription": "Dapatkan pemberitahuan saat streamer yang Anda ikuti mulai siaran langsung.",
         "gameAlertsTitle": "Pemberitahuan perubahan kategori",
@@ -8549,6 +9088,19 @@ export const translations = {
       }
     },
     "recap": {
+      "periodYear": "Wrapped {{year}}",
+      "plus": {
+        "title": "Rekap lanjutan",
+        "categories": "Jam per kategori",
+        "activity": "Aktivitasmu",
+        "noCategories": "Kategori muncul untuk waktu tonton sejak pembaruan ini.",
+        "peakDay": "Hari paling aktif: {{label}} · {{time}}",
+        "peakMonth": "Bulan paling aktif: {{label}} · {{time}}",
+        "noActivity": "Tidak ada aktivitas di periode ini.",
+        "lockedTitle": "Rekap lanjutan dan Wrapped tahunan",
+        "lockedBody": "Jam per kategori, kurva aktivitasmu, dan setahun penuh dalam satu rekap.",
+        "unlock": "Buka"
+      },
       "documentTitle": "Rekap saya · StreamPulse",
       "title": "Rekap kamu",
       "subtitle": "Pilih periode dan format, lalu unduh gambarmu.",
@@ -8851,6 +9403,37 @@ export const translations = {
       "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
+      "accent": {
+        "title": "Accentkleur",
+        "hint": "Verandert de kleur van de knoppen en markeringen in de popup.",
+        "violet": "Violet",
+        "lcd": "LCD-groen",
+        "ocean": "Blauw",
+        "ember": "Oranje",
+        "crimson": "Rood"
+      },
+      "pred": {
+        "title": "Voorspellingshulp",
+        "lockedBody": "Automatisch inzetten volgens jouw regel, inzetgeschiedenis en winpercentage. Alleen met StreamPulse+.",
+        "autoTitle": "Automatisch inzetten",
+        "autoBody": "StreamPulse zet enkele seconden voor het einde van elke voorspelling in, op het kanaal dat open staat in een Twitch-tabblad.",
+        "strategy": "Gekozen optie",
+        "majority": "Meest ingezet",
+        "underdog": "Minst ingezet (beste odds)",
+        "percent": "Inzet (% van saldo)",
+        "max": "Maximale inzet",
+        "reserve": "Altijd houden",
+        "bets": "Inzetten",
+        "rate": "Winst",
+        "net": "Nettowinst",
+        "empty": "Nog geen inzetten.",
+        "betLine": "{{outcome}} · {{points}} ptn · {{channel}}",
+        "refunded": "Terugbetaald",
+        "pending": "In afwachting",
+        "unknown": "Onbekend",
+        "failed": "Geweigerd",
+        "note": "Resultaten geschat op basis van je puntensaldo."
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -9030,6 +9613,8 @@ export const translations = {
       "greetingMorning": "Goedemorgen",
       "greetingSub": "Dit zijn de mensen die online zijn.",
       "settings": {
+        "badgePlusOn": "StreamPulse+ actief: je eigen kleur is zichtbaar voor alle StreamPulse-gebruikers.",
+        "badgePlusOff": "Met StreamPulse+ is je eigen kleur zichtbaar voor alle StreamPulse-gebruikers.",
         "liveNotificationsTitle": "Chrome-meldingen",
         "liveNotificationsDescription": "Ontvang een melding wanneer een streamer die je volgt live gaat.",
         "gameAlertsTitle": "Meldingen bij wijzigingen in categorieën",
@@ -9269,6 +9854,19 @@ export const translations = {
       }
     },
     "recap": {
+      "periodYear": "Wrapped {{year}}",
+      "plus": {
+        "title": "Uitgebreid overzicht",
+        "categories": "Uren per categorie",
+        "activity": "Je activiteit",
+        "noCategories": "Categorieën verschijnen voor kijktijd sinds deze update.",
+        "peakDay": "Drukste dag: {{label}} · {{time}}",
+        "peakMonth": "Drukste maand: {{label}} · {{time}}",
+        "noActivity": "Geen activiteit in deze periode.",
+        "lockedTitle": "Uitgebreid overzicht en jaarlijkse Wrapped",
+        "lockedBody": "Je uren per categorie, je activiteitscurve en je hele jaar in één overzicht.",
+        "unlock": "Ontgrendelen"
+      },
       "documentTitle": "Mijn overzicht · StreamPulse",
       "title": "Jouw overzicht",
       "subtitle": "Kies een periode en een formaat en download dan je afbeelding.",
@@ -9571,6 +10169,37 @@ export const translations = {
       "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
+      "accent": {
+        "title": "Accent color",
+        "hint": "Changes the color of the popup's buttons and highlights.",
+        "violet": "Violet",
+        "lcd": "LCD green",
+        "ocean": "Blue",
+        "ember": "Orange",
+        "crimson": "Red"
+      },
+      "pred": {
+        "title": "Assisted predictions",
+        "lockedBody": "Automatic bets based on your rule, your betting history and win rate. StreamPulse+ only.",
+        "autoTitle": "Bet automatically",
+        "autoBody": "StreamPulse places your bet a few seconds before each prediction closes, on the channel open in a Twitch tab.",
+        "strategy": "Pick",
+        "majority": "Most backed option",
+        "underdog": "Least backed option (best odds)",
+        "percent": "Bet (% of balance)",
+        "max": "Maximum bet",
+        "reserve": "Always keep",
+        "bets": "Bets",
+        "rate": "Win rate",
+        "net": "Net gain",
+        "empty": "No bets yet.",
+        "betLine": "{{outcome}} · {{points}} pts · {{channel}}",
+        "refunded": "Refunded",
+        "pending": "Pending",
+        "unknown": "Unknown",
+        "failed": "Rejected",
+        "note": "Results are estimated from how your points balance changes."
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -9750,6 +10379,8 @@ export const translations = {
       "greetingMorning": "सुप्रभात",
       "greetingSub": "यहां बताया गया है कि कौन ऑनलाइन है.",
       "settings": {
+        "badgePlusOn": "StreamPulse+ is active: your custom color is visible to every StreamPulse user.",
+        "badgePlusOff": "With StreamPulse+, your custom color is visible to every StreamPulse user.",
         "liveNotificationsTitle": "Chrome सूचनाएं",
         "liveNotificationsDescription": "किसी फ़ॉलो किए गए स्ट्रीमर के लाइव होने पर अलर्ट प्राप्त करें।",
         "gameAlertsTitle": "श्रेणी परिवर्तन अलर्ट",
@@ -9989,6 +10620,19 @@ export const translations = {
       }
     },
     "recap": {
+      "periodYear": "Wrapped {{year}}",
+      "plus": {
+        "title": "Advanced recap",
+        "categories": "Hours by category",
+        "activity": "Your activity",
+        "noCategories": "Categories show up for time watched since this update.",
+        "peakDay": "Busiest day: {{label}} · {{time}}",
+        "peakMonth": "Busiest month: {{label}} · {{time}}",
+        "noActivity": "No activity in this period.",
+        "lockedTitle": "Advanced recap and yearly Wrapped",
+        "lockedBody": "Your hours by category, your activity curve and your whole year in one recap.",
+        "unlock": "Unlock"
+      },
       "documentTitle": "My recap · StreamPulse",
       "title": "Your recap",
       "subtitle": "Pick a period and a format, then download your image.",
@@ -10291,6 +10935,37 @@ export const translations = {
       "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
+      "accent": {
+        "title": "Accentfärg",
+        "hint": "Ändrar färgen på knappar och markeringar i popupen.",
+        "violet": "Violett",
+        "lcd": "LCD-grön",
+        "ocean": "Blå",
+        "ember": "Orange",
+        "crimson": "Röd"
+      },
+      "pred": {
+        "title": "Förutsägelsehjälp",
+        "lockedBody": "Automatiska insatser enligt din regel, insatshistorik och vinstprocent. Endast StreamPulse+.",
+        "autoTitle": "Satsa automatiskt",
+        "autoBody": "StreamPulse satsar några sekunder innan varje förutsägelse stänger, på kanalen som är öppen i en Twitch-flik.",
+        "strategy": "Valt alternativ",
+        "majority": "Mest satsat",
+        "underdog": "Minst satsat (bäst odds)",
+        "percent": "Insats (% av saldot)",
+        "max": "Högsta insats",
+        "reserve": "Behåll alltid",
+        "bets": "Insatser",
+        "rate": "Vinster",
+        "net": "Nettovinst",
+        "empty": "Inga insatser än.",
+        "betLine": "{{outcome}} · {{points}} p · {{channel}}",
+        "refunded": "Återbetald",
+        "pending": "Väntar",
+        "unknown": "Okänt",
+        "failed": "Nekad",
+        "note": "Resultaten uppskattas utifrån hur ditt poängsaldo ändras."
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -10470,6 +11145,8 @@ export const translations = {
       "greetingMorning": "God morgon",
       "greetingSub": "Här är de som är online.",
       "settings": {
+        "badgePlusOn": "StreamPulse+ aktivt: din egen färg syns för alla StreamPulse-användare.",
+        "badgePlusOff": "Med StreamPulse+ syns din egen färg för alla StreamPulse-användare.",
         "liveNotificationsTitle": "Chrome-meddelanden",
         "liveNotificationsDescription": "Få ett meddelande när en streamer du följer går live.",
         "gameAlertsTitle": "Varningar om ändring av kategori",
@@ -10709,6 +11386,19 @@ export const translations = {
       }
     },
     "recap": {
+      "periodYear": "Wrapped {{year}}",
+      "plus": {
+        "title": "Utökad sammanfattning",
+        "categories": "Timmar per kategori",
+        "activity": "Din aktivitet",
+        "noCategories": "Kategorier visas för tittartid sedan den här uppdateringen.",
+        "peakDay": "Mest aktiva dag: {{label}} · {{time}}",
+        "peakMonth": "Mest aktiva månad: {{label}} · {{time}}",
+        "noActivity": "Ingen aktivitet under perioden.",
+        "lockedTitle": "Utökad sammanfattning och årlig Wrapped",
+        "lockedBody": "Dina timmar per kategori, din aktivitetskurva och hela ditt år i en sammanfattning.",
+        "unlock": "Lås upp"
+      },
       "documentTitle": "Min sammanfattning · StreamPulse",
       "title": "Din sammanfattning",
       "subtitle": "Välj en period och ett format och ladda sedan ner din bild.",
@@ -11011,6 +11701,37 @@ export const translations = {
       "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
+      "accent": {
+        "title": "Barva zvýraznění",
+        "hint": "Mění barvu tlačítek a zvýraznění v okně.",
+        "violet": "Fialová",
+        "lcd": "Zelená LCD",
+        "ocean": "Modrá",
+        "ember": "Oranžová",
+        "crimson": "Červená"
+      },
+      "pred": {
+        "title": "Asistované predikce",
+        "lockedBody": "Automatické sázky podle tvého pravidla, historie sázek a úspěšnost. Pouze se StreamPulse+.",
+        "autoTitle": "Sázet automaticky",
+        "autoBody": "StreamPulse vsadí pár sekund před koncem každé predikce, na kanálu otevřeném v kartě Twitche.",
+        "strategy": "Zvolená možnost",
+        "majority": "Nejvíce sázená",
+        "underdog": "Nejméně sázená (nejlepší kurz)",
+        "percent": "Sázka (% zůstatku)",
+        "max": "Maximální sázka",
+        "reserve": "Vždy ponechat",
+        "bets": "Sázky",
+        "rate": "Úspěšnost",
+        "net": "Čistý zisk",
+        "empty": "Zatím žádné sázky.",
+        "betLine": "{{outcome}} · {{points}} b. · {{channel}}",
+        "refunded": "Vráceno",
+        "pending": "Čeká",
+        "unknown": "Neznámé",
+        "failed": "Zamítnuto",
+        "note": "Výsledky jsou odhadnuté podle změny zůstatku bodů."
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -11190,6 +11911,8 @@ export const translations = {
       "greetingMorning": "Dobré ráno",
       "greetingSub": "Tady je seznam uživatelů, kteří jsou právě online.",
       "settings": {
+        "badgePlusOn": "StreamPulse+ aktivní: tvoje vlastní barva je vidět všem uživatelům StreamPulse.",
+        "badgePlusOff": "Se StreamPulse+ je tvoje vlastní barva vidět všem uživatelům StreamPulse.",
         "liveNotificationsTitle": "Oznámení v prohlížeči Chrome",
         "liveNotificationsDescription": "Nechte si zaslat upozornění, když streamer, kterého sledujete, spustí živé vysílání.",
         "gameAlertsTitle": "Upozornění na změnu kategorie",
@@ -11429,6 +12152,19 @@ export const translations = {
       }
     },
     "recap": {
+      "periodYear": "Wrapped {{year}}",
+      "plus": {
+        "title": "Rozšířený přehled",
+        "categories": "Hodiny podle kategorie",
+        "activity": "Tvoje aktivita",
+        "noCategories": "Kategorie se zobrazují pro čas sledování od této aktualizace.",
+        "peakDay": "Nejaktivnější den: {{label}} · {{time}}",
+        "peakMonth": "Nejaktivnější měsíc: {{label}} · {{time}}",
+        "noActivity": "V tomto období žádná aktivita.",
+        "lockedTitle": "Rozšířený přehled a roční Wrapped",
+        "lockedBody": "Hodiny podle kategorie, křivka aktivity a celý tvůj rok v jednom přehledu.",
+        "unlock": "Odemknout"
+      },
       "documentTitle": "Můj přehled · StreamPulse",
       "title": "Tvůj přehled",
       "subtitle": "Vyber období a formát a pak si stáhni obrázek.",

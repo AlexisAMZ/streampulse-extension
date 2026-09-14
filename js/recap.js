@@ -1,7 +1,8 @@
 // Page de recap : lit le storage, dessine la carte dans le format choisi, propose l'export.
 
 import { initI18n, applyTranslations, t, getCurrentLanguage, resolveLocale } from "./i18n.js";
-import { listPeriods, collectEntries, buildRecap, formatDuration, rollingDayKeys } from "./recap-data.js";
+import { listPeriods, collectEntries, buildRecap, buildTimeline, formatDuration, rollingDayKeys } from "./recap-data.js";
+import { PLUS_KEY, isPlusActive, plusPageUrl } from "./plus.js";
 import { drawRecapCard, CARD_WIDTH, CARD_HEIGHT } from "./recap-card.js";
 import { drawRecapStory, STORY_WIDTH, STORY_HEIGHT } from "./recap-story.js";
 
@@ -24,8 +25,10 @@ const actionsEl = document.getElementById("actions");
 const periodSelect = document.getElementById("period");
 const formatsEl = document.getElementById("formats");
 const dailyHintEl = document.getElementById("daily-hint");
+const insightsEl = document.getElementById("insights");
+const insightsLockedEl = document.getElementById("insights-locked");
 
-let stored = { monthly: {}, daily: {}, pseudo: "" };
+let stored = { monthly: {}, daily: {}, pseudo: "", plus: false };
 let currentFormat = "desktop";
 let currentPeriod = "7d";
 let currentRecap = null;
@@ -101,18 +104,25 @@ function rangeLabel(days) {
   return typeof fmt.formatRange === "function" ? fmt.formatRange(start, end) : `${fmt.format(start)} – ${fmt.format(end)}`;
 }
 
+/** Periodes proposees ; le Wrapped annuel est reserve a StreamPulse+. */
+function periodsFor(data) {
+  return listPeriods(data.monthly, data.daily, new Date(), { years: data.plus });
+}
+
 function periodTitle(period) {
   if (period.kind === "rolling") return t(`recap.period${period.days}d`);
+  if (period.kind === "year") return t("recap.periodYear", { year: period.year });
   return monthLabel(period.month);
 }
 
 function periodSubtitle(period) {
   if (period.kind === "rolling") return `${t(`recap.period${period.days}d`)} · ${rangeLabel(period.days)}`;
+  if (period.kind === "year") return t("recap.periodYear", { year: period.year });
   return monthLabel(period.month);
 }
 
 function findPeriod(id) {
-  return listPeriods(stored.monthly, stored.daily).find((p) => p.id === id);
+  return periodsFor(stored).find((p) => p.id === id);
 }
 
 function buildLabels(period) {
@@ -129,7 +139,7 @@ function buildLabels(period) {
 }
 
 function populatePeriods() {
-  const periods = listPeriods(stored.monthly, stored.daily);
+  const periods = periodsFor(stored);
   periodSelect.replaceChildren(
     ...periods.map((p) => {
       const opt = document.createElement("option");
@@ -160,6 +170,7 @@ async function renderPeriod() {
   // Les periodes glissantes dependent du suivi par jour, plus recent que le suivi mensuel.
   show(dailyHintEl, period.kind === "rolling");
 
+  renderInsights(period, recap);
   if (recap.isEmpty) {
     currentRecap = null;
     show(stageEl, false);
@@ -177,6 +188,84 @@ async function renderPeriod() {
   show(emptyEl, false);
   show(stageEl, true);
   show(actionsEl, true);
+}
+
+// ─── Recap avance (StreamPulse+) ───────────────────────────────────────────────
+
+function pointLabel(key, style) {
+  const [y, m, d] = key.split("-").map(Number);
+  const date = new Date(y, m - 1, d || 1);
+  const options = d ? { day: "numeric", month: style } : { month: style };
+  return date.toLocaleDateString(locale(), options);
+}
+
+function renderCategories(categories) {
+  const list = document.getElementById("cat-list");
+  if (!categories.length) {
+    const empty = document.createElement("li");
+    empty.className = "cat-empty";
+    empty.textContent = t("recap.plus.noCategories");
+    list.replaceChildren(empty);
+    return;
+  }
+  const max = categories[0].seconds || 1;
+  list.replaceChildren(
+    ...categories.map((category) => {
+      const item = document.createElement("li");
+      const name = document.createElement("span");
+      name.className = "cat-name";
+      name.textContent = category.name;
+      name.title = category.name;
+      const time = document.createElement("span");
+      time.className = "cat-time";
+      time.textContent = `${formatDuration(category.seconds)} · ${Math.round(category.share * 100)} %`;
+      const bar = document.createElement("span");
+      bar.className = "cat-bar";
+      const fill = document.createElement("i");
+      fill.style.width = `${Math.max(3, (category.seconds / max) * 100)}%`;
+      bar.append(fill);
+      item.append(name, time, bar);
+      return item;
+    }),
+  );
+}
+
+function renderTimeline(points, period) {
+  const host = document.getElementById("timeline");
+  const axis = document.getElementById("timeline-axis");
+  const peakEl = document.getElementById("timeline-peak");
+  const max = Math.max(0, ...points.map((p) => p.seconds));
+  host.replaceChildren(
+    ...points.map((point) => {
+      const bar = document.createElement("span");
+      bar.className = point.seconds > 0 ? "tl-bar" : "tl-bar is-empty";
+      bar.style.height = max > 0 && point.seconds > 0 ? `${Math.max(4, (point.seconds / max) * 100)}%` : "2px";
+      bar.title = `${pointLabel(point.key, "long")} · ${formatDuration(point.seconds)}`;
+      return bar;
+    }),
+  );
+  const monthly = period.kind === "year";
+  axis.replaceChildren(
+    ...[points[0], points[points.length - 1]].map((point) => {
+      const label = document.createElement("span");
+      label.textContent = point ? pointLabel(point.key, "short") : "";
+      return label;
+    }),
+  );
+  const peak = points.reduce((best, point) => (point.seconds > (best?.seconds || 0) ? point : best), null);
+  const summary = peak
+    ? t(monthly ? "recap.plus.peakMonth" : "recap.plus.peakDay", { label: pointLabel(peak.key, "long"), time: formatDuration(peak.seconds) })
+    : t("recap.plus.noActivity");
+  peakEl.textContent = summary;
+  host.setAttribute("aria-label", summary);
+}
+
+function renderInsights(period, recap) {
+  show(insightsLockedEl, !stored.plus && !recap.isEmpty);
+  show(insightsEl, stored.plus && !recap.isEmpty);
+  if (!stored.plus || recap.isEmpty) return;
+  renderCategories(recap.categories);
+  renderTimeline(buildTimeline(stored.monthly, stored.daily, period.id), period);
 }
 
 function fileName() {
@@ -216,12 +305,13 @@ function openShareComposer() {
 }
 
 async function readStorage() {
-  const data = await chrome.storage.local.get([WATCH_TIME_KEY, WATCH_TIME_DAILY_KEY, PREFERENCES_KEY]);
+  const data = await chrome.storage.local.get([WATCH_TIME_KEY, WATCH_TIME_DAILY_KEY, PREFERENCES_KEY, PLUS_KEY]);
   const prefs = data[PREFERENCES_KEY] || {};
   return {
     monthly: data[WATCH_TIME_KEY] || {},
     daily: data[WATCH_TIME_DAILY_KEY] || {},
     pseudo: typeof prefs.pseudo === "string" ? prefs.pseudo.trim().slice(0, 40) : "",
+    plus: isPlusActive(data[PLUS_KEY]),
   };
 }
 
@@ -238,7 +328,7 @@ async function init() {
   }
 
   // Sans aucune donnee journaliere, ouvrir sur le mois en cours plutot que sur un 7 jours vide.
-  const periods = listPeriods(stored.monthly, stored.daily);
+  const periods = periodsFor(stored);
   const hasDaily = Object.keys(stored.daily).length > 0;
   const firstMonth = periods.find((p) => p.kind === "month");
   currentPeriod = !hasDaily && firstMonth ? firstMonth.id : "7d";
@@ -268,6 +358,8 @@ async function init() {
     draw();
   });
 
+  const unlock = document.getElementById("insights-unlock");
+  if (unlock) unlock.href = plusPageUrl(getCurrentLanguage());
   document.getElementById("download").addEventListener("click", exportImage);
   document.getElementById("share").addEventListener("click", openShareComposer);
 

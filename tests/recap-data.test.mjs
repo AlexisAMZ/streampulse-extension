@@ -5,7 +5,9 @@ import {
   listPeriods,
   collectEntries,
   buildRecap,
+  buildTimeline,
   formatDuration,
+  mergeGames,
 } from "../js/recap-data.js";
 
 const NOW = new Date(2026, 8, 13, 20, 0, 0); // 13 septembre 2026, heure locale
@@ -118,4 +120,58 @@ test("formatDuration arrondit proprement", () => {
   assert.equal(formatDuration(3600), "1 h");
   assert.equal(formatDuration(3599), "1 h");
   assert.equal(formatDuration(12 * 3600 + 35 * 60), "12 h 35");
+});
+
+test("mergeGames additionne les categories sans modifier les tables", () => {
+  const a = { GTA: 60 };
+  const merged = mergeGames(a, { GTA: 40, Chat: 10, "": 5, Bad: -3 });
+  assert.deepEqual(merged, { GTA: 100, Chat: 10 });
+  assert.deepEqual(a, { GTA: 60 });
+});
+
+test("buildRecap classe les categories et calcule leur part", () => {
+  const recap = buildRecap([
+    { ...entry("twitch", "a", 100), games: { GTA: 60, Chat: 40 } },
+    { ...entry("twitch", "b", 50), games: { GTA: 50 } },
+  ]);
+  assert.deepEqual(recap.categories.map((c) => c.name), ["GTA", "Chat"]);
+  assert.equal(recap.categories[0].seconds, 110);
+  assert.equal(recap.categories[0].share, 110 / 150);
+});
+
+test("collectEntries fusionne les categories des jours d'une periode", () => {
+  const withGames = {
+    "2026-09-13": { "twitch:a": { ...entry("twitch", "a", 600), games: { GTA: 600 } } },
+    "2026-09-12": { "twitch:a": { ...entry("twitch", "a", 300), games: { GTA: 100, Chat: 200 } } },
+  };
+  const [a] = collectEntries({}, withGames, "7d", NOW);
+  assert.deepEqual(a.games, { GTA: 700, Chat: 200 });
+});
+
+test("listPeriods ajoute le Wrapped de chaque annee quand il est demande", () => {
+  assert.deepEqual(
+    listPeriods(monthly, daily, NOW, { years: true }).map((p) => p.id),
+    ["7d", "30d", "year:2026", "month:2026-09", "month:2026-07"]
+  );
+});
+
+test("collectEntries sur une annee prefere le detail journalier au total mensuel", () => {
+  const entries = collectEntries(monthly, daily, "year:2026", NOW);
+  // juillet : mensuel 3600 ; aout : journalier 5000 ; septembre : journalier 3000
+  assert.equal(entries.reduce((s, e) => s + e.watchSeconds, 0), 3600 + 5000 + 3000);
+});
+
+test("buildTimeline donne un point par jour ou par mois selon la periode", () => {
+  const week = buildTimeline(monthly, daily, "7d", NOW);
+  assert.equal(week.length, 7);
+  assert.deepEqual(week[6], { key: "2026-09-13", seconds: 600 });
+
+  const month = buildTimeline(monthly, daily, "month:2026-09", NOW);
+  assert.equal(month.length, 30);
+  assert.equal(month[9].seconds, 1500);
+
+  const year = buildTimeline(monthly, daily, "year:2026", NOW);
+  assert.equal(year.length, 12);
+  assert.deepEqual([year[6].seconds, year[7].seconds, year[8].seconds], [3600, 5000, 3000]);
+  assert.deepEqual(buildTimeline(monthly, daily, "bogus", NOW), []);
 });

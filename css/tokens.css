@@ -82,3 +82,14 @@
   --dur-fast: 140ms;
   --dur-base: 220ms;
 }
+
+/* StreamPulse+ : couleur d'accent du popup. Seules les variables violettes
+   changent ; chaque teinte garde un contraste AA avec le texte blanc des boutons. */
+[data-accent="lcd"] { --violet: #4f7a1f; --violet-strong: #3f6317; --violet-soft: rgba(79, 122, 31, 0.26); --violet-line: rgba(181, 214, 122, 0.5); --violet-text: #b5d67a; }
+[data-accent="ocean"] { --violet: #2563eb; --violet-strong: #1d4ed8; --violet-soft: rgba(37, 99, 235, 0.24); --violet-line: rgba(147, 180, 255, 0.5); --violet-text: #93b4ff; }
+[data-accent="ember"] { --violet: #c2410c; --violet-strong: #9a3412; --violet-soft: rgba(194, 65, 12, 0.24); --violet-line: rgba(255, 167, 121, 0.5); --violet-text: #ffa779; }
+[data-accent="crimson"] { --violet: #be123c; --violet-strong: #9f1239; --violet-soft: rgba(190, 18, 60, 0.24); --violet-line: rgba(255, 143, 168, 0.5); --violet-text: #ff8fa8; }
+[data-theme="light"][data-accent="lcd"] { --violet-soft: rgba(79, 122, 31, 0.12); --violet-line: rgba(63, 99, 23, 0.42); --violet-text: #3f6317; }
+[data-theme="light"][data-accent="ocean"] { --violet-soft: rgba(37, 99, 235, 0.1); --violet-line: rgba(29, 78, 216, 0.42); --violet-text: #1d4ed8; }
+[data-theme="light"][data-accent="ember"] { --violet-soft: rgba(194, 65, 12, 0.1); --violet-line: rgba(154, 52, 18, 0.42); --violet-text: #9a3412; }
+[data-theme="light"][data-accent="crimson"] { --violet-soft: rgba(190, 18, 60, 0.1); --violet-line: rgba(159, 18, 57, 0.42); --violet-text: #9f1239; }

@@ -71,6 +71,33 @@
             <p class="empty-title" data-i18n="recap.emptyTitle">Rien à afficher pour cette période.</p>
             <p class="empty-body" data-i18n="recap.emptyBody">Le suivi du temps de visionnage n'a rien enregistré sur cette période.</p>
           </div>
+
+          <section class="panel insights" id="insights" hidden aria-labelledby="insights-title">
+            <header class="insights-head">
+              <h2 class="insights-title" id="insights-title" data-i18n="recap.plus.title">Récap avancé</h2>
+              <span class="plus-tag">PLUS</span>
+            </header>
+            <div class="insights-grid">
+              <div class="insight">
+                <h3 class="insight-title" data-i18n="recap.plus.categories">Heures par catégorie</h3>
+                <ol class="cat-list" id="cat-list"></ol>
+              </div>
+              <div class="insight">
+                <h3 class="insight-title" data-i18n="recap.plus.activity">Ton activité</h3>
+                <div class="timeline" id="timeline" role="img"></div>
+                <div class="timeline-axis" id="timeline-axis" aria-hidden="true"></div>
+                <p class="timeline-peak" id="timeline-peak"></p>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel insights-locked" id="insights-locked" hidden>
+            <div class="insights-locked-text">
+              <p class="insights-title"><span data-i18n="recap.plus.lockedTitle">Récap avancé et Wrapped annuel</span> <span class="plus-tag">PLUS</span></p>
+              <p class="empty-body" data-i18n="recap.plus.lockedBody">Tes heures par catégorie, la courbe de ton activité et ton année entière en une image.</p>
+            </div>
+            <a class="btn btn-primary" id="insights-unlock" href="https://www.streampulse.fr/plus" target="_blank" rel="noopener" data-i18n="recap.plus.unlock">Débloquer</a>
+          </section>
         </section>
       </main>
     </div>
