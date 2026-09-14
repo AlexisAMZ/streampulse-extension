@@ -79,3 +79,6 @@
   .recap { grid-template-columns: 1fr; gap: 32px; }
   .recap-side { position: static; }
 }
+
+/* StreamPulse+ : le « + » du logo, en vert LCD comme le badge PLUS. */
+.brand-plus { color: var(--lcd); }

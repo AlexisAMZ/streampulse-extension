@@ -358,6 +358,7 @@ async function init() {
     draw();
   });
 
+  show(document.getElementById("brand-plus"), stored.plus);
   const unlock = document.getElementById("insights-unlock");
   if (unlock) unlock.href = plusPageUrl(getCurrentLanguage());
   document.getElementById("download").addEventListener("click", exportImage);
