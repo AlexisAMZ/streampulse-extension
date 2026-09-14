@@ -19,7 +19,7 @@ import {
 } from "./platforms.js";
 import { HISTORY_KEY, addSession, emptyHistory, markSeen, patchSession } from "./history-data.js";
 import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-alerts.js";
-import { PLUS_KEY, isPlusActive, needsRecheck, verifyLicense } from "./plus.js";
+import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "./plus.js";
 
 const STORAGE_KEYS = {
   STREAMERS: "betaGeneralStreamers",
@@ -875,10 +875,11 @@ class HistoryStore {
 async function recheckPlusLicense(record) {
   if (!needsRecheck(record)) return;
   const now = Date.now();
-  const result = await verifyLicense(record.licenseKey, fetch, now);
+  const device = await getDeviceId(chrome.storage.local);
+  const result = await verifyLicense(record.licenseKey, fetch, now, device);
   if (result.ok) {
     await chrome.storage.local.set({ [PLUS_KEY]: { ...result.record, checkedAt: now } });
-  } else if (result.error === "invalid" || result.error === "format") {
+  } else if (["invalid", "format", "device_limit"].includes(result.error)) {
     await chrome.storage.local.remove(PLUS_KEY);
   } else {
     await chrome.storage.local.set({ [PLUS_KEY]: { ...record, checkedAt: now } });
@@ -2858,7 +2859,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     case "activatePlus":
       (async () => {
-        const result = await verifyLicense(request.key, fetch);
+        const result = await verifyLicense(request.key, fetch, Date.now(), await getDeviceId(chrome.storage.local));
         if (result.ok) await chrome.storage.local.set({ [PLUS_KEY]: result.record });
         sendResponse(result);
         if (result.ok) pollStreamers().catch(() => {});

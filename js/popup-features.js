@@ -4,7 +4,7 @@
 
 import { t } from "./i18n.js";
 import { HISTORY_KEY, formatClock, selectMissed, summarize } from "./history-data.js";
-import { PLUS_KEY, PLUS_CHECKOUT_URL, isPlusActive, normalizeLicenseKey, verifyLicense } from "./plus.js";
+import { PLUS_KEY, PLUS_CHECKOUT_URL, getDeviceId, isPlusActive, normalizeLicenseKey, releaseDevice, verifyLicense } from "./plus.js";
 import {
   SMART_ALERTS_KEY,
   MAX_RULES_PER_STREAMER,
@@ -213,15 +213,20 @@ function initPlus() {
     try {
       // Vérifié depuis le popup : l'activation ne dépend pas d'un service
       // worker encore sur une ancienne version après une mise à jour.
-      const result = await verifyLicense(input.value, fetch);
+      const result = await verifyLicense(input.value, fetch, Date.now(), await getDeviceId(chrome.storage.local));
       if (result.ok) {
         await chrome.storage.local.set({ [PLUS_KEY]: result.record });
+        // eslint-disable-next-line require-atomic-updates -- la dernière vérification fait foi.
         plusRecord = result.record;
         input.value = "";
         renderPlus();
         chrome.runtime.sendMessage({ type: "refreshStatuses" }).catch?.(() => {});
       } else {
-        const errors = { format: "popup.plus.errorFormat", invalid: "popup.plus.errorInvalid" };
+        const errors = {
+          format: "popup.plus.errorFormat",
+          invalid: "popup.plus.errorInvalid",
+          device_limit: "popup.plus.errorDevices",
+        };
         showKeyError(errors[result?.error] || "popup.plus.errorNetwork");
       }
     } catch {
@@ -235,9 +240,12 @@ function initPlus() {
   $("plus-deactivate")?.addEventListener("click", async () => {
     // Directement dans le stockage, comme l'activation : le service worker
     // n'a pas besoin d'être à jour pour que le bouton marche.
+    const licenseKey = plusRecord?.licenseKey;
     await chrome.storage.local.remove(PLUS_KEY);
+    // eslint-disable-next-line require-atomic-updates -- la dernière vérification fait foi.
     plusRecord = null;
     renderPlus();
+    releaseDevice(licenseKey, await getDeviceId(chrome.storage.local), fetch);
     chrome.runtime.sendMessage({ type: "refreshStatuses" }).catch?.(() => {});
   });
 }
@@ -452,11 +460,13 @@ async function recheckOnOpen() {
   if (!plusRecord?.licenseKey || plusRecord.status !== "active") return;
   const now = Date.now();
   if (now - (Number(plusRecord.checkedAt || plusRecord.verifiedAt) || 0) < OPEN_RECHECK_MS) return;
-  const result = await verifyLicense(plusRecord.licenseKey, fetch, now);
+  const result = await verifyLicense(plusRecord.licenseKey, fetch, now, await getDeviceId(chrome.storage.local));
   if (result.ok) {
+    // eslint-disable-next-line require-atomic-updates -- la dernière vérification fait foi.
     plusRecord = { ...result.record, checkedAt: now };
     await chrome.storage.local.set({ [PLUS_KEY]: plusRecord });
-  } else if (result.error === "invalid" || result.error === "format") {
+  } else if (["invalid", "format", "device_limit"].includes(result.error)) {
+    // eslint-disable-next-line require-atomic-updates -- la dernière vérification fait foi.
     plusRecord = null;
     await chrome.storage.local.remove(PLUS_KEY);
   } else {

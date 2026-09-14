@@ -131,10 +131,12 @@ test("needsRecheck revérifie une licence active au bout de 24 h", () => {
 test("verifyLicense gère format, clé refusée, réseau et succès", async () => {
   const ok = async () => ({ ok: true, status: 200, json: async () => ({ valid: true, plan: "lifetime" }) });
   const refused = async () => ({ ok: false, status: 404, json: async () => ({ valid: false }) });
+  const full = async () => ({ ok: false, status: 403, json: async () => ({ valid: false, error: "device_limit" }) });
   const down = async () => { throw new Error("offline"); };
   assert.deepEqual(await verifyLicense("nope", ok, NOW), { ok: false, error: "format" });
   assert.deepEqual(await verifyLicense("SP-ABCD-1234-EFGH-5678", refused, NOW), { ok: false, error: "invalid" });
   assert.deepEqual(await verifyLicense("SP-ABCD-1234-EFGH-5678", down, NOW), { ok: false, error: "network" });
+  assert.deepEqual(await verifyLicense("SP-ABCD-1234-EFGH-5678", full, NOW, "a".repeat(32)), { ok: false, error: "device_limit" });
   const result = await verifyLicense("abcd-1234-efgh-5678", ok, NOW);
   assert.equal(result.ok, true);
   assert.equal(result.record.plan, "lifetime");
