@@ -48,6 +48,66 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.16",
+    date: "2026-09-14",
+    title: {
+      fr: "Badge StreamPulse+ réparé",
+      en: "StreamPulse+ badge fixed",
+      es: "Insignia StreamPulse+ reparada",
+      "pt-BR": "Emblema StreamPulse+ corrigido",
+      de: "StreamPulse+-Abzeichen repariert",
+      it: "Badge StreamPulse+ riparato",
+      pl: "Naprawiona odznaka StreamPulse+",
+      tr: "StreamPulse+ rozeti düzeltildi",
+      ru: "Значок StreamPulse+ исправлен",
+      ja: "StreamPulse+ バッジを修正",
+      ko: "StreamPulse+ 배지 수정",
+      id: "Lencana StreamPulse+ diperbaiki",
+      nl: "StreamPulse+-badge hersteld",
+      sv: "StreamPulse+-märket lagat",
+      cs: "Odznak StreamPulse+ opraven"
+    },
+    subtitle: {
+      fr: "Ton badge et tes effets s'affichent de nouveau dans le tchat Twitch.",
+      en: "Your badge and effects show up in Twitch chat again.",
+      es: "Tu insignia y tus efectos vuelven a verse en el chat de Twitch.",
+      "pt-BR": "Seu emblema e seus efeitos voltam a aparecer no chat da Twitch.",
+      de: "Dein Abzeichen und deine Effekte erscheinen wieder im Twitch-Chat.",
+      it: "Il tuo badge e i tuoi effetti tornano visibili nella chat di Twitch.",
+      pl: "Twoja odznaka i efekty znów widać na czacie Twitcha.",
+      tr: "Rozetin ve efektlerin Twitch sohbetinde yeniden görünüyor.",
+      ru: "Ваш значок и эффекты снова видны в чате Twitch.",
+      ja: "バッジとエフェクトが Twitch チャットに再び表示されます。",
+      ko: "배지와 효과가 다시 트위치 채팅에 표시됩니다.",
+      id: "Lencana dan efekmu kembali tampil di chat Twitch.",
+      nl: "Je badge en effecten zijn weer zichtbaar in de Twitch-chat.",
+      sv: "Ditt märke och dina effekter syns i Twitch-chatten igen.",
+      cs: "Tvůj odznak a efekty se znovu zobrazují v chatu Twitche."
+    },
+    changes: [
+      {
+        type: "fix",
+        text: {
+          fr: "Le badge, sa couleur, ses effets et le pseudo spécial manquaient sur les messages déjà affichés au chargement de Twitch : ils apparaissent maintenant tout de suite.",
+          en: "The badge, its color, its effects and the special name were missing on messages already on screen when Twitch loaded: they now appear right away.",
+          es: "La insignia, su color, sus efectos y el nombre especial faltaban en los mensajes ya visibles al cargar Twitch: ahora aparecen al instante.",
+          "pt-BR": "O emblema, a cor, os efeitos e o nome especial faltavam nas mensagens já exibidas ao carregar a Twitch: agora aparecem na hora.",
+          de: "Abzeichen, Farbe, Effekte und spezieller Name fehlten bei Nachrichten, die beim Laden von Twitch schon da waren: Sie erscheinen jetzt sofort.",
+          it: "Badge, colore, effetti e nome speciale mancavano sui messaggi già presenti al caricamento di Twitch: ora compaiono subito.",
+          pl: "Odznaka, jej kolor, efekty i specjalna nazwa nie pojawiały się przy wiadomościach widocznych w chwili ładowania Twitcha: teraz są od razu.",
+          tr: "Twitch yüklenirken ekranda olan mesajlarda rozet, rengi, efektleri ve özel ad görünmüyordu: artık hemen görünüyor.",
+          ru: "Значок, его цвет, эффекты и особый ник не отображались у сообщений, уже видимых при загрузке Twitch: теперь они появляются сразу.",
+          ja: "Twitch 読み込み時にすでに表示されていたメッセージで、バッジ、色、エフェクト、スペシャルネームが出ていませんでした。今はすぐに表示されます。",
+          ko: "트위치를 불러올 때 이미 보이던 메시지에 배지, 색상, 효과, 특별 닉네임이 빠져 있었습니다. 이제 바로 표시됩니다.",
+          id: "Lencana, warnanya, efeknya, dan nama spesial tidak muncul pada pesan yang sudah tampil saat Twitch dimuat: kini langsung muncul.",
+          nl: "Badge, kleur, effecten en speciale naam ontbraken bij berichten die al zichtbaar waren bij het laden van Twitch: ze verschijnen nu meteen.",
+          sv: "Märket, färgen, effekterna och specialnamnet saknades på meddelanden som redan syntes när Twitch laddades: nu visas de direkt.",
+          cs: "Odznak, jeho barva, efekty a speciální jméno chyběly u zpráv zobrazených při načtení Twitche: teď se objeví hned."
+        }
+      }
+    ]
+  },
+  {
     version: "26.9.15",
     date: "2026-09-14",
     title: {
