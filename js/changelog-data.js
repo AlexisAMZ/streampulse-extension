@@ -108,21 +108,21 @@ export const RELEASES = [
       {
         type: "new",
         text: {
-          fr: "Favoris StreamPulse dans la liste de gauche de Twitch : une étoile au survol d'une chaîne suivie, et tes favoris en direct remontent en haut. C'est la même liste que les favoris de la pop-up.",
-          en: "StreamPulse favorites in Twitch's left sidebar: a star appears when you hover a followed channel, and your live favorites move to the top. It's the same list as the popup favorites.",
-          es: "Favoritos de StreamPulse en la barra izquierda de Twitch: una estrella al pasar el ratón por un canal seguido, y tus favoritos en directo suben arriba. Es la misma lista que los favoritos del popup.",
-          "pt-BR": "Favoritos do StreamPulse na barra esquerda da Twitch: uma estrela aparece ao passar o mouse num canal seguido, e seus favoritos ao vivo sobem para o topo. É a mesma lista dos favoritos do popup.",
-          de: "StreamPulse-Favoriten in der linken Twitch-Leiste: Ein Stern erscheint beim Überfahren eines gefolgten Kanals, und deine Live-Favoriten stehen oben. Es ist dieselbe Liste wie im Popup.",
-          it: "Preferiti StreamPulse nella barra sinistra di Twitch: una stella appare passando su un canale seguito, e i tuoi preferiti in diretta salgono in cima. È la stessa lista dei preferiti del popup.",
-          pl: "Ulubione StreamPulse w lewym pasku Twitcha: gwiazdka pojawia się po najechaniu na obserwowany kanał, a ulubione na żywo trafiają na górę. To ta sama lista co w oknie rozszerzenia.",
-          tr: "Twitch sol menüsünde StreamPulse favorileri: takip ettiğin bir kanalın üzerine gelince yıldız çıkar, canlı favorilerin en üste çıkar. Açılır penceredeki favorilerle aynı liste.",
-          ru: "Избранное StreamPulse в левой панели Twitch: при наведении на отслеживаемый канал появляется звезда, а избранные в эфире поднимаются наверх. Это тот же список, что и во всплывающем окне.",
-          ja: "Twitch 左サイドバーに StreamPulse お気に入り：フォロー中のチャンネルにカーソルを合わせると星が表示され、配信中のお気に入りが上に並びます。ポップアップのお気に入りと同じリストです。",
-          ko: "트위치 왼쪽 목록에 StreamPulse 즐겨찾기: 팔로우한 채널에 마우스를 올리면 별이 나타나고, 방송 중인 즐겨찾기가 위로 올라갑니다. 팝업의 즐겨찾기와 같은 목록입니다.",
-          id: "Favorit StreamPulse di bilah kiri Twitch: bintang muncul saat mengarahkan ke kanal yang diikuti, dan favorit yang sedang live naik ke atas. Daftarnya sama dengan favorit di popup.",
-          nl: "StreamPulse-favorieten in de linkerbalk van Twitch: er verschijnt een ster als je over een gevolgd kanaal beweegt, en je live favorieten staan bovenaan. Het is dezelfde lijst als in de pop-up.",
-          sv: "StreamPulse-favoriter i Twitchs vänsterlist: en stjärna visas när du hovrar över en följd kanal, och dina favoriter som sänder hamnar överst. Det är samma lista som i popupen.",
-          cs: "Oblíbené StreamPulse v levém panelu Twitche: po najetí na sledovaný kanál se objeví hvězda a oblíbení v přímém přenosu jsou nahoře. Je to stejný seznam jako v okně rozšíření."
+          fr: "Favoris StreamPulse dans la liste de gauche de Twitch : une étoile au survol d'une chaîne suivie, et tes favoris en direct remontent en haut. C'est la même liste que les favoris de la pop-up. Elles n'apparaissent plus en double dans la liste en dessous.",
+          en: "StreamPulse favorites in Twitch's left sidebar: a star appears when you hover a followed channel, and your live favorites move to the top. It's the same list as the popup favorites. They no longer show up twice in the list below.",
+          es: "Favoritos de StreamPulse en la barra izquierda de Twitch: una estrella al pasar el ratón por un canal seguido, y tus favoritos en directo suben arriba. Es la misma lista que los favoritos del popup. Ya no aparecen repetidos en la lista de abajo.",
+          "pt-BR": "Favoritos do StreamPulse na barra esquerda da Twitch: uma estrela aparece ao passar o mouse num canal seguido, e seus favoritos ao vivo sobem para o topo. É a mesma lista dos favoritos do popup. Eles não aparecem mais duplicados na lista abaixo.",
+          de: "StreamPulse-Favoriten in der linken Twitch-Leiste: Ein Stern erscheint beim Überfahren eines gefolgten Kanals, und deine Live-Favoriten stehen oben. Es ist dieselbe Liste wie im Popup. Sie erscheinen nicht mehr doppelt in der Liste darunter.",
+          it: "Preferiti StreamPulse nella barra sinistra di Twitch: una stella appare passando su un canale seguito, e i tuoi preferiti in diretta salgono in cima. È la stessa lista dei preferiti del popup. Non compaiono più doppi nella lista sottostante.",
+          pl: "Ulubione StreamPulse w lewym pasku Twitcha: gwiazdka pojawia się po najechaniu na obserwowany kanał, a ulubione na żywo trafiają na górę. To ta sama lista co w oknie rozszerzenia. Nie pojawiają się już podwójnie na liście poniżej.",
+          tr: "Twitch sol menüsünde StreamPulse favorileri: takip ettiğin bir kanalın üzerine gelince yıldız çıkar, canlı favorilerin en üste çıkar. Açılır penceredeki favorilerle aynı liste. Artık alttaki listede iki kez görünmüyorlar.",
+          ru: "Избранное StreamPulse в левой панели Twitch: при наведении на отслеживаемый канал появляется звезда, а избранные в эфире поднимаются наверх. Это тот же список, что и во всплывающем окне. Они больше не дублируются в списке ниже.",
+          ja: "Twitch 左サイドバーに StreamPulse お気に入り：フォロー中のチャンネルにカーソルを合わせると星が表示され、配信中のお気に入りが上に並びます。ポップアップのお気に入りと同じリストです。下のリストに重複して表示されなくなりました。",
+          ko: "트위치 왼쪽 목록에 StreamPulse 즐겨찾기: 팔로우한 채널에 마우스를 올리면 별이 나타나고, 방송 중인 즐겨찾기가 위로 올라갑니다. 팝업의 즐겨찾기와 같은 목록입니다. 아래 목록에는 더 이상 중복으로 표시되지 않습니다.",
+          id: "Favorit StreamPulse di bilah kiri Twitch: bintang muncul saat mengarahkan ke kanal yang diikuti, dan favorit yang sedang live naik ke atas. Daftarnya sama dengan favorit di popup. Kanal itu tidak lagi muncul dua kali di daftar bawah.",
+          nl: "StreamPulse-favorieten in de linkerbalk van Twitch: er verschijnt een ster als je over een gevolgd kanaal beweegt, en je live favorieten staan bovenaan. Het is dezelfde lijst als in de pop-up. Ze staan niet meer dubbel in de lijst eronder.",
+          sv: "StreamPulse-favoriter i Twitchs vänsterlist: en stjärna visas när du hovrar över en följd kanal, och dina favoriter som sänder hamnar överst. Det är samma lista som i popupen. De visas inte längre dubbelt i listan nedanför.",
+          cs: "Oblíbené StreamPulse v levém panelu Twitche: po najetí na sledovaný kanál se objeví hvězda a oblíbení v přímém přenosu jsou nahoře. Je to stejný seznam jako v okně rozšíření. V seznamu pod ním se už nezobrazují dvakrát."
         }
       },
       {
