@@ -4,7 +4,7 @@
 
 import { t } from "./i18n.js";
 import { HISTORY_KEY, formatClock, selectMissed, summarize } from "./history-data.js";
-import { PLUS_KEY, PLUS_CHECKOUT_URL, isPlusActive, normalizeLicenseKey } from "./plus.js";
+import { PLUS_KEY, PLUS_CHECKOUT_URL, isPlusActive, normalizeLicenseKey, verifyLicense } from "./plus.js";
 import {
   SMART_ALERTS_KEY,
   MAX_RULES_PER_STREAMER,
@@ -211,11 +211,15 @@ function initPlus() {
     button.disabled = true;
     button.textContent = t("popup.plus.activating");
     try {
-      const result = await chrome.runtime.sendMessage({ type: "activatePlus", key: input.value });
-      if (result?.ok) {
+      // Vérifié depuis le popup : l'activation ne dépend pas d'un service
+      // worker encore sur une ancienne version après une mise à jour.
+      const result = await verifyLicense(input.value, fetch);
+      if (result.ok) {
+        await chrome.storage.local.set({ [PLUS_KEY]: result.record });
         plusRecord = result.record;
         input.value = "";
         renderPlus();
+        chrome.runtime.sendMessage({ type: "refreshStatuses" }).catch?.(() => {});
       } else {
         const errors = { format: "popup.plus.errorFormat", invalid: "popup.plus.errorInvalid" };
         showKeyError(errors[result?.error] || "popup.plus.errorNetwork");
