@@ -493,7 +493,7 @@ function renderAccent() {
 }
 
 export const COSMETICS_KEY = "streamPulseCosmetics";
-const BADGE_FX = ["pulse", "shine", "rainbow"];
+const BADGE_FX = ["pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker"];
 const NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow"];
 let cosmetics = { badgeFx: "", nameFx: "" };
 

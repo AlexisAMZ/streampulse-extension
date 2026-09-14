@@ -53,17 +53,26 @@
    l'abonne. Chaque animation s'arrete si l'utilisateur reduit les animations. */
 .sp-chat-badge--fx-pulse .sp-chat-badge-img { animation: sp-badge-pulse 2.4s ease-in-out infinite; }
 .sp-chat-badge--fx-shine .sp-chat-badge-img {
-  background-image: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.95) 50%, transparent 65%) !important;
-  background-size: 260% 100% !important;
+  background-image: linear-gradient(110deg, transparent 40%, rgba(255, 255, 255, 0.95) 50%, transparent 60%) !important;
+  background-size: 300% 100% !important;
+  background-repeat: no-repeat !important;
   animation: sp-badge-shine 2.8s ease-in-out infinite;
 }
+.sp-chat-badge--fx-glow .sp-chat-badge-img { filter: drop-shadow(0 0 3px var(--sp-badge-color, #9146ff)) drop-shadow(0 0 7px var(--sp-badge-color, #9146ff)); }
+.sp-chat-badge--fx-bounce .sp-chat-badge-img { animation: sp-badge-bounce 2.2s cubic-bezier(0.28, 0.84, 0.42, 1) infinite; }
+.sp-chat-badge--fx-spin .sp-chat-badge-img { animation: sp-badge-spin 4s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+.sp-chat-badge--fx-flicker .sp-chat-badge-img { animation: sp-badge-flicker 3.2s linear infinite; }
 .sp-chat-badge--fx-rainbow .sp-chat-badge-img { background-color: #ff5f6d !important; animation: sp-badge-hue 4s linear infinite; }
 
 @keyframes sp-badge-pulse {
   0%, 100% { filter: drop-shadow(0 0 0 transparent); transform: scale(1); }
   50% { filter: drop-shadow(0 0 5px var(--sp-badge-color, #9146ff)); transform: scale(1.12); }
 }
-@keyframes sp-badge-shine { 0% { background-position: 130% 0; } 60%, 100% { background-position: -130% 0; } }
+/* 100 % : reflet hors du logo a gauche ; 0 % : hors du logo a droite. Aucune image residuelle au bouclage. */
+@keyframes sp-badge-shine { 0% { background-position: 100% 0; } 60%, 100% { background-position: 0% 0; } }
+@keyframes sp-badge-bounce { 0%, 60%, 100% { transform: translateY(0); } 20% { transform: translateY(-4px); } 40% { transform: translateY(0); } 50% { transform: translateY(-1.5px); } }
+@keyframes sp-badge-spin { 0%, 70% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes sp-badge-flicker { 0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; filter: drop-shadow(0 0 4px var(--sp-badge-color, #9146ff)); } 20%, 24%, 55% { opacity: 0.35; filter: none; } }
 @keyframes sp-badge-hue { to { filter: hue-rotate(360deg); } }
 
 .sp-paint {
@@ -94,6 +103,9 @@
   .sp-chat-badge--fx-pulse .sp-chat-badge-img,
   .sp-chat-badge--fx-shine .sp-chat-badge-img,
   .sp-chat-badge--fx-rainbow .sp-chat-badge-img,
+  .sp-chat-badge--fx-bounce .sp-chat-badge-img,
+  .sp-chat-badge--fx-spin .sp-chat-badge-img,
+  .sp-chat-badge--fx-flicker .sp-chat-badge-img,
   .sp-paint { animation: none !important; }
 }
 

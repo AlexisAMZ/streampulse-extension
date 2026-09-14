@@ -50,7 +50,7 @@
   // Effets publics des abonnes : empreinte -> { b: effet du badge, n: pseudo special }.
   var badgeStyles = new Map();
   var COSMETICS_KEY = "streamPulseCosmetics";
-  var BADGE_FX = ["pulse", "shine", "rainbow"];
+  var BADGE_FX = ["pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker"];
   var NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow"];
 
   // "author" (couleur du pseudo), "theme" (blanc/noir), ou une couleur hexa.

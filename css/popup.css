@@ -117,7 +117,7 @@ body.is-settings .topbar { background: var(--surface); box-shadow: inset 0 -1px 
 .brand-name { font-family: var(--display); font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
 .tabs { display: flex; align-items: center; gap: 18px; margin-left: 8px; }
 .tab-button,
-.topbar-link { position: relative; height: 32px; padding: 0; border: 0; background: transparent; color: rgba(255, 255, 255, 0.74); font-weight: 600; }
+.topbar-link { position: relative; display: inline-flex; align-items: center; height: 32px; padding: 0; border: 0; background: transparent; color: rgba(255, 255, 255, 0.74); font: inherit; font-weight: 600; line-height: 1; }
 .tab-button:hover,
 .topbar-link:hover { color: #ffffff; }
 .tab-button.active { color: #ffffff; box-shadow: inset 0 -2px 0 var(--lcd); }
@@ -610,10 +610,17 @@ body.is-settings .plus-badge:not(.is-active) { background: var(--surface-2); box
 .cosmetic-name { color: #bf94ff; font-weight: 700; }
 .cosmetic-msg { color: #efeff1; }
 .cosmetic-badge.sp-fx-pulse { animation: sp-badge-pulse 2.4s ease-in-out infinite; }
-.cosmetic-badge.sp-fx-shine { background-image: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.95) 50%, transparent 65%); background-size: 260% 100%; animation: sp-badge-shine 2.8s ease-in-out infinite; }
+.cosmetic-badge.sp-fx-shine { background-image: linear-gradient(110deg, transparent 40%, rgba(255, 255, 255, 0.95) 50%, transparent 60%); background-size: 300% 100%; background-repeat: no-repeat; animation: sp-badge-shine 2.8s ease-in-out infinite; }
+.cosmetic-badge.sp-fx-glow { filter: drop-shadow(0 0 3px var(--violet)) drop-shadow(0 0 7px var(--violet)); }
+.cosmetic-badge.sp-fx-bounce { animation: sp-badge-bounce 2.2s cubic-bezier(0.28, 0.84, 0.42, 1) infinite; }
+.cosmetic-badge.sp-fx-spin { animation: sp-badge-spin 4s cubic-bezier(0.65, 0, 0.35, 1) infinite; }
+.cosmetic-badge.sp-fx-flicker { animation: sp-badge-flicker 3.2s linear infinite; }
 .cosmetic-badge.sp-fx-rainbow { background-color: #ff5f6d; animation: sp-badge-hue 4s linear infinite; }
 @keyframes sp-badge-pulse { 0%, 100% { filter: drop-shadow(0 0 0 transparent); transform: scale(1); } 50% { filter: drop-shadow(0 0 5px var(--violet)); transform: scale(1.12); } }
-@keyframes sp-badge-shine { 0% { background-position: 130% 0; } 60%, 100% { background-position: -130% 0; } }
+@keyframes sp-badge-shine { 0% { background-position: 100% 0; } 60%, 100% { background-position: 0% 0; } }
+@keyframes sp-badge-bounce { 0%, 60%, 100% { transform: translateY(0); } 20% { transform: translateY(-4px); } 40% { transform: translateY(0); } 50% { transform: translateY(-1.5px); } }
+@keyframes sp-badge-spin { 0%, 70% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes sp-badge-flicker { 0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; filter: drop-shadow(0 0 4px var(--violet)); } 20%, 24%, 55% { opacity: 0.35; filter: none; } }
 @keyframes sp-badge-hue { to { filter: hue-rotate(360deg); } }
 .sp-paint { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; background-size: 200% 100%; }
 .sp-paint--aurora { background-image: linear-gradient(90deg, #9146ff, #4fd1ff, #c6d4a0, #9146ff); animation: sp-paint-slide 6s linear infinite; }
