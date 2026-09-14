@@ -441,6 +441,30 @@ function initSmartAlerts() {
   plusListeners.add(() => renderSmart());
 }
 
+/**
+ * À l'ouverture du popup, revérifie la licence si le dernier contrôle date de
+ * plus d'une heure : un client supprimé ou un abonnement résilié perd l'accès
+ * dès la prochaine ouverture, sans attendre le contrôle quotidien.
+ */
+const OPEN_RECHECK_MS = 60 * 60 * 1000;
+
+async function recheckOnOpen() {
+  if (!plusRecord?.licenseKey || plusRecord.status !== "active") return;
+  const now = Date.now();
+  if (now - (Number(plusRecord.checkedAt || plusRecord.verifiedAt) || 0) < OPEN_RECHECK_MS) return;
+  const result = await verifyLicense(plusRecord.licenseKey, fetch, now);
+  if (result.ok) {
+    plusRecord = { ...result.record, checkedAt: now };
+    await chrome.storage.local.set({ [PLUS_KEY]: plusRecord });
+  } else if (result.error === "invalid" || result.error === "format") {
+    plusRecord = null;
+    await chrome.storage.local.remove(PLUS_KEY);
+  } else {
+    return;
+  }
+  renderPlus();
+}
+
 // ─── Initialisation ────────────────────────────────────────────────────────────
 
 export async function initFeatures() {
@@ -450,6 +474,7 @@ export async function initFeatures() {
 
   const stored = await chrome.storage.local.get([PLUS_KEY, SMART_ALERTS_KEY, "betaGeneralStreamers"]);
   plusRecord = stored[PLUS_KEY] || null;
+  recheckOnOpen().catch(() => {});
   smartRules = normalizeRules(stored[SMART_ALERTS_KEY]);
   smartStreamers = Array.isArray(stored.betaGeneralStreamers) ? stored.betaGeneralStreamers : [];
   renderPlus();
