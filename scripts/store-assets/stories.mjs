@@ -164,7 +164,6 @@ h1.fav { font-size: 92px; line-height: 1; }
 .stage { position: relative; margin-top: 84px; width: 760px; transform: rotate(-3deg); transform-origin: top left; }
 .panel { position: relative; overflow: hidden; border-radius: 40px; background: #1f1f23; box-shadow: 0 50px 90px -26px rgba(0, 0, 0, 0.9), 0 0 0 2px ${COLORS.line2}; }
 .panel img { display: block; width: 760px; }
-.ring { position: absolute; top: 108px; left: 14px; right: 14px; height: 124px; border-radius: 26px; box-shadow: inset 0 0 0 4px ${COLORS.lcd}; }
 .tag { position: absolute; top: 204px; right: -26px; z-index: 3; display: inline-flex; align-items: center; gap: 12px; padding: 14px 28px 14px 22px; border-radius: 999px; background: ${COLORS.lcd}; color: ${COLORS.lcdInk}; font-size: 36px; font-weight: 700; transform: rotate(6deg); box-shadow: 0 16px 34px -10px rgba(0, 0, 0, 0.7); }
 .tag svg { width: 32px; height: 32px; }
 </style></head><body>
@@ -173,7 +172,7 @@ h1.fav { font-size: 92px; line-height: 1; }
   <h1 class="fav">${escapeHtml(copy.favHook[0])}<em>${escapeHtml(copy.favHook[1])}</em></h1>
   <p class="sub">${escapeHtml(copy.favSub)}</p>
   <div class="stage">
-    <div class="panel"><img src="${escapeHtml(sidebar)}" alt=""><div class="ring"></div></div>
+    <div class="panel"><img src="${escapeHtml(sidebar)}" alt=""></div>
     <span class="tag">${STAR}${escapeHtml(copy.favNote)}</span>
   </div>
   </div>
