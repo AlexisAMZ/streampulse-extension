@@ -2,9 +2,9 @@
 // Séparé de popup.js pour garder chaque fichier lisible ; tout passe par
 // chrome.storage, que le service worker alimente.
 
-import { t } from "./i18n.js";
+import { t, getCurrentLanguage } from "./i18n.js";
 import { HISTORY_KEY, formatClock, selectMissed, summarize } from "./history-data.js";
-import { PLUS_KEY, PLUS_CHECKOUT_URL, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
+import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
 import {
   SMART_ALERTS_KEY,
   MAX_RULES_PER_STREAMER,
@@ -196,7 +196,7 @@ function initPlus() {
     }),
   );
 
-  $("plus-checkout")?.addEventListener("click", () => openTab(`${PLUS_CHECKOUT_URL}?plan=${selectedPlan}`));
+  $("plus-checkout")?.addEventListener("click", () => openTab(plusPageUrl(getCurrentLanguage(), selectedPlan)));
 
   $("plus-key-form")?.addEventListener("submit", async (event) => {
     event.preventDefault();

@@ -48,6 +48,126 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.15",
+    date: "2026-09-14",
+    title: {
+      fr: "Historique et StreamPulse+",
+      en: "History and StreamPulse+",
+      es: "Historial y StreamPulse+",
+      "pt-BR": "Histórico e StreamPulse+",
+      de: "Verlauf und StreamPulse+",
+      it: "Cronologia e StreamPulse+",
+      pl: "Historia i StreamPulse+",
+      tr: "Geçmiş ve StreamPulse+",
+      ru: "История и StreamPulse+",
+      ja: "履歴とStreamPulse+",
+      ko: "기록과 StreamPulse+",
+      id: "Riwayat dan StreamPulse+",
+      nl: "Geschiedenis en StreamPulse+",
+      sv: "Historik och StreamPulse+",
+      cs: "Historie a StreamPulse+"
+    },
+    subtitle: {
+      fr: "Retrouve les lives que tu as ratés, et découvre StreamPulse+ avec les alertes intelligentes.",
+      en: "Catch up on the lives you missed, and meet StreamPulse+ with smart alerts.",
+      es: "Recupera los directos que te perdiste y descubre StreamPulse+ con las alertas inteligentes.",
+      "pt-BR": "Recupere as lives que você perdeu e conheça o StreamPulse+ com os alertas inteligentes.",
+      de: "Hol verpasste Streams nach und entdecke StreamPulse+ mit intelligenten Benachrichtigungen.",
+      it: "Recupera le dirette che ti sei perso e scopri StreamPulse+ con gli avvisi intelligenti.",
+      pl: "Nadrób przegapione transmisje i poznaj StreamPulse+ z inteligentnymi alertami.",
+      tr: "Kaçırdığın yayınları yakala ve akıllı bildirimlerle StreamPulse+'ı keşfet.",
+      ru: "Наверстай пропущенные трансляции и открой StreamPulse+ с умными оповещениями.",
+      ja: "見逃した配信をチェックして、スマート通知付きのStreamPulse+を試そう。",
+      ko: "놓친 방송을 다시 보고, 스마트 알림이 있는 StreamPulse+를 만나 보세요.",
+      id: "Tonton lagi siaran yang terlewat, dan kenali StreamPulse+ dengan notifikasi pintar.",
+      nl: "Haal gemiste streams in en ontdek StreamPulse+ met slimme meldingen.",
+      sv: "Ta igen missade sändningar och upptäck StreamPulse+ med smarta aviseringar.",
+      cs: "Doháněj zmeškaná vysílání a objev StreamPulse+ s chytrými upozorněními."
+    },
+    changes: [
+      {
+        type: "new",
+        text: {
+          fr: "Nouvel onglet Historique : les lives que tu as ratés s'affichent en vignettes, avec leur durée et un accès direct à la rediffusion Twitch.",
+          en: "New History tab: the lives you missed show up as thumbnails, with their length and a direct link to the Twitch replay.",
+          es: "Nueva pestaña Historial: los directos que te perdiste aparecen en miniaturas, con su duración y acceso directo a la repetición de Twitch.",
+          "pt-BR": "Nova aba Histórico: as lives que você perdeu aparecem em miniaturas, com a duração e acesso direto à reprise da Twitch.",
+          de: "Neuer Tab Verlauf: verpasste Streams erscheinen als Vorschaubilder, mit Dauer und direktem Link zur Twitch-Aufzeichnung.",
+          it: "Nuova scheda Cronologia: le dirette che ti sei perso compaiono in miniatura, con la durata e l'accesso diretto alla replica su Twitch.",
+          pl: "Nowa karta Historia: przegapione transmisje pojawiają się jako miniatury, z czasem trwania i bezpośrednim linkiem do powtórki na Twitchu.",
+          tr: "Yeni Geçmiş sekmesi: kaçırdığın yayınlar süreleri ve Twitch tekrarına doğrudan bağlantıyla küçük resimler halinde görünür.",
+          ru: "Новая вкладка «История»: пропущенные трансляции отображаются миниатюрами, с длительностью и прямой ссылкой на запись Twitch.",
+          ja: "新しい「履歴」タブ：見逃した配信が長さとTwitchアーカイブへの直接リンク付きでサムネイル表示されます。",
+          ko: "새 기록 탭: 놓친 방송이 길이와 트위치 다시보기 바로가기와 함께 썸네일로 표시됩니다.",
+          id: "Tab Riwayat baru: siaran yang terlewat tampil sebagai thumbnail, dengan durasi dan tautan langsung ke tayangan ulang Twitch.",
+          nl: "Nieuw tabblad Geschiedenis: gemiste streams verschijnen als thumbnails, met hun duur en een directe link naar de Twitch-herhaling.",
+          sv: "Ny flik Historik: missade sändningar visas som miniatyrer, med längd och direktlänk till Twitch-repriset.",
+          cs: "Nová karta Historie: zmeškaná vysílání se zobrazí jako náhledy s délkou a přímým odkazem na záznam na Twitchi."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "StreamPulse+ : une formule mensuelle ou à vie pour soutenir l'extension. Tout ce qui existe reste gratuit. Clé de licence à activer via le badge PLUS, utilisable sur 2 navigateurs.",
+          en: "StreamPulse+: a monthly or lifetime plan to support the extension. Everything that exists stays free. Activate your license key from the PLUS badge, usable on 2 browsers.",
+          es: "StreamPulse+: una suscripción mensual o de por vida para apoyar la extensión. Todo lo que ya existe sigue siendo gratis. Activa tu clave desde la insignia PLUS, válida en 2 navegadores.",
+          "pt-BR": "StreamPulse+: plano mensal ou vitalício para apoiar a extensão. Tudo o que já existe continua grátis. Ative sua chave pelo selo PLUS, válida em 2 navegadores.",
+          de: "StreamPulse+: ein Monats- oder Lifetime-Plan zur Unterstützung der Erweiterung. Alles Bestehende bleibt kostenlos. Lizenzschlüssel über das PLUS-Abzeichen aktivieren, nutzbar in 2 Browsern.",
+          it: "StreamPulse+: un piano mensile o a vita per sostenere l'estensione. Tutto ciò che esiste resta gratuito. Attiva la chiave dal badge PLUS, valida su 2 browser.",
+          pl: "StreamPulse+: plan miesięczny lub dożywotni wspierający rozszerzenie. Wszystko, co już jest, pozostaje darmowe. Klucz aktywujesz przez odznakę PLUS, działa w 2 przeglądarkach.",
+          tr: "StreamPulse+: eklentiyi desteklemek için aylık veya ömür boyu plan. Mevcut her şey ücretsiz kalıyor. Lisans anahtarını PLUS rozetinden etkinleştir, 2 tarayıcıda kullanılabilir.",
+          ru: "StreamPulse+: ежемесячный или пожизненный план для поддержки расширения. Всё, что есть, остаётся бесплатным. Ключ активируется через значок PLUS и работает в 2 браузерах.",
+          ja: "StreamPulse+：拡張機能を応援する月額または買い切りプラン。既存の機能はすべて無料のままです。PLUSバッジからライセンスキーを有効化、2つのブラウザで使えます。",
+          ko: "StreamPulse+: 확장 프로그램을 응원하는 월간 또는 평생 플랜. 기존 기능은 모두 무료로 유지됩니다. PLUS 배지에서 라이선스 키를 활성화하며 브라우저 2개에서 사용할 수 있습니다.",
+          id: "StreamPulse+: paket bulanan atau seumur hidup untuk mendukung ekstensi. Semua yang sudah ada tetap gratis. Aktifkan kunci lisensi dari lencana PLUS, bisa dipakai di 2 browser.",
+          nl: "StreamPulse+: een maand- of levenslang abonnement om de extensie te steunen. Alles wat er al is blijft gratis. Activeer je licentiesleutel via het PLUS-badge, bruikbaar in 2 browsers.",
+          sv: "StreamPulse+: en månads- eller livstidsplan för att stödja tillägget. Allt som redan finns förblir gratis. Aktivera licensnyckeln via PLUS-märket, fungerar i 2 webbläsare.",
+          cs: "StreamPulse+: měsíční nebo doživotní plán na podporu rozšíření. Vše, co existuje, zůstává zdarma. Licenční klíč aktivuješ přes odznak PLUS, funguje ve 2 prohlížečích."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "Alertes intelligentes (StreamPulse+) : sois prévenu seulement quand un streamer lance un jeu précis, met un mot dans son titre ou dépasse un nombre de viewers. Réglages, Alertes.",
+          en: "Smart alerts (StreamPulse+): only get notified when a streamer starts a specific game, puts a word in their title or passes a viewer count. Settings, Alerts.",
+          es: "Alertas inteligentes (StreamPulse+): recibe un aviso solo cuando un streamer empieza un juego concreto, pone una palabra en el título o supera un número de espectadores. Ajustes, Alertas.",
+          "pt-BR": "Alertas inteligentes (StreamPulse+): seja avisado só quando um streamer começa um jogo específico, coloca uma palavra no título ou passa de um número de espectadores. Configurações, Alertas.",
+          de: "Intelligente Benachrichtigungen (StreamPulse+): nur benachrichtigt werden, wenn ein Streamer ein bestimmtes Spiel startet, ein Wort im Titel nutzt oder eine Zuschauerzahl überschreitet. Einstellungen, Benachrichtigungen.",
+          it: "Avvisi intelligenti (StreamPulse+): ricevi un avviso solo quando uno streamer avvia un gioco preciso, mette una parola nel titolo o supera un numero di spettatori. Impostazioni, Avvisi.",
+          pl: "Inteligentne alerty (StreamPulse+): powiadomienie tylko wtedy, gdy streamer uruchomi konkretną grę, doda słowo do tytułu lub przekroczy liczbę widzów. Ustawienia, Alerty.",
+          tr: "Akıllı bildirimler (StreamPulse+): yalnızca bir yayıncı belirli bir oyunu açtığında, başlığa bir kelime eklediğinde veya izleyici sayısını aştığında haberdar ol. Ayarlar, Bildirimler.",
+          ru: "Умные оповещения (StreamPulse+): уведомление только когда стример запускает нужную игру, добавляет слово в название или превышает число зрителей. Настройки, Оповещения.",
+          ja: "スマート通知（StreamPulse+）：配信者が特定のゲームを始めたとき、タイトルに特定の言葉を入れたとき、視聴者数を超えたときだけ通知します。設定の「通知」から。",
+          ko: "스마트 알림(StreamPulse+): 스트리머가 특정 게임을 시작하거나, 제목에 단어를 넣거나, 시청자 수를 넘을 때만 알림을 받습니다. 설정, 알림.",
+          id: "Notifikasi pintar (StreamPulse+): hanya diberi tahu saat streamer memulai game tertentu, menaruh kata di judul, atau melewati jumlah penonton. Pengaturan, Notifikasi.",
+          nl: "Slimme meldingen (StreamPulse+): krijg alleen een melding als een streamer een bepaalde game start, een woord in de titel zet of een aantal kijkers overschrijdt. Instellingen, Meldingen.",
+          sv: "Smarta aviseringar (StreamPulse+): få besked bara när en streamer startar ett visst spel, har ett ord i titeln eller passerar ett antal tittare. Inställningar, Aviseringar.",
+          cs: "Chytrá upozornění (StreamPulse+): upozornění jen tehdy, když streamer spustí konkrétní hru, dá do názvu slovo nebo překročí počet diváků. Nastavení, Upozornění."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Le compteur « Drops aujourd'hui » de l'accueil est masqué le temps de corriger un mauvais décompte.",
+          en: "The \"Drops today\" counter on the home screen is hidden while a miscount is fixed.",
+          es: "El contador «Drops de hoy» de la pantalla de inicio se oculta mientras se corrige un conteo erróneo.",
+          "pt-BR": "O contador «Drops hoje» da tela inicial fica oculto enquanto uma contagem errada é corrigida.",
+          de: "Der Zähler „Drops heute“ auf dem Startbildschirm ist ausgeblendet, bis eine falsche Zählung behoben ist.",
+          it: "Il contatore «Drops di oggi» nella schermata iniziale è nascosto finché non viene corretto un conteggio errato.",
+          pl: "Licznik „Dropsy dzisiaj” na ekranie głównym jest ukryty do czasu poprawienia błędnego liczenia.",
+          tr: "Ana ekrandaki «Bugünkü Drops» sayacı, hatalı sayım düzeltilene kadar gizlendi.",
+          ru: "Счётчик «Drops сегодня» на главном экране скрыт, пока исправляется неверный подсчёт.",
+          ja: "ホーム画面の「今日のドロップ」カウンターは、集計の誤りを修正するまで非表示です。",
+          ko: "홈 화면의 '오늘의 드롭스' 카운터는 잘못된 집계를 고치는 동안 숨겨집니다.",
+          id: "Penghitung «Drops hari ini» di layar utama disembunyikan sementara kesalahan hitung diperbaiki.",
+          nl: "De teller „Drops vandaag” op het startscherm is verborgen terwijl een verkeerde telling wordt opgelost.",
+          sv: "Räknaren ”Drops i dag” på startskärmen är dold medan en felräkning åtgärdas.",
+          cs: "Počítadlo „Dropy dnes” na úvodní obrazovce je skryté, dokud se neopraví chybné počítání."
+        }
+      }
+    ]
+  },
+  {
     version: "26.9.14",
     date: "2026-09-14",
     title: {
