@@ -178,8 +178,11 @@
     section.setAttribute("aria-label", tr("favorites"));
 
     var head = el("div", "sp-fav-head");
+    // Logo StreamPulse en masque : il prend la couleur d'accent comme le badge du tchat.
     var icon = el("span", "sp-fav-head-ic");
-    icon.innerHTML = STAR;
+    var mask = "url(" + chrome.runtime.getURL("images/photos/128px.png") + ")";
+    icon.style.setProperty("-webkit-mask-image", mask);
+    icon.style.setProperty("mask-image", mask);
     head.appendChild(icon);
     head.appendChild(el("span", "sp-fav-title", tr("favorites")));
     section.appendChild(head);

@@ -103,7 +103,7 @@
 /* ── Side nav favorites: Twitch geometry, StreamPulse accent ── */
 .sp-fav-section { padding: 0 0 8px; border-bottom: 1px solid var(--color-border-base, rgba(83, 83, 95, 0.48)); margin-bottom: 4px; }
 .sp-fav-head { display: flex; align-items: center; gap: 6px; padding: 10px 10px 5px; color: var(--color-text-base, #efeff1); }
-.sp-fav-head-ic { display: inline-flex; color: #bf94ff; }
+.sp-fav-head-ic { flex-shrink: 0; width: 16px; height: 16px; background-color: #bf94ff; -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; }
 .sp-fav-title { overflow: hidden; font-size: 13px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
 .sp-fav-empty { margin: 0; padding: 2px 10px 4px; color: var(--color-text-alt-2, #adadb8); font-size: 12px; line-height: 1.35; }
 
