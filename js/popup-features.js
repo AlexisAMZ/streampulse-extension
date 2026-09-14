@@ -4,7 +4,7 @@
 
 import { t } from "./i18n.js";
 import { HISTORY_KEY, formatClock, selectMissed, summarize } from "./history-data.js";
-import { PLUS_KEY, PLUS_CHECKOUT_URL, getDeviceId, isPlusActive, normalizeLicenseKey, releaseDevice, verifyLicense } from "./plus.js";
+import { PLUS_KEY, PLUS_CHECKOUT_URL, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
 import {
   SMART_ALERTS_KEY,
   MAX_RULES_PER_STREAMER,
@@ -233,6 +233,29 @@ function initPlus() {
     } finally {
       button.disabled = false;
       button.textContent = t("popup.plus.activate");
+    }
+  });
+
+  $("plus-manage")?.addEventListener("click", async () => {
+    const button = $("plus-manage");
+    const error = $("plus-manage-error");
+    if (!plusRecord?.licenseKey || !button) return;
+    button.disabled = true;
+    if (error) error.hidden = true;
+    try {
+      const url = await portalUrl(plusRecord.licenseKey, fetch);
+      if (url) {
+        openTab(url);
+        return;
+      }
+      throw new Error("no_portal");
+    } catch {
+      if (error) {
+        error.textContent = t("popup.plus.manageError");
+        error.hidden = false;
+      }
+    } finally {
+      button.disabled = false;
     }
   });
 

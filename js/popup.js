@@ -710,7 +710,9 @@ async function renderActivity() {
   const points = today.filter((log) => log.type === "points").reduce((sum, log) => sum + (Number(log.value) || 0), 0);
   const drops = today.filter((log) => log.type === "drop").length;
   setChip("activity-points", points > 0, t("popup.cplus.pointsToday", { count: formatNumber(points) }));
-  setChip("activity-drops", drops > 0, t(drops > 1 ? "popup.cplus.dropsTodayPlural" : "popup.cplus.dropsToday", { count: drops }));
+  // Compteur de Drops du jour masqué : il comptait mal (bug à corriger avant de le réafficher).
+  void drops;
+  setChip("activity-drops", false, "");
 }
 
 // --- All channels sheet ---

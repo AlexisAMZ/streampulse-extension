@@ -20,6 +20,17 @@ export function releaseDevice(licenseKey, device, fetchImpl) {
   }).catch(() => {});
 }
 
+/** Lien vers le portail client Stripe pour la clé de ce navigateur. */
+export async function portalUrl(licenseKey, fetchImpl) {
+  const response = await fetchImpl(LICENSE_VERIFY_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "portal", key: licenseKey }),
+  });
+  const payload = await response.json().catch(() => ({}));
+  return response.ok && payload?.url ? payload.url : null;
+}
+
 /** Page d'achat ouverte par le bouton « Débloquer StreamPulse+ ». */
 export const PLUS_CHECKOUT_URL = "https://www.streampulse.fr/plus";
 

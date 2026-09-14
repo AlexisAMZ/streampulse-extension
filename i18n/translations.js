@@ -206,7 +206,9 @@ export const translations = {
         "activeTitle": "StreamPulse+ est actif",
         "planMonthly": "Formule mensuelle · {{key}}",
         "planLifetime": "Formule à vie · {{key}}",
-        "deactivate": "Retirer la licence de ce navigateur",
+        "manage": "Gérer mon abonnement",
+      "manageError": "Impossible d'ouvrir ton espace pour l'instant. Réessaie dans quelques minutes.",
+      "deactivate": "Retirer la licence de ce navigateur",
         "close": "Fermer"
       },
       "smart": {
@@ -924,7 +926,9 @@ export const translations = {
         "activeTitle": "StreamPulse+ is active",
         "planMonthly": "Monthly plan · {{key}}",
         "planLifetime": "Lifetime plan · {{key}}",
-        "deactivate": "Remove the license from this browser",
+        "manage": "Manage my subscription",
+      "manageError": "Can't open your account right now. Try again in a few minutes.",
+      "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
       "smart": {
@@ -1642,7 +1646,9 @@ export const translations = {
         "activeTitle": "StreamPulse+ is active",
         "planMonthly": "Monthly plan · {{key}}",
         "planLifetime": "Lifetime plan · {{key}}",
-        "deactivate": "Remove the license from this browser",
+        "manage": "Manage my subscription",
+      "manageError": "Can't open your account right now. Try again in a few minutes.",
+      "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
       "smart": {
@@ -2360,7 +2366,9 @@ export const translations = {
         "activeTitle": "StreamPulse+ is active",
         "planMonthly": "Monthly plan · {{key}}",
         "planLifetime": "Lifetime plan · {{key}}",
-        "deactivate": "Remove the license from this browser",
+        "manage": "Manage my subscription",
+      "manageError": "Can't open your account right now. Try again in a few minutes.",
+      "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
       "smart": {
@@ -3078,7 +3086,9 @@ export const translations = {
         "activeTitle": "StreamPulse+ is active",
         "planMonthly": "Monthly plan · {{key}}",
         "planLifetime": "Lifetime plan · {{key}}",
-        "deactivate": "Remove the license from this browser",
+        "manage": "Manage my subscription",
+      "manageError": "Can't open your account right now. Try again in a few minutes.",
+      "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
       "smart": {
@@ -3796,7 +3806,9 @@ export const translations = {
         "activeTitle": "StreamPulse+ is active",
         "planMonthly": "Monthly plan · {{key}}",
         "planLifetime": "Lifetime plan · {{key}}",
-        "deactivate": "Remove the license from this browser",
+        "manage": "Manage my subscription",
+      "manageError": "Can't open your account right now. Try again in a few minutes.",
+      "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
       "smart": {
@@ -4514,7 +4526,9 @@ export const translations = {
         "activeTitle": "StreamPulse+ is active",
         "planMonthly": "Monthly plan · {{key}}",
         "planLifetime": "Lifetime plan · {{key}}",
-        "deactivate": "Remove the license from this browser",
+        "manage": "Manage my subscription",
+      "manageError": "Can't open your account right now. Try again in a few minutes.",
+      "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
       "smart": {
@@ -5232,7 +5246,9 @@ export const translations = {
         "activeTitle": "StreamPulse+ is active",
         "planMonthly": "Monthly plan · {{key}}",
         "planLifetime": "Lifetime plan · {{key}}",
-        "deactivate": "Remove the license from this browser",
+        "manage": "Manage my subscription",
+      "manageError": "Can't open your account right now. Try again in a few minutes.",
+      "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
       "smart": {
@@ -5950,7 +5966,9 @@ export const translations = {
         "activeTitle": "StreamPulse+ is active",
         "planMonthly": "Monthly plan · {{key}}",
         "planLifetime": "Lifetime plan · {{key}}",
-        "deactivate": "Remove the license from this browser",
+        "manage": "Manage my subscription",
+      "manageError": "Can't open your account right now. Try again in a few minutes.",
+      "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
       "smart": {
@@ -6668,7 +6686,9 @@ export const translations = {
         "activeTitle": "StreamPulse+ is active",
         "planMonthly": "Monthly plan · {{key}}",
         "planLifetime": "Lifetime plan · {{key}}",
-        "deactivate": "Remove the license from this browser",
+        "manage": "Manage my subscription",
+      "manageError": "Can't open your account right now. Try again in a few minutes.",
+      "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
       "smart": {
@@ -7386,7 +7406,9 @@ export const translations = {
         "activeTitle": "StreamPulse+ is active",
         "planMonthly": "Monthly plan · {{key}}",
         "planLifetime": "Lifetime plan · {{key}}",
-        "deactivate": "Remove the license from this browser",
+        "manage": "Manage my subscription",
+      "manageError": "Can't open your account right now. Try again in a few minutes.",
+      "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
       "smart": {
@@ -8104,7 +8126,9 @@ export const translations = {
         "activeTitle": "StreamPulse+ is active",
         "planMonthly": "Monthly plan · {{key}}",
         "planLifetime": "Lifetime plan · {{key}}",
-        "deactivate": "Remove the license from this browser",
+        "manage": "Manage my subscription",
+      "manageError": "Can't open your account right now. Try again in a few minutes.",
+      "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
       "smart": {
@@ -8822,7 +8846,9 @@ export const translations = {
         "activeTitle": "StreamPulse+ is active",
         "planMonthly": "Monthly plan · {{key}}",
         "planLifetime": "Lifetime plan · {{key}}",
-        "deactivate": "Remove the license from this browser",
+        "manage": "Manage my subscription",
+      "manageError": "Can't open your account right now. Try again in a few minutes.",
+      "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
       "smart": {
@@ -9540,7 +9566,9 @@ export const translations = {
         "activeTitle": "StreamPulse+ is active",
         "planMonthly": "Monthly plan · {{key}}",
         "planLifetime": "Lifetime plan · {{key}}",
-        "deactivate": "Remove the license from this browser",
+        "manage": "Manage my subscription",
+      "manageError": "Can't open your account right now. Try again in a few minutes.",
+      "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
       "smart": {
@@ -10258,7 +10286,9 @@ export const translations = {
         "activeTitle": "StreamPulse+ is active",
         "planMonthly": "Monthly plan · {{key}}",
         "planLifetime": "Lifetime plan · {{key}}",
-        "deactivate": "Remove the license from this browser",
+        "manage": "Manage my subscription",
+      "manageError": "Can't open your account right now. Try again in a few minutes.",
+      "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
       "smart": {
@@ -10976,7 +11006,9 @@ export const translations = {
         "activeTitle": "StreamPulse+ is active",
         "planMonthly": "Monthly plan · {{key}}",
         "planLifetime": "Lifetime plan · {{key}}",
-        "deactivate": "Remove the license from this browser",
+        "manage": "Manage my subscription",
+      "manageError": "Can't open your account right now. Try again in a few minutes.",
+      "deactivate": "Remove the license from this browser",
         "close": "Close"
       },
       "smart": {
