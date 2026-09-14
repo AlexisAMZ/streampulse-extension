@@ -39,6 +39,10 @@ You follow streamers on two platforms, Twitch buries your favorites under recomm
 It works **alongside** BetterTTV, FrankerFaceZ and 7TV: they customize chat, StreamPulse handles alerts, rewards and your streamer list.
 
 <p align="center">
+  <img src="images/promo/demo.gif" alt="Pinning a streamer to StreamPulse favorites in the Twitch sidebar, then opening StreamPulse settings on Twitch" width="100%">
+</p>
+
+<p align="center">
   <img src="images/cws_screenshots/EN/01-dashboard.png" alt="StreamPulse dashboard showing who's live" width="100%">
 </p>
 
