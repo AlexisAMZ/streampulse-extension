@@ -140,7 +140,9 @@
 .side-nav-card.sp-fav-host:hover .sp-fav-star,
 .sp-fav-star:focus-visible { opacity: 1; transform: none; }
 .sp-fav-star:hover { color: #bf94ff; }
-.side-nav-card.sp-fav-pinned .sp-fav-star { color: #bf94ff; opacity: 1; transform: none; }
+/* Already shown in the StreamPulse favorites block: hidden from Twitch's lists to avoid duplicates. */
+.side-nav-card.sp-fav-pinned,
+.tw-transition:has(.side-nav-card.sp-fav-pinned) { display: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
   .sp-drawer,
