@@ -39,7 +39,7 @@ const COPY = {
     favHook: ["Tes favoris", "en haut de Twitch."],
     favSub: "Une étoile sur une chaîne, et elle passe devant toutes les autres.",
     favNote: "Épinglée",
-    cta: "Lien en bio",
+    cta: "Lien",
     browsers: "Chrome · Firefox · gratuit",
   },
   en: {
@@ -52,7 +52,7 @@ const COPY = {
     favHook: ["Your favorites,", "on top of Twitch."],
     favSub: "Star a channel and it jumps ahead of everything else.",
     favNote: "Pinned",
-    cta: "Link in bio",
+    cta: "Link",
     browsers: "Chrome · Firefox · free",
   },
 };
@@ -60,7 +60,7 @@ const COPY = {
 const BELL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>';
 const GEM = '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M4 2h8l3 4-7 8-7-8z"/></svg>';
 const STAR = '<svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M10 2.2l2.35 4.9 5.35.7-3.92 3.72 1 5.32L10 14.27l-4.78 2.57 1-5.32L2.3 7.8l5.35-.7z"/></svg>';
-const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>';
+const LINK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
 
 const BASE_CSS = `
 ${FONT_CSS}
@@ -126,7 +126,7 @@ ${BASE_CSS}
   </div>
   </div>
   <div class="foot">
-    <span class="cta">${ARROW}${escapeHtml(copy.cta)}</span>
+    <span class="cta">${LINK}${escapeHtml(copy.cta)}</span>
     <div class="meta"><span class="chip twitch">Twitch</span><span class="chip kick">Kick</span><span>${escapeHtml(copy.browsers)}</span></div>
   </div>
 </body></html>`;
@@ -153,7 +153,7 @@ h1.fav { font-size: 92px; line-height: 1; }
   </div>
   </div>
   <div class="foot">
-    <span class="cta">${ARROW}${escapeHtml(copy.cta)}</span>
+    <span class="cta">${LINK}${escapeHtml(copy.cta)}</span>
     <div class="meta"><span class="chip twitch">Twitch</span><span>${escapeHtml(copy.browsers)}</span></div>
   </div>
 </body></html>`;
