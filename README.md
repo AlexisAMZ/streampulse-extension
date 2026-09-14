@@ -14,6 +14,7 @@
   <a href="https://addons.mozilla.org/firefox/addon/streampulse-twitch-kick/"><img src="https://img.shields.io/amo/v/streampulse-twitch-kick?label=Firefox&logo=firefoxbrowser&logoColor=white&color=FF7139" alt="Firefox Add-ons"></a>
   <a href="https://github.com/AlexisAMZ/streampulse-extension/stargazers"><img src="https://img.shields.io/github/stars/AlexisAMZ/streampulse-extension?style=flat&logo=github&color=53FC18" alt="GitHub stars"></a>
   <img src="https://img.shields.io/badge/languages-16-lightgrey" alt="16 languages">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="License: GPL-3.0"></a>
 </p>
 
 <p align="center">
@@ -111,6 +112,10 @@ Bug reports, ideas and pull requests are welcome.
 - **Found a bug?** [Open an issue](https://github.com/AlexisAMZ/streampulse-extension/issues/new) with your browser, the page and what happened.
 - **Speak another language?** Every string lives in [`i18n/translations.js`](i18n/translations.js). Fixes and new languages are easy first contributions.
 - **Sending code?** Run `npm run lint` and `npm test` before opening the PR.
+
+## License
+
+StreamPulse is free software under the [GNU General Public License v3.0](LICENSE). You can use, study, modify and share it; any distributed copy or fork must stay open source under the same license.
 
 ## Star history
 
