@@ -202,6 +202,7 @@ Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décoc
 
 | Version | Date | Description des changements | Statut CWS |
 |---------|------|-----------------------------|------------|
+| 26.9.14 | 2026-09-14 | Nouveau design du popup (streamer en vedette, bandeau de lives, points et Drops du jour), épingles et groupes de chaînes, restyle du récap, des notes de version, de l'onboarding et des éléments Twitch, import de sauvegarde qui fusionne au lieu de remplacer, bouton « Partir » reconnu pour annuler les raids, nouvelles captures et visuels promo. | Prêt pour publication |
 | 26.9.13 | 2026-09-13 | Alertes de changement de titre (réglage global et bouton par streamer), photo de profil Twitch en filigrane derrière les statistiques, infobulles au survol sur les boutons de carte, correction du nom de plateforme affiché deux fois, et grande passe de correction des traductions dans 12 langues, dernière catégorie et dernier titre conservés sur les cartes hors ligne, photo de profil qui suit le changement de pseudo, et disparition du bandeau « Aucune préférence à mettre à jour » injustifié. | Prêt pour publication |
 | 26.8.11 | 2026-08-11 | Bouton « Ajouter à StreamPulse » sur les pages de chaîne Twitch, page de notes de version localisée, traductions dans 15 langues ajoutées, ajustements d'interface (indicateur de latence). | Prêt pour publication |
 | 26.8.6 | 2026-08-06 | Amélioration des aperçus vidéo Twitch/Kick, optimisation anti-pause du lecteur et gestion i18n FR/EN. | Prêt pour publication |

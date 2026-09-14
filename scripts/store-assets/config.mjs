@@ -71,7 +71,7 @@ export const LOCALES = {
 export const CANVAS = { width: 1280, height: 800 };
 
 /** Taille de rendu du popup avant intégration dans le cadre marketing. */
-export const POPUP_VIEWPORT = { width: 820, height: 600 };
+export const POPUP_VIEWPORT = { width: 780, height: 600 };
 
 /** Facteur de suréchantillonnage : on rend en 2x puis on réduit. */
 export const SCALE = 2;

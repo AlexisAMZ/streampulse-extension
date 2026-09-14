@@ -86,12 +86,8 @@ function warnPolicySoft(entries, lang) {
 
 /** Les deux vues du popup que l'on capture, avec leur point d'ancrage. */
 const POPUP_VARIANTS = [
-  { name: "dashboard", variant: "dashboard" },
-  {
-    name: "automation",
-    variant: "settings",
-    scrollToSelector: '[data-i18n="popup.settings.groupNotifications"]',
-  },
+  { name: "dashboard", panel: null },
+  { name: "automation", panel: "automation" },
 ];
 
 /**
@@ -142,7 +138,7 @@ async function renderFrame({ name, html, outPath, size = CANVAS, flatten = false
   }
 }
 
-async function buildLanguage({ lang, translations, platforms, languages, listing, uiKeys }) {
+async function buildLanguage({ lang, translations, listing, uiKeys }) {
   const translate = makeTranslator(translations, lang);
   const t = (key, vars) => applyTypography(translate(key, vars), lang);
   const dirName = LANG_DIRS[lang];
@@ -169,15 +165,17 @@ async function buildLanguage({ lang, translations, platforms, languages, listing
       popupShots[spec.name] = override;
       continue;
     }
+    if (!spec.panel) {
+      throw new Error(
+        `Capture manquante : ${path.relative(ROOT, override)} (vraie capture du popup, ~1240px de large)`,
+      );
+    }
     const html = buildPopupPage({
       lang,
       locale: LOCALES[lang],
       strings: translations[lang],
       fallback: translations.en,
-      platforms,
-      languages,
-      variant: spec.variant,
-      scrollToSelector: spec.scrollToSelector,
+      panel: spec.panel,
     });
     const htmlPath = writeWork(`popup-${lang}-${spec.name}.html`, html);
     const shotPath = path.join(WORK_DIR, `popup-${lang}-${spec.name}.png`);
@@ -306,15 +304,9 @@ async function main() {
   assertChromeAvailable();
 
   const i18n = await import(path.join(ROOT, "i18n", "translations.js"));
-  const platformsModule = await import(path.join(ROOT, "js", "platforms.js"));
   const listing = loadListingCopy();
   const uiKeys = popupI18nKeys();
 
-  const platforms = platformsModule.AVAILABLE_PLATFORMS.map((definition) => ({
-    id: definition.id,
-    icon: definition.icon,
-  }));
-  const languages = i18n.AVAILABLE_LANGUAGES.map(({ code, label }) => ({ code, label }));
 
   const requested = process.argv.slice(2);
   const targets = requested.length ? requested : Object.keys(LANG_DIRS);
@@ -334,8 +326,6 @@ async function main() {
       const outDir = await buildLanguage({
         lang,
         translations: i18n.translations,
-        platforms,
-        languages,
         listing,
         uiKeys,
       });

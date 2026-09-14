@@ -48,6 +48,146 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.14",
+    date: "2026-09-14",
+    title: {
+      fr: "Un tout nouveau StreamPulse",
+      en: "A brand new StreamPulse",
+      es: "Un StreamPulse totalmente nuevo",
+      "pt-BR": "Um StreamPulse totalmente novo",
+      de: "Ein ganz neues StreamPulse",
+      it: "Uno StreamPulse tutto nuovo",
+      pl: "Zupełnie nowy StreamPulse",
+      tr: "Yepyeni bir StreamPulse",
+      ru: "Совершенно новый StreamPulse",
+      ja: "生まれ変わったStreamPulse",
+      ko: "완전히 새로워진 StreamPulse",
+      id: "StreamPulse yang serba baru",
+      nl: "Een gloednieuw StreamPulse",
+      sv: "Ett helt nytt StreamPulse",
+      cs: "Zcela nový StreamPulse"
+    },
+    subtitle: {
+      fr: "Nouveau design du popup et de toutes les pages, épingles et groupes pour vos chaînes, et une restauration qui ajoute vos données au lieu de les remplacer.",
+      en: "A new design for the popup and every page, pins and groups for your channels, and a restore that adds your data instead of replacing it.",
+      es: "Nuevo diseño del popup y de todas las páginas, fijados y grupos para tus canales, y una restauración que añade tus datos en lugar de reemplazarlos.",
+      "pt-BR": "Novo design do popup e de todas as páginas, fixados e grupos para seus canais, e uma restauração que adiciona seus dados em vez de substituí-los.",
+      de: "Neues Design für Popup und alle Seiten, Pins und Gruppen für deine Kanäle und eine Wiederherstellung, die deine Daten ergänzt statt sie zu ersetzen.",
+      it: "Nuovo design del popup e di tutte le pagine, fissati e gruppi per i tuoi canali, e un ripristino che aggiunge i tuoi dati invece di sostituirli.",
+      pl: "Nowy wygląd popupu i wszystkich stron, przypięte kanały i grupy oraz przywracanie, które dodaje dane zamiast je zastępować.",
+      tr: "Açılır pencere ve tüm sayfalar için yeni tasarım, kanalların için sabitleme ve gruplar, ve verilerini değiştirmek yerine ekleyen geri yükleme.",
+      ru: "Новый дизайн всплывающего окна и всех страниц, закрепление и группы каналов, а восстановление теперь добавляет данные, а не заменяет их.",
+      ja: "ポップアップと全ページの新デザイン、チャンネルのピン留めとグループ、そしてデータを置き換えずに追加する復元機能。",
+      ko: "팝업과 모든 페이지의 새 디자인, 채널 고정과 그룹, 그리고 데이터를 덮어쓰지 않고 더해 주는 복원 기능.",
+      id: "Desain baru untuk popup dan semua halaman, sematan dan grup untuk kanalmu, serta pemulihan yang menambahkan data alih-alih menggantinya.",
+      nl: "Een nieuw ontwerp voor de pop-up en alle pagina's, vastpinnen en groepen voor je kanalen, en een herstel dat je gegevens toevoegt in plaats van vervangt.",
+      sv: "Ny design för popupen och alla sidor, fästa kanaler och grupper, och en återställning som lägger till dina data i stället för att ersätta dem.",
+      cs: "Nový vzhled vyskakovacího okna i všech stránek, připnutí a skupiny kanálů a obnova, která data přidává místo nahrazení."
+    },
+    changes: [
+      {
+        type: "new",
+        text: {
+          fr: "Nouveau popup : le streamer en live s'affiche en grand avec sa miniature, les autres lives défilent en dessous, et vous voyez d'un coup d'œil vos points et Drops du jour.",
+          en: "New popup: the live streamer takes the stage with their thumbnail, other lives scroll below, and today's points and Drops are visible at a glance.",
+          es: "Nuevo popup: el streamer en directo se muestra en grande con su miniatura, los demás directos se desplazan debajo y ves de un vistazo tus puntos y Drops del día.",
+          "pt-BR": "Novo popup: o streamer ao vivo aparece em destaque com a miniatura, as outras lives rolam abaixo e você vê num relance seus pontos e Drops do dia.",
+          de: "Neues Popup: Der Streamer, der live ist, wird groß mit Vorschaubild gezeigt, die anderen Lives laufen darunter, und deine Punkte und Drops des Tages siehst du auf einen Blick.",
+          it: "Nuovo popup: lo streamer in diretta appare in grande con la sua miniatura, le altre dirette scorrono sotto e vedi a colpo d'occhio punti e Drops del giorno.",
+          pl: "Nowy popup: streamer na żywo jest pokazany w dużym formacie z miniaturą, pozostałe transmisje przewijają się poniżej, a dzisiejsze punkty i Dropsy widać od razu.",
+          tr: "Yeni açılır pencere: canlı yayıncı küçük resmiyle büyük gösterilir, diğer yayınlar altta kayar ve günün puanlarını ve Drops'larını tek bakışta görürsün.",
+          ru: "Новое всплывающее окно: стример в эфире показан крупно с превью, остальные трансляции прокручиваются ниже, а баллы и Drops за день видны сразу.",
+          ja: "新しいポップアップ：配信中の配信者がサムネイル付きで大きく表示され、他の配信は下に並び、今日のポイントとドロップもひと目で確認できます。",
+          ko: "새 팝업: 방송 중인 스트리머가 썸네일과 함께 크게 표시되고, 다른 방송은 아래로 넘겨 보며, 오늘의 포인트와 드롭스를 한눈에 확인할 수 있습니다.",
+          id: "Popup baru: streamer yang sedang live tampil besar dengan thumbnail, siaran lain bergulir di bawahnya, dan poin serta Drops hari ini terlihat sekilas.",
+          nl: "Nieuwe pop-up: de streamer die live is staat groot in beeld met de thumbnail, andere streams scrollen eronder en je punten en Drops van vandaag zie je in één oogopslag.",
+          sv: "Ny popup: streamern som sänder live visas stort med miniatyrbild, övriga sändningar rullar nedanför och dagens poäng och Drops syns direkt.",
+          cs: "Nové vyskakovací okno: streamer, který vysílá, je zobrazen velký s náhledem, ostatní vysílání se posouvají pod ním a dnešní body a Dropy vidíš na první pohled."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "Épinglez vos chaînes préférées, rangez-les dans des groupes et retrouvez-les dans la liste complète avec recherche et tri.",
+          en: "Pin your favorite channels, sort them into groups and find them in the full list with search and sorting.",
+          es: "Fija tus canales favoritos, organízalos en grupos y encuéntralos en la lista completa con búsqueda y orden.",
+          "pt-BR": "Fixe seus canais favoritos, organize-os em grupos e encontre-os na lista completa com busca e ordenação.",
+          de: "Pinne deine Lieblingskanäle, sortiere sie in Gruppen und finde sie in der vollständigen Liste mit Suche und Sortierung.",
+          it: "Fissa i tuoi canali preferiti, organizzali in gruppi e ritrovali nell'elenco completo con ricerca e ordinamento.",
+          pl: "Przypinaj ulubione kanały, układaj je w grupy i znajduj na pełnej liście z wyszukiwaniem i sortowaniem.",
+          tr: "Sevdiğin kanalları sabitle, gruplara ayır ve arama ve sıralama içeren tam listede bul.",
+          ru: "Закрепляйте любимые каналы, распределяйте их по группам и находите в полном списке с поиском и сортировкой.",
+          ja: "お気に入りのチャンネルをピン留めしてグループに分け、検索と並べ替えのできる一覧からすぐに見つけられます。",
+          ko: "좋아하는 채널을 고정하고 그룹으로 정리한 뒤, 검색과 정렬이 되는 전체 목록에서 찾아보세요.",
+          id: "Sematkan kanal favoritmu, kelompokkan dalam grup, dan temukan di daftar lengkap dengan pencarian dan pengurutan.",
+          nl: "Pin je favoriete kanalen, deel ze in groepen in en vind ze terug in de volledige lijst met zoeken en sorteren.",
+          sv: "Fäst dina favoritkanaler, ordna dem i grupper och hitta dem i hela listan med sökning och sortering.",
+          cs: "Připni si oblíbené kanály, roztřiď je do skupin a najdi je v úplném seznamu s vyhledáváním a řazením."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "Nouveau look pour le récap, les notes de version, l'accueil et les éléments ajoutés sur Twitch, aux couleurs de streampulse.fr.",
+          en: "A new look for the recap, the release notes, the welcome screens and the elements added on Twitch, matching streampulse.fr.",
+          es: "Nuevo aspecto para el resumen, las notas de versión, la bienvenida y los elementos añadidos en Twitch, con los colores de streampulse.fr.",
+          "pt-BR": "Novo visual para o resumo, as notas de versão, as boas-vindas e os elementos adicionados na Twitch, com as cores do streampulse.fr.",
+          de: "Neuer Look für den Rückblick, die Versionshinweise, die Begrüßung und die auf Twitch eingefügten Elemente, passend zu streampulse.fr.",
+          it: "Nuovo aspetto per il riepilogo, le note di versione, il benvenuto e gli elementi aggiunti su Twitch, con i colori di streampulse.fr.",
+          pl: "Nowy wygląd podsumowania, informacji o wersji, ekranu powitalnego i elementów dodawanych na Twitchu, w barwach streampulse.fr.",
+          tr: "Özet, sürüm notları, karşılama ekranları ve Twitch'e eklenen öğeler için streampulse.fr renklerinde yeni görünüm.",
+          ru: "Новый вид итогов, заметок о версии, приветствия и элементов на Twitch в стиле streampulse.fr.",
+          ja: "まとめ、リリースノート、ようこそ画面、Twitchに追加される要素のデザインをstreampulse.frに合わせて一新。",
+          ko: "요약, 릴리스 노트, 시작 화면, 트위치에 추가되는 요소가 streampulse.fr 스타일로 새로워졌습니다.",
+          id: "Tampilan baru untuk rekap, catatan rilis, layar sambutan, dan elemen yang ditambahkan di Twitch, senada dengan streampulse.fr.",
+          nl: "Een nieuwe look voor het overzicht, de releasenotes, het welkomstscherm en de elementen op Twitch, in de stijl van streampulse.fr.",
+          sv: "Nytt utseende för sammanfattningen, versionsinformationen, välkomstskärmen och elementen på Twitch, i streampulse.fr:s stil.",
+          cs: "Nový vzhled rekapitulace, poznámek k verzi, uvítání a prvků přidaných na Twitch v barvách streampulse.fr."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "Importer une sauvegarde s'ouvre dans un onglet et ajoute les streamers et le temps de visionnage à ceux déjà présents, sans écraser vos réglages.",
+          en: "Importing a backup opens in a tab and adds its streamers and watch time to what you already have, without overwriting your settings.",
+          es: "Importar una copia se abre en una pestaña y añade los streamers y el tiempo de visualización a los que ya tienes, sin sobrescribir tus ajustes.",
+          "pt-BR": "Importar um backup abre em uma aba e adiciona os streamers e o tempo assistido aos que você já tem, sem sobrescrever suas configurações.",
+          de: "Das Importieren einer Sicherung öffnet sich in einem Tab und fügt Streamer und Zuschauzeit zu deinen vorhandenen hinzu, ohne deine Einstellungen zu überschreiben.",
+          it: "L'importazione di un backup si apre in una scheda e aggiunge streamer e tempo di visione a quelli che hai già, senza sovrascrivere le impostazioni.",
+          pl: "Import kopii otwiera się w karcie i dodaje streamerów oraz czas oglądania do tych, które już masz, bez nadpisywania ustawień.",
+          tr: "Yedek içe aktarma bir sekmede açılır ve yayıncılarla izleme süresini mevcut olanlara ekler, ayarlarının üzerine yazmaz.",
+          ru: "Импорт резервной копии открывается во вкладке и добавляет стримеров и время просмотра к уже имеющимся, не перезаписывая настройки.",
+          ja: "バックアップの読み込みは専用タブで開き、設定を上書きせずに配信者と視聴時間を今のデータに追加します。",
+          ko: "백업 가져오기가 탭에서 열리며, 설정을 덮어쓰지 않고 스트리머와 시청 시간을 기존 데이터에 더해 줍니다.",
+          id: "Impor cadangan terbuka di tab dan menambahkan streamer serta waktu menonton ke data yang sudah ada, tanpa menimpa pengaturanmu.",
+          nl: "Een back-up importeren opent in een tabblad en voegt de streamers en kijktijd toe aan wat je al hebt, zonder je instellingen te overschrijven.",
+          sv: "Import av säkerhetskopia öppnas i en flik och lägger till streamers och tittartid till det du redan har, utan att skriva över inställningarna.",
+          cs: "Import zálohy se otevře v kartě a přidá streamery a dobu sledování k těm stávajícím, aniž by přepsal nastavení."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "L'annulation automatique des raids reconnaît de nouveau le bouton « Partir » de Twitch en français et dans d'autres langues.",
+          en: "Automatic raid opt-out recognizes Twitch's leave button again in French and other languages.",
+          es: "La cancelación automática de raids vuelve a reconocer el botón para salir de Twitch en español y otros idiomas.",
+          "pt-BR": "O cancelamento automático de raids volta a reconhecer o botão de sair da Twitch em português e outros idiomas.",
+          de: "Das automatische Abbrechen von Raids erkennt den Verlassen-Button von Twitch wieder, auch auf Deutsch.",
+          it: "L'annullamento automatico dei raid riconosce di nuovo il pulsante per uscire di Twitch in più lingue.",
+          pl: "Automatyczne anulowanie rajdów znów rozpoznaje przycisk opuszczenia na Twitchu w wielu językach.",
+          tr: "Baskınları otomatik iptal etme, Twitch'in ayrılma düğmesini birçok dilde yeniden tanıyor.",
+          ru: "Автоматическая отмена рейдов снова распознаёт кнопку выхода Twitch на разных языках.",
+          ja: "レイドの自動キャンセルが、複数の言語でTwitchの退出ボタンを再び認識するようになりました。",
+          ko: "자동 레이드 취소가 여러 언어에서 트위치의 나가기 버튼을 다시 인식합니다.",
+          id: "Pembatalan raid otomatis kembali mengenali tombol keluar Twitch dalam berbagai bahasa.",
+          nl: "Automatisch raids annuleren herkent de verlaatknop van Twitch weer in meerdere talen.",
+          sv: "Automatisk avbrytning av raids känner igen Twitchs lämna-knapp igen på flera språk.",
+          cs: "Automatické rušení raidů opět rozpozná tlačítko pro odchod na Twitchi v různých jazycích."
+        }
+      }
+    ]
+  },
+  {
     version: "26.9.13",
     date: "2026-09-13",
     title: {

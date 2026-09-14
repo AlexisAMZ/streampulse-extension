@@ -1,79 +1,49 @@
 /**
  * Cadres marketing 1280x800 (dimensions imposées par le Chrome Web Store).
  *
- * La charte reprend celle du popup : fond #08080d, grille ambiante, halo violet
- * Twitch et halo vert Kick, typographie système identique.
+ * Charte de streampulse.fr et du popup (voir brand.mjs) : navy, halo violet,
+ * titres en Unbounded, texte en Onest, logo blanc sans fond.
  */
 
 import { CANVAS } from "./config.mjs";
-
-function escapeHtml(value) {
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
+import { COLORS, FONT_CSS, DISPLAY, RESET, backdrop, LOGO_CSS, escapeHtml } from "./brand.mjs";
 
 const BASE_CSS = `
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body {
-  width: ${CANVAS.width}px;
-  height: ${CANVAS.height}px;
-  overflow: hidden;
-}
-body {
-  background:
-    radial-gradient(880px 520px at 10% -12%, rgba(145, 70, 255, 0.32), transparent 64%),
-    radial-gradient(760px 460px at 94% 4%, rgba(83, 252, 24, 0.13), transparent 60%),
-    radial-gradient(900px 620px at 50% 118%, rgba(145, 70, 255, 0.12), transparent 70%),
-    #08080d;
-  color: #f0f0f4;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-body::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
-  background-size: 40px 40px;
-  -webkit-mask-image: radial-gradient(ellipse 85% 70% at 50% 20%, black, transparent 82%);
-}
-body > * { position: relative; z-index: 1; }
+${FONT_CSS}
+${RESET}
+${backdrop(CANVAS.width, CANVAS.height)}
+body { display: flex; flex-direction: column; }
 
-.head { flex: 0 0 auto; padding: 42px 76px 0; }
-.brand { display: flex; align-items: center; gap: 11px; margin-bottom: 16px; }
-.brand img { width: 30px; height: 30px; display: block; }
-.brand .wordmark { font-size: 19px; font-weight: 700; letter-spacing: -0.015em; }
-.brand .divider { width: 1px; height: 15px; background: rgba(255, 255, 255, 0.16); }
+.head { flex: 0 0 auto; padding: 44px 72px 0; }
+.brand { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.brand img { width: 30px; height: 30px; ${LOGO_CSS} }
+.brand .wordmark { font-family: ${DISPLAY}; font-size: 19px; font-weight: 700; letter-spacing: -0.02em; }
 .brand .tagline {
-  font-family: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  color: #a97dff;
+  margin-left: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(198, 212, 160, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(198, 212, 160, 0.3);
+  color: ${COLORS.lcd};
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 h1 {
-  font-size: 40px;
-  line-height: 1.1;
+  font-family: ${DISPLAY};
+  font-size: 42px;
+  line-height: 1.08;
   font-weight: 800;
-  letter-spacing: -0.028em;
-  max-width: 1000px;
+  letter-spacing: -0.035em;
+  max-width: 1080px;
 }
 .sub {
-  margin-top: 11px;
-  font-size: 17px;
-  line-height: 1.48;
-  color: #9a9aab;
-  max-width: 880px;
+  margin-top: 12px;
+  font-size: 18px;
+  line-height: 1.45;
+  color: ${COLORS.text2};
+  max-width: 900px;
 }
 `;
 
@@ -84,17 +54,18 @@ const PRODUCT_CSS = `
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 26px 76px 36px;
+  padding: 28px 72px 0;
+  overflow: hidden;
 }
 .stage img {
-  height: 100%;
-  width: auto;
+  width: 880px;
+  height: auto;
   display: block;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 20px 20px 0 0;
   box-shadow:
-    0 34px 80px rgba(0, 0, 0, 0.66),
-    0 0 100px rgba(145, 70, 255, 0.16);
+    0 0 0 1px ${COLORS.line2},
+    0 40px 90px rgba(0, 0, 0, 0.6),
+    0 0 120px rgba(145, 70, 255, 0.28);
 }
 `;
 
@@ -106,33 +77,34 @@ const FEATURES_CSS = `
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: 1fr;
   gap: 16px;
-  padding: 30px 76px 48px;
+  padding: 32px 72px 52px;
 }
 .feat {
-  background: rgba(255, 255, 255, 0.032);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 14px;
-  padding: 20px 20px 22px;
+  background: rgba(21, 23, 61, 0.72);
+  box-shadow: inset 0 0 0 1px ${COLORS.line};
+  border-radius: 20px;
+  padding: 22px 22px 24px;
   overflow: hidden;
 }
 .feat .glyph {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: rgba(145, 70, 255, 0.15);
-  border: 1px solid rgba(145, 70, 255, 0.34);
-  color: #c2a0ff;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: ${COLORS.lcd};
+  color: ${COLORS.lcdInk};
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
-.feat .glyph svg { width: 17px; height: 17px; display: block; }
+.feat:nth-child(even) .glyph { background: ${COLORS.violet}; color: #fff; }
+.feat .glyph svg { width: 19px; height: 19px; display: block; }
 .feat h3 {
-  font-size: 15.5px;
+  font-family: ${DISPLAY};
+  font-size: 15px;
   font-weight: 700;
-  line-height: 1.28;
-  letter-spacing: -0.012em;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
   margin-bottom: 8px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -140,9 +112,9 @@ const FEATURES_CSS = `
   overflow: hidden;
 }
 .feat p {
-  font-size: 13px;
-  line-height: 1.55;
-  color: #8d8d9e;
+  font-size: 14px;
+  line-height: 1.5;
+  color: ${COLORS.text2};
   display: -webkit-box;
   -webkit-line-clamp: 6;
   -webkit-box-orient: vertical;
@@ -164,7 +136,6 @@ function head({ logoPath, tagline, title, subtitle }) {
   <div class="brand">
     <img src="${escapeHtml(logoPath)}" alt="">
     <span class="wordmark">StreamPulse</span>
-    <span class="divider"></span>
     <span class="tagline">${escapeHtml(tagline)}</span>
   </div>
   <h1>${escapeHtml(title)}</h1>
@@ -172,7 +143,7 @@ function head({ logoPath, tagline, title, subtitle }) {
 </div>`;
 }
 
-/** Cadre « produit » : bandeau de texte puis capture du popup. */
+/** Cadre « produit » : bandeau de texte puis capture du popup, coupée en bas. */
 export function buildProductFrame({ logoPath, tagline, title, subtitle, shotPath }) {
   return page({
     css: PRODUCT_CSS,
@@ -183,8 +154,7 @@ export function buildProductFrame({ logoPath, tagline, title, subtitle, shotPath
 
 /**
  * Icônes au trait, même facture que celles de l'extension (24px, stroke 2).
- * Ordre calé sur celui des puces de CHROMEWEBSTORE.md : points de chaîne,
- * alertes live, intégration Twitch, aperçus au survol, lecteur, filtre chat.
+ * Ordre calé sur celui des puces de CHROMEWEBSTORE.md.
  */
 const stroke = (body) =>
   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
