@@ -351,26 +351,24 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
  * langue. Rédigé dans la langue principale du store (français, cf.
  * CHROMEWEBSTORE.md § 1). Seul asset qui doit être sans canal alpha.
  */
-async function buildPromo({ translations, listing, lang = PROMO_LANG }) {
-  const t = makeTranslator(translations, lang);
+async function buildPromo({ listing, lang = PROMO_LANG }) {
   const suffix = lang === PROMO_LANG ? "" : `_${lang}`;
   const outDir = path.join(ROOT, "images", "promo");
   fs.mkdirSync(outDir, { recursive: true });
   const outPath = path.join(outDir, `small_tile${suffix}.png`);
 
-  // Points de chaîne, alertes live, aperçus au survol : les trois arguments les
-  // plus vendeurs parmi les puces du listing, dans leur ordre d'origine.
-  const bullets = listing[lang].bullets;
-  const benefits = [bullets[0], bullets[1], bullets[3]].map((bullet) =>
-    applyTypography(bullet.title, lang),
-  );
-  const tagline = resolveTagline(t("onboarding.welcomeTagline"), lang);
-
+  // Accroche courte et vraies cartes live du popup : sur 440x280, une promesse
+  // lisible d'un coup d'oeil vaut mieux qu'une liste de fonctions.
+  const fr = lang === "fr";
+  const tile = {
+    title: fr ? "Ne rate plus" : "Never miss",
+    accent: fr ? "aucun live." : "a live again.",
+    subtitle: fr ? "Tes streamers Twitch et Kick en direct, en un clic." : "Your Twitch and Kick streamers live, one click away.",
+    liveLabel: fr ? "En direct" : "Live now",
+    pointsLabel: fr ? "+250 pts" : "+250 pts",
+  };
   assertPolicyClean(
-    [
-      { label: "tagline", text: tagline },
-      ...benefits.map((text, index) => ({ label: `bénéfice ${index + 1}`, text })),
-    ],
+    Object.entries(tile).map(([label, text]) => ({ label: `tuile ${label}`, text })),
     lang,
   );
 
@@ -379,8 +377,19 @@ async function buildPromo({ translations, listing, lang = PROMO_LANG }) {
     outPath,
     size: PROMO_TILE,
     flatten: true,
-    html: buildPromoTile({ logoPath: LOGO, tagline, benefits }),
+    html: buildPromoTile({
+      logoPath: LOGO,
+      ...tile,
+      shotPath: path.join(OUT_DIR, LANG_DIRS[lang], "source-dashboard.png"),
+    }),
   });
+
+  // Points de chaîne, alertes live, aperçus au survol : les trois arguments de
+  // la grande image, dans l'ordre des puces du listing.
+  const bullets = listing[lang].bullets;
+  const benefits = [bullets[0], bullets[1], bullets[3]].map((bullet) =>
+    applyTypography(bullet.title, lang),
+  );
 
   // Grande image en haut de la fiche, avec la vraie capture du popup.
   const marqueePath = path.join(outDir, `marquee_1400x560${suffix}.png`);
@@ -444,7 +453,7 @@ async function main() {
     }
 
     for (const lang of [PROMO_LANG, "en"]) {
-      const promoPaths = await buildPromo({ translations: i18n.translations, listing, lang });
+      const promoPaths = await buildPromo({ listing, lang });
       for (const promoPath of promoPaths) console.log(`✓ promo  → ${path.relative(ROOT, promoPath)} (24 bits)`);
     }
   } finally {
