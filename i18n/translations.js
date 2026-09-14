@@ -242,6 +242,17 @@ export const translations = {
         "failed": "Refusé",
         "note": "Résultats estimés d'après l'évolution de ton solde de points."
       },
+      "plusMenu": {
+        "statusActive": "Ta licence est active sur ce navigateur : tout est débloqué.",
+        "statusInactive": "Débloque ces outils avec StreamPulse+.",
+        "manage": "Gérer ma licence",
+        "discover": "Découvrir StreamPulse+",
+        "groupLook": "Personnalisation",
+        "groupRecap": "Récap avancé",
+        "recapTitle": "Récap avancé et Wrapped annuel",
+        "recapBody": "Heures par catégorie, courbe d'activité et ton année entière.",
+        "openRecap": "Ouvrir mon récap"
+      },
       "smart": {
         "title": "Alertes intelligentes",
         "lockedBody": "Choisis quand être prévenu : un jeu précis, un mot dans le titre, un nombre de viewers. Réservé à StreamPulse+.",
@@ -353,6 +364,7 @@ export const translations = {
         "menuPreviews": "Aperçus",
         "menuChat": "Chat",
         "menuData": "Temps et données",
+        "menuPlus": "StreamPulse+",
         "menuGeneral": "Général et aide",
         "groupRewards": "Récompenses",
         "groupPlayer": "Lecteur",
@@ -1008,6 +1020,17 @@ export const translations = {
         "failed": "Rejected",
         "note": "Results are estimated from how your points balance changes."
       },
+      "plusMenu": {
+        "statusActive": "Your license is active on this browser: everything is unlocked.",
+        "statusInactive": "Unlock these tools with StreamPulse+.",
+        "manage": "Manage my license",
+        "discover": "Discover StreamPulse+",
+        "groupLook": "Customization",
+        "groupRecap": "Advanced recap",
+        "recapTitle": "Advanced recap and yearly Wrapped",
+        "recapBody": "Hours by category, activity curve and your whole year.",
+        "openRecap": "Open my recap"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -1119,6 +1142,7 @@ export const translations = {
         "menuPreviews": "Previews",
         "menuChat": "Chat",
         "menuData": "Time and data",
+        "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
         "groupPlayer": "Player",
@@ -1774,6 +1798,17 @@ export const translations = {
         "failed": "Rechazada",
         "note": "Resultados estimados a partir de la evolución de tu saldo de puntos."
       },
+      "plusMenu": {
+        "statusActive": "Tu licencia está activa en este navegador: todo está desbloqueado.",
+        "statusInactive": "Desbloquea estas herramientas con StreamPulse+.",
+        "manage": "Gestionar mi licencia",
+        "discover": "Descubrir StreamPulse+",
+        "groupLook": "Personalización",
+        "groupRecap": "Resumen avanzado",
+        "recapTitle": "Resumen avanzado y Wrapped anual",
+        "recapBody": "Horas por categoría, curva de actividad y todo tu año.",
+        "openRecap": "Abrir mi resumen"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -1885,6 +1920,7 @@ export const translations = {
         "menuPreviews": "Previews",
         "menuChat": "Chat",
         "menuData": "Time and data",
+        "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
         "groupPlayer": "Player",
@@ -2540,6 +2576,17 @@ export const translations = {
         "failed": "Recusada",
         "note": "Resultados estimados pela variação do seu saldo de pontos."
       },
+      "plusMenu": {
+        "statusActive": "Sua licença está ativa neste navegador: tudo desbloqueado.",
+        "statusInactive": "Desbloqueie estas ferramentas com o StreamPulse+.",
+        "manage": "Gerenciar minha licença",
+        "discover": "Conhecer o StreamPulse+",
+        "groupLook": "Personalização",
+        "groupRecap": "Resumo avançado",
+        "recapTitle": "Resumo avançado e Wrapped anual",
+        "recapBody": "Horas por categoria, curva de atividade e o seu ano inteiro.",
+        "openRecap": "Abrir meu resumo"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -2651,6 +2698,7 @@ export const translations = {
         "menuPreviews": "Previews",
         "menuChat": "Chat",
         "menuData": "Time and data",
+        "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
         "groupPlayer": "Player",
@@ -3306,6 +3354,17 @@ export const translations = {
         "failed": "Abgelehnt",
         "note": "Ergebnisse geschätzt anhand der Entwicklung deines Kanalpunkte-Guthabens."
       },
+      "plusMenu": {
+        "statusActive": "Deine Lizenz ist in diesem Browser aktiv: alles freigeschaltet.",
+        "statusInactive": "Schalte diese Tools mit StreamPulse+ frei.",
+        "manage": "Lizenz verwalten",
+        "discover": "StreamPulse+ entdecken",
+        "groupLook": "Anpassung",
+        "groupRecap": "Erweiterter Rückblick",
+        "recapTitle": "Erweiterter Rückblick und Jahres-Wrapped",
+        "recapBody": "Stunden pro Kategorie, Aktivitätskurve und dein ganzes Jahr.",
+        "openRecap": "Rückblick öffnen"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -3417,6 +3476,7 @@ export const translations = {
         "menuPreviews": "Previews",
         "menuChat": "Chat",
         "menuData": "Time and data",
+        "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
         "groupPlayer": "Player",
@@ -4072,6 +4132,17 @@ export const translations = {
         "failed": "Rifiutata",
         "note": "Risultati stimati in base all'andamento del tuo saldo punti."
       },
+      "plusMenu": {
+        "statusActive": "La tua licenza è attiva su questo browser: tutto sbloccato.",
+        "statusInactive": "Sblocca questi strumenti con StreamPulse+.",
+        "manage": "Gestisci la licenza",
+        "discover": "Scopri StreamPulse+",
+        "groupLook": "Personalizzazione",
+        "groupRecap": "Riepilogo avanzato",
+        "recapTitle": "Riepilogo avanzato e Wrapped annuale",
+        "recapBody": "Ore per categoria, curva di attività e il tuo anno intero.",
+        "openRecap": "Apri il riepilogo"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -4183,6 +4254,7 @@ export const translations = {
         "menuPreviews": "Previews",
         "menuChat": "Chat",
         "menuData": "Time and data",
+        "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
         "groupPlayer": "Player",
@@ -4838,6 +4910,17 @@ export const translations = {
         "failed": "Odrzucony",
         "note": "Wyniki szacowane na podstawie zmian salda punktów."
       },
+      "plusMenu": {
+        "statusActive": "Licencja jest aktywna w tej przeglądarce: wszystko odblokowane.",
+        "statusInactive": "Odblokuj te narzędzia ze StreamPulse+.",
+        "manage": "Zarządzaj licencją",
+        "discover": "Poznaj StreamPulse+",
+        "groupLook": "Personalizacja",
+        "groupRecap": "Rozszerzone podsumowanie",
+        "recapTitle": "Rozszerzone podsumowanie i roczny Wrapped",
+        "recapBody": "Godziny według kategorii, krzywa aktywności i cały Twój rok.",
+        "openRecap": "Otwórz podsumowanie"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -4949,6 +5032,7 @@ export const translations = {
         "menuPreviews": "Previews",
         "menuChat": "Chat",
         "menuData": "Time and data",
+        "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
         "groupPlayer": "Player",
@@ -5604,6 +5688,17 @@ export const translations = {
         "failed": "Reddedildi",
         "note": "Sonuçlar puan bakiyendeki değişime göre tahmin edilir."
       },
+      "plusMenu": {
+        "statusActive": "Lisansın bu tarayıcıda etkin: her şeyin kilidi açık.",
+        "statusInactive": "Bu araçların kilidini StreamPulse+ ile aç.",
+        "manage": "Lisansımı yönet",
+        "discover": "StreamPulse+'ı keşfet",
+        "groupLook": "Kişiselleştirme",
+        "groupRecap": "Gelişmiş özet",
+        "recapTitle": "Gelişmiş özet ve yıllık Wrapped",
+        "recapBody": "Kategoriye göre saatler, etkinlik eğrisi ve tüm yılın.",
+        "openRecap": "Özetimi aç"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -5715,6 +5810,7 @@ export const translations = {
         "menuPreviews": "Previews",
         "menuChat": "Chat",
         "menuData": "Time and data",
+        "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
         "groupPlayer": "Player",
@@ -6370,6 +6466,17 @@ export const translations = {
         "failed": "Отклонена",
         "note": "Результаты оцениваются по изменению баланса баллов."
       },
+      "plusMenu": {
+        "statusActive": "Лицензия активна в этом браузере: всё открыто.",
+        "statusInactive": "Откройте эти инструменты со StreamPulse+.",
+        "manage": "Управлять лицензией",
+        "discover": "Узнать о StreamPulse+",
+        "groupLook": "Оформление",
+        "groupRecap": "Расширенная сводка",
+        "recapTitle": "Расширенная сводка и годовой Wrapped",
+        "recapBody": "Часы по категориям, кривая активности и весь ваш год.",
+        "openRecap": "Открыть сводку"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -6481,6 +6588,7 @@ export const translations = {
         "menuPreviews": "Previews",
         "menuChat": "Chat",
         "menuData": "Time and data",
+        "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
         "groupPlayer": "Player",
@@ -7136,6 +7244,17 @@ export const translations = {
         "failed": "拒否",
         "note": "結果はポイント残高の変化から推定しています。"
       },
+      "plusMenu": {
+        "statusActive": "このブラウザでライセンスが有効です：すべて利用できます。",
+        "statusInactive": "StreamPulse+ でこれらの機能をアンロックできます。",
+        "manage": "ライセンスを管理",
+        "discover": "StreamPulse+ を見る",
+        "groupLook": "カスタマイズ",
+        "groupRecap": "詳細な振り返り",
+        "recapTitle": "詳細な振り返りと年間 Wrapped",
+        "recapBody": "カテゴリ別の時間、アクティビティの推移、1年分。",
+        "openRecap": "振り返りを開く"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -7247,6 +7366,7 @@ export const translations = {
         "menuPreviews": "Previews",
         "menuChat": "Chat",
         "menuData": "Time and data",
+        "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
         "groupPlayer": "Player",
@@ -7902,6 +8022,17 @@ export const translations = {
         "failed": "거부됨",
         "note": "결과는 포인트 잔액 변화로 추정합니다."
       },
+      "plusMenu": {
+        "statusActive": "이 브라우저에서 라이선스가 활성화되어 모든 기능이 열렸습니다.",
+        "statusInactive": "StreamPulse+로 이 도구들을 잠금 해제하세요.",
+        "manage": "라이선스 관리",
+        "discover": "StreamPulse+ 알아보기",
+        "groupLook": "맞춤 설정",
+        "groupRecap": "고급 요약",
+        "recapTitle": "고급 요약과 연간 Wrapped",
+        "recapBody": "카테고리별 시간, 활동 곡선, 한 해 전체.",
+        "openRecap": "요약 열기"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -8013,6 +8144,7 @@ export const translations = {
         "menuPreviews": "Previews",
         "menuChat": "Chat",
         "menuData": "Time and data",
+        "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
         "groupPlayer": "Player",
@@ -8668,6 +8800,17 @@ export const translations = {
         "failed": "Ditolak",
         "note": "Hasil diperkirakan dari perubahan saldo poinmu."
       },
+      "plusMenu": {
+        "statusActive": "Lisensimu aktif di browser ini: semua terbuka.",
+        "statusInactive": "Buka alat-alat ini dengan StreamPulse+.",
+        "manage": "Kelola lisensi",
+        "discover": "Kenali StreamPulse+",
+        "groupLook": "Personalisasi",
+        "groupRecap": "Rekap lanjutan",
+        "recapTitle": "Rekap lanjutan dan Wrapped tahunan",
+        "recapBody": "Jam per kategori, kurva aktivitas, dan setahun penuh.",
+        "openRecap": "Buka rekapku"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -8779,6 +8922,7 @@ export const translations = {
         "menuPreviews": "Previews",
         "menuChat": "Chat",
         "menuData": "Time and data",
+        "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
         "groupPlayer": "Player",
@@ -9434,6 +9578,17 @@ export const translations = {
         "failed": "Geweigerd",
         "note": "Resultaten geschat op basis van je puntensaldo."
       },
+      "plusMenu": {
+        "statusActive": "Je licentie is actief in deze browser: alles is ontgrendeld.",
+        "statusInactive": "Ontgrendel deze tools met StreamPulse+.",
+        "manage": "Licentie beheren",
+        "discover": "Ontdek StreamPulse+",
+        "groupLook": "Personalisatie",
+        "groupRecap": "Uitgebreid overzicht",
+        "recapTitle": "Uitgebreid overzicht en jaarlijkse Wrapped",
+        "recapBody": "Uren per categorie, activiteitscurve en je hele jaar.",
+        "openRecap": "Overzicht openen"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -9545,6 +9700,7 @@ export const translations = {
         "menuPreviews": "Previews",
         "menuChat": "Chat",
         "menuData": "Time and data",
+        "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
         "groupPlayer": "Player",
@@ -10200,6 +10356,17 @@ export const translations = {
         "failed": "Rejected",
         "note": "Results are estimated from how your points balance changes."
       },
+      "plusMenu": {
+        "statusActive": "Your license is active on this browser: everything is unlocked.",
+        "statusInactive": "Unlock these tools with StreamPulse+.",
+        "manage": "Manage my license",
+        "discover": "Discover StreamPulse+",
+        "groupLook": "Customization",
+        "groupRecap": "Advanced recap",
+        "recapTitle": "Advanced recap and yearly Wrapped",
+        "recapBody": "Hours by category, activity curve and your whole year.",
+        "openRecap": "Open my recap"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -10311,6 +10478,7 @@ export const translations = {
         "menuPreviews": "Previews",
         "menuChat": "Chat",
         "menuData": "Time and data",
+        "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
         "groupPlayer": "Player",
@@ -10966,6 +11134,17 @@ export const translations = {
         "failed": "Nekad",
         "note": "Resultaten uppskattas utifrån hur ditt poängsaldo ändras."
       },
+      "plusMenu": {
+        "statusActive": "Din licens är aktiv i den här webbläsaren: allt är upplåst.",
+        "statusInactive": "Lås upp de här verktygen med StreamPulse+.",
+        "manage": "Hantera licens",
+        "discover": "Upptäck StreamPulse+",
+        "groupLook": "Anpassning",
+        "groupRecap": "Utökad sammanfattning",
+        "recapTitle": "Utökad sammanfattning och årlig Wrapped",
+        "recapBody": "Timmar per kategori, aktivitetskurva och hela ditt år.",
+        "openRecap": "Öppna sammanfattning"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -11077,6 +11256,7 @@ export const translations = {
         "menuPreviews": "Previews",
         "menuChat": "Chat",
         "menuData": "Time and data",
+        "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
         "groupPlayer": "Player",
@@ -11732,6 +11912,17 @@ export const translations = {
         "failed": "Zamítnuto",
         "note": "Výsledky jsou odhadnuté podle změny zůstatku bodů."
       },
+      "plusMenu": {
+        "statusActive": "Licence je v tomto prohlížeči aktivní: vše je odemčeno.",
+        "statusInactive": "Odemkni tyto nástroje se StreamPulse+.",
+        "manage": "Spravovat licenci",
+        "discover": "Objevit StreamPulse+",
+        "groupLook": "Přizpůsobení",
+        "groupRecap": "Rozšířený přehled",
+        "recapTitle": "Rozšířený přehled a roční Wrapped",
+        "recapBody": "Hodiny podle kategorie, křivka aktivity a celý tvůj rok.",
+        "openRecap": "Otevřít přehled"
+      },
       "smart": {
         "title": "Smart alerts",
         "lockedBody": "Choose when to be alerted: a specific game, a word in the title, a viewer count. StreamPulse+ only.",
@@ -11843,6 +12034,7 @@ export const translations = {
         "menuPreviews": "Previews",
         "menuChat": "Chat",
         "menuData": "Time and data",
+        "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
         "groupPlayer": "Player",

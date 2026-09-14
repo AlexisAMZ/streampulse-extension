@@ -232,6 +232,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
           <span data-i18n="popup.osd.menuData">Temps et données</span>
         </button>
+        <button id="menu-tab-plus" class="menu-tab menu-tab-plus" type="button" role="tab" aria-selected="false" aria-controls="menu-plus" data-panel="plus" tabindex="-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg>
+          <span data-i18n="popup.osd.menuPlus">StreamPulse+</span>
+        </button>
         <button id="menu-tab-general" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-general" data-panel="general" tabindex="-1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
           <span data-i18n="popup.osd.menuGeneral">Général et aide</span>
@@ -272,18 +276,6 @@
             <input id="pref-sounds" type="checkbox" role="switch" />
           </label>
 
-          <h3 class="settings-group-header smart-head"><span data-i18n="popup.smart.title">Alertes intelligentes</span><span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span></h3>
-          <div class="smart-locked" id="smart-locked">
-            <p class="settings-description" data-i18n="popup.smart.lockedBody">Choisis quand être prévenu : un jeu précis, un mot dans le titre, un nombre de viewers. Réservé à StreamPulse+.</p>
-            <button class="button button-primary" id="smart-unlock" type="button" data-i18n="popup.smart.unlock">Débloquer</button>
-          </div>
-          <div class="smart-editor" id="smart-editor" hidden>
-            <p class="settings-description" data-i18n="popup.smart.replacesNote">Tant qu'un streamer a une règle active, elle remplace son alerte classique.</p>
-            <div class="smart-layout">
-              <ul class="smart-streamers" id="smart-streamers" data-i18n-attr-ariaLabel="popup.smart.streamersLabel" aria-label="Streamers"></ul>
-              <div class="smart-rules" id="smart-rules"></div>
-            </div>
-          </div>
 
           <div class="panel-actions">
             <button id="test-notification" type="button" class="button button-quiet" data-i18n="popup.testNotification">Tester une notification</button>
@@ -387,40 +379,6 @@
             </span>
             <input id="pref-enable-tab-live-icon" type="checkbox" role="switch" />
           </label>
-
-          <h3 class="settings-group-header smart-head"><span data-i18n="popup.pred.title">Prédictions assistées</span><span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span></h3>
-          <div class="smart-locked" id="pred-locked">
-            <p class="settings-description" data-i18n="popup.pred.lockedBody">Mise automatique selon ta règle, historique de tes paris et taux de réussite. Réservé à StreamPulse+.</p>
-            <button class="button button-primary" id="pred-unlock" type="button" data-i18n="popup.smart.unlock">Débloquer</button>
-          </div>
-          <div class="pred-editor" id="pred-editor" hidden>
-            <label class="settings-toggle">
-              <span class="settings-text">
-                <span class="settings-title" data-i18n="popup.pred.autoTitle">Miser automatiquement</span>
-                <span class="settings-description" data-i18n="popup.pred.autoBody">StreamPulse mise quelques secondes avant la fin de chaque prédiction, sur la chaîne ouverte dans un onglet Twitch.</span>
-              </span>
-              <input id="pred-enabled" type="checkbox" role="switch" />
-            </label>
-            <div class="settings-row">
-              <label class="settings-title" for="pred-strategy" data-i18n="popup.pred.strategy">Option choisie</label>
-              <select id="pred-strategy" class="settings-select">
-                <option value="majority" data-i18n="popup.pred.majority">La plus jouée</option>
-                <option value="underdog" data-i18n="popup.pred.underdog">La moins jouée (meilleure cote)</option>
-              </select>
-            </div>
-            <div class="pred-numbers">
-              <label class="pred-field"><span data-i18n="popup.pred.percent">Mise (% du solde)</span><input id="pred-percent" class="text-input" type="number" min="1" max="50" step="1" inputmode="numeric" /></label>
-              <label class="pred-field"><span data-i18n="popup.pred.max">Mise maximum</span><input id="pred-max" class="text-input" type="number" min="10" step="50" inputmode="numeric" /></label>
-              <label class="pred-field"><span data-i18n="popup.pred.reserve">Toujours garder</span><input id="pred-reserve" class="text-input" type="number" min="0" step="100" inputmode="numeric" /></label>
-            </div>
-            <dl class="pred-stats">
-              <div><dt data-i18n="popup.pred.bets">Paris</dt><dd id="pred-stat-bets">0</dd></div>
-              <div><dt data-i18n="popup.pred.rate">Réussite</dt><dd id="pred-stat-rate">–</dd></div>
-              <div><dt data-i18n="popup.pred.net">Gain net</dt><dd id="pred-stat-net">0</dd></div>
-            </dl>
-            <ol class="pred-history" id="pred-history"></ol>
-            <p class="settings-description" data-i18n="popup.pred.note">Résultats estimés d'après l'évolution de ton solde de points.</p>
-          </div>
         </section>
 
         <!-- Aperçus -->
@@ -496,21 +454,6 @@
             </span>
             <input id="pref-community-badge" type="checkbox" role="switch" />
           </label>
-          <div class="settings-row badge-color-row">
-            <span class="settings-text">
-              <label class="settings-title" for="pref-badge-color-mode" data-i18n="popup.settings.badgeColorTitle">Couleur du badge</label>
-              <span class="settings-description" data-i18n="popup.settings.badgeColorDescription">Choisissez la teinte de l'icône affichée dans le tchat.</span>
-            </span>
-            <span class="badge-color-controls">
-              <select id="pref-badge-color-mode" class="settings-select">
-                <option value="author" data-i18n="popup.settings.badgeColorAuthor">Couleur du pseudo</option>
-                <option value="theme" data-i18n="popup.settings.badgeColorTheme">Selon le thème Twitch</option>
-                <option value="custom" data-i18n="popup.settings.badgeColorCustom">Couleur personnalisée</option>
-              </select>
-              <input id="pref-badge-color-value" class="badge-color-input" type="color" value="#9147ff" data-i18n-attr-ariaLabel="popup.settings.badgeColorCustom" hidden />
-            </span>
-          </div>
-          <p class="settings-description badge-plus-note" id="badge-plus-note" data-i18n="popup.settings.badgePlusOff">Avec StreamPulse+, ta couleur personnalisée est visible par tous les utilisateurs de StreamPulse.</p>
 
           <div class="field-stack">
             <label class="settings-title" for="pref-chat-keywords" data-i18n="onboarding.chatFilterTitle">Filtre de chat (Anti-Spoiler)</label>
@@ -593,6 +536,103 @@
           </div>
         </section>
 
+        <!-- StreamPulse+ -->
+        <section class="menu-panel" id="menu-plus" role="tabpanel" aria-labelledby="menu-tab-plus" hidden>
+          <h2 data-i18n="popup.osd.menuPlus">StreamPulse+</h2>
+
+          <div class="plus-menu-status" id="plus-menu-status">
+            <span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span>
+            <p class="settings-description" id="plus-menu-text" data-i18n="popup.plusMenu.statusInactive">Débloque ces outils avec StreamPulse+.</p>
+            <button class="button button-primary" id="plus-menu-open" type="button" data-i18n="popup.plusMenu.discover">Découvrir StreamPulse+</button>
+          </div>
+
+          <h3 class="settings-group-header" data-i18n="popup.plusMenu.groupLook">Personnalisation</h3>
+          <div class="settings-row accent-row is-locked" id="accent-row">
+            <span class="settings-text">
+              <span class="settings-title" id="accent-label"><span data-i18n="popup.accent.title">Couleur d'accent</span></span>
+              <span class="settings-description" data-i18n="popup.accent.hint">Change la couleur des boutons et des repères du popup.</span>
+            </span>
+            <div class="accent-swatches" id="accent-swatches" role="radiogroup" aria-labelledby="accent-label">
+              <button class="accent-swatch" type="button" role="radio" aria-checked="true" data-accent="violet" data-i18n-attr-ariaLabel="popup.accent.violet" aria-label="Violet"></button>
+              <button class="accent-swatch" type="button" role="radio" aria-checked="false" data-accent="lcd" data-i18n-attr-ariaLabel="popup.accent.lcd" aria-label="Vert LCD"></button>
+              <button class="accent-swatch" type="button" role="radio" aria-checked="false" data-accent="ocean" data-i18n-attr-ariaLabel="popup.accent.ocean" aria-label="Bleu"></button>
+              <button class="accent-swatch" type="button" role="radio" aria-checked="false" data-accent="ember" data-i18n-attr-ariaLabel="popup.accent.ember" aria-label="Orange"></button>
+              <button class="accent-swatch" type="button" role="radio" aria-checked="false" data-accent="crimson" data-i18n-attr-ariaLabel="popup.accent.crimson" aria-label="Rouge"></button>
+            </div>
+          </div>
+          <div class="settings-row badge-color-row">
+            <span class="settings-text">
+              <label class="settings-title" for="pref-badge-color-mode" data-i18n="popup.settings.badgeColorTitle">Couleur du badge</label>
+              <span class="settings-description" data-i18n="popup.settings.badgeColorDescription">Choisissez la teinte de l'icône affichée dans le tchat.</span>
+            </span>
+            <span class="badge-color-controls">
+              <select id="pref-badge-color-mode" class="settings-select">
+                <option value="author" data-i18n="popup.settings.badgeColorAuthor">Couleur du pseudo</option>
+                <option value="theme" data-i18n="popup.settings.badgeColorTheme">Selon le thème Twitch</option>
+                <option value="custom" data-i18n="popup.settings.badgeColorCustom">Couleur personnalisée</option>
+              </select>
+              <input id="pref-badge-color-value" class="badge-color-input" type="color" value="#9147ff" data-i18n-attr-ariaLabel="popup.settings.badgeColorCustom" hidden />
+            </span>
+          </div>
+          <p class="settings-description badge-plus-note" id="badge-plus-note" data-i18n="popup.settings.badgePlusOff">Avec StreamPulse+, ta couleur personnalisée est visible par tous les utilisateurs de StreamPulse.</p>
+
+          <h3 class="settings-group-header smart-head"><span data-i18n="popup.smart.title">Alertes intelligentes</span></h3>
+          <div class="smart-locked" id="smart-locked">
+            <p class="settings-description" data-i18n="popup.smart.lockedBody">Choisis quand être prévenu : un jeu précis, un mot dans le titre, un nombre de viewers. Réservé à StreamPulse+.</p>
+            <button class="button button-primary" id="smart-unlock" type="button" data-i18n="popup.smart.unlock">Débloquer</button>
+          </div>
+          <div class="smart-editor" id="smart-editor" hidden>
+            <p class="settings-description" data-i18n="popup.smart.replacesNote">Tant qu'un streamer a une règle active, elle remplace son alerte classique.</p>
+            <div class="smart-layout">
+              <ul class="smart-streamers" id="smart-streamers" data-i18n-attr-ariaLabel="popup.smart.streamersLabel" aria-label="Streamers"></ul>
+              <div class="smart-rules" id="smart-rules"></div>
+            </div>
+          </div>
+
+          <h3 class="settings-group-header smart-head"><span data-i18n="popup.pred.title">Prédictions assistées</span></h3>
+          <div class="smart-locked" id="pred-locked">
+            <p class="settings-description" data-i18n="popup.pred.lockedBody">Mise automatique selon ta règle, historique de tes paris et taux de réussite. Réservé à StreamPulse+.</p>
+            <button class="button button-primary" id="pred-unlock" type="button" data-i18n="popup.smart.unlock">Débloquer</button>
+          </div>
+          <div class="pred-editor" id="pred-editor" hidden>
+            <label class="settings-toggle">
+              <span class="settings-text">
+                <span class="settings-title" data-i18n="popup.pred.autoTitle">Miser automatiquement</span>
+                <span class="settings-description" data-i18n="popup.pred.autoBody">StreamPulse mise quelques secondes avant la fin de chaque prédiction, sur la chaîne ouverte dans un onglet Twitch.</span>
+              </span>
+              <input id="pred-enabled" type="checkbox" role="switch" />
+            </label>
+            <div class="settings-row">
+              <label class="settings-title" for="pred-strategy" data-i18n="popup.pred.strategy">Option choisie</label>
+              <select id="pred-strategy" class="settings-select">
+                <option value="majority" data-i18n="popup.pred.majority">La plus jouée</option>
+                <option value="underdog" data-i18n="popup.pred.underdog">La moins jouée (meilleure cote)</option>
+              </select>
+            </div>
+            <div class="pred-numbers">
+              <label class="pred-field"><span data-i18n="popup.pred.percent">Mise (% du solde)</span><input id="pred-percent" class="text-input" type="number" min="1" max="50" step="1" inputmode="numeric" /></label>
+              <label class="pred-field"><span data-i18n="popup.pred.max">Mise maximum</span><input id="pred-max" class="text-input" type="number" min="10" step="50" inputmode="numeric" /></label>
+              <label class="pred-field"><span data-i18n="popup.pred.reserve">Toujours garder</span><input id="pred-reserve" class="text-input" type="number" min="0" step="100" inputmode="numeric" /></label>
+            </div>
+            <dl class="pred-stats">
+              <div><dt data-i18n="popup.pred.bets">Paris</dt><dd id="pred-stat-bets">0</dd></div>
+              <div><dt data-i18n="popup.pred.rate">Réussite</dt><dd id="pred-stat-rate">–</dd></div>
+              <div><dt data-i18n="popup.pred.net">Gain net</dt><dd id="pred-stat-net">0</dd></div>
+            </dl>
+            <ol class="pred-history" id="pred-history"></ol>
+            <p class="settings-description" data-i18n="popup.pred.note">Résultats estimés d'après l'évolution de ton solde de points.</p>
+          </div>
+
+          <h3 class="settings-group-header" data-i18n="popup.plusMenu.groupRecap">Récap avancé</h3>
+          <div class="settings-row">
+            <span class="settings-text">
+              <span class="settings-title" data-i18n="popup.plusMenu.recapTitle">Récap avancé et Wrapped annuel</span>
+              <span class="settings-description" data-i18n="popup.plusMenu.recapBody">Heures par catégorie, courbe d'activité et ton année entière.</span>
+            </span>
+            <button class="button button-quiet" id="plus-menu-recap" type="button" data-i18n="popup.plusMenu.openRecap">Ouvrir mon récap</button>
+          </div>
+        </section>
+
         <!-- Général et aide -->
         <section class="menu-panel" id="menu-general" role="tabpanel" aria-labelledby="menu-tab-general" hidden>
           <h2 data-i18n="popup.osd.menuGeneral">Général et aide</h2>
@@ -605,19 +645,6 @@
             </div>
           </div>
 
-          <div class="settings-row accent-row is-locked" id="accent-row">
-            <span class="settings-text">
-              <span class="settings-title" id="accent-label"><span data-i18n="popup.accent.title">Couleur d'accent</span><span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span></span>
-              <span class="settings-description" data-i18n="popup.accent.hint">Change la couleur des boutons et des repères du popup.</span>
-            </span>
-            <div class="accent-swatches" id="accent-swatches" role="radiogroup" aria-labelledby="accent-label">
-              <button class="accent-swatch" type="button" role="radio" aria-checked="true" data-accent="violet" data-i18n-attr-ariaLabel="popup.accent.violet" aria-label="Violet"></button>
-              <button class="accent-swatch" type="button" role="radio" aria-checked="false" data-accent="lcd" data-i18n-attr-ariaLabel="popup.accent.lcd" aria-label="Vert LCD"></button>
-              <button class="accent-swatch" type="button" role="radio" aria-checked="false" data-accent="ocean" data-i18n-attr-ariaLabel="popup.accent.ocean" aria-label="Bleu"></button>
-              <button class="accent-swatch" type="button" role="radio" aria-checked="false" data-accent="ember" data-i18n-attr-ariaLabel="popup.accent.ember" aria-label="Orange"></button>
-              <button class="accent-swatch" type="button" role="radio" aria-checked="false" data-accent="crimson" data-i18n-attr-ariaLabel="popup.accent.crimson" aria-label="Rouge"></button>
-            </div>
-          </div>
 
           <div class="field-stack">
             <span class="settings-title" data-i18n="popup.settings.languageTitle">Langue de l'extension</span>

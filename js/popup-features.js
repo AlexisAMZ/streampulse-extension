@@ -155,6 +155,8 @@ function renderPlus() {
       { key },
     );
   }
+  if ($("plus-menu-text")) $("plus-menu-text").textContent = t(active ? "popup.plusMenu.statusActive" : "popup.plusMenu.statusInactive");
+  if ($("plus-menu-open")) $("plus-menu-open").textContent = t(active ? "popup.plusMenu.manage" : "popup.plusMenu.discover");
   plusListeners.forEach((listener) => listener(active));
 }
 
@@ -181,6 +183,10 @@ function showKeyError(key) {
 function initPlus() {
   $("open-plus")?.addEventListener("click", openPlus);
   $("plus-close")?.addEventListener("click", closePlus);
+  $("plus-menu-open")?.addEventListener("click", openPlus);
+  $("plus-menu-recap")?.addEventListener("click", () => {
+    chrome.tabs.create({ url: chrome.runtime.getURL("html/recap.html") }, () => window.close());
+  });
   $("plus-view")?.addEventListener("keydown", (event) => {
     if (event.key === "Escape") closePlus();
   });

@@ -595,3 +595,10 @@ body.is-settings .plus-badge:not(.is-active) { background: var(--surface-2); box
 .pred-result.is-lost { color: var(--danger); }
 .pred-empty { padding: 10px 0; color: var(--text-3); font-size: 12px; }
 
+/* Menu StreamPulse+ */
+.menu-tab-plus svg { color: var(--lcd); }
+.plus-menu-status { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 14px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+.plus-menu-status .plus-tag { flex: none; margin: 0; vertical-align: 0; }
+.plus-menu-status .settings-description { flex: 1; min-width: 0; }
+.plus-menu-status .button { flex: none; }
+
