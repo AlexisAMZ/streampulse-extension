@@ -23,6 +23,7 @@ import {
   sanitizeHandle,
 } from "./platforms.js";
 import { createAllChannelsTile, createChannelRow, createMiniCard, formatNumber, renderStage, renderStageEmpty } from "./ui.js";
+import { initFeatures, renderHistory } from "./popup-features.js";
 
 const PREFERENCES_STORAGE_KEY = "betaGeneralPreferences";
 
@@ -1069,10 +1070,17 @@ function setActiveTab(tabName) {
 
   const streamersView = document.getElementById("streamers-view");
   const settingsSection = document.getElementById("settings-section");
+  const historyView = document.getElementById("history-view");
+  document.getElementById("plus-view")?.classList.add("hidden");
+  historyView?.classList.toggle("hidden", tabName !== "history");
 
   if (tabName === "streamers") {
     streamersView?.classList.remove("hidden");
     settingsSection?.classList.add("hidden");
+  } else if (tabName === "history") {
+    streamersView?.classList.add("hidden");
+    settingsSection?.classList.add("hidden");
+    renderHistory().catch(() => {});
   } else {
     streamersView?.classList.add("hidden");
     settingsSection?.classList.remove("hidden");
@@ -1734,6 +1742,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     initMenuNav();
     initHomeInteractions();
+    initFeatures().catch((error) => console.warn("[popup] features init failed:", error));
 
     if (streamerInput) {
       streamerInput.addEventListener("input", (e) => {

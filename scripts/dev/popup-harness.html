@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <!-- Prévisualisation du vrai popup hors extension. Servir la racine du projet,
          puis ouvrir /scripts/dev/popup-harness.html?state=live|offline|empty|many|loading
-         &theme=light&lang=en&tab=menu&panel=data&next=1&sheet=1&query=lu -->
+         &theme=light&lang=en&tab=menu|history&panel=data&next=1&sheet=1&query=lu
+         &plus=1 (licence active) &plusview=1 (écran StreamPulse+) &scrollto=<id> -->
     <base href="/html/" />
     <title>StreamPulse · banc du popup</title>
     <link rel="stylesheet" href="../css/tokens.css" />
@@ -28,9 +29,13 @@
 
       for (let i = 0; i < Number(params.get("next") || 0); i++) document.getElementById("stage-next")?.click();
       if (params.get("tab") === "menu") document.getElementById("tab-settings")?.click();
+      if (params.get("tab") === "history") document.getElementById("tab-history")?.click();
+      if (params.get("plusview") === "1") document.getElementById("open-plus")?.click();
       const panel = params.get("panel");
       if (panel) document.querySelector(`.menu-tab[data-panel="${panel}"]`)?.click();
       if (params.get("sheet")) document.getElementById("open-all-channels")?.click();
+      const scrollTo = params.get("scrollto");
+      if (scrollTo) document.getElementById(scrollTo)?.scrollIntoView({ block: "start" });
       const query = params.get("query");
       if (query) {
         const search = document.getElementById("sheet-search");

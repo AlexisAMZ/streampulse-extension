@@ -138,7 +138,6 @@ locale ne la retire.
 | `notifications` | `permissions` | Permet d'afficher des notifications système natives à l'utilisateur lorsqu'un streamer suivi démarre son direct. |
 | `offscreen` | `permissions` | Permet de créer un document hors écran dédié à la lecture des sons d'alerte et à la gestion audio sans bloquer le service worker. |
 | `tabs` | `permissions` | Permet de détecter si des onglets Twitch ou Kick sont ouverts afin d'appliquer l'anti-pause vidéo et la synchronisation du lecteur. |
-| `https://alexisamz.fr/*` | `host_permissions` | Permet de lire la configuration distante (`/api/streampulse-config`), qui fournit les identifiants d'API Twitch afin de pouvoir les faire tourner sans republier l'extension, et la liste des badges communautaires (`/api/streampulse-badges`). Seule donnée envoyée : l'empreinte (SHA-256 salé, tronquée à 12 caractères) du pseudo Twitch pour le badge communautaire, au plus une fois par jour, jamais le pseudo en clair. Désactivable dans Réglages → Chat. |
 | `https://api.twitch.tv/*` | `host_permissions` | Permet d'interroger l'API officielle Twitch pour vérifier l'état en direct des chaînes et obtenir les métadonnées des streams. |
 | `https://tmi.twitch.tv/*` | `host_permissions` | Permet de communiquer avec les serveurs de messagerie Twitch pour les fonctionnalités de chat et d'interaction. |
 | `https://gql.twitch.tv/*` | `host_permissions` | Permet d'interagir avec l'API GraphQL Twitch pour la récupération automatique des Channel Points et l'affichage des prévisualisations. |
@@ -167,8 +166,8 @@ locale ne la retire.
 Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décochés : le temps de visionnage, les streamers suivis et les points ne quittent jamais l'appareil (`chrome.storage.local`). Les pseudos des streamers ajoutés sont envoyés aux API publiques de Twitch et Kick uniquement pour obtenir leur statut en direct, ce qui relève du fonctionnement annoncé de l'extension.
 
 ### Détail à fournir si la console le demande
-**FR** : `Le badge communautaire, activé par défaut et désactivable dans Réglages → Chat, envoie au plus une fois par jour une empreinte SHA-256 salée et tronquée du pseudo Twitch de l'utilisateur à alexisamz.fr. Le pseudo en clair n'est jamais transmis ni stocké. Cette empreinte sert uniquement à afficher le badge StreamPulse dans le tchat Twitch des autres utilisateurs de l'extension.`
-**EN** : `The community badge, enabled by default and turned off in Settings → Chat, sends a salted, truncated SHA-256 hash of the user's Twitch username to alexisamz.fr at most once a day. The plain username is never sent or stored. The hash is only used to show the StreamPulse badge in Twitch chat for other extension users.`
+**FR** : `Le badge communautaire, activé par défaut et désactivable dans Réglages → Chat, envoie au plus une fois par jour une empreinte SHA-256 salée et tronquée du pseudo Twitch de l'utilisateur à streampulse.fr. Le pseudo en clair n'est jamais transmis ni stocké. Cette empreinte sert uniquement à afficher le badge StreamPulse dans le tchat Twitch des autres utilisateurs de l'extension.`
+**EN** : `The community badge, enabled by default and turned off in Settings → Chat, sends a salted, truncated SHA-256 hash of the user's Twitch username to streampulse.fr at most once a day. The plain username is never sent or stored. The hash is only used to show the StreamPulse badge in Twitch chat for other extension users.`
 
 ### Certifications (les trois à cocher)
 - ☑ Je ne vends ni ne transfère les données des utilisateurs à des tiers, en dehors des cas d'utilisation approuvés.
@@ -177,7 +176,7 @@ Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décoc
 
 ### Déclaration d'utilisation des données
 - Streamers suivis, préférences, filtres, points et temps de visionnage (mensuel et journalier) : stockés uniquement en local via `chrome.storage.local`.
-- Envoyé à `alexisamz.fr` : l'empreinte du pseudo Twitch (badge communautaire), rien d'autre. Les requêtes de configuration et de liste des badges ne contiennent aucune donnée utilisateur.
+- Envoyé à `streampulse.fr` : l'empreinte du pseudo Twitch (badge communautaire), rien d'autre. Les requêtes de configuration et de liste des badges ne contiennent aucune donnée utilisateur.
 - Envoyé aux API publiques de Twitch et Kick : les pseudos des streamers ajoutés, pour vérifier leur statut en direct.
 - Aucun serveur d'analyse, de tracking, de télémétrie ou de publicité.
 

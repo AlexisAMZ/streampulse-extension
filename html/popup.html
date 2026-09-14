@@ -14,9 +14,11 @@
       <div class="brand">
         <img src="../images/photos/logosp.png" alt="" class="brand-mark" />
         <span class="brand-name" data-i18n="popup.title">StreamPulse</span>
+        <button id="open-plus" class="plus-badge" type="button" data-i18n-attr-title="popup.plus.open" data-i18n-attr-ariaLabel="popup.plus.open" title="Découvrir StreamPulse+" aria-label="Découvrir StreamPulse+"><span data-i18n="popup.plus.badge">PLUS</span></button>
       </div>
       <nav class="tabs" role="tablist" data-i18n-attr-ariaLabel="popup.osd.tabsLabel">
         <button id="tab-streamers" class="tab-button active" type="button" role="tab" aria-selected="true" aria-controls="streamers-view" data-tab="streamers" data-i18n="popup.tabs.streamers">Streamers</button>
+        <button id="tab-history" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="history-view" data-tab="history" data-i18n="popup.tabs.history">Historique</button>
         <button id="tab-settings" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="settings-section" data-tab="settings" data-i18n="popup.tabs.settings">Réglages</button>
         <button id="header-patch-notes" class="topbar-link" type="button">
           <span data-i18n="popup.osd.changelog">Nouveautés</span>
@@ -131,6 +133,83 @@
       </section>
     </main>
 
+    <section id="history-view" class="history hidden" role="tabpanel" aria-labelledby="tab-history">
+      <div class="history-head">
+        <p class="history-summary"><strong id="history-count"></strong><span id="history-sub"></span></p>
+        <div class="segmented" id="history-filter" role="group" data-i18n-attr-ariaLabel="popup.history.filterLabel" aria-label="Filtrer par plateforme">
+          <button class="seg-btn active" type="button" data-platform="all" aria-pressed="true" data-i18n="popup.history.filterAll">Tout</button>
+          <button class="seg-btn" type="button" data-platform="twitch" aria-pressed="false">Twitch</button>
+          <button class="seg-btn" type="button" data-platform="kick" aria-pressed="false">Kick</button>
+        </div>
+      </div>
+      <ul class="history-grid" id="history-grid"></ul>
+      <div class="history-empty" id="history-empty" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        <p class="history-empty-title" data-i18n="popup.history.emptyTitle">Aucun live raté</p>
+        <p class="history-empty-body" data-i18n="popup.history.emptyBody">Quand un streamer suivi termine un live sans que tu l'aies regardé, il apparaît ici avec sa rediffusion.</p>
+      </div>
+    </section>
+
+    <section id="plus-view" class="plus-view hidden" role="dialog" aria-labelledby="plus-title">
+      <div class="plus-main">
+        <h2 class="plus-title" id="plus-title"><span data-i18n="popup.plus.title">Va plus loin</span><br /><em data-i18n="popup.plus.titleAccent">sur tes lives.</em></h2>
+        <p class="plus-intro" data-i18n="popup.plus.intro">Tout ce que tu as déjà reste gratuit. StreamPulse+ ajoute des outils pour les viewers les plus assidus.</p>
+        <ul class="plus-perks">
+          <li class="plus-perk">
+            <span class="perk-glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
+            <span class="perk-text"><b data-i18n="popup.plus.perkAlerts">Alertes intelligentes</b><span data-i18n="popup.plus.perkAlertsBody">Seulement pour un jeu, un mot du titre ou un seuil de viewers.</span></span>
+          </li>
+          <li class="plus-perk is-soon">
+            <span class="perk-glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg></span>
+            <span class="perk-text"><b data-i18n="popup.plus.perkRecap">Récap avancé et Wrapped annuel</b><span data-i18n="popup.plus.perkRecapBody">Heures par catégorie, courbe de l'année, image à partager.</span></span>
+            <span class="perk-soon" data-i18n="popup.plus.soon">Bientôt</span>
+          </li>
+          <li class="plus-perk is-soon">
+            <span class="perk-glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+            <span class="perk-text"><b data-i18n="popup.plus.perkPredictions">Prédictions assistées</b><span data-i18n="popup.plus.perkPredictionsBody">Historique de tes paris, taux de réussite, mise auto selon ta règle.</span></span>
+            <span class="perk-soon" data-i18n="popup.plus.soon">Bientôt</span>
+          </li>
+          <li class="plus-perk is-soon">
+            <span class="perk-glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="6.5" cy="12" r="2.5"/><circle cx="17.5" cy="15.5" r="2.5"/><path d="M12 22a10 10 0 1 1 10-10c0 2-1.5 3-3 3h-2a2 2 0 0 0-1.5 3.3A1.5 1.5 0 0 1 12 22z"/></svg></span>
+            <span class="perk-text"><b data-i18n="popup.plus.perkThemes">Thèmes et badge personnalisés</b><span data-i18n="popup.plus.perkThemesBody">Couleur du badge dans le tchat, thèmes du popup.</span></span>
+            <span class="perk-soon" data-i18n="popup.plus.soon">Bientôt</span>
+          </li>
+        </ul>
+      </div>
+
+      <aside class="plus-offer" id="plus-offer">
+        <div class="plus-plans" role="radiogroup" data-i18n-attr-ariaLabel="popup.plus.plansLabel" aria-label="Formule">
+          <button class="plus-plan" type="button" role="radio" aria-checked="false" data-plan="monthly">
+            <span class="plan-text"><b data-i18n="popup.plus.monthly">Mensuel</b><small data-i18n="popup.plus.monthlyNote">Sans engagement</small></span>
+            <span class="plan-price"><span data-i18n="popup.plus.monthlyPrice">2,99 €</span><small data-i18n="popup.plus.perMonth">/mois</small></span>
+          </button>
+          <button class="plus-plan active" type="button" role="radio" aria-checked="true" data-plan="lifetime">
+            <span class="plan-text"><b data-i18n="popup.plus.lifetime">À vie</b><small data-i18n="popup.plus.lifetimeNote">Un seul paiement</small></span>
+            <span class="plan-price"><span data-i18n="popup.plus.lifetimePrice">19 €</span></span>
+          </button>
+        </div>
+        <button class="plus-checkout" id="plus-checkout" type="button" data-i18n="popup.plus.checkout">Débloquer StreamPulse+</button>
+        <p class="plus-secure" data-i18n="popup.plus.secure">Paiement sécurisé sur streampulse.fr</p>
+        <form class="plus-key" id="plus-key-form" novalidate>
+          <label class="visually-hidden" for="plus-key-input" data-i18n="popup.plus.keyPlaceholder">J'ai déjà une clé de licence</label>
+          <input id="plus-key-input" class="text-input" type="text" autocomplete="off" spellcheck="false" data-i18n-attr-placeholder="popup.plus.keyPlaceholder" placeholder="J'ai déjà une clé de licence" />
+          <button class="button button-ghost" id="plus-key-activate" type="submit" data-i18n="popup.plus.activate">Activer</button>
+        </form>
+        <p class="plus-error" id="plus-key-error" role="alert" hidden></p>
+      </aside>
+
+      <aside class="plus-offer plus-active" id="plus-active" hidden>
+        <span class="plus-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg></span>
+        <p class="plus-active-title" data-i18n="popup.plus.activeTitle">StreamPulse+ est actif</p>
+        <p class="plus-active-plan" id="plus-active-plan"></p>
+        <button class="button button-quiet" id="plus-deactivate" type="button" data-i18n="popup.plus.deactivate">Retirer la licence de ce navigateur</button>
+      </aside>
+
+      <button class="icon-button plus-close" id="plus-close" type="button" data-i18n-attr-ariaLabel="popup.plus.close" data-i18n-attr-title="popup.plus.close" aria-label="Fermer" title="Fermer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </section>
+
     <!-- Menu: settings grouped by intent -->
     <section id="settings-section" class="menu hidden" role="tabpanel" aria-labelledby="tab-settings">
       <nav class="menu-nav" role="tablist" aria-orientation="vertical" data-i18n-attr-ariaLabel="popup.osd.menuLabel">
@@ -193,6 +272,19 @@
             </span>
             <input id="pref-sounds" type="checkbox" role="switch" />
           </label>
+
+          <h3 class="settings-group-header smart-head"><span data-i18n="popup.smart.title">Alertes intelligentes</span><span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span></h3>
+          <div class="smart-locked" id="smart-locked">
+            <p class="settings-description" data-i18n="popup.smart.lockedBody">Choisis quand être prévenu : un jeu précis, un mot dans le titre, un nombre de viewers. Réservé à StreamPulse+.</p>
+            <button class="button button-primary" id="smart-unlock" type="button" data-i18n="popup.smart.unlock">Débloquer</button>
+          </div>
+          <div class="smart-editor" id="smart-editor" hidden>
+            <p class="settings-description" data-i18n="popup.smart.replacesNote">Tant qu'un streamer a une règle active, elle remplace son alerte classique.</p>
+            <div class="smart-layout">
+              <ul class="smart-streamers" id="smart-streamers" data-i18n-attr-ariaLabel="popup.smart.streamersLabel" aria-label="Streamers"></ul>
+              <div class="smart-rules" id="smart-rules"></div>
+            </div>
+          </div>
 
           <div class="panel-actions">
             <button id="test-notification" type="button" class="button button-quiet" data-i18n="popup.testNotification">Tester une notification</button>

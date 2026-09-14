@@ -17,6 +17,9 @@ import {
   platformSupportsLiveStatus,
   sanitizeHandle,
 } from "./platforms.js";
+import { HISTORY_KEY, addSession, emptyHistory, markSeen, patchSession } from "./history-data.js";
+import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-alerts.js";
+import { PLUS_KEY, isPlusActive, verifyLicense } from "./plus.js";
 
 const STORAGE_KEYS = {
   STREAMERS: "betaGeneralStreamers",
@@ -34,7 +37,7 @@ const STORAGE_KEYS = {
 };
 
 // ─── Remote config (credentials hosted on Vercel, never in the zip) ──────────
-const REMOTE_CONFIG_URL = "https://alexisamz.fr/api/streampulse-config";
+const REMOTE_CONFIG_URL = "https://www.streampulse.fr/api/streampulse-config";
 const REMOTE_CONFIG_CACHE_KEY = "streampulse:remoteConfig";
 const REMOTE_CONFIG_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
 
@@ -754,6 +757,121 @@ async function resolveChannelAvatar(platform, channel) {
   }
 
   return "";
+}
+
+// ─── Historique des lives ─────────────────────────────────────────────────────
+// Chaque fin de live d'un streamer suivi devient une entree d'historique. Une
+// session est « regardee » si le tracker de temps de visionnage a vu la chaine
+// ouverte pendant qu'elle etait en direct.
+const LAST_WATCHED_KEY = "streamPulseLastWatched";
+
+class HistoryStore {
+  static _queue = Promise.resolve();
+
+  /** Serialise les ecritures : plusieurs lives peuvent finir dans le meme sondage. */
+  static _enqueue(task) {
+    const run = this._queue.then(task, task);
+    this._queue = run.catch(() => {});
+    return run;
+  }
+
+  static async get() {
+    const stored = await chrome.storage.local.get(HISTORY_KEY);
+    return stored[HISTORY_KEY] || emptyHistory();
+  }
+
+  static async save(history) {
+    await chrome.storage.local.set({ [HISTORY_KEY]: history });
+  }
+
+  static watchKey(platform, channel) {
+    return `${normalizePlatform(platform)}:${String(channel || "").toLowerCase()}`;
+  }
+
+  static markWatched(platform, channel) {
+    if (!platform || !channel) return Promise.resolve();
+    return this._enqueue(async () => {
+      const stored = await chrome.storage.local.get(LAST_WATCHED_KEY);
+      const map = stored[LAST_WATCHED_KEY] || {};
+      map[this.watchKey(platform, channel)] = Date.now();
+      await chrome.storage.local.set({ [LAST_WATCHED_KEY]: map });
+    });
+  }
+
+  static markSeen(id) {
+    return this._enqueue(async () => this.save(markSeen(await this.get(), id)));
+  }
+
+  static recordEnded(streamer, liveState) {
+    return this._enqueue(async () => {
+      const platform = normalizePlatform(streamer.platform);
+      const handle = streamer.handle || streamer.twitch || "";
+      const endedAt = Date.now();
+      const startedAtTime = Date.parse(liveState.startedAt || "") || null;
+      const stored = await chrome.storage.local.get(LAST_WATCHED_KEY);
+      const lastWatched = (stored[LAST_WATCHED_KEY] || {})[this.watchKey(platform, handle)] || 0;
+      const watched = startedAtTime ? lastWatched >= startedAtTime : false;
+
+      const session = {
+        streamerId: streamer.id,
+        platform,
+        handle,
+        displayName: streamer.displayName || formatHandleForDisplay(platform, handle),
+        avatarUrl: liveState.avatarUrl || streamer.avatarUrl || "",
+        title: liveState.title || liveState.lastTitle || "",
+        game: liveState.game || liveState.lastGame || "",
+        startedAt: liveState.startedAt || null,
+        endedAt,
+        thumbnailUrl: sizeThumbnail(liveState.thumbnailUrl || ""),
+        vodUrl: platform === "twitch"
+          ? `https://www.twitch.tv/${encodeURIComponent(handle)}/videos?filter=archives`
+          : `https://kick.com/${encodeURIComponent(handle)}/videos`,
+        hasVod: false,
+        watched,
+      };
+      const history = addSession(await this.get(), session, endedAt);
+      await this.save(history);
+      const saved = history.entries.find((entry) => entry.streamerId === streamer.id && entry.endedAt === endedAt);
+      return saved || null;
+    }).then((saved) => {
+      if (saved && saved.platform === "twitch" && !saved.watched) {
+        this.attachTwitchVod(saved).catch((error) => console.warn("VOD lookup failed:", error?.message || error));
+      }
+    });
+  }
+
+  /** La rediffusion Twitch n'existe qu'apres coup : on la cherche une fois le live fini. */
+  static async attachTwitchVod(entry) {
+    const user = await PlatformChecker.getTwitchUser(entry.handle);
+    if (!user?.id) return;
+    const data = await fetchJson(
+      `https://api.twitch.tv/helix/videos?user_id=${encodeURIComponent(user.id)}&type=archive&first=1`,
+      { headers: twitchHeaders() }
+    );
+    const video = data?.data?.[0];
+    if (!video?.url) return;
+    const startedAt = Date.parse(entry.startedAt || "");
+    const createdAt = Date.parse(video.created_at || "");
+    // Une VOD plus ancienne que ce live appartient a une autre session.
+    if (Number.isFinite(startedAt) && Number.isFinite(createdAt) && Math.abs(createdAt - startedAt) > 2 * 60 * 60 * 1000) return;
+    const thumbnailUrl = sizeThumbnail(video.thumbnail_url || "");
+    await this._enqueue(async () =>
+      this.save(
+        patchSession(await this.get(), entry.id, {
+          vodUrl: video.url,
+          hasVod: true,
+          ...(thumbnailUrl ? { thumbnailUrl } : {}),
+        })
+      )
+    );
+  }
+}
+
+/** Les vignettes Twitch portent un gabarit de taille ({width}x{height} ou %{width}x%{height}). */
+function sizeThumbnail(url) {
+  return String(url || "")
+    .replace(/%?\{width\}/g, "440")
+    .replace(/%?\{height\}/g, "248");
 }
 
 class WatchTimeStore {
@@ -1782,6 +1900,9 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
           lastTitle: entry.lastTitle || "",
           lastGame: entry.lastGame || "",
           avatarUrl: entry.avatarUrl || "",
+          startedAt: entry.startedAt || null,
+          thumbnailUrl: entry.thumbnailUrl || "",
+          matchedRuleIds: Array.isArray(entry.matchedRuleIds) ? entry.matchedRuleIds : [],
           supportsLiveStatus: entry.supportsLiveStatus !== false,
         });
       }
@@ -1789,6 +1910,11 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
   } catch (err) {
     console.warn("Failed to restore live state:", err?.message || err);
   }
+
+  // Alertes intelligentes : actives seulement avec StreamPulse+.
+  const plusStored = await chrome.storage.local.get([PLUS_KEY, SMART_ALERTS_KEY]);
+  const plusActive = isPlusActive(plusStored[PLUS_KEY]);
+  const smartRules = plusActive ? normalizeRules(plusStored[SMART_ALERTS_KEY]) : {};
 
   const streamerById = new Map();
   streamers.forEach((streamer) => {
@@ -1827,6 +1953,9 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
       lastTitle: status.active?.title || status.active?.lastTitle || "",
       lastGame: status.active?.game || status.active?.lastGame || "",
       avatarUrl: status.avatarUrl || streamer.avatarUrl || null,
+      startedAt: status.active?.isLive ? status.active?.startedAt || previousLiveState.startedAt || null : null,
+      thumbnailUrl: status.active?.isLive ? status.active?.thumbnailUrl || previousLiveState.thumbnailUrl || "" : "",
+      matchedRuleIds: [],
       supportsLiveStatus: status.active?.supportsLiveStatus !== false,
       isError: Boolean(status.active?.isError),
     };
@@ -1837,13 +1966,37 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
       nextLiveState.sessionId = previousLiveState.sessionId;
       nextLiveState.game = previousLiveState.game;
       nextLiveState.title = previousLiveState.title;
+      nextLiveState.startedAt = previousLiveState.startedAt || null;
+      nextLiveState.thumbnailUrl = previousLiveState.thumbnailUrl || "";
+      nextLiveState.matchedRuleIds = previousLiveState.matchedRuleIds || [];
+    }
+
+    // Fin de live : entree d'historique (la VOD Twitch est cherchee ensuite).
+    if (previousLiveState.isLive && !nextLiveState.isLive && !nextLiveState.isError) {
+      HistoryStore.recordEnded(streamer, previousLiveState).catch((error) =>
+        console.warn("History record failed:", error?.message || error)
+      );
     }
 
     const notificationsEnabled =
       preferences.liveNotifications !== false &&
       streamer.notificationsEnabled !== false;
 
-    if (forceNotification && notificationsEnabled && nextLiveState.isLive) {
+    // Regles d'alerte du streamer : elles remplacent l'alerte classique.
+    const smartDecision = nextLiveState.isError
+      ? null
+      : decideSmartAlert(
+          smartRules[streamer.id],
+          status.active,
+          previousLiveState.isLive ? previousLiveState.matchedRuleIds || [] : []
+        );
+    if (smartDecision) nextLiveState.matchedRuleIds = smartDecision.matchedIds;
+
+    if (smartDecision) {
+      if (notificationsEnabled && smartDecision.notifyRule) {
+        await NotificationSystem.notifyLive(streamer, status.active, preferences);
+      }
+    } else if (forceNotification && notificationsEnabled && nextLiveState.isLive) {
       await NotificationSystem.notifyLive(streamer, status.active, preferences);
     } else if (notificationsEnabled && nextLiveState.isLive) {
       const wasLive = previousLiveState.isLive;
@@ -2653,6 +2806,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             const secs = Number(seconds) || 0;
             // Record immediately: never block on avatar resolution
             await WatchTimeStore.record(platform, channel, secs, "");
+            HistoryStore.markWatched(platform, channel).catch(() => {});
             // Best-effort avatar update (fire-and-forget, doesn't block response)
             if (secs > 0) {
               resolveChannelAvatar(platform, channel)
@@ -2675,6 +2829,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           sendResponse({ error: error.message });
         }
       })();
+      return true;
+
+    case "markHistorySeen":
+      HistoryStore.markSeen(String(request.id || ""))
+        .then(() => sendResponse({ success: true }))
+        .catch((error) => sendResponse({ error: error.message }));
+      return true;
+
+    case "activatePlus":
+      (async () => {
+        const result = await verifyLicense(request.key, fetch);
+        if (result.ok) await chrome.storage.local.set({ [PLUS_KEY]: result.record });
+        sendResponse(result);
+        if (result.ok) pollStreamers().catch(() => {});
+      })();
+      return true;
+
+    case "deactivatePlus":
+      chrome.storage.local.remove(PLUS_KEY).then(() => sendResponse({ success: true }));
       return true;
 
     case "getWatchTimeSummary":

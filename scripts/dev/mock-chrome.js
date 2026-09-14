@@ -111,6 +111,32 @@
     });
   }
 
+  // Historique : lives terminés récemment (onglet Historique).
+  const history = {
+    entries: channels.streamers.slice(3, 9).map((s, i) => {
+      const endedAt = now - (40 + i * 190) * 60000;
+      const durationSec = [11524, 20419, 7533, 15490, 6422, 9120][i % 6];
+      return {
+        id: `${s.id}@${endedAt - durationSec * 1000}`,
+        streamerId: s.id,
+        platform: s.platform,
+        handle: s.handle,
+        displayName: s.displayName,
+        avatarUrl: s.avatarUrl,
+        title: TITLES[i % TITLES.length],
+        game: GAMES[(i + 2) % GAMES.length],
+        startedAt: new Date(endedAt - durationSec * 1000).toISOString(),
+        endedAt,
+        durationSec,
+        thumbnailUrl: thumbnail((i * 61 + 20) % 360, i + 7),
+        vodUrl: `https://www.twitch.tv/${s.handle}/videos`,
+        hasVod: s.platform === "twitch",
+        watched: false,
+        seen: i >= 4,
+      };
+    }),
+  };
+
   const store = {
     betaGeneralStreamers: channels.streamers,
     betaGeneralStatuses: channels.statuses,
@@ -122,6 +148,21 @@
     betaGeneralStats: { channelPointsClaimed: scenario === "empty" ? 0 : 12480 },
     betaWatchTimeData: scenario === "empty" ? {} : watchTime,
     streamPulseWatchTimeDaily: scenario === "empty" ? {} : watchDaily,
+    streamPulseHistory: scenario === "empty" ? { entries: [] } : history,
+    // ?plus=1 : licence active et deux règles d'alerte de démonstration.
+    ...(params.get("plus") === "1"
+      ? {
+          streamPulsePlus: { licenseKey: "SP-DEMO-2026-PLUS-0001", plan: "lifetime", status: "active", verifiedAt: now },
+          streamPulseSmartAlerts: channels.streamers[0]
+            ? {
+                [channels.streamers[0].id]: [
+                  { id: "r_gta", name: "Soirée GTA", enabled: true, games: ["Grand Theft Auto V"], keywords: [], minViewers: 0 },
+                  { id: "r_event", name: "Événements", enabled: true, games: [], keywords: ["tournoi", "event"], minViewers: 5000 },
+                ],
+              }
+            : {},
+        }
+      : {}),
     userProfile: { displayName: "AlexisAMZ" },
     patchNotesUnread: true,
     betaPinnedIds: channels.streamers[1] ? [channels.streamers[1].id] : [],
@@ -194,6 +235,22 @@
         store.betaGeneralStreamers = [...store.betaGeneralStreamers, { id, platform: message.platform, handle, displayName: message.displayName }];
         return { success: true };
       }
+      case "markHistorySeen":
+        store.streamPulseHistory = {
+          entries: (store.streamPulseHistory?.entries || []).map((e) => (e.id === message.id ? { ...e, seen: true } : e)),
+        };
+        return { success: true };
+      case "activatePlus": {
+        // Démo : toute clé au bon format commençant par SP-DEMO est acceptée.
+        const key = String(message.key || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+        if (!key.startsWith("SPDEMO") || key.length !== 18) return { ok: false, error: "invalid" };
+        const record = { licenseKey: `SP-${key.slice(2).match(/.{4}/g).join("-")}`, plan: "lifetime", status: "active", verifiedAt: now };
+        await local.set({ streamPulsePlus: record });
+        return { ok: true, record };
+      }
+      case "deactivatePlus":
+        await local.remove("streamPulsePlus");
+        return { success: true };
       case "updatePreferences":
         store.betaGeneralPreferences = { ...store.betaGeneralPreferences, ...message.updates };
         return { success: true, preferences: store.betaGeneralPreferences };

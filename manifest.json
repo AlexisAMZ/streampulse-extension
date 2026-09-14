@@ -12,7 +12,6 @@
     "tabs"
   ],
   "host_permissions": [
-    "https://alexisamz.fr/*",
     "https://api.twitch.tv/*",
     "https://tmi.twitch.tv/*",
     "https://gql.twitch.tv/*",
