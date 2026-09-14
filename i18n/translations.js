@@ -795,6 +795,13 @@ export const translations = {
       "noNotesBody": "Les notes de cette version n'ont pas encore été publiées."
     },
     "inject": {
+      "badge": {
+        "lifetime": "Membre à vie",
+        "months": "Abonné depuis {{count}} mois",
+        "monthOne": "Abonné depuis 1 mois",
+        "newMember": "Nouvel abonné",
+        "freeLine": "Utilisateur de l'extension"
+      },
       "topbar": {
         "previews": "Previews au survol",
         "thisChannel": "Cette chaîne",
@@ -1594,6 +1601,13 @@ export const translations = {
       "noNotesBody": "The notes for this version have not been published yet."
     },
     "inject": {
+      "badge": {
+        "lifetime": "Lifetime member",
+        "months": "Subscribed for {{count}} months",
+        "monthOne": "Subscribed for 1 month",
+        "newMember": "New subscriber",
+        "freeLine": "Extension user"
+      },
       "topbar": {
         "previews": "Hover previews",
         "thisChannel": "This channel",
@@ -2393,6 +2407,13 @@ export const translations = {
       "noNotesBody": "Las notas de esta versión aún no se han publicado."
     },
     "inject": {
+      "badge": {
+        "lifetime": "Miembro de por vida",
+        "months": "Suscrito desde hace {{count}} meses",
+        "monthOne": "Suscrito desde hace 1 mes",
+        "newMember": "Nuevo suscriptor",
+        "freeLine": "Usuario de la extensión"
+      },
       "topbar": {
         "previews": "Vistas previas",
         "thisChannel": "Este canal",
@@ -3192,6 +3213,13 @@ export const translations = {
       "noNotesBody": "As notas desta versão ainda não foram publicadas."
     },
     "inject": {
+      "badge": {
+        "lifetime": "Membro vitalício",
+        "months": "Assinante há {{count}} meses",
+        "monthOne": "Assinante há 1 mês",
+        "newMember": "Novo assinante",
+        "freeLine": "Usuário da extensão"
+      },
       "topbar": {
         "previews": "Prévias ao passar",
         "thisChannel": "Este canal",
@@ -3991,6 +4019,13 @@ export const translations = {
       "noNotesBody": "Die Hinweise zu dieser Version wurden noch nicht veröffentlicht."
     },
     "inject": {
+      "badge": {
+        "lifetime": "Mitglied auf Lebenszeit",
+        "months": "Seit {{count}} Monaten dabei",
+        "monthOne": "Seit 1 Monat dabei",
+        "newMember": "Neues Mitglied",
+        "freeLine": "Nutzt die Erweiterung"
+      },
       "topbar": {
         "previews": "Hover-Vorschau",
         "thisChannel": "Dieser Kanal",
@@ -4790,6 +4825,13 @@ export const translations = {
       "noNotesBody": "Le note per questa versione non sono state ancora pubblicate."
     },
     "inject": {
+      "badge": {
+        "lifetime": "Membro a vita",
+        "months": "Abbonato da {{count}} mesi",
+        "monthOne": "Abbonato da 1 mese",
+        "newMember": "Nuovo abbonato",
+        "freeLine": "Utente dell'estensione"
+      },
       "topbar": {
         "previews": "Anteprime al passaggio del mouse",
         "thisChannel": "Questo canale",
@@ -5589,6 +5631,13 @@ export const translations = {
       "noNotesBody": "Uwagi do tej wersji nie zostały jeszcze opublikowane."
     },
     "inject": {
+      "badge": {
+        "lifetime": "Członek dożywotni",
+        "months": "Subskrybuje od {{count}} mies.",
+        "monthOne": "Subskrybuje od 1 miesiąca",
+        "newMember": "Nowy subskrybent",
+        "freeLine": "Użytkownik rozszerzenia"
+      },
       "topbar": {
         "previews": "Najedź kursorem na podglądy",
         "thisChannel": "Ten kanał",
@@ -6388,6 +6437,13 @@ export const translations = {
       "noNotesBody": "Bu sürümün notları henüz yayınlanmamıştır."
     },
     "inject": {
+      "badge": {
+        "lifetime": "Ömür boyu üye",
+        "months": "{{count}} aydır abone",
+        "monthOne": "1 aydır abone",
+        "newMember": "Yeni abone",
+        "freeLine": "Eklenti kullanıcısı"
+      },
       "topbar": {
         "previews": "Fareyle üzerine gelindiğinde görünen önizlemeler",
         "thisChannel": "Bu kanal",
@@ -7187,6 +7243,13 @@ export const translations = {
       "noNotesBody": "Примечания к этой версии пока не опубликованы."
     },
     "inject": {
+      "badge": {
+        "lifetime": "Пожизненный участник",
+        "months": "Подписка {{count}} мес.",
+        "monthOne": "Подписка 1 месяц",
+        "newMember": "Новый подписчик",
+        "freeLine": "Пользователь расширения"
+      },
       "topbar": {
         "previews": "Предварительный просмотр при наведении курсора",
         "thisChannel": "Этот канал",
@@ -7986,6 +8049,13 @@ export const translations = {
       "noNotesBody": "このバージョンのリリースノートはまだ公開されていません。"
     },
     "inject": {
+      "badge": {
+        "lifetime": "永久メンバー",
+        "months": "{{count}}か月利用中",
+        "monthOne": "1か月利用中",
+        "newMember": "新規メンバー",
+        "freeLine": "拡張機能ユーザー"
+      },
       "topbar": {
         "previews": "ホバー時のプレビュー",
         "thisChannel": "このチャンネル",
@@ -8785,6 +8855,13 @@ export const translations = {
       "noNotesBody": "이 버전에 대한 변경 내역은 아직 공개되지 않았습니다."
     },
     "inject": {
+      "badge": {
+        "lifetime": "평생 멤버",
+        "months": "{{count}}개월째 구독 중",
+        "monthOne": "1개월째 구독 중",
+        "newMember": "새 구독자",
+        "freeLine": "확장 프로그램 사용자"
+      },
       "topbar": {
         "previews": "마우스 오버 시 미리보기",
         "thisChannel": "이 채널",
@@ -9584,6 +9661,13 @@ export const translations = {
       "noNotesBody": "Catatan untuk versi ini belum diterbitkan."
     },
     "inject": {
+      "badge": {
+        "lifetime": "Anggota seumur hidup",
+        "months": "Berlangganan {{count}} bulan",
+        "monthOne": "Berlangganan 1 bulan",
+        "newMember": "Pelanggan baru",
+        "freeLine": "Pengguna ekstensi"
+      },
       "topbar": {
         "previews": "Pratinjau saat mengarahkan kursor",
         "thisChannel": "Kanal ini",
@@ -10383,6 +10467,13 @@ export const translations = {
       "noNotesBody": "De toelichting bij deze versie is nog niet gepubliceerd."
     },
     "inject": {
+      "badge": {
+        "lifetime": "Lid voor het leven",
+        "months": "{{count}} maanden abonnee",
+        "monthOne": "1 maand abonnee",
+        "newMember": "Nieuwe abonnee",
+        "freeLine": "Gebruikt de extensie"
+      },
       "topbar": {
         "previews": "Voorbeelden bij aanwijzen",
         "thisChannel": "Dit kanaal",
@@ -11182,6 +11273,13 @@ export const translations = {
       "noNotesBody": "इस संस्करण के नोट्स अभी तक प्रकाशित नहीं किये गये हैं।"
     },
     "inject": {
+      "badge": {
+        "lifetime": "Lifetime member",
+        "months": "Subscribed for {{count}} months",
+        "monthOne": "Subscribed for 1 month",
+        "newMember": "New subscriber",
+        "freeLine": "Extension user"
+      },
       "topbar": {
         "previews": "पूर्वावलोकन पर होवर करें",
         "thisChannel": "यह चैनल",
@@ -11981,6 +12079,13 @@ export const translations = {
       "noNotesBody": "Informationen om den här versionen har ännu inte publicerats."
     },
     "inject": {
+      "badge": {
+        "lifetime": "Livstidsmedlem",
+        "months": "Prenumerant i {{count}} månader",
+        "monthOne": "Prenumerant i 1 månad",
+        "newMember": "Ny prenumerant",
+        "freeLine": "Använder tillägget"
+      },
       "topbar": {
         "previews": "Förhandsvisning vid muspekning",
         "thisChannel": "Den här kanalen",
@@ -12780,6 +12885,13 @@ export const translations = {
       "noNotesBody": "Poznámky k této verzi zatím nebyly zveřejněny."
     },
     "inject": {
+      "badge": {
+        "lifetime": "Doživotní člen",
+        "months": "Předplatitel {{count}} měs.",
+        "monthOne": "Předplatitel 1 měsíc",
+        "newMember": "Nový předplatitel",
+        "freeLine": "Uživatel rozšíření"
+      },
       "topbar": {
         "previews": "Náhledy při najetí myší",
         "thisChannel": "Tento kanál",

@@ -56,6 +56,9 @@
   // Empreinte du compte Twitch connecte et licence de ce navigateur.
   var ownHash = "";
   var viewerPlus = false;
+  var ownPlan = "";
+  var badgeLang = "en";
+  var MONTH_MS = 30.44 * 24 * 60 * 60 * 1000;
   // Reglages locaux de son propre badge : appliques tout de suite, sans attendre le serveur.
   var ownLocal = { color: null, b: "", n: "" };
 
@@ -74,8 +77,13 @@
     if (!ownHash) return;
     if (viewerPlus && ownLocal.color) badgeColors.set(ownHash, ownLocal.color);
     else badgeColors.delete(ownHash);
-    if (viewerPlus && (ownLocal.b || ownLocal.n)) badgeStyles.set(ownHash, { b: ownLocal.b, n: ownLocal.n });
-    else badgeStyles.delete(ownHash);
+    if (viewerPlus) {
+      // Formule et anciennete viennent du serveur ; en attendant, la licence locale suffit.
+      var known = badgeStyles.get(ownHash) || {};
+      badgeStyles.set(ownHash, { b: ownLocal.b, n: ownLocal.n, p: known.p || ownPlan, s: known.s || 0 });
+    } else {
+      badgeStyles.delete(ownHash);
+    }
   }
 
   // "author" (couleur du pseudo), "theme" (blanc/noir), ou une couleur hexa.
@@ -216,7 +224,9 @@
             var style = styles[h] || {};
             var b = BADGE_FX.indexOf(style.b) !== -1 ? style.b : "";
             var n = NAME_FX.indexOf(style.n) !== -1 ? style.n : "";
-            if (/^[a-f0-9]{12}$/.test(h) && (b || n)) nextStyles.set(h, { b: b, n: n });
+            var p = style.p === "lifetime" || style.p === "monthly" ? style.p : "";
+            var since = Number(style.s) || 0;
+            if (/^[a-f0-9]{12}$/.test(h) && (b || n || p)) nextStyles.set(h, { b: b, n: n, p: p, s: since });
           });
           badgeStyles = nextStyles;
           applyOwnLocal();
@@ -446,8 +456,8 @@
     var badge = document.createElement("span");
     badge.className = "sp-chat-badge";
     if (hash) badge.setAttribute("data-sp-hash", hash);
-    badge.setAttribute("title", "Utilisateur StreamPulse");
-    badge.setAttribute("aria-label", "Utilisateur StreamPulse");
+    // La carte au survol remplace l'infobulle du navigateur ; le libelle reste pour les lecteurs d'ecran.
+    badge.setAttribute("aria-label", "StreamPulse");
 
     // Le logo est un PNG monochrome applique en masque : il prend donc la
     // couleur de fond, ce qu'une balise <img> ne permettrait pas.
@@ -541,6 +551,88 @@
     } catch (_e) {
       // Twitch reconstruit son DOM en permanence : le noeud peut disparaitre entre sa selection et son usage.
     }
+  }
+
+  // ── Carte au survol du badge ─────────────────────────────────────────────
+
+  var badgeCard = null;
+
+  function tr(key, params) {
+    var api = typeof window !== "undefined" ? window.__SP_I18N__ : null;
+    return api ? api.get(badgeLang, "badge." + key, params) : key;
+  }
+
+  /** Une seule carte pour tout le tchat, creee au premier survol. */
+  function getBadgeCard() {
+    if (badgeCard && badgeCard.isConnected) return badgeCard;
+    badgeCard = document.createElement("div");
+    badgeCard.className = "sp-badge-card";
+    badgeCard.setAttribute("role", "tooltip");
+    var logo = document.createElement("span");
+    logo.className = "sp-badge-card__logo";
+    var mask = "url(" + badgeIconUrl + ")";
+    logo.style.setProperty("-webkit-mask-image", mask);
+    logo.style.setProperty("mask-image", mask);
+    var title = document.createElement("span");
+    title.className = "sp-badge-card__title";
+    var line = document.createElement("span");
+    line.className = "sp-badge-card__line";
+    badgeCard.append(logo, title, line);
+    document.body.appendChild(badgeCard);
+    return badgeCard;
+  }
+
+  function memberLine(style) {
+    if (style.p === "lifetime") return tr("lifetime");
+    var months = style.s ? Math.floor((Date.now() - style.s) / MONTH_MS) : 0;
+    if (months < 1) return tr("newMember");
+    return months === 1 ? tr("monthOne") : tr("months", { count: months });
+  }
+
+  function showBadgeCard(badge) {
+    try {
+      var hash = badge.getAttribute("data-sp-hash");
+      var style = hash && badgeStyles.get(hash);
+      var plus = !!(style && style.p);
+      var card = getBadgeCard();
+      card.classList.toggle("is-plus", plus);
+      var title = card.querySelector(".sp-badge-card__title");
+      title.textContent = "StreamPulse";
+      if (plus) {
+        var mark = document.createElement("b");
+        mark.textContent = "+";
+        title.appendChild(mark);
+      }
+      card.querySelector(".sp-badge-card__line").textContent = plus ? memberLine(style) : tr("freeLine");
+      var rect = badge.getBoundingClientRect();
+      card.classList.add("is-visible");
+      var width = card.offsetWidth;
+      var height = card.offsetHeight;
+      var top = rect.top - height - 8;
+      if (top < 8) top = rect.bottom + 8;
+      var left = Math.min(Math.max(8, rect.left + rect.width / 2 - width / 2), window.innerWidth - width - 8);
+      card.style.top = top + "px";
+      card.style.left = left + "px";
+    } catch (_e) {
+      // Le message a pu disparaitre du tchat pendant le survol.
+    }
+  }
+
+  function hideBadgeCard() {
+    if (badgeCard) badgeCard.classList.remove("is-visible");
+  }
+
+  function setupBadgeCard() {
+    // Delegation : deux ecouteurs pour tout le tchat, aucun par badge.
+    document.addEventListener("mouseover", function (event) {
+      var badge = event.target && event.target.closest ? event.target.closest(".sp-chat-badge") : null;
+      if (badge) showBadgeCard(badge);
+    }, true);
+    document.addEventListener("mouseout", function (event) {
+      var badge = event.target && event.target.closest ? event.target.closest(".sp-chat-badge") : null;
+      if (badge && !badge.contains(event.relatedTarget)) hideBadgeCard();
+    }, true);
+    window.addEventListener("scroll", hideBadgeCard, true);
   }
 
   /** Reapplique couleur, effet et pseudo special aux messages deja affiches. */
@@ -677,6 +769,9 @@
     chrome.storage.local.get(["betaGeneralPreferences", PLUS_KEY, COSMETICS_KEY], function (res) {
       var prefs = (res && res.betaGeneralPreferences) || {};
       viewerPlus = !!activePlusKey(res && res[PLUS_KEY]);
+      ownPlan = viewerPlus ? (res[PLUS_KEY].plan === "monthly" ? "monthly" : "lifetime") : "";
+      var i18n = typeof window !== "undefined" ? window.__SP_I18N__ : null;
+      badgeLang = i18n ? i18n.resolve(prefs.language || navigator.language) : "en";
       readOwnLocal(prefs, res && res[COSMETICS_KEY]);
       if (prefs.communityBadge === false) {
         log("desactive par l utilisateur");
@@ -687,6 +782,7 @@
       log("init", badgeIconUrl ? "icone OK" : "icone MANQUANTE", "| couleur :", badgeColorMode);
       initBadges();
       setupChatObserver();
+      setupBadgeCard();
       // Les reglages des autres abonnes arrivent sans recharger la page.
       setInterval(fetchRemoteBadges, REFRESH_MS);
 
@@ -697,7 +793,10 @@
         var plusChange = changes[PLUS_KEY];
         if (!prefsChange && !cosmeticsChange && !plusChange) return;
         if (prefsChange) badgeColorMode = normalizeColorMode((prefsChange.newValue || {}).communityBadgeColor);
-        if (plusChange) viewerPlus = !!activePlusKey(plusChange.newValue);
+        if (plusChange) {
+          viewerPlus = !!activePlusKey(plusChange.newValue);
+          ownPlan = viewerPlus ? (plusChange.newValue.plan === "monthly" ? "monthly" : "lifetime") : "";
+        }
         chrome.storage.local.get(["betaGeneralPreferences", COSMETICS_KEY], function (res) {
           readOwnLocal((res && res.betaGeneralPreferences) || {}, res && res[COSMETICS_KEY]);
           // Aucune requete ni boucle : seuls les messages deja affiches sont retouches.

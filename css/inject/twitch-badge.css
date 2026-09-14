@@ -110,3 +110,47 @@
   .sp-paint { animation: none !important; }
 }
 
+/* ── Carte au survol du badge ──
+   Posee dans <body>, en position fixe : elle ne depend pas du conteneur du tchat. */
+.sp-badge-card {
+  position: fixed;
+  z-index: 10000;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 11px;
+  min-width: 190px;
+  max-width: 260px;
+  padding: 11px 14px 11px 12px;
+  border-radius: 12px;
+  background: #1b1f4a;
+  box-shadow: 0 16px 32px -16px rgba(0, 0, 0, 0.8), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-family: inherit;
+  line-height: 1.3;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(3px);
+  transition: opacity 0.14s ease-out, transform 0.14s ease-out, visibility 0s linear 0.14s;
+}
+.sp-badge-card.is-visible { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.sp-badge-card__logo {
+  grid-row: 1 / span 2;
+  width: 30px;
+  height: 30px;
+  background-color: #ffffff;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+.sp-badge-card.is-plus .sp-badge-card__logo { background-color: #c6d4a0; }
+.sp-badge-card__title { font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
+.sp-badge-card__title b { margin-left: 1px; font-size: 1.2em; line-height: 0; }
+.sp-badge-card__line { color: rgba(255, 255, 255, 0.78); font-size: 12px; }
+.sp-badge-card.is-plus .sp-badge-card__line { color: #c6d4a0; font-weight: 600; }
+@media (prefers-reduced-motion: reduce) { .sp-badge-card { transition: none; } }
+

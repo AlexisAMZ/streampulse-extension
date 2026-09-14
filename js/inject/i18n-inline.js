@@ -16,6 +16,13 @@
 
   var STRINGS = {
   "fr": {
+    "badge": {
+      "lifetime": "Membre à vie",
+      "months": "Abonné depuis {{count}} mois",
+      "monthOne": "Abonné depuis 1 mois",
+      "newMember": "Nouvel abonné",
+      "freeLine": "Utilisateur de l'extension"
+    },
     "topbar": {
       "previews": "Previews au survol",
       "thisChannel": "Cette chaîne",
@@ -54,6 +61,13 @@
     }
   },
   "en": {
+    "badge": {
+      "lifetime": "Lifetime member",
+      "months": "Subscribed for {{count}} months",
+      "monthOne": "Subscribed for 1 month",
+      "newMember": "New subscriber",
+      "freeLine": "Extension user"
+    },
     "topbar": {
       "previews": "Hover previews",
       "thisChannel": "This channel",
@@ -92,6 +106,13 @@
     }
   },
   "es": {
+    "badge": {
+      "lifetime": "Miembro de por vida",
+      "months": "Suscrito desde hace {{count}} meses",
+      "monthOne": "Suscrito desde hace 1 mes",
+      "newMember": "Nuevo suscriptor",
+      "freeLine": "Usuario de la extensión"
+    },
     "topbar": {
       "previews": "Vistas previas",
       "thisChannel": "Este canal",
@@ -130,6 +151,13 @@
     }
   },
   "pt-BR": {
+    "badge": {
+      "lifetime": "Membro vitalício",
+      "months": "Assinante há {{count}} meses",
+      "monthOne": "Assinante há 1 mês",
+      "newMember": "Novo assinante",
+      "freeLine": "Usuário da extensão"
+    },
     "topbar": {
       "previews": "Prévias ao passar",
       "thisChannel": "Este canal",
@@ -168,6 +196,13 @@
     }
   },
   "de": {
+    "badge": {
+      "lifetime": "Mitglied auf Lebenszeit",
+      "months": "Seit {{count}} Monaten dabei",
+      "monthOne": "Seit 1 Monat dabei",
+      "newMember": "Neues Mitglied",
+      "freeLine": "Nutzt die Erweiterung"
+    },
     "topbar": {
       "previews": "Hover-Vorschau",
       "thisChannel": "Dieser Kanal",
@@ -206,6 +241,13 @@
     }
   },
   "it": {
+    "badge": {
+      "lifetime": "Membro a vita",
+      "months": "Abbonato da {{count}} mesi",
+      "monthOne": "Abbonato da 1 mese",
+      "newMember": "Nuovo abbonato",
+      "freeLine": "Utente dell'estensione"
+    },
     "topbar": {
       "previews": "Anteprime al passaggio del mouse",
       "thisChannel": "Questo canale",
@@ -244,6 +286,13 @@
     }
   },
   "pl": {
+    "badge": {
+      "lifetime": "Członek dożywotni",
+      "months": "Subskrybuje od {{count}} mies.",
+      "monthOne": "Subskrybuje od 1 miesiąca",
+      "newMember": "Nowy subskrybent",
+      "freeLine": "Użytkownik rozszerzenia"
+    },
     "topbar": {
       "previews": "Najedź kursorem na podglądy",
       "thisChannel": "Ten kanał",
@@ -282,6 +331,13 @@
     }
   },
   "tr": {
+    "badge": {
+      "lifetime": "Ömür boyu üye",
+      "months": "{{count}} aydır abone",
+      "monthOne": "1 aydır abone",
+      "newMember": "Yeni abone",
+      "freeLine": "Eklenti kullanıcısı"
+    },
     "topbar": {
       "previews": "Fareyle üzerine gelindiğinde görünen önizlemeler",
       "thisChannel": "Bu kanal",
@@ -320,6 +376,13 @@
     }
   },
   "ru": {
+    "badge": {
+      "lifetime": "Пожизненный участник",
+      "months": "Подписка {{count}} мес.",
+      "monthOne": "Подписка 1 месяц",
+      "newMember": "Новый подписчик",
+      "freeLine": "Пользователь расширения"
+    },
     "topbar": {
       "previews": "Предварительный просмотр при наведении курсора",
       "thisChannel": "Этот канал",
@@ -358,6 +421,13 @@
     }
   },
   "ja": {
+    "badge": {
+      "lifetime": "永久メンバー",
+      "months": "{{count}}か月利用中",
+      "monthOne": "1か月利用中",
+      "newMember": "新規メンバー",
+      "freeLine": "拡張機能ユーザー"
+    },
     "topbar": {
       "previews": "ホバー時のプレビュー",
       "thisChannel": "このチャンネル",
@@ -396,6 +466,13 @@
     }
   },
   "ko": {
+    "badge": {
+      "lifetime": "평생 멤버",
+      "months": "{{count}}개월째 구독 중",
+      "monthOne": "1개월째 구독 중",
+      "newMember": "새 구독자",
+      "freeLine": "확장 프로그램 사용자"
+    },
     "topbar": {
       "previews": "마우스 오버 시 미리보기",
       "thisChannel": "이 채널",
@@ -434,6 +511,13 @@
     }
   },
   "id": {
+    "badge": {
+      "lifetime": "Anggota seumur hidup",
+      "months": "Berlangganan {{count}} bulan",
+      "monthOne": "Berlangganan 1 bulan",
+      "newMember": "Pelanggan baru",
+      "freeLine": "Pengguna ekstensi"
+    },
     "topbar": {
       "previews": "Pratinjau saat mengarahkan kursor",
       "thisChannel": "Kanal ini",
@@ -472,6 +556,13 @@
     }
   },
   "nl": {
+    "badge": {
+      "lifetime": "Lid voor het leven",
+      "months": "{{count}} maanden abonnee",
+      "monthOne": "1 maand abonnee",
+      "newMember": "Nieuwe abonnee",
+      "freeLine": "Gebruikt de extensie"
+    },
     "topbar": {
       "previews": "Voorbeelden bij aanwijzen",
       "thisChannel": "Dit kanaal",
@@ -510,44 +601,58 @@
     }
   },
   "hi": {
+    "badge": {
+      "lifetime": "Lifetime member",
+      "months": "Subscribed for {{count}} months",
+      "monthOne": "Subscribed for 1 month",
+      "newMember": "New subscriber",
+      "freeLine": "Extension user"
+    },
     "topbar": {
-      "previews": "Hover previews",
+      "previews": "पूर्वावलोकन पर होवर करें",
       "thisChannel": "यह चैनल",
       "badgeColor": "बैज का रंग",
-      "badgeAuthor": "नाम",
-      "badgeTheme": "थीम",
-      "badgeCustom": "कस्टम",
-      "liveNow": "अभी लाइव",
-      "noneLive": "कोई लाइव नहीं",
-      "watchedHere": "यहाँ देखा गया",
-      "follow": "फ़ॉलो करें",
-      "followed": "फ़ॉलो किया",
-      "autoClaim": "स्वतः चैनल पॉइंट",
-      "fastForward": "फास्ट फॉरवर्ड",
-      "more": "+{{count}} और",
-      "tip": "Offer a Bubble Tea",
-      "settings": "All settings"
+      "badgeAuthor": "उपयोगकर्ता नाम",
+      "badgeTheme": "विषय",
+      "badgeCustom": "रिवाज़",
+      "liveNow": "अब सीधा प्रसारण हो रहा है",
+      "noneLive": "अभी कोई नहीं रहता",
+      "watchedHere": "यहाँ देखा",
+      "follow": "अनुसरण करना",
+      "followed": "पालन ​​किया",
+      "autoClaim": "ऑटो चैनल पॉइंट",
+      "fastForward": "तेजी से आगे बढ़ना",
+      "more": "+{{count}} अधिक",
+      "tip": "बबल टी पेश करें",
+      "settings": "सभी सेटिंग्स"
     },
     "quickFollow": {
-      "add": "Add to StreamPulse",
-      "tracked": "Tracked",
-      "remove": "Remove from StreamPulse",
-      "added": "{{name}} added to StreamPulse",
-      "removed": "{{name}} removed from StreamPulse",
-      "error": "Action failed. Try again."
+      "add": "StreamPulse में जोड़ें",
+      "tracked": "ट्रैक",
+      "remove": "StreamPulse से हटाएं",
+      "added": "{{name}} को StreamPulse में जोड़ा गया",
+      "removed": "{{name}} को StreamPulse से हटा दिया गया",
+      "error": "क्रिया: विफल रही है। पुनः प्रयास करें।"
     },
     "player": {
-      "skipToLive": "Skip to live",
-      "holdToFastForward": "Hold to fast-forward x2",
-      "latencyEmpty": "Latency: --",
-      "latencyValue": "Latency: {{value}}s",
-      "offline": "OFFLINE"
+      "skipToLive": "जीना छोड़ें",
+      "holdToFastForward": "तेजी से आगे बढ़ने वाले x2 को दबाए रखें",
+      "latencyEmpty": "विलंबता:--",
+      "latencyValue": "विलंबता: {{value}}s",
+      "offline": "ऑफलाइन"
     },
     "chatFilter": {
-      "replacement": "Message removed by StreamPulse"
+      "replacement": "StreamPulse द्वारा संदेश हटा दिया गया"
     }
   },
   "sv": {
+    "badge": {
+      "lifetime": "Livstidsmedlem",
+      "months": "Prenumerant i {{count}} månader",
+      "monthOne": "Prenumerant i 1 månad",
+      "newMember": "Ny prenumerant",
+      "freeLine": "Använder tillägget"
+    },
     "topbar": {
       "previews": "Förhandsvisning vid muspekning",
       "thisChannel": "Den här kanalen",
@@ -586,6 +691,13 @@
     }
   },
   "cs": {
+    "badge": {
+      "lifetime": "Doživotní člen",
+      "months": "Předplatitel {{count}} měs.",
+      "monthOne": "Předplatitel 1 měsíc",
+      "newMember": "Nový předplatitel",
+      "freeLine": "Uživatel rozšíření"
+    },
     "topbar": {
       "previews": "Náhledy při najetí myší",
       "thisChannel": "Tento kanál",
