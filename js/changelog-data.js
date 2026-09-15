@@ -48,6 +48,86 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.18",
+    date: "2026-09-15",
+    title: {
+      fr: "Moins de permissions demandées",
+      en: "Fewer permissions requested",
+      es: "Menos permisos solicitados",
+      "pt-BR": "Menos permissões solicitadas",
+      de: "Weniger Berechtigungen nötig",
+      it: "Meno autorizzazioni richieste",
+      pl: "Mniej wymaganych uprawnień",
+      tr: "Daha az izin isteniyor",
+      ru: "Меньше запрашиваемых разрешений",
+      ja: "必要な権限を削減",
+      ko: "요청 권한 축소",
+      id: "Lebih sedikit izin yang diminta",
+      nl: "Minder machtigingen nodig",
+      sv: "Färre behörigheter krävs",
+      cs: "Méně požadovaných oprávnění"
+    },
+    subtitle: {
+      fr: "StreamPulse n'a plus besoin d'accéder aux onglets du navigateur.",
+      en: "StreamPulse no longer needs access to your browser tabs.",
+      es: "StreamPulse ya no necesita acceder a las pestañas del navegador.",
+      "pt-BR": "O StreamPulse não precisa mais acessar as abas do navegador.",
+      de: "StreamPulse braucht keinen Zugriff mehr auf die Browser-Tabs.",
+      it: "StreamPulse non ha più bisogno di accedere alle schede del browser.",
+      pl: "StreamPulse nie potrzebuje już dostępu do kart przeglądarki.",
+      tr: "StreamPulse artık tarayıcı sekmelerine erişmeye ihtiyaç duymuyor.",
+      ru: "StreamPulse больше не нужен доступ к вкладкам браузера.",
+      ja: "StreamPulse はブラウザのタブへのアクセスが不要になりました。",
+      ko: "StreamPulse가 더 이상 브라우저 탭에 접근할 필요가 없습니다.",
+      id: "StreamPulse tidak lagi perlu mengakses tab browser.",
+      nl: "StreamPulse heeft geen toegang meer nodig tot je browsertabbladen.",
+      sv: "StreamPulse behöver inte längre åtkomst till webbläsarens flikar.",
+      cs: "StreamPulse už nepotřebuje přístup ke kartám prohlížeče."
+    },
+    changes: [
+      {
+        type: "improved",
+        text: {
+          fr: "Permission « onglets » retirée : Chrome n'affiche plus « Lire l'historique de navigation » à l'installation. Toutes les fonctions restent identiques.",
+          en: "\"Tabs\" permission removed: Chrome no longer shows \"Read your browsing history\" at install. Every feature works the same.",
+          es: "Permiso de «pestañas» eliminado: Chrome ya no muestra «Leer tu historial de navegación» al instalar. Todas las funciones siguen igual.",
+          "pt-BR": "Permissão de \"abas\" removida: o Chrome não mostra mais \"Ler seu histórico de navegação\" na instalação. Todos os recursos continuam iguais.",
+          de: "Berechtigung „Tabs“ entfernt: Chrome zeigt bei der Installation nicht mehr „Browserverlauf lesen“ an. Alle Funktionen bleiben gleich.",
+          it: "Autorizzazione «schede» rimossa: Chrome non mostra più «Leggere la cronologia di navigazione» all'installazione. Tutte le funzioni restano uguali.",
+          pl: "Usunięto uprawnienie „karty”: Chrome nie wyświetla już „Odczytywanie historii przeglądania” podczas instalacji. Wszystkie funkcje działają tak samo.",
+          tr: "\"Sekmeler\" izni kaldırıldı: Chrome kurulumda artık \"Tarama geçmişinizi okuma\" uyarısını göstermiyor. Tüm özellikler aynı şekilde çalışıyor.",
+          ru: "Разрешение «вкладки» удалено: Chrome больше не показывает «Просмотр истории браузера» при установке. Все функции работают как прежде.",
+          ja: "「タブ」権限を削除：インストール時に Chrome が「閲覧履歴の読み取り」を表示しなくなりました。機能はすべてそのままです。",
+          ko: "\"탭\" 권한 제거: 설치할 때 Chrome이 더 이상 \"방문 기록 읽기\"를 표시하지 않습니다. 모든 기능은 그대로입니다.",
+          id: "Izin \"tab\" dihapus: Chrome tidak lagi menampilkan \"Membaca histori penjelajahan\" saat instalasi. Semua fitur tetap sama.",
+          nl: "Machtiging 'tabbladen' verwijderd: Chrome toont bij installatie niet meer 'Je browsegeschiedenis lezen'. Alle functies werken hetzelfde.",
+          sv: "Behörigheten ”flikar” borttagen: Chrome visar inte längre ”Läsa din webbhistorik” vid installation. Alla funktioner fungerar som förut.",
+          cs: "Oprávnění „karty“ odebráno: Chrome při instalaci už nezobrazuje „Číst historii prohlížení“. Všechny funkce fungují stejně."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "Les fichiers internes de l'extension (son, notes de version) ne sont plus lisibles par les sites web, et ses logos seulement sur Twitch.",
+          en: "The extension's internal files (sound, release notes) can no longer be read by websites, and its logos only on Twitch.",
+          es: "Los archivos internos de la extensión (sonido, notas de versión) ya no los pueden leer los sitios web, y sus logotipos solo en Twitch.",
+          "pt-BR": "Os arquivos internos da extensão (som, notas de versão) não podem mais ser lidos por sites, e os logotipos só no Twitch.",
+          de: "Interne Dateien der Erweiterung (Ton, Versionshinweise) sind für Websites nicht mehr lesbar, die Logos nur noch auf Twitch.",
+          it: "I file interni dell'estensione (suono, note di versione) non sono più leggibili dai siti web, e i loghi solo su Twitch.",
+          pl: "Wewnętrzne pliki rozszerzenia (dźwięk, informacje o wersji) nie są już dostępne dla stron internetowych, a logo tylko na Twitchu.",
+          tr: "Eklentinin dahili dosyaları (ses, sürüm notları) artık web siteleri tarafından okunamıyor, logolar ise yalnızca Twitch'te.",
+          ru: "Внутренние файлы расширения (звук, заметки о версии) больше недоступны сайтам, а логотипы — только на Twitch.",
+          ja: "拡張機能の内部ファイル（サウンド、リリースノート）はウェブサイトから読み取れなくなり、ロゴは Twitch 上のみになりました。",
+          ko: "확장 프로그램의 내부 파일(소리, 릴리스 노트)은 더 이상 웹사이트에서 읽을 수 없으며, 로고는 Twitch에서만 사용됩니다.",
+          id: "File internal ekstensi (suara, catatan rilis) tidak lagi bisa dibaca situs web, dan logonya hanya di Twitch.",
+          nl: "Interne bestanden van de extensie (geluid, releasenotes) zijn niet meer leesbaar voor websites, en de logo's alleen nog op Twitch.",
+          sv: "Tilläggets interna filer (ljud, versionsinformation) kan inte längre läsas av webbplatser, och logotyperna bara på Twitch.",
+          cs: "Interní soubory rozšíření (zvuk, poznámky k verzi) už weby nemohou číst a loga jen na Twitchi."
+        }
+      }
+    ]
+  },
+  {
     version: "26.9.17",
     date: "2026-09-15",
     title: {

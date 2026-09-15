@@ -1,6 +1,6 @@
 {
   "name": "streampulse-extension",
-  "version": "26.9.17",
+  "version": "26.9.18",
   "private": true,
   "description": "Outillage de developpement de l'extension StreamPulse. Rien ici n'est package dans le zip livre au Chrome Web Store.",
   "type": "module",
@@ -12,6 +12,8 @@
     "publish:edge": "node scripts/publish-edge.mjs",
     "publish:chrome": "node scripts/publish-chrome.mjs",
     "publish:firefox": "node scripts/publish-firefox.mjs",
+    "publish:firefox:screenshots": "node scripts/publish-firefox-screenshots.mjs",
+    "listing": "node scripts/prepare-listing.mjs",
     "publish:all": "node scripts/publish-edge.mjs && node scripts/publish-chrome.mjs && node scripts/publish-firefox.mjs",
     "build": "npm run lint && npm test && node scripts/build-zip.mjs",
     "test": "node --test \"tests/*.test.mjs\""
