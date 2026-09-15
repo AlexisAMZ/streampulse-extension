@@ -30,6 +30,10 @@
   <sub>If StreamPulse saves you a click, <a href="https://github.com/AlexisAMZ/streampulse-extension/stargazers">a ⭐ on GitHub</a> helps other viewers find it.</sub>
 </p>
 
+<p align="center">
+  <a href="https://maidensail.com/startup/streampulse" rel="dofollow"><picture><source media="(prefers-color-scheme: dark)" srcset="https://maidensail.com/badge/streampulse.svg?theme=dark"><img src="https://maidensail.com/badge/streampulse.svg?theme=light" alt="Featured on Maidensail" height="44"></picture></a>
+</p>
+
 ---
 
 ## Why StreamPulse
