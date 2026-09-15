@@ -86,6 +86,26 @@ export const RELEASES = [
     },
     changes: [
       {
+        type: "fix",
+        text: {
+          fr: "Les aperçus au survol fonctionnent de nouveau sur vos favoris StreamPulse dans la barre latérale de Twitch.",
+          en: "Hover previews work again on your StreamPulse favorites in the Twitch sidebar.",
+          es: "Las vistas previas al pasar el cursor vuelven a funcionar en tus favoritos de StreamPulse en la barra lateral de Twitch.",
+          "pt-BR": "As prévias ao passar o mouse voltaram a funcionar nos seus favoritos do StreamPulse na barra lateral da Twitch.",
+          de: "Die Vorschau beim Überfahren funktioniert wieder bei deinen StreamPulse-Favoriten in der Twitch-Seitenleiste.",
+          it: "Le anteprime al passaggio del mouse funzionano di nuovo sui tuoi preferiti StreamPulse nella barra laterale di Twitch.",
+          pl: "Podgląd po najechaniu kursorem znów działa na Twoich ulubionych StreamPulse na pasku bocznym Twitcha.",
+          tr: "Üzerine gelince önizleme, Twitch kenar çubuğundaki StreamPulse favorilerinde yeniden çalışıyor.",
+          ru: "Предпросмотр при наведении снова работает для ваших избранных StreamPulse на боковой панели Twitch.",
+          ja: "Twitch のサイドバーにある StreamPulse のお気に入りで、ホバープレビューが再び表示されるようになりました。",
+          ko: "Twitch 사이드바의 StreamPulse 즐겨찾기에서 마우스를 올리면 미리보기가 다시 표시됩니다.",
+          id: "Pratinjau saat kursor diarahkan kembali berfungsi pada favorit StreamPulse di bilah samping Twitch.",
+          nl: "Voorvertoningen bij aanwijzen werken weer bij je StreamPulse-favorieten in de zijbalk van Twitch.",
+          sv: "Förhandsvisningar när du för muspekaren över fungerar igen på dina StreamPulse-favoriter i Twitchs sidofält.",
+          cs: "Náhledy při najetí myší opět fungují u vašich oblíbených StreamPulse na postranním panelu Twitche."
+        }
+      },
+      {
         type: "improved",
         text: {
           fr: "Le badge communautaire est désormais désactivé par défaut et ne s'active qu'avec votre accord, à l'installation ou dans les réglages, car il envoie une empreinte de votre pseudo à streampulse.fr.",
