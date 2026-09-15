@@ -525,7 +525,7 @@
     }
 
     setHideTwitchExtensions(preferences.hideTwitchExtensions === true);
-    setAutoCancelRaids(preferences.autoCancelRaids !== false);
+    setAutoCancelRaids(preferences.autoCancelRaids === true);
   }
 
   const HIDE_EXTENSIONS_STYLE_ID = "streampulse-hide-extensions-style";

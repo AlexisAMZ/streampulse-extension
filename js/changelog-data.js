@@ -88,6 +88,26 @@ export const RELEASES = [
       {
         type: "improved",
         text: {
+          fr: "L'annulation automatique des raids est désormais désactivée par défaut : suivre un raid permet de récupérer les points de chaîne liés au raid. Elle reste activable dans les réglages.",
+          en: "Automatic raid cancel is now off by default: following a raid lets you collect the channel points that come with it. You can still turn it on in settings.",
+          es: "La cancelación automática de raids ahora está desactivada por defecto: seguir un raid permite conseguir los puntos de canal que lo acompañan. Se puede activar en los ajustes.",
+          "pt-BR": "O cancelamento automático de raids agora vem desativado por padrão: seguir um raid permite coletar os pontos de canal que vêm com ele. Dá para ativar nas configurações.",
+          de: "Das automatische Abbrechen von Raids ist jetzt standardmäßig aus: Wer einem Raid folgt, sammelt die dazugehörigen Kanalpunkte. In den Einstellungen lässt es sich weiterhin einschalten.",
+          it: "L'annullamento automatico dei raid è ora disattivato di default: seguire un raid permette di ottenere i punti canale che lo accompagnano. Si può attivare nelle impostazioni.",
+          pl: "Automatyczne anulowanie rajdów jest teraz domyślnie wyłączone: podążanie za rajdem pozwala zdobyć związane z nim punkty kanału. Nadal można je włączyć w ustawieniach.",
+          tr: "Baskınları otomatik iptal etme artık varsayılan olarak kapalı: bir baskını takip etmek, onunla gelen kanal puanlarını toplamanı sağlar. Ayarlardan yine açılabilir.",
+          ru: "Автоматическая отмена рейдов теперь по умолчанию выключена: переход вместе с рейдом позволяет получить связанные с ним баллы канала. Её можно включить в настройках.",
+          ja: "レイドの自動キャンセルは初期設定でオフになりました。レイドについていくと、それに伴うチャンネルポイントを獲得できます。設定から引き続きオンにできます。",
+          ko: "레이드 자동 취소가 이제 기본적으로 꺼져 있습니다. 레이드를 따라가면 함께 제공되는 채널 포인트를 받을 수 있습니다. 설정에서 다시 켤 수 있습니다.",
+          id: "Pembatalan otomatis raid kini nonaktif secara default: mengikuti raid memungkinkan kamu mengumpulkan poin channel yang menyertainya. Tetap bisa diaktifkan di pengaturan.",
+          nl: "Raids automatisch annuleren staat nu standaard uit: door een raid te volgen verzamel je de kanaalpunten die erbij horen. Je kunt het nog steeds aanzetten in de instellingen.",
+          sv: "Automatisk avbrytning av raider är nu avstängd som standard: genom att följa en raid får du kanalpoängen som hör till den. Den kan fortfarande slås på i inställningarna.",
+          cs: "Automatické rušení nájezdů je nyní ve výchozím stavu vypnuté: sledováním nájezdu získáte body kanálu, které k němu patří. V nastavení ho lze stále zapnout."
+        }
+      },
+      {
+        type: "improved",
+        text: {
           fr: "Permission « onglets » retirée : Chrome n'affiche plus « Lire l'historique de navigation » à l'installation. Toutes les fonctions restent identiques.",
           en: "\"Tabs\" permission removed: Chrome no longer shows \"Read your browsing history\" at install. Every feature works the same.",
           es: "Permiso de «pestañas» eliminado: Chrome ya no muestra «Leer tu historial de navegación» al instalar. Todas las funciones siguen igual.",

@@ -126,7 +126,7 @@ const DEFAULT_PREFERENCES = {
   autoOpenInventory: false,
   autoOpenInventoryIntervalHours: 24,
   hideTwitchExtensions: false,
-  autoCancelRaids: true,
+  autoCancelRaids: false,
   preventTabDiscard: true,
   enablePredictionsPopup: true,
   enableTabLiveIcon: true,
@@ -561,7 +561,7 @@ class PreferenceStore {
       autoOpenInventory: Boolean(preferences.autoOpenInventory),
       autoOpenInventoryIntervalHours: Number(preferences.autoOpenInventoryIntervalHours) > 0 ? Number(preferences.autoOpenInventoryIntervalHours) : 24,
       hideTwitchExtensions: Boolean(preferences.hideTwitchExtensions),
-      autoCancelRaids: preferences.autoCancelRaids !== false,
+      autoCancelRaids: preferences.autoCancelRaids === true,
       preventTabDiscard: preferences.preventTabDiscard !== false,
       enablePredictionsPopup: preferences.enablePredictionsPopup !== false,
       enableTabLiveIcon: preferences.enableTabLiveIcon !== false,
@@ -2260,12 +2260,30 @@ async function migrateAutoOpenInventoryInterval() {
   }
 }
 
+// 26.9.18 : suivre un raid rapporte des points de chaine, donc l'annulation
+// automatique passe a desactivee par defaut. L'ancien defaut (active) etait deja
+// ecrit en storage chez tout le monde : on bascule une seule fois, marque par un
+// drapeau, pour qu'un utilisateur qui la reactive ne soit pas ecrase ensuite.
+const RAID_CANCEL_MIGRATION_KEY = "autoCancelRaidsMigratedToOff";
+
+async function migrateAutoCancelRaidsOff() {
+  try {
+    const stored = await chrome.storage.local.get(RAID_CANCEL_MIGRATION_KEY);
+    if (stored[RAID_CANCEL_MIGRATION_KEY]) return;
+    await PreferenceStore.update({ autoCancelRaids: false });
+    await chrome.storage.local.set({ [RAID_CANCEL_MIGRATION_KEY]: true });
+  } catch (error) {
+    console.warn("Raid cancel migration failed:", error.message);
+  }
+}
+
 chrome.runtime.onInstalled.addListener(async (details) => {
   initDone = true;
   await fetchRemoteConfig(); // load credentials before first poll
   const streamers = await DataStore.ensureDefaults();
   await PreferenceStore.ensureDefaults();
   await migrateAutoOpenInventoryInterval();
+  await migrateAutoCancelRaidsOff();
   await NotificationCenter.init();
   scheduleWatcherAlarm();
   scheduleKeepAliveAlarm();
@@ -2975,7 +2993,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           updates.autoClaimMoments = incomingUpdates.autoClaimMoments !== false;
         }
         if ("autoCancelRaids" in incomingUpdates) {
-          updates.autoCancelRaids = incomingUpdates.autoCancelRaids !== false;
+          updates.autoCancelRaids = incomingUpdates.autoCancelRaids === true;
         }
         if ("preventTabDiscard" in incomingUpdates) {
           updates.preventTabDiscard =

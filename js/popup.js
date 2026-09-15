@@ -912,7 +912,7 @@ function renderPreferences() {
     hideTwitchExtensionsToggle.checked = Boolean(prefs.hideTwitchExtensions);
   }
   if (autoCancelRaidsToggle) {
-    autoCancelRaidsToggle.checked = prefs.autoCancelRaids !== false;
+    autoCancelRaidsToggle.checked = prefs.autoCancelRaids === true;
   }
   if (preventTabDiscardToggle) {
     preventTabDiscardToggle.checked = prefs.preventTabDiscard !== false;
