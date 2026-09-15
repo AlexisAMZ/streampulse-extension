@@ -42,12 +42,21 @@
     "kalimba", "lanterne", "mosaique", "nightowlfr", "opaline", "pistache", "quiveroak", "rouletabille",
     "saltmarsh", "tamtam", "ultramarin", "vagabonde", "wildthyme", "xylofun", "yuzuzest", "zephyrin"];
   const GAMES = ["Just Chatting", "Grand Theft Auto V", "League of Legends", "Minecraft", "Valorant", "Art", "Music", "Elden Ring"];
-  const TITLES = [
+  // Titres en français pour le banc FR, en anglais ailleurs : une capture du store
+  // en allemand ou en japonais ne doit pas montrer un titre de stream en français.
+  const TITLES = (params.get("lang") || "fr") === "fr" ? [
     "Soirée détente, on répond à vos questions",
     "RP sur le serveur, on reprend l'enquête là où on s'était arrêtés",
     "Ranked jusqu'à Diamant ou jusqu'au bout de la nuit",
     "Construction de la base, épisode 12",
+  ] : [
+    "Chill night, answering your questions",
+    "Server RP, picking the case up where we left off",
+    "Ranked until Diamond or until sunrise",
+    "Base building, episode 12",
   ];
+  // store=1 : toutes les alertes actives, pour les captures du Chrome Web Store.
+  const STORE_SHOT = params.get("store") === "1";
 
   function makeChannels(count, liveCount) {
     const streamers = [];
@@ -64,8 +73,8 @@
         displayName: handle.charAt(0).toUpperCase() + handle.slice(1),
         avatarUrl: avatar(handle[0].toUpperCase(), isTwitch ? "#7c4dff" : "#2e9e3a", isTwitch ? "#2a1a55" : "#113d17"),
         notificationsEnabled: true,
-        gameNotificationsEnabled: i % 2 === 0,
-        titleNotificationsEnabled: false,
+        gameNotificationsEnabled: STORE_SHOT || i % 2 === 0,
+        titleNotificationsEnabled: STORE_SHOT,
       });
       const isLive = i < liveCount;
       statuses[id] = {
