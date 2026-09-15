@@ -48,6 +48,146 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.17",
+    date: "2026-09-15",
+    title: {
+      fr: "Connexion au serveur StreamPulse réparée",
+      en: "StreamPulse server connection fixed",
+      es: "Conexión con el servidor de StreamPulse reparada",
+      "pt-BR": "Conexão com o servidor do StreamPulse corrigida",
+      de: "Verbindung zum StreamPulse-Server repariert",
+      it: "Connessione al server di StreamPulse riparata",
+      pl: "Połączenie z serwerem StreamPulse naprawione",
+      tr: "StreamPulse sunucu bağlantısı düzeltildi",
+      ru: "Соединение с сервером StreamPulse восстановлено",
+      ja: "StreamPulse サーバーとの接続を修正",
+      ko: "StreamPulse 서버 연결 수정",
+      id: "Koneksi ke server StreamPulse diperbaiki",
+      nl: "Verbinding met de StreamPulse-server hersteld",
+      sv: "Anslutningen till StreamPulse-servern är lagad",
+      cs: "Spojení se serverem StreamPulse opraveno"
+    },
+    subtitle: {
+      fr: "Badges, StreamPulse+ et statut des lives fonctionnent de nouveau normalement.",
+      en: "Badges, StreamPulse+ and live status work normally again.",
+      es: "Las insignias, StreamPulse+ y el estado de los directos vuelven a funcionar con normalidad.",
+      "pt-BR": "Emblemas, StreamPulse+ e status das lives voltam a funcionar normalmente.",
+      de: "Abzeichen, StreamPulse+ und Live-Status funktionieren wieder normal.",
+      it: "Badge, StreamPulse+ e stato delle live funzionano di nuovo normalmente.",
+      pl: "Odznaki, StreamPulse+ i status transmisji znów działają normalnie.",
+      tr: "Rozetler, StreamPulse+ ve yayın durumu yeniden normal çalışıyor.",
+      ru: "Значки, StreamPulse+ и статус трансляций снова работают как обычно.",
+      ja: "バッジ、StreamPulse+、配信ステータスが再び正常に動作します。",
+      ko: "배지, StreamPulse+, 방송 상태가 다시 정상적으로 작동합니다.",
+      id: "Lencana, StreamPulse+, dan status siaran kembali berfungsi normal.",
+      nl: "Badges, StreamPulse+ en livestatus werken weer normaal.",
+      sv: "Märken, StreamPulse+ och livestatus fungerar som vanligt igen.",
+      cs: "Odznaky, StreamPulse+ a stav vysílání opět fungují normálně."
+    },
+    changes: [
+      {
+        type: "fix",
+        text: {
+          fr: "L'extension contacte maintenant directement streampulse.fr : le badge, la vérification de ta clé StreamPulse+ et la connexion à Twitch ne dépendent plus d'une redirection qui pouvait les bloquer.",
+          en: "The extension now talks to streampulse.fr directly: the badge, your StreamPulse+ key check and the Twitch connection no longer rely on a redirect that could block them.",
+          es: "La extensión ahora contacta directamente con streampulse.fr: la insignia, la verificación de tu clave StreamPulse+ y la conexión con Twitch ya no dependen de una redirección que podía bloquearlas.",
+          "pt-BR": "A extensão agora se conecta diretamente a streampulse.fr: o emblema, a verificação da sua chave StreamPulse+ e a conexão com a Twitch não dependem mais de um redirecionamento que podia bloqueá-los.",
+          de: "Die Erweiterung verbindet sich jetzt direkt mit streampulse.fr: Abzeichen, Prüfung deines StreamPulse+-Schlüssels und Twitch-Verbindung hängen nicht mehr von einer Weiterleitung ab, die sie blockieren konnte.",
+          it: "L'estensione ora contatta direttamente streampulse.fr: il badge, la verifica della tua chiave StreamPulse+ e la connessione a Twitch non dipendono più da un reindirizzamento che poteva bloccarli.",
+          pl: "Rozszerzenie łączy się teraz bezpośrednio z streampulse.fr: odznaka, weryfikacja klucza StreamPulse+ i połączenie z Twitchem nie zależą już od przekierowania, które mogło je blokować.",
+          tr: "Eklenti artık doğrudan streampulse.fr ile iletişim kuruyor: rozet, StreamPulse+ anahtar doğrulaması ve Twitch bağlantısı artık onları engelleyebilecek bir yönlendirmeye bağlı değil.",
+          ru: "Расширение теперь обращается напрямую к streampulse.fr: значок, проверка ключа StreamPulse+ и подключение к Twitch больше не зависят от перенаправления, которое могло их блокировать.",
+          ja: "拡張機能が streampulse.fr に直接接続するようになりました。バッジ、StreamPulse+ キーの確認、Twitch との接続が、ブロックの原因になり得たリダイレクトに依存しなくなりました。",
+          ko: "확장 프로그램이 이제 streampulse.fr에 직접 연결합니다. 배지, StreamPulse+ 키 확인, 트위치 연결이 차단될 수 있던 리디렉션에 더 이상 의존하지 않습니다.",
+          id: "Ekstensi kini langsung terhubung ke streampulse.fr: lencana, pemeriksaan kunci StreamPulse+, dan koneksi Twitch tidak lagi bergantung pada pengalihan yang bisa memblokirnya.",
+          nl: "De extensie maakt nu rechtstreeks verbinding met streampulse.fr: de badge, de controle van je StreamPulse+-sleutel en de Twitch-verbinding zijn niet meer afhankelijk van een doorverwijzing die ze kon blokkeren.",
+          sv: "Tillägget ansluter nu direkt till streampulse.fr: märket, kontrollen av din StreamPulse+-nyckel och Twitch-anslutningen är inte längre beroende av en omdirigering som kunde blockera dem.",
+          cs: "Rozšíření se nyní připojuje přímo k streampulse.fr: odznak, ověření klíče StreamPulse+ a připojení k Twitchi už nezávisí na přesměrování, které je mohlo blokovat."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "Petit message de remerciement quand tu actives StreamPulse+. Il ne s'affiche qu'une fois par clé.",
+          en: "A small thank-you message when you activate StreamPulse+. It only shows once per key.",
+          es: "Un pequeño mensaje de agradecimiento al activar StreamPulse+. Solo aparece una vez por clave.",
+          "pt-BR": "Uma pequena mensagem de agradecimento ao ativar o StreamPulse+. Ela aparece só uma vez por chave.",
+          de: "Eine kleine Dankesnachricht, wenn du StreamPulse+ aktivierst. Sie erscheint nur einmal pro Schlüssel.",
+          it: "Un piccolo messaggio di ringraziamento quando attivi StreamPulse+. Compare una sola volta per chiave.",
+          pl: "Krótkie podziękowanie po aktywacji StreamPulse+. Pojawia się tylko raz na klucz.",
+          tr: "StreamPulse+ etkinleştirdiğinde küçük bir teşekkür mesajı. Her anahtar için yalnızca bir kez görünür.",
+          ru: "Небольшое сообщение с благодарностью при активации StreamPulse+. Появляется только один раз для каждого ключа.",
+          ja: "StreamPulse+ を有効にすると、ちょっとしたお礼のメッセージが表示されます。キーごとに一度だけです。",
+          ko: "StreamPulse+를 활성화하면 작은 감사 메시지가 표시됩니다. 키마다 한 번만 나타납니다.",
+          id: "Pesan terima kasih kecil saat kamu mengaktifkan StreamPulse+. Hanya muncul sekali per kunci.",
+          nl: "Een klein dankjewel wanneer je StreamPulse+ activeert. Het verschijnt maar één keer per sleutel.",
+          sv: "Ett litet tack när du aktiverar StreamPulse+. Det visas bara en gång per nyckel.",
+          cs: "Malé poděkování při aktivaci StreamPulse+. Zobrazí se jen jednou pro každý klíč."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "Un bandeau te prévient dans la pop-up quand le navigateur bloque les notifications de StreamPulse, avec un bouton vers les réglages.",
+          en: "A banner in the popup warns you when your browser blocks StreamPulse notifications, with a button to the settings.",
+          es: "Un aviso en la ventana emergente te alerta cuando el navegador bloquea las notificaciones de StreamPulse, con un botón hacia los ajustes.",
+          "pt-BR": "Um aviso no pop-up alerta quando o navegador bloqueia as notificações do StreamPulse, com um botão para as configurações.",
+          de: "Ein Hinweis im Popup warnt dich, wenn der Browser die Benachrichtigungen von StreamPulse blockiert, mit einer Schaltfläche zu den Einstellungen.",
+          it: "Un avviso nel popup ti segnala quando il browser blocca le notifiche di StreamPulse, con un pulsante per le impostazioni.",
+          pl: "Pasek w oknie rozszerzenia ostrzega, gdy przeglądarka blokuje powiadomienia StreamPulse, z przyciskiem do ustawień.",
+          tr: "Tarayıcı StreamPulse bildirimlerini engellediğinde açılır pencerede bir uyarı ve ayarlara giden bir düğme görünür.",
+          ru: "Плашка во всплывающем окне предупреждает, когда браузер блокирует уведомления StreamPulse, и ведёт в настройки.",
+          ja: "ブラウザーが StreamPulse の通知をブロックしているとき、ポップアップにバナーと設定へのボタンが表示されます。",
+          ko: "브라우저가 StreamPulse 알림을 차단하면 팝업에 배너와 설정 버튼이 표시됩니다.",
+          id: "Spanduk di popup memberi tahu saat browser memblokir notifikasi StreamPulse, dengan tombol ke pengaturan.",
+          nl: "Een banner in de pop-up waarschuwt je wanneer je browser meldingen van StreamPulse blokkeert, met een knop naar de instellingen.",
+          sv: "En banner i popupen varnar när webbläsaren blockerar aviseringar från StreamPulse, med en knapp till inställningarna.",
+          cs: "Pruh ve vyskakovacím okně upozorní, když prohlížeč blokuje oznámení StreamPulse, s tlačítkem do nastavení."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "Quand une alerte intelligente est active pour un streamer, StreamPulse indique que son alerte classique est coupée.",
+          en: "When a smart alert is active for a streamer, StreamPulse now tells you their regular alert is off.",
+          es: "Cuando una alerta inteligente está activa para un streamer, StreamPulse indica que su alerta normal está desactivada.",
+          "pt-BR": "Quando um alerta inteligente está ativo para um streamer, o StreamPulse avisa que o alerta normal dele está desligado.",
+          de: "Wenn für einen Streamer ein intelligenter Alarm aktiv ist, zeigt StreamPulse an, dass sein normaler Alarm aus ist.",
+          it: "Quando un avviso intelligente è attivo per uno streamer, StreamPulse indica che il suo avviso normale è disattivato.",
+          pl: "Gdy dla streamera działa inteligentny alert, StreamPulse informuje, że jego zwykły alert jest wyłączony.",
+          tr: "Bir yayıncı için akıllı uyarı etkin olduğunda StreamPulse normal uyarısının kapalı olduğunu belirtir.",
+          ru: "Когда для стримера включено умное оповещение, StreamPulse показывает, что обычное оповещение отключено.",
+          ja: "配信者にスマートアラートが有効な場合、通常のアラートがオフになっていることを StreamPulse が表示します。",
+          ko: "스트리머에게 스마트 알림이 켜져 있으면 StreamPulse가 기본 알림이 꺼져 있다고 알려 줍니다.",
+          id: "Saat peringatan pintar aktif untuk seorang streamer, StreamPulse memberi tahu bahwa peringatan biasanya dimatikan.",
+          nl: "Als er een slimme melding actief is voor een streamer, laat StreamPulse zien dat de gewone melding uit staat.",
+          sv: "När en smart avisering är aktiv för en streamer visar StreamPulse att den vanliga aviseringen är avstängd.",
+          cs: "Když je pro streamera aktivní chytré upozornění, StreamPulse ukáže, že jeho běžné upozornění je vypnuté."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "Lien pour mettre une étoile au projet sur GitHub dans les réglages.",
+          en: "A link in the settings to star the project on GitHub.",
+          es: "Enlace en los ajustes para dar una estrella al proyecto en GitHub.",
+          "pt-BR": "Link nas configurações para dar uma estrela ao projeto no GitHub.",
+          de: "Link in den Einstellungen, um dem Projekt auf GitHub einen Stern zu geben.",
+          it: "Link nelle impostazioni per mettere una stella al progetto su GitHub.",
+          pl: "Link w ustawieniach, aby dać projektowi gwiazdkę na GitHubie.",
+          tr: "Ayarlarda projeye GitHub'da yıldız vermek için bir bağlantı.",
+          ru: "Ссылка в настройках, чтобы поставить проекту звезду на GitHub.",
+          ja: "設定に GitHub でプロジェクトにスターを付けるリンクを追加。",
+          ko: "설정에 GitHub에서 프로젝트에 별을 줄 수 있는 링크 추가.",
+          id: "Tautan di pengaturan untuk memberi bintang proyek di GitHub.",
+          nl: "Link in de instellingen om het project een ster te geven op GitHub.",
+          sv: "Länk i inställningarna för att ge projektet en stjärna på GitHub.",
+          cs: "Odkaz v nastavení pro udělení hvězdičky projektu na GitHubu."
+        }
+      }
+    ]
+  },
+  {
     version: "26.9.16",
     date: "2026-09-14",
     title: {
