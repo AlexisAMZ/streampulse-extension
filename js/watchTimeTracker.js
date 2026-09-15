@@ -164,7 +164,9 @@
 
   // ── Save partial time on page close ──
 
-  window.addEventListener("beforeunload", () => {
+  // pagehide plutot que beforeunload : beforeunload peut empecher Chrome de garder
+  // la page dans le cache precedent/suivant (retour arriere instantane).
+  window.addEventListener("pagehide", () => {
     if (!currentChannel || !currentPlatform || !lastHeartbeatTime) return;
     // Seconds elapsed since the last heartbeat (partial interval)
     const elapsed = Math.round((Date.now() - lastHeartbeatTime) / 1000);
@@ -177,6 +179,9 @@
         game: currentGame(),
       });
     }
+    // La page peut revenir depuis le cache : repartir de maintenant evite de
+    // compter deux fois l'intervalle deja envoye.
+    lastHeartbeatTime = Date.now();
   });
 
   // ── Settings ──
