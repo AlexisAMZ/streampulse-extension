@@ -8,8 +8,7 @@
     "storage",
     "alarms",
     "notifications",
-    "offscreen",
-    "tabs"
+    "offscreen"
   ],
   "host_permissions": [
     "https://api.twitch.tv/*",
@@ -18,12 +17,7 @@
     "https://www.twitch.tv/*",
     "https://clips.twitch.tv/*",
     "https://kick.com/*",
-    "https://*.kick.com/*",
-    "https://files.kick.com/*",
-    "https://images.kick.com/*",
-    "https://stream.kick.com/*",
-    "https://id.kick.com/*",
-    "https://api.kick.com/*"
+    "https://*.kick.com/*"
   ],
   "author": "AlexisAMZ",
   "background": {
@@ -149,14 +143,11 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "html/audio-handler.html",
-        "html/changelog.html",
-        "sons/notification.mp3",
         "images/photos/128px.png",
         "images/photos/logosp.png"
       ],
       "matches": [
-        "<all_urls>"
+        "https://www.twitch.tv/*"
       ]
     },
     {
