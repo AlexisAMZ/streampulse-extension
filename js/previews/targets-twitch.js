@@ -19,6 +19,10 @@
     "a.side-nav-card__link",
     ".side-nav-card a[href]",
     'a[data-a-target="card-1-image-link"]',
+    // Favoris StreamPulse dans la barre latérale (js/inject/sidebar-favorites.js) :
+    // une chaîne épinglée n'apparaît plus dans la liste Twitch en dessous, donc sans
+    // ce sélecteur elle n'avait plus d'aperçu du tout.
+    "a.sp-fav-row",
   ];
   const ANCHOR_SELECTOR = ANCHOR_SELECTORS.join(",");
 
@@ -37,13 +41,14 @@
     '[data-a-target="preview-card-game-link"]',
     ".side-nav-card__metadata",
     '[data-a-target="side-nav-game-title"]',
+    ".sp-fav-cat",
   ];
   const VIEWERS_SELECTORS = [
     ".tw-media-card-stat",
     '[data-a-target="preview-card-channel-link"] + *',
     ".side-nav-card__live-status",
   ];
-  const AVATAR_SELECTORS = [".tw-image-avatar", ".side-nav-card__avatar img", "img.tw-image"];
+  const AVATAR_SELECTORS = [".tw-image-avatar", ".side-nav-card__avatar img", "img.tw-image", ".sp-fav-av img"];
 
   // Path segments that are never channel logins.
   const RESERVED = new Set([
@@ -132,7 +137,7 @@
     const href = anchorEl.getAttribute("href") || "";
     const card =
       (anchorEl.closest &&
-        anchorEl.closest('article, .tw-media-card, .side-nav-card, [data-a-target="card"]')) ||
+        anchorEl.closest('article, .tw-media-card, .side-nav-card, [data-a-target="card"], .sp-fav-row')) ||
       anchorEl.parentElement ||
       anchorEl;
 
