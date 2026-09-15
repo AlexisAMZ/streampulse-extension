@@ -88,6 +88,26 @@ export const RELEASES = [
       {
         type: "improved",
         text: {
+          fr: "Le badge communautaire est désormais désactivé par défaut et ne s'active qu'avec votre accord, à l'installation ou dans les réglages, car il envoie une empreinte de votre pseudo à streampulse.fr.",
+          en: "The community badge is now off by default and only turns on with your consent, at install or in settings, since it sends a fingerprint of your username to streampulse.fr.",
+          es: "La insignia de la comunidad ahora está desactivada por defecto y solo se activa con tu consentimiento, al instalar o en los ajustes, porque envía una huella de tu nombre de usuario a streampulse.fr.",
+          "pt-BR": "O emblema da comunidade agora vem desativado por padrão e só é ativado com o seu consentimento, na instalação ou nas configurações, porque envia uma impressão do seu nome de usuário para streampulse.fr.",
+          de: "Das Community-Abzeichen ist jetzt standardmäßig aus und wird nur mit deiner Zustimmung aktiviert, bei der Installation oder in den Einstellungen, da es einen Fingerabdruck deines Benutzernamens an streampulse.fr sendet.",
+          it: "Il badge della community ora è disattivato di default e si attiva solo con il tuo consenso, all'installazione o nelle impostazioni, perché invia un'impronta del tuo nome utente a streampulse.fr.",
+          pl: "Odznaka społeczności jest teraz domyślnie wyłączona i włącza się tylko za Twoją zgodą, podczas instalacji lub w ustawieniach, ponieważ wysyła odcisk Twojej nazwy użytkownika do streampulse.fr.",
+          tr: "Topluluk rozeti artık varsayılan olarak kapalı ve yalnızca senin onayınla, kurulumda veya ayarlardan açılıyor, çünkü kullanıcı adının bir parmak izini streampulse.fr'ye gönderiyor.",
+          ru: "Значок сообщества теперь по умолчанию выключен и включается только с вашего согласия, при установке или в настройках, так как он отправляет отпечаток вашего имени пользователя на streampulse.fr.",
+          ja: "コミュニティバッジは初期設定でオフになり、インストール時または設定で同意した場合のみオンになります。ユーザー名のフィンガープリントを streampulse.fr に送信するためです。",
+          ko: "커뮤니티 배지는 이제 기본적으로 꺼져 있으며, 사용자 이름의 지문을 streampulse.fr로 보내기 때문에 설치 시 또는 설정에서 동의한 경우에만 켜집니다.",
+          id: "Lencana komunitas kini nonaktif secara default dan hanya aktif dengan persetujuanmu, saat instalasi atau di pengaturan, karena lencana ini mengirim sidik nama penggunamu ke streampulse.fr.",
+          nl: "De communitybadge staat nu standaard uit en gaat alleen aan met je toestemming, bij installatie of in de instellingen, omdat hij een vingerafdruk van je gebruikersnaam naar streampulse.fr stuurt.",
+          sv: "Communitymärket är nu avstängt som standard och slås bara på med ditt samtycke, vid installation eller i inställningarna, eftersom det skickar ett fingeravtryck av ditt användarnamn till streampulse.fr.",
+          cs: "Komunitní odznak je nyní ve výchozím stavu vypnutý a zapne se jen s vaším souhlasem, při instalaci nebo v nastavení, protože odesílá otisk vašeho uživatelského jména na streampulse.fr."
+        }
+      },
+      {
+        type: "improved",
+        text: {
           fr: "L'annulation automatique des raids est désormais désactivée par défaut : suivre un raid permet de récupérer les points de chaîne liés au raid. Elle reste activable dans les réglages.",
           en: "Automatic raid cancel is now off by default: following a raid lets you collect the channel points that come with it. You can still turn it on in settings.",
           es: "La cancelación automática de raids ahora está desactivada por defecto: seguir un raid permite conseguir los puntos de canal que lo acompañan. Se puede activar en los ajustes.",

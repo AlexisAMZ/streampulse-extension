@@ -25,7 +25,7 @@
 
   // Réglages activés tant que l'utilisateur ne les a pas coupés.
   var DEFAULT_ON = [
-    "autoClaimChannelPoints", "liveNotifications", "communityBadge", "enableFastForwardButton",
+    "autoClaimChannelPoints", "liveNotifications", "enableFastForwardButton",
     "previewsEnabled", "previewsSurfaceDirectory", "previewsSurfaceSidebar",
   ];
 

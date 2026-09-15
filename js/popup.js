@@ -943,7 +943,7 @@ function renderPreferences() {
     }
   }
   if (communityBadgeToggle) {
-    communityBadgeToggle.checked = prefs.communityBadge !== false;
+    communityBadgeToggle.checked = prefs.communityBadge === true;
   }
   if (previewsEnabledToggle) {
     previewsEnabledToggle.checked = prefs.previewsEnabled !== false;

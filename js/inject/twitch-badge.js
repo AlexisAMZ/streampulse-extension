@@ -773,8 +773,10 @@
       var i18n = typeof window !== "undefined" ? window.__SP_I18N__ : null;
       badgeLang = i18n ? i18n.resolve(prefs.language || navigator.language) : "en";
       readOwnLocal(prefs, res && res[COSMETICS_KEY]);
-      if (prefs.communityBadge === false) {
-        log("desactive par l utilisateur");
+      // Badge desactive par defaut depuis 26.9.18 : il envoie une empreinte du
+      // pseudo, donc il ne demarre qu'avec l'accord explicite de l'utilisateur.
+      if (prefs.communityBadge !== true) {
+        log("desactive (non active par l utilisateur)");
         return;
       }
 

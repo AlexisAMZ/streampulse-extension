@@ -49,7 +49,7 @@ Open source
 The full code is public on GitHub under the GPL v3 license: github.com/AlexisAMZ/streampulse-extension
 
 Privacy
-StreamPulse needs no account and has no ads, trackers or analytics. Your streamers, settings, points and watch time stay on your device. Only two things reach our server, streampulse.fr: the community badge sends a hashed version of your Twitch username (never the username itself) at most once a day, and can be turned off in Settings; and a StreamPulse+ license key is checked there when you activate it. Streamer names are sent to the official Twitch and Kick APIs only to check who is live.`,
+StreamPulse needs no account and has no ads, trackers or analytics. Your streamers, settings, points and watch time stay on your device. Only two things reach our server, streampulse.fr: the optional community badge, off by default and turned on only if you choose to, sends a hashed version of your Twitch username (never the username itself) at most once a day; and a StreamPulse+ license key is checked there when you activate it. Streamer names are sent to the official Twitch and Kick APIs only to check who is live.`,
 
   fr: `StreamPulse réunit Twitch et Kick dans une seule extension légère. Voyez qui est en direct d'un coup d'œil, recevez une alerte dès qu'un live démarre, et laissez l'extension récupérer vos points de chaîne et vos Drops pendant que vous regardez.
 
@@ -87,5 +87,5 @@ Open source
 Tout le code est public sur GitHub sous licence GPL v3 : github.com/AlexisAMZ/streampulse-extension
 
 Confidentialité
-StreamPulse ne demande aucun compte et ne contient ni publicité, ni traceur, ni outil de mesure d'audience. Vos streamers, réglages, points et temps de visionnage restent sur votre appareil. Seules deux choses arrivent sur notre serveur, streampulse.fr : le badge communautaire envoie une empreinte (hash) de votre pseudo Twitch, jamais le pseudo lui-même, au plus une fois par jour, et se désactive dans les réglages ; et une clé de licence StreamPulse+ y est vérifiée quand vous l'activez. Les noms des streamers sont envoyés aux API officielles de Twitch et Kick uniquement pour savoir qui est en direct.`,
+StreamPulse ne demande aucun compte et ne contient ni publicité, ni traceur, ni outil de mesure d'audience. Vos streamers, réglages, points et temps de visionnage restent sur votre appareil. Seules deux choses arrivent sur notre serveur, streampulse.fr : le badge communautaire, optionnel et désactivé par défaut, envoie une empreinte (hash) de votre pseudo Twitch, jamais le pseudo lui-même, au plus une fois par jour, seulement si vous l'activez ; et une clé de licence StreamPulse+ y est vérifiée quand vous l'activez. Les noms des streamers sont envoyés aux API officielles de Twitch et Kick uniquement pour savoir qui est en direct.`,
 };

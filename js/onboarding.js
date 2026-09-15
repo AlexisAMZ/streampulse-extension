@@ -61,7 +61,16 @@ const preferenceToggleDefinitions = [
   { element: document.getElementById("onboarding-prevent-tab-discard"), key: "preventTabDiscard" },
   { element: document.getElementById("onboarding-streamer-favicon"), key: "enableStreamerFavicon" },
   { element: document.getElementById("onboarding-tab-live-icon"), key: "enableTabLiveIcon" },
+  { element: document.getElementById("onboarding-community-badge"), key: "communityBadge" },
 ];
+
+/**
+ * Réglages désactivés tant que l'utilisateur ne les active pas : une valeur
+ * absente vaut « non ». Le badge communautaire envoie une empreinte du pseudo,
+ * il demande donc un accord explicite ; suivre les raids rapporte des points.
+ */
+const OFF_BY_DEFAULT = new Set(["communityBadge", "autoCancelRaids"]);
+const isEnabled = (preferences, key) => (OFF_BY_DEFAULT.has(key) ? preferences?.[key] === true : preferences?.[key] !== false);
 
 const LANGUAGE_FLAGS = { fr: "🇫🇷", en: "🇬🇧", es: "🇪🇸", "pt-BR": "🇧🇷", de: "🇩🇪", it: "🇮🇹", pl: "🇵🇱", tr: "🇹🇷", ru: "🇷🇺", ja: "🇯🇵", ko: "🇰🇷", id: "🇮🇩", nl: "🇳🇱", hi: "🇮🇳", sv: "🇸🇪", cs: "🇨🇿" };
 
@@ -479,12 +488,12 @@ function renderStreamers(streamers = []) {
 function renderPreferenceToggles(preferences = {}) {
   preferenceToggleDefinitions.forEach(({ element, key }) => {
     if (!element) return;
-    element.checked = preferences[key] !== false;
+    element.checked = isEnabled(preferences, key);
   });
 }
 
 async function updatePreferenceToggle({ element, key }, enabled) {
-  const previous = currentPreferences?.[key] !== false;
+  const previous = isEnabled(currentPreferences, key);
   try {
     const response = await chrome.runtime.sendMessage({
       type: "updatePreferences",

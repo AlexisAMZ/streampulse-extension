@@ -148,7 +148,7 @@ const DEFAULT_PREFERENCES = {
   previewsAudio: false,
   previewsShowDelayMs: 200,
   previewsAnimations: true,
-  communityBadge: true,
+  communityBadge: false,
   // "author" = couleur du pseudo, "theme" = blanc/noir selon Twitch,
   // ou une couleur hexadecimale fixe.
   communityBadgeColor: "author",
@@ -585,7 +585,7 @@ class PreferenceStore {
         ? Math.min(2000, Math.max(0, previewsDelay))
         : 200,
       previewsAnimations: preferences.previewsAnimations !== false,
-      communityBadge: preferences.communityBadge !== false,
+      communityBadge: preferences.communityBadge === true,
       communityBadgeColor: sanitizeBadgeColor(preferences.communityBadgeColor),
     };
   }
@@ -3106,7 +3106,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             incomingUpdates.previewsAnimations !== false;
         }
         if ("communityBadge" in incomingUpdates) {
-          updates.communityBadge = incomingUpdates.communityBadge !== false;
+          updates.communityBadge = incomingUpdates.communityBadge === true;
         }
         if ("communityBadgeColor" in incomingUpdates) {
           updates.communityBadgeColor = sanitizeBadgeColor(
