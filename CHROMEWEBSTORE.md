@@ -57,7 +57,7 @@ StreamPulse requires no account and contains no ads or trackers. Your streamers,
 ```
 
 ### Catégorie
-`Divertissement` (**Entertainment**) : « extensions designed for fans of sports, music, television, and cinema », la plus proche pour des spectateurs de lives Twitch et Kick. Les anciennes catégories (Productivité, Outils de recherche) n'existent plus depuis mi-2023. Alternative : `Social Media & Networking` (notifications et intégration de plateformes).
+`Réseaux sociaux` (**Social Media & Networking**) : « extensions designed to enhance social media platforms … notifications, status updates ». Twitch et Kick sont des plateformes sociales, et StreamPulse y ajoute alertes et intégration. Les anciennes catégories (Productivité, Outils de recherche) n'existent plus depuis mi-2023.
 
 ### Objectif Unique (Single Purpose)
 **FR** : `Centraliser les alertes de direct, la collecte automatique de points de chaîne et le filtrage de chat pour Twitch et Kick dans une interface unique.`  
