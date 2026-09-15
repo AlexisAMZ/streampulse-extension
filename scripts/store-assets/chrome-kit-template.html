@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kit Chrome · StreamPulse</title>
+<style>
+@font-face { font-family: "Unbounded"; font-weight: 400 900; src: url("fonts/unbounded-latin-10.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC; }
+@font-face { font-family: "Unbounded"; font-weight: 400 900; src: url("fonts/unbounded-latin-ext-9.woff2") format("woff2"); unicode-range: U+0100-02BA, U+1E00-1E9F; }
+@font-face { font-family: "Unbounded"; font-weight: 400 900; src: url("fonts/unbounded-cyrillic-8.woff2") format("woff2"); unicode-range: U+0400-045F; }
+@font-face { font-family: "Onest"; font-weight: 400 700; src: url("fonts/onest-latin-6.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+20AC; }
+@font-face { font-family: "Onest"; font-weight: 400 700; src: url("fonts/onest-latin-ext-5.woff2") format("woff2"); unicode-range: U+0100-02BA, U+1E00-1E9F; }
+@font-face { font-family: "Onest"; font-weight: 400 700; src: url("fonts/onest-cyrillic-4.woff2") format("woff2"); unicode-range: U+0400-045F; }
+:root {
+  --bg: #0b0c22; --surface: #15173d; --surface-2: #1e2150; --line: rgba(255,255,255,.08); --line-2: rgba(255,255,255,.15);
+  --text: #f4f3ff; --text-2: #b9b7d6; --text-3: #8f8db2; --violet: #9146ff; --violet-text: #c4a6ff; --lcd: #c6d4a0; --lcd-ink: #1c2615;
+  --display: "Unbounded", "Hiragino Sans", "Apple SD Gothic Neo", system-ui, sans-serif;
+  --body: "Onest", "Hiragino Sans", "Apple SD Gothic Neo", -apple-system, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html { color-scheme: dark; }
+body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--text); font: 400 14px/1.5 var(--body); -webkit-font-smoothing: antialiased; }
+::selection { background: var(--violet); color: #fff; }
+:focus-visible { outline: 2px solid var(--lcd); outline-offset: 2px; }
+button { font: inherit; color: inherit; }
+::-webkit-scrollbar { width: 10px; height: 10px; } ::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 10px; border: 3px solid var(--bg); }
+
+.app { display: grid; grid-template-columns: 264px minmax(0, 1fr); min-height: 100vh; }
+.rail { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 22px 14px; border-right: 1px solid var(--line); background: #090a1c; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 8px; }
+.brand img { width: 26px; height: 26px; filter: brightness(0) invert(1); }
+.brand b { font: 800 15px/1 var(--display); letter-spacing: -.02em; }
+.brand small { display: block; margin-top: 3px; color: var(--text-3); font-size: 12px; }
+.progress { margin: 22px 8px 12px; }
+.progress-top { display: flex; justify-content: space-between; color: var(--text-2); font-size: 12px; font-weight: 600; }
+.progress-top b { color: var(--text); font-variant-numeric: tabular-nums; }
+.bar { height: 6px; margin-top: 8px; border-radius: 99px; background: var(--surface); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--lcd); border-radius: inherit; transition: width .5s cubic-bezier(.16,1,.3,1); }
+.langs { flex: 1; overflow-y: auto; margin: 0 -6px; padding: 0 6px; }
+.lang { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border: 0; border-radius: 10px; background: transparent; text-align: left; cursor: pointer; transition: background .15s ease; }
+.lang:hover { background: var(--surface); }
+.lang.on { background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line-2); }
+.lang code { width: 42px; flex: none; color: var(--text-3); font: 600 11px/1 var(--body); letter-spacing: .04em; }
+.lang span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+.lang .tick { width: 18px; height: 18px; flex: none; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--line-2); display: grid; place-items: center; }
+.lang.done .tick { background: var(--lcd); box-shadow: none; }
+.lang.done .tick::after { content: ""; width: 8px; height: 4px; border: solid var(--lcd-ink); border-width: 0 0 2px 2px; transform: translateY(-1px) rotate(-45deg); }
+.keys { margin: 12px 8px 0; color: var(--text-3); font-size: 12px; }
+kbd { display: inline-block; min-width: 20px; padding: 1px 6px; border-radius: 5px; background: var(--surface); box-shadow: inset 0 -1px 0 var(--line-2); color: var(--text-2); font: 600 11px/18px var(--body); text-align: center; }
+
+main { padding: 34px clamp(20px, 4vw, 56px) 80px; max-width: 1080px; }
+.head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+h1 { margin: 0; font: 800 clamp(28px, 3.4vw, 40px)/1.05 var(--display); letter-spacing: -.04em; }
+h1 em { font-style: normal; color: var(--violet-text); }
+.lead { margin: 10px 0 0; max-width: 60ch; color: var(--text-2); }
+.lead code { color: var(--text); font-family: var(--body); font-weight: 600; }
+.mark { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border: 0; border-radius: 99px; background: var(--lcd); color: var(--lcd-ink); font-weight: 700; cursor: pointer; transition: transform .15s ease, background .15s ease; }
+.mark:hover { background: #d6e3b3; } .mark:active { transform: scale(.98); }
+.mark.is-done { background: var(--surface-2); color: var(--text-2); box-shadow: inset 0 0 0 1px var(--line-2); }
+
+.field { margin-top: 34px; }
+.field-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 10px; }
+.field h2 { margin: 0; font: 700 15px/1.2 var(--display); letter-spacing: -.01em; }
+.field h2 small { margin-left: 8px; color: var(--text-3); font: 500 12px var(--body); letter-spacing: 0; }
+.hint { color: var(--text-3); font-size: 12px; }
+.copy { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 12px; border: 0; border-radius: 99px; background: var(--violet); color: #fff; font-weight: 600; font-size: 13px; cursor: pointer; transition: background .15s ease; white-space: nowrap; }
+.copy:hover { background: #7b35e8; }
+.copy.ok { background: var(--lcd); color: var(--lcd-ink); }
+.copy svg { width: 14px; height: 14px; }
+
+.desc { position: relative; max-height: 320px; overflow: auto; padding: 18px 20px; border-radius: 14px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); white-space: pre-wrap; color: var(--text); font-size: 13.5px; line-height: 1.6; }
+.terms { display: flex; flex-wrap: wrap; gap: 8px; }
+.term { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 6px 0 14px; border: 0; border-radius: 99px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2); cursor: pointer; transition: background .15s ease, box-shadow .15s ease; }
+.term:hover { background: var(--surface-2); }
+.term i { font-style: normal; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--bg); color: var(--text-3); font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.term.ok { box-shadow: inset 0 0 0 1.5px var(--lcd); }
+.term.ok i { background: var(--lcd); color: var(--lcd-ink); }
+
+.shots { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+.asset { margin: 0; }
+.asset img { display: block; width: 100%; height: auto; border-radius: 10px; background: var(--surface); box-shadow: 0 0 0 1px var(--line-2); }
+.asset figcaption { display: flex; justify-content: space-between; gap: 8px; margin-top: 7px; color: var(--text-3); font-size: 12px; }
+.asset figcaption b { color: var(--text-2); font-weight: 600; }
+.row { display: grid; grid-template-columns: 150px 240px minmax(0, 1fr); gap: 16px; align-items: start; }
+.path { margin-top: 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 14px; border-radius: 12px; background: #090a1c; box-shadow: inset 0 0 0 1px var(--line); color: var(--text-2); font-size: 13px; }
+.path code { color: var(--text); font: 600 13px var(--body); word-break: break-all; }
+.toast { position: fixed; left: 50%; bottom: 24px; z-index: 5; padding: 10px 16px; border-radius: 12px; background: var(--surface-2); box-shadow: 0 0 0 1px var(--line-2), 0 18px 40px -12px rgba(0,0,0,.7); font-weight: 600; opacity: 0; transform: translate(-50%, 8px); transition: opacity .2s ease, transform .25s cubic-bezier(.16,1,.3,1); pointer-events: none; }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+@media (max-width: 860px) { .app { grid-template-columns: 1fr; } .rail { position: static; height: auto; } .langs { display: flex; flex-wrap: wrap; } .lang { width: auto; } .row { grid-template-columns: 1fr; } .row .asset:first-child { max-width: 150px; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="brand"><img src="shared/mark.png" alt=""><div><b>StreamPulse</b><small>Fiche Chrome Web Store</small></div></div>
+    <div class="progress"><div class="progress-top"><span>Langues remplies</span><b id="count">0 / 15</b></div><div class="bar"><i id="bar"></i></div></div>
+    <nav class="langs" id="langs" aria-label="Langues"></nav>
+    <p class="keys"><kbd>J</kbd> <kbd>K</kbd> langue suivante ou précédente · <kbd>D</kbd> copier la description</p>
+  </aside>
+  <main id="main"></main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+const DATA = __DATA__;
+const ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="9" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3 11V3a1 1 0 0 1 1-1h7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+const store = { get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} } };
+let done = new Set(store.get("sp-chrome-done", []));
+let current = store.get("sp-chrome-lang", "en");
+if (!DATA.some((l) => l.code === current)) current = "en";
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast.timer); toast.timer = setTimeout(() => t.classList.remove("show"), 1600); }
+async function copyText(text, btn, label) {
+  try { await navigator.clipboard.writeText(text); }
+  catch { const ta = document.createElement("textarea"); ta.value = text; document.body.append(ta); ta.select(); document.execCommand("copy"); ta.remove(); }
+  if (btn) { btn.classList.add("ok"); setTimeout(() => btn.classList.remove("ok"), 1400); }
+  toast(label + " copié");
+}
+
+function renderRail() {
+  $("langs").innerHTML = DATA.map((l) => `<button class="lang${l.code === current ? " on" : ""}${done.has(l.code) ? " done" : ""}" data-code="${l.code}" aria-current="${l.code === current}"><code>${l.dir}</code><span>${esc(l.name)}</span><em class="tick" aria-label="${done.has(l.code) ? "rempli" : "à faire"}"></em></button>`).join("");
+  $("count").textContent = `${done.size} / ${DATA.length}`;
+  $("bar").style.width = `${(done.size / DATA.length) * 100}%`;
+}
+
+function renderMain() {
+  const l = DATA.find((x) => x.code === current);
+  const fr = l.code === "fr";
+  $("main").innerHTML = `
+    <div class="head">
+      <div>
+        <h1>Fiche en <em>${esc(l.name)}</em></h1>
+        <p class="lead">Remplis les champs dans l'ordre du formulaire. Les images de cette langue sont aussi dans <code>chrome-kit/${l.dir}/</code>, pour le sélecteur de fichiers.</p>
+      </div>
+      <button class="mark${done.has(l.code) ? " is-done" : ""}" id="mark">${done.has(l.code) ? "Langue remplie" : "Marquer comme remplie"}</button>
+    </div>
+
+    <section class="field">
+      <div class="field-head"><h2>Nom et description courte<small>lus dans le manifest</small></h2><span class="hint">Rien à coller : Chrome les prend dans le paquet</span></div>
+      <div class="desc" tabindex="0"><b>${esc(l.appName)}</b> (${l.appName.length}/75)
+${esc(l.appDesc)} (${l.appDesc.length}/132)</div>
+    </section>
+
+    <section class="field">
+      <div class="field-head"><h2>Description détaillée<small>${l.desc.length} caractères</small></h2><button class="copy" id="copy-desc">${ICON}Copier la description</button></div>
+      <div class="desc" tabindex="0">${esc(l.desc)}</div>
+    </section>
+
+    <section class="field">
+      <div class="field-head"><h2>Icône du store et tuiles promotionnelles</h2><span class="hint">${fr ? "Visuels en français" : "Visuels en anglais"}</span></div>
+      <div class="row">
+        <figure class="asset"><img src="shared/store-icon-128.png" alt="Icône StreamPulse"><figcaption><b>Icône du store</b><span>128×128</span></figcaption></figure>
+        <figure class="asset"><img src="${l.tile}" alt="Petite tuile promotionnelle"><figcaption><b>Petite tuile promotionnelle</b><span>440×280</span></figcaption></figure>
+        <figure class="asset"><img src="${l.marquee}" alt="Grande tuile promotionnelle"><figcaption><b>Tuile promotionnelle en en-tête</b><span>1400×560</span></figcaption></figure>
+      </div>
+    </section>
+
+    <section class="field">
+      <div class="field-head"><h2>Captures d'écran<small>5 sur 5 possibles · 1280×800</small></h2><span class="hint">Dans l'ordre</span></div>
+      <div class="shots">${l.shots.map((s, i) => `<figure class="asset"><img src="${s}" alt="Capture ${i + 1}" loading="lazy"><figcaption><b>capture-${i + 1}.png</b></figcaption></figure>`).join("")}</div>
+      <div class="path">Dossier à ouvrir dans le sélecteur de fichiers <code>~/Desktop/dev/ZIPS/chrome-kit/${l.dir}/</code></div>
+    </section>`;
+
+  $("copy-desc").onclick = (e) => copyText(l.desc, e.currentTarget, "Description");
+  $("mark").onclick = () => { done.has(l.code) ? done.delete(l.code) : done.add(l.code); store.set("sp-chrome-done", [...done]); renderRail(); renderMain(); };
+}
+
+function select(code) { current = code; store.set("sp-chrome-lang", code); renderRail(); renderMain(); window.scrollTo({ top: 0 }); }
+$("langs").addEventListener("click", (e) => { const b = e.target.closest(".lang"); if (b) select(b.dataset.code); });
+document.addEventListener("keydown", (e) => {
+  if (e.metaKey || e.ctrlKey || e.altKey || /input|textarea/i.test(e.target.tagName)) return;
+  const i = DATA.findIndex((l) => l.code === current);
+  if (e.key === "j") select(DATA[(i + 1) % DATA.length].code);
+  if (e.key === "k") select(DATA[(i - 1 + DATA.length) % DATA.length].code);
+  if (e.key === "d") $("copy-desc").click();
+});
+renderRail(); renderMain();
+</script>
+</body>
+</html>

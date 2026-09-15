@@ -14,6 +14,7 @@
     "publish:firefox": "node scripts/publish-firefox.mjs",
     "publish:firefox:screenshots": "node scripts/publish-firefox-screenshots.mjs",
     "listing": "node scripts/prepare-listing.mjs",
+    "store:chrome-kit": "node scripts/make-chrome-kit.mjs",
     "publish:all": "node scripts/publish-edge.mjs && node scripts/publish-chrome.mjs && node scripts/publish-firefox.mjs",
     "build": "npm run lint && npm test && node scripts/build-zip.mjs",
     "test": "node --test \"tests/*.test.mjs\""

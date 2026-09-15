@@ -170,7 +170,7 @@ Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décoc
 
 ### Déclaration d'utilisation des données
 - Streamers suivis, préférences, filtres, points et temps de visionnage (mensuel et journalier) : stockés uniquement en local via `chrome.storage.local`.
-- Envoyé à `streampulse.fr` : l'empreinte du pseudo Twitch (badge communautaire), rien d'autre. Les requêtes de configuration et de liste des badges ne contiennent aucune donnée utilisateur.
+- Envoyé à `streampulse.fr` : l'empreinte du pseudo Twitch (badge communautaire) et, seulement quand l'utilisateur active StreamPulse+, sa clé de licence avec un identifiant d'appareil aléatoire (limite de 2 navigateurs par clé). Les requêtes de configuration et de liste des badges ne contiennent aucune donnée utilisateur.
 - Envoyé aux API publiques de Twitch et Kick : les pseudos des streamers ajoutés, pour vérifier leur statut en direct.
 - Aucun serveur d'analyse, de tracking, de télémétrie ou de publicité.
 
