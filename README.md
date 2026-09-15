@@ -34,6 +34,7 @@
   <a href="https://maidensail.com/startup/streampulse" rel="dofollow"><picture><source media="(prefers-color-scheme: dark)" srcset="https://maidensail.com/badge/streampulse.svg?theme=dark"><img src="https://maidensail.com/badge/streampulse.svg?theme=light" alt="Featured on Maidensail" height="44"></picture></a>
   <a href="https://alternativeto.net/software/streampulse/about/?utm_source=badge&utm_medium=referral"><picture><source media="(prefers-color-scheme: dark)" srcset="https://alternativeto.net/static/badges/badge-compact-dark.svg"><img src="https://alternativeto.net/static/badges/badge-compact-light.svg" alt="StreamPulse | AlternativeTo" height="44"></picture></a>
   <a href="https://www.betterlaunch.co/product/streampulse"><picture><source media="(prefers-color-scheme: dark)" srcset="https://www.betterlaunch.co/badge-find-dark.svg"><img src="https://www.betterlaunch.co/badge-find-light.svg" alt="StreamPulse on Better Launch" height="44"></picture></a>
+  <a href="https://www.producthunt.com/products/streampulse?utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-streampulse"><picture><source media="(prefers-color-scheme: dark)" srcset="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1250953&theme=dark"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1250953&theme=light" alt="StreamPulse on Product Hunt" height="44"></picture></a>
 </p>
 
 ---
