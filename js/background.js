@@ -1857,7 +1857,9 @@ async function notifyIncomingRaid({ channel, raider, viewers }) {
       viewers: viewersText,
     }),
     platform: "twitch",
-    url: buildProfileUrl("twitch", channel),
+    // Les points de raid se gagnent en arrivant DEPUIS le stream du raid
+    // partant : on ouvre chez {{raider}}, pas sur la chaîne raidée.
+    url: buildProfileUrl("twitch", raider),
     iconUrl,
     requireInteraction: false,
     priority: 1,
