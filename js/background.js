@@ -216,6 +216,27 @@ async function fetchKickAppToken() {
   // Les identifiants Kick peuvent venir de la config distante : garantit qu'elle
   // est hydratee (cache d'abord) avant de conclure a une absence de creds.
   await ensureConfig();
+
+  // 1) Voie privilégiée : le proxy streampulse.fr fabrique le jeton — le client
+  // secret ne quitte jamais le serveur. Échec silencieux si l'endpoint est
+  // indisponible (ancien déploiement) : on retombe sur les credentials locaux.
+  try {
+    const resp = await fetch("https://streampulse.fr/api/kick-token", { cache: "no-store" });
+    if (resp.ok) {
+      const json = await resp.json();
+      const expiresAt = json.expires_at ?? Date.now() + (json.expires_in ?? 3600) * 1000;
+      if (json.access_token && Date.now() < expiresAt - 120_000) {
+        _kickToken.value = json.access_token;
+        _kickToken.expiresAt = expiresAt;
+        await chrome.storage.local.set({
+          "streampulse:kickToken": { value: json.access_token, expiresAt },
+        });
+        return json.access_token;
+      }
+    }
+  } catch { /* repli ci-dessous */ }
+
+  // 2) Repli : credentials locaux (saveKickCreds / config distante transitoire)
   const creds = await getKickCredentials();
   if (!creds?.clientId || !creds?.clientSecret) return null;
 
