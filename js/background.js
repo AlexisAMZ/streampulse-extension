@@ -724,10 +724,22 @@ class StatsStore {
     return merged;
   }
 
-  static async increment(stat, value = 1) {
-    const current = await this.get();
-    const newValue = (current[stat] || 0) + value;
-    return this.update({ [stat]: newValue });
+  // Read-modify-write sequencé : deux increments quasi simultanes (points +
+  // drop dans la meme seconde) s'ecrasaient sinon — meme pattern que HistoryStore.
+  static _queue = Promise.resolve();
+
+  static _enqueue(task) {
+    const run = this._queue.then(task, task);
+    this._queue = run.catch(() => {});
+    return run;
+  }
+
+  static increment(stat, value = 1) {
+    return this._enqueue(async () => {
+      const current = await this.get();
+      const newValue = (current[stat] || 0) + value;
+      return this.update({ [stat]: newValue });
+    });
   }
 }
 
@@ -1059,10 +1071,23 @@ class WatchTimeStore {
     await chrome.storage.local.set({ [STORAGE_KEYS.WATCH_TIME_DAILY]: next });
   }
 
-  static async record(platform, channel, seconds, avatarUrl = "", game = "") {
-    // Skip pure presence pings (no actual data to record)
-    if (seconds <= 0) return;
+  // record() et getSummary() font du read-modify-write sur la meme cle :
+  // ils passent par une file pour ne jamais s'ecarter (meme pattern que HistoryStore).
+  static _queue = Promise.resolve();
 
+  static _enqueue(task) {
+    const run = this._queue.then(task, task);
+    this._queue = run.catch(() => {});
+    return run;
+  }
+
+  static record(platform, channel, seconds, avatarUrl = "", game = "") {
+    // Skip pure presence pings (no actual data to record)
+    if (seconds <= 0) return Promise.resolve();
+    return this._enqueue(() => this._record(platform, channel, seconds, avatarUrl, game));
+  }
+
+  static async _record(platform, channel, seconds, avatarUrl = "", game = "") {
     const month = this._getMonthKey();
     const data = await this._getData();
 
@@ -1122,11 +1147,8 @@ class WatchTimeStore {
       })
     );
 
-    // Save back any newly resolved avatars
-    if (data[key]) {
-      data[key] = monthData;
-      await this._saveData(data);
-    }
+    // Persister les avatars resolus ICI ferait un RMW concurrent avec record() :
+    // on laisse record() en être responsable (il met deja avatarUrl a jour).
 
     const totalSeconds = entries.reduce((s, e) => s + e.watchSeconds, 0);
     const availableMonths = Object.keys(data).sort().reverse();
@@ -2940,13 +2962,16 @@ function handleMessage(request, sender, sendResponse) {
               resolveChannelAvatar(platform, channel)
                 .then(async (avatar) => {
                   if (avatar) {
-                    const data = await WatchTimeStore._getData();
-                    const month = WatchTimeStore._getMonthKey();
-                    const key = `${platform}:${channel}`;
-                    if (data[month]?.[key] && !data[month][key].avatarUrl) {
-                      data[month][key].avatarUrl = avatar;
-                      await WatchTimeStore._saveData(data);
-                    }
+                    // RMW passe par la file du store, comme record().
+                    await WatchTimeStore._enqueue(async () => {
+                      const data = await WatchTimeStore._getData();
+                      const month = WatchTimeStore._getMonthKey();
+                      const key = `${platform}:${channel}`;
+                      if (data[month]?.[key] && !data[month][key].avatarUrl) {
+                        data[month][key].avatarUrl = avatar;
+                        await WatchTimeStore._saveData(data);
+                      }
+                    });
                   }
                 })
                 .catch(() => {});
