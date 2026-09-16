@@ -119,7 +119,9 @@
     chrome.storage.local.get([PREFERENCES_KEY], (res) => {
       isEnabled = res?.[PREFERENCES_KEY]?.enablePredictionsPopup !== false;
       if (isEnabled && !checkIntervalId) {
-        checkIntervalId = setInterval(checkPrediction, 3000);
+        checkIntervalId = setInterval(() => {
+          if (!document.hidden) checkPrediction();
+        }, 3000);
       }
     });
 

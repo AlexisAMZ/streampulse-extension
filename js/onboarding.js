@@ -698,7 +698,7 @@ function setupUpdateModeUI() {
     if (titleEl && !titleEl.querySelector(".badge-new")) {
       const badge = document.createElement("span");
       badge.className = "badge-new";
-      badge.textContent = "NOUVEAU";
+      badge.textContent = t("onboarding.newBadge");
       titleEl.appendChild(badge);
     }
   });

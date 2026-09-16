@@ -887,7 +887,10 @@
         this.headerCheckIntervalId = window.setInterval(() => this.ensureHeader(), 3000);
       }
       if (this.updateIntervalId == null) {
-        this.updateIntervalId = window.setInterval(() => this.update(), 1000);
+        this.updateIntervalId = window.setInterval(() => {
+          // Inutile de mesurer la latence quand l'onglet est en arriere-plan.
+          if (!document.hidden) this.update();
+        }, 1000);
       }
       this.update(true);
     }

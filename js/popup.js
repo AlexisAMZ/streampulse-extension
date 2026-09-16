@@ -356,6 +356,18 @@ function clearDropMarkers() {
   });
 }
 
+async function reorderStreamers(from, to) {
+  if (!Number.isInteger(from) || !Number.isInteger(to) || from === to) return false;
+  if (from < 0 || to < 0 || from >= state.streamers.length || to >= state.streamers.length) return false;
+  const reordered = [...state.streamers];
+  const [moved] = reordered.splice(from, 1);
+  reordered.splice(to, 0, moved);
+  state.streamers = reordered;
+  await chrome.storage.local.set({ betaGeneralStreamers: reordered });
+  renderStreamers();
+  return true;
+}
+
 function initDragAndDrop() {
   if (!sheetListEl || sheetListEl._dragInit) return;
   sheetListEl._dragInit = true;
@@ -393,14 +405,23 @@ function initDragAndDrop() {
     let to = Number(row.dataset.index) + (row.classList.contains("drop-after") ? 1 : 0);
     if (to > from) to -= 1;
     clearDropMarkers();
-    if (!Number.isInteger(from) || !Number.isInteger(to) || from === to) return;
+    await reorderStreamers(from, to);
+  });
 
-    const reordered = [...state.streamers];
-    const [moved] = reordered.splice(from, 1);
-    reordered.splice(to, 0, moved);
-    state.streamers = reordered;
-    await chrome.storage.local.set({ betaGeneralStreamers: reordered });
-    renderStreamers();
+  // Alternative clavier au glisser-déposer : Alt + flèches haut/bas sur une
+  // ligne focusée (tri personnalisé uniquement, comme la souris).
+  sheetListEl.addEventListener("keydown", async (event) => {
+    if (!event.altKey || (event.key !== "ArrowUp" && event.key !== "ArrowDown")) return;
+    const row = event.target.closest?.(".channel-row");
+    if (!row || !row.querySelector(".row-grip")) return;
+    event.preventDefault();
+    const from = Number(row.dataset.index);
+    const to = from + (event.key === "ArrowUp" ? -1 : 1);
+    const moved = await reorderStreamers(from, to);
+    if (moved) {
+      const target = sheetListEl.querySelector(`.channel-row[data-index="${to}"]`);
+      target?.querySelector("button, [href], input")?.focus();
+    }
   });
 }
 
@@ -715,25 +736,42 @@ async function renderActivity() {
   midnight.setHours(0, 0, 0, 0);
   const today = logs.filter((log) => log.timestamp >= midnight.getTime());
   const points = today.filter((log) => log.type === "points").reduce((sum, log) => sum + (Number(log.value) || 0), 0);
-  const drops = today.filter((log) => log.type === "drop").length;
   setChip("activity-points", points > 0, t("popup.cplus.pointsToday", { count: formatNumber(points) }));
   // Compteur de Drops du jour masqué : il comptait mal (bug à corriger avant de le réafficher).
-  void drops;
   setChip("activity-drops", false, "");
 }
 
 // --- All channels sheet ---
+const SHEET_FOCUSABLE = 'button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex="-1"])';
+
+function trapSheetFocus(event) {
+  if (event.key !== "Tab") return;
+  const focusable = [...sheetEl.querySelectorAll(SHEET_FOCUSABLE)].filter((el) => el.offsetParent !== null);
+  if (!focusable.length) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if (event.shiftKey && (document.activeElement === first || !sheetEl.contains(document.activeElement))) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
 function openSheet() {
   if (!sheetEl) return;
   sheetEl.hidden = false;
   if (sheetScrimEl) sheetScrimEl.hidden = false;
   renderSheet();
+  sheetEl.addEventListener("keydown", trapSheetFocus);
   sheetSearchEl?.focus();
 }
 
 function closeSheet({ restoreFocus = true } = {}) {
   if (!sheetEl || sheetEl.hidden) return;
   sheetEl.hidden = true;
+  sheetEl.removeEventListener("keydown", trapSheetFocus);
   if (sheetScrimEl) sheetScrimEl.hidden = true;
   state.sheetQuery = "";
   if (sheetSearchEl) sheetSearchEl.value = "";

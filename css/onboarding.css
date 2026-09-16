@@ -156,6 +156,13 @@
   .step-label { display: none; }
   .step-pill { padding-right: 6px; }
 }
+/* Petit écran / zoom : resserre la colonne unique pour éviter le défilement
+   horizontal avec les chaînes longues (allemand, russe). */
+@media (max-width: 720px) {
+  .step-frame { gap: 24px; }
+  .welcome-frame,
+  .finish-frame { gap: 18px; padding: 0 16px; }
+}
 @media (prefers-reduced-motion: reduce) {
   .step-pill,
   .language-button,

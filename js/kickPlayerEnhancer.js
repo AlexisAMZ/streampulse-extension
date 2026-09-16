@@ -11,9 +11,21 @@
   let fastForwardEnabled = true;
   let intervalId = null;
 
+  // Même logique que chatFilter.js : on lit la langue choisie dans StreamPulse
+  // plutôt que navigator.language, via le bundle inline injecté avant ce script.
+  let currentLang = "en";
+  const i18nApi = () => (typeof window !== "undefined" ? window.__SP_I18N__ : null);
+
+  function jumpToLiveTitle() {
+    const api = i18nApi();
+    return api ? api.get(currentLang, "enhancer.jumpToLive") : "Jump to Live (StreamPulse)";
+  }
+
   function loadSettings() {
     chrome.storage.local.get([PREFERENCES_KEY], (result) => {
       const prefs = result[PREFERENCES_KEY] || {};
+      const api = i18nApi();
+      if (api && prefs.language) currentLang = api.resolve(prefs.language);
       fastForwardEnabled = prefs.enableFastForwardButton !== false; // Default true
       if (fastForwardEnabled) {
         startLoop();
@@ -69,7 +81,7 @@
       opacity: 0.8;
       transition: opacity 0.2s;
     `;
-    btn.title = "Jump to Live (StreamPulse)";
+    btn.title = jumpToLiveTitle();
     
     btn.onmouseenter = () => btn.style.opacity = "1";
     btn.onmouseleave = () => btn.style.opacity = "0.8";

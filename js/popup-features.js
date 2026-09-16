@@ -37,8 +37,10 @@ function openTab(url) {
 function durationLabel(seconds) {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.round((seconds % 3600) / 60);
-  if (hours <= 0) return `${minutes} min`;
-  return minutes >= 30 && hours < 10 ? `${hours} h ${String(minutes).padStart(2, "0")}` : `${hours} h`;
+  if (hours <= 0) return t("popup.history.durationMinutes", { count: minutes });
+  return minutes >= 30 && hours < 10
+    ? t("popup.history.durationHoursShort", { h: hours, m: String(minutes).padStart(2, "0") })
+    : t("popup.history.durationHours", { count: hours });
 }
 
 function agoLabel(endedAt, now = Date.now()) {

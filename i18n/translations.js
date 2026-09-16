@@ -52,6 +52,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+      "newBadge": "NOUVEAU",
+
+      
       "htmlLang": "fr",
       "stepProfile": "Pseudo",
       "profileTitle": "Ton pseudo Twitch.",
@@ -155,6 +159,14 @@ export const translations = {
     },
     "popup": {
       "history": {
+
+        "durationMinutes": "{{count}} min",
+
+        "durationHours": "{{count}} h",
+
+        "durationHoursShort": "{{h}} h {{m}}",
+
+        
         "filterLabel": "Filtrer par plateforme",
         "filterAll": "Tout",
         "countSingular": "1 live",
@@ -805,6 +817,14 @@ export const translations = {
       "noNotesBody": "Les notes de cette version n'ont pas encore été publiées."
     },
     "inject": {
+
+      "enhancer": {
+
+      "jumpToLive": "Aller au direct (StreamPulse)"
+
+      },
+
+      
       "twitchUi": {
         "favorites": "Favoris StreamPulse",
         "pin": "Ajouter aux favoris StreamPulse",
@@ -889,6 +909,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+      "newBadge": "NEW",
+
+      
       "htmlLang": "en",
       "stepProfile": "Username",
       "profileTitle": "Your Twitch username.",
@@ -992,6 +1016,14 @@ export const translations = {
     },
     "popup": {
       "history": {
+
+        "durationMinutes": "{{count}} min",
+
+        "durationHours": "{{count}} hr",
+
+        "durationHoursShort": "{{h}} hr {{m}}",
+
+        
         "filterLabel": "Filter by platform",
         "filterAll": "All",
         "countSingular": "1 live",
@@ -1642,6 +1674,14 @@ export const translations = {
       "noNotesBody": "The notes for this version have not been published yet."
     },
     "inject": {
+
+      "enhancer": {
+
+      "jumpToLive": "Jump to Live (StreamPulse)"
+
+      },
+
+      
       "twitchUi": {
         "favorites": "StreamPulse favorites",
         "pin": "Add to StreamPulse favorites",
@@ -1726,6 +1766,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+      "newBadge": "NUEVO",
+
+      
       "stepProfile": "Usuario",
       "profileTitle": "Tu nombre de usuario en Twitch.",
       "profileDescription": "Indícanos tu usuario para personalizar StreamPulse. Recogeremos tu foto de perfil de Twitch para darte la bienvenida como toca.",
@@ -1829,6 +1873,14 @@ export const translations = {
     },
     "popup": {
       "history": {
+
+        "durationMinutes": "{{count}} min",
+
+        "durationHours": "{{count}} h",
+
+        "durationHoursShort": "{{h}} h {{m}}",
+
+        
         "filterLabel": "Filter by platform",
         "filterAll": "All",
         "countSingular": "1 live",
@@ -2479,6 +2531,14 @@ export const translations = {
       "noNotesBody": "Las notas de esta versión aún no se han publicado."
     },
     "inject": {
+
+      "enhancer": {
+
+      "jumpToLive": "Ir al directo (StreamPulse)"
+
+      },
+
+      
       "twitchUi": {
         "favorites": "Favoritos de StreamPulse",
         "pin": "Añadir a favoritos de StreamPulse",
@@ -3400,6 +3460,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+      "newBadge": "NEU",
+
+      
       "htmlLang": "de",
       "stepProfile": "Benutzername",
       "profileTitle": "Dein Twitch-Benutzername.",
@@ -3503,6 +3567,14 @@ export const translations = {
     },
     "popup": {
       "history": {
+
+        "durationMinutes": "{{count}} Min.",
+
+        "durationHours": "{{count}} Std.",
+
+        "durationHoursShort": "{{h}} Std. {{m}}",
+
+        
         "filterLabel": "Filter by platform",
         "filterAll": "All",
         "countSingular": "1 live",
@@ -4153,6 +4225,14 @@ export const translations = {
       "noNotesBody": "Die Hinweise zu dieser Version wurden noch nicht veröffentlicht."
     },
     "inject": {
+
+      "enhancer": {
+
+      "jumpToLive": "Zum Live-Stream springen (StreamPulse)"
+
+      },
+
+      
       "twitchUi": {
         "favorites": "StreamPulse-Favoriten",
         "pin": "Zu StreamPulse-Favoriten hinzufügen",
@@ -4237,6 +4317,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+      "newBadge": "NUOVO",
+
+      
       "htmlLang": "it",
       "stepProfile": "Nome utente",
       "profileTitle": "Il tuo nome utente Twitch.",
@@ -4340,6 +4424,14 @@ export const translations = {
     },
     "popup": {
       "history": {
+
+        "durationMinutes": "{{count}} min",
+
+        "durationHours": "{{count}} h",
+
+        "durationHoursShort": "{{h}} h {{m}}",
+
+        
         "filterLabel": "Filter by platform",
         "filterAll": "All",
         "countSingular": "1 live",
@@ -4990,6 +5082,14 @@ export const translations = {
       "noNotesBody": "Le note per questa versione non sono state ancora pubblicate."
     },
     "inject": {
+
+      "enhancer": {
+
+      "jumpToLive": "Vai alla diretta (StreamPulse)"
+
+      },
+
+      
       "twitchUi": {
         "favorites": "Preferiti StreamPulse",
         "pin": "Aggiungi ai preferiti StreamPulse",
@@ -5074,6 +5174,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+      "newBadge": "NOWOŚĆ",
+
+      
       "htmlLang": "pl",
       "stepProfile": "Nazwa użytkownika",
       "profileTitle": "Twoja nazwa użytkownika na Twitchu.",
@@ -5177,6 +5281,14 @@ export const translations = {
     },
     "popup": {
       "history": {
+
+        "durationMinutes": "{{count}} min",
+
+        "durationHours": "{{count}} godz.",
+
+        "durationHoursShort": "{{h}} godz. {{m}}",
+
+        
         "filterLabel": "Filter by platform",
         "filterAll": "All",
         "countSingular": "1 live",
@@ -5827,6 +5939,14 @@ export const translations = {
       "noNotesBody": "Uwagi do tej wersji nie zostały jeszcze opublikowane."
     },
     "inject": {
+
+      "enhancer": {
+
+      "jumpToLive": "Przejdź na żywo (StreamPulse)"
+
+      },
+
+      
       "twitchUi": {
         "favorites": "Ulubione StreamPulse",
         "pin": "Dodaj do ulubionych StreamPulse",
@@ -5911,6 +6031,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+      "newBadge": "YENİ",
+
+      
       "htmlLang": "tr",
       "stepProfile": "Kullanıcı adı",
       "profileTitle": "Twitch kullanıcı adınız.",
@@ -6014,6 +6138,14 @@ export const translations = {
     },
     "popup": {
       "history": {
+
+        "durationMinutes": "{{count}} dk",
+
+        "durationHours": "{{count}} sa",
+
+        "durationHoursShort": "{{h}} sa {{m}}",
+
+        
         "filterLabel": "Filter by platform",
         "filterAll": "All",
         "countSingular": "1 live",
@@ -6664,6 +6796,14 @@ export const translations = {
       "noNotesBody": "Bu sürümün notları henüz yayınlanmamıştır."
     },
     "inject": {
+
+      "enhancer": {
+
+      "jumpToLive": "Canlı yayına git (StreamPulse)"
+
+      },
+
+      
       "twitchUi": {
         "favorites": "StreamPulse favorileri",
         "pin": "StreamPulse favorilerine ekle",
@@ -6748,6 +6888,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+      "newBadge": "НОВОЕ",
+
+      
       "htmlLang": "ru",
       "stepProfile": "Имя пользователя",
       "profileTitle": "Ваш логин на Twitch.",
@@ -6851,6 +6995,14 @@ export const translations = {
     },
     "popup": {
       "history": {
+
+        "durationMinutes": "{{count}} мин",
+
+        "durationHours": "{{count}} ч",
+
+        "durationHoursShort": "{{h}} ч {{m}}",
+
+        
         "filterLabel": "Filter by platform",
         "filterAll": "All",
         "countSingular": "1 live",
@@ -7501,6 +7653,14 @@ export const translations = {
       "noNotesBody": "Примечания к этой версии пока не опубликованы."
     },
     "inject": {
+
+      "enhancer": {
+
+      "jumpToLive": "Перейти к прямому эфиру (StreamPulse)"
+
+      },
+
+      
       "twitchUi": {
         "favorites": "Избранное StreamPulse",
         "pin": "Добавить в избранное StreamPulse",
@@ -7585,6 +7745,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+      "newBadge": "新着",
+
+      
       "htmlLang": "ja",
       "stepProfile": "ユーザー名",
       "profileTitle": "Twitchのユーザー名。",
@@ -7688,6 +7852,14 @@ export const translations = {
     },
     "popup": {
       "history": {
+
+        "durationMinutes": "{{count}}分",
+
+        "durationHours": "{{count}}時間",
+
+        "durationHoursShort": "{{h}}時間{{m}}分",
+
+        
         "filterLabel": "Filter by platform",
         "filterAll": "All",
         "countSingular": "1 live",
@@ -8338,6 +8510,14 @@ export const translations = {
       "noNotesBody": "このバージョンのリリースノートはまだ公開されていません。"
     },
     "inject": {
+
+      "enhancer": {
+
+      "jumpToLive": "ライブに移動 (StreamPulse)"
+
+      },
+
+      
       "twitchUi": {
         "favorites": "StreamPulse お気に入り",
         "pin": "StreamPulse お気に入りに追加",
@@ -8422,6 +8602,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+      "newBadge": "새 기능",
+
+      
       "htmlLang": "ko",
       "stepProfile": "사용자 이름",
       "profileTitle": "Twitch 사용자 이름.",
@@ -8525,6 +8709,14 @@ export const translations = {
     },
     "popup": {
       "history": {
+
+        "durationMinutes": "{{count}}분",
+
+        "durationHours": "{{count}}시간",
+
+        "durationHoursShort": "{{h}}시간 {{m}}분",
+
+        
         "filterLabel": "Filter by platform",
         "filterAll": "All",
         "countSingular": "1 live",
@@ -9175,6 +9367,14 @@ export const translations = {
       "noNotesBody": "이 버전에 대한 변경 내역은 아직 공개되지 않았습니다."
     },
     "inject": {
+
+      "enhancer": {
+
+      "jumpToLive": "라이브로 이동 (StreamPulse)"
+
+      },
+
+      
       "twitchUi": {
         "favorites": "StreamPulse 즐겨찾기",
         "pin": "StreamPulse 즐겨찾기에 추가",
@@ -9259,6 +9459,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+      "newBadge": "BARU",
+
+      
       "htmlLang": "id",
       "stepProfile": "Nama Pengguna",
       "profileTitle": "Nama pengguna Twitch Anda.",
@@ -9362,6 +9566,14 @@ export const translations = {
     },
     "popup": {
       "history": {
+
+        "durationMinutes": "{{count}} mnt",
+
+        "durationHours": "{{count}} jam",
+
+        "durationHoursShort": "{{h}} jam {{m}} mnt",
+
+        
         "filterLabel": "Filter by platform",
         "filterAll": "All",
         "countSingular": "1 live",
@@ -10012,6 +10224,14 @@ export const translations = {
       "noNotesBody": "Catatan untuk versi ini belum diterbitkan."
     },
     "inject": {
+
+      "enhancer": {
+
+      "jumpToLive": "Lompat ke siaran langsung (StreamPulse)"
+
+      },
+
+      
       "twitchUi": {
         "favorites": "Favorit StreamPulse",
         "pin": "Tambahkan ke favorit StreamPulse",
@@ -10096,6 +10316,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+      "newBadge": "NIEUW",
+
+      
       "htmlLang": "nl",
       "stepProfile": "Gebruikersnaam",
       "profileTitle": "Je Twitch-gebruikersnaam.",
@@ -10199,6 +10423,14 @@ export const translations = {
     },
     "popup": {
       "history": {
+
+        "durationMinutes": "{{count}} min",
+
+        "durationHours": "{{count}} u",
+
+        "durationHoursShort": "{{h}} u {{m}}",
+
+        
         "filterLabel": "Filter by platform",
         "filterAll": "All",
         "countSingular": "1 live",
@@ -10849,6 +11081,14 @@ export const translations = {
       "noNotesBody": "De toelichting bij deze versie is nog niet gepubliceerd."
     },
     "inject": {
+
+      "enhancer": {
+
+      "jumpToLive": "Naar de livestream (StreamPulse)"
+
+      },
+
+      
       "twitchUi": {
         "favorites": "StreamPulse-favorieten",
         "pin": "Toevoegen aan StreamPulse-favorieten",
@@ -10933,6 +11173,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+      "newBadge": "नया",
+
+      
       "htmlLang": "hi",
       "stepProfile": "उपयोक्तानाम",
       "profileTitle": "आपका Twitch उपयोगकर्ता नाम.",
@@ -11036,6 +11280,14 @@ export const translations = {
     },
     "popup": {
       "history": {
+
+        "durationMinutes": "{{count}} मिनट",
+
+        "durationHours": "{{count}} घंटे",
+
+        "durationHoursShort": "{{h}} घंटे {{m}} मिनट",
+
+        
         "filterLabel": "Filter by platform",
         "filterAll": "All",
         "countSingular": "1 live",
@@ -11686,6 +11938,14 @@ export const translations = {
       "noNotesBody": "इस संस्करण के नोट्स अभी तक प्रकाशित नहीं किये गये हैं।"
     },
     "inject": {
+
+      "enhancer": {
+
+      "jumpToLive": "लाइव पर जाएँ (StreamPulse)"
+
+      },
+
+      
       "twitchUi": {
         "favorites": "StreamPulse favorites",
         "pin": "Add to StreamPulse favorites",
@@ -11770,6 +12030,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+      "newBadge": "NYTT",
+
+      
       "htmlLang": "sv",
       "stepProfile": "Användarnamn",
       "profileTitle": "Ditt användarnamn på Twitch.",
@@ -11873,6 +12137,14 @@ export const translations = {
     },
     "popup": {
       "history": {
+
+        "durationMinutes": "{{count}} min",
+
+        "durationHours": "{{count}} tim",
+
+        "durationHoursShort": "{{h}} tim {{m}}",
+
+        
         "filterLabel": "Filter by platform",
         "filterAll": "All",
         "countSingular": "1 live",
@@ -12523,6 +12795,14 @@ export const translations = {
       "noNotesBody": "Informationen om den här versionen har ännu inte publicerats."
     },
     "inject": {
+
+      "enhancer": {
+
+      "jumpToLive": "Hoppa till direktsändningen (StreamPulse)"
+
+      },
+
+      
       "twitchUi": {
         "favorites": "StreamPulse-favoriter",
         "pin": "Lägg till i StreamPulse-favoriter",
@@ -12607,6 +12887,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+      "newBadge": "NOVÉ",
+
+      
       "htmlLang": "cs",
       "stepProfile": "Uživatelské jméno",
       "profileTitle": "Tvé uživatelské jméno na Twitchi.",
@@ -12710,6 +12994,14 @@ export const translations = {
     },
     "popup": {
       "history": {
+
+        "durationMinutes": "{{count}} min",
+
+        "durationHours": "{{count}} h",
+
+        "durationHoursShort": "{{h}} h {{m}}",
+
+        
         "filterLabel": "Filter by platform",
         "filterAll": "All",
         "countSingular": "1 live",
@@ -13360,6 +13652,14 @@ export const translations = {
       "noNotesBody": "Poznámky k této verzi zatím nebyly zveřejněny."
     },
     "inject": {
+
+      "enhancer": {
+
+      "jumpToLive": "Přehrát živě (StreamPulse)"
+
+      },
+
+      
       "twitchUi": {
         "favorites": "Oblíbené StreamPulse",
         "pin": "Přidat do oblíbených StreamPulse",

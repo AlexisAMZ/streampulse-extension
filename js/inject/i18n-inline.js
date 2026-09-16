@@ -16,6 +16,9 @@
 
   var STRINGS = {
   "fr": {
+    "enhancer": {
+      "jumpToLive": "Aller au direct (StreamPulse)"
+    },
     "twitchUi": {
       "favorites": "Favoris StreamPulse",
       "pin": "Ajouter aux favoris StreamPulse",
@@ -131,6 +134,9 @@
     }
   },
   "en": {
+    "enhancer": {
+      "jumpToLive": "Jump to Live (StreamPulse)"
+    },
     "twitchUi": {
       "favorites": "StreamPulse favorites",
       "pin": "Add to StreamPulse favorites",
@@ -246,6 +252,9 @@
     }
   },
   "es": {
+    "enhancer": {
+      "jumpToLive": "Ir al directo (StreamPulse)"
+    },
     "twitchUi": {
       "favorites": "Favoritos de StreamPulse",
       "pin": "Añadir a favoritos de StreamPulse",
@@ -476,6 +485,9 @@
     }
   },
   "de": {
+    "enhancer": {
+      "jumpToLive": "Zum Live-Stream springen (StreamPulse)"
+    },
     "twitchUi": {
       "favorites": "StreamPulse-Favoriten",
       "pin": "Zu StreamPulse-Favoriten hinzufügen",
@@ -591,6 +603,9 @@
     }
   },
   "it": {
+    "enhancer": {
+      "jumpToLive": "Vai alla diretta (StreamPulse)"
+    },
     "twitchUi": {
       "favorites": "Preferiti StreamPulse",
       "pin": "Aggiungi ai preferiti StreamPulse",
@@ -706,6 +721,9 @@
     }
   },
   "pl": {
+    "enhancer": {
+      "jumpToLive": "Przejdź na żywo (StreamPulse)"
+    },
     "twitchUi": {
       "favorites": "Ulubione StreamPulse",
       "pin": "Dodaj do ulubionych StreamPulse",
@@ -821,6 +839,9 @@
     }
   },
   "tr": {
+    "enhancer": {
+      "jumpToLive": "Canlı yayına git (StreamPulse)"
+    },
     "twitchUi": {
       "favorites": "StreamPulse favorileri",
       "pin": "StreamPulse favorilerine ekle",
@@ -936,6 +957,9 @@
     }
   },
   "ru": {
+    "enhancer": {
+      "jumpToLive": "Перейти к прямому эфиру (StreamPulse)"
+    },
     "twitchUi": {
       "favorites": "Избранное StreamPulse",
       "pin": "Добавить в избранное StreamPulse",
@@ -1051,6 +1075,9 @@
     }
   },
   "ja": {
+    "enhancer": {
+      "jumpToLive": "ライブに移動 (StreamPulse)"
+    },
     "twitchUi": {
       "favorites": "StreamPulse お気に入り",
       "pin": "StreamPulse お気に入りに追加",
@@ -1166,6 +1193,9 @@
     }
   },
   "ko": {
+    "enhancer": {
+      "jumpToLive": "라이브로 이동 (StreamPulse)"
+    },
     "twitchUi": {
       "favorites": "StreamPulse 즐겨찾기",
       "pin": "StreamPulse 즐겨찾기에 추가",
@@ -1281,6 +1311,9 @@
     }
   },
   "id": {
+    "enhancer": {
+      "jumpToLive": "Lompat ke siaran langsung (StreamPulse)"
+    },
     "twitchUi": {
       "favorites": "Favorit StreamPulse",
       "pin": "Tambahkan ke favorit StreamPulse",
@@ -1396,6 +1429,9 @@
     }
   },
   "nl": {
+    "enhancer": {
+      "jumpToLive": "Naar de livestream (StreamPulse)"
+    },
     "twitchUi": {
       "favorites": "StreamPulse-favorieten",
       "pin": "Toevoegen aan StreamPulse-favorieten",
@@ -1511,6 +1547,9 @@
     }
   },
   "hi": {
+    "enhancer": {
+      "jumpToLive": "लाइव पर जाएँ (StreamPulse)"
+    },
     "twitchUi": {
       "favorites": "StreamPulse favorites",
       "pin": "Add to StreamPulse favorites",
@@ -1626,6 +1665,9 @@
     }
   },
   "sv": {
+    "enhancer": {
+      "jumpToLive": "Hoppa till direktsändningen (StreamPulse)"
+    },
     "twitchUi": {
       "favorites": "StreamPulse-favoriter",
       "pin": "Lägg till i StreamPulse-favoriter",
@@ -1741,6 +1783,9 @@
     }
   },
   "cs": {
+    "enhancer": {
+      "jumpToLive": "Přehrát živě (StreamPulse)"
+    },
     "twitchUi": {
       "favorites": "Oblíbené StreamPulse",
       "pin": "Přidat do oblíbených StreamPulse",

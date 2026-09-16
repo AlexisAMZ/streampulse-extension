@@ -756,7 +756,11 @@
     }
 
     attachObserver();
-    setInterval(attachObserver, 2000);
+    // Re-check periodique : Twitch remonte un nouveau conteneur de chat a chaque
+    // navigation de chaine. On evite tout travail quand l'onglet est masque.
+    setInterval(function () {
+      if (!document.hidden) attachObserver();
+    }, 2000);
   }
 
   // ── Demarrage ────────────────────────────────────────────────────────────
