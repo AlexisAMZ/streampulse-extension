@@ -507,6 +507,15 @@ function formatNumberForLanguage(lang, value) {
   }
 }
 
+// Bornes 1-24 h : une seule source de coercion, shared par sanitize() et le
+// handler updatePreferences (prealablement dupliquees avec des regles differentes).
+function clampInventoryIntervalHours(value) {
+  const hours = Number(value);
+  return Number.isFinite(hours)
+    ? Math.min(24, Math.max(1, Math.round(hours)))
+    : 24;
+}
+
 class DataStore {
   static async getStreamers() {
     const stored = await chrome.storage.local.get(STORAGE_KEYS.STREAMERS);
@@ -608,7 +617,7 @@ class PreferenceStore {
       autoClaimDrops: preferences.autoClaimDrops !== false,
       autoClaimMoments: preferences.autoClaimMoments !== false,
       autoOpenInventory: Boolean(preferences.autoOpenInventory),
-      autoOpenInventoryIntervalHours: Number(preferences.autoOpenInventoryIntervalHours) > 0 ? Number(preferences.autoOpenInventoryIntervalHours) : 24,
+      autoOpenInventoryIntervalHours: clampInventoryIntervalHours(preferences.autoOpenInventoryIntervalHours),
       hideTwitchExtensions: Boolean(preferences.hideTwitchExtensions),
       keepQualityInBackground: preferences.keepQualityInBackground === true,
       enablePipButton: preferences.enablePipButton !== false,
@@ -3122,179 +3131,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case "updatePreferences":
       (async () => {
         const incomingUpdates = request.updates || {};
-        const updates = {};
-        if ("liveNotifications" in incomingUpdates) {
-          updates.liveNotifications =
-            incomingUpdates.liveNotifications !== false;
-        }
-        if ("gameNotifications" in incomingUpdates) {
-          updates.gameNotifications =
-            incomingUpdates.gameNotifications === true;
-        }
-        if ("titleNotifications" in incomingUpdates) {
-          updates.titleNotifications =
-            incomingUpdates.titleNotifications === true;
-        }
-        if ("soundsEnabled" in incomingUpdates) {
-          updates.soundsEnabled = incomingUpdates.soundsEnabled !== false;
-        }
-        if ("autoClaimChannelPoints" in incomingUpdates) {
-          updates.autoClaimChannelPoints =
-            incomingUpdates.autoClaimChannelPoints !== false;
-        }
-        // Default-true toggles: any value other than an explicit `false` keeps them on.
-        if ("autoClaimDrops" in incomingUpdates) {
-          updates.autoClaimDrops = incomingUpdates.autoClaimDrops !== false;
-        }
-        if ("autoClaimMoments" in incomingUpdates) {
-          updates.autoClaimMoments = incomingUpdates.autoClaimMoments !== false;
-        }
-        if ("autoCancelRaids" in incomingUpdates) {
-          updates.autoCancelRaids = incomingUpdates.autoCancelRaids === true;
-        }
-        if ("preventTabDiscard" in incomingUpdates) {
-          updates.preventTabDiscard =
-            incomingUpdates.preventTabDiscard !== false;
-        }
-        if ("enableTabLiveIcon" in incomingUpdates) {
-          updates.enableTabLiveIcon =
-            incomingUpdates.enableTabLiveIcon !== false;
-        }
-        if ("enableStreamerFavicon" in incomingUpdates) {
-          updates.enableStreamerFavicon =
-            incomingUpdates.enableStreamerFavicon !== false;
-        }
-        if ("enablePredictionsPopup" in incomingUpdates) {
-          updates.enablePredictionsPopup =
-            incomingUpdates.enablePredictionsPopup !== false;
-        }
-        if ("dropAlerts" in incomingUpdates) {
-          updates.dropAlerts = incomingUpdates.dropAlerts !== false;
-        }
-        if ("predictionAlerts" in incomingUpdates) {
-          updates.predictionAlerts = incomingUpdates.predictionAlerts !== false;
-        }
-        if ("raidAlerts" in incomingUpdates) {
-          updates.raidAlerts = incomingUpdates.raidAlerts !== false;
-        }
-        // Default-false toggle: requires an explicit `true` to enable.
-        if ("backgroundRaidAlerts" in incomingUpdates) {
-          updates.backgroundRaidAlerts =
-            incomingUpdates.backgroundRaidAlerts === true;
-        }
-        // Default-false toggle: requires an explicit `true` to enable.
-        if ("autoOpenInventory" in incomingUpdates) {
-          updates.autoOpenInventory =
-            incomingUpdates.autoOpenInventory === true;
-        }
-        if ("autoOpenInventoryIntervalHours" in incomingUpdates) {
-          const hours = Number(incomingUpdates.autoOpenInventoryIntervalHours);
-          updates.autoOpenInventoryIntervalHours = Number.isFinite(hours)
-            ? Math.min(24, Math.max(1, Math.round(hours)))
-            : DEFAULT_PREFERENCES.autoOpenInventoryIntervalHours;
-        }
-        if ("autoRefreshPlayerErrors" in incomingUpdates) {
-          updates.autoRefreshPlayerErrors =
-            incomingUpdates.autoRefreshPlayerErrors !== false;
-        }
-        if ("enablePipButton" in incomingUpdates) {
-          updates.enablePipButton = incomingUpdates.enablePipButton !== false;
-        }
-        if ("playerQuality" in incomingUpdates) {
-          updates.playerQuality = PLAYER_QUALITIES.includes(incomingUpdates.playerQuality)
-            ? incomingUpdates.playerQuality
-            : "auto";
-        }
-        if ("enableClipDownload" in incomingUpdates) {
-          updates.enableClipDownload = incomingUpdates.enableClipDownload !== false;
-        }
-        if ("keepQualityInBackground" in incomingUpdates) {
-          updates.keepQualityInBackground =
-            incomingUpdates.keepQualityInBackground === true;
-        }
-        if ("hideTwitchExtensions" in incomingUpdates) {
-          updates.hideTwitchExtensions =
-            incomingUpdates.hideTwitchExtensions === true;
-        }
-        if ("enableFastForwardButton" in incomingUpdates) {
-          updates.enableFastForwardButton =
-            incomingUpdates.enableFastForwardButton !== false;
-        }
-        if ("chatKeywords" in incomingUpdates) {
-          updates.chatKeywords =
-            typeof incomingUpdates.chatKeywords === "string"
-              ? incomingUpdates.chatKeywords
-              : "";
-        }
-        if ("chatBlockedUsers" in incomingUpdates) {
-          updates.chatBlockedUsers =
-            typeof incomingUpdates.chatBlockedUsers === "string"
-              ? incomingUpdates.chatBlockedUsers
-              : "";
-        }
-        if ("watchTimeTracker" in incomingUpdates) {
-          updates.watchTimeTracker =
-            incomingUpdates.watchTimeTracker !== false;
-        }
-        if ("language" in incomingUpdates) {
-          updates.language = normalizeLanguage(incomingUpdates.language);
-        }
-        if ("sortOrder" in incomingUpdates) {
-          const allowed = ["live", "name-asc", "name-desc", "custom"];
-          const val = incomingUpdates.sortOrder;
-          updates.sortOrder = allowed.includes(val) ? val : "live";
-        }
-        if ("previewsEnabled" in incomingUpdates) {
-          updates.previewsEnabled = incomingUpdates.previewsEnabled !== false;
-        }
-        if ("previewsMode" in incomingUpdates) {
-          updates.previewsMode =
-            incomingUpdates.previewsMode === "video" ? "video" : "image";
-        }
-        if ("previewsSurfaceDirectory" in incomingUpdates) {
-          updates.previewsSurfaceDirectory =
-            incomingUpdates.previewsSurfaceDirectory !== false;
-        }
-        if ("previewsSurfaceSidebar" in incomingUpdates) {
-          updates.previewsSurfaceSidebar =
-            incomingUpdates.previewsSurfaceSidebar !== false;
-        }
-        if ("previewsSurfaceClips" in incomingUpdates) {
-          updates.previewsSurfaceClips =
-            incomingUpdates.previewsSurfaceClips !== false;
-        }
-        if ("previewsSurfaceSearch" in incomingUpdates) {
-          updates.previewsSurfaceSearch =
-            incomingUpdates.previewsSurfaceSearch !== false;
-        }
-        if ("previewsSize" in incomingUpdates) {
-          const allowedSizes = ["s", "m", "l"];
-          updates.previewsSize = allowedSizes.includes(incomingUpdates.previewsSize)
-            ? incomingUpdates.previewsSize
-            : "m";
-        }
-        if ("previewsAudio" in incomingUpdates) {
-          updates.previewsAudio = incomingUpdates.previewsAudio === true;
-        }
-        if ("previewsShowDelayMs" in incomingUpdates) {
-          const d = Number(incomingUpdates.previewsShowDelayMs);
-          updates.previewsShowDelayMs = Number.isFinite(d)
-            ? Math.min(2000, Math.max(0, d))
-            : 200;
-        }
-        if ("previewsAnimations" in incomingUpdates) {
-          updates.previewsAnimations =
-            incomingUpdates.previewsAnimations !== false;
-        }
-        if ("communityBadge" in incomingUpdates) {
-          updates.communityBadge = incomingUpdates.communityBadge === true;
-        }
-        if ("communityBadgeColor" in incomingUpdates) {
-          updates.communityBadgeColor = sanitizeBadgeColor(
-            incomingUpdates.communityBadgeColor
-          );
-        }
-
+        // Coercion unique : PreferenceStore.sanitize() est la seule source de
+        // verite (le bloc duplique qui vivait ici a fini par perdre des cles,
+        // cf. le commentaire de sanitize()). On ne garde que les cles que
+        // l'appelant a envoyees et que sanitize reconnait.
+        const sanitized = PreferenceStore.sanitize(incomingUpdates);
+        const updates = Object.fromEntries(
+          Object.keys(incomingUpdates)
+            .filter((key) => key in sanitized)
+            .map((key) => [key, sanitized[key]])
+        );
         if (Object.keys(updates).length === 0) {
           const preferences = await PreferenceStore.get();
           const incomingKeys = Object.keys(incomingUpdates);
