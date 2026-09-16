@@ -32,9 +32,9 @@
 
   };
 
+  // Seul `features` est consomme : ne pas demander (ni garder en memoire) les
+  // identifiants Twitch du service worker, dont ce script n'a aucun usage.
   let extensionConfig = {
-    clientId: "",
-    accessToken: "",
     features: DEFAULT_FEATURE_CONFIG,
   };
 
@@ -906,8 +906,6 @@
       const loadedConfig =
         (await chrome.runtime.sendMessage({ type: "getConfig" })) || {};
       extensionConfig = {
-        clientId: loadedConfig.clientId || "",
-        accessToken: loadedConfig.accessToken || "",
         features: mergeFeatureConfig(
           DEFAULT_FEATURE_CONFIG,
           loadedConfig.features || {}
@@ -919,8 +917,6 @@
         error
       );
       extensionConfig = {
-        clientId: "",
-        accessToken: "",
         features: DEFAULT_FEATURE_CONFIG,
       };
     }
