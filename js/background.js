@@ -1587,6 +1587,19 @@ class NotificationCenter {
 }
 
 class NotificationSystem {
+  // Avatar du streamer si connu, icone de plateforme sinon — logique partagée
+  // par les trois notifications (avant : copie-collé trois fois).
+  static resolveNotificationIcon(streamer, platformKey) {
+    const streamerStatus = streamerStates.get(streamer.id);
+    const fallbackIcon =
+      (chrome?.runtime && getPlatformIcon(platformKey)
+        ? chrome.runtime.getURL(getPlatformIcon(platformKey))
+        : null) || NotificationCenter.getDefaultIcon();
+    return NotificationCenter.resolveIcon(
+      streamerStatus?.avatarUrl || streamer.avatarUrl || fallbackIcon
+    );
+  }
+
   static async notifyLive(streamer, status, preferences = DEFAULT_PREFERENCES) {
     if (preferences.liveNotifications === false) {
       return;
@@ -1634,14 +1647,6 @@ class NotificationSystem {
       platform,
       streamer.handle || streamer.twitch || streamer.id
     );
-    const streamerStatus = streamerStates.get(streamer.id);
-    const fallbackIcon =
-      (chrome?.runtime && getPlatformIcon(platform)
-        ? chrome.runtime.getURL(getPlatformIcon(platform))
-        : null) || NotificationCenter.getDefaultIcon();
-    const iconCandidate =
-      streamerStatus?.avatarUrl || streamer.avatarUrl || fallbackIcon;
-    const iconUrl = NotificationCenter.resolveIcon(iconCandidate);
 
     await NotificationCenter.show({
       title,
@@ -1649,9 +1654,48 @@ class NotificationSystem {
       streamerId: streamer.id,
       platform: status.platform,
       url: status.url || targetUrl,
-      iconUrl,
+      iconUrl: this.resolveNotificationIcon(streamer, platform),
       requireInteraction: true,
       priority: 2,
+      playSound: preferences?.soundsEnabled !== false,
+    });
+  }
+
+  // Changement de catégorie ou de titre : mêmes garde-fous, même structure,
+  // seuls les textes et les paramètres de traduction varient.
+  static async notifyChangeEvent(
+    streamer,
+    preferences,
+    { alertKey, titleKey, messageKey, messageParams, platform }
+  ) {
+    if (
+      preferences.liveNotifications === false ||
+      !preferences[alertKey]
+    ) {
+      return;
+    }
+
+    const lang = normalizeLanguage(preferences?.language);
+    const platformKey = platform || streamer.platform || "twitch";
+    if (!platformSupportsLiveStatus(platformKey)) {
+      return;
+    }
+    const name =
+      streamer.displayName ||
+      formatHandleForDisplay(platformKey, streamer.handle || streamer.twitch);
+
+    await NotificationCenter.show({
+      title: translate(lang, titleKey, { name }),
+      message: translate(lang, messageKey, messageParams(lang)),
+      streamerId: streamer.id,
+      platform: platformKey,
+      url: buildProfileUrl(
+        platformKey,
+        streamer.handle || streamer.twitch || streamer.id
+      ),
+      iconUrl: this.resolveNotificationIcon(streamer, platformKey),
+      requireInteraction: false,
+      priority: 1,
       playSound: preferences?.soundsEnabled !== false,
     });
   }
@@ -1663,64 +1707,17 @@ class NotificationSystem {
     preferences = DEFAULT_PREFERENCES,
     platform = null
   ) {
-    if (
-      preferences.liveNotifications === false ||
-      !preferences.gameNotifications
-    ) {
-      return;
-    }
-
-    const lang = normalizeLanguage(preferences?.language);
-    const platformKey = platform || streamer.platform || "twitch";
-    if (!platformSupportsLiveStatus(platformKey)) {
-      return;
-    }
-    const title = translate(
-      lang,
-      "background.notifications.categoryChangeTitle",
-      {
-        name:
-          streamer.displayName ||
-          formatHandleForDisplay(
-            platformKey,
-            streamer.handle || streamer.twitch
-          ),
-      }
-    );
-    const message = translate(
-      lang,
-      "background.notifications.categoryChangeMessage",
-      {
+    await this.notifyChangeEvent(streamer, preferences, {
+      alertKey: "gameNotifications",
+      titleKey: "background.notifications.categoryChangeTitle",
+      messageKey: "background.notifications.categoryChangeMessage",
+      messageParams: (lang) => ({
         from:
           fromGame ||
           translate(lang, "background.notifications.unknownCategory"),
         to: toGame || translate(lang, "background.notifications.newCategory"),
-      }
-    );
-
-    const targetUrl = buildProfileUrl(
-      platformKey,
-      streamer.handle || streamer.twitch || streamer.id
-    );
-    const streamerStatus = streamerStates.get(streamer.id);
-    const fallbackIcon =
-      (chrome?.runtime && getPlatformIcon(platformKey)
-        ? chrome.runtime.getURL(getPlatformIcon(platformKey))
-        : null) || NotificationCenter.getDefaultIcon();
-    const iconCandidate =
-      streamerStatus?.avatarUrl || streamer.avatarUrl || fallbackIcon;
-    const iconUrl = NotificationCenter.resolveIcon(iconCandidate);
-
-    await NotificationCenter.show({
-      title,
-      message,
-      streamerId: streamer.id,
-      platform: platformKey,
-      url: targetUrl,
-      iconUrl,
-      requireInteraction: false,
-      priority: 1,
-      playSound: preferences?.soundsEnabled !== false,
+      }),
+      platform,
     });
   }
 
@@ -1731,65 +1728,18 @@ class NotificationSystem {
     preferences = DEFAULT_PREFERENCES,
     platform = null
   ) {
-    if (
-      preferences.liveNotifications === false ||
-      !preferences.titleNotifications
-    ) {
-      return;
-    }
-
-    const lang = normalizeLanguage(preferences?.language);
-    const platformKey = platform || streamer.platform || "twitch";
-    if (!platformSupportsLiveStatus(platformKey)) {
-      return;
-    }
-    const title = translate(
-      lang,
-      "background.notifications.titleChangeTitle",
-      {
-        name:
-          streamer.displayName ||
-          formatHandleForDisplay(
-            platformKey,
-            streamer.handle || streamer.twitch
-          ),
-      }
-    );
-    // Le corps ne montre que le nouveau titre : un flux Twitch en fait souvent
-    // plusieurs par session et le « avant apres » deborde de la notification.
-    const message = translate(
-      lang,
-      "background.notifications.titleChangeMessage",
-      {
+    await this.notifyChangeEvent(streamer, preferences, {
+      alertKey: "titleNotifications",
+      titleKey: "background.notifications.titleChangeTitle",
+      // Le corps ne montre que le nouveau titre : un flux Twitch en fait souvent
+      // plusieurs par session et le « avant apres » deborde de la notification.
+      messageKey: "background.notifications.titleChangeMessage",
+      messageParams: (lang) => ({
         to:
           toTitle ||
           translate(lang, "background.notifications.unknownTitle"),
-      }
-    );
-
-    const targetUrl = buildProfileUrl(
-      platformKey,
-      streamer.handle || streamer.twitch || streamer.id
-    );
-    const streamerStatus = streamerStates.get(streamer.id);
-    const fallbackIcon =
-      (chrome?.runtime && getPlatformIcon(platformKey)
-        ? chrome.runtime.getURL(getPlatformIcon(platformKey))
-        : null) || NotificationCenter.getDefaultIcon();
-    const iconCandidate =
-      streamerStatus?.avatarUrl || streamer.avatarUrl || fallbackIcon;
-    const iconUrl = NotificationCenter.resolveIcon(iconCandidate);
-
-    await NotificationCenter.show({
-      title,
-      message,
-      streamerId: streamer.id,
-      platform: platformKey,
-      url: targetUrl,
-      iconUrl,
-      requireInteraction: false,
-      priority: 1,
-      playSound: preferences?.soundsEnabled !== false,
+      }),
+      platform,
     });
   }
 
