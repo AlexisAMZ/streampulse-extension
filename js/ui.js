@@ -151,7 +151,8 @@ function preblurAvatar(url, image) {
     }
   };
   source.onerror = () => {
-    image.src = url;
+    // URL morte : on masque l'image pour laisser le fond dégradé de la scène.
+    image.style.display = "none";
   };
   source.src = url;
 }
@@ -527,7 +528,6 @@ export function createChannelRow(streamer, status, options, callbacks) {
   row.dataset.index = String(index);
   if (draggable) {
     row.draggable = true;
-    row.setAttribute("aria-keyshortcuts", "Alt+ArrowUp Alt+ArrowDown");
     const grip = el("span", "row-grip");
     grip.innerHTML = ICONS.grip;
     grip.title = t("popup.cplus.drag", { name: label });
@@ -550,6 +550,11 @@ export function createChannelRow(streamer, status, options, callbacks) {
   const actions = el("span", "row-actions");
   const pin = button("row-icon pin", { icon: "star", label: t(pinned ? "popup.cplus.unpin" : "popup.cplus.pin", { name: label }) });
   pin.setAttribute("aria-pressed", String(pinned));
+  if (draggable) {
+    // aria-keyshortcuts doit être sur un élément focusable pour être exposé ;
+    // l'étoile est le premier bouton focusable de la ligne.
+    pin.setAttribute("aria-keyshortcuts", "Alt+ArrowUp Alt+ArrowDown");
+  }
   pin.addEventListener("click", () => callbacks.onTogglePin(streamer.id));
   actions.append(pin);
   ALERTS.forEach((alert) => actions.append(alertToggle("row-icon", streamer, alert, callbacks, false)));

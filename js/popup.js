@@ -368,6 +368,18 @@ async function reorderStreamers(from, to) {
   return true;
 }
 
+/** Échange deux emplacements de stockage : déplacement visuel adjacent dans le panneau. */
+async function swapStreamers(indexA, indexB) {
+  if (!Number.isInteger(indexA) || !Number.isInteger(indexB)) return false;
+  if (indexA < 0 || indexB < 0 || indexA >= state.streamers.length || indexB >= state.streamers.length) return false;
+  const reordered = [...state.streamers];
+  [reordered[indexA], reordered[indexB]] = [reordered[indexB], reordered[indexA]];
+  state.streamers = reordered;
+  await chrome.storage.local.set({ betaGeneralStreamers: reordered });
+  renderStreamers();
+  return true;
+}
+
 function initDragAndDrop() {
   if (!sheetListEl || sheetListEl._dragInit) return;
   sheetListEl._dragInit = true;
@@ -409,22 +421,33 @@ function initDragAndDrop() {
   });
 
   // Alternative clavier au glisser-déposer : Alt + flèches haut/bas sur une
-  // ligne focusée (tri personnalisé uniquement, comme la souris).
+  // ligne focusée (tri personnalisé uniquement, comme la souris). On raisonne
+  // dans l'ordre VISUEL du panneau (lives d'abord) : on échange la ligne avec
+  // sa voisine visuelle en échangeant leurs deux emplacements de stockage.
+  // Échanger un live avec un hors-ligne n'a pas d'effet visuel (la partition
+  // lives-d'abord est stable) : on ignore ce cas pour ne pas mentir.
   sheetListEl.addEventListener("keydown", async (event) => {
     if (!event.altKey || (event.key !== "ArrowUp" && event.key !== "ArrowDown")) return;
     const row = event.target.closest?.(".channel-row");
     if (!row || !row.querySelector(".row-grip")) return;
-    event.preventDefault();
-    const from = Number(row.dataset.index);
+    const rows = [...sheetListEl.querySelectorAll(".channel-row")];
+    const from = rows.indexOf(row);
     const to = from + (event.key === "ArrowUp" ? -1 : 1);
-    const streamer = state.streamers[from];
-    const moved = await reorderStreamers(from, to);
+    const target = rows[to];
+    if (!target) return;
+    if (row.classList.contains("live") !== target.classList.contains("live")) return;
+    event.preventDefault();
+
+    const storageFrom = Number(row.dataset.index);
+    const storageTo = Number(target.dataset.index);
+    const streamer = state.streamers[storageFrom];
+    const moved = await swapStreamers(storageFrom, storageTo);
     if (moved) {
       document.getElementById("sheet-live").textContent = t("popup.cplus.rowMoved", {
         name: nameFor(streamer.id),
         position: to + 1,
       });
-      sheetListEl.querySelector(`.channel-row[data-index="${to}"] button`)?.focus();
+      sheetListEl.querySelector(`.channel-row[data-index="${storageTo}"] button`)?.focus();
     }
   });
 }

@@ -541,6 +541,12 @@
 
   function queueSpacing(badge) {
     spacingQueue.push(badge);
+    // File plafonnee : onglet masque tres longtemps, on mesure la salve en
+    // attente plutot que de la laisser croitre sans borne.
+    if (spacingQueue.length > 300) {
+      flushSpacing();
+      return;
+    }
     if (spacingScheduled) return;
     spacingScheduled = true;
     if (document.hidden) {
@@ -831,7 +837,9 @@
       setupChatObserver();
       setupBadgeCard();
       // Les reglages des autres abonnes arrivent sans recharger la page.
-      setInterval(fetchRemoteBadges, REFRESH_MS);
+      setInterval(function () {
+        if (!document.hidden) fetchRemoteBadges();
+      }, REFRESH_MS);
 
       chrome.storage.onChanged.addListener(function (changes, area) {
         if (area !== "local") return;
@@ -854,6 +862,7 @@
       });
 
       setInterval(function () {
+        if (document.hidden) return;
         if (!currentTwitchUser) {
           currentTwitchUser = detectCurrentTwitchUser();
           if (currentTwitchUser) {
