@@ -43,6 +43,7 @@ const STORAGE_KEYS = {
   // wiped/reset. This is critical for MV3: every SW restart wipes the
   // in-memory `streamerLiveState` Map, so we MUST restore from storage.
   LIVE_STATE: "streamPulseLiveState",
+  EVENT_LOGS: "betaEventLogs",
 };
 
 // ─── Remote config (credentials hosted on Vercel, never in the zip) ──────────
@@ -722,10 +723,27 @@ class StatsStore {
 }
 
 class EventLogStore {
+  // Before the EVENT_LOGS key existed, getLogs() read the whole storage and
+  // addLog() wrote under the literal "undefined" key. Recover those logs once.
+  static LEGACY_KEY = "undefined";
+
   static async getLogs() {
     try {
-      const stored = await chrome.storage.local.get(STORAGE_KEYS.EVENT_LOGS);
-      return stored[STORAGE_KEYS.EVENT_LOGS] || [];
+      const stored = await chrome.storage.local.get([
+        STORAGE_KEYS.EVENT_LOGS,
+        this.LEGACY_KEY,
+      ]);
+      const current = stored[STORAGE_KEYS.EVENT_LOGS];
+      if (current) {
+        return current;
+      }
+      const legacy = stored[this.LEGACY_KEY];
+      if (Array.isArray(legacy) && legacy.length > 0) {
+        await chrome.storage.local.set({ [STORAGE_KEYS.EVENT_LOGS]: legacy });
+        await chrome.storage.local.remove(this.LEGACY_KEY);
+        return legacy;
+      }
+      return [];
     } catch (_) {
       return [];
     }
