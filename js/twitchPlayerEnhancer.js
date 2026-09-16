@@ -218,7 +218,11 @@
   let observedVideo = null;
   let videoAbortHandler = null;
   let retryClickAttempted = false;
-  let autoRefreshEnabled = true;
+  // Faux au depart : c'est setAutoRefresh(), appele par applyPreferences au
+  // chargement des reglages, qui demarre reellement la detection. Le mettre a
+  // vrai ici ferait sortir setAutoRefresh par son garde d'egalite, et plus
+  // rien n'aurait jamais lance le sondage.
+  let autoRefreshEnabled = false;
   let reloadPendingUntilVisible = false;
   let reloadAttempted = false;
 

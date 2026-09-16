@@ -24,8 +24,14 @@
   var MARK_URL = chrome.runtime.getURL("images/photos/128px.png");
 
   // Réglages activés tant que l'utilisateur ne les a pas coupés.
+  // Reglages actifs par defaut : sans cette liste, prefOn() les lit comme
+  // eteints tant que l'utilisateur n'y a jamais touche, l'interrupteur
+  // s'affiche a l'envers et le premier clic ne fait rien de visible.
+  // Doit rester aligne sur DEFAULT_PREFERENCES dans js/background.js.
   var DEFAULT_ON = [
-    "autoClaimChannelPoints", "liveNotifications", "enableFastForwardButton",
+    "autoClaimChannelPoints", "autoClaimDrops", "autoClaimMoments",
+    "liveNotifications", "soundsEnabled",
+    "enableFastForwardButton", "enablePipButton", "autoRefreshPlayerErrors",
     "previewsEnabled", "previewsSurfaceDirectory", "previewsSurfaceSidebar",
   ];
 

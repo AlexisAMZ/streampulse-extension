@@ -58,7 +58,9 @@
 .language-button-flag { grid-row: span 2; font-size: 22px; line-height: 1; }
 .language-button-code { color: var(--text-3); font-size: 11px; font-weight: 700; text-transform: uppercase; }
 .language-button-label { font-weight: 600; }
-.language-button-meta { color: var(--text-3); font-size: 12px; }
+/* Colonne de droite du bouton : nom au-dessus, code en-dessous (le drapeau fait span 2 lignes). */
+.language-button-meta { display: grid; gap: 1px; min-width: 0; color: var(--text-3); font-size: 12px; }
+.language-button-code { color: var(--text-3); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
 .language-button-check { position: absolute; top: 50%; right: 12px; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--violet); color: #ffffff; font-size: 11px; opacity: 0; transform: translateY(-50%); }
 .language-button.is-active .language-button-check { opacity: 1; }
 .badge-new { display: inline-flex; align-items: center; height: 18px; margin-left: 6px; padding: 0 7px; border-radius: 999px; background: var(--lcd); color: var(--lcd-ink); font-size: 10px; font-weight: 800; vertical-align: 1px; }
