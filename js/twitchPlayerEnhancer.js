@@ -1,9 +1,7 @@
 (() => {
   const PREFERENCES_KEY = "betaGeneralPreferences";
-  const AUTO_REFRESH_FIELD = "autoRefreshPlayerErrors";
   const FAST_FORWARD_FIELD = "enableFastForwardButton";
 
-  const ERROR_CODES = ["1000", "2000", "3000", "4000", "5000"];
   const FAST_FORWARD_BUTTON_ID = "streampulse-fast-forward-btn";
   const FAST_FORWARD_STYLE_ID = "streampulse-fast-forward-style";
   const SHARED_STYLE_ID = "streampulse-enhancer-styles";
@@ -38,11 +36,6 @@
     accessToken: "",
     features: DEFAULT_FEATURE_CONFIG,
   };
-
-  let autoRefreshEnabled = false;
-  let errorCheckTimeoutId = null;
-  let observedVideo = null;
-  let videoAbortHandler = null;
 
   let fastForwardEnabled = false;
   let fastForwardEnsureIntervalId = null;
@@ -201,60 +194,48 @@
     return null;
   }
 
-  const RELOAD_STAMP_KEY = "streampulsePlayerReloadAt";
-  const RELOAD_COOLDOWN_MS = 45000;
+  // La relance automatique du lecteur en cas d'erreur (codes 1000-5000, dont
+  // le fameux #2000) a ete adoucie : on garde la detection et on appuie pour
+  // l'utilisateur sur le bouton « Reessayer » du lecteur, mais on ne recharge
+  // plus jamais la page entiere — un #2000 transitoire ne doit plus couper
+  // le stream pour rien.
+
+  const ERROR_GATE_SELECTOR =
+    '[data-a-target="player-overlay-content-gate"], .content-overlay-gate';
+  const ERROR_CODES = ["1000", "2000", "3000", "4000", "5000"];
   const RETRY_GRACE_MS = 6000;
+  const RETRY_POLL_MS = 4000;
+
+  let errorCheckTimeoutId = null;
+  let observedVideo = null;
+  let videoAbortHandler = null;
+  let retryClickAttempted = false;
 
   function hasPlayerError() {
-    const gate = document.querySelector(
-      '[data-a-target="player-overlay-content-gate"], .content-overlay-gate'
-    );
+    const gate = document.querySelector(ERROR_GATE_SELECTOR);
     if (!gate) return false;
     const text = gate.textContent || "";
     return ERROR_CODES.some((code) => text.includes(code));
   }
 
-  let reloadPendingUntilVisible = false;
-  let reloadAttempted = false;
-
-  function reloadPlayerPage() {
-    // Never reload a tab the viewer is not looking at: wait until it is shown.
-    if (document.hidden) {
-      reloadPendingUntilVisible = true;
-      return;
+  function clickRetryButton() {
+    const button = document.querySelector(`${ERROR_GATE_SELECTOR} button`);
+    if (button instanceof HTMLElement) {
+      button.click();
+      return true;
     }
-    reloadPendingUntilVisible = false;
-    // One reload per page load, whatever happens next: a stream that keeps
-    // erroring must never put the tab in a reload loop.
-    if (reloadAttempted) return;
-    reloadAttempted = true;
-    // sessionStorage survives the reload, so the cooldown prevents reload loops.
-    try {
-      const lastReload = Number(sessionStorage.getItem(RELOAD_STAMP_KEY)) || 0;
-      if (Date.now() - lastReload < RELOAD_COOLDOWN_MS) return;
-      sessionStorage.setItem(RELOAD_STAMP_KEY, String(Date.now()));
-    } catch (_error) {
-      // Storage blocked: skip the reload rather than risk an unguarded loop.
-      return;
-    }
-    window.location.reload();
+    return false;
   }
 
   function attemptRecovery() {
-    const button = document.querySelector(
-      '[data-a-target="player-overlay-content-gate"] button, .content-overlay-gate button'
-    );
-    if (button instanceof HTMLElement) {
-      button.click();
+    // Un seul clic par erreur : si le lecteur re-affiche l'overlay, le tour
+    // de sondage suivant re-tentera. Re-cliquer en boucle sur un bouton qui
+    // ne repond pas ne sert a rien.
+    if (!retryClickAttempted) {
+      retryClickAttempted = clickRetryButton();
     }
 
-    // Errors like #2000 rarely clear on their own: reload if still stuck.
     window.setTimeout(() => {
-      if (!autoRefreshEnabled) return;
-      if (hasPlayerError()) {
-        reloadPlayerPage();
-        return;
-      }
       const video = findVideoElement();
       if (video?.paused) {
         video.play().catch(() => {});
@@ -265,23 +246,19 @@
 
   function checkForPlayerErrors() {
     errorCheckTimeoutId = null;
-    if (!autoRefreshEnabled) {
-      return;
-    }
-
     ensureVideoAbortListener();
 
     if (hasPlayerError()) {
       attemptRecovery();
-      scheduleErrorCheck(RETRY_GRACE_MS + 4000);
+      scheduleErrorCheck(RETRY_GRACE_MS + RETRY_POLL_MS);
       return;
     }
 
-    scheduleErrorCheck(4000);
+    retryClickAttempted = false;
+    scheduleErrorCheck(RETRY_POLL_MS);
   }
 
   function scheduleErrorCheck(delay = 2000) {
-    if (!autoRefreshEnabled) return;
     if (errorCheckTimeoutId != null) {
       clearTimeout(errorCheckTimeoutId);
     }
@@ -304,27 +281,9 @@
     detachVideoAbortListener();
     observedVideo = video;
     videoAbortHandler = () => {
-      if (autoRefreshEnabled) {
-        scheduleErrorCheck(100);
-      }
+      scheduleErrorCheck(100);
     };
     video.addEventListener("abort", videoAbortHandler);
-  }
-
-  function enableAutoRefresh() {
-    if (autoRefreshEnabled) return;
-    autoRefreshEnabled = true;
-    ensureVideoAbortListener();
-    scheduleErrorCheck(500);
-  }
-
-  function disableAutoRefresh() {
-    autoRefreshEnabled = false;
-    if (errorCheckTimeoutId != null) {
-      clearTimeout(errorCheckTimeoutId);
-      errorCheckTimeoutId = null;
-    }
-    detachVideoAbortListener();
   }
 
   function insertFastForwardStyle() {
@@ -558,13 +517,6 @@
   }
 
   function applyPreferences(preferences = {}) {
-    const shouldAutoRefresh = preferences[AUTO_REFRESH_FIELD] !== false;
-    if (shouldAutoRefresh && !autoRefreshEnabled) {
-      enableAutoRefresh();
-    } else if (!shouldAutoRefresh && autoRefreshEnabled) {
-      disableAutoRefresh();
-    }
-
     const shouldFastForward = preferences[FAST_FORWARD_FIELD] !== false;
     if (shouldFastForward && !fastForwardEnabled) {
       enableFastForward();
@@ -969,19 +921,11 @@
         this.headerMode = "metadata";
         return metadata;
       }
-      const selectors = [
-        ".stream-chat-header__left",
-        ".stream-chat-header",
-        '[data-a-target="chat-room-header"]',
-        '[data-test-selector="chat-room-header"]',
-      ];
-      for (const selector of selectors) {
-        const element = document.querySelector(selector);
-        if (element) {
-          this.headerMode = "chat";
-          return element;
-        }
-      }
+      // Plus de repli sur l'en-tete du chat : la barre d'infos du lecteur
+      // apparait quelques secondes apres le chargement de la page, et le
+      // bouton s'y teleportait depuis le chat, ce qui etait desagreable a
+      // l'oeil. On prefere attendre (le sondage de 3 s reessaie) et poser le
+      // bouton directement a sa place definitive.
       return null;
     }
 
@@ -1120,6 +1064,10 @@
 
     if (isTopWindow) {
       initPreferences();
+      // Detection d'erreur toujours active : aucun reglage ne la coupe, elle
+      // ne fait que cliquer « Reessayer » et ne recharge jamais la page.
+      ensureVideoAbortListener();
+      scheduleErrorCheck(500);
     }
   }
 
@@ -1127,13 +1075,7 @@
     if (document.hidden) return;
 
     if (isTopWindow) {
-      if (autoRefreshEnabled && reloadPendingUntilVisible && hasPlayerError()) {
-        reloadPlayerPage();
-        return;
-      }
-      if (autoRefreshEnabled) {
-        scheduleErrorCheck(500);
-      }
+      scheduleErrorCheck(500);
       if (fastForwardEnabled) {
         ensureFastForwardButton();
       }

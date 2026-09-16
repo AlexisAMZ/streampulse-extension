@@ -32,7 +32,6 @@ const defaultPreferences = {
   gameNotifications: false,
   soundsEnabled: true,
   autoClaimChannelPoints: true,
-  autoRefreshPlayerErrors: true,
   keepQualityInBackground: false,
   enablePipButton: true,
   enableClipDownload: true,
@@ -80,6 +79,7 @@ const liveNotificationsToggle = document.getElementById("pref-live-notifications
 const gameAlertsToggle = document.getElementById("pref-game-alerts");
 const titleAlertsToggle = document.getElementById("pref-title-alerts");
 const soundsToggle = document.getElementById("pref-sounds");
+const backgroundRaidAlertsToggle = document.getElementById("pref-background-raid-alerts");
 const autoClaimToggle = document.getElementById("pref-auto-claim");
 const autoClaimDropsToggle = document.getElementById("pref-auto-claim-drops");
 const autoClaimMomentsToggle = document.getElementById("pref-auto-claim-moments");
@@ -90,7 +90,6 @@ const autoCancelRaidsToggle = document.getElementById("pref-auto-cancel-raids");
 const preventTabDiscardToggle = document.getElementById("pref-prevent-tab-discard");
 const streamerFaviconToggle = document.getElementById("pref-enable-streamer-favicon");
 const tabLiveIconToggle = document.getElementById("pref-enable-tab-live-icon");
-const autoRefreshToggle = document.getElementById("pref-auto-refresh");
 const keepQualityToggle = document.getElementById("pref-keep-quality");
 const pipButtonToggle = document.getElementById("pref-pip-button");
 const clipDownloadToggle = document.getElementById("pref-clip-download");
@@ -901,6 +900,9 @@ function renderPreferences() {
   if (soundsToggle) {
     soundsToggle.checked = prefs.soundsEnabled !== false;
   }
+  if (backgroundRaidAlertsToggle) {
+    backgroundRaidAlertsToggle.checked = prefs.backgroundRaidAlerts === true;
+  }
   if (autoClaimToggle) {
     autoClaimToggle.checked = prefs.autoClaimChannelPoints !== false;
   }
@@ -930,9 +932,6 @@ function renderPreferences() {
   }
   if (tabLiveIconToggle) {
     tabLiveIconToggle.checked = prefs.enableTabLiveIcon !== false;
-  }
-  if (autoRefreshToggle) {
-    autoRefreshToggle.checked = prefs.autoRefreshPlayerErrors !== false;
   }
   if (keepQualityToggle) {
     keepQualityToggle.checked = prefs.keepQualityInBackground === true;
@@ -1549,13 +1548,6 @@ async function updatePreferences(updates) {
     showFeedback(t(messageKey), "success");
   }
 
-  if ("autoRefreshPlayerErrors" in updates) {
-    const messageKey = updates.autoRefreshPlayerErrors
-      ? "popup.preferences.autoRefreshEnabled"
-      : "popup.preferences.autoRefreshDisabled";
-    showFeedback(t(messageKey), "success");
-  }
-
   if ("enablePipButton" in updates) {
     const messageKey = updates.enablePipButton
       ? "popup.preferences.pipButtonEnabled"
@@ -1872,6 +1864,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     soundsToggle?.addEventListener("change", (e) => {
       updatePreferences({ soundsEnabled: e.target.checked });
     });
+    backgroundRaidAlertsToggle?.addEventListener("change", (e) => {
+      updatePreferences({ backgroundRaidAlerts: e.target.checked });
+    });
     autoClaimToggle?.addEventListener("change", (e) => {
       updatePreferences({ autoClaimChannelPoints: e.target.checked });
     });
@@ -1901,9 +1896,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     tabLiveIconToggle?.addEventListener("change", (e) => {
       updatePreferences({ enableTabLiveIcon: e.target.checked });
-    });
-    autoRefreshToggle?.addEventListener("change", (e) => {
-      updatePreferences({ autoRefreshPlayerErrors: e.target.checked });
     });
     keepQualityToggle?.addEventListener("change", (e) => {
       updatePreferences({ keepQualityInBackground: e.target.checked });

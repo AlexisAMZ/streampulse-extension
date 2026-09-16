@@ -50,7 +50,6 @@ const preferenceToggleDefinitions = [
   { element: document.getElementById("onboarding-live-notifications"), key: "liveNotifications" },
   { element: document.getElementById("onboarding-game-alerts"), key: "gameNotifications" },
   { element: document.getElementById("onboarding-sounds"), key: "soundsEnabled" },
-  { element: document.getElementById("onboarding-auto-refresh"), key: "autoRefreshPlayerErrors" },
   { element: document.getElementById("onboarding-fast-forward"), key: "enableFastForwardButton" },
   { element: document.getElementById("onboarding-hide-extensions"), key: "hideTwitchExtensions" },
   { element: document.getElementById("onboarding-auto-claim"), key: "autoClaimChannelPoints" },

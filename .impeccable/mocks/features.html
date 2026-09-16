@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>StreamPulse · maquettes Historique et StreamPulse+</title>
+<link rel="stylesheet" href="/css/tokens.css" />
+<link rel="stylesheet" href="/css/popup.css" />
+<style>
+  html, body { width: auto; height: auto; overflow: visible; }
+  body.board { margin: 0; padding: 40px; background: #06071a; display: grid; grid-template-columns: repeat(2, 780px); gap: 56px 40px; justify-content: center; }
+  .shot { display: grid; gap: 12px; }
+  .shot > h2 { margin: 0; color: #f4f3ff; font: 700 18px/1.2 var(--display); letter-spacing: -0.02em; }
+  .shot > p { margin: -6px 0 0; color: var(--text-2); font: 400 13px/1.45 var(--body); max-width: 70ch; }
+  .popup { position: relative; width: 780px; height: 600px; overflow: hidden; border-radius: 16px; background: var(--bg); color: var(--text); font: 400 13px/1.4 var(--body); box-shadow: 0 0 0 1px var(--line-2), 0 30px 70px rgba(0,0,0,.55); display: grid; grid-template-rows: auto 1fr; }
+  .popup svg { width: 14px; height: 14px; flex: none; }
+  .popup .topbar { position: relative; inset: auto; z-index: 2; background: var(--bg); border-bottom: 1px solid var(--line); }
+  .ic { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* shared */
+  .body { min-height: 0; overflow: hidden; padding: 18px 20px 20px; display: grid; gap: 14px; align-content: start; }
+  .row-head { display: flex; align-items: center; gap: 10px; }
+  .row-head h1 { margin: 0; font: 800 22px/1.1 var(--display); letter-spacing: -0.03em; }
+  .row-head .muted { color: var(--text-2); font-size: 13px; }
+  .seg { display: inline-flex; margin-left: auto; padding: 3px; border-radius: 10px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+  .seg b { padding: 5px 12px; border-radius: 8px; color: var(--text-2); font-weight: 600; font-size: 12px; }
+  .seg b.on { background: var(--violet); color: #fff; }
+  .plus { display: inline-flex; align-items: center; gap: 5px; height: 20px; padding: 0 8px; border-radius: 999px; background: var(--lcd); color: var(--lcd-ink); font: 700 12px/1 var(--body); letter-spacing: .02em; }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; flex: none; display: grid; place-items: center; color: #fff; font-weight: 700; }
+  .tw { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--twitch); }
+  .kk { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--kick); }
+  .btn-sm { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 9px; background: var(--surface-2); color: var(--text); font-weight: 600; font-size: 12px; box-shadow: inset 0 0 0 1px var(--line-2); white-space: nowrap; }
+  .btn-sm.primary { background: var(--violet); box-shadow: none; color: #fff; }
+
+  /* A · Historique en fil */
+  .day { color: var(--text-2); font: 700 12px/1 var(--display); letter-spacing: -0.005em; margin: 4px 0 -4px; }
+  .miss { display: grid; grid-template-columns: 34px 1fr auto; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+  .miss .who { min-width: 0; }
+  .miss .who b { font-size: 14px; }
+  .miss .who span { display: block; overflow: hidden; color: var(--text-2); font-size: 12px; white-space: nowrap; text-overflow: ellipsis; }
+  .miss .meta { display: flex; align-items: center; gap: 10px; color: var(--text-2); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .miss.seen { opacity: .62; }
+
+  /* B · Historique en vignettes */
+  .vods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .vod { overflow: hidden; border-radius: 14px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+  .vod .thumb { position: relative; height: 112px; }
+  .vod .thumb i { position: absolute; right: 8px; bottom: 8px; padding: 2px 7px; border-radius: 6px; background: rgba(11,12,34,.86); font: 700 12px/1.4 var(--body); font-style: normal; font-variant-numeric: tabular-nums; }
+  .vod .thumb em { position: absolute; left: 8px; top: 8px; padding: 2px 7px; border-radius: 6px; background: var(--lcd); color: var(--lcd-ink); font: 700 12px/1.4 var(--body); font-style: normal; }
+  .vod .info { display: flex; gap: 9px; padding: 10px; }
+  .vod .info .avatar { width: 26px; height: 26px; font-size: 11px; }
+  .vod .info div { min-width: 0; }
+  .vod .info b { display: block; font-size: 13px; }
+  .vod .info span { display: block; overflow: hidden; color: var(--text-2); font-size: 12px; white-space: nowrap; text-overflow: ellipsis; }
+  .summary { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 12px; background: var(--lcd-soft); box-shadow: inset 0 0 0 1px var(--lcd-line); }
+  .summary strong { font: 800 20px/1 var(--display); letter-spacing: -0.03em; }
+  .summary span { color: var(--text-2); }
+
+  /* StreamPulse+ */
+  .plus-page { display: grid; grid-template-columns: 1fr 300px; gap: 18px; padding: 20px; min-height: 0; }
+  .plus-hero h1 { margin: 4px 0 8px; font: 800 30px/1.02 var(--display); letter-spacing: -0.04em; }
+  .plus-hero h1 em { font-style: normal; color: var(--violet-text); }
+  .plus-hero p { margin: 0; color: var(--text-2); font-size: 14px; max-width: 42ch; }
+  .perks { display: grid; gap: 8px; margin-top: 18px; }
+  .perk { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: center; padding: 10px 12px; border-radius: 12px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+  .perk .glyph { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--violet-soft); color: var(--violet-text); }
+  .perk .glyph svg { width: 17px; height: 17px; }
+  .perk b { display: block; font-size: 13.5px; }
+  .perk span { color: var(--text-2); font-size: 12px; }
+  .offer { align-self: start; display: grid; gap: 12px; padding: 18px; border-radius: 18px; background: radial-gradient(120% 90% at 0% 0%, rgba(145,70,255,.35), transparent 60%), var(--surface); box-shadow: inset 0 0 0 1px var(--violet-line); }
+  .offer .plan { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: 12px; background: rgba(11,12,34,.55); box-shadow: inset 0 0 0 1px var(--line-2); }
+  .offer .plan.on { box-shadow: inset 0 0 0 2px var(--lcd); }
+  .offer .plan b { font-size: 14px; }
+  .offer .plan small { display: block; color: var(--text-2); font-size: 12px; }
+  .offer .price { font: 800 20px/1 var(--display); letter-spacing: -0.03em; }
+  .offer .price span { color: var(--text-2); font: 500 12px var(--body); }
+  .offer .cta { display: flex; align-items: center; justify-content: center; gap: 8px; height: 44px; border-radius: 12px; background: #fff; color: #0b0c22; font: 700 14px var(--display); letter-spacing: -0.01em; }
+  .offer .fine { color: var(--text-3); font-size: 12px; text-align: center; }
+  .offer .key { display: flex; gap: 8px; }
+  .offer .key input { flex: 1; min-width: 0; height: 34px; padding: 0 10px; border: 0; border-radius: 9px; background: rgba(11,12,34,.6); box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text); font: 500 12px var(--body); }
+
+  /* Alertes intelligentes */
+  .alert-page { display: grid; grid-template-columns: 250px 1fr; min-height: 0; }
+  .who-list { padding: 16px 12px; border-right: 1px solid var(--line); display: grid; gap: 4px; align-content: start; }
+  .who-list .it { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; color: var(--text-2); font-weight: 600; }
+  .who-list .it .avatar { width: 26px; height: 26px; font-size: 11px; }
+  .who-list .it.on { background: var(--violet-soft); box-shadow: inset 0 0 0 1px var(--violet-line); color: var(--text); }
+  .who-list .it small { margin-left: auto; color: var(--text-3); font-weight: 500; }
+  .rules { padding: 18px 20px; display: grid; gap: 12px; align-content: start; }
+  .rule { display: grid; gap: 10px; padding: 14px; border-radius: 14px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+  .rule-top { display: flex; align-items: center; gap: 10px; }
+  .rule-top b { font-size: 14px; }
+  .toggle { margin-left: auto; width: 36px; height: 20px; border-radius: 999px; background: var(--violet); position: relative; }
+  .toggle::after { content: ""; position: absolute; top: 3px; right: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
+  .toggle.off { background: var(--surface-2); }
+  .toggle.off::after { right: auto; left: 3px; }
+  .sentence { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--text-2); font-size: 13px; }
+  .token { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: 8px; background: var(--bg); box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text); font-weight: 600; }
+  .token.add { color: var(--violet-text); box-shadow: inset 0 0 0 1px var(--violet-line); }
+  .preview-note { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 12px; background: var(--lcd-soft); box-shadow: inset 0 0 0 1px var(--lcd-line); font-size: 12.5px; }
+  .preview-note svg { color: var(--lcd); width: 16px; height: 16px; }
+</style>
+</head>
+<body class="board" data-theme="dark">
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="t1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b1d7a"/><stop offset="1" stop-color="#0b0c22"/></linearGradient>
+  </defs>
+</svg>
+
+<!-- ============ A · HISTORIQUE (FIL) ============ -->
+<section class="shot">
+  <h2>A · Historique en fil</h2>
+  <p>Nouvel onglet à côté de Streamers. Les lives ratés, rangés par jour, avec la durée et le lien vers la VOD. Ceux déjà ouverts s'estompent.</p>
+  <div class="popup">
+    <header class="topbar">
+      <div class="brand"><img src="/images/photos/logosp.png" alt="" class="brand-mark" /><span class="brand-name">StreamPulse</span></div>
+      <nav class="tabs"><button class="tab-button" type="button">Streamers</button><button class="tab-button active" type="button" aria-selected="true">Historique</button><button class="tab-button" type="button">Réglages</button></nav>
+      <div class="topbar-end"><span class="stat-pill stat-points"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z"/></svg><span>20 200</span></span><span class="stat-pill stat-time"><span>93h43</span></span></div>
+    </header>
+    <div class="body">
+      <div class="row-head">
+        <h1>Tu as raté 5 lives</h1>
+        <div class="seg"><b class="on">24 h</b><b>7 jours</b><b>Épinglés</b></div>
+      </div>
+      <div class="day">Aujourd'hui</div>
+      <div class="miss">
+        <div class="avatar tw" style="background:#5b2bb5">A</div>
+        <div class="who"><b>Anyme023</b><span>IRL en Guadeloupe · IRL</span></div>
+        <div class="meta"><span>3 h 12</span><span>fini à 14:05</span><span class="btn-sm primary"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Voir la VOD</span></div>
+      </div>
+      <div class="miss">
+        <div class="avatar tw" style="background:#7a3b1d">K</div>
+        <div class="who"><b>Kamet0</b><span>GTA RP Flashback V6 · Grand Theft Auto V</span></div>
+        <div class="meta"><span>5 h 40</span><span>fini à 06:22</span><span class="btn-sm primary"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Voir la VOD</span></div>
+      </div>
+      <div class="day">Hier</div>
+      <div class="miss">
+        <div class="avatar kk" style="background:#1d6b2a">T</div>
+        <div class="who"><b>Teuf</b><span>Soirée détente, on répond à vos questions · Just Chatting</span></div>
+        <div class="meta"><span>2 h 05</span><span>fini à 23:48</span><span class="btn-sm"><svg viewBox="0 0 24 24" class="ic"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>Chaîne</span></div>
+      </div>
+      <div class="miss seen">
+        <div class="avatar tw" style="background:#2b4db5">S</div>
+        <div class="who"><b>sherine_ts</b><span>Ranked jusqu'à Diamant · VALORANT</span></div>
+        <div class="meta"><span>4 h 18</span><span>fini à 02:10</span><span class="btn-sm"><svg viewBox="0 0 24 24" class="ic"><path d="M20 6 9 17l-5-5"/></svg>Vue</span></div>
+      </div>
+      <div class="miss">
+        <div class="avatar tw" style="background:#b52b6b">J</div>
+        <div class="who"><b>jokaa45</b><span>ON EST LA COMME TOUS LES JOURS · Just Chatting</span></div>
+        <div class="meta"><span>6 h 02</span><span>fini à 20:31</span><span class="btn-sm primary"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Voir la VOD</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ B · HISTORIQUE (VIGNETTES) ============ -->
+<section class="shot">
+  <h2>B · Historique en vignettes</h2>
+  <p>Même onglet, plus visuel : vignette de la VOD, durée, et un résumé en haut. Un clic sur la carte ouvre la rediffusion.</p>
+  <div class="popup">
+    <header class="topbar">
+      <div class="brand"><img src="/images/photos/logosp.png" alt="" class="brand-mark" /><span class="brand-name">StreamPulse</span></div>
+      <nav class="tabs"><button class="tab-button" type="button">Streamers</button><button class="tab-button active" type="button" aria-selected="true">Historique</button><button class="tab-button" type="button">Réglages</button></nav>
+      <div class="topbar-end"><span class="stat-pill stat-points"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z"/></svg><span>20 200</span></span><span class="stat-pill stat-time"><span>93h43</span></span></div>
+    </header>
+    <div class="body">
+      <div class="summary">
+        <strong>5 lives</strong><span>ratés depuis ta dernière visite · 21 h de contenu</span>
+        <div class="seg" style="margin-left:auto"><b class="on">Tout</b><b>Twitch</b><b>Kick</b></div>
+      </div>
+      <div class="vods">
+        <div class="vod"><div class="thumb" style="background:linear-gradient(135deg,#6a3bd1,#1a1450)"><em>Nouveau</em><i>3:12:04</i></div><div class="info"><div class="avatar tw" style="background:#5b2bb5">A</div><div><b>Anyme023</b><span>IRL en Guadeloupe</span></div></div></div>
+        <div class="vod"><div class="thumb" style="background:linear-gradient(135deg,#b56a2b,#2a1606)"><em>Nouveau</em><i>5:40:19</i></div><div class="info"><div class="avatar tw" style="background:#7a3b1d">K</div><div><b>Kamet0</b><span>GTA RP Flashback V6</span></div></div></div>
+        <div class="vod"><div class="thumb" style="background:linear-gradient(135deg,#b52b6b,#2a0a1a)"><i>6:02:47</i></div><div class="info"><div class="avatar tw" style="background:#b52b6b">J</div><div><b>jokaa45</b><span>ON EST LA COMME TOUS LES JOURS</span></div></div></div>
+        <div class="vod"><div class="thumb" style="background:linear-gradient(135deg,#2bb56b,#062a14)"><i>2:05:33</i></div><div class="info"><div class="avatar kk" style="background:#1d6b2a">T</div><div><b>Teuf</b><span>Soirée détente</span></div></div></div>
+        <div class="vod" style="opacity:.62"><div class="thumb" style="background:linear-gradient(135deg,#2b4db5,#0a142a)"><i>4:18:10</i></div><div class="info"><div class="avatar tw" style="background:#2b4db5">S</div><div><b>sherine_ts</b><span>Ranked jusqu'à Diamant</span></div></div></div>
+        <div class="vod"><div class="thumb" style="background:linear-gradient(135deg,#3b3f6a,#0b0c22)"><i>1:47:02</i></div><div class="info"><div class="avatar tw" style="background:#4a4f8a">M</div><div><b>Minos</b><span>Chill et discussions</span></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STREAMPULSE+ ============ -->
+<section class="shot">
+  <h2>C · Écran StreamPulse+</h2>
+  <p>Ouvert depuis un badge « Plus » dans la barre du haut ou depuis une fonction verrouillée. Paiement unique ou mensuel, activation par clé de licence.</p>
+  <div class="popup">
+    <header class="topbar">
+      <div class="brand"><img src="/images/photos/logosp.png" alt="" class="brand-mark" /><span class="brand-name">StreamPulse</span><span class="plus">PLUS</span></div>
+      <nav class="tabs"><button class="tab-button" type="button">Streamers</button><button class="tab-button" type="button">Historique</button><button class="tab-button" type="button">Réglages</button></nav>
+      <div class="topbar-end"><span class="stat-pill stat-points"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z"/></svg><span>20 200</span></span></div>
+    </header>
+    <div class="plus-page">
+      <div class="plus-hero">
+        <h1>Va plus loin<br /><em>sur tes lives.</em></h1>
+        <p>Tout ce que tu as déjà reste gratuit. StreamPulse+ ajoute des outils pour les viewers les plus assidus.</p>
+        <div class="perks">
+          <div class="perk"><div class="glyph"><svg viewBox="0 0 24 24" class="ic"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg></div><div><b>Récap avancé et Wrapped annuel</b><span>Heures par catégorie, courbe de l'année, image à partager.</span></div></div>
+          <div class="perk"><div class="glyph"><svg viewBox="0 0 24 24" class="ic"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><b>Prédictions assistées</b><span>Historique de tes paris, taux de réussite, mise auto selon ta règle.</span></div></div>
+          <div class="perk"><div class="glyph"><svg viewBox="0 0 24 24" class="ic"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></div><div><b>Alertes intelligentes</b><span>Seulement pour un jeu, un mot du titre ou un seuil de viewers.</span></div></div>
+          <div class="perk"><div class="glyph"><svg viewBox="0 0 24 24" class="ic"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="6.5" cy="12" r="2.5"/><circle cx="17.5" cy="15.5" r="2.5"/><path d="M12 22a10 10 0 1 1 10-10c0 2-1.5 3-3 3h-2a2 2 0 0 0-1.5 3.3A1.5 1.5 0 0 1 12 22z"/></svg></div><div><b>Thèmes et badge personnalisés</b><span>Couleur du badge dans le tchat, thèmes du popup.</span></div></div>
+        </div>
+      </div>
+      <aside class="offer">
+        <div class="plan"><div><b>Mensuel</b><small>Sans engagement</small></div><div class="price">2,99 €<span> /mois</span></div></div>
+        <div class="plan on"><div><b>À vie</b><small>Un seul paiement</small></div><div class="price">19 €</div></div>
+        <div class="cta">Débloquer StreamPulse+</div>
+        <div class="fine">Paiement sécurisé sur streampulse.fr</div>
+        <div class="key"><input value="" placeholder="J'ai déjà une clé de licence" /><span class="btn-sm">Activer</span></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ALERTES INTELLIGENTES ============ -->
+<section class="shot">
+  <h2>D · Alertes intelligentes</h2>
+  <p>Dans Réglages → Alertes. Une règle par streamer, écrite comme une phrase qu'on complète en cliquant sur les étiquettes.</p>
+  <div class="popup">
+    <header class="topbar">
+      <div class="brand"><img src="/images/photos/logosp.png" alt="" class="brand-mark" /><span class="brand-name">StreamPulse</span><span class="plus">PLUS</span></div>
+      <nav class="tabs"><button class="tab-button" type="button">Streamers</button><button class="tab-button" type="button">Historique</button><button class="tab-button active" type="button" aria-selected="true">Réglages</button></nav>
+      <div class="topbar-end"><span class="stat-pill stat-points"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z"/></svg><span>20 200</span></span></div>
+    </header>
+    <div class="alert-page">
+      <div class="who-list">
+        <div class="it on"><div class="avatar tw" style="background:#7a3b1d">K</div>Kamet0<small>2 règles</small></div>
+        <div class="it"><div class="avatar tw" style="background:#5b2bb5">A</div>Anyme023<small>1 règle</small></div>
+        <div class="it"><div class="avatar tw" style="background:#b52b6b">J</div>jokaa45<small>—</small></div>
+        <div class="it"><div class="avatar kk" style="background:#1d6b2a">T</div>Teuf<small>—</small></div>
+        <div class="it"><div class="avatar tw" style="background:#2b4db5">S</div>sherine_ts<small>—</small></div>
+      </div>
+      <div class="rules">
+        <div class="row-head"><h1 style="font-size:19px">Alertes pour Kamet0</h1><span class="btn-sm primary" style="margin-left:auto"><svg viewBox="0 0 24 24" class="ic"><path d="M12 5v14M5 12h14"/></svg>Nouvelle règle</span></div>
+        <div class="rule">
+          <div class="rule-top"><b>Quand il lance GTA</b><span class="toggle"></span></div>
+          <div class="sentence">Me prévenir quand <span class="token">Kamet0</span> est en live sur <span class="token">Grand Theft Auto V</span><span class="token add">+ jeu</span></div>
+        </div>
+        <div class="rule">
+          <div class="rule-top"><b>Événements spéciaux</b><span class="toggle"></span></div>
+          <div class="sentence">Me prévenir quand le titre contient <span class="token">tournoi</span><span class="token">event</span><span class="token add">+ mot</span> et qu'il y a plus de <span class="token">5 000 viewers</span></div>
+        </div>
+        <div class="rule">
+          <div class="rule-top"><b>Tous les lives</b><span class="toggle off"></span></div>
+          <div class="sentence">Alerte classique à chaque passage en live (désactivée : les règles au-dessus la remplacent).</div>
+        </div>
+        <div class="preview-note"><svg viewBox="0 0 24 24" class="ic"><path d="M20 6 9 17l-5-5"/></svg>Sur les 30 derniers jours, ces règles t'auraient envoyé 6 alertes au lieu de 24.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

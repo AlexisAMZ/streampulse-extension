@@ -17,10 +17,15 @@ import {
   platformSupportsLiveStatus,
   sanitizeHandle,
 } from "./platforms.js";
-import { HISTORY_KEY, addSession, emptyHistory, markSeen, patchSession } from "./history-data.js";
+import { HISTORY_KEY, addSession, emptyHistory, markSeen, patchSession, removeEntry } from "./history-data.js";
 import { thankPlusSubscriber } from "./plus-thanks.js";
 import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-alerts.js";
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "./plus.js";
+import {
+  RAID_WATCHER_ALARM,
+  syncRaidWatcher,
+  stopRaidWatcher,
+} from "./raidWatcher.js";
 
 /** Qualites proposees pour le lecteur Twitch. "auto" laisse Twitch decider. */
 const PLAYER_QUALITIES = ["auto", "source", "1440", "1080", "720", "480", "360"];
@@ -122,6 +127,9 @@ const DEFAULT_PREFERENCES = {
   dropAlerts: true,
   predictionAlerts: true,
   raidAlerts: true,
+  // Bêta : détection des raids entrants en arrière-plan via IRC anonyme.
+  // Opt-in explicite car elle maintient une connexion WebSocket permanente.
+  backgroundRaidAlerts: false,
   soundsEnabled: true,
   autoClaimChannelPoints: true,
   autoClaimDrops: true,
@@ -138,7 +146,6 @@ const DEFAULT_PREFERENCES = {
   enablePredictionsPopup: true,
   enableTabLiveIcon: true,
   enableStreamerFavicon: true,
-  autoRefreshPlayerErrors: true,
   enableFastForwardButton: true,
   watchTimeTracker: true,
   chatKeywords: "",
@@ -561,6 +568,7 @@ class PreferenceStore {
       dropAlerts: preferences.dropAlerts !== false,
       predictionAlerts: preferences.predictionAlerts !== false,
       raidAlerts: preferences.raidAlerts !== false,
+      backgroundRaidAlerts: preferences.backgroundRaidAlerts === true,
       soundsEnabled: preferences.soundsEnabled !== false,
       autoClaimChannelPoints: preferences.autoClaimChannelPoints !== false,
       autoClaimDrops: preferences.autoClaimDrops !== false,
@@ -577,7 +585,6 @@ class PreferenceStore {
       enablePredictionsPopup: preferences.enablePredictionsPopup !== false,
       enableTabLiveIcon: preferences.enableTabLiveIcon !== false,
       enableStreamerFavicon: preferences.enableStreamerFavicon !== false,
-      autoRefreshPlayerErrors: preferences.autoRefreshPlayerErrors !== false,
       enableFastForwardButton: preferences.enableFastForwardButton !== false,
       watchTimeTracker: preferences.watchTimeTracker !== false,
       chatKeywords: typeof preferences.chatKeywords === "string" ? preferences.chatKeywords : "",
@@ -812,6 +819,10 @@ class HistoryStore {
 
   static markSeen(id) {
     return this._enqueue(async () => this.save(markSeen(await this.get(), id)));
+  }
+
+  static removeEntry(id) {
+    return this._enqueue(async () => this.save(removeEntry(await this.get(), id)));
   }
 
   static recordEnded(streamer, liveState) {
@@ -1789,6 +1800,79 @@ class SoundManager {
   }
 }
 
+// ─── Bêta : détection des raids entrants en arrière-plan ────────────────────
+//
+// Le watcher IRC est opt-in (backgroundRaidAlerts) : une fois activé, il
+// maintient une connexion anonyme vers les chaînes Twitch favorites. Voir
+// js/raidWatcher.js pour le détail du protocole et les limites de coût.
+
+async function refreshRaidWatcher() {
+  try {
+    const preferences = await PreferenceStore.get();
+    if (preferences.backgroundRaidAlerts !== true) {
+      stopRaidWatcher();
+      return;
+    }
+    await syncRaidWatcher(notifyIncomingRaid);
+  } catch (error) {
+    console.warn("Raid watcher sync failed:", error.message);
+  }
+}
+
+async function notifyIncomingRaid({ channel, raider, viewers }) {
+  const preferences = await PreferenceStore.get();
+  const lang = normalizeLanguage(preferences?.language);
+
+  const displayName = await resolveChannelDisplayName(channel);
+  const viewersText = formatNumberForLanguage(lang, viewers || 0);
+
+  let iconUrl = null;
+  try {
+    iconUrl = await resolveChannelAvatar("twitch", channel);
+  } catch (_) {
+    // L'avatar est décoratif : la notification part sans icône dédiée.
+  }
+
+  await NotificationCenter.show({
+    title: translate(lang, "background.notifications.raidIncomingTitle", {
+      name: displayName,
+    }),
+    message: translate(lang, "background.notifications.raidIncomingMessage", {
+      raider: raider || translate(lang, "common.unknown"),
+      viewers: viewersText,
+    }),
+    platform: "twitch",
+    url: buildProfileUrl("twitch", channel),
+    iconUrl,
+    requireInteraction: false,
+    priority: 1,
+    playSound: preferences?.soundsEnabled !== false,
+  });
+}
+
+// Le handle IRC est en minuscules ; on récupère le nom d'affichage connu des
+// données de l'extension avant de retomber sur le handle brut.
+async function resolveChannelDisplayName(channel) {
+  try {
+    const stored = await chrome.storage.local.get(STORAGE_KEYS.STREAMERS);
+    const streamers = Array.isArray(stored[STORAGE_KEYS.STREAMERS])
+      ? stored[STORAGE_KEYS.STREAMERS]
+      : [];
+    const match = streamers.find(
+      (s) =>
+        (s.platform || "twitch") === "twitch" &&
+        getHandleComparisonKey("twitch", s.handle || s.twitch || s.id || "") ===
+          getHandleComparisonKey("twitch", channel)
+    );
+    if (match?.displayName || match?.name) {
+      return match.displayName || match.name;
+    }
+  } catch (_) {
+    // Lecture de storage échouée : on retombe sur le handle.
+  }
+  return formatHandleForDisplay("twitch", channel);
+}
+
 class ActionBadge {
   static formatBadgeCount(count) {
     if (!Number.isFinite(count) || count <= 0) {
@@ -2349,7 +2433,9 @@ chrome.runtime.onStartup.addListener(async () => {
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === WATCHER_ALARM) {
+  if (alarm.name === RAID_WATCHER_ALARM) {
+    refreshRaidWatcher();
+  } else if (alarm.name === WATCHER_ALARM) {
     pollStreamers({ forceNotification: false }).catch((error) => {
       console.warn("Polling error:", error.message);
     });
@@ -2859,6 +2945,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         .catch((error) => sendResponse({ error: error.message }));
       return true;
 
+    case "removeHistoryEntry":
+      HistoryStore.removeEntry(String(request.id || ""))
+        .then(() => sendResponse({ success: true }))
+        .catch((error) => sendResponse({ error: error.message }));
+      return true;
+
     case "activatePlus":
       (async () => {
         const result = await verifyLicense(request.key, fetch, Date.now(), await getDeviceId(chrome.storage.local));
@@ -2992,10 +3084,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           updates.autoClaimChannelPoints =
             incomingUpdates.autoClaimChannelPoints !== false;
         }
-        if ("autoRefreshPlayerErrors" in incomingUpdates) {
-          updates.autoRefreshPlayerErrors =
-            incomingUpdates.autoRefreshPlayerErrors !== false;
-        }
         // Default-true toggles: any value other than an explicit `false` keeps them on.
         if ("autoClaimDrops" in incomingUpdates) {
           updates.autoClaimDrops = incomingUpdates.autoClaimDrops !== false;
@@ -3030,6 +3118,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         if ("raidAlerts" in incomingUpdates) {
           updates.raidAlerts = incomingUpdates.raidAlerts !== false;
+        }
+        // Default-false toggle: requires an explicit `true` to enable.
+        if ("backgroundRaidAlerts" in incomingUpdates) {
+          updates.backgroundRaidAlerts =
+            incomingUpdates.backgroundRaidAlerts === true;
         }
         // Default-false toggle: requires an explicit `true` to enable.
         if ("autoOpenInventory" in incomingUpdates) {
@@ -3170,6 +3263,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
 
         const preferences = await PreferenceStore.update(updates);
+        if ("backgroundRaidAlerts" in updates) {
+          refreshRaidWatcher();
+        }
         sendResponse({ success: true, preferences });
       })();
       return true;
@@ -3211,6 +3307,7 @@ scheduleKeepAliveAlarm();
   initDone = true;
   await PreferenceStore.ensureDefaults();
   await NotificationCenter.init();
+  refreshRaidWatcher();
 
   // Only poll on SW wake if cached statuses are stale (>60s old).
   // Avoids triggering a full poll every time the popup is reopened.

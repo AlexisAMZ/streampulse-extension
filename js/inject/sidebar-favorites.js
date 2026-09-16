@@ -84,6 +84,7 @@
   }
 
   function setPins(next) {
+    if (!alive()) return teardown();
     state.pins = next;
     chrome.storage.local.set({ [PINS_KEY]: next });
     render();
@@ -226,6 +227,7 @@
   }
 
   function render() {
+    if (!alive()) return teardown();
     var header = document.querySelector(FOLLOWED_HEADER);
     var followed = header && header.closest(".side-nav-section");
     var existing = document.getElementById(SECTION_ID);
@@ -245,11 +247,21 @@
   }
 
   // ---- cycle de vie ------------------------------------------------------------
+  // Extension rechargée/mise à jour : ce script devient orphelin (chrome.runtime
+  // disparaît). On coupe tout pour ne pas planter en boucle à chaque mutation Twitch.
+  function teardown() {
+    if (timer) clearTimeout(timer);
+    timer = null;
+    if (typeof observer !== "undefined") observer.disconnect();
+  }
+
   var timer = null;
   function schedule(reload) {
     if (timer) return;
     timer = setTimeout(function () {
       timer = null;
+      // Extension rechargée/mise à jour : ce script est orphelin, chrome.runtime n'existe plus.
+      if (!alive()) return teardown();
       if (reload) load(render);
       else render();
     }, 400);
@@ -258,6 +270,7 @@
   // Twitch re-rend la barre latérale en continu : on ne reconstruit que si le
   // bloc a disparu ou si de nouvelles cartes n'ont pas encore leur étoile.
   var observer = new MutationObserver(function () {
+    if (!alive()) return teardown();
     if (!document.getElementById(SECTION_ID) || document.querySelector(CARD + ":not(.sp-fav-host)")) schedule(false);
   });
 

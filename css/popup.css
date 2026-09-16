@@ -457,6 +457,13 @@ input[type="checkbox"][role="switch"]:checked::before { transform: translateX(16
 .history-summary span { overflow: hidden; color: var(--text-2); text-overflow: ellipsis; white-space: nowrap; }
 .history-head .segmented { margin-left: auto; }
 .history-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0 16px 16px; overflow-y: auto; overscroll-behavior: contain; list-style: none; align-content: start; }
+.history-grid > li { position: relative; }
+.vod-dismiss { position: absolute; top: 6px; right: 6px; z-index: 2; display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 8px; background: rgba(11, 12, 34, 0.78); color: #ffffff; cursor: pointer; opacity: 0; transition: opacity var(--dur-fast) ease, background-color var(--dur-fast) ease; }
+.vod-dismiss svg { width: 14px; height: 14px; display: block; pointer-events: none; }
+.history-grid > li:hover .vod-dismiss,
+.vod-dismiss:focus-visible { opacity: 1; }
+.vod-dismiss:hover { background: rgba(145, 70, 255, 0.9); }
+@media (hover: none) { .vod-dismiss { opacity: 1; } }
 .vod-card { display: block; width: 100%; padding: 0; overflow: hidden; border: 0; border-radius: 14px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); color: var(--text); text-align: left; transition: box-shadow var(--dur-fast) ease, transform var(--dur-base) var(--ease-out); }
 .vod-card:hover { box-shadow: inset 0 0 0 1px var(--violet-line); transform: translateY(-2px); }
 .vod-card.is-seen { opacity: 0.62; }

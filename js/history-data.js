@@ -75,6 +75,11 @@ export function markSeen(history, id) {
   return patchSession(history, id, { seen: true });
 }
 
+/** Retire definitivement une session de l'historique (bouton supprimer du popup). */
+export function removeEntry(history, id) {
+  return { entries: sanitizeHistory(history).filter((entry) => entry.id !== id) };
+}
+
 /**
  * Lives ratés : sessions que l'utilisateur n'a pas regardées, filtrées par
  * plateforme. Les sessions déjà ouvertes depuis l'historique restent listées

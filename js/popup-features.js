@@ -100,6 +100,24 @@ function createVodCard(entry) {
     if (!entry.seen) chrome.runtime.sendMessage({ type: "markHistorySeen", id: entry.id }).catch?.(() => {});
   });
   item.append(card);
+
+  // Suppression directe : un « X » discret sur la carte, sans ouvrir le VOD.
+  const dismiss = node("button", "vod-dismiss");
+  dismiss.type = "button";
+  dismiss.setAttribute("aria-label", t("popup.history.dismiss", { name }));
+  dismiss.innerHTML =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+  dismiss.addEventListener("click", (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    chrome.runtime
+      .sendMessage({ type: "removeHistoryEntry", id: entry.id })
+      .catch?.(() => {});
+    item.remove();
+    // Le compteur et l'état vide doivent se recalculer sans la carte retirée.
+    renderHistory().catch(() => {});
+  });
+  item.append(dismiss);
   return item;
 }
 
