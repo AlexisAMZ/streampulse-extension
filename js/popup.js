@@ -677,6 +677,11 @@ function renderFeatured() {
       offlineCount: state.streamers.length,
       avatarUrl: safeAvatarUrl(state.userProfile?.avatarUrl),
       onOpenSheet: openSheet,
+      // Premier contact : le CTA place le curseur dans le champ d'ajout.
+      onAddStreamer: () => {
+        document.getElementById("tab-streamers")?.click();
+        document.getElementById("streamer-input")?.focus();
+      },
     });
     return;
   }

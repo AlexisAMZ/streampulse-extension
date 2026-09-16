@@ -27,6 +27,7 @@ const ICONS = {
   trash: `<svg ${STROKE}><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4h8v2"/></svg>`,
   grip: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>',
   list: `<svg ${STROKE}><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg>`,
+  plus: `<svg ${STROKE}><path d="M12 5v14M5 12h14"/></svg>`,
 };
 
 const ALERTS = [
@@ -392,7 +393,7 @@ export function renderStage(stage, media, feature, streamer, status, { isNew }, 
   feature.firstChild.append(avatarImage(`feature-avatar ring-${platformId}`, streamer, platformId), text, alerts, watch);
 }
 
-export function renderStageEmpty(stage, media, feature, { kind, offlineCount, avatarUrl, onOpenSheet }) {
+export function renderStageEmpty(stage, media, feature, { kind, offlineCount, avatarUrl, onOpenSheet, onAddStreamer }) {
   stopHoverPlayer(stage, media);
   stage._hoverAbort?.abort();
   stage.dataset.state = kind;
@@ -410,6 +411,11 @@ export function renderStageEmpty(stage, media, feature, { kind, offlineCount, av
   const box = el("div", "stage-empty");
   if (kind === "empty") {
     box.append(el("p", "stage-empty-title", t("popup.cplus.emptyTitle")), el("p", "stage-empty-body", t("popup.cplus.emptyBody")));
+    // Premier contact : le CTA mène au geste qui crée la valeur (suivre un
+    // streamer), au lieu de laisser l'utilisateur chercher le champ tout bas.
+    const add = button("button", { icon: "plus", text: t("popup.cplus.emptyCta") });
+    add.addEventListener("click", onAddStreamer);
+    box.append(add);
   } else {
     box.append(
       el("p", "stage-empty-title", t("popup.cplus.nobodyTitle")),

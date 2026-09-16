@@ -331,6 +331,9 @@ export const translations = {
       },
       "cplus": {
 
+
+        "emptyCta": "Ajouter ton premier streamer",
+
         "reorderHint": "Réordonner : Alt + ↑ ↓",
 
         "rowMoved": "{{name}} déplacé en position {{position}}",
@@ -1211,6 +1214,9 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+
+        "emptyCta": "Add your first streamer",
 
         "reorderHint": "Reorder: Alt + ↑ ↓",
 
@@ -2093,6 +2099,9 @@ export const translations = {
       },
       "cplus": {
 
+
+        "emptyCta": "Añade tu primer streamer",
+
         "reorderHint": "Reordenar: Alt + ↑ ↓",
 
         "rowMoved": "{{name}} movido a la posición {{position}}",
@@ -2959,6 +2968,9 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+
+        "emptyCta": "Adicione seu primeiro streamer",
 
         "reorderHint": "Reordenar: Alt + ↑ ↓",
 
@@ -3835,6 +3847,9 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+
+        "emptyCta": "Füge deinen ersten Streamer hinzu",
 
         "reorderHint": "Sortieren: Alt + ↑ ↓",
 
@@ -4717,6 +4732,9 @@ export const translations = {
       },
       "cplus": {
 
+
+        "emptyCta": "Aggiungi il tuo primo streamer",
+
         "reorderHint": "Riordina: Alt + ↑ ↓",
 
         "rowMoved": "{{name}} spostato in posizione {{position}}",
@@ -5597,6 +5615,9 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+
+        "emptyCta": "Dodaj pierwszego streamera",
 
         "reorderHint": "Zmiana kolejności: Alt + ↑ ↓",
 
@@ -6479,6 +6500,9 @@ export const translations = {
       },
       "cplus": {
 
+
+        "emptyCta": "İlk streamerını ekle",
+
         "reorderHint": "Sırala: Alt + ↑ ↓",
 
         "rowMoved": "{{name}}, {{position}}. konuma taşındı",
@@ -7359,6 +7383,9 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+
+        "emptyCta": "Добавьте первого стримера",
 
         "reorderHint": "Порядок: Alt + ↑ ↓",
 
@@ -8241,6 +8268,9 @@ export const translations = {
       },
       "cplus": {
 
+
+        "emptyCta": "最初のストリーマーを追加",
+
         "reorderHint": "並べ替え：Alt + ↑ ↓",
 
         "rowMoved": "{{name}}を{{position}}番目に移動しました",
@@ -9121,6 +9151,9 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+
+        "emptyCta": "첫 스트리머 추가하기",
 
         "reorderHint": "순서 변경: Alt + ↑ ↓",
 
@@ -10003,6 +10036,9 @@ export const translations = {
       },
       "cplus": {
 
+
+        "emptyCta": "Tambahkan streamer pertamamu",
+
         "reorderHint": "Urutkan: Alt + ↑ ↓",
 
         "rowMoved": "{{name}} dipindahkan ke posisi {{position}}",
@@ -10883,6 +10919,9 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+
+        "emptyCta": "Voeg je eerste streamer toe",
 
         "reorderHint": "Hersorteer: Alt + ↑ ↓",
 
@@ -11765,6 +11804,9 @@ export const translations = {
       },
       "cplus": {
 
+
+        "emptyCta": "अपना पहला स्ट्रीमर जोड़ें",
+
         "reorderHint": "क्रम बदलें: Alt + ↑ ↓",
 
         "rowMoved": "{{name}} को स्थिति {{position}} पर खिसकाया गया",
@@ -12646,6 +12688,9 @@ export const translations = {
       },
       "cplus": {
 
+
+        "emptyCta": "Lägg till din första streamare",
+
         "reorderHint": "Ordna: Alt + ↑ ↓",
 
         "rowMoved": "{{name}} flyttad till position {{position}}",
@@ -13526,6 +13571,9 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+
+        "emptyCta": "Přidej svého prvního streamera",
 
         "reorderHint": "Seřadit: Alt + ↑ ↓",
 
