@@ -160,6 +160,9 @@ function renderProfileFromState() {
   if (profilePreviewName) {
     profilePreviewName.textContent = display || "—";
   }
+  // L'aperçu du badge reflète le pseudo saisi en temps réel.
+  const badgePreviewName = document.getElementById("badge-preview-name");
+  if (badgePreviewName) badgePreviewName.textContent = display ? `@${display}` : "@toi";
 
   if (profileInputCount) profileInputCount.textContent = String((profileInput?.value || "").length);
 

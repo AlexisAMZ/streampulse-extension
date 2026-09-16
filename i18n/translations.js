@@ -54,6 +54,10 @@ export const translations = {
     "onboarding": {
 
 
+
+      "badgePreviewMessage": "Regarde, c'est mon badge StreamPulse !",
+
+
       "welcomeTitle": "Ne rate plus jamais un live.",
 
 
@@ -933,6 +937,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+
+
+      "badgePreviewMessage": "Look, that's my StreamPulse badge!",
 
 
       "welcomeTitle": "Never miss a live again.",
@@ -1816,6 +1824,10 @@ export const translations = {
     "onboarding": {
 
 
+
+      "badgePreviewMessage": "¡Mira, esta es mi insignia de StreamPulse!",
+
+
       "welcomeTitle": "No te pierdas nunca más un directo.",
 
 
@@ -2696,6 +2708,9 @@ export const translations = {
     },
     "onboarding": {
 
+
+      "badgePreviewMessage": "Olha, essa é a minha insígnia do StreamPulse!",
+
       "welcomeTitle": "Nunca mais perca uma live.",
 
       "skipStep": "Pular esta etapa",
@@ -3557,6 +3572,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+
+
+      "badgePreviewMessage": "Schau, das ist mein StreamPulse-Abzeichen!",
 
 
       "welcomeTitle": "Verpasse nie wieder einen Stream.",
@@ -4440,6 +4459,10 @@ export const translations = {
     "onboarding": {
 
 
+
+      "badgePreviewMessage": "Guarda, questo è il mio badge StreamPulse!",
+
+
       "welcomeTitle": "Non perdere mai più una diretta.",
 
 
@@ -5319,6 +5342,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+
+
+      "badgePreviewMessage": "Spójrz, to moja odznaka StreamPulse!",
 
 
       "welcomeTitle": "Nigdy więcej nie przegap transmisji.",
@@ -6202,6 +6229,10 @@ export const translations = {
     "onboarding": {
 
 
+
+      "badgePreviewMessage": "Bak, bu benim StreamPulse rozetim!",
+
+
       "welcomeTitle": "Artık hiçbir canlı yayını kaçırmayacaksın.",
 
 
@@ -7081,6 +7112,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+
+
+      "badgePreviewMessage": "Смотри, это мой значок StreamPulse!",
 
 
       "welcomeTitle": "Не пропусти больше ни одного эфира.",
@@ -7964,6 +7999,10 @@ export const translations = {
     "onboarding": {
 
 
+
+      "badgePreviewMessage": "見て、これが私のStreamPulseバッジ！",
+
+
       "welcomeTitle": "もうライブを見逃さない。",
 
 
@@ -8843,6 +8882,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+
+
+      "badgePreviewMessage": "보세요, 제 StreamPulse 배지예요!",
 
 
       "welcomeTitle": "이제 라이브를 놓치지 마세요.",
@@ -9726,6 +9769,10 @@ export const translations = {
     "onboarding": {
 
 
+
+      "badgePreviewMessage": "Lihat, ini lencana StreamPulse saya!",
+
+
       "welcomeTitle": "Jangan lewatkan siaran langsung lagi.",
 
 
@@ -10605,6 +10652,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+
+
+      "badgePreviewMessage": "Kijk, dit is mijn StreamPulse-badge!",
 
 
       "welcomeTitle": "Mis nooit meer een livestream.",
@@ -11488,6 +11539,10 @@ export const translations = {
     "onboarding": {
 
 
+
+      "badgePreviewMessage": "देखो, यह मेरा StreamPulse बैज है!",
+
+
       "welcomeTitle": "अब कभी कोई लाइव न चूकें।",
 
 
@@ -12369,6 +12424,10 @@ export const translations = {
     "onboarding": {
 
 
+
+      "badgePreviewMessage": "Titta, det här är min StreamPulse-badge!",
+
+
       "welcomeTitle": "Missa aldrig mer en direktsändning.",
 
 
@@ -13248,6 +13307,10 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+
+
+      "badgePreviewMessage": "Podívej, tohle je můj odznak StreamPulse!",
 
 
       "welcomeTitle": "Už nikdy nezmeškejte živý přenos.",

@@ -100,6 +100,19 @@
                     <span class="input-counter"><span id="profile-input-count">0</span>/32</span>
                   </div>
                 </div>
+
+                <div class="badge-setting">
+                  <label class="settings-toggle">
+                    <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.communityBadgeTitle"></span><span class="settings-description" data-i18n="popup.settings.communityBadgeDescription"></span></span>
+                    <input id="onboarding-community-badge" type="checkbox" role="switch" />
+                  </label>
+                  <div class="badge-preview" aria-hidden="true">
+                    <span class="badge-preview-badge"></span>
+                    <span class="badge-preview-name" id="badge-preview-name">@toi</span>
+                    <span class="badge-preview-msg" data-i18n="onboarding.badgePreviewMessage">Regarde, c'est mon badge StreamPulse !</span>
+                  </div>
+                  <p class="settings-privacy" data-i18n="onboarding.badgePrivacyNote">Désactivé par défaut. Si tu l'actives : une empreinte de ton pseudo est envoyée à streampulse.fr au maximum une fois par jour. Rien d'autre ne quitte ton navigateur.</p>
+                </div>
               </div>
 
               <div class="step-nav">
@@ -208,11 +221,6 @@
                   <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.hideTwitchExtensionsTitle"></span><span class="settings-description" data-i18n="popup.settings.hideTwitchExtensionsDescription"></span></span>
                   <input id="onboarding-hide-extensions" type="checkbox" role="switch" />
                 </label>
-                <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.communityBadgeTitle"></span><span class="settings-description" data-i18n="popup.settings.communityBadgeDescription"></span></span>
-                  <input id="onboarding-community-badge" type="checkbox" role="switch" />
-                </label>
-                <p class="settings-privacy" data-i18n="onboarding.badgePrivacyNote">Désactivé par défaut. Si tu l'actives : une empreinte de ton pseudo est envoyée à streampulse.fr au maximum une fois par jour. Rien d'autre ne quitte ton navigateur.</p>
               </div>
 
               <details class="settings-advanced">
