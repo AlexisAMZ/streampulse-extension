@@ -96,7 +96,7 @@ export const RELEASES = [
           pl: "Po najechaniu na ikonę dymek ponownie pokazuje liczbę trwających transmisji zamiast po cichu zawieść.",
           tr: "Simge üzerine gelindiğinde ipucu, sessizce hata vermek yerine devam eden canlı yayın sayısını yeniden gösteriyor.",
           ru: "При наведении на значок подсказка снова показывает число идущих эфиров вместо тихого сбоя.",
-          ja: "アイコンにカーソルを合わせると、エラー silently ではなく実行中の配信数が再びツールチップに表示されます。",
+          ja: "アイコンにカーソルを合わせると、実行中の配信数が再びツールチップに表示されるようになりました。",
           ko: "아이콘에 마우스를 올리면 조용히 실패하는 대신 진행 중인 라이브 수가 툴팁에 다시 표시됩니다."
         }
       },
