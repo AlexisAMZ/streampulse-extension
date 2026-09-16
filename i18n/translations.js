@@ -67,11 +67,6 @@ export const translations = {
 
       "removeStreamerName": "Supprimer {{name}}",
 
-
-      
-
-      "newBadge": "NOUVEAU",
-
       
       "htmlLang": "fr",
       "stepProfile": "Pseudo",
@@ -184,7 +179,6 @@ export const translations = {
         "summary": "ratés ces 14 derniers jours · {{duration}} de contenu",
         "emptyTitle": "Aucun live raté",
         "emptyBody": "Quand un streamer suivi termine un live sans que tu l'aies regardé, il apparaît ici avec sa rediffusion.",
-        "newBadge": "Nouveau",
         "watchVod": "Voir la rediffusion de {{name}}",
         "openChannel": "Ouvrir les vidéos de {{name}}",
         "dismiss": "Retirer {{name}} de la liste",
@@ -334,7 +328,6 @@ export const translations = {
         "liveOf": "{{live}} sur {{total}}",
         "justStarted": "{{name}} vient de lancer",
         "since": "depuis {{duration}}",
-        "newBadge": "Nouveau",
         "prev": "Live précédent",
         "next": "Live suivant",
         "activityLabel": "Activité du jour",
@@ -787,7 +780,7 @@ export const translations = {
       "restorePage": {
         "documentTitle": "Importer une sauvegarde · StreamPulse",
         "title": "Importe une sauvegarde",
-        "intro": "Choisis le fichier .json téléchargé avec « Sauvegarder mes données », depuis cette version de StreamPulse ou une plus ancienne. Son contenu s'ajoute à tes données actuelles.",
+        "intro": "Choisis le fichier .json téléchargé avec «\u00a0Sauvegarder mes données\u00a0», depuis cette version de StreamPulse ou une plus ancienne. Son contenu s'ajoute à tes données actuelles.",
         "drop": "Glisse ton fichier de sauvegarde ici",
         "or": "ou",
         "choose": "Choisir un fichier",
@@ -952,11 +945,6 @@ export const translations = {
 
       "removeStreamerName": "Remove {{name}}",
 
-
-      
-
-      "newBadge": "NEW",
-
       
       "htmlLang": "en",
       "stepProfile": "Username",
@@ -1069,7 +1057,6 @@ export const translations = {
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
         "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
-        "newBadge": "New",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "Remove {{name}} from the list",
@@ -1219,7 +1206,6 @@ export const translations = {
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
-        "newBadge": "New",
         "prev": "Previous live",
         "next": "Next live",
         "activityLabel": "Today's activity",
@@ -1837,11 +1823,6 @@ export const translations = {
 
       "removeStreamerName": "Eliminar {{name}}",
 
-
-      
-
-      "newBadge": "NUEVO",
-
       
       "stepProfile": "Usuario",
       "profileTitle": "Tu nombre de usuario en Twitch.",
@@ -1954,7 +1935,6 @@ export const translations = {
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
         "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
-        "newBadge": "New",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "Quitar a {{name}} de la lista",
@@ -2104,7 +2084,6 @@ export const translations = {
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
-        "newBadge": "New",
         "prev": "Previous live",
         "next": "Next live",
         "activityLabel": "Today's activity",
@@ -2715,9 +2694,6 @@ export const translations = {
       "advancedSettings": "Configurações avançadas",
 
       "removeStreamerName": "Remover {{name}}",
-
-      
-      "newBadge": "NOVO",
       "stepProfile": "Usuário",
       "profileTitle": "Seu nome de usuário na Twitch.",
       "profileDescription": "Coloque seu nome de usuário para personalizar o StreamPulse. A gente pega sua foto de perfil da Twitch para te receber direitinho.",
@@ -2824,7 +2800,6 @@ export const translations = {
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
         "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
-        "newBadge": "New",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "Remover {{name}} da lista",
@@ -2974,7 +2949,6 @@ export const translations = {
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
-        "newBadge": "New",
         "prev": "Previous live",
         "next": "Next live",
         "activityLabel": "Today's activity",
@@ -3587,11 +3561,6 @@ export const translations = {
 
       "removeStreamerName": "{{name}} entfernen",
 
-
-      
-
-      "newBadge": "NEU",
-
       
       "htmlLang": "de",
       "stepProfile": "Benutzername",
@@ -3704,7 +3673,6 @@ export const translations = {
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
         "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
-        "newBadge": "New",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "{{name}} aus der Liste entfernen",
@@ -3854,7 +3822,6 @@ export const translations = {
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
-        "newBadge": "New",
         "prev": "Previous live",
         "next": "Next live",
         "activityLabel": "Today's activity",
@@ -4472,11 +4439,6 @@ export const translations = {
 
       "removeStreamerName": "Rimuovi {{name}}",
 
-
-      
-
-      "newBadge": "NUOVO",
-
       
       "htmlLang": "it",
       "stepProfile": "Nome utente",
@@ -4589,7 +4551,6 @@ export const translations = {
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
         "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
-        "newBadge": "New",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "Rimuovi {{name}} dall'elenco",
@@ -4739,7 +4700,6 @@ export const translations = {
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
-        "newBadge": "New",
         "prev": "Previous live",
         "next": "Next live",
         "activityLabel": "Today's activity",
@@ -5357,11 +5317,6 @@ export const translations = {
 
       "removeStreamerName": "Usuń {{name}}",
 
-
-      
-
-      "newBadge": "NOWOŚĆ",
-
       
       "htmlLang": "pl",
       "stepProfile": "Nazwa użytkownika",
@@ -5474,7 +5429,6 @@ export const translations = {
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
         "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
-        "newBadge": "New",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "Usuń {{name}} z listy",
@@ -5624,7 +5578,6 @@ export const translations = {
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
-        "newBadge": "New",
         "prev": "Previous live",
         "next": "Next live",
         "activityLabel": "Today's activity",
@@ -6242,11 +6195,6 @@ export const translations = {
 
       "removeStreamerName": "{{name}} kişisini kaldır",
 
-
-      
-
-      "newBadge": "YENİ",
-
       
       "htmlLang": "tr",
       "stepProfile": "Kullanıcı adı",
@@ -6359,7 +6307,6 @@ export const translations = {
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
         "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
-        "newBadge": "New",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "{{name}} öğesini listeden kaldır",
@@ -6509,7 +6456,6 @@ export const translations = {
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
-        "newBadge": "New",
         "prev": "Previous live",
         "next": "Next live",
         "activityLabel": "Today's activity",
@@ -7127,11 +7073,6 @@ export const translations = {
 
       "removeStreamerName": "Удалить {{name}}",
 
-
-      
-
-      "newBadge": "НОВОЕ",
-
       
       "htmlLang": "ru",
       "stepProfile": "Имя пользователя",
@@ -7244,7 +7185,6 @@ export const translations = {
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
         "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
-        "newBadge": "New",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "Убрать {{name}} из списка",
@@ -7394,7 +7334,6 @@ export const translations = {
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
-        "newBadge": "New",
         "prev": "Previous live",
         "next": "Next live",
         "activityLabel": "Today's activity",
@@ -8012,11 +7951,6 @@ export const translations = {
 
       "removeStreamerName": "{{name}}を削除",
 
-
-      
-
-      "newBadge": "新着",
-
       
       "htmlLang": "ja",
       "stepProfile": "ユーザー名",
@@ -8129,7 +8063,6 @@ export const translations = {
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
         "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
-        "newBadge": "New",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "{{name}}をリストから削除",
@@ -8279,7 +8212,6 @@ export const translations = {
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
-        "newBadge": "New",
         "prev": "Previous live",
         "next": "Next live",
         "activityLabel": "Today's activity",
@@ -8897,11 +8829,6 @@ export const translations = {
 
       "removeStreamerName": "{{name}} 삭제",
 
-
-      
-
-      "newBadge": "새 기능",
-
       
       "htmlLang": "ko",
       "stepProfile": "사용자 이름",
@@ -9014,7 +8941,6 @@ export const translations = {
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
         "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
-        "newBadge": "New",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "목록에서 {{name}} 제거",
@@ -9164,7 +9090,6 @@ export const translations = {
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
-        "newBadge": "New",
         "prev": "Previous live",
         "next": "Next live",
         "activityLabel": "Today's activity",

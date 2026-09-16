@@ -11,7 +11,6 @@ import {
 // Popup rendering: the featured live on stage, the live strip tiles and the
 // rows of the "all channels" sheet. popup.js owns state and storage.
 
-const HOVER_DELAY = 500;
 const THUMB_CACHE_MAX = 50;
 const MAX_THUMB_CONCURRENCY = 3;
 const FALLBACK_ICON = "images/photos/48px.png";
@@ -251,11 +250,14 @@ function probeImage(url, onOk, onFail) {
   drainThumbQueue();
 }
 
-function loadThumbnail(streamer, active, image, width, height) {
+function loadThumbnail(streamer, active, image, width, height, onFail) {
   const candidates = (active.thumbnailCandidates || [active.thumbnailUrl])
     .filter(Boolean)
     .map((url) => url.replace("{width}", String(width)).replace("{height}", String(height)));
-  if (candidates.length === 0) return;
+  if (candidates.length === 0) {
+    onFail?.();
+    return;
+  }
 
   const apply = (url) => {
     if (!image.isConnected) return;
@@ -266,6 +268,7 @@ function loadThumbnail(streamer, active, image, width, height) {
   const tryNext = () => {
     if (index >= candidates.length) {
       setCachedThumb(streamer.id, null);
+      onFail?.();
       return;
     }
     const url = candidates[index++];
@@ -286,48 +289,6 @@ function loadThumbnail(streamer, active, image, width, height) {
   }
 }
 
-// --- Kick hover preview on the stage: iframe after a short hover, freed on leave ---
-function setupHoverPlayer(stage, media, platformId, streamer, onOpen) {
-  stage._hoverAbort?.abort();
-  if (platformId !== "kick" || !streamer.handle) return;
-  const controller = new AbortController();
-  stage._hoverAbort = controller;
-  const { signal } = controller;
-  const embedUrl = `https://player.kick.com/${encodeURIComponent(streamer.handle)}?muted=true`;
-  let timer = null;
-
-  media.style.pointerEvents = "auto";
-  media.addEventListener("mouseenter", () => {
-    if (media.querySelector(".hover-player-wrap")) return;
-    timer = setTimeout(() => {
-      const wrap = el("div", "hover-player-wrap");
-      const frame = document.createElement("iframe");
-      frame.allow = "autoplay; encrypted-media; picture-in-picture";
-      frame.setAttribute("scrolling", "no");
-      frame.src = embedUrl;
-      // Iframes swallow clicks: a transparent layer keeps "click to watch".
-      const overlay = el("div", "embed-click-overlay");
-      overlay.addEventListener("click", onOpen);
-      wrap.append(frame, overlay);
-      media.appendChild(wrap);
-      stage.classList.add("is-playing");
-    }, HOVER_DELAY);
-  }, { signal });
-  stage.addEventListener("mouseleave", () => {
-    clearTimeout(timer);
-    stopHoverPlayer(stage, media);
-  }, { signal });
-}
-
-function stopHoverPlayer(stage, media) {
-  media.querySelectorAll(".hover-player-wrap").forEach((wrap) => {
-    const frame = wrap.querySelector("iframe");
-    if (frame) frame.src = "about:blank";
-    wrap.remove();
-  });
-  stage.classList.remove("is-playing");
-}
-
 // --- Alerts ---
 function alertToggle(className, streamer, alert, callbacks, withLabel) {
   const enabled = streamer[alert.key] !== false;
@@ -343,21 +304,72 @@ function alertToggle(className, streamer, alert, callbacks, withLabel) {
   return node;
 }
 
+// --- Kick en vidéo sur la scène : embed muet plein cadre après un court
+// --- survol, libéré dès qu'on sort (l'iframe Kick ne fournit pas de capture
+// --- statique exploitable, c'est le seul aperçu réel possible).
+function mountStageVideo(stage, media, streamer, onOpen) {
+  const wrap = el("div", "hover-player-wrap");
+  const frame = document.createElement("iframe");
+  frame.allow = "autoplay; encrypted-media; picture-in-picture";
+  frame.setAttribute("scrolling", "no");
+  // Muet : la popup ne doit jamais émettre de son.
+  frame.src = `https://player.kick.com/${encodeURIComponent(streamer.handle)}?muted=true`;
+  frame.title = t("popup.labels.previewAltLive", { name: getDisplayLabel(streamer) });
+  // Les iframes avalent les clics : une couche transparente garde le clic
+  // « Regarder » qui ouvre le stream.
+  const overlay = el("div", "embed-click-overlay");
+  overlay.addEventListener("click", onOpen);
+  wrap.append(frame, overlay);
+  media.appendChild(wrap);
+  stage.classList.add("is-playing");
+}
+
+function stopStageVideo(stage, media) {
+  stage._videoFor = null;
+  media?.querySelectorAll(".hover-player-wrap").forEach((wrap) => {
+    const frame = wrap.querySelector("iframe");
+    if (frame) frame.src = "about:blank";
+    wrap.remove();
+  });
+  stage.classList.remove("is-playing");
+}
+
 // --- Stage ---
-export function renderStage(stage, media, feature, streamer, status, { isNew }, callbacks) {
-  stopHoverPlayer(stage, media);
+export function renderStage(stage, media, feature, streamer, status, options, callbacks) {
   const { active, platformId, viewers } = getLiveState(streamer, status);
   const label = getDisplayLabel(streamer);
   const platformLabel = getPlatformLabel(platformId);
   const open = () => callbacks.onOpen(getStreamerUrl(streamer));
+  // Un rafraîchissement de statuts re-rend toute la scène : on ne reset le
+  // média (et donc un survol/une vidéo en cours) que si le streamer a changé.
+  const isSameStage = stage._videoFor === streamer.id;
+  if (!isSameStage) {
+    stopStageVideo(stage, media);
+    stage._videoFor = streamer.id;
+  }
   stage.dataset.state = "live";
 
-  const image = el("img", "stage-image");
-  image.alt = t("popup.labels.previewAltLive", { name: label });
-  image.hidden = true;
-  media.replaceChildren(image);
-  loadThumbnail(streamer, active, image, 960, 540);
-  setupHoverPlayer(stage, media, platformId, streamer, open);
+  if (!isSameStage) {
+    const image = el("img", "stage-image");
+    image.alt = t("popup.labels.previewAltLive", { name: label });
+    image.hidden = true;
+    media.replaceChildren(image);
+    // Kick n'expose pas toujours de thumbnail : en cas d'échec, on retombe sur
+    // l'avatar pré-flouté (même fond que les écrans vides) au lieu d'un aplat noir.
+    loadThumbnail(streamer, active, image, 960, 540, () => {
+      if (!image.isConnected || !streamer.avatarUrl) return;
+      image.classList.add("is-avatar");
+      image.alt = "";
+      preblurAvatar(streamer.avatarUrl, image);
+      image.hidden = false;
+    });
+    // Kick n'expose plus de thumbnail via son API : le lecteur live muet est
+    // monté directement, plein cadre, sans attendre de survol. Twitch garde
+    // sa capture (disponible publiquement).
+    if (platformId === "kick" && streamer.handle) {
+      mountStageVideo(stage, media, streamer, open);
+    }
+  }
 
   const pills = el("div", "feature-pills");
   // The time on air rides inside the live pill so the row never wraps.
@@ -372,7 +384,6 @@ export function renderStage(stage, media, feature, streamer, status, { isNew }, 
     chip.append(el("i"), document.createTextNode(t("popup.labels.viewers", { count: formatCompactNumber(viewers) })));
     pills.append(chip);
   }
-  if (isNew) pills.append(el("span", "pill pill-new", t("popup.cplus.newBadge")));
 
   const text = el("div", "feature-text");
   text.append(
@@ -394,8 +405,7 @@ export function renderStage(stage, media, feature, streamer, status, { isNew }, 
 }
 
 export function renderStageEmpty(stage, media, feature, { kind, offlineCount, avatarUrl, onOpenSheet, onAddStreamer }) {
-  stopHoverPlayer(stage, media);
-  stage._hoverAbort?.abort();
+  stopStageVideo(stage, media);
   stage.dataset.state = kind;
   if (avatarUrl) {
     const image = el("img", "stage-image is-avatar");
@@ -429,7 +439,7 @@ export function renderStageEmpty(stage, media, feature, { kind, offlineCount, av
 }
 
 // --- Live strip ---
-export function createMiniCard(streamer, status, { selected, pinned, isNew }, callbacks) {
+export function createMiniCard(streamer, status, { selected, pinned }, callbacks) {
   const { active, platformId, viewers } = getLiveState(streamer, status);
   const label = getDisplayLabel(streamer);
   const item = el("li", "mini");
@@ -450,7 +460,6 @@ export function createMiniCard(streamer, status, { selected, pinned, isNew }, ca
     chip.append(el("i"), document.createTextNode(formatCompactNumber(viewers)));
     hit.append(chip);
   }
-  if (isNew) hit.append(el("span", "pill pill-new mini-new", t("popup.cplus.newBadge")));
   const who = el("span", "mini-who");
   const text = el("span", "mini-text");
   text.append(el("span", "mini-name", label), el("span", "mini-game", active.game || getPlatformLabel(platformId)));
@@ -463,7 +472,36 @@ export function createMiniCard(streamer, status, { selected, pinned, isNew }, ca
   pin.setAttribute("aria-pressed", String(pinned));
   pin.addEventListener("click", () => callbacks.onTogglePin(streamer.id));
 
-  item.append(hit, pin);
+  // Suppression directe depuis le tableau de bord, avec confirmation inline
+  // (même libellé que la corbeille de la liste complète).
+  const remove = button("mini-pin mini-remove", { icon: "trash", label: t("popup.cplus.remove", { name: label }) });
+  const confirmBox = el("span", "mini-confirm");
+  confirmBox.setAttribute("role", "alertdialog");
+  confirmBox.setAttribute("aria-label", t("popup.osd.confirmRemove", { name: label }));
+  const cancelRemove = button("button button-ghost", { text: t("popup.osd.cancel") });
+  const confirmRemove = button("button button-danger", { text: t("popup.osd.remove") });
+  confirmBox.append(el("span", "mini-confirm-text", t("popup.osd.confirmRemove", { name: label })), cancelRemove, confirmRemove);
+  confirmBox.hidden = true;
+  const closeConfirm = () => {
+    confirmBox.hidden = true;
+    hit.disabled = false;
+    remove.focus();
+  };
+  remove.addEventListener("click", () => {
+    confirmBox.hidden = false;
+    hit.disabled = true;
+    cancelRemove.focus();
+  });
+  cancelRemove.addEventListener("click", closeConfirm);
+  confirmRemove.addEventListener("click", () => callbacks.onRemove(streamer.id, label));
+  confirmBox.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      event.stopPropagation();
+      closeConfirm();
+    }
+  });
+
+  item.append(hit, pin, remove, confirmBox);
   return item;
 }
 

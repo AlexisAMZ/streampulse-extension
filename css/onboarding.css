@@ -4,7 +4,7 @@
 /* Head and stepper */
 .ob-head { gap: 22px; }
 .stepper { display: flex; gap: 6px; margin-left: auto; }
-.step-pill { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px 0 6px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); color: var(--text-3); font-size: 13px; font-weight: 600; transition: background-color var(--dur-base) ease, color var(--dur-base) ease; }
+.step-pill { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 14px 0 8px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); color: var(--text-3); font-size: 13px; font-weight: 600; transition: background-color var(--dur-base) ease, color var(--dur-base) ease; }
 .step-num { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--surface-2); font-size: 12px; font-weight: 800; font-variant-numeric: tabular-nums; }
 .step-pill.active { background: var(--violet-soft); box-shadow: inset 0 0 0 1px var(--violet-line); color: var(--text); }
 .step-pill.active .step-num { background: var(--violet); color: #ffffff; }

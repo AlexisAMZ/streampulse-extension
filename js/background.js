@@ -190,7 +190,15 @@ const _kickToken = { value: null, expiresAt: 0 };
 
 async function getKickCredentials() {
   const data = await chrome.storage.local.get("streampulse:kickCreds");
-  return data["streampulse:kickCreds"] || null;
+  const stored = data["streampulse:kickCreds"];
+  if (stored?.clientId && stored?.clientSecret) return stored;
+  // Repli : identifiants servis par la config distante streampulse.fr
+  // (variables Vercel STREAMPULSE_KICK_CLIENT_ID / _CLIENT_SECRET), hydratées
+  // dans CONFIG par fetchRemoteConfig().
+  if (CONFIG.kickClientId && CONFIG.kickClientSecret) {
+    return { clientId: CONFIG.kickClientId, clientSecret: CONFIG.kickClientSecret };
+  }
+  return null;
 }
 
 // Vol unique : sans lui, deux sondages concurrents demandent chacun un jeton
@@ -205,6 +213,9 @@ function getKickAppToken() {
 }
 
 async function fetchKickAppToken() {
+  // Les identifiants Kick peuvent venir de la config distante : garantit qu'elle
+  // est hydratee (cache d'abord) avant de conclure a une absence de creds.
+  await ensureConfig();
   const creds = await getKickCredentials();
   if (!creds?.clientId || !creds?.clientSecret) return null;
 
@@ -1232,15 +1243,14 @@ class PlatformChecker {
       stream?.category?.title ||
       "";
 
-    const preferredSize = { width: 1280, height: 720 };
-    const dimensionSuffix = `${preferredSize.width}x${preferredSize.height}`;
     // Optimize: Cache for 60 seconds to prevent flickering on every popup open
     const cb = Math.floor(Date.now() / 60000); // 1-minute cache bucket
 
-    const slug = channel?.slug || channel?.user?.username || stream?.slug;
-    const channelId = channel?.id || stream?.channel_id || stream?.id;
-
-    // API-provided URLs first (most reliable), then constructed fallbacks
+    // Uniquement les URLs fournies par l'API. Kick renvoie `thumbnail: null`
+    // quand il n'a pas d'image ; les URLs construites qui étaient sondées en
+    // secours (images.kick.com/v2/stream-thumbnails/..., files.kick.com/
+    // stream-thumbnails/...) répondent 403 en réel : elles ne donnaient jamais
+    // d'image et rajoutaient des probes mortes qui retardaient le chargement.
     const apiRaw = [
       stream?.thumbnail?.url,
       stream?.thumbnail?.src,
@@ -1248,27 +1258,9 @@ class PlatformChecker {
       stream?.thumbnail,
     ];
 
-    const constructedRaw = [];
-    if (channelId) {
-      constructedRaw.push(
-        `https://images.kick.com/v2/stream-thumbnails/${channelId}/live-${dimensionSuffix}.webp`,
-        `https://images.kick.com/v2/stream-thumbnails/${channelId}/live-${dimensionSuffix}.jpg`,
-        `https://files.kick.com/stream-thumbnails/${channelId}/livestream-${dimensionSuffix}.webp`,
-        `https://files.kick.com/stream-thumbnails/${channelId}/livestream-${dimensionSuffix}.jpg`,
-        `https://files.kick.com/stream-thumbnails/${channelId}/livestream.jpg`
-      );
-    }
-    if (slug) {
-      constructedRaw.push(
-        `https://files.kick.com/stream-thumbnails/${slug}/livestream-${dimensionSuffix}.webp`,
-        `https://files.kick.com/stream-thumbnails/${slug}/livestream-${dimensionSuffix}.jpg`,
-        `https://files.kick.com/stream-thumbnails/${slug}/livestream.jpg`
-      );
-    }
-
     const distinctUrls = new Set();
     const allCandidates = [];
-    for (const raw of [...apiRaw, ...constructedRaw]) {
+    for (const raw of apiRaw) {
       const resolved = resolveKickAsset(raw);
       if (resolved && !resolved.includes("null") && !resolved.includes("undefined")) {
         if (!distinctUrls.has(resolved)) {
@@ -2309,6 +2301,19 @@ function scheduleKeepAliveAlarm() {
 
 let initDone = false;
 
+// Badge "nouveau" sur l'icone de l'extension : visible avant meme d'ouvrir la
+// popup, pose a chaque mise a jour, retire quand les notes de version sont
+// ouvertes. Violet Twitch, comme la pastille inline des notes dans la popup.
+async function syncUpdateBadge() {
+  try {
+    const { patchNotesUnread } = await chrome.storage.local.get("patchNotesUnread");
+    await chrome.action.setBadgeBackgroundColor({ color: "#9146ff" });
+    await chrome.action.setBadgeText({ text: patchNotesUnread ? "1" : "" });
+  } catch (error) {
+    console.warn("Failed to sync update badge:", error.message);
+  }
+}
+
 async function openOnboarding(mode = "") {
   const query = mode ? `?mode=${encodeURIComponent(mode)}` : "";
   const url = chrome.runtime.getURL(`html/onboarding.html${query}`);
@@ -2420,6 +2425,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
       await chrome.storage.local.set({ patchNotesUnread: true });
     }
   }
+  await syncUpdateBadge();
 });
 
 chrome.runtime.onStartup.addListener(async () => {
@@ -2432,6 +2438,9 @@ chrome.runtime.onStartup.addListener(async () => {
   setupAutoOpenInventoryAlarm(prefs);
   await NotificationCenter.init();
   await pollStreamers({ forceNotification: false });
+  // Le texte de badge peut survivre a un redemarrage du navigateur avec une
+  // valeur perimee : on le resynchronise avec l'etat reel du stockage.
+  await syncUpdateBadge();
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
@@ -2530,6 +2539,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           patchNotesUnread: false,
           seenPatchNotesVersion: chrome.runtime.getManifest().version,
         });
+        await syncUpdateBadge();
         await openPatchNotes();
         sendResponse({ success: true });
       })();

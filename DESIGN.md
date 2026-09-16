@@ -31,6 +31,15 @@ Textes dégradés (`sp-paint`), glows, bounce et flicker des badges de tchat son
 ### Mouvement
 `prefers-reduced-motion` est honoré dans chaque feuille de style, y compris injectée. Les animations d'interface (non cosmetiques) utilisent `--ease-out`, jamais de rebond.
 
+### Aperçu des lives : captures pour Twitch, lecteur muet pour Kick
+Sur la scène de la popup, Twitch affiche sa thumbnail (capture), disponible publiquement. Kick n'expose plus aucune thumbnail par son API (champ `thumbnail: null`, fichiers 403) : pour Kick uniquement, le lecteur `player.kick.com` **muet** (`muted=true`) est monté directement plein cadre dès l'affichage du streamer — pas de survol requis, pas de son. Jamais de vidéo dans les cartes de la bande ni dans la liste. En cas d'absence d'image, le fond est l'avatar pré-flouté.
+
+### Suppression accessible depuis le tableau de bord
+Chaque carte de live porte sa corbeille (au survol, comme l'épingle) avec confirmation inline sur la carte (`mini-confirm`). La liste complète (sheet) garde sa corbeille par ligne. Ne jamais supprimer sans confirmation.
+
+### Exceptions volontaires aux détecteurs d'anti-patterns
+Constats assumés, à ne pas « corriger » : glows violets et textes dégradés des cosmétiques Plus (voir plus haut) ; rebond `sp-badge-bounce` des badges de tchat (feature Plus) ; `#c4a3ff` (`--violet-text`) sur les titres (marque) ; groupes de réglages encadrés dans leur panneau (menu popup, insights du récap, aperçu tchat de l'onboarding) — boîtes dans boîtes assumées ; pills du stepper et champs compacts du popup (surface souris fixe, padding validé au rendu).
+
 ## Tokens
 
 Source de vérité : `css/tokens.css`. Règle : toute couleur référencée plus d'une fois devient un token ; les hexadécimaux locaux ne sont tolérés que pour le shading du fond de scène sombre (`#0b0c22` et ses rgba dérivés).

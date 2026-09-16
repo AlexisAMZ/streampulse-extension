@@ -14,6 +14,7 @@
   border: 2px dashed var(--line-2);
   border-radius: 18px;
   background: var(--bg);
+  box-shadow: none; /* le drop-zone EST le panneau : pas de ring de .panel en plus */
   text-align: center;
   cursor: pointer;
   transition: border-color var(--dur-fast) ease, background-color var(--dur-fast) ease;
@@ -29,11 +30,11 @@
 
 .file-line { display: flex; align-items: center; gap: 10px; font-weight: 600; overflow-wrap: anywhere; }
 .file-line svg { width: 20px; height: 20px; color: var(--violet-text); }
-.summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 18px 0; }
-.summary div { padding: 14px 16px; border-radius: 14px; background: var(--bg); box-shadow: inset 0 0 0 1px var(--line); }
+.summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 18px 0; }
+.summary div { padding-top: 12px; border-top: 1px solid var(--line); }
 .summary dt { color: var(--text-2); font-size: 12px; }
 .summary dd { margin: 4px 0 0; font-family: var(--display); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
-.note { padding: 12px 14px; border-radius: 12px; background: var(--lcd-soft); box-shadow: inset 0 0 0 1px var(--lcd-line); color: var(--text); font-size: 14px; }
+.note { color: var(--text-2); font-size: 14px; }
 .restore-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 18px; }
 
 .restore-done { display: grid; justify-items: center; gap: 16px; padding: 40px 24px; text-align: center; }

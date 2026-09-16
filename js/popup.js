@@ -610,6 +610,7 @@ const miniCallbacks = {
     renderStreamers();
   },
   onTogglePin: togglePin,
+  onRemove: streamerCallbacks.onRemove,
 };
 
 const rowCallbacks = {
@@ -688,7 +689,6 @@ function renderFeatured() {
     return;
   }
   renderStage(stageEl, stageMediaEl, stageFeatureEl, streamer, state.statuses[streamer.id], {
-    isNew: justLiveIds.has(streamer.id),
   }, streamerCallbacks);
 }
 
@@ -730,13 +730,20 @@ function renderStreamers() {
     fragment.appendChild(createMiniCard(streamer, state.statuses[streamer.id], {
       selected: streamer.id === state.selectedId,
       pinned: isPinned(streamer.id),
-      isNew: justLiveIds.has(streamer.id),
     }, miniCallbacks));
   });
   if (state.streamers.length) {
     fragment.appendChild(createAllChannelsTile(offline.slice(0, 3), offline.length, openSheet));
   }
   streamerListEl.replaceChildren(fragment);
+
+  // Garde la carte du streamer affiché sur la scène visible dans la bande,
+  // sinon la carte sélectionnée reste coupée au bord du scroll.
+  const selectedCard = streamerListEl.querySelector(".mini.is-selected");
+  if (selectedCard) {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    selectedCard.scrollIntoView({ block: "nearest", inline: "nearest", behavior: reducedMotion ? "auto" : "smooth" });
+  }
 
   const liveCountEl = document.getElementById("live-count");
   if (liveCountEl) liveCountEl.textContent = t("popup.cplus.liveOf", { live: live.length, total: state.streamers.length });
@@ -2152,8 +2159,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 4. Background Sync (Silent)
     sendMessage({ type: "getStreamers" }).catch(() => {});
 
-    // Free Kick embed connections immediately on popup close so the next
-    // open isn't delayed by lingering network streams.
+    // Libère les connexions de l'embed Kick dès la fermeture de la popup pour
+    // que la prochaine ouverture ne soit pas ralentie par des flux résiduels.
     window.addEventListener("pagehide", () => {
       document.querySelectorAll(".hover-player-wrap iframe").forEach((f) => {
         f.src = "about:blank";

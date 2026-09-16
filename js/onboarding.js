@@ -112,6 +112,8 @@ function updateStepper() {
   pills.forEach((pill, i) => {
     pill.classList.toggle("active", i === currentStep);
     pill.classList.toggle("completed", i < currentStep);
+    if (i === currentStep) pill.setAttribute("aria-current", "step");
+    else pill.removeAttribute("aria-current");
   });
   if (stepCounterCurrent) {
     stepCounterCurrent.textContent = String(currentStep + 1).padStart(2, "0");

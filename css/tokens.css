@@ -44,6 +44,11 @@
   --twitch: #9146ff;
   --kick: #53fc18;
 
+  /* Couleurs constantes de la scène du popup (sombre quel que soit le thème). */
+  --paper: #ffffff;
+  --paper-ink: #1a0b14;
+  --danger-bright: #ff4d4d;
+
   --shadow-pop: 0 18px 36px -18px rgba(0, 0, 0, 0.75);
 }
 

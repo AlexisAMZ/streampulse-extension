@@ -22,19 +22,17 @@
       <main class="restore">
         <section class="restore-intro">
           <h1 class="display" data-i18n="backup.restorePage.title">Importe une sauvegarde</h1>
-          <p class="lede" data-i18n="backup.restorePage.intro">Choisis le fichier .json téléchargé avec « Sauvegarder mes données ».</p>
+          <p class="lede" data-i18n="backup.restorePage.intro">Choisis le fichier .json téléchargé avec «&nbsp;Sauvegarder mes données&nbsp;».</p>
         </section>
 
-        <section class="panel restore-card" id="restore-pick">
-          <label class="drop-zone" id="drop-zone" for="file-input">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M20 15v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4"/></svg>
-            <span class="drop-title" data-i18n="backup.restorePage.drop">Glisse ton fichier de sauvegarde ici</span>
-            <span class="drop-or" data-i18n="backup.restorePage.or">ou</span>
-            <span class="btn btn-primary" data-i18n="backup.restorePage.choose">Choisir un fichier</span>
-            <span class="drop-hint" data-i18n="backup.restorePage.hint">Fichier .json de 5 Mo maximum</span>
-          </label>
+        <label class="panel restore-card drop-zone" id="restore-pick" for="file-input">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M20 15v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4"/></svg>
+          <span class="drop-title" data-i18n="backup.restorePage.drop">Glisse ton fichier de sauvegarde ici</span>
+          <span class="drop-or" data-i18n="backup.restorePage.or">ou</span>
+          <span class="btn btn-primary" data-i18n="backup.restorePage.choose">Choisir un fichier</span>
+          <span class="drop-hint" data-i18n="backup.restorePage.hint">Fichier .json de 5 Mo maximum</span>
           <input class="file-input" id="file-input" type="file" accept=".json,application/json" />
-        </section>
+        </label>
 
         <section class="panel restore-card" id="restore-review" hidden>
           <p class="file-line">
