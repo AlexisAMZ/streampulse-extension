@@ -614,7 +614,12 @@ class PreferenceStore {
       autoRefreshPlayerErrors: preferences.autoRefreshPlayerErrors !== false,
       enableClipDownload: preferences.enableClipDownload !== false,
       playerQuality: PLAYER_QUALITIES.includes(preferences.playerQuality) ? preferences.playerQuality : "auto",
-      autoCancelRaids: preferences.autoCancelRaids === true,
+      // Les alertes de raid rapportent des points en suivant le raid : garder
+      // l'annulation automatique active rendrait les deux fonctionnalités
+      // contradictoires (le raid est annulé avant qu'on puisse le suivre).
+      // Tant que le détecteur de raids est actif, l'annulation est forcée off.
+      autoCancelRaids:
+        preferences.autoCancelRaids === true && preferences.backgroundRaidAlerts !== true,
       preventTabDiscard: preferences.preventTabDiscard !== false,
       enablePredictionsPopup: preferences.enablePredictionsPopup !== false,
       enableTabLiveIcon: preferences.enableTabLiveIcon !== false,

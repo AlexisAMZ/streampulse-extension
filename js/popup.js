@@ -1954,7 +1954,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       updatePreferences({ soundsEnabled: e.target.checked });
     });
     backgroundRaidAlertsToggle?.addEventListener("change", (e) => {
-      updatePreferences({ backgroundRaidAlerts: e.target.checked });
+      // Suivre les raids rapporte des points : activer le détecteur coupe
+      // l'annulation automatique, qui annulerait le raid avant qu'on le suive.
+      const enableRaidAlerts = e.target.checked;
+      updatePreferences({
+        backgroundRaidAlerts: enableRaidAlerts,
+        ...(enableRaidAlerts ? { autoCancelRaids: false } : {}),
+      });
+      if (enableRaidAlerts && autoCancelRaidsToggle) {
+        autoCancelRaidsToggle.checked = false;
+      }
     });
     autoClaimToggle?.addEventListener("change", (e) => {
       updatePreferences({ autoClaimChannelPoints: e.target.checked });
