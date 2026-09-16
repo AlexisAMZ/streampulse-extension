@@ -370,6 +370,9 @@
     }
   },
   "pt-BR": {
+    "enhancer": {
+      "jumpToLive": "Ir para o ao vivo (StreamPulse)"
+    },
     "twitchUi": {
       "favorites": "Favoritos do StreamPulse",
       "pin": "Adicionar aos favoritos do StreamPulse",

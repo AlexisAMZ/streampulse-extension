@@ -121,6 +121,41 @@ function platformIcon(platformId) {
   return `../${getPlatformDefinition(platformId).icon || FALLBACK_ICON}`;
 }
 
+/**
+ * Version pré-floutée d'un avatar pour la bannière : dessinée une fois dans un
+ * canvas ~5× plus petit avec blur(5.6px) + saturate(1.3) + zoom 1.2 (l'équivalent
+ * exact de blur(28px) en espace 780×300), puis servie en image statique. Le rendu
+ * est identique mais la peinture au repos ne coûte plus un filtre live.
+ * Repli transparent sur l'URL d'origine si le canvas est teinté (CORS) ou en erreur.
+ */
+function preblurAvatar(url, image) {
+  const source = new Image();
+  source.crossOrigin = "anonymous";
+  source.onload = () => {
+    try {
+      const W = 156;
+      const H = 60;
+      const canvas = document.createElement("canvas");
+      canvas.width = W;
+      canvas.height = H;
+      const ctx = canvas.getContext("2d");
+      ctx.filter = "blur(5.6px) saturate(1.3)";
+      const scale = Math.max(W / source.naturalWidth, H / source.naturalHeight) * 1.2;
+      const w = source.naturalWidth * scale;
+      const h = source.naturalHeight * scale;
+      ctx.drawImage(source, (W - w) / 2, (H - h) / 2, w, h);
+      image.src = canvas.toDataURL();
+      image.classList.add("sp-preblurred");
+    } catch {
+      image.src = url;
+    }
+  };
+  source.onerror = () => {
+    image.src = url;
+  };
+  source.src = url;
+}
+
 function avatarImage(className, streamer, platformId) {
   const img = el("img", className);
   const fallback = platformIcon(platformId);
@@ -363,7 +398,9 @@ export function renderStageEmpty(stage, media, feature, { kind, offlineCount, av
   if (avatarUrl) {
     const image = el("img", "stage-image is-avatar");
     image.alt = "";
-    image.src = avatarUrl;
+    // Le blur 28px efface tout détail : on pré-floute dans un canvas réduit
+    // (rendu identique, peinture statique au repos au lieu d'un filtre live).
+    preblurAvatar(avatarUrl, image);
     media.replaceChildren(image);
   } else {
     media.replaceChildren();
@@ -490,6 +527,7 @@ export function createChannelRow(streamer, status, options, callbacks) {
   row.dataset.index = String(index);
   if (draggable) {
     row.draggable = true;
+    row.setAttribute("aria-keyshortcuts", "Alt+ArrowUp Alt+ArrowDown");
     const grip = el("span", "row-grip");
     grip.innerHTML = ICONS.grip;
     grip.title = t("popup.cplus.drag", { name: label });

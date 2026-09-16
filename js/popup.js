@@ -417,10 +417,14 @@ function initDragAndDrop() {
     event.preventDefault();
     const from = Number(row.dataset.index);
     const to = from + (event.key === "ArrowUp" ? -1 : 1);
+    const streamer = state.streamers[from];
     const moved = await reorderStreamers(from, to);
     if (moved) {
-      const target = sheetListEl.querySelector(`.channel-row[data-index="${to}"]`);
-      target?.querySelector("button, [href], input")?.focus();
+      document.getElementById("sheet-live").textContent = t("popup.cplus.rowMoved", {
+        name: nameFor(streamer.id),
+        position: to + 1,
+      });
+      sheetListEl.querySelector(`.channel-row[data-index="${to}"] button`)?.focus();
     }
   });
 }

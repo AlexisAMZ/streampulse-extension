@@ -27,6 +27,7 @@ svg { flex: none; width: 14px; height: 14px; }
 * { scrollbar-width: thin; scrollbar-color: var(--line-2) transparent; }
 .visually-hidden,
 .platform-button-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.sheet-hint { color: var(--text-3); font-size: 11px; font-weight: 600; white-space: nowrap; }
 
 /* ── Shared controls ── */
 .button {
@@ -148,6 +149,8 @@ body.is-settings .topbar .icon-button { background: var(--surface-2); box-shadow
 .stage-media { position: absolute; inset: 0; z-index: -2; }
 .stage-image { width: 100%; height: 100%; object-fit: cover; }
 .stage-image.is-avatar { opacity: 0.45; filter: blur(28px) saturate(1.3); transform: scale(1.2); }
+/* Variante pré-floutée en canvas (js/ui.js preblurAvatar) : le filtre est déjà cuit. */
+.stage-image.is-avatar.sp-preblurred { filter: none; transform: none; }
 .stage::after {
   content: "";
   position: absolute;
@@ -179,7 +182,7 @@ body.is-settings .topbar .icon-button { background: var(--surface-2); box-shadow
 .feature-name { overflow: hidden; font-family: var(--display); font-size: 22px; font-weight: 800; line-height: 1.15; letter-spacing: -0.025em; text-overflow: ellipsis; white-space: nowrap; }
 .feature-sub { overflow: hidden; color: rgba(255, 255, 255, 0.78); text-overflow: ellipsis; white-space: nowrap; }
 .feature-alerts { display: flex; gap: 2px; padding: 3px; border-radius: 12px; background: rgba(11, 12, 34, 0.64); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15); }
-.alert-toggle { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 9px; border: 0; border-radius: 9px; background: transparent; color: rgba(255, 255, 255, 0.6); font-size: 12px; font-weight: 600; }
+.alert-toggle { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 9px; border: 0; border-radius: 9px; background: transparent; color: rgba(255, 255, 255, 0.72); font-size: 12px; font-weight: 600; }
 .alert-toggle:hover { color: #ffffff; }
 .alert-toggle[aria-pressed="true"] { background: rgba(145, 70, 255, 0.4); color: #ffffff; }
 .alert-toggle[aria-pressed="false"] { text-decoration: line-through; text-decoration-thickness: 1.5px; }

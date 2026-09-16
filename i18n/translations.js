@@ -312,6 +312,12 @@ export const translations = {
         "noStreamers": "Ajoute d'abord un streamer depuis l'accueil."
       },
       "cplus": {
+
+        "reorderHint": "Réordonner : Alt + ↑ ↓",
+
+        "rowMoved": "{{name}} déplacé en position {{position}}",
+
+        
         "liveOf": "{{live}} sur {{total}}",
         "justStarted": "{{name}} vient de lancer",
         "since": "depuis {{duration}}",
@@ -1169,6 +1175,12 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+        "reorderHint": "Reorder: Alt + ↑ ↓",
+
+        "rowMoved": "{{name}} moved to position {{position}}",
+
+        
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
@@ -2026,6 +2038,12 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+        "reorderHint": "Reordenar: Alt + ↑ ↓",
+
+        "rowMoved": "{{name}} movido a la posición {{position}}",
+
+        
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
@@ -2623,6 +2641,7 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+      "newBadge": "NOVO",
       "stepProfile": "Usuário",
       "profileTitle": "Seu nome de usuário na Twitch.",
       "profileDescription": "Coloque seu nome de usuário para personalizar o StreamPulse. A gente pega sua foto de perfil da Twitch para te receber direitinho.",
@@ -2726,6 +2745,9 @@ export const translations = {
     },
     "popup": {
       "history": {
+        "durationMinutes": "{{count}} min",
+        "durationHours": "{{count}} h",
+        "durationHoursShort": "{{h}} h {{m}}",
         "filterLabel": "Filter by platform",
         "filterAll": "All",
         "countSingular": "1 live",
@@ -2871,6 +2893,12 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+        "reorderHint": "Reordenar: Alt + ↑ ↓",
+
+        "rowMoved": "{{name}} movido para a posição {{position}}",
+
+        
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
@@ -3376,6 +3404,9 @@ export const translations = {
       "noNotesBody": "As notas desta versão ainda não foram publicadas."
     },
     "inject": {
+      "enhancer": {
+        "jumpToLive": "Ir para o ao vivo (StreamPulse)"
+      },
       "twitchUi": {
         "favorites": "Favoritos do StreamPulse",
         "pin": "Adicionar aos favoritos do StreamPulse",
@@ -3720,6 +3751,12 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+        "reorderHint": "Sortieren: Alt + ↑ ↓",
+
+        "rowMoved": "{{name}} auf Position {{position}} verschoben",
+
+        
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
@@ -4577,6 +4614,12 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+        "reorderHint": "Riordina: Alt + ↑ ↓",
+
+        "rowMoved": "{{name}} spostato in posizione {{position}}",
+
+        
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
@@ -5434,6 +5477,12 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+        "reorderHint": "Zmiana kolejności: Alt + ↑ ↓",
+
+        "rowMoved": "Przeniesiono {{name}} na pozycję {{position}}",
+
+        
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
@@ -6291,6 +6340,12 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+        "reorderHint": "Sırala: Alt + ↑ ↓",
+
+        "rowMoved": "{{name}}, {{position}}. konuma taşındı",
+
+        
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
@@ -7148,6 +7203,12 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+        "reorderHint": "Порядок: Alt + ↑ ↓",
+
+        "rowMoved": "{{name}} перемещён на позицию {{position}}",
+
+        
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
@@ -8005,6 +8066,12 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+        "reorderHint": "並べ替え：Alt + ↑ ↓",
+
+        "rowMoved": "{{name}}を{{position}}番目に移動しました",
+
+        
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
@@ -8862,6 +8929,12 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+        "reorderHint": "순서 변경: Alt + ↑ ↓",
+
+        "rowMoved": "{{name}}을(를) {{position}}번째로 이동했습니다",
+
+        
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
@@ -9719,6 +9792,12 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+        "reorderHint": "Urutkan: Alt + ↑ ↓",
+
+        "rowMoved": "{{name}} dipindahkan ke posisi {{position}}",
+
+        
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
@@ -10576,6 +10655,12 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+        "reorderHint": "Hersorteer: Alt + ↑ ↓",
+
+        "rowMoved": "{{name}} verplaatst naar positie {{position}}",
+
+        
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
@@ -11433,6 +11518,12 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+        "reorderHint": "क्रम बदलें: Alt + ↑ ↓",
+
+        "rowMoved": "{{name}} को स्थिति {{position}} पर खिसकाया गया",
+
+        
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
@@ -12290,6 +12381,12 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+        "reorderHint": "Ordna: Alt + ↑ ↓",
+
+        "rowMoved": "{{name}} flyttad till position {{position}}",
+
+        
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",
@@ -13147,6 +13244,12 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+
+        "reorderHint": "Seřadit: Alt + ↑ ↓",
+
+        "rowMoved": "{{name}} přesunut na pozici {{position}}",
+
+        
         "liveOf": "{{live}} of {{total}}",
         "justStarted": "{{name}} just went live",
         "since": "for {{duration}}",

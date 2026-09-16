@@ -31,11 +31,12 @@ Right inside Twitch
 Rewards on autopilot
 • Channel points bonuses claimed automatically while you watch.
 • Twitch Drops claimed as soon as they're ready, and points earned on Kick counted too.
-• Raids stay on by default so you collect the channel points that come with them. Automatic raid cancel is available in settings.
+• Raids stay on by default so you collect the channel points that come with them.
+• Incoming raid alerts (beta, off by default): get notified when a channel you follow is raided, even with no tab open, so you don't miss the raid points. Automatic raid cancel is available in settings.
 
 A smoother player
 • Anti-pause: the stream keeps playing when you switch tabs.
-• Player recovery after errors such as Twitch #2000: StreamPulse clicks Retry and, if the error is still there, reloads the tab once.
+• Player recovery after errors such as Twitch #2000: StreamPulse presses Try again for you, resumes playback and snaps back to the live edge.
 • Picture-in-Picture button: watch the stream in a floating mini window while you do something else.
 • Fast-forward button: jump back to the live edge when your stream falls behind.
 • Optional: keep the video quality when the tab is in the background, instead of letting Twitch lower it.
@@ -79,11 +80,12 @@ Directement dans Twitch
 Récompenses en pilote automatique
 • Les bonus de points de chaîne récupérés automatiquement pendant que vous regardez.
 • Les Drops Twitch récupérés dès qu'ils sont prêts, et les points gagnés sur Kick comptabilisés aussi.
-• Les raids restent actifs par défaut pour récupérer les points de chaîne qui vont avec. L'annulation automatique des raids reste disponible dans les réglages.
+• Les raids restent actifs par défaut pour récupérer les points de chaîne qui vont avec.
+• Alertes de raids entrants (bêta, désactivées par défaut) : soyez prévenu quand une chaîne suivie reçoit un raid, même sans onglet ouvert, pour ne pas manquer les points. L'annulation automatique des raids reste disponible dans les réglages.
 
 Un lecteur plus fluide
 • Anti-pause : le stream continue quand vous changez d'onglet.
-• Récupération du lecteur après une erreur comme la #2000 de Twitch : StreamPulse clique sur Réessayer et, si l'erreur persiste, recharge l'onglet une seule fois.
+• Récupération du lecteur après une erreur comme la #2000 de Twitch : StreamPulse appuie sur Réessayer à votre place, relance la lecture et recale sur le direct.
 • Bouton Picture-in-Picture : regardez le live dans une mini-fenêtre flottante pendant que vous faites autre chose.
 • Bouton d'avance rapide : rattrapez le direct quand votre flux a pris du retard.
 • Au choix : garder la qualité vidéo quand l'onglet est en arrière-plan, au lieu de laisser Twitch la baisser.

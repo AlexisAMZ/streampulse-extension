@@ -86,6 +86,26 @@ export const RELEASES = [
     },
     changes: [
       {
+        type: "new",
+        text: {
+          fr: "Nouveau : alertes de raids entrants (bêta), à activer dans les réglages. StreamPulse surveille les chaînes Twitch que vous suivez, même sans onglet ouvert, et vous prévient dès qu'un raid arrive pour que vous puissiez récupérer les points. Désactivé par défaut.",
+          en: "New: incoming raid alerts (beta), to switch on in settings. StreamPulse watches the Twitch channels you follow, even with no tab open, and warns you as soon as a raid lands so you can collect the points. Off by default.",
+          es: "Nuevo: alertas de raids entrantes (beta), que se activan en los ajustes. StreamPulse vigila los canales de Twitch que sigues, incluso sin ninguna pestaña abierta, y te avisa en cuanto llega un raid para que recojas los puntos. Desactivado por defecto.",
+          "pt-BR": "Novo: alertas de raids recebidos (beta), para ativar nas configurações. O StreamPulse monitora os canais da Twitch que você segue, mesmo sem nenhuma aba aberta, e avisa assim que um raid chega para você pegar os pontos. Desativado por padrão.",
+          de: "Neu: Benachrichtigungen bei eingehenden Raids (Beta), in den Einstellungen aktivierbar. StreamPulse beobachtet die Twitch-Kanäle, denen du folgst, auch ohne offenen Tab, und meldet dir jeden Raid, damit du die Punkte mitnimmst. Standardmäßig aus.",
+          it: "Novità: avvisi di raid in arrivo (beta), da attivare nelle impostazioni. StreamPulse sorveglia i canali Twitch che segui, anche senza schede aperte, e ti avvisa appena arriva un raid così puoi prendere i punti. Disattivato di default.",
+          pl: "Nowość: powiadomienia o nadchodzących raidach (beta), do włączenia w ustawieniach. StreamPulse obserwuje śledzone kanały Twitcha, nawet bez otwartej karty, i ostrzega, gdy tylko nadejdzie raid, żebyś zdążył odebrać punkty. Domyślnie wyłączone.",
+          tr: "Yeni: gelen raid uyarıları (beta), ayarlardan açılıyor. StreamPulse takip ettiğin Twitch kanallarını hiç sekme açık olmasa bile izler ve bir raid gelir gelmez seni uyarır, böylece puanları alabilirsin. Varsayılan olarak kapalı.",
+          ru: "Новое: оповещения о входящих рейдах (бета), включаются в настройках. StreamPulse следит за каналами Twitch, на которые вы подписаны, даже без открытых вкладок, и предупреждает, как только приходит рейд, чтобы вы успели забрать очки. По умолчанию выключено.",
+          ja: "新機能：レイド着弾のお知らせ（ベータ）。設定からオンにできます。StreamPulse がフォロー中の Twitch チャンネルをタブを開いていなくても見張り、レイドが来た瞬間に知らせます。ポイントを取り逃しません。初期設定はオフです。",
+          ko: "새 기능: 레이드 알림(베타), 설정에서 켤 수 있습니다. StreamPulse가 팔로우한 Twitch 채널을 탭이 열려 있지 않아도 지켜보다가, 레이드가 오는 즉시 알려 줘서 포인트를 챙길 수 있습니다. 기본값은 꺼짐입니다.",
+          id: "Baru: peringatan raid masuk (beta), diaktifkan di pengaturan. StreamPulse memantau kanal Twitch yang kamu ikuti, bahkan tanpa tab terbuka, dan memberi tahu begitu raid tiba agar kamu bisa mengambil poinnya. Nonaktif secara default.",
+          nl: "Nieuw: meldingen bij binnenkomende raids (bèta), aan te zetten in de instellingen. StreamPulse houdt de Twitch-kanalen die je volgt in de gaten, zelfs zonder open tabblad, en waarschuwt je zodra er een raid binnenkomt zodat je de punten pakt. Standaard uit.",
+          sv: "Nytt: aviseringar om inkommande raider (beta), slås på i inställningarna. StreamPulse bevakar Twitch-kanalerna du följer, även utan öppen flik, och varnar dig så fort en raid kommer så att du hinner ta poängen. Avstängt som standard.",
+          cs: "Novinka: upozornění na příchozí raidy (beta), zapíná se v nastavení. StreamPulse sleduje kanály Twitche, které sledujete, i bez otevřené karty, a upozorní vás, jakmile raid dorazí, abyste stihli získat body. Ve výchozím stavu vypnuto."
+        }
+      },
+      {
         type: "improved",
         text: {
           fr: "Le bouton « Ajouté » sur les pages de chaîne perd son liseré coloré : il reprend le gris neutre des boutons Twitch.",
@@ -246,23 +266,23 @@ export const RELEASES = [
         }
       },
       {
-        type: "fix",
+        type: "improved",
         text: {
-          fr: "L'actualisation automatique relance vraiment le live après une erreur #2000 : si le bouton Réessayer ne suffit pas, l'onglet est rechargé dès que vous le regardez.",
-          en: "Automatic refresh now really restarts the stream after a #2000 error: if the Retry button isn't enough, the tab reloads as soon as you look at it.",
-          es: "La actualización automática ahora reinicia de verdad el directo tras un error #2000: si el botón Reintentar no basta, la pestaña se recarga en cuanto la miras.",
-          "pt-BR": "A atualização automática agora reinicia de verdade a live após um erro #2000: se o botão Tentar novamente não bastar, a aba é recarregada assim que você olhar para ela.",
-          de: "Die automatische Aktualisierung startet den Stream nach einem Fehler #2000 jetzt wirklich neu: Reicht der Button Erneut versuchen nicht, wird der Tab neu geladen, sobald du ihn ansiehst.",
-          it: "L'aggiornamento automatico ora riavvia davvero la diretta dopo un errore #2000: se il pulsante Riprova non basta, la scheda viene ricaricata appena la guardi.",
-          pl: "Automatyczne odświeżanie naprawdę wznawia transmisję po błędzie #2000: jeśli przycisk Spróbuj ponownie nie wystarczy, karta przeładuje się, gdy tylko na nią spojrzysz.",
-          tr: "Otomatik yenileme artık #2000 hatasından sonra yayını gerçekten yeniden başlatıyor: Tekrar dene düğmesi yetmezse sekme, ona baktığın anda yenileniyor.",
-          ru: "Автообновление теперь действительно перезапускает трансляцию после ошибки #2000: если кнопки «Повторить» недостаточно, вкладка перезагрузится, как только вы на неё посмотрите.",
-          ja: "自動更新が #2000 エラーの後に配信を確実に再開するようになりました。再試行ボタンで直らない場合は、タブを表示した時点で再読み込みします。",
-          ko: "자동 새로고침이 이제 #2000 오류 후 방송을 확실히 다시 시작합니다. 다시 시도 버튼으로 해결되지 않으면 탭을 볼 때 새로고침됩니다.",
-          id: "Pembaruan otomatis kini benar-benar memulai ulang siaran setelah kesalahan #2000: jika tombol Coba lagi tidak cukup, tab dimuat ulang begitu kamu melihatnya.",
-          nl: "Automatisch vernieuwen herstart de stream nu echt na een fout #2000: als de knop Opnieuw proberen niet genoeg is, wordt het tabblad herladen zodra je ernaar kijkt.",
-          sv: "Automatisk uppdatering startar nu verkligen om sändningen efter fel #2000: räcker inte knappen Försök igen laddas fliken om så fort du tittar på den.",
-          cs: "Automatické obnovení teď po chybě #2000 opravdu znovu spustí vysílání: pokud tlačítko Zkusit znovu nestačí, karta se znovu načte, jakmile se na ni podíváte."
+          fr: "Erreurs du lecteur (#1000 à #5000, dont la #2000) : StreamPulse appuie sur « Réessayer » à votre place, relance la lecture et recale sur le direct. L'onglet n'est jamais rechargé.",
+          en: "Player errors (#1000 to #5000, including #2000): StreamPulse presses \"Try again\" for you, resumes playback and snaps back to the live edge. The tab is never reloaded.",
+          es: "Errores del reproductor (#1000 a #5000, incluido el #2000): StreamPulse pulsa «Reintentar» por ti, reanuda la reproducción y vuelve al directo. La pestaña nunca se recarga.",
+          "pt-BR": "Erros do player (#1000 a #5000, incluindo o #2000): o StreamPulse clica em \"Tentar novamente\" por você, retoma a reprodução e volta ao ao vivo. A aba nunca é recarregada.",
+          de: "Player-Fehler (#1000 bis #5000, auch #2000): StreamPulse klickt für dich auf „Erneut versuchen“, setzt die Wiedergabe fort und springt zurück zum Livepunkt. Der Tab wird nie neu geladen.",
+          it: "Errori del player (da #1000 a #5000, incluso il #2000): StreamPulse preme \"Riprova\" al posto tuo, riavvia la riproduzione e torna alla diretta. La scheda non viene mai ricaricata.",
+          pl: "Błędy odtwarzacza (#1000 do #5000, w tym #2000): StreamPulse klika za Ciebie „Spróbuj ponownie”, wznawia odtwarzanie i wraca do transmisji na żywo. Karta nigdy nie jest przeładowywana.",
+          tr: "Oynatıcı hataları (#1000 ile #5000 arası, #2000 dahil): StreamPulse senin yerine \"Tekrar dene\"ye basar, oynatmayı sürdürür ve canlı noktaya döner. Sekme asla yenilenmez.",
+          ru: "Ошибки плеера (с #1000 по #5000, включая #2000): StreamPulse нажимает «Повторить» за вас, возобновляет воспроизведение и возвращает к прямому эфиру. Вкладка никогда не перезагружается.",
+          ja: "プレーヤーのエラー（#1000〜#5000、#2000 を含む）では、StreamPulse が代わりに「再試行」を押し、再生を再開してライブ地点に戻します。タブを再読み込みすることはありません。",
+          ko: "플레이어 오류(#1000~#5000, #2000 포함)가 나면 StreamPulse가 대신 \"다시 시도\"를 누르고, 재생을 재개한 뒤 실시간 지점으로 돌아갑니다. 탭을 새로고침하지는 않습니다.",
+          id: "Kesalahan pemutar (#1000 sampai #5000, termasuk #2000): StreamPulse menekan \"Coba lagi\" untukmu, melanjutkan pemutaran, dan kembali ke titik siaran langsung. Tab tidak pernah dimuat ulang.",
+          nl: "Spelerfouten (#1000 tot #5000, waaronder #2000): StreamPulse klikt voor je op ‘Opnieuw proberen’, hervat het afspelen en springt terug naar live. Het tabblad wordt nooit herladen.",
+          sv: "Spelarfel (#1000 till #5000, inklusive #2000): StreamPulse trycker på ”Försök igen” åt dig, återupptar uppspelningen och hoppar tillbaka till direktsändningen. Fliken laddas aldrig om.",
+          cs: "Chyby přehrávače (#1000 až #5000, včetně #2000): StreamPulse za vás klikne na „Zkusit znovu“, obnoví přehrávání a vrátí se na živý okamžik. Karta se nikdy znovu nenačítá."
         }
       },
       {
