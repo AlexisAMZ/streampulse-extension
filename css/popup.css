@@ -27,7 +27,7 @@ svg { flex: none; width: 14px; height: 14px; }
 * { scrollbar-width: thin; scrollbar-color: var(--line-2) transparent; }
 .visually-hidden,
 .platform-button-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.sheet-hint { color: var(--text-3); font-size: 11px; font-weight: 600; white-space: nowrap; }
+.sheet-hint { color: var(--text-3); font-size: 12px; font-weight: 600; white-space: nowrap; }
 
 /* ── Shared controls ── */
 .button {

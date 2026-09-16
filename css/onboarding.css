@@ -131,7 +131,7 @@
 /* Settings */
 .settings-group { padding: 22px 24px 6px; border-radius: 22px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
 /* Note privacy sous le badge communautaire : la seule donnée réseau du produit. */
-.settings-privacy { margin: -14px 0 14px; padding: 0 24px; color: var(--text-3); font-size: 12.5px; line-height: 1.5; }
+.settings-privacy { margin: -8px 0 14px; padding: 0 24px; color: var(--text-3); font-size: 12.5px; line-height: 1.5; }
 /* Réglages avancés : repliés par défaut pour alléger l'étape préférences. */
 .settings-advanced { margin: 0; }
 .settings-advanced > summary { padding: 12px 24px; border-radius: 14px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); color: var(--text-2); font-size: 13.5px; font-weight: 700; cursor: pointer; list-style: none; }
