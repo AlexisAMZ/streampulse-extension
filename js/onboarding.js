@@ -477,6 +477,8 @@ function renderStreamers(streamers = []) {
     removeButton.className = "remove-streamer";
     removeButton.type = "button";
     removeButton.dataset.streamerId = streamer.id;
+    removeButton.innerHTML =
+      '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
     removeButton.setAttribute("aria-label", t("onboarding.removeStreamerName", { name: handleLabel || avatar.alt }));
 
     item.append(info, removeButton);
