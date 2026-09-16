@@ -139,6 +139,7 @@ const DEFAULT_PREFERENCES = {
   hideTwitchExtensions: false,
   keepQualityInBackground: false,
   enablePipButton: true,
+  autoRefreshPlayerErrors: true,
   enableClipDownload: true,
   playerQuality: "auto",
   autoCancelRaids: false,
@@ -578,6 +579,7 @@ class PreferenceStore {
       hideTwitchExtensions: Boolean(preferences.hideTwitchExtensions),
       keepQualityInBackground: preferences.keepQualityInBackground === true,
       enablePipButton: preferences.enablePipButton !== false,
+      autoRefreshPlayerErrors: preferences.autoRefreshPlayerErrors !== false,
       enableClipDownload: preferences.enableClipDownload !== false,
       playerQuality: PLAYER_QUALITIES.includes(preferences.playerQuality) ? preferences.playerQuality : "auto",
       autoCancelRaids: preferences.autoCancelRaids === true,
@@ -3134,6 +3136,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           updates.autoOpenInventoryIntervalHours = Number.isFinite(hours)
             ? Math.min(24, Math.max(1, Math.round(hours)))
             : DEFAULT_PREFERENCES.autoOpenInventoryIntervalHours;
+        }
+        if ("autoRefreshPlayerErrors" in incomingUpdates) {
+          updates.autoRefreshPlayerErrors =
+            incomingUpdates.autoRefreshPlayerErrors !== false;
         }
         if ("enablePipButton" in incomingUpdates) {
           updates.enablePipButton = incomingUpdates.enablePipButton !== false;

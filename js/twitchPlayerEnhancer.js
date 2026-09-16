@@ -1,6 +1,7 @@
 (() => {
   const PREFERENCES_KEY = "betaGeneralPreferences";
   const FAST_FORWARD_FIELD = "enableFastForwardButton";
+  const AUTO_REFRESH_FIELD = "autoRefreshPlayerErrors";
 
   const FAST_FORWARD_BUTTON_ID = "streampulse-fast-forward-btn";
   const FAST_FORWARD_STYLE_ID = "streampulse-fast-forward-style";
@@ -194,11 +195,15 @@
     return null;
   }
 
-  // La relance automatique du lecteur en cas d'erreur (codes 1000-5000, dont
-  // le fameux #2000) a ete adoucie : on garde la detection et on appuie pour
-  // l'utilisateur sur le bouton « Reessayer » du lecteur, mais on ne recharge
-  // plus jamais la page entiere — un #2000 transitoire ne doit plus couper
-  // le stream pour rien.
+  // Relance du lecteur sur erreur (codes 1000-5000, dont le fameux #2000).
+  //
+  // On clique « Reessayer » a la place de l'utilisateur. Si l'overlay n'offre
+  // aucun bouton, ou si le clic n'a pas suffi au tour precedent, on recharge —
+  // mais jamais sur un onglet cache (on attend son retour), jamais deux fois
+  // pour la meme page, et jamais moins de 45 s apres un rechargement.
+  //
+  // Reglable : autoRefreshPlayerErrors, active par defaut. Une extension ne
+  // doit pas imposer un rechargement de page sans laisser couper la fonction.
 
   const ERROR_GATE_SELECTOR =
     '[data-a-target="player-overlay-content-gate"], .content-overlay-gate';
@@ -206,10 +211,16 @@
   const RETRY_GRACE_MS = 6000;
   const RETRY_POLL_MS = 4000;
 
+  const RELOAD_STAMP_KEY = "streampulsePlayerReloadAt";
+  const RELOAD_COOLDOWN_MS = 45000;
+
   let errorCheckTimeoutId = null;
   let observedVideo = null;
   let videoAbortHandler = null;
   let retryClickAttempted = false;
+  let autoRefreshEnabled = true;
+  let reloadPendingUntilVisible = false;
+  let reloadAttempted = false;
 
   function hasPlayerError() {
     const gate = document.querySelector(ERROR_GATE_SELECTOR);
@@ -227,12 +238,43 @@
     return false;
   }
 
+  /** Dernier recours : recharger, sous trois garde-fous cumules. */
+  function reloadPlayerPage() {
+    if (document.hidden) {
+      // Recharger un onglet que personne ne regarde couperait un stream
+      // ecoute en fond : on attend son retour au premier plan.
+      reloadPendingUntilVisible = true;
+      return;
+    }
+    reloadPendingUntilVisible = false;
+    if (reloadAttempted) return;
+    reloadAttempted = true;
+    try {
+      // sessionStorage survit au rechargement : c'est lui qui empeche la boucle.
+      const last = Number(sessionStorage.getItem(RELOAD_STAMP_KEY)) || 0;
+      if (Date.now() - last < RELOAD_COOLDOWN_MS) return;
+      sessionStorage.setItem(RELOAD_STAMP_KEY, String(Date.now()));
+    } catch (_error) {
+      return; // Stockage bloque : pas de garde-fou, donc pas de rechargement.
+    }
+    window.location.reload();
+  }
+
   function attemptRecovery() {
     // Un seul clic par erreur : si le lecteur re-affiche l'overlay, le tour
-    // de sondage suivant re-tentera. Re-cliquer en boucle sur un bouton qui
-    // ne repond pas ne sert a rien.
+    // de sondage suivant passera au rechargement. Re-cliquer en boucle sur un
+    // bouton qui ne repond pas ne sert a rien.
     if (!retryClickAttempted) {
       retryClickAttempted = clickRetryButton();
+      if (!retryClickAttempted) {
+        // Overlay sans bouton : le clic est impossible, on recharge.
+        reloadPlayerPage();
+        return;
+      }
+    } else {
+      // Le clic du tour precedent n'a pas suffi.
+      reloadPlayerPage();
+      return;
     }
 
     window.setTimeout(() => {
@@ -246,6 +288,7 @@
 
   function checkForPlayerErrors() {
     errorCheckTimeoutId = null;
+    if (!autoRefreshEnabled) return;
     ensureVideoAbortListener();
 
     if (hasPlayerError()) {
@@ -259,6 +302,7 @@
   }
 
   function scheduleErrorCheck(delay = 2000) {
+    if (!autoRefreshEnabled) return;
     if (errorCheckTimeoutId != null) {
       clearTimeout(errorCheckTimeoutId);
     }
@@ -516,7 +560,24 @@
     }
   }
 
+  function setAutoRefresh(enabled) {
+    if (enabled === autoRefreshEnabled) return;
+    autoRefreshEnabled = enabled;
+    if (enabled) {
+      ensureVideoAbortListener();
+      scheduleErrorCheck(500);
+      return;
+    }
+    if (errorCheckTimeoutId != null) {
+      clearTimeout(errorCheckTimeoutId);
+      errorCheckTimeoutId = null;
+    }
+    detachVideoAbortListener();
+  }
+
   function applyPreferences(preferences = {}) {
+    setAutoRefresh(preferences[AUTO_REFRESH_FIELD] !== false);
+
     const shouldFastForward = preferences[FAST_FORWARD_FIELD] !== false;
     if (shouldFastForward && !fastForwardEnabled) {
       enableFastForward();
@@ -1074,11 +1135,8 @@
     }
 
     if (isTopWindow) {
+      // La detection demarre via applyPreferences, selon le reglage.
       initPreferences();
-      // Detection d'erreur toujours active : aucun reglage ne la coupe, elle
-      // ne fait que cliquer « Reessayer » et ne recharge jamais la page.
-      ensureVideoAbortListener();
-      scheduleErrorCheck(500);
     }
   }
 
@@ -1086,6 +1144,10 @@
     if (document.hidden) return;
 
     if (isTopWindow) {
+      if (autoRefreshEnabled && reloadPendingUntilVisible && hasPlayerError()) {
+        reloadPlayerPage();
+        return;
+      }
       scheduleErrorCheck(500);
       if (fastForwardEnabled) {
         ensureFastForwardButton();

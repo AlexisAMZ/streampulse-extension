@@ -36,7 +36,7 @@ Rewards on autopilot
 
 A smoother player
 • Anti-pause: the stream keeps playing when you switch tabs.
-• Player recovery after errors such as Twitch #2000: StreamPulse presses Try again for you, resumes playback and snaps back to the live edge.
+• Player recovery after errors such as Twitch #2000: StreamPulse presses Try again for you and reloads the tab if the player still won't start, never on a background tab. Can be switched off in settings.
 • Picture-in-Picture button: watch the stream in a floating mini window while you do something else.
 • Fast-forward button: jump back to the live edge when your stream falls behind.
 • Optional: keep the video quality when the tab is in the background, instead of letting Twitch lower it.
@@ -85,7 +85,7 @@ Récompenses en pilote automatique
 
 Un lecteur plus fluide
 • Anti-pause : le stream continue quand vous changez d'onglet.
-• Récupération du lecteur après une erreur comme la #2000 de Twitch : StreamPulse appuie sur Réessayer à votre place, relance la lecture et recale sur le direct.
+• Récupération du lecteur après une erreur comme la #2000 de Twitch : StreamPulse appuie sur Réessayer à votre place et recharge l'onglet si le lecteur ne repart pas, jamais sur un onglet en arrière-plan. Désactivable dans les réglages.
 • Bouton Picture-in-Picture : regardez le live dans une mini-fenêtre flottante pendant que vous faites autre chose.
 • Bouton d'avance rapide : rattrapez le direct quand votre flux a pris du retard.
 • Au choix : garder la qualité vidéo quand l'onglet est en arrière-plan, au lieu de laisser Twitch la baisser.

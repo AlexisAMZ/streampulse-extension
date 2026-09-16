@@ -44,6 +44,7 @@
           ["keepQualityInBackground", "keepQualityTitle"],
           ["enableFastForwardButton", "fastForwardTitle"],
           ["enablePipButton", "pipButtonTitle"],
+          ["autoRefreshPlayerErrors", "autoRefreshTitle"],
           ["hideTwitchExtensions", "hideTwitchExtensionsTitle"],
           ["communityBadge", "communityBadgeTitle"],
         ] },

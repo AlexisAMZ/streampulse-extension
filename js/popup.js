@@ -34,6 +34,7 @@ const defaultPreferences = {
   autoClaimChannelPoints: true,
   keepQualityInBackground: false,
   enablePipButton: true,
+  autoRefreshPlayerErrors: true,
   enableClipDownload: true,
   playerQuality: "auto",
   enableFastForwardButton: true,
@@ -92,6 +93,7 @@ const streamerFaviconToggle = document.getElementById("pref-enable-streamer-favi
 const tabLiveIconToggle = document.getElementById("pref-enable-tab-live-icon");
 const keepQualityToggle = document.getElementById("pref-keep-quality");
 const pipButtonToggle = document.getElementById("pref-pip-button");
+const autoRefreshToggle = document.getElementById("pref-auto-refresh");
 const clipDownloadToggle = document.getElementById("pref-clip-download");
 const playerQualitySelect = document.getElementById("pref-player-quality");
 const fastForwardToggle = document.getElementById("pref-fast-forward");
@@ -1009,6 +1011,9 @@ function renderPreferences() {
   if (pipButtonToggle) {
     pipButtonToggle.checked = prefs.enablePipButton !== false;
   }
+  if (autoRefreshToggle) {
+    autoRefreshToggle.checked = prefs.autoRefreshPlayerErrors !== false;
+  }
   if (clipDownloadToggle) {
     clipDownloadToggle.checked = prefs.enableClipDownload !== false;
   }
@@ -1618,6 +1623,13 @@ async function updatePreferences(updates) {
     showFeedback(t(messageKey), "success");
   }
 
+  if ("autoRefreshPlayerErrors" in updates) {
+    const messageKey = updates.autoRefreshPlayerErrors
+      ? "popup.preferences.autoRefreshEnabled"
+      : "popup.preferences.autoRefreshDisabled";
+    showFeedback(t(messageKey), "success");
+  }
+
   if ("enablePipButton" in updates) {
     const messageKey = updates.enablePipButton
       ? "popup.preferences.pipButtonEnabled"
@@ -1972,6 +1984,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     pipButtonToggle?.addEventListener("change", (e) => {
       updatePreferences({ enablePipButton: e.target.checked });
+    });
+    autoRefreshToggle?.addEventListener("change", (e) => {
+      updatePreferences({ autoRefreshPlayerErrors: e.target.checked });
     });
     clipDownloadToggle?.addEventListener("change", (e) => {
       updatePreferences({ enableClipDownload: e.target.checked });

@@ -268,21 +268,21 @@ export const RELEASES = [
       {
         type: "improved",
         text: {
-          fr: "Erreurs du lecteur (#1000 à #5000, dont la #2000) : StreamPulse appuie sur « Réessayer » à votre place, relance la lecture et recale sur le direct. L'onglet n'est jamais rechargé.",
-          en: "Player errors (#1000 to #5000, including #2000): StreamPulse presses \"Try again\" for you, resumes playback and snaps back to the live edge. The tab is never reloaded.",
-          es: "Errores del reproductor (#1000 a #5000, incluido el #2000): StreamPulse pulsa «Reintentar» por ti, reanuda la reproducción y vuelve al directo. La pestaña nunca se recarga.",
-          "pt-BR": "Erros do player (#1000 a #5000, incluindo o #2000): o StreamPulse clica em \"Tentar novamente\" por você, retoma a reprodução e volta ao ao vivo. A aba nunca é recarregada.",
-          de: "Player-Fehler (#1000 bis #5000, auch #2000): StreamPulse klickt für dich auf „Erneut versuchen“, setzt die Wiedergabe fort und springt zurück zum Livepunkt. Der Tab wird nie neu geladen.",
-          it: "Errori del player (da #1000 a #5000, incluso il #2000): StreamPulse preme \"Riprova\" al posto tuo, riavvia la riproduzione e torna alla diretta. La scheda non viene mai ricaricata.",
-          pl: "Błędy odtwarzacza (#1000 do #5000, w tym #2000): StreamPulse klika za Ciebie „Spróbuj ponownie”, wznawia odtwarzanie i wraca do transmisji na żywo. Karta nigdy nie jest przeładowywana.",
-          tr: "Oynatıcı hataları (#1000 ile #5000 arası, #2000 dahil): StreamPulse senin yerine \"Tekrar dene\"ye basar, oynatmayı sürdürür ve canlı noktaya döner. Sekme asla yenilenmez.",
-          ru: "Ошибки плеера (с #1000 по #5000, включая #2000): StreamPulse нажимает «Повторить» за вас, возобновляет воспроизведение и возвращает к прямому эфиру. Вкладка никогда не перезагружается.",
-          ja: "プレーヤーのエラー（#1000〜#5000、#2000 を含む）では、StreamPulse が代わりに「再試行」を押し、再生を再開してライブ地点に戻します。タブを再読み込みすることはありません。",
-          ko: "플레이어 오류(#1000~#5000, #2000 포함)가 나면 StreamPulse가 대신 \"다시 시도\"를 누르고, 재생을 재개한 뒤 실시간 지점으로 돌아갑니다. 탭을 새로고침하지는 않습니다.",
-          id: "Kesalahan pemutar (#1000 sampai #5000, termasuk #2000): StreamPulse menekan \"Coba lagi\" untukmu, melanjutkan pemutaran, dan kembali ke titik siaran langsung. Tab tidak pernah dimuat ulang.",
-          nl: "Spelerfouten (#1000 tot #5000, waaronder #2000): StreamPulse klikt voor je op ‘Opnieuw proberen’, hervat het afspelen en springt terug naar live. Het tabblad wordt nooit herladen.",
-          sv: "Spelarfel (#1000 till #5000, inklusive #2000): StreamPulse trycker på ”Försök igen” åt dig, återupptar uppspelningen och hoppar tillbaka till direktsändningen. Fliken laddas aldrig om.",
-          cs: "Chyby přehrávače (#1000 až #5000, včetně #2000): StreamPulse za vás klikne na „Zkusit znovu“, obnoví přehrávání a vrátí se na živý okamžik. Karta se nikdy znovu nenačítá."
+          fr: "Erreurs du lecteur (#1000 à #5000, dont la #2000) : StreamPulse clique « Réessayer » à votre place, puis recharge l'onglet si le lecteur ne repart pas. Jamais sur un onglet en arrière-plan, jamais deux fois pour la même page. Réglage désactivable, actif par défaut.",
+          en: "Player errors (#1000 to #5000, including #2000): StreamPulse presses \"Try again\" for you, then reloads the tab if the player still won't start. Never on a background tab, never twice for the same page. Can be switched off; on by default.",
+          es: "Errores del reproductor (#1000 a #5000, incluido el #2000): StreamPulse pulsa «Reintentar» por ti y recarga la pestaña si el reproductor sigue sin arrancar. Nunca en una pestaña en segundo plano, nunca dos veces en la misma página. Se puede desactivar; activado por defecto.",
+          "pt-BR": "Erros do player (#1000 a #5000, incluindo o #2000): o StreamPulse clica em \"Tentar novamente\" por você e recarrega a aba se o player não voltar. Nunca em uma aba em segundo plano, nunca duas vezes na mesma página. Pode ser desativado; ativado por padrão.",
+          de: "Player-Fehler (#1000 bis #5000, auch #2000): StreamPulse klickt für dich auf „Erneut versuchen“ und lädt den Tab neu, wenn der Player nicht wieder anläuft. Nie bei einem Hintergrund-Tab, nie zweimal für dieselbe Seite. Abschaltbar, standardmäßig an.",
+          it: "Errori del player (da #1000 a #5000, incluso il #2000): StreamPulse preme \"Riprova\" al posto tuo e ricarica la scheda se il player non riparte. Mai su una scheda in background, mai due volte per la stessa pagina. Disattivabile, attivo di default.",
+          pl: "Błędy odtwarzacza (#1000–#5000, w tym #2000): StreamPulse klika za Ciebie „Spróbuj ponownie”, a potem przeładowuje kartę, jeśli odtwarzacz nie rusza. Nigdy w karcie w tle, nigdy dwa razy na tej samej stronie. Można wyłączyć; domyślnie włączone.",
+          tr: "Oynatıcı hataları (#1000–#5000, #2000 dahil): StreamPulse senin yerine \"Tekrar dene\"ye basar, oynatıcı yine açılmazsa sekmeyi yeniler. Arka plandaki sekmede asla, aynı sayfada asla iki kez. Kapatılabilir; varsayılan olarak açık.",
+          ru: "Ошибки плеера (с #1000 по #5000, включая #2000): StreamPulse нажимает «Повторить» за вас, а если плеер не запускается — перезагружает вкладку. Никогда в фоновой вкладке и никогда дважды для одной страницы. Можно отключить, по умолчанию включено.",
+          ja: "プレーヤーのエラー（#1000〜#5000、#2000 を含む）では、StreamPulse が代わりに「再試行」を押し、それでも復帰しない場合はタブを再読み込みします。バックグラウンドのタブでは行わず、同じページで二度は行いません。設定でオフにでき、初期設定はオンです。",
+          ko: "플레이어 오류(#1000~#5000, #2000 포함) 시 StreamPulse가 대신 \"다시 시도\"를 누르고, 그래도 재생되지 않으면 탭을 새로고침합니다. 백그라운드 탭에서는 하지 않으며, 같은 페이지에서 두 번 하지 않습니다. 설정에서 끌 수 있고 기본값은 켜짐입니다.",
+          id: "Kesalahan pemutar (#1000 sampai #5000, termasuk #2000): StreamPulse menekan \"Coba lagi\" untukmu, lalu memuat ulang tab bila pemutar tetap tidak jalan. Tidak pernah pada tab latar belakang, tidak pernah dua kali untuk halaman yang sama. Bisa dimatikan; aktif secara bawaan.",
+          nl: "Spelerfouten (#1000 tot #5000, waaronder #2000): StreamPulse klikt voor je op ‘Opnieuw proberen’ en herlaadt het tabblad als de speler niet start. Nooit bij een tabblad op de achtergrond, nooit twee keer voor dezelfde pagina. Uit te schakelen; standaard aan.",
+          sv: "Spelarfel (#1000 till #5000, inklusive #2000): StreamPulse trycker på ”Försök igen” åt dig och laddar om fliken om spelaren ändå inte startar. Aldrig i en flik i bakgrunden, aldrig två gånger för samma sida. Går att stänga av; på som standard.",
+          cs: "Chyby přehrávače (#1000 až #5000, včetně #2000): StreamPulse za vás klikne na „Zkusit znovu“ a kartu znovu načte, pokud se přehrávač stále nerozběhne. Nikdy na kartě na pozadí a nikdy dvakrát pro stejnou stránku. Lze vypnout, ve výchozím stavu zapnuto."
         }
       },
       {
