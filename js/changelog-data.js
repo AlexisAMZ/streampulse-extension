@@ -86,6 +86,46 @@ export const RELEASES = [
     },
     changes: [
       {
+        type: "fix",
+        text: {
+          fr: "Dans le panneau de réglages sur Twitch, cinq interrupteurs s'affichaient éteints alors que l'option était active : Drops, Moments, bouton Picture-in-Picture, relance du lecteur et son des notifications. Le premier clic semblait donc ne rien faire.",
+          en: "In the settings panel on Twitch, five switches showed as off while the option was actually on: Drops, Moments, the Picture-in-Picture button, player recovery and notification sound. The first click therefore seemed to do nothing.",
+          es: "En el panel de ajustes de Twitch, cinco interruptores aparecían apagados aunque la opción estaba activa: Drops, Moments, botón de imagen en imagen, recuperación del reproductor y sonido de notificaciones. El primer clic parecía no hacer nada.",
+          "pt-BR": "No painel de configurações da Twitch, cinco interruptores apareciam desligados embora a opção estivesse ativa: Drops, Moments, botão Picture-in-Picture, recuperação do player e som das notificações. O primeiro clique parecia não fazer nada.",
+          de: "Im Einstellungsfeld auf Twitch wurden fünf Schalter als aus angezeigt, obwohl die Option aktiv war: Drops, Moments, Bild-in-Bild-Button, Player-Wiederherstellung und Benachrichtigungston. Der erste Klick schien deshalb nichts zu bewirken.",
+          it: "Nel pannello delle impostazioni su Twitch, cinque interruttori risultavano spenti anche se l'opzione era attiva: Drops, Moments, pulsante Picture-in-Picture, ripristino del player e suono delle notifiche. Il primo clic sembrava non fare nulla.",
+          pl: "W panelu ustawień na Twitchu pięć przełączników pokazywało się jako wyłączone, choć opcja była włączona: Drops, Moments, przycisk obrazu w obrazie, naprawa odtwarzacza i dźwięk powiadomień. Pierwsze kliknięcie zdawało się nic nie robić.",
+          tr: "Twitch üzerindeki ayarlar panelinde beş anahtar, seçenek açıkken kapalı görünüyordu: Drops, Moments, resim içinde resim düğmesi, oynatıcı kurtarma ve bildirim sesi. Bu yüzden ilk tıklama hiçbir şey yapmıyormuş gibi görünüyordu.",
+          ru: "В панели настроек на Twitch пять переключателей отображались выключенными, хотя параметр был включён: Drops, Moments, кнопка «Картинка в картинке», восстановление плеера и звук уведомлений. Первый клик поэтому будто ничего не делал.",
+          ja: "Twitch 上の設定パネルで、実際はオンなのにオフと表示される項目が 5 つありました。ドロップ、モーメント、ピクチャー・イン・ピクチャーのボタン、プレーヤーの復帰、通知音です。最初のクリックが何も起きないように見えていました。",
+          ko: "Twitch의 설정 패널에서 실제로는 켜져 있는데 꺼짐으로 표시되던 항목이 다섯 개 있었습니다. 드롭, 모먼트, PIP 버튼, 플레이어 복구, 알림음입니다. 그래서 첫 클릭이 아무 일도 하지 않는 것처럼 보였습니다.",
+          id: "Di panel pengaturan pada Twitch, lima sakelar tampak mati padahal opsinya aktif: Drops, Moments, tombol Picture-in-Picture, pemulihan pemutar, dan suara notifikasi. Klik pertama karena itu terlihat tidak melakukan apa-apa.",
+          nl: "In het instellingenpaneel op Twitch stonden vijf schakelaars op uit terwijl de optie aanstond: Drops, Moments, de beeld-in-beeldknop, herstel van de speler en het meldingsgeluid. De eerste klik leek daardoor niets te doen.",
+          sv: "I inställningspanelen på Twitch visades fem reglage som avstängda trots att alternativet var på: Drops, Moments, bild-i-bild-knappen, återställning av spelaren och aviseringsljudet. Första klicket verkade därför inte göra något.",
+          cs: "V panelu nastavení na Twitchi se pět přepínačů zobrazovalo jako vypnuté, přestože volba byla zapnutá: Drops, Moments, tlačítko Obraz v obraze, obnovení přehrávače a zvuk upozornění. První kliknutí tak vypadalo, že nic nedělá."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "La détection des erreurs du lecteur ne démarrait plus du tout : elle attendait un changement de réglage qui n'arrivait jamais. Elle repart dès l'ouverture de la page.",
+          en: "Player error detection no longer started at all: it was waiting for a settings change that never came. It now runs as soon as the page opens.",
+          es: "La detección de errores del reproductor ya no se iniciaba: esperaba un cambio de ajuste que nunca llegaba. Ahora arranca en cuanto se abre la página.",
+          "pt-BR": "A detecção de erros do player não iniciava mais: esperava uma mudança de configuração que nunca chegava. Agora ela começa assim que a página abre.",
+          de: "Die Fehlererkennung des Players startete gar nicht mehr: Sie wartete auf eine Einstellungsänderung, die nie kam. Jetzt läuft sie, sobald die Seite öffnet.",
+          it: "Il rilevamento degli errori del player non partiva più: attendeva un cambio di impostazione che non arrivava mai. Ora si avvia all'apertura della pagina.",
+          pl: "Wykrywanie błędów odtwarzacza w ogóle się nie uruchamiało: czekało na zmianę ustawienia, która nigdy nie następowała. Teraz rusza zaraz po otwarciu strony.",
+          tr: "Oynatıcı hata algılaması hiç başlamıyordu: hiç gelmeyen bir ayar değişikliğini bekliyordu. Artık sayfa açılır açılmaz çalışıyor.",
+          ru: "Обнаружение ошибок плеера вообще не запускалось: оно ждало изменения настройки, которое никогда не приходило. Теперь оно работает сразу при открытии страницы.",
+          ja: "プレーヤーのエラー検出がまったく始まらなくなっていました。決して来ない設定変更を待っていたためです。ページを開いた時点で動くようになりました。",
+          ko: "플레이어 오류 감지가 전혀 시작되지 않았습니다. 오지 않는 설정 변경을 기다리고 있었기 때문입니다. 이제 페이지를 열면 바로 동작합니다.",
+          id: "Deteksi kesalahan pemutar sama sekali tidak berjalan: ia menunggu perubahan pengaturan yang tidak pernah datang. Kini berjalan begitu halaman dibuka.",
+          nl: "De foutdetectie van de speler startte helemaal niet meer: hij wachtte op een instellingswijziging die nooit kwam. Hij draait nu zodra de pagina opent.",
+          sv: "Spelarens feldetektering startade inte alls: den väntade på en inställningsändring som aldrig kom. Nu körs den så fort sidan öppnas.",
+          cs: "Detekce chyb přehrávače se vůbec nespouštěla: čekala na změnu nastavení, která nikdy nepřišla. Nyní běží hned po otevření stránky."
+        }
+      },
+      {
         type: "new",
         text: {
           fr: "Nouveau : alertes de raids entrants (bêta), à activer dans les réglages. StreamPulse surveille les chaînes Twitch que vous suivez, même sans onglet ouvert, et vous prévient dès qu'un raid arrive pour que vous puissiez récupérer les points. Désactivé par défaut.",
