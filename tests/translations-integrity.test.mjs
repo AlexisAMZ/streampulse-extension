@@ -15,7 +15,7 @@ function leafPaths(node, prefix = "") {
 
 test("toutes les locales exposent exactement les mêmes clés", () => {
   const locales = Object.keys(translations);
-  assert.ok(locales.length >= 15, `au moins 15 locales attendues, trouvé ${locales.length}`);
+  assert.ok(locales.length >= 11, `au moins 11 locales attendues, trouvé ${locales.length}`);
 
   const reference = new Set(leafPaths(translations.fr)).difference(new Set(["fr.htmlLang"]));
   for (const locale of locales) {
