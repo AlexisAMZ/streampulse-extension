@@ -87,6 +87,22 @@ export const RELEASES = [
     changes: [      {
         type: "fix",
         text: {
+          fr: "Les panneaux sur Twitch reconnaissent désormais tous les pseudos valides : certains logins courts étaient ignorés par le bouton topbar et le suivi de chaîne.",
+          en: "Twitch panels now recognize every valid username: some short logins were ignored by the topbar button and channel following.",
+          es: "Los paneles en Twitch reconocen ahora todos los seudónimos válidos: algunos logins cortos eran ignorados por el botón topbar y el seguimiento de canal.",
+          "pt-BR": "Os painéis na Twitch reconhecem agora todos os nomes de usuário válidos: alguns logins curtos eram ignorados pelo botão da topbar e pelo seguimento de canal.",
+          de: "Die Panels auf Twitch erkennen jetzt alle gültigen Nutzernamen: manche kurze Logins wurden von der Topbar-Schaltfläche und dem Kanal-Folgen ignoriert.",
+          it: "I pannelli su Twitch riconoscono ormai tutti i nomi utente validi: alcuni login corti venivano ignorati dal pulsante topbar e dal seguire canale.",
+          pl: "Panele na Twitchu rozpoznają teraz wszystkie poprawne nazwy użytkownika: niektóre krótkie loginy były ignorowane przez przycisk topbara i obserwowanie kanału.",
+          tr: "Twitch panelleri artık tüm geçerli kullanıcı adlarını tanıyor: bazı kısa loginler topbar düğmesi ve kanal takibi tarafından yok sayılıyordu.",
+          ru: "Панели на Twitch теперь распознают все корректные имена пользователей: некоторые короткие логины игнорировались кнопкой топбара и подпиской на канал.",
+          ja: "Twitch のパネルがすべての有効なユーザー名を認識するように：短いログインがトップバーボタンやチャンネルフォローで無視されることがありました。",
+          ko: "Twitch 패널이 이제 모든 유효한 사용자 이름을 인식합니다: 짧은 로그인이 탑바 버튼과 채널 팔로우에서 무시되곤 했습니다."
+        }
+      },
+      {
+        type: "fix",
+        text: {
           fr: "Points, Drops et temps de visionnage sont comptés au juste nombre : des événements simultanés ne s'écrasaient plus entre eux.",
           en: "Channel points, Drops and watch time are counted exactly: simultaneous events no longer overwrite each other.",
           es: "Puntos de canal, Drops y tiempo de visionado se cuentan con exactitud: los eventos simultáneos ya se sobrescriben entre ellos.",
