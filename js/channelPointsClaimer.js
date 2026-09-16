@@ -78,6 +78,21 @@
       if (svgPath) btn = svgPath.closest("button");
     }
 
+    if (!btn) {
+      // Repli inspiré du rendu actuel de Twitch, indépendant de la langue :
+      // quand un bonus est disponible, le résumé de points affiche un « +N »
+      // et sa caisse est le premier bouton de la zone, quel que soit le
+      // libellé traduit. Sans « +N » on ne clique pas : le bouton existe
+      // aussi hors bonus et ne ferait qu'ouvrir un popover en boucle.
+      const summary = document.querySelector(
+        "[data-test-selector='community-points-summary'], .community-points-summary"
+      );
+      if (summary && /\+\s*\d/.test(summary.textContent || "")) {
+        const chest = summary.querySelector("button");
+        if (chest && !chest.hasAttribute("disabled")) btn = chest;
+      }
+    }
+
     if (!btn) return false;
 
     // Channel points bonus chest found: claim it
