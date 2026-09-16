@@ -664,7 +664,9 @@ body.is-settings .plus-badge:not(.is-active) { background: var(--surface-2); box
 .sp-paint--sunset { background-image: linear-gradient(90deg, #ff7a45, #ff4d8d, #ffd166, #ff7a45); }
 .sp-paint--lcd { background-image: linear-gradient(180deg, #eaf5c2, #9fbf5a); filter: drop-shadow(0 0 3px rgba(198, 212, 160, 0.6)); }
 .sp-paint--gold { background-image: linear-gradient(100deg, #b8860b 0%, #ffe08a 42%, #fff8d6 50%, #ffe08a 58%, #b8860b 100%); background-size: 260% 100%; animation: sp-paint-slide 3.5s linear infinite; }
-.sp-paint--neon { background: none; -webkit-text-fill-color: #e6dbff; color: #e6dbff; text-shadow: 0 0 1px #a06bff, 0 0 4px #9146ff, 0 0 10px rgba(145, 70, 255, 0.55); }
+/* Apercu fidele du rendu injecte (css/inject/twitch-badge.css) : meme formule
+   color-mix sur --sp-paint-glow — sans glow custom, la valeur de repli coincide. */
+.sp-paint--neon { background: none; -webkit-text-fill-color: color-mix(in srgb, var(--sp-paint-glow, #9146ff) 25%, #ffffff); color: color-mix(in srgb, var(--sp-paint-glow, #9146ff) 25%, #ffffff); text-shadow: 0 0 1px color-mix(in srgb, var(--sp-paint-glow, #9146ff) 90%, #ffffff), 0 0 4px var(--sp-paint-glow, #9146ff), 0 0 10px color-mix(in srgb, var(--sp-paint-glow, #9146ff) 55%, transparent); }
 .sp-paint--rainbow { background-image: linear-gradient(90deg, #ff5f6d, #ffc371, #c6f15a, #4fd1ff, #9146ff, #ff5f6d); animation: sp-paint-slide 4s linear infinite; }
 @keyframes sp-paint-slide { to { background-position: -200% 0; } }
 @media (prefers-reduced-motion: reduce) { .cosmetic-badge, .sp-paint { animation: none !important; } }
