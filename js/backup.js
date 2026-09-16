@@ -118,13 +118,15 @@ function cleanValue(key, value) {
     case PREFERENCES:
     case STATS:
     case PROFILE:
-    case GROUPS:
     case HISTORY:
     case COSMETICS:
     case PREDICTION_RULE:
       return isPlainObject(value) ? value : undefined;
     case PINNED:
       return Array.isArray(value) ? value.filter((id) => typeof id === "string" && id) : undefined;
+    // Les groupes sont une liste, y compris vide : la refuser rejetait toute la sauvegarde.
+    case GROUPS:
+      return Array.isArray(value) ? value.filter(isPlainObject) : undefined;
     case SMART_ALERTS:
       return Array.isArray(value) || isPlainObject(value) ? value : undefined;
     case ACCENT:
@@ -276,7 +278,14 @@ export function mergeBackup(current, incoming) {
         data[key] = [...new Set([...currentPins, ...value])];
         break;
       }
-      case GROUPS:
+      case GROUPS: {
+        // Union par identite (id, sinon nom) : les groupes locaux restent en tete.
+        const currentGroups = Array.isArray(now[key]) ? now[key] : [];
+        const identity = (g) => String(g?.id ?? g?.name ?? JSON.stringify(g));
+        const seen = new Set(currentGroups.map(identity));
+        data[key] = [...currentGroups, ...value.filter((g) => !seen.has(identity(g)))];
+        break;
+      }
       case HISTORY:
         // Les entrees deja presentes gagnent : on n'ecrase pas l'existant.
         data[key] = { ...value, ...(isPlainObject(now[key]) ? now[key] : {}) };

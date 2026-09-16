@@ -27,7 +27,7 @@ const storage = {
   },
   userProfile: { handle: "alexisamz", displayName: "AlexisAMZ", avatarUrl: "" },
   betaPinnedIds: ["twitch:gotaga", "kick:amine"],
-  betaChannelGroups: { amis: ["twitch:gotaga"] },
+  betaChannelGroups: [{ id: "g1", name: "Amis", memberIds: ["twitch:gotaga"] }],
   streamPulseHistory: { "2026-09-12": [{ channel: "gotaga", minutes: 42 }] },
   streamPulseSmartAlerts: [{ handle: "gotaga", game: "Just Chatting" }],
   streamPulseCosmetics: { badgeFx: "glow", nameFx: "" },
@@ -62,7 +62,9 @@ test("les favoris epingles sont sauvegardes, relus et fusionnes sans doublon", (
   const parsed = parseBackup(backup);
   assert.equal(parsed.ok, true);
   assert.deepEqual(parsed.data.betaPinnedIds, ["twitch:gotaga", "kick:amine"]);
-  assert.deepEqual(parsed.data.betaChannelGroups, { amis: ["twitch:gotaga"] });
+  assert.deepEqual(parsed.data.betaChannelGroups, [
+    { id: "g1", name: "Amis", memberIds: ["twitch:gotaga"] },
+  ]);
 
   const merged = mergeBackup({ betaPinnedIds: ["twitch:squeezie", "kick:amine"] }, parsed.data);
   assert.deepEqual(merged.data.betaPinnedIds, ["twitch:squeezie", "kick:amine", "twitch:gotaga"]);
@@ -148,4 +150,25 @@ test("parseBackup ecarte les streamers et les entrees de temps corrompus", () =>
 
 test("backupFileName date le fichier en heure locale", () => {
   assert.equal(backupFileName(new Date(2026, 8, 13, 23, 30)), "streampulse-backup-2026-09-13.json");
+});
+
+test("une liste de groupes vide n'invalide pas la sauvegarde", () => {
+  const result = parseBackup({ betaGeneralStreamers: [], betaChannelGroups: [] });
+  assert.equal(result.ok, true, result.error);
+  assert.deepEqual(result.data.betaChannelGroups, []);
+});
+
+test("les groupes de chaines fusionnent en liste, sans doublon d'identite", () => {
+  const incoming = { betaChannelGroups: [{ id: "g1", name: "Amis" }, { id: "g2", name: "LoL" }] };
+  const merged = mergeBackup({ betaChannelGroups: [{ id: "g1", name: "Amis (local)" }] }, incoming);
+  assert.deepEqual(merged.data.betaChannelGroups, [
+    { id: "g1", name: "Amis (local)" },
+    { id: "g2", name: "LoL" },
+  ]);
+});
+
+test("un objet la ou une liste de groupes est attendue reste refuse", () => {
+  const result = parseBackup({ betaChannelGroups: { amis: [] } });
+  assert.equal(result.ok, false);
+  assert.equal(result.error, "invalid-betaChannelGroups");
 });
