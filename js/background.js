@@ -2871,21 +2871,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       return true;
 
     case "toggleNotifications":
-      (async () => {
-        const preferences = await PreferenceStore.get();
-        const streamers = await DataStore.getStreamers();
-        const idx = streamers.findIndex((s) => s.id === request.id);
-        if (idx === -1) {
-          sendResponse({ error: translateWithPrefs(preferences, "background.errors.streamerNotFound", { platform: "" }) });
-          return;
-        }
-        streamers[idx].notificationsEnabled = Boolean(request.enabled);
-        await DataStore.saveStreamers(streamers);
-        sendResponse({ success: true });
-      })();
-      return true;
-
     case "toggleGameNotifications":
+    case "toggleTitleNotifications": {
+      // Trois messages jumeaux : le nom du flag decoule du type de message.
+      const flagByType = {
+        toggleNotifications: "notificationsEnabled",
+        toggleGameNotifications: "gameNotificationsEnabled",
+        toggleTitleNotifications: "titleNotificationsEnabled",
+      };
       (async () => {
         const preferences = await PreferenceStore.get();
         const streamers = await DataStore.getStreamers();
@@ -2894,26 +2887,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           sendResponse({ error: translateWithPrefs(preferences, "background.errors.streamerNotFound", { platform: "" }) });
           return;
         }
-        streamers[idx].gameNotificationsEnabled = Boolean(request.enabled);
+        streamers[idx][flagByType[request.type]] = Boolean(request.enabled);
         await DataStore.saveStreamers(streamers);
         sendResponse({ success: true });
       })();
       return true;
-
-    case "toggleTitleNotifications":
-      (async () => {
-        const preferences = await PreferenceStore.get();
-        const streamers = await DataStore.getStreamers();
-        const idx = streamers.findIndex((s) => s.id === request.id);
-        if (idx === -1) {
-          sendResponse({ error: translateWithPrefs(preferences, "background.errors.streamerNotFound", { platform: "" }) });
-          return;
-        }
-        streamers[idx].titleNotificationsEnabled = Boolean(request.enabled);
-        await DataStore.saveStreamers(streamers);
-        sendResponse({ success: true });
-      })();
-      return true;
+    }
 
     case "refreshStatuses":
       PlatformChecker.refreshAll().then(() => {
