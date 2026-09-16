@@ -445,9 +445,6 @@ function renderStreamers(streamers = []) {
     (typeof chrome !== "undefined" && chrome.runtime) ||
     (typeof browser !== "undefined" && browser.runtime) ||
     null;
-  const fallbackAvatar = runtime
-    ? runtime.getURL("images/photos/avatars/default-48.png")
-    : "../images/photos/avatars/default-48.png";
 
   streamers.forEach((streamer) => {
     const item = document.createElement("li");
@@ -461,11 +458,11 @@ function renderStreamers(streamers = []) {
     const platformId = streamer.platform || DEFAULT_PLATFORM;
     const definition = getPlatformDefinition(platformId);
     const platformIcon = runtime ? runtime.getURL(definition.icon) : `../${definition.icon}`;
-    avatar.src = streamer.avatarUrl || platformIcon || fallbackAvatar;
+    avatar.src = streamer.avatarUrl || platformIcon;
     const handleLabel = formatHandleForDisplay(platformId, streamer.handle || streamer.twitch);
     avatar.alt = streamer.displayName || handleLabel || "Streamer";
     avatar.referrerPolicy = "no-referrer";
-    avatar.onerror = function () { this.onerror = null; this.src = platformIcon || fallbackAvatar; };
+    avatar.onerror = function () { this.onerror = null; this.src = platformIcon; };
 
     const name = document.createElement("span");
     name.className = "streamer-name";
@@ -477,7 +474,7 @@ function renderStreamers(streamers = []) {
     removeButton.className = "remove-streamer";
     removeButton.type = "button";
     removeButton.dataset.streamerId = streamer.id;
-    removeButton.setAttribute("aria-label", t("onboarding.removeStreamer"));
+    removeButton.setAttribute("aria-label", t("onboarding.removeStreamerName", { name: handleLabel || avatar.alt }));
 
     item.append(info, removeButton);
     streamerList.appendChild(item);
@@ -566,6 +563,8 @@ function registerEventListeners() {
   document.getElementById("btn-back-1")?.addEventListener("click", () => goToStep(0, "back"));
   document.getElementById("btn-back-2")?.addEventListener("click", () => goToStep(1, "back"));
   document.getElementById("btn-back-3")?.addEventListener("click", () => goToStep(2, "back"));
+  document.getElementById("btn-skip-1")?.addEventListener("click", () => goToStep(2, "forward"));
+  document.getElementById("btn-skip-2")?.addEventListener("click", () => goToStep(3, "forward"));
 
   /* Stepper pill clicks */
   document.querySelectorAll(".step-pill").forEach((pill) => {
@@ -723,19 +722,8 @@ function setupUpdateModeUI() {
  * Il était écrit V1.0 en dur dans le HTML : tous les utilisateurs voyaient cette
  * valeur quelle que soit leur version installée.
  */
-function renderSystemVersion() {
-  const host = document.getElementById("ob-sys-version");
-  if (!host) return;
-  try {
-    host.textContent = `V${chrome.runtime.getManifest().version}`;
-  } catch (_) {
-    host.textContent = "";
-  }
-}
-
 async function initialize() {
   await initI18n();
-  renderSystemVersion();
   buildLanguageButtons();
   refreshTranslations();
   registerEventListeners();

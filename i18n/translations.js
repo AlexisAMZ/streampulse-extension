@@ -53,6 +53,24 @@ export const translations = {
     },
     "onboarding": {
 
+
+      "welcomeTitle": "Ne rate plus jamais un live.",
+
+
+      "skipStep": "Passer cette étape",
+
+
+      "badgePrivacyNote": "Désactivé par défaut. Si tu l'actives : une empreinte de ton pseudo est envoyée à streampulse.fr au maximum une fois par jour. Rien d'autre ne quitte ton navigateur.",
+
+
+      "advancedSettings": "Réglages avancés",
+
+
+      "removeStreamerName": "Supprimer {{name}}",
+
+
+      
+
       "newBadge": "NOUVEAU",
 
       
@@ -915,6 +933,24 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+
+      "welcomeTitle": "Never miss a live again.",
+
+
+      "skipStep": "Skip this step",
+
+
+      "badgePrivacyNote": "Off by default. If you enable it: a hashed version of your username is sent to streampulse.fr at most once a day. Nothing else leaves your browser.",
+
+
+      "advancedSettings": "Advanced settings",
+
+
+      "removeStreamerName": "Remove {{name}}",
+
+
+      
 
       "newBadge": "NEW",
 
@@ -1779,6 +1815,24 @@ export const translations = {
     },
     "onboarding": {
 
+
+      "welcomeTitle": "No te pierdas nunca más un directo.",
+
+
+      "skipStep": "Omitir este paso",
+
+
+      "badgePrivacyNote": "Desactivado por defecto. Si lo activas: se envía una versión cifrada de tu usuario a streampulse.fr como máximo una vez al día. Nada más sale de tu navegador.",
+
+
+      "advancedSettings": "Ajustes avanzados",
+
+
+      "removeStreamerName": "Eliminar {{name}}",
+
+
+      
+
       "newBadge": "NUEVO",
 
       
@@ -2641,6 +2695,18 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+      "welcomeTitle": "Nunca mais perca uma live.",
+
+      "skipStep": "Pular esta etapa",
+
+      "badgePrivacyNote": "Desativado por padrão. Se você ativar: um hash do seu nome de usuário é enviado para streampulse.fr no máximo uma vez por dia. Nada mais sai do seu navegador.",
+
+      "advancedSettings": "Configurações avançadas",
+
+      "removeStreamerName": "Remover {{name}}",
+
+      
       "newBadge": "NOVO",
       "stepProfile": "Usuário",
       "profileTitle": "Seu nome de usuário na Twitch.",
@@ -3491,6 +3557,24 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+
+      "welcomeTitle": "Verpasse nie wieder einen Stream.",
+
+
+      "skipStep": "Diesen Schritt überspringen",
+
+
+      "badgePrivacyNote": "Standardmäßig aus. Wenn aktiviert: Ein verschlüsselter Hash deines Benutzernamens wird höchstens einmal täglich an streampulse.fr gesendet. Nichts anderes verlässt deinen Browser.",
+
+
+      "advancedSettings": "Erweiterte Einstellungen",
+
+
+      "removeStreamerName": "{{name}} entfernen",
+
+
+      
 
       "newBadge": "NEU",
 
@@ -4355,6 +4439,24 @@ export const translations = {
     },
     "onboarding": {
 
+
+      "welcomeTitle": "Non perdere mai più una diretta.",
+
+
+      "skipStep": "Salta questo passaggio",
+
+
+      "badgePrivacyNote": "Disattivato per impostazione predefinita. Se lo attivi: una versione cifrata del tuo nome utente viene inviata a streampulse.fr al massimo una volta al giorno. Nulla altro lascia il browser.",
+
+
+      "advancedSettings": "Impostazioni avanzate",
+
+
+      "removeStreamerName": "Rimuovi {{name}}",
+
+
+      
+
       "newBadge": "NUOVO",
 
       
@@ -5217,6 +5319,24 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+
+      "welcomeTitle": "Nigdy więcej nie przegap transmisji.",
+
+
+      "skipStep": "Pomiń ten krok",
+
+
+      "badgePrivacyNote": "Domyślnie wyłączone. Po włączeniu: skrót nazwy użytkownika jest wysyłany do streampulse.fr najwyżej raz dziennie. Nic innego nie opuszcza przeglądarki.",
+
+
+      "advancedSettings": "Ustawienia zaawansowane",
+
+
+      "removeStreamerName": "Usuń {{name}}",
+
+
+      
 
       "newBadge": "NOWOŚĆ",
 
@@ -6081,6 +6201,24 @@ export const translations = {
     },
     "onboarding": {
 
+
+      "welcomeTitle": "Artık hiçbir canlı yayını kaçırmayacaksın.",
+
+
+      "skipStep": "Bu adımı atla",
+
+
+      "badgePrivacyNote": "Varsayılan olarak kapalı. Etkinleştirirsen: kullanıcı adının şifreli bir özeti günde en fazla bir kez streampulse.fr adresine gönderilir. Başka hiçbir veri tarayıcıdan çıkmaz.",
+
+
+      "advancedSettings": "Gelişmiş ayarlar",
+
+
+      "removeStreamerName": "{{name}} kişisini kaldır",
+
+
+      
+
       "newBadge": "YENİ",
 
       
@@ -6943,6 +7081,24 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+
+      "welcomeTitle": "Не пропусти больше ни одного эфира.",
+
+
+      "skipStep": "Пропустить этот шаг",
+
+
+      "badgePrivacyNote": "По умолчанию выключено. При включении: хеш вашего имени отправляется на streampulse.fr не чаще раза в день. Больше ничего не покидает браузер.",
+
+
+      "advancedSettings": "Дополнительные настройки",
+
+
+      "removeStreamerName": "Удалить {{name}}",
+
+
+      
 
       "newBadge": "НОВОЕ",
 
@@ -7807,6 +7963,24 @@ export const translations = {
     },
     "onboarding": {
 
+
+      "welcomeTitle": "もうライブを見逃さない。",
+
+
+      "skipStep": "このステップをスキップ",
+
+
+      "badgePrivacyNote": "デフォルトはオフです。有効にすると、ユーザー名のハッシュが1日に最大1回 streampulse.fr へ送信されます。他のデータは送信されません。",
+
+
+      "advancedSettings": "詳細設定",
+
+
+      "removeStreamerName": "{{name}}を削除",
+
+
+      
+
       "newBadge": "新着",
 
       
@@ -8669,6 +8843,24 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+
+      "welcomeTitle": "이제 라이브를 놓치지 마세요.",
+
+
+      "skipStep": "이 단계 건너뛰기",
+
+
+      "badgePrivacyNote": "기본값은 꺼짐입니다. 켜면 사용자 이름의 해시가 하루 최대 1회 streampulse.fr로 전송됩니다. 다른 데이터는 전송되지 않습니다.",
+
+
+      "advancedSettings": "고급 설정",
+
+
+      "removeStreamerName": "{{name}} 삭제",
+
+
+      
 
       "newBadge": "새 기능",
 
@@ -9533,6 +9725,24 @@ export const translations = {
     },
     "onboarding": {
 
+
+      "welcomeTitle": "Jangan lewatkan siaran langsung lagi.",
+
+
+      "skipStep": "Lewati langkah ini",
+
+
+      "badgePrivacyNote": "Nonaktif secara bawaan. Jika diaktifkan: hash nama pengguna dikirim ke streampulse.fr maksimal sekali sehari. Tidak ada data lain yang dikirim.",
+
+
+      "advancedSettings": "Pengaturan lanjutan",
+
+
+      "removeStreamerName": "Hapus {{name}}",
+
+
+      
+
       "newBadge": "BARU",
 
       
@@ -10395,6 +10605,24 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+
+      "welcomeTitle": "Mis nooit meer een livestream.",
+
+
+      "skipStep": "Deze stap overslaan",
+
+
+      "badgePrivacyNote": "Standaard uit. Bij inschakelen: een gehashte versie van je gebruikersnaam wordt maximaal één keer per dag naar streampulse.fr gestuurd. Verder verlaat niets je browser.",
+
+
+      "advancedSettings": "Geavanceerde instellingen",
+
+
+      "removeStreamerName": "{{name}} verwijderen",
+
+
+      
 
       "newBadge": "NIEUW",
 
@@ -11259,6 +11487,24 @@ export const translations = {
     },
     "onboarding": {
 
+
+      "welcomeTitle": "अब कभी कोई लाइव न चूकें।",
+
+
+      "skipStep": "यह चरण छोड़ें",
+
+
+      "badgePrivacyNote": "डिफ़ॉल्ट रूप से बंद। चालू करने पर: आपके उपयोगकर्ता नाम का हैश दिन में अधिकतम एक बार streampulse.fr को भेजा जाता है। और कुछ भी ब्राउज़र से बाहर नहीं जाता।",
+
+
+      "advancedSettings": "उन्नत सेटिंग्स",
+
+
+      "removeStreamerName": "{{name}} हटाएँ",
+
+
+      
+
       "newBadge": "नया",
 
       
@@ -12122,6 +12368,24 @@ export const translations = {
     },
     "onboarding": {
 
+
+      "welcomeTitle": "Missa aldrig mer en direktsändning.",
+
+
+      "skipStep": "Hoppa över det här steget",
+
+
+      "badgePrivacyNote": "Av som standard. Om du aktiverar: en hashad version av ditt användarnamn skickas till streampulse.fr högst en gång per dag. Inget annat lämnar webbläsaren.",
+
+
+      "advancedSettings": "Avancerade inställningar",
+
+
+      "removeStreamerName": "Ta bort {{name}}",
+
+
+      
+
       "newBadge": "NYTT",
 
       
@@ -12984,6 +13248,24 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+
+
+      "welcomeTitle": "Už nikdy nezmeškejte živý přenos.",
+
+
+      "skipStep": "Přeskočit tento krok",
+
+
+      "badgePrivacyNote": "Ve výchozím nastavení vypnuto. Po zapnutí: hash uživatelského jména se posílá na streampulse.fr nejvýše jednou denně. Nic jiného neopouští prohlížeč.",
+
+
+      "advancedSettings": "Pokročilá nastavení",
+
+
+      "removeStreamerName": "Odebrat {{name}}",
+
+
+      
 
       "newBadge": "NOVÉ",
 

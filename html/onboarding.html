@@ -16,7 +16,6 @@
           <img class="brand-mark" src="../images/photos/logosp.png" alt="" />
           <span>StreamPulse</span>
         </span>
-        <span id="ob-sys-version" hidden></span>
 
         <nav class="stepper" id="stepper" aria-label="Progression">
           <div class="step-pill active" data-step="0">
@@ -52,13 +51,7 @@
           <div class="step-frame step-frame-single">
             <div class="welcome-frame">
               <h1 class="display welcome-display">
-                <span class="word" data-i18n="onboarding.welcomeWord1">Ne</span>
-                <span class="word" data-i18n="onboarding.welcomeWord2">rate</span>
-                <span class="word" data-i18n="onboarding.welcomeWord3">plus</span>
-                <span class="word italic" data-i18n="onboarding.welcomeWord4">jamais</span>
-                <br />
-                <span class="word" data-i18n="onboarding.welcomeWord5">un</span>
-                <span class="word italic" data-i18n="onboarding.welcomeWord6">live.</span>
+                <span class="welcome-line" data-i18n="onboarding.welcomeTitle">Ne rate plus jamais un live.</span>
               </h1>
               <p class="lede welcome-sub" data-i18n="onboarding.welcomeDescription">Une extension pour suivre tes streamers en un coup d'œil. Commence par choisir la langue de l'interface.</p>
 
@@ -114,6 +107,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>
                   <span data-i18n="onboarding.backBtn">Retour</span>
                 </button>
+                <button class="btn btn-ghost btn-skip" id="btn-skip-1" type="button" data-i18n="onboarding.skipStep">Passer cette étape</button>
                 <button class="btn btn-primary" id="btn-next-1" type="button" disabled>
                   <span data-i18n="onboarding.continueBtn">Continuer</span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
@@ -159,6 +153,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>
                   <span data-i18n="onboarding.backBtn">Retour</span>
                 </button>
+                <button class="btn btn-ghost btn-skip" id="btn-skip-2" type="button" data-i18n="onboarding.skipStep">Passer cette étape</button>
                 <button class="btn btn-primary" id="btn-next-2" type="button" disabled>
                   <span data-i18n="onboarding.continueBtn">Continuer</span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
@@ -217,10 +212,13 @@
                   <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.communityBadgeTitle"></span><span class="settings-description" data-i18n="popup.settings.communityBadgeDescription"></span></span>
                   <input id="onboarding-community-badge" type="checkbox" role="switch" />
                 </label>
+                <p class="settings-privacy" data-i18n="onboarding.badgePrivacyNote">Désactivé par défaut. Si tu l'actives : une empreinte de ton pseudo est envoyée à streampulse.fr au maximum une fois par jour. Rien d'autre ne quitte ton navigateur.</p>
               </div>
 
-              <div class="settings-group">
-                <h2 class="group-title" data-i18n="onboarding.tabsGroupLabel">Onglets et arrière-plan</h2>
+              <details class="settings-advanced">
+                <summary data-i18n="onboarding.advancedSettings">Réglages avancés</summary>
+                <div class="settings-group">
+                  <h2 class="group-title" data-i18n="onboarding.tabsGroupLabel">Onglets et arrière-plan</h2>
                 <p class="settings-group-hint" data-i18n="onboarding.tabsGroupHint">Gestion visuelle et maintien de l'activité des onglets.</p>
                 <label class="settings-toggle">
                   <span class="settings-text"><span class="settings-title" data-i18n="onboarding.streamerFaviconTitle">Avatar du streamer sur l'onglet</span><span class="settings-description" data-i18n="onboarding.streamerFaviconDescription">Remplacer l'icône de l'onglet par la photo du streamer en direct.</span></span>
@@ -251,7 +249,8 @@
                   <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.soundsTitle"></span><span class="settings-description" data-i18n="popup.settings.soundsDescription"></span></span>
                   <input id="onboarding-sounds" type="checkbox" role="switch" checked />
                 </label>
-              </div>
+                </div>
+              </details>
 
               <div class="step-nav">
                 <button class="btn btn-ghost" id="btn-back-3" type="button">

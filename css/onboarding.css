@@ -19,12 +19,9 @@
 .wizard-step.active { display: block; }
 @media (prefers-reduced-motion: no-preference) {
   .wizard-step.active { animation: rise 460ms var(--ease-out) both; }
-  .welcome-display .word { animation: word-in 700ms var(--ease-out) both; }
-  .welcome-display .word:nth-child(2) { animation-delay: 80ms; }
-  .welcome-display .word:nth-child(3) { animation-delay: 160ms; }
-  .welcome-display .word:nth-child(4) { animation-delay: 260ms; }
-  .welcome-display .word:nth-child(6) { animation-delay: 380ms; }
-  .welcome-display .word:nth-child(7) { animation-delay: 480ms; }
+  /* Titre d'accueil traduit d'un bloc (une seule chaîne i18n) : l'animation
+     porte sur la ligne entière, pas sur des mots positionnés par nth-child. */
+  .welcome-display .welcome-line { display: inline-block; animation: word-in 700ms var(--ease-out) both; }
   .finish-check { animation: pop 520ms var(--ease-out) both; }
 }
 /* onboarding.js switches steps on animationend of these two classes: they must
@@ -48,6 +45,10 @@
 .step-content { display: grid; gap: 16px; }
 .step-nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; }
 .step-nav-center { justify-content: center; }
+/* Étape facultative : le lien « Passer » reste discret entre Retour et Continuer. */
+.btn-skip { margin-left: auto; color: var(--text-3); text-decoration: none; }
+.btn-skip:hover { color: var(--text); }
+.btn-skip + .btn-primary { margin-left: 0; }
 
 /* Languages */
 .language-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; width: 100%; margin-top: 8px; text-align: left; }
@@ -107,7 +108,7 @@
 .platform-button { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border: 0; border-radius: 12px; background: var(--bg); box-shadow: inset 0 0 0 1px var(--line); color: var(--text-2); font-weight: 600; cursor: pointer; }
 .platform-button img { width: 18px; height: 18px; }
 .platform-button:hover { color: var(--text); }
-.platform-button.active { background: var(--violet-soft); box-shadow: inset 0 0 0 1.5px var(--violet); color: var(--text); }
+.platform-button.is-active { background: var(--violet-soft); box-shadow: inset 0 0 0 1.5px var(--violet); color: var(--text); }
 .feedback { color: var(--text-2); font-size: 14px; }
 .feedback.success { color: var(--lcd-accent); }
 .feedback.error { color: var(--danger); }
@@ -129,6 +130,15 @@
 
 /* Settings */
 .settings-group { padding: 22px 24px 6px; border-radius: 22px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+/* Note privacy sous le badge communautaire : la seule donnée réseau du produit. */
+.settings-privacy { margin: -14px 0 14px; padding: 0 24px; color: var(--text-3); font-size: 12.5px; line-height: 1.5; }
+/* Réglages avancés : repliés par défaut pour alléger l'étape préférences. */
+.settings-advanced { margin: 0; }
+.settings-advanced > summary { padding: 12px 24px; border-radius: 14px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); color: var(--text-2); font-size: 13.5px; font-weight: 700; cursor: pointer; list-style: none; }
+.settings-advanced > summary::-webkit-details-marker { display: none; }
+.settings-advanced > summary::after { content: "+"; float: right; color: var(--text-3); font-weight: 700; }
+.settings-advanced[open] > summary::after { content: "–"; }
+.settings-advanced[open] > summary { margin-bottom: 12px; }
 .group-title { font-family: var(--display); font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
 .settings-group-hint { margin: 4px 0 10px; color: var(--text-2); font-size: 13px; }
 .settings-toggle { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 14px 0; box-shadow: inset 0 1px 0 var(--line); cursor: pointer; }
