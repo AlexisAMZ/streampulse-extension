@@ -13,6 +13,7 @@ const ES_MODULES = [
   "js/changelog.js",
   "js/changelog-data.js",
   "js/history-data.js",
+  "js/preferences-data.js",
   "js/i18n.js",
   "js/onboarding.js",
   "js/platforms.js",

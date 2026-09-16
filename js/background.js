@@ -18,6 +18,7 @@ import {
   sanitizeHandle,
 } from "./platforms.js";
 import { HISTORY_KEY, addSession, emptyHistory, markSeen, patchSession, removeEntry } from "./history-data.js";
+import { DEFAULT_PREFERENCES } from "./preferences-data.js";
 import { thankPlusSubscriber } from "./plus-thanks.js";
 import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-alerts.js";
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "./plus.js";
@@ -121,54 +122,6 @@ const BADGE_COLOR_LIVE = "#f7f4e3";
 const BADGE_COLOR_IDLE = "#6C5CE7";
 
 const PREFERENCES_KEY = "betaGeneralPreferences";
-const DEFAULT_PREFERENCES = {
-  liveNotifications: true,
-  gameNotifications: false,
-  titleNotifications: false,
-  dropAlerts: true,
-  predictionAlerts: true,
-  raidAlerts: true,
-  // Bêta : détection des raids entrants en arrière-plan via IRC anonyme.
-  // Opt-in explicite car elle maintient une connexion WebSocket permanente.
-  backgroundRaidAlerts: false,
-  soundsEnabled: true,
-  autoClaimChannelPoints: true,
-  autoClaimDrops: true,
-  autoClaimMoments: true,
-  autoOpenInventory: false,
-  autoOpenInventoryIntervalHours: 24,
-  hideTwitchExtensions: false,
-  keepQualityInBackground: false,
-  enablePipButton: true,
-  autoRefreshPlayerErrors: true,
-  enableClipDownload: true,
-  playerQuality: "auto",
-  autoCancelRaids: false,
-  preventTabDiscard: true,
-  enablePredictionsPopup: true,
-  enableTabLiveIcon: true,
-  enableStreamerFavicon: true,
-  enableFastForwardButton: true,
-  watchTimeTracker: true,
-  chatKeywords: "",
-  chatBlockedUsers: "",
-  language: DEFAULT_LANGUAGE,
-  sortOrder: "live",
-  previewsEnabled: true,
-  previewsMode: "image",
-  previewsSurfaceDirectory: true,
-  previewsSurfaceSidebar: true,
-  previewsSurfaceClips: true,
-  previewsSurfaceSearch: true,
-  previewsSize: "m",
-  previewsAudio: false,
-  previewsShowDelayMs: 200,
-  previewsAnimations: true,
-  communityBadge: false,
-  // "author" = couleur du pseudo, "theme" = blanc/noir selon Twitch,
-  // ou une couleur hexadecimale fixe.
-  communityBadgeColor: "author",
-};
 
 const DEFAULT_STATS = {
   channelPointsClaimed: 0,

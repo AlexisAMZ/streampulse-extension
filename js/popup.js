@@ -1,4 +1,5 @@
 import { BACKUP_KEYS, buildBackup, backupFileName } from "./backup.js";
+import { DEFAULT_PREFERENCES } from "./preferences-data.js";
 import {
   initI18n,
   applyTranslations,
@@ -8,7 +9,6 @@ import {
   getCurrentLanguage,
   t,
   syncDocumentLanguage,
-  DEFAULT_LANGUAGE,
   resolveLocale,
 } from "./i18n.js";
 import {
@@ -27,21 +27,7 @@ import { initFeatures, renderHistory } from "./popup-features.js";
 
 const PREFERENCES_STORAGE_KEY = "betaGeneralPreferences";
 
-const defaultPreferences = {
-  liveNotifications: true,
-  gameNotifications: false,
-  soundsEnabled: true,
-  autoClaimChannelPoints: true,
-  keepQualityInBackground: false,
-  enablePipButton: true,
-  autoRefreshPlayerErrors: true,
-  enableClipDownload: true,
-  playerQuality: "auto",
-  enableFastForwardButton: true,
-  watchTimeTracker: true,
-  language: DEFAULT_LANGUAGE,
-  sortOrder: "live",
-};
+const defaultPreferences = DEFAULT_PREFERENCES;
 
 const state = {
   streamers: [],

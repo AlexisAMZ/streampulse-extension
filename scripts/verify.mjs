@@ -126,14 +126,6 @@ else {
     const skip = (f) =>
       f.includes("vendor") || f.includes("i18n-inline") || f.endsWith("translations.js") ||
       f.includes("changelog-data") || f.includes("history-data") || f.includes("predictions-data");
-    const collectKeys = (node) => {
-      if (node.nodeType !== 1) return; // element
-      for (const attr of ["data-i18n", "data-i18n-placeholder", "data-i18n-title"]) {
-        const v = node.getAttribute?.(attr);
-        if (v) usedKeys.add(v);
-      }
-      [...node.children].forEach(collectKeys);
-    };
     const keyPatterns = [
       /\bt\("([a-zA-Z][a-zA-Z0-9]*(?:\.[a-zA-Z0-9-]+)+)"/g,
       /translate(?:WithPrefs)?\([^,\n]+,\s*"([a-zA-Z][a-zA-Z0-9]*(?:\.[a-zA-Z0-9-]+)+)"/g,
@@ -152,7 +144,6 @@ else {
           for (const m of text.matchAll(re)) usedKeys.add(m[1]);
         }
         if (full.endsWith(".html")) {
-          const dom = new (globalThis.DOMParser || Object)();
           // pas de DOM en node : grep sur les attributs suffit
           for (const m of text.matchAll(/data-i18n="([^"]+)"/g)) usedKeys.add(m[1]);
         }
@@ -305,14 +296,19 @@ if (!syntaxFails) pass(`${jsFiles.length} JS files parse cleanly`);
   const bgSrc = fs.existsSync(abs("js/background.js"))
     ? fs.readFileSync(abs("js/background.js"), "utf8")
     : "";
-  const defStart = bgSrc.indexOf("const DEFAULT_PREFERENCES = {");
+  // DEFAULT_PREFERENCES vit desormais dans js/preferences-data.js (module
+  // partage avec la popup) : la parité se verifie entre ce fichier et sanitize().
+  const defSrc = fs.existsSync(abs("js/preferences-data.js"))
+    ? fs.readFileSync(abs("js/preferences-data.js"), "utf8")
+    : "";
+  const defStart = defSrc.indexOf("export const DEFAULT_PREFERENCES = {");
   const sanStart = bgSrc.indexOf("static sanitize(preferences");
   const getStart = bgSrc.indexOf("static async get()", sanStart);
 
   if (defStart === -1 || sanStart === -1 || getStart === -1) {
-    warn("js/background.js: DEFAULT_PREFERENCES or PreferenceStore.sanitize() not found, preference parity not checked");
+    warn("js/preferences-data.js: DEFAULT_PREFERENCES or PreferenceStore.sanitize() not found, preference parity not checked");
   } else {
-    const defBody = bgSrc.slice(defStart, bgSrc.indexOf("\n};", defStart));
+    const defBody = defSrc.slice(defStart, defSrc.indexOf("\n};", defStart));
     const sanBody = bgSrc.slice(sanStart, getStart);
     const keysOf = (body, indent) =>
       [...body.matchAll(new RegExp(`^\\s{${indent}}([A-Za-z0-9_]+):`, "gm"))].map((m) => m[1]);
