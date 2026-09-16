@@ -13,3 +13,7 @@ coverage/
 backups/
 .agents/
 memory.md
+
+# Outillage local des agents : jamais versionne
+.codex/
+.impeccable/
