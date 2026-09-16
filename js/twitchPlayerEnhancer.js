@@ -657,20 +657,14 @@
   let raidCheckIntervalId = null;
   let raidObserver = null;
 
-  // Twitch routes whose first path segment is a feature name, not a login.
-  const NON_CHANNEL_ROUTES = new Set([
-    "directory", "settings", "drops", "downloads", "subscriptions", "wallet",
-    "inventory", "friends", "u", "videos", "search", "prime", "turbo", "store",
-    "jobs", "p",
-  ]);
 
   function getCurrentChannel() {
     try {
       const segment = location.pathname.replace(/^\//, "").split("/")[0] || "";
-      const candidate = segment.toLowerCase();
-      if (!candidate || NON_CHANNEL_ROUTES.has(candidate)) return "";
-      if (!/^[a-z0-9_]{3,25}$/.test(candidate)) return "";
-      return candidate;
+      // Liste canonique + test de login partages (js/inject/dom.js, charge
+      // avant ce script via le manifest) : l'ancien plancher {3,25} rejetait
+      // des logins courts legitimes.
+      return window.__SP_DOM__.isChannelLogin(segment) ? segment.toLowerCase() : "";
     } catch (_) {
       return "";
     }

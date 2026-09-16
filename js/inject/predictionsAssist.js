@@ -11,10 +11,6 @@
   const POLL_MS = 10_000;
   const FAST_POLL_MS = 3_000;
   const REQUEST_TIMEOUT_MS = 8_000;
-  const IGNORED_ROUTES = new Set([
-    "directory", "settings", "subscriptions", "drops", "wallet", "u", "search",
-    "videos", "moderator", "inventory", "friends", "popout", "turbo",
-  ]);
 
   let data = null;
   let sequence = 0;
@@ -22,7 +18,7 @@
 
   function channelLogin() {
     const segment = (window.location.pathname.split("/").filter(Boolean)[0] || "").toLowerCase();
-    return /^[a-z0-9_]{2,25}$/.test(segment) && !IGNORED_ROUTES.has(segment) ? segment : "";
+    return window.__SP_DOM__.isChannelLogin(segment) ? segment.toLowerCase() : "";
   }
 
   /** Même règle que js/plus.js : à vie toujours active, mensuelle 30 jours après la dernière vérification. */

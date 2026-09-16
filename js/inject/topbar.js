@@ -97,19 +97,15 @@
   var PREFERENCES_KEY = "betaGeneralPreferences";
 
   // Les segments de premier niveau qui ne sont pas des chaines.
-  var NOT_CHANNELS = [
-    "directory", "videos", "downloads", "prime", "turbo", "subscriptions",
-    "inventory", "wallet", "settings", "friends", "messages", "search", "p", "u",
-  ];
-
   /** Login de la chaine affichee, ou "" hors d'une page de chaine. */
   function currentChannel() {
     try {
       var parts = location.pathname.split("/").filter(Boolean);
       if (parts.length !== 1) return "";
-      var login = parts[0].toLowerCase();
-      if (NOT_CHANNELS.indexOf(login) !== -1) return "";
-      return /^[a-z0-9_]{3,25}$/.test(login) ? login : "";
+      // Liste canonique partagee (js/inject/dom.js) : union des anciennes
+      // listes, regex {1,25} — un login de 1-2 caracteres est legitime.
+      if (!window.__SP_DOM__.isChannelLogin(parts[0])) return "";
+      return parts[0].toLowerCase();
     } catch (_e) {
       return "";
     }

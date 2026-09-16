@@ -100,14 +100,7 @@
   var PREFERENCES_KEY = "betaGeneralPreferences";
   var LOGO_URL = chrome.runtime.getURL("images/photos/logosp.png");
 
-  // Twitch routes whose first path segment is a feature, not a channel login.
-  var NON_CHANNEL_ROUTES = [
-    "directory", "settings", "drops", "downloads", "subscriptions", "wallet",
-    "inventory", "friends", "u", "videos", "search", "prime", "turbo", "store",
-    "jobs", "p", "moderator", "popout", "team", "communities", "payments",
-    "following", "dashboard", "activate", "collections", "products", "broadcast",
-    "creatorcamp", "bits", "login", "signup", "logout",
-  ];
+  // Routes canoniques + test de login partages (js/inject/dom.js).
 
   var currentLang = "en";
   var trackedSet = new Set();
@@ -142,11 +135,8 @@
   function getCurrentChannel() {
     try {
       var segment = (location.pathname.replace(/^\//, "").split("/")[0] || "").toLowerCase();
-      if (!segment) return "";
-      if (NON_CHANNEL_ROUTES.indexOf(segment) !== -1) return "";
-      // Twitch logins are 1-25 chars; the old 3-char floor rejected short ones.
-      if (!/^[a-z0-9_]{1,25}$/.test(segment)) return "";
-      return segment;
+      // Liste canonique + test de login partages (js/inject/dom.js).
+      return window.__SP_DOM__.isChannelLogin(segment) ? segment : "";
     } catch (_e) {
       return "";
     }
