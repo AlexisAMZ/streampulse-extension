@@ -85,6 +85,22 @@ export const RELEASES = [
       cs: "Chyby přehrávání se opraví samy a kvalita může zůstat zachována i na pozadí."
     },
     changes: [      {
+        type: "fix",
+        text: {
+          fr: "La récupération du bonus de points re-clique plus le compteur par erreur : le popover de points ne s'ouvre plus en boucle pendant que vous regardez.",
+          en: "The channel-point bonus no longer mis-clicks the counter: the points popover stops opening in a loop while you watch.",
+          es: "La bonificación de puntos ya no hace clic por error en el contador: el popover de puntos deja de abrirse en bucle mientras miras.",
+          "pt-BR": "O bônus de pontos não clica mais no contador por engano: o popover de pontos para de abrir em loop enquanto você assiste.",
+          de: "Der Kanalpunkte-Bonus klickt nicht mehr versehentlich auf den Zähler: das Punkte-Popup öffnet sich nicht mehr in Schleife beim Schauen.",
+          it: "Il bonus dei punti non clicca più per errore sul contatore: il popover dei punti smette di aprirsi in loop mentre guardi.",
+          pl: "Bonus punktów nie klika już przez pomyłkę licznika: popover punktów przestaje otwierać się w pętli podczas oglądania.",
+          tr: "Kanal puanı bonusu artık yanlışlıkla sayacı tıklamıyor: izlerken puan popover'ı döngüde açılmayı bırakıyor.",
+          ru: "Бонус баллов больше не нажимает на счётчик по ошибке: всплывающее окно баллов перестаёт открываться по кругу во время просмотра.",
+          ja: "チャンネルポイントのボーナスが誤ってカウンターをクリックしなくなりました。視聴中にポイントのポップアップが繰り返し開くことはありません。",
+          ko: "채널 포인트 보너스가 더 이상 실수로 카운터를 클릭하지 않습니다: 시청 중에 포인트 팝업이 반복해서 열리지 않습니다."
+        }
+      },
+      {
         type: "improved",
         text: {
           fr: "L'aperçu de l'effet néon dans les réglages reflète exactement le rendu dans le tchat, y compris avec une couleur de halo personnalisée.",
