@@ -85,6 +85,22 @@ export const RELEASES = [
       cs: "Chyby přehrávání se opraví samy a kvalita může zůstat zachována i na pozadí."
     },
     changes: [      {
+        type: "improved",
+        text: {
+          fr: "L'aperçu de l'effet néon dans les réglages reflète exactement le rendu dans le tchat, y compris avec une couleur de halo personnalisée.",
+          en: "The neon effect preview in settings now mirrors the chat rendering exactly, including with a custom glow color.",
+          es: "La vista previa del efecto neón en los ajustes refleja exactamente el renderizado en el tchat, incluso con un color de halo personalizado.",
+          "pt-BR": "A prévia do efeito neon nas configurações reflete exatamente a renderização no chat, inclusive com cor de brilho personalizada.",
+          de: "Die Vorschau des Neon-Effekts in den Einstellungen entspricht exakt der Darstellung im Chat, auch mit eigener Leuchtfarbe.",
+          it: "L'anteprima dell'effetto neon nelle impostazioni rispecchia esattamente la resa in chat, anche con un colore bagliore personalizzato.",
+          pl: "Podgląd efektu neonu w ustawieniach dokładnie odzwierciedla wygląd na czacie, również z własnym kolorem poświaty.",
+          tr: "Ayarlarndaki neon efekti önizlemesi, özel parlama renginde bile sohbetteki görünümü tam yansıtıyor.",
+          ru: "Предпросмотр неонового эффекта в настройках точно соответствует виду в чате, включая свой цвет свечения.",
+          ja: "設定のネオン効果プレビューが、カスタムグロー色の場合でもチャット上の表示と正確に一致するようになりました。",
+          ko: "설정의 네온 효과 미리보기가 사용자 지정 발광 색상을 포함해 채팅 렌더링과 정확히 일치합니다."
+        }
+      },
+      {
         type: "fix",
         text: {
           fr: "Les panneaux sur Twitch reconnaissent désormais tous les pseudos valides : certains logins courts étaient ignorés par le bouton topbar et le suivi de chaîne.",
