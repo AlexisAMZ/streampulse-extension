@@ -71,7 +71,7 @@ const preferenceToggleDefinitions = [
 const OFF_BY_DEFAULT = new Set(["communityBadge", "autoCancelRaids"]);
 const isEnabled = (preferences, key) => (OFF_BY_DEFAULT.has(key) ? preferences?.[key] === true : preferences?.[key] !== false);
 
-const LANGUAGE_FLAGS = { fr: "🇫🇷", en: "🇬🇧", es: "🇪🇸", "pt-BR": "🇧🇷", de: "🇩🇪", it: "🇮🇹", pl: "🇵🇱", tr: "🇹🇷", ru: "🇷🇺", ja: "🇯🇵", ko: "🇰🇷", id: "🇮🇩", nl: "🇳🇱", hi: "🇮🇳", sv: "🇸🇪", cs: "🇨🇿" };
+const LANGUAGE_FLAGS = { fr: "🇫🇷", en: "🇬🇧", es: "🇪🇸", "pt-BR": "🇧🇷", de: "🇩🇪", it: "🇮🇹", pl: "🇵🇱", tr: "🇹🇷", ru: "🇷🇺", ja: "🇯🇵", ko: "🇰🇷" };
 
 /* ── State ── */
 let currentStreamers = [];
