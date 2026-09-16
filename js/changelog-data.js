@@ -85,6 +85,119 @@ export const RELEASES = [
       cs: "Chyby přehrávání se opraví samy a kvalita může zůstat zachována i na pozadí."
     },
     changes: [
+      {
+        type: "fix",
+        text: {
+          fr: "Le journal d'événements se remplit à nouveau : points de chaîne, Drops, Moments et raids sont de nouveau comptabilisés.",
+          en: "The event log fills in again: channel points, Drops, Moments and raids are tracked once more.",
+          es: "El registro de eventos vuelve a llenarse: puntos de canal, Drops, Moments y raids se vuelven a contabilizar.",
+          "pt-BR": "O registro de eventos volta a ser preenchido: pontos de canal, Drops, Moments e raids voltam a ser contabilizados.",
+          de: "Das Ereignisprotokoll füllt sich wieder: Kanalpunkte, Drops, Moments und Raids werden erneut erfasst.",
+          it: "Il registro eventi si riempie di nuovo: punti del canale, Drops, Moments e raid vengono conteggiati di nuovo.",
+          pl: "Dziennik zdarzeń znów się wypełnia: punkty kanału, Dropsy, Moments i rajdy są znów zliczane.",
+          tr: "Etkinlik günlüğü yeniden doluyor: kanal puanları, Drops, Moments ve raidler yeniden sayılıyor.",
+          ru: "Журнал событий снова заполняется: баллы канала, дропы, моменты и рейды снова учитываются.",
+          ja: "イベントログが再び記録されるように：チャンネルポイント、ドロップ、モーメント、レイドが再度カウントされます。",
+          ko: "이벤트 로그가 다시 채워집니다: 채널 포인트, 드롭, 모먼트, 레이드가 다시 집계됩니다."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Un réglage n'affiche plus deux notifications d'un coup : une seule bulle, avec le bon message.",
+          en: "Toggling a setting no longer shows two notifications at once: a single toast, with the right message.",
+          es: "Ajustar una opción ya no muestra dos notificaciones a la vez: una sola burbuja, con el mensaje correcto.",
+          "pt-BR": "Ajustar uma opção não mostra mais duas notificações de uma vez: um único balão, com a mensagem certa.",
+          de: "Beim Umlegen einer Einstellung erscheinen nicht mehr zwei Benachrichtigungen auf einmal: nur noch eine, mit der richtigen Meldung.",
+          it: "Attivare un'impostazione non mostra più due notifiche insieme: un solo avviso, con il messaggio giusto.",
+          pl: "Zmiana ustawienia nie pokazuje już dwóch powiadomień naraz: tylko jedno, z właściwym komunikatem.",
+          tr: "Bir ayarı değiştirmek artık aynı anda iki bildirim göstermiyor: doğru mesajla tek bir balon.",
+          ru: "Переключение настройки больше не показывает два уведомления сразу: только одно, с нужным сообщением.",
+          ja: "設定を切り替えたときに通知が2つ同時に出なくなりました。正しいメッセージの1つだけが表示されます。",
+          ko: "설정을 변경할 때 알림 두 개가 동시에 뜨지 않고 올바른 메시지의 알림 하나만 표시됩니다."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Dans l'historique, la pastille des nouvelles vidéos affiche à nouveau « Nouveau » au lieu d'un code interne.",
+          en: "In history, the new-video pill shows its « New » label again instead of an internal code.",
+          es: "En el historial, la etiqueta de vídeos nuevos muestra de nuevo «Nuevo» en vez de un código interno.",
+          "pt-BR": "No histórico, o selo de vídeos novos mostra «Novo» novamente em vez de um código interno.",
+          de: "Im Verlauf zeigt die Markierung neuer Videos wieder «Neu» anstatt eines internen Codes.",
+          it: "Nella cronologia, la pastiglia dei nuovi video mostra di nuovo «Nuovo» al posto di un codice interno.",
+          pl: "W historii plakietka nowych filmów znowu pokazuje «Nowe» zamiast wewnętrznego kodu.",
+          tr: "Geçmişte, yeni videoların etiketi dahili bir kod yerine yeniden «Yeni» gösteriyor.",
+          ru: "В истории метка новых видео снова показывает «Новое» вместо внутреннего кода.",
+          ja: "履歴の新着動画バッジが、内部コードではなく「新着」と正しく表示されるようになりました。",
+          ko: "기록에서 새 동영상 배지가 내부 코드 대신 «새 항목»으로 다시 표시됩니다."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Prédictions : même quand les clés internes de Twitch expirent, le panneau reste lisible et le pari reste possible.",
+          en: "Predictions: even when Twitch's internal keys expire, the panel stays readable and betting keeps working.",
+          es: "Predicciones: incluso cuando las claves internas de Twitch caducan, el panel sigue siendo legible y se puede apostar.",
+          "pt-BR": "Previsões: mesmo quando as chaves internas da Twitch expiram, o painel continua legível e a aposta continua possível.",
+          de: "Vorhersagen: selbst wenn Twitchs interne Schlüssel ablaufen, bleibt das Panel lesbar und Wetten bleiben möglich.",
+          it: "Previsioni: anche quando le chiavi interne di Twitch scadono, il pannello resta leggibile e la scommessa resta possibile.",
+          pl: "Przewidywania: nawet gdy wewnętrzne klucze Twitcha wygasają, panel pozostaje czytelny i można obstawiać.",
+          tr: "Tahminler: Twitch'in dahili anahtarlarının süresi dolduğunda bile panel okunabilir kalır ve bahis yapılabilmeye devam eder.",
+          ru: "Прогнозы: даже когда внутренние ключи Twitch истекают, панель остаётся читаемой, а ставка — возможной.",
+          ja: "予測：Twitch の内部キーが期限切れでもパネルは読めるままで、ベットも可能です。",
+          ko: "예측: Twitch의 내부 키가 만료되어도 패널은 계속 읽을 수 있고 베팅도 가능합니다."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Le bonus de points de chaîne ne se bloque plus si Twitch modifie son bouton : un repli évite les clics en boucle.",
+          en: "The channel-point bonus no longer jams if Twitch changes its button: a fallback prevents repeated clicking.",
+          es: "La bonificación de puntos de canal ya no se atasca si Twitch cambia su botón: un respaldo evita los clics en bucle.",
+          "pt-BR": "O bônus de pontos de canal não trava mais se a Twitch mudar o botão: um respaldo evita cliques em loop.",
+          de: "Der Kanalpunkte-Bonus klemmt nicht mehr, wenn Twitch seine Schaltfläche ändert: ein Fallback verhindert Dauerklicken.",
+          it: "Il bonus dei punti del canale non si blocca più se Twitch cambia il suo pulsante: un ripiego evita i clic in loop.",
+          pl: "Bonus punktów kanału nie blokuje się już, gdy Twitch zmieni swój przycisk: zapasowy mechanizm zapobiega klikaniu w pętli.",
+          tr: "Twitch düğmesini değiştirdiğinde kanal puanı bonusu artık takılmıyor: yedek mekanizma döngüsel tıklamayı önler.",
+          ru: "Бонус баллов канала больше не застревает, если Twitch изменит свою кнопку: резервный механизм предотвращает клики по кругу.",
+          ja: "Twitch がボタンを変更してもチャンネルポイントのボーナスが固まらなくなりました。フォールバックが連打を防ぎます。",
+          ko: "Twitch가 버튼을 바꿔도 채널 포인트 보너스가 더 이상 멈추지 않습니다: 폴백이 반복 클릭을 막습니다."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "Alertes de raid et annulation automatique ne se contrarient plus : activer les alertes coupe l'annulation, pour laisser le temps de suivre le raid.",
+          en: "Raid alerts and auto-cancel no longer conflict: enabling alerts turns off auto-cancel, leaving time to follow the raid.",
+          es: "Las alertas de raid y la cancelación automática ya no se contradicen: activar las alertas desactiva la cancelación, para dar tiempo a seguir el raid.",
+          "pt-BR": "Alertas de raid e cancelamento automático não conflitam mais: ativar os alertas desativa o cancelamento, para dar tempo de seguir o raid.",
+          de: "Raid-Warnungen und Auto-Abbrechen beißen sich nicht mehr: Aktivieren der Warnungen deaktiviert das Abbrechen, damit Zeit bleibt, dem Raid zu folgen.",
+          it: "Avvisi raid e annullamento automatico non sono più in conflitto: attivare gli avvisi disattiva l'annullamento, per lasciare tempo di seguire il raid.",
+          pl: "Alerty rajdów i automatyczne anulowanie nie kolidują już: włączenie alertów wyłącza anulowanie, by zdążyć dołączyć do rajdu.",
+          tr: "Raid uyarıları ve otomatik iptal artık çakışmıyor: uyarıları açmak, raidi takip etmek için zaman tanıyarak iptali kapatır.",
+          ru: "Оповещения о рейдах и автоотмена больше не конфликтуют: включение оповещений отключает автоотмену, чтобы успеть присоединиться к рейду.",
+          ja: "レイド通知と自動キャンセルが競合しなくなりました。通知を有効にするとキャンセルがオフになり、レイドに参加する時間が残ります。",
+          ko: "레이드 알림과 자동 취소가 더 이상 충돌하지 않습니다: 알림을 켜면 자동 취소가 꺼져 레이드를 따라갈 시간이 생깁니다."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "Moins de mémoire et de processeur dans les onglets Twitch : des boucles internes s'arrêtent quand elles ne servent plus.",
+          en: "Less memory and CPU in Twitch tabs: internal loops now stop when they're no longer needed.",
+          es: "Menos memoria y procesador en las pestañas de Twitch: algunos bucles internos se detienen cuando ya no sirven.",
+          "pt-BR": "Menos memória e processador nas abas da Twitch: loops internos agora param quando não são mais necessários.",
+          de: "Weniger Arbeitsspeicher und Prozessor in Twitch-Tabs: interne Schleifen stoppen, wenn sie nicht mehr gebraucht werden.",
+          it: "Meno memoria e processore nelle schede Twitch: alcuni cicli interni si fermano quando non servono più.",
+          pl: "Mniej pamięci i procesora w kartach Twitcha: wewnętrzne pętle zatrzymują się, gdy nie są już potrzebne.",
+          tr: "Twitch sekmelerinde daha az bellek ve işlemci: dahili döngüler artık gerekmediğinde duruyor.",
+          ru: "Меньше памяти и процессора во вкладках Twitch: внутренние циклы останавливаются, когда становятся не нужны.",
+          ja: "Twitch タブでのメモリと CPU の使用を削減：内部ループが不要になったときに停止するようになりました。",
+          ko: "Twitch 탭에서 메모리와 CPU 사용 감소: 내부 루프가 더 이상 필요 없을 때 멈춥니다."
+        }
+      },
+
 
       {
         type: "new",
