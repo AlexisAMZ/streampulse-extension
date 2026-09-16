@@ -1600,77 +1600,26 @@ async function updatePreferences(updates) {
     ...(result?.preferences || payload),
   };
   renderPreferences();
-  showFeedback(t("popup.settings.saved"));
 
-  if ("liveNotifications" in updates) {
-    const messageKey = updates.liveNotifications
-      ? "popup.preferences.liveEnabled"
-      : "popup.preferences.liveDisabled";
-    showFeedback(t(messageKey), "success");
-  }
-
-  if ("gameNotifications" in updates) {
-    const messageKey = updates.gameNotifications
-      ? "popup.preferences.gameEnabled"
-      : "popup.preferences.gameDisabled";
-    showFeedback(t(messageKey), "success");
-  }
-
-  if ("soundsEnabled" in updates) {
-    const messageKey = updates.soundsEnabled
-      ? "popup.preferences.soundsEnabled"
-      : "popup.preferences.soundsDisabled";
-    showFeedback(t(messageKey), "success");
-  }
-
-  if ("autoClaimChannelPoints" in updates) {
-    const messageKey = updates.autoClaimChannelPoints
-      ? "popup.preferences.autoClaimEnabled"
-      : "popup.preferences.autoClaimDisabled";
-    showFeedback(t(messageKey), "success");
-  }
-
-  if ("autoRefreshPlayerErrors" in updates) {
-    const messageKey = updates.autoRefreshPlayerErrors
-      ? "popup.preferences.autoRefreshEnabled"
-      : "popup.preferences.autoRefreshDisabled";
-    showFeedback(t(messageKey), "success");
-  }
-
-  if ("enablePipButton" in updates) {
-    const messageKey = updates.enablePipButton
-      ? "popup.preferences.pipButtonEnabled"
-      : "popup.preferences.pipButtonDisabled";
-    showFeedback(t(messageKey), "success");
-  }
-
-  if ("enableClipDownload" in updates) {
-    const messageKey = updates.enableClipDownload
-      ? "popup.preferences.clipDownloadEnabled"
-      : "popup.preferences.clipDownloadDisabled";
-    showFeedback(t(messageKey), "success");
-  }
-
-  if ("keepQualityInBackground" in updates) {
-    const messageKey = updates.keepQualityInBackground
-      ? "popup.preferences.keepQualityEnabled"
-      : "popup.preferences.keepQualityDisabled";
-    showFeedback(t(messageKey), "success");
-  }
-
-  if ("enableFastForwardButton" in updates) {
-    const messageKey = updates.enableFastForwardButton
-      ? "popup.preferences.fastForwardEnabled"
-      : "popup.preferences.fastForwardDisabled";
-    showFeedback(t(messageKey), "success");
-  }
-
-  if ("watchTimeTracker" in updates) {
-    const messageKey = updates.watchTimeTracker
-      ? "popup.preferences.watchTimeEnabled"
-      : "popup.preferences.watchTimeDisabled";
-    showFeedback(t(messageKey), "success");
-  }
+  // Un seul toast par reglage : le message specifique quand la cle en a un,
+  // le « Reglage enregistre » generique sinon (avant, les deux s'empilaient).
+  const SPECIFIC_TOASTS = {
+    liveNotifications: ["popup.preferences.liveEnabled", "popup.preferences.liveDisabled"],
+    gameNotifications: ["popup.preferences.gameEnabled", "popup.preferences.gameDisabled"],
+    soundsEnabled: ["popup.preferences.soundsEnabled", "popup.preferences.soundsDisabled"],
+    autoClaimChannelPoints: ["popup.preferences.autoClaimEnabled", "popup.preferences.autoClaimDisabled"],
+    autoRefreshPlayerErrors: ["popup.preferences.autoRefreshEnabled", "popup.preferences.autoRefreshDisabled"],
+    enablePipButton: ["popup.preferences.pipButtonEnabled", "popup.preferences.pipButtonDisabled"],
+    enableClipDownload: ["popup.preferences.clipDownloadEnabled", "popup.preferences.clipDownloadDisabled"],
+    keepQualityInBackground: ["popup.preferences.keepQualityEnabled", "popup.preferences.keepQualityDisabled"],
+    enableFastForwardButton: ["popup.preferences.fastForwardEnabled", "popup.preferences.fastForwardDisabled"],
+    watchTimeTracker: ["popup.preferences.watchTimeEnabled", "popup.preferences.watchTimeDisabled"],
+  };
+  const specificKey = Object.keys(SPECIFIC_TOASTS).find((key) => key in updates);
+  const toastKey = specificKey
+    ? SPECIFIC_TOASTS[specificKey][updates[specificKey] ? 0 : 1]
+    : "popup.settings.saved";
+  showFeedback(t(toastKey));
 
   return true;
 }
