@@ -48,6 +48,118 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.20",
+    date: "2026-09-17",
+    title: {
+      fr: "Kick passe à la vidéo",
+      en: "Kick steps into video",
+      es: "Kick se pasa al vídeo",
+      "pt-BR": "O Kick entra no vídeo",
+      de: "Kick kommt ins Video",
+      it: "Kick passa al video",
+      pl: "Kick przechodzi na wideo",
+      tr: "Kick videoya geçiyor",
+      ru: "Кик переходит на видео",
+      ja: "Kick が動画デビュー",
+      ko: "Kick가 영상에 데뷔"
+    },
+    subtitle: {
+      fr: "La scène de la popup s'anime pour les lives Kick, et tout se supprime plus vite.",
+      en: "The popup stage comes alive for Kick streams, and deleting is quicker.",
+      es: "La escena de la ventana cobra vida con los directos de Kick, y borrar es más rápido.",
+      "pt-BR": "O palco da janela ganha vida com as lives da Kick, e excluir ficou mais rápido.",
+      de: "Die Bühne des Popups erwacht für Kick-Streams, und Löschen geht schneller.",
+      it: "La scena del popup si anima con i live di Kick, ed eliminare è più veloce.",
+      pl: "Scena popupa ożywa przy streamach Kicka, a usuwanie jest szybsze.",
+      tr: "Popup sahnesi Kick yayınlarıyla canlanıyor ve silme hızlanıyor.",
+      ru: "Сцена попапа оживает со стримами Kick, а удаление стало быстрее.",
+      ja: "ポップアップのステージが Kick の配信で動き出し、削除も素早く。",
+      ko: "팝업 무대가 Kick 방송으로 살아나고, 삭제도 빨라졌습니다."
+    },
+    changes: [
+      {
+        type: "new",
+        text: {
+          fr: "Kick passe en vidéo : sur la scène de la popup, le live d'un streamer Kick démarre en plein cadre dès l'ouverture, sans le son.",
+          en: "Kick goes video: on the popup stage, a Kick streamer's live starts full-frame the moment you open, with no sound.",
+          es: "Kick pasa a vídeo: en la escena de la ventana, el directo de un streamer de Kick arranca a pantalla completa al abrir, sin sonido.",
+          "pt-BR": "O Kick vai ao vídeo: na cena da janela, a live de um streamer da Kick começa em tela cheia assim que você abre, sem som.",
+          de: "Kick geht ins Video: auf der Popup-Bühne startet der Live-Stream eines Kick-Streamers beim Öffnen im Vollbild, ohne Ton.",
+          it: "Kick passa al video: sulla scena del popup, il live di uno streamer Kick parte a tutto schermo all'apertura, senza audio.",
+          pl: "Kick przechodzi na wideo: na scenie popupa live streamera Kicka startuje w pełnym kadrze od otwarcia, bez dźwięku.",
+          tr: "Kick videoya geçiyor: popup sahnesinde bir Kick yayıncısının canlı yayını, açılışta tam karede ve sessiz başlar.",
+          ru: "Кик переходит на видео: на сцене попапа эфир стримера Kick запускается в полный кадр сразу при открытии, без звука.",
+          ja: "Kick が動画に：ポップアップのステージでは、Kick ストリーマーの配信を開いた瞬間にフルフレーム・ミュートで再生します。",
+          ko: "Kick가 영상으로: 팝업 무대에서 Kick 스트리머의 방송을 열자마자 전체 프레임, 음소거 상태로 재생합니다."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "Vraies images pour les lives Kick : l'extension interroge l'API officielle de Kick, et les miniatures alimentent les listes et le fond de la scène.",
+          en: "Real images for Kick streams: the extension now asks Kick's official API, and the thumbnails feed the lists and the stage backdrop.",
+          es: "Imágenes reales para los directos de Kick: la extensión consulta la API oficial de Kick, y las miniaturas alimentan las listas y el fondo de la escena.",
+          "pt-BR": "Imagens reais para as lives da Kick: a extensão consulta a API oficial da Kick, e as miniaturas alimentam as listas e o fundo da cena.",
+          de: "Echte Bilder für Kick-Streams: Die Extension fragt die offizielle Kick-API ab, und die Vorschaubilder füllen die Listen und den Bühnenhintergrund.",
+          it: "Immagini vere per i live di Kick: l'estensione interroga l'API ufficiale di Kick, e le miniature alimentano le liste e lo sfondo della scena.",
+          pl: "Prawdziwe obrazy dla streamów Kicka: rozszerzenie odpytuje oficjalne API Kicka, a miniatury zasilają listy i tło sceny.",
+          tr: "Kick yayınları için gerçek görseller: uzantı Kick'in resmi API'sini kullanıyor; küçük resimler listeleri ve sahne arka planını dolduruyor.",
+          ru: "Настоящие изображения для стримов Kick: расширение обращается к официальному API Kick, а миниатюры наполняют списки и фон сцены.",
+          ja: "Kick の配信に本物の画像：拡張機能は Kick の公式 API を利用し、サムネイルがリストとステージの背景に表示されます。",
+          ko: "Kick 방송의 실제 이미지: 확장 프로그램이 Kick 공식 API를 사용해 썸네일을 목록과 스테이지 배경에 표시합니다."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "Suppression directe : chaque carte de live porte sa corbeille, avec confirmation sur la carte. Plus besoin d'ouvrir la liste complète.",
+          en: "Direct removal: every live card carries its own trash button, with on-card confirmation. No more digging through the full list.",
+          es: "Eliminación directa: cada tarjeta de directo lleva su papelera, con confirmación en la propia tarjeta. Adiós a abrir la lista completa.",
+          "pt-BR": "Exclusão direta: cada card de live tem sua própria lixeira, com confirmação no card. Chega de abrir a lista completa.",
+          de: "Direktes Entfernen: jede Live-Karte trägt ihren eigenen Mülleimer, mit Bestätigung direkt auf der Karte. Kein Durchsuchen der Gesamtliste mehr.",
+          it: "Rimozione diretta: ogni card live ha il suo cestino, con conferma sulla card. Basta aprire l'elenco completo.",
+          pl: "Bezpośrednie usuwanie: każda karta live ma własny kosz, z potwierdzeniem na karcie. Koniec z przeszukiwaniem pełnej listy.",
+          tr: "Doğrudan kaldırma: her canlı kartının kendi çöp düğmesi var, onay kartın üzerinde. Tam listeyi karıştırmaya son.",
+          ru: "Прямое удаление: у каждой карточки эфира своя корзина с подтверждением на самой карточке. Больше не нужно открывать полный список.",
+          ja: "直接削除：各ライブカードにゴミ箱ボタンが付き、カード上で確認できます。完全なリストを開き回らなくて済みます。",
+          ko: "바로 삭제: 각 라이브 카드에 휴지통이 붙고, 카드 위에서 확인합니다. 전체 목록을 열어 볼 필요가 없습니다."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "Un point violet « 1 » s'affiche sur l'icône de l'extension quand des notes de version vous attendent, et s'efface une fois lues.",
+          en: "A violet \"1\" shows on the extension icon when release notes are waiting, and clears once you've read them.",
+          es: "Un punto violeta «1» aparece en el icono de la extensión cuando hay notas de versión pendientes, y desaparece al leerlas.",
+          "pt-BR": "Um ponto violeta «1» aparece no ícone da extensão quando há notas de versão esperando, e desaparece depois de lidas.",
+          de: "Ein violetter Punkt „1“ erscheint auf dem Erweiterungssymbol, wenn Release-Notizen warten, und verschwindet nach dem Lesen.",
+          it: "Un punto viola «1» appare sull'icona dell'estensione quando ci sono note di versione da leggere, e scompare una volta lette.",
+          pl: "Fioletowy punkt „1” pojawia się na ikonie rozszerzenia, gdy czekają uwagi do wersji, i znika po ich przeczytaniu.",
+          tr: "Sürüm notları beklerken uzantı simgesinde mor bir «1» noktası görünür, okunduktan sonra kaybolur.",
+          ru: "Фиолетовая точка «1» появляется на значке расширения, когда вас ждут заметки о версии, и исчезает после прочтения.",
+          ja: "リリースノートがあるとき、拡張機能アイコンに紫の「1」が表示され、読むと消えます。",
+          ko: "릴리스 노트가 기다리고 있으면 확장 프로그램 아이콘에 보라색 「1」이 표시되고, 읽으면 사라집니다."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Le texte d'accueil reste lisible sur les scènes très lumineuses, et l'étape active de l'onboarding est annoncée aux lecteurs d'écran.",
+          en: "The greeting stays readable on very bright scenes, and the active onboarding step is announced to screen readers.",
+          es: "El saludo sigue siendo legible en escenas muy brillantes, y el paso activo de la incorporación se anuncia a los lectores de pantalla.",
+          "pt-BR": "A saudação continua legível em cenas muito claras, e a etapa ativa da integração é anunciada aos leitores de tela.",
+          de: "Der Begrüßungstext bleibt auf sehr hellen Szenen lesbar, und der aktive Onboarding-Schritt wird an Screenreader gemeldet.",
+          it: "Il saluto resta legibile sulle scene molto luminose, e il passaggio attivo dell'onboarding viene annunciato ai lettori di schermo.",
+          pl: "Tekst powitania pozostaje czytelny na bardzo jasnych scenach, a aktywny krok onboardingu jest ogłaszany czytnikom ekranu.",
+          tr: "Karşılama metni çok parlak sahnelerde okunur kalır ve onboarding'in aktif adımı ekran okuyuculara bildirilir.",
+          ru: "Приветствие остаётся читаемым на очень ярких сценах, а активный шаг онбординга объявляется скринридерами.",
+          ja: "非常に明るいシーンでも挨拶文は読みやすく、オンボーディングの現在ステップはスクリーンリーダーに通知されます。",
+          ko: "아주 밝은 장면에서도 인사말이 읽히고, 온보딩의 현재 단계가 스크린 리더에 알려집니다."
+        }
+      }
+    ]
+  },
+  {
     version: "26.9.19",
     date: "2026-09-16",
     title: {
