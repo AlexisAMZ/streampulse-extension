@@ -2508,45 +2508,57 @@ async function openStreamerFromNotification(streamerId) {
   }
 }
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+function handleMessage(request, sender, sendResponse) {
   switch (request?.type) {
     case "notify":
       (async () => {
-        await NotificationCenter.show({
-          title: request.title,
-          message: request.message,
-          url: request.url || null,
-          streamerId: request.streamerId || null,
-          platform: request.platform || null,
-          requireInteraction: Boolean(request.requireInteraction),
-          priority:
-            typeof request.priority === "number"
-              ? request.priority
-              : request.requireInteraction
-              ? 2
-              : 0,
-          playSound: request.playSound !== false,
-        });
-        sendResponse({ success: true });
+        try {
+          await NotificationCenter.show({
+            title: request.title,
+            message: request.message,
+            url: request.url || null,
+            streamerId: request.streamerId || null,
+            platform: request.platform || null,
+            requireInteraction: Boolean(request.requireInteraction),
+            priority:
+              typeof request.priority === "number"
+                ? request.priority
+                : request.requireInteraction
+                ? 2
+                : 0,
+            playSound: request.playSound !== false,
+          });
+          sendResponse({ success: true });
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
+        }
       })();
       return true;
 
     case "schedule":
       (async () => {
-        await NotificationCenter.schedule(request);
-        sendResponse({ success: true });
+        try {
+          await NotificationCenter.schedule(request);
+          sendResponse({ success: true });
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
+        }
       })();
       return true;
 
     case "openPatchNotes":
       (async () => {
-        await chrome.storage.local.set({
-          patchNotesUnread: false,
-          seenPatchNotesVersion: chrome.runtime.getManifest().version,
-        });
-        await syncUpdateBadge();
-        await openPatchNotes();
-        sendResponse({ success: true });
+        try {
+          await chrome.storage.local.set({
+            patchNotesUnread: false,
+            seenPatchNotesVersion: chrome.runtime.getManifest().version,
+          });
+          await syncUpdateBadge();
+          await openPatchNotes();
+          sendResponse({ success: true });
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
+        }
       })();
       return true;
 
@@ -2662,13 +2674,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     case "getStreamers":
       (async () => {
-        const [streamers, statuses, preferences, profileData] = await Promise.all([
-          DataStore.getStreamers(),
-          DataStore.getStatuses(),
-          PreferenceStore.get(),
-          chrome.storage.local.get("userProfile")
-        ]);
-        sendResponse({ streamers, statuses, preferences, userProfile: profileData.userProfile || null });
+        try {
+          const [streamers, statuses, preferences, profileData] = await Promise.all([
+            DataStore.getStreamers(),
+            DataStore.getStatuses(),
+            PreferenceStore.get(),
+            chrome.storage.local.get("userProfile")
+          ]);
+          sendResponse({ streamers, statuses, preferences, userProfile: profileData.userProfile || null });
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
+        }
       })();
       return true;
 
@@ -2697,176 +2713,184 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     case "addStreamer":
       (async () => {
-        const preferences = await PreferenceStore.get();
-        const requestedPlatform = request.platform || "twitch";
-        const platform = normalizePlatform(
-          requestedPlatform || DEFAULT_PLATFORM
-        );
-        const rawHandle =
-          request.handle ??
-          request.twitch ??
-          request.login ??
-          request.url ??
-          "";
-        const handle = sanitizeHandle(platform, rawHandle);
-
-        if (!handle) {
-          const platformLabel = translateWithPrefs(
-            preferences,
-            getPlatformLabelKey(platform)
+        try {
+          const preferences = await PreferenceStore.get();
+          const requestedPlatform = request.platform || "twitch";
+          const platform = normalizePlatform(
+            requestedPlatform || DEFAULT_PLATFORM
           );
-          sendResponse({
-            error: translateWithPrefs(
+          const rawHandle =
+            request.handle ??
+            request.twitch ??
+            request.login ??
+            request.url ??
+            "";
+          const handle = sanitizeHandle(platform, rawHandle);
+
+          if (!handle) {
+            const platformLabel = translateWithPrefs(
               preferences,
-              "background.errors.invalidHandle",
-              { platform: platformLabel }
-            ),
-          });
-          return;
-        }
-
-        const streamers = await DataStore.getStreamers();
-        const incomingKey = getHandleComparisonKey(platform, handle);
-        const alreadyExists = streamers.some((streamer) => {
-          const existingKey = getHandleComparisonKey(
-            streamer.platform || "twitch",
-            streamer.handle || streamer.twitch || streamer.id
-          );
-          return existingKey === incomingKey;
-        });
-
-        if (alreadyExists) {
-          const platformLabel = translateWithPrefs(
-            preferences,
-            getPlatformLabelKey(platform)
-          );
-          sendResponse({
-            error: translateWithPrefs(
-              preferences,
-              "background.errors.streamerExistsPlatform",
-              { platform: platformLabel }
-            ),
-          });
-          return;
-        }
-
-        let sourceData = {
-          id: `${platform}:${handle}`,
-          platform,
-          handle,
-          notificationsEnabled: true,
-          socials: {},
-        };
-
-        if (platform === "twitch") {
-          const user = await PlatformChecker.getTwitchUser(handle);
-          if (!user || user._apiError) {
-            const errorKey = user?._apiError
-              ? "background.errors.apiError"
-              : "background.errors.streamerNotFound";
+              getPlatformLabelKey(platform)
+            );
             sendResponse({
               error: translateWithPrefs(
                 preferences,
-                errorKey,
-                {
-                  platform: translateWithPrefs(
-                    preferences,
-                    getPlatformLabelKey(platform)
-                  ),
-                }
+                "background.errors.invalidHandle",
+                { platform: platformLabel }
               ),
             });
             return;
           }
 
-          sourceData = {
-            ...sourceData,
-            id: handle,
-            twitch: handle,
-            displayName: user.display_name || handle,
-            avatarUrl: user.profile_image_url || "",
-            twitchId: user.id,
-          };
-        } else if (platform === "kick") {
-          const channel = await PlatformChecker.getKickChannel(handle);
-          if (!channel || channel._apiError) {
-            const errorKey = channel?._apiError
-              ? "background.errors.apiError"
-              : "background.errors.streamerNotFound";
+          const streamers = await DataStore.getStreamers();
+          const incomingKey = getHandleComparisonKey(platform, handle);
+          const alreadyExists = streamers.some((streamer) => {
+            const existingKey = getHandleComparisonKey(
+              streamer.platform || "twitch",
+              streamer.handle || streamer.twitch || streamer.id
+            );
+            return existingKey === incomingKey;
+          });
+
+          if (alreadyExists) {
+            const platformLabel = translateWithPrefs(
+              preferences,
+              getPlatformLabelKey(platform)
+            );
             sendResponse({
               error: translateWithPrefs(
                 preferences,
-                errorKey,
-                {
-                  platform: translateWithPrefs(
-                    preferences,
-                    getPlatformLabelKey(platform)
-                  ),
-                }
+                "background.errors.streamerExistsPlatform",
+                { platform: platformLabel }
               ),
             });
             return;
           }
 
-          sourceData = {
-            ...sourceData,
-            displayName:
-              channel?.user?.display_name ||
-              channel?.user?.username ||
-              channel?.slug ||
-              formatHandleForDisplay(platform, handle),
-            avatarUrl: resolveExternalUrl(
-              channel?.user?.profile_pic,
-              "https://files.kick.com"
-            ),
-            handle: channel?.slug || handle,
-          };
-        } else {
-          sourceData = {
-            ...sourceData,
-            displayName:
-              request.displayName ||
-              formatHandleForDisplay(platform, handle),
-            avatarUrl: request.avatarUrl || "",
-          };
-        }
-
-        if (platform === "twitch") {
-          sourceData.id = sourceData.twitch;
-        } else {
-          sourceData.id = `${platform}:${sanitizeHandle(
+          let sourceData = {
+            id: `${platform}:${handle}`,
             platform,
-            sourceData.handle
-          )}`;
+            handle,
+            notificationsEnabled: true,
+            socials: {},
+          };
+
+          if (platform === "twitch") {
+            const user = await PlatformChecker.getTwitchUser(handle);
+            if (!user || user._apiError) {
+              const errorKey = user?._apiError
+                ? "background.errors.apiError"
+                : "background.errors.streamerNotFound";
+              sendResponse({
+                error: translateWithPrefs(
+                  preferences,
+                  errorKey,
+                  {
+                    platform: translateWithPrefs(
+                      preferences,
+                      getPlatformLabelKey(platform)
+                    ),
+                  }
+                ),
+              });
+              return;
+            }
+
+            sourceData = {
+              ...sourceData,
+              id: handle,
+              twitch: handle,
+              displayName: user.display_name || handle,
+              avatarUrl: user.profile_image_url || "",
+              twitchId: user.id,
+            };
+          } else if (platform === "kick") {
+            const channel = await PlatformChecker.getKickChannel(handle);
+            if (!channel || channel._apiError) {
+              const errorKey = channel?._apiError
+                ? "background.errors.apiError"
+                : "background.errors.streamerNotFound";
+              sendResponse({
+                error: translateWithPrefs(
+                  preferences,
+                  errorKey,
+                  {
+                    platform: translateWithPrefs(
+                      preferences,
+                      getPlatformLabelKey(platform)
+                    ),
+                  }
+                ),
+              });
+              return;
+            }
+
+            sourceData = {
+              ...sourceData,
+              displayName:
+                channel?.user?.display_name ||
+                channel?.user?.username ||
+                channel?.slug ||
+                formatHandleForDisplay(platform, handle),
+              avatarUrl: resolveExternalUrl(
+                channel?.user?.profile_pic,
+                "https://files.kick.com"
+              ),
+              handle: channel?.slug || handle,
+            };
+          } else {
+            sourceData = {
+              ...sourceData,
+              displayName:
+                request.displayName ||
+                formatHandleForDisplay(platform, handle),
+              avatarUrl: request.avatarUrl || "",
+            };
+          }
+
+          if (platform === "twitch") {
+            sourceData.id = sourceData.twitch;
+          } else {
+            sourceData.id = `${platform}:${sanitizeHandle(
+              platform,
+              sourceData.handle
+            )}`;
+          }
+
+          const newStreamer = normalizeStreamer(sourceData);
+
+          const updated = await DataStore.saveStreamers([
+            ...streamers,
+            newStreamer,
+          ]);
+
+          await pollStreamers({ forceNotification: false });
+
+          sendResponse({
+            success: true,
+            streamers: updated,
+          });
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
         }
-
-        const newStreamer = normalizeStreamer(sourceData);
-
-        const updated = await DataStore.saveStreamers([
-          ...streamers,
-          newStreamer,
-        ]);
-
-        await pollStreamers({ forceNotification: false });
-
-        sendResponse({
-          success: true,
-          streamers: updated,
-        });
       })();
       return true;
 
     case "removeStreamer":
       (async () => {
-        const targetId = request.id;
-        const streamers = await DataStore.getStreamers();
-        const filtered = streamers.filter((s) => s.id !== targetId);
-        await DataStore.saveStreamers(filtered);
-        streamerStates.delete(targetId);
-        streamerCache.delete(targetId);
-        streamerLiveState.delete(targetId);
-        await pollStreamers({ forceNotification: false });
-        sendResponse({ success: true, streamers: filtered });
+        try {
+          const targetId = request.id;
+          const streamers = await DataStore.getStreamers();
+          const filtered = streamers.filter((s) => s.id !== targetId);
+          await DataStore.saveStreamers(filtered);
+          streamerStates.delete(targetId);
+          streamerCache.delete(targetId);
+          streamerLiveState.delete(targetId);
+          await pollStreamers({ forceNotification: false });
+          sendResponse({ success: true, streamers: filtered });
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
+        }
       })();
       return true;
 
@@ -2949,15 +2973,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     case "activatePlus":
       (async () => {
-        const result = await verifyLicense(request.key, fetch, Date.now(), await getDeviceId(chrome.storage.local));
-        if (result.ok) await chrome.storage.local.set({ [PLUS_KEY]: result.record });
-        sendResponse(result);
-        if (result.ok) {
-          const prefs = await PreferenceStore.get();
-          const lang = normalizeLanguage(prefs?.language);
-          thankPlusSubscriber(result.record.licenseKey, (key) => translate(lang, key)).catch(() => {});
+        try {
+          const result = await verifyLicense(request.key, fetch, Date.now(), await getDeviceId(chrome.storage.local));
+          if (result.ok) await chrome.storage.local.set({ [PLUS_KEY]: result.record });
+          sendResponse(result);
+          if (result.ok) {
+            const prefs = await PreferenceStore.get();
+            const lang = normalizeLanguage(prefs?.language);
+            thankPlusSubscriber(result.record.licenseKey, (key) => translate(lang, key)).catch(() => {});
+          }
+          if (result.ok) pollStreamers().catch(() => {});
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
         }
-        if (result.ok) pollStreamers().catch(() => {});
       })();
       return true;
 
@@ -2984,51 +3012,55 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     case "incrementStat":
       (async () => {
-        const { stat, value, channel, text, raidTarget } = request;
-        if (stat) {
-          await StatsStore.increment(stat, Number(value) || 1);
-          let type = "info";
-          if (stat === "dropsClaimed") type = "drop";
-          else if (stat === "momentsClaimed") type = "moment";
-          else if (stat === "raidsCancelled") type = "raid";
-          else if (stat === "channelPointsClaimed") type = "points";
+        try {
+          const { stat, value, channel, text, raidTarget } = request;
+          if (stat) {
+            await StatsStore.increment(stat, Number(value) || 1);
+            let type = "info";
+            if (stat === "dropsClaimed") type = "drop";
+            else if (stat === "momentsClaimed") type = "moment";
+            else if (stat === "raidsCancelled") type = "raid";
+            else if (stat === "channelPointsClaimed") type = "points";
 
-          let logText = text || `${stat} (+${value || 1})`;
-          if (!text && type === "raid" && raidTarget) {
-            logText = `Raid → ${raidTarget} (annulé)`;
-          }
+            let logText = text || `${stat} (+${value || 1})`;
+            if (!text && type === "raid" && raidTarget) {
+              logText = `Raid → ${raidTarget} (annulé)`;
+            }
 
-          await EventLogStore.addLog({
-            type,
-            channel: channel || "",
-            text: logText,
-            value: value || 1,
-          });
-
-          // Alertes d'evenement. On passe par NotificationCenter comme partout
-          // ailleurs : il resout l'icone en URL absolue, retombe sur l'icone
-          // embarquee si le telechargement echoue, et attrape le rejet.
-          //
-          // Les deux appels directs qui vivaient ici passaient un chemin
-          // relatif ("images/photos/128px.png"). Un service worker resout le
-          // relatif contre sa propre URL, soit js/images/photos/128px.png, qui
-          // n'existe pas : Chrome refusait la notification entiere avec
-          // « Unable to download all specified images », et faute de callback
-          // la promesse rejetee remontait en Uncaught (in promise).
-          const prefs = await PreferenceStore.get();
-          if (type === "drop" && prefs.dropAlerts) {
-            await NotificationCenter.show({
-              title: translateWithPrefs(prefs, "background.notifications.dropTitle"),
-              message: text || translateWithPrefs(prefs, "background.notifications.dropMessage"),
+            await EventLogStore.addLog({
+              type,
+              channel: channel || "",
+              text: logText,
+              value: value || 1,
             });
-          } else if (type === "raid" && prefs.raidAlerts) {
-            await NotificationCenter.show({
-              title: translateWithPrefs(prefs, "background.notifications.raidTitle"),
-              message: text || translateWithPrefs(prefs, "background.notifications.raidMessage"),
-            });
+
+            // Alertes d'evenement. On passe par NotificationCenter comme partout
+            // ailleurs : il resout l'icone en URL absolue, retombe sur l'icone
+            // embarquee si le telechargement echoue, et attrape le rejet.
+            //
+            // Les deux appels directs qui vivaient ici passaient un chemin
+            // relatif ("images/photos/128px.png"). Un service worker resout le
+            // relatif contre sa propre URL, soit js/images/photos/128px.png, qui
+            // n'existe pas : Chrome refusait la notification entiere avec
+            // « Unable to download all specified images », et faute de callback
+            // la promesse rejetee remontait en Uncaught (in promise).
+            const prefs = await PreferenceStore.get();
+            if (type === "drop" && prefs.dropAlerts) {
+              await NotificationCenter.show({
+                title: translateWithPrefs(prefs, "background.notifications.dropTitle"),
+                message: text || translateWithPrefs(prefs, "background.notifications.dropMessage"),
+              });
+            } else if (type === "raid" && prefs.raidAlerts) {
+              await NotificationCenter.show({
+                title: translateWithPrefs(prefs, "background.notifications.raidTitle"),
+                message: text || translateWithPrefs(prefs, "background.notifications.raidMessage"),
+              });
+            }
           }
+          sendResponse({ success: true });
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
         }
-        sendResponse({ success: true });
       })();
       return true;
 
@@ -3046,82 +3078,94 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     
     case "resetStat":
       (async () => {
-        const { stat } = request;
-        if (stat) {
+        try {
+          const { stat } = request;
+          if (stat) {
 
-          const current = await StatsStore.get();
-          current[stat] = 0;
-          await chrome.storage.local.set({ [STORAGE_KEYS.STATS]: current });
+            const current = await StatsStore.get();
+            current[stat] = 0;
+            await chrome.storage.local.set({ [STORAGE_KEYS.STATS]: current });
+          }
+          sendResponse({ success: true });
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
         }
-        sendResponse({ success: true });
       })();
       return true;
 
     case "updatePreferences":
       (async () => {
-        const incomingUpdates = request.updates || {};
-        // Coercion unique : PreferenceStore.sanitize() est la seule source de
-        // verite (le bloc duplique qui vivait ici a fini par perdre des cles,
-        // cf. le commentaire de sanitize()). On ne garde que les cles que
-        // l'appelant a envoyees et que sanitize reconnait.
-        const sanitized = PreferenceStore.sanitize(incomingUpdates);
-        const updates = Object.fromEntries(
-          Object.keys(incomingUpdates)
-            .filter((key) => key in sanitized)
-            .map((key) => [key, sanitized[key]])
-        );
-        if (Object.keys(updates).length === 0) {
-          const preferences = await PreferenceStore.get();
-          const incomingKeys = Object.keys(incomingUpdates);
+        try {
+          const incomingUpdates = request.updates || {};
+          // Coercion unique : PreferenceStore.sanitize() est la seule source de
+          // verite (le bloc duplique qui vivait ici a fini par perdre des cles,
+          // cf. le commentaire de sanitize()). On ne garde que les cles que
+          // l'appelant a envoyees et que sanitize reconnait.
+          const sanitized = PreferenceStore.sanitize(incomingUpdates);
+          const updates = Object.fromEntries(
+            Object.keys(incomingUpdates)
+              .filter((key) => key in sanitized)
+              .map((key) => [key, sanitized[key]])
+          );
+          if (Object.keys(updates).length === 0) {
+            const preferences = await PreferenceStore.get();
+            const incomingKeys = Object.keys(incomingUpdates);
 
-          // Charge utile vide : il n'y a rien a faire, ce n'est pas une erreur.
-          // Le bandeau rouge sortait ici, sans qu'aucun reglage n'ait echoue.
-          // La serialisation de sendMessage supprime les proprietes valant
-          // undefined, donc un appelant peut envoyer un objet qui arrive vide.
-          if (incomingKeys.length === 0) {
-            sendResponse({ success: true, preferences });
+            // Charge utile vide : il n'y a rien a faire, ce n'est pas une erreur.
+            // Le bandeau rouge sortait ici, sans qu'aucun reglage n'ait echoue.
+            // La serialisation de sendMessage supprime les proprietes valant
+            // undefined, donc un appelant peut envoyer un objet qui arrive vide.
+            if (incomingKeys.length === 0) {
+              sendResponse({ success: true, preferences });
+              return;
+            }
+
+            // Des cles sont bien arrivees mais aucune n'est reconnue : la, c'est
+            // un vrai defaut. On les nomme dans la console du service worker,
+            // faute de quoi le bandeau ne dit pas laquelle est en cause.
+            console.warn(
+              "[SP] updatePreferences: aucune cle reconnue parmi",
+              incomingKeys
+            );
+            sendResponse({
+              error: translateWithPrefs(
+                preferences,
+                "background.errors.noPreferencesUpdate"
+              ),
+            });
             return;
           }
 
-          // Des cles sont bien arrivees mais aucune n'est reconnue : la, c'est
-          // un vrai defaut. On les nomme dans la console du service worker,
-          // faute de quoi le bandeau ne dit pas laquelle est en cause.
-          console.warn(
-            "[SP] updatePreferences: aucune cle reconnue parmi",
-            incomingKeys
-          );
-          sendResponse({
-            error: translateWithPrefs(
-              preferences,
-              "background.errors.noPreferencesUpdate"
-            ),
-          });
-          return;
+          const preferences = await PreferenceStore.update(updates);
+          if ("backgroundRaidAlerts" in updates) {
+            refreshRaidWatcher();
+          }
+          sendResponse({ success: true, preferences });
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
         }
-
-        const preferences = await PreferenceStore.update(updates);
-        if ("backgroundRaidAlerts" in updates) {
-          refreshRaidWatcher();
-        }
-        sendResponse({ success: true, preferences });
       })();
       return true;
 
     case "testNotification":
       (async () => {
-        const preferences = await PreferenceStore.get();
         try {
-          await NotificationSystem.sendTest(preferences);
-          sendResponse({ success: true });
+          const preferences = await PreferenceStore.get();
+          try {
+            await NotificationSystem.sendTest(preferences);
+            sendResponse({ success: true });
+          } catch (error) {
+            sendResponse({
+              error:
+                error?.message ||
+                translateWithPrefs(
+                  preferences,
+                  "background.errors.testNotificationFailed"
+                ),
+            });
+          }
         } catch (error) {
-          sendResponse({
-            error:
-              error?.message ||
-              translateWithPrefs(
-                preferences,
-                "background.errors.testNotificationFailed"
-              ),
-          });
+          sendResponse({ error: error?.message || String(error) });
         }
       })();
       return true;
@@ -3134,6 +3178,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   return false;
+}
+
+// Filet uniforme : aucune exception (sync) ne doit laisser la popup sans
+// reponse, et chaque IIFE async dispose desormais de son propre try/catch.
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  try {
+    return handleMessage(request, sender, sendResponse);
+  } catch (error) {
+    console.warn("[SP] onMessage:", error?.message || error);
+    try {
+      sendResponse({ error: error?.message || String(error) });
+    } catch (_) {
+      // Canal deja ferme : la popup a ete fermee entre-temps.
+    }
+    return false;
+  }
 });
 
 scheduleWatcherAlarm();
