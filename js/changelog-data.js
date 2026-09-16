@@ -48,6 +48,246 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.19",
+    date: "2026-09-16",
+    title: {
+      fr: "Le lecteur Twitch plus fiable",
+      en: "A more reliable Twitch player",
+      es: "Un reproductor de Twitch más fiable",
+      "pt-BR": "Um player da Twitch mais confiável",
+      de: "Ein zuverlässigerer Twitch-Player",
+      it: "Un player Twitch più affidabile",
+      pl: "Bardziej niezawodny odtwarzacz Twitcha",
+      tr: "Daha güvenilir Twitch oynatıcısı",
+      ru: "Более надёжный плеер Twitch",
+      ja: "より安定した Twitch プレーヤー",
+      ko: "더 안정적인 Twitch 플레이어",
+      id: "Pemutar Twitch yang lebih andal",
+      nl: "Een betrouwbaardere Twitch-speler",
+      sv: "En pålitligare Twitch-spelare",
+      cs: "Spolehlivější přehrávač Twitche"
+    },
+    subtitle: {
+      fr: "Les erreurs de lecture se corrigent seules et la qualité peut rester intacte en arrière-plan.",
+      en: "Playback errors fix themselves and quality can stay intact in the background.",
+      es: "Los errores de reproducción se corrigen solos y la calidad puede mantenerse en segundo plano.",
+      "pt-BR": "Os erros de reprodução se corrigem sozinhos e a qualidade pode continuar intacta em segundo plano.",
+      de: "Wiedergabefehler beheben sich selbst und die Qualität kann im Hintergrund erhalten bleiben.",
+      it: "Gli errori di riproduzione si risolvono da soli e la qualità può restare intatta in background.",
+      pl: "Błędy odtwarzania naprawiają się same, a jakość może pozostać nienaruszona w tle.",
+      tr: "Oynatma hataları kendiliğinden düzeliyor ve kalite arka planda korunabiliyor.",
+      ru: "Ошибки воспроизведения исправляются сами, а качество может сохраняться в фоне.",
+      ja: "再生エラーが自動で直り、バックグラウンドでも画質を維持できます。",
+      ko: "재생 오류가 자동으로 해결되고 백그라운드에서도 화질을 유지할 수 있습니다.",
+      id: "Kesalahan pemutaran pulih sendiri dan kualitas bisa tetap terjaga di latar belakang.",
+      nl: "Afspeelfouten herstellen zichzelf en de kwaliteit kan op de achtergrond behouden blijven.",
+      sv: "Uppspelningsfel åtgärdas av sig själva och kvaliteten kan behållas i bakgrunden.",
+      cs: "Chyby přehrávání se opraví samy a kvalita může zůstat zachována i na pozadí."
+    },
+    changes: [
+      {
+        type: "improved",
+        text: {
+          fr: "Le bouton « Ajouté » sur les pages de chaîne perd son liseré coloré : il reprend le gris neutre des boutons Twitch.",
+          en: "The \"Added\" button on channel pages loses its coloured outline and takes Twitch's own neutral grey.",
+          es: "El botón «Añadido» en las páginas de canal pierde su borde de color y adopta el gris neutro de los botones de Twitch.",
+          "pt-BR": "O botão \"Adicionado\" nas páginas de canal perde a borda colorida e adota o cinza neutro dos botões da Twitch.",
+          de: "Der Button „Hinzugefügt“ auf Kanalseiten verliert seinen farbigen Rand und übernimmt das neutrale Grau der Twitch-Buttons.",
+          it: "Il pulsante \"Aggiunto\" nelle pagine dei canali perde il bordo colorato e adotta il grigio neutro dei pulsanti Twitch.",
+          pl: "Przycisk „Dodano” na stronach kanałów traci kolorową obwódkę i przyjmuje neutralną szarość przycisków Twitcha.",
+          tr: "Kanal sayfalarındaki \"Eklendi\" düğmesi renkli çerçevesini bırakıp Twitch düğmelerinin nötr grisini alıyor.",
+          ru: "Кнопка «Добавлено» на страницах каналов теряет цветную обводку и получает нейтральный серый цвет кнопок Twitch.",
+          ja: "チャンネルページの「追加済み」ボタンから色付きの枠線をなくし、Twitch のボタンと同じ落ち着いたグレーにしました。",
+          ko: "채널 페이지의 \"추가됨\" 버튼에서 색상 테두리를 없애고 Twitch 버튼과 같은 회색으로 바꿨습니다.",
+          id: "Tombol \"Ditambahkan\" di halaman kanal kehilangan garis tepi berwarnanya dan memakai abu-abu netral tombol Twitch.",
+          nl: "De knop ‘Toegevoegd’ op kanaalpagina's verliest zijn gekleurde rand en krijgt het neutrale grijs van Twitch-knoppen.",
+          sv: "Knappen ”Tillagd” på kanalsidor tappar sin färgade kant och får samma neutrala grå som Twitchs knappar.",
+          cs: "Tlačítko „Přidáno“ na stránkách kanálů ztrácí barevný obrys a přebírá neutrální šedou tlačítek Twitche."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "Les boutons StreamPulse du lecteur affichent une infobulle au survol, comme ceux de Twitch : « Rattraper le direct », « Picture-in-Picture » ou « Télécharger le clip ».",
+          en: "The StreamPulse player buttons now show a tooltip on hover, like Twitch's own: \"Skip to live\", \"Picture-in-Picture\" or \"Download clip\".",
+          es: "Los botones de StreamPulse en el reproductor muestran una descripción al pasar el cursor, como los de Twitch: «Ir al directo», «Imagen en imagen» o «Descargar clip».",
+          "pt-BR": "Os botões do StreamPulse no player mostram uma dica ao passar o mouse, como os da Twitch: \"Voltar ao ao vivo\", \"Picture-in-Picture\" ou \"Baixar clipe\".",
+          de: "Die StreamPulse-Buttons im Player zeigen beim Überfahren einen Hinweis, wie die von Twitch: „Zum Livepunkt springen“, „Bild-in-Bild“ oder „Clip herunterladen“.",
+          it: "I pulsanti StreamPulse del player mostrano un suggerimento al passaggio del mouse, come quelli di Twitch: \"Torna alla diretta\", \"Picture-in-Picture\" o \"Scarica clip\".",
+          pl: "Przyciski StreamPulse w odtwarzaczu pokazują podpowiedź po najechaniu kursorem, tak jak przyciski Twitcha: „Wróć do transmisji na żywo”, „Obraz w obrazie” lub „Pobierz klip”.",
+          tr: "Oynatıcıdaki StreamPulse düğmeleri, Twitch'inkiler gibi üzerine gelince ipucu gösteriyor: \"Canlıya dön\", \"Resim içinde resim\" veya \"Klibi indir\".",
+          ru: "Кнопки StreamPulse в плеере показывают подсказку при наведении, как и кнопки Twitch: «Вернуться к эфиру», «Картинка в картинке» или «Скачать клип».",
+          ja: "プレーヤーの StreamPulse のボタンにカーソルを合わせると、Twitch と同じようにツールチップが出ます。「ライブに追いつく」「ピクチャー・イン・ピクチャー」「クリップをダウンロード」などです。",
+          ko: "플레이어의 StreamPulse 버튼에 마우스를 올리면 Twitch처럼 툴팁이 표시됩니다. \"실시간으로 이동\", \"PIP 모드\", \"클립 다운로드\" 등입니다.",
+          id: "Tombol StreamPulse di pemutar kini menampilkan tooltip saat kursor diarahkan, seperti milik Twitch: \"Lompat ke siaran langsung\", \"Picture-in-Picture\", atau \"Unduh klip\".",
+          nl: "De StreamPulse-knoppen in de speler tonen nu een tooltip bij aanwijzen, net als die van Twitch: ‘Naar live springen’, ‘Beeld-in-beeld’ of ‘Clip downloaden’.",
+          sv: "StreamPulse-knapparna i spelaren visar nu en tooltip när du för muspekaren över dem, precis som Twitchs egna: ”Hoppa till direktsändningen”, ”Bild-i-bild” eller ”Ladda ner klipp”.",
+          cs: "Tlačítka StreamPulse v přehrávači nyní při najetí myší zobrazí popisek, stejně jako tlačítka Twitche: „Přejít na živé vysílání“, „Obraz v obraze“ nebo „Stáhnout klip“."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "L'indicateur de latence est passé sous le lecteur, juste à gauche du nombre de spectateurs et de la durée du live, au lieu de l'en-tête du tchat.",
+          en: "The latency indicator moved under the player, just left of the viewer count and stream uptime, instead of the chat header.",
+          es: "El indicador de latencia se ha movido debajo del reproductor, justo a la izquierda del número de espectadores y de la duración del directo, en lugar del encabezado del chat.",
+          "pt-BR": "O indicador de latência foi para baixo do player, logo à esquerda do número de espectadores e da duração da live, em vez do cabeçalho do chat.",
+          de: "Die Latenzanzeige sitzt jetzt unter dem Player, direkt links neben der Zuschauerzahl und der Streamdauer, statt in der Chat-Kopfzeile.",
+          it: "L'indicatore di latenza è passato sotto il player, subito a sinistra del numero di spettatori e della durata della diretta, invece che nell'intestazione della chat.",
+          pl: "Wskaźnik opóźnienia przeniósł się pod odtwarzacz, tuż na lewo od liczby widzów i czasu trwania transmisji, zamiast do nagłówka czatu.",
+          tr: "Gecikme göstergesi, sohbet başlığı yerine oynatıcının altına, izleyici sayısı ile yayın süresinin hemen soluna taşındı.",
+          ru: "Индикатор задержки переехал под плеер, слева от числа зрителей и длительности трансляции, вместо шапки чата.",
+          ja: "遅延の表示がチャットのヘッダーからプレーヤーの下へ移り、視聴者数と配信時間のすぐ左に並ぶようになりました。",
+          ko: "지연 표시가 채팅 헤더에서 플레이어 아래로 옮겨져, 시청자 수와 방송 시간 바로 왼쪽에 표시됩니다.",
+          id: "Indikator latensi kini berada di bawah pemutar, tepat di kiri jumlah penonton dan durasi siaran, bukan lagi di header obrolan.",
+          nl: "De latentie-indicator staat nu onder de speler, net links van het aantal kijkers en de streamduur, in plaats van in de chatkop.",
+          sv: "Latensindikatorn har flyttat ned under spelaren, precis till vänster om antalet tittare och sändningens längd, i stället för chattens rubrik.",
+          cs: "Ukazatel latence se přesunul pod přehrávač, hned nalevo od počtu diváků a délky vysílání, místo do záhlaví chatu."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "Nouveau réglage « Qualité du lecteur » : ouvrez chaque live en Source, 1440p, 1080p, 720p, 480p ou 360p. StreamPulse prend la qualité la plus proche quand la vôtre n'existe pas sur la chaîne, par exemple 1440p si vous demandez 1080p sur une chaîne qui diffuse en 1440p. Sur Auto, le réglage par défaut, Twitch garde entièrement la main.",
+          en: "New \"Player quality\" setting: open every stream at Source, 1440p, 1080p, 720p, 480p or 360p. StreamPulse picks the closest quality when yours isn't offered by the channel, for example 1440p if you ask for 1080p on a channel streaming in 1440p. On Auto, the default, Twitch keeps full control.",
+          es: "Nuevo ajuste «Calidad del reproductor»: abre cada directo en Fuente, 1440p, 1080p, 720p, 480p o 360p. StreamPulse elige la calidad más cercana cuando la tuya no está disponible en el canal, por ejemplo 1440p si pides 1080p en un canal que emite en 1440p. En Auto, el valor por defecto, Twitch mantiene el control.",
+          "pt-BR": "Nova configuração \"Qualidade do player\": abra cada live em Fonte, 1440p, 1080p, 720p, 480p ou 360p. O StreamPulse escolhe a qualidade mais próxima quando a sua não existe no canal, por exemplo 1440p se você pedir 1080p em um canal que transmite em 1440p. Em Auto, o padrão, a Twitch mantém o controle.",
+          de: "Neue Einstellung „Player-Qualität“: Starte jeden Stream in Quelle, 1440p, 1080p, 720p, 480p oder 360p. StreamPulse nimmt die nächstliegende Qualität, wenn deine im Kanal fehlt, zum Beispiel 1440p, wenn du 1080p auf einem Kanal mit 1440p wählst. Bei Auto, der Voreinstellung, behält Twitch die Kontrolle.",
+          it: "Nuova impostazione \"Qualità del player\": apri ogni diretta in Sorgente, 1440p, 1080p, 720p, 480p o 360p. StreamPulse sceglie la qualità più vicina quando la tua non è disponibile sul canale, per esempio 1440p se chiedi 1080p su un canale che trasmette in 1440p. Su Auto, il valore predefinito, decide Twitch.",
+          pl: "Nowe ustawienie „Jakość odtwarzacza”: otwieraj każdą transmisję w jakości Źródło, 1440p, 1080p, 720p, 480p lub 360p. StreamPulse wybiera najbliższą jakość, gdy Twojej nie ma na kanale, na przykład 1440p, gdy prosisz o 1080p na kanale nadającym w 1440p. Przy Auto, ustawieniu domyślnym, decyduje Twitch.",
+          tr: "Yeni \"Oynatıcı kalitesi\" ayarı: her yayını Kaynak, 1440p, 1080p, 720p, 480p veya 360p olarak aç. Seçtiğin kalite kanalda yoksa StreamPulse en yakınını seçer; örneğin 1440p yayın yapan bir kanalda 1080p istersen 1440p uygulanır. Varsayılan olan Auto'da kontrol tamamen Twitch'te kalır.",
+          ru: "Новая настройка «Качество плеера»: открывайте трансляции в качестве Источник, 1440p, 1080p, 720p, 480p или 360p. Если выбранного качества на канале нет, StreamPulse берёт ближайшее — например 1440p, если вы просите 1080p на канале, вещающем в 1440p. При значении «Авто», которое стоит по умолчанию, выбор остаётся за Twitch.",
+          ja: "新しい設定「プレーヤーの画質」を追加しました。ソース、1440p、1080p、720p、480p、360p から選べます。選んだ画質がそのチャンネルにない場合は、最も近い画質を使います。たとえば 1440p 配信のチャンネルで 1080p を選ぶと 1440p になります。初期設定の「自動」では Twitch が選びます。",
+          ko: "새 설정 \"플레이어 화질\": 모든 방송을 소스, 1440p, 1080p, 720p, 480p, 360p 중 하나로 엽니다. 선택한 화질이 채널에 없으면 가장 가까운 화질을 사용합니다. 예를 들어 1440p로 송출하는 채널에서 1080p를 고르면 1440p가 적용됩니다. 기본값인 자동에서는 Twitch가 결정합니다.",
+          id: "Pengaturan baru \"Kualitas pemutar\": buka setiap siaran dalam Sumber, 1440p, 1080p, 720p, 480p, atau 360p. StreamPulse memilih kualitas terdekat bila pilihanmu tidak tersedia di kanal, misalnya 1440p jika kamu meminta 1080p di kanal yang menyiarkan 1440p. Pada Auto, nilai bawaan, Twitch tetap yang menentukan.",
+          nl: "Nieuwe instelling ‘Kwaliteit van de speler’: open elke stream in Bron, 1440p, 1080p, 720p, 480p of 360p. StreamPulse kiest de dichtstbijzijnde kwaliteit als de jouwe niet op het kanaal bestaat, bijvoorbeeld 1440p als je 1080p vraagt op een kanaal dat in 1440p uitzendt. Op Auto, de standaard, houdt Twitch de controle.",
+          sv: "Ny inställning ”Spelarens kvalitet”: öppna varje sändning i Källa, 1440p, 1080p, 720p, 480p eller 360p. StreamPulse tar närmaste kvalitet när din inte finns på kanalen, till exempel 1440p om du ber om 1080p på en kanal som sänder i 1440p. På Auto, som är standard, bestämmer Twitch.",
+          cs: "Nové nastavení „Kvalita přehrávače“: otevřete každé vysílání ve Zdroji, 1440p, 1080p, 720p, 480p nebo 360p. Pokud vaše kvalita na kanálu není, StreamPulse vezme nejbližší — třeba 1440p, když chcete 1080p na kanálu vysílajícím v 1440p. Při výchozím Auto rozhoduje Twitch."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "La sauvegarde était incomplète : elle contient désormais aussi vos favoris épinglés, vos groupes de chaînes, votre historique, vos alertes intelligentes, votre thème et vos règles de prédiction. La licence StreamPulse+ en reste exclue, car elle est liée à l'appareil.",
+          en: "Backups were incomplete: they now also include your pinned favorites, channel groups, history, smart alerts, theme and prediction rules. Your StreamPulse+ license stays out, since it is tied to the device.",
+          es: "La copia de seguridad estaba incompleta: ahora también incluye tus favoritos fijados, grupos de canales, historial, alertas inteligentes, tema y reglas de predicción. La licencia StreamPulse+ queda fuera, porque está vinculada al dispositivo.",
+          "pt-BR": "O backup estava incompleto: agora inclui também seus favoritos fixados, grupos de canais, histórico, alertas inteligentes, tema e regras de previsão. A licença StreamPulse+ fica de fora, pois está vinculada ao aparelho.",
+          de: "Die Sicherung war unvollständig: Sie enthält jetzt auch deine angehefteten Favoriten, Kanalgruppen, den Verlauf, smarte Alarme, das Design und die Prognoseregeln. Die StreamPulse+-Lizenz bleibt außen vor, da sie an das Gerät gebunden ist.",
+          it: "Il backup era incompleto: ora include anche i preferiti fissati, i gruppi di canali, la cronologia, gli avvisi intelligenti, il tema e le regole di previsione. La licenza StreamPulse+ resta esclusa, perché è legata al dispositivo.",
+          pl: "Kopia zapasowa była niepełna: teraz zawiera też przypięte ulubione, grupy kanałów, historię, inteligentne alerty, motyw i reguły predykcji. Licencja StreamPulse+ pozostaje poza nią, bo jest powiązana z urządzeniem.",
+          tr: "Yedek eksikti: artık sabitlenmiş favorilerini, kanal gruplarını, geçmişini, akıllı uyarılarını, temanı ve tahmin kurallarını da içeriyor. StreamPulse+ lisansı cihaza bağlı olduğu için dışarıda kalıyor.",
+          ru: "Резервная копия была неполной: теперь в неё входят также закреплённые избранные, группы каналов, история, умные оповещения, тема и правила прогнозов. Лицензия StreamPulse+ в неё не входит, так как привязана к устройству.",
+          ja: "バックアップが不完全でした。今後はピン留めしたお気に入り、チャンネルのグループ、履歴、スマート通知、テーマ、予想のルールも保存されます。StreamPulse+ のライセンスは端末に紐づくため対象外です。",
+          ko: "백업이 불완전했습니다. 이제 고정한 즐겨찾기, 채널 그룹, 기록, 스마트 알림, 테마, 예측 규칙도 포함됩니다. StreamPulse+ 라이선스는 기기에 연결되어 있어 제외됩니다.",
+          id: "Cadangan sebelumnya tidak lengkap: kini juga mencakup favorit yang disematkan, grup kanal, riwayat, peringatan pintar, tema, dan aturan prediksi. Lisensi StreamPulse+ tetap dikecualikan karena terikat pada perangkat.",
+          nl: "De back-up was onvolledig: hij bevat nu ook je vastgezette favorieten, kanaalgroepen, geschiedenis, slimme meldingen, thema en voorspellingsregels. Je StreamPulse+-licentie blijft erbuiten, omdat die aan het apparaat gebonden is.",
+          sv: "Säkerhetskopian var ofullständig: den innehåller nu även dina fästa favoriter, kanalgrupper, historik, smarta aviseringar, tema och prognosregler. StreamPulse+-licensen står utanför eftersom den är kopplad till enheten.",
+          cs: "Záloha byla neúplná: nyní obsahuje i připnuté oblíbené, skupiny kanálů, historii, chytrá upozornění, motiv a pravidla předpovědí. Licence StreamPulse+ zůstává mimo, protože je vázaná na zařízení."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "Les boutons StreamPulse du lecteur Twitch adoptent enfin le style de Twitch : mêmes dimensions, forme ronde et icônes redessinées avec le même trait que le lecteur.",
+          en: "The StreamPulse buttons in the Twitch player finally match Twitch's own style: same size, round shape and icons redrawn with the player's own weight.",
+          es: "Los botones de StreamPulse en el reproductor de Twitch por fin adoptan el estilo de Twitch: mismo tamaño, forma redonda e iconos rediseñados con el mismo trazo que el reproductor.",
+          "pt-BR": "Os botões do StreamPulse no player da Twitch finalmente seguem o estilo da Twitch: mesmo tamanho, formato redondo e ícones redesenhados com o mesmo traço do player.",
+          de: "Die StreamPulse-Buttons im Twitch-Player übernehmen endlich Twitchs Stil: gleiche Größe, runde Form und Symbole, die in derselben Strichstärke wie der Player neu gezeichnet wurden.",
+          it: "I pulsanti StreamPulse nel player di Twitch adottano finalmente lo stile di Twitch: stesse dimensioni, forma tonda e icone ridisegnate con lo stesso tratto del player.",
+          pl: "Przyciski StreamPulse w odtwarzaczu Twitcha wreszcie pasują do stylu Twitcha: ten sam rozmiar, okrągły kształt i ikony narysowane od nowa tą samą kreską co odtwarzacz.",
+          tr: "Twitch oynatıcısındaki StreamPulse düğmeleri nihayet Twitch'in tarzını benimsedi: aynı boyut, yuvarlak biçim ve oynatıcıyla aynı çizgide yeniden çizilmiş simgeler.",
+          ru: "Кнопки StreamPulse в плеере Twitch наконец выглядят как родные: тот же размер, круглая форма и значки, перерисованные в той же толщине, что и у плеера.",
+          ja: "Twitch プレーヤーの StreamPulse のボタンが、ようやく Twitch と同じ見た目になりました。同じ大きさ、丸い形、そしてプレーヤーと同じ太さで描き直したアイコンです。",
+          ko: "Twitch 플레이어의 StreamPulse 버튼이 드디어 Twitch 스타일에 맞춰졌습니다. 같은 크기, 둥근 모양, 그리고 플레이어와 같은 굵기로 다시 그린 아이콘입니다.",
+          id: "Tombol StreamPulse di pemutar Twitch akhirnya mengikuti gaya Twitch: ukuran sama, bentuk bulat, dan ikon yang digambar ulang dengan ketebalan yang sama seperti pemutar.",
+          nl: "De StreamPulse-knoppen in de Twitch-speler volgen eindelijk Twitch' eigen stijl: zelfde grootte, ronde vorm en pictogrammen die met dezelfde lijndikte als de speler zijn hertekend.",
+          sv: "StreamPulse-knapparna i Twitch-spelaren följer äntligen Twitchs egen stil: samma storlek, rund form och ikoner omritade med samma tjocklek som spelarens.",
+          cs: "Tlačítka StreamPulse v přehrávači Twitche konečně odpovídají stylu Twitche: stejná velikost, kulatý tvar a ikony překreslené stejnou silou tahu jako v přehrávači."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "Nouveau bouton Picture-in-Picture dans le lecteur Twitch pour regarder le live dans une mini-fenêtre.",
+          en: "New Picture-in-Picture button in the Twitch player to watch the stream in a mini window.",
+          es: "Nuevo botón de imagen en imagen en el reproductor de Twitch para ver el directo en una minipantalla.",
+          "pt-BR": "Novo botão Picture-in-Picture no player da Twitch para assistir à live em uma minijanela.",
+          de: "Neuer Bild-in-Bild-Button im Twitch-Player, um den Stream in einem Mini-Fenster zu sehen.",
+          it: "Nuovo pulsante Picture-in-Picture nel player di Twitch per guardare la diretta in una mini finestra.",
+          pl: "Nowy przycisk obrazu w obrazie w odtwarzaczu Twitcha do oglądania transmisji w mini oknie.",
+          tr: "Yayını küçük bir pencerede izlemek için Twitch oynatıcısında yeni resim içinde resim düğmesi.",
+          ru: "Новая кнопка «Картинка в картинке» в плеере Twitch для просмотра трансляции в мини-окне.",
+          ja: "配信を小さなウィンドウで見られるピクチャー・イン・ピクチャーボタンを Twitch プレーヤーに追加しました。",
+          ko: "Twitch 플레이어에 방송을 작은 창으로 볼 수 있는 PIP 버튼이 추가되었습니다.",
+          id: "Tombol Picture-in-Picture baru di pemutar Twitch untuk menonton siaran di jendela mini.",
+          nl: "Nieuwe beeld-in-beeldknop in de Twitch-speler om de stream in een minivenster te kijken.",
+          sv: "Ny bild-i-bild-knapp i Twitch-spelaren för att titta på sändningen i ett minifönster.",
+          cs: "Nové tlačítko Obraz v obraze v přehrávači Twitche pro sledování vysílání v mini okně."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "StreamPulse+ : un bouton sur les pages de clips Twitch enregistre le clip en MP4, dans la meilleure qualité disponible.",
+          en: "StreamPulse+: a button on Twitch clip pages saves the clip as MP4, in the best available quality.",
+          es: "StreamPulse+: un botón en las páginas de clips de Twitch guarda el clip en MP4, con la mejor calidad disponible.",
+          "pt-BR": "StreamPulse+: um botão nas páginas de clipes da Twitch salva o clipe em MP4, na melhor qualidade disponível.",
+          de: "StreamPulse+: Ein Button auf Twitch-Clip-Seiten speichert den Clip als MP4 in der besten verfügbaren Qualität.",
+          it: "StreamPulse+: un pulsante nelle pagine delle clip di Twitch salva la clip in MP4, nella migliore qualità disponibile.",
+          pl: "StreamPulse+: przycisk na stronach klipów Twitcha zapisuje klip w MP4 w najlepszej dostępnej jakości.",
+          tr: "StreamPulse+: Twitch klip sayfalarındaki bir düğme klibi mevcut en iyi kalitede MP4 olarak kaydeder.",
+          ru: "StreamPulse+: кнопка на страницах клипов Twitch сохраняет клип в MP4 в лучшем доступном качестве.",
+          ja: "StreamPulse+：Twitch のクリップページにあるボタンで、クリップを最高画質の MP4 として保存できます。",
+          ko: "StreamPulse+: Twitch 클립 페이지의 버튼으로 클립을 최고 화질의 MP4로 저장합니다.",
+          id: "StreamPulse+: tombol di halaman klip Twitch menyimpan klip sebagai MP4 dengan kualitas terbaik yang tersedia.",
+          nl: "StreamPulse+: een knop op Twitch-clippagina's slaat de clip op als MP4, in de beste beschikbare kwaliteit.",
+          sv: "StreamPulse+: en knapp på Twitchs klippsidor sparar klippet som MP4 i bästa tillgängliga kvalitet.",
+          cs: "StreamPulse+: tlačítko na stránkách klipů Twitche uloží klip jako MP4 v nejlepší dostupné kvalitě."
+        }
+      },
+      {
+        type: "fix",
+        text: {
+          fr: "L'actualisation automatique relance vraiment le live après une erreur #2000 : si le bouton Réessayer ne suffit pas, l'onglet est rechargé dès que vous le regardez.",
+          en: "Automatic refresh now really restarts the stream after a #2000 error: if the Retry button isn't enough, the tab reloads as soon as you look at it.",
+          es: "La actualización automática ahora reinicia de verdad el directo tras un error #2000: si el botón Reintentar no basta, la pestaña se recarga en cuanto la miras.",
+          "pt-BR": "A atualização automática agora reinicia de verdade a live após um erro #2000: se o botão Tentar novamente não bastar, a aba é recarregada assim que você olhar para ela.",
+          de: "Die automatische Aktualisierung startet den Stream nach einem Fehler #2000 jetzt wirklich neu: Reicht der Button Erneut versuchen nicht, wird der Tab neu geladen, sobald du ihn ansiehst.",
+          it: "L'aggiornamento automatico ora riavvia davvero la diretta dopo un errore #2000: se il pulsante Riprova non basta, la scheda viene ricaricata appena la guardi.",
+          pl: "Automatyczne odświeżanie naprawdę wznawia transmisję po błędzie #2000: jeśli przycisk Spróbuj ponownie nie wystarczy, karta przeładuje się, gdy tylko na nią spojrzysz.",
+          tr: "Otomatik yenileme artık #2000 hatasından sonra yayını gerçekten yeniden başlatıyor: Tekrar dene düğmesi yetmezse sekme, ona baktığın anda yenileniyor.",
+          ru: "Автообновление теперь действительно перезапускает трансляцию после ошибки #2000: если кнопки «Повторить» недостаточно, вкладка перезагрузится, как только вы на неё посмотрите.",
+          ja: "自動更新が #2000 エラーの後に配信を確実に再開するようになりました。再試行ボタンで直らない場合は、タブを表示した時点で再読み込みします。",
+          ko: "자동 새로고침이 이제 #2000 오류 후 방송을 확실히 다시 시작합니다. 다시 시도 버튼으로 해결되지 않으면 탭을 볼 때 새로고침됩니다.",
+          id: "Pembaruan otomatis kini benar-benar memulai ulang siaran setelah kesalahan #2000: jika tombol Coba lagi tidak cukup, tab dimuat ulang begitu kamu melihatnya.",
+          nl: "Automatisch vernieuwen herstart de stream nu echt na een fout #2000: als de knop Opnieuw proberen niet genoeg is, wordt het tabblad herladen zodra je ernaar kijkt.",
+          sv: "Automatisk uppdatering startar nu verkligen om sändningen efter fel #2000: räcker inte knappen Försök igen laddas fliken om så fort du tittar på den.",
+          cs: "Automatické obnovení teď po chybě #2000 opravdu znovu spustí vysílání: pokud tlačítko Zkusit znovu nestačí, karta se znovu načte, jakmile se na ni podíváte."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "Nouvelle option « Garder la qualité en arrière-plan » dans les réglages du lecteur : Twitch ne baisse plus la qualité quand vous changez d'onglet. Désactivée par défaut.",
+          en: "New \"Keep quality in background\" option in player settings: Twitch no longer lowers quality when you switch tabs. Off by default.",
+          es: "Nueva opción «Mantener la calidad en segundo plano» en los ajustes del reproductor: Twitch ya no baja la calidad al cambiar de pestaña. Desactivada por defecto.",
+          "pt-BR": "Nova opção \"Manter a qualidade em segundo plano\" nas configurações do player: a Twitch não baixa mais a qualidade quando você troca de aba. Desativada por padrão.",
+          de: "Neue Option „Qualität im Hintergrund behalten“ in den Player-Einstellungen: Twitch senkt die Qualität nicht mehr, wenn du den Tab wechselst. Standardmäßig aus.",
+          it: "Nuova opzione \"Mantieni la qualità in background\" nelle impostazioni del player: Twitch non abbassa più la qualità quando cambi scheda. Disattivata di default.",
+          pl: "Nowa opcja „Zachowaj jakość w tle” w ustawieniach odtwarzacza: Twitch nie obniża już jakości po przełączeniu karty. Domyślnie wyłączona.",
+          tr: "Oynatıcı ayarlarında yeni \"Arka planda kaliteyi koru\" seçeneği: sekme değiştirdiğinde Twitch artık kaliteyi düşürmüyor. Varsayılan olarak kapalı.",
+          ru: "Новая опция «Сохранять качество в фоне» в настройках плеера: Twitch больше не снижает качество при переключении вкладок. По умолчанию выключена.",
+          ja: "プレーヤー設定に「バックグラウンドでも画質を維持」を追加しました。タブを切り替えても Twitch が画質を下げなくなります。初期設定はオフです。",
+          ko: "플레이어 설정에 \"백그라운드에서 화질 유지\" 옵션이 추가되었습니다. 탭을 전환해도 Twitch가 화질을 낮추지 않습니다. 기본값은 꺼짐입니다.",
+          id: "Opsi baru \"Pertahankan kualitas di latar belakang\" di pengaturan pemutar: Twitch tidak lagi menurunkan kualitas saat kamu berpindah tab. Nonaktif secara default.",
+          nl: "Nieuwe optie ‘Kwaliteit op de achtergrond behouden’ in de spelerinstellingen: Twitch verlaagt de kwaliteit niet meer als je van tabblad wisselt. Standaard uit.",
+          sv: "Nytt alternativ ”Behåll kvaliteten i bakgrunden” i spelarinställningarna: Twitch sänker inte längre kvaliteten när du byter flik. Avstängt som standard.",
+          cs: "Nová volba „Zachovat kvalitu na pozadí“ v nastavení přehrávače: Twitch už nesnižuje kvalitu, když přepnete kartu. Ve výchozím stavu vypnuto."
+        }
+      }
+    ]
+  },
+  {
     version: "26.9.18",
     date: "2026-09-15",
     title: {

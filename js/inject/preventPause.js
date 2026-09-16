@@ -1,66 +1,53 @@
 (() => {
   "use strict";
 
-  // Prevent Twitch video player from pausing or degrading quality when the tab is inactive/hidden.
+  // Keeps the Twitch player from pausing or dropping to low quality when the
+  // tab is hidden. Runs in the MAIN world at document_start so it patches the
+  // page's own Document before Twitch reads visibility.
+  //
+  // Opt-in: the "keepQualityInBackground" setting is mirrored into this
+  // localStorage flag by twitchPlayerEnhancer.js (isolated world, which can
+  // read chrome.storage). Changes apply on the next page load.
   // Compatible with 7TV, BetterTTV, and FrankerFaceZ.
 
+  const FLAG_KEY = "streampulse:keepQualityInBackground";
+
+  const readFlag = () => {
+    try {
+      return window.localStorage.getItem(FLAG_KEY) === "1";
+    } catch (_error) {
+      // Storage blocked (privacy mode): leave Twitch's default behavior.
+      return false;
+    }
+  };
+  if (!readFlag() || window.__streampulsePreventPause) return;
+  window.__streampulsePreventPause = true;
+
+  const alwaysVisible = (value) => ({ get: () => value, configurable: true });
+
   try {
-    // Override Document visibility properties so Twitch thinks the page is always active
     Object.defineProperties(Document.prototype, {
-      hidden: {
-        get: function () {
-          return false;
-        },
-        configurable: true,
-      },
-      visibilityState: {
-        get: function () {
-          return "visible";
-        },
-        configurable: true,
-      },
+      hidden: alwaysVisible(false),
+      webkitHidden: alwaysVisible(false),
+      visibilityState: alwaysVisible("visible"),
+      webkitVisibilityState: alwaysVisible("visible"),
     });
-
-    // Block visibilitychange event dispatching to Twitch's internal listeners
-    const originalAddEventListener = EventTarget.prototype.addEventListener;
-    EventTarget.prototype.addEventListener = function (type, listener, options) {
-      if (type === "visibilitychange") {
-        const wrappedListener = function (event) {
-          // Suppress visibilitychange if it tries to signal 'hidden'
-          if (document.hidden === false) {
-            // Prevent event execution for video pause logic
-            return;
-          }
-          if (typeof listener === "function") {
-            return listener.call(this, event);
-          } else if (listener && typeof listener.handleEvent === "function") {
-            return listener.handleEvent(event);
-          }
-        };
-        return originalAddEventListener.call(this, type, wrappedListener, options);
-      }
-      return originalAddEventListener.call(this, type, listener, options);
-    };
-
-    // Auto-resume video player if Twitch attempts to pause it when hidden
-    document.addEventListener(
-      "pause",
-      (e) => {
-        if (e.target && e.target.tagName === "VIDEO") {
-          const video = e.target;
-          // Only auto-play if video was paused while page is not actually focused/visible
-          if (document.realHidden || document.webkitHidden) {
-            setTimeout(() => {
-              if (video.paused) {
-                video.play().catch(() => {});
-              }
-            }, 100);
-          }
-        }
-      },
-      true
-    );
+    Document.prototype.hasFocus = () => true;
   } catch (err) {
-    console.warn("StreamPulse: preventPause injection failed", err);
+    console.warn("StreamPulse: visibility override failed", err);
   }
+
+  // Swallow visibility and blur signals before any page listener sees them.
+  const swallow = (event) => event.stopImmediatePropagation();
+  for (const type of ["visibilitychange", "webkitvisibilitychange"]) {
+    document.addEventListener(type, swallow, true);
+    window.addEventListener(type, swallow, true);
+  }
+  window.addEventListener(
+    "blur",
+    (event) => {
+      if (event.target === window) event.stopImmediatePropagation();
+    },
+    true
+  );
 })();

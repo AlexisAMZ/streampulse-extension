@@ -35,15 +35,25 @@ Rewards on autopilot
 
 A smoother player
 • Anti-pause: the stream keeps playing when you switch tabs.
-• Player recovery after errors such as Twitch #2000.
+• Player recovery after errors such as Twitch #2000: StreamPulse clicks Retry and, if the error is still there, reloads the tab once.
+• Picture-in-Picture button: watch the stream in a floating mini window while you do something else.
+• Fast-forward button: jump back to the live edge when your stream falls behind.
+• Optional: keep the video quality when the tab is in the background, instead of letting Twitch lower it.
+• Optional: hide Twitch extension overlays on top of the video.
 • Chat filters by keyword or user, on Twitch and Kick.
+
+Your tabs, your way
+• The streamer's avatar as the tab icon, and a red LIVE dot while they are on air.
+• Keep Twitch and Kick tabs from being put to sleep by Chrome.
+• Extension language: 15 languages, chosen independently from your browser language.
+• A changelog screen that tells you what changed after each update.
 
 Your watch time
 • Time watched per channel and a shareable recap image for the last 7 or 30 days or any month, in 16:9 or 9:16.
-• Backup and restore: move your streamers, settings and watch time to another browser.
+• Backup and restore: move your streamers, favorites, channel groups, settings, history and watch time to another browser.
 
 StreamPulse+ (optional, paid)
-Everything above is free and stays free. StreamPulse+ is a monthly or lifetime plan that supports the project and adds: smart alerts (only for a game, a word in the title or a viewer threshold), an advanced recap with a yearly Wrapped, assisted predictions, and custom popup themes with animated badge and name effects in Twitch chat.
+Everything above is free and stays free. StreamPulse+ is a monthly or lifetime plan that supports the project and adds: smart alerts (only for a game, a word in the title or a viewer threshold), an advanced recap with a yearly Wrapped, assisted predictions with a movable widget on the video, clip downloads as MP4 from any Twitch clip page, and custom popup themes with animated badge and name effects in Twitch chat.
 
 Open source
 The full code is public on GitHub under the GPL v3 license: github.com/AlexisAMZ/streampulse-extension
@@ -73,15 +83,25 @@ Récompenses en pilote automatique
 
 Un lecteur plus fluide
 • Anti-pause : le stream continue quand vous changez d'onglet.
-• Récupération du lecteur après une erreur comme la #2000 de Twitch.
+• Récupération du lecteur après une erreur comme la #2000 de Twitch : StreamPulse clique sur Réessayer et, si l'erreur persiste, recharge l'onglet une seule fois.
+• Bouton Picture-in-Picture : regardez le live dans une mini-fenêtre flottante pendant que vous faites autre chose.
+• Bouton d'avance rapide : rattrapez le direct quand votre flux a pris du retard.
+• Au choix : garder la qualité vidéo quand l'onglet est en arrière-plan, au lieu de laisser Twitch la baisser.
+• Au choix : masquer les incrustations d'extensions Twitch par-dessus la vidéo.
 • Filtres de chat par mot-clé ou par utilisateur, sur Twitch et Kick.
+
+Vos onglets, à votre façon
+• L'avatar du streamer comme icône de l'onglet, et un point rouge LIVE quand il est en direct.
+• Empêcher Chrome de mettre en veille vos onglets Twitch et Kick.
+• Langue de l'extension : 15 langues, choisie indépendamment de celle du navigateur.
+• Un écran de nouveautés qui vous dit ce qui a changé après chaque mise à jour.
 
 Votre temps de visionnage
 • Le temps passé sur chaque chaîne et une image récap à partager sur les 7 ou 30 derniers jours ou sur un mois, en 16:9 ou 9:16.
-• Sauvegarde et restauration : retrouvez vos streamers, réglages et temps de visionnage dans un autre navigateur.
+• Sauvegarde et restauration : retrouvez vos streamers, favoris, groupes de chaînes, réglages, historique et temps de visionnage dans un autre navigateur.
 
 StreamPulse+ (optionnel, payant)
-Tout ce qui précède est gratuit et le reste. StreamPulse+ est une formule mensuelle ou à vie qui soutient le projet et ajoute : des alertes intelligentes (seulement pour un jeu, un mot dans le titre ou un seuil de spectateurs), un récap avancé avec un bilan annuel, des prédictions assistées, et des thèmes pour le pop-up avec des effets animés de badge et de pseudo dans le tchat Twitch.
+Tout ce qui précède est gratuit et le reste. StreamPulse+ est une formule mensuelle ou à vie qui soutient le projet et ajoute : des alertes intelligentes (seulement pour un jeu, un mot dans le titre ou un seuil de spectateurs), un récap avancé avec un bilan annuel, des prédictions assistées avec un widget déplaçable sur la vidéo, le téléchargement des clips en MP4 depuis n'importe quelle page de clip Twitch, et des thèmes pour le pop-up avec des effets animés de badge et de pseudo dans le tchat Twitch.
 
 Open source
 Tout le code est public sur GitHub sous licence GPL v3 : github.com/AlexisAMZ/streampulse-extension

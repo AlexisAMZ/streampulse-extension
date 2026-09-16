@@ -33,6 +33,10 @@ const defaultPreferences = {
   soundsEnabled: true,
   autoClaimChannelPoints: true,
   autoRefreshPlayerErrors: true,
+  keepQualityInBackground: false,
+  enablePipButton: true,
+  enableClipDownload: true,
+  playerQuality: "auto",
   enableFastForwardButton: true,
   watchTimeTracker: true,
   language: DEFAULT_LANGUAGE,
@@ -87,6 +91,10 @@ const preventTabDiscardToggle = document.getElementById("pref-prevent-tab-discar
 const streamerFaviconToggle = document.getElementById("pref-enable-streamer-favicon");
 const tabLiveIconToggle = document.getElementById("pref-enable-tab-live-icon");
 const autoRefreshToggle = document.getElementById("pref-auto-refresh");
+const keepQualityToggle = document.getElementById("pref-keep-quality");
+const pipButtonToggle = document.getElementById("pref-pip-button");
+const clipDownloadToggle = document.getElementById("pref-clip-download");
+const playerQualitySelect = document.getElementById("pref-player-quality");
 const fastForwardToggle = document.getElementById("pref-fast-forward");
 const previewsEnabledToggle = document.getElementById("pref-previews-enabled");
 const previewsModeGroup = document.getElementById("previews-mode-group");
@@ -926,6 +934,18 @@ function renderPreferences() {
   if (autoRefreshToggle) {
     autoRefreshToggle.checked = prefs.autoRefreshPlayerErrors !== false;
   }
+  if (keepQualityToggle) {
+    keepQualityToggle.checked = prefs.keepQualityInBackground === true;
+  }
+  if (pipButtonToggle) {
+    pipButtonToggle.checked = prefs.enablePipButton !== false;
+  }
+  if (clipDownloadToggle) {
+    clipDownloadToggle.checked = prefs.enableClipDownload !== false;
+  }
+  if (playerQualitySelect) {
+    playerQualitySelect.value = prefs.playerQuality || "auto";
+  }
   if (fastForwardToggle) {
     fastForwardToggle.checked = prefs.enableFastForwardButton !== false;
   }
@@ -1536,6 +1556,27 @@ async function updatePreferences(updates) {
     showFeedback(t(messageKey), "success");
   }
 
+  if ("enablePipButton" in updates) {
+    const messageKey = updates.enablePipButton
+      ? "popup.preferences.pipButtonEnabled"
+      : "popup.preferences.pipButtonDisabled";
+    showFeedback(t(messageKey), "success");
+  }
+
+  if ("enableClipDownload" in updates) {
+    const messageKey = updates.enableClipDownload
+      ? "popup.preferences.clipDownloadEnabled"
+      : "popup.preferences.clipDownloadDisabled";
+    showFeedback(t(messageKey), "success");
+  }
+
+  if ("keepQualityInBackground" in updates) {
+    const messageKey = updates.keepQualityInBackground
+      ? "popup.preferences.keepQualityEnabled"
+      : "popup.preferences.keepQualityDisabled";
+    showFeedback(t(messageKey), "success");
+  }
+
   if ("enableFastForwardButton" in updates) {
     const messageKey = updates.enableFastForwardButton
       ? "popup.preferences.fastForwardEnabled"
@@ -1863,6 +1904,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     autoRefreshToggle?.addEventListener("change", (e) => {
       updatePreferences({ autoRefreshPlayerErrors: e.target.checked });
+    });
+    keepQualityToggle?.addEventListener("change", (e) => {
+      updatePreferences({ keepQualityInBackground: e.target.checked });
+    });
+    pipButtonToggle?.addEventListener("change", (e) => {
+      updatePreferences({ enablePipButton: e.target.checked });
+    });
+    clipDownloadToggle?.addEventListener("change", (e) => {
+      updatePreferences({ enableClipDownload: e.target.checked });
+    });
+    playerQualitySelect?.addEventListener("change", (e) => {
+      updatePreferences({ playerQuality: e.target.value });
     });
     previewsEnabledToggle?.addEventListener("change", (e) => {
       updatePreferences({ previewsEnabled: e.target.checked });

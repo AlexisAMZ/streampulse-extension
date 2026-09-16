@@ -3,7 +3,7 @@
   "default_locale": "en",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "26.9.18",
+  "version": "26.9.19",
   "permissions": [
     "storage",
     "alarms",
@@ -31,9 +31,11 @@
       ],
       "all_frames": false,
       "js": [
-        "js/inject/preventPause.js"
+        "js/inject/preventPause.js",
+        "js/inject/playerQuality.js"
       ],
-      "run_at": "document_start"
+      "run_at": "document_start",
+      "world": "MAIN"
     },
     {
       "matches": [
@@ -95,8 +97,10 @@
       "all_frames": false,
       "js": [
         "js/inject/i18n-inline.js",
+        "js/inject/player-tip.js",
         "js/channelPointsClaimer.js",
         "js/twitchPlayerEnhancer.js",
+        "js/twitchPlayerButtons.js",
         "js/chatFilter.js",
         "js/watchTimeTracker.js",
         "js/tabEnhancer.js",

@@ -2,9 +2,11 @@
 // Module pur : aucun acces a chrome.*, ni au DOM. Teste par tests/backup.test.mjs.
 //
 // Une sauvegarde ne contient que ce que l'utilisateur a construit : streamers,
-// reglages, statistiques, temps de visionnage et profil. Les caches (statuts,
-// miniatures, configuration distante), les jetons Kick et les notifications
-// programmees (liees a chrome.alarms, qui ne se restaurent pas) en sont exclus.
+// favoris epingles, groupes de chaines, reglages, statistiques, historique,
+// temps de visionnage, alertes, apparence et profil. Les caches (statuts,
+// miniatures, configuration distante), les jetons Kick, la licence StreamPulse+
+// (liee a l'appareil) et les notifications programmees (liees a chrome.alarms,
+// qui ne se restaurent pas) en sont exclus.
 
 export const BACKUP_APP = "StreamPulse";
 export const BACKUP_FORMAT = 1;
@@ -18,8 +20,20 @@ const STATS = "betaGeneralStats";
 const WATCH_MONTHLY = "betaWatchTimeData";
 const WATCH_DAILY = "streamPulseWatchTimeDaily";
 const PROFILE = "userProfile";
+const PINNED = "betaPinnedIds";
+const GROUPS = "betaChannelGroups";
+const HISTORY = "streamPulseHistory";
+const SMART_ALERTS = "streamPulseSmartAlerts";
+const COSMETICS = "streamPulseCosmetics";
+const ACCENT = "streamPulseAccent";
+const PREDICTION_RULE = "streamPulsePredictionRule";
 
-export const BACKUP_KEYS = [STREAMERS, PREFERENCES, STATS, WATCH_MONTHLY, WATCH_DAILY, PROFILE];
+// La licence StreamPulse+, l'identifiant d'appareil et les alarmes restent
+// dehors : ils sont lies a CETTE installation et n'ont pas de sens ailleurs.
+export const BACKUP_KEYS = [
+  STREAMERS, PREFERENCES, STATS, WATCH_MONTHLY, WATCH_DAILY, PROFILE,
+  PINNED, GROUPS, HISTORY, SMART_ALERTS, COSMETICS, ACCENT, PREDICTION_RULE,
+];
 
 /** Caches derives des donnees restaurees : vides a la restauration, recalcules ensuite. */
 export const RESET_ON_RESTORE = ["betaGeneralStatuses", "streamPulseLiveState", "streampulse:thumbCache"];
@@ -104,7 +118,17 @@ function cleanValue(key, value) {
     case PREFERENCES:
     case STATS:
     case PROFILE:
+    case GROUPS:
+    case HISTORY:
+    case COSMETICS:
+    case PREDICTION_RULE:
       return isPlainObject(value) ? value : undefined;
+    case PINNED:
+      return Array.isArray(value) ? value.filter((id) => typeof id === "string" && id) : undefined;
+    case SMART_ALERTS:
+      return Array.isArray(value) || isPlainObject(value) ? value : undefined;
+    case ACCENT:
+      return typeof value === "string" ? value : undefined;
     default:
       return undefined;
   }
@@ -245,6 +269,24 @@ export function mergeBackup(current, incoming) {
         break;
       case PROFILE:
         data[key] = hasProfile(now[key]) ? now[key] : value;
+        break;
+      case PINNED: {
+        // Union sans doublon : les favoris des deux installations sont gardes.
+        const currentPins = Array.isArray(now[key]) ? now[key] : [];
+        data[key] = [...new Set([...currentPins, ...value])];
+        break;
+      }
+      case GROUPS:
+      case HISTORY:
+        // Les entrees deja presentes gagnent : on n'ecrase pas l'existant.
+        data[key] = { ...value, ...(isPlainObject(now[key]) ? now[key] : {}) };
+        break;
+      case SMART_ALERTS:
+      case COSMETICS:
+      case PREDICTION_RULE:
+      case ACCENT:
+        // Reglages simples : ceux de l'installation courante restent prioritaires.
+        data[key] = now[key] !== undefined ? now[key] : value;
         break;
       default:
         break;

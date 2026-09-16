@@ -96,6 +96,15 @@
       color: #dedee3;
       transform: none;
     }
+    .streampulse-latency-button.is-metadata {
+      align-self: center;
+      padding: 0 10px 0 0;
+      font-size: 13px;
+      gap: 6px;
+    }
+    .streampulse-latency-button.is-metadata:hover {
+      transform: none;
+    }
     .dPOHRS {
       padding-left: 40px !important;
     }
@@ -192,24 +201,66 @@
     return null;
   }
 
+  const RELOAD_STAMP_KEY = "streampulsePlayerReloadAt";
+  const RELOAD_COOLDOWN_MS = 45000;
+  const RETRY_GRACE_MS = 6000;
+
+  function hasPlayerError() {
+    const gate = document.querySelector(
+      '[data-a-target="player-overlay-content-gate"], .content-overlay-gate'
+    );
+    if (!gate) return false;
+    const text = gate.textContent || "";
+    return ERROR_CODES.some((code) => text.includes(code));
+  }
+
+  let reloadPendingUntilVisible = false;
+  let reloadAttempted = false;
+
+  function reloadPlayerPage() {
+    // Never reload a tab the viewer is not looking at: wait until it is shown.
+    if (document.hidden) {
+      reloadPendingUntilVisible = true;
+      return;
+    }
+    reloadPendingUntilVisible = false;
+    // One reload per page load, whatever happens next: a stream that keeps
+    // erroring must never put the tab in a reload loop.
+    if (reloadAttempted) return;
+    reloadAttempted = true;
+    // sessionStorage survives the reload, so the cooldown prevents reload loops.
+    try {
+      const lastReload = Number(sessionStorage.getItem(RELOAD_STAMP_KEY)) || 0;
+      if (Date.now() - lastReload < RELOAD_COOLDOWN_MS) return;
+      sessionStorage.setItem(RELOAD_STAMP_KEY, String(Date.now()));
+    } catch (_error) {
+      // Storage blocked: skip the reload rather than risk an unguarded loop.
+      return;
+    }
+    window.location.reload();
+  }
+
   function attemptRecovery() {
     const button = document.querySelector(
-      ".content-overlay-gate__allow-pointers button"
+      '[data-a-target="player-overlay-content-gate"] button, .content-overlay-gate button'
     );
     if (button instanceof HTMLElement) {
       button.click();
     }
 
+    // Errors like #2000 rarely clear on their own: reload if still stuck.
     window.setTimeout(() => {
+      if (!autoRefreshEnabled) return;
+      if (hasPlayerError()) {
+        reloadPlayerPage();
+        return;
+      }
       const video = findVideoElement();
-      if (!video) return;
-      if (video.paused) {
+      if (video?.paused) {
         video.play().catch(() => {});
       }
-      window.setTimeout(() => {
-        seekToBufferedEnd(video);
-      }, 120);
-    }, 2000);
+      window.setTimeout(() => seekToBufferedEnd(video), 120);
+    }, RETRY_GRACE_MS);
   }
 
   function checkForPlayerErrors() {
@@ -220,19 +271,13 @@
 
     ensureVideoAbortListener();
 
-    const gate = document.querySelector(
-      'div[data-a-target="player-overlay-content-gate"]'
-    );
-    if (gate) {
-      const text = (gate.textContent || "").toLowerCase();
-      if (ERROR_CODES.some((code) => text.includes(code))) {
-        attemptRecovery();
-        scheduleErrorCheck(10000);
-        return;
-      }
+    if (hasPlayerError()) {
+      attemptRecovery();
+      scheduleErrorCheck(RETRY_GRACE_MS + 4000);
+      return;
     }
 
-    scheduleErrorCheck(8000);
+    scheduleErrorCheck(4000);
   }
 
   function scheduleErrorCheck(delay = 2000) {
@@ -294,14 +339,14 @@
         justify-content: center;
         background: transparent;
         border: none;
-        border-radius: 4px;
+        border-radius: 9000px;
         color: #ffffff;
         cursor: pointer;
         display: inline-flex;
-        width: 3rem;
-        height: 3rem;
+        width: 32px;
+        height: 32px;
         padding: 0;
-        margin: 0 6px 0 0;
+        margin: 0 4px 0 0;
         background-repeat: no-repeat;
         background-size: contain;
         transition: background-color 0.2s ease, color 0.2s ease;
@@ -317,8 +362,9 @@
         background-color: rgba(38, 38, 38, 1);
       }
       #${FAST_FORWARD_BUTTON_ID} svg {
-        width: 100%;
-        height: 100%;
+        width: 20px;
+        height: 20px;
+        display: block;
         pointer-events: none;
         fill: currentColor;
       }
@@ -338,8 +384,9 @@
       button.type = "button";
       button.className = "streampulse-fast-forward-button";
       button.innerHTML = `
-      <svg viewBox="0 0 1024 1024" aria-hidden="true">
-        <path d="M825.8 498 538.4 249.9c-10.7-9.2-26.4-.9-26.4 14v496.3c0 14.9 15.7 23.2 26.4 14L825.8 526c8.3-7.2 8.3-20.8 0-28zm-320 0L218.4 249.9c-10.7-9.2-26.4-.9-26.4 14v496.3c0 14.9 15.7 23.2 26.4 14L505.8 526c4.1-3.6 6.2-8.8 6.2-14 0-5.2-2.1-10.4-6.2-14z"></path>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 5.5v13l8-6.5-8-6.5Zm9 0v13l8-6.5-8-6.5Z"></path>
+        <path d="M21 5h2v14h-2V5Z"></path>
       </svg>
     `;
 
@@ -433,7 +480,8 @@
       });
     }
     button.setAttribute("aria-label", texts.tooltip);
-    button.title = tooltip;
+    button.dataset.spLabel = tooltip;
+    window.__SP_TIP__?.attach(button, () => button.dataset.spLabel || "");
     return button;
   }
 
@@ -526,6 +574,38 @@
 
     setHideTwitchExtensions(preferences.hideTwitchExtensions === true);
     setAutoCancelRaids(preferences.autoCancelRaids === true);
+    syncKeepQualityFlag(preferences.keepQualityInBackground === true);
+    syncPlayerQuality(preferences.playerQuality);
+  }
+
+  // preventPause.js runs in the MAIN world and cannot read chrome.storage,
+  // so the opt-in is mirrored into page localStorage. Applies on next load.
+  const PLAYER_QUALITY_KEY = "streampulse:playerQuality";
+  const PLAYER_QUALITIES = ["auto", "source", "1440", "1080", "720", "480", "360"];
+
+  // playerQuality.js tourne dans le monde MAIN et ne lit pas chrome.storage :
+  // le reglage transite par le localStorage de la page, applique sans rechargement.
+  function syncPlayerQuality(value) {
+    const quality = PLAYER_QUALITIES.includes(value) ? value : "auto";
+    try {
+      window.localStorage.setItem(PLAYER_QUALITY_KEY, quality);
+      window.dispatchEvent(new Event("streampulse:quality-changed"));
+    } catch (_error) {
+      // Stockage bloque : Twitch garde la main sur la qualite.
+    }
+  }
+
+  const KEEP_QUALITY_FLAG_KEY = "streampulse:keepQualityInBackground";
+  function syncKeepQualityFlag(enable) {
+    try {
+      if (enable) {
+        window.localStorage.setItem(KEEP_QUALITY_FLAG_KEY, "1");
+      } else {
+        window.localStorage.removeItem(KEEP_QUALITY_FLAG_KEY);
+      }
+    } catch (_error) {
+      // Storage can be blocked (privacy mode): the feature simply stays off.
+    }
   }
 
   const HIDE_EXTENSIONS_STYLE_ID = "streampulse-hide-extensions-style";
@@ -872,7 +952,23 @@
       this.detach();
     }
 
+    /**
+     * Barre d'infos sous le lecteur : le conteneur qui aligne le nombre de
+     * spectateurs et la duree du live. Repere par ".live-time", la seule classe
+     * stable du lot (les autres sont generees par Twitch a chaque build).
+     */
+    findMetadataBar() {
+      const liveTime = document.querySelector(".live-time");
+      const holder = liveTime?.parentElement?.parentElement;
+      return holder instanceof HTMLElement ? holder : null;
+    }
+
     findHeader() {
+      const metadata = this.findMetadataBar();
+      if (metadata) {
+        this.headerMode = "metadata";
+        return metadata;
+      }
       const selectors = [
         ".stream-chat-header__left",
         ".stream-chat-header",
@@ -881,7 +977,10 @@
       ];
       for (const selector of selectors) {
         const element = document.querySelector(selector);
-        if (element) return element;
+        if (element) {
+          this.headerMode = "chat";
+          return element;
+        }
       }
       return null;
     }
@@ -926,7 +1025,12 @@
 
       this.button.append(this.dot, this.text);
       this.button.addEventListener("click", () => this.handleClick());
-      this.header.appendChild(this.button);
+      if (this.headerMode === "metadata") {
+        this.button.classList.add("is-metadata");
+        this.header.insertBefore(this.button, this.header.firstElementChild);
+      } else {
+        this.header.appendChild(this.button);
+      }
     }
 
     handleClick() {
@@ -1023,6 +1127,10 @@
     if (document.hidden) return;
 
     if (isTopWindow) {
+      if (autoRefreshEnabled && reloadPendingUntilVisible && hasPlayerError()) {
+        reloadPlayerPage();
+        return;
+      }
       if (autoRefreshEnabled) {
         scheduleErrorCheck(500);
       }

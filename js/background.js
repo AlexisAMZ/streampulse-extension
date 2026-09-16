@@ -22,6 +22,9 @@ import { thankPlusSubscriber } from "./plus-thanks.js";
 import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-alerts.js";
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "./plus.js";
 
+/** Qualites proposees pour le lecteur Twitch. "auto" laisse Twitch decider. */
+const PLAYER_QUALITIES = ["auto", "source", "1440", "1080", "720", "480", "360"];
+
 const STORAGE_KEYS = {
   STREAMERS: "betaGeneralStreamers",
   STATUSES: "betaGeneralStatuses",
@@ -126,6 +129,10 @@ const DEFAULT_PREFERENCES = {
   autoOpenInventory: false,
   autoOpenInventoryIntervalHours: 24,
   hideTwitchExtensions: false,
+  keepQualityInBackground: false,
+  enablePipButton: true,
+  enableClipDownload: true,
+  playerQuality: "auto",
   autoCancelRaids: false,
   preventTabDiscard: true,
   enablePredictionsPopup: true,
@@ -561,6 +568,10 @@ class PreferenceStore {
       autoOpenInventory: Boolean(preferences.autoOpenInventory),
       autoOpenInventoryIntervalHours: Number(preferences.autoOpenInventoryIntervalHours) > 0 ? Number(preferences.autoOpenInventoryIntervalHours) : 24,
       hideTwitchExtensions: Boolean(preferences.hideTwitchExtensions),
+      keepQualityInBackground: preferences.keepQualityInBackground === true,
+      enablePipButton: preferences.enablePipButton !== false,
+      enableClipDownload: preferences.enableClipDownload !== false,
+      playerQuality: PLAYER_QUALITIES.includes(preferences.playerQuality) ? preferences.playerQuality : "auto",
       autoCancelRaids: preferences.autoCancelRaids === true,
       preventTabDiscard: preferences.preventTabDiscard !== false,
       enablePredictionsPopup: preferences.enablePredictionsPopup !== false,
@@ -3030,6 +3041,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           updates.autoOpenInventoryIntervalHours = Number.isFinite(hours)
             ? Math.min(24, Math.max(1, Math.round(hours)))
             : DEFAULT_PREFERENCES.autoOpenInventoryIntervalHours;
+        }
+        if ("enablePipButton" in incomingUpdates) {
+          updates.enablePipButton = incomingUpdates.enablePipButton !== false;
+        }
+        if ("playerQuality" in incomingUpdates) {
+          updates.playerQuality = PLAYER_QUALITIES.includes(incomingUpdates.playerQuality)
+            ? incomingUpdates.playerQuality
+            : "auto";
+        }
+        if ("enableClipDownload" in incomingUpdates) {
+          updates.enableClipDownload = incomingUpdates.enableClipDownload !== false;
+        }
+        if ("keepQualityInBackground" in incomingUpdates) {
+          updates.keepQualityInBackground =
+            incomingUpdates.keepQualityInBackground === true;
         }
         if ("hideTwitchExtensions" in incomingUpdates) {
           updates.hideTwitchExtensions =

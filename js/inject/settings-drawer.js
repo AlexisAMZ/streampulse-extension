@@ -42,7 +42,9 @@
         ] },
         { title: "shared.settings.groupChat", keys: [
           ["autoRefreshPlayerErrors", "autoRefreshTitle"],
+          ["keepQualityInBackground", "keepQualityTitle"],
           ["enableFastForwardButton", "fastForwardTitle"],
+          ["enablePipButton", "pipButtonTitle"],
           ["hideTwitchExtensions", "hideTwitchExtensionsTitle"],
           ["communityBadge", "communityBadgeTitle"],
         ] },

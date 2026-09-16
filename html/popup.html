@@ -342,10 +342,49 @@
           </label>
           <label class="settings-toggle">
             <span class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.keepQualityTitle">Garder la qualité en arrière-plan</span>
+              <span class="settings-description" data-i18n="popup.settings.keepQualityDescription">Empêcher Twitch de baisser la qualité quand l'onglet n'est pas affiché.</span>
+            </span>
+            <input id="pref-keep-quality" type="checkbox" role="switch" />
+          </label>
+          <label class="settings-toggle">
+            <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.fastForwardTitle">Bouton d'avance rapide</span>
               <span class="settings-description" data-i18n="popup.settings.fastForwardDescription">Ajouter un bouton pour rattraper instantanément le direct.</span>
             </span>
             <input id="pref-fast-forward" type="checkbox" role="switch" />
+          </label>
+          <label class="settings-toggle">
+            <span class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.pipButtonTitle">Bouton Picture-in-Picture</span>
+              <span class="settings-description" data-i18n="popup.settings.pipButtonDescription">Ajouter un bouton au lecteur pour regarder le live dans une mini-fenêtre.</span>
+            </span>
+            <input id="pref-pip-button" type="checkbox" role="switch" />
+          </label>
+          <div class="settings-toggle">
+            <span class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.playerQualityTitle">Qualité du lecteur</span>
+              <span class="settings-description" data-i18n="popup.settings.playerQualityDescription">Ouvrir chaque live dans cette qualité. Auto laisse Twitch décider.</span>
+            </span>
+          </div>
+          <div class="settings-sub-row">
+            <label class="settings-title" for="pref-player-quality" data-i18n="popup.settings.playerQualityTitle">Qualité du lecteur</label>
+            <select id="pref-player-quality" class="settings-select">
+              <option value="auto" selected data-i18n="popup.settings.playerQualityAuto">Auto</option>
+              <option value="source" data-i18n="popup.settings.playerQualitySource">Source</option>
+              <option value="1440">1440p (2K)</option>
+              <option value="1080">1080p</option>
+              <option value="720">720p</option>
+              <option value="480">480p</option>
+              <option value="360">360p</option>
+            </select>
+          </div>
+          <label class="settings-toggle">
+            <span class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.clipDownloadTitle">Téléchargement des clips</span>
+              <span class="settings-description" data-i18n="popup.settings.clipDownloadDescription">Ajouter un bouton pour enregistrer les clips Twitch en MP4. StreamPulse+.</span>
+            </span>
+            <input id="pref-clip-download" type="checkbox" role="switch" />
           </label>
           <label class="settings-toggle">
             <span class="settings-text">

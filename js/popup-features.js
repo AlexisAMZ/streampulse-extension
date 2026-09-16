@@ -558,6 +558,24 @@ function initBadgeColorLock() {
   });
 }
 
+/**
+ * Le téléchargement des clips est un avantage StreamPulse+ : sans licence,
+ * l'activer ouvre l'écran d'abonnement. Écouté en capture, avant popup.js.
+ */
+function initClipDownloadLock() {
+  document.addEventListener(
+    "change",
+    (event) => {
+      const toggle = event.target;
+      if (toggle?.id !== "pref-clip-download" || !toggle.checked || plusActive()) return;
+      event.stopImmediatePropagation();
+      toggle.checked = false;
+      openPlus();
+    },
+    true,
+  );
+}
+
 function initAccent() {
   $("accent-swatches")?.addEventListener("click", (event) => {
     const swatch = event.target.closest(".accent-swatch");
@@ -716,6 +734,7 @@ export async function initFeatures() {
   initSmartAlerts();
   initAccent();
   initBadgeColorLock();
+  initClipDownloadLock();
   initCosmetics();
   initPredictions();
 

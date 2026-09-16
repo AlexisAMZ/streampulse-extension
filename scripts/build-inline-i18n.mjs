@@ -29,7 +29,7 @@ const NAMESPACE = "inject";
 const SHARED_SETTINGS = [
   "groupAutomation", "groupPreviews", "groupNotifications", "groupChat",
   "autoClaimTitle", "autoClaimDropsTitle", "autoClaimMomentsTitle", "autoCancelRaidsTitle",
-  "autoRefreshTitle", "fastForwardTitle", "hideTwitchExtensionsTitle", "communityBadgeTitle",
+  "autoRefreshTitle", "keepQualityTitle", "fastForwardTitle", "pipButtonTitle", "hideTwitchExtensionsTitle", "communityBadgeTitle",
   "previewsEnableTitle", "previewsModeTitle", "previewsModeImage", "previewsModeVideo",
   "previewsSurfaceDirectory", "previewsSurfaceSidebar", "previewsAudioTitle",
   "liveNotificationsTitle", "gameAlertsTitle", "titleAlertsTitle", "soundsTitle",
