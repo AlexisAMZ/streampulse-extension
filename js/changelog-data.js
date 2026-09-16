@@ -87,6 +87,22 @@ export const RELEASES = [
     changes: [      {
         type: "fix",
         text: {
+          fr: "Points, Drops et temps de visionnage sont comptés au juste nombre : des événements simultanés ne s'écrasaient plus entre eux.",
+          en: "Channel points, Drops and watch time are counted exactly: simultaneous events no longer overwrite each other.",
+          es: "Puntos de canal, Drops y tiempo de visionado se cuentan con exactitud: los eventos simultáneos ya se sobrescriben entre ellos.",
+          "pt-BR": "Pontos de canal, Drops e tempo de assistência são contados com exatidão: eventos simultâneos não se sobrescrevem mais.",
+          de: "Kanalpunkte, Drops und Sehzeit werden exakt gezählt: gleichzeitige Ereignisse überschreiben sich nicht mehr gegenseitig.",
+          it: "Punti del canale, Drops e tempo di visione sono contati con precisione: gli eventi simultanei non si sovrascrivono più.",
+          pl: "Punkty kanału, Dropsy i czas oglądania są liczone dokładnie: równoczesne zdarzenia nie nadpisują się już nawzajem.",
+          tr: "Kanal puanları, Drops ve izleme süresi tam olarak sayılıyor: eşzamanlı olaylar artık birbirini ezmiyor.",
+          ru: "Баллы канала, дропы и время просмотра считаются точно: одновременные события больше не затирают друг друга.",
+          ja: "チャンネルポイント、ドロップ、視聴時間を正確にカウント：同時に発生したイベントが上書きされなくなりました。",
+          ko: "채널 포인트, 드롭, 시청 시간이 정확히 집계됩니다: 동시 이벤트가 서로를 덮어쓰지 않습니다."
+        }
+      },
+      {
+        type: "fix",
+        text: {
           fr: "Au survol de l'icône, l'infobulle affiche à nouveau le nombre de lives en cours au lieu d'échouer en silence.",
           en: "Hovering the toolbar icon shows the live count again in its tooltip, instead of silently failing.",
           es: "Al pasar el ratón por el icono, la burbuja muestra de nuevo el número de directos en curso en lugar de fallar en silencio.",
