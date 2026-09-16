@@ -99,6 +99,12 @@
   }
 
   function ensureButton() {
+    // Contexte mort (extension rechargee) : couper la boucle au lieu de
+    // jeter dans le vide toutes les 2 s jusqu'a la fermeture de l'onglet.
+    if (!(chrome.runtime && chrome.runtime.id)) {
+      stopLoop();
+      return;
+    }
     if (!fastForwardEnabled) return;
     const controls = findControls();
     if (!controls) return;
