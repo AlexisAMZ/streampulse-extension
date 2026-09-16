@@ -76,7 +76,13 @@
         if (event.status === "ACTIVE" && left > 0 && left <= rule.secondsBeforeEnd + 15) delay = FAST_POLL_MS;
         const decision = data.decideBet(event, balance, rule, history, now);
         if (!decision) continue;
-        const result = await ask("bet", { eventId: event.id, outcomeId: decision.outcome.id, points: decision.points });
+        const result = await ask("bet", {
+          eventId: event.id,
+          outcomeId: decision.outcome.id,
+          // Le repli hors GraphQL retrouve l'option par son libellé.
+          outcomeTitle: decision.outcome.title,
+          points: decision.points,
+        });
         history = data.addBet(history, {
           eventId: event.id,
           channel,
