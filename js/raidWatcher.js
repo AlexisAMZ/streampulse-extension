@@ -91,6 +91,9 @@ function connect() {
 
   socket.onopen = () => {
     reconnectDelayMs = RECONNECT_MIN_MS;
+    // Indispensable : sans capability "tags", Twitch envoie USERNOTICE sans
+    // @tags, donc sans msg-id=raid — aucun raid n'était jamais détecté.
+    socket.send("CAP REQ :twitch.tv/tags twitch.tv/commands");
     socket.send(`NICK justinfan${10000 + Math.floor(Math.random() * 80000)}`);
     syncJoins();
     pingTimer = setInterval(() => {
