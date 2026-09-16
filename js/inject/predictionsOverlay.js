@@ -12,6 +12,26 @@
   let isDragging = false;
   let dragOffsetX = 0;
   let dragOffsetY = 0;
+  let dragListenersAttached = false;
+
+  // Twitch peut retirer le widget (et l'overlay avec lui) à chaque navigation :
+  // createOverlay() est donc rappelée, mais les listeners document ne doivent
+  // être posés qu'une fois, sinon ils s'accumulent.
+  function attachDragListeners() {
+    if (dragListenersAttached) return;
+    dragListenersAttached = true;
+
+    document.addEventListener("mousemove", (e) => {
+      if (!isDragging || !overlayEl) return;
+      overlayEl.style.left = `${e.clientX - dragOffsetX}px`;
+      overlayEl.style.top = `${e.clientY - dragOffsetY}px`;
+      overlayEl.style.right = "auto";
+    });
+
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
+    });
+  }
 
   function createOverlay() {
     if (document.getElementById(WIDGET_ID)) return;
@@ -57,16 +77,7 @@
       dragOffsetY = e.clientY - rect.top;
     });
 
-    document.addEventListener("mousemove", (e) => {
-      if (!isDragging || !overlayEl) return;
-      overlayEl.style.left = `${e.clientX - dragOffsetX}px`;
-      overlayEl.style.top = `${e.clientY - dragOffsetY}px`;
-      overlayEl.style.right = "auto";
-    });
-
-    document.addEventListener("mouseup", () => {
-      isDragging = false;
-    });
+    attachDragListeners();
 
     document.getElementById(`${WIDGET_ID}-close`).addEventListener("click", () => {
       overlayEl.style.display = "none";
@@ -82,6 +93,14 @@
   }
 
   function checkPrediction() {
+    // Contexte mort (extension rechargée) : arrêter la boucle au lieu de
+    // tourner à vide jusqu'à la fermeture de l'onglet.
+    if (!(chrome.runtime && chrome.runtime.id)) {
+      clearInterval(checkIntervalId);
+      checkIntervalId = null;
+      return;
+    }
+
     if (!isEnabled) {
       if (overlayEl) overlayEl.style.display = "none";
       return;
@@ -128,6 +147,15 @@
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area === "local" && changes[PREFERENCES_KEY]) {
         isEnabled = changes[PREFERENCES_KEY].newValue?.enablePredictionsPopup !== false;
+        if (!isEnabled && checkIntervalId) {
+          // Désactivé à chaud : arrêter la boucle et masquer le panneau.
+          clearInterval(checkIntervalId);
+          checkIntervalId = null;
+          if (overlayEl) overlayEl.style.display = "none";
+        } else if (isEnabled && !checkIntervalId) {
+          // Réactivé à chaud : relancer la boucle.
+          checkIntervalId = setInterval(checkPrediction, 3000);
+        }
       }
     });
   }

@@ -806,6 +806,7 @@
     // Re-check periodique : Twitch remonte un nouveau conteneur de chat a chaque
     // navigation de chaine. On evite tout travail quand l'onglet est masque.
     setInterval(function () {
+      if (!(chrome.runtime && chrome.runtime.id)) return;
       if (!document.hidden) attachObserver();
     }, 2000);
   }
@@ -838,6 +839,7 @@
       setupBadgeCard();
       // Les reglages des autres abonnes arrivent sans recharger la page.
       setInterval(function () {
+        if (!(chrome.runtime && chrome.runtime.id)) return;
         if (!document.hidden) fetchRemoteBadges();
       }, REFRESH_MS);
 
@@ -863,6 +865,7 @@
 
       setInterval(function () {
         if (document.hidden) return;
+        if (!(chrome.runtime && chrome.runtime.id)) return;
         if (!currentTwitchUser) {
           currentTwitchUser = detectCurrentTwitchUser();
           if (currentTwitchUser) {

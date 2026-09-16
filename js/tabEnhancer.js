@@ -213,7 +213,11 @@
     }
   }
 
-  setInterval(updateTabFavicon, 4000);
+  // Le favicon est invisible onglet cache : ne pas le repeindre pour rien,
+  // le tick suivant au retour sur l'onglet remet l'etat a jour.
+  setInterval(() => {
+    if (!document.hidden) updateTabFavicon();
+  }, 4000);
 
   function loadPrefs(prefs = {}) {
     isLiveIconActive = prefs.enableTabLiveIcon !== false;
