@@ -80,20 +80,32 @@
 
     if (!btn) {
       // Repli inspiré du rendu actuel de Twitch, indépendant de la langue :
-      // quand un bonus est disponible, le résumé de points affiche un « +N »
-      // et sa caisse est le premier bouton de la zone, quel que soit le
-      // libellé traduit. Sans « +N » on ne clique pas : le bouton existe
-      // aussi hors bonus et ne ferait qu'ouvrir un popover en boucle.
+      // quand un bonus est disponible, le résumé de points affiche un « +N ».
+      // On ne clique QUE un bouton réellement marqué « caisse de bonus »
+      // (classe claimable-bonus) : le premier bouton de la zone est le
+      // compteur, qui ouvre le popover de points — le cliquer en boucle
+      // toutes les 2,5 s est exactement le scénario gênant à éviter.
       const summary = document.querySelector(
         "[data-test-selector='community-points-summary'], .community-points-summary"
       );
       if (summary && /\+\s*\d/.test(summary.textContent || "")) {
-        const chest = summary.querySelector("button");
+        const chest = Array.from(summary.querySelectorAll("button")).find(
+          (b) =>
+            b.classList.contains("claimable-bonus") ||
+            Boolean(b.querySelector(".claimable-bonus__icon")) ||
+            /claimable-bonus/.test(b.className)
+        );
         if (chest && !chest.hasAttribute("disabled")) btn = chest;
       }
     }
 
     if (!btn) return false;
+
+    // Garde anti-reclic : si ce bouton vient déjà d'être cliqué et reste
+    // visible (claim en cours, ou faux positif), ne pas re-cliquer — un
+    // même bouton cliqué à chaque poll tournerait en boucle visible.
+    if (btn.__spClaimedAt && Date.now() - btn.__spClaimedAt < 30_000) return false;
+    btn.__spClaimedAt = Date.now();
 
     // Channel points bonus chest found: claim it
     lastClaimTime = Date.now();
