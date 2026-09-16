@@ -144,11 +144,48 @@
     return Number.isFinite(value) && value > 0 ? value : null;
   }
 
+  /**
+   * Attend que test() renvoie vrai (poll court) au lieu de dormir un temps
+   * fixe : sur machine lente, un wait(500) lisait un panneau pas encore rendu.
+   * Renvoie le résultat de test(), ou null à l'échéance.
+   */
+  function waitFor(test, timeout = 2500, step = 120) {
+    return new Promise((resolve) => {
+      const started = Date.now();
+      const timer = setInterval(() => {
+        let found = null;
+        try {
+          found = test();
+        } catch (_) {
+          // Sélecteur pas encore valide : on retente.
+        }
+        if (found) {
+          clearInterval(timer);
+          resolve(found);
+        } else if (Date.now() - started >= timeout) {
+          clearInterval(timer);
+          resolve(null);
+        }
+      }, step);
+    });
+  }
+
   function closePredictionPanel() {
-    // L'en-tête du popover de récompenses porte le bouton de fermeture ; on
-    // descend depuis .rewards-popover-header comme le fait l'interface.
-    const close = document.querySelector(".rewards-popover-header")?.firstChild?.lastChild?.firstChild;
-    if (close instanceof HTMLElement) close.click();
+    // L'en-tête du popover porte le bouton de fermeture, mais sa position dans
+    // l'arbre dépend des versions de l'interface : on cherche n'importe quel
+    // bouton cliquable dans l'en-tête, puis on vérifie que ça a fermé, sinon
+    // Escape (comportement natif du popover) — un panneau qui resterait ouvert
+    // serait rrouvert à chaque poll.
+    const header = document.querySelector(".rewards-popover-header");
+    const close = header
+      ? Array.from(header.querySelectorAll('button, [role="button"]')).find((el) => el instanceof HTMLElement)
+      : null;
+    if (close) close.click();
+    setTimeout(() => {
+      if (document.querySelector(".rewards-popover-header")) {
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", keyCode: 27, bubbles: true }));
+      }
+    }, 200);
   }
 
   function subtitleSeconds(text) {
@@ -167,7 +204,18 @@
     const seconds = subtitleSeconds(subtitle && subtitle.textContent);
 
     item.click();
-    await wait(500);
+    // Le panneau se monte en async : attendre son rendu (ou un état non votable).
+    const rendered = await waitFor(
+      () =>
+        document.querySelector(".prediction-checkout-details-header") ||
+        document.querySelector('[data-test-selector="prediction-checkout-completion-step__winnings-string"]') ||
+        document.querySelector('p[data-test-selector="prediction-checkout-completion-step__luck-string"]') ||
+        document.querySelector('span[data-test-selector="user-prediction-string__outcome-title"]')
+    );
+    if (!rendered) {
+      closePredictionPanel();
+      return null;
+    }
 
     try {
       // Déjà misé, terminé ou résolu : le panneau ne propose plus de vote.
@@ -244,7 +292,8 @@
       if (!toggle) return { ok: false, error: "panel_not_votable" };
 
       toggle.click();
-      await wait(700);
+      const toggled = await waitFor(() => document.querySelector(".custom-prediction-button"));
+      if (!toggled) return { ok: false, error: "panel_not_votable" };
 
       const buttons = Array.from(document.querySelectorAll(".custom-prediction-button"));
       const index = outcomeTitle
@@ -259,11 +308,11 @@
       setNativeValue(input, Math.floor(Number(points)));
       await wait(200);
       confirm.click();
-      await wait(400);
-
-      const accept =
-        document.querySelector('button[data-test-selector="prediction-terms-step__accept-button"]') ||
-        document.querySelector('button[data-test-selector="prediction-mod-confirmation__accept-button"]');
+      const accept = await waitFor(
+        () =>
+          document.querySelector('button[data-test-selector="prediction-terms-step__accept-button"]') ||
+          document.querySelector('button[data-test-selector="prediction-mod-confirmation__accept-button"]')
+      );
       if (!accept) return { ok: false, error: "confirm_not_found" };
       accept.click();
       return { ok: true };
