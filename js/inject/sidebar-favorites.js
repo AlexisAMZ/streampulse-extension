@@ -31,12 +31,7 @@
     return api ? api.get(state.lang, "twitchUi." + key) : key;
   }
 
-  function el(tag, cls, text) {
-    var node = document.createElement(tag);
-    if (cls) node.className = cls;
-    if (text != null) node.textContent = text;
-    return node;
-  }
+  var el = window.__SP_DOM__.el;
 
   function alive() {
     return !!(chrome.runtime && chrome.runtime.id);

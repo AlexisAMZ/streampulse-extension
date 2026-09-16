@@ -55,6 +55,7 @@
       "all_frames": false,
       "js": [
         "js/inject/i18n-inline.js",
+        "js/inject/dom.js",
         "js/inject/topbar-panel.js",
         "js/inject/settings-drawer.js",
         "js/inject/topbar.js",
