@@ -84,7 +84,23 @@ export const RELEASES = [
       sv: "Uppspelningsfel åtgärdas av sig själva och kvaliteten kan behållas i bakgrunden.",
       cs: "Chyby přehrávání se opraví samy a kvalita může zůstat zachována i na pozadí."
     },
-    changes: [
+    changes: [      {
+        type: "fix",
+        text: {
+          fr: "Au survol de l'icône, l'infobulle affiche à nouveau le nombre de lives en cours au lieu d'échouer en silence.",
+          en: "Hovering the toolbar icon shows the live count again in its tooltip, instead of silently failing.",
+          es: "Al pasar el ratón por el icono, la burbuja muestra de nuevo el número de directos en curso en lugar de fallar en silencio.",
+          "pt-BR": "Ao passar o mouse no ícone, o balão mostra de novo o número de lives em andamento em vez de falhar em silêncio.",
+          de: "Beim Überfahren des Symbols zeigt der Tooltip wieder die Anzahl laufender Lives, statt stillzuscheitern.",
+          it: "Passando sopra l'icona, il suggerimento mostra di nuovo il numero di live in corso invece di fallire in silenzio.",
+          pl: "Po najechaniu na ikonę dymek ponownie pokazuje liczbę trwających transmisji zamiast po cichu zawieść.",
+          tr: "Simge üzerine gelindiğinde ipucu, sessizce hata vermek yerine devam eden canlı yayın sayısını yeniden gösteriyor.",
+          ru: "При наведении на значок подсказка снова показывает число идущих эфиров вместо тихого сбоя.",
+          ja: "アイコンにカーソルを合わせると、エラー silently ではなく実行中の配信数が再びツールチップに表示されます。",
+          ko: "아이콘에 마우스를 올리면 조용히 실패하는 대신 진행 중인 라이브 수가 툴팁에 다시 표시됩니다."
+        }
+      },
+
       {
         type: "fix",
         text: {

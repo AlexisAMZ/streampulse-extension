@@ -116,6 +116,57 @@ else {
     }
 
     const referenceKeys = flatten(translations[DEFAULT_LANGUAGE]);
+    const referenceKeySet = new Set(referenceKeys);
+
+    // Toute cle t("…") ou translate(lang, "…") litterale du code applicatif
+    // doit exister dans translations.js : une cle absente tombe sur la cle
+    // brute a l'ecran (deja arrive : popup.history.newBadge).
+    const usedKeys = new Set();
+    const appDirs = ["js", "html"];
+    const skip = (f) =>
+      f.includes("vendor") || f.includes("i18n-inline") || f.endsWith("translations.js") ||
+      f.includes("changelog-data") || f.includes("history-data") || f.includes("predictions-data");
+    const collectKeys = (node) => {
+      if (node.nodeType !== 1) return; // element
+      for (const attr of ["data-i18n", "data-i18n-placeholder", "data-i18n-title"]) {
+        const v = node.getAttribute?.(attr);
+        if (v) usedKeys.add(v);
+      }
+      [...node.children].forEach(collectKeys);
+    };
+    const keyPatterns = [
+      /\bt\("([a-zA-Z][a-zA-Z0-9]*(?:\.[a-zA-Z0-9-]+)+)"/g,
+      /translate(?:WithPrefs)?\([^,\n]+,\s*"([a-zA-Z][a-zA-Z0-9]*(?:\.[a-zA-Z0-9-]+)+)"/g,
+      /__SP_I18N__\.get\([^,\n]+,\s*"([a-zA-Z][a-zA-Z0-9]*(?:\.[a-zA-Z0-9-]+)+)"/g,
+    ];
+    const scanDir = (dir) => {
+      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        const full = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          if (!skip(full)) scanDir(full);
+          continue;
+        }
+        if (!/\.(js|mjs|html)$/.test(entry.name) || skip(full)) continue;
+        const text = fs.readFileSync(full, "utf8");
+        for (const re of keyPatterns) {
+          for (const m of text.matchAll(re)) usedKeys.add(m[1]);
+        }
+        if (full.endsWith(".html")) {
+          const dom = new (globalThis.DOMParser || Object)();
+          // pas de DOM en node : grep sur les attributs suffit
+          for (const m of text.matchAll(/data-i18n="([^"]+)"/g)) usedKeys.add(m[1]);
+        }
+      }
+    };
+    for (const dir of appDirs) scanDir(path.join(REPO, dir));
+    const unknown = [...usedKeys].filter((k) => !referenceKeySet.has(k));
+    if (unknown.length) {
+      unknown.forEach((k) =>
+        fail(`translation key "${k}" is used in code but missing from translations.js: it renders as the raw key on screen`)
+      );
+    } else {
+      pass(`${usedKeys.size} literal translation keys used in code all exist in translations.js`);
+    }
     let incomplete = 0;
 
     for (const code of declared) {

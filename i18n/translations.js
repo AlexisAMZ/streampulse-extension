@@ -47,6 +47,7 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+      "newBadge": "Nouveau",
 
 
 
@@ -731,6 +732,8 @@ export const translations = {
       },
       "badge": {
         "idle": "StreamPulse"
+    ,
+        "live": "{{count}} en direct"
       }
     },
     "recap": {
@@ -926,6 +929,7 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+      "newBadge": "New",
 
 
 
@@ -1610,6 +1614,8 @@ export const translations = {
       },
       "badge": {
         "idle": "StreamPulse"
+    ,
+        "live": "{{count}} live"
       }
     },
     "recap": {
@@ -1805,6 +1811,7 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+      "newBadge": "Nuevo",
 
 
 
@@ -2489,6 +2496,8 @@ export const translations = {
       },
       "badge": {
         "idle": "StreamPulse"
+    ,
+        "live": "{{count}} en directo"
       }
     },
     "recap": {
@@ -2684,6 +2693,7 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+      "newBadge": "Novo",
 
 
       "badgePreviewMessage": "Olha, essa é a minha insígnia do StreamPulse!",
@@ -3355,6 +3365,8 @@ export const translations = {
       },
       "badge": {
         "idle": "StreamPulse"
+    ,
+        "live": "{{count}} ao vivo"
       }
     },
     "recap": {
@@ -3545,6 +3557,7 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+      "newBadge": "Neu",
 
 
 
@@ -4229,6 +4242,8 @@ export const translations = {
       },
       "badge": {
         "idle": "StreamPulse"
+    ,
+        "live": "{{count}} live"
       }
     },
     "recap": {
@@ -4424,6 +4439,7 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+      "newBadge": "Nuovo",
 
 
 
@@ -5108,6 +5124,8 @@ export const translations = {
       },
       "badge": {
         "idle": "StreamPulse"
+    ,
+        "live": "{{count}} in diretta"
       }
     },
     "recap": {
@@ -5303,6 +5321,7 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+      "newBadge": "Nowe",
 
 
 
@@ -5987,6 +6006,8 @@ export const translations = {
       },
       "badge": {
         "idle": "StreamPulse"
+    ,
+        "live": "{{count}} na żywo"
       }
     },
     "recap": {
@@ -6182,6 +6203,7 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+      "newBadge": "Yeni",
 
 
 
@@ -6866,6 +6888,8 @@ export const translations = {
       },
       "badge": {
         "idle": "StreamPulse"
+    ,
+        "live": "{{count}} canlı"
       }
     },
     "recap": {
@@ -7061,6 +7085,7 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+      "newBadge": "Новое",
 
 
 
@@ -7745,6 +7770,8 @@ export const translations = {
       },
       "badge": {
         "idle": "StreamPulse"
+    ,
+        "live": "{{count}} в эфире"
       }
     },
     "recap": {
@@ -7940,6 +7967,7 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+      "newBadge": "新着",
 
 
 
@@ -8624,6 +8652,8 @@ export const translations = {
       },
       "badge": {
         "idle": "StreamPulse"
+    ,
+        "live": "{{count}}件の配信"
       }
     },
     "recap": {
@@ -8819,6 +8849,7 @@ export const translations = {
       "kick": "Kick"
     },
     "onboarding": {
+      "newBadge": "새 항목",
 
 
 
@@ -9503,6 +9534,8 @@ export const translations = {
       },
       "badge": {
         "idle": "StreamPulse"
+    ,
+        "live": "라이브 {{count}}개"
       }
     },
     "recap": {
