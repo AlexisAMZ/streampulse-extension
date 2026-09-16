@@ -506,32 +506,48 @@
    * Espacement badge/pseudo, par salve : on differe la mesure au prochain
    * frame pour lire tous les rects d'un coup, avant toute mutation — sinon
    * chaque badge alterne lecture/écriture de layout (reflow par message).
+   * Onglet masqué, requestAnimationFrame ne tourne pas : on purge alors au
+   * retour sur l'onglet (visibilitychange), l'espacement reste donc correct.
    */
   var spacingQueue = [];
   var spacingScheduled = false;
+
+  function flushSpacing() {
+    spacingScheduled = false;
+    var pending = spacingQueue;
+    spacingQueue = [];
+    var gaps = [];
+    for (var i = 0; i < pending.length; i++) {
+      try {
+        var prev = pending[i].previousElementSibling;
+        // Phase de lecture uniquement : aucune mutation avant la fin de la boucle.
+        gaps.push(prev ? pending[i].getBoundingClientRect().left - prev.getBoundingClientRect().right : Infinity);
+      } catch (_e) {
+        gaps.push(Infinity);
+      }
+    }
+    for (var j = 0; j < pending.length; j++) {
+      if (gaps[j] < 3) pending[j].classList.add("sp-chat-badge--spaced");
+    }
+  }
+
+  function onSpacingVisible() {
+    if (!document.hidden) return;
+    document.addEventListener("visibilitychange", function onVisible() {
+      document.removeEventListener("visibilitychange", onVisible);
+      if (!document.hidden && spacingQueue.length) flushSpacing();
+    });
+  }
 
   function queueSpacing(badge) {
     spacingQueue.push(badge);
     if (spacingScheduled) return;
     spacingScheduled = true;
-    requestAnimationFrame(function () {
-      spacingScheduled = false;
-      var pending = spacingQueue;
-      spacingQueue = [];
-      var gaps = [];
-      for (var i = 0; i < pending.length; i++) {
-        try {
-          var prev = pending[i].previousElementSibling;
-          // Phase de lecture uniquement : aucune mutation avant la fin de la boucle.
-          gaps.push(prev ? pending[i].getBoundingClientRect().left - prev.getBoundingClientRect().right : Infinity);
-        } catch (_e) {
-          gaps.push(Infinity);
-        }
-      }
-      for (var j = 0; j < pending.length; j++) {
-        if (gaps[j] < 3) pending[j].classList.add("sp-chat-badge--spaced");
-      }
-    });
+    if (document.hidden) {
+      onSpacingVisible();
+    } else {
+      requestAnimationFrame(flushSpacing);
+    }
   }
 
   function ensureSpacing(badge) {

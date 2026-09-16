@@ -888,9 +888,17 @@
       }
       if (this.updateIntervalId == null) {
         this.updateIntervalId = window.setInterval(() => {
-          // Inutile de mesurer la latence quand l'onglet est en arriere-plan.
+          // Inutile de mesurer la latence quand l'onglet est en arrière-plan ;
+          // au retour, update() recalcule tout depuis la vidéo, et le listener
+          // visibilitychange ci-dessous rafraîchit immédiatement.
           if (!document.hidden) this.update();
         }, 1000);
+        if (!this._visibilityBound) {
+          this._visibilityBound = true;
+          document.addEventListener("visibilitychange", () => {
+            if (!document.hidden) this.update(true);
+          });
+        }
       }
       this.update(true);
     }

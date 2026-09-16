@@ -119,9 +119,9 @@
     chrome.storage.local.get([PREFERENCES_KEY], (res) => {
       isEnabled = res?.[PREFERENCES_KEY]?.enablePredictionsPopup !== false;
       if (isEnabled && !checkIntervalId) {
-        checkIntervalId = setInterval(() => {
-          if (!document.hidden) checkPrediction();
-        }, 3000);
+        // Pas de porte sur document.hidden ici : le panneau doit apparaître
+        // (et alerter) dès qu'une prédiction démarre, même onglet en arrière-plan.
+        checkIntervalId = setInterval(checkPrediction, 3000);
       }
     });
 
