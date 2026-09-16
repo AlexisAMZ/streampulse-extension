@@ -164,6 +164,7 @@ export const translations = {
     },
     "popup": {
       "history": {
+        "newBadge": "Nouveau",
 
         "durationMinutes": "{{count}} min",
 
@@ -1042,6 +1043,7 @@ export const translations = {
     },
     "popup": {
       "history": {
+        "newBadge": "New",
 
         "durationMinutes": "{{count}} min",
 
@@ -1920,6 +1922,7 @@ export const translations = {
     },
     "popup": {
       "history": {
+        "newBadge": "Nuevo",
 
         "durationMinutes": "{{count}} min",
 
@@ -2790,6 +2793,7 @@ export const translations = {
     },
     "popup": {
       "history": {
+        "newBadge": "Novo",
         "durationMinutes": "{{count}} min",
         "durationHours": "{{count}} h",
         "durationHoursShort": "{{h}} h {{m}}",
@@ -3658,6 +3662,7 @@ export const translations = {
     },
     "popup": {
       "history": {
+        "newBadge": "Neu",
 
         "durationMinutes": "{{count}} Min.",
 
@@ -4536,6 +4541,7 @@ export const translations = {
     },
     "popup": {
       "history": {
+        "newBadge": "Nuovo",
 
         "durationMinutes": "{{count}} min",
 
@@ -5414,6 +5420,7 @@ export const translations = {
     },
     "popup": {
       "history": {
+        "newBadge": "Nowe",
 
         "durationMinutes": "{{count}} min",
 
@@ -6292,6 +6299,7 @@ export const translations = {
     },
     "popup": {
       "history": {
+        "newBadge": "Yeni",
 
         "durationMinutes": "{{count}} dk",
 
@@ -7170,6 +7178,7 @@ export const translations = {
     },
     "popup": {
       "history": {
+        "newBadge": "Новое",
 
         "durationMinutes": "{{count}} мин",
 
@@ -8048,6 +8057,7 @@ export const translations = {
     },
     "popup": {
       "history": {
+        "newBadge": "新着",
 
         "durationMinutes": "{{count}}分",
 
@@ -8926,6 +8936,7 @@ export const translations = {
     },
     "popup": {
       "history": {
+        "newBadge": "새 항목",
 
         "durationMinutes": "{{count}}분",
 
