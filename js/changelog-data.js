@@ -48,35 +48,44 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
-    version: "26.9.20",
-    date: "2026-09-17",
+    version: "26.9.19",
+    date: "2026-09-16",
     title: {
-      fr: "Kick passe à la vidéo",
-      en: "Kick steps into video",
-      es: "Kick se pasa al vídeo",
-      "pt-BR": "O Kick entra no vídeo",
-      de: "Kick kommt ins Video",
-      it: "Kick passa al video",
-      pl: "Kick przechodzi na wideo",
-      tr: "Kick videoya geçiyor",
-      ru: "Кик переходит на видео",
-      ja: "Kick が動画デビュー",
-      ko: "Kick가 영상에 데뷔"
+      fr: "Le lecteur Twitch plus fiable",
+      en: "A more reliable Twitch player",
+      es: "Un reproductor de Twitch más fiable",
+      "pt-BR": "Um player da Twitch mais confiável",
+      de: "Ein zuverlässigerer Twitch-Player",
+      it: "Un player Twitch più affidabile",
+      pl: "Bardziej niezawodny odtwarzacz Twitcha",
+      tr: "Daha güvenilir Twitch oynatıcısı",
+      ru: "Более надёжный плеер Twitch",
+      ja: "より安定した Twitch プレーヤー",
+      ko: "더 안정적인 Twitch 플레이어",
+      id: "Pemutar Twitch yang lebih andal",
+      nl: "Een betrouwbaardere Twitch-speler",
+      sv: "En pålitligare Twitch-spelare",
+      cs: "Spolehlivější přehrávač Twitche"
     },
     subtitle: {
-      fr: "La scène de la popup s'anime pour les lives Kick, et tout se supprime plus vite.",
-      en: "The popup stage comes alive for Kick streams, and deleting is quicker.",
-      es: "La escena de la ventana cobra vida con los directos de Kick, y borrar es más rápido.",
-      "pt-BR": "O palco da janela ganha vida com as lives da Kick, e excluir ficou mais rápido.",
-      de: "Die Bühne des Popups erwacht für Kick-Streams, und Löschen geht schneller.",
-      it: "La scena del popup si anima con i live di Kick, ed eliminare è più veloce.",
-      pl: "Scena popupa ożywa przy streamach Kicka, a usuwanie jest szybsze.",
-      tr: "Popup sahnesi Kick yayınlarıyla canlanıyor ve silme hızlanıyor.",
-      ru: "Сцена попапа оживает со стримами Kick, а удаление стало быстрее.",
-      ja: "ポップアップのステージが Kick の配信で動き出し、削除も素早く。",
-      ko: "팝업 무대가 Kick 방송으로 살아나고, 삭제도 빨라졌습니다."
+      fr: "Les erreurs de lecture se corrigent seules et la qualité peut rester intacte en arrière-plan.",
+      en: "Playback errors fix themselves and quality can stay intact in the background.",
+      es: "Los errores de reproducción se corrigen solos y la calidad puede mantenerse en segundo plano.",
+      "pt-BR": "Os erros de reprodução se corrigem sozinhos e a qualidade pode continuar intacta em segundo plano.",
+      de: "Wiedergabefehler beheben sich selbst und die Qualität kann im Hintergrund erhalten bleiben.",
+      it: "Gli errori di riproduzione si risolvono da soli e la qualità può restare intatta in background.",
+      pl: "Błędy odtwarzania naprawiają się same, a jakość może pozostać nienaruszona w tle.",
+      tr: "Oynatma hataları kendiliğinden düzeliyor ve kalite arka planda korunabiliyor.",
+      ru: "Ошибки воспроизведения исправляются сами, а качество может сохраняться в фоне.",
+      ja: "再生エラーが自動で直り、バックグラウンドでも画質を維持できます。",
+      ko: "재생 오류가 자동으로 해결되고 백그라운드에서도 화질을 유지할 수 있습니다.",
+      id: "Kesalahan pemutaran pulih sendiri dan kualitas bisa tetap terjaga di latar belakang.",
+      nl: "Afspeelfouten herstellen zichzelf en de kwaliteit kan op de achtergrond behouden blijven.",
+      sv: "Uppspelningsfel åtgärdas av sig själva och kvaliteten kan behållas i bakgrunden.",
+      cs: "Chyby přehrávání se opraví samy a kvalita může zůstat zachována i na pozadí."
     },
     changes: [
+
       {
         type: "new",
         text: {
@@ -156,47 +165,7 @@ export const RELEASES = [
           ja: "非常に明るいシーンでも挨拶文は読みやすく、オンボーディングの現在ステップはスクリーンリーダーに通知されます。",
           ko: "아주 밝은 장면에서도 인사말이 읽히고, 온보딩의 현재 단계가 스크린 리더에 알려집니다."
         }
-      }
-    ]
-  },
-  {
-    version: "26.9.19",
-    date: "2026-09-16",
-    title: {
-      fr: "Le lecteur Twitch plus fiable",
-      en: "A more reliable Twitch player",
-      es: "Un reproductor de Twitch más fiable",
-      "pt-BR": "Um player da Twitch mais confiável",
-      de: "Ein zuverlässigerer Twitch-Player",
-      it: "Un player Twitch più affidabile",
-      pl: "Bardziej niezawodny odtwarzacz Twitcha",
-      tr: "Daha güvenilir Twitch oynatıcısı",
-      ru: "Более надёжный плеер Twitch",
-      ja: "より安定した Twitch プレーヤー",
-      ko: "더 안정적인 Twitch 플레이어",
-      id: "Pemutar Twitch yang lebih andal",
-      nl: "Een betrouwbaardere Twitch-speler",
-      sv: "En pålitligare Twitch-spelare",
-      cs: "Spolehlivější přehrávač Twitche"
-    },
-    subtitle: {
-      fr: "Les erreurs de lecture se corrigent seules et la qualité peut rester intacte en arrière-plan.",
-      en: "Playback errors fix themselves and quality can stay intact in the background.",
-      es: "Los errores de reproducción se corrigen solos y la calidad puede mantenerse en segundo plano.",
-      "pt-BR": "Os erros de reprodução se corrigem sozinhos e a qualidade pode continuar intacta em segundo plano.",
-      de: "Wiedergabefehler beheben sich selbst und die Qualität kann im Hintergrund erhalten bleiben.",
-      it: "Gli errori di riproduzione si risolvono da soli e la qualità può restare intatta in background.",
-      pl: "Błędy odtwarzania naprawiają się same, a jakość może pozostać nienaruszona w tle.",
-      tr: "Oynatma hataları kendiliğinden düzeliyor ve kalite arka planda korunabiliyor.",
-      ru: "Ошибки воспроизведения исправляются сами, а качество может сохраняться в фоне.",
-      ja: "再生エラーが自動で直り、バックグラウンドでも画質を維持できます。",
-      ko: "재생 오류가 자동으로 해결되고 백그라운드에서도 화질을 유지할 수 있습니다.",
-      id: "Kesalahan pemutaran pulih sendiri dan kualitas bisa tetap terjaga di latar belakang.",
-      nl: "Afspeelfouten herstellen zichzelf en de kwaliteit kan op de achtergrond behouden blijven.",
-      sv: "Uppspelningsfel åtgärdas av sig själva och kvaliteten kan behållas i bakgrunden.",
-      cs: "Chyby přehrávání se opraví samy a kvalita může zůstat zachována i na pozadí."
-    },
-    changes: [
+      },
       {
         type: "fix",
         text: {
