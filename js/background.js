@@ -3281,3 +3281,35 @@ if (chrome.tabs?.onUpdated?.addListener) {
     }
   });
 }
+
+// ─── Diagnostic : simulation de changements de titre/categorie ───────────────
+// Utilisable depuis la console du service worker (chrome://extensions →
+// StreamPulse → « inspect » du worker). Sans effet sur les donnees reelles :
+// on falsifie uniquement l'etat precedent EN MEMOIRE avant un poll — le poll
+// suivant recharge le vrai titre, la comparaison declenche alors la meme
+// alerte qu'un vrai changement, preferences et toggles compris.
+self.__SP_DEBUG__ = {
+  async fakeTitleChange(handle) {
+    return this._fake(handle, "title", " [test StreamPulse]");
+  },
+  async fakeGameChange(handle) {
+    return this._fake(handle, "game", "Tests & Démos");
+  },
+  async _fake(handle, field, value) {
+    const streamers = await DataStore.getStreamers();
+    const login = String(handle || "").toLowerCase();
+    const streamer = streamers.find(
+      (item) =>
+        String(item.handle || item.twitch || "").toLowerCase() === login ||
+        (login === "" && streamerLiveState.get(item.id)?.isLive)
+    );
+    if (!streamer) return "StreamPulse: streamer introuvable (essaie sans handle pour cibler n'importe quel streamer en direct)";
+    const state = streamerLiveState.get(streamer.id);
+    if (!state || !state.isLive) {
+      return `StreamPulse: ${streamer.handle} n'est pas en direct — la simulation n'a de sens qu'en direct`;
+    }
+    state[field] = value;
+    await pollStreamers();
+    return `StreamPulse: changement de ${field} simule pour ${streamer.handle} — une alerte doit partir si l'alerte correspondante est active`;
+  },
+};
