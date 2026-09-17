@@ -19,6 +19,7 @@ const ES_MODULES = [
   "js/platforms.js",
   "js/plus.js",
   "js/plus-thanks.js",
+  "js/eventsubRaid.js",
   "js/raidWatcher.js",
   "js/popup.js",
   "js/popup-features.js",

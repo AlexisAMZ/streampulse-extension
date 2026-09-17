@@ -22,6 +22,7 @@ import { DEFAULT_PREFERENCES } from "./preferences-data.js";
 import { thankPlusSubscriber } from "./plus-thanks.js";
 import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-alerts.js";
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "./plus.js";
+import { syncEventSubRaid, stopEventSubRaid } from "./eventsubRaid.js";
 import {
   RAID_WATCHER_ALARM,
   syncRaidWatcher,
@@ -133,6 +134,48 @@ const DEFAULT_STATS = {
 const DEFAULT_POLL_INTERVAL =
   Number(CONFIG.pollIntervalMinutes) > 0 ? CONFIG.pollIntervalMinutes : 1;
 
+
+// ─── Diagnostic : expose tot, meme si une erreur survient plus bas ───────────
+// Console du service worker (chrome://extensions → inspect du worker).
+self.__SP_DEBUG__ = {
+  async fakeTitleChange(handle) {
+    return this._fake(handle, "title", " [test StreamPulse]");
+  },
+  async fakeGameChange(handle) {
+    return this._fake(handle, "game", "Tests & Démos");
+  },
+  async fakeRaid(handle) {
+    const streamers = await DataStore.getStreamers();
+    const login = String(handle || "").toLowerCase();
+    const streamer = streamers.find(
+      (item) => String(item.handle || item.twitch || "").toLowerCase() === login
+    );
+    if (!streamer) return "StreamPulse: streamer introuvable";
+    await notifyIncomingRaid({
+      channel: streamer.handle || streamer.twitch,
+      raider: streamer.displayName || "TestRaid",
+      viewers: 42,
+    });
+    return "StreamPulse: notification de raid envoyee (chemin d'affichage)";
+  },
+  async _fake(handle, field, value) {
+    const streamers = await DataStore.getStreamers();
+    const login = String(handle || "").toLowerCase();
+    const streamer = streamers.find(
+      (item) =>
+        String(item.handle || item.twitch || "").toLowerCase() === login ||
+        (login === "" && streamerLiveState.get(item.id)?.isLive)
+    );
+    if (!streamer) return "StreamPulse: streamer introuvable (essaie sans handle pour cibler n'importe quel streamer en direct)";
+    const state = streamerLiveState.get(streamer.id);
+    if (!state || !state.isLive) {
+      return `StreamPulse: ${streamer.handle} n'est pas en direct — la simulation n'a de sens qu'en direct`;
+    }
+    state[field] = value;
+    await pollStreamers();
+    return `StreamPulse: changement de ${field} simule pour ${streamer.handle} — une alerte doit partir si l'alerte correspondante est active`;
+  },
+};
 
 function sanitizeLogin(value = "") {
   return sanitizeHandle("twitch", value);
@@ -1826,8 +1869,21 @@ async function refreshRaidWatcher() {
   try {
     const preferences = await PreferenceStore.get();
     if (preferences.backgroundRaidAlerts !== true) {
+      stopEventSubRaid();
       stopRaidWatcher();
       return;
+    }
+    // EventSub d'abord : l'evenement channel.raid part au DEBUT du compte a
+    // rebours (~90 s avant l'arrivee), la ou l'IRC n'entend le raid qu'a son
+    // atterrissage. L'IRC reste le repli si l'Helix token n'est pas disponible.
+    await ensureConfig();
+    if (CONFIG.accessToken && CONFIG.clientId) {
+      const active = await syncEventSubRaid(notifyIncomingRaid, twitchHeaders);
+      if (active) {
+        // Les deux en meme temps notifieraient chaque raid deux fois.
+        stopRaidWatcher();
+        return;
+      }
     }
     await syncRaidWatcher(notifyIncomingRaid);
   } catch (error) {
@@ -3281,35 +3337,3 @@ if (chrome.tabs?.onUpdated?.addListener) {
     }
   });
 }
-
-// ─── Diagnostic : simulation de changements de titre/categorie ───────────────
-// Utilisable depuis la console du service worker (chrome://extensions →
-// StreamPulse → « inspect » du worker). Sans effet sur les donnees reelles :
-// on falsifie uniquement l'etat precedent EN MEMOIRE avant un poll — le poll
-// suivant recharge le vrai titre, la comparaison declenche alors la meme
-// alerte qu'un vrai changement, preferences et toggles compris.
-self.__SP_DEBUG__ = {
-  async fakeTitleChange(handle) {
-    return this._fake(handle, "title", " [test StreamPulse]");
-  },
-  async fakeGameChange(handle) {
-    return this._fake(handle, "game", "Tests & Démos");
-  },
-  async _fake(handle, field, value) {
-    const streamers = await DataStore.getStreamers();
-    const login = String(handle || "").toLowerCase();
-    const streamer = streamers.find(
-      (item) =>
-        String(item.handle || item.twitch || "").toLowerCase() === login ||
-        (login === "" && streamerLiveState.get(item.id)?.isLive)
-    );
-    if (!streamer) return "StreamPulse: streamer introuvable (essaie sans handle pour cibler n'importe quel streamer en direct)";
-    const state = streamerLiveState.get(streamer.id);
-    if (!state || !state.isLive) {
-      return `StreamPulse: ${streamer.handle} n'est pas en direct — la simulation n'a de sens qu'en direct`;
-    }
-    state[field] = value;
-    await pollStreamers();
-    return `StreamPulse: changement de ${field} simule pour ${streamer.handle} — une alerte doit partir si l'alerte correspondante est active`;
-  },
-};
