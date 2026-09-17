@@ -1692,7 +1692,7 @@ class NotificationSystem {
   static async notifyChangeEvent(
     streamer,
     preferences,
-    { alertKey, titleKey, messageKey, messageParams, platform }
+    { alertKey: _alertKey, titleKey, messageKey, messageParams, platform }
   ) {
     const lang = normalizeLanguage(preferences?.language);
     const platformKey = platform || streamer.platform || "twitch";
