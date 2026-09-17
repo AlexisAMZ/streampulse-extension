@@ -227,6 +227,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
           <span data-i18n="popup.osd.menuAutomation">Automatisation</span>
         </button>
+        <button id="menu-tab-player" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-player" data-panel="player" tabindex="-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>
+          <span data-i18n="popup.osd.menuPlayer">Lecteur</span>
+        </button>
         <button id="menu-tab-previews" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-previews" data-panel="previews" tabindex="-1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="m10 8 5 3-5 3z"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
           <span data-i18n="popup.osd.menuPreviews">Aperçus</span>
@@ -290,6 +294,14 @@
             <input id="pref-background-raid-alerts" type="checkbox" role="switch" />
           </label>
 
+          <label class="settings-toggle">
+            <span class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.autoCancelRaidsTitle">Annulation automatique des Raids</span>
+              <span class="settings-description" data-i18n="popup.settings.autoCancelRaidsDescription">Annuler automatiquement la redirection lors d'un Raid Twitch. Se désactive quand les alertes de raid en arrière-plan sont actives : les points se gagnent en suivant le raid.</span>
+            </span>
+            <input id="pref-auto-cancel-raids" type="checkbox" role="switch" />
+          </label>
+
 
           <div class="panel-actions">
             <button id="test-notification" type="button" class="button button-quiet" data-i18n="popup.testNotification">Tester une notification</button>
@@ -341,7 +353,35 @@
             </select>
           </div>
 
-          <h3 class="settings-group-header" data-i18n="popup.osd.groupPlayer">Lecteur</h3>
+
+          <h3 class="settings-group-header" data-i18n="popup.osd.groupTabs">Onglets</h3>
+          <label class="settings-toggle">
+            <span class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.preventTabDiscardTitle">Empêcher la mise en veille de l'onglet</span>
+              <span class="settings-description" data-i18n="popup.settings.preventTabDiscardDescription">Empêcher Chrome de fermer ou décharger les onglets Twitch/Kick inactifs.</span>
+            </span>
+            <input id="pref-prevent-tab-discard" type="checkbox" role="switch" />
+          </label>
+          <label class="settings-toggle">
+            <span class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.streamerFaviconTitle">Avatar du streamer sur l'onglet</span>
+              <span class="settings-description" data-i18n="popup.settings.streamerFaviconDescription">Remplacer l'icône de l'onglet par la photo de profil du streamer en direct.</span>
+            </span>
+            <input id="pref-enable-streamer-favicon" type="checkbox" role="switch" />
+          </label>
+          <label class="settings-toggle">
+            <span class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.tabLiveIconTitle">Pastille rouge LIVE sur l'onglet</span>
+              <span class="settings-description" data-i18n="popup.settings.tabLiveIconDescription">Afficher un point rouge LIVE sur l'icône de l'onglet quand le flux est en direct.</span>
+            </span>
+            <input id="pref-enable-tab-live-icon" type="checkbox" role="switch" />
+          </label>
+        </section>
+
+        <!-- Lecteur -->
+        <section class="menu-panel" id="menu-player" role="tabpanel" aria-labelledby="menu-tab-player" hidden>
+          <h2 data-i18n="popup.osd.menuPlayer">Lecteur</h2>
+
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.keepQualityTitle">Garder la qualité en arrière-plan</span>
@@ -375,10 +415,7 @@
               <span class="settings-title" data-i18n="popup.settings.playerQualityTitle">Qualité du lecteur</span>
               <span class="settings-description" data-i18n="popup.settings.playerQualityDescription">Ouvrir chaque live dans cette qualité. Auto laisse Twitch décider.</span>
             </span>
-          </div>
-          <div class="settings-sub-row">
-            <label class="settings-title" for="pref-player-quality" data-i18n="popup.settings.playerQualityTitle">Qualité du lecteur</label>
-            <select id="pref-player-quality" class="settings-select">
+            <select id="pref-player-quality" class="settings-select" data-i18n-attr-ariaLabel="popup.settings.playerQualityTitle">
               <option value="auto" selected data-i18n="popup.settings.playerQualityAuto">Auto</option>
               <option value="source" data-i18n="popup.settings.playerQualitySource">Source</option>
               <option value="1440">1440p (2K)</option>
@@ -390,13 +427,6 @@
           </div>
           <label class="settings-toggle">
             <span class="settings-text">
-              <span class="settings-title" data-i18n="popup.settings.clipDownloadTitle">Téléchargement des clips</span>
-              <span class="settings-description" data-i18n="popup.settings.clipDownloadDescription">Ajouter un bouton pour enregistrer les clips Twitch en MP4. StreamPulse+.</span>
-            </span>
-            <input id="pref-clip-download" type="checkbox" role="switch" />
-          </label>
-          <label class="settings-toggle">
-            <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.hideTwitchExtensionsTitle">Masquer les extensions Twitch</span>
               <span class="settings-description" data-i18n="popup.settings.hideTwitchExtensionsDescription">Masquer les incrustations d'extensions sur le lecteur vidéo.</span>
             </span>
@@ -404,33 +434,10 @@
           </label>
           <label class="settings-toggle">
             <span class="settings-text">
-              <span class="settings-title" data-i18n="popup.settings.autoCancelRaidsTitle">Annulation automatique des Raids</span>
-              <span class="settings-description" data-i18n="popup.settings.autoCancelRaidsDescription">Annuler automatiquement la redirection lors d'un Raid Twitch.</span>
+              <span class="settings-title" data-i18n="popup.settings.clipDownloadTitle">Téléchargement des clips</span>
+              <span class="settings-description" data-i18n="popup.settings.clipDownloadDescription">Ajouter un bouton pour enregistrer les clips Twitch en MP4. StreamPulse+.</span>
             </span>
-            <input id="pref-auto-cancel-raids" type="checkbox" role="switch" />
-          </label>
-
-          <h3 class="settings-group-header" data-i18n="popup.osd.groupTabs">Onglets</h3>
-          <label class="settings-toggle">
-            <span class="settings-text">
-              <span class="settings-title" data-i18n="popup.settings.preventTabDiscardTitle">Empêcher la mise en veille de l'onglet</span>
-              <span class="settings-description" data-i18n="popup.settings.preventTabDiscardDescription">Empêcher Chrome de fermer ou décharger les onglets Twitch/Kick inactifs.</span>
-            </span>
-            <input id="pref-prevent-tab-discard" type="checkbox" role="switch" />
-          </label>
-          <label class="settings-toggle">
-            <span class="settings-text">
-              <span class="settings-title" data-i18n="popup.settings.streamerFaviconTitle">Avatar du streamer sur l'onglet</span>
-              <span class="settings-description" data-i18n="popup.settings.streamerFaviconDescription">Remplacer l'icône de l'onglet par la photo de profil du streamer en direct.</span>
-            </span>
-            <input id="pref-enable-streamer-favicon" type="checkbox" role="switch" />
-          </label>
-          <label class="settings-toggle">
-            <span class="settings-text">
-              <span class="settings-title" data-i18n="popup.settings.tabLiveIconTitle">Pastille rouge LIVE sur l'onglet</span>
-              <span class="settings-description" data-i18n="popup.settings.tabLiveIconDescription">Afficher un point rouge LIVE sur l'icône de l'onglet quand le flux est en direct.</span>
-            </span>
-            <input id="pref-enable-tab-live-icon" type="checkbox" role="switch" />
+            <input id="pref-clip-download" type="checkbox" role="switch" />
           </label>
         </section>
 
@@ -522,7 +529,6 @@
             <span class="settings-description" data-i18n="onboarding.blockedUsersDescription">Masquer les messages d'utilisateurs spécifiques (séparés par des virgules).</span>
             <textarea id="pref-blocked-users" rows="3" class="settings-textarea" placeholder="bot, spammer" data-i18n-attr-placeholder="onboarding.blockedUsersPlaceholder"></textarea>
             <div class="field-actions">
-              <button id="save-blocked-users" class="button button-quiet" type="button" data-i18n="popup.actions.saveBlockedUsers">Enregistrer les utilisateurs masqués</button>
             </div>
           </div>
         </section>

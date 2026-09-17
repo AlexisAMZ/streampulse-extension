@@ -97,7 +97,6 @@ const previewsAnimationsToggle = document.getElementById("pref-previews-animatio
 const chatKeywordsInput = document.getElementById("pref-chat-keywords");
 const blockedUsersInput = document.getElementById("pref-blocked-users");
 const saveChatFilterButton = document.getElementById("save-chat-filter");
-const saveBlockedUsersButton = document.getElementById("save-blocked-users");
 const testNotificationButton = document.getElementById("test-notification");
 const tabButtons = Array.from(document.querySelectorAll(".tab-button"));
 const languageOptions = document.getElementById("language-options-popup");
@@ -2052,19 +2051,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (ok) {
           showFeedback(t("popup.feedback.chatFilterSaved"), "success");
           markButtonSuccess(saveChatFilterButton);
-        }
-      });
-    }
-
-    if (saveBlockedUsersButton) {
-      saveBlockedUsersButton.addEventListener("click", async () => {
-        const blocked = blockedUsersInput?.value || "";
-        const ok = await updatePreferences({
-          chatBlockedUsers: blocked,
-        });
-        if (ok) {
-          showFeedback(t("popup.feedback.blockedUsersSaved"), "success");
-          markButtonSuccess(saveBlockedUsersButton);
         }
       });
     }
