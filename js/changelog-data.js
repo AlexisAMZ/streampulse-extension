@@ -87,6 +87,22 @@ export const RELEASES = [
     changes: [      {
         type: "improved",
         text: {
+          fr: "Alertes plus compréhensibles : l'interrupteur de chaque streamer décide pour lui, et ceux des réglages s'appliquent d'un coup à tout le monde. Fini les doubles interrupteurs contradictoires.",
+          en: "Clearer alerts: each streamer's switch decides for them, and the settings switches apply to everyone at once. No more contradictory double switches.",
+          es: "Alertas más claras: el interruptor de cada streamer decide por él, y los de los ajustes se aplican a todos de una vez. Adiós a los dobles interruptores contradictorios.",
+          "pt-BR": "Alertas mais claros: a chave de cada streamer decide para ele, e as dos ajustes se aplicam a todos de uma vez. Chega de chaves duplas contraditórias.",
+          de: "Klarere Warnungen: der Schalter jedes Streamers entscheidet für ihn, die in den Einstellungen gelten für alle gleichzeitig. Keine widersprüchlichen Doppelschalter mehr.",
+          it: "Avvisi più chiari: l'interruttore di ogni streamer decide per lui e quelli nelle impostazioni si applicano a tutti in una volta. Basta doppie interruttori contraddittori.",
+          pl: "Jaśniejsze alerty: przełącznik każdego streamera decyduje dla niego, a te w ustawieniach dotyczą wszystkich naraz. Koniec sprzecznych podwójnych przełączników.",
+          tr: "Daha anlaşılır uyarılar: her yayıncının düğmesi onun için karar verir, ayarlardakiler herkese aynı anda uygulanır. Çelişkili çift düğmeler bitti.",
+          ru: "Понятные оповещения: переключатель каждого стримера решает за него, а переключатели в настройках применяются ко всем сразу. Больше никаких противоречивых двойных переключателей.",
+          ja: "通知がわかりやすく：ストリーマーごとのスイッチがその人に対して決定し、設定のスイッチは全員に一括適用。矛盾する二重スイッチはなくなりました。",
+          ko: "더 명확한 알림: 스트리머별 스위치가 그 스트리머를 결정하고, 설정의 스위치는 모두에게 한 번에 적용됩니다. 모순되는 이중 스위치는 이제 끝입니다."
+        }
+      },
+      {
+        type: "improved",
+        text: {
           fr: "Alertes de raids 90 secondes plus tôt : StreamPulse est prévenu au début du compte à rebours via l'interface temps réel de Twitch, plus à l'arrivée du raid.",
           en: "Raid alerts 90 seconds earlier: StreamPulse is notified the moment the raid countdown starts via Twitch's real-time interface, no longer on arrival.",
           es: "Alertas de raid 90 segundos antes: StreamPulse avisa al comienzo de la cuenta regresiva mediante la interfaz en tiempo real de Twitch, ya no a la llegada.",
