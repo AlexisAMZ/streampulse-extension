@@ -87,6 +87,22 @@ export const RELEASES = [
     changes: [      {
         type: "improved",
         text: {
+          fr: "Alertes de raids 90 secondes plus tôt : StreamPulse est prévenu au début du compte à rebours via l'interface temps réel de Twitch, plus à l'arrivée du raid.",
+          en: "Raid alerts 90 seconds earlier: StreamPulse is notified the moment the raid countdown starts via Twitch's real-time interface, no longer on arrival.",
+          es: "Alertas de raid 90 segundos antes: StreamPulse avisa al comienzo de la cuenta regresiva mediante la interfaz en tiempo real de Twitch, ya no a la llegada.",
+          "pt-BR": "Alertas de raid 90 segundos mais cedo: o StreamPulse é avisado no início da contagem regressiva pela interface em tempo real da Twitch, não mais na chegada.",
+          de: "Raid-Warnungen 90 Sekunden früher: StreamPulse wird beim Start des Countdowns über Twitches Echtzeitschnittstelle benachrichtigt, nicht mehr bei Ankunft.",
+          it: "Avvisi raid 90 secondi prima: StreamPulse viene avvisato all'inizio del conto alla rovescia tramite l'interfaccia in tempo reale di Twitch, non più all'arrivo.",
+          pl: "Alerty rajdów 90 sekund wcześniej: StreamPulse jest powiadamiany na początku odliczania przez interfejs czasu rzeczywistego Twitcha, a nie przy przybyciu.",
+          tr: "90 saniye daha erken raid uyarıları: StreamPulse, Twitch'in gerçek zamanlı arayüzüyle sayacın başında uyarılır, artık varışta değil.",
+          ru: "Оповещения о рейдах на 90 секунд раньше: StreamPulse узнаёт о начале отсчёта через интерфейс Twitch реального времени, а не по прибытии рейда.",
+          ja: "レイド通知が90秒早く：Twitch のリアルタイムインターフェースにより、カウントダウン開始の瞬間に StreamPulse が通知を受け取ります。到着時ではなくなりました。",
+          ko: "레이드 알림이 90초 더 빨라졌습니다: StreamPulse가 Twitch 실시간 인터페이스를 통해 카운트다운 시작 시 알림을 받고, 도착 시점이 아닙니다."
+        }
+      },
+      {
+        type: "improved",
+        text: {
           fr: "Réglages réorganisés : un panneau Lecteur dédié, l'annulation des raids rejoint les alertes de raid qu'elle accompagne, et la qualité du lecteur tient enfin sur une seule ligne.",
           en: "Settings reorganized: a dedicated Player panel, raid auto-cancel moved next to the raid alerts it pairs with, and the player quality setting finally fits on one line.",
           es: "Ajustes reorganizados: un panel de Reproductor dedicado, la cancelación de raids se une a las alertas de raid que acompaña, y la calidad del reproductor por fin cabe en una sola línea.",
