@@ -54,17 +54,17 @@ export const RELEASES = [
       {
         type: "fix",
         text: {
-          fr: "Connexion rétablie après l'incident d'identification Twitch, et l'extension se répare désormais seule si les identifiants changent à nouveau — plus besoin d'attendre ni de réinstaller.",
-          en: "Connection restored after the Twitch authentication incident, and the extension now repairs itself if the credentials change again — no more waiting or reinstalling.",
+          fr: "Connexion rétablie après l'incident d'identification Twitch, et l'extension se répare désormais seule si les identifiants changent à nouveau : plus besoin d'attendre ni de réinstaller.",
+          en: "Connection restored after the Twitch authentication incident, and the extension now repairs itself if the credentials change again, so there is no more waiting or reinstalling.",
           es: "Conexión restablecida tras el incidente de autenticación de Twitch, y la extensión ahora se repara sola si las credenciales vuelven a cambiar: no hace falta esperar ni reinstalar.",
-          "pt-BR": "Conexão restabelecida após o incidente de autenticação da Twitch, e a extensão agora se repara sozinha se as credenciais mudarem de novo — sem precisar esperar nem reinstalar.",
+          "pt-BR": "Conexão restabelecida após o incidente de autenticação da Twitch, e a extensão agora se repara sozinha se as credenciais mudarem de novo, sem precisar esperar nem reinstalar.",
           de: "Verbindung nach dem Twitch-Authentifizierungs Vorfall wiederhergestellt, und die Erweiterung repariert sich jetzt selbst, wenn sich die Zugangsdaten ändern – kein Warten oder Neuinstallieren mehr.",
-          it: "Connessione ripristinata dopo l'incidente di autenticazione Twitch, e l'estensione ora si ripara da sola se le credenziali cambiano di nuovo — niente più attese o reinstallazioni.",
-          pl: "Połączenie przywrócone po incidencie uwierzytelniania Twitcha, a rozszerzenie naprawia się teraz samo, gdy dane logowania zmienią się ponownie — bez czekania i bez ponownej instalacji.",
-          tr: "Twitch kimlik doğrulama sorunundan sonra bağlantı yeniden kuruldu ve kimlik bilgileri yeniden değiştiğinde eklenti artık kendini onarıyor — beklemeye veya yeniden yüklemeye gerek yok.",
-          ru: "Соединение восстановлено после сбоя аутентификации Twitch, и расширение теперь чинит себя само при повторной смене учётных данных — без ожидания и переустановки.",
-          ja: "Twitch の認証障害後に接続を復旧しました。今後、認証情報が変わっても拡張機能が自動で修復します — 待つことも再インストールも不要です。",
-          ko: "Twitch 인증 문제 후 연결이 복구되었으며, 이제 자격 증명이 다시 변경되어도 확장 프로그램이 스스로 복구합니다 — 기다리거나 재설치할 필요가 없습니다."
+          it: "Connessione ripristinata dopo l'incidente di autenticazione Twitch, e l'estensione ora si ripara da sola se le credenziali cambiano di nuovo, niente più attese o reinstallazioni.",
+          pl: "Połączenie przywrócone po incidencie uwierzytelniania Twitcha, a rozszerzenie naprawia się teraz samo, gdy dane logowania zmienią się ponownie, bez czekania i bez ponownej instalacji.",
+          tr: "Twitch kimlik doğrulama sorunundan sonra bağlantı yeniden kuruldu ve kimlik bilgileri yeniden değiştiğinde eklenti artık kendini onarıyor, beklemeye veya yeniden yüklemeye gerek yok.",
+          ru: "Соединение восстановлено после сбоя аутентификации Twitch, и расширение теперь чинит себя само при повторной смене учётных данных, без ожидания и переустановки.",
+          ja: "Twitch の認証障害後に接続を復旧しました。今後、認証情報が変わっても拡張機能が自動で修復します。待つことも再インストールも不要です。",
+          ko: "Twitch 인증 문제 후 연결이 복구되었으며, 이제 자격 증명이 다시 변경되어도 확장 프로그램이 스스로 복구합니다. 기다리거나 재설치할 필요가 없습니다."
         }
       },
       {
