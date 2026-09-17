@@ -2981,31 +2981,6 @@ function handleMessage(request, sender, sendResponse) {
       })();
       return true;
 
-    case "bulkStreamerAlerts": {
-      // Les toggles globaux des reglages sont des actions en masse : activer
-      // ou couper l'alerte sur TOUS les streamers d'un coup. Apres quoi le
-      // toggle de chaque streamer reste libre (modele « par streamer d'abord »).
-      const flagByType = {
-        bulkNotifications: "notificationsEnabled",
-        bulkGameNotifications: "gameNotificationsEnabled",
-        bulkTitleNotifications: "titleNotificationsEnabled",
-      };
-      const flag = flagByType[request.type];
-      if (!flag) {
-        sendResponse({ error: "unknown bulk flag" });
-        return true;
-      }
-      (async () => {
-        const streamers = await DataStore.getStreamers();
-        for (const streamer of streamers) {
-          streamer[flag] = Boolean(request.enabled);
-        }
-        await DataStore.saveStreamers(streamers);
-        sendResponse({ success: true });
-      })();
-      return true;
-    }
-
     case "toggleNotifications":
     case "toggleGameNotifications":
     case "toggleTitleNotifications": {

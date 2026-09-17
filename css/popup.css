@@ -388,6 +388,7 @@ button.row-main:hover .row-name { color: var(--violet-text); }
 .settings-sub-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; box-shadow: inset 0 -1px 0 var(--line); }
 .settings-toggle { cursor: pointer; }
 .settings-sub-row { padding-left: 16px; }
+.settings-note { margin: 0 0 4px; color: var(--text-2); font-size: 12px; line-height: 1.45; }
 .settings-text { display: grid; gap: 2px; min-width: 0; }
 .settings-title { font-weight: 600; }
 .settings-description { color: var(--text-2); font-size: 12px; line-height: 1.45; }
