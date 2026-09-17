@@ -1555,6 +1555,23 @@ async function handleAddStreamer(event) {
   await loadStreamers();
 }
 
+/**
+ * Mode « par streamer d'abord » : le toggle global applique l'etat a TOUS les
+ * streamers (action en masse), et reste ensuite comme defaut pour les nouveaux.
+ * Le toggle individuel de chaque streamer reste libre ensuite.
+ */
+async function applyGlobalAlert(prefKey, bulkType, enabled) {
+  const ok = await updatePreferences({ [prefKey]: enabled });
+  if (!ok) return;
+  try {
+    await sendMessage({ type: bulkType, enabled });
+  } catch (_) {
+    // Le worker peut se rendormir entre les deux : la preference reste persistee,
+    // l'application en masse rattrapera au prochain changement.
+  }
+  await loadStreamers();
+}
+
 async function updatePreferences(updates) {
   // Une valeur undefined disparait a la serialisation de sendMessage : la
   // charge utile arrivait vide au service worker, qui repondait « Aucune
@@ -1876,13 +1893,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     addStreamerForm?.addEventListener("submit", handleAddStreamer);
     liveNotificationsToggle?.addEventListener("change", (e) => {
-      updatePreferences({ liveNotifications: e.target.checked });
+      applyGlobalAlert("liveNotifications", "bulkNotifications", e.target.checked);
     });
     gameAlertsToggle?.addEventListener("change", (e) => {
-      updatePreferences({ gameNotifications: e.target.checked });
+      applyGlobalAlert("gameNotifications", "bulkGameNotifications", e.target.checked);
     });
     titleAlertsToggle?.addEventListener("change", (e) => {
-      updatePreferences({ titleNotifications: e.target.checked });
+      applyGlobalAlert("titleNotifications", "bulkTitleNotifications", e.target.checked);
     });
     soundsToggle?.addEventListener("change", (e) => {
       updatePreferences({ soundsEnabled: e.target.checked });

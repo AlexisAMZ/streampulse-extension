@@ -370,6 +370,16 @@ function normalizeStreamer(raw) {
       typeof raw.notificationsEnabled === "boolean"
         ? raw.notificationsEnabled
         : true,
+    // Defauts explicites (defauts globaux) : sans eux, un champ absent valait
+    // « activé » via !== false — bruyant des qu'on ajoute un streamer.
+    gameNotificationsEnabled:
+      typeof raw.gameNotificationsEnabled === "boolean"
+        ? raw.gameNotificationsEnabled
+        : DEFAULT_PREFERENCES.gameNotifications,
+    titleNotificationsEnabled:
+      typeof raw.titleNotificationsEnabled === "boolean"
+        ? raw.titleNotificationsEnabled
+        : DEFAULT_PREFERENCES.titleNotifications,
     avatarUrl: raw.avatarUrl || "",
     twitchId: platform === "twitch" ? raw.twitchId || "" : "",
     createdAt: raw.createdAt || Date.now(),
@@ -1619,10 +1629,8 @@ class NotificationSystem {
   }
 
   static async notifyLive(streamer, status, preferences = DEFAULT_PREFERENCES) {
-    if (preferences.liveNotifications === false) {
-      return;
-    }
-
+    // Le verrou par streamer est dejà verifie par l'appelant : ici on ne
+    // re-verifie pas la preference globale (modele « par streamer d'abord »).
     const lang = normalizeLanguage(preferences?.language);
     const platform = status.platform || streamer.platform || "twitch";
     const name =
@@ -1686,13 +1694,6 @@ class NotificationSystem {
     preferences,
     { alertKey, titleKey, messageKey, messageParams, platform }
   ) {
-    if (
-      preferences.liveNotifications === false ||
-      !preferences[alertKey]
-    ) {
-      return;
-    }
-
     const lang = normalizeLanguage(preferences?.language);
     const platformKey = platform || streamer.platform || "twitch";
     if (!platformSupportsLiveStatus(platformKey)) {
@@ -1768,15 +1769,6 @@ class NotificationSystem {
   static _testStep = 0;
 
   static async sendTest(preferences = DEFAULT_PREFERENCES) {
-    if (preferences.liveNotifications === false) {
-      throw new Error(
-        translateWithPrefs(
-          preferences,
-          "background.errors.notificationsDisabled"
-        )
-      );
-    }
-
     const lang = normalizeLanguage(preferences?.language);
     const step = this._testStep % 3;
     this._testStep += 1;
@@ -2195,9 +2187,11 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
       );
     }
 
-    const notificationsEnabled =
-      preferences.liveNotifications !== false &&
-      streamer.notificationsEnabled !== false;
+    // Mode « par streamer d'abord » : le toggle du streamer est la seule
+    // source de vérite (les toggles globaux des reglages sont des actions en
+    // masse, plus des verrous — sinon deux interrupteurs doivent etre actifs
+    // pour qu'une alerte parte, et personne ne comprend pourquoi elle ne part pas).
+    const notificationsEnabled = streamer.notificationsEnabled !== false;
 
     // Regles d'alerte du streamer : elles remplacent l'alerte classique.
     const smartDecision = nextLiveState.isError
@@ -2251,7 +2245,6 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
           });
         }
         const shouldNotifyGame =
-          preferences.gameNotifications &&
           gameNotificationsEnabled &&
           preferences.liveNotifications !== false &&
           previousLiveState.isLive &&
@@ -2274,7 +2267,6 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
 
         const titleNotificationsEnabled = streamer.titleNotificationsEnabled !== false;
         const shouldNotifyTitle =
-          preferences.titleNotifications &&
           titleNotificationsEnabled &&
           preferences.liveNotifications !== false &&
           previousLiveState.isLive &&
@@ -2988,6 +2980,31 @@ function handleMessage(request, sender, sendResponse) {
         }
       })();
       return true;
+
+    case "bulkStreamerAlerts": {
+      // Les toggles globaux des reglages sont des actions en masse : activer
+      // ou couper l'alerte sur TOUS les streamers d'un coup. Apres quoi le
+      // toggle de chaque streamer reste libre (modele « par streamer d'abord »).
+      const flagByType = {
+        bulkNotifications: "notificationsEnabled",
+        bulkGameNotifications: "gameNotificationsEnabled",
+        bulkTitleNotifications: "titleNotificationsEnabled",
+      };
+      const flag = flagByType[request.type];
+      if (!flag) {
+        sendResponse({ error: "unknown bulk flag" });
+        return true;
+      }
+      (async () => {
+        const streamers = await DataStore.getStreamers();
+        for (const streamer of streamers) {
+          streamer[flag] = Boolean(request.enabled);
+        }
+        await DataStore.saveStreamers(streamers);
+        sendResponse({ success: true });
+      })();
+      return true;
+    }
 
     case "toggleNotifications":
     case "toggleGameNotifications":
