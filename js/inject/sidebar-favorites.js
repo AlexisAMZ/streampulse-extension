@@ -117,8 +117,14 @@
         return { s: s, st: raw.active || raw };
       })
       .filter(Boolean)
+      // Choix produit : la section ne montre que les favoris EN DIRECT. Les
+      // chaînes hors ligne restent visibles dans la liste « Chaînes suivies »
+      // native de Twitch juste en dessous — les doubler ici n'apportait rien.
+      .filter(function (entry) {
+        return !!entry.st.isLive;
+      })
       .sort(function (a, b) {
-        return (Number(!!b.st.isLive) - Number(!!a.st.isLive)) || ((b.st.viewers || 0) - (a.st.viewers || 0));
+        return (b.st.viewers || 0) - (a.st.viewers || 0);
       });
   }
 
@@ -184,13 +190,11 @@
     section.appendChild(head);
 
     var list = favorites();
-    if (!list.length) {
-      section.appendChild(el("p", "sp-fav-empty", tr("emptyFavorites")));
-    } else {
-      list.forEach(function (entry) {
-        section.appendChild(row(entry));
-      });
-    }
+    // Personne en direct : pas de section du tout (pas de bloc vide inutile).
+    if (!list.length) return null;
+    list.forEach(function (entry) {
+      section.appendChild(row(entry));
+    });
     return section;
   }
 
@@ -232,6 +236,11 @@
     }
     var collapsed = followed.getBoundingClientRect().width < 120;
     var next = buildSection();
+    if (!next) {
+      if (existing) existing.remove();
+      decorateCards(followed.parentElement);
+      return;
+    }
     next.classList.toggle("is-collapsed", collapsed);
     if (existing && existing.parentElement === followed.parentElement) existing.replaceWith(next);
     else {
