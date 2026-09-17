@@ -87,17 +87,17 @@ export const RELEASES = [
     changes: [      {
         type: "improved",
         text: {
-          fr: "Alertes plus compréhensibles : l'interrupteur de chaque streamer décide pour lui, et ceux des réglages s'appliquent d'un coup à tout le monde. Fini les doubles interrupteurs contradictoires.",
-          en: "Clearer alerts: each streamer's switch decides for them, and the settings switches apply to everyone at once. No more contradictory double switches.",
-          es: "Alertas más claras: el interruptor de cada streamer decide por él, y los de los ajustes se aplican a todos de una vez. Adiós a los dobles interruptores contradictorios.",
-          "pt-BR": "Alertas mais claros: a chave de cada streamer decide para ele, e as dos ajustes se aplicam a todos de uma vez. Chega de chaves duplas contraditórias.",
-          de: "Klarere Warnungen: der Schalter jedes Streamers entscheidet für ihn, die in den Einstellungen gelten für alle gleichzeitig. Keine widersprüchlichen Doppelschalter mehr.",
-          it: "Avvisi più chiari: l'interruttore di ogni streamer decide per lui e quelli nelle impostazioni si applicano a tutti in una volta. Basta doppie interruttori contraddittori.",
-          pl: "Jaśniejsze alerty: przełącznik każdego streamera decyduje dla niego, a te w ustawieniach dotyczą wszystkich naraz. Koniec sprzecznych podwójnych przełączników.",
-          tr: "Daha anlaşılır uyarılar: her yayıncının düğmesi onun için karar verir, ayarlardakiler herkese aynı anda uygulanır. Çelişkili çift düğmeler bitti.",
-          ru: "Понятные оповещения: переключатель каждого стримера решает за него, а переключатели в настройках применяются ко всем сразу. Больше никаких противоречивых двойных переключателей.",
-          ja: "通知がわかりやすく：ストリーマーごとのスイッチがその人に対して決定し、設定のスイッチは全員に一括適用。矛盾する二重スイッチはなくなりました。",
-          ko: "더 명확한 알림: 스트리머별 스위치가 그 스트리머를 결정하고, 설정의 스위치는 모두에게 한 번에 적용됩니다. 모순되는 이중 스위치는 이제 끝입니다."
+          fr: "Alertes plus simples : tout se règle sur la carte de chaque streamer — notifications, changement de catégorie et de titre. Fini les doubles interrupteurs contradictoires dans les réglages.",
+          en: "Simpler alerts: everything is set on each streamer's card — notifications, category and title changes. No more contradictory double switches in settings.",
+          es: "Alertas más simples: todo se configura en la tarjeta de cada streamer: notificaciones, cambios de categoría y de título. Adiós a los dobles interruptores contradictorios en los ajustes.",
+          "pt-BR": "Alertas mais simples: tudo se configura no card de cada streamer: notificações, mudanças de categoria e de título. Chega de chaves duplas contraditórias nos ajustes.",
+          de: "Einfachere Warnungen: alles wird auf der Karte jedes Streamers eingestellt – Benachrichtigungen, Kategorie- und Titelwechsel. Keine widersprüchlichen Doppelschalter in den Einstellungen mehr.",
+          it: "Avvisi più semplici: tutto si imposta sulla scheda di ogni streamer: notifiche, cambi di categoria e di titolo. Basta interruttori doppi contraddittori nelle impostazioni.",
+          pl: "Prostsze alerty: wszystko ustawia się na karcie każdego streamera: powiadomienia, zmiany kategorii i tytułu. Koniec sprzecznych podwójnych przełączników w ustawieniach.",
+          tr: "Daha basit uyarılar: her şey her yayıncının kartından ayarlanır: bildirimler, kategori ve başlık değişiklikleri. Ayarlardaki çelişkili çift düğmeler bitti.",
+          ru: "Более простые оповещения: всё настраивается на карточке каждого стримера: уведомления, смены категории и названия. Больше никаких противоречивых двойных переключателей в настройках.",
+          ja: "通知がシンプルに：通知、カテゴリ変更、タイトル変更はすべてストリーマーごとのカードから設定。設定内の矛盾する二重スイッチはなくなりました。",
+          ko: "더 간단한 알림: 알림, 카테고리 변경, 제목 변경 모두 각 스트리머의 카드에서 설정합니다. 설정의 모순되는 이중 스위치는 끝났습니다."
         }
       },
       {
