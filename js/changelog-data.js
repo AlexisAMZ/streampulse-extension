@@ -85,6 +85,22 @@ export const RELEASES = [
       cs: "Chyby přehrávání se opraví samy a kvalita může zůstat zachována i na pozadí."
     },
     changes: [      {
+        type: "improved",
+        text: {
+          fr: "Réglages réorganisés : un panneau Lecteur dédié, l'annulation des raids rejoint les alertes de raid qu'elle accompagne, et la qualité du lecteur tient enfin sur une seule ligne.",
+          en: "Settings reorganized: a dedicated Player panel, raid auto-cancel moved next to the raid alerts it pairs with, and the player quality setting finally fits on one line.",
+          es: "Ajustes reorganizados: un panel de Reproductor dedicado, la cancelación de raids se une a las alertas de raid que acompaña, y la calidad del reproductor por fin cabe en una sola línea.",
+          "pt-BR": "Configurações reorganizadas: um painel dedicado ao Player, o cancelamento de raids se junta aos alertas de raid que acompanha, e a qualidade do player finalmente cabe em uma linha.",
+          de: "Einstellungen neu geordnet: ein eigenes Player-Panel, die Raid-Auto-Abbrechen-Funktion wandert zu den Raid-Warnungen, und die Player-Qualität passt endlich in eine Zeile.",
+          it: "Impostazioni riorganizzate: un pannello Player dedicato, l'annullamento dei raid si unisce agli avvisi raid che accompagna, e la qualità del player sta finalmente su una riga.",
+          pl: "Przeorganizowane ustawienia: dedykowany panel odtwarzacza, anulowanie rajdów dołącza do alertów rajdów, a jakość odtwarzacza w końcu mieści się w jednej linii.",
+          tr: "Ayarlar yeniden düzenlendi: özel bir Oynatıcı paneli, raid iptali artık birlikte çalıştığı raid uyarılarının yanında ve oynatıcı kalitesi sonunda tek satıra sığıyor.",
+          ru: "Настройки реорганизованы: отдельная панель плеера, отмена рейдов переехала к оповещениям о рейдах, а качество плеера наконец умещается в одну строку.",
+          ja: "設定を再編成：プレーヤー専用パネルを新設、レイド自動キャンセルはレイド通知の隣に移動、プレーヤー品質もついに1行に収まるように。",
+          ko: "설정 재구성: 전용 플레이어 패널 신설, 레이드 자동 취소가 페어인 레이드 알림 옆으로 이동, 플레이어 화질도 드디어 한 줄에 정리되었습니다."
+        }
+      },
+      {
         type: "fix",
         text: {
           fr: "La récupération du bonus de points re-clique plus le compteur par erreur : le popover de points ne s'ouvre plus en boucle pendant que vous regardez.",
