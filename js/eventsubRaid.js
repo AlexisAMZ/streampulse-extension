@@ -41,6 +41,11 @@ let subscribedIds = new Set();
 let subscribeQueue = [];
 let drainingQueue = false;
 let lastNotifiedAt = new Map();
+// Twitch refuse la combinaison channel.raid + websocket + jeton d'application
+// (« invalid transport and auth combination », 400 a chaque souscription).
+// Une fois constate, on cesse toute tentative pour la duree du SW : le repli
+// IRC prend le relais, et on economise les requetes Helix + les logs.
+let fatalAuthRejected = false;
 
 export function eventSubActive() {
   return Boolean(socket && sessionId);
@@ -76,6 +81,10 @@ export function stopEventSubRaid() {
  * @returns {Promise<boolean>} true si le transport est actif (welcome recu).
  */
 export async function syncEventSubRaid(notify, headers) {
+  if (fatalAuthRejected) {
+    stopEventSubRaid();
+    return false;
+  }
   notifyRaid = notify || notifyRaid;
   getHeaders = headers || getHeaders;
   if (!getHeaders) return false;
@@ -306,6 +315,13 @@ async function createSubscription(userId) {
         transport: { method: "websocket", session_id: sessionId },
       }),
     });
+    if (resp.status === 400) {
+      // Refus persistant (transport/auth incompatibles) : inutile de retenter.
+      fatalAuthRejected = true;
+      console.warn("EventSub: souscriptions refusees par Twitch (400), repli IRC");
+      stopEventSubRaid();
+      return false;
+    }
     if (resp.status === 409) {
       // Deja souscrit (etats 409 = doublon) : considere comme fait.
       return true;

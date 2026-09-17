@@ -48,6 +48,28 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.20",
+    date: "2026-09-17",
+    changes: [
+      {
+        type: "improved",
+        text: {
+          fr: "La vérification des lives est bien plus légère : tous les streamers Twitch suivis sont désormais interrogés en une seule requête groupée, au lieu d'une par chaîne. La limite de quota de Twitch est atteinte beaucoup moins vite, même avec de longues listes de follow.",
+          en: "Live checks are now far lighter: all followed Twitch streamers are queried in a single grouped request instead of one per channel. Twitch's rate limit is reached much later, even with long follow lists.",
+          es: "La comprobación de directos es mucho más ligera: todos los streamers de Twitch seguidos se consultan en una única solicitud agrupada, en lugar de una por canal. El límite de Twitch se alcanza mucho más tarde, incluso con listas largas de seguimientos.",
+          "pt-BR": "A verificação de lives ficou muito mais leve: todos os streamers da Twitch seguidos são consultados em uma única solicitação agrupada, em vez de uma por canal. O limite da Twitch é atingido muito mais tarde, mesmo com listas longas de seguimentos.",
+          de: "Die Live-Prüfung ist deutlich leichter: Alle gefolgten Twitch-Streamer werden in einer einzigen gebündelten Anfrage abgefragt statt einer pro Kanal. Das Twitch-Limit wird erst viel später erreicht, selbst mit langen Follower-Listen.",
+          it: "Il controllo dei live è molto più leggero: tutti gli streamer Twitch seguiti vengono interrogati con un'unica richiesta raggruppata invece di una per canale. Il limite di Twitch viene raggiunto molto più tardi, anche con lunghe liste di follow.",
+          pl: "Sprawdzanie live jest znacznie lżejsze: wszyscy obserwowani streamerzy Twitcha są odpytywani jednym zbiorczym żądaniem zamiast osobnego dla każdego kanału. Limit Twitcha zostaje osiągnięty znacznie później, nawet przy długich listach obserwowanych.",
+          tr: "Canlı yayın kontrolü çok daha hafif: Takip edilen tüm Twitch yayıncıları, kanal başına bir istek yerine tek bir gruplu istekle sorgulanıyor. Twitch'in limitine çok daha geç ulaşılıyor, uzun takip listelerinde bile.",
+          ru: "Проверка трансляций стала значительно легче: все отслеживаемые стримеры Twitch опрашиваются одним групповым запросом вместо отдельного на каждый канал. Лимит Twitch достигается гораздо позже, даже при длинных списках отслеживания.",
+          ja: "配信チェックが大幅に軽量化：フォロー中のすべての Twitch ストリーマーを、チャンネルごとの個別リクエストではなく1つのまとめたリクエストで確認します。フォローリストが長くても Twitch のレート制限に達しにくくなりました。",
+          ko: "라이브 확인이 훨씬 가벼워졌습니다: 팔로우한 모든 Twitch 스트리머를 채널별 요청 대신 하나의 묶음 요청으로 확인합니다. 팔로우 목록이 길어도 Twitch rate limit에 훨씬 덜 닿습니다."
+        }
+      }
+    ]
+  },
+  {
     version: "26.9.19",
     date: "2026-09-16",
     title: {
