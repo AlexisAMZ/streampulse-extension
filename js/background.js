@@ -1718,6 +1718,12 @@ class NotificationSystem {
     });
   }
 
+  // Chaque clic sur « Tester une notification » fait tourner un compteur :
+  // 1er clic = live, 2e = changement de categorie, 3e = changement de titre.
+  // Permet de verifier le pipeline complet des trois alertes sans attendre
+  // qu'un streamer change reellement de jeu ou de titre.
+  static _testStep = 0;
+
   static async sendTest(preferences = DEFAULT_PREFERENCES) {
     if (preferences.liveNotifications === false) {
       throw new Error(
@@ -1729,14 +1735,52 @@ class NotificationSystem {
     }
 
     const lang = normalizeLanguage(preferences?.language);
+    const step = this._testStep % 3;
+    this._testStep += 1;
 
-    await NotificationCenter.show({
-      title: translate(lang, "common.appName"),
-      message: translate(lang, "background.notifications.testSimpleMessage"),
-      requireInteraction: true,
-      priority: 2,
-      playSound: preferences?.soundsEnabled !== false,
-    });
+    if (step === 0) {
+      await NotificationCenter.show({
+        title: translate(lang, "common.appName"),
+        message: translate(lang, "background.notifications.testSimpleMessage"),
+        requireInteraction: true,
+        priority: 2,
+        playSound: preferences?.soundsEnabled !== false,
+      });
+      return;
+    }
+
+    // Bypass volontaire des preferences : l'objectif du bouton est de montrer
+    // a quoi ressemble chaque type d'alerte, meme si elle est desactivee.
+    const forcedPrefs = {
+      ...preferences,
+      liveNotifications: true,
+      gameNotifications: true,
+      titleNotifications: true,
+    };
+    const fakeStreamer = {
+      id: "test",
+      platform: "twitch",
+      handle: "test",
+      displayName: translate(lang, "common.appName"),
+      notificationsEnabled: true,
+      gameNotificationsEnabled: true,
+      titleNotificationsEnabled: true,
+    };
+    if (step === 1) {
+      await this.notifyGameChange(
+        fakeStreamer,
+        translate(lang, "background.notifications.unknownCategory"),
+        translate(lang, "background.notifications.newCategory"),
+        forcedPrefs
+      );
+    } else {
+      await this.notifyTitleChange(
+        fakeStreamer,
+        "",
+        translate(lang, "background.notifications.testTitleMessage"),
+        forcedPrefs
+      );
+    }
   }
 }
 
@@ -2130,6 +2174,26 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
         );
       } else {
         const gameNotificationsEnabled = streamer.gameNotificationsEnabled !== false;
+        // Journal de diagnostic : un changement de jeu/titre sans alerte est
+        // invisible pour l'utilisateur. Le SW console (chrome://extensions →
+        // inspect) dit alors exactement quel garde a bloque l'envoi.
+        if (previousLiveState.isLive && nextLiveState.isLive && previousLiveState.game !== nextLiveState.game) {
+          console.info("[SP] changement de categorie detecte:", streamer.handle, {
+            prefGame: preferences.gameNotifications,
+            prefLive: preferences.liveNotifications,
+            streamerToggle: streamer.gameNotificationsEnabled,
+          });
+        }
+        if (previousLiveState.isLive && nextLiveState.isLive && previousLiveState.title !== nextLiveState.title) {
+          console.info("[SP] changement de titre detecte:", streamer.handle, {
+            prefTitle: preferences.titleNotifications,
+            prefLive: preferences.liveNotifications,
+            streamerToggle: streamer.titleNotificationsEnabled,
+            sessionIdentique:
+              !previousLiveState.sessionId || !nextLiveState.sessionId ||
+              previousLiveState.sessionId === nextLiveState.sessionId,
+          });
+        }
         const shouldNotifyGame =
           preferences.gameNotifications &&
           gameNotificationsEnabled &&
