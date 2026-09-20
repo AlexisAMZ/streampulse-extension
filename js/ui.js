@@ -304,17 +304,18 @@ function alertToggle(className, streamer, alert, callbacks, withLabel) {
   return node;
 }
 
-// --- Kick en vidéo sur la scène : embed muet plein cadre après un court
-// --- survol, libéré dès qu'on sort (l'iframe Kick ne fournit pas de capture
-// --- statique exploitable, c'est le seul aperçu réel possible).
-function mountStageVideo(stage, media, streamer, onOpen) {
+// --- Lecteur live muet sur la scène (Kick et YouTube) : embed plein cadre
+// --- dès l'affichage du streamer. Kick ne fournit plus de capture
+// --- exploitable et YouTube ne rafraîchit pas sa vignette : l'iframe est le
+// --- seul aperçu réellement « en direct ».
+function mountStageVideo(stage, media, frameSrc, frameLabel, onOpen) {
   const wrap = el("div", "hover-player-wrap");
   const frame = document.createElement("iframe");
   frame.allow = "autoplay; encrypted-media; picture-in-picture";
   frame.setAttribute("scrolling", "no");
   // Muet : la popup ne doit jamais émettre de son.
-  frame.src = `https://player.kick.com/${encodeURIComponent(streamer.handle)}?muted=true`;
-  frame.title = t("popup.labels.previewAltLive", { name: getDisplayLabel(streamer) });
+  frame.src = frameSrc;
+  frame.title = t("popup.labels.previewAltLive", { name: frameLabel });
   // Les iframes avalent les clics : une couche transparente garde le clic
   // « Regarder » qui ouvre le stream.
   const overlay = el("div", "embed-click-overlay");
@@ -363,11 +364,20 @@ export function renderStage(stage, media, feature, streamer, status, options, ca
       preblurAvatar(streamer.avatarUrl, image);
       image.hidden = false;
     });
-    // Kick n'expose plus de thumbnail via son API : le lecteur live muet est
-    // monté directement, plein cadre, sans attendre de survol. Twitch garde
-    // sa capture (disponible publiquement).
+    // Kick n'expose plus de thumbnail exploitable : lecteur live muet monté
+    // directement, plein cadre, sans attendre de survol. Twitch garde sa
+    // capture (disponible publiquement). YouTube reste sur vignette : son
+    // lecteur refuse de se charger depuis une page d'extension (erreur 153,
+    // origine non web) — mais la vignette d'un stream est rafraîchie côté
+    // YouTube, donc le cache-buster du background la rend quasi live.
     if (platformId === "kick" && streamer.handle) {
-      mountStageVideo(stage, media, streamer, open);
+      mountStageVideo(
+        stage,
+        media,
+        `https://player.kick.com/${encodeURIComponent(streamer.handle)}?muted=true`,
+        label,
+        open
+      );
     }
   }
 

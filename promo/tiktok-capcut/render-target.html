@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
+  <title>StreamPulse Toast Overlay Dark</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    html, body {
+      width: 1080px;
+      height: 1920px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: transparent !important;
+    }
+    .tiktok-canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 1080px; height: 1920px;
+      transform: none !important;
+      background: transparent !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="tiktok-canvas mode-transparent auto-animate-slides" id="canvas-target">
+    
+    <div class="compact-toast-wrapper pos-bottom" id="toast-wrapper">
+      <div class="dynamic-toast">
+        
+        <!-- 5 indicateurs de progression -->
+        <div class="toast-progress-bars">
+          <div class="progress-track track-1"><div class="progress-fill"></div></div>
+          <div class="progress-track track-2"><div class="progress-fill"></div></div>
+          <div class="progress-track track-3"><div class="progress-fill"></div></div>
+          <div class="progress-track track-4"><div class="progress-fill"></div></div>
+          <div class="progress-track track-5"><div class="progress-fill"></div></div>
+        </div>
+
+        <!-- Viewport des 5 slides -->
+        <div class="slides-viewport">
+          
+          <!-- SLIDE 1 : Hook Live anyme023 -->
+          <div class="toast-slide toast-slide-1 active">
+            <div class="slide-media-slot">
+              <img src="assets/anyme_avatar.png" alt="anyme023" class="slide-avatar-img">
+              <div class="slide-badge-plat">
+                <img src="assets/twitch.svg" alt="Twitch">
+              </div>
+            </div>
+            <div class="slide-text-col">
+              <div class="slide-top-tag">
+                <span class="eyebrow-pill pill-live">🔴 EN DIRECT SUR TWITCH</span>
+              </div>
+              <div class="slide-headline">anyme023 est en live !</div>
+              <div class="slide-sub">Ne rate plus aucun stream grâce à StreamPulse</div>
+            </div>
+            <div class="slide-cta-badge">
+              <div class="url-box">
+                <span>streampulse.fr</span>
+                <span class="url-arrow">↗</span>
+              </div>
+              <div class="bio-reminder">Lien en bio TikTok</div>
+            </div>
+          </div>
+
+          <!-- SLIDE 2 : Feature 1 - Alertes Instantanées -->
+          <div class="toast-slide toast-slide-2">
+            <div class="slide-media-slot">
+              <div class="feature-media-box box-violet">⚡</div>
+            </div>
+            <div class="slide-text-col">
+              <div class="slide-top-tag">
+                <span class="eyebrow-pill pill-violet">⚡ 0 SECONDE DE RETARD</span>
+              </div>
+              <div class="slide-headline">Alertes Lives Immédiates</div>
+              <div class="slide-sub">Notifié sur PC dès la 1ère seconde où il lance</div>
+            </div>
+            <div class="slide-cta-badge">
+              <div class="url-box">
+                <span>streampulse.fr</span>
+                <span class="url-arrow">↗</span>
+              </div>
+              <div class="bio-reminder">Gratuit Chrome & Firefox</div>
+            </div>
+          </div>
+
+          <!-- SLIDE 3 : Feature 2 - Drops Automatiques -->
+          <div class="toast-slide toast-slide-3">
+            <div class="slide-media-slot">
+              <div class="feature-media-box box-lcd">🎁</div>
+            </div>
+            <div class="slide-text-col">
+              <div class="slide-top-tag">
+                <span class="eyebrow-pill pill-lcd">🎁 AUTO-CLAIM REWARDS</span>
+              </div>
+              <div class="slide-headline">Drops Twitch Automatiques</div>
+              <div class="slide-sub">Récupère tes récompenses et skins sans y penser</div>
+            </div>
+            <div class="slide-cta-badge">
+              <div class="url-box">
+                <span>streampulse.fr</span>
+                <span class="url-arrow">↗</span>
+              </div>
+              <div class="bio-reminder">100% Automatisé</div>
+            </div>
+          </div>
+
+          <!-- SLIDE 4 : Feature 3 - Multi-Plateformes Twitch & Kick -->
+          <div class="toast-slide toast-slide-4">
+            <div class="slide-media-slot">
+              <div class="feature-media-box box-green">📊</div>
+            </div>
+            <div class="slide-text-col">
+              <div class="slide-top-tag">
+                <span class="eyebrow-pill pill-green">📊 MULTI-PLATEFORMES</span>
+              </div>
+              <div class="slide-headline">Twitch & Kick Réunis</div>
+              <div class="slide-sub">Tous tes streamers favoris au même endroit</div>
+            </div>
+            <div class="slide-cta-badge">
+              <div class="url-box">
+                <span>streampulse.fr</span>
+                <span class="url-arrow">↗</span>
+              </div>
+              <div class="bio-reminder">Lien en bio TikTok</div>
+            </div>
+          </div>
+
+          <!-- SLIDE 5 : Call to action & lien -->
+          <div class="toast-slide toast-slide-5">
+            <div class="slide-media-slot">
+              <div class="feature-media-box box-logo">
+                <img src="assets/logo.png" alt="StreamPulse">
+              </div>
+            </div>
+            <div class="slide-text-col">
+              <div class="slide-top-tag">
+                <span class="eyebrow-pill pill-violet">🚀 SANS INSCRIPTION · GRATUIT</span>
+              </div>
+              <div class="slide-headline">Télécharge StreamPulse</div>
+              <div class="slide-sub">Extension pour Chrome, Firefox & Edge</div>
+            </div>
+            <div class="slide-cta-badge">
+              <div class="url-box">
+                <span>streampulse.fr</span>
+                <span class="url-arrow">↗</span>
+              </div>
+              <div class="bio-reminder">Tape le lien ou go bio</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

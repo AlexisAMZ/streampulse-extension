@@ -23,7 +23,7 @@ Les panneaux injectés (topbar, drawer de réglages, prédictions, badge) resten
 Les variables injectées sont préfixées `--sp-*` (css/inject/twitch-ui.css) pour ne jamais entrer en collision avec celles de l'hôte.
 
 ### Twitch et Kick ne sont pas la marque
-`#9146FF` et `#53FC18` identifient les plateformes d'un streamer ; la couleur d'accent de StreamPulse vit dans `css/tokens.css` (`--violet`, 5 palettes). Les hexadécimaux de plateforme n'apparaissent que comme anneaux/étiquettes d'identification.
+`#9146FF`, `#53FC18` et `#FF0000` (YouTube) identifient les plateformes d'un streamer ; la couleur d'accent de StreamPulse vit dans `css/tokens.css` (`--violet`, 5 palettes). Les hexadécimaux de plateforme n'apparaissent que comme anneaux/étiquettes d'identification.
 
 ### Les cosmétiques Plus sont des fonctionnalités
 Textes dégradés (`sp-paint`), glows, bounce et flicker des badges de tchat sont des effets **choisis et payés par l'utilisateur Plus** pour son propre badge : ce sont des features, pas des anti-patterns de design. Ils sont dupliqués volontairement entre `css/inject/twitch-badge.css` (rendu réel) et l'aperçu de `css/popup.css` (préview popup) — garder les deux en synchro à chaque modification.
@@ -31,8 +31,8 @@ Textes dégradés (`sp-paint`), glows, bounce et flicker des badges de tchat son
 ### Mouvement
 `prefers-reduced-motion` est honoré dans chaque feuille de style, y compris injectée. Les animations d'interface (non cosmetiques) utilisent `--ease-out`, jamais de rebond.
 
-### Aperçu des lives : captures pour Twitch, lecteur muet pour Kick
-Sur la scène de la popup, Twitch affiche sa thumbnail (capture), disponible publiquement. Kick n'expose plus aucune thumbnail par son API (champ `thumbnail: null`, fichiers 403) : pour Kick uniquement, le lecteur `player.kick.com` **muet** (`muted=true`) est monté directement plein cadre dès l'affichage du streamer — pas de survol requis, pas de son. Jamais de vidéo dans les cartes de la bande ni dans la liste. En cas d'absence d'image, le fond est l'avatar pré-flouté.
+### Aperçu des lives : capture pour Twitch, lecteur muet pour Kick, vignette rafraîchie pour YouTube
+Sur la scène de la popup, Twitch affiche sa thumbnail (capture), disponible publiquement. Kick n'expose plus aucune thumbnail par son API (champ `thumbnail: null`, fichiers 403) : pour Kick uniquement, le lecteur `player.kick.com` **muet** (`muted=true`) est monté directement plein cadre dès l'affichage du streamer — pas de survol requis, pas de son. YouTube reste sur vignette : son lecteur refuse de se charger depuis une page d'extension (erreur 153, origine non web, testé avec et sans `youtube-nocookie`/`origin`/`widget_referrer`) ; sa vignette de stream étant rafraîchie côté YouTube, le cache-buster par minute du background la rend quasi live. Jamais de vidéo dans les cartes de la bande ni dans la liste. En cas d'absence d'image, le fond est l'avatar pré-flouté.
 
 ### Suppression accessible depuis le tableau de bord
 Chaque carte de live porte sa corbeille (au survol, comme l'épingle) avec confirmation inline sur la carte (`mini-confirm`). La liste complète (sheet) garde sa corbeille par ligne. Ne jamais supprimer sans confirmation.

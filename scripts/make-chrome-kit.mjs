@@ -37,8 +37,7 @@ const OUT = path.join(process.env.STREAMPULSE_ZIP_DIR || path.join(os.homedir(),
 const LANGS = [
   ["en", "English"], ["fr", "Français"], ["es", "Español"], ["pt-BR", "Português (Brasil)"],
   ["de", "Deutsch"], ["it", "Italiano"], ["pl", "Polski"], ["tr", "Türkçe"], ["ru", "Русский"],
-  ["ja", "日本語"], ["ko", "한국어"], ["id", "Bahasa Indonesia"], ["nl", "Nederlands"],
-  ["sv", "Svenska"], ["cs", "Čeština"],
+  ["ja", "日本語"], ["ko", "한국어"],
 ];
 const FONTS = [
   "unbounded-latin-10.woff2", "unbounded-latin-ext-9.woff2", "unbounded-cyrillic-8.woff2",

@@ -42,10 +42,6 @@ export const LANG_DIRS = {
   ru: "RU",
   ja: "JA",
   ko: "KO",
-  id: "ID",
-  nl: "NL",
-  sv: "SV",
-  cs: "CS",
 };
 
 /** Locale BCP-47 utilisée pour le formatage des nombres dans le popup de démo. */
@@ -61,10 +57,6 @@ export const LOCALES = {
   ru: "ru-RU",
   ja: "ja-JP",
   ko: "ko-KR",
-  id: "id-ID",
-  nl: "nl-NL",
-  sv: "sv-SE",
-  cs: "cs-CZ",
 };
 
 /** Dimensions imposées par le Chrome Web Store. */

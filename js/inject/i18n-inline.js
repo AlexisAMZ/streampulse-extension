@@ -72,6 +72,8 @@
     "player": {
       "skipToLive": "Rattraper le direct",
       "holdToFastForward": "Maintenir pour avance x2",
+      "volumeBoostLabel": "Amplifier le volume",
+      "volumeBoostHint": "Clic : marche arrêt · molette ou flèches : régler, jusqu'à 200 %",
       "pictureInPicture": "Picture-in-Picture",
       "clipDownload": "Télécharger le clip (MP4)",
       "clipDownloading": "Téléchargement du clip…",
@@ -191,6 +193,8 @@
     "player": {
       "skipToLive": "Skip to live",
       "holdToFastForward": "Hold to fast-forward x2",
+      "volumeBoostLabel": "Boost the volume",
+      "volumeBoostHint": "Click: on/off · scroll or arrows: adjust, up to 200%",
       "pictureInPicture": "Picture-in-Picture",
       "clipDownload": "Download clip (MP4)",
       "clipDownloading": "Downloading clip…",
@@ -310,6 +314,8 @@
     "player": {
       "skipToLive": "Volver al directo",
       "holdToFastForward": "Mantén pulsado para avanzar x2",
+      "volumeBoostLabel": "Amplificar el volumen",
+      "volumeBoostHint": "Clic: activar o desactivar · rueda o flechas: ajustar, hasta 200 %",
       "pictureInPicture": "Imagen en imagen",
       "clipDownload": "Descargar clip (MP4)",
       "clipDownloading": "Descargando clip…",
@@ -429,6 +435,8 @@
     "player": {
       "skipToLive": "Voltar ao ao vivo",
       "holdToFastForward": "Segure para avançar x2",
+      "volumeBoostLabel": "Amplificar o volume",
+      "volumeBoostHint": "Clique: liga ou desliga · roda ou setas: ajustar, até 200%",
       "pictureInPicture": "Picture-in-Picture",
       "clipDownload": "Baixar clipe (MP4)",
       "clipDownloading": "Baixando clipe…",
@@ -548,6 +556,8 @@
     "player": {
       "skipToLive": "Weiter zum Leben",
       "holdToFastForward": "Halten Sie die Taste gedrückt, um x2",
+      "volumeBoostLabel": "Lautstärke verstärken",
+      "volumeBoostHint": "Klick: ein oder aus · Scrollen oder Pfeile: bis 200 %",
       "pictureInPicture": "Bild-in-Bild",
       "clipDownload": "Clip herunterladen (MP4)",
       "clipDownloading": "Clip wird heruntergeladen…",
@@ -667,6 +677,8 @@
     "player": {
       "skipToLive": "Passa alla diretta",
       "holdToFastForward": "Tieni premuto per avanzare velocemente x2",
+      "volumeBoostLabel": "Amplifica il volume",
+      "volumeBoostHint": "Clic: attiva o disattiva · rotella o frecce: regola, fino al 200%",
       "pictureInPicture": "Picture-in-Picture",
       "clipDownload": "Scarica clip (MP4)",
       "clipDownloading": "Download della clip…",
@@ -786,6 +798,8 @@
     "player": {
       "skipToLive": "Przejdź do transmisji na żywo",
       "holdToFastForward": "Przytrzymaj, aby przewinąć do przodu x2",
+      "volumeBoostLabel": "Wzmocnij głośność",
+      "volumeBoostHint": "Klik: włącz lub wyłącz · kółko lub strzałki: do 200%",
       "pictureInPicture": "Obraz w obrazie",
       "clipDownload": "Pobierz klip (MP4)",
       "clipDownloading": "Pobieranie klipu…",
@@ -905,6 +919,8 @@
     "player": {
       "skipToLive": "Canlı yayına atla",
       "holdToFastForward": "Hızlı ileri sarma için basılı tutun x2",
+      "volumeBoostLabel": "Sesi güçlendir",
+      "volumeBoostHint": "Tık: aç veya kapat · tekerlek veya oklar: %200'e kadar ayarla",
       "pictureInPicture": "Resim içinde resim",
       "clipDownload": "Klibi indir (MP4)",
       "clipDownloading": "Klip indiriliyor…",
@@ -1024,6 +1040,8 @@
     "player": {
       "skipToLive": "Перейти к трансляции",
       "holdToFastForward": "Удерживайте для ускоренного просмотра в 2 раза",
+      "volumeBoostLabel": "Усилить громкость",
+      "volumeBoostHint": "Клик: вкл или выкл · колесо или стрелки: до 200 %",
       "pictureInPicture": "Картинка в картинке",
       "clipDownload": "Скачать клип (MP4)",
       "clipDownloading": "Скачивание клипа…",
@@ -1143,6 +1161,8 @@
     "player": {
       "skipToLive": "ライブへスキップ",
       "holdToFastForward": "長押しで早送り（2倍速）",
+      "volumeBoostLabel": "音量をブースト",
+      "volumeBoostHint": "クリック：オン/オフ · ホイールや矢印：最大200%まで調整",
       "pictureInPicture": "ピクチャー・イン・ピクチャー",
       "clipDownload": "クリップをダウンロード (MP4)",
       "clipDownloading": "クリップをダウンロード中…",
@@ -1262,6 +1282,8 @@
     "player": {
       "skipToLive": "라이브로 건너뛰기",
       "holdToFastForward": "길게 누르면 2배속으로 빨리 감기",
+      "volumeBoostLabel": "음량 증폭",
+      "volumeBoostHint": "클릭: 켜기/끄기 · 휠 또는 화살표: 최대 200%까지 조절",
       "pictureInPicture": "PIP 모드",
       "clipDownload": "클립 다운로드 (MP4)",
       "clipDownloading": "클립 다운로드 중…",

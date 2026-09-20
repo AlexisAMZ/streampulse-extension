@@ -1,8 +1,8 @@
 {
   "appName": {
-    "message": "StreamPulse: Twitch & Kick 通知・ポイント・ドロップ"
+    "message": "StreamPulse: Twitch & Kick & YouTube 通知・ポイント・ドロップ"
   },
   "appDesc": {
-    "message": "TwitchとKickの自動チャンネルポイント・ドロップ獲得、ライブ通知、見逃し配信の履歴、ホバープレビュー、視聴時間、チャットフィルター。無料・アカウント不要・広告なし。"
+    "message": "Twitch・Kick・YouTubeの自動チャンネルポイント・ドロップ獲得、ライブ通知、見逃し配信の履歴、ホバープレビュー、チャットフィルター。無料・アカウント不要。"
   }
 }

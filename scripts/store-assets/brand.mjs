@@ -25,6 +25,7 @@ export const COLORS = {
   lcd: "#c6d4a0",
   lcdInk: "#1c2615",
   kick: "#53fc18",
+  youtube: "#ff0000",
 };
 
 const font = (name) => pathToFileURL(path.join(ROOT, "font", name)).href;

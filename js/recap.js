@@ -158,6 +158,15 @@ function draw() {
   canvas.height = format.height;
   canvas.dataset.format = currentFormat;
   format.draw(canvas.getContext("2d"), currentRecap, currentAssets);
+  // Équivalent textuel du canvas pour les lecteurs d'écran (role="img").
+  const topChannel = currentRecap.top?.[0]?.channel;
+  canvas.setAttribute(
+    "aria-label",
+    t("recap.canvasSummary", {
+      time: formatDuration(currentRecap.totalSeconds),
+      top: topChannel || t("recap.emptyTitle"),
+    })
+  );
 }
 
 async function renderPeriod() {

@@ -7,6 +7,7 @@
   right: 20px;
   z-index: 9999;
   width: 290px;
+  max-width: calc(100vw - 40px);
   overflow: hidden;
   border-radius: 16px;
   background: #0b0c22;

@@ -136,9 +136,9 @@ export function loadListingCopy() {
  * affichée dans l'onboarding de l'extension.
  */
 const TAGLINE_FIXES = {
-  de: "CHROME-ERWEITERUNG · TWITCH · KICK",
-  it: "ESTENSIONE CHROME · TWITCH · KICK",
-  pl: "ROZSZERZENIE CHROME · TWITCH · KICK",
+  de: "CHROME-ERWEITERUNG · TWITCH · KICK · YOUTUBE",
+  it: "ESTENSIONE CHROME · TWITCH · KICK · YOUTUBE",
+  pl: "ROZSZERZENIE CHROME · TWITCH · KICK · YOUTUBE",
 };
 
 export function resolveTagline(translated, lang) {

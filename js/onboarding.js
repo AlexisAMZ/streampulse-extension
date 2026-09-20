@@ -112,6 +112,9 @@ function updateStepper() {
   pills.forEach((pill, i) => {
     pill.classList.toggle("active", i === currentStep);
     pill.classList.toggle("completed", i < currentStep);
+    // Seules les étapes déjà traversées sont cliquables : les futures restent
+    // dans le flux (le wizard est linéaire) mais jamais atteignables au clavier.
+    pill.disabled = i > currentStep;
     if (i === currentStep) pill.setAttribute("aria-current", "step");
     else pill.removeAttribute("aria-current");
   });
@@ -229,8 +232,10 @@ function scheduleProfileLookup(rawValue) {
     } else {
       userProfile = { handle, displayName: handle, avatarUrl: "" };
       setProfileAvatarImage("");
-      setAvatarStatus("error");
-      setHintState("error", t("onboarding.profileHintNotFound"));
+      /* Pas de compte Twitch (ou pseudo inconnu) : ce n'est pas une erreur.
+         On garde le pseudo saisi tel quel, en état neutre. */
+      setAvatarStatus("idle");
+      setHintState("idle", t("onboarding.profileHintKept"));
     }
     renderProfileFromState();
   }, 450);

@@ -248,6 +248,9 @@
       var toast = document.createElement("div");
       toast.id = "sp-qf-toast";
       toast.className = "sp-qf-toast";
+      // Le toast confirme une action : il doit être annoncé aux lecteurs d'écran.
+      toast.setAttribute("role", "status");
+      toast.setAttribute("aria-live", "polite");
 
       var logo = document.createElement("img");
       logo.className = "sp-qf-toast-logo";

@@ -11,6 +11,29 @@ function sanitizeSimpleHandle(value) {
   return cleaned.replace(SIMPLE_HANDLE_CHARS, "").toLowerCase();
 }
 
+/* YouTube : handles @xxx mais aussi IDs de chaîne "UC…" (sensible à la casse
+   pour l'ID, insensible pour le handle). Les deux passent par le même jeu de
+   caractères ; la casse n'est repliée que si ce n'est pas un ID de chaîne. */
+const YOUTUBE_CHANNEL_ID = /^UC[A-Za-z0-9_-]{10,32}$/;
+
+function sanitizeYoutubeHandle(value) {
+  const raw = trimValue(value);
+  if (!raw) return "";
+  // Une URL YouTube collée ? On en extrait le handle (@x) ou l'ID de chaîne
+  // (youtube.com/channel/UC…, youtube.com/c/UC…). Sinon traitement simple.
+  const fromUrl = raw.match(
+    /youtube\.com\/(?:c\/|channel\/)?(@[A-Za-z0-9._-]{3,30}|UC[A-Za-z0-9_-]{10,32})/i
+  );
+  const token = fromUrl ? fromUrl[1] : raw;
+  const cleaned = token.replace(/^@+/, "").replace(SIMPLE_HANDLE_CHARS, "");
+  if (!cleaned) return "";
+  return YOUTUBE_CHANNEL_ID.test(cleaned) ? cleaned : cleaned.toLowerCase();
+}
+
+export function isYoutubeChannelId(handle) {
+  return YOUTUBE_CHANNEL_ID.test(trimValue(handle));
+}
+
 function sanitizeKickHandle(value) {
   return sanitizeSimpleHandle(value);
 }
@@ -52,7 +75,7 @@ export const PLATFORM_DEFINITIONS = {
     labelKey: "platforms.kick",
     shortLabelKey: "platformsShort.kick",
     icon: "images/social/Kick.png",
-    color: "#52FF3A",
+    color: "#53fc18",
     inputPrefix: "@",
     placeholderKey: {
       popup: "popup.placeholders.kick",
@@ -68,6 +91,33 @@ export const PLATFORM_DEFINITIONS = {
     buildUrl(handle) {
       const cleaned = sanitizeKickHandle(handle);
       return cleaned ? `https://kick.com/${cleaned}` : "https://kick.com/";
+    },
+  },
+  youtube: {
+    id: "youtube",
+    labelKey: "platforms.youtube",
+    shortLabelKey: "platformsShort.youtube",
+    icon: "images/social/youtube.png",
+    color: "#FF0000",
+    inputPrefix: "@",
+    placeholderKey: {
+      popup: "popup.placeholders.youtube",
+      onboarding: "onboarding.placeholders.youtube",
+    },
+    supportsLiveStatus: true,
+    sanitizeHandle: sanitizeYoutubeHandle,
+    sanitizeForComparison: sanitizeSimpleForComparison,
+    formatHandle(handle) {
+      const cleaned = sanitizeYoutubeHandle(handle);
+      if (!cleaned) return "";
+      return isYoutubeChannelId(cleaned) ? cleaned : `@${cleaned}`;
+    },
+    buildUrl(handle) {
+      const cleaned = sanitizeYoutubeHandle(handle);
+      if (!cleaned) return "https://www.youtube.com/";
+      return isYoutubeChannelId(cleaned)
+        ? `https://www.youtube.com/channel/${cleaned}`
+        : `https://www.youtube.com/@${cleaned}`;
     },
   },
 };

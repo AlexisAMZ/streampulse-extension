@@ -3,12 +3,13 @@
   "default_locale": "en",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "26.9.20",
+  "version": "26.9.21",
   "permissions": [
     "storage",
     "alarms",
     "notifications",
-    "offscreen"
+    "offscreen",
+    "scripting"
   ],
   "host_permissions": [
     "https://api.twitch.tv/*",
@@ -17,7 +18,8 @@
     "https://www.twitch.tv/*",
     "https://clips.twitch.tv/*",
     "https://kick.com/*",
-    "https://*.kick.com/*"
+    "https://*.kick.com/*",
+    "https://www.youtube.com/*"
   ],
   "author": "AlexisAMZ",
   "background": {
@@ -78,7 +80,6 @@
       ],
       "all_frames": false,
       "js": [
-        "js/vendor/hls.light.min.js",
         "js/previews/sources.js",
         "js/previews/card.js",
         "js/previews/targets-twitch.js",

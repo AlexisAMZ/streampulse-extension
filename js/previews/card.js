@@ -262,7 +262,23 @@
         });
     }
 
-    function startPlayback(variantUrl, token, opts) {
+    // hls.js n'est plus déclaré dans le manifest (354 Ko sur chaque page pour
+    // rien) : le background l'injecte dans le monde isolé, seulement au premier
+    // démarrage réel d'un aperçu. En cas d'échec, on retombe sur le lecteur
+    // natif (Safari-like) ou l'image.
+    function ensureHls() {
+      if (NS.Hls) return Promise.resolve(NS.Hls);
+      try {
+        return chrome.runtime
+          .sendMessage({ type: "loadPreviewsHls" })
+          .then((res) => (res && !res.error && NS.Hls) || null)
+          .catch(() => null);
+      } catch (_e) {
+        return Promise.resolve(null);
+      }
+    }
+
+    async function startPlayback(variantUrl, token, opts) {
       if (token !== playbackToken || !videoEl) return;
 
       videoEl.muted = !(opts && opts.audio === true);
@@ -279,7 +295,9 @@
       };
       videoEl.addEventListener("playing", onPlaying, { once: true });
 
-      const Hls = NS.Hls;
+      const Hls = await ensureHls();
+      // Le survol a pu prendre fin pendant le chargement du vendor.
+      if (token !== playbackToken || !videoEl) return;
       const canNative =
         typeof videoEl.canPlayType === "function" &&
         videoEl.canPlayType("application/vnd.apple.mpegurl") !== "";

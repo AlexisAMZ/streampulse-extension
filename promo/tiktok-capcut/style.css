@@ -1,0 +1,1284 @@
+/* StreamPulse TikTok / CapCut Promo Studio
+   Format natif 1080x1920 (9:16) pour TikTok, CapCut, Reels et Shorts.
+   Direction Artistique StreamPulse : Dark space, néon violet, accents LCD, Unbounded + Onest. */
+
+@font-face {
+  font-family: "Unbounded";
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url("../../font/unbounded-latin-10.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Onest";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../../font/onest-latin-6.woff2") format("woff2");
+}
+
+:root {
+  --display: "Unbounded", system-ui, sans-serif;
+  --body: "Onest", system-ui, -apple-system, sans-serif;
+  
+  --bg-dark: #070817;
+  --bg-surface: #0e1029;
+  --bg-card: rgba(21, 23, 61, 0.72);
+  --bg-card-hover: rgba(30, 33, 80, 0.85);
+  
+  --violet: #9146ff;
+  --violet-strong: #7b35e8;
+  --violet-glow: rgba(145, 70, 255, 0.6);
+  --violet-soft: rgba(145, 70, 255, 0.18);
+  --violet-line: rgba(181, 139, 255, 0.45);
+  --violet-text: #c4a3ff;
+  
+  --lcd: #c6d4a0;
+  --lcd-glow: rgba(198, 212, 160, 0.5);
+  --lcd-soft: rgba(198, 212, 160, 0.15);
+  --lcd-line: rgba(198, 212, 160, 0.35);
+  
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.2);
+  
+  --text-main: #ffffff;
+  --text-sub: rgba(244, 242, 247, 0.78);
+  --text-dim: rgba(244, 242, 247, 0.5);
+  
+  --live-red: #ff3b30;
+  --live-red-glow: rgba(255, 59, 48, 0.6);
+  
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+body {
+  background: #05060f;
+  color: var(--text-main);
+  font-family: var(--body);
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Application Layout */
+.app-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Sidebar Controls */
+.controls-sidebar {
+  width: 380px;
+  background: #0a0b1c;
+  border-right: 1px solid var(--line);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.brand-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand-header img {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  box-shadow: 0 0 16px var(--violet-glow);
+}
+
+.brand-header .title {
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff 40%, var(--violet-text));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-header .badge-tag {
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  background: var(--violet-soft);
+  color: var(--violet-text);
+  border: 1px solid var(--violet-line);
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.control-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-sub);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.control-input,
+.control-select {
+  background: #12142e;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  color: #fff;
+  padding: 10px 12px;
+  font-family: var(--body);
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.control-input:focus,
+.control-select:focus {
+  border-color: var(--violet);
+  box-shadow: 0 0 0 2px var(--violet-soft);
+}
+
+.mode-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.mode-btn {
+  background: #12142e;
+  border: 1px solid var(--line);
+  color: var(--text-sub);
+  border-radius: 8px;
+  padding: 10px 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.mode-btn:hover {
+  background: #1a1d42;
+  border-color: var(--line-strong);
+  color: #fff;
+}
+
+.mode-btn.active {
+  background: var(--violet-soft);
+  border-color: var(--violet);
+  color: #fff;
+  box-shadow: 0 0 14px rgba(145, 70, 255, 0.25);
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #12142e;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+.toggle-label {
+  font-size: 0.85rem;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #24274d;
+  transition: .3s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--violet);
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+/* Action Buttons */
+.action-buttons {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--violet) 0%, var(--violet-strong) 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-family: var(--display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px var(--violet-glow);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(145, 70, 255, 0.8);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-secondary {
+  background: #141738;
+  color: var(--text-main);
+  border: 1px solid var(--violet-line);
+  border-radius: 10px;
+  padding: 12px;
+  font-family: var(--body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #1c204d;
+  border-color: var(--violet);
+}
+
+/* Preview Canvas Area */
+.preview-stage {
+  flex: 1;
+  background: #03040a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 20px;
+  overflow: hidden;
+}
+
+/* Smartphone Mockup Frame */
+.phone-viewport {
+  position: relative;
+  width: 405px; /* 37.5% de 1080 */
+  height: 720px; /* 37.5% de 1920 */
+  border-radius: 36px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.15), 0 0 40px var(--violet-soft);
+  background: #000;
+  transition: all 0.3s var(--ease-out);
+}
+
+/* Full resolution 1080x1920 actual stage inside, scaled via transform */
+.tiktok-canvas {
+  width: 1080px;
+  height: 1920px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  transform: scale(0.375); /* 405 / 1080 */
+  overflow: hidden;
+  background: var(--bg-dark);
+}
+
+/* Modes Styles */
+.tiktok-canvas.mode-fullscreen {
+  background: radial-gradient(circle at 50% 25%, #181b4b 0%, #080a1c 65%, #04050d 100%);
+}
+
+.tiktok-canvas.mode-greenscreen {
+  background: #00ff00 !important;
+}
+
+.tiktok-canvas.mode-transparent {
+  background: transparent !important;
+}
+
+.tiktok-canvas.mode-overlay {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+/* TikTok Safe Area Overlay Guides */
+.tiktok-safe-area {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 999;
+  display: none;
+}
+
+.tiktok-safe-area.active {
+  display: block;
+}
+
+.safe-zone-top {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 220px;
+  border-bottom: 2px dashed rgba(255, 255, 255, 0.25);
+  background: rgba(255, 0, 0, 0.05);
+}
+
+.safe-zone-top::after {
+  content: "Zone En-tête TikTok (Recherche, Onglets)";
+  position: absolute;
+  bottom: 8px; left: 24px;
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 600;
+}
+
+.safe-zone-bottom {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 480px;
+  border-top: 2px dashed rgba(255, 255, 255, 0.25);
+  background: rgba(255, 0, 0, 0.05);
+}
+
+.safe-zone-bottom::after {
+  content: "Zone Description & Son TikTok";
+  position: absolute;
+  top: 12px; left: 24px;
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 600;
+}
+
+.safe-zone-right {
+  position: absolute;
+  top: 220px; right: 0; bottom: 480px;
+  width: 170px;
+  border-left: 2px dashed rgba(255, 255, 255, 0.25);
+  background: rgba(255, 0, 0, 0.05);
+}
+
+.safe-zone-right::after {
+  content: "Boutons Likes / Partage";
+  position: absolute;
+  top: 50%; right: 10px;
+  transform: translateY(-50%) rotate(90deg);
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.4);
+  white-space: nowrap;
+}
+
+/* ========================================================
+   ANIMATED PROMO ELEMENTS (1080x1920 Native Space)
+   ======================================================== */
+
+.ambient-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.glow-1 {
+  width: 800px;
+  height: 800px;
+  background: var(--violet-glow);
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: pulseGlow 6s ease-in-out infinite alternate;
+}
+
+.glow-2 {
+  width: 500px;
+  height: 500px;
+  background: rgba(83, 252, 24, 0.2);
+  bottom: 25%;
+  right: 5%;
+}
+
+.digital-grid {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+.promo-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 60px;
+  z-index: 2;
+}
+
+/* Notification Card */
+.notification-card {
+  width: 960px;
+  background: #0f112e;
+  border: 1px solid var(--violet-line);
+  border-radius: 32px;
+  padding: 36px 44px;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6);
+  position: relative;
+  overflow: hidden;
+  transform: translateY(0);
+}
+
+.avatar-container {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
+}
+
+.avatar-pulse-ring {
+  position: absolute;
+  top: -12px; left: -12px; right: -12px; bottom: -12px;
+  border-radius: 50%;
+  border: 3px solid var(--violet);
+  animation: ringPulse 2s infinite ease-out;
+  opacity: 0.8;
+}
+
+.avatar-pulse-ring-2 {
+  position: absolute;
+  top: -24px; left: -24px; right: -24px; bottom: -24px;
+  border-radius: 50%;
+  border: 2px solid var(--live-red);
+  animation: ringPulse 2s infinite ease-out 0.6s;
+  opacity: 0;
+}
+
+.streamer-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  object-fit: cover;
+  box-shadow: 0 0 24px var(--violet-glow);
+  position: relative;
+  z-index: 2;
+}
+
+.platform-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  background: #000;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.platform-badge img {
+  width: 24px;
+  height: 24px;
+}
+
+.notif-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.notif-top-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.live-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 59, 48, 0.18);
+  border: 1.5px solid var(--live-red);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 800;
+  color: #ff5e55;
+  letter-spacing: 0.05em;
+}
+
+.live-dot {
+  width: 10px;
+  height: 10px;
+  background: var(--live-red);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--live-red);
+  animation: blink 1.2s infinite;
+}
+
+.app-brand-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--violet-soft);
+  border: 1.5px solid var(--violet-line);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--violet-text);
+}
+
+.app-brand-pill img {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+.notif-title {
+  font-family: var(--display);
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.notif-title .highlight {
+  color: #c4a3ff;
+  text-shadow: 0 0 16px var(--violet-glow);
+}
+
+.notif-subtitle {
+  font-size: 20px;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+/* Main Hook & Pitch Section */
+.pitch-section {
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.main-headline {
+  font-family: var(--display);
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.18;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin-bottom: 24px;
+  max-width: 920px;
+}
+
+.main-headline .brand-highlight {
+  color: var(--violet-text);
+}
+
+.main-headline .streamer-name {
+  color: var(--lcd);
+}
+
+/* Feature Badges Cards */
+.features-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 960px;
+  margin-top: 36px;
+}
+
+.feature-pill {
+  background: #111333;
+  border: 1px solid var(--line-strong);
+  border-radius: 20px;
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  transition: all 0.3s var(--ease-out);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.feature-pill:nth-child(1) { border-left: 4px solid var(--violet); }
+.feature-pill:nth-child(2) { border-left: 4px solid var(--lcd); }
+.feature-pill:nth-child(3) { border-left: 4px solid #53fc18; }
+
+.feature-icon-box {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.icon-box-violet {
+  background: var(--violet-soft);
+  color: var(--violet-text);
+  border: 1px solid var(--violet-line);
+  box-shadow: 0 0 20px rgba(145, 70, 255, 0.3);
+}
+
+.icon-box-lcd {
+  background: var(--lcd-soft);
+  color: var(--lcd);
+  border: 1px solid var(--lcd-line);
+  box-shadow: 0 0 20px rgba(198, 212, 160, 0.3);
+}
+
+.icon-box-green {
+  background: rgba(83, 252, 24, 0.15);
+  color: #53fc18;
+  border: 1px solid rgba(83, 252, 24, 0.35);
+  box-shadow: 0 0 20px rgba(83, 252, 24, 0.3);
+}
+
+.feature-texts {
+  text-align: left;
+}
+
+.feature-title {
+  font-family: var(--display);
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.feature-desc {
+  font-size: 19px;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+/* Call to Action Bar */
+.cta-container {
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  width: 960px;
+}
+
+.cta-button {
+  width: 100%;
+  background: linear-gradient(135deg, var(--violet) 0%, #6325d9 100%);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: 28px;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  box-shadow: 
+    0 20px 60px rgba(145, 70, 255, 0.5),
+    0 0 80px rgba(145, 70, 255, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.35);
+  animation: glowPulse 3s infinite alternate;
+}
+
+.cta-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.5);
+}
+
+.cta-text-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.cta-main-text {
+  font-family: var(--display);
+  font-size: 32px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+
+.cta-sub-text {
+  font-size: 19px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.stores-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.store-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-sub);
+}
+
+.store-item span.dot {
+  color: var(--violet);
+}
+
+.site-url-pill {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--lcd);
+  background: rgba(198, 212, 160, 0.12);
+  border: 1.5px solid var(--lcd-line);
+  padding: 8px 24px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px var(--lcd-soft);
+}
+
+/* ========================================================
+   KEYFRAMES & ANIMATIONS
+   ======================================================== */
+
+@keyframes ringPulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes pulseGlow {
+  0% { transform: translateX(-50%) scale(0.9); opacity: 0.5; }
+  100% { transform: translateX(-50%) scale(1.15); opacity: 0.75; }
+}
+
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 20px 60px rgba(145, 70, 255, 0.4), 0 0 50px rgba(145, 70, 255, 0.2);
+  }
+  100% {
+    box-shadow: 0 25px 80px rgba(145, 70, 255, 0.7), 0 0 90px rgba(145, 70, 255, 0.5);
+  }
+}
+
+.animate-in-card {
+  animation: enterCard 0.9s var(--ease-spring) forwards;
+}
+
+.animate-in-headline {
+  animation: enterHeadline 0.8s var(--ease-out) 0.3s forwards;
+  opacity: 0;
+}
+
+.animate-in-features {
+  animation: enterFeatures 0.8s var(--ease-out) 0.6s forwards;
+  opacity: 0;
+}
+
+.animate-in-cta {
+  animation: enterCTA 0.8s var(--ease-spring) 0.9s forwards;
+  opacity: 0;
+}
+
+@keyframes enterCard {
+  0% {
+    opacity: 0;
+    transform: translateY(-80px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes enterHeadline {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes enterFeatures {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes enterCTA {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ========================================================
+   COMPACT DYNAMIC TOAST WITH MORPHING FEATURES
+   ======================================================== */
+
+.compact-toast-wrapper {
+  position: absolute;
+  left: 50px;
+  right: 50px;
+  height: 240px;
+  z-index: 100;
+  transition: all 0.3s var(--ease-out);
+}
+
+/* Positionnement intelligent par rapport à l'interface TikTok */
+.pos-top {
+  top: 250px;
+  bottom: auto;
+}
+
+.pos-bottom {
+  bottom: 520px;
+  top: auto;
+}
+
+.pos-center {
+  top: 50%;
+  transform: translateY(-50%);
+  bottom: auto;
+}
+
+.dynamic-toast {
+  width: 100%;
+  height: 100%;
+  background: #0b0c22;
+  border: 2.5px solid #9146ff;
+  border-radius: 32px;
+  box-shadow: none !important; /* Aucun halo d'ombre pour un détourage Chroma Key parfait dans CapCut */
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Désactivation absolue de tout reflet sur fond vert */
+.mode-greenscreen .ambient-glow,
+.mode-greenscreen .digital-grid {
+  display: none !important;
+}
+
+/* 5 Indicateurs de progression en haut */
+.toast-progress-bars {
+  display: flex;
+  gap: 8px;
+  padding: 14px 24px 0 24px;
+  width: 100%;
+}
+
+.progress-track {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--violet);
+  border-radius: 4px;
+}
+
+/* Slides Container */
+.slides-viewport {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.toast-slide {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  padding: 12px 28px 20px 28px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+}
+
+.toast-slide.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Slide Icon / Media Area */
+.slide-media-slot {
+  width: 116px;
+  height: 116px;
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  object-fit: cover;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.slide-badge-plat {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 36px;
+  height: 36px;
+  background: #000;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-badge-plat img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Icons for Feature Slides */
+.feature-media-box {
+  width: 100%;
+  height: 100%;
+  border-radius: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.box-violet {
+  background: var(--violet-soft);
+  color: var(--violet-text);
+  border: 2px solid var(--violet-line);
+}
+
+.box-lcd {
+  background: var(--lcd-soft);
+  color: var(--lcd);
+  border: 2px solid var(--lcd-line);
+}
+
+.box-green {
+  background: rgba(83, 252, 24, 0.15);
+  color: #53fc18;
+  border: 2px solid rgba(83, 252, 24, 0.35);
+}
+
+.box-logo {
+  background: #15173d;
+  border: 2px solid var(--violet-line);
+  padding: 16px;
+}
+
+.box-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Slide Content */
+.slide-text-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.slide-top-tag {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.eyebrow-pill {
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 3px 12px;
+  border-radius: 12px;
+}
+
+.pill-live {
+  background: rgba(255, 59, 48, 0.2);
+  color: #ff5e55;
+  border: 1px solid var(--live-red);
+}
+
+.pill-violet {
+  background: var(--violet-soft);
+  color: var(--violet-text);
+  border: 1px solid var(--violet-line);
+}
+
+.pill-lcd {
+  background: var(--lcd-soft);
+  color: var(--lcd);
+  border: 1px solid var(--lcd-line);
+}
+
+.pill-green {
+  background: rgba(83, 252, 24, 0.15);
+  color: #53fc18;
+  border: 1px solid rgba(83, 252, 24, 0.35);
+}
+
+.slide-headline {
+  font-family: var(--display);
+  font-size: 28px;
+  font-weight: 900;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.slide-sub {
+  font-size: 19px;
+  color: var(--text-sub);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Action URL Badge (Crucial on TikTok: non-clickable reminder) */
+.slide-cta-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.url-box {
+  background: var(--violet-soft);
+  border: 1.5px solid var(--violet-line);
+  padding: 8px 18px;
+  border-radius: 14px;
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.url-box .url-arrow {
+  color: var(--lcd);
+}
+
+.bio-reminder {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--lcd);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Animations CSS automatiques pour le mode headless / standalone */
+.auto-animate-slides .toast-slide-1 { animation: slideTimeline1 12.5s infinite; }
+.auto-animate-slides .toast-slide-2 { animation: slideTimeline2 12.5s infinite; }
+.auto-animate-slides .toast-slide-3 { animation: slideTimeline3 12.5s infinite; }
+.auto-animate-slides .toast-slide-4 { animation: slideTimeline4 12.5s infinite; }
+.auto-animate-slides .toast-slide-5 { animation: slideTimeline5 12.5s infinite; }
+
+.auto-animate-slides .track-1 .progress-fill { animation: fillTimeline1 12.5s infinite linear; }
+.auto-animate-slides .track-2 .progress-fill { animation: fillTimeline2 12.5s infinite linear; }
+.auto-animate-slides .track-3 .progress-fill { animation: fillTimeline3 12.5s infinite linear; }
+.auto-animate-slides .track-4 .progress-fill { animation: fillTimeline4 12.5s infinite linear; }
+.auto-animate-slides .track-5 .progress-fill { animation: fillTimeline5 12.5s infinite linear; }
+
+@keyframes slideTimeline1 {
+  0%, 18% { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  20%, 100% { opacity: 0; transform: translateY(-12px); pointer-events: none; }
+}
+
+@keyframes slideTimeline2 {
+  0%, 19% { opacity: 0; transform: translateY(12px); pointer-events: none; }
+  20%, 38% { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  40%, 100% { opacity: 0; transform: translateY(-12px); pointer-events: none; }
+}
+
+@keyframes slideTimeline3 {
+  0%, 39% { opacity: 0; transform: translateY(12px); pointer-events: none; }
+  40%, 58% { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  60%, 100% { opacity: 0; transform: translateY(-12px); pointer-events: none; }
+}
+
+@keyframes slideTimeline4 {
+  0%, 59% { opacity: 0; transform: translateY(12px); pointer-events: none; }
+  60%, 78% { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  80%, 100% { opacity: 0; transform: translateY(-12px); pointer-events: none; }
+}
+
+@keyframes slideTimeline5 {
+  0%, 79% { opacity: 0; transform: translateY(12px); pointer-events: none; }
+  80%, 98% { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  100% { opacity: 0; transform: translateY(-12px); pointer-events: none; }
+}
+
+@keyframes fillTimeline1 {
+  0% { width: 0%; }
+  18% { width: 100%; }
+  20%, 100% { width: 100%; }
+}
+
+@keyframes fillTimeline2 {
+  0%, 20% { width: 0%; }
+  38% { width: 100%; }
+  40%, 100% { width: 100%; }
+}
+
+@keyframes fillTimeline3 {
+  0%, 40% { width: 0%; }
+  58% { width: 100%; }
+  60%, 100% { width: 100%; }
+}
+
+@keyframes fillTimeline4 {
+  0%, 60% { width: 0%; }
+  78% { width: 100%; }
+  80%, 100% { width: 100%; }
+}
+
+@keyframes fillTimeline5 {
+  0%, 80% { width: 0%; }
+  98% { width: 100%; }
+  100% { width: 100%; }
+}

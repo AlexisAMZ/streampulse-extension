@@ -49,7 +49,7 @@
         <div class="stage-media" id="stage-media"></div>
         <div class="greeting">
           <h1 class="greeting-title" id="greeting-title">Bonsoir.<br /><span class="greeting-sub">Voici qui est en ligne.</span></h1>
-          <p class="greeting-hint" id="greeting-live-count"></p>
+          <p class="greeting-hint" id="greeting-live-count" role="status"></p>
         </div>
         <div class="stage-pager" id="stage-pager" hidden>
           <button id="stage-prev" type="button" class="icon-button" data-i18n-attr-ariaLabel="popup.cplus.prev" data-i18n-attr-title="popup.cplus.prev" aria-label="Live précédent">
@@ -84,7 +84,7 @@
 
       <section class="live-strip">
         <div class="strip-head">
-          <h2 class="strip-title"><span data-i18n="popup.osd.sectionLive">En direct</span><span class="strip-count" id="live-count"></span></h2>
+          <h2 class="strip-title"><span data-i18n="popup.osd.sectionLive">En direct</span><span class="strip-count" id="live-count" role="status"></span></h2>
           <div class="segmented" id="platform-filter-group" role="group" data-i18n-attr-ariaLabel="popup.osd.filterLabel">
             <button type="button" class="pf-btn active" aria-pressed="true" data-filter="all" data-i18n="popup.osd.filterAll">Tout</button>
             <button type="button" class="pf-btn" aria-pressed="false" data-filter="pinned" data-i18n="popup.cplus.pinnedFilter">Épinglés</button>
@@ -147,6 +147,7 @@
           <button class="seg-btn active" type="button" data-platform="all" aria-pressed="true" data-i18n="popup.history.filterAll">Tout</button>
           <button class="seg-btn" type="button" data-platform="twitch" aria-pressed="false">Twitch</button>
           <button class="seg-btn" type="button" data-platform="kick" aria-pressed="false">Kick</button>
+          <button class="seg-btn" type="button" data-platform="youtube" aria-pressed="false">YouTube</button>
         </div>
       </div>
       <ul class="history-grid" id="history-grid"></ul>
@@ -157,7 +158,7 @@
       </div>
     </section>
 
-    <section id="plus-view" class="plus-view hidden" role="dialog" aria-labelledby="plus-title">
+    <section id="plus-view" class="plus-view hidden" role="dialog" aria-modal="true" aria-labelledby="plus-title">
       <div class="plus-main">
         <h2 class="plus-title" id="plus-title"><span data-i18n="popup.plus.title">Va plus loin</span><br /><em data-i18n="popup.plus.titleAccent">sur tes lives.</em></h2>
         <p class="plus-intro" data-i18n="popup.plus.intro">Tout ce que tu as déjà reste gratuit. StreamPulse+ ajoute des outils pour les viewers les plus assidus.</p>
@@ -611,7 +612,7 @@
                 <option value="theme" data-i18n="popup.settings.badgeColorTheme">Selon le thème Twitch</option>
                 <option value="custom" data-i18n="popup.settings.badgeColorCustom">Couleur personnalisée</option>
               </select>
-              <input id="pref-badge-color-value" class="badge-color-input" type="color" value="#9147ff" data-i18n-attr-ariaLabel="popup.settings.badgeColorCustom" hidden />
+              <input id="pref-badge-color-value" class="badge-color-input" type="color" value="#9146ff" data-i18n-attr-ariaLabel="popup.settings.badgeColorCustom" hidden />
             </span>
           </div>
           <p class="settings-description badge-plus-note" id="badge-plus-note" data-i18n="popup.settings.badgePlusOff">Avec StreamPulse+, ta couleur personnalisée est visible par tous les utilisateurs de StreamPulse.</p>

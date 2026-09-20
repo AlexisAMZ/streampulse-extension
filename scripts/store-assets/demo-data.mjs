@@ -91,6 +91,12 @@ const KICK = {
   accent: "#53FC18",
   secondary: "#0f8f4a",
 };
+const YOUTUBE = {
+  from: "#2a0b0b",
+  to: "#0f0b0b",
+  accent: "#FF0000",
+  secondary: "#8f0f0f",
+};
 
 /**
  * Les `category` sont des noms de catégories Twitch génériques, pas des titres
@@ -112,6 +118,14 @@ export const DEMO_STREAMERS = [
     category: "Grand Theft Auto V",
     avatar: avatar({ letter: "P", from: "#53FC18", to: "#2b8c10" }),
     thumbnail: thumbnail(KICK),
+  },
+  {
+    handle: "novasounds",
+    platform: "youtube",
+    isLive: true,
+    category: "Music",
+    avatar: avatar({ letter: "N", from: "#FF0000", to: "#8f0f0f" }),
+    thumbnail: thumbnail(YOUTUBE),
   },
   {
     handle: "lunaplays",

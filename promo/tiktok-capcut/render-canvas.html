@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas Deterministic Render</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #00ff00;
+      overflow: hidden;
+    }
+    #render-canvas {
+      width: 1080px;
+      height: 1920px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="render-canvas" width="1080" height="1920"></canvas>
+
+  <script src="toast-renderer.js"></script>
+  <script>
+
+    async function loadImage(src) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => resolve(null);
+        img.src = src;
+      });
+    }
+
+    async function init() {
+      await document.fonts.ready;
+
+      const avatarImg = await loadImage("assets/anyme_avatar.png");
+      const logoImg = await loadImage("assets/logo.png");
+      const twitchImg = await loadImage("assets/twitch.svg");
+      const kickImg = await loadImage("assets/kick.svg");
+
+      const canvas = document.getElementById("render-canvas");
+      const renderer = new ToastRenderer(canvas, {
+        streamer: "anyme023",
+        url: "streampulse.fr",
+        position: "pos-bottom",
+        avatarImg,
+        logoImg,
+        twitchImg,
+        kickImg,
+      });
+
+      window.__renderer = renderer;
+      window.__canvas = canvas;
+
+      // Si le paramètre ?auto=true est présent, lancer le rendu automatique vers le serveur local
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("auto") === "true") {
+        const port = params.get("port") || "8765";
+        await runBatchRender(`http://127.0.0.1:${port}/frame`);
+      }
+    }
+
+    async function runBatchRender(uploadUrl) {
+      const totalFrames = 750; // 12.5 secondes x 60 FPS
+      const fps = 60;
+
+      for (let f = 0; f < totalFrames; f++) {
+        const t = f / fps;
+        window.__renderer.draw(t);
+
+        const blob = await new Promise((resolve) => {
+          window.__canvas.toBlob(resolve, "image/jpeg", 0.95);
+        });
+
+        await fetch(`${uploadUrl}?f=${f}`, {
+          method: "POST",
+          body: blob
+        });
+      }
+
+      await fetch(`${uploadUrl}?done=true`, { method: "POST" });
+    }
+
+    init();
+  </script>
+</body>
+</html>

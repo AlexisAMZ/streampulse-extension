@@ -107,6 +107,7 @@ svg { flex: none; width: 14px; height: 14px; }
 
 .ring-twitch { box-shadow: 0 0 0 2px #0b0c22, 0 0 0 4px var(--twitch); }
 .ring-kick { box-shadow: 0 0 0 2px #0b0c22, 0 0 0 4px var(--kick); }
+.ring-youtube { box-shadow: 0 0 0 2px #0b0c22, 0 0 0 4px var(--youtube); }
 
 /* ── Top bar: floats over the stage, solid in settings ── */
 .topbar { position: absolute; z-index: 20; top: 0; left: 0; right: 0; display: flex; align-items: center; gap: 16px; height: 54px; padding: 0 16px; color: var(--paper); }
@@ -171,8 +172,9 @@ body.is-settings .topbar .icon-button { background: var(--surface-2); box-shadow
   pointer-events: none;
   transition: opacity var(--dur-base) ease;
 }
-/* Pendant la vidéo Kick, on allège le dégradé pour laisser voir l'image. */
-.stage.is-playing::after { opacity: 0.25; }
+/* Pendant la vidéo Kick, on allège le dégradé pour laisser voir l'image,
+   sans descendre sous le seuil où le texte du bas devient illisible. */
+.stage.is-playing::after { opacity: 0.55; }
 .hover-player-wrap,
 .embed-click-overlay { position: absolute; inset: 0; }
 /* Cover : l'iframe déborde du wrap et est recadrée, pour que la vidéo
@@ -246,6 +248,7 @@ body.is-settings .topbar .icon-button { background: var(--surface-2); box-shadow
 .mini-avatar { flex: none; width: 24px; height: 24px; border-radius: 50%; object-fit: cover; }
 .mini-avatar.ring-twitch { box-shadow: 0 0 0 1.5px #0b0c22, 0 0 0 3px var(--twitch); }
 .mini-avatar.ring-kick { box-shadow: 0 0 0 1.5px #0b0c22, 0 0 0 3px var(--kick); }
+.mini-avatar.ring-youtube { box-shadow: 0 0 0 1.5px #0b0c22, 0 0 0 3px var(--youtube); }
 .mini-text { display: grid; min-width: 0; line-height: 1.2; }
 .mini-name,
 .mini-game { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

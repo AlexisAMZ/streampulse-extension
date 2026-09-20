@@ -28,7 +28,6 @@
   let blockedKeywords = [];
   let blockedUsers = [];
   let observer = null;
-  let pollIntervalId = null;
 
   // Pre-joined selectors for fewer querySelectorAll calls
   const MESSAGE_SELECTOR = [
@@ -80,10 +79,8 @@
       if (hasActiveFilters()) {
         runFilter();
         startObserver();
-        startPolling();
       } else {
         stopObserver();
-        stopPolling();
       }
     });
   }
@@ -251,17 +248,8 @@
     pendingNodes = [];
   }
 
-  function startPolling() {
-    if (pollIntervalId) return;
-    pollIntervalId = setInterval(runFilter, 3000);
-  }
-
-  function stopPolling() {
-    if (pollIntervalId) {
-      clearInterval(pollIntervalId);
-      pollIntervalId = null;
-    }
-  }
+  // Pas de sondage périodique : l'observer (batché en rAF) couvre les nouveaux
+  // messages, et runFilter() est relancé à chaque changement de préférences.
 
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area === "local" && changes[PREFERENCES_KEY]) {

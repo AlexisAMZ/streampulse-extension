@@ -7,16 +7,16 @@
 ## 1. Informations Principales du Store (Store Listing)
 
 ### Nom de l'extension
-**FR** : `StreamPulse : Alertes, Points & Drops Twitch & Kick` (51 / 75 caractères)  
-**EN** : `StreamPulse: Twitch & Kick Alerts, Points & Drops` (49 / 75 caractères)
+**FR** : `StreamPulse : Alertes, Points & Drops Twitch, Kick & YouTube` (60 / 75 caractères)  
+**EN** : `StreamPulse: Twitch, Kick & YouTube Alerts, Points & Drops` (58 / 75 caractères)
 
 ### Description Courte (Short Description)
-**FR** : `Points de chaîne et Drops Twitch auto, alertes live, aperçus au survol, filtres de chat et récap de visionnage. Twitch & Kick.` (126 / 132 caractères)  
-**EN** : `Auto-claim Twitch channel points & Drops, live alerts, hover previews, chat filters and watch time recaps for Twitch & Kick.` (124 / 132 caractères)
+**FR** : `Points et Drops Twitch auto, alertes live, aperçus, filtres de chat, récap. Twitch, Kick & YouTube.` (100 / 132 caractères)  
+**EN** : `Auto-claim Twitch channel points & Drops, live alerts, previews, chat filters, recaps. Twitch, Kick & YouTube.` (110 / 132 caractères)
 
 ### Description Détaillée (Detailed Description - FR)
 ```text
-StreamPulse réunit Twitch et Kick dans une seule extension légère. Elle surveille vos streamers préférés, automatise les clics répétitifs et garde votre navigateur rapide.
+StreamPulse réunit Twitch, Kick et YouTube dans une seule extension légère. Elle surveille vos streamers préférés, automatise les clics répétitifs et garde votre navigateur rapide.
 
 🌍 Entièrement traduite en 15 langues.
 
@@ -29,7 +29,7 @@ Fonctionnalités principales :
 • Filtre de chat : Masquez les messages par mot-clé ou ceux de certains utilisateurs, sur Twitch et Kick.
 • Temps de visionnage et récap : Suivez votre temps passé sur chaque chaîne, puis créez une image récap à partager sur les 7 ou 30 derniers jours ou sur un mois, au format PC (16:9) ou mobile (9:16).
 • Badge communautaire : Repérez l'icône StreamPulse à côté des autres utilisateurs de l'extension dans le tchat Twitch. Désactivable à tout moment.
-• Tableau de bord unifié : Un pop-up unique pour Twitch et Kick qui montre d'un coup d'œil qui est en direct.
+• Tableau de bord unifié : Un pop-up unique pour Twitch, Kick et YouTube qui montre d'un coup d'œil qui est en direct.
 
 Confidentialité :
 StreamPulse ne demande aucun compte et ne contient ni publicité ni traceur. Vos streamers, vos réglages et votre temps de visionnage restent stockés sur votre appareil. Seul le badge communautaire envoie une donnée à notre serveur : une empreinte (hash) de votre pseudo Twitch (jamais le pseudo lui-même), au plus une fois par jour. Désactivez le badge dans les réglages pour l'arrêter.
@@ -37,7 +37,7 @@ StreamPulse ne demande aucun compte et ne contient ni publicité ni traceur. Vos
 
 ### Detailed Description (EN)
 ```text
-StreamPulse brings Twitch and Kick together in one lightweight extension. It keeps an eye on your favorite streamers, automates repetitive clicks and keeps your browser fast.
+StreamPulse brings Twitch, Kick and YouTube together in one lightweight extension. It keeps an eye on your favorite streamers, automates repetitive clicks and keeps your browser fast.
 
 🌍 Fully translated into 15 languages.
 
@@ -50,7 +50,7 @@ Key Features:
 • Chat Filtering: Hide messages by keyword or from specific users, on Twitch and Kick.
 • Watch Time & Recap: Track the time you spend on each channel, then create a shareable recap image for the last 7 or 30 days or any month, in desktop (16:9) or mobile (9:16) format.
 • Community Badge: Spot the StreamPulse icon next to other StreamPulse users in Twitch chat. You can turn it off at any time.
-• Unified Dashboard: One pop-up for Twitch and Kick that shows who is live at a glance.
+• Unified Dashboard: One pop-up for Twitch, Kick and YouTube that shows who is live at a glance.
 
 Privacy:
 StreamPulse requires no account and contains no ads or trackers. Your streamers, settings and watch time are stored on your device. Only the community badge sends data to our server: a hashed version of your Twitch username (never the username itself), at most once a day. Turn the badge off in Settings to stop it.
@@ -60,8 +60,8 @@ StreamPulse requires no account and contains no ads or trackers. Your streamers,
 `Réseaux sociaux` (**Social Media & Networking**) : « extensions designed to enhance social media platforms … notifications, status updates ». Twitch et Kick sont des plateformes sociales, et StreamPulse y ajoute alertes et intégration. Les anciennes catégories (Productivité, Outils de recherche) n'existent plus depuis mi-2023.
 
 ### Objectif Unique (Single Purpose)
-**FR** : `Centraliser les alertes de direct, la collecte automatique de points de chaîne et le filtrage de chat pour Twitch et Kick dans une interface unique.`  
-**EN** : `Provide live stream notifications, automatic channel points collection, and chat filtering for Twitch and Kick in a single extension.`
+**FR** : `Centraliser les alertes de direct, la collecte automatique de points de chaîne et le filtrage de chat pour Twitch, Kick et YouTube dans une interface unique.`  
+**EN** : `Provide live stream notifications, automatic channel points collection, and chat filtering for Twitch, Kick and YouTube in a single extension.`
 
 ### Langue Principale
 `Français` (Primary), `Anglais` (Secondary)

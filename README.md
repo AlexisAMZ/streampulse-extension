@@ -5,7 +5,7 @@
 <h1 align="center">StreamPulse</h1>
 
 <p align="center">
-  <strong>The Twitch & Kick companion that tells you who's live, claims your channel points and Drops, and lives right inside Twitch.</strong>
+  <strong>The Twitch, Kick & YouTube companion that tells you who's live, claims your channel points and Drops, and lives right inside Twitch.</strong>
 </p>
 
 <p align="center">
@@ -42,7 +42,7 @@
 
 ## Why StreamPulse
 
-You follow streamers on two platforms, Twitch buries your favorites under recommendations, and channel points only drop if you're there to click. StreamPulse fixes all three from one lightweight extension, with no account and no ads.
+You follow streamers on three platforms, Twitch buries your favorites under recommendations, and channel points only drop if you're there to click. StreamPulse fixes all three from one lightweight extension, with no account and no ads.
 
 It works **alongside** BetterTTV, FrankerFaceZ and 7TV: they customize chat, StreamPulse handles alerts, rewards and your streamer list.
 
@@ -57,7 +57,7 @@ It works **alongside** BetterTTV, FrankerFaceZ and 7TV: they customize chat, Str
 ## Features
 
 ### 🔔 Know who's live
-- **One dashboard for Twitch and Kick.** Live channels first, with viewers, category and uptime.
+- **One dashboard for Twitch, Kick and YouTube.** Live channels first, with viewers, category and uptime.
 - **Desktop alerts** when a streamer goes live, and optionally when they change title or category.
 - **Hover previews** of a live stream (image or video) straight from Twitch links.
 
@@ -95,7 +95,7 @@ Animated name and badge effects in Twitch chat, visible to other StreamPulse use
 | Firefox 128+ | [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/streampulse-twitch-kick/) |
 | Microsoft Edge | Coming soon on Edge Add-ons (the Chrome Web Store version works today) |
 
-Click the StreamPulse icon, type a Twitch or Kick username, and you're set.
+Click the StreamPulse icon, type a Twitch, Kick or YouTube username, and you're set.
 
 ### Run from source
 

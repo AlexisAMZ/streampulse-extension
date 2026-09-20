@@ -13,12 +13,12 @@
  */
 
 export const LISTING = {
-  en: `StreamPulse brings Twitch and Kick together in one lightweight extension. See who's live at a glance, get an alert the moment a stream starts, and let the extension claim your channel points and Drops while you watch.
+  en: `StreamPulse brings Twitch, Kick and YouTube together in one lightweight extension. See who's live at a glance, get an alert the moment a stream starts, and let the extension claim your channel points and Drops while you watch.
 
-🌍 Fully translated into 15 languages. No account, no ads.
+🌍 Fully translated into 11 languages. No account, no ads.
 
 Know who's live
-• One dashboard for Twitch and Kick: live channels first, with viewers, category and uptime.
+• One dashboard for Twitch, Kick and YouTube: live channels first, with viewers, category and uptime.
 • Desktop alerts when a streamer you follow goes live, and optionally when they change category or title.
 • History tab: the lives you missed, with their length and a direct link to the Twitch replay.
 • Hover previews: preview a live stream by hovering a channel link on Twitch.
@@ -45,8 +45,8 @@ A smoother player
 
 Your tabs, your way
 • The streamer's avatar as the tab icon, and a red LIVE dot while they are on air.
-• Keep Twitch and Kick tabs from being put to sleep by Chrome.
-• Extension language: 15 languages, chosen independently from your browser language.
+• Keep Twitch, Kick and YouTube tabs from being put to sleep by Chrome.
+• Extension language: 11 languages, chosen independently from your browser language.
 • A changelog screen that tells you what changed after each update.
 
 Your watch time
@@ -60,14 +60,14 @@ Open source
 The full code is public on GitHub under the GPL v3 license: github.com/AlexisAMZ/streampulse-extension
 
 Privacy
-StreamPulse needs no account and has no ads, trackers or analytics. Your streamers, settings, points and watch time stay on your device. Only two things reach our server, streampulse.fr: the optional community badge, off by default and turned on only if you choose to, sends a hashed version of your Twitch username (never the username itself) at most once a day; and a StreamPulse+ license key is checked there when you activate it. Streamer names are sent to the official Twitch and Kick APIs only to check who is live.`,
+StreamPulse needs no account and has no ads, trackers or analytics. Your streamers, settings, points and watch time stay on your device. Only two things reach our server, streampulse.fr: the optional community badge, off by default and turned on only if you choose to, sends a hashed version of your Twitch username (never the username itself) at most once a day; and a StreamPulse+ license key is checked there when you activate it. Streamer names are sent to the official Twitch, Kick and YouTube pages only to check who is live.`,
 
-  fr: `StreamPulse réunit Twitch et Kick dans une seule extension légère. Voyez qui est en direct d'un coup d'œil, recevez une alerte dès qu'un live démarre, et laissez l'extension récupérer vos points de chaîne et vos Drops pendant que vous regardez.
+  fr: `StreamPulse réunit Twitch, Kick et YouTube dans une seule extension légère. Voyez qui est en direct d'un coup d'œil, recevez une alerte dès qu'un live démarre, et laissez l'extension récupérer vos points de chaîne et vos Drops pendant que vous regardez.
 
-🌍 Entièrement traduite en 15 langues. Sans compte, sans publicité.
+🌍 Entièrement traduite en 11 langues. Sans compte, sans publicité.
 
 Savoir qui est en live
-• Un tableau de bord unique pour Twitch et Kick : les chaînes en direct d'abord, avec spectateurs, catégorie et durée.
+• Un tableau de bord unique pour Twitch, Kick et YouTube : les chaînes en direct d'abord, avec spectateurs, catégorie et durée.
 • Des alertes sur le bureau quand un streamer suivi lance son live, et au choix quand il change de catégorie ou de titre.
 • Onglet Historique : les lives manqués, avec leur durée et un lien direct vers la rediffusion Twitch.
 • Aperçus au survol : prévisualisez un live en survolant le lien d'une chaîne sur Twitch.
@@ -94,8 +94,8 @@ Un lecteur plus fluide
 
 Vos onglets, à votre façon
 • L'avatar du streamer comme icône de l'onglet, et un point rouge LIVE quand il est en direct.
-• Empêcher Chrome de mettre en veille vos onglets Twitch et Kick.
-• Langue de l'extension : 15 langues, choisie indépendamment de celle du navigateur.
+• Empêcher Chrome de mettre en veille vos onglets Twitch, Kick et YouTube.
+• Langue de l'extension : 11 langues, choisie indépendamment de celle du navigateur.
 • Un écran de nouveautés qui vous dit ce qui a changé après chaque mise à jour.
 
 Votre temps de visionnage
@@ -109,5 +109,5 @@ Open source
 Tout le code est public sur GitHub sous licence GPL v3 : github.com/AlexisAMZ/streampulse-extension
 
 Confidentialité
-StreamPulse ne demande aucun compte et ne contient ni publicité, ni traceur, ni outil de mesure d'audience. Vos streamers, réglages, points et temps de visionnage restent sur votre appareil. Seules deux choses arrivent sur notre serveur, streampulse.fr : le badge communautaire, optionnel et désactivé par défaut, envoie une empreinte (hash) de votre pseudo Twitch, jamais le pseudo lui-même, au plus une fois par jour, seulement si vous l'activez ; et une clé de licence StreamPulse+ y est vérifiée quand vous l'activez. Les noms des streamers sont envoyés aux API officielles de Twitch et Kick uniquement pour savoir qui est en direct.`,
+StreamPulse ne demande aucun compte et ne contient ni publicité, ni traceur, ni outil de mesure d'audience. Vos streamers, réglages, points et temps de visionnage restent sur votre appareil. Seules deux choses arrivent sur notre serveur, streampulse.fr : le badge communautaire, optionnel et désactivé par défaut, envoie une empreinte (hash) de votre pseudo Twitch, jamais le pseudo lui-même, au plus une fois par jour, seulement si vous l'activez ; et une clé de licence StreamPulse+ y est vérifiée quand vous l'activez. Les noms des streamers sont envoyés aux API officielles de Twitch et Kick, et aux pages publiques de YouTube, uniquement pour savoir qui est en direct.`,
 };

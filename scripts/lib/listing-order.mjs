@@ -1,11 +1,11 @@
 /**
  * Ordre des visuels sur les fiches des stores, partagé par les scripts de
- * publication : le tableau de bord d'abord, l'intégration Twitch ensuite.
+ * publication : le tableau de bord d'abord, la compatibilité Twitch & Kick ensuite.
  */
 
 export const SCREENSHOT_ORDER = [
   "01-dashboard.png",
-  "05-twitch.png",
+  "06-compat.png",
   "02-automation.png",
   "03-features.png",
   "04-recap.png",

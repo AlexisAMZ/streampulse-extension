@@ -29,6 +29,7 @@ h1 em { display: block; font-style: normal; color: ${COLORS.violetText}; }
 .chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; }
 .chip.twitch::before { background: ${COLORS.violet}; }
 .chip.kick::before { background: ${COLORS.kick}; }
+.chip.youtube::before { background: ${COLORS.youtube}; }
 
 /* Vraies cartes du popup, découpées dans la capture et posées en éventail. */
 .stage { position: absolute; top: 0; right: 0; width: 210px; height: 280px; z-index: 1; }
@@ -66,7 +67,7 @@ export function buildPromoTile({ logoPath, title, accent, subtitle, liveLabel, p
     <div class="brand"><img src="${escapeHtml(logoPath)}" alt=""><span>StreamPulse</span></div>
     <h1>${escapeHtml(title)}<em>${escapeHtml(accent)}</em></h1>
     <p class="sub">${escapeHtml(subtitle)}</p>
-    <div class="chips"><span class="chip twitch">Twitch</span><span class="chip kick">Kick</span></div>
+    <div class="chips"><span class="chip twitch">Twitch</span><span class="chip kick">Kick</span><span class="chip youtube">YouTube</span></div>
   </div>
   <div class="stage">
     <div class="card back" style="${shot}"></div>
@@ -107,6 +108,7 @@ h1 em { font-style: normal; color: ${COLORS.violetText}; }
 .chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; }
 .chip.twitch::before { background: ${COLORS.violet}; }
 .chip.kick::before { background: ${COLORS.kick}; }
+.chip.youtube::before { background: ${COLORS.youtube}; }
 .stage { height: 560px; display: flex; align-items: center; justify-content: center; padding: 44px 64px 44px 20px; }
 .stage img {
   max-width: 100%; max-height: 472px; display: block; border-radius: 18px;
@@ -135,7 +137,7 @@ export function buildPromoMarquee({ logoPath, title, accent, benefits, shotPath 
     <div class="brand"><img src="${escapeHtml(logoPath)}" alt=""><span>StreamPulse</span></div>
     <h1>${escapeHtml(title)}<br><em>${escapeHtml(accent)}</em></h1>
     <div class="benefits">${lines}</div>
-    <div class="chips"><span class="chip twitch">Twitch</span><span class="chip kick">Kick</span></div>
+    <div class="chips"><span class="chip twitch">Twitch</span><span class="chip kick">Kick</span><span class="chip youtube">YouTube</span></div>
   </div>
   <div class="stage"><img src="${escapeHtml(shotPath)}" alt=""></div>
 </body>

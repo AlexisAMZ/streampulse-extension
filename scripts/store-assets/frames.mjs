@@ -189,3 +189,212 @@ export function buildFeaturesFrame({ logoPath, tagline, title, subtitle, feature
 <div class="grid">${cards}</div>`,
   });
 }
+
+const COMPAT_CSS = `
+.compat h1 { font-size: 58px; letter-spacing: -0.04em; }
+.compat h1 .platform-twitch { color: ${COLORS.violet}; }
+.compat h1 .platform-kick { color: ${COLORS.kick}; }
+.compat h1 .platform-youtube { color: ${COLORS.youtube}; }
+.compat .sub { margin-top: 14px; max-width: 980px; }
+
+.stage-compat {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 64px;
+  padding: 0 72px 0;
+}
+.platform-tile {
+  width: 224px;
+  height: 224px;
+  border-radius: 52px;
+  background: rgba(21, 23, 61, 0.72);
+  box-shadow: inset 0 0 0 1px ${COLORS.line2}, 0 30px 70px rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.platform-tile img { width: 114px; height: 114px; display: block; }
+.platform-tile.twitch img { filter: drop-shadow(0 0 34px rgba(145, 70, 255, 0.55)); }
+.platform-tile.kick img { filter: drop-shadow(0 0 34px rgba(83, 252, 24, 0.4)); }
+.platform-tile.youtube img { filter: drop-shadow(0 0 34px rgba(255, 0, 0, 0.4)); }
+.stage-compat .pulse {
+  width: 252px;
+  height: 252px;
+  border-radius: 60px;
+  background: ${COLORS.surface};
+  box-shadow:
+    inset 0 0 0 1px ${COLORS.line2},
+    0 0 0 14px rgba(145, 70, 255, 0.1),
+    0 36px 90px rgba(0, 0, 0, 0.6),
+    0 0 130px rgba(145, 70, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stage-compat .pulse img { width: 140px; height: 140px; ${LOGO_CSS} }
+
+.emotes {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 0 72px 40px;
+}
+.emotes .row {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+.emotes { padding-top: 22px; }
+.emote-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: rgba(21, 23, 61, 0.6);
+  box-shadow: inset 0 0 0 1px ${COLORS.line};
+  font-size: 14px;
+  font-weight: 600;
+  color: ${COLORS.text2};
+}
+.emote-chip img { width: 26px; height: 26px; display: block; }
+.features {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 0 72px;
+  margin-top: 22px;
+}
+.feature-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(21, 23, 61, 0.72);
+  box-shadow: inset 0 0 0 1px ${COLORS.line};
+  font-size: 14.5px;
+  font-weight: 600;
+  color: ${COLORS.text};
+}
+.feature-pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: ${COLORS.violet}; }
+.feature-pill:nth-child(even)::before { background: ${COLORS.lcd}; }
+
+.tile-wrap { position: relative; }
+.float-badge {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 12px 26px -8px rgba(0, 0, 0, 0.65);
+}
+.float-badge.live {
+  top: -16px;
+  left: -34px;
+  transform: rotate(-7deg);
+  background: ${COLORS.lcd};
+  color: ${COLORS.lcdInk};
+}
+.float-badge.live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: ${COLORS.lcdInk}; }
+.float-badge.points {
+  bottom: -16px;
+  right: -34px;
+  transform: rotate(6deg);
+  background: ${COLORS.surface2};
+  box-shadow: inset 0 0 0 1px ${COLORS.line2}, 0 12px 26px -8px rgba(0, 0, 0, 0.65);
+  color: ${COLORS.text};
+  font-family: ${DISPLAY};
+}
+.float-badge.points svg { width: 14px; height: 14px; color: ${COLORS.violetText}; }
+
+.emotes-note {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: ${COLORS.text3};
+  margin-bottom: 14px;
+}
+`;
+
+/**
+ * Cadre « compatibilité » : Twitch et Kick réunis par la marque, les
+ * extensions d'émotes avec lesquelles StreamPulse cohabite (BetterTTV,
+ * FrankerFaceZ, 7TV). Les noms de plateforme restent en clair dans toutes les
+ * langues : le titre n'a pas besoin de traduction, et les couleurs des
+ * plateformes servent uniquement à les identifier (cf. DESIGN.md).
+ *
+ * @param {object} options
+ * @param {string} options.logoPath       chemin absolu du logo StreamPulse
+ * @param {string} options.tagline        pill de la ligne de marque
+ * @param {string} options.subtitle       phrase traduite sous le titre
+ * @param {string} options.twitchIconPath chemin absolu du glyphe Twitch
+ * @param {string} options.kickIconPath   chemin absolu du glyphe Kick
+ * @param {string} options.youtubeIconPath chemin absolu du glyphe YouTube
+ * @param {string[]} [options.emoteIcons] chemins des glyphes d'extensions d'émotes
+ * @param {string[]} [options.emoteNames] libellés associés (noms propres)
+ * @param {string} [options.compatNote]  phrase traduite « totalement compatible avec »
+ * @param {string[]} [options.featurePills] pastilles de fonctions traduites
+ * @param {string} [options.liveLabel]   pastille « En direct » (traduite)
+ */
+export function buildCompatibilityFrame({
+  logoPath,
+  tagline,
+  subtitle,
+  twitchIconPath,
+  kickIconPath,
+  youtubeIconPath,
+  emoteIcons = [],
+  emoteNames = [],
+  compatNote = "",
+  featurePills = [],
+  liveLabel = "",
+}) {
+  const chips = emoteIcons
+    .map(
+      (icon, index) =>
+        `<div class="emote-chip"><img src="${escapeHtml(icon)}" alt="">${escapeHtml(emoteNames[index] || "")}</div>`,
+    )
+    .join("");
+  return page({
+    css: COMPAT_CSS,
+    body: `
+<div class="head compat">
+  <div class="brand">
+    <img src="${escapeHtml(logoPath)}" alt="">
+    <span class="wordmark">StreamPulse</span>
+    <span class="tagline">${escapeHtml(tagline)}</span>
+  </div>
+  <h1><span class="platform-twitch">Twitch</span> <span>&amp;</span> <span class="platform-kick">Kick</span> <span>&amp;</span> <span class="platform-youtube">YouTube</span></h1>
+  <p class="sub">${escapeHtml(subtitle)}</p>
+</div>
+<div class="stage-compat">
+  <div class="tile-wrap">
+    <div class="platform-tile twitch"><img src="${escapeHtml(twitchIconPath)}" alt=""></div>
+    ${liveLabel ? `<div class="float-badge live">${escapeHtml(liveLabel)}</div>` : ""}
+  </div>
+  <div class="pulse"><img src="${escapeHtml(logoPath)}" alt="StreamPulse"></div>
+  <div class="tile-wrap">
+    <div class="platform-tile kick"><img src="${escapeHtml(kickIconPath)}" alt=""></div>
+    <div class="platform-tile youtube"><img src="${escapeHtml(youtubeIconPath)}" alt=""></div>
+    <div class="float-badge points"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M4 2h8l3 4-7 8-7-8z"/></svg>+250</div>
+  </div>
+</div>
+${featurePills.length ? `<div class="features">${featurePills.map((pill) => `<div class="feature-pill">${escapeHtml(pill)}</div>`).join("")}</div>` : ""}
+<div class="emotes">${compatNote ? `<p class="emotes-note">${escapeHtml(compatNote)}</p>` : ""}
+  <div class="row">${chips}</div>
+</div>`,
+  });
+}

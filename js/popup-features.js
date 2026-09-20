@@ -213,16 +213,36 @@ function initPlus() {
   });
 
   const plans = document.querySelectorAll(".plus-plan");
-  plans.forEach((plan) =>
-    plan.addEventListener("click", () => {
-      selectedPlan = plan.dataset.plan;
-      plans.forEach((other) => {
-        const on = other === plan;
-        other.classList.toggle("active", on);
-        other.setAttribute("aria-checked", String(on));
-      });
-    }),
-  );
+  const selectPlan = (plan) => {
+    selectedPlan = plan.dataset.plan;
+    plans.forEach((other) => {
+      const on = other === plan;
+      other.classList.toggle("active", on);
+      other.setAttribute("aria-checked", String(on));
+    });
+  };
+  plans.forEach((plan) => plan.addEventListener("click", () => selectPlan(plan)));
+  // Motif radiogroup ARIA : les flèches déplacent la sélection (et le focus),
+  // les deux boutons ne restent pas tous deux dans l'ordre de tabulation.
+  document.querySelector(".plus-plans")?.addEventListener("keydown", (event) => {
+    const list = Array.from(plans);
+    const index = list.indexOf(document.activeElement);
+    if (index === -1) return;
+    const targets = {
+      ArrowRight: list[(index + 1) % list.length],
+      ArrowDown: list[(index + 1) % list.length],
+      ArrowLeft: list[(index - 1 + list.length) % list.length],
+      ArrowUp: list[(index - 1 + list.length) % list.length],
+    };
+    const next = targets[event.key];
+    if (!next) return;
+    event.preventDefault();
+    selectPlan(next);
+    next.focus();
+  });
+  plans.forEach((plan) => {
+    plan.tabIndex = plan.classList.contains("active") ? 0 : -1;
+  });
 
   $("plus-checkout")?.addEventListener("click", () => openTab(plusPageUrl(getCurrentLanguage(), selectedPlan)));
 

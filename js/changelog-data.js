@@ -48,6 +48,73 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.21",
+    date: "2026-09-21",
+    title: {
+      fr: "Twitch, Kick et maintenant YouTube",
+      en: "Twitch, Kick and now YouTube",
+      es: "Twitch, Kick y ahora YouTube",
+      "pt-BR": "Twitch, Kick e agora YouTube",
+      de: "Twitch, Kick und jetzt YouTube",
+      it: "Twitch, Kick e ora YouTube",
+      pl: "Twitch, Kick i teraz YouTube",
+      tr: "Twitch, Kick ve artık YouTube",
+      ru: "Twitch, Kick и теперь YouTube",
+      ja: "Twitch、Kick、そして YouTube",
+      ko: "Twitch, Kick 그리고 YouTube"
+    },
+    changes: [
+      {
+        type: "new",
+        text: {
+          fr: "YouTube rejoint Twitch et Kick : ajoutez une chaîne avec son @handle ou en collant son lien, et elle apparaît dans le tableau de bord avec son titre, ses spectateurs et sa miniature. Les alertes de live fonctionnent comme sur les autres plateformes, sans compte ni clé API.",
+          en: "YouTube joins Twitch and Kick: add a channel by its @handle or by pasting its link, and it shows up in the dashboard with its title, viewer count and thumbnail. Live alerts work just like on the other platforms, with no account and no API key.",
+          es: "YouTube se une a Twitch y Kick: añade un canal con su @usuario o pegando su enlace, y aparecerá en el panel con su título, espectadores y miniatura. Las alertas de directo funcionan igual que en las demás plataformas, sin cuenta ni clave de API.",
+          "pt-BR": "O YouTube se junta à Twitch e à Kick: adicione um canal pelo @usuário ou colando o link dele, e ele aparece no painel com título, espectadores e miniatura. Os alertas de live funcionam como nas outras plataformas, sem conta e sem chave de API.",
+          de: "YouTube kommt zu Twitch und Kick dazu: Füge einen Kanal über sein @Handle oder per eingefügtem Link hinzu, und er erscheint im Dashboard mit Titel, Zuschauerzahl und Vorschaubild. Live-Benachrichtigungen funktionieren wie bei den anderen Plattformen, ohne Konto und ohne API-Schlüssel.",
+          it: "YouTube si aggiunge a Twitch e Kick: aggiungi un canale con il suo @handle o incollandone il link, e comparirà nella dashboard con titolo, spettatori e miniatura. Gli avvisi di live funzionano come sulle altre piattaforme, senza account e senza chiave API.",
+          pl: "YouTube dołącza do Twitcha i Kicka: dodaj kanał przez @handle albo wklejając jego link, a pojawi się w panelu z tytułem, liczbą widzów i miniaturą. Powiadomienia o live działają tak samo jak na pozostałych platformach, bez konta i bez klucza API.",
+          tr: "YouTube, Twitch ve Kick'e katılıyor: bir kanalı @handle ile ekle ya da bağlantısını yapıştır, panoda başlığı, izleyici sayısı ve küçük resmiyle görünsün. Canlı yayın bildirimleri diğer platformlardaki gibi çalışır, hesap ve API anahtarı gerekmez.",
+          ru: "YouTube присоединяется к Twitch и Kick: добавь канал по @handle или вставив ссылку, и он появится на панели с названием трансляции, числом зрителей и превью. Уведомления о начале эфира работают так же, как на других платформах, без аккаунта и ключа API.",
+          ja: "YouTube が Twitch と Kick に加わりました。@ハンドルを入力するかチャンネルのリンクを貼り付けるだけで、タイトル・同時視聴者数・サムネイル付きでダッシュボードに表示されます。ライブ通知も他のプラットフォームと同じように動作し、アカウントも API キーも不要です。",
+          ko: "YouTube가 Twitch, Kick에 더해졌습니다. @핸들을 입력하거나 채널 링크를 붙여넣으면 제목, 시청자 수, 썸네일과 함께 대시보드에 나타납니다. 라이브 알림도 다른 플랫폼과 똑같이 동작하며, 계정이나 API 키가 필요 없습니다."
+        }
+      },
+      {
+        type: "new",
+        text: {
+          fr: "Amplification du volume sur le lecteur Twitch : un bouton à côté du curseur de son pousse le volume jusqu'à 200 %, pour les streams mixés trop bas. Clic pour activer ou couper, molette ou flèches pour régler.",
+          en: "Volume boost on the Twitch player: a button next to the sound slider pushes the volume up to 200%, for streams mixed too quietly. Click to turn it on or off, scroll or use the arrow keys to adjust.",
+          es: "Amplificación de volumen en el reproductor de Twitch: un botón junto al control de sonido sube el volumen hasta el 200 %, para los directos con el audio demasiado bajo. Haz clic para activarlo o desactivarlo y usa la rueda o las flechas para ajustarlo.",
+          "pt-BR": "Amplificação de volume no player da Twitch: um botão ao lado do controle de som leva o volume até 200%, para lives com áudio baixo demais. Clique para ligar ou desligar e use a roda do mouse ou as setas para ajustar.",
+          de: "Lautstärke-Verstärkung im Twitch-Player: Eine Schaltfläche neben dem Lautstärkeregler hebt die Lautstärke auf bis zu 200 % an, für zu leise abgemischte Streams. Klicken zum Ein- oder Ausschalten, Scrollen oder Pfeiltasten zum Feinjustieren.",
+          it: "Amplificazione del volume nel player di Twitch: un pulsante accanto al cursore dell'audio porta il volume fino al 200%, per le dirette mixate troppo basse. Clic per attivarlo o disattivarlo, rotellina o frecce per regolarlo.",
+          pl: "Wzmocnienie głośności w odtwarzaczu Twitcha: przycisk obok suwaka dźwięku podbija głośność nawet do 200%, dla transmisji zmiksowanych zbyt cicho. Kliknięcie włącza i wyłącza, kółko myszy lub strzałki regulują poziom.",
+          tr: "Twitch oynatıcısında ses yükseltme: ses kaydırıcısının yanındaki düğme, sesi çok kısık yayınlar için sesi %200'e kadar çıkarır. Açıp kapatmak için tıkla, ayarlamak için tekerleği veya ok tuşlarını kullan.",
+          ru: "Усиление громкости в плеере Twitch: кнопка рядом с ползунком звука поднимает громкость до 200 % для трансляций, сведённых слишком тихо. Клик включает и выключает, колесо мыши или стрелки регулируют уровень.",
+          ja: "Twitch プレイヤーの音量ブースト：音量スライダーの隣のボタンで、音が小さすぎる配信の音量を最大 200 % まで上げられます。クリックでオン・オフ、ホイールか矢印キーで調整できます。",
+          ko: "Twitch 플레이어 음량 증폭: 음량 슬라이더 옆 버튼으로 소리가 너무 작은 방송의 음량을 최대 200 %까지 올립니다. 클릭으로 켜고 끄고, 휠이나 화살표 키로 조절합니다."
+        }
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "Les pages Twitch s'allègent de 354 Ko : le lecteur des aperçus au survol n'est plus chargé sur chaque page, mais seulement au premier aperçu réellement lancé.",
+          en: "Twitch pages are 354 KB lighter: the hover preview player is no longer loaded on every page, only when a preview actually starts.",
+          es: "Las páginas de Twitch pesan 354 KB menos: el reproductor de las vistas previas al pasar el ratón ya no se carga en cada página, solo cuando una vista previa arranca de verdad.",
+          "pt-BR": "As páginas da Twitch ficaram 354 KB mais leves: o player das prévias ao passar o mouse não é mais carregado em toda página, só quando uma prévia realmente começa.",
+          de: "Twitch-Seiten sind 354 KB leichter: Der Player für die Hover-Vorschau wird nicht mehr auf jeder Seite geladen, sondern erst, wenn eine Vorschau tatsächlich startet.",
+          it: "Le pagine di Twitch pesano 354 KB in meno: il player delle anteprime al passaggio del mouse non viene più caricato su ogni pagina, ma solo quando un'anteprima parte davvero.",
+          pl: "Strony Twitcha są lżejsze o 354 KB: odtwarzacz podglądów po najechaniu kursorem nie ładuje się już na każdej stronie, tylko wtedy, gdy podgląd faktycznie się uruchomi.",
+          tr: "Twitch sayfaları 354 KB hafifledi: üzerine gelince çıkan önizlemelerin oynatıcısı artık her sayfada değil, yalnızca bir önizleme gerçekten başladığında yükleniyor.",
+          ru: "Страницы Twitch стали легче на 354 КБ: плеер превью при наведении больше не загружается на каждой странице, а только когда превью действительно запускается.",
+          ja: "Twitch のページが 354 KB 軽くなりました。ホバープレビュー用のプレイヤーは全ページで読み込まれなくなり、実際にプレビューが再生されるときだけ読み込まれます。",
+          ko: "Twitch 페이지가 354 KB 가벼워졌습니다. 마우스를 올렸을 때 나오는 미리보기 플레이어를 모든 페이지에서 불러오지 않고, 미리보기가 실제로 재생될 때만 불러옵니다."
+        }
+      }
+    ]
+  },
+  {
     version: "26.9.20",
     date: "2026-09-17",
     changes: [

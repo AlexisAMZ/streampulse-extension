@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StreamPulse : Overlay Fond Vert CapCut (MP4 60 FPS)</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="assets/logo.png">
+  <style>
+    .tiktok-canvas {
+      background: #00ff00 !important;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1080px;
+      height: 1920px;
+      transform-origin: top left;
+      transform: scale(0.375);
+    }
+    .phone-viewport {
+      background: #00ff00 !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Barre latérale de configuration -->
+    <aside class="controls-sidebar">
+      <div class="brand-header">
+        <img src="assets/logo.png" alt="StreamPulse Logo">
+        <div>
+          <div class="title">StreamPulse</div>
+          <div class="badge-tag">Overlay CapCut (60 FPS)</div>
+        </div>
+      </div>
+
+      <!-- Format verrouillé en fond vert -->
+      <div class="control-group">
+        <label class="control-label">Format de sortie</label>
+        <div class="toggle-row">
+          <span class="toggle-label">Fond Vert Chroma Key (#00FF00)</span>
+          <span style="color: var(--lcd); font-weight: 700; font-size: 0.8rem;">ACTIF</span>
+        </div>
+      </div>
+
+      <!-- Position du Toast sur l'écran TikTok -->
+      <div class="control-group">
+        <label class="control-label">Position sur l'écran</label>
+        <div class="mode-grid">
+          <button class="mode-btn active" data-pos="pos-bottom">
+            <span>Bas de l'écran</span>
+          </button>
+          <button class="mode-btn" data-pos="pos-top">
+            <span>Haut de l'écran</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Personnalisation du Streamer & URL -->
+      <div class="control-group">
+        <label class="control-label" for="input-streamer">Pseudo Streamer</label>
+        <input type="text" id="input-streamer" class="control-input" value="anyme023">
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="input-url">Lien affiché</label>
+        <input type="text" id="input-url" class="control-input" value="streampulse.fr">
+      </div>
+
+      <!-- Toggles -->
+      <div class="control-group">
+        <div class="toggle-row">
+          <span class="toggle-label">Zone de sécurité TikTok</span>
+          <label class="switch">
+            <input type="checkbox" id="toggle-safe-area" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="toggle-row">
+          <span class="toggle-label">Son au démarrage</span>
+          <label class="switch">
+            <input type="checkbox" id="toggle-sound" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Boutons d'action -->
+      <div class="action-buttons">
+        <!-- Téléchargement immédiat du MP4 60 FPS complet -->
+        <a href="output/streampulse_overlay_greenscreen_12s.mp4" download="streampulse_overlay_greenscreen_12s.mp4" class="btn-primary" id="btn-download-mp4" style="text-decoration: none;">
+          <span>Télécharger la Vidéo MP4 (12.5s)</span>
+        </a>
+
+        <button id="btn-replay" class="btn-secondary">
+          <span>Rejouer l'animation (avec son)</span>
+        </button>
+
+        <button id="btn-record-video" class="btn-secondary">
+          <span id="record-btn-text">Générer nouveau MP4 en direct</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Zone de prévisualisation smartphone -->
+    <main class="preview-stage">
+      <div class="phone-viewport" id="viewport">
+        <!-- Canvas 60 FPS haute performance -->
+        <canvas id="live-canvas" width="1080" height="1920" class="tiktok-canvas"></canvas>
+
+        <!-- Repères interface TikTok (Safe Area) -->
+        <div class="tiktok-safe-area active" id="safe-area-overlay">
+          <div class="safe-zone-top"></div>
+          <div class="safe-zone-right"></div>
+          <div class="safe-zone-bottom"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Audio officiel -->
+  <audio id="notif-sound" src="assets/notification.mp3" preload="auto"></audio>
+
+  <!-- Scripts classiques compatibles file:/// sans blocage CORS -->
+  <script src="toast-renderer.js"></script>
+  <script src="studio.js"></script>
+</body>
+</html>

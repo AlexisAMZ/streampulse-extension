@@ -24,6 +24,11 @@ const DEV_ONLY = [/\.md$/i, /^\.gitignore$/, /^package(-lock)?\.json$/, /^eslint
   // formulaire du store, pas au paquet. 61 fichiers, ~22 Mo telecharges par
   // chaque utilisateur pour rien.
   /^images\/cws_screenshots\//, /^images\/promo\//,
+  // Visuels de travail (7tv, betterttv, ffz) : non references par l'extension.
+  /^images\/platforms\//,
+  // Studio promo TikTok : rendus, mp4 et pages de capture, 1,4 Mo hors-sujet
+  // dans le paquet livre.
+  /^promo\//,
   // Tests unitaires : outillage de developpement.
   /^tests\//];
 // Necessaire a l'extension mais gitignore.

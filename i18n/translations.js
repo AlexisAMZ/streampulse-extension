@@ -44,7 +44,8 @@ export const translations = {
     },
     "platforms": {
       "twitch": "Twitch",
-      "kick": "Kick"
+      "kick": "Kick",
+      "youtube": "YouTube"
     },
     "onboarding": {
       "newBadge": "Nouveau",
@@ -72,15 +73,15 @@ export const translations = {
       "htmlLang": "fr",
       "stepProfile": "Pseudo",
       "profileTitle": "Ton pseudo Twitch.",
-      "profileDescription": "Renseigne ton pseudo pour personnaliser StreamPulse. On récupère ta photo de profil Twitch pour t'accueillir comme il faut.",
+      "profileDescription": "Optionnel : renseigne ton pseudo Twitch et on récupère ta photo de profil pour t'accueillir. Pas de compte Twitch, ou tu préfères ne pas le donner ? Passe cette étape, tout marche quand même.",
       "profileInputLabel": "TON PSEUDO TWITCH",
       "profileHintIdle": "Saisis ton pseudo : on cherche automatiquement ton profil Twitch.",
       "profileHintSearching": "Recherche en cours…",
       "profileHintFound": "✓ Trouvé : {{handle}}",
-      "profileHintNotFound": "Aucun profil Twitch trouvé. Tu peux quand même continuer.",
+      "profileHintKept": "Profil Twitch introuvable : pas grave, on garde ce pseudo tel quel. Tu peux aussi passer cette étape.",
       "profilePreviewSuffix": "Voici qui est en ligne.",
       "documentTitle": "Première configuration",
-      "welcomeTagline": "EXTENSION CHROME · TWITCH · KICK",
+      "welcomeTagline": "EXTENSION CHROME · TWITCH · KICK · YOUTUBE",
       "welcomeDescription": "Ajoute ton premier streamer pour recevoir ses notifications. Tu pourras en ajouter d'autres ensuite directement depuis StreamPulse.",
       "languagePrompt": "Choisis la langue de l’extension",
       "languageHint": "Tu pourras la modifier plus tard depuis les réglages.",
@@ -129,7 +130,8 @@ export const translations = {
       "helperTextPlatform": "Ajoute un créateur disponible sur {{platform}}.",
       "placeholders": {
         "twitch": "ex: AlexisAMZ",
-        "kick": "ex: Teuf"
+        "kick": "ex: Teuf",
+        "youtube": "@handle ou lien de chaîne YouTube",
       },
       "submit": "Ajouter",
       "currentHeader": "Streamers suivis",
@@ -360,7 +362,7 @@ export const translations = {
         "nobodyTitle": "Personne en live pour l'instant",
         "nobodyBody": "Vos {{count}} chaînes sont hors ligne. StreamPulse vous prévient dès qu'une d'elles lance un live.",
         "emptyTitle": "Ajoutez votre premier streamer",
-        "emptyBody": "Saisissez un pseudo ou collez le lien d'une chaîne Twitch ou Kick en bas de la fenêtre.",
+        "emptyBody": "Saisissez un pseudo ou collez le lien d'une chaîne Twitch, Kick ou YouTube en bas de la fenêtre.",
         "stateLive": "En live",
         "stateOffline": "Hors ligne",
         "feature": "Mettre {{name}} en avant",
@@ -400,7 +402,7 @@ export const translations = {
         "confirmRemove": "Retirer {{name}} ?",
         "cancel": "Annuler",
         "noChannelsTitle": "Aucune chaîne pour l'instant",
-        "noChannelsBody": "Saisissez un pseudo ou collez le lien d'une chaîne Twitch ou Kick en bas de la fenêtre.",
+        "noChannelsBody": "Saisissez un pseudo ou collez le lien d'une chaîne Twitch, Kick ou YouTube en bas de la fenêtre.",
         "noMatchTitle": "Aucune chaîne avec ce filtre",
         "noMatchBody": "Choisissez « Tout » pour revoir toutes vos chaînes.",
         "rowLive": "{{name}}, en direct sur {{platform}}. {{game}}",
@@ -457,7 +459,8 @@ export const translations = {
       "platformFilter": {
         "all": "tous",
         "twitch": "twitch",
-        "kick": "kick"
+        "kick": "kick",
+            "youtube": "YouTube"
       },
       "addStreamerTitleBase": "Ajouter un streamer",
       "addStreamerTitlePlatform": "Ajouter un streamer {{platform}}",
@@ -467,7 +470,8 @@ export const translations = {
       "platformSelectorLabel": "Plateforme du streamer",
       "placeholders": {
         "twitch": "ex: AlexisAMZ",
-        "kick": "ex: Teuf"
+        "kick": "ex: Teuf",
+        "youtube": "@handle ou lien de chaîne YouTube",
       },
       "emptyState": "Aucun streamer suivi. Ajoutez-en un pour commencer.",
       "sort": {
@@ -543,7 +547,7 @@ export const translations = {
         "clipDownloadTitle": "Téléchargement des clips",
         "clipDownloadDescription": "Ajouter un bouton sur les pages de clips pour les enregistrer en MP4. StreamPulse+.",
         "preventTabDiscardTitle": "Empêcher la mise en veille de l'onglet",
-        "preventTabDiscardDescription": "Empêcher Chrome de fermer ou décharger les onglets Twitch/Kick inactifs.",
+        "preventTabDiscardDescription": "Empêcher Chrome de fermer ou décharger les onglets Twitch, Kick ou YouTube inactifs.",
         "fastForwardTitle": "Bouton d'avance rapide",
         "fastForwardDescription": "Ajouter un bouton pour rattraper instantanément le direct quand le flux est en retard.",
         "communityBadgeTitle": "Badge communautaire",
@@ -710,6 +714,8 @@ export const translations = {
       },
       "notifications": {
         "liveTitle": "{{name}} est en live",
+        "startupBatchTitle": "En direct maintenant",
+        "startupBatchBody": "Déjà en direct : {{names}}",
         "liveMessage": "{{game}} • {{viewers}} spectateurs",
         "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} spectateurs",
@@ -763,6 +769,7 @@ export const translations = {
       "formatDesktop": "PC · 16:9",
       "formatMobile": "Mobile · 9:16",
       "loading": "Chargement de tes statistiques…",
+      "canvasSummary": "Image récap : {{time}} de visionnage sur la période. Chaîne la plus regardée : {{top}}.",
       "emptyTitle": "Rien à afficher pour cette période.",
       "emptyBody": "Le Watch Time Tracker n'a rien enregistré sur cette période. Vérifie qu'il est activé dans les réglages.",
       "download": "Télécharger l'image",
@@ -901,6 +908,8 @@ export const translations = {
       "player": {
         "skipToLive": "Rattraper le direct",
         "holdToFastForward": "Maintenir pour avance x2",
+        "volumeBoostLabel": "Amplifier le volume",
+        "volumeBoostHint": "Clic : marche arrêt · molette ou flèches : régler, jusqu'à 200 %",
         "pictureInPicture": "Picture-in-Picture",
         "clipDownload": "Télécharger le clip (MP4)",
         "clipDownloading": "Téléchargement du clip…",
@@ -929,7 +938,8 @@ export const translations = {
     },
     "platforms": {
       "twitch": "Twitch",
-      "kick": "Kick"
+      "kick": "Kick",
+      "youtube": "YouTube"
     },
     "onboarding": {
       "newBadge": "New",
@@ -957,15 +967,15 @@ export const translations = {
       "htmlLang": "en",
       "stepProfile": "Username",
       "profileTitle": "Your Twitch username.",
-      "profileDescription": "Tell us your handle to personalize StreamPulse. We'll grab your Twitch profile picture to greet you properly.",
+      "profileDescription": "Optional: enter your Twitch username and we'll grab your profile picture to greet you properly. No Twitch account, or you'd rather not share it? Just skip this step, everything works anyway.",
       "profileInputLabel": "YOUR TWITCH USERNAME",
       "profileHintIdle": "Type your handle: we'll look up your Twitch profile.",
       "profileHintSearching": "Searching…",
       "profileHintFound": "✓ Found: {{handle}}",
-      "profileHintNotFound": "No Twitch profile found. You can still continue.",
+      "profileHintKept": "Twitch profile not found: no worries, we'll keep this username as is. You can also skip this step.",
       "profilePreviewSuffix": "Here's who's online.",
       "documentTitle": "First-time setup",
-      "welcomeTagline": "CHROME EXTENSION · TWITCH · KICK",
+      "welcomeTagline": "CHROME EXTENSION · TWITCH · KICK · YOUTUBE",
       "welcomeDescription": "Add your first streamer to start receiving their notifications. You can add more later directly from StreamPulse.",
       "languagePrompt": "Choose the extension language",
       "languageHint": "You can change it later from the settings.",
@@ -1014,7 +1024,8 @@ export const translations = {
       "helperTextPlatform": "Add a creator available on {{platform}}.",
       "placeholders": {
         "twitch": "e.g. minos",
-        "kick": "e.g. trainwreckstv"
+        "kick": "e.g. trainwreckstv",
+        "youtube": "@handle or YouTube channel URL",
       },
       "submit": "Add",
       "currentHeader": "Followed streamers",
@@ -1245,7 +1256,7 @@ export const translations = {
         "nobodyTitle": "Nobody is live right now",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
-        "emptyBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "emptyBody": "Type a handle or paste a Twitch, Kick or YouTube channel link at the bottom of the window.",
         "stateLive": "Live",
         "stateOffline": "Offline",
         "feature": "Feature {{name}}",
@@ -1285,7 +1296,7 @@ export const translations = {
         "confirmRemove": "Remove {{name}}?",
         "cancel": "Cancel",
         "noChannelsTitle": "No channels yet",
-        "noChannelsBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "noChannelsBody": "Type a handle or paste a Twitch, Kick or YouTube channel link at the bottom of the window.",
         "noMatchTitle": "No channels for this filter",
         "noMatchBody": "Choose “All” to see every channel again.",
         "rowLive": "{{name}}, live on {{platform}}. {{game}}",
@@ -1342,7 +1353,8 @@ export const translations = {
       "platformFilter": {
         "all": "all",
         "twitch": "twitch",
-        "kick": "kick"
+        "kick": "kick",
+            "youtube": "YouTube"
       },
       "addStreamerTitleBase": "Add a streamer",
       "addStreamerTitlePlatform": "Add a {{platform}} streamer",
@@ -1352,7 +1364,8 @@ export const translations = {
       "platformSelectorLabel": "Streamer platform",
       "placeholders": {
         "twitch": "e.g. minos",
-        "kick": "e.g. trainwreckstv"
+        "kick": "e.g. trainwreckstv",
+        "youtube": "@handle or YouTube channel URL",
       },
       "emptyState": "No streamers followed yet. Add one to get started.",
       "sort": {
@@ -1428,7 +1441,7 @@ export const translations = {
         "clipDownloadTitle": "Clip downloads",
         "clipDownloadDescription": "Add a button on clip pages to save clips as MP4. StreamPulse+.",
         "preventTabDiscardTitle": "Prevent tab discarding",
-        "preventTabDiscardDescription": "Prevent Chrome from discarding inactive Twitch/Kick tabs.",
+        "preventTabDiscardDescription": "Prevent Chrome from discarding inactive Twitch, Kick or YouTube tabs.",
         "fastForwardTitle": "Fast-forward button",
         "fastForwardDescription": "Add a button to instantly catch up to live when the stream lags behind.",
         "communityBadgeTitle": "Community badge",
@@ -1595,6 +1608,8 @@ export const translations = {
       },
       "notifications": {
         "liveTitle": "{{name}} is live",
+        "startupBatchTitle": "Live right now",
+        "startupBatchBody": "Already live: {{names}}",
         "liveMessage": "{{game}} • {{viewers}} viewers",
         "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} viewers",
@@ -1648,6 +1663,7 @@ export const translations = {
       "formatDesktop": "Desktop · 16:9",
       "formatMobile": "Mobile · 9:16",
       "loading": "Loading your stats…",
+      "canvasSummary": "Recap image: {{time}} watched over the period. Most-watched channel: {{top}}.",
       "emptyTitle": "Nothing to show for this period.",
       "emptyBody": "The Watch Time Tracker has not recorded anything for this period. Make sure it is turned on in the settings.",
       "download": "Download image",
@@ -1786,6 +1802,8 @@ export const translations = {
       "player": {
         "skipToLive": "Skip to live",
         "holdToFastForward": "Hold to fast-forward x2",
+        "volumeBoostLabel": "Boost the volume",
+        "volumeBoostHint": "Click: on/off · scroll or arrows: adjust, up to 200%",
         "pictureInPicture": "Picture-in-Picture",
         "clipDownload": "Download clip (MP4)",
         "clipDownloading": "Downloading clip…",
@@ -1814,7 +1832,8 @@ export const translations = {
     },
     "platforms": {
       "twitch": "Twitch",
-      "kick": "Kick"
+      "kick": "Kick",
+      "youtube": "YouTube"
     },
     "onboarding": {
       "newBadge": "Nuevo",
@@ -1846,10 +1865,10 @@ export const translations = {
       "profileHintIdle": "Escribe tu usuario: buscaremos tu perfil de Twitch automáticamente.",
       "profileHintSearching": "Buscando…",
       "profileHintFound": "✓ Encontrado: {{handle}}",
-      "profileHintNotFound": "No se ha encontrado ningún perfil de Twitch. Puedes continuar de todos modos.",
+      "profileHintKept": "Perfil de Twitch no encontrado: no pasa nada, guardamos este usuario tal cual. También puedes saltarte este paso.",
       "profilePreviewSuffix": "Aquí tienes quién está en línea.",
       "documentTitle": "Configuración inicial",
-      "welcomeTagline": "EXTENSIÓN CHROME · TWITCH · KICK",
+      "welcomeTagline": "EXTENSIÓN CHROME · TWITCH · KICK · YOUTUBE",
       "welcomeDescription": "Añade tu primer streamer para recibir sus notificaciones. Después podrás añadir más directamente desde StreamPulse.",
       "languagePrompt": "Elige el idioma de la extensión",
       "languageHint": "Podrás cambiarlo más tarde desde los ajustes.",
@@ -1898,7 +1917,8 @@ export const translations = {
       "helperTextPlatform": "Añade un creador disponible en {{platform}}.",
       "placeholders": {
         "twitch": "ej.: AlexisAMZ",
-        "kick": "ej.: Teuf"
+        "kick": "ej.: Teuf",
+        "youtube": "@usuario o enlace de canal de YouTube",
       },
       "submit": "Añadir",
       "currentHeader": "Streamers seguidos",
@@ -1950,7 +1970,7 @@ export const translations = {
         "countPlural": "{{count}} lives",
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
-        "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
+        "emptyBody": "Cuando un streamer que sigues termina un directo que no has visto, aparece aquí con su repetición.",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "Quitar a {{name}} de la lista",
@@ -2130,7 +2150,7 @@ export const translations = {
         "nobodyTitle": "Nobody is live right now",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
-        "emptyBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "emptyBody": "Escribe un usuario o pega el enlace de un canal de Twitch, Kick o YouTube en la parte inferior de la ventana.",
         "stateLive": "Live",
         "stateOffline": "Offline",
         "feature": "Feature {{name}}",
@@ -2170,7 +2190,7 @@ export const translations = {
         "confirmRemove": "Remove {{name}}?",
         "cancel": "Cancel",
         "noChannelsTitle": "No channels yet",
-        "noChannelsBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "noChannelsBody": "Escribe un usuario o pega el enlace de un canal de Twitch, Kick o YouTube en la parte inferior de la ventana.",
         "noMatchTitle": "No channels for this filter",
         "noMatchBody": "Choose “All” to see every channel again.",
         "rowLive": "{{name}}, live on {{platform}}. {{game}}",
@@ -2226,7 +2246,8 @@ export const translations = {
       "platformFilter": {
         "all": "todos",
         "twitch": "twitch",
-        "kick": "kick"
+        "kick": "kick",
+            "youtube": "YouTube"
       },
       "addStreamerTitleBase": "Añadir un streamer",
       "addStreamerTitlePlatform": "Añadir un streamer de {{platform}}",
@@ -2236,7 +2257,8 @@ export const translations = {
       "platformSelectorLabel": "Plataforma del streamer",
       "placeholders": {
         "twitch": "ej.: AlexisAMZ",
-        "kick": "ej.: Teuf"
+        "kick": "ej.: Teuf",
+        "youtube": "@usuario o enlace de canal de YouTube",
       },
       "emptyState": "Aún no sigues a ningún streamer. Añade uno para empezar.",
       "sort": {
@@ -2363,7 +2385,7 @@ export const translations = {
         "clipDownloadTitle": "Descarga de clips",
         "clipDownloadDescription": "Añade un botón en las páginas de clips para guardarlos en MP4. StreamPulse+.",
         "preventTabDiscardTitle": "Evitar la suspensión de pestañas",
-        "preventTabDiscardDescription": "Evita que Chrome descarte las pestañas inactivas de Twitch o Kick."
+        "preventTabDiscardDescription": "Evita que Chrome descarte las pestañas inactivas de Twitch, Kick o YouTube."
       },
       "watchTime": {
         "totalTime": "Tiempo total",
@@ -2480,6 +2502,8 @@ export const translations = {
       },
       "notifications": {
         "liveTitle": "{{name}} está en live",
+        "startupBatchTitle": "En directo ahora",
+        "startupBatchBody": "Ya en directo: {{names}}",
         "liveMessage": "{{game}} • {{viewers}} espectadores",
         "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} espectadores",
@@ -2534,6 +2558,7 @@ export const translations = {
       "formatMobile": "Móvil · 9:16",
       "loading": "Cargando tus estadísticas…",
       "emptyTitle": "No hay nada que mostrar en este periodo.",
+      "canvasSummary": "Imagen resumen: {{time}} de visionado en el periodo. Canal más visto: {{top}}.",
       "emptyBody": "El Watch Time Tracker no ha registrado nada en este periodo. Comprueba que esté activado en los ajustes.",
       "download": "Descargar imagen",
       "share": "Compartir en X",
@@ -2671,6 +2696,8 @@ export const translations = {
       "player": {
         "skipToLive": "Volver al directo",
         "holdToFastForward": "Mantén pulsado para avanzar x2",
+        "volumeBoostLabel": "Amplificar el volumen",
+        "volumeBoostHint": "Clic: activar o desactivar · rueda o flechas: ajustar, hasta 200 %",
         "pictureInPicture": "Imagen en imagen",
         "clipDownload": "Descargar clip (MP4)",
         "clipDownloading": "Descargando clip…",
@@ -2699,7 +2726,8 @@ export const translations = {
     },
     "platforms": {
       "twitch": "Twitch",
-      "kick": "Kick"
+      "kick": "Kick",
+      "youtube": "YouTube"
     },
     "onboarding": {
       "newBadge": "Novo",
@@ -2723,10 +2751,10 @@ export const translations = {
       "profileHintIdle": "Digite seu nome de usuário: buscamos seu perfil da Twitch automaticamente.",
       "profileHintSearching": "Buscando…",
       "profileHintFound": "✓ Encontrado: {{handle}}",
-      "profileHintNotFound": "Nenhum perfil da Twitch encontrado. Você pode continuar mesmo assim.",
+      "profileHintKept": "Perfil da Twitch não encontrado: sem problemas, vamos manter este nome de usuário como está. Você também pode pular esta etapa.",
       "profilePreviewSuffix": "Veja quem está online.",
       "documentTitle": "Configuração inicial",
-      "welcomeTagline": "EXTENSÃO CHROME · TWITCH · KICK",
+      "welcomeTagline": "EXTENSÃO CHROME · TWITCH · KICK · YOUTUBE",
       "welcomeDescription": "Adicione seu primeiro streamer para receber as notificações dele. Você pode adicionar mais depois direto pelo StreamPulse.",
       "languagePrompt": "Escolha o idioma da extensão",
       "languageHint": "Você poderá mudar depois nas configurações.",
@@ -2775,7 +2803,8 @@ export const translations = {
       "helperTextPlatform": "Adicione um criador disponível na {{platform}}.",
       "placeholders": {
         "twitch": "ex.: AlexisAMZ",
-        "kick": "ex.: Teuf"
+        "kick": "ex.: Teuf",
+        "youtube": "@usuário ou link de canal do YouTube",
       },
       "submit": "Adicionar",
       "currentHeader": "Streamers seguidos",
@@ -2822,7 +2851,7 @@ export const translations = {
         "countPlural": "{{count}} lives",
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
-        "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
+        "emptyBody": "Quando um streamer que você segue termina uma live que você não assistiu, ela aparece aqui com o replay.",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "Remover {{name}} da lista",
@@ -3002,7 +3031,7 @@ export const translations = {
         "nobodyTitle": "Nobody is live right now",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
-        "emptyBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "emptyBody": "Digite um nome de usuário ou cole o link de um canal da Twitch, Kick ou YouTube na parte de baixo da janela.",
         "stateLive": "Live",
         "stateOffline": "Offline",
         "feature": "Feature {{name}}",
@@ -3042,7 +3071,7 @@ export const translations = {
         "confirmRemove": "Remove {{name}}?",
         "cancel": "Cancel",
         "noChannelsTitle": "No channels yet",
-        "noChannelsBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "noChannelsBody": "Digite um nome de usuário ou cole o link de um canal da Twitch, Kick ou YouTube na parte de baixo da janela.",
         "noMatchTitle": "No channels for this filter",
         "noMatchBody": "Choose “All” to see every channel again.",
         "rowLive": "{{name}}, live on {{platform}}. {{game}}",
@@ -3098,7 +3127,8 @@ export const translations = {
       "platformFilter": {
         "all": "todos",
         "twitch": "twitch",
-        "kick": "kick"
+        "kick": "kick",
+            "youtube": "YouTube"
       },
       "addStreamerTitleBase": "Adicionar um streamer",
       "addStreamerTitlePlatform": "Adicionar um streamer de {{platform}}",
@@ -3108,7 +3138,8 @@ export const translations = {
       "platformSelectorLabel": "Plataforma do streamer",
       "placeholders": {
         "twitch": "ex.: AlexisAMZ",
-        "kick": "ex.: Teuf"
+        "kick": "ex.: Teuf",
+        "youtube": "@usuário ou link de canal do YouTube",
       },
       "emptyState": "Você ainda não segue nenhum streamer. Adicione um para começar.",
       "sort": {
@@ -3235,7 +3266,7 @@ export const translations = {
         "clipDownloadTitle": "Download de clipes",
         "clipDownloadDescription": "Adiciona um botão nas páginas de clipes para salvá-los em MP4. StreamPulse+.",
         "preventTabDiscardTitle": "Impedir a suspensão de abas",
-        "preventTabDiscardDescription": "Impede que o Chrome descarte abas inativas da Twitch ou Kick."
+        "preventTabDiscardDescription": "Impede que o Chrome descarte abas inativas da Twitch, Kick ou YouTube."
       },
       "watchTime": {
         "totalTime": "Tempo total",
@@ -3352,6 +3383,8 @@ export const translations = {
       },
       "notifications": {
         "liveTitle": "{{name}} está ao vivo",
+        "startupBatchTitle": "Ao vivo agora",
+        "startupBatchBody": "Já ao vivo: {{names}}",
         "liveMessage": "{{game}} • {{viewers}} espectadores",
         "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} espectadores",
@@ -3406,6 +3439,7 @@ export const translations = {
       "formatMobile": "Celular · 9:16",
       "loading": "Carregando suas estatísticas…",
       "emptyTitle": "Nada para mostrar neste período.",
+      "canvasSummary": "Imagem resumo: {{time}} de visualização no período. Canal mais assistido: {{top}}.",
       "emptyBody": "O Watch Time Tracker não registrou nada neste período. Verifique se ele está ativado nas configurações.",
       "download": "Baixar imagem",
       "share": "Compartilhar no X",
@@ -3538,6 +3572,8 @@ export const translations = {
       "player": {
         "skipToLive": "Voltar ao ao vivo",
         "holdToFastForward": "Segure para avançar x2",
+        "volumeBoostLabel": "Amplificar o volume",
+        "volumeBoostHint": "Clique: liga ou desliga · roda ou setas: ajustar, até 200%",
         "pictureInPicture": "Picture-in-Picture",
         "clipDownload": "Baixar clipe (MP4)",
         "clipDownloading": "Baixando clipe…",
@@ -3566,7 +3602,8 @@ export const translations = {
     },
     "platforms": {
       "twitch": "Twitch",
-      "kick": "Kick"
+      "kick": "Kick",
+      "youtube": "YouTube"
     },
     "onboarding": {
       "newBadge": "Neu",
@@ -3599,10 +3636,10 @@ export const translations = {
       "profileHintIdle": "Geben Sie Ihren Benutzernamen ein: Wir suchen nach Ihrem Twitch-Profil.",
       "profileHintSearching": "Suche...",
       "profileHintFound": "✓ Gefunden: {{handle}}",
-      "profileHintNotFound": "Kein Twitch-Profil gefunden. Sie können trotzdem fortfahren.",
+      "profileHintKept": "Twitch-Profil nicht gefunden: kein Problem, wir behalten diesen Benutzernamen so. Du kannst diesen Schritt auch überspringen.",
       "profilePreviewSuffix": "Hier erfahren Sie, wer online ist.",
       "documentTitle": "Erstmalige Einrichtung",
-      "welcomeTagline": "CHROMVERLÄNGERUNG · TWITCH · KICK",
+      "welcomeTagline": "CHROME-ERWEITERUNG · TWITCH · KICK · YOUTUBE",
       "welcomeDescription": "Fügen Sie Ihren ersten Streamer hinzu, um dessen Benachrichtigungen zu erhalten. Sie können später direkt aus StreamPulse weitere hinzufügen.",
       "languagePrompt": "Wählen Sie die Erweiterungssprache",
       "languageHint": "Sie können es später in den Einstellungen ändern.",
@@ -3651,7 +3688,8 @@ export const translations = {
       "helperTextPlatform": "Fügen Sie einen auf {{platform}} verfügbaren Ersteller hinzu.",
       "placeholders": {
         "twitch": "z.B. Minos",
-        "kick": "z.B. trainwreckstv"
+        "kick": "z.B. trainwreckstv",
+        "youtube": "@Name oder YouTube-Kanal-Link",
       },
       "submit": "Hinzufügen",
       "currentHeader": "Streamern gefolgt",
@@ -3702,7 +3740,7 @@ export const translations = {
         "countPlural": "{{count}} lives",
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
-        "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
+        "emptyBody": "Wenn ein Streamer, dem du folgst, einen Stream beendet, den du nicht gesehen hast, taucht er hier mit seiner Wiederholung auf.",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "{{name}} aus der Liste entfernen",
@@ -3882,7 +3920,7 @@ export const translations = {
         "nobodyTitle": "Nobody is live right now",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
-        "emptyBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "emptyBody": "Gib einen Namen ein oder füge unten im Fenster den Link eines Twitch-, Kick- oder YouTube-Kanals ein.",
         "stateLive": "Live",
         "stateOffline": "Offline",
         "feature": "Feature {{name}}",
@@ -3922,7 +3960,7 @@ export const translations = {
         "confirmRemove": "Remove {{name}}?",
         "cancel": "Cancel",
         "noChannelsTitle": "No channels yet",
-        "noChannelsBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "noChannelsBody": "Gib einen Namen ein oder füge unten im Fenster den Link eines Twitch-, Kick- oder YouTube-Kanals ein.",
         "noMatchTitle": "No channels for this filter",
         "noMatchBody": "Choose “All” to see every channel again.",
         "rowLive": "{{name}}, live on {{platform}}. {{game}}",
@@ -3979,7 +4017,8 @@ export const translations = {
       "platformFilter": {
         "all": "alle",
         "twitch": "twitch",
-        "kick": "kick"
+        "kick": "kick",
+            "youtube": "YouTube"
       },
       "addStreamerTitleBase": "Fügen Sie einen Streamer hinzu",
       "addStreamerTitlePlatform": "Fügen Sie einen {{platform}}-Streamer hinzu",
@@ -3989,7 +4028,8 @@ export const translations = {
       "platformSelectorLabel": "Streamer-Plattform",
       "placeholders": {
         "twitch": "z.B. Minos",
-        "kick": "z.B. trainwreckstv"
+        "kick": "z.B. trainwreckstv",
+        "youtube": "@Name oder YouTube-Kanal-Link",
       },
       "emptyState": "Es sind noch keine Streamer gefolgt. Fügen Sie eines hinzu, um loszulegen.",
       "sort": {
@@ -4065,7 +4105,7 @@ export const translations = {
         "clipDownloadTitle": "Clip-Downloads",
         "clipDownloadDescription": "Fügt auf Clip-Seiten einen Button hinzu, um Clips als MP4 zu speichern. StreamPulse+.",
         "preventTabDiscardTitle": "Verhindern Sie das Verwerfen von Tabs",
-        "preventTabDiscardDescription": "Verhindern Sie, dass Chrome inaktive Twitch/Kick-Tabs verwirft.",
+        "preventTabDiscardDescription": "Verhindern Sie, dass Chrome inaktive Twitch-, Kick- oder YouTube-Tabs verwirft.",
         "fastForwardTitle": "Schnellvorlauf-Taste",
         "fastForwardDescription": "Fügen Sie eine Schaltfläche hinzu, um sofort auf den neuesten Stand zu kommen, wenn der Stream hinterherhinkt.",
         "communityBadgeTitle": "Community-Abzeichen",
@@ -4232,6 +4272,8 @@ export const translations = {
       },
       "notifications": {
         "liveTitle": "{{name}} ist live",
+        "startupBatchTitle": "Jetzt live",
+        "startupBatchBody": "Bereits live: {{names}}",
         "liveMessage": "{{game}} • {{viewers}} Zuschauer",
         "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} Zuschauer",
@@ -4286,6 +4328,7 @@ export const translations = {
       "formatMobile": "Mobil · 9:16",
       "loading": "Deine Statistiken werden geladen…",
       "emptyTitle": "Für diesen Zeitraum gibt es nichts anzuzeigen.",
+      "canvasSummary": "Récap-Bild: {{time}} Sehdauer im Zeitraum. Meistgesehener Kanal: {{top}}.",
       "emptyBody": "Der Watch Time Tracker hat in diesem Zeitraum nichts erfasst. Prüfe, ob er in den Einstellungen aktiviert ist.",
       "download": "Bild herunterladen",
       "share": "Auf X teilen",
@@ -4423,6 +4466,8 @@ export const translations = {
       "player": {
         "skipToLive": "Weiter zum Leben",
         "holdToFastForward": "Halten Sie die Taste gedrückt, um x2",
+        "volumeBoostLabel": "Lautstärke verstärken",
+        "volumeBoostHint": "Klick: ein oder aus · Scrollen oder Pfeile: bis 200 %",
         "pictureInPicture": "Bild-in-Bild",
         "clipDownload": "Clip herunterladen (MP4)",
         "clipDownloading": "Clip wird heruntergeladen…",
@@ -4451,7 +4496,8 @@ export const translations = {
     },
     "platforms": {
       "twitch": "Twitch",
-      "kick": "Kick"
+      "kick": "Kick",
+      "youtube": "YouTube"
     },
     "onboarding": {
       "newBadge": "Nuovo",
@@ -4484,10 +4530,10 @@ export const translations = {
       "profileHintIdle": "Inserisci il tuo handle: cercheremo il tuo profilo Twitch.",
       "profileHintSearching": "Ricerca…",
       "profileHintFound": "✓ Trovato: {{handle}}",
-      "profileHintNotFound": "Nessun profilo Twitch trovato. Puoi ancora continuare.",
+      "profileHintKept": "Profilo Twitch non trovato: nessun problema, teniamo questo nome utente così com'è. Puoi anche saltare questo passaggio.",
       "profilePreviewSuffix": "Ecco chi è online.",
       "documentTitle": "Prima configurazione",
-      "welcomeTagline": "ESTENSIONE CROMATA · TWITCH · KICK",
+      "welcomeTagline": "ESTENSIONE CHROME · TWITCH · KICK · YOUTUBE",
       "welcomeDescription": "Aggiungi il tuo primo streamer per iniziare a ricevere le sue notifiche. Puoi aggiungerne altri in seguito direttamente da StreamPulse.",
       "languagePrompt": "Scegli la lingua dell'estensione",
       "languageHint": "Potrai modificarlo in seguito dalle impostazioni.",
@@ -4536,7 +4582,8 @@ export const translations = {
       "helperTextPlatform": "Aggiungi un creatore disponibile su {{platform}}.",
       "placeholders": {
         "twitch": "per esempio. mino",
-        "kick": "per esempio. trainwreckstv"
+        "kick": "per esempio. trainwreckstv",
+        "youtube": "@handle o link del canale YouTube",
       },
       "submit": "Aggiungi",
       "currentHeader": "Streamer seguiti",
@@ -4587,7 +4634,7 @@ export const translations = {
         "countPlural": "{{count}} lives",
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
-        "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
+        "emptyBody": "Quando uno streamer che segui chiude una diretta che non hai visto, compare qui con la sua replica.",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "Rimuovi {{name}} dall'elenco",
@@ -4767,7 +4814,7 @@ export const translations = {
         "nobodyTitle": "Nobody is live right now",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
-        "emptyBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "emptyBody": "Scrivi un nome utente o incolla il link di un canale Twitch, Kick o YouTube in fondo alla finestra.",
         "stateLive": "Live",
         "stateOffline": "Offline",
         "feature": "Feature {{name}}",
@@ -4807,7 +4854,7 @@ export const translations = {
         "confirmRemove": "Remove {{name}}?",
         "cancel": "Cancel",
         "noChannelsTitle": "No channels yet",
-        "noChannelsBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "noChannelsBody": "Scrivi un nome utente o incolla il link di un canale Twitch, Kick o YouTube in fondo alla finestra.",
         "noMatchTitle": "No channels for this filter",
         "noMatchBody": "Choose “All” to see every channel again.",
         "rowLive": "{{name}}, live on {{platform}}. {{game}}",
@@ -4864,7 +4911,8 @@ export const translations = {
       "platformFilter": {
         "all": "tutto",
         "twitch": "twitch",
-        "kick": "kick"
+        "kick": "kick",
+            "youtube": "YouTube"
       },
       "addStreamerTitleBase": "Aggiungi uno streamer",
       "addStreamerTitlePlatform": "Aggiungi uno streamer {{platform}}",
@@ -4874,7 +4922,8 @@ export const translations = {
       "platformSelectorLabel": "Piattaforma di streaming",
       "placeholders": {
         "twitch": "per esempio. mino",
-        "kick": "per esempio. trainwreckstv"
+        "kick": "per esempio. trainwreckstv",
+        "youtube": "@handle o link del canale YouTube",
       },
       "emptyState": "Nessuno streamer è stato ancora seguito. Aggiungine uno per iniziare.",
       "sort": {
@@ -4950,7 +4999,7 @@ export const translations = {
         "clipDownloadTitle": "Download delle clip",
         "clipDownloadDescription": "Aggiunge un pulsante nelle pagine delle clip per salvarle in MP4. StreamPulse+.",
         "preventTabDiscardTitle": "Impedisci l'eliminazione delle schede",
-        "preventTabDiscardDescription": "Impedisci a Chrome di eliminare le schede Twitch/Kick inattive.",
+        "preventTabDiscardDescription": "Impedisci a Chrome di eliminare le schede Twitch, Kick o YouTube inattive.",
         "fastForwardTitle": "Pulsante di avanzamento veloce",
         "fastForwardDescription": "Aggiungi un pulsante per restare immediatamente aggiornato in diretta quando lo streaming è in ritardo.",
         "communityBadgeTitle": "Badge della comunità",
@@ -5117,6 +5166,8 @@ export const translations = {
       },
       "notifications": {
         "liveTitle": "{{name}} è attivo",
+        "startupBatchTitle": "In diretta adesso",
+        "startupBatchBody": "Già in diretta: {{names}}",
         "liveMessage": "{{game}} • {{viewers}} spettatori",
         "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} spettatori",
@@ -5171,6 +5222,7 @@ export const translations = {
       "formatMobile": "Mobile · 9:16",
       "loading": "Caricamento delle statistiche…",
       "emptyTitle": "Niente da mostrare per questo periodo.",
+      "canvasSummary": "Immagine riepilogo: {{time}} di visione nel periodo. Canale più guardato: {{top}}.",
       "emptyBody": "Il Watch Time Tracker non ha registrato nulla in questo periodo. Verifica che sia attivo nelle impostazioni.",
       "download": "Scarica immagine",
       "share": "Condividi su X",
@@ -5308,6 +5360,8 @@ export const translations = {
       "player": {
         "skipToLive": "Passa alla diretta",
         "holdToFastForward": "Tieni premuto per avanzare velocemente x2",
+        "volumeBoostLabel": "Amplifica il volume",
+        "volumeBoostHint": "Clic: attiva o disattiva · rotella o frecce: regola, fino al 200%",
         "pictureInPicture": "Picture-in-Picture",
         "clipDownload": "Scarica clip (MP4)",
         "clipDownloading": "Download della clip…",
@@ -5336,7 +5390,8 @@ export const translations = {
     },
     "platforms": {
       "twitch": "Twitch",
-      "kick": "Kick"
+      "kick": "Kick",
+      "youtube": "YouTube"
     },
     "onboarding": {
       "newBadge": "Nowe",
@@ -5369,10 +5424,10 @@ export const translations = {
       "profileHintIdle": "Wpisz swój nick: sprawdzimy Twój profil na Twitchu.",
       "profileHintSearching": "Badawczy…",
       "profileHintFound": "✓ Znaleziono: {{handle}}",
-      "profileHintNotFound": "Nie znaleziono profilu Twitch. Nadal możesz kontynuować.",
+      "profileHintKept": "Nie znaleziono profilu Twitch: nic się nie stało, zachowujemy ten pseudonim bez zmian. Możesz też pominąć ten krok.",
       "profilePreviewSuffix": "Oto, kto jest online.",
       "documentTitle": "Konfiguracja po raz pierwszy",
-      "welcomeTagline": "ROZSZERZENIE CHROMU · TWITCH · KICK",
+      "welcomeTagline": "ROZSZERZENIE CHROME · TWITCH · KICK · YOUTUBE",
       "welcomeDescription": "Dodaj swojego pierwszego streamera, aby zacząć otrzymywać jego powiadomienia. Możesz dodać więcej później bezpośrednio ze StreamPulse.",
       "languagePrompt": "Wybierz język rozszerzenia",
       "languageHint": "Możesz to później zmienić w ustawieniach.",
@@ -5421,7 +5476,8 @@ export const translations = {
       "helperTextPlatform": "Dodaj twórcę dostępnego na {{platform}}.",
       "placeholders": {
         "twitch": "np. Minos",
-        "kick": "np. wrak pociągu"
+        "kick": "np. wrak pociągu",
+        "youtube": "@pseudo lub link do kanału YouTube",
       },
       "submit": "Dodać",
       "currentHeader": "Obserwowani streamerzy",
@@ -5472,7 +5528,7 @@ export const translations = {
         "countPlural": "{{count}} lives",
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
-        "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
+        "emptyBody": "Gdy obserwowany streamer kończy transmisję, której nie oglądałeś, pojawia się tutaj razem z powtórką.",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "Usuń {{name}} z listy",
@@ -5652,7 +5708,7 @@ export const translations = {
         "nobodyTitle": "Nobody is live right now",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
-        "emptyBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "emptyBody": "Wpisz nazwę użytkownika albo wklej link do kanału Twitch, Kick lub YouTube na dole okna.",
         "stateLive": "Live",
         "stateOffline": "Offline",
         "feature": "Feature {{name}}",
@@ -5692,7 +5748,7 @@ export const translations = {
         "confirmRemove": "Remove {{name}}?",
         "cancel": "Cancel",
         "noChannelsTitle": "No channels yet",
-        "noChannelsBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "noChannelsBody": "Wpisz nazwę użytkownika albo wklej link do kanału Twitch, Kick lub YouTube na dole okna.",
         "noMatchTitle": "No channels for this filter",
         "noMatchBody": "Choose “All” to see every channel again.",
         "rowLive": "{{name}}, live on {{platform}}. {{game}}",
@@ -5749,7 +5805,8 @@ export const translations = {
       "platformFilter": {
         "all": "wszystko",
         "twitch": "twitch",
-        "kick": "kick"
+        "kick": "kick",
+            "youtube": "YouTube"
       },
       "addStreamerTitleBase": "Dodaj streamera",
       "addStreamerTitlePlatform": "Dodaj streamera {{platform}}",
@@ -5759,7 +5816,8 @@ export const translations = {
       "platformSelectorLabel": "Platforma streamerów",
       "placeholders": {
         "twitch": "np. Minos",
-        "kick": "np. wrak pociągu"
+        "kick": "np. wrak pociągu",
+        "youtube": "@pseudo lub link do kanału YouTube",
       },
       "emptyState": "Żaden streamer jeszcze nie obserwuje. Dodaj jeden, aby rozpocząć.",
       "sort": {
@@ -5835,7 +5893,7 @@ export const translations = {
         "clipDownloadTitle": "Pobieranie klipów",
         "clipDownloadDescription": "Dodaje na stronach klipów przycisk zapisu w MP4. StreamPulse+.",
         "preventTabDiscardTitle": "Zapobiegaj odrzucaniu zakładek",
-        "preventTabDiscardDescription": "Uniemożliwiaj Chrome odrzucanie nieaktywnych zakładek Twitch/Kick.",
+        "preventTabDiscardDescription": "Uniemożliwiaj Chrome odrzucanie nieaktywnych zakładek Twitch, Kick i YouTube.",
         "fastForwardTitle": "Przycisk przewijania do przodu",
         "fastForwardDescription": "Dodaj przycisk, aby natychmiast nadrobić zaległości w transmisji na żywo, gdy transmisja jest opóźniona.",
         "communityBadgeTitle": "Odznaka społeczności",
@@ -6002,6 +6060,8 @@ export const translations = {
       },
       "notifications": {
         "liveTitle": "{{name}} jest na żywo",
+        "startupBatchTitle": "Na żywo teraz",
+        "startupBatchBody": "Już na żywo: {{names}}",
         "liveMessage": "{{game}} • {{viewers}} widzów",
         "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} widzów",
@@ -6056,6 +6116,7 @@ export const translations = {
       "formatMobile": "Telefon · 9:16",
       "loading": "Wczytywanie statystyk…",
       "emptyTitle": "Brak danych dla tego okresu.",
+      "canvasSummary": "Obraz podsumowania: {{time}} oglądania w tym okresie. Najczęściej oglądany kanał: {{top}}.",
       "emptyBody": "Watch Time Tracker nic nie zarejestrował w tym okresie. Sprawdź, czy jest włączony w ustawieniach.",
       "download": "Pobierz obraz",
       "share": "Udostępnij na X",
@@ -6193,6 +6254,8 @@ export const translations = {
       "player": {
         "skipToLive": "Przejdź do transmisji na żywo",
         "holdToFastForward": "Przytrzymaj, aby przewinąć do przodu x2",
+        "volumeBoostLabel": "Wzmocnij głośność",
+        "volumeBoostHint": "Klik: włącz lub wyłącz · kółko lub strzałki: do 200%",
         "pictureInPicture": "Obraz w obrazie",
         "clipDownload": "Pobierz klip (MP4)",
         "clipDownloading": "Pobieranie klipu…",
@@ -6221,7 +6284,8 @@ export const translations = {
     },
     "platforms": {
       "twitch": "Twitch",
-      "kick": "Kick"
+      "kick": "Kick",
+      "youtube": "YouTube"
     },
     "onboarding": {
       "newBadge": "Yeni",
@@ -6254,10 +6318,10 @@ export const translations = {
       "profileHintIdle": "Takma adını gir: Twitch profilini arayacağız.",
       "profileHintSearching": "Aranıyor…",
       "profileHintFound": "✓ Bulundu: {{handle}}",
-      "profileHintNotFound": "Twitch profili bulunamadı. Yine de devam edebilirsiniz.",
+      "profileHintKept": "Twitch profili bulunamadı: sorun değil, bu kullanıcı adını olduğu gibi tutuyoruz. Bu adımı atlayabilirsin.",
       "profilePreviewSuffix": "İşte şu anda çevrimiçi olanlar.",
       "documentTitle": "İlk kurulum",
-      "welcomeTagline": "CHROME UZANTISI · TWITCH · KICK",
+      "welcomeTagline": "CHROME UZANTISI · TWITCH · KICK · YOUTUBE",
       "welcomeDescription": "Bildirimlerini almaya başlamak için ilk streamer’ınızı ekleyin. Daha sonra doğrudan StreamPulse üzerinden başka streamer’lar da ekleyebilirsiniz.",
       "languagePrompt": "Uzantı dilini seçin",
       "languageHint": "Bunu daha sonra ayarlardan değiştirebilirsiniz.",
@@ -6306,7 +6370,8 @@ export const translations = {
       "helperTextPlatform": "{{platform}}'da bulunan bir içerik oluşturucuyu ekleyin.",
       "placeholders": {
         "twitch": "örn. minos",
-        "kick": "örn. trainwreckstv"
+        "kick": "örn. trainwreckstv",
+        "youtube": "@kullanıcı adı veya YouTube kanal bağlantısı",
       },
       "submit": "Ekle",
       "currentHeader": "Takip ettiğim yayıncılar",
@@ -6357,7 +6422,7 @@ export const translations = {
         "countPlural": "{{count}} lives",
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
-        "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
+        "emptyBody": "Takip ettiğin bir yayıncı, izlemediğin bir yayını bitirdiğinde, tekrarıyla birlikte burada görünür.",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "{{name}} öğesini listeden kaldır",
@@ -6537,7 +6602,7 @@ export const translations = {
         "nobodyTitle": "Nobody is live right now",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
-        "emptyBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "emptyBody": "Pencerenin altına bir kullanıcı adı yaz ya da bir Twitch, Kick veya YouTube kanal bağlantısı yapıştır.",
         "stateLive": "Live",
         "stateOffline": "Offline",
         "feature": "Feature {{name}}",
@@ -6577,7 +6642,7 @@ export const translations = {
         "confirmRemove": "Remove {{name}}?",
         "cancel": "Cancel",
         "noChannelsTitle": "No channels yet",
-        "noChannelsBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "noChannelsBody": "Pencerenin altına bir kullanıcı adı yaz ya da bir Twitch, Kick veya YouTube kanal bağlantısı yapıştır.",
         "noMatchTitle": "No channels for this filter",
         "noMatchBody": "Choose “All” to see every channel again.",
         "rowLive": "{{name}}, live on {{platform}}. {{game}}",
@@ -6634,7 +6699,8 @@ export const translations = {
       "platformFilter": {
         "all": "hepsi",
         "twitch": "twitch",
-        "kick": "kick"
+        "kick": "kick",
+            "youtube": "YouTube"
       },
       "addStreamerTitleBase": "Bir flama ekle",
       "addStreamerTitlePlatform": "Bir {{platform}} yayıncısı ekle",
@@ -6644,7 +6710,8 @@ export const translations = {
       "platformSelectorLabel": "Canlı yayın platformu",
       "placeholders": {
         "twitch": "örn. minos",
-        "kick": "örn. trainwreckstv"
+        "kick": "örn. trainwreckstv",
+        "youtube": "@kullanıcı adı veya YouTube kanal bağlantısı",
       },
       "emptyState": "Henüz takip ettiğiniz yayıncı yok. Başlamak için birini ekleyin.",
       "sort": {
@@ -6720,7 +6787,7 @@ export const translations = {
         "clipDownloadTitle": "Klip indirme",
         "clipDownloadDescription": "Klip sayfalarına klipleri MP4 olarak kaydetmek için bir düğme ekler. StreamPulse+.",
         "preventTabDiscardTitle": "Sekmenin kapatılmasını önle",
-        "preventTabDiscardDescription": "Chrome’un etkin olmayan Twitch/Kick sekmelerini kapatmasını engelleyin.",
+        "preventTabDiscardDescription": "Chrome’un etkin olmayan Twitch/Kick/YouTube sekmelerini kapatmasını engelleyin.",
         "fastForwardTitle": "Hızlı ileri sarma düğmesi",
         "fastForwardDescription": "Yayın gecikmesi yaşandığında anında canlı yayına yetişmek için bir düğme ekleyin.",
         "communityBadgeTitle": "Topluluk rozeti",
@@ -6887,6 +6954,8 @@ export const translations = {
       },
       "notifications": {
         "liveTitle": "{{name}} yayında",
+        "startupBatchTitle": "Şu anda canlı",
+        "startupBatchBody": "Hâlihazırda canlı: {{names}}",
         "liveMessage": "{{game}} • {{viewers}} izleyici",
         "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} izleyici",
@@ -6941,6 +7010,7 @@ export const translations = {
       "formatMobile": "Mobil · 9:16",
       "loading": "İstatistiklerin yükleniyor…",
       "emptyTitle": "Bu dönem için gösterilecek bir şey yok.",
+      "canvasSummary": "Özet görseli: dönemde {{time}} izleme. En çok izlenen kanal: {{top}}.",
       "emptyBody": "Watch Time Tracker bu dönemde hiçbir şey kaydetmedi. Ayarlarda açık olduğundan emin ol.",
       "download": "Görseli indir",
       "share": "X'te paylaş",
@@ -7078,6 +7148,8 @@ export const translations = {
       "player": {
         "skipToLive": "Canlı yayına atla",
         "holdToFastForward": "Hızlı ileri sarma için basılı tutun x2",
+        "volumeBoostLabel": "Sesi güçlendir",
+        "volumeBoostHint": "Tık: aç veya kapat · tekerlek veya oklar: %200'e kadar ayarla",
         "pictureInPicture": "Resim içinde resim",
         "clipDownload": "Klibi indir (MP4)",
         "clipDownloading": "Klip indiriliyor…",
@@ -7106,7 +7178,8 @@ export const translations = {
     },
     "platforms": {
       "twitch": "Twitch",
-      "kick": "Kick"
+      "kick": "Kick",
+      "youtube": "YouTube"
     },
     "onboarding": {
       "newBadge": "Новое",
@@ -7139,10 +7212,10 @@ export const translations = {
       "profileHintIdle": "Введите свой ник: мы найдем ваш профиль на Twitch.",
       "profileHintSearching": "Поиск…",
       "profileHintFound": "✓ Найден: {{handle}}",
-      "profileHintNotFound": "Профиль на Twitch не найден. Вы всё равно можете продолжить.",
+      "profileHintKept": "Профиль Twitch не найден: ничего страшного, оставим этот ник как есть. Можно также пропустить этот шаг.",
       "profilePreviewSuffix": "Вот кто сейчас в сети.",
       "documentTitle": "Первоначальная настройка",
-      "welcomeTagline": "РАСШИРЕНИЕ ДЛЯ CHROME · TWITCH · KICK",
+      "welcomeTagline": "РАСШИРЕНИЕ ДЛЯ CHROME · TWITCH · KICK · YOUTUBE",
       "welcomeDescription": "Добавьте своего первого стримера, чтобы начать получать уведомления от него. Позже вы сможете добавить других стримеров прямо из StreamPulse.",
       "languagePrompt": "Выберите язык расширения",
       "languageHint": "Вы сможете изменить это позже в настройках.",
@@ -7191,7 +7264,8 @@ export const translations = {
       "helperTextPlatform": "Добавить автора, доступного на {{platform}}.",
       "placeholders": {
         "twitch": "например, миносы",
-        "kick": "например, trainwreckstv"
+        "kick": "например, trainwreckstv",
+        "youtube": "@ник или ссылка на канал YouTube",
       },
       "submit": "Добавить",
       "currentHeader": "Следующие стримеры",
@@ -7242,7 +7316,7 @@ export const translations = {
         "countPlural": "{{count}} lives",
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
-        "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
+        "emptyBody": "Когда стример, за которым ты следишь, заканчивает эфир, который ты не посмотрел, он появляется здесь вместе с записью.",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "Убрать {{name}} из списка",
@@ -7422,7 +7496,7 @@ export const translations = {
         "nobodyTitle": "Nobody is live right now",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
-        "emptyBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "emptyBody": "Введите ник или вставьте ссылку на канал Twitch, Kick или YouTube внизу окна.",
         "stateLive": "Live",
         "stateOffline": "Offline",
         "feature": "Feature {{name}}",
@@ -7462,7 +7536,7 @@ export const translations = {
         "confirmRemove": "Remove {{name}}?",
         "cancel": "Cancel",
         "noChannelsTitle": "No channels yet",
-        "noChannelsBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "noChannelsBody": "Введите ник или вставьте ссылку на канал Twitch, Kick или YouTube внизу окна.",
         "noMatchTitle": "No channels for this filter",
         "noMatchBody": "Choose “All” to see every channel again.",
         "rowLive": "{{name}}, live on {{platform}}. {{game}}",
@@ -7519,7 +7593,8 @@ export const translations = {
       "platformFilter": {
         "all": "все",
         "twitch": "twitch",
-        "kick": "kick"
+        "kick": "kick",
+            "youtube": "YouTube"
       },
       "addStreamerTitleBase": "Добавить серпантин",
       "addStreamerTitlePlatform": "Добавить стримера {{platform}}",
@@ -7529,7 +7604,8 @@ export const translations = {
       "platformSelectorLabel": "Платформа для стримеров",
       "placeholders": {
         "twitch": "например, миносы",
-        "kick": "например, trainwreckstv"
+        "kick": "например, trainwreckstv",
+        "youtube": "@ник или ссылка на канал YouTube",
       },
       "emptyState": "Пока никто не подписался на стримеров. Добавьте одного, чтобы начать.",
       "sort": {
@@ -7605,7 +7681,7 @@ export const translations = {
         "clipDownloadTitle": "Скачивание клипов",
         "clipDownloadDescription": "Добавляет на страницы клипов кнопку для сохранения в MP4. StreamPulse+.",
         "preventTabDiscardTitle": "Предотвратить сброс вкладки",
-        "preventTabDiscardDescription": "Не позволяйте Chrome закрывать неактивные вкладки Twitch/Kick.",
+        "preventTabDiscardDescription": "Не позволяйте Chrome закрывать неактивные вкладки Twitch, Kick и YouTube.",
         "fastForwardTitle": "Кнопка «Перемотка вперед»",
         "fastForwardDescription": "Добавьте кнопку, чтобы мгновенно наверстать отставание от прямой трансляции, когда она начинает задерживаться.",
         "communityBadgeTitle": "Значок сообщества",
@@ -7772,6 +7848,8 @@ export const translations = {
       },
       "notifications": {
         "liveTitle": "{{name}} в эфире",
+        "startupBatchTitle": "Сейчас в эфире",
+        "startupBatchBody": "Уже в эфире: {{names}}",
         "liveMessage": "{{game}} • {{viewers}} зрителей",
         "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} зрителей",
@@ -7826,6 +7904,7 @@ export const translations = {
       "formatMobile": "Телефон · 9:16",
       "loading": "Загрузка статистики…",
       "emptyTitle": "За этот период нечего показать.",
+      "canvasSummary": "Изображение-рекап: {{time}} просмотра за период. Самый просматриваемый канал: {{top}}.",
       "emptyBody": "Watch Time Tracker ничего не записал за этот период. Проверь, что он включён в настройках.",
       "download": "Скачать изображение",
       "share": "Поделиться в X",
@@ -7963,6 +8042,8 @@ export const translations = {
       "player": {
         "skipToLive": "Перейти к трансляции",
         "holdToFastForward": "Удерживайте для ускоренного просмотра в 2 раза",
+        "volumeBoostLabel": "Усилить громкость",
+        "volumeBoostHint": "Клик: вкл или выкл · колесо или стрелки: до 200 %",
         "pictureInPicture": "Картинка в картинке",
         "clipDownload": "Скачать клип (MP4)",
         "clipDownloading": "Скачивание клипа…",
@@ -7991,7 +8072,8 @@ export const translations = {
     },
     "platforms": {
       "twitch": "Twitch",
-      "kick": "Kick"
+      "kick": "Kick",
+      "youtube": "YouTube"
     },
     "onboarding": {
       "newBadge": "新着",
@@ -8024,10 +8106,10 @@ export const translations = {
       "profileHintIdle": "ハンドルネームを入力してください。Twitchのプロフィールを検索します。",
       "profileHintSearching": "検索中…",
       "profileHintFound": "✓ 見つかりました：{{handle}}",
-      "profileHintNotFound": "Twitchのプロフィールが見つかりませんでした。それでも続行できます。",
+      "profileHintKept": "Twitchのプロフィールが見つかりません：大丈夫、このユーザー名をそのまま使います。このステップをスキップしても構いません。",
       "profilePreviewSuffix": "現在オンライン中のユーザーはこちらです。",
       "documentTitle": "初回設定",
-      "welcomeTagline": "Chrome拡張機能 · Twitch · Kick",
+      "welcomeTagline": "Chrome拡張機能 · Twitch · Kick · YouTube",
       "welcomeDescription": "最初のストリーマーを追加して、そのストリーマーからの通知を受け取り始めましょう。後でStreamPulseから直接、さらにストリーマーを追加することもできます。",
       "languagePrompt": "拡張機能の言語を選択してください",
       "languageHint": "後で設定から変更できます。",
@@ -8076,7 +8158,8 @@ export const translations = {
       "helperTextPlatform": "{{platform}}で利用可能なクリエイターを追加する。",
       "placeholders": {
         "twitch": "例：ミノス",
-        "kick": "例：trainwreckstv"
+        "kick": "例：trainwreckstv",
+        "youtube": "@ハンドルまたはYouTubeチャンネルのURL",
       },
       "submit": "追加",
       "currentHeader": "フォローしているストリーマー",
@@ -8127,7 +8210,7 @@ export const translations = {
         "countPlural": "{{count}} lives",
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
-        "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
+        "emptyBody": "フォロー中のストリーマーが、あなたが見ていない配信を終えると、そのアーカイブとともにここに表示されます。",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "{{name}}をリストから削除",
@@ -8307,7 +8390,7 @@ export const translations = {
         "nobodyTitle": "Nobody is live right now",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
-        "emptyBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "emptyBody": "ウィンドウ下部にユーザー名を入力するか、Twitch・Kick・YouTube のチャンネルリンクを貼り付けてください。",
         "stateLive": "Live",
         "stateOffline": "Offline",
         "feature": "Feature {{name}}",
@@ -8347,7 +8430,7 @@ export const translations = {
         "confirmRemove": "Remove {{name}}?",
         "cancel": "Cancel",
         "noChannelsTitle": "No channels yet",
-        "noChannelsBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "noChannelsBody": "ウィンドウ下部にユーザー名を入力するか、Twitch・Kick・YouTube のチャンネルリンクを貼り付けてください。",
         "noMatchTitle": "No channels for this filter",
         "noMatchBody": "Choose “All” to see every channel again.",
         "rowLive": "{{name}}, live on {{platform}}. {{game}}",
@@ -8404,7 +8487,8 @@ export const translations = {
       "platformFilter": {
         "all": "すべて",
         "twitch": "twitch",
-        "kick": "kick"
+        "kick": "kick",
+            "youtube": "YouTube"
       },
       "addStreamerTitleBase": "ストリーマーを追加する",
       "addStreamerTitlePlatform": "{{platform}}のストリーマーを追加する",
@@ -8414,7 +8498,8 @@ export const translations = {
       "platformSelectorLabel": "ストリーミングプラットフォーム",
       "placeholders": {
         "twitch": "例：ミノス",
-        "kick": "例：trainwreckstv"
+        "kick": "例：trainwreckstv",
+        "youtube": "@ハンドルまたはYouTubeチャンネルのURL",
       },
       "emptyState": "まだフォローしているストリーマーはいません。1人フォローして始めましょう。",
       "sort": {
@@ -8490,7 +8575,7 @@ export const translations = {
         "clipDownloadTitle": "クリップのダウンロード",
         "clipDownloadDescription": "クリップページに MP4 で保存するボタンを追加します。StreamPulse+。",
         "preventTabDiscardTitle": "タブの破棄を防ぐ",
-        "preventTabDiscardDescription": "Chromeが非アクティブなTwitch/Kickのタブを閉じないようにする。",
+        "preventTabDiscardDescription": "Chromeが非アクティブなTwitch/Kick/YouTubeのタブを閉じないようにする。",
         "fastForwardTitle": "早送りボタン",
         "fastForwardDescription": "配信に遅れが生じた際に、即座にライブ配信に追いつけるボタンを追加します。",
         "communityBadgeTitle": "コミュニティバッジ",
@@ -8657,6 +8742,8 @@ export const translations = {
       },
       "notifications": {
         "liveTitle": "{{name}}が配信中です",
+        "startupBatchTitle": "配信中",
+        "startupBatchBody": "すでに配信中：{{names}}",
         "liveMessage": "{{game}} • {{viewers}}人の視聴者",
         "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} 視聴者",
@@ -8711,6 +8798,7 @@ export const translations = {
       "formatMobile": "モバイル · 9:16",
       "loading": "統計を読み込み中…",
       "emptyTitle": "この期間に表示するデータはありません。",
+      "canvasSummary": "リキャップ画像：期間の視聴時間は{{time}}。最も視聴したチャンネル：{{top}}。",
       "emptyBody": "この期間、Watch Time Trackerは何も記録していません。設定で有効になっているか確認してください。",
       "download": "画像をダウンロード",
       "share": "Xでシェア",
@@ -8848,6 +8936,8 @@ export const translations = {
       "player": {
         "skipToLive": "ライブへスキップ",
         "holdToFastForward": "長押しで早送り（2倍速）",
+        "volumeBoostLabel": "音量をブースト",
+        "volumeBoostHint": "クリック：オン/オフ · ホイールや矢印：最大200%まで調整",
         "pictureInPicture": "ピクチャー・イン・ピクチャー",
         "clipDownload": "クリップをダウンロード (MP4)",
         "clipDownloading": "クリップをダウンロード中…",
@@ -8876,7 +8966,8 @@ export const translations = {
     },
     "platforms": {
       "twitch": "Twitch",
-      "kick": "Kick"
+      "kick": "Kick",
+      "youtube": "YouTube"
     },
     "onboarding": {
       "newBadge": "새 항목",
@@ -8909,10 +9000,10 @@ export const translations = {
       "profileHintIdle": "닉네임을 입력해 주세요. 귀하의 Twitch 프로필을 조회해 드리겠습니다.",
       "profileHintSearching": "검색 중…",
       "profileHintFound": "✓ 발견됨: {{handle}}",
-      "profileHintNotFound": "Twitch 프로필을 찾을 수 없습니다. 그래도 계속 진행할 수 있습니다.",
+      "profileHintKept": "Twitch 프로필을 찾을 수 없습니다: 괜찮아요, 이 사용자 이름을 그대로 사용합니다. 이 단계를 건너뛰어도 됩니다.",
       "profilePreviewSuffix": "현재 온라인 상태인 사용자는 다음과 같습니다.",
       "documentTitle": "초기 설정",
-      "welcomeTagline": "크롬 확장 프로그램 · 트위치 · 킥",
+      "welcomeTagline": "크롬 확장 프로그램 · 트위치 · 킥 · 유튜브",
       "welcomeDescription": "첫 번째 스트리머를 추가하면 해당 스트리머의 알림을 받기 시작할 수 있습니다. 나중에 StreamPulse에서 직접 더 많은 스트리머를 추가할 수 있습니다.",
       "languagePrompt": "확장 언어 선택",
       "languageHint": "나중에 설정에서 변경할 수 있습니다.",
@@ -8961,7 +9052,8 @@ export const translations = {
       "helperTextPlatform": "{{platform}}에서 활동 중인 크리에이터를 추가하세요.",
       "placeholders": {
         "twitch": "예: 미노스",
-        "kick": "예: trainwreckstv"
+        "kick": "예: trainwreckstv",
+        "youtube": "@핸들 또는 YouTube 채널 링크",
       },
       "submit": "추가",
       "currentHeader": "팔로우 중인 스트리머",
@@ -9012,7 +9104,7 @@ export const translations = {
         "countPlural": "{{count}} lives",
         "summary": "missed in the last 14 days · {{duration}} of content",
         "emptyTitle": "No missed lives",
-        "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
+        "emptyBody": "팔로우한 스트리머가 당신이 보지 않은 방송을 끝내면, 다시보기와 함께 여기에 표시됩니다.",
         "watchVod": "Watch {{name}}'s replay",
         "openChannel": "Open {{name}}'s videos",
         "dismiss": "목록에서 {{name}} 제거",
@@ -9192,7 +9284,7 @@ export const translations = {
         "nobodyTitle": "Nobody is live right now",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
-        "emptyBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "emptyBody": "창 아래쪽에 사용자 이름을 입력하거나 Twitch, Kick, YouTube 채널 링크를 붙여넣으세요.",
         "stateLive": "Live",
         "stateOffline": "Offline",
         "feature": "Feature {{name}}",
@@ -9232,7 +9324,7 @@ export const translations = {
         "confirmRemove": "Remove {{name}}?",
         "cancel": "Cancel",
         "noChannelsTitle": "No channels yet",
-        "noChannelsBody": "Type a handle or paste a Twitch or Kick channel link at the bottom of the window.",
+        "noChannelsBody": "창 아래쪽에 사용자 이름을 입력하거나 Twitch, Kick, YouTube 채널 링크를 붙여넣으세요.",
         "noMatchTitle": "No channels for this filter",
         "noMatchBody": "Choose “All” to see every channel again.",
         "rowLive": "{{name}}, live on {{platform}}. {{game}}",
@@ -9289,7 +9381,8 @@ export const translations = {
       "platformFilter": {
         "all": "모두",
         "twitch": "twitch",
-        "kick": "kick"
+        "kick": "kick",
+            "youtube": "유튜브",
       },
       "addStreamerTitleBase": "스트리머 추가하기",
       "addStreamerTitlePlatform": "{{platform}} 스트리머 추가하기",
@@ -9299,7 +9392,8 @@ export const translations = {
       "platformSelectorLabel": "스트리밍 플랫폼",
       "placeholders": {
         "twitch": "예: 미노스",
-        "kick": "예: trainwreckstv"
+        "kick": "예: trainwreckstv",
+        "youtube": "@핸들 또는 YouTube 채널 링크",
       },
       "emptyState": "아직 팔로우한 스트리머가 없습니다. 시작하려면 한 명을 추가하세요.",
       "sort": {
@@ -9375,7 +9469,7 @@ export const translations = {
         "clipDownloadTitle": "클립 다운로드",
         "clipDownloadDescription": "클립 페이지에 MP4로 저장하는 버튼을 추가합니다. StreamPulse+.",
         "preventTabDiscardTitle": "탭 삭제 방지",
-        "preventTabDiscardDescription": "Chrome이 활동이 없는 Twitch/Kick 탭을 닫지 못하도록 방지합니다.",
+        "preventTabDiscardDescription": "Chrome이 활동이 없는 Twitch/Kick/YouTube 탭을 닫지 못하도록 방지합니다.",
         "fastForwardTitle": "빨리 감기 버튼",
         "fastForwardDescription": "스트림이 지연될 때 실시간으로 바로 따라잡을 수 있는 버튼을 추가하세요.",
         "communityBadgeTitle": "커뮤니티 배지",
@@ -9542,6 +9636,8 @@ export const translations = {
       },
       "notifications": {
         "liveTitle": "{{name}}이(가) 생방송 중입니다",
+        "startupBatchTitle": "지금 라이브 중",
+        "startupBatchBody": "이미 라이브 중: {{names}}",
         "liveMessage": "{{game}} • {{viewers}} 명의 시청자",
         "liveMessageNoViewers": "{{game}}",
         "liveMessageNoGame": "{{viewers}} 명의 시청자",
@@ -9596,6 +9692,7 @@ export const translations = {
       "formatMobile": "모바일 · 9:16",
       "loading": "통계를 불러오는 중…",
       "emptyTitle": "이 기간에 표시할 내용이 없습니다.",
+      "canvasSummary": "요약 이미지: 기간 동안 {{time}} 시청. 가장 많이 시청한 채널: {{top}}.",
       "emptyBody": "이 기간 동안 Watch Time Tracker가 기록한 내용이 없습니다. 설정에서 켜져 있는지 확인하세요.",
       "download": "이미지 다운로드",
       "share": "X에 공유",
@@ -9733,6 +9830,8 @@ export const translations = {
       "player": {
         "skipToLive": "라이브로 건너뛰기",
         "holdToFastForward": "길게 누르면 2배속으로 빨리 감기",
+        "volumeBoostLabel": "음량 증폭",
+        "volumeBoostHint": "클릭: 켜기/끄기 · 휠 또는 화살표: 최대 200%까지 조절",
         "pictureInPicture": "PIP 모드",
         "clipDownload": "클립 다운로드 (MP4)",
         "clipDownloading": "클립 다운로드 중…",

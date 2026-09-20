@@ -31,7 +31,7 @@ import {
   resolveTagline,
 } from "./store-assets/copy.mjs";
 import { buildPopupPage } from "./store-assets/popup-page.mjs";
-import { buildProductFrame, buildFeaturesFrame } from "./store-assets/frames.mjs";
+import { buildProductFrame, buildFeaturesFrame, buildCompatibilityFrame } from "./store-assets/frames.mjs";
 import { buildPromoTile, PROMO_TILE, buildPromoMarquee, PROMO_MARQUEE } from "./store-assets/promo.mjs";
 import { findBannedTerms, stripPromotionalSentences } from "./store-assets/policy.mjs";
 import {
@@ -44,6 +44,34 @@ import {
 } from "./store-assets/shot.mjs";
 
 const LOGO = path.join(ROOT, "images", "photos", "logosp.png");
+const TWITCH_ICON = path.join(ROOT, "images", "platforms", "twitch.svg");
+const KICK_ICON = path.join(ROOT, "images", "platforms", "kick.svg");
+const YOUTUBE_ICON = path.join(ROOT, "images", "platforms", "youtube.svg");
+// Logos officiels fournis (BetterTTV, FrankerFaceZ, 7TV) : StreamPulse cohabite
+// avec ces extensions d'émotes, il ne les remplace pas.
+const EMOTE_ICONS = ["betterttv", "ffz", "7tv"].map((name) =>
+  path.join(ROOT, "images", "platforms", `${name}.png`),
+);
+const EMOTE_NAMES = ["BetterTTV", "FrankerFaceZ", "7TV"];
+
+/**
+ * Mention « totalement compatible » au-dessus des pastilles : noms propres et
+ * vocabulaire factuel, traduits langue par langue (aucun terme interdit par
+ * policy.mjs : ni gratuité, ni nouveauté, ni superlatif).
+ */
+const COMPAT_NOTES = {
+  fr: "StreamPulse est totalement compatible avec",
+  en: "StreamPulse is fully compatible with",
+  es: "StreamPulse es totalmente compatible con",
+  "pt-BR": "O StreamPulse é totalmente compatível com",
+  de: "StreamPulse ist voll kompatibel mit",
+  it: "StreamPulse è totalmente compatibile con",
+  pl: "StreamPulse jest w pełni kompatybilny z",
+  tr: "StreamPulse tam uyumlu çalışır",
+  ru: "StreamPulse полностью совместим с",
+  ja: "StreamPulseは以下と完全な互換性があります",
+  ko: "StreamPulse은 다음과 완전히 호환됩니다",
+};
 
 /**
  * Serveur local qui sert la racine du dépôt (Portly : StreamPulseMain/harness).
@@ -343,6 +371,43 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
     }),
   });
 
+  // 6. Cadre « Twitch & Kick » : même promesse que la puce « Tableau de bord
+  //    unifié » du listing, déjà traduite dans les 15 langues. Le titre
+  //    n'affiche que les noms de plateforme : rien à traduire.
+  const compatBullet = bullets[8] || bullets[bullets.length - 1];
+  const compatNote = COMPAT_NOTES[lang] || COMPAT_NOTES.en;
+  assertPolicyClean(
+    [
+      { label: "sous-titre 06", text: compatBullet.body },
+      { label: "note 06", text: compatNote },
+    ],
+    lang,
+  );
+  await renderFrame({
+    name: `frame-${lang}-06`,
+    outPath: path.join(outDir, "06-compat.png"),
+    flatten: true,
+    html: buildCompatibilityFrame({
+      logoPath: LOGO,
+      tagline,
+      subtitle: compatBullet.body,
+      twitchIconPath: TWITCH_ICON,
+      kickIconPath: KICK_ICON,
+      youtubeIconPath: YOUTUBE_ICON,
+      emoteIcons: EMOTE_ICONS,
+      emoteNames: EMOTE_NAMES,
+      compatNote,
+      // Fonctions phares, libellés déjà traduits dans l'interface ; la
+      // pastille « +250 » du badge de points est volontairement sans texte.
+      featurePills: [
+        t("onboarding.autoClaimTitle"),
+        t("popup.smart.title"),
+        t("onboarding.autoOpenInventoryTitle"),
+      ],
+      liveLabel: t("popup.osd.onAirChip"),
+    }),
+  });
+
   return outDir;
 }
 
@@ -363,7 +428,7 @@ async function buildPromo({ listing, lang = PROMO_LANG }) {
   const tile = {
     title: fr ? "Ne rate plus" : "Never miss",
     accent: fr ? "aucun live." : "a live again.",
-    subtitle: fr ? "Tes streamers Twitch et Kick en direct, en un clic." : "Your Twitch and Kick streamers live, one click away.",
+    subtitle: fr ? "Tes streamers Twitch, Kick et YouTube en direct, en un clic." : "Your Twitch, Kick and YouTube streamers live, one click away.",
     liveLabel: fr ? "En direct" : "Live now",
     pointsLabel: fr ? "+250 pts" : "+250 pts",
   };
@@ -464,7 +529,7 @@ async function main() {
     }
   }
 
-  console.log(`\n${targets.length} langue(s) · 5 captures 1280x800 chacune.`);
+  console.log(`\n${targets.length} langue(s) · 6 captures 1280x800 chacune.`);
 }
 
 main().catch((error) => {

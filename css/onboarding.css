@@ -4,7 +4,9 @@
 /* Head and stepper */
 .ob-head { gap: 22px; }
 .stepper { display: flex; gap: 6px; margin-left: auto; }
-.step-pill { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 14px 0 8px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); color: var(--text-3); font-size: 13px; font-weight: 600; transition: background-color var(--dur-base) ease, color var(--dur-base) ease; }
+/* Les pills sont de vrais <button> : reset bouton avant l'habillage pill. */
+.step-pill { appearance: none; border: 0; margin: 0; font-family: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 14px 0 8px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); color: var(--text-3); font-size: 13px; font-weight: 600; transition: background-color var(--dur-base) ease, color var(--dur-base) ease; }
+.step-pill:disabled { cursor: default; }
 .step-num { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--surface-2); font-size: 12px; font-weight: 800; font-variant-numeric: tabular-nums; }
 .step-pill.active { background: var(--violet-soft); box-shadow: inset 0 0 0 1px var(--violet-line); color: var(--text); }
 .step-pill.active .step-num { background: var(--violet); color: #ffffff; }
@@ -79,7 +81,7 @@
 .profile-avatar-status[data-state="success"] { background: var(--lcd); }
 .profile-avatar-status[data-state="error"],
 .profile-avatar-status[data-state="notfound"],
-.profile-avatar-status[data-state="not-found"] { background: #ff6b6b; }
+.profile-avatar-status[data-state="not-found"] { background: var(--danger); }
 .profile-info { display: grid; gap: 4px; min-width: 0; }
 .profile-info-name { overflow: hidden; font-family: var(--display); font-size: 24px; font-weight: 700; letter-spacing: -0.02em; text-overflow: ellipsis; white-space: nowrap; }
 .profile-info-line { color: var(--text-2); font-size: 14px; }

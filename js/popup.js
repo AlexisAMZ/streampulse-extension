@@ -1786,6 +1786,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         setActiveTab(tabName);
       });
     });
+    // Motif ARIA tabs : flèches + Home/End avec tabindex itinérant (setActiveTab
+    // gère déjà tabIndex), sur le modèle du menu latéral des réglages.
+    document.querySelector(".tabs")?.addEventListener("keydown", (event) => {
+      const list = Array.from(tabs);
+      const index = list.indexOf(document.activeElement);
+      if (index === -1) return;
+      const targets = {
+        ArrowRight: list[(index + 1) % list.length],
+        ArrowLeft: list[(index - 1 + list.length) % list.length],
+        Home: list[0],
+        End: list[list.length - 1],
+      };
+      const next = targets[event.key];
+      if (!next) return;
+      event.preventDefault();
+      setActiveTab(next.dataset.tab);
+      next.focus();
+    });
     initMenuNav();
     initHomeInteractions();
     initFeatures().catch((error) => console.warn("[popup] features init failed:", error));
@@ -1987,7 +2005,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const custom = mode === "custom";
         if (badgeColorValue) badgeColorValue.hidden = !custom;
         updatePreferences({
-          communityBadgeColor: custom ? badgeColorValue?.value || "#9147ff" : mode,
+          communityBadgeColor: custom ? badgeColorValue?.value || "#9146ff" : mode,
         });
       });
       // "change" et non "input" : le selecteur de couleur emet en continu

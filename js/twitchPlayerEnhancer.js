@@ -564,6 +564,290 @@
     }
   }
 
+  /* ══════════════════════════════════════════════════════════════
+     VOLUME BOOST
+     Le slider natif s'arrête à 100 % ; la zone StreamPulse greffée
+     à sa droite prolonge la course jusqu'à 200 % : le remplissage
+     passe du vert LCD à l'orange puis au rouge. À la souris : glisser
+     dans la zone ou molette. Au clavier : flèches / Début / Fin.
+     L'amplification elle-même est un GainNode Web Audio branché sur
+     le <video> ; le volume natif continue de s'appliquer en amont.
+     ══════════════════════════════════════════════════════════════ */
+
+  const VOLUME_BOOST_FIELD = "playerVolumeBoost";
+  const BOOST_BUTTON_ID = "streampulse-volume-boost-btn";
+  const BOOST_STYLE_ID = "streampulse-volume-boost-style";
+  const BOOST_MAX = 2.0;
+
+  let volumeBoostEnabled = false;
+  let boostEnsureIntervalId = null;
+  let boostLevel = 1.0;
+  let lastBoostLevel = 1.5;
+
+  let boostAudioCtx = null;
+  let boostSourceNode = null;
+  let boostGainNode = null;
+  let boostWiredVideo = null;
+
+  function insertBoostStyles() {
+    if (document.getElementById(BOOST_STYLE_ID)) return;
+    const style = document.createElement("style");
+    style.id = BOOST_STYLE_ID;
+    style.textContent = `
+    /* Typo de marque StreamPulse (Onest), chargée depuis le paquet. */
+    @font-face {
+      font-family: "SP Onest";
+      font-weight: 400 700;
+      font-display: swap;
+      src: url("${chrome.runtime.getURL("font/onest-latin-6.woff2")}") format("woff2");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122;
+    }
+    @font-face {
+      font-family: "SP Onest";
+      font-weight: 400 700;
+      font-display: swap;
+      src: url("${chrome.runtime.getURL("font/onest-latin-ext-5.woff2")}") format("woff2");
+      unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    }
+    /* Bouton « Boost » StreamPulse : fantôme comme les boutons du player
+       Twitch (transparent, halo au survol), le mot en typo Onest. */
+    .sp-vboost-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      flex: 0 0 auto;
+      align-self: center;
+      height: 30px;
+      margin-left: 8px;
+      padding: 0 7px;
+      border: 0;
+      border-radius: 0.4rem;
+      background: transparent;
+      color: #c4a3ff;
+      font-family: "SP Onest", "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      cursor: pointer;
+      transition: background-color 0.1s ease, color 0.1s ease;
+      vertical-align: middle;
+    }
+    .sp-vboost-btn:hover { background: rgba(255, 255, 255, 0.1); color: #d9c2ff; }
+    .sp-vboost-btn:focus-visible { outline: 2px solid #c6d4a0; outline-offset: 1px; }
+    /* Niveau de boost : LCD vers 115 %, orange vers 150 %, rouge au-delà. */
+    .sp-vboost-btn.is-low { color: #c6d4a0; }
+    .sp-vboost-btn.is-mid { color: #ffb020; }
+    .sp-vboost-btn.is-high { color: #ff4d4d; }
+    .sp-vboost-pct { display: none; }
+    .sp-vboost-btn.is-low .sp-vboost-pct,
+    .sp-vboost-btn.is-mid .sp-vboost-pct,
+    .sp-vboost-btn.is-high .sp-vboost-pct { display: inline; }
+    @media (prefers-reduced-motion: reduce) {
+      .sp-vboost-btn { transition: none; }
+    }
+    `;
+    document.head?.appendChild(style);
+  }
+
+  function findVolumeSlider() {
+    return (
+      document.querySelector('[data-a-target="player-volume-slider"]') ||
+      document.querySelector(".video-slider__slider-container") ||
+      document.querySelector(".video-slider")
+    );
+  }
+
+  /**
+   * Point d'insertion stable : le bouton Paramètres du player
+   * ([data-a-target="player-settings-button"]) vit dans la même rangée que le
+   * volume, sur tous les players. « Boost » s'insère juste avant lui, donc
+   * entre le volume et les autres contrôles. Repli : remonter depuis le
+   * slider jusqu'au premier conteneur flex horizontal.
+   */
+  function findBoostAnchor(slider) {
+    const settingsButton = document.querySelector('[data-a-target="player-settings-button"]');
+    if (settingsButton?.parentElement) {
+      return { row: settingsButton.parentElement, volumeBlock: settingsButton, before: true };
+    }
+    let node = slider;
+    for (let depth = 0; depth < 5 && node.parentElement; depth++) {
+      const parent = node.parentElement;
+      const display = getComputedStyle(parent).display || "";
+      const direction = getComputedStyle(parent).flexDirection || "row";
+      if (parent.children.length > 1 && display.includes("flex") && !display.includes("inline") && direction === "row") {
+        return { row: parent, volumeBlock: node, before: false };
+      }
+      node = parent;
+    }
+    return { row: null, volumeBlock: slider.parentElement, before: false };
+  }
+
+  function boostAriaLabel() {
+    return tr("volumeBoostLabel");
+  }
+
+  function boostHintText() {
+    return tr("volumeBoostHint");
+  }
+
+  function ensureBoostAudio(video) {
+    // Routé une seule fois par élément vidéo : le volume natif de Twitch
+    // s'applique toujours en amont du graphe, le gain ne fait qu'amplifier.
+    if (typeof AudioContext === "undefined") return false;
+    if (!boostAudioCtx) boostAudioCtx = new AudioContext();
+    if (boostAudioCtx.state === "suspended") {
+      boostAudioCtx.resume().catch(() => {});
+    }
+    if (boostWiredVideo === video && boostGainNode) {
+      boostGainNode.gain.value = boostLevel;
+      return true;
+    }
+    try {
+      boostSourceNode?.disconnect();
+      boostGainNode?.disconnect();
+      boostSourceNode = boostAudioCtx.createMediaElementSource(video);
+      boostGainNode = boostAudioCtx.createGain();
+      boostGainNode.gain.value = boostLevel;
+      boostSourceNode.connect(boostGainNode);
+      boostGainNode.connect(boostAudioCtx.destination);
+      boostWiredVideo = video;
+      return true;
+    } catch (_error) {
+      // MediaElementSource impossible (flux exotique) : le bouton reste
+      // mais le son n'est pas amplifié.
+      boostWiredVideo = null;
+      boostGainNode = null;
+      return false;
+    }
+  }
+
+  function renderBoostButton(button) {
+    const pct = Math.round(boostLevel * 100);
+    // Libellés rafraîchis au rendu : ils suivent les changements de langue.
+    button.setAttribute("aria-label", boostAriaLabel());
+    button.title = boostHintText();
+    button.setAttribute("aria-pressed", boostLevel > 1.001 ? "true" : "false");
+    button.classList.toggle("is-low", boostLevel > 1.001 && boostLevel <= 1.15);
+    button.classList.toggle("is-mid", boostLevel > 1.15 && boostLevel <= 1.5);
+    button.classList.toggle("is-high", boostLevel > 1.5);
+    const pctEl = button.querySelector(".sp-vboost-pct");
+    pctEl.textContent = `+${pct - 100} %`;
+  }
+
+  function setBoostLevel(value) {
+    boostLevel = Math.min(BOOST_MAX, Math.max(1, value));
+    if (boostLevel > 1.001) lastBoostLevel = boostLevel;
+    const video = findVideoElement();
+    if (boostLevel > 1.001 && video) {
+      ensureBoostAudio(video);
+    } else if (boostGainNode) {
+      boostGainNode.gain.value = 1;
+    }
+    const button = document.getElementById(BOOST_BUTTON_ID);
+    if (button) renderBoostButton(button);
+  }
+
+  function toggleBoost() {
+    setBoostLevel(boostLevel > 1.001 ? 1 : lastBoostLevel);
+  }
+
+  function wireBoostButton(button) {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      toggleBoost();
+    });
+    button.addEventListener(
+      "wheel",
+      (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setBoostLevel(boostLevel + (event.deltaY < 0 ? 0.1 : -0.1));
+      },
+      { passive: false }
+    );
+    button.addEventListener("keydown", (event) => {
+      const steps = { ArrowRight: 0.1, ArrowUp: 0.1, ArrowLeft: -0.1, ArrowDown: -0.1 };
+      if (event.key in steps) {
+        event.preventDefault();
+        event.stopPropagation();
+        setBoostLevel(boostLevel + steps[event.key]);
+      } else if (event.key === "Home") {
+        event.preventDefault();
+        setBoostLevel(1);
+      } else if (event.key === "End") {
+        event.preventDefault();
+        setBoostLevel(BOOST_MAX);
+      }
+    });
+  }
+
+  function ensureVolumeBoostButton() {
+    if (!volumeBoostEnabled || !isStreamPage()) return;
+    const slider = findVolumeSlider();
+    if (!slider) return;
+    let button = document.getElementById(BOOST_BUTTON_ID);
+    if (!button) {
+      insertBoostStyles();
+      button = document.createElement("button");
+      button.id = BOOST_BUTTON_ID;
+      button.type = "button";
+      button.className = "sp-vboost-btn";
+      button.setAttribute("aria-pressed", "false");
+      /* Le mot « Boost » dans la typo StreamPulse : reconnaissable de tous
+         les players, compris dans toutes les langues. */
+      button.innerHTML = '<span class="sp-vboost-word">Boost</span><span class="sp-vboost-pct"></span>';
+      wireBoostButton(button);
+    }
+    const anchor = findBoostAnchor(slider);
+    const targetParent = anchor.row || anchor.volumeBlock.parentElement;
+    const inPlace =
+      button.parentElement === targetParent &&
+      (anchor.before
+        ? button.nextElementSibling === anchor.volumeBlock
+        : button.previousElementSibling === anchor.volumeBlock);
+    if (!inPlace) {
+      // Avant le bouton Paramètres (même rangée que le volume, jamais dans
+      // le wrapper du slider), ou après le bloc volume en repli.
+      if (anchor.before) anchor.volumeBlock.before(button);
+      else anchor.volumeBlock.after(button);
+    }
+    // Twitch peut recréer aussi l'élément <video> (changement de chaîne) :
+    // on rebranche le graphe si l'élément amplifié n'est plus le bon.
+    if (boostLevel > 1.001) {
+      const video = findVideoElement();
+      if (video && video !== boostWiredVideo) ensureBoostAudio(video);
+    }
+    renderBoostButton(button);
+  }
+
+  function enableVolumeBoost() {
+    if (volumeBoostEnabled) return;
+    volumeBoostEnabled = true;
+    ensureVolumeBoostButton();
+    if (boostEnsureIntervalId == null) {
+      boostEnsureIntervalId = window.setInterval(ensureVolumeBoostButton, 4000);
+    }
+  }
+
+  function disableVolumeBoost() {
+    volumeBoostEnabled = false;
+    if (boostEnsureIntervalId != null) {
+      clearInterval(boostEnsureIntervalId);
+      boostEnsureIntervalId = null;
+    }
+    document.getElementById(BOOST_BUTTON_ID)?.remove();
+    if (boostGainNode) boostGainNode.gain.value = 1;
+    boostLevel = 1;
+  }
+
+  function setVolumeBoost(enabled) {
+    if (enabled) enableVolumeBoost();
+    else disableVolumeBoost();
+  }
+
   function setAutoRefresh(enabled) {
     if (enabled === autoRefreshEnabled) return;
     autoRefreshEnabled = enabled;
@@ -593,6 +877,7 @@
     setAutoCancelRaids(preferences.autoCancelRaids === true);
     syncKeepQualityFlag(preferences.keepQualityInBackground === true);
     syncPlayerQuality(preferences.playerQuality);
+    setVolumeBoost(preferences[VOLUME_BOOST_FIELD] !== false);
   }
 
   // preventPause.js runs in the MAIN world and cannot read chrome.storage,
@@ -1145,6 +1430,9 @@
       scheduleErrorCheck(500);
       if (fastForwardEnabled) {
         ensureFastForwardButton();
+      }
+      if (volumeBoostEnabled) {
+        ensureVolumeBoostButton();
       }
       latencyFeature?.update(true);
 

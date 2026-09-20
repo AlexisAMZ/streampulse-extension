@@ -63,15 +63,21 @@
     const statuses = {};
     for (let i = 0; i < count; i++) {
       const handle = NAMES[i % NAMES.length] + (i >= NAMES.length ? String(i) : "");
-      const platform = i % 3 === 1 ? "kick" : "twitch";
+      const platform = i % 3 === 2 ? "youtube" : i % 3 === 1 ? "kick" : "twitch";
       const id = `${platform}:${handle}`;
       const isTwitch = platform === "twitch";
+      const isYoutube = platform === "youtube";
+      const avatarColors = isTwitch
+        ? ["#7c4dff", "#2a1a55"]
+        : isYoutube
+          ? ["#ff5a5a", "#4d0f0f"]
+          : ["#2e9e3a", "#113d17"];
       streamers.push({
         id,
         platform,
         handle,
         displayName: handle.charAt(0).toUpperCase() + handle.slice(1),
-        avatarUrl: avatar(handle[0].toUpperCase(), isTwitch ? "#7c4dff" : "#2e9e3a", isTwitch ? "#2a1a55" : "#113d17"),
+        avatarUrl: avatar(handle[0].toUpperCase(), avatarColors[0], avatarColors[1]),
         notificationsEnabled: true,
         gameNotificationsEnabled: STORE_SHOT || i % 2 === 0,
         titleNotificationsEnabled: STORE_SHOT,

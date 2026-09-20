@@ -56,7 +56,7 @@
     var picker = document.createElement("input");
     picker.type = "color";
     picker.className = "sp-tb-badge-picker";
-    picker.value = custom ? stored : "#9147ff";
+    picker.value = custom ? stored : "#9146ff";
     picker.hidden = !custom;
 
     BADGE_MODES.forEach(function (mode) {
