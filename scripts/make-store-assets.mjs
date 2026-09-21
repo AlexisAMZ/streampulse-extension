@@ -32,6 +32,7 @@ import {
 } from "./store-assets/copy.mjs";
 import { buildPopupPage } from "./store-assets/popup-page.mjs";
 import { buildProductFrame, buildFeaturesFrame, buildCompatibilityFrame } from "./store-assets/frames.mjs";
+import { COLORS as BRAND_COLORS } from "./store-assets/brand.mjs";
 import { buildPromoTile, PROMO_TILE, buildPromoMarquee, PROMO_MARQUEE } from "./store-assets/promo.mjs";
 import { findBannedTerms, stripPromotionalSentences } from "./store-assets/policy.mjs";
 import {
@@ -71,6 +72,46 @@ const COMPAT_NOTES = {
   ru: "StreamPulse полностью совместим с",
   ja: "StreamPulseは以下と完全な互換性があります",
   ko: "StreamPulse은 다음과 완전히 호환됩니다",
+};
+
+/**
+ * Titre du cadre 06. Il remplace l'ancienne enfilade « Twitch & Kick &
+ * YouTube » : les noms des plateformes sont déjà portés par les trois tuiles
+ * juste dessous, et les couleurs de marque n'ont pas leur place en display
+ * (cf. DESIGN.md, « Twitch et Kick ne sont pas la marque »).
+ */
+const COMPAT_HEADLINES = {
+  fr: "Une fenêtre pour tes trois plateformes",
+  en: "One window for your three platforms",
+  es: "Una ventana para tus tres plataformas",
+  "pt-BR": "Uma janela para suas três plataformas",
+  de: "Ein Fenster für deine drei Plattformen",
+  it: "Una finestra per le tue tre piattaforme",
+  pl: "Jedno okno dla twoich trzech platform",
+  tr: "Üç platformun için tek pencere",
+  ru: "Одно окно для трёх платформ",
+  ja: "3つのプラットフォームを1つのウィンドウに",
+  ko: "세 플랫폼을 하나의 창에서",
+};
+
+/**
+ * Ce que StreamPulse sait faire sur chaque plateforme. YouTube se limite aux
+ * alertes et au temps de visionnage (pas de points de chaîne, pas de Drops,
+ * pas de lecteur injecté) : la capture le dit au lieu de le taire, sinon la
+ * fiche promet à un acheteur YouTube des fonctions qu'il n'aura pas.
+ */
+const COMPAT_CAPS = {
+  fr: { alerts: "Alertes de live", watch: "Temps de visionnage", points: "Points de chaîne", drops: "Drops" },
+  en: { alerts: "Live alerts", watch: "Watch time", points: "Channel points", drops: "Drops" },
+  es: { alerts: "Alertas de directo", watch: "Tiempo de visionado", points: "Puntos de canal", drops: "Drops" },
+  "pt-BR": { alerts: "Alertas de live", watch: "Tempo assistido", points: "Pontos de canal", drops: "Drops" },
+  de: { alerts: "Live-Hinweise", watch: "Sehdauer", points: "Kanalpunkte", drops: "Drops" },
+  it: { alerts: "Avvisi di diretta", watch: "Tempo di visione", points: "Punti canale", drops: "Drops" },
+  pl: { alerts: "Powiadomienia o live", watch: "Czas oglądania", points: "Punkty kanału", drops: "Drops" },
+  tr: { alerts: "Canlı bildirimleri", watch: "İzleme süresi", points: "Kanal puanları", drops: "Drops" },
+  ru: { alerts: "Уведомления об эфире", watch: "Время просмотра", points: "Баллы канала", drops: "Drops" },
+  ja: { alerts: "ライブ通知", watch: "視聴時間", points: "チャンネルポイント", drops: "ドロップ" },
+  ko: { alerts: "라이브 알림", watch: "시청 시간", points: "채널 포인트", drops: "드롭" },
 };
 
 /**
@@ -371,15 +412,16 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
     }),
   });
 
-  // 6. Cadre « Twitch & Kick » : même promesse que la puce « Tableau de bord
-  //    unifié » du listing, déjà traduite dans les 15 langues. Le titre
-  //    n'affiche que les noms de plateforme : rien à traduire.
-  const compatBullet = bullets[8] || bullets[bullets.length - 1];
+  // 6. Cadre « compatibilite » : la marque en pivot, les trois plateformes
+  //    reliees, et sous chacune ce qu'elle sait reellement y faire.
   const compatNote = COMPAT_NOTES[lang] || COMPAT_NOTES.en;
+  const headline = COMPAT_HEADLINES[lang] || COMPAT_HEADLINES.en;
+  const caps = COMPAT_CAPS[lang] || COMPAT_CAPS.en;
   assertPolicyClean(
     [
-      { label: "sous-titre 06", text: compatBullet.body },
+      { label: "titre 06", text: headline },
       { label: "note 06", text: compatNote },
+      ...Object.entries(caps).map(([key, text]) => ({ label: `capacite 06 ${key}`, text })),
     ],
     lang,
   );
@@ -389,22 +431,33 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
     flatten: true,
     html: buildCompatibilityFrame({
       logoPath: LOGO,
-      tagline,
-      subtitle: compatBullet.body,
-      twitchIconPath: TWITCH_ICON,
-      kickIconPath: KICK_ICON,
-      youtubeIconPath: YOUTUBE_ICON,
+      headline,
+      // L'ordre des capacites va du partage au specifique : les deux premieres
+      // lignes sont identiques partout, ce qui rend lisible d'un coup d'oeil
+      // ce que YouTube n'a pas.
+      platforms: [
+        {
+          name: "Twitch",
+          icon: TWITCH_ICON,
+          color: BRAND_COLORS.violet,
+          caps: [caps.alerts, caps.watch, caps.points, caps.drops],
+        },
+        {
+          name: "Kick",
+          icon: KICK_ICON,
+          color: BRAND_COLORS.kick,
+          caps: [caps.alerts, caps.watch, caps.points],
+        },
+        {
+          name: "YouTube",
+          icon: YOUTUBE_ICON,
+          color: BRAND_COLORS.youtube,
+          caps: [caps.alerts, caps.watch],
+        },
+      ],
       emoteIcons: EMOTE_ICONS,
       emoteNames: EMOTE_NAMES,
       compatNote,
-      // Fonctions phares, libellés déjà traduits dans l'interface ; la
-      // pastille « +250 » du badge de points est volontairement sans texte.
-      featurePills: [
-        t("onboarding.autoClaimTitle"),
-        t("popup.smart.title"),
-        t("onboarding.autoOpenInventoryTitle"),
-      ],
-      liveLabel: t("popup.osd.onAirChip"),
     }),
   });
 
