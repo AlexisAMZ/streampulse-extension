@@ -71,53 +71,61 @@ const PRODUCT_CSS = `
 `;
 
 const FEATURES_CSS = `
-.grid {
+/* Pas de grille de cartes identiques : six boites icone + titre + texte, c'est
+   le conteneur par defaut, et les titres de longueurs inegales cassaient
+   l'alignement des corps de texte sur chaque rangee. Liste composee en deux
+   colonnes, separee par des filets, chaque entree independante de sa voisine. */
+.list {
   flex: 1 1 auto;
   min-height: 0;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: 1fr;
-  gap: 16px;
-  padding: 32px 72px 52px;
+  grid-template-columns: 1fr 1px 1fr;
+  column-gap: 40px;
+  padding: 26px 72px 46px;
 }
-.feat {
-  background: rgba(21, 23, 61, 0.72);
-  box-shadow: inset 0 0 0 1px ${COLORS.line};
-  border-radius: 20px;
-  padding: 22px 22px 24px;
-  overflow: hidden;
+.list .rule-v { background: ${COLORS.line}; align-self: stretch; }
+/* Trois rangees de hauteur egale dans chaque colonne : les entrees se font
+   face d'une colonne a l'autre, et la liste occupe toute la scene au lieu de
+   se centrer en laissant du vide en haut et en bas. */
+.col { display: grid; grid-template-rows: repeat(3, 1fr); }
+.entry {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  column-gap: 16px;
+  /* Cale en haut, pas centre : les titres d'une meme rangee partagent ainsi
+     leur ligne de base d'une colonne a l'autre. */
+  align-content: start;
+  padding: 20px 0 14px;
 }
-.feat .glyph {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  background: ${COLORS.lcd};
-  color: ${COLORS.lcdInk};
+.entry + .entry { border-top: 1px solid ${COLORS.line}; }
+.entry .glyph {
+  grid-row: span 2;
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background: rgba(145, 70, 255, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(145, 70, 255, 0.28);
+  color: ${COLORS.violetText};
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
+  margin-top: 2px;
 }
-.feat:nth-child(even) .glyph { background: ${COLORS.violet}; color: #fff; }
-.feat .glyph svg { width: 19px; height: 19px; display: block; }
-.feat h3 {
+.entry .glyph svg { width: 17px; height: 17px; display: block; }
+.entry h3 {
   font-family: ${DISPLAY};
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.25;
   letter-spacing: -0.02em;
-  margin-bottom: 8px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  margin-bottom: 5px;
 }
-.feat p {
-  font-size: 14px;
+.entry p {
+  font-size: 13.5px;
   line-height: 1.5;
   color: ${COLORS.text2};
   display: -webkit-box;
-  -webkit-line-clamp: 6;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -169,24 +177,28 @@ const GLYPHS = [
   stroke('<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>'),
 ];
 
-/** Cadre « fonctionnalités » : grille 3x2 alimentée par CHROMEWEBSTORE.md. */
+/** Cadre « fonctionnalités » : deux colonnes de six entrées composées. */
 export function buildFeaturesFrame({ logoPath, tagline, title, subtitle, features }) {
-  const cards = features
-    .slice(0, 6)
-    .map(
-      (feature, index) => `
-  <div class="feat">
-    <div class="glyph">${GLYPHS[index]}</div>
-    <h3>${escapeHtml(feature.title)}</h3>
-    <p>${escapeHtml(feature.body)}</p>
-  </div>`,
-    )
-    .join("");
+  const entry = (feature, index) => `
+    <div class="entry">
+      <div class="glyph">${GLYPHS[index]}</div>
+      <div>
+        <h3>${escapeHtml(feature.title)}</h3>
+        <p>${escapeHtml(feature.body)}</p>
+      </div>
+    </div>`;
+  const picked = features.slice(0, 6);
+  const left = picked.slice(0, 3).map((f, i) => entry(f, i)).join("");
+  const right = picked.slice(3).map((f, i) => entry(f, i + 3)).join("");
 
   return page({
     css: FEATURES_CSS,
     body: `${head({ logoPath, tagline, title, subtitle })}
-<div class="grid">${cards}</div>`,
+<div class="list">
+  <div class="col">${left}</div>
+  <div class="rule-v"></div>
+  <div class="col">${right}</div>
+</div>`,
   });
 }
 

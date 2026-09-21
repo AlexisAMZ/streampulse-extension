@@ -80,6 +80,27 @@ const COMPAT_NOTES = {
  * juste dessous, et les couleurs de marque n'ont pas leur place en display
  * (cf. DESIGN.md, « Twitch et Kick ne sont pas la marque »).
  */
+/**
+ * Sous-titre de la capture 01. Il portait jusqu'ici
+ * `popup.settings.liveNotificationsDescription`, c'est-a-dire la description
+ * d'un reglage de notification : sous le titre « Voici qui est en ligne », la
+ * phrase ne voulait rien dire. Texte dedie, qui decrit ce que la capture
+ * montre vraiment.
+ */
+const DASHBOARD_SUBTITLES = {
+  fr: "Tes streamers Twitch, Kick et YouTube en direct d'abord, avec spectateurs, catégorie et durée.",
+  en: "Your live Twitch, Kick and YouTube streamers first, with viewers, category and uptime.",
+  es: "Tus streamers de Twitch, Kick y YouTube en directo primero, con espectadores, categoría y duración.",
+  "pt-BR": "Seus streamers da Twitch, Kick e YouTube ao vivo primeiro, com espectadores, categoria e tempo no ar.",
+  de: "Deine Twitch-, Kick- und YouTube-Streamer zuerst live, mit Zuschauerzahl, Kategorie und Laufzeit.",
+  it: "I tuoi streamer Twitch, Kick e YouTube in diretta per primi, con spettatori, categoria e durata.",
+  pl: "Twoi streamerzy z Twitcha, Kicka i YouTube na żywo najpierw, z liczbą widzów, kategorią i czasem transmisji.",
+  tr: "Twitch, Kick ve YouTube yayıncıların önce canlı olarak, izleyici sayısı, kategori ve yayın süresiyle.",
+  ru: "Твои стримеры Twitch, Kick и YouTube сначала в эфире, со зрителями, категорией и временем трансляции.",
+  ja: "Twitch・Kick・YouTube の配信中のストリーマーを先頭に、視聴者数・カテゴリ・配信時間つきで表示します。",
+  ko: "Twitch, Kick, YouTube에서 방송 중인 스트리머를 먼저, 시청자 수와 카테고리, 방송 시간과 함께 보여줍니다.",
+};
+
 const COMPAT_HEADLINES = {
   fr: "Une fenêtre pour tes trois plateformes",
   en: "One window for your three platforms",
@@ -309,6 +330,7 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
       { label: "titre 02", text: t("onboarding.autoClaimTitle") },
       { label: "sous-titre 02", text: t("onboarding.autoClaimDescription") },
       { label: "titre 03", text: t("onboarding.welcomeTitle") },
+      { label: "sous-titre 01", text: DASHBOARD_SUBTITLES[lang] || DASHBOARD_SUBTITLES.en },
       { label: "sous-titre 03", text: featuresSubtitle },
       ...bullets.flatMap((bullet, index) => [
         { label: `puce ${index + 1} titre`, text: bullet.title },
@@ -333,7 +355,7 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
       logoPath: LOGO,
       tagline,
       title: t("popup.greetingSub"),
-      subtitle: t("popup.settings.liveNotificationsDescription"),
+      subtitle: applyTypography(DASHBOARD_SUBTITLES[lang] || DASHBOARD_SUBTITLES.en, lang),
       shotPath: popupShots.dashboard,
     }),
   });
@@ -368,7 +390,10 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
   const recapShot = await captureHarness(
     `recap-${lang}`,
     `/scripts/dev/page-harness.html?page=recap&shot=1&lang=${encodeURIComponent(lang)}`,
-    { width: 1280, height: 520 },
+    // 520 coupait en plein milieu du panneau « Recap avance » : mesure a 1280 de
+    // large, l'apercu se termine a 621 et la coque a 677. On cadre a 640, dans
+    // la marge basse, pour ne trancher aucun element.
+    { width: 1280, height: 640 },
   );
   const recapTitle = t("recap.title");
   const recapSubtitle = t("recap.subtitle");
