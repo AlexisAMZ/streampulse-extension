@@ -97,6 +97,22 @@ export const RELEASES = [
         }
       },
       {
+        type: "fix",
+        text: {
+          fr: "Plusieurs textes de l'extension restaient en anglais dans les autres langues : le message affiché quand aucune chaîne n'est suivie, et celui de l'onglet Historique quand il est vide. Ils sont désormais traduits partout.",
+          en: "A few texts stayed in English in the other languages: the message shown when no channel is followed, and the one in the History tab when it is empty. They are translated everywhere now.",
+          es: "Varios textos de la extensión seguían en inglés en los demás idiomas: el mensaje que aparece cuando no sigues ningún canal y el de la pestaña Historial cuando está vacía. Ya están traducidos en todas partes.",
+          "pt-BR": "Alguns textos da extensão continuavam em inglês nos outros idiomas: a mensagem exibida quando nenhum canal é seguido e a da aba Histórico quando ela está vazia. Agora estão traduzidos em todos os idiomas.",
+          de: "Einige Texte der Erweiterung blieben in den anderen Sprachen auf Englisch: die Meldung, wenn keinem Kanal gefolgt wird, und die im Verlauf-Tab, wenn er leer ist. Sie sind jetzt überall übersetzt.",
+          it: "Alcuni testi dell'estensione restavano in inglese nelle altre lingue: il messaggio mostrato quando non segui alcun canale e quello della scheda Cronologia quando è vuota. Ora sono tradotti ovunque.",
+          pl: "Kilka tekstów rozszerzenia pozostawało po angielsku w pozostałych językach: komunikat wyświetlany, gdy nie obserwujesz żadnego kanału, oraz ten w karcie Historia, gdy jest pusta. Teraz są przetłumaczone wszędzie.",
+          tr: "Eklentinin bazı metinleri diğer dillerde İngilizce kalıyordu: hiçbir kanal takip edilmediğinde görünen mesaj ve Geçmiş sekmesi boşken görünen mesaj. Artık her dilde çevrildi.",
+          ru: "Несколько текстов расширения оставались на английском в остальных языках: сообщение, когда ни один канал не отслеживается, и сообщение на вкладке «История», когда она пуста. Теперь они переведены везде.",
+          ja: "他の言語でも英語のままだったテキストがありました。フォロー中のチャンネルがないときのメッセージと、履歴タブが空のときのメッセージです。すべての言語で翻訳されました。",
+          ko: "다른 언어에서도 영어로 남아 있던 문구가 있었습니다. 팔로우한 채널이 없을 때 표시되는 메시지와, 기록 탭이 비었을 때의 메시지입니다. 이제 모든 언어로 번역되었습니다."
+        }
+      },
+      {
         type: "improved",
         text: {
           fr: "Les pages Twitch s'allègent de 354 Ko : le lecteur des aperçus au survol n'est plus chargé sur chaque page, mais seulement au premier aperçu réellement lancé.",
