@@ -289,9 +289,18 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
       continue;
     }
     if (!spec.panel) {
-      throw new Error(
-        `Capture manquante : ${path.relative(ROOT, override)} (vraie capture du popup, ~1240px de large)`,
+      // Le tableau de bord ne se rend pas via buildPopupPage, qui masque la vue
+      // Streamers et n'a aucune couche de donnees. On passe par le banc, qui
+      // fait tourner le vrai popup avec le faux chrome.* de mock-chrome.js :
+      // la capture suit donc le code au lieu de figer une photo. Le mode
+      // store=1 du banc retire le lecteur Kick en direct, pour qu'aucune
+      // chaine reelle n'entre dans un visuel public.
+      popupShots[spec.name] = await captureHarness(
+        `popup-${lang}-dashboard`,
+        `/scripts/dev/page-harness.html?page=popup&store=1&lang=${encodeURIComponent(lang)}`,
+        { width: POPUP_VIEWPORT.width, height: POPUP_VIEWPORT.height },
       );
+      continue;
     }
     const html = buildPopupPage({
       lang,

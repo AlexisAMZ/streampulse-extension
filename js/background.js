@@ -2166,6 +2166,11 @@ async function resolveChannelDisplayName(channel) {
   return formatHandleForDisplay("twitch", channel);
 }
 
+/** Cle du dernier nombre de streamers en direct, relu apres un redemarrage. */
+const BADGE_LIVE_COUNT_KEY = "streampulse:badgeLiveCount";
+/** Violet Twitch, comme la pastille inline des notes dans la popup. */
+const BADGE_COLOR_UPDATE = "#9146ff";
+
 class ActionBadge {
   static formatBadgeCount(count) {
     if (!Number.isFinite(count) || count <= 0) {
@@ -2206,12 +2211,49 @@ class ActionBadge {
   }
 
   static async update(liveCount, preferences = null) {
+    // Le compteur survit aux redemarrages du service worker : sans lui, le
+    // rendu declenche par une autre source (notes de version, demarrage)
+    // n'aurait aucun moyen de savoir combien de streamers sont en direct et
+    // effacerait le badge.
+    try {
+      await chrome.storage.local.set({ [BADGE_LIVE_COUNT_KEY]: liveCount });
+    } catch { /* le rendu retombera sur 0 */ }
+    await this.render(preferences);
+  }
+
+  /**
+   * Unique ecrivain du badge. Deux sources veulent l'ecrire : le nombre de
+   * streamers en direct et la pastille « notes de version non lues ». Elles
+   * s'ecrasaient mutuellement, et syncUpdateBadge() tournant a chaque
+   * demarrage du service worker, le compteur disparaissait a des moments
+   * arbitraires. Le direct l'emporte, puisque c'est la question a laquelle le
+   * badge repond ; la pastille des notes n'apparait que quand personne n'est
+   * en direct.
+   */
+  static async render(preferences = null) {
     const prefs = preferences || (await PreferenceStore.get());
+    let stored = {};
+    try {
+      stored = await chrome.storage.local.get([BADGE_LIVE_COUNT_KEY, "patchNotesUnread"]);
+    } catch { /* valeurs par defaut ci-dessous */ }
+    const liveCount = Number(stored[BADGE_LIVE_COUNT_KEY]) || 0;
     if (liveCount > 0) {
       await this.setLive(liveCount, prefs);
-    } else {
-      await this.clear(prefs);
+      return;
     }
+    if (stored.patchNotesUnread) {
+      try {
+        await chrome.action.setBadgeText({ text: "1" });
+        await chrome.action.setBadgeBackgroundColor({ color: BADGE_COLOR_UPDATE });
+        await chrome.action.setTitle({
+          title: translateWithPrefs(prefs, "background.badge.idle"),
+        });
+      } catch (error) {
+        console.warn("Badge update marker failed:", error.message);
+      }
+      return;
+    }
+    await this.clear(prefs);
   }
 }
 
@@ -2715,13 +2757,7 @@ let initDone = false;
 // popup, pose a chaque mise a jour, retire quand les notes de version sont
 // ouvertes. Violet Twitch, comme la pastille inline des notes dans la popup.
 async function syncUpdateBadge() {
-  try {
-    const { patchNotesUnread } = await chrome.storage.local.get("patchNotesUnread");
-    await chrome.action.setBadgeBackgroundColor({ color: "#9146ff" });
-    await chrome.action.setBadgeText({ text: patchNotesUnread ? "1" : "" });
-  } catch (error) {
-    console.warn("Failed to sync update badge:", error.message);
-  }
+  await ActionBadge.render();
 }
 
 async function openOnboarding(mode = "") {

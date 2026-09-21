@@ -36,6 +36,19 @@
         document.head.append(style);
       }
 
+      // ?store=1 : une fiche de store est du materiel public. Le popup monte le
+      // vrai lecteur player.kick.com en plein cadre (Kick n'expose aucune
+      // vignette), ce qui ferait entrer le direct d'une vraie chaine dans la
+      // capture. On le retire ici, dans le banc seulement : le fond retombe sur
+      // l'avatar pre-floute, comme quand aucune image n'est disponible.
+      if (params.get("store") === "1") {
+        const dropKickPlayer = () => {
+          document.querySelectorAll('iframe[src*="player.kick.com"]').forEach((f) => f.remove());
+        };
+        dropKickPlayer();
+        new MutationObserver(dropKickPlayer).observe(document.body, { childList: true, subtree: true });
+      }
+
       const step = Number(params.get("step") || 0);
       if (page === "onboarding" && step > 0) {
         await new Promise((resolve) => setTimeout(resolve, 600));
