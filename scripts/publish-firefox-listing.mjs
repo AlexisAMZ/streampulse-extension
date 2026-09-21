@@ -11,6 +11,11 @@
  * « Firefox ». Le script refuse d'écrire s'il n'en trouve pas exactement une,
  * plutôt que d'envoyer un texte faux sur une page publique.
  *
+ * AMO limite severement les ecritures (429, fenetre longue de ~1 h). Les 11
+ * langues partent donc dans UN SEUL PATCH : l'API fusionne les traductions,
+ * elle ne les remplace pas. Une requete par langue epuisait le quota au bout
+ * de trois.
+ *
  * Identifiants dans .env : AMO_JWT_ISSUER, AMO_JWT_SECRET. Jamais affichés.
  */
 
@@ -48,9 +53,6 @@ const LOCALES = {
   KO: "ko",
 };
 
-/** Repli quand AMO refuse le code principal (es-ES vs es selon les comptes). */
-const FALLBACK = { "es-ES": "es" };
-
 /** AMO veut un JWT HS256 neuf (jti unique) à chaque requête. */
 function authHeader() {
   const encode = (value) => Buffer.from(JSON.stringify(value)).toString("base64url");
@@ -78,15 +80,31 @@ function toFirefox(text, folder) {
   return text.replace("Chrome", "Firefox");
 }
 
-async function patchDescription(locale, text) {
+async function patchDescriptions(descriptions) {
   const response = await fetch(`${API}/addons/addon/${encodeURIComponent(addonId)}/`, {
     method: "PATCH",
     headers: { ...authHeader(), "Content-Type": "application/json" },
-    body: JSON.stringify({ description: { [locale]: text } }),
+    body: JSON.stringify({ description: descriptions }),
   });
   if (response.ok) return { ok: true };
   const payload = await response.text().catch(() => "");
-  return { ok: false, status: response.status, payload: payload.slice(0, 300) };
+  return { ok: false, status: response.status, payload: payload.slice(0, 400) };
+}
+
+/** Relit la fiche langue par langue : seule preuve que l'ecriture a pris. */
+async function readBack(locales) {
+  const state = [];
+  for (const locale of locales) {
+    const response = await fetch(
+      `${API}/addons/addon/${encodeURIComponent(addonId)}/?lang=${encodeURIComponent(locale)}`,
+      { headers: authHeader() },
+    );
+    const payload = await response.json().catch(() => ({}));
+    const value = payload.description;
+    const text = typeof value === "string" ? value : (value || {})[locale];
+    state.push({ locale, ok: Boolean(text && text.includes("Firefox")), length: text?.length || 0 });
+  }
+  return state;
 }
 
 async function main() {
@@ -108,22 +126,28 @@ async function main() {
     return;
   }
 
-  let failures = 0;
-  for (const { folder, locale, text } of prepared) {
-    let result = await patchDescription(locale, text);
-    if (!result.ok && FALLBACK[locale]) {
-      console.log(`  ${folder.padEnd(6)} ${locale} refusé, essai avec ${FALLBACK[locale]}`);
-      result = await patchDescription(FALLBACK[locale], text);
+  const descriptions = Object.fromEntries(prepared.map(({ locale, text }) => [locale, text]));
+  const result = await patchDescriptions(descriptions);
+
+  if (!result.ok) {
+    if (result.status === 429) {
+      const seconds = Number(/available in (\d+)/.exec(result.payload)?.[1]) || 0;
+      const minutes = Math.ceil(seconds / 60);
+      fail(
+        `AMO limite les écritures : réessayer dans ${minutes} minute(s). ` +
+          `Rien n'a été envoyé, la fiche est inchangée.`,
+      );
     }
-    if (result.ok) {
-      console.log(`  ${folder.padEnd(6)} ✓`);
-    } else {
-      failures += 1;
-      console.log(`  ${folder.padEnd(6)} ✗ HTTP ${result.status} ${result.payload}`);
-    }
+    fail(`Écriture refusée (HTTP ${result.status}) ${result.payload}`);
   }
-  if (failures) fail(`${failures} langue(s) en échec. La fiche est partiellement à jour.`);
-  console.log("\nFiche mise à jour. Vérifier sur addons.mozilla.org/developers.");
+
+  const state = await readBack(prepared.map(({ locale }) => locale));
+  for (const { locale, ok, length } of state) {
+    console.log(`  ${locale.padEnd(6)} ${ok ? `✓ ${length} caractères` : "✗ absente ou non relue"}`);
+  }
+  const missing = state.filter((entry) => !entry.ok);
+  if (missing.length) fail(`${missing.length} langue(s) non confirmée(s) à la relecture.`);
+  console.log("\nFiche mise à jour et relue. Vérifier sur addons.mozilla.org/developers.");
 }
 
 main().catch((error) => fail(error.message));
