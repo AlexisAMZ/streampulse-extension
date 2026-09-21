@@ -11,8 +11,9 @@ export const SCREENSHOT_ORDER = [
   "04-recap.png",
 ];
 
-/** Tuiles promo : nom du fichier source par langue de fiche (FR = sans suffixe). */
-export const PROMO_FILES = {
-  FR: { marquee: "marquee_1400x560.png", small: "small_tile.png" },
-  EN: { marquee: "marquee_1400x560_en.png", small: "small_tile_en.png" },
-};
+/**
+ * Tuiles promo : le Chrome Web Store n'en stocke qu'un seul jeu pour toute la
+ * fiche, quelle que soit la langue consultee. Elles sont donc uniques et en
+ * anglais.
+ */
+export const PROMO = { marquee: "marquee_1400x560.png", small: "small_tile.png" };

@@ -19,7 +19,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { SCREENSHOT_ORDER, PROMO_FILES } from "./lib/listing-order.mjs";
+import { SCREENSHOT_ORDER, PROMO } from "./lib/listing-order.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const { version } = JSON.parse(fs.readFileSync(path.join(ROOT, "manifest.json"), "utf8"));
@@ -43,10 +43,10 @@ for (const store of STORES) {
     SCREENSHOT_ORDER.forEach((name, index) => {
       copy(path.join(ROOT, "images", "cws_screenshots", lang, name), path.join(dir, numbered(index + 1, name)));
     });
-    const promo = PROMO_FILES[lang];
+    // Jeu de tuiles unique : les stores n'en acceptent qu'un par fiche.
     const next = SCREENSHOT_ORDER.length;
-    copy(path.join(ROOT, "images", "promo", promo.marquee), path.join(dir, `${next + 1}-marquee-1400x560.png`));
-    copy(path.join(ROOT, "images", "promo", promo.small), path.join(dir, `${next + 2}-small-tile-440x280.png`));
+    copy(path.join(ROOT, "images", "promo", PROMO.marquee), path.join(dir, `${next + 1}-marquee-1400x560.png`));
+    copy(path.join(ROOT, "images", "promo", PROMO.small), path.join(dir, `${next + 2}-small-tile-440x280.png`));
   }
 }
 

@@ -169,7 +169,12 @@ async function captureHarness(name, pagePath, size = CANVAS) {
 }
 
 /** Langue de la tuile promotionnelle : celle déclarée comme principale au store. */
-const PROMO_LANG = "fr";
+/**
+ * Le Chrome Web Store ne stocke qu'un seul jeu de tuiles promo pour toute la
+ * fiche : il n'y a pas de variante par langue a televerser. On ne produit donc
+ * que l'anglais, la langue par defaut de la fiche.
+ */
+const PROMO_LANG = "en";
 
 /**
  * Refuse de générer si un texte MARKETING imprimé sur un asset porte un terme
@@ -504,6 +509,13 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
  * CHROMEWEBSTORE.md § 1). Seul asset qui doit être sans canal alpha.
  */
 async function buildPromo({ listing, lang = PROMO_LANG }) {
+  // Capture du vrai popup, par le banc : les tuiles montraient un cadre vide
+  // depuis que source-dashboard.png, la photo manuelle, a disparu.
+  const promoShot = await captureHarness(
+    `promo-popup-${lang}`,
+    `/scripts/dev/page-harness.html?page=popup&store=1&lang=${encodeURIComponent(lang)}`,
+    { width: POPUP_VIEWPORT.width, height: POPUP_VIEWPORT.height },
+  );
   const suffix = lang === PROMO_LANG ? "" : `_${lang}`;
   const outDir = path.join(ROOT, "images", "promo");
   fs.mkdirSync(outDir, { recursive: true });
@@ -511,13 +523,12 @@ async function buildPromo({ listing, lang = PROMO_LANG }) {
 
   // Accroche courte et vraies cartes live du popup : sur 440x280, une promesse
   // lisible d'un coup d'oeil vaut mieux qu'une liste de fonctions.
-  const fr = lang === "fr";
   const tile = {
-    title: fr ? "Ne rate plus" : "Never miss",
-    accent: fr ? "aucun live." : "a live again.",
-    subtitle: fr ? "Tes streamers Twitch, Kick et YouTube en direct, en un clic." : "Your Twitch, Kick and YouTube streamers live, one click away.",
-    liveLabel: fr ? "En direct" : "Live now",
-    pointsLabel: fr ? "+250 pts" : "+250 pts",
+    title: "Never miss",
+    accent: "a live again.",
+    subtitle: "Your Twitch, Kick and YouTube streamers live, one click away.",
+    liveLabel: "Live now",
+    pointsLabel: "+250 pts",
   };
   assertPolicyClean(
     Object.entries(tile).map(([label, text]) => ({ label: `tuile ${label}`, text })),
@@ -532,7 +543,7 @@ async function buildPromo({ listing, lang = PROMO_LANG }) {
     html: buildPromoTile({
       logoPath: LOGO,
       ...tile,
-      shotPath: path.join(OUT_DIR, LANG_DIRS[lang], "source-dashboard.png"),
+      shotPath: promoShot,
     }),
   });
 
@@ -564,7 +575,7 @@ async function buildPromo({ listing, lang = PROMO_LANG }) {
       title,
       accent,
       benefits,
-      shotPath: path.join(OUT_DIR, LANG_DIRS[lang], "source-dashboard.png"),
+      shotPath: promoShot,
     }),
   });
 
@@ -604,10 +615,8 @@ async function main() {
       console.log(`✓ ${lang.padEnd(6)} → ${path.relative(ROOT, outDir)}`);
     }
 
-    for (const lang of [PROMO_LANG, "en"]) {
-      const promoPaths = await buildPromo({ listing, lang });
-      for (const promoPath of promoPaths) console.log(`✓ promo  → ${path.relative(ROOT, promoPath)} (24 bits)`);
-    }
+    const promoPaths = await buildPromo({ listing });
+    for (const promoPath of promoPaths) console.log(`✓ promo  → ${path.relative(ROOT, promoPath)} (24 bits)`);
   } finally {
     if (!process.env.KEEP_BUILD) {
       fs.rmSync(WORK_DIR, { recursive: true, force: true });

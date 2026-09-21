@@ -24,7 +24,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { LISTING } from "./store-assets/chrome-listing.mjs";
 import { LANG_DIRS } from "./store-assets/config.mjs";
-import { SCREENSHOT_ORDER, PROMO_FILES } from "./lib/listing-order.mjs";
+import { SCREENSHOT_ORDER, PROMO } from "./lib/listing-order.mjs";
 import { loadDotEnv, requireEnv } from "./lib/store-env.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -101,9 +101,7 @@ async function main() {
   FONTS.forEach((font) => copy(path.join(ROOT, "font", font), path.join(OUT, "fonts", font)));
   copy(path.join(ROOT, "images", "promo", "store-icon-128.png"), path.join(OUT, "shared", "store-icon-128.png"));
   copy(path.join(ROOT, "images", "photos", "128px.png"), path.join(OUT, "shared", "mark.png"));
-  for (const promo of Object.values(PROMO_FILES)) {
-    for (const file of Object.values(promo)) copy(path.join(ROOT, "images", "promo", file), path.join(OUT, "shared", file));
-  }
+  for (const file of Object.values(PROMO)) copy(path.join(ROOT, "images", "promo", file), path.join(OUT, "shared", file));
 
   const data = LANGS.map(([code, name]) => {
     const dir = LANG_DIRS[code];
@@ -114,10 +112,9 @@ async function main() {
       copy(path.join(ROOT, "images", "cws_screenshots", dir, file), path.join(langOut, `capture-${index + 1}.png`));
       return `${dir}/capture-${index + 1}.png`;
     });
-    const promo = PROMO_FILES[code === "fr" ? "FR" : "EN"];
-    copy(path.join(ROOT, "images", "promo", promo.marquee), path.join(langOut, "tuile-grande-1400x560.png"));
-    copy(path.join(ROOT, "images", "promo", promo.small), path.join(langOut, "tuile-petite-440x280.png"));
-    return { code, name, dir, desc: texts[code], ...manifestStrings(code), shots, tile: `shared/${promo.small}`, marquee: `shared/${promo.marquee}` };
+    copy(path.join(ROOT, "images", "promo", PROMO.marquee), path.join(langOut, "tuile-grande-1400x560.png"));
+    copy(path.join(ROOT, "images", "promo", PROMO.small), path.join(langOut, "tuile-petite-440x280.png"));
+    return { code, name, dir, desc: texts[code], ...manifestStrings(code), shots, tile: `shared/${PROMO.small}`, marquee: `shared/${PROMO.marquee}` };
   });
 
   const json = JSON.stringify(data).replace(/</g, "\\u003c");
