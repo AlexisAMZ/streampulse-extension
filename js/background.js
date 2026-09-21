@@ -3116,25 +3116,6 @@ function handleMessage(request, sender, sendResponse) {
       return true;
     }
 
-    case "loadPreviewsHls": {
-      // hls.js (354 Ko) n'est plus injecté sur chaque page Twitch : il est
-      // chargé ici, dans le monde isolé de l'onglet demandeur, uniquement au
-      // moment où un aperçu démarre réellement la lecture.
-      const tabId = sender?.tab?.id;
-      const frameId = sender?.frameId;
-      if (typeof tabId !== "number" || !chrome.scripting) {
-        sendResponse({ error: "no-scripting" });
-        return false;
-      }
-      chrome.scripting
-        .executeScript({
-          target: { tabId, frameIds: typeof frameId === "number" ? [frameId] : undefined },
-          files: ["js/vendor/hls.light.min.js"],
-        })
-        .then(() => sendResponse({ success: true }))
-        .catch(err => sendResponse({ error: err.message }));
-      return true;
-    }
 
     case "addStreamer":
       (async () => {

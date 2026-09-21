@@ -262,20 +262,19 @@
         });
     }
 
-    // hls.js n'est plus déclaré dans le manifest (354 Ko sur chaque page pour
-    // rien) : le background l'injecte dans le monde isolé, seulement au premier
-    // démarrage réel d'un aperçu. En cas d'échec, on retombe sur le lecteur
-    // natif (Safari-like) ou l'image.
+    // hls.js n'est plus charge sur chaque page Twitch (354 Ko pour rien) : il est
+    // declare dans web_accessible_resources et importe ici, au premier demarrage
+    // reel d'un apercu. Le bundle est un UMD : evalue comme module, il s'accroche
+    // a globalThis, donc au global du monde isole. En cas d'echec, on retombe sur
+    // le lecteur natif (Safari-like) ou l'image.
+    let hlsPromise = null;
     function ensureHls() {
       if (NS.Hls) return Promise.resolve(NS.Hls);
-      try {
-        return chrome.runtime
-          .sendMessage({ type: "loadPreviewsHls" })
-          .then((res) => (res && !res.error && NS.Hls) || null)
-          .catch(() => null);
-      } catch (_e) {
-        return Promise.resolve(null);
-      }
+      if (hlsPromise) return hlsPromise;
+      hlsPromise = import(chrome.runtime.getURL("js/vendor/hls.light.min.js"))
+        .then(() => NS.Hls || globalThis.Hls || null)
+        .catch(() => null);
+      return hlsPromise;
     }
 
     async function startPlayback(variantUrl, token, opts) {
