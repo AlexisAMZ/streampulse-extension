@@ -8,8 +8,7 @@
     "storage",
     "alarms",
     "notifications",
-    "offscreen",
-    "scripting"
+    "offscreen"
   ],
   "host_permissions": [
     "https://api.twitch.tv/*",
@@ -175,6 +174,15 @@
       ],
       "matches": [
         "https://www.twitch.tv/*"
+      ]
+    },
+    {
+      "resources": [
+        "js/vendor/hls.light.min.js"
+      ],
+      "matches": [
+        "https://www.twitch.tv/*",
+        "https://clips.twitch.tv/*"
       ]
     }
   ]
