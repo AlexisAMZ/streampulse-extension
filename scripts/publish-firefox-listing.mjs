@@ -38,6 +38,62 @@ const addonId =
 
 const KIT = path.join(os.homedir(), "Desktop/dev/ZIPS/chrome-kit");
 
+/**
+ * Nom de la fiche AMO, par langue. Il ne peut pas etre recopie du manifeste :
+ * AMO plafonne ce champ a 50 caracteres et les noms du paquet montent a 67.
+ * On garde donc la marque, les trois plateformes (c'est ce que les gens
+ * cherchent) et le mot « alertes ». Points, Drops, apercus et filtres de tchat
+ * vivent dans le resume, qui a 250 caracteres et est indexe lui aussi.
+ * L'allemand dit « Live-Alerts » parce que c'est deja le mot employe par la
+ * description allemande de l'extension.
+ */
+const NAMES = {
+  fr: "StreamPulse : Alertes Twitch, Kick & YouTube",
+  "en-US": "StreamPulse: Twitch, Kick & YouTube Alerts",
+  "es-ES": "StreamPulse: Alertas Twitch, Kick y YouTube",
+  "pt-BR": "StreamPulse: Alertas Twitch, Kick e YouTube",
+  de: "StreamPulse: Live-Alerts Twitch, Kick & YouTube",
+  it: "StreamPulse: Avvisi Twitch, Kick e YouTube",
+  pl: "StreamPulse: Alerty Twitch, Kick i YouTube",
+  tr: "StreamPulse: Twitch, Kick ve YouTube Bildirimleri",
+  ru: "StreamPulse: Уведомления Twitch, Kick и YouTube",
+  ja: "StreamPulse: Twitch・Kick・YouTube 通知",
+  ko: "StreamPulse: Twitch, Kick, YouTube 알림",
+};
+
+const NAME_MAX = 50;
+const SUMMARY_MAX = 250;
+
+/** Code de langue AMO → dossier _locales du port (Chrome ecrit pt_BR, AMO pt-BR). */
+const LOCALE_DIRS = {
+  fr: "fr",
+  "en-US": "en",
+  "es-ES": "es",
+  "pt-BR": "pt_BR",
+  de: "de",
+  it: "it",
+  pl: "pl",
+  tr: "tr",
+  ru: "ru",
+  ja: "ja",
+  ko: "ko",
+};
+
+/**
+ * Le resume vient de appDesc du port : une seule source pour la description
+ * courte, celle que le navigateur affiche et celle que la fiche affiche.
+ */
+function summaryFor(locale) {
+  const dir = LOCALE_DIRS[locale] || fail(`pas de dossier _locales pour ${locale}`);
+  const file = path.join(FIREFOX_REPO, "_locales", dir, "messages.json");
+  if (!fs.existsSync(file)) fail(`messages.json absent : ${file}`);
+  const messages = JSON.parse(fs.readFileSync(file, "utf8"));
+  const text = messages.appDesc?.message || fail(`appDesc absent dans ${file}`);
+  if (text.includes("Chrome")) fail(`appDesc ${dir} parle de Chrome : a corriger dans le port.`);
+  if (!text.includes("YouTube")) fail(`appDesc ${dir} ne mentionne pas YouTube : port incomplet.`);
+  return text;
+}
+
 /** Dossier du kit → code de langue AMO. AMO refuse un code inconnu en 400. */
 const LOCALES = {
   FR: "fr",
@@ -80,11 +136,11 @@ function toFirefox(text, folder) {
   return text.replace("Chrome", "Firefox");
 }
 
-async function patchDescriptions(descriptions) {
+async function patchDescriptions(descriptions, name, summary) {
   const response = await fetch(`${API}/addons/addon/${encodeURIComponent(addonId)}/`, {
     method: "PATCH",
     headers: { ...authHeader(), "Content-Type": "application/json" },
-    body: JSON.stringify({ description: descriptions }),
+    body: JSON.stringify({ description: descriptions, name, summary }),
   });
   if (response.ok) return { ok: true };
   const payload = await response.text().catch(() => "");
@@ -93,6 +149,7 @@ async function patchDescriptions(descriptions) {
 
 /** Relit la fiche langue par langue : seule preuve que l'ecriture a pris. */
 async function readBack(locales) {
+  const pick = (value, locale) => (typeof value === "string" ? value : (value || {})[locale] || "");
   const state = [];
   for (const locale of locales) {
     const response = await fetch(
@@ -100,9 +157,18 @@ async function readBack(locales) {
       { headers: authHeader() },
     );
     const payload = await response.json().catch(() => ({}));
-    const value = payload.description;
-    const text = typeof value === "string" ? value : (value || {})[locale];
-    state.push({ locale, ok: Boolean(text && text.includes("Firefox")), length: text?.length || 0 });
+    const description = pick(payload.description, locale);
+    const name = pick(payload.name, locale);
+    const summary = pick(payload.summary, locale);
+    state.push({
+      locale,
+      // Le seul marqueur fiable des trois : la description doit parler de
+      // Firefox, le nom et le resume doivent nommer YouTube.
+      description: description.includes("Firefox"),
+      name: name.includes("YouTube"),
+      summary: summary.includes("YouTube"),
+      length: description.length,
+    });
   }
   return state;
 }
@@ -119,15 +185,32 @@ async function main() {
 
   if (!WRITE) {
     for (const { folder, locale, text } of prepared) {
-      const line = text.split("\n").find((l) => l.includes("Firefox")) || "";
-      console.log(`  ${folder.padEnd(6)} → ${locale.padEnd(6)} ${text.length} caractères | ${line.trim().slice(0, 70)}`);
+      const name = NAMES[locale] || "(aucun)";
+      const summary = summaryFor(locale);
+      const flag = name.length > NAME_MAX || summary.length > SUMMARY_MAX ? "  ⚠ HORS LIMITE" : "";
+      console.log(`  ${folder.padEnd(6)} → ${locale}`);
+      console.log(`     nom      ${String(name.length).padStart(3)}/${NAME_MAX}   ${name}${flag}`);
+      console.log(`     résumé   ${String(summary.length).padStart(3)}/${SUMMARY_MAX}  ${summary.slice(0, 60)}…`);
+      console.log(`     descr.   ${String(text.length).padStart(3)}       ${text.includes("Firefox") ? "Firefox ✓" : "Chrome ✗"}`);
     }
     console.log("\nSimulation : rien n'a été envoyé. Relancer avec --write pour publier.");
     return;
   }
 
   const descriptions = Object.fromEntries(prepared.map(({ locale, text }) => [locale, text]));
-  const result = await patchDescriptions(descriptions);
+  const names = {};
+  const summaries = {};
+  for (const { locale } of prepared) {
+    const name = NAMES[locale] || fail(`pas de nom de fiche pour ${locale}`);
+    if (name.length > NAME_MAX) fail(`nom ${locale} : ${name.length} caractères, AMO en accepte ${NAME_MAX}.`);
+    if (!name.includes("YouTube")) fail(`nom ${locale} : YouTube manquant.`);
+    const summary = summaryFor(locale);
+    if (summary.length > SUMMARY_MAX) fail(`résumé ${locale} : ${summary.length} caractères, AMO en accepte ${SUMMARY_MAX}.`);
+    names[locale] = name;
+    summaries[locale] = summary;
+  }
+
+  const result = await patchDescriptions(descriptions, names, summaries);
 
   if (!result.ok) {
     if (result.status === 429) {
@@ -142,11 +225,16 @@ async function main() {
   }
 
   const state = await readBack(prepared.map(({ locale }) => locale));
-  for (const { locale, ok, length } of state) {
-    console.log(`  ${locale.padEnd(6)} ${ok ? `✓ ${length} caractères` : "✗ absente ou non relue"}`);
+  for (const entry of state) {
+    const mark = (ok) => (ok ? "✓" : "✗");
+    console.log(
+      `  ${entry.locale.padEnd(6)} nom ${mark(entry.name)}  résumé ${mark(entry.summary)}  description ${mark(entry.description)} (${entry.length} car.)`,
+    );
   }
-  const missing = state.filter((entry) => !entry.ok);
-  if (missing.length) fail(`${missing.length} langue(s) non confirmée(s) à la relecture.`);
+  const missing = state.filter((e) => !(e.name && e.summary && e.description));
+  if (missing.length) {
+    fail(`${missing.length} langue(s) non confirmée(s) à la relecture : ${missing.map((e) => e.locale).join(", ")}`);
+  }
   console.log("\nFiche mise à jour et relue. Vérifier sur addons.mozilla.org/developers.");
 }
 
