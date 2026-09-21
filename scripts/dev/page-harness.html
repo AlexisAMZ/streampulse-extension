@@ -12,7 +12,7 @@
   <body>
     <script type="module">
       const params = new URLSearchParams(location.search);
-      const page = ["onboarding", "changelog", "recap", "restore"].includes(params.get("page")) ? params.get("page") : "changelog";
+      const page = ["onboarding", "changelog", "recap", "restore", "popup"].includes(params.get("page")) ? params.get("page") : "changelog";
       const source = await (await fetch(`/html/${page}.html`)).text();
       const parsed = new DOMParser().parseFromString(source, "text/html");
 

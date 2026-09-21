@@ -99,6 +99,22 @@ export const RELEASES = [
       {
         type: "fix",
         text: {
+          fr: "Le filtre du tableau de bord ne proposait que Twitch et Kick : impossible de n'afficher que ses chaînes YouTube. La pastille YouTube manquait, elle est là.",
+          en: "The dashboard filter only offered Twitch and Kick, so there was no way to show only your YouTube channels. The YouTube pill was missing, it is there now.",
+          es: "El filtro del panel solo ofrecía Twitch y Kick, así que no se podían mostrar solo los canales de YouTube. Faltaba la pestaña de YouTube, ya está.",
+          "pt-BR": "O filtro do painel só oferecia Twitch e Kick, então não dava para mostrar apenas os canais do YouTube. Faltava a opção YouTube, agora ela está lá.",
+          de: "Der Filter im Dashboard bot nur Twitch und Kick an, YouTube-Kanäle ließen sich also nicht allein anzeigen. Die YouTube-Schaltfläche fehlte, jetzt ist sie da.",
+          it: "Il filtro della dashboard proponeva solo Twitch e Kick, quindi non si potevano mostrare solo i canali YouTube. Mancava il pulsante YouTube, ora c'è.",
+          pl: "Filtr na pulpicie oferował tylko Twitcha i Kicka, więc nie dało się pokazać samych kanałów YouTube. Brakowało przycisku YouTube, teraz jest.",
+          tr: "Panodaki filtre yalnızca Twitch ve Kick sunuyordu, yani YouTube kanallarını tek başına göstermek mümkün değildi. Eksik olan YouTube düğmesi eklendi.",
+          ru: "Фильтр на панели предлагал только Twitch и Kick, поэтому показать одни каналы YouTube было нельзя. Кнопки YouTube не хватало, теперь она есть.",
+          ja: "ダッシュボードのフィルターに Twitch と Kick しかなく、YouTube のチャンネルだけを表示できませんでした。不足していた YouTube のボタンを追加しました。",
+          ko: "대시보드 필터에 Twitch와 Kick만 있어서 YouTube 채널만 보는 것이 불가능했습니다. 빠져 있던 YouTube 버튼을 추가했습니다."
+        }
+      },
+      {
+        type: "fix",
+        text: {
           fr: "Plusieurs textes de l'extension restaient en anglais dans les autres langues : le message affiché quand aucune chaîne n'est suivie, et celui de l'onglet Historique quand il est vide. Ils sont désormais traduits partout.",
           en: "A few texts stayed in English in the other languages: the message shown when no channel is followed, and the one in the History tab when it is empty. They are translated everywhere now.",
           es: "Varios textos de la extensión seguían en inglés en los demás idiomas: el mensaje que aparece cuando no sigues ningún canal y el de la pestaña Historial cuando está vacía. Ya están traducidos en todas partes.",
