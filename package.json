@@ -12,6 +12,7 @@
     "publish:edge": "node scripts/publish-edge.mjs",
     "publish:chrome": "node scripts/publish-chrome.mjs",
     "publish:firefox": "node scripts/publish-firefox.mjs",
+    "publish:firefox:listing": "node scripts/publish-firefox-listing.mjs",
     "publish:firefox:screenshots": "node scripts/publish-firefox-screenshots.mjs",
     "listing": "node scripts/prepare-listing.mjs",
     "store:chrome-kit": "node scripts/make-chrome-kit.mjs",
