@@ -1017,11 +1017,20 @@ const REWARDS_EVERY_MS = 30 * 60_000;
 
 /** Campagnes de badges et récompenses, relues au plus toutes les 30 minutes. */
 async function refreshRewardsFromWorker() {
-  const stored = await chrome.storage.local.get("streamPulseDropsRewards");
-  if (Date.now() - (Number(stored.streamPulseDropsRewards?.updatedAt) || 0) < REWARDS_EVERY_MS) return;
-  await dropsStore.recordRewards(await dropsClient.readRewards());
-  const { added } = await dropsStore.recordBadges(await dropsClient.readBadges());
-  announceBadges(added).catch(() => {});
+  const stored = await chrome.storage.local.get(["streamPulseDropsRewards", "streamPulseDropsBadges"]);
+  const now = Date.now();
+  // Deux délais séparés : une lecture réussie de l'un ne doit jamais bloquer l'autre.
+  const warn = (what) => (error) => {
+    if (error.code !== "signed-out") console.warn(`[StreamPulse] ${what} :`, error.code || error.message, error.detail || "");
+  };
+  if (now - (Number(stored.streamPulseDropsRewards?.updatedAt) || 0) >= REWARDS_EVERY_MS) {
+    await dropsClient.readRewards().then((list) => dropsStore.recordRewards(list), warn("campagnes de badges"));
+  }
+  if (now - (Number(stored.streamPulseDropsBadges?.updatedAt) || 0) >= REWARDS_EVERY_MS) {
+    await dropsClient.readBadges()
+      .then((raw) => dropsStore.recordBadges(raw))
+      .then(({ added }) => announceBadges(added), warn("badges globaux"));
+  }
 }
 
 /** Alerte pour les nouveaux badges gratuits (3 au plus d'un coup). */
