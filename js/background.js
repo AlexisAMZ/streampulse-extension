@@ -23,6 +23,7 @@ import { DEFAULT_PREFERENCES } from "./preferences-data.js";
 import { thankPlusSubscriber } from "./plus-thanks.js";
 import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-alerts.js";
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "./plus.js";
+import { createPointsStore } from "./points-store.js";
 import { syncEventSubRaid, stopEventSubRaid } from "./eventsubRaid.js";
 import {
   RAID_WATCHER_ALARM,
@@ -907,6 +908,24 @@ async function resolveChannelAvatar(platform, channel) {
 
   return "";
 }
+
+// ─── Suivi des points de chaîne ───────────────────────────────────────────────
+// Les gains arrivent de pointsRecorder.js ; points-store.js est le seul à les
+// écrire. Les noms des chaînes viennent de Helix, par lots de 100 identifiants.
+
+async function resolveTwitchChannels(ids) {
+  await ensureConfig();
+  const query = ids.map((id) => `id=${encodeURIComponent(id)}`).join("&");
+  const data = await fetchTwitchJson(`https://api.twitch.tv/helix/users?${query}`, { headers: twitchHeaders() });
+  return (data?.data || []).map((user) => ({
+    id: String(user.id),
+    login: user.login,
+    displayName: user.display_name || user.login,
+    avatar: user.profile_image_url || "",
+  }));
+}
+
+const pointsStore = createPointsStore({ storage: chrome.storage.local, resolveChannels: resolveTwitchChannels });
 
 // ─── Historique des lives ─────────────────────────────────────────────────────
 // Chaque fin de live d'un streamer suivi devient une entree d'historique. Une
@@ -3478,6 +3497,30 @@ function handleMessage(request, sender, sendResponse) {
       StatsStore.get().then((stats) => {
         sendResponse({ success: true, stats });
       });
+      return true;
+
+    case "recordPointsGain":
+      (async () => {
+        try {
+          const prefs = await PreferenceStore.get();
+          if (prefs.pointsTracking === false) {
+            sendResponse({ success: true, recorded: false });
+            return;
+          }
+          const result = await pointsStore.record(request.data);
+          sendResponse({ success: true, ...result });
+          if (result.recorded) pointsStore.resolveNames().catch(() => {});
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
+        }
+      })();
+      return true;
+
+    case "resetPoints":
+      pointsStore.reset().then(
+        () => sendResponse({ success: true }),
+        (error) => sendResponse({ error: error?.message || String(error) }),
+      );
       return true;
 
     case "incrementStat":
