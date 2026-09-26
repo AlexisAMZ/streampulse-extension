@@ -67,3 +67,14 @@ function raw_rewards() {
     { id: "p", name: "First Partners Collection", brand: "Pokemon", startsAt: "2026-08-24T17:00:00Z", endsAt: "2026-10-01T07:00:00Z", rewards: [{ id: "r1", name: "Poké Ball" }] },
   ];
 }
+
+test("un vieux badge du même jeu, daté d'une année passée, n'est pas disponible ; le nom exact d'une récompense l'est", () => {
+  const now = Date.parse("2026-09-26T20:00:00Z");
+  const raw = { badges: [
+    { setID: "old-control", title: "Old Control", description: "watching CONTROL Resonant during the 2025 reveal" },
+    { setID: "poke-ball", title: "Poké Ball", description: "Pokémon collection" },
+  ], owned: [] };
+  const { state } = mergeBadges({ updatedAt: 0, syncedAt: 0, badges: [], owned: [] }, raw, now);
+  const names = activeNames({ rewards: normalizeRewards(raw_rewards()) }, now);
+  assert.deepEqual(catalogBadges(state, "available", "", { now, names }).map((b) => b.id), ["poke-ball"]);
+});

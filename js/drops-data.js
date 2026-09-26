@@ -550,6 +550,10 @@ const fold = (value) => String(value || "").normalize("NFD").replace(/[\u0300-\u
  */
 export function activeNames({ rewards = [], campaigns = [], drops = [] } = {}, now = Date.now()) {
   const names = new Set();
+  // Noms exacts des récompenses en cours : un badge qui porte ce nom est certain.
+  names.rewardTitles = new Set();
+  for (const reward of activeRewards(rewards, now)) reward.rewards.forEach((item) => names.rewardTitles.add(fold(item.name).trim()));
+  for (const drop of drops) if (drop.isBadge) String(drop.name || "").split(" + ").forEach((name) => names.rewardTitles.add(fold(name).trim()));
   const add = (value) => {
     const name = fold(value).trim();
     // Trop court, un nom trouverait des correspondances partout (« d20 », « Go »).
@@ -578,8 +582,14 @@ export function catalogBadges(state, filterId = "all", query = "", context = {})
   const owned = new Set(state.owned);
   const now = context.now ?? Date.now();
   const names = [...(context.names || [])];
+  const titles = context.names?.rewardTitles || new Set();
+  const year = new Date(now).getFullYear();
+  // Une année passée dans la description (« 2025 ») : l'événement est fini.
+  const pastYear = (badge) => (fold(badge.description).match(/\b20\d\d\b/g) || []).some((value) => Number(value) < year);
   const isAvailable = (badge) =>
-    (badge.firstSeen > 0 && now - badge.firstSeen <= NEW_BADGE_MS) || names.some((name) => fold(badge.description).includes(name) || fold(badge.title).includes(name));
+    titles.has(fold(badge.title).trim()) ||
+    (badge.firstSeen > 0 && now - badge.firstSeen <= NEW_BADGE_MS) ||
+    (!pastYear(badge) && names.some((name) => fold(badge.description).includes(name)));
   const needle = String(query || "").trim().toLowerCase();
   const test = BADGE_TESTS[filterId] || BADGE_TESTS.all;
   return state.badges
