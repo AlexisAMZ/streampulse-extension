@@ -30,6 +30,10 @@ export const DEFAULT_PREFERENCES = {
   autoRefreshPlayerErrors: true,
   enableClipDownload: true,
   playerQuality: "auto",
+  // Position de l'indicateur de latence : "viewers" = sous le lecteur, à
+  // côté du nombre de spectateurs ; "chat" = dans l'en-tête du tchat, à la
+  // place du titre « Chat du stream ».
+  latencyPlacement: "viewers",
   autoCancelRaids: false,
   preventTabDiscard: true,
   enablePredictionsPopup: true,

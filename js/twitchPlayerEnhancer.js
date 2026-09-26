@@ -27,7 +27,10 @@
     streamLatency: {
       enabled: true,
       autoRealignPlayer: true,
-      renderInChatHeader: true,
+      // Position de l'indicateur : "viewers" (barre d'infos sous le lecteur,
+      // defaut) ou "chat" (en-tete du tchat, a la place du titre). Surcharge
+      // en dernier recours par la preference utilisateur latencyPlacement.
+      placement: "viewers",
     },
 
   };
@@ -98,6 +101,20 @@
     }
     .streampulse-latency-button.is-metadata:hover {
       transform: none;
+    }
+    .streampulse-latency-button.is-chat {
+      padding: 0 6px;
+      font-size: 12px;
+      font-weight: 700;
+      gap: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .streampulse-latency-button.is-chat:hover {
+      transform: none;
+    }
+    .streampulse-chat-title-hidden {
+      display: none !important;
     }
     .dPOHRS {
       padding-left: 40px !important;
@@ -878,6 +895,8 @@
     syncKeepQualityFlag(preferences.keepQualityInBackground === true);
     syncPlayerQuality(preferences.playerQuality);
     setVolumeBoost(preferences[VOLUME_BOOST_FIELD] !== false);
+    // Position de l'indicateur de latence, appliquée sans rechargement.
+    latencyFeature?.setPlacement(preferences.latencyPlacement);
   }
 
   // preventPause.js runs in the MAIN world and cannot read chrome.storage,
@@ -1210,14 +1229,25 @@
   class LatencyFeature {
     constructor(config = {}) {
       this.config = { ...DEFAULT_FEATURE_CONFIG.streamLatency, ...config };
+      this.placement = config.placement === "chat" ? "chat" : "viewers";
       this.button = null;
       this.dot = null;
       this.text = null;
       this.header = null;
+      this.chatTitle = null;
       this.observer = null;
       this.updateIntervalId = null;
       this.headerCheckIntervalId = null;
       this.locale = getLocaleKey();
+    }
+
+    /** Le réglage change sans rechargement : on ré-accroche au bon endroit. */
+    setPlacement(value) {
+      const next = value === "chat" ? "chat" : "viewers";
+      if (next === this.placement) return;
+      this.placement = next;
+      this.detach();
+      this.ensureHeader();
     }
 
     start() {
@@ -1267,16 +1297,55 @@
     }
 
     findHeader() {
+      if (this.placement === "chat") {
+        const chatHeader = this.findChatHeader();
+        if (chatHeader) {
+          this.headerMode = "chat";
+          return chatHeader;
+        }
+        return null;
+      }
       const metadata = this.findMetadataBar();
       if (metadata) {
         this.headerMode = "metadata";
         return metadata;
       }
-      // Plus de repli sur l'en-tete du chat : la barre d'infos du lecteur
-      // apparait quelques secondes apres le chargement de la page, et le
-      // bouton s'y teleportait depuis le chat, ce qui etait desagreable a
-      // l'oeil. On prefere attendre (le sondage de 3 s reessaie) et poser le
-      // bouton directement a sa place definitive.
+      // Pas de repli croisé : l'en-tête du tchat et la barre d'infos ne
+      // s'affichent pas au même moment au chargement, et un repli ferait
+      // « téléporter » le bouton quelques secondes après son apparition.
+      // Le sondage de 3 s réessaie jusqu'à ce que l'ancre choisie existe.
+      return null;
+    }
+
+    /** En-tête du tchat : classes stables relevées sur twitch.tv. */
+    findChatHeader() {
+      const selectors = [
+        ".stream-chat-header",
+        '[data-a-target="chat-room-header"]',
+        '[data-test-selector="chat-room-header"]',
+      ];
+      for (const selector of selectors) {
+        const element = document.querySelector(selector);
+        if (element) return element;
+      }
+      return null;
+    }
+
+    /**
+     * Le libellé « Chat du stream » que le bouton vient remplacer : premier
+     * élément texte de l'en-tête qui n'est pas dans un bouton. L'icône est un
+     * SVG (sans texte) et les commandes de droite sont des boutons, donc ce
+     * repère reste juste quelle que soit la langue de l'interface.
+     */
+    findChatTitle(header) {
+      for (const element of header.querySelectorAll("*")) {
+        if (element.closest('button, [role="button"]')) continue;
+        const directText = Array.from(element.childNodes)
+          .filter((node) => node.nodeType === Node.TEXT_NODE)
+          .map((node) => String(node.textContent || "").trim())
+          .join("");
+        if (directText) return element;
+      }
       return null;
     }
 
@@ -1302,6 +1371,11 @@
       this.button = null;
       this.dot = null;
       this.text = null;
+      // En mode chat, le titre « Chat du stream » était masqué : le rendre.
+      if (this.chatTitle) {
+        this.chatTitle.classList.remove("streampulse-chat-title-hidden");
+        this.chatTitle = null;
+      }
       this.header = null;
     }
 
@@ -1323,6 +1397,17 @@
       if (this.headerMode === "metadata") {
         this.button.classList.add("is-metadata");
         this.header.insertBefore(this.button, this.header.firstElementChild);
+      } else if (this.headerMode === "chat") {
+        this.button.classList.add("is-chat");
+        const title = this.findChatTitle(this.header);
+        if (title) {
+          this.chatTitle = title;
+          title.classList.add("streampulse-chat-title-hidden");
+          title.insertAdjacentElement("beforebegin", this.button);
+        } else {
+          // Structure inconnue : le badge se glisse à droite du titre.
+          this.header.appendChild(this.button);
+        }
       } else {
         this.header.appendChild(this.button);
       }

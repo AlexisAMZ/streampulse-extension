@@ -341,6 +341,23 @@ export const RELEASES = [
       },
       {
         type: "improved",
+        area: "interface",
+        text: {
+          fr: "L'indicateur de latence se place où tu veux : sous le lecteur à côté des spectateurs, comme aujourd'hui, ou dans l'en-tête du tchat à la place du titre « Chat du stream ». Ça se règle dans Lecteur.",
+          en: "The latency indicator goes where you want: under the player next to the viewer count, as today, or in the chat header in place of the \"Stream Chat\" title. Set it in Player.",
+          es: "El indicador de latencia se coloca donde quieras: bajo el reproductor junto a los espectadores, como ahora, o en el encabezado del chat en lugar del título «Chat del stream». Se ajusta en Reproductor.",
+          "pt-BR": "O indicador de latência fica onde você quiser: sob o player ao lado dos espectadores, como hoje, ou no cabeçalho do chat no lugar do título \"Chat da transmissão\". Ajuste em Player.",
+          de: "Die Latenzanzeige sitzt, wo du willst: unter dem Player neben der Zuschauerzahl wie bisher oder in der Chat-Kopfzeile anstelle des Titels „Stream-Chat“. Einstellbar unter Player.",
+          it: "L'indicatore di latenza sta dove vuoi: sotto il player accanto agli spettatori, come oggi, o nell'intestazione della chat al posto del titolo \"Chat dello stream\". Si imposta in Player.",
+          pl: "Wskaźnik opóźnienia stawia tam, gdzie chcesz: pod odtwarzaczem obok liczby widzów, jak teraz, albo w nagłówku czatu zamiast tytułu „Czat transmisji”. Ustawisz to w Odtwarzaczu.",
+          tr: "Gecikme göstergesi istediğin yerde: bugünkü gibi oynatıcının altında izleyici sayısının yanında ya da \"Yayın sohbeti\" başlığının yerine sohbet başlığında. Oynatıcı bölümünden ayarlanır.",
+          ru: "Индикатор задержки ставится куда угодно: под плеером рядом со зрителями, как сейчас, или в шапке чата вместо заголовка «Чат трансляции». Настраивается в разделе «Плеер».",
+          ja: "遅延の表示を好きな場所に置けます：これまで通りプレーヤーの下の視聴者数の横、または「配信チャット」のタイトルの代わりにチャットのヘッダーへ。「プレーヤー」で設定できます。",
+          ko: "지연 표시를 원하는 곳에 둘 수 있습니다: 지금처럼 플레이어 아래 시청자 수 옆, 또는 '방송 채팅' 제목 대신 채팅 헤더에. '플레이어'에서 설정합니다.",
+        },
+      },
+      {
+        type: "improved",
         area: "points",
         text: {
           fr: "Les points gagnés sur l'image du récap sont les vrais points de la période : le nouveau suivi par jour, et avant lui les coffres récupérés que l'extension avait datés. Si le suivi ne couvre qu'une partie de la période, l'image l'indique (« Points depuis le 26 sept. »). Le Wrapped annuel reprend ton total depuis l'installation.",

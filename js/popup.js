@@ -82,6 +82,7 @@ const pipButtonToggle = document.getElementById("pref-pip-button");
 const autoRefreshToggle = document.getElementById("pref-auto-refresh");
 const clipDownloadToggle = document.getElementById("pref-clip-download");
 const playerQualitySelect = document.getElementById("pref-player-quality");
+const latencyPlacementSelect = document.getElementById("pref-latency-placement");
 const fastForwardToggle = document.getElementById("pref-fast-forward");
 const previewsEnabledToggle = document.getElementById("pref-previews-enabled");
 const previewsModeGroup = document.getElementById("previews-mode-group");
@@ -1004,6 +1005,9 @@ function renderPreferences() {
   }
   if (playerQualitySelect) {
     playerQualitySelect.value = prefs.playerQuality || "auto";
+  }
+  if (latencyPlacementSelect) {
+    latencyPlacementSelect.value = prefs.latencyPlacement === "chat" ? "chat" : "viewers";
   }
   if (fastForwardToggle) {
     fastForwardToggle.checked = prefs.enableFastForwardButton !== false;
@@ -1965,6 +1969,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     autoRefreshToggle?.addEventListener("change", (e) => {
       updatePreferences({ autoRefreshPlayerErrors: e.target.checked });
+    });
+    latencyPlacementSelect?.addEventListener("change", (e) => {
+      updatePreferences({ latencyPlacement: e.target.value });
     });
     clipDownloadToggle?.addEventListener("change", (e) => {
       updatePreferences({ enableClipDownload: e.target.checked });

@@ -655,6 +655,7 @@ class PreferenceStore {
   static sanitize(preferences = {}) {
     const SORT_ORDER_VALUES = ["live", "name-asc", "name-desc", "custom"];
     const PREVIEWS_SIZES = ["s", "m", "l"];
+    const LATENCY_PLACEMENTS = ["viewers", "chat"];
     const previewsDelay = Number(preferences.previewsShowDelayMs);
     return {
       liveNotifications: preferences.liveNotifications !== false,
@@ -682,6 +683,9 @@ class PreferenceStore {
       autoRefreshPlayerErrors: preferences.autoRefreshPlayerErrors !== false,
       enableClipDownload: preferences.enableClipDownload !== false,
       playerQuality: PLAYER_QUALITIES.includes(preferences.playerQuality) ? preferences.playerQuality : "auto",
+      latencyPlacement: LATENCY_PLACEMENTS.includes(preferences.latencyPlacement)
+        ? preferences.latencyPlacement
+        : "viewers",
       // Les alertes de raid rapportent des points en suivant le raid : garder
       // l'annulation automatique active rendrait les deux fonctionnalités
       // contradictoires (le raid est annulé avant qu'on puisse le suivre).
