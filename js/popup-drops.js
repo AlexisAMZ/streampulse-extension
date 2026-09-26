@@ -7,6 +7,8 @@ import { t, getCurrentLanguage } from "./i18n.js";
 import {
   DROPS_KEYS,
   badgesFrom,
+  catalogBadges,
+  countBadges,
   newBadges,
   activeRewards,
   bandModel,
@@ -52,6 +54,9 @@ let history = [];
 let prefs = {};
 let myGames = new Set();
 let filter = "all";
+let badgeFilter = "all";
+let badgeQuery = "";
+let badgeLimit = 40;
 /** Récupérations demandées depuis ce popup : instanceId → heure de la demande. */
 const claiming = new Map();
 
@@ -355,7 +360,7 @@ function badgeRow(badge) {
   if (badge.description) main.title = badge.description;
   const side = el("span", "camp-side");
   side.append(el("span", badge.owned ? "drops-tag" : badge.paid ? "camp-badge" : "camp-when is-new", t(badge.owned ? "popup.drops.badgeOwned" : badge.paid ? "popup.drops.badgePaid" : "popup.drops.badgeFree")));
-  side.append(el("span", "camp-when", shortDate(badge.firstSeen)));
+  if (badge.firstSeen) side.append(el("span", "camp-when", shortDate(badge.firstSeen)));
   row.append(thumb(badge.image, "drop-img is-small"), main, side);
   item.append(row);
   return item;
@@ -373,6 +378,22 @@ function renderBadges(now) {
   const sync = $("drops-badges-sync");
   sync.hidden = shown.length > 0;
   sync.textContent = badges.syncedAt ? t("popup.drops.badgesSince", { date: shortDate(badges.syncedAt) }) : t("popup.drops.badgesSyncing");
+}
+
+function renderCatalog() {
+  if (!$("badges-catalog")) return;
+  const counts = countBadges(badges);
+  document.querySelectorAll("#badges-filters [data-filter]").forEach((button) => {
+    const active = button.dataset.filter === badgeFilter;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+    const count = button.querySelector("[data-count]");
+    if (count) count.textContent = badges.badges.length ? String(counts[button.dataset.filter] ?? 0) : "";
+  });
+  const list = catalogBadges(badges, badgeFilter, badgeQuery);
+  $("badges-catalog").replaceChildren(...list.slice(0, badgeLimit).map(badgeRow));
+  $("badges-catalog-empty").hidden = list.length > 0 || !badges.badges.length;
+  $("badges-more").hidden = list.length <= badgeLimit;
 }
 
 // ─── Panneau : historique (StreamPulse+) ──────────────────────────────────────
@@ -420,6 +441,7 @@ function renderPanel(now) {
   renderCampaigns(now);
   renderRewards(now);
   renderBadges(now);
+  renderCatalog();
   renderHistory();
 }
 
@@ -483,6 +505,22 @@ function bind() {
   $("drops-progress")?.addEventListener("click", (event) => {
     const button = event.target.closest("[data-claim]");
     if (button && !button.disabled) claim(button);
+  });
+  $("badges-filters")?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-filter]");
+    if (!button) return;
+    badgeFilter = button.dataset.filter;
+    badgeLimit = 40;
+    renderCatalog();
+  });
+  $("badges-search")?.addEventListener("input", (event) => {
+    badgeQuery = event.target.value;
+    badgeLimit = 40;
+    renderCatalog();
+  });
+  $("badges-more")?.addEventListener("click", () => {
+    badgeLimit += 40;
+    renderCatalog();
   });
   $("drops-open-campaigns")?.addEventListener("click", () => openTab(CAMPAIGNS_PAGE));
   $("drops-unlock")?.addEventListener("click", () => deps.openPlus());

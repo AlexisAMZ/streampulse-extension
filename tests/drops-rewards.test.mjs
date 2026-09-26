@@ -27,3 +27,20 @@ test("activeRewards garde les campagnes en cours, celle qui finit la première d
   assert.deepEqual(activeRewards(rewards, now).map((r) => r.id), ["92f5", "9bdb", "68e4"]);
   assert.deepEqual(activeRewards(rewards, Date.parse("2026-10-05T00:00:00Z")).map((r) => r.id), ["68e4"]);
 });
+
+import { catalogBadges, countBadges, mergeBadges } from "../js/drops-data.js";
+
+test("catalogBadges filtre gratuits, payants, obtenus, à obtenir, et cherche dans la description", () => {
+  const raw = { badges: [
+    { setID: "rematch-blue-lock", title: "Rematch Blue Lock", description: "This badge was earned by watching a streamer in the Rematch category for 30 minutes" },
+    { setID: "big-walk", title: "Big Walk", description: "This badge was earned by subscribing or gifting a sub to a streamer in the Big Walk category." },
+    { setID: "d20", title: "d20", description: "This badge was earned by watching Dungeon Masters on Twitch." },
+    { setID: "d20", title: "d20", description: "version 2" },
+  ], owned: ["d20"] };
+  const { state } = mergeBadges({ updatedAt: 0, syncedAt: 0, badges: [], owned: [] }, raw, 1);
+  assert.equal(state.badges.length, 3, "une ligne par set, quelle que soit la version");
+  assert.deepEqual(countBadges(state), { all: 3, free: 2, paid: 1, missing: 2, owned: 1 });
+  assert.deepEqual(catalogBadges(state, "paid").map((b) => b.id), ["big-walk"]);
+  assert.deepEqual(catalogBadges(state, "missing", "rematch").map((b) => b.id), ["rematch-blue-lock"]);
+  assert.equal(catalogBadges(state, "owned")[0].owned, true);
+});

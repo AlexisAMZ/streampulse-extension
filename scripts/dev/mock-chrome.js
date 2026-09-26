@@ -264,6 +264,19 @@
     streamPulseDropsHistory: dropsHistory,
     streamPulseDropsCampaigns: dropsCampaigns,
     streamPulseDropsSince: now - 60 * 24 * H,
+    streamPulseDropsBadges: dropsMode === "none" ? undefined : {
+      updatedAt: now - 5 * 60e3,
+      syncedAt: now - 10 * 24 * H,
+      owned: ["bulbasaur", "d20"],
+      badges: [
+        { id: "ace-combat-8-nugget", title: "ACE COMBAT 8 Nugget", description: "This badge was earned by subscribing or gifting a sub to a streamer in the ACE COMBAT 8 category during the game's launch!", image: reward(210, "A"), firstSeen: now - 24 * H },
+        { id: "rematch-blue-lock", title: "Rematch Blue Lock", description: "This badge was earned by watching a streamer in the Rematch category for 30 minutes", image: reward(200, "R"), firstSeen: now - 5 * 24 * H },
+        { id: "dont-eat-the-mold", title: "Don't Eat The Mold", description: "This badge was earned by watching a streamer in the CONTROL Resonant category for 1 hour", image: reward(100, "M"), firstSeen: now - 5 * 24 * H },
+        { id: "d20", title: "d20", description: "This badge was earned by watching Dungeon Masters on Twitch.", image: reward(0, "20"), firstSeen: 0 },
+        { id: "bulbasaur", title: "Bulbasaur", description: "This badge was earned during the Pokémon First Partners Collection campaign.", image: reward(120, "B"), firstSeen: 0 },
+        { id: "big-walk", title: "Big Walk", description: "This badge was earned by subscribing or gifting a sub to a streamer in the Big Walk category.", image: reward(30, "W"), firstSeen: 0 },
+      ],
+    },
     streamPulseDropsRewards: {
       updatedAt: now - 5 * 60e3,
       rewards: dropsMode === "none" ? [] : [

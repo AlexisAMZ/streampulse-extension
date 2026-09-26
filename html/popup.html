@@ -689,6 +689,23 @@
           <h3 class="drops-section"><span data-i18n="popup.drops.newBadges">Nouveaux badges</span><small id="drops-badges-meta"></small></h3>
           <ul class="drops-campaigns" id="drops-badges"></ul>
           <p class="drops-empty" id="drops-badges-sync" role="status"></p>
+
+          <h3 class="drops-section"><span data-i18n="popup.drops.allBadges">Tous les badges</span></h3>
+          <p class="settings-description" data-i18n="popup.drops.catalogNote">Twitch n'indique pas si un badge peut encore être obtenu : sa description dit comment il s'obtenait. Les événements finis ne le donnent plus.</p>
+          <div class="drops-filters" id="badges-filters" role="group" data-i18n-attr-ariaLabel="popup.drops.allBadges">
+            <button type="button" class="drops-filter active" aria-pressed="true" data-filter="all"><span data-i18n="popup.drops.filterAll">Toutes</span><em data-count="all"></em></button>
+            <button type="button" class="drops-filter" aria-pressed="false" data-filter="free"><span data-i18n="popup.drops.badgeFilterFree">Gratuits</span><em data-count="free"></em></button>
+            <button type="button" class="drops-filter" aria-pressed="false" data-filter="paid"><span data-i18n="popup.drops.badgeFilterPaid">Payants</span><em data-count="paid"></em></button>
+            <button type="button" class="drops-filter" aria-pressed="false" data-filter="missing"><span data-i18n="popup.drops.badgeFilterMissing">À obtenir</span><em data-count="missing"></em></button>
+            <button type="button" class="drops-filter" aria-pressed="false" data-filter="owned"><span data-i18n="popup.drops.badgeFilterOwned">Obtenus</span><em data-count="owned"></em></button>
+          </div>
+          <label class="sheet-search badges-search">
+            <span class="visually-hidden" data-i18n="popup.drops.searchBadges">Chercher un badge</span>
+            <input id="badges-search" type="search" autocomplete="off" spellcheck="false" data-i18n-attr-placeholder="popup.drops.searchBadges" placeholder="Chercher un badge" />
+          </label>
+          <ul class="drops-campaigns" id="badges-catalog"></ul>
+          <p class="drops-empty" id="badges-catalog-empty" data-i18n="popup.drops.noBadgeMatch" hidden>Aucun badge ne correspond.</p>
+          <button id="badges-more" class="button button-quiet" type="button" data-i18n="popup.drops.showMore" hidden>Voir plus</button>
         </section>
 
         <!-- StreamPulse+ -->

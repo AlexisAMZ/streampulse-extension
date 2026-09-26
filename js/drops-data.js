@@ -538,6 +538,35 @@ export function mergeBadges(state, raw, now) {
 /** Payant si la description parle d'abonnement, de sub offert ou de Bits. */
 export const isPaidBadge = (badge) => /subscrib|gift|\bsubs?\b|\bbits?\b/i.test(badge.description || "");
 
+export const BADGE_FILTERS = Object.freeze(["all", "free", "paid", "missing", "owned"]);
+
+const BADGE_TESTS = {
+  all: () => true,
+  free: (badge) => !badge.paid,
+  paid: (badge) => badge.paid,
+  missing: (badge) => !badge.owned,
+  owned: (badge) => badge.owned,
+};
+
+/**
+ * Catalogue complet : filtre, recherche dans le nom et la description, les
+ * plus récemment apparus d'abord, puis par ordre alphabétique.
+ */
+export function catalogBadges(state, filterId = "all", query = "") {
+  const owned = new Set(state.owned);
+  const needle = String(query || "").trim().toLowerCase();
+  const test = BADGE_TESTS[filterId] || BADGE_TESTS.all;
+  return state.badges
+    .map((badge) => ({ ...badge, owned: owned.has(badge.id), paid: isPaidBadge(badge) }))
+    .filter((badge) => test(badge) && (!needle || `${badge.title} ${badge.description}`.toLowerCase().includes(needle)))
+    .sort((a, b) => (b.firstSeen || 0) - (a.firstSeen || 0) || a.title.localeCompare(b.title));
+}
+
+export function countBadges(state) {
+  const all = catalogBadges(state);
+  return Object.fromEntries(BADGE_FILTERS.map((id) => [id, all.filter(BADGE_TESTS[id]).length]));
+}
+
 export function newBadges(state, now, windowMs = NEW_BADGE_MS) {
   const owned = new Set(state.owned);
   return state.badges

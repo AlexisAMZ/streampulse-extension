@@ -852,3 +852,7 @@ button.pts-row:focus-visible { background: var(--surface-2); }
 .layout-label input:disabled + span { color: var(--text-3); }
 .layout-move { width: 28px; height: 28px; font-size: 13px; }
 .layout-move:disabled { opacity: 0.3; }
+
+.badges-search { display: flex; margin: 0 0 8px; }
+.badges-search input { flex: 1; }
+#badges-more { margin-top: 8px; }
