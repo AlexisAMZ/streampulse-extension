@@ -29,10 +29,25 @@
   let sequence = 0;
   let campaignsTriedAt = 0;
   let inventoryAskedAt = 0;
+  let timer = null;
+
+  /**
+   * Extension rechargée ou mise à jour : ce script, resté dans un onglet ouvert
+   * avant, n'a plus accès à chrome.*. On arrête tout au lieu de lever une erreur
+   * à chaque minute ; le nouveau script prendra le relais au rechargement de la page.
+   */
+  function contextAlive() {
+    if (chrome.runtime?.id) return true;
+    enabled = false;
+    if (timer) clearInterval(timer);
+    timer = null;
+    return false;
+  }
 
   const isEnabled = (prefs) => !prefs || prefs.dropsTracking !== false;
 
   function send(message) {
+    if (!contextAlive()) return Promise.resolve(null);
     try {
       return chrome.runtime.sendMessage(message).catch(() => null);
     } catch {
@@ -86,7 +101,7 @@
 
   /** Relit ce qui est périmé, sauf si un autre onglet vient de le faire. */
   function tick() {
-    if (!enabled) return;
+    if (!enabled || !contextAlive()) return;
     chrome.storage.local.get([PROGRESS_KEY, CAMPAIGNS_KEY], (stored) => {
       if (chrome.runtime.lastError || !enabled) return;
       const now = Date.now();
@@ -101,7 +116,7 @@
     if (started) return;
     started = true;
     setTimeout(tick, FIRST_TICK_MS);
-    setInterval(tick, TICK_MS);
+    timer = setInterval(tick, TICK_MS);
   }
 
   // Demandes du service worker : relire tout de suite (popup ouvert, Drop

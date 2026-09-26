@@ -24,6 +24,7 @@ function sandbox({ prefs = {}, stored = {}, respond = () => ({}) } = {}) {
   win.top = win;
   const chrome = {
     runtime: {
+      id: "streampulse",
       lastError: undefined,
       sendMessage: async (message) => {
         sent.push(message);
@@ -41,7 +42,7 @@ function sandbox({ prefs = {}, stored = {}, respond = () => ({}) } = {}) {
   const fromPage = (data) => pageListeners.forEach((listener) => listener({ source: win, data }));
   const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
   const commands = () => posted.filter((message) => message.source === "streampulse:drops:cmd");
-  return { posted, sent, fromPage, flush, commands, timers, storageListeners, runtime: () => runtimeListener };
+  return { posted, sent, fromPage, flush, commands, timers, storageListeners, chrome, runtime: () => runtimeListener };
 }
 
 test("le relais annonce qu'il est prêt, puis relit l'inventaire et les campagnes périmés", async () => {
@@ -104,4 +105,12 @@ test("suivi désactivé : rien n'est relayé ni relu", async () => {
 
   box.storageListeners.forEach((listener) => listener({ betaGeneralPreferences: { newValue: { dropsTracking: true } } }, "local"));
   assert.equal(box.timers.length, 1, "réactiver le suivi relance les lectures");
+});
+
+test("extension rechargée : le relais s'arrête sans lever d'erreur", () => {
+  const box = sandbox();
+  box.chrome.runtime.id = undefined;
+  box.chrome.storage.local.get = () => { throw new Error("Extension context invalidated."); };
+  assert.doesNotThrow(() => box.timers[0]());
+  assert.deepEqual(box.commands(), []);
 });
