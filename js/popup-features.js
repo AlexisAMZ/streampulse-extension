@@ -525,18 +525,14 @@ function renderSmart() {
 // ─── Couleur d'accent et badge (StreamPulse+) ─────────────────────────────────
 
 export const ACCENT_KEY = "streamPulseAccent";
-const ACCENTS = ["violet", "lcd", "ocean", "ember", "crimson"];
-let accentChoice = "violet";
 
+/**
+ * La couleur d'accent a été retirée de StreamPulse+ : le popup reste violet,
+ * même si une ancienne couleur est encore rangée dans le storage.
+ */
 function renderAccent() {
   const active = plusActive();
-  const applied = active && ACCENTS.includes(accentChoice) ? accentChoice : "violet";
-  if (applied === "violet") delete document.body.dataset.accent;
-  else document.body.dataset.accent = applied;
-  $("accent-row")?.classList.toggle("is-locked", !active);
-  document.querySelectorAll(".accent-swatch").forEach((swatch) => {
-    swatch.setAttribute("aria-checked", String(swatch.dataset.accent === applied));
-  });
+  delete document.body.dataset.accent;
   const note = $("badge-plus-note");
   if (note) note.textContent = t(active ? "popup.settings.badgePlusOn" : "popup.settings.badgePlusOff");
 }
@@ -621,17 +617,6 @@ function initClipDownloadLock() {
 }
 
 function initAccent() {
-  $("accent-swatches")?.addEventListener("click", (event) => {
-    const swatch = event.target.closest(".accent-swatch");
-    if (!swatch) return;
-    if (!plusActive()) {
-      if (swatch.dataset.accent !== "violet") openPlus();
-      return;
-    }
-    accentChoice = swatch.dataset.accent;
-    chrome.storage.local.set({ [ACCENT_KEY]: accentChoice });
-    renderAccent();
-  });
   plusListeners.add(() => renderAccent());
 }
 
@@ -784,7 +769,6 @@ export async function initFeatures() {
 
   const stored = await chrome.storage.local.get([PLUS_KEY, SMART_ALERTS_KEY, ACCENT_KEY, COSMETICS_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers"]);
   plusRecord = stored[PLUS_KEY] || null;
-  accentChoice = stored[ACCENT_KEY] || "violet";
   cosmetics = normalizeCosmetics(stored[COSMETICS_KEY]);
   predictionRule = normalizePredictionRule(stored[PREDICTION_RULE_KEY]);
   predictionHistory = Array.isArray(stored[PREDICTION_HISTORY_KEY]) ? stored[PREDICTION_HISTORY_KEY] : [];
@@ -813,7 +797,6 @@ export async function initFeatures() {
       renderPredictions();
     }
     if (changes[ACCENT_KEY]) {
-      accentChoice = changes[ACCENT_KEY].newValue || "violet";
       renderAccent();
     }
     if (changes.betaGeneralStreamers) {

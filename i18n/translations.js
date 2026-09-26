@@ -516,6 +516,9 @@ export const translations = {
         "later": "Plus tard",
         "never": "Non merci"
       },
+      "identity": {
+        "intro": "L'apparence de ton badge StreamPulse et de ton pseudo dans le chat Twitch, visible par les autres utilisateurs de StreamPulse."
+      },
       "layout": {
         "title": "Disposition",
         "description": "Choisis l'ordre des onglets et des rubriques, et masque ceux dont tu ne te sers pas.",
@@ -572,6 +575,7 @@ export const translations = {
         "menuPoints": "Points",
         "menuDrops": "Drops",
         "menuBadges": "Badges",
+        "menuIdentity": "Pseudo et badge",
         "menuPlus": "StreamPulse+",
         "menuGeneral": "Général et aide",
         "groupRewards": "Récompenses",
@@ -1577,6 +1581,9 @@ export const translations = {
         "later": "Later",
         "never": "No thanks"
       },
+      "identity": {
+        "intro": "How your StreamPulse badge and your name look in Twitch chat, visible to other StreamPulse users."
+      },
       "layout": {
         "title": "Layout",
         "description": "Choose the order of tabs and sections, and hide the ones you don't use.",
@@ -1633,6 +1640,7 @@ export const translations = {
         "menuPoints": "Points",
         "menuDrops": "Drops",
         "menuBadges": "Badges",
+        "menuIdentity": "Name & badge",
         "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
@@ -2638,6 +2646,9 @@ export const translations = {
         "later": "Más tarde",
         "never": "No, gracias"
       },
+      "identity": {
+        "intro": "El aspecto de tu insignia StreamPulse y de tu nombre en el chat de Twitch, visible para otros usuarios de StreamPulse."
+      },
       "layout": {
         "title": "Disposición",
         "description": "Elige el orden de las pestañas y secciones, y oculta las que no uses.",
@@ -2694,6 +2705,7 @@ export const translations = {
         "menuPoints": "Puntos",
         "menuDrops": "Drops",
         "menuBadges": "Insignias",
+        "menuIdentity": "Nombre e insignia",
         "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
@@ -3686,6 +3698,9 @@ export const translations = {
         "later": "Mais tarde",
         "never": "Não, obrigado"
       },
+      "identity": {
+        "intro": "A aparência do seu emblema StreamPulse e do seu nome no chat da Twitch, visível para outros usuários do StreamPulse."
+      },
       "layout": {
         "title": "Disposição",
         "description": "Escolha a ordem das abas e seções e oculte as que você não usa.",
@@ -3742,6 +3757,7 @@ export const translations = {
         "menuPoints": "Pontos",
         "menuDrops": "Drops",
         "menuBadges": "Emblemas",
+        "menuIdentity": "Nome e emblema",
         "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
@@ -4742,6 +4758,9 @@ export const translations = {
         "later": "Später",
         "never": "Nein danke"
       },
+      "identity": {
+        "intro": "Wie dein StreamPulse-Abzeichen und dein Name im Twitch-Chat aussehen, sichtbar für andere StreamPulse-Nutzer."
+      },
       "layout": {
         "title": "Anordnung",
         "description": "Wähle die Reihenfolge der Tabs und Bereiche und blende nicht genutzte aus.",
@@ -4798,6 +4817,7 @@ export const translations = {
         "menuPoints": "Punkte",
         "menuDrops": "Drops",
         "menuBadges": "Abzeichen",
+        "menuIdentity": "Name & Abzeichen",
         "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
@@ -5803,6 +5823,9 @@ export const translations = {
         "later": "Più tardi",
         "never": "No, grazie"
       },
+      "identity": {
+        "intro": "L'aspetto del tuo badge StreamPulse e del tuo nome nella chat di Twitch, visibile agli altri utenti di StreamPulse."
+      },
       "layout": {
         "title": "Disposizione",
         "description": "Scegli l'ordine di schede e sezioni e nascondi quelle che non usi.",
@@ -5859,6 +5882,7 @@ export const translations = {
         "menuPoints": "Punti",
         "menuDrops": "Drops",
         "menuBadges": "Badge",
+        "menuIdentity": "Nome e badge",
         "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
@@ -6864,6 +6888,9 @@ export const translations = {
         "later": "Później",
         "never": "Nie, dzięki"
       },
+      "identity": {
+        "intro": "Wygląd twojej odznaki StreamPulse i nicku na czacie Twitcha, widoczny dla innych użytkowników StreamPulse."
+      },
       "layout": {
         "title": "Układ",
         "description": "Wybierz kolejność kart i sekcji oraz ukryj te, których nie używasz.",
@@ -6920,6 +6947,7 @@ export const translations = {
         "menuPoints": "Punkty",
         "menuDrops": "Drops",
         "menuBadges": "Odznaki",
+        "menuIdentity": "Nick i odznaka",
         "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
@@ -7925,6 +7953,9 @@ export const translations = {
         "later": "Sonra",
         "never": "Hayır, teşekkürler"
       },
+      "identity": {
+        "intro": "StreamPulse rozetinin ve adının Twitch sohbetindeki görünümü, diğer StreamPulse kullanıcılarına görünür."
+      },
       "layout": {
         "title": "Düzen",
         "description": "Sekmelerin ve bölümlerin sırasını seç, kullanmadıklarını gizle.",
@@ -7981,6 +8012,7 @@ export const translations = {
         "menuPoints": "Puanlar",
         "menuDrops": "Drops",
         "menuBadges": "Rozetler",
+        "menuIdentity": "Ad ve rozet",
         "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
@@ -8986,6 +9018,9 @@ export const translations = {
         "later": "Позже",
         "never": "Нет, спасибо"
       },
+      "identity": {
+        "intro": "Как выглядят ваш значок StreamPulse и ник в чате Twitch, видно другим пользователям StreamPulse."
+      },
       "layout": {
         "title": "Расположение",
         "description": "Выберите порядок вкладок и разделов и скройте ненужные.",
@@ -9042,6 +9077,7 @@ export const translations = {
         "menuPoints": "Баллы",
         "menuDrops": "Drops",
         "menuBadges": "Значки",
+        "menuIdentity": "Ник и значок",
         "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
@@ -10047,6 +10083,9 @@ export const translations = {
         "later": "あとで",
         "never": "今はしない"
       },
+      "identity": {
+        "intro": "Twitch チャットでの StreamPulse バッジと名前の見た目。他の StreamPulse ユーザーにも表示されます。"
+      },
       "layout": {
         "title": "レイアウト",
         "description": "タブと項目の並び順を選び、使わないものは非表示にできます。",
@@ -10103,6 +10142,7 @@ export const translations = {
         "menuPoints": "ポイント",
         "menuDrops": "Drops",
         "menuBadges": "バッジ",
+        "menuIdentity": "名前とバッジ",
         "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",
@@ -11108,6 +11148,9 @@ export const translations = {
         "later": "나중에",
         "never": "괜찮아요"
       },
+      "identity": {
+        "intro": "Twitch 채팅에서 StreamPulse 배지와 닉네임이 보이는 모습으로, 다른 StreamPulse 사용자에게도 보입니다."
+      },
       "layout": {
         "title": "배치",
         "description": "탭과 항목의 순서를 정하고, 쓰지 않는 것은 숨길 수 있습니다.",
@@ -11164,6 +11207,7 @@ export const translations = {
         "menuPoints": "포인트",
         "menuDrops": "Drops",
         "menuBadges": "배지",
+        "menuIdentity": "닉네임과 배지",
         "menuPlus": "StreamPulse+",
         "menuGeneral": "General and help",
         "groupRewards": "Rewards",

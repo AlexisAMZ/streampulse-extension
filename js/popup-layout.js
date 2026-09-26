@@ -147,5 +147,5 @@ export async function initLayout() {
 
 const DEFAULT_ORDER = {
   tabs: ["streamers", "history", "settings", "changelog"],
-  menu: ["alerts", "automation", "player", "previews", "chat", "data", "points", "drops", "badges", "plus", "general"],
+  menu: ["alerts", "automation", "player", "previews", "chat", "data", "points", "drops", "badges", "identity", "plus", "general"],
 };

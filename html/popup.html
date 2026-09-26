@@ -271,6 +271,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
           <span data-i18n="popup.osd.menuBadges">Badges</span>
         </button>
+        <button id="menu-tab-identity" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-identity" data-panel="identity" tabindex="-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+          <span data-i18n="popup.osd.menuIdentity">Pseudo et badge</span>
+        </button>
         <button id="menu-tab-plus" class="menu-tab menu-tab-plus" type="button" role="tab" aria-selected="false" aria-controls="menu-plus" data-panel="plus" tabindex="-1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg>
           <span data-i18n="popup.osd.menuPlus">StreamPulse+</span>
@@ -735,30 +739,9 @@
           </div>
         </section>
 
-        <!-- StreamPulse+ -->
-        <section class="menu-panel" id="menu-plus" role="tabpanel" aria-labelledby="menu-tab-plus" hidden>
-          <h2 data-i18n="popup.osd.menuPlus">StreamPulse+</h2>
-
-          <div class="plus-menu-status" id="plus-menu-status">
-            <span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span>
-            <p class="settings-description" id="plus-menu-text" data-i18n="popup.plusMenu.statusInactive">Débloque ces outils avec StreamPulse+.</p>
-            <button class="button button-primary" id="plus-menu-open" type="button" data-i18n="popup.plusMenu.discover">Découvrir StreamPulse+</button>
-          </div>
-
-          <h3 class="settings-group-header" data-i18n="popup.plusMenu.groupLook">Personnalisation</h3>
-          <div class="settings-row accent-row is-locked" id="accent-row">
-            <span class="settings-text">
-              <span class="settings-title" id="accent-label"><span data-i18n="popup.accent.title">Couleur d'accent</span></span>
-              <span class="settings-description" data-i18n="popup.accent.hint">Change la couleur des boutons et des repères du popup.</span>
-            </span>
-            <div class="accent-swatches" id="accent-swatches" role="radiogroup" aria-labelledby="accent-label">
-              <button class="accent-swatch" type="button" role="radio" aria-checked="true" data-accent="violet" data-i18n-attr-ariaLabel="popup.accent.violet" aria-label="Violet"></button>
-              <button class="accent-swatch" type="button" role="radio" aria-checked="false" data-accent="lcd" data-i18n-attr-ariaLabel="popup.accent.lcd" aria-label="Vert LCD"></button>
-              <button class="accent-swatch" type="button" role="radio" aria-checked="false" data-accent="ocean" data-i18n-attr-ariaLabel="popup.accent.ocean" aria-label="Bleu"></button>
-              <button class="accent-swatch" type="button" role="radio" aria-checked="false" data-accent="ember" data-i18n-attr-ariaLabel="popup.accent.ember" aria-label="Orange"></button>
-              <button class="accent-swatch" type="button" role="radio" aria-checked="false" data-accent="crimson" data-i18n-attr-ariaLabel="popup.accent.crimson" aria-label="Rouge"></button>
-            </div>
-          </div>
+        <section class="menu-panel" id="menu-identity" role="tabpanel" aria-labelledby="menu-tab-identity" hidden>
+          <h2 data-i18n="popup.osd.menuIdentity">Pseudo et badge</h2>
+          <p class="settings-description" data-i18n="popup.identity.intro">L'apparence de ton badge StreamPulse et de ton pseudo dans le chat Twitch, visible par les autres utilisateurs de StreamPulse.</p>
           <div class="settings-row badge-color-row">
             <span class="settings-text">
               <label class="settings-title" for="pref-badge-color-mode" data-i18n="popup.settings.badgeColorTitle">Couleur du badge</label>
@@ -808,6 +791,18 @@
           <div class="cosmetic-preview">
             <span class="cosmetic-preview-label" data-i18n="popup.cosmetics.preview">Aperçu dans le tchat</span>
             <span class="cosmetic-line" aria-hidden="true"><span class="cosmetic-badge" id="cosmetic-badge"></span><b class="cosmetic-name" id="cosmetic-name" data-i18n="popup.cosmetics.sampleName">TonPseudo</b><span class="cosmetic-msg">: gg !</span></span>
+          </div>
+
+        </section>
+
+        <!-- StreamPulse+ -->
+        <section class="menu-panel" id="menu-plus" role="tabpanel" aria-labelledby="menu-tab-plus" hidden>
+          <h2 data-i18n="popup.osd.menuPlus">StreamPulse+</h2>
+
+          <div class="plus-menu-status" id="plus-menu-status">
+            <span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span>
+            <p class="settings-description" id="plus-menu-text" data-i18n="popup.plusMenu.statusInactive">Débloque ces outils avec StreamPulse+.</p>
+            <button class="button button-primary" id="plus-menu-open" type="button" data-i18n="popup.plusMenu.discover">Découvrir StreamPulse+</button>
           </div>
 
           <h3 class="settings-group-header smart-head"><span data-i18n="popup.smart.title">Alertes intelligentes</span></h3>
