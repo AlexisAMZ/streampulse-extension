@@ -59,6 +59,13 @@ export const REWARDS_QUERY = `query StreamPulseRewardCampaigns {
   }
 }`;
 
+// Tous les badges globaux de Twitch, et ceux que l'utilisateur possède déjà.
+// Lecture acceptée sans Client-Integrity (vérifié sur twitch.tv le 2026-09-26).
+export const BADGES_QUERY = `query StreamPulseGlobalBadges {
+  badges { setID version title description imageURL(size: NORMAL) }
+  currentUser { id availableBadges { setID } }
+}`;
+
 const failure = (code, detail = "") => Object.assign(new Error(code), { code, detail });
 
 /** Jeton de session Twitch lu dans le cookie, ou "" si l'utilisateur n'est pas connecté. */
@@ -112,5 +119,13 @@ export function createDropsClient({ fetch, cookies }) {
     return Array.isArray(data.rewardCampaignsAvailableToUser) ? data.rewardCampaignsAvailableToUser : [];
   }
 
-  return { readInventory, readRewards, claim };
+  async function readBadges() {
+    const { data } = await gql(BADGES_QUERY);
+    return {
+      badges: Array.isArray(data.badges) ? data.badges : [],
+      owned: Array.isArray(data.currentUser?.availableBadges) ? data.currentUser.availableBadges.map((badge) => badge?.setID).filter(Boolean) : [],
+    };
+  }
+
+  return { readInventory, readRewards, readBadges, claim };
 }

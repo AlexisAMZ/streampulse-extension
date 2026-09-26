@@ -72,7 +72,7 @@
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 3h12l4 6-10 12L2 9z"/></svg>
           <span class="chip-label"></span>
         </span>
-        <span class="chip" id="activity-drops" hidden>
+        <span class="chip chip-drops" id="activity-drops" role="button" tabindex="0" data-i18n-attr-ariaLabel="popup.drops.bandOpen" aria-label="Ouvrir le panneau Drops" hidden>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/></svg>
           <span class="chip-label"></span>
         </span>
@@ -82,18 +82,6 @@
         </button>
       </section>
 
-      <button type="button" class="drops-band" id="drops-band" data-i18n-attr-ariaLabel="popup.drops.bandOpen" aria-label="Ouvrir le panneau Drops" hidden>
-        <span class="drops-gift" id="drops-band-gift"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg></span>
-        <span class="drops-band-text">
-          <b class="drops-band-name" id="drops-band-name"></b>
-          <small class="drops-band-meta" id="drops-band-meta"></small>
-        </span>
-        <span class="drops-band-progress" id="drops-band-progress">
-          <span class="drops-bar"><i id="drops-band-fill"></i></span>
-          <small id="drops-band-count"></small>
-        </span>
-        <span class="drops-band-more" id="drops-band-more"></span>
-      </button>
 
       <section class="live-strip">
         <div class="strip-head">
@@ -673,6 +661,9 @@
           <h3 class="drops-section"><span data-i18n="popup.drops.badges">Badges et récompenses</span><small id="drops-rewards-meta"></small></h3>
           <ul class="drops-campaigns" id="drops-rewards"></ul>
           <p class="drops-empty" id="drops-rewards-empty" data-i18n="popup.drops.badgesEmpty" hidden>Aucune campagne de badges en cours pour l'instant.</p>
+          <p class="drops-subtitle"><span data-i18n="popup.drops.newBadges">Nouveaux badges</span><small id="drops-badges-meta"></small></p>
+          <ul class="drops-campaigns" id="drops-badges"></ul>
+          <p class="drops-empty" id="drops-badges-sync" role="status"></p>
 
           <h3 class="drops-section"><span data-i18n="popup.drops.history">Historique</span><span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span><small id="drops-history-meta"></small></h3>
           <div class="drops-history" id="drops-history"></div>

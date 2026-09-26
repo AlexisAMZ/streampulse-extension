@@ -10,6 +10,9 @@ import {
   DROPS_KEYS,
   DROPS_PROGRESS_KEY,
   DROPS_REWARDS_KEY,
+  DROPS_BADGES_KEY,
+  badgesFrom,
+  mergeBadges,
   DROPS_SINCE_KEY,
   applyClaim,
   applyEvent,
@@ -122,6 +125,14 @@ export function createDropsStore({ storage, resolveChannels = async () => [], no
     });
   }
 
+  function recordBadges(raw) {
+    return enqueue(async () => {
+      const result = mergeBadges(badgesFrom(await storage.get([DROPS_BADGES_KEY])), raw, now());
+      if (result.state.updatedAt) await storage.set({ [DROPS_BADGES_KEY]: result.state });
+      return { added: result.added };
+    });
+  }
+
   /** Résultat de `claimDropRewards` renvoyé par la page Twitch. */
   function recordClaim({ instanceId, ok, status, auto = true }) {
     return enqueue(async () => {
@@ -169,5 +180,5 @@ export function createDropsStore({ storage, resolveChannels = async () => [], no
     return campaignsFrom(await storage.get([DROPS_CAMPAIGNS_KEY]));
   }
 
-  return { recordInventory, recordEvent, recordCampaigns, recordRewards, recordClaim, resolveNames, readCampaigns };
+  return { recordInventory, recordEvent, recordCampaigns, recordRewards, recordBadges, recordClaim, resolveNames, readCampaigns };
 }

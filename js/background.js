@@ -25,7 +25,7 @@ import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-aler
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "./plus.js";
 import { createPointsStore } from "./points-store.js";
 import { createDropsStore } from "./drops-store.js";
-import { CLAIM_OK_STATUSES } from "./drops-data.js";
+import { CLAIM_OK_STATUSES, isPaidBadge } from "./drops-data.js";
 import { createDropsClient } from "./drops-gql.js";
 import { syncEventSubRaid, stopEventSubRaid } from "./eventsubRaid.js";
 import {
@@ -1020,6 +1020,22 @@ async function refreshRewardsFromWorker() {
   const stored = await chrome.storage.local.get("streamPulseDropsRewards");
   if (Date.now() - (Number(stored.streamPulseDropsRewards?.updatedAt) || 0) < REWARDS_EVERY_MS) return;
   await dropsStore.recordRewards(await dropsClient.readRewards());
+  const { added } = await dropsStore.recordBadges(await dropsClient.readBadges());
+  announceBadges(added).catch(() => {});
+}
+
+/** Alerte pour les nouveaux badges gratuits (3 au plus d'un coup). */
+async function announceBadges(badges) {
+  const free = badges.filter((badge) => !isPaidBadge(badge)).slice(0, 3);
+  if (!free.length) return;
+  const prefs = await PreferenceStore.get();
+  if (!prefs.dropAlerts) return;
+  for (const badge of free) {
+    await NotificationCenter.show({
+      title: translateWithPrefs(prefs, "background.notifications.badgeTitle", { name: badge.title }),
+      message: badge.description || badge.title,
+    });
+  }
 }
 
 async function claimDropFromWorker(instanceId, auto) {

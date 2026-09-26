@@ -12,7 +12,11 @@ export const DROPS_HISTORY_KEY = "streamPulseDropsHistory";
 export const DROPS_SINCE_KEY = "streamPulseDropsSince";
 /** Campagnes de récompenses (badges de chat) : cache relu toutes les 30 minutes. */
 export const DROPS_REWARDS_KEY = "streamPulseDropsRewards";
-export const DROPS_KEYS = [DROPS_PROGRESS_KEY, DROPS_CAMPAIGNS_KEY, DROPS_HISTORY_KEY, DROPS_SINCE_KEY, DROPS_REWARDS_KEY];
+/** Badges globaux de Twitch, avec la date où StreamPulse a vu chacun pour la première fois. */
+export const DROPS_BADGES_KEY = "streamPulseDropsBadges";
+export const DROPS_KEYS = [DROPS_PROGRESS_KEY, DROPS_CAMPAIGNS_KEY, DROPS_HISTORY_KEY, DROPS_SINCE_KEY, DROPS_REWARDS_KEY, DROPS_BADGES_KEY];
+/** Un badge vu pour la première fois depuis moins longtemps est « nouveau ». */
+export const NEW_BADGE_MS = 30 * 86_400_000;
 
 const MINUTE_MS = 60_000;
 const HOUR_MS = 60 * MINUTE_MS;
@@ -479,6 +483,67 @@ export function activeRewards(rewards, now) {
   return rewards
     .filter((reward) => (!reward.startsAt || reward.startsAt <= now) && (!reward.endsAt || reward.endsAt > now))
     .sort((a, b) => (a.endsAt || Infinity) - (b.endsAt || Infinity));
+}
+
+// ─── Badges globaux ───────────────────────────────────────────────────────────
+
+export function badgesFrom(stored = {}) {
+  const value = (stored || {})[DROPS_BADGES_KEY];
+  if (!isPlainObject(value)) return { updatedAt: 0, syncedAt: 0, badges: [], owned: [] };
+  return {
+    updatedAt: timeOf(value.updatedAt),
+    syncedAt: timeOf(value.syncedAt),
+    badges: list(value.badges).filter((badge) => isPlainObject(badge) && typeof badge.id === "string"),
+    owned: list(value.owned).filter((id) => typeof id === "string"),
+  };
+}
+
+/**
+ * Twitch ne date pas ses badges : comme Stream Database, on retient le moment
+ * où chacun apparaît. À la première synchronisation, tous sont déjà connus
+ * (firstSeen 0) ; seuls les suivants seront « nouveaux ». Un badge a
+ * plusieurs versions : une seule ligne par set.
+ *
+ * @returns {{ state: object, added: object[] }}
+ */
+export function mergeBadges(state, raw, now) {
+  const first = !state.syncedAt;
+  const known = new Map(state.badges.map((badge) => [badge.id, badge]));
+  const badges = [];
+  const added = [];
+  const seen = new Set();
+  for (const item of list(raw.badges)) {
+    const id = text(item?.setID, 120);
+    if (!id || seen.has(id)) continue;
+    seen.add(id);
+    const before = known.get(id);
+    const badge = {
+      id,
+      title: text(item.title, 120) || id,
+      description: text(item.description, 400),
+      image: httpsUrl(item.imageURL),
+      firstSeen: before ? before.firstSeen : first ? 0 : now,
+    };
+    if (!before && !first) added.push(badge);
+    badges.push(badge);
+  }
+  // Une réponse vide (panne passagère) ne doit pas effacer la liste.
+  if (!badges.length) return { state, added: [] };
+  return {
+    state: { updatedAt: now, syncedAt: state.syncedAt || now, badges, owned: list(raw.owned).map((id) => text(id, 120)).filter(Boolean) },
+    added,
+  };
+}
+
+/** Payant si la description parle d'abonnement, de sub offert ou de Bits. */
+export const isPaidBadge = (badge) => /subscrib|gift|\bsubs?\b|\bbits?\b/i.test(badge.description || "");
+
+export function newBadges(state, now, windowMs = NEW_BADGE_MS) {
+  const owned = new Set(state.owned);
+  return state.badges
+    .filter((badge) => badge.firstSeen && now - badge.firstSeen <= windowMs)
+    .map((badge) => ({ ...badge, owned: owned.has(badge.id), paid: isPaidBadge(badge) }))
+    .sort((a, b) => b.firstSeen - a.firstSeen);
 }
 
 // ─── Affichage ────────────────────────────────────────────────────────────────

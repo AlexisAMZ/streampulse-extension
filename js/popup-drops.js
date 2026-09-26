@@ -6,6 +6,8 @@
 import { t, getCurrentLanguage } from "./i18n.js";
 import {
   DROPS_KEYS,
+  badgesFrom,
+  newBadges,
   activeRewards,
   bandModel,
   campaignUrl,
@@ -45,6 +47,7 @@ let deps = { isPlus: () => false, openPlus: () => {} };
 let progress = progressFrom({});
 let campaigns = campaignsFrom({});
 let rewards = rewardsFrom({});
+let badges = badgesFrom({});
 let history = [];
 let prefs = {};
 let myGames = new Set();
@@ -139,40 +142,43 @@ function bar(drop) {
 
 // ─── Accueil : bande et puce ──────────────────────────────────────────────────
 
-function renderBand(now) {
-  const band = $("drops-band");
-  if (!band) return;
-  const model = trackingOn() ? bandModel(progress, history, now) : null;
-  band.hidden = !model;
-  $("streamers-view")?.classList.toggle("has-drops", Boolean(model));
-  if (!model) return;
-
-  band.classList.toggle("is-claimed", model.kind === "claimed");
-  $("drops-band-progress").hidden = model.kind !== "progress";
-  if (model.kind === "progress") {
-    const { drop } = model;
-    $("drops-band-name").textContent = drop.name;
-    $("drops-band-meta").textContent = [drop.game, channelLabel(drop), model.stale ? t("popup.drops.staleHint") : endsLabel(drop, now)].filter(Boolean).join(" · ");
-    $("drops-band-fill").style.width = `${percent(drop)}%`;
-    $("drops-band-count").textContent = t("popup.drops.progressMin", { minutes: drop.minutes, required: drop.required });
-    const left = isClaimable(drop) ? t("popup.drops.ready") : minutesLabel(remainingMinutes(drop));
-    const more = model.others ? plural(model.others, "popup.drops.bandMoreOne", "popup.drops.bandMoreOther") : "";
-    $("drops-band-more").textContent = `${[left, more].filter(Boolean).join(" · ")} ›`;
-  } else {
-    const { entry } = model;
-    $("drops-band-name").textContent = t("popup.drops.bandClaimed", { name: entry.name });
-    $("drops-band-meta").textContent = [entry.game, entry.channel ? t("popup.drops.onChannel", { channel: entry.channel }) : ""].filter(Boolean).join(" · ");
-    $("drops-band-more").textContent = `${clock(entry.at)} ›`;
-  }
-}
-
+/**
+ * Pastille de l'accueil (maquette H1) : le Drop qui avance avec son liseré de
+ * progression, sinon le dernier récupéré, sinon le compte du jour. Le popup
+ * est plafonné à 600 px par Chrome : une pastille ne prend rien à la scène.
+ */
 function renderChip(now) {
   const chip = $("activity-drops");
   if (!chip) return;
-  const count = trackingOn() ? dropsToday(history, now) : 0;
-  chip.hidden = count === 0;
+  const model = trackingOn() ? bandModel(progress, history, now) : null;
+  const today = trackingOn() ? dropsToday(history, now) : 0;
+  chip.hidden = !model && today === 0;
+  chip.classList.toggle("is-progress", model?.kind === "progress");
+  chip.classList.toggle("is-claimed", model?.kind === "claimed");
+  let fill = chip.querySelector(".chip-fill");
+  if (!fill) {
+    fill = el("span", "chip-fill");
+    chip.append(fill);
+  }
   const label = chip.querySelector(".chip-label");
-  if (label) label.textContent = plural(count, "popup.cplus.dropsToday", "popup.cplus.dropsTodayPlural");
+  let text;
+  if (model?.kind === "progress") {
+    const { drop } = model;
+    const left = isClaimable(drop) ? t("popup.drops.ready") : minutesLabel(remainingMinutes(drop));
+    const more = model.others ? plural(model.others, "popup.drops.bandMoreOne", "popup.drops.bandMoreOther") : "";
+    text = [drop.name, left, more].filter(Boolean).join(" · ");
+    fill.style.width = `${percent(drop)}%`;
+    chip.title = [drop.game, channelLabel(drop), model.stale ? t("popup.drops.staleHint") : endsLabel(drop, now)].filter(Boolean).join(" · ");
+  } else if (model?.kind === "claimed") {
+    text = t("popup.drops.bandClaimed", { name: model.entry.name });
+    fill.style.width = "0";
+    chip.title = model.entry.game || "";
+  } else {
+    text = plural(today, "popup.cplus.dropsToday", "popup.cplus.dropsTodayPlural");
+    fill.style.width = "0";
+    chip.title = "";
+  }
+  if (label) label.textContent = text;
 }
 
 // ─── Panneau : en cours ───────────────────────────────────────────────────────
@@ -341,6 +347,34 @@ function renderRewards(now) {
   $("drops-rewards-meta").textContent = shown.length ? t("popup.drops.badgesMeta", { count: shown.length }) : "";
 }
 
+function badgeRow(badge) {
+  const item = el("li");
+  const row = el("div", "camp-row badge-row");
+  const main = el("span", "camp-main");
+  main.append(el("b", null, badge.title), el("small", "badge-desc", badge.description));
+  if (badge.description) main.title = badge.description;
+  const side = el("span", "camp-side");
+  side.append(el("span", badge.owned ? "drops-tag" : badge.paid ? "camp-badge" : "camp-when is-new", t(badge.owned ? "popup.drops.badgeOwned" : badge.paid ? "popup.drops.badgePaid" : "popup.drops.badgeFree")));
+  side.append(el("span", "camp-when", shortDate(badge.firstSeen)));
+  row.append(thumb(badge.image, "drop-img is-small"), main, side);
+  item.append(row);
+  return item;
+}
+
+/**
+ * Twitch ne date pas ses badges : StreamPulse note leur première apparition.
+ * Le message de synchronisation l'explique tant qu'aucun nouveau n'est apparu.
+ */
+function renderBadges(now) {
+  if (!$("drops-badges")) return;
+  const shown = newBadges(badges, now);
+  $("drops-badges").replaceChildren(...shown.map(badgeRow));
+  $("drops-badges-meta").textContent = badges.badges.length ? t("popup.drops.badgesKnown", { count: badges.badges.length }) : "";
+  const sync = $("drops-badges-sync");
+  sync.hidden = shown.length > 0;
+  sync.textContent = badges.syncedAt ? t("popup.drops.badgesSince", { date: shortDate(badges.syncedAt) }) : t("popup.drops.badgesSyncing");
+}
+
 // ─── Panneau : historique (StreamPulse+) ──────────────────────────────────────
 
 function renderHistory() {
@@ -385,13 +419,13 @@ function renderPanel(now) {
   renderProgress(now);
   renderCampaigns(now);
   renderRewards(now);
+  renderBadges(now);
   renderHistory();
 }
 
 function render() {
   const now = Date.now();
   for (const [id, at] of claiming) if (now - at >= CLAIM_PENDING_MS) claiming.delete(id);
-  renderBand(now);
   renderChip(now);
   renderPanel(now);
 }
@@ -415,9 +449,15 @@ async function claim(button) {
 }
 
 function bind() {
-  $("drops-band")?.addEventListener("click", () => {
+  const openPanel = () => {
     $("tab-settings")?.click();
     $("menu-tab-drops")?.click();
+  };
+  $("activity-drops")?.addEventListener("click", openPanel);
+  $("activity-drops")?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    openPanel();
   });
   $("drops-auto")?.addEventListener("click", () => $("menu-tab-automation")?.click());
   $("drops-filters")?.addEventListener("click", (event) => {
@@ -447,13 +487,14 @@ async function reload() {
   progress = progressFrom(stored);
   campaigns = campaignsFrom(stored);
   rewards = rewardsFrom(stored);
+  badges = badgesFrom(stored);
   history = historyFrom(stored);
   prefs = stored[PREFERENCES_KEY] || {};
   render();
 }
 
 export async function initDrops({ isPlus, onPlusChange, openPlus }) {
-  if (!$("menu-drops") && !$("drops-band")) return;
+  if (!$("menu-drops") && !$("activity-drops")) return;
   deps = { isPlus, openPlus };
   bind();
   onPlusChange(() => render());
