@@ -1,70 +1,75 @@
-// Pont du suivi des points, exécuté dans le monde de la page Twitch. Twitch
-// reçoit chaque gain de points de chaîne par sa connexion temps réel (Hermes,
-// ou l'ancien PubSub) : ce script écoute les WebSocket de la page, repère les
-// messages « points-earned » et les transmet à pointsRecorder.js par
-// window.postMessage. Il ne modifie rien de ce que Twitch reçoit.
+// Pont temps réel, exécuté dans le monde de la page Twitch. Twitch reçoit
+// chaque gain de points de chaîne et chaque avancée de Drop par sa connexion
+// temps réel (Hermes, ou l'ancien PubSub) : ce script écoute les WebSocket de
+// la page, repère les messages « points-earned », « drop-progress » et
+// « drop-claim », et les transmet par window.postMessage à pointsRecorder.js
+// et dropsRecorder.js. Il ne modifie rien de ce que Twitch reçoit.
 (() => {
   "use strict";
 
   if (window.top !== window || window.__streamPulsePointsBridge) return;
   window.__streamPulsePointsBridge = true;
 
-  const SOURCE = "streampulse:points";
-  const READY = "streampulse:points:ready";
-  const MARKER = "points-earned";
   const QUEUE_LIMIT = 50;
   // Hermes emballe le message PubSub dans une chaîne JSON, elle-même dans un
   // objet : il faut descendre de quatre niveaux, on en autorise six.
   const MAX_DEPTH = 6;
 
-  let ready = false;
-  const queue = [];
+  /** Un canal par relais : chacun a son signal « prêt » et sa file d'attente. */
+  const points = { ready: "streampulse:points:ready", isReady: false, queue: [], post: (data) => ({ source: "streampulse:points", v: 1, data }) };
+  const drops = { ready: "streampulse:drops:ready", isReady: false, queue: [], post: (event) => ({ source: "streampulse:drops", v: 1, kind: "event", data: event }) };
+  const MARKERS = [
+    { type: "points-earned", channel: points, payload: (message) => message.data },
+    { type: "drop-progress", channel: drops, payload: (message) => ({ type: message.type, data: message.data }) },
+    { type: "drop-claim", channel: drops, payload: (message) => ({ type: message.type, data: message.data }) },
+  ];
 
-  /** Cherche { type: "points-earned", data } dans un message, quel que soit son emballage. */
-  function findPointsEarned(value, depth) {
+  /** Cherche { type, data } dans un message, quel que soit son emballage. */
+  function findMessage(value, type, depth) {
     if (depth > MAX_DEPTH || value === null || value === undefined) return null;
     if (typeof value === "string") {
-      if (!value.includes(MARKER)) return null;
+      if (!value.includes(type)) return null;
       try {
-        return findPointsEarned(JSON.parse(value), depth + 1);
+        return findMessage(JSON.parse(value), type, depth + 1);
       } catch {
         return null;
       }
     }
     if (typeof value !== "object") return null;
-    if (value.type === MARKER && value.data && typeof value.data === "object") return value.data;
+    if (value.type === type && value.data && typeof value.data === "object") return value;
     for (const key of Object.keys(value)) {
-      const found = findPointsEarned(value[key], depth + 1);
+      const found = findMessage(value[key], type, depth + 1);
       if (found) return found;
     }
     return null;
   }
 
-  function post(data) {
-    window.postMessage({ source: SOURCE, v: 1, data }, location.origin);
-  }
-
-  function emit(data) {
-    if (ready) post(data);
-    else if (queue.length < QUEUE_LIMIT) queue.push(data);
+  function emit(channel, payload) {
+    if (channel.isReady) window.postMessage(channel.post(payload), location.origin);
+    else if (channel.queue.length < QUEUE_LIMIT) channel.queue.push(payload);
   }
 
   function onSocketMessage(event) {
     try {
       const raw = event.data;
-      // Filtre bon marché : la plupart des messages ne parlent pas de points.
-      if (typeof raw !== "string" || !raw.includes(MARKER)) return;
-      const data = findPointsEarned(raw, 0);
-      if (data) emit(data);
+      if (typeof raw !== "string") return;
+      for (const marker of MARKERS) {
+        // Filtre bon marché : la plupart des messages ne parlent ni de points ni de Drops.
+        if (!raw.includes(marker.type)) continue;
+        const message = findMessage(raw, marker.type, 0);
+        if (message) emit(marker.channel, marker.payload(message));
+      }
     } catch {
       // Ne jamais gêner la connexion de Twitch.
     }
   }
 
   window.addEventListener("message", (event) => {
-    if (event.source !== window || !event.data || event.data.source !== READY) return;
-    ready = true;
-    queue.splice(0).forEach(post);
+    if (event.source !== window || !event.data) return;
+    const channel = [points, drops].find((item) => item.ready === event.data.source);
+    if (!channel) return;
+    channel.isReady = true;
+    channel.queue.splice(0).forEach((payload) => window.postMessage(channel.post(payload), location.origin));
   });
 
   const NativeWebSocket = window.WebSocket;

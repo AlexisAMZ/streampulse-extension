@@ -59,7 +59,7 @@ function sandbox() {
   win.top = win;
   new Function("window", "location", SOURCE)(win, { origin: ORIGIN });
   const ready = () => pageListeners.forEach((listener) => listener({ source: win, data: { source: "streampulse:points:ready" } }));
-  return { win, posted, ready, FakeWebSocket };
+  return { win, posted, ready, FakeWebSocket, pageListeners };
 }
 
 test("un gain reçu par Hermes est transmis une fois", () => {
@@ -110,4 +110,37 @@ test("Twitch garde ses propres écouteurs et un vrai WebSocket", () => {
   assert.ok(socket instanceof FakeWebSocket);
   assert.ok(socket instanceof win.WebSocket);
   assert.equal(win.WebSocket.OPEN, 1);
+});
+
+function dropsSandbox() {
+  const box = sandbox();
+  box.readyDrops = () => box.pageListeners.forEach((listener) => listener({ source: box.win, data: { source: "streampulse:drops:ready" } }));
+  return box;
+}
+
+const dropProgress = { type: "drop-progress", data: { channel_id: "123", drop_id: "d1", current_progress_min: 32, required_progress_min: 60 } };
+const dropClaim = { type: "drop-claim", data: { channel_id: "123", drop_id: "d1", drop_instance_id: "999#c1#d1" } };
+
+test("une avancée de Drop reçue par Hermes part vers le relais des Drops, pas vers celui des points", () => {
+  const { win, posted, ready, readyDrops: dropsReady } = dropsSandbox();
+  ready();
+  dropsReady();
+  const socket = new win.WebSocket("wss://hermes.twitch.tv/v1");
+  socket.receive(hermes(dropProgress));
+  socket.receive(pubsub(dropClaim));
+  assert.deepEqual(posted.map((item) => item.message), [
+    { source: "streampulse:drops", v: 1, kind: "event", data: dropProgress },
+    { source: "streampulse:drops", v: 1, kind: "event", data: dropClaim },
+  ]);
+});
+
+test("les événements de Drops attendent leur propre relais, indépendamment des points", () => {
+  const { win, posted, ready, readyDrops: dropsReady } = dropsSandbox();
+  ready();
+  const socket = new win.WebSocket("wss://hermes.twitch.tv/v1");
+  socket.receive(hermes(dropProgress));
+  socket.receive(hermes(pointsEarned));
+  assert.deepEqual(posted.map((item) => item.message.source), ["streampulse:points"]);
+  dropsReady();
+  assert.deepEqual(posted.map((item) => item.message.source), ["streampulse:points", "streampulse:drops"]);
 });
