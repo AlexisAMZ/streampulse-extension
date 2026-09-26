@@ -355,7 +355,11 @@ function renderRewards(now) {
 
 function badgeRow(badge) {
   const item = el("li");
-  const row = el("div", "camp-row badge-row");
+  const row = el(badge.url ? "button" : "div", "camp-row badge-row");
+  if (badge.url) {
+    row.type = "button";
+    row.dataset.url = badge.url;
+  }
   const main = el("span", "camp-main");
   main.append(el("b", null, badge.title), el("small", "badge-desc", badge.description));
   if (badge.description) main.title = badge.description;
@@ -521,6 +525,12 @@ function bind() {
     badgeLimit = 40;
     renderCatalog();
   });
+  for (const id of ["badges-catalog", "drops-badges"]) {
+    $(id)?.addEventListener("click", (event) => {
+      const row = event.target.closest("[data-url]");
+      if (row) openTab(row.dataset.url);
+    });
+  }
   $("badges-more")?.addEventListener("click", () => {
     badgeLimit += 40;
     renderCatalog();

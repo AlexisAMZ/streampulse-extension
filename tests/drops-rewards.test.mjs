@@ -78,3 +78,11 @@ test("un vieux badge du même jeu, daté d'une année passée, n'est pas disponi
   const names = activeNames({ rewards: normalizeRewards(raw_rewards()) }, now);
   assert.deepEqual(catalogBadges(state, "available", "", { now, names }).map((b) => b.id), ["poke-ball"]);
 });
+
+import { gameFromUrl } from "../js/drops-data.js";
+
+test("gameFromUrl lit la catégorie du lien d'un badge", () => {
+  assert.equal(gameFromUrl("https://www.twitch.tv/directory/game/1979%20Revolution/details"), "1979 Revolution");
+  assert.equal(gameFromUrl("https://www.twitch.tv/directory/category/control-resonant"), "control resonant");
+  assert.equal(gameFromUrl(null), "");
+});

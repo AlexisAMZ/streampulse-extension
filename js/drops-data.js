@@ -522,6 +522,8 @@ export function mergeBadges(state, raw, now) {
       title: text(item.title, 120) || id,
       description: text(item.description, 400),
       image: httpsUrl(item.imageURL),
+      url: httpsUrl(item.clickURL),
+      game: gameFromUrl(item.clickURL),
       firstSeen: before ? before.firstSeen : first ? 0 : now,
     };
     if (!before && !first) added.push(badge);
@@ -533,6 +535,17 @@ export function mergeBadges(state, raw, now) {
     state: { updatedAt: now, syncedAt: state.syncedAt || now, badges, owned: list(raw.owned).map((id) => text(id, 120)).filter(Boolean) },
     added,
   };
+}
+
+/** Catégorie citée par le lien d'un badge : /directory/game/<nom>/… ou /directory/category/<slug>. */
+export function gameFromUrl(url) {
+  const match = /twitch\.tv\/directory\/(?:game|category)\/([^/?#]+)/i.exec(String(url || ""));
+  if (!match) return "";
+  try {
+    return decodeURIComponent(match[1]).replace(/-/g, " ").trim();
+  } catch {
+    return "";
+  }
 }
 
 /** Payant si la description parle d'abonnement, de sub offert ou de Bits. */
@@ -589,7 +602,7 @@ export function catalogBadges(state, filterId = "all", query = "", context = {})
   const isAvailable = (badge) =>
     titles.has(fold(badge.title).trim()) ||
     (badge.firstSeen > 0 && now - badge.firstSeen <= NEW_BADGE_MS) ||
-    (!pastYear(badge) && names.some((name) => fold(badge.description).includes(name)));
+    (!pastYear(badge) && names.some((name) => fold(badge.description).includes(name) || (badge.game && fold(badge.game) === name)));
   const needle = String(query || "").trim().toLowerCase();
   const test = BADGE_TESTS[filterId] || BADGE_TESTS.all;
   return state.badges
