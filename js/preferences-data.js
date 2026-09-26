@@ -35,6 +35,7 @@ export const DEFAULT_PREFERENCES = {
   enableFastForwardButton: true,
   watchTimeTracker: true,
   pointsTracking: true,
+  dropsTracking: true,
   chatKeywords: "",
   chatBlockedUsers: "",
   language: DEFAULT_LANGUAGE,

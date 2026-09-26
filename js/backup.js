@@ -15,6 +15,7 @@ export const BACKUP_FORMAT = 1;
 export const MAX_BACKUP_BYTES = 5 * 1024 * 1024;
 
 import { JOURNAL_LIMIT, POINTS_CHANNELS_KEY, POINTS_DAILY_KEY, POINTS_JOURNAL_KEY } from "./points-data.js";
+import { DROPS_HISTORY_KEY, HISTORY_LIMIT as DROPS_HISTORY_LIMIT, isHistoryEntry as isDropEntry } from "./drops-data.js";
 
 const STREAMERS = "betaGeneralStreamers";
 const PREFERENCES = "betaGeneralPreferences";
@@ -35,7 +36,7 @@ const PREDICTION_RULE = "streamPulsePredictionRule";
 export const BACKUP_KEYS = [
   STREAMERS, PREFERENCES, STATS, WATCH_MONTHLY, WATCH_DAILY, PROFILE,
   PINNED, GROUPS, HISTORY, SMART_ALERTS, COSMETICS, ACCENT, PREDICTION_RULE,
-  POINTS_DAILY_KEY, POINTS_JOURNAL_KEY, POINTS_CHANNELS_KEY,
+  POINTS_DAILY_KEY, POINTS_JOURNAL_KEY, POINTS_CHANNELS_KEY, DROPS_HISTORY_KEY,
 ];
 
 /** Caches derives des donnees restaurees : vides a la restauration, recalcules ensuite. */
@@ -168,6 +169,14 @@ function mergePointsJournal(current, incoming) {
     .slice(0, JOURNAL_LIMIT);
 }
 
+/** Union par clé : un Drop présent des deux côtés n'est compté qu'une fois. */
+function mergeDropsHistory(current, incoming) {
+  const keys = new Set(current.map((entry) => entry.key));
+  return [...current, ...incoming.filter((entry) => !keys.has(entry.key))]
+    .sort((a, b) => b.at - a.at)
+    .slice(0, DROPS_HISTORY_LIMIT);
+}
+
 /** La fiche locale gagne, complétée par ce que la sauvegarde sait en plus. */
 function mergePointsChannels(current, incoming) {
   const merged = { ...incoming };
@@ -209,6 +218,8 @@ function cleanValue(key, value) {
       return Array.isArray(value) ? value.filter(isJournalEntry) : undefined;
     case POINTS_CHANNELS_KEY:
       return isPlainObject(value) ? cleanPointsChannels(value) : undefined;
+    case DROPS_HISTORY_KEY:
+      return Array.isArray(value) ? value.filter(isDropEntry) : undefined;
     default:
       return undefined;
   }
@@ -383,6 +394,9 @@ export function mergeBackup(current, incoming) {
         break;
       case POINTS_CHANNELS_KEY:
         data[key] = mergePointsChannels(isPlainObject(now[key]) ? now[key] : {}, value);
+        break;
+      case DROPS_HISTORY_KEY:
+        data[key] = mergeDropsHistory(Array.isArray(now[key]) ? now[key] : [], value);
         break;
       default:
         break;

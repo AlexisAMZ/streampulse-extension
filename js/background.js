@@ -24,6 +24,8 @@ import { thankPlusSubscriber } from "./plus-thanks.js";
 import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-alerts.js";
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "./plus.js";
 import { createPointsStore } from "./points-store.js";
+import { createDropsStore } from "./drops-store.js";
+import { CLAIM_OK_STATUSES } from "./drops-data.js";
 import { syncEventSubRaid, stopEventSubRaid } from "./eventsubRaid.js";
 import {
   RAID_WATCHER_ALARM,
@@ -689,6 +691,7 @@ class PreferenceStore {
       enableFastForwardButton: preferences.enableFastForwardButton !== false,
       watchTimeTracker: preferences.watchTimeTracker !== false,
       pointsTracking: preferences.pointsTracking !== false,
+      dropsTracking: preferences.dropsTracking !== false,
       chatKeywords: typeof preferences.chatKeywords === "string" ? preferences.chatKeywords : "",
       chatBlockedUsers: typeof preferences.chatBlockedUsers === "string" ? preferences.chatBlockedUsers : "",
       language: normalizeLanguage(preferences.language),
@@ -926,6 +929,61 @@ async function resolveTwitchChannels(ids) {
 }
 
 const pointsStore = createPointsStore({ storage: chrome.storage.local, resolveChannels: resolveTwitchChannels });
+
+// ─── Suivi des Drops ──────────────────────────────────────────────────────────
+// dropsRecorder.js relaie l'inventaire, les événements et les campagnes lus
+// dans la page Twitch ; drops-store.js est le seul à les écrire. Les requêtes
+// vers Twitch partent toujours de la page : ici, on ne fait que ranger,
+// prévenir, et confier les récupérations à un onglet Twitch.
+
+const dropsStore = createDropsStore({ storage: chrome.storage.local, resolveChannels: resolveTwitchChannels });
+/** Un Drop gagné hors de la vue (lecture tardive) ne déclenche pas d'alerte. */
+const DROP_ALERT_MAX_AGE_MS = 60 * 60_000;
+const DROP_ALERTS_PER_READ = 3;
+/** Le popup ouvert ne relance pas une lecture plus récente que ce délai. */
+const DROPS_POPUP_REFRESH_MS = 2 * 60_000;
+
+/** Journal d'événements, compteur et alerte pour chaque Drop obtenu. */
+async function announceDrops(entries) {
+  if (!entries?.length) return;
+  const prefs = await PreferenceStore.get();
+  const now = Date.now();
+  let alerts = 0;
+  for (const entry of entries) {
+    const label = [entry.name, entry.game].filter(Boolean).join(" · ");
+    await StatsStore.increment("dropsClaimed", 1);
+    await EventLogStore.addLog({ type: "drop", channel: entry.channel || "", text: label || translateWithPrefs(prefs, "background.notifications.dropMessage"), value: 1 });
+    if (!prefs.dropAlerts || now - entry.at > DROP_ALERT_MAX_AGE_MS || alerts >= DROP_ALERTS_PER_READ) continue;
+    alerts += 1;
+    await NotificationCenter.show({
+      title: translateWithPrefs(prefs, "background.notifications.dropTitle"),
+      message: label
+        ? translateWithPrefs(prefs, "background.notifications.dropClaimedMessage", { reward: label })
+        : translateWithPrefs(prefs, "background.notifications.dropMessage"),
+    });
+  }
+}
+
+/** Onglets Twitch, celui qui a parlé d'abord, puis l'onglet actif. */
+async function twitchTabs(preferredId) {
+  const tabs = await chrome.tabs.query({ url: "https://www.twitch.tv/*" });
+  return tabs
+    .filter((tab) => tab.id !== undefined && tab.discarded !== true)
+    .sort((a, b) => Number(b.id === preferredId) - Number(a.id === preferredId) || Number(b.active) - Number(a.active));
+}
+
+/** Confie une commande au premier onglet Twitch qui a le relais des Drops. */
+async function sendDropsCommand(command, preferredId) {
+  for (const tab of await twitchTabs(preferredId)) {
+    try {
+      const response = await chrome.tabs.sendMessage(tab.id, { type: "dropsCommand", ...command });
+      if (response?.ok) return true;
+    } catch (_) {
+      // Onglet ouvert avant l'installation : pas de relais, on essaie le suivant.
+    }
+  }
+  return false;
+}
 
 // ─── Historique des lives ─────────────────────────────────────────────────────
 // Chaque fin de live d'un streamer suivi devient une entree d'historique. Une
@@ -3521,6 +3579,125 @@ function handleMessage(request, sender, sendResponse) {
         () => sendResponse({ success: true }),
         (error) => sendResponse({ error: error?.message || String(error) }),
       );
+      return true;
+
+    case "recordDropsInventory":
+      (async () => {
+        try {
+          const prefs = await PreferenceStore.get();
+          if (prefs.dropsTracking === false || request.ok !== true) {
+            sendResponse({ success: true, recorded: false, claim: [] });
+            return;
+          }
+          const result = await dropsStore.recordInventory(request.data, { autoClaim: prefs.autoClaimDrops !== false });
+          sendResponse({ success: true, recorded: result.recorded, claim: result.claim });
+          announceDrops(result.added).catch(() => {});
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
+        }
+      })();
+      return true;
+
+    case "recordDropsEvent":
+      (async () => {
+        try {
+          const prefs = await PreferenceStore.get();
+          if (prefs.dropsTracking === false) {
+            sendResponse({ success: true, recorded: false, refresh: false, claim: [] });
+            return;
+          }
+          const result = await dropsStore.recordEvent(request.data, { autoClaim: prefs.autoClaimDrops !== false });
+          sendResponse({ success: true, ...result });
+          if (result.channelId) dropsStore.resolveNames().catch(() => {});
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
+        }
+      })();
+      return true;
+
+    case "recordDropsCampaigns":
+      (async () => {
+        try {
+          const prefs = await PreferenceStore.get();
+          const result = prefs.dropsTracking === false
+            ? { recorded: false }
+            : await dropsStore.recordCampaigns(request.data, request.source);
+          sendResponse({ success: true, ...result });
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
+        }
+      })();
+      return true;
+
+    case "recordDropClaim":
+      (async () => {
+        try {
+          const result = await dropsStore.recordClaim({
+            instanceId: String(request.instanceId || ""),
+            ok: request.ok === true,
+            status: String(request.status || ""),
+            auto: request.auto !== false,
+          });
+          sendResponse({ success: true, recorded: result.recorded });
+          if (result.entry) announceDrops([result.entry]).catch(() => {});
+          else if (request.ok !== true || !CLAIM_OK_STATUSES.includes(request.status)) {
+            console.warn("[StreamPulse] récupération du Drop refusée :", request.error || request.status || "sans statut");
+          }
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
+        }
+      })();
+      return true;
+
+    // Popup ouvert : relit l'inventaire (et les campagnes périmées) par un onglet Twitch.
+    case "dropsRefresh":
+      (async () => {
+        try {
+          const prefs = await PreferenceStore.get();
+          if (prefs.dropsTracking === false) {
+            sendResponse({ success: true, sent: false });
+            return;
+          }
+          const stored = await chrome.storage.local.get(["streamPulseDropsProgress", "streamPulseDropsCampaigns"]);
+          const now = Date.now();
+          const readAt = Number(stored.streamPulseDropsProgress?.updatedAt) || 0;
+          const campaignsAt = Number(stored.streamPulseDropsCampaigns?.updatedAt) || 0;
+          const sent = request.force || now - readAt >= DROPS_POPUP_REFRESH_MS
+            ? await sendDropsCommand({ action: "inventory" })
+            : false;
+          if (now - campaignsAt >= 30 * 60_000) sendDropsCommand({ action: "campaigns" }).catch(() => {});
+          sendResponse({ success: true, sent });
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
+        }
+      })();
+      return true;
+
+    // Bouton « Récupérer » du popup : récupération auto coupée, ou refusée par Twitch.
+    case "claimDrop":
+      sendDropsCommand({ action: "claim", instanceId: String(request.instanceId || "") })
+        .then((sent) => sendResponse({ success: true, sent }))
+        .catch((error) => sendResponse({ error: error?.message || String(error) }));
+      return true;
+
+    // channelPointsClaimer.js a cliqué un bouton « Réclamer » sur la page. Avec
+    // le suivi des Drops, on relit l'inventaire de cet onglet : le Drop y sera
+    // compté avec son nom, une seule fois. Sans le suivi, on garde l'ancien
+    // compteur fondé sur le clic.
+    case "dropClaimedByClick":
+      (async () => {
+        try {
+          const prefs = await PreferenceStore.get();
+          if (prefs.dropsTracking !== false) {
+            setTimeout(() => sendDropsCommand({ action: "inventory" }, sender.tab?.id).catch(() => {}), 3000);
+          } else {
+            await announceDrops([{ name: "", game: "", channel: String(request.channel || ""), at: Date.now() }]);
+          }
+          sendResponse({ success: true });
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
+        }
+      })();
       return true;
 
     case "incrementStat":

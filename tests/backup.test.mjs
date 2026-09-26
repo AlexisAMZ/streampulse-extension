@@ -36,6 +36,7 @@ const storage = {
   streamPulsePointsDaily: { "2026-09-26": { 123: { WATCH: { count: 1, points: 10, base: 10 } } } },
   streamPulsePointsJournal: [],
   streamPulsePointsChannels: { 123: { login: "novastream" } },
+  streamPulseDropsHistory: [{ key: "drop:d1", name: "Vehicle XP Booster", game: "World of Tanks: HEAT", channel: "Terracid", at: 1 }],
   // Lie a cette installation : jamais dans une sauvegarde.
   streamPulsePlus: { status: "active", licenseKey: "SP-XXXX", plan: "lifetime" },
   streamPulseDeviceId: "device-123",

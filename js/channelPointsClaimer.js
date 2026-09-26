@@ -131,12 +131,8 @@
     const channel = getCurrentChannel();
     setTimeout(() => {
       try {
-        chrome.runtime.sendMessage({
-          type: "incrementStat",
-          stat: "dropsClaimed",
-          value: 1,
-          channel,
-        }).catch(() => {});
+        // Le service worker relit l'inventaire pour compter ce Drop avec son nom.
+        chrome.runtime.sendMessage({ type: "dropClaimedByClick", channel }).catch(() => {});
       } catch (_) {
         // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
       }
