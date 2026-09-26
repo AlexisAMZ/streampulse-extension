@@ -688,29 +688,33 @@
             <button class="button button-primary" id="badges-unlock" type="button" data-i18n="popup.smart.unlock">Débloquer</button>
           </div>
           <div id="badges-content">
-          <h3 class="drops-section"><span data-i18n="popup.drops.badges">Badges et récompenses</span><small id="drops-rewards-meta"></small></h3>
-          <ul class="drops-campaigns" id="drops-rewards"></ul>
-          <p class="drops-empty" id="drops-rewards-empty" data-i18n="popup.drops.badgesEmpty" hidden>Aucune campagne de badges en cours pour l'instant.</p>
-          <ul id="drops-badges" hidden></ul>
-          <small id="drops-badges-meta" hidden></small>
-          <p class="drops-empty" id="drops-badges-sync" role="status"></p>
-
-          <h3 class="drops-section"><span data-i18n="popup.drops.allBadges">Badges disponibles</span></h3>
-          <p class="settings-description" data-i18n="popup.drops.catalogNote">Seuls les badges obtenables en ce moment sont listés. Clique sur un badge pour ouvrir un live où le gagner.</p>
-          <div class="drops-filters" id="badges-filters" role="group" data-i18n-attr-ariaLabel="popup.drops.allBadges">
-            <button type="button" class="drops-filter active" aria-pressed="true" data-filter="all"><span data-i18n="popup.drops.filterAll">Toutes</span><em data-count="all"></em></button>
-            <button type="button" class="drops-filter" aria-pressed="false" data-filter="free"><span data-i18n="popup.drops.badgeFilterFree">Gratuits</span><em data-count="free"></em></button>
-            <button type="button" class="drops-filter" aria-pressed="false" data-filter="paid"><span data-i18n="popup.drops.badgeFilterPaid">Payants</span><em data-count="paid"></em></button>
-            <button type="button" class="drops-filter" aria-pressed="false" data-filter="missing"><span data-i18n="popup.drops.badgeFilterMissing">À obtenir</span><em data-count="missing"></em></button>
-            <button type="button" class="drops-filter" aria-pressed="false" data-filter="owned"><span data-i18n="popup.drops.badgeFilterOwned">Obtenus</span><em data-count="owned"></em></button>
-          </div>
-          <label class="sheet-search badges-search">
-            <span class="visually-hidden" data-i18n="popup.drops.searchBadges">Chercher un badge</span>
-            <input id="badges-search" type="search" autocomplete="off" spellcheck="false" data-i18n-attr-placeholder="popup.drops.searchBadges" placeholder="Chercher un badge" />
-          </label>
-          <ul class="drops-campaigns" id="badges-catalog"></ul>
-          <p class="drops-empty" id="badges-catalog-empty" data-i18n="popup.drops.noBadgeMatch" hidden>Aucun badge ne correspond.</p>
-          <button id="badges-more" class="button button-quiet" type="button" data-i18n="popup.drops.showMore" hidden>Voir plus</button>
+            <div class="pts-lcd badges-lcd">
+              <p class="pts-lcd-total"><span id="badges-total">0</span><small data-i18n="popup.drops.badgesUnit">DISPONIBLES</small></p>
+              <p class="pts-lcd-meta" id="badges-lcd-meta"></p>
+            </div>
+            <div class="badges-toolbar">
+              <div class="segmented" id="badges-filters" role="group" data-i18n-attr-ariaLabel="popup.drops.allBadges">
+                <button type="button" class="pf-btn active" aria-pressed="true" data-filter="all"><span data-i18n="popup.drops.filterAll">Toutes</span><em data-count="all"></em></button>
+                <button type="button" class="pf-btn" aria-pressed="false" data-filter="free"><span data-i18n="popup.drops.badgeFilterFree">Gratuits</span><em data-count="free"></em></button>
+                <button type="button" class="pf-btn" aria-pressed="false" data-filter="paid"><span data-i18n="popup.drops.badgeFilterPaid">Payants</span><em data-count="paid"></em></button>
+                <button type="button" class="pf-btn" aria-pressed="false" data-filter="missing"><span data-i18n="popup.drops.badgeFilterMissing">À obtenir</span><em data-count="missing"></em></button>
+                <button type="button" class="pf-btn" aria-pressed="false" data-filter="owned"><span data-i18n="popup.drops.badgeFilterOwned">Obtenus</span><em data-count="owned"></em></button>
+              </div>
+              <label class="badges-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <span class="visually-hidden" data-i18n="popup.drops.searchBadges">Chercher un badge</span>
+                <input id="badges-search" type="search" autocomplete="off" spellcheck="false" data-i18n-attr-placeholder="popup.drops.searchBadges" placeholder="Chercher un badge" />
+              </label>
+            </div>
+            <ul class="badge-grid" id="badges-catalog"></ul>
+            <p class="drops-empty" id="badges-catalog-empty" data-i18n="popup.drops.noBadgeMatch" hidden>Aucun badge ne correspond.</p>
+            <button id="badges-more" class="button button-quiet" type="button" data-i18n="popup.drops.showMore" hidden>Voir plus</button>
+            <p class="badges-note" data-i18n="popup.drops.catalogNote">Seuls les badges obtenables en ce moment sont listés. Clique sur un badge pour ouvrir un live où le gagner.</p>
+            <p class="badges-note" id="drops-badges-sync" role="status"></p>
+            <div hidden>
+              <ul id="drops-rewards"></ul><small id="drops-rewards-meta"></small><p id="drops-rewards-empty"></p>
+              <ul id="drops-badges"></ul><small id="drops-badges-meta"></small>
+            </div>
           </div>
         </section>
 

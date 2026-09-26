@@ -856,3 +856,41 @@ button.pts-row:focus-visible { background: var(--surface-2); }
 .badges-search { display: flex; margin: 0 0 8px; }
 .badges-search input { flex: 1; }
 #badges-more { margin-top: 8px; }
+
+
+/* ── Onglet Badges : grille de cartes ── */
+.badges-lcd { margin-bottom: 12px; }
+.badges-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+.badges-toolbar .segmented { flex-wrap: wrap; }
+.badges-toolbar .pf-btn { display: inline-flex; align-items: center; gap: 5px; }
+.badges-toolbar .pf-btn em { color: var(--text-3); font-style: normal; font-size: 11px; font-variant-numeric: tabular-nums; }
+.badges-toolbar .pf-btn.active em { color: inherit; opacity: 0.75; }
+.badges-search { display: flex; flex: 1; min-width: 140px; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: 10px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text-3); }
+.badges-search svg { flex: none; width: 14px; height: 14px; }
+.badges-search input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--text); font: inherit; font-size: 12px; outline: none; }
+.badges-search:focus-within { box-shadow: inset 0 0 0 1px var(--violet-line); }
+button.badge-card { cursor: pointer; }
+button.badge-card:hover,
+button.badge-card:focus-visible { box-shadow: inset 0 0 0 1px var(--violet-line), 0 10px 22px -16px rgba(145, 70, 255, 0.8); transform: translateY(-1px); }
+.badge-card.is-owned { background: var(--lcd-soft); box-shadow: inset 0 0 0 1px var(--lcd-line); }
+.badge-card-check { position: absolute; right: -4px; bottom: -4px; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--lcd); color: var(--lcd-ink); font-size: 11px; font-weight: 900; box-shadow: 0 0 0 2px var(--surface); }
+.badge-card-body b { overflow: hidden; font-size: 13px; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
+.badge-card-cond { display: -webkit-box; overflow: hidden; color: var(--text-2); font-size: 11.5px; line-height: 1.35; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.badge-card-cond::first-letter { text-transform: uppercase; }
+.badge-card-cond.is-long { color: var(--text-3); -webkit-line-clamp: 3; }
+.badge-pill { padding: 2px 8px; border-radius: 999px; font-size: 10.5px; font-weight: 800; letter-spacing: 0.02em; }
+.badge-pill.is-free { background: var(--lcd-soft); box-shadow: inset 0 0 0 1px var(--lcd-line); color: var(--lcd-accent); }
+.badge-pill.is-paid { background: rgba(255, 210, 63, 0.1); box-shadow: inset 0 0 0 1px rgba(255, 210, 63, 0.4); color: var(--star); }
+.badge-pill.is-owned { background: var(--lcd); color: var(--lcd-ink); }
+.badge-when { margin-left: auto; color: var(--text-3); font-size: 11px; white-space: nowrap; }
+.badge-when.is-soon { color: var(--danger); font-weight: 700; }
+.badges-note { margin: 12px 0 0; color: var(--text-3); font-size: 11.5px; line-height: 1.5; }
+.badges-note:empty { display: none; }
+#badges-more { margin-top: 10px; }
+
+.badge-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.badge-card { position: relative; display: grid; grid-template-columns: 40px minmax(0, 1fr); grid-template-rows: auto auto; align-items: center; gap: 6px 10px; width: 100%; height: 100%; padding: 10px; border: 0; border-radius: 12px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text); text-align: left; transition: box-shadow var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out); }
+.badge-card-art { position: relative; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: var(--surface-2); }
+.badge-card-art img { width: 30px; height: 30px; object-fit: contain; }
+.badge-card-body { display: grid; gap: 2px; min-width: 0; }
+.badge-card-foot { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; }

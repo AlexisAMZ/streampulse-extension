@@ -359,31 +359,96 @@ function renderRewards(now) {
   $("drops-rewards-meta").textContent = shown.length ? t("popup.drops.badgesMeta", { count: shown.length }) : "";
 }
 
-function badgeRow(badge) {
-  const item = el("li");
-  // Badge d'une campagne en cours : un clic ouvre un live où le gagner.
-  const row = el(badge.campaign || badge.url ? "button" : "div", "camp-row badge-row");
-  if (badge.campaign) {
-    row.type = "button";
-    row.dataset.gameId = badge.campaign.gameId || "";
-    row.dataset.game = badge.campaign.game;
-  } else if (badge.url) {
-    row.type = "button";
-    row.dataset.url = badge.url;
+/** Image nette : Twitch sert 18 px par défaut, la version 3 fait 72 px. */
+const sharpImage = (url) => String(url || "").replace(/\/1$/, "/3");
+
+/** Condition courte tirée de la description anglaise de Twitch, dans la langue de l'utilisateur. */
+function badgeCondition(description) {
+  const text = String(description || "");
+  const watch = /watch\w*[^.]*?for (\d+|one|an?) (minute|hour)s?/i.exec(text);
+  if (watch) {
+    const amount = /^\d+$/.test(watch[1]) ? Number(watch[1]) : 1;
+    return t("popup.drops.badgeWatch", { time: minutesLabel(/hour/i.test(watch[2]) ? amount * 60 : amount) });
   }
-  const main = el("span", "camp-main");
-  const description = badgeText[getCurrentLanguage()]?.[badge.id]?.text || badge.description;
-  main.append(el("b", null, badge.title), el("small", "badge-desc", description));
-  if (badge.description) main.title = badge.description;
-  const side = el("span", "camp-side");
-  if (badge.available && !badge.owned) side.append(el("span", "camp-when is-new", t("popup.drops.badgeAvailable")));
-  side.append(el("span", badge.owned ? "drops-tag" : badge.paid ? "camp-badge" : "camp-when is-new", t(badge.owned ? "popup.drops.badgeOwned" : badge.paid ? "popup.drops.badgePaid" : "popup.drops.badgeFree")));
-  // Relié à une campagne de Drops : sa vraie date de fin, et un lien vers elle.
-  if (badge.campaign?.endsAt) side.append(el("span", isEndingSoon(badge.campaign, Date.now()) ? "camp-when is-soon" : "camp-when", t("popup.drops.endsIn", { time: spanLabel(badge.campaign.endsAt - Date.now()) })));
-  else if (badge.firstSeen) side.append(el("span", "camp-when", shortDate(badge.firstSeen)));
-  row.append(thumb(badge.image, "drop-img is-small"), main, side);
-  item.append(row);
+  if (/subscrib\w*[^.]*(gift|offer)/i.test(text)) return t("popup.drops.badgeCondSubGift");
+  if (/gift\w* (a )?sub/i.test(text)) return t("popup.drops.badgeCondSubGift");
+  if (/subscrib/i.test(text)) return t("popup.drops.badgeCondSub");
+  if (/\bbits?\b/i.test(text)) return t("popup.drops.badgeCondBits");
+  return "";
+}
+
+const categoryOf = (description) => /in the (.+?) category/i.exec(String(description || ""))?.[1] || "";
+
+/**
+ * Carte d'un badge ou d'une récompense : image, nom, condition courte, jeu,
+ * coût et échéance. Un clic ouvre un live où la gagner.
+ */
+function badgeCard({ title, image, condition, fallback, game, paid, owned, endsAt, gameId, link, tooltip }) {
+  const now = Date.now();
+  const item = el("li");
+  const card = el(game || link ? "button" : "div", owned ? "badge-card is-owned" : "badge-card");
+  if (game) {
+    card.type = "button";
+    card.dataset.gameId = gameId || "";
+    card.dataset.game = game;
+  } else if (link) {
+    card.type = "button";
+    card.dataset.url = link;
+  }
+  if (tooltip) card.title = tooltip;
+  const art = el("span", "badge-card-art");
+  if (image) {
+    const img = el("img");
+    img.src = image;
+    img.alt = "";
+    img.loading = "lazy";
+    img.onerror = () => img.remove();
+    art.append(img);
+  }
+  if (owned) art.append(el("span", "badge-card-check", "✓"));
+  const body = el("span", "badge-card-body");
+  body.append(el("b", null, title));
+  const line = [condition, game].filter(Boolean).join(" · ");
+  body.append(el("small", line ? "badge-card-cond" : "badge-card-cond is-long", line || fallback || ""));
+  const foot = el("span", "badge-card-foot");
+  foot.append(el("span", owned ? "badge-pill is-owned" : paid ? "badge-pill is-paid" : "badge-pill is-free", t(owned ? "popup.drops.badgeOwned" : paid ? "popup.drops.badgePaid" : "popup.drops.badgeFree")));
+  if (endsAt > now) foot.append(el("span", endsAt - now < 48 * 3_600_000 ? "badge-when is-soon" : "badge-when", t("popup.drops.endsIn", { time: spanLabel(endsAt - now) })));
+  card.append(art, body, foot);
+  item.append(card);
   return item;
+}
+
+function badgeRow(badge) {
+  const text = badgeText[getCurrentLanguage()]?.[badge.id]?.text || badge.description;
+  return badgeCard({
+    title: badge.title,
+    image: sharpImage(badge.image),
+    condition: badgeCondition(badge.description),
+    fallback: text,
+    game: badge.campaign?.game || categoryOf(badge.description),
+    gameId: badge.campaign?.gameId || "",
+    link: badge.campaign ? "" : badge.url,
+    paid: badge.paid,
+    owned: badge.owned,
+    endsAt: badge.campaign?.endsAt || 0,
+    tooltip: text,
+  });
+}
+
+/** Une récompense de campagne (Poké Ball…) présentée comme un badge. */
+function rewardCard(reward) {
+  const paid = reward.subsGoal > 0 && !reward.minutesGoal;
+  return badgeCard({
+    title: reward.rewards.map((item) => item.name).join(" + "),
+    image: reward.rewards[0]?.image,
+    condition: rewardRequirement(reward),
+    game: reward.game || reward.brand,
+    link: reward.url,
+    paid,
+    owned: false,
+    endsAt: reward.endsAt,
+    tooltip: reward.summary && reward.summary !== reward.name ? reward.summary : "",
+  });
 }
 
 /**
@@ -430,11 +495,14 @@ function renderCatalog() {
   if (!$("badges-catalog")) return;
   const context = { now: Date.now(), campaigns: campaigns.campaigns, names: activeNames({ rewards: rewards.rewards, campaigns: campaigns.campaigns, drops: progress.drops }) };
   const available = catalogBadges(badges, "all", "", context).filter((badge) => badge.available);
+  // Les récompenses de campagne comptent avec les badges : jamais obtenues (Twitch ne le dit pas).
+  const running = activeRewards(rewards.rewards, context.now);
+  const rewardPaid = running.filter((reward) => reward.subsGoal > 0 && !reward.minutesGoal).length;
   const counts = {
-    all: available.length,
-    free: available.filter((badge) => !badge.paid).length,
-    paid: available.filter((badge) => badge.paid).length,
-    missing: available.filter((badge) => !badge.owned).length,
+    all: available.length + running.length,
+    free: available.filter((badge) => !badge.paid).length + running.length - rewardPaid,
+    paid: available.filter((badge) => badge.paid).length + rewardPaid,
+    missing: available.filter((badge) => !badge.owned).length + running.length,
     owned: available.filter((badge) => badge.owned).length,
   };
   const plus = deps.isPlus();
@@ -445,15 +513,26 @@ function renderCatalog() {
     button.classList.toggle("active", active);
     button.setAttribute("aria-pressed", active ? "true" : "false");
     const count = button.querySelector("[data-count]");
-    if (count) count.textContent = badges.badges.length ? String(counts[button.dataset.filter] ?? 0) : "";
+    if (count) count.textContent = String(counts[button.dataset.filter] ?? 0);
   });
   // Seuls les badges obtenables en ce moment : les événements finis n'intéressent personne.
   const list = catalogBadges(badges, badgeFilter, badgeQuery, context).filter((badge) => badge.available);
+  // Les récompenses de campagne (Poké Ball…) passent dans la même grille.
+  const needle = badgeQuery.trim().toLowerCase();
+  const rewardCards = badgeFilter === "owned" ? [] : activeRewards(rewards.rewards, context.now)
+    .filter((reward) => badgeFilter !== "free" || reward.minutesGoal > 0)
+    .filter((reward) => badgeFilter !== "paid" || (reward.subsGoal > 0 && !reward.minutesGoal))
+    .filter((reward) => !needle || `${reward.name} ${reward.brand} ${reward.game} ${reward.rewards.map((item) => item.name).join(" ")}`.toLowerCase().includes(needle));
   const shown = list.slice(0, badgeLimit);
-  $("badges-catalog").replaceChildren(...shown.map(badgeRow));
-  translateBadges(shown.map((badge) => badge.id));
-  $("badges-catalog-empty").hidden = list.length > 0;
+  $("badges-catalog").replaceChildren(...rewardCards.map(rewardCard), ...shown.map(badgeRow));
+  translateBadges(shown.filter((badge) => !badgeCondition(badge.description)).map((badge) => badge.id));
+  $("badges-catalog-empty").hidden = list.length + rewardCards.length > 0;
   $("badges-more").hidden = list.length <= badgeLimit;
+  $("badges-total").textContent = String(counts.all);
+  $("badges-lcd-meta").replaceChildren(...[
+    t("popup.drops.badgesLcdOwned", { count: counts.owned }),
+    t("popup.drops.badgesLcdFree", { count: counts.free }),
+  ].map((text) => el("span", null, text)));
 }
 
 // ─── Panneau : historique (StreamPulse+) ──────────────────────────────────────
