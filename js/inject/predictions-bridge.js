@@ -19,6 +19,9 @@
     bet: "b44682ecc88358817009f20e69d75081b1e58825bb40aa53d5dbadcc17c881d8",
   };
   const captured = {};
+  // Après un échec réseau (TypeError du fetch), inutile de retenter GraphQL à
+  // chaque poll de 10 s : le repli DOM prend le relais jusqu'à cette échéance.
+  let gqlNetworkDownUntil = 0;
 
   function headerReader(headers) {
     if (!headers) return () => null;
@@ -86,12 +89,18 @@
     HEADER_NAMES.forEach((name) => {
       if (captured[name]) headers[name] = captured[name];
     });
-    const response = await nativeFetch.call(window, GQL_URL, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(operations),
-      credentials: "omit",
-    });
+    let response;
+    try {
+      response = await nativeFetch.call(window, GQL_URL, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(operations),
+        credentials: "omit",
+      });
+    } catch (networkError) {
+      if (networkError instanceof TypeError) gqlNetworkDownUntil = Date.now() + 120_000;
+      throw networkError;
+    }
     if (!response.ok) throw new Error(`http_${response.status}`);
     return response.json();
   }
@@ -322,28 +331,41 @@
     }
   }
 
+  // Les bascules GraphQL → DOM sont normales (hash tourné, réseau coupé,
+  // bloqueur de pub) : une ligne par type et par tranche de 10 minutes suffit,
+  // en console.info pour ne pas alimenter les rapports d'erreurs du store.
+  const FALLBACK_LOG_INTERVAL_MS = 10 * 60_000;
+  const lastFallbackLog = { predictions: 0, bet: 0 };
+  function logFallback(kind, reason) {
+    const now = Date.now();
+    if (now - lastFallbackLog[kind] < FALLBACK_LOG_INTERVAL_MS) return;
+    lastFallbackLog[kind] = now;
+    console.info(`StreamPulse: GraphQL ${kind} unavailable, DOM fallback:`, reason);
+  }
+
   window.addEventListener("message", async (event) => {
     const message = event.data;
     if (event.source !== window || !message || message.__sp !== "prediction-request") return;
     const reply = (payload) => window.postMessage({ __sp: "prediction-response", id: message.id, ...payload }, location.origin);
     try {
       if (message.op === "context") {
-        let context;
-        try {
-          context = await readContext(message.channel);
-        } catch (graphqlError) {
-          // Hash de requête persistée expiré, session illisible... : on passe
-          // par l'interface plutôt que de laisser la prédiction invisible.
-          console.warn("StreamPulse: GraphQL predictions unavailable, DOM fallback:", String((graphqlError && graphqlError.message) || graphqlError));
-          context = await domContext();
+        let context = null;
+        if (Date.now() >= gqlNetworkDownUntil) {
+          try {
+            context = await readContext(message.channel);
+          } catch (graphqlError) {
+            // Hash de requête persistée expiré, session illisible... : on passe
+            // par l'interface plutôt que de laisser la prédiction invisible.
+            logFallback("predictions", String((graphqlError && graphqlError.message) || graphqlError));
+          }
         }
-        reply(context);
+        reply(context || (await domContext()));
       } else if (message.op === "bet") {
         let result = { ok: false, error: "no_session" };
         try {
           result = await placeBet(message.eventId, message.outcomeId, message.points);
         } catch (graphqlError) {
-          console.warn("StreamPulse: GraphQL bet unavailable, DOM fallback:", String((graphqlError && graphqlError.message) || graphqlError));
+          logFallback("bet", String((graphqlError && graphqlError.message) || graphqlError));
         }
         if (!result.ok && message.outcomeTitle) {
           result = await domBet(message.outcomeTitle, message.points);
