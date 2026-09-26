@@ -119,22 +119,28 @@ export function collectEntries(monthly, daily, periodId, now = new Date()) {
   return [];
 }
 
+const sumSeconds = (entries) => (entries || []).filter(isValidEntry).reduce((sum, e) => sum + e.watchSeconds, 0);
+
 /**
- * Un seau par mois de l'annee : le detail journalier quand il existe, sinon le
- * total mensuel (historique d'avant le suivi par jour).
+ * Un seau par mois de l'annee, pris dans la source la plus complete.
+ *
+ * Chaque visionnage est ecrit dans les deux stockages, mais aucun ne couvre
+ * tout : le mensuel ne garde que trois mois, et le journalier n'existe que
+ * depuis sa mise en service, en cours de mois. Preferer le journalier des
+ * qu'un seul jour existait faisait tomber septembre 2026 de 160 h a 120 h
+ * dans le Wrapped, sous le total du mois lui-meme.
  */
 function yearBuckets(monthly, daily, year) {
   const out = [];
   for (let m = 1; m <= 12; m++) {
     const month = `${year}-${pad(m)}`;
     const days = Object.keys(daily || {}).filter((key) => key.startsWith(`${month}-`));
-    const bucket = days.length ? mergeBuckets(days.map((key) => daily[key])) : Object.values((monthly || {})[month] || {});
-    out.push({ month, bucket });
+    const fromDays = days.length ? mergeBuckets(days.map((key) => daily[key])) : [];
+    const fromMonth = Object.values((monthly || {})[month] || {});
+    out.push({ month, bucket: sumSeconds(fromMonth) >= sumSeconds(fromDays) ? fromMonth : fromDays });
   }
   return out;
 }
-
-const sumSeconds = (entries) => (entries || []).filter(isValidEntry).reduce((sum, e) => sum + e.watchSeconds, 0);
 
 /**
  * Courbe d'activite d'une periode : un point par jour (7 et 30 jours, mois) ou

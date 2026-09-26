@@ -96,6 +96,22 @@ export const RELEASES = [
           ko: "버튼에 들어가지 않던 라벨을 이탈리아어, 폴란드어, 터키어, 러시아어, 프랑스어에서 짧게 줄였습니다(마우스 오버 미리보기, 도움말 및 FAQ, 시청 시간 등).",
         },
       },
+      {
+        type: "fix",
+        text: {
+          fr: "Le Wrapped annuel pouvait afficher moins d'heures que l'un de ses mois (par exemple 120 h pour 2026 contre 160 h pour septembre) : le mois en cours n'était compté qu'à partir de l'arrivée du suivi par jour. Chaque mois est maintenant compté en entier.",
+          en: "The yearly Wrapped could show fewer hours than one of its months (for example 120 h for 2026 versus 160 h for September): the current month only counted from when daily tracking arrived. Every month is now counted in full.",
+          es: "El Wrapped anual podía mostrar menos horas que uno de sus meses (por ejemplo 120 h para 2026 frente a 160 h para septiembre): el mes en curso solo se contaba desde la llegada del registro diario. Ahora cada mes se cuenta entero.",
+          "pt-BR": "O Wrapped anual podia mostrar menos horas que um dos seus meses (por exemplo 120 h em 2026 contra 160 h em setembro): o mês atual só era contado a partir da chegada do registro diário. Agora cada mês é contado por inteiro.",
+          de: "Der Jahres-Wrapped konnte weniger Stunden zeigen als einer seiner Monate (zum Beispiel 120 h für 2026 gegenüber 160 h für September): Der laufende Monat wurde erst ab Einführung der Tageserfassung gezählt. Jetzt wird jeder Monat vollständig gezählt.",
+          it: "Il Wrapped annuale poteva mostrare meno ore di uno dei suoi mesi (per esempio 120 h per il 2026 contro 160 h per settembre): il mese in corso veniva contato solo dall'arrivo del monitoraggio giornaliero. Ora ogni mese viene contato per intero.",
+          pl: "Roczny Wrapped mógł pokazywać mniej godzin niż jeden z jego miesięcy (na przykład 120 h w 2026 wobec 160 h we wrześniu): bieżący miesiąc liczono dopiero od wprowadzenia śledzenia dziennego. Teraz każdy miesiąc jest liczony w całości.",
+          tr: "Yıllık Wrapped, aylarından birinden daha az saat gösterebiliyordu (örneğin Eylül için 160 saate karşı 2026 için 120 saat): içinde bulunulan ay yalnızca günlük takibin geldiği andan itibaren sayılıyordu. Artık her ay eksiksiz sayılıyor.",
+          ru: "Годовой Wrapped мог показывать меньше часов, чем один из его месяцев (например, 120 ч за 2026 год против 160 ч за сентябрь): текущий месяц учитывался только с момента появления ежедневного учёта. Теперь каждый месяц считается полностью.",
+          ja: "年間 Wrapped が、その年のある月より少ない時間を表示することがありました（例：9月は160時間なのに2026年は120時間）。当月は日別記録の開始以降しか数えていなかったためです。現在は各月をすべて数えます。",
+          ko: "연간 Wrapped가 해당 연도의 한 달보다 적은 시간을 보여줄 수 있었습니다(예: 9월은 160시간인데 2026년은 120시간). 이번 달은 일별 기록이 시작된 이후만 집계되었기 때문입니다. 이제 모든 달을 빠짐없이 집계합니다.",
+        },
+      },
     ],
     thanks: [
       {

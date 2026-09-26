@@ -155,10 +155,26 @@ test("listPeriods ajoute le Wrapped de chaque annee quand il est demande", () =>
   );
 });
 
-test("collectEntries sur une annee prefere le detail journalier au total mensuel", () => {
+test("collectEntries sur une annee prend, pour chaque mois, la source la plus complete", () => {
   const entries = collectEntries(monthly, daily, "year:2026", NOW);
-  // juillet : mensuel 3600 ; aout : journalier 5000 ; septembre : journalier 3000
-  assert.equal(entries.reduce((s, e) => s + e.watchSeconds, 0), 3600 + 5000 + 3000);
+  // juillet : mensuel seul 3600 ; aout : journalier seul 5000 (mois purge du
+  // stockage mensuel) ; septembre : mensuel 9000, car le detail journalier ne
+  // couvre que les jours suivis depuis son arrivee (3000).
+  assert.equal(entries.reduce((s, e) => s + e.watchSeconds, 0), 3600 + 5000 + 9000);
+});
+
+test("une annee ne compte jamais moins d'heures qu'un de ses mois", () => {
+  // Cas signale : septembre 2026 affichait 160 h et 2026 seulement 120 h, parce
+  // que le suivi par jour n'a commence qu'en cours de mois.
+  const hours = (h) => h * 3600;
+  const month = { "2026-09": { "twitch:a": entry("twitch", "a", hours(160)) } };
+  const days = { "2026-09-20": { "twitch:a": entry("twitch", "a", hours(120)) } };
+  const sum = (entries) => entries.reduce((s, e) => s + e.watchSeconds, 0);
+  const monthTotal = sum(collectEntries(month, days, "month:2026-09", NOW));
+  const yearTotal = sum(collectEntries(month, days, "year:2026", NOW));
+  assert.equal(monthTotal, hours(160));
+  assert.equal(yearTotal, hours(160));
+  assert.equal(buildTimeline(month, days, "year:2026", NOW)[8].seconds, hours(160));
 });
 
 test("buildTimeline donne un point par jour ou par mois selon la periode", () => {
@@ -172,6 +188,6 @@ test("buildTimeline donne un point par jour ou par mois selon la periode", () =>
 
   const year = buildTimeline(monthly, daily, "year:2026", NOW);
   assert.equal(year.length, 12);
-  assert.deepEqual([year[6].seconds, year[7].seconds, year[8].seconds], [3600, 5000, 3000]);
+  assert.deepEqual([year[6].seconds, year[7].seconds, year[8].seconds], [3600, 5000, 9000]);
   assert.deepEqual(buildTimeline(monthly, daily, "bogus", NOW), []);
 });
