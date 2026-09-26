@@ -310,8 +310,8 @@ export const translations = {
         "gameLine": "Jeu",
         "keywordLine": "Titre contient",
         "viewersLine": "Viewers minimum",
-        "anyGame": "N'importe quel jeu",
-        "anyKeyword": "N'importe quel titre",
+        "anyGame": "Tous les jeux",
+        "anyKeyword": "Tous les titres",
         "gamePlaceholder": "+ jeu",
         "keywordPlaceholder": "+ mot",
         "removeTerm": "Retirer {{term}}",
@@ -569,7 +569,7 @@ export const translations = {
         "streamerFaviconDescription": "Remplacer l'icône de l'onglet par la photo de profil du streamer en direct.",
         "tabLiveIconTitle": "Pastille rouge LIVE sur l'onglet",
         "tabLiveIconDescription": "Afficher un point rouge LIVE sur l'icône de l'onglet quand le flux est en direct.",
-        "groupEventLog": "Journal d'événements",
+        "groupEventLog": "Journal d'activité",
         "logFilterAll": "Tous",
         "logClear": "Effacer",
         "logClearTitle": "Effacer le journal",
@@ -4783,7 +4783,7 @@ export const translations = {
     },
     "common": {
       "appName": "StreamPulse",
-      "loading": "Caricamento in corso…",
+      "loading": "Caricamento…",
       "confirm": "Conferma",
       "cancel": "Annulla",
       "error": "Qualcosa è andato storto. Per favore riprova.",
@@ -5322,7 +5322,7 @@ export const translations = {
         "logClearTitle": "Cancella il registro",
         "logEmpty": "Nessun evento registrato.",
         "logError": "Impossibile leggere il registro.",
-        "groupFaq": "Aiuto e domande frequenti",
+        "groupFaq": "Aiuto e FAQ",
         "faqPointsTitle": "Punti e drop del canale",
         "faqPointsBody": "StreamPulse fa clic sulla cassa dei punti del canale per te e richiede i tuoi Drop non appena compaiono.",
         "faqPlayerTitle": "Lettore e Anti-Pausa",
@@ -5377,8 +5377,8 @@ export const translations = {
         "dataDescription": "Gestisci i tuoi dati e visualizza le tue statistiche.",
         "groupNotifications": "Notifiche",
         "groupAutomation": "Automazione",
-        "groupPreviews": "Anteprime al passaggio del mouse",
-        "previewsEnableTitle": "Anteprime al passaggio del mouse",
+        "groupPreviews": "Anteprime al passaggio",
+        "previewsEnableTitle": "Anteprime al passaggio",
         "previewsEnableDescription": "Mostra un'anteprima dal vivo quando passi il mouse su un canale o una clip.",
         "previewsModeTitle": "Modalità anteprima",
         "previewsModeImage": "Immagine",
@@ -5686,7 +5686,7 @@ export const translations = {
         "freeLine": "Utente dell'estensione"
       },
       "topbar": {
-        "previews": "Anteprime al passaggio del mouse",
+        "previews": "Anteprime al passaggio",
         "thisChannel": "Questo canale",
         "badgeColor": "Colore del badge",
         "badgeAuthor": "Nome",
@@ -6275,7 +6275,7 @@ export const translations = {
         "logClearTitle": "Wyczyść dziennik",
         "logEmpty": "Nie zarejestrowano żadnych zdarzeń.",
         "logError": "Nie udało się odczytać dziennika.",
-        "groupFaq": "Pomoc i często zadawane pytania",
+        "groupFaq": "Pomoc i FAQ",
         "faqPointsTitle": "Punkty i nagrody w kanale",
         "faqPointsBody": "StreamPulse kliknie za Ciebie skrzynię z punktami kanału i odbierze Twoje Dropy, gdy tylko się pojawią.",
         "faqPlayerTitle": "Odtwarzacz i Anti-Pauza",
@@ -6665,7 +6665,7 @@ export const translations = {
         "error": "Akcja nie powiodła się. Spróbuj ponownie."
       },
       "player": {
-        "skipToLive": "Przejdź do transmisji na żywo",
+        "skipToLive": "Przejdź na żywo",
         "holdToFastForward": "Przytrzymaj, aby przewinąć do przodu x2",
         "volumeBoostLabel": "Wzmocnij głośność",
         "volumeBoostHint": "Klik: włącz lub wyłącz · kółko lub strzałki: do 200%",
@@ -7283,8 +7283,8 @@ export const translations = {
         "dataDescription": "Verilerinizi yönetin ve istatistiklerinizi görüntüleyin.",
         "groupNotifications": "Bildirimler",
         "groupAutomation": "Otomasyon",
-        "groupPreviews": "Fareyle üzerine gelindiğinde görünen önizlemeler",
-        "previewsEnableTitle": "Fareyle üzerine gelindiğinde görünen önizlemeler",
+        "groupPreviews": "Fareyle önizleme",
+        "previewsEnableTitle": "Fareyle önizleme",
         "previewsEnableDescription": "Bir kanalın veya klibin üzerine fareyi getirdiğinizde canlı önizleme gösterilsin.",
         "previewsModeTitle": "Önizleme modu",
         "previewsModeImage": "Resim",
@@ -7592,7 +7592,7 @@ export const translations = {
         "freeLine": "Eklenti kullanıcısı"
       },
       "topbar": {
-        "previews": "Fareyle üzerine gelindiğinde görünen önizlemeler",
+        "previews": "Fareyle önizleme",
         "thisChannel": "Bu kanal",
         "badgeColor": "Rozet rengi",
         "badgeAuthor": "Kullanıcı adı",
@@ -8109,7 +8109,7 @@ export const translations = {
       "greetingLiveCountPlural": "{{count}} стримеров в прямом эфире",
       "statBlock": {
         "points": "Баллы",
-        "watchTime": "Продолжительность просмотра"
+        "watchTime": "Время просмотра"
       },
       "section": {
         "live": "Прямая трансляция"
@@ -8181,7 +8181,7 @@ export const translations = {
         "logClearTitle": "Очистить журнал",
         "logEmpty": "Событий не зарегистрировано.",
         "logError": "Не удалось прочитать журнал.",
-        "groupFaq": "Справка и часто задаваемые вопросы",
+        "groupFaq": "Справка и FAQ",
         "faqPointsTitle": "Баллы и подарки канала",
         "faqPointsBody": "StreamPulse автоматически нажимает на точки на груди персонажей и забирает ваши Drops, как только они появляются.",
         "faqPlayerTitle": "Воспроизведение и запрет на приостановку",
@@ -8236,10 +8236,10 @@ export const translations = {
         "dataDescription": "Управляйте своими данными и просматривайте статистику.",
         "groupNotifications": "Уведомления",
         "groupAutomation": "Автоматизация",
-        "groupPreviews": "Предварительный просмотр при наведении курсора",
-        "previewsEnableTitle": "Предварительный просмотр при наведении курсора",
+        "groupPreviews": "Превью при наведении",
+        "previewsEnableTitle": "Превью при наведении",
         "previewsEnableDescription": "Отображать предварительный просмотр в режиме реального времени при наведении курсора на канал или клип.",
-        "previewsModeTitle": "Режим предварительного просмотра",
+        "previewsModeTitle": "Режим превью",
         "previewsModeImage": "Изображение",
         "previewsModeVideo": "Видео",
         "previewsSurfacesTitle": "Показать на",
@@ -8355,7 +8355,7 @@ export const translations = {
       "labels": {
         "viewers": "{{count}} зрителей",
         "lastUpdateTimePlaceholder": "--",
-        "previewAltLive": "Предварительный просмотр в режиме реального времени {{name}}",
+        "previewAltLive": "Превью эфира {{name}}",
         "previewAltOffline": "Не в сети – {{name}}",
         "avatarAlt": "Аватар {{name}}"
       }
@@ -8545,7 +8545,7 @@ export const translations = {
         "freeLine": "Пользователь расширения"
       },
       "topbar": {
-        "previews": "Предварительный просмотр при наведении курсора",
+        "previews": "Превью при наведении",
         "thisChannel": "Этот канал",
         "badgeColor": "Цвет значка",
         "badgeAuthor": "Ник",

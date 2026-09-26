@@ -649,7 +649,7 @@
       "freeLine": "Utente dell'estensione"
     },
     "topbar": {
-      "previews": "Anteprime al passaggio del mouse",
+      "previews": "Anteprime al passaggio",
       "thisChannel": "Questo canale",
       "badgeColor": "Colore del badge",
       "badgeAuthor": "Nome",
@@ -693,7 +693,7 @@
     "shared": {
       "settings": {
         "groupAutomation": "Automazione",
-        "groupPreviews": "Anteprime al passaggio del mouse",
+        "groupPreviews": "Anteprime al passaggio",
         "groupNotifications": "Notifiche",
         "groupChat": "Chatta",
         "autoClaimTitle": "Rivendica automaticamente i punti canale",
@@ -706,7 +706,7 @@
         "pipButtonTitle": "Pulsante Picture-in-Picture",
         "hideTwitchExtensionsTitle": "Nascondi le estensioni Twitch",
         "communityBadgeTitle": "Badge della comunità",
-        "previewsEnableTitle": "Anteprime al passaggio del mouse",
+        "previewsEnableTitle": "Anteprime al passaggio",
         "previewsModeTitle": "Modalità anteprima",
         "previewsModeImage": "Immagine",
         "previewsModeVideo": "Video",
@@ -796,7 +796,7 @@
       "error": "Akcja nie powiodła się. Spróbuj ponownie."
     },
     "player": {
-      "skipToLive": "Przejdź do transmisji na żywo",
+      "skipToLive": "Przejdź na żywo",
       "holdToFastForward": "Przytrzymaj, aby przewinąć do przodu x2",
       "volumeBoostLabel": "Wzmocnij głośność",
       "volumeBoostHint": "Klik: włącz lub wyłącz · kółko lub strzałki: do 200%",
@@ -891,7 +891,7 @@
       "freeLine": "Eklenti kullanıcısı"
     },
     "topbar": {
-      "previews": "Fareyle üzerine gelindiğinde görünen önizlemeler",
+      "previews": "Fareyle önizleme",
       "thisChannel": "Bu kanal",
       "badgeColor": "Rozet rengi",
       "badgeAuthor": "Kullanıcı adı",
@@ -935,7 +935,7 @@
     "shared": {
       "settings": {
         "groupAutomation": "Otomasyon",
-        "groupPreviews": "Fareyle üzerine gelindiğinde görünen önizlemeler",
+        "groupPreviews": "Fareyle önizleme",
         "groupNotifications": "Bildirimler",
         "groupChat": "Kedi",
         "autoClaimTitle": "Kanal puanlarını otomatik olarak talep et",
@@ -948,7 +948,7 @@
         "pipButtonTitle": "Resim içinde resim düğmesi",
         "hideTwitchExtensionsTitle": "Twitch uzantılarını gizle",
         "communityBadgeTitle": "Topluluk rozeti",
-        "previewsEnableTitle": "Fareyle üzerine gelindiğinde görünen önizlemeler",
+        "previewsEnableTitle": "Fareyle önizleme",
         "previewsModeTitle": "Önizleme modu",
         "previewsModeImage": "Resim",
         "previewsModeVideo": "Video",
@@ -1012,7 +1012,7 @@
       "freeLine": "Пользователь расширения"
     },
     "topbar": {
-      "previews": "Предварительный просмотр при наведении курсора",
+      "previews": "Превью при наведении",
       "thisChannel": "Этот канал",
       "badgeColor": "Цвет значка",
       "badgeAuthor": "Ник",
@@ -1056,7 +1056,7 @@
     "shared": {
       "settings": {
         "groupAutomation": "Автоматизация",
-        "groupPreviews": "Предварительный просмотр при наведении курсора",
+        "groupPreviews": "Превью при наведении",
         "groupNotifications": "Уведомления",
         "groupChat": "Кот",
         "autoClaimTitle": "Автоматическое начисление баллов по каналу «Auto-claim»",
@@ -1069,8 +1069,8 @@
         "pipButtonTitle": "Кнопка «Картинка в картинке»",
         "hideTwitchExtensionsTitle": "Скрыть расширения Twitch",
         "communityBadgeTitle": "Значок сообщества",
-        "previewsEnableTitle": "Предварительный просмотр при наведении курсора",
-        "previewsModeTitle": "Режим предварительного просмотра",
+        "previewsEnableTitle": "Превью при наведении",
+        "previewsModeTitle": "Режим превью",
         "previewsModeImage": "Изображение",
         "previewsModeVideo": "Видео",
         "previewsSurfaceDirectory": "Справочник",
