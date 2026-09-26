@@ -110,6 +110,7 @@ const wtTopWatched = document.getElementById("wt-top-watched");
 const wtEmpty = document.getElementById("wt-empty");
 const watchTimeToggle = document.getElementById("pref-watch-time");
 const pointsTrackingToggle = document.getElementById("pref-points-tracking");
+const dropsTrackingToggle = document.getElementById("pref-drops-tracking");
 const communityBadgeToggle = document.getElementById("pref-community-badge");
 const badgeColorMode = document.getElementById("pref-badge-color-mode");
 const badgeColorValue = document.getElementById("pref-badge-color-value");
@@ -761,8 +762,7 @@ async function renderActivity() {
   const today = logs.filter((log) => log.timestamp >= midnight.getTime());
   const points = today.filter((log) => log.type === "points").reduce((sum, log) => sum + (Number(log.value) || 0), 0);
   setChip("activity-points", points > 0, t("popup.cplus.pointsToday", { count: formatNumber(points) }));
-  // Compteur de Drops du jour masqué : il comptait mal (bug à corriger avant de le réafficher).
-  setChip("activity-drops", false, "");
+  // La puce « Drops du jour » est tenue par popup-drops.js, d'après l'historique des Drops.
 }
 
 // --- All channels sheet ---
@@ -1006,6 +1006,9 @@ function renderPreferences() {
   }
   if (watchTimeToggle) {
     watchTimeToggle.checked = prefs.watchTimeTracker !== false;
+  }
+  if (dropsTrackingToggle) {
+    dropsTrackingToggle.checked = prefs.dropsTracking !== false;
   }
   if (pointsTrackingToggle) {
     pointsTrackingToggle.checked = prefs.pointsTracking !== false;
@@ -2006,6 +2009,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (pointsTrackingToggle) {
       pointsTrackingToggle.addEventListener("change", (e) => {
         updatePreferences({ pointsTracking: e.target.checked });
+      });
+    }
+
+    if (dropsTrackingToggle) {
+      dropsTrackingToggle.addEventListener("change", (e) => {
+        updatePreferences({ dropsTracking: e.target.checked });
       });
     }
 

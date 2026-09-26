@@ -764,3 +764,84 @@ button.pts-row:focus-visible { background: var(--surface-2); }
 .pts-journal-row b { font-variant-numeric: tabular-nums; }
 .pts-muted { color: var(--text-3); font-size: 12px; }
 .pts-health { margin: 16px 0 0; color: var(--text-3); font-size: 12px; }
+
+/* ── Drops ── */
+/* La bande prend une ligne à la scène quand un Drop avance : la grille des lives garde sa hauteur. */
+.home.has-drops { grid-template-rows: 248px 46px 52px minmax(0, 1fr) 60px; }
+.drops-band { display: grid; grid-template-columns: 30px minmax(0, 1fr) 150px auto; align-items: center; gap: 10px; margin: 0 16px 8px; padding: 0 10px; border: 0; border-radius: 12px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text); text-align: left; cursor: pointer; transition: box-shadow var(--dur-fast) ease; }
+.drops-band:hover,
+.drops-band:focus-visible { box-shadow: inset 0 0 0 1px var(--violet-line); }
+.drops-band.is-claimed { grid-template-columns: 30px minmax(0, 1fr) auto; background: var(--lcd-soft); box-shadow: inset 0 0 0 1px var(--lcd-line); }
+.drops-gift { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: var(--lcd); color: var(--lcd-ink); }
+.drops-gift svg { width: 16px; height: 16px; }
+.drops-band-text { display: grid; min-width: 0; line-height: 1.3; }
+.drops-band-name,
+.drops-band-meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.drops-band-name { font-size: 12.5px; font-weight: 700; }
+.drops-band-meta { color: var(--text-3); font-size: 11px; }
+.drops-band-progress { display: grid; gap: 3px; }
+.drops-band-progress small { color: var(--text-3); font-size: 10.5px; font-variant-numeric: tabular-nums; }
+.drops-band-more { color: var(--violet-text); font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+.drops-bar { display: block; height: 6px; overflow: hidden; border-radius: 3px; background: var(--line-2); }
+.drops-bar i { display: block; height: 100%; border-radius: 3px; background: var(--lcd-accent); transition: width var(--dur-base) var(--ease-out); }
+
+.drops-auto { border: 0; cursor: pointer; }
+.drops-auto.is-on { background: var(--lcd-soft); box-shadow: inset 0 0 0 1px var(--lcd-line); color: var(--text); }
+.drops-auto.is-on svg { color: var(--lcd-accent); }
+.drops-auto:not(.is-on) svg { display: none; }
+.drops-auto:hover { box-shadow: inset 0 0 0 1px var(--violet-line); }
+.drops-section { display: flex; align-items: baseline; gap: 8px; margin: 18px 0 8px; font-family: var(--display); font-size: 13px; font-weight: 700; }
+.drops-section:first-of-type { margin-top: 0; }
+.drops-section small { margin-left: auto; color: var(--text-3); font-family: var(--body); font-size: 11.5px; font-weight: 500; }
+.drops-section .plus-tag { margin-left: 0; font-size: 10px; vertical-align: 0; }
+.drops-list,
+.drops-campaigns { margin: 0; padding: 0; list-style: none; }
+.drop-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 12px; margin-bottom: 8px; padding: 10px; border-radius: 12px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2); }
+.drop-row.is-ready { background: var(--lcd-soft); box-shadow: inset 0 0 0 1px var(--lcd-line); }
+.drop-img { display: grid; place-items: center; width: 44px; height: 44px; overflow: hidden; border-radius: 10px; background: var(--surface-2); color: var(--lcd-accent); }
+.drop-img img { width: 100%; height: 100%; object-fit: cover; }
+.drop-img svg { width: 20px; height: 20px; }
+.drop-img.is-small { width: 30px; height: 30px; border-radius: 8px; }
+.drop-img.is-small svg { width: 14px; height: 14px; }
+.drop-main { display: grid; gap: 2px; min-width: 0; }
+.drop-main b,
+.drop-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.drop-main b { font-size: 13px; }
+.drop-main small { color: var(--text-3); font-size: 11px; }
+.drop-main .drops-bar { margin-top: 5px; }
+.drop-side { display: grid; justify-items: end; gap: 2px; font-size: 12px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.drop-side small { color: var(--text-3); font-size: 11px; font-weight: 500; white-space: nowrap; }
+.drops-tag { padding: 3px 9px; border-radius: 999px; background: var(--lcd); color: var(--lcd-ink); font-size: 11px; font-weight: 800; white-space: nowrap; }
+.drops-tag.is-pending { background: transparent; box-shadow: inset 0 0 0 1px var(--lcd-line); color: var(--lcd-accent); }
+.drops-claim { height: 30px; padding: 0 12px; font-size: 12px; }
+.drops-empty { margin: 2px 0 8px; color: var(--text-3); font-size: 12px; line-height: 1.5; }
+.drops-empty-action { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.drops-empty-action p { margin: 0; }
+.drops-filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.drops-filter { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 9px; border: 0; border-radius: 8px; background: transparent; box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text-2); font-size: 11.5px; font-weight: 600; cursor: pointer; }
+.drops-filter em { color: var(--text-3); font-style: normal; font-variant-numeric: tabular-nums; }
+.drops-filter:hover { color: var(--text); }
+.drops-filter.active { background: var(--violet); box-shadow: none; color: var(--paper); }
+.drops-filter.active em { color: rgba(255, 255, 255, 0.8); }
+.camp-row { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; align-items: center; gap: 10px; width: 100%; padding: 8px 6px; border: 0; background: transparent; box-shadow: inset 0 1px 0 var(--line); color: var(--text); text-align: left; cursor: pointer; }
+.camp-row:hover,
+.camp-row:focus-visible { background: var(--surface-2); }
+.camp-row.is-mine { box-shadow: inset 3px 0 0 var(--violet), inset 0 1px 0 var(--line); }
+.camp-box { width: 34px; height: 44px; overflow: hidden; border-radius: 6px; background: linear-gradient(160deg, var(--violet), var(--surface-2)); }
+.camp-box img { width: 100%; height: 100%; object-fit: cover; }
+.camp-main { display: grid; gap: 2px; min-width: 0; }
+.camp-main b,
+.camp-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.camp-main b { font-size: 12.5px; }
+.camp-main small { color: var(--text-3); font-size: 11px; }
+.camp-side { display: grid; justify-items: end; gap: 4px; }
+.camp-badge { padding: 1px 6px; border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(255, 210, 63, 0.4); color: var(--star); font-size: 10px; font-weight: 800; }
+.camp-when { color: var(--text-2); font-size: 11px; white-space: nowrap; }
+.camp-when.is-soon { color: var(--danger); font-weight: 700; }
+.camp-when.is-new { color: var(--lcd-accent); font-weight: 700; }
+.drops-month { margin: 10px 0 4px; color: var(--text-3); font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+.drops-hrow { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 6px 0; box-shadow: inset 0 1px 0 var(--line); }
+.drops-hrow .drop-main b { font-size: 12px; font-weight: 600; }
+.drops-hrow time { color: var(--text-3); font-size: 11px; white-space: nowrap; }
+.drops-times { color: var(--violet-text); font-weight: 700; }
+.drops-panel .settings-toggle { margin-top: 16px; }

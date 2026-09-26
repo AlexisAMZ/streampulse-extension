@@ -202,6 +202,48 @@
   });
   pointsJournal.sort((a, b) => b.at - a.at);
 
+  // Drops (bande de l'accueil, Réglages > Drops) : ?drops=none pour les masquer,
+  // ?drops=claimed pour la bande « Drop récupéré », ?drops=manual sans récupération auto.
+  const dropsMode = params.get("drops") || (scenario === "empty" ? "none" : "progress");
+  const H = 3600e3;
+  const reward = (hue, letter) => svgData(`<svg xmlns="http://www.w3.org/2000/svg" width="88" height="88"><defs><linearGradient id="r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl(${hue} 45% 42%)"/><stop offset="1" stop-color="hsl(${hue} 55% 18%)"/></linearGradient></defs><rect width="88" height="88" fill="url(#r)"/><text x="44" y="46" text-anchor="middle" dominant-baseline="central" font-family="Helvetica, Arial" font-size="36" font-weight="700" fill="#fff" fill-opacity=".9">${letter}</text></svg>`);
+  const box = (hue) => svgData(`<svg xmlns="http://www.w3.org/2000/svg" width="52" height="72"><defs><linearGradient id="b" x1="0" y1="0" x2=".4" y2="1"><stop offset="0" stop-color="hsl(${hue} 60% 55%)"/><stop offset="1" stop-color="hsl(${hue} 55% 16%)"/></linearGradient></defs><rect width="52" height="72" fill="url(#b)"/></svg>`);
+  const dropsProgress = {
+    updatedAt: now - 60e3,
+    eventAt: now - 60e3,
+    channels: {},
+    drops: dropsMode === "progress" || dropsMode === "manual"
+      ? [
+          { id: "d-wot", campaignId: "c-wot", instanceId: "", name: "Vehicle XP Booster", game: "World of Tanks: HEAT", image: reward(95, "XP"), benefitIds: ["b-wot"], minutes: 32, required: 60, endsAt: now + 26 * H, channel: "Terracid", anyChannel: false },
+          { id: "d-gob", campaignId: "c-gob", instanceId: "", name: "Goblin Cleanup · Épée rouillée", game: "Goblin Cleanup", image: reward(20, "⚔"), benefitIds: ["b-gob"], minutes: 22, required: 120, endsAt: now + 50 * H, channel: "", anyChannel: true },
+          ...(dropsMode === "manual" ? [{ id: "d-pay", campaignId: "c-pay", instanceId: "999#c-pay#d-pay", name: "Badge Chains", game: "PAYDAY 3", image: reward(45, "P3"), benefitIds: ["b-pay"], minutes: 60, required: 60, endsAt: now + 9 * 24 * H, channel: "Novastream", anyChannel: false }] : []),
+        ]
+      : [],
+  };
+  const dropsHistory = dropsMode === "none" ? [] : [
+    { key: "drop:gob-skin", name: "Skin Goblin doré", game: "Goblin Cleanup", channel: "Crisalu", image: reward(48, "G"), at: now - 36 * 60e3, auto: true },
+    { key: "drop:pay", name: "Badge Chains", game: "PAYDAY 3", channel: "Novastream", image: reward(45, "P3"), at: now - 27 * H, auto: true },
+    { key: "drop:eld", name: "Badge Tarnished", game: "ELDEN RING", channel: "Rivertv", image: reward(140, "ER"), at: now - 4 * 24 * H, auto: true },
+    { key: "drop:lol", name: "Capsule Hextech", game: "League of Legends", channel: "Solenne", image: reward(0, "LoL"), at: now - 14 * 24 * H, auto: false },
+    { key: "drop:zzz", name: "Pack de polychromes", game: "Zenless Zone Zero", channel: "Maxcraft", image: reward(215, "Z"), at: now - 31 * 24 * H, auto: true },
+    { key: "drop:wot1", name: "Vehicle XP Booster", game: "World of Tanks", channel: "Terracid", image: reward(95, "XP"), at: now - 33 * 24 * H, auto: true },
+    { key: "drop:wot2", name: "Vehicle XP Booster", game: "World of Tanks", channel: "Terracid", image: reward(95, "XP"), at: now - 33 * 24 * H - 2 * H, auto: true },
+  ].filter((entry) => dropsMode !== "claimed" || entry.key === "drop:gob-skin" || entry.at < now - 2 * H);
+  const campaign = (id, game, owner, startH, endH, hue, extra = {}) => ({ id, name: `${game} Drops`, game, gameId: id, boxArt: box(hue), owner, startsAt: now + startH * H, endsAt: now + endH * H, status: startH > 0 ? "UPCOMING" : "ACTIVE", rewardCount: null, badgeOnly: null, accountLinkUrl: "", connected: null, ...extra });
+  const dropsCampaigns = {
+    updatedAt: now - 12 * 60e3,
+    source: "apollo",
+    campaigns: dropsMode === "none" ? [] : [
+      campaign("c-wot", "World of Tanks: HEAT", "Wargaming", -240, 26, 95, { rewardCount: 3, accountLinkUrl: "https://example.invalid/link", connected: false }),
+      campaign("c-pay", "PAYDAY 3", "Starbreeze", -48, 14 * 24, 45, { rewardCount: 4, badgeOnly: true }),
+      campaign("c-eld", "ELDEN RING", "Twitch Gaming", -20 * 24, 44, 140, { rewardCount: 1, badgeOnly: true }),
+      campaign("c-lol", "League of Legends", "Riot Games", -25 * 24, 7 * 24, 0, { rewardCount: 2 }),
+      campaign("c-zzz", "Zenless Zone Zero", "Cognosphere", -17 * 24, 4 * 24, 215, { rewardCount: 5 }),
+      campaign("c-gob", "Goblin Cleanup", "Goblin Studio", -6 * 24, 50, 20),
+      campaign("c-val", "VALORANT", "Riot Games", -30, 12 * 24, 350, { rewardCount: 2 }),
+    ],
+  };
+
   const store = {
     betaGeneralStreamers: channels.streamers,
     betaGeneralStatuses: channels.statuses,
@@ -209,6 +251,7 @@
       language: params.get("lang") || "fr",
       theme: params.get("theme") || "dark",
       sortOrder: "live",
+      autoClaimDrops: dropsMode !== "manual",
     },
     betaGeneralStats: { channelPointsClaimed: scenario === "empty" ? 0 : 12480 },
     betaWatchTimeData: scenario === "empty" ? {} : watchTime,
@@ -217,6 +260,10 @@
     streamPulsePointsDaily: scenario === "empty" ? {} : pointsDaily,
     streamPulsePointsJournal: scenario === "empty" ? [] : pointsJournal,
     streamPulsePointsChannels: scenario === "empty" ? {} : pointsChannels,
+    streamPulseDropsProgress: dropsProgress,
+    streamPulseDropsHistory: dropsHistory,
+    streamPulseDropsCampaigns: dropsCampaigns,
+    streamPulseDropsSince: now - 60 * 24 * H,
     // ?plus=1 : licence active et deux règles d'alerte de démonstration.
     ...(params.get("plus") === "1"
       ? {
@@ -298,6 +345,7 @@
       case "refreshStatuses":
       case "testNotification":
       case "clearEventLogs":
+      case "dropsRefresh":
       case "openPatchNotes":
       case "resetStat":
       case "updateUserProfile":
@@ -330,6 +378,8 @@
       case "updatePreferences":
         store.betaGeneralPreferences = { ...store.betaGeneralPreferences, ...message.updates };
         return { success: true, preferences: store.betaGeneralPreferences };
+      case "claimDrop":
+        return { success: true, sent: true };
       default:
         return {};
     }
