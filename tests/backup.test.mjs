@@ -33,6 +33,9 @@ const storage = {
   streamPulseCosmetics: { badgeFx: "glow", nameFx: "" },
   streamPulseAccent: "violet",
   streamPulsePredictionRule: { percent: 10, maxPoints: 5000 },
+  streamPulsePointsDaily: { "2026-09-26": { 123: { WATCH: { count: 1, points: 10, base: 10 } } } },
+  streamPulsePointsJournal: [],
+  streamPulsePointsChannels: { 123: { login: "novastream" } },
   // Lie a cette installation : jamais dans une sauvegarde.
   streamPulsePlus: { status: "active", licenseKey: "SP-XXXX", plan: "lifetime" },
   streamPulseDeviceId: "device-123",

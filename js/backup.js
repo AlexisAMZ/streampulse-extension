@@ -14,6 +14,8 @@ export const BACKUP_FORMAT = 1;
 // Au-dela, ce n'est pas une sauvegarde StreamPulse : on refuse avant de lire.
 export const MAX_BACKUP_BYTES = 5 * 1024 * 1024;
 
+import { JOURNAL_LIMIT, POINTS_CHANNELS_KEY, POINTS_DAILY_KEY, POINTS_JOURNAL_KEY } from "./points-data.js";
+
 const STREAMERS = "betaGeneralStreamers";
 const PREFERENCES = "betaGeneralPreferences";
 const STATS = "betaGeneralStats";
@@ -33,6 +35,7 @@ const PREDICTION_RULE = "streamPulsePredictionRule";
 export const BACKUP_KEYS = [
   STREAMERS, PREFERENCES, STATS, WATCH_MONTHLY, WATCH_DAILY, PROFILE,
   PINNED, GROUPS, HISTORY, SMART_ALERTS, COSMETICS, ACCENT, PREDICTION_RULE,
+  POINTS_DAILY_KEY, POINTS_JOURNAL_KEY, POINTS_CHANNELS_KEY,
 ];
 
 /** Caches derives des donnees restaurees : vides a la restauration, recalcules ensuite. */
@@ -103,6 +106,75 @@ function cleanWatchTime(value, periodKey) {
   return cleaned;
 }
 
+const CHANNEL_ID = /^\d{1,20}$/;
+const isCount = (value) => Number.isInteger(value) && value >= 0;
+
+function isPointsTotals(value) {
+  return isPlainObject(value) && isCount(value.count) && isCount(value.points) && isCount(value.base);
+}
+
+/** Jours bien formés ; dans chacun, chaînes numériques et totaux entiers. */
+function cleanPointsDaily(value) {
+  const cleaned = {};
+  for (const [day, channels] of Object.entries(value)) {
+    if (!DAY_KEY.test(day) || !isPlainObject(channels)) continue;
+    cleaned[day] = {};
+    for (const [channelId, reasons] of Object.entries(channels)) {
+      if (!CHANNEL_ID.test(channelId) || !isPlainObject(reasons)) continue;
+      const kept = Object.fromEntries(Object.entries(reasons).filter(([, totals]) => isPointsTotals(totals)));
+      if (Object.keys(kept).length) cleaned[day][channelId] = kept;
+    }
+  }
+  return cleaned;
+}
+
+function isJournalEntry(entry) {
+  return (
+    isPlainObject(entry) &&
+    typeof entry.key === "string" &&
+    Number.isFinite(entry.at) &&
+    CHANNEL_ID.test(String(entry.channelId)) &&
+    typeof entry.reason === "string" &&
+    isCount(entry.points)
+  );
+}
+
+function cleanPointsChannels(value) {
+  return Object.fromEntries(
+    Object.entries(value).filter(([id, channel]) => CHANNEL_ID.test(id) && isPlainObject(channel) && Object.keys(channel).length > 0)
+  );
+}
+
+/** Pour chaque jour, chaîne et raison, garde le plus grand total : pas de double compte. */
+function mergePointsDaily(current, incoming) {
+  const merged = structuredClone(current);
+  for (const [day, channels] of Object.entries(incoming)) {
+    merged[day] = merged[day] || {};
+    for (const [channelId, reasons] of Object.entries(channels)) {
+      merged[day][channelId] = merged[day][channelId] || {};
+      for (const [code, totals] of Object.entries(reasons)) {
+        const mine = merged[day][channelId][code];
+        if (!mine || totals.points > mine.points) merged[day][channelId][code] = totals;
+      }
+    }
+  }
+  return merged;
+}
+
+function mergePointsJournal(current, incoming) {
+  const keys = new Set(current.map((entry) => entry.key));
+  return [...current, ...incoming.filter((entry) => !keys.has(entry.key))]
+    .sort((a, b) => b.at - a.at)
+    .slice(0, JOURNAL_LIMIT);
+}
+
+/** La fiche locale gagne, complétée par ce que la sauvegarde sait en plus. */
+function mergePointsChannels(current, incoming) {
+  const merged = { ...incoming };
+  for (const [id, channel] of Object.entries(current)) merged[id] = { ...(incoming[id] || {}), ...channel };
+  return merged;
+}
+
 /**
  * Nettoie une valeur connue. Renvoie `undefined` si son type est incompatible :
  * restaurer une liste de streamers qui n'est pas une liste casserait la popup.
@@ -131,6 +203,12 @@ function cleanValue(key, value) {
       return Array.isArray(value) || isPlainObject(value) ? value : undefined;
     case ACCENT:
       return typeof value === "string" ? value : undefined;
+    case POINTS_DAILY_KEY:
+      return isPlainObject(value) ? cleanPointsDaily(value) : undefined;
+    case POINTS_JOURNAL_KEY:
+      return Array.isArray(value) ? value.filter(isJournalEntry) : undefined;
+    case POINTS_CHANNELS_KEY:
+      return isPlainObject(value) ? cleanPointsChannels(value) : undefined;
     default:
       return undefined;
   }
@@ -296,6 +374,15 @@ export function mergeBackup(current, incoming) {
       case ACCENT:
         // Reglages simples : ceux de l'installation courante restent prioritaires.
         data[key] = now[key] !== undefined ? now[key] : value;
+        break;
+      case POINTS_DAILY_KEY:
+        data[key] = mergePointsDaily(isPlainObject(now[key]) ? now[key] : {}, value);
+        break;
+      case POINTS_JOURNAL_KEY:
+        data[key] = mergePointsJournal(Array.isArray(now[key]) ? now[key] : [], value);
+        break;
+      case POINTS_CHANNELS_KEY:
+        data[key] = mergePointsChannels(isPlainObject(now[key]) ? now[key] : {}, value);
         break;
       default:
         break;
