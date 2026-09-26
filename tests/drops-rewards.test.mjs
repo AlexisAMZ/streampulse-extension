@@ -47,7 +47,7 @@ test("catalogBadges filtre gratuits, payants, obtenus, à obtenir, et cherche da
 
 import { activeNames } from "../js/drops-data.js";
 
-test("un badge est disponible si son jeu a une campagne en cours ou s'il vient d'apparaître", () => {
+test("citer le jeu d'une campagne de récompenses ne suffit plus : il faut le nom exact ou une campagne de badges", () => {
   const now = Date.parse("2026-09-26T20:00:00Z");
   const raw = { badges: [
     { setID: "mold", title: "Don't Eat The Mold", description: "watching a streamer in the CONTROL Resonant category for 1 hour" },
@@ -58,7 +58,7 @@ test("un badge est disponible si son jeu a une campagne en cours ou s'il vient d
   const rewards = normalizeRewards(raw_rewards());
   const names = activeNames({ rewards }, now);
   const available = catalogBadges(state, "available", "", { now, names }).map((b) => b.id);
-  assert.deepEqual(available.sort(), ["mold", "pichu"]);
+  assert.deepEqual(available, []);
 });
 
 function raw_rewards() {
@@ -92,6 +92,7 @@ import { badgeCampaignFor, normalizeCampaigns } from "../js/drops-data.js";
 test("un badge est relié à la campagne de Drops en cours de son jeu, qui donne sa vraie date de fin", () => {
   const now = Date.parse("2026-09-26T20:00:00Z");
   const campaigns = normalizeCampaigns([
+    { id: "lol", name: "LoL", status: "ACTIVE", startAt: "2026-09-01T18:00:00Z", endAt: "2026-10-03T15:59:00Z", game: { displayName: "League of Legends" }, owner: { name: "Riot Games" } },
     { id: "rm", name: "REMATCH", status: "ACTIVE", startAt: "2026-09-23T23:01:00Z", endAt: "2026-10-21T22:58:00Z", game: { displayName: "REMATCH" }, owner: { name: "Twitch Gaming" } },
     { id: "dd", name: "D&D", status: "ACTIVE", startAt: "2026-09-24T01:15:00Z", endAt: "2026-10-21T06:58:00Z", game: { displayName: "Dungeons & Dragons" }, owner: { name: "Twitch Gaming" } },
   ]);
@@ -99,6 +100,7 @@ test("un badge est relié à la campagne de Drops en cours de son jeu, qui donne
     { setID: "rematch-blue-lock", title: "Rematch Blue Lock", description: "watching a streamer in the Rematch category for 30 minutes" },
     { setID: "d20", title: "d20", description: "watching Dungeon Masters on Twitch.", clickURL: "https://www.twitch.tv/directory/category/dungeons-&-dragons" },
     { setID: "old", title: "Old", description: "nothing to do with it" },
+    { setID: "lol-classic", title: "LoL Classic", description: "watching League of Legends" },
   ], owned: [] };
   const { state } = mergeBadges({ updatedAt: 0, syncedAt: 0, badges: [], owned: [] }, raw, now);
   assert.equal(badgeCampaignFor(state.badges[0], campaigns, now).id, "rm");

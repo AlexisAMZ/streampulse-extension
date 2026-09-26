@@ -603,6 +603,10 @@ export function badgeCampaignFor(badge, campaigns, now) {
   let best = null;
   for (const campaign of campaigns) {
     if (!isActiveCampaign(campaign, now)) continue;
+    // Seules les campagnes qui distribuent des badges comptent : celles de
+    // « Twitch Gaming », ou celles dont on sait que la récompense est un badge.
+    // Une campagne d'éditeur (Riot, Ubisoft…) donne des objets de jeu.
+    if (!/twitch gaming/i.test(campaign.owner || "") && campaign.badgeOnly !== true) continue;
     const name = fold(campaign.game).trim();
     if (name.length < 4) continue;
     const exact = campaign.badgeOnly !== false && game && game === name;
@@ -616,7 +620,6 @@ export function badgeCampaignFor(badge, campaigns, now) {
 export function catalogBadges(state, filterId = "all", query = "", context = {}) {
   const owned = new Set(state.owned);
   const now = context.now ?? Date.now();
-  const names = [...(context.names || [])];
   const titles = context.names?.rewardTitles || new Set();
   const year = new Date(now).getFullYear();
   // Une année passée dans la description (« 2025 ») : l'événement est fini.
@@ -625,8 +628,7 @@ export function catalogBadges(state, filterId = "all", query = "", context = {})
   const isAvailable = (badge) =>
     Boolean(badge.campaign) ||
     titles.has(fold(badge.title).trim()) ||
-    (badge.firstSeen > 0 && now - badge.firstSeen <= NEW_BADGE_MS) ||
-    (!pastYear(badge) && names.some((name) => fold(badge.description).includes(name) || (badge.game && fold(badge.game) === name)));
+    (badge.firstSeen > 0 && now - badge.firstSeen <= NEW_BADGE_MS);
   const needle = String(query || "").trim().toLowerCase();
   const test = BADGE_TESTS[filterId] || BADGE_TESTS.all;
   return state.badges
