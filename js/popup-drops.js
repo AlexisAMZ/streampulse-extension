@@ -6,6 +6,7 @@
 import { t, getCurrentLanguage } from "./i18n.js";
 import {
   DROPS_KEYS,
+  activeRewards,
   bandModel,
   campaignUrl,
   campaignsFrom,
@@ -23,6 +24,7 @@ import {
   progressFrom,
   recentClaims,
   remainingMinutes,
+  rewardsFrom,
   summarizeHistory,
 } from "./drops-data.js";
 
@@ -42,6 +44,7 @@ const GIFT_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 let deps = { isPlus: () => false, openPlus: () => {} };
 let progress = progressFrom({});
 let campaigns = campaignsFrom({});
+let rewards = rewardsFrom({});
 let history = [];
 let prefs = {};
 let myGames = new Set();
@@ -300,6 +303,44 @@ function renderCampaigns(now) {
   $("drops-open-campaigns").hidden = all.length > 0;
 }
 
+// ─── Panneau : badges et récompenses ──────────────────────────────────────────
+
+/** Conditions d'une campagne de récompenses : minutes regardées, abonnements, ou l'un des deux. */
+function rewardRequirement(reward) {
+  const parts = [];
+  if (reward.minutesGoal) parts.push(t("popup.drops.badgeWatch", { time: minutesLabel(reward.minutesGoal) }));
+  if (reward.subsGoal) parts.push(plural(reward.subsGoal, "popup.drops.badgeSubOne", "popup.drops.badgeSubOther"));
+  return parts.join(` ${t("popup.drops.badgeOr")} `);
+}
+
+function rewardRow(reward, now) {
+  const item = el("li");
+  const row = el(reward.url ? "button" : "div", "camp-row");
+  if (reward.url) {
+    row.type = "button";
+    row.dataset.url = reward.url;
+  }
+  if (reward.summary && reward.summary !== reward.name) row.title = reward.summary;
+  const main = el("span", "camp-main");
+  main.append(
+    el("b", null, reward.rewards.map((item) => item.name).join(" + ")),
+    el("small", null, [reward.brand || reward.game || reward.name, rewardRequirement(reward)].filter(Boolean).join(" · ")),
+  );
+  const side = el("span", "camp-side");
+  if (reward.endsAt > now) side.append(el("span", isEndingSoon({ ...reward, status: "" }, now) ? "camp-when is-soon" : "camp-when", t("popup.drops.endsIn", { time: spanLabel(reward.endsAt - now) })));
+  row.append(thumb(reward.rewards[0]?.image, "drop-img is-small"), main, side);
+  item.append(row);
+  return item;
+}
+
+function renderRewards(now) {
+  if (!$("drops-rewards")) return;
+  const shown = activeRewards(rewards.rewards, now);
+  $("drops-rewards").replaceChildren(...shown.map((reward) => rewardRow(reward, now)));
+  $("drops-rewards-empty").hidden = shown.length > 0 || !rewards.updatedAt;
+  $("drops-rewards-meta").textContent = shown.length ? t("popup.drops.badgesMeta", { count: shown.length }) : "";
+}
+
 // ─── Panneau : historique (StreamPulse+) ──────────────────────────────────────
 
 function renderHistory() {
@@ -343,6 +384,7 @@ function renderPanel(now) {
   $("drops-auto-label").textContent = t(auto ? "popup.drops.autoOn" : "popup.drops.autoOff");
   renderProgress(now);
   renderCampaigns(now);
+  renderRewards(now);
   renderHistory();
 }
 
@@ -384,6 +426,10 @@ function bind() {
     filter = button.dataset.filter;
     renderCampaigns(Date.now());
   });
+  $("drops-rewards")?.addEventListener("click", (event) => {
+    const row = event.target.closest("[data-url]");
+    if (row) openTab(row.dataset.url);
+  });
   $("drops-campaigns")?.addEventListener("click", (event) => {
     const row = event.target.closest("[data-url]");
     if (row) openTab(row.dataset.url);
@@ -400,6 +446,7 @@ async function reload() {
   const stored = await chrome.storage.local.get([...DROPS_KEYS, PREFERENCES_KEY]);
   progress = progressFrom(stored);
   campaigns = campaignsFrom(stored);
+  rewards = rewardsFrom(stored);
   history = historyFrom(stored);
   prefs = stored[PREFERENCES_KEY] || {};
   render();

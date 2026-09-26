@@ -264,6 +264,14 @@
     streamPulseDropsHistory: dropsHistory,
     streamPulseDropsCampaigns: dropsCampaigns,
     streamPulseDropsSince: now - 60 * 24 * H,
+    streamPulseDropsRewards: {
+      updatedAt: now - 5 * 60e3,
+      rewards: dropsMode === "none" ? [] : [
+        { id: "rw-poke", name: "First Partners Collection", brand: "Pokemon", game: "", summary: "", url: "https://help.twitch.tv/s/article/pokemon-chat-badges", startsAt: now - 30 * 24 * H, endsAt: now + 4 * 24 * H, minutesGoal: 20, subsGoal: 0, rewards: [{ id: "r1", name: "Poké Ball", image: reward(0, "●") }] },
+        { id: "rw-poke2", name: "First Partners Collection", brand: "Pokemon", game: "", summary: "", url: "https://help.twitch.tv/s/article/pokemon-chat-badges", startsAt: now - 30 * 24 * H, endsAt: now + 4 * 24 * H, minutesGoal: 0, subsGoal: 2, rewards: [{ id: "r3", name: "Great Ball", image: reward(215, "●") }] },
+        { id: "rw-ctrl", name: "CONTROL Resonant launch", brand: "", game: "CONTROL Resonant", summary: "Tenue exclusive pour Dylan Faden.", url: "", startsAt: now - 4 * 24 * H, endsAt: now + 17 * 24 * H, minutesGoal: 240, subsGoal: 0, rewards: [{ id: "r2", name: "Sierra Helmet", image: reward(30, "C") }] },
+      ],
+    },
     // ?plus=1 : licence active et deux règles d'alerte de démonstration.
     ...(params.get("plus") === "1"
       ? {

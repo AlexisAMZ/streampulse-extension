@@ -9,6 +9,7 @@ import {
   DROPS_HISTORY_KEY,
   DROPS_KEYS,
   DROPS_PROGRESS_KEY,
+  DROPS_REWARDS_KEY,
   DROPS_SINCE_KEY,
   applyClaim,
   applyEvent,
@@ -18,6 +19,7 @@ import {
   isClaimable,
   normalizeCampaigns,
   normalizeInventory,
+  normalizeRewards,
   progressFrom,
   pruneCampaigns,
   pruneHistory,
@@ -112,6 +114,14 @@ export function createDropsStore({ storage, resolveChannels = async () => [], no
     });
   }
 
+  function recordRewards(rawList) {
+    return enqueue(async () => {
+      const rewards = normalizeRewards(rawList);
+      await storage.set({ [DROPS_REWARDS_KEY]: { updatedAt: now(), rewards } });
+      return { recorded: true, count: rewards.length };
+    });
+  }
+
   /** Résultat de `claimDropRewards` renvoyé par la page Twitch. */
   function recordClaim({ instanceId, ok, status, auto = true }) {
     return enqueue(async () => {
@@ -159,5 +169,5 @@ export function createDropsStore({ storage, resolveChannels = async () => [], no
     return campaignsFrom(await storage.get([DROPS_CAMPAIGNS_KEY]));
   }
 
-  return { recordInventory, recordEvent, recordCampaigns, recordClaim, resolveNames, readCampaigns };
+  return { recordInventory, recordEvent, recordCampaigns, recordRewards, recordClaim, resolveNames, readCampaigns };
 }

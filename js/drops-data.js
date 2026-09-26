@@ -10,7 +10,9 @@ export const DROPS_CAMPAIGNS_KEY = "streamPulseDropsCampaigns";
 export const DROPS_HISTORY_KEY = "streamPulseDropsHistory";
 /** Début du suivi : un Drop obtenu avant n'entre jamais dans l'historique. */
 export const DROPS_SINCE_KEY = "streamPulseDropsSince";
-export const DROPS_KEYS = [DROPS_PROGRESS_KEY, DROPS_CAMPAIGNS_KEY, DROPS_HISTORY_KEY, DROPS_SINCE_KEY];
+/** Campagnes de récompenses (badges de chat) : cache relu toutes les 30 minutes. */
+export const DROPS_REWARDS_KEY = "streamPulseDropsRewards";
+export const DROPS_KEYS = [DROPS_PROGRESS_KEY, DROPS_CAMPAIGNS_KEY, DROPS_HISTORY_KEY, DROPS_SINCE_KEY, DROPS_REWARDS_KEY];
 
 const MINUTE_MS = 60_000;
 const HOUR_MS = 60 * MINUTE_MS;
@@ -431,6 +433,52 @@ export function filterCampaigns(campaigns, filterId, now, myGames = new Set()) {
 
 export function countFilters(campaigns, now) {
   return Object.fromEntries(CAMPAIGN_FILTERS.map((id) => [id, campaigns.filter((campaign) => FILTER_TESTS[id](campaign, now)).length]));
+}
+
+// ─── Campagnes de récompenses (badges) ───────────────────────────────────────
+
+/** Une campagne `rewardCampaignsAvailableToUser`, avec ses conditions et ses récompenses. */
+export function normalizeReward(raw) {
+  if (!isPlainObject(raw)) return null;
+  const id = idOf(raw.id);
+  const rewards = list(raw.rewards)
+    .filter(isPlainObject)
+    .map((reward) => ({ id: idOf(reward.id), name: text(reward.name, 120), image: httpsUrl(reward.bannerImage?.image1xURL) }))
+    .filter((reward) => reward.name);
+  if (!id || !rewards.length) return null;
+  const url = httpsUrl(raw.externalURL);
+  return {
+    id,
+    name: text(raw.name, 160),
+    brand: text(raw.brand, 80),
+    game: text(raw.game?.displayName, 120),
+    summary: text(raw.summary, 400),
+    // Le lien par défaut de Twitch (la page d'accueil) n'apprend rien.
+    url: url.replace(/\/+$/, "") === "https://www.twitch.tv" ? "" : url,
+    startsAt: timeOf(raw.startsAt),
+    endsAt: timeOf(raw.endsAt),
+    minutesGoal: minutesOf(raw.unlockRequirements?.minuteWatchedGoal),
+    subsGoal: minutesOf(raw.unlockRequirements?.subsGoal),
+    rewards,
+  };
+}
+
+export function normalizeRewards(rawList) {
+  const seen = new Set();
+  return list(rawList).map(normalizeReward).filter((reward) => reward && !seen.has(reward.id) && seen.add(reward.id));
+}
+
+export function rewardsFrom(stored = {}) {
+  const value = (stored || {})[DROPS_REWARDS_KEY];
+  if (!isPlainObject(value)) return { updatedAt: 0, rewards: [] };
+  return { updatedAt: timeOf(value.updatedAt), rewards: list(value.rewards).filter((reward) => isPlainObject(reward) && typeof reward.id === "string") };
+}
+
+/** Campagnes en cours, celle qui finit la première d'abord. */
+export function activeRewards(rewards, now) {
+  return rewards
+    .filter((reward) => (!reward.startsAt || reward.startsAt <= now) && (!reward.endsAt || reward.endsAt > now))
+    .sort((a, b) => (a.endsAt || Infinity) - (b.endsAt || Infinity));
 }
 
 // ─── Affichage ────────────────────────────────────────────────────────────────

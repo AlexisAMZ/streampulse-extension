@@ -993,6 +993,9 @@ function scheduleDropsAlarm() {
 async function refreshDropsFromWorker({ minGapMs = DROPS_WORKER_MIN_GAP_MS } = {}) {
   const prefs = await PreferenceStore.get();
   if (prefs.dropsTracking === false) return { read: false, reason: "disabled" };
+  refreshRewardsFromWorker().catch((error) => {
+    if (error.code !== "signed-out") console.warn("[StreamPulse] badges :", error.code || error.message);
+  });
   const stored = await chrome.storage.local.get("streamPulseDropsProgress");
   if (Date.now() - (Number(stored.streamPulseDropsProgress?.updatedAt) || 0) < minGapMs) return { read: false, reason: "fresh" };
   let inventory;
@@ -1008,6 +1011,15 @@ async function refreshDropsFromWorker({ minGapMs = DROPS_WORKER_MIN_GAP_MS } = {
   announceDrops(result.added).catch(() => {});
   for (const instanceId of result.claim) await claimDropFromWorker(instanceId, true);
   return { read: true };
+}
+
+const REWARDS_EVERY_MS = 30 * 60_000;
+
+/** Campagnes de badges et récompenses, relues au plus toutes les 30 minutes. */
+async function refreshRewardsFromWorker() {
+  const stored = await chrome.storage.local.get("streamPulseDropsRewards");
+  if (Date.now() - (Number(stored.streamPulseDropsRewards?.updatedAt) || 0) < REWARDS_EVERY_MS) return;
+  await dropsStore.recordRewards(await dropsClient.readRewards());
 }
 
 async function claimDropFromWorker(instanceId, auto) {

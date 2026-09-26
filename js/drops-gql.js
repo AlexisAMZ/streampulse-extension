@@ -47,6 +47,18 @@ export const INVENTORY_QUERY_LITE = `query StreamPulseDropsInventoryLite {
   }
 }`;
 
+// Campagnes de récompenses (badges de chat, objets offerts) : un circuit séparé
+// des Drops, attribué automatiquement. Lecture acceptée sans Client-Integrity
+// (vérifié sur twitch.tv le 2026-09-26) ; Twitch ne donne pas l'avancée.
+export const REWARDS_QUERY = `query StreamPulseRewardCampaigns {
+  rewardCampaignsAvailableToUser {
+    id name brand startsAt endsAt summary externalURL
+    unlockRequirements { subsGoal minuteWatchedGoal }
+    game { displayName }
+    rewards { id name bannerImage { image1xURL } }
+  }
+}`;
+
 const failure = (code, detail = "") => Object.assign(new Error(code), { code, detail });
 
 /** Jeton de session Twitch lu dans le cookie, ou "" si l'utilisateur n'est pas connecté. */
@@ -95,5 +107,10 @@ export function createDropsClient({ fetch, cookies }) {
     return { status: String(data.claimDropRewards?.status || "") };
   }
 
-  return { readInventory, claim };
+  async function readRewards() {
+    const { data } = await gql(REWARDS_QUERY);
+    return Array.isArray(data.rewardCampaignsAvailableToUser) ? data.rewardCampaignsAvailableToUser : [];
+  }
+
+  return { readInventory, readRewards, claim };
 }
