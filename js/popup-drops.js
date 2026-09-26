@@ -11,6 +11,7 @@ import {
   activeNames,
   newBadges,
   activeRewards,
+  isBadgeCampaign,
   bandModel,
   campaignsFrom,
   countFilters,
@@ -298,7 +299,8 @@ function campaignRow(campaign, now) {
 
 function renderCampaigns(now) {
   if (!$("drops-campaigns")) return;
-  const all = campaigns.campaigns;
+  // Les campagnes de badges (PAYDAY 3, ATLUS…) sont dans l'onglet Badges, réservé à StreamPulse+.
+  const all = campaigns.campaigns.filter((campaign) => !isBadgeCampaign(campaign));
   const counts = countFilters(all, now);
   document.querySelectorAll("#drops-filters [data-filter]").forEach((button) => {
     const active = button.dataset.filter === filter;

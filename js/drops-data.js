@@ -597,6 +597,9 @@ const BADGE_TESTS = {
  * récompense est un badge : elles portent les vraies dates. On les relie par
  * le jeu du lien du badge, sinon par le jeu cité dans sa description.
  */
+/** Campagne qui distribue des badges de chat : celles-ci vivent dans l'onglet Badges (StreamPulse+). */
+export const isBadgeCampaign = (campaign) => /twitch gaming/i.test(campaign.owner || "") || campaign.badgeOnly === true;
+
 export function badgeCampaignFor(badge, campaigns, now) {
   const game = fold(badge.game).trim();
   const text = fold(`${badge.title} ${badge.description}`);

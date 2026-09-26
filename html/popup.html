@@ -44,6 +44,19 @@
       <button id="notif-blocked-open" type="button" class="button button-quiet" data-i18n="popup.notifBlockedAction">Réglages</button>
     </div>
 
+    <aside class="review-ask" id="review-ask" role="dialog" hidden>
+      <span class="review-ask-stars" aria-hidden="true">★★★★★</span>
+      <div class="review-ask-text">
+        <b data-i18n="popup.review.title">Tu aimes StreamPulse ?</b>
+        <span data-i18n="popup.review.body">Un avis sur le store aide énormément une extension indépendante. Merci d'avance !</span>
+      </div>
+      <div class="review-ask-actions">
+        <button id="review-ask-rate" type="button" class="button button-primary" data-i18n="popup.review.rate">Laisser un avis</button>
+        <button id="review-ask-later" type="button" class="button button-quiet" data-i18n="popup.review.later">Plus tard</button>
+        <button id="review-ask-never" type="button" class="button button-link" data-i18n="popup.review.never">Non merci</button>
+      </div>
+    </aside>
+
     <main id="streamers-view" class="home" role="tabpanel" aria-labelledby="tab-streamers">
       <section class="stage" id="stage" data-state="empty">
         <div class="stage-media" id="stage-media"></div>

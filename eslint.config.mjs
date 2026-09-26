@@ -38,6 +38,7 @@ const ES_MODULES = [
   "js/drops-gql.js",
   "js/popup-drops.js",
   "js/popup-layout.js",
+  "js/popup-review.js",
   "js/recap-draw.js",
   "js/recap-story.js",
   "js/ui.js",

@@ -509,6 +509,13 @@ export const translations = {
         "trackingTitle": "Suivre les Drops",
         "trackingBody": "Progression et récupération même sans onglet Twitch ouvert. La liste des campagnes se met à jour quand tu passes sur Twitch."
       },
+      "review": {
+        "title": "Tu aimes StreamPulse ?",
+        "body": "Un avis sur le store aide énormément une extension indépendante. Merci d'avance !",
+        "rate": "Laisser un avis",
+        "later": "Plus tard",
+        "never": "Non merci"
+      },
       "layout": {
         "title": "Disposition",
         "description": "Choisis l'ordre des onglets et des rubriques, et masque ceux dont tu ne te sers pas.",
@@ -1562,6 +1569,13 @@ export const translations = {
         "lockedBody": "The history of every Drop you earned, month by month, with the game and the channel. StreamPulse+ only.",
         "trackingTitle": "Track Drops",
         "trackingBody": "Progress and claiming even without a Twitch tab open. The campaign list updates when you visit Twitch."
+      },
+      "review": {
+        "title": "Enjoying StreamPulse?",
+        "body": "A review on the store helps an independent extension a lot. Thank you!",
+        "rate": "Leave a review",
+        "later": "Later",
+        "never": "No thanks"
       },
       "layout": {
         "title": "Layout",
@@ -2617,6 +2631,13 @@ export const translations = {
         "trackingTitle": "Seguir los Drops",
         "trackingBody": "Progreso y reclamo incluso sin una pestaña de Twitch abierta. La lista de campañas se actualiza cuando visitas Twitch."
       },
+      "review": {
+        "title": "¿Te gusta StreamPulse?",
+        "body": "Una reseña en la tienda ayuda muchísimo a una extensión independiente. ¡Gracias!",
+        "rate": "Dejar una reseña",
+        "later": "Más tarde",
+        "never": "No, gracias"
+      },
       "layout": {
         "title": "Disposición",
         "description": "Elige el orden de las pestañas y secciones, y oculta las que no uses.",
@@ -3657,6 +3678,13 @@ export const translations = {
         "lockedBody": "O histórico de todos os Drops obtidos, mês a mês, com o jogo e o canal. Exclusivo do StreamPulse+.",
         "trackingTitle": "Acompanhar os Drops",
         "trackingBody": "Progresso e resgate mesmo sem uma aba da Twitch aberta. A lista de campanhas é atualizada quando você visita a Twitch."
+      },
+      "review": {
+        "title": "Curtindo o StreamPulse?",
+        "body": "Uma avaliação na loja ajuda muito uma extensão independente. Obrigado!",
+        "rate": "Avaliar",
+        "later": "Mais tarde",
+        "never": "Não, obrigado"
       },
       "layout": {
         "title": "Disposição",
@@ -4706,6 +4734,13 @@ export const translations = {
         "lockedBody": "Der Verlauf aller erhaltenen Drops, Monat für Monat, mit Spiel und Kanal. Nur mit StreamPulse+.",
         "trackingTitle": "Drops verfolgen",
         "trackingBody": "Fortschritt und Abholen auch ohne offenen Twitch-Tab. Die Kampagnenliste wird aktualisiert, wenn du Twitch besuchst."
+      },
+      "review": {
+        "title": "Gefällt dir StreamPulse?",
+        "body": "Eine Bewertung im Store hilft einer unabhängigen Erweiterung enorm. Danke!",
+        "rate": "Bewerten",
+        "later": "Später",
+        "never": "Nein danke"
       },
       "layout": {
         "title": "Anordnung",
@@ -5761,6 +5796,13 @@ export const translations = {
         "trackingTitle": "Segui i Drops",
         "trackingBody": "Progressi e riscatto anche senza una scheda di Twitch aperta. L'elenco delle campagne si aggiorna quando visiti Twitch."
       },
+      "review": {
+        "title": "Ti piace StreamPulse?",
+        "body": "Una recensione sullo store aiuta moltissimo un'estensione indipendente. Grazie!",
+        "rate": "Lascia una recensione",
+        "later": "Più tardi",
+        "never": "No, grazie"
+      },
       "layout": {
         "title": "Disposizione",
         "description": "Scegli l'ordine di schede e sezioni e nascondi quelle che non usi.",
@@ -6814,6 +6856,13 @@ export const translations = {
         "lockedBody": "Historia wszystkich zdobytych Dropsów, miesiąc po miesiącu, z grą i kanałem. Tylko w StreamPulse+.",
         "trackingTitle": "Śledź Dropsy",
         "trackingBody": "Postęp i odbieranie nawet bez otwartej karty Twitcha. Lista kampanii odświeża się, gdy odwiedzasz Twitcha."
+      },
+      "review": {
+        "title": "Podoba ci się StreamPulse?",
+        "body": "Opinia w sklepie bardzo pomaga niezależnemu rozszerzeniu. Dziękujemy!",
+        "rate": "Wystaw opinię",
+        "later": "Później",
+        "never": "Nie, dzięki"
       },
       "layout": {
         "title": "Układ",
@@ -7869,6 +7918,13 @@ export const translations = {
         "trackingTitle": "Drops'u takip et",
         "trackingBody": "Twitch sekmesi açık olmasa bile ilerleme ve alma. Kampanya listesi Twitch'e girdiğinde güncellenir."
       },
+      "review": {
+        "title": "StreamPulse'ı beğendin mi?",
+        "body": "Mağazadaki bir yorum bağımsız bir eklentiye çok yardımcı olur. Teşekkürler!",
+        "rate": "Yorum yap",
+        "later": "Sonra",
+        "never": "Hayır, teşekkürler"
+      },
       "layout": {
         "title": "Düzen",
         "description": "Sekmelerin ve bölümlerin sırasını seç, kullanmadıklarını gizle.",
@@ -8922,6 +8978,13 @@ export const translations = {
         "lockedBody": "История всех полученных Drops по месяцам, с игрой и каналом. Только в StreamPulse+.",
         "trackingTitle": "Отслеживать Drops",
         "trackingBody": "Прогресс и получение даже без открытой вкладки Twitch. Список кампаний обновляется, когда вы заходите на Twitch."
+      },
+      "review": {
+        "title": "Нравится StreamPulse?",
+        "body": "Отзыв в магазине очень помогает независимому расширению. Спасибо!",
+        "rate": "Оставить отзыв",
+        "later": "Позже",
+        "never": "Нет, спасибо"
       },
       "layout": {
         "title": "Расположение",
@@ -9977,6 +10040,13 @@ export const translations = {
         "trackingTitle": "ドロップを記録",
         "trackingBody": "Twitch のタブを開いていなくても進捗の確認と受け取りができます。キャンペーン一覧は Twitch を開いたときに更新されます。"
       },
+      "review": {
+        "title": "StreamPulse は気に入りましたか？",
+        "body": "ストアでのレビューは、個人開発の拡張機能にとって大きな助けになります。ありがとうございます！",
+        "rate": "レビューを書く",
+        "later": "あとで",
+        "never": "今はしない"
+      },
       "layout": {
         "title": "レイアウト",
         "description": "タブと項目の並び順を選び、使わないものは非表示にできます。",
@@ -11030,6 +11100,13 @@ export const translations = {
         "lockedBody": "획득한 모든 드롭의 기록을 게임과 채널과 함께 월별로 볼 수 있습니다. StreamPulse+ 전용.",
         "trackingTitle": "드롭 추적",
         "trackingBody": "Twitch 탭을 열지 않아도 진행 상황 확인과 수령이 됩니다. 캠페인 목록은 Twitch를 방문할 때 업데이트됩니다."
+      },
+      "review": {
+        "title": "StreamPulse가 마음에 드시나요?",
+        "body": "스토어 리뷰는 독립 확장 프로그램에 큰 도움이 됩니다. 감사합니다!",
+        "rate": "리뷰 남기기",
+        "later": "나중에",
+        "never": "괜찮아요"
       },
       "layout": {
         "title": "배치",
