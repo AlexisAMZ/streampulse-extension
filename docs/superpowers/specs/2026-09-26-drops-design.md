@@ -2,7 +2,7 @@
 
 - **Date** : 2026-09-26
 - **Demandé par** : Alexis
-- **Statut** : choix validés (approche A, maquettes H2, P1, P2), spec en attente de relecture
+- **Statut** : implémenté en 26.9.28 (approche A, maquettes H2, P1, P2) ; reste à vérifier sur un vrai compte Twitch
 - **Maquettes** : `.impeccable/drops-mockups.html` (non versionné)
 
 ## Objectif
@@ -47,8 +47,9 @@ clics au lieu de vrais Drops.
   messages `drop-progress` (minutes regardées, `drop_id`,
   `current_progress_min`, `required_progress_min`) et `drop-claim`
   (`drop_instance_id`, `drop_id`, `channel_id`) sur le sujet
-  `user-drop-events.<userId>`. **Forme exacte à confirmer par une capture en
-  étape 1**, comme pour `points-earned`.
+  `user-drop-events.<userId>`. `drop-claim` annonce qu'un Drop est **prêt** à
+  récupérer (avec l'identifiant à envoyer), pas qu'il a été récupéré. **Forme
+  exacte à confirmer par une capture réelle**, comme pour `points-earned`.
 - **Inventaire** : la requête GraphQL brute
   `currentUser.inventory.dropCampaignsInProgress` (avec `timeBasedDrops`,
   `self.currentMinutesWatched`, `self.dropInstanceID`, `self.isClaimed`,
@@ -138,9 +139,16 @@ Aucun accès à `chrome.*` ni au DOM.
   `isBadge` si toutes les récompenses ont `distributionType: "BADGE"`.
 - `applyProgress(state, event)` : met à jour `minutes` d'un Drop en cours à
   partir de `drop-progress`, sans attendre la prochaine lecture d'inventaire.
-- `applyClaim(state, event, now)` → nouvel état : le Drop passe `claimed`,
-  une entrée est ajoutée à l'historique. Dédoublonnage par `instanceId`
-  (deux onglets, ou claim vu par l'événement puis par l'inventaire).
+- `applyEvent(progress, event, now)` : `drop-progress` fait avancer le Drop,
+  `drop-claim` le rend prêt (`instanceId`). Un Drop inconnu (`known: false`)
+  relance la lecture de l'inventaire, au plus une fois toutes les 2 minutes.
+- `applyClaim(progress, history, instanceId, now, auto)` : le Drop récupéré
+  quitte la progression et entre dans l'historique (clé `drop:<dropId>`).
+- `applyInventory(...)` : un Drop vu en cours puis récupéré (hors
+  StreamPulse, par exemple sur mobile), ou une récompense datée
+  (`gameEventDrops.lastAwardedAt`) postérieure au début du suivi, entre dans
+  l'historique. Une récompense déjà comptée par une récupération (même
+  récompense à moins de 2 h) n'est pas ajoutée deux fois.
 - `filterCampaigns(campaigns, filterId, now, myGames)` :
   - `all` : campagnes `ACTIVE` ;
   - `new` : commencées depuis moins de 3 jours ;
@@ -163,7 +171,8 @@ Aucune nouvelle collecte.
 
 - `streamPulseDropsProgress` : `{ updatedAt, drops: [...] }` (état courant, non sauvegardé).
 - `streamPulseDropsCampaigns` : `{ updatedAt, source: "apollo" | "gql", campaigns: [...] }` (cache, non sauvegardé).
-- `streamPulseDropsHistory` : `[{ instanceId, dropId, name, game, channel, image, at, auto }]`, le plus récent en tête. **Ajouté à `BACKUP_KEYS`**.
+- `streamPulseDropsHistory` : `[{ key, instanceId, dropId, benefitIds, name, game, channel, image, at, auto }]`, le plus récent en tête. **Ajouté à `BACKUP_KEYS`**.
+- `streamPulseDropsSince` : début du suivi ; aucune récompense antérieure n'entre dans l'historique.
 
 ### 5. Service worker : `js/drops-store.js`
 
@@ -173,12 +182,17 @@ Module importé par `background.js`, sur le modèle de `points-store.js`.
 - `recordDropEvent`, `recordDropCampaigns`, `recordDropInventory` →
   fonctions de `drops-data.js`, puis écriture.
 - **Récupération automatique** : si `autoClaimDrops` est actif et qu'un Drop
-  devient `claimable`, le store demande au pont (via l'onglet Twitch qui a
-  envoyé l'inventaire) d'appeler `claimDropRewards`. Succès confirmé par la
-  réponse GraphQL ou par `drop-claim` : entrée d'historique avec `auto: true`,
-  notification existante (`dropAlerts`). L'auto-clic DOM de
-  `channelPointsClaimer.js` reste en secours, mais **n'incrémente plus
-  `dropsClaimed`** : le compte vient uniquement des vrais événements.
+  devient prêt, la réponse du store à l'onglet qui a relayé l'inventaire (ou
+  l'événement) contient son `instanceId` ; un verrou de 2 minutes empêche un
+  second onglet de le récupérer aussi. Le relais demande alors au pont
+  d'appeler `claimDropRewards`. Succès (`ELIGIBLE_FOR_ALL` ou
+  `DROP_INSTANCE_ALREADY_CLAIMED`) : entrée d'historique avec `auto: true`,
+  compteur `dropsClaimed`, journal d'événements et notification (`dropAlerts`,
+  3 au plus par lecture, jamais pour un Drop de plus d'une heure). L'auto-clic
+  DOM de `channelPointsClaimer.js` reste en secours, mais **n'incrémente plus
+  `dropsClaimed`** : il demande une relecture de l'inventaire de l'onglet
+  (message `dropClaimedByClick`), qui compte le Drop avec son nom. Sans le
+  suivi des Drops, l'ancien compteur fondé sur le clic est conservé.
 - `autoOpenInventory` reste disponible mais devient inutile quand un onglet
   Twitch est ouvert ; son libellé l'indique.
 
@@ -207,7 +221,9 @@ Code dans le nouveau `js/popup-drops.js` (et non `popup.js`), initialisé comme
   jeu · chaîne ou « toute chaîne avec Drops », temps restant, `minutes /
   requis · finit dans N j`). Drops prêts : bouton « Récupérer » si
   l'auto-claim est coupé ; sinon « Récupéré automatiquement à HH h MM » et
-  « Dans l'inventaire ».
+  « Dans l'inventaire ». Un Drop prêt garde toujours son bouton
+  « Récupérer » : si Twitch refuse la récupération automatique, on peut
+  relancer à la main.
 - **Campagnes** : « N actives · lues sur Twitch il y a N min », filtres
   Toutes / Nouvelles / Finissent bientôt / À venir avec compteurs, lignes
   (jaquette, jeu, éditeur · N récompenses, tag BADGE, « nouvelle · dates » ou
@@ -235,7 +251,9 @@ Code dans le nouveau `js/popup-drops.js` (et non `popup.js`), initialisé comme
 - Note de version `new` dans les 11 langues ; note `fix` pour le compteur
   « Drops du jour » réactivé.
 - Firefox : manifeste Firefox mis à jour à la main pour les nouveaux content
-  scripts, pas d'`import()` dans un content script.
+  scripts (`js/inject/drops-bridge.js` dans le monde `MAIN`,
+  `js/dropsRecorder.js` isolé, tous deux à `document_start`), pas d'`import()`
+  dans un content script. À faire dans le dépôt Firefox.
 
 ## Erreurs et cas limites
 
