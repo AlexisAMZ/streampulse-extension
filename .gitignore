@@ -17,6 +17,7 @@ memory.md
 # Outillage local des agents : jamais versionne
 .codex/
 .impeccable/
+.zcode/
 
 # Intermediaires des captures du store (supprimes en fin de run, sauf KEEP_BUILD
 # ou interruption).
