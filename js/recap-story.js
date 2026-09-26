@@ -3,6 +3,7 @@
 import { formatDuration } from "./recap-data.js";
 import { DISPLAY,
   INK,
+  LCD,
   MUTED,
   FAINT,
   MONO,
@@ -60,21 +61,26 @@ function drawHeader(ctx, model) {
 function drawTiles(ctx, model, top) {
   const { labels } = model;
   const gap = 24;
-  const w = (CONTENT_W - gap) / 2;
   const h = 150;
   const tiles = [
     { label: labels.statChannels, value: String(model.streamerCount) },
     { label: labels.statTop, value: model.top[0]?.channel || "—" },
+    ...(model.points ? [{ label: labels.statPoints, value: model.points.label, color: LCD }] : []),
   ];
+  // Avec trois tuiles, le nom de la chaine favorite garde la place de s'afficher en entier.
+  const weights = tiles.length === 3 ? [0.7, 1.4, 1] : tiles.map(() => 1);
+  const unit = (CONTENT_W - gap * (tiles.length - 1)) / weights.reduce((sum, weight) => sum + weight, 0);
+  let x = LEFT;
   tiles.forEach((tile, i) => {
-    const x = LEFT + i * (w + gap);
+    const w = unit * weights[i];
     drawPanel(ctx, x, top, w, h, 20);
     ctx.fillStyle = FAINT;
     setFont(ctx, 700, 20, MONO);
     ctx.fillText(fitText(ctx, tile.label.toUpperCase(), w - 56), x + 28, top + 50);
-    ctx.fillStyle = INK;
+    ctx.fillStyle = tile.color || INK;
     setFittedFont(ctx, tile.value, w - 56, 800, 54, DISPLAY);
     ctx.fillText(fitText(ctx, tile.value, w - 56), x + 28, top + 118);
+    x += w + gap;
   });
   return top + h;
 }

@@ -5,6 +5,7 @@ import { listPeriods, collectEntries, buildRecap, buildTimeline, formatDuration,
 import { PLUS_KEY, isPlusActive, plusPageUrl } from "./plus.js";
 import { drawRecapCard, CARD_WIDTH, CARD_HEIGHT } from "./recap-card.js";
 import { drawRecapStory, STORY_WIDTH, STORY_HEIGHT } from "./recap-story.js";
+import { POINTS_KEYS, REASON_LABEL_KEYS, channelName, dayKeysForPeriod, daySeries, stateFrom, summarizeDays } from "./points-data.js";
 
 const WATCH_TIME_KEY = "betaWatchTimeData";
 const WATCH_TIME_DAILY_KEY = "streamPulseWatchTimeDaily";
@@ -28,7 +29,7 @@ const dailyHintEl = document.getElementById("daily-hint");
 const insightsEl = document.getElementById("insights");
 const insightsLockedEl = document.getElementById("insights-locked");
 
-let stored = { monthly: {}, daily: {}, pseudo: "", plus: false };
+let stored = { monthly: {}, daily: {}, pseudo: "", plus: false, points: stateFrom({}) };
 let currentFormat = "desktop";
 let currentPeriod = "7d";
 let currentRecap = null;
@@ -86,6 +87,14 @@ function locale() {
   return resolveLocale(getCurrentLanguage());
 }
 
+const formatPoints = (value) => new Intl.NumberFormat(locale()).format(value);
+
+/** Points gagnés sur la période du récap, ou `null` s'il n'y en a aucun. */
+function pointsFor(period) {
+  const summary = summarizeDays(stored.points, dayKeysForPeriod(period.id, stored.points, Date.now()));
+  return summary.total > 0 ? summary : null;
+}
+
 function monthLabel(month) {
   const [y, m] = month.split("-").map(Number);
   const label = new Date(y, m - 1, 1).toLocaleDateString(locale(), { month: "long", year: "numeric" });
@@ -135,6 +144,7 @@ function buildLabels(period) {
     statTop: t("recap.card.statTop"),
     statPlatforms: t("recap.card.statPlatforms"),
     topTitle: t("recap.card.topTitle"),
+    statPoints: t("recap.card.statPoints"),
   };
 }
 
@@ -179,7 +189,8 @@ async function renderPeriod() {
   // Les periodes glissantes dependent du suivi par jour, plus recent que le suivi mensuel.
   show(dailyHintEl, period.kind === "rolling");
 
-  renderInsights(period, recap);
+  const points = pointsFor(period);
+  renderInsights(period, recap, points);
   if (recap.isEmpty) {
     currentRecap = null;
     show(stageEl, false);
@@ -191,7 +202,12 @@ async function renderPeriod() {
   const avatars = await loadAvatars(recap.top);
   if (token !== renderToken) return; // une autre periode a ete choisie entre-temps
 
-  currentRecap = { ...recap, labels: buildLabels(period), periodTitle: periodTitle(period) };
+  currentRecap = {
+    ...recap,
+    points: points ? { total: points.total, label: `+${formatPoints(points.total)}` } : null,
+    labels: buildLabels(period),
+    periodTitle: periodTitle(period),
+  };
   currentAssets = { ...currentAssets, avatars };
   draw();
   show(emptyEl, false);
@@ -208,6 +224,24 @@ function pointLabel(key, style) {
   return date.toLocaleDateString(locale(), options);
 }
 
+function barItem(nameText, valueText, ratio) {
+  const item = document.createElement("li");
+  const name = document.createElement("span");
+  name.className = "cat-name";
+  name.textContent = nameText;
+  name.title = nameText;
+  const value = document.createElement("span");
+  value.className = "cat-time";
+  value.textContent = valueText;
+  const bar = document.createElement("span");
+  bar.className = "cat-bar";
+  const fill = document.createElement("i");
+  fill.style.width = `${Math.max(3, ratio * 100)}%`;
+  bar.append(fill);
+  item.append(name, value, bar);
+  return item;
+}
+
 function renderCategories(categories) {
   const list = document.getElementById("cat-list");
   if (!categories.length) {
@@ -219,62 +253,89 @@ function renderCategories(categories) {
   }
   const max = categories[0].seconds || 1;
   list.replaceChildren(
-    ...categories.map((category) => {
-      const item = document.createElement("li");
-      const name = document.createElement("span");
-      name.className = "cat-name";
-      name.textContent = category.name;
-      name.title = category.name;
-      const time = document.createElement("span");
-      time.className = "cat-time";
-      time.textContent = `${formatDuration(category.seconds)} · ${Math.round(category.share * 100)} %`;
-      const bar = document.createElement("span");
-      bar.className = "cat-bar";
-      const fill = document.createElement("i");
-      fill.style.width = `${Math.max(3, (category.seconds / max) * 100)}%`;
-      bar.append(fill);
-      item.append(name, time, bar);
-      return item;
-    }),
+    ...categories.map((category) =>
+      barItem(category.name, `${formatDuration(category.seconds)} · ${Math.round(category.share * 100)} %`, category.seconds / max),
+    ),
   );
 }
 
-function renderTimeline(points, period) {
-  const host = document.getElementById("timeline");
-  const axis = document.getElementById("timeline-axis");
-  const peakEl = document.getElementById("timeline-peak");
-  const max = Math.max(0, ...points.map((p) => p.seconds));
+/** Barres d'une période : une par jour, ou une par mois pour une année. */
+function renderBars({ hostId, axisId, peakId }, series, period, { valueOf, format, peakParams, peakKeys, emptyKey }) {
+  const host = document.getElementById(hostId);
+  const axis = document.getElementById(axisId);
+  const peakEl = document.getElementById(peakId);
+  const max = Math.max(0, ...series.map(valueOf));
   host.replaceChildren(
-    ...points.map((point) => {
+    ...series.map((point) => {
+      const value = valueOf(point);
       const bar = document.createElement("span");
-      bar.className = point.seconds > 0 ? "tl-bar" : "tl-bar is-empty";
-      bar.style.height = max > 0 && point.seconds > 0 ? `${Math.max(4, (point.seconds / max) * 100)}%` : "2px";
-      bar.title = `${pointLabel(point.key, "long")} · ${formatDuration(point.seconds)}`;
+      bar.className = value > 0 ? "tl-bar" : "tl-bar is-empty";
+      bar.style.height = max > 0 && value > 0 ? `${Math.max(4, (value / max) * 100)}%` : "2px";
+      bar.title = `${pointLabel(point.key, "long")} · ${format(value)}`;
       return bar;
     }),
   );
-  const monthly = period.kind === "year";
   axis.replaceChildren(
-    ...[points[0], points[points.length - 1]].map((point) => {
+    ...[series[0], series[series.length - 1]].map((point) => {
       const label = document.createElement("span");
       label.textContent = point ? pointLabel(point.key, "short") : "";
       return label;
     }),
   );
-  const peak = points.reduce((best, point) => (point.seconds > (best?.seconds || 0) ? point : best), null);
+  const peak = series.reduce((best, point) => (valueOf(point) > (best ? valueOf(best) : 0) ? point : best), null);
   const summary = peak
-    ? t(monthly ? "recap.plus.peakMonth" : "recap.plus.peakDay", { label: pointLabel(peak.key, "long"), time: formatDuration(peak.seconds) })
-    : t("recap.plus.noActivity");
+    ? t(period.kind === "year" ? peakKeys.month : peakKeys.day, { label: pointLabel(peak.key, "long"), ...peakParams(valueOf(peak)) })
+    : t(emptyKey);
   peakEl.textContent = summary;
   host.setAttribute("aria-label", summary);
 }
 
-function renderInsights(period, recap) {
+function renderTimeline(points, period) {
+  renderBars({ hostId: "timeline", axisId: "timeline-axis", peakId: "timeline-peak" }, points, period, {
+    valueOf: (point) => point.seconds,
+    format: formatDuration,
+    peakParams: (seconds) => ({ time: formatDuration(seconds) }),
+    peakKeys: { day: "recap.plus.peakDay", month: "recap.plus.peakMonth" },
+    emptyKey: "recap.plus.noActivity",
+  });
+}
+
+function renderPointsInsights(period, points) {
+  const host = document.getElementById("points-insights");
+  if (!host) return;
+  show(host, Boolean(points));
+  if (!points) return;
+  const reasons = points.byReason.filter((reason) => reason.points > 0).sort((a, b) => b.points - a.points);
+  const max = reasons[0]?.points || 1;
+  document.getElementById("points-reason-list").replaceChildren(
+    ...reasons.map((reason) =>
+      barItem(
+        t(REASON_LABEL_KEYS[reason.code]),
+        `${formatPoints(reason.points)} · ${Math.round((reason.points / points.total) * 100)} %`,
+        reason.points / max,
+      ),
+    ),
+  );
+  renderBars({ hostId: "points-timeline", axisId: "points-timeline-axis", peakId: "points-peak" }, daySeries(stored.points, period.id), period, {
+    valueOf: (point) => point.points,
+    format: formatPoints,
+    peakParams: (value) => ({ points: formatPoints(value) }),
+    peakKeys: { day: "recap.plus.pointsPeakDay", month: "recap.plus.pointsPeakMonth" },
+    emptyKey: "recap.plus.noActivity",
+  });
+  const best = points.byChannel[0];
+  const extra = [t("recap.plus.pointsBest", { name: channelName(stored.points, best.channelId), points: formatPoints(best.points) })];
+  if (points.subBonus > 0) extra.push(t("recap.plus.pointsSubBonus", { points: formatPoints(points.subBonus) }));
+  document.getElementById("points-extra").textContent = extra.join(" · ");
+}
+
+function renderInsights(period, recap, points) {
   show(insightsLockedEl, !stored.plus && !recap.isEmpty);
   show(insightsEl, stored.plus && !recap.isEmpty);
   if (!stored.plus || recap.isEmpty) return;
   renderCategories(recap.categories);
   renderTimeline(buildTimeline(stored.monthly, stored.daily, period.id), period);
+  renderPointsInsights(period, points);
 }
 
 function fileName() {
@@ -314,13 +375,14 @@ function openShareComposer() {
 }
 
 async function readStorage() {
-  const data = await chrome.storage.local.get([WATCH_TIME_KEY, WATCH_TIME_DAILY_KEY, PREFERENCES_KEY, PLUS_KEY]);
+  const data = await chrome.storage.local.get([WATCH_TIME_KEY, WATCH_TIME_DAILY_KEY, PREFERENCES_KEY, PLUS_KEY, ...POINTS_KEYS]);
   const prefs = data[PREFERENCES_KEY] || {};
   return {
     monthly: data[WATCH_TIME_KEY] || {},
     daily: data[WATCH_TIME_DAILY_KEY] || {},
     pseudo: typeof prefs.pseudo === "string" ? prefs.pseudo.trim().slice(0, 40) : "",
     plus: isPlusActive(data[PLUS_KEY]),
+    points: stateFrom(data),
   };
 }
 

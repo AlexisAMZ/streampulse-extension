@@ -3,6 +3,7 @@
 import { formatDuration } from "./recap-data.js";
 import { DISPLAY,
   INK,
+  LCD,
   MUTED,
   FAINT,
   MONO,
@@ -47,23 +48,28 @@ function drawLeftColumn(ctx, model) {
   setFont(ctx, 800, 124, DISPLAY);
   ctx.fillText(formatDuration(model.totalSeconds), PAD - 4, 450);
 
-  // Deux tuiles : nombre de chaines et chaine favorite.
+  // Deux tuiles, trois quand la période compte des points de chaîne.
   const tileY = 500;
   const tileH = 128;
-  const tileW = (maxWidth - 20) / 2;
   const tiles = [
     { label: labels.statChannels, value: String(model.streamerCount) },
     { label: labels.statTop, value: model.top[0]?.channel || "—" },
+    ...(model.points ? [{ label: labels.statPoints, value: model.points.label, color: LCD }] : []),
   ];
+  // Avec trois tuiles, le nom de la chaine favorite garde la place de s'afficher en entier.
+  const weights = tiles.length === 3 ? [0.7, 1.4, 1] : tiles.map(() => 1);
+  const unit = (maxWidth - 20 * (tiles.length - 1)) / weights.reduce((sum, w) => sum + w, 0);
+  let x = PAD;
   tiles.forEach((tile, i) => {
-    const x = PAD + i * (tileW + 20);
+    const tileW = unit * weights[i];
     drawPanel(ctx, x, tileY, tileW, tileH, 16);
     ctx.fillStyle = FAINT;
     setFont(ctx, 700, 16, MONO);
     ctx.fillText(fitText(ctx, tile.label.toUpperCase(), tileW - 48), x + 24, tileY + 42);
-    ctx.fillStyle = INK;
+    ctx.fillStyle = tile.color || INK;
     setFittedFont(ctx, tile.value, tileW - 48, 800, 44, DISPLAY);
     ctx.fillText(fitText(ctx, tile.value, tileW - 48), x + 24, tileY + 100);
+    x += tileW + 20;
   });
 
   ctx.fillStyle = FAINT;

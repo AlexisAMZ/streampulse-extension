@@ -82,3 +82,5 @@
 
 /* StreamPulse+ : le « + » du logo, plus grand que le nom. */
 .brand-plus { display: inline-block; margin-left: 3px; color: #ffffff; font-size: 1.35em; line-height: 0; vertical-align: -0.06em; }
+
+.points-insights { margin-top: 24px; padding-top: 20px; box-shadow: inset 0 1px 0 var(--line); }
