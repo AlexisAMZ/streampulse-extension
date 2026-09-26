@@ -23,6 +23,7 @@ const ES_MODULES = [
   "js/raidWatcher.js",
   "js/popup.js",
   "js/popup-features.js",
+  "js/popup-points.js",
   "js/recap.js",
   "js/restore.js",
   "js/smart-alerts.js",

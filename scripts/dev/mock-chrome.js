@@ -156,6 +156,52 @@
     }),
   };
 
+  // Points de chaîne gagnés : 7 jours de démo sur les chaînes Twitch (onglet Réglages > Points).
+  const pointsDaily = {};
+  const pointsJournal = [];
+  const pointsChannels = {};
+  const pointStreamers = channels.streamers.filter((s) => s.platform === "twitch").slice(0, 5);
+  pointStreamers.forEach((s, i) => {
+    pointsChannels[String(1001 + i)] = {
+      login: s.handle,
+      displayName: s.displayName || s.handle,
+      avatar: s.avatarUrl || "",
+      balance: 23410 - i * 3100,
+      balanceAt: now,
+      lastGainAt: now - (i + 1) * 180000,
+      factor: i < 2 ? 0.2 : 0,
+      factorAt: now,
+      firsts: i === 0 ? { CHEER: now - 2 * 86400000 } : {},
+    };
+  });
+  for (let d = 0; d < 7; d++) {
+    const date = new Date(now - d * 86400000);
+    const key = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+    pointsDaily[key] = {};
+    pointStreamers.forEach((s, i) => {
+      if ((d + i) % 4 === 3) return;
+      const mult = i < 2 ? 1.2 : 1;
+      const watch = 12 + ((d * 7 + i * 5) % 9);
+      const claims = 3 + ((d + i) % 4);
+      const reasons = {
+        WATCH: { count: watch, points: Math.round(watch * 10 * mult), base: watch * 10 },
+        CLAIM: { count: claims, points: Math.round(claims * 50 * mult), base: claims * 50 },
+      };
+      if (d === 2 && i === 0) reasons.WATCH_STREAK = { count: 1, points: 450, base: 450 };
+      if (d === 1 && i === 1) reasons.RAID = { count: 1, points: 300, base: 250 };
+      if (d === 4 && i === 2) reasons.FOLLOW = { count: 1, points: 300, base: 300 };
+      pointsDaily[key][String(1001 + i)] = reasons;
+    });
+  }
+  pointStreamers.slice(0, 2).forEach((s, i) => {
+    for (let k = 0; k < 6; k++) {
+      const at = now - (k * 4 + i + 1) * 60000;
+      const reason = k % 3 === 0 ? "CLAIM" : "WATCH";
+      pointsJournal.push({ key: `${1001 + i}|${at}|${reason}`, at, channelId: String(1001 + i), reason, rawReason: reason, points: reason === "CLAIM" ? 60 : 12, base: reason === "CLAIM" ? 50 : 10, factor: 0.2 });
+    }
+  });
+  pointsJournal.sort((a, b) => b.at - a.at);
+
   const store = {
     betaGeneralStreamers: channels.streamers,
     betaGeneralStatuses: channels.statuses,
@@ -168,6 +214,9 @@
     betaWatchTimeData: scenario === "empty" ? {} : watchTime,
     streamPulseWatchTimeDaily: scenario === "empty" ? {} : watchDaily,
     streamPulseHistory: scenario === "empty" ? { entries: [] } : history,
+    streamPulsePointsDaily: scenario === "empty" ? {} : pointsDaily,
+    streamPulsePointsJournal: scenario === "empty" ? [] : pointsJournal,
+    streamPulsePointsChannels: scenario === "empty" ? {} : pointsChannels,
     // ?plus=1 : licence active et deux règles d'alerte de démonstration.
     ...(params.get("plus") === "1"
       ? {

@@ -245,6 +245,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
           <span data-i18n="popup.osd.menuData">Temps et données</span>
         </button>
+        <button id="menu-tab-points" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-points" data-panel="points" tabindex="-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 19 9 12 22 5 9"/><line x1="5" y1="9" x2="19" y2="9"/></svg>
+          <span data-i18n="popup.osd.menuPoints">Points</span>
+        </button>
         <button id="menu-tab-plus" class="menu-tab menu-tab-plus" type="button" role="tab" aria-selected="false" aria-controls="menu-plus" data-panel="plus" tabindex="-1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg>
           <span data-i18n="popup.osd.menuPlus">StreamPulse+</span>
@@ -575,6 +579,51 @@
               <button id="btn-export" class="button button-quiet" type="button" data-i18n="backup.export">Sauvegarder mes données</button>
               <button id="btn-import" class="button button-quiet" type="button" data-i18n="backup.import">Restaurer une sauvegarde</button>
             </div>
+          </div>
+        </section>
+
+        <section class="menu-panel points-panel" id="menu-points" role="tabpanel" aria-labelledby="menu-tab-points" hidden>
+          <div class="pts-head">
+            <h2 data-i18n="popup.points.title">Points</h2>
+            <div class="segmented" id="points-period" role="group" data-i18n-attr-ariaLabel="popup.points.periodLabel">
+              <button type="button" class="pf-btn" aria-pressed="false" data-period="today" data-i18n="popup.points.periodToday">Aujourd'hui</button>
+              <button type="button" class="pf-btn active" aria-pressed="true" data-period="7d" data-i18n="popup.points.period7d">7 jours</button>
+              <button type="button" class="pf-btn" aria-pressed="false" data-period="30d" data-i18n="popup.points.period30d">30 jours</button>
+              <button type="button" class="pf-btn" aria-pressed="false" data-period="all" data-i18n="popup.points.periodAll">Tout</button>
+            </div>
+          </div>
+
+          <div id="points-overview">
+            <div class="pts-lcd">
+              <p class="pts-lcd-total"><span id="points-total">0</span><small data-i18n="popup.points.unit">PTS</small></p>
+              <p class="pts-lcd-meta" id="points-meta"></p>
+            </div>
+            <div class="pts-tiles" id="points-reasons" hidden></div>
+            <h4 class="list-caption pts-caption"><span data-i18n="popup.points.byChannel">Par chaîne</span><span class="pts-hint" id="points-click-hint" data-i18n="popup.points.clickHint" hidden>Clique sur une chaîne pour le détail</span></h4>
+            <ol class="pts-list" id="points-channels"></ol>
+            <p class="wt-empty-state" id="points-empty" data-i18n="popup.points.empty" hidden>Aucun gain de points sur cette période.</p>
+            <div class="smart-locked" id="points-locked">
+              <p class="settings-description" data-i18n="popup.points.lockedBody">D'où viennent tes points ? Réservé à StreamPulse+.</p>
+              <button class="button button-primary" id="points-unlock" type="button" data-i18n="popup.smart.unlock">Débloquer</button>
+            </div>
+          </div>
+
+          <div id="points-detail" hidden>
+            <button class="pts-back" id="points-back" type="button"><span aria-hidden="true">‹</span> <span data-i18n="popup.points.back">Toutes les chaînes</span></button>
+            <div id="points-detail-body"></div>
+          </div>
+
+          <p class="pts-health" id="points-health" role="status"></p>
+          <label class="settings-toggle">
+            <span class="settings-text">
+              <span class="settings-title" data-i18n="popup.points.trackingTitle">Suivre les points gagnés</span>
+              <span class="settings-description" data-i18n="popup.points.trackingBody">Actif tant qu'un onglet Twitch est ouvert, sur toutes tes chaînes.</span>
+            </span>
+            <input id="pref-points-tracking" type="checkbox" role="switch" />
+          </label>
+          <div class="settings-row">
+            <span class="settings-description" id="points-reset-status" role="status"></span>
+            <button id="btn-reset-points" class="button button-quiet" type="button" data-i18n="popup.points.reset">Remettre à zéro</button>
           </div>
         </section>
 

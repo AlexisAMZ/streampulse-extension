@@ -109,6 +109,7 @@ const wtTotalChannels = document.getElementById("wt-total-channels");
 const wtTopWatched = document.getElementById("wt-top-watched");
 const wtEmpty = document.getElementById("wt-empty");
 const watchTimeToggle = document.getElementById("pref-watch-time");
+const pointsTrackingToggle = document.getElementById("pref-points-tracking");
 const communityBadgeToggle = document.getElementById("pref-community-badge");
 const badgeColorMode = document.getElementById("pref-badge-color-mode");
 const badgeColorValue = document.getElementById("pref-badge-color-value");
@@ -1005,6 +1006,9 @@ function renderPreferences() {
   }
   if (watchTimeToggle) {
     watchTimeToggle.checked = prefs.watchTimeTracker !== false;
+  }
+  if (pointsTrackingToggle) {
+    pointsTrackingToggle.checked = prefs.pointsTracking !== false;
   }
   if (badgeColorMode) {
     // Une couleur hexadecimale stockee signifie le mode personnalise.
@@ -1996,6 +2000,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (watchTimeToggle) {
       watchTimeToggle.addEventListener("change", (e) => {
         updatePreferences({ watchTimeTracker: e.target.checked });
+      });
+    }
+
+    if (pointsTrackingToggle) {
+      pointsTrackingToggle.addEventListener("change", (e) => {
+        updatePreferences({ pointsTracking: e.target.checked });
       });
     }
 
