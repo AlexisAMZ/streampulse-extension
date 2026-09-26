@@ -314,3 +314,10 @@ test("les états lus du storage résistent à des valeurs inattendues", () => {
   assert.deepEqual(progressFrom({ [DROPS_PROGRESS_KEY]: { drops: [null, { id: "a" }] } }).drops, [{ id: "a" }]);
   assert.deepEqual(historyFrom({ [DROPS_HISTORY_KEY]: [{ key: "a", name: "A", at: 1 }, { key: 1 }, null] }), [{ key: "a", name: "A", at: 1 }]);
 });
+
+test("isBadgeCampaign reconnaît les organisations de badges sans liste de récompenses", async () => {
+  const { isBadgeCampaign } = await import("../js/drops-data.js");
+  assert.equal(isBadgeCampaign({ owner: "BadgesLibrary", badgeOnly: null }), true);
+  assert.equal(isBadgeCampaign({ owner: "Twitch Gaming" }), true);
+  assert.equal(isBadgeCampaign({ owner: "Riot Games", badgeOnly: null }), false);
+});

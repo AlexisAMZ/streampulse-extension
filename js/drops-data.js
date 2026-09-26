@@ -598,7 +598,11 @@ const BADGE_TESTS = {
  * le jeu du lien du badge, sinon par le jeu cité dans sa description.
  */
 /** Campagne qui distribue des badges de chat : celles-ci vivent dans l'onglet Badges (StreamPulse+). */
-export const isBadgeCampaign = (campaign) => /twitch gaming/i.test(campaign.owner || "") || campaign.badgeOnly === true;
+// Organisations qui ne distribuent que des badges de chat (« Twitch Gaming », « BadgesLibrary »…),
+// utile quand la liste des récompenses n'est pas lue.
+const BADGE_OWNER = /twitch gaming|badge/i;
+
+export const isBadgeCampaign = (campaign) => BADGE_OWNER.test(campaign.owner || "") || campaign.badgeOnly === true;
 
 export function badgeCampaignFor(badge, campaigns, now) {
   const game = fold(badge.game).trim();
@@ -609,12 +613,12 @@ export function badgeCampaignFor(badge, campaigns, now) {
     // Seules les campagnes qui distribuent des badges comptent : celles de
     // « Twitch Gaming », ou celles dont on sait que la récompense est un badge.
     // Une campagne d'éditeur (Riot, Ubisoft…) donne des objets de jeu.
-    if (!/twitch gaming/i.test(campaign.owner || "") && campaign.badgeOnly !== true) continue;
+    if (!isBadgeCampaign(campaign)) continue;
     const name = fold(campaign.game).trim();
     if (name.length < 4) continue;
     const exact = campaign.badgeOnly !== false && game && game === name;
     if (!exact && !text.includes(name)) continue;
-    const score = (exact ? 2 : 1) + (/twitch gaming/i.test(campaign.owner) ? 1 : 0);
+    const score = (exact ? 2 : 1) + (BADGE_OWNER.test(campaign.owner) ? 1 : 0);
     if (!best || score > best.score) best = { campaign, score };
   }
   return best?.campaign || null;
