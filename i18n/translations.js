@@ -273,6 +273,8 @@ export const translations = {
         "openRecap": "Ouvrir mon récap"
       },
       "cosmetics": {
+        "ambassador": "Ambassadeur",
+        "halo": "Halo doré",
         "badgeTitle": "Effet du badge",
         "badgeBody": "Anime le logo StreamPulse à côté de ton pseudo.",
         "nameTitle": "Pseudo spécial",
@@ -518,6 +520,23 @@ export const translations = {
       },
       "identity": {
         "intro": "L'apparence de ton badge StreamPulse et de ton pseudo dans le chat Twitch, visible par les autres utilisateurs de StreamPulse."
+      },
+      "referral": {
+        "title": "Parrainage",
+        "body": "Partage ton code : ton ami a son premier mois offert. Toi, tu gagnes un mois gratuit par ami (formule mensuelle) et des récompenses d'ambassadeur.",
+        "get": "Obtenir mon code",
+        "copy": "Copier",
+        "copied": "Code copié !",
+        "loading": "Chargement…",
+        "soon": "Le parrainage ouvre très bientôt.",
+        "error": "Code indisponible pour le moment. Réessaie plus tard.",
+        "count": "Amis parrainés : {{count}}",
+        "friends": "Amis : {{count}}",
+        "needed": "Amis : {{count}}",
+        "tierName": "Effet de pseudo Ambassadeur",
+        "tierBadge": "Effet de badge Halo doré",
+        "tierDevice": "Un appareil de plus",
+        "tierGift": "Une licence à vie à offrir"
       },
       "layout": {
         "title": "Disposition",
@@ -1338,6 +1357,8 @@ export const translations = {
         "openRecap": "Open my recap"
       },
       "cosmetics": {
+        "ambassador": "Ambassador",
+        "halo": "Golden halo",
         "badgeTitle": "Badge effect",
         "badgeBody": "Animates the StreamPulse logo next to your name.",
         "nameTitle": "Special name",
@@ -1583,6 +1604,23 @@ export const translations = {
       },
       "identity": {
         "intro": "How your StreamPulse badge and your name look in Twitch chat, visible to other StreamPulse users."
+      },
+      "referral": {
+        "title": "Referral",
+        "body": "Share your code: your friend gets their first month free. You get a free month per friend (monthly plan) and ambassador rewards.",
+        "get": "Get my code",
+        "copy": "Copy",
+        "copied": "Code copied!",
+        "loading": "Loading…",
+        "soon": "Referrals open very soon.",
+        "error": "Code unavailable right now. Try again later.",
+        "count": "Friends referred: {{count}}",
+        "friends": "Friends: {{count}}",
+        "needed": "Friends: {{count}}",
+        "tierName": "Ambassador name effect",
+        "tierBadge": "Golden halo badge effect",
+        "tierDevice": "One more device",
+        "tierGift": "A lifetime license to give away"
       },
       "layout": {
         "title": "Layout",
@@ -2403,6 +2441,8 @@ export const translations = {
         "openRecap": "Abrir mi resumen"
       },
       "cosmetics": {
+        "ambassador": "Embajador",
+        "halo": "Halo dorado",
         "badgeTitle": "Efecto de la insignia",
         "badgeBody": "Anima el logo de StreamPulse junto a tu nombre.",
         "nameTitle": "Nombre especial",
@@ -2648,6 +2688,23 @@ export const translations = {
       },
       "identity": {
         "intro": "El aspecto de tu insignia StreamPulse y de tu nombre en el chat de Twitch, visible para otros usuarios de StreamPulse."
+      },
+      "referral": {
+        "title": "Recomendación",
+        "body": "Comparte tu código: tu amigo tiene su primer mes gratis. Tú ganas un mes gratis por amigo (plan mensual) y recompensas de embajador.",
+        "get": "Obtener mi código",
+        "copy": "Copiar",
+        "copied": "¡Código copiado!",
+        "loading": "Cargando…",
+        "soon": "Las recomendaciones abren muy pronto.",
+        "error": "Código no disponible por ahora. Inténtalo más tarde.",
+        "count": "Amigos recomendados: {{count}}",
+        "friends": "Amigos: {{count}}",
+        "needed": "Amigos: {{count}}",
+        "tierName": "Efecto de nombre Embajador",
+        "tierBadge": "Efecto de insignia Halo dorado",
+        "tierDevice": "Un dispositivo más",
+        "tierGift": "Una licencia de por vida para regalar"
       },
       "layout": {
         "title": "Disposición",
@@ -3455,6 +3512,8 @@ export const translations = {
         "openRecap": "Abrir meu resumo"
       },
       "cosmetics": {
+        "ambassador": "Embaixador",
+        "halo": "Halo dourado",
         "badgeTitle": "Efeito do emblema",
         "badgeBody": "Anima o logo do StreamPulse ao lado do seu nome.",
         "nameTitle": "Nome especial",
@@ -3700,6 +3759,23 @@ export const translations = {
       },
       "identity": {
         "intro": "A aparência do seu emblema StreamPulse e do seu nome no chat da Twitch, visível para outros usuários do StreamPulse."
+      },
+      "referral": {
+        "title": "Indicação",
+        "body": "Compartilhe seu código: seu amigo ganha o primeiro mês grátis. Você ganha um mês grátis por amigo (plano mensal) e recompensas de embaixador.",
+        "get": "Obter meu código",
+        "copy": "Copiar",
+        "copied": "Código copiado!",
+        "loading": "Carregando…",
+        "soon": "As indicações abrem muito em breve.",
+        "error": "Código indisponível no momento. Tente mais tarde.",
+        "count": "Amigos indicados: {{count}}",
+        "friends": "Amigos: {{count}}",
+        "needed": "Amigos: {{count}}",
+        "tierName": "Efeito de nome Embaixador",
+        "tierBadge": "Efeito de emblema Halo dourado",
+        "tierDevice": "Mais um dispositivo",
+        "tierGift": "Uma licença vitalícia para presentear"
       },
       "layout": {
         "title": "Disposição",
@@ -4515,6 +4591,8 @@ export const translations = {
         "openRecap": "Rückblick öffnen"
       },
       "cosmetics": {
+        "ambassador": "Botschafter",
+        "halo": "Goldener Heiligenschein",
         "badgeTitle": "Abzeichen-Effekt",
         "badgeBody": "Animiert das StreamPulse-Logo neben deinem Namen.",
         "nameTitle": "Spezieller Name",
@@ -4760,6 +4838,23 @@ export const translations = {
       },
       "identity": {
         "intro": "Wie dein StreamPulse-Abzeichen und dein Name im Twitch-Chat aussehen, sichtbar für andere StreamPulse-Nutzer."
+      },
+      "referral": {
+        "title": "Empfehlung",
+        "body": "Teile deinen Code: Dein Freund bekommt den ersten Monat gratis. Du bekommst einen Gratismonat pro Freund (Monatsplan) und Botschafter-Belohnungen.",
+        "get": "Meinen Code holen",
+        "copy": "Kopieren",
+        "copied": "Code kopiert!",
+        "loading": "Wird geladen…",
+        "soon": "Empfehlungen starten sehr bald.",
+        "error": "Code gerade nicht verfügbar. Versuch es später erneut.",
+        "count": "Geworbene Freunde: {{count}}",
+        "friends": "Freunde: {{count}}",
+        "needed": "Freunde: {{count}}",
+        "tierName": "Namenseffekt Botschafter",
+        "tierBadge": "Abzeicheneffekt Goldener Heiligenschein",
+        "tierDevice": "Ein Gerät mehr",
+        "tierGift": "Eine lebenslange Lizenz zum Verschenken"
       },
       "layout": {
         "title": "Anordnung",
@@ -5580,6 +5675,8 @@ export const translations = {
         "openRecap": "Apri il riepilogo"
       },
       "cosmetics": {
+        "ambassador": "Ambasciatore",
+        "halo": "Alone dorato",
         "badgeTitle": "Effetto del badge",
         "badgeBody": "Anima il logo StreamPulse accanto al tuo nome.",
         "nameTitle": "Nome speciale",
@@ -5825,6 +5922,23 @@ export const translations = {
       },
       "identity": {
         "intro": "L'aspetto del tuo badge StreamPulse e del tuo nome nella chat di Twitch, visibile agli altri utenti di StreamPulse."
+      },
+      "referral": {
+        "title": "Invita un amico",
+        "body": "Condividi il tuo codice: il tuo amico ha il primo mese gratis. Tu ottieni un mese gratis per amico (piano mensile) e ricompense da ambasciatore.",
+        "get": "Ottieni il mio codice",
+        "copy": "Copia",
+        "copied": "Codice copiato!",
+        "loading": "Caricamento…",
+        "soon": "Gli inviti aprono molto presto.",
+        "error": "Codice non disponibile ora. Riprova più tardi.",
+        "count": "Amici invitati: {{count}}",
+        "friends": "Amici: {{count}}",
+        "needed": "Amici: {{count}}",
+        "tierName": "Effetto nome Ambasciatore",
+        "tierBadge": "Effetto badge Alone dorato",
+        "tierDevice": "Un dispositivo in più",
+        "tierGift": "Una licenza a vita da regalare"
       },
       "layout": {
         "title": "Disposizione",
@@ -6645,6 +6759,8 @@ export const translations = {
         "openRecap": "Otwórz podsumowanie"
       },
       "cosmetics": {
+        "ambassador": "Ambasador",
+        "halo": "Złota aureola",
         "badgeTitle": "Efekt odznaki",
         "badgeBody": "Animuje logo StreamPulse obok Twojej nazwy.",
         "nameTitle": "Specjalna nazwa",
@@ -6890,6 +7006,23 @@ export const translations = {
       },
       "identity": {
         "intro": "Wygląd twojej odznaki StreamPulse i nicku na czacie Twitcha, widoczny dla innych użytkowników StreamPulse."
+      },
+      "referral": {
+        "title": "Polecenia",
+        "body": "Udostępnij swój kod: twój znajomy dostaje pierwszy miesiąc gratis. Ty dostajesz darmowy miesiąc za każdego znajomego (plan miesięczny) i nagrody ambasadora.",
+        "get": "Pobierz mój kod",
+        "copy": "Kopiuj",
+        "copied": "Kod skopiowany!",
+        "loading": "Wczytywanie…",
+        "soon": "Polecenia ruszą już wkrótce.",
+        "error": "Kod jest teraz niedostępny. Spróbuj później.",
+        "count": "Poleceni znajomi: {{count}}",
+        "friends": "Znajomi: {{count}}",
+        "needed": "Znajomi: {{count}}",
+        "tierName": "Efekt nicku Ambasador",
+        "tierBadge": "Efekt odznaki Złota aureola",
+        "tierDevice": "Jedno urządzenie więcej",
+        "tierGift": "Dożywotnia licencja do podarowania"
       },
       "layout": {
         "title": "Układ",
@@ -7710,6 +7843,8 @@ export const translations = {
         "openRecap": "Özetimi aç"
       },
       "cosmetics": {
+        "ambassador": "Elçi",
+        "halo": "Altın hale",
         "badgeTitle": "Rozet efekti",
         "badgeBody": "Adının yanındaki StreamPulse logosunu canlandırır.",
         "nameTitle": "Özel ad",
@@ -7955,6 +8090,23 @@ export const translations = {
       },
       "identity": {
         "intro": "StreamPulse rozetinin ve adının Twitch sohbetindeki görünümü, diğer StreamPulse kullanıcılarına görünür."
+      },
+      "referral": {
+        "title": "Davet",
+        "body": "Kodunu paylaş: arkadaşın ilk ayı ücretsiz alır. Sen her arkadaş için bir ay ücretsiz (aylık plan) ve elçi ödülleri kazanırsın.",
+        "get": "Kodumu al",
+        "copy": "Kopyala",
+        "copied": "Kod kopyalandı!",
+        "loading": "Yükleniyor…",
+        "soon": "Davet sistemi çok yakında açılıyor.",
+        "error": "Kod şu anda kullanılamıyor. Daha sonra tekrar dene.",
+        "count": "Davet edilen arkadaşlar: {{count}}",
+        "friends": "Arkadaş: {{count}}",
+        "needed": "Arkadaş: {{count}}",
+        "tierName": "Elçi ad efekti",
+        "tierBadge": "Altın hale rozet efekti",
+        "tierDevice": "Bir cihaz daha",
+        "tierGift": "Hediye edilecek ömür boyu lisans"
       },
       "layout": {
         "title": "Düzen",
@@ -8775,6 +8927,8 @@ export const translations = {
         "openRecap": "Открыть сводку"
       },
       "cosmetics": {
+        "ambassador": "Посол",
+        "halo": "Золотой ореол",
         "badgeTitle": "Эффект значка",
         "badgeBody": "Анимирует логотип StreamPulse рядом с вашим ником.",
         "nameTitle": "Особый ник",
@@ -9020,6 +9174,23 @@ export const translations = {
       },
       "identity": {
         "intro": "Как выглядят ваш значок StreamPulse и ник в чате Twitch, видно другим пользователям StreamPulse."
+      },
+      "referral": {
+        "title": "Приглашения",
+        "body": "Поделись кодом: другу первый месяц бесплатно. Тебе, бесплатный месяц за каждого друга (месячный план) и награды посла.",
+        "get": "Получить код",
+        "copy": "Копировать",
+        "copied": "Код скопирован!",
+        "loading": "Загрузка…",
+        "soon": "Приглашения откроются совсем скоро.",
+        "error": "Код сейчас недоступен. Попробуй позже.",
+        "count": "Приглашено друзей: {{count}}",
+        "friends": "Друзей: {{count}}",
+        "needed": "Друзей: {{count}}",
+        "tierName": "Эффект ника «Посол»",
+        "tierBadge": "Эффект значка «Золотой ореол»",
+        "tierDevice": "Ещё одно устройство",
+        "tierGift": "Вечная лицензия в подарок"
       },
       "layout": {
         "title": "Расположение",
@@ -9840,6 +10011,8 @@ export const translations = {
         "openRecap": "振り返りを開く"
       },
       "cosmetics": {
+        "ambassador": "アンバサダー",
+        "halo": "金色の光輪",
         "badgeTitle": "バッジのエフェクト",
         "badgeBody": "名前の横の StreamPulse ロゴをアニメーションさせます。",
         "nameTitle": "スペシャルネーム",
@@ -10085,6 +10258,23 @@ export const translations = {
       },
       "identity": {
         "intro": "Twitch チャットでの StreamPulse バッジと名前の見た目。他の StreamPulse ユーザーにも表示されます。"
+      },
+      "referral": {
+        "title": "紹介",
+        "body": "コードをシェアしよう：友だちは最初の1か月が無料。あなたは友だち1人ごとに1か月無料（月額プラン）とアンバサダー特典がもらえます。",
+        "get": "コードを取得",
+        "copy": "コピー",
+        "copied": "コードをコピーしました！",
+        "loading": "読み込み中…",
+        "soon": "紹介プログラムはまもなく開始します。",
+        "error": "現在コードを取得できません。後でもう一度お試しください。",
+        "count": "紹介した友だち：{{count}}",
+        "friends": "友だち {{count}} 人",
+        "needed": "友だち {{count}} 人",
+        "tierName": "アンバサダーの名前エフェクト",
+        "tierBadge": "金色の光輪のバッジエフェクト",
+        "tierDevice": "デバイスを1台追加",
+        "tierGift": "プレゼント用の買い切りライセンス"
       },
       "layout": {
         "title": "レイアウト",
@@ -10905,6 +11095,8 @@ export const translations = {
         "openRecap": "요약 열기"
       },
       "cosmetics": {
+        "ambassador": "앰배서더",
+        "halo": "황금 후광",
         "badgeTitle": "배지 효과",
         "badgeBody": "닉네임 옆 StreamPulse 로고에 애니메이션을 줍니다.",
         "nameTitle": "특별 닉네임",
@@ -11150,6 +11342,23 @@ export const translations = {
       },
       "identity": {
         "intro": "Twitch 채팅에서 StreamPulse 배지와 닉네임이 보이는 모습으로, 다른 StreamPulse 사용자에게도 보입니다."
+      },
+      "referral": {
+        "title": "추천",
+        "body": "코드를 공유하세요. 친구는 첫 달이 무료입니다. 나는 친구 한 명당 한 달 무료(월간 플랜)와 앰배서더 보상을 받습니다.",
+        "get": "내 코드 받기",
+        "copy": "복사",
+        "copied": "코드를 복사했습니다!",
+        "loading": "불러오는 중…",
+        "soon": "추천 프로그램이 곧 열립니다.",
+        "error": "지금은 코드를 받을 수 없습니다. 나중에 다시 시도하세요.",
+        "count": "추천한 친구: {{count}}",
+        "friends": "친구 {{count}}명",
+        "needed": "친구 {{count}}명",
+        "tierName": "앰배서더 닉네임 효과",
+        "tierBadge": "황금 후광 배지 효과",
+        "tierDevice": "기기 1대 추가",
+        "tierGift": "선물할 평생 라이선스"
       },
       "layout": {
         "title": "배치",

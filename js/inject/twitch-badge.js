@@ -50,8 +50,8 @@
   // Effets publics des abonnes : empreinte -> { b: effet du badge, n: pseudo special }.
   var badgeStyles = new Map();
   var COSMETICS_KEY = "streamPulseCosmetics";
-  var BADGE_FX = ["pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker"];
-  var NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow"];
+  var BADGE_FX = ["pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "halo"];
+  var NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow", "ambassador"];
   var REFRESH_MS = 5 * 60 * 1000;
   // Empreinte du compte Twitch connecte et licence de ce navigateur.
   var ownHash = "";

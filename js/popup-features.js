@@ -10,7 +10,7 @@ import { initLayout } from "./popup-layout.js";
 import { initReviewAsk } from "./popup-review.js";
 import { HISTORY_KEY, formatClock, selectMissed, summarize } from "./history-data.js";
 import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalizePredictionRule, summarize as summarizePredictions } from "./predictions-data.js";
-import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
+import { LICENSE_VERIFY_URL, PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
 import {
   SMART_ALERTS_KEY,
   MAX_RULES_PER_STREAMER,
@@ -538,8 +538,10 @@ function renderAccent() {
 }
 
 export const COSMETICS_KEY = "streamPulseCosmetics";
-const BADGE_FX = ["pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker"];
-const NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow"];
+const BADGE_FX = ["pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "halo"];
+const NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow", "ambassador"];
+/** Effets d'ambassadeur : nombre de filleuls abonnés exigé (mêmes paliers que le serveur). */
+const REFERRAL_FX = { ambassador: 1, halo: 3 };
 let cosmetics = { badgeFx: "", nameFx: "" };
 
 function normalizeCosmetics(value) {
@@ -550,29 +552,134 @@ function normalizeCosmetics(value) {
   };
 }
 
+let chatName = "";
+
+const referralsCount = () => Math.max(0, Number(plusRecord?.referrals) || 0);
+const fxLocked = (value) => (REFERRAL_FX[value] || 0) > referralsCount();
+
+/**
+ * Un aperçu cliquable par effet : le pseudo de l'utilisateur (ou « TonPseudo »)
+ * avec l'effet appliqué, ou le logo StreamPulse animé. Plus lisible qu'un menu.
+ */
+function fxOption(kind, value, selected) {
+  const plus = plusActive();
+  const locked = plus && fxLocked(value);
+  const button = node("button", "fx-option");
+  button.type = "button";
+  button.setAttribute("role", "radio");
+  button.setAttribute("aria-checked", String(value === selected));
+  button.dataset.kind = kind;
+  button.dataset.value = value;
+  if (locked) button.setAttribute("aria-disabled", "true");
+  if (kind === "name") {
+    const sample = node("b", `fx-sample-name${value ? ` sp-paint sp-paint--${value}` : ""}`, chatName || t("popup.cosmetics.sampleName"));
+    button.append(sample);
+  } else {
+    button.append(node("span", `cosmetic-badge${value ? ` sp-fx-${value}` : ""}`));
+  }
+  button.append(node("span", "fx-label", t(`popup.cosmetics.${value || "none"}`)));
+  if (locked) {
+    button.append(node("span", "fx-lock", t("popup.referral.needed", { count: REFERRAL_FX[value] })));
+    button.title = t("popup.referral.needed", { count: REFERRAL_FX[value] });
+  } else if (!plus && value) {
+    button.append(node("span", "fx-plus", t("popup.plus.badge")));
+  }
+  return button;
+}
+
 function renderCosmetics() {
   const shown = plusActive() ? cosmetics : { badgeFx: "", nameFx: "" };
-  if ($("cosmetic-badge-fx")) $("cosmetic-badge-fx").value = shown.badgeFx;
-  if ($("cosmetic-name-fx")) $("cosmetic-name-fx").value = shown.nameFx;
+  $("cosmetic-name-fx")?.replaceChildren(...["", ...NAME_FX].map((value) => fxOption("name", value, shown.nameFx)));
+  $("cosmetic-badge-fx")?.replaceChildren(...["", ...BADGE_FX].map((value) => fxOption("badge", value, shown.badgeFx)));
   if ($("cosmetic-badge")) $("cosmetic-badge").className = `cosmetic-badge${shown.badgeFx ? ` sp-fx-${shown.badgeFx}` : ""}`;
-  if ($("cosmetic-name")) $("cosmetic-name").className = `cosmetic-name${shown.nameFx ? ` sp-paint sp-paint--${shown.nameFx}` : ""}`;
+  if ($("cosmetic-name")) {
+    $("cosmetic-name").className = `cosmetic-name${shown.nameFx ? ` sp-paint sp-paint--${shown.nameFx}` : ""}`;
+    $("cosmetic-name").textContent = chatName || t("popup.cosmetics.sampleName");
+  }
 }
 
 function initCosmetics() {
-  const fields = { "cosmetic-badge-fx": "badgeFx", "cosmetic-name-fx": "nameFx" };
-  Object.entries(fields).forEach(([id, field]) => {
-    $(id)?.addEventListener("change", (event) => {
+  for (const id of ["cosmetic-name-fx", "cosmetic-badge-fx"]) {
+    $(id)?.addEventListener("click", (event) => {
+      const button = event.target.closest(".fx-option");
+      if (!button || button.getAttribute("aria-disabled") === "true") return;
       if (!plusActive()) {
-        event.target.value = "";
-        openPlus();
+        if (button.dataset.value) openPlus();
         return;
       }
-      cosmetics = normalizeCosmetics({ ...cosmetics, [field]: event.target.value });
+      const field = button.dataset.kind === "name" ? "nameFx" : "badgeFx";
+      cosmetics = normalizeCosmetics({ ...cosmetics, [field]: button.dataset.value });
       chrome.storage.local.set({ [COSMETICS_KEY]: cosmetics });
       renderCosmetics();
     });
-  });
+  }
   plusListeners.add(() => renderCosmetics());
+}
+
+// ─── Parrainage (StreamPulse+) ────────────────────────────────────────────────
+
+const REFERRAL_TIERS = [
+  { count: 1, key: "popup.referral.tierName" },
+  { count: 3, key: "popup.referral.tierBadge" },
+  { count: 5, key: "popup.referral.tierDevice" },
+  { count: 10, key: "popup.referral.tierGift" },
+];
+let referralCode = "";
+
+function renderReferral() {
+  const block = $("referral-block");
+  if (!block) return;
+  const active = plusActive();
+  const count = referralsCount();
+  $("referral-code").hidden = !referralCode;
+  $("referral-code").textContent = referralCode;
+  $("referral-copy").hidden = !referralCode;
+  $("referral-get").hidden = Boolean(referralCode);
+  $("referral-get").textContent = t(active ? "popup.referral.get" : "popup.plusMenu.discover");
+  $("referral-tiers").replaceChildren(...REFERRAL_TIERS.map((tier) => {
+    const item = node("li", count >= tier.count ? "referral-tier is-done" : "referral-tier");
+    item.append(node("b", null, t("popup.referral.friends", { count: tier.count })), node("span", null, t(tier.key)));
+    return item;
+  }));
+  if (active && count && !$("referral-status").dataset.busy) $("referral-status").textContent = t("popup.referral.count", { count });
+}
+
+async function fetchReferral() {
+  const status = $("referral-status");
+  status.dataset.busy = "1";
+  status.textContent = t("popup.referral.loading");
+  try {
+    const response = await fetch(LICENSE_VERIFY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "referral", key: plusRecord.licenseKey }),
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (response.status === 503) {
+      status.textContent = t("popup.referral.soon");
+      return;
+    }
+    if (!response.ok || !payload.code) throw new Error(payload.error || `HTTP ${response.status}`);
+    referralCode = payload.code;
+    plusRecord = { ...plusRecord, referrals: Number(payload.referrals) || 0 };
+    await chrome.storage.local.set({ [PLUS_KEY]: plusRecord, streamPulseReferralCode: referralCode });
+    status.textContent = t("popup.referral.count", { count: referralsCount() });
+  } catch (error) {
+    console.warn("[popup] code de parrainage indisponible :", error?.message || error);
+    status.textContent = t("popup.referral.error");
+  } finally {
+    delete status.dataset.busy;
+    renderReferral();
+  }
+}
+
+function initReferral() {
+  $("referral-get")?.addEventListener("click", () => (plusActive() ? fetchReferral() : openPlus()));
+  $("referral-copy")?.addEventListener("click", async () => {
+    await navigator.clipboard.writeText(referralCode).catch(() => {});
+    $("referral-status").textContent = t("popup.referral.copied");
+  });
+  plusListeners.add(() => renderReferral());
 }
 
 /**
@@ -765,9 +872,13 @@ export async function initFeatures() {
   initBadgeColorLock();
   initClipDownloadLock();
   initCosmetics();
+  initReferral();
   initPredictions();
 
-  const stored = await chrome.storage.local.get([PLUS_KEY, SMART_ALERTS_KEY, ACCENT_KEY, COSMETICS_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers"]);
+  const stored = await chrome.storage.local.get([PLUS_KEY, SMART_ALERTS_KEY, ACCENT_KEY, COSMETICS_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers", "userProfile", "streamPulseReferralCode"]);
+  // Pseudo choisi dans l'extension, pour les aperçus des effets.
+  chatName = String(stored.userProfile?.displayName || stored.userProfile?.handle || "").slice(0, 25);
+  referralCode = typeof stored.streamPulseReferralCode === "string" ? stored.streamPulseReferralCode : "";
   plusRecord = stored[PLUS_KEY] || null;
   cosmetics = normalizeCosmetics(stored[COSMETICS_KEY]);
   predictionRule = normalizePredictionRule(stored[PREDICTION_RULE_KEY]);
