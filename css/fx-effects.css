@@ -1,4 +1,4 @@
-/* Effets StreamPulse+ ajoutés en 26.9.28, partagés par le popup (aperçus) et le
+/* Effets StreamPulse+ ajoutés en 26.9.27, partagés par le popup (aperçus) et le
    tchat Twitch (content script). Un seul rendu à maintenir :
    - popup : .cosmetic-badge.sp-fx-<effet> est le logo masqué lui-même ;
    - tchat : .sp-chat-badge--fx-<effet> .sp-chat-badge-img est le logo masqué.

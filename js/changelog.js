@@ -56,6 +56,55 @@ function el(tag, className, text) {
   return node;
 }
 
+/** Thèmes d'une grosse version, dans l'ordre de la page (voir changelog-data.js). */
+const AREA_ORDER = ["drops", "badges", "points", "plus", "interface", "fixes"];
+
+/**
+ * Sépare l'intitulé d'un changement de son détail : « Nouveau panneau Drops :
+ * tes Drops… » devient un titre et un paragraphe, lisibles en diagonale. Seul
+ * un deux-points suivi d'une espace compte (« 16:9 » reste entier), et
+ * l'intitulé doit rester court ; sinon le texte reste d'un seul tenant.
+ */
+function splitLead(text) {
+  // Intitulé : dans la première phrase, 90 caractères au plus, avant « : » ou « ： ».
+  const match = /^([^.!?。]{3,90}?)\s?(?::\s+|：\s*)(\S[\s\S]*)$/u.exec(text);
+  if (!match) return { lead: "", body: text };
+  const locale = resolveLocale(getCurrentLanguage());
+  const body = match[2];
+  return { lead: match[1].trim(), body: body.charAt(0).toLocaleUpperCase(locale) + body.slice(1) };
+}
+
+function renderItem(change) {
+  const item = el("li", "cl-item");
+  const { lead, body } = splitLead(localized(change.text));
+  const copy = el("div", "cl-copy");
+  if (lead) copy.append(el("h3", "cl-lead", lead));
+  copy.append(el("p", "cl-text", body));
+  item.append(copy);
+  const type = TYPE_KEYS[change.type] ? change.type : "other";
+  item.append(el("span", `cl-tag cl-tag-${type}`, t(TYPE_KEYS[type] || "changelog.tagOther")));
+  return item;
+}
+
+/** Une section du corps de page, repérée par le sommaire. */
+function renderSection(id, label, changes) {
+  const section = el("section", "cl-area");
+  section.id = id;
+  section.setAttribute("aria-labelledby", `${id}-title`);
+  const title = el("h2", "cl-area-title");
+  title.id = `${id}-title`;
+  title.append(el("span", null, label), el("span", "cl-area-count", String(changes.length)));
+  const list = el("ul", "cl-list");
+  for (const change of changes) list.append(renderItem(change));
+  section.append(title, list);
+  return section;
+}
+
+/**
+ * Sections de la version : par thème quand les changements en portent un
+ * (grosse version), sinon par type comme avant. Renvoie { id, label, count }
+ * pour le sommaire.
+ */
 function renderChanges(release) {
   const host = document.getElementById("cl-changes");
   host.replaceChildren();
@@ -63,49 +112,83 @@ function renderChanges(release) {
   const changes = Array.isArray(release.changes) ? release.changes : [];
   if (!changes.length) {
     host.append(el("p", "cl-empty", t("changelog.genericChanges")));
+    return [];
+  }
+
+  const byArea = changes.some((change) => change.area);
+  // Rangé par type, l'étiquette répéterait le titre de sa section.
+  host.classList.toggle("is-by-type", !byArea);
+  const keys = byArea ? AREA_ORDER : ["new", "improved", "fix"];
+  const groupOf = (change) => (byArea ? change.area : change.type);
+  const labelOf = (key) => t(byArea ? `changelog.areas.${key}` : TYPE_KEYS[key]);
+  const sections = [];
+  for (const key of keys) {
+    const items = changes.filter((change) => groupOf(change) === key);
+    if (!items.length) continue;
+    const id = `cl-${key}`;
+    host.append(renderSection(id, labelOf(key), items));
+    sections.push({ id, label: labelOf(key), count: items.length });
+  }
+
+  // Un thème ou un type inconnu reste affiché plutôt que perdu.
+  const rest = changes.filter((change) => !keys.includes(groupOf(change)));
+  if (rest.length) {
+    host.append(renderSection("cl-other", t("changelog.tagOther"), rest));
+    sections.push({ id: "cl-other", label: t("changelog.tagOther"), count: rest.length });
+  }
+  return sections;
+}
+
+/**
+ * Sommaire : colonne fixe sur grand écran, ligne de pastilles sur mobile. Le
+ * lien de la section visible est marqué aria-current au fil de la lecture.
+ */
+function renderToc(entries) {
+  const nav = document.getElementById("cl-toc");
+  const list = document.getElementById("cl-toc-list");
+  if (!nav || !list) return;
+  list.replaceChildren();
+  // Une version courte se lit d'un coup d'œil : pas de sommaire.
+  if (entries.length < 3) {
+    nav.hidden = true;
     return;
   }
-
-  // Group by type so related items read together.
-  let groupIndex = 0;
-  const makeGroup = (tagClass, label) => {
-    // .glass and .frame-brackets come from onboarding.css: frosted panel plus
-    // the violet corner brackets used throughout that flow.
-    const group = el("div", "cl-group glass frame-brackets");
-    // Stagger each panel so the list assembles instead of appearing at once.
-    group.style.animationDelay = `${0.15 + groupIndex * 0.12}s`;
-    groupIndex += 1;
-    // Separate element because .frame-brackets owns ::before and ::after.
-    group.append(el("span", "cl-group-wash"));
-    group.append(el("span", tagClass, label));
-    return group;
+  nav.hidden = false;
+  const links = new Map();
+  for (const entry of entries) {
+    const item = el("li");
+    const link = el("a", "cl-toc-link");
+    link.href = `#${entry.id}`;
+    link.append(el("span", "cl-toc-label", entry.label));
+    if (entry.count) link.append(el("span", "cl-toc-count", String(entry.count)));
+    item.append(link);
+    list.append(item);
+    links.set(entry.id, link);
+  }
+  if (typeof IntersectionObserver !== "function") return;
+  const visible = new Set();
+  // Rien dans la zone de lecture (haut de page, entre deux sections) : on garde
+  // la dernière section repérée, la première au départ.
+  let current = entries[0].id;
+  const mark = () => {
+    current = entries.find((entry) => visible.has(entry.id))?.id || current;
+    links.forEach((link, id) => {
+      if (id === current) link.setAttribute("aria-current", "true");
+      else link.removeAttribute("aria-current");
+    });
   };
-
-  for (const type of ["new", "improved", "fix"]) {
-    const items = changes.filter((change) => change.type === type);
-    if (!items.length) continue;
-
-    const group = makeGroup(`cl-tag cl-tag-${type}`, t(TYPE_KEYS[type] || "changelog.tagOther"));
-
-    const list = el("ul", "cl-list");
-    for (const item of items) {
-      const text = localized(item.text);
-      list.append(el("li", "cl-item", text));
+  const observer = new IntersectionObserver((records) => {
+    for (const record of records) {
+      if (record.isIntersecting) visible.add(record.target.id);
+      else visible.delete(record.target.id);
     }
-    group.append(list);
-    host.append(group);
+    mark();
+  }, { rootMargin: "-20% 0px -55% 0px" });
+  for (const entry of entries) {
+    const target = document.getElementById(entry.id);
+    if (target) observer.observe(target);
   }
-
-  // Any unrecognised type still gets shown rather than silently dropped.
-  const known = new Set(["new", "improved", "fix"]);
-  const rest = changes.filter((change) => !known.has(change.type));
-  if (rest.length) {
-    const group = makeGroup("cl-tag", t("changelog.tagOther"));
-    const list = el("ul", "cl-list");
-    for (const item of rest) list.append(el("li", "cl-item", localized(item.text)));
-    group.append(list);
-    host.append(group);
-  }
+  mark();
 }
 
 function renderThanks(release) {
@@ -137,10 +220,8 @@ function renderThanks(release) {
   intro.hidden = single;
   if (!single) intro.textContent = t("changelog.thanksIntro");
 
-  thanks.forEach((person, index) => {
+  thanks.forEach((person) => {
     const item = el("li", "cl-thanks-item");
-    // Land after the change panels, so the page resolves top to bottom.
-    item.style.animationDelay = `${0.5 + index * 0.1}s`;
 
     const avatar = el("span", "cl-thanks-avatar", person.handle.charAt(0).toUpperCase());
     avatar.setAttribute("aria-hidden", "true");
@@ -233,9 +314,7 @@ function renderHistory(currentVersion) {
     details.append(summary);
 
     const list = el("ul", "cl-list");
-    for (const change of release.changes || []) {
-      list.append(el("li", "cl-item", localized(change.text)));
-    }
+    for (const change of release.changes || []) list.append(renderItem(change));
     details.append(list);
     host.append(details);
   }
@@ -298,10 +377,15 @@ function render(release) {
       : t("changelog.genericChanges");
   }
 
-  renderChanges(release);
+  const sections = renderChanges(release);
   renderThanks(release);
   renderHistory(release.version);
   renderSupport();
+  const extras = [
+    { id: "cl-thanks", label: document.getElementById("cl-thanks-title").textContent },
+    { id: "cl-history", label: t("changelog.historyTitle") },
+  ].filter((entry) => !document.getElementById(entry.id).hidden);
+  renderToc([...sections, ...extras]);
 }
 
 async function init() {

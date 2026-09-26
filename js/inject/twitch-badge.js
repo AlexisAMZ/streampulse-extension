@@ -440,7 +440,7 @@
 
   /**
    * Couleur d'un badge : celle du pseudo. Une couleur publiee par une ancienne
-   * version (reglage retire en 26.9.28) reste respectee jusqu'a son expiration.
+   * version (reglage retire en 26.9.27) reste respectee jusqu'a son expiration.
    */
   function resolveBadgeColor(messageEl, hash) {
     var publicColor = hash && badgeColors.get(hash);

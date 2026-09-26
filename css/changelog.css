@@ -1,37 +1,60 @@
-/* Release notes page (Read mode): one column, big title, changes grouped by
-   type, thanks, history, then support. Markup is built by changelog.js. */
+/* Release notes page (Read mode). A long release gets a table of contents: a
+   sticky rail on wide screens, a row of chips on narrow ones. Sections and
+   changes are separated by rules, not cards (monde Tatoo). Each change reads
+   as a short bold lead and its detail. Markup is built by changelog.js. */
 
-.cl { width: min(820px, 100%); }
-
-.cl-hero { display: grid; justify-items: start; gap: 20px; padding: 56px 0 44px; }
-.cl-hero .display { font-size: clamp(42px, 6vw, 76px); }
-.cl-date:empty { display: none; }
-
-.cl-changes { display: grid; gap: 18px; }
-.cl-group { position: relative; padding: 24px 28px 12px; border-radius: 22px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
-.cl-group-wash { display: none; }
+html { scrollbar-color: color-mix(in srgb, var(--text-3) 55%, transparent) transparent; }
 @media (prefers-reduced-motion: no-preference) {
-  .cl-group,
-  .cl-thanks-item { animation: rise 520ms var(--ease-out) both; }
+  html { scroll-behavior: smooth; }
   #cl-display .word { animation: word-in 700ms var(--ease-out) both; }
 }
-.cl-tag { display: inline-flex; align-items: center; gap: 7px; height: 28px; padding: 0 12px; border-radius: 999px; background: var(--surface-2); color: var(--text-2); font-size: 13px; font-weight: 700; }
-.cl-tag::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+.cl { display: grid; grid-template-columns: minmax(0, 1fr); width: min(1060px, 100%); }
+.cl > * { min-width: 0; }
+
+.cl-hero { display: grid; justify-items: start; gap: 20px; padding: 56px 0 36px; }
+.cl-hero .display { max-width: 15ch; font-size: clamp(36px, 6vw, 76px); }
+.cl-date:empty { display: none; }
+
+/* ── Sommaire ── */
+.cl-toc[hidden] { display: none; }
+.cl-toc-list { display: flex; gap: 8px; margin: 0 0 12px; padding: 2px 2px 6px; overflow-x: auto; list-style: none; scrollbar-width: none; }
+.cl-toc-list::-webkit-scrollbar { display: none; }
+.cl-toc-link { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 14px; border-radius: 999px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); color: var(--text-2); font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap; transition: color var(--dur-fast) ease, background-color var(--dur-fast) ease; }
+.cl-toc-link:hover { color: var(--text); }
+.cl-toc-link[aria-current="true"] { background: var(--lcd); box-shadow: none; color: var(--lcd-ink); }
+.cl-toc-count { color: var(--text-3); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.cl-toc-link[aria-current="true"] .cl-toc-count { color: inherit; }
+
+/* ── Sections et changements ── */
+.cl-area { padding: 32px 0 6px; box-shadow: inset 0 1px 0 var(--line-2); scroll-margin-top: 20px; }
+.cl-area-title,
+.cl-section-title { display: flex; align-items: baseline; gap: 10px; font-family: var(--display); font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+.cl-area-count { color: var(--text-3); font-family: var(--body); font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.cl-list { margin: 8px 0 0; padding: 0; list-style: none; }
+.cl-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 8px 24px; padding: 18px 0; box-shadow: inset 0 -1px 0 var(--line); }
+.cl-item:last-child { box-shadow: none; }
+.cl-copy { display: grid; gap: 6px; max-width: 70ch; }
+.cl-lead { color: var(--text); font-family: var(--body); font-size: 17px; font-weight: 700; line-height: 1.35; text-wrap: balance; }
+.cl-text { color: var(--text-2); font-size: 15.5px; line-height: 1.62; }
+.cl-copy > .cl-text:only-child { color: var(--text); }
+.cl-empty { color: var(--text-2); }
+
+.cl-tag { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 999px; background: var(--surface-2); color: var(--text-2); font-size: 11px; font-weight: 800; letter-spacing: 0.03em; white-space: nowrap; }
+.cl-tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 .cl-tag-new { background: var(--lcd); color: var(--lcd-ink); }
 .cl-tag-improved { background: var(--violet-soft); box-shadow: inset 0 0 0 1px var(--violet-line); color: var(--violet-text); }
 .cl-tag-fix { background: color-mix(in srgb, var(--danger) 12%, transparent); box-shadow: inset 0 0 0 1px var(--danger); color: var(--danger); }
+.cl-changes.is-by-type .cl-tag { display: none; }
 
-.cl-list { margin: 10px 0 0; padding: 0; list-style: none; }
-.cl-item { position: relative; padding: 13px 0 13px 24px; box-shadow: inset 0 -1px 0 var(--line); font-size: 15.5px; line-height: 1.6; }
-.cl-item:last-child { box-shadow: none; }
-.cl-item::before { content: ""; position: absolute; top: 23px; left: 4px; width: 7px; height: 7px; border-radius: 50%; background: var(--violet); }
-.cl-empty { color: var(--text-2); }
-
-.cl-section-title { display: flex; align-items: baseline; margin: 64px 0 18px; font-family: var(--display); font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+/* ── Remerciements et versions précédentes ── */
+.cl-thanks,
+.cl-history { margin-top: 40px; padding-top: 32px; box-shadow: inset 0 1px 0 var(--line-2); scroll-margin-top: 20px; }
 .cl-section-rule { display: none; }
-
-.cl-thanks-intro { max-width: 56ch; margin-bottom: 18px; color: var(--text-2); }
-.cl-thanks-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.cl-thanks-intro { max-width: 56ch; margin: 10px 0 18px; color: var(--text-2); }
+.cl-thanks-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin: 18px 0 0; padding: 0; list-style: none; }
+.cl-thanks-intro:not([hidden]) + .cl-thanks-list { margin-top: 0; }
 .cl-thanks-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 18px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
 .cl-thanks-avatar { display: grid; flex: none; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: var(--lcd); color: var(--lcd-ink); font-family: var(--display); font-weight: 800; }
 .cl-thanks-body { display: grid; min-width: 0; }
@@ -39,7 +62,7 @@
 a.cl-thanks-handle:hover { color: var(--violet-text); }
 .cl-thanks-for { color: var(--text-2); font-size: 13px; }
 
-.cl-history-list { box-shadow: inset 0 1px 0 var(--line); }
+.cl-history-list { margin-top: 12px; }
 .cl-history-entry { box-shadow: inset 0 -1px 0 var(--line); }
 .cl-history-summary { display: flex; align-items: baseline; gap: 16px; padding: 18px 0; list-style: none; cursor: pointer; }
 .cl-history-summary::-webkit-details-marker { display: none; }
@@ -48,9 +71,13 @@ a.cl-thanks-handle:hover { color: var(--violet-text); }
 .cl-history-summary:hover .cl-history-title { color: var(--violet-text); }
 .cl-history-version { min-width: 96px; color: var(--violet-text); font-family: var(--display); font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .cl-history-title { font-weight: 600; }
-.cl-history-entry .cl-list { margin: 0 0 14px 112px; }
+.cl-history-entry .cl-list { margin: 0 0 12px 112px; }
+.cl-history-entry .cl-item { padding: 12px 0; }
+.cl-history-entry .cl-lead { font-size: 15px; }
+.cl-history-entry .cl-text { font-size: 14.5px; }
 
-.cl-donation-card { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-top: 64px; padding: 24px 28px; border-radius: 22px; background: var(--violet); color: var(--paper); }
+/* ── Soutien et fermeture ── */
+.cl-donation-card { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-top: 56px; padding: 24px 28px; border-radius: 22px; background: var(--violet); color: var(--paper); }
 .cl-donation-title { display: flex; align-items: center; gap: 12px; font-family: var(--display); font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
 .cl-donation-icon svg { width: 24px; height: 24px; }
 .cl-donation-buttons { display: flex; gap: 8px; }
@@ -67,12 +94,35 @@ a.cl-thanks-handle:hover { color: var(--violet-text); }
 
 .cl-close-row { display: flex; justify-content: center; margin-top: 48px; }
 
+/* Grand écran : sommaire en colonne fixe à gauche du texte. */
+@media (min-width: 980px) {
+  .cl { grid-template-columns: 184px minmax(0, 1fr); column-gap: 64px; }
+  .cl-hero { grid-column: 1 / -1; }
+  .cl > :not(.cl-hero):not(.cl-toc) { grid-column: 2; }
+  .cl-toc { position: sticky; top: 28px; grid-column: 1; grid-row: 2 / span 8; align-self: start; padding-top: 26px; }
+  .cl-toc-list { display: grid; gap: 2px; margin: 0; padding: 0; overflow: visible; }
+  .cl-toc-link { justify-content: space-between; width: 100%; height: 38px; padding: 0 12px; border-radius: 10px; background: none; box-shadow: none; }
+  .cl-toc-link:hover { background: var(--surface); }
+  .cl-toc-link[aria-current="true"] { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text); }
+  .cl-toc-label { display: inline-flex; align-items: center; gap: 9px; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .cl-toc-label::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--line-2); transition: background-color var(--dur-fast) ease; }
+  .cl-toc-link[aria-current="true"] .cl-toc-label::before { background: var(--lcd); }
+  .cl-toc-link[aria-current="true"] .cl-toc-count { color: var(--text-2); }
+  .cl-changes > .cl-area:first-child { box-shadow: none; }
+}
+
 @media (max-width: 640px) {
+  .brand-sub { display: none; }
+  .cl-hero { padding-top: 36px; }
+  .cl-item { grid-template-columns: minmax(0, 1fr); }
+  .cl-item > .cl-tag { grid-row: 1; justify-self: start; }
   .cl-history-entry .cl-list { margin-left: 0; }
   .cl-support-card { flex-wrap: wrap; }
   .cl-support-link { margin-left: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .cl-history-summary::after,
-  .cl-donation-btn { transition: none; }
+  .cl-donation-btn,
+  .cl-toc-link,
+  .cl-toc-label::before { transition: none; }
 }

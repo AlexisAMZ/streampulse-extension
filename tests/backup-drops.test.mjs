@@ -9,7 +9,7 @@ test("l'historique des Drops fait partie de la sauvegarde, pas la progression", 
   assert.ok(BACKUP_KEYS.includes(DROPS_HISTORY_KEY));
   assert.ok(!BACKUP_KEYS.includes(DROPS_PROGRESS_KEY), "la progression est un cache relu sur Twitch");
   const history = [entry("drop:a", 2), entry("drop:b", 1)];
-  const parsed = parseBackup(buildBackup({ [DROPS_HISTORY_KEY]: history }, { version: "26.9.28" }));
+  const parsed = parseBackup(buildBackup({ [DROPS_HISTORY_KEY]: history }, { version: "26.9.27" }));
   assert.equal(parsed.ok, true);
   assert.deepEqual(parsed.data[DROPS_HISTORY_KEY], history);
 });

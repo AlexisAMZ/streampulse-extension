@@ -1034,6 +1034,15 @@ export const translations = {
       "restored": "Sauvegarde restaurée !"
     },
     "changelog": {
+      "toc": "Sommaire",
+      "areas": {
+        "drops": "Drops",
+        "badges": "Badges",
+        "points": "Points",
+        "plus": "StreamPulse+",
+        "interface": "Interface",
+        "fixes": "Corrections",
+      },
       "documentTitle": "StreamPulse : Nouveautés",
       "brandSub": "Notes de version",
       "supportIntro": "Un bug, une idée ?",
@@ -2138,6 +2147,15 @@ export const translations = {
       "restored": "Backup restored!"
     },
     "changelog": {
+      "toc": "Contents",
+      "areas": {
+        "drops": "Drops",
+        "badges": "Badges",
+        "points": "Points",
+        "plus": "StreamPulse+",
+        "interface": "Interface",
+        "fixes": "Fixes",
+      },
       "documentTitle": "StreamPulse: What's new",
       "brandSub": "Release notes",
       "supportIntro": "Found a bug, got an idea?",
@@ -3242,6 +3260,15 @@ export const translations = {
       "restored": "¡Copia restaurada!"
     },
     "changelog": {
+      "toc": "Índice",
+      "areas": {
+        "drops": "Drops",
+        "badges": "Insignias",
+        "points": "Puntos",
+        "plus": "StreamPulse+",
+        "interface": "Interfaz",
+        "fixes": "Correcciones",
+      },
       "documentTitle": "StreamPulse: Novedades",
       "brandSub": "Notas de la versión",
       "supportIntro": "¿Un fallo, una idea?",
@@ -4333,6 +4360,15 @@ export const translations = {
       "restored": "Backup restaurado!"
     },
     "changelog": {
+      "toc": "Sumário",
+      "areas": {
+        "drops": "Drops",
+        "badges": "Emblemas",
+        "points": "Pontos",
+        "plus": "StreamPulse+",
+        "interface": "Interface",
+        "fixes": "Correções",
+      },
       "documentTitle": "StreamPulse: Novidades",
       "brandSub": "Notas da versão",
       "supportIntro": "Um bug, uma ideia?",
@@ -5432,6 +5468,15 @@ export const translations = {
       "restored": "Sicherung wiederhergestellt!"
     },
     "changelog": {
+      "toc": "Inhalt",
+      "areas": {
+        "drops": "Drops",
+        "badges": "Abzeichen",
+        "points": "Punkte",
+        "plus": "StreamPulse+",
+        "interface": "Oberfläche",
+        "fixes": "Fehlerbehebungen",
+      },
       "documentTitle": "StreamPulse: Was ist neu",
       "brandSub": "Versionshinweise",
       "supportIntro": "Einen Fehler gefunden, eine Idee?",
@@ -6536,6 +6581,15 @@ export const translations = {
       "restored": "Backup ripristinato!"
     },
     "changelog": {
+      "toc": "Indice",
+      "areas": {
+        "drops": "Drops",
+        "badges": "Badge",
+        "points": "Punti",
+        "plus": "StreamPulse+",
+        "interface": "Interfaccia",
+        "fixes": "Correzioni",
+      },
       "documentTitle": "StreamPulse: Novità",
       "brandSub": "Note sulla versione",
       "supportIntro": "Hai trovato un bug, hai un'idea?",
@@ -7640,6 +7694,15 @@ export const translations = {
       "restored": "Kopia przywrócona!"
     },
     "changelog": {
+      "toc": "Spis treści",
+      "areas": {
+        "drops": "Dropsy",
+        "badges": "Odznaki",
+        "points": "Punkty",
+        "plus": "StreamPulse+",
+        "interface": "Interfejs",
+        "fixes": "Poprawki",
+      },
       "documentTitle": "StreamPulse: Co nowego",
       "brandSub": "Informacje o wydaniu",
       "supportIntro": "Znalazłeś błąd, masz pomysł?",
@@ -8744,6 +8807,15 @@ export const translations = {
       "restored": "Yedek geri yüklendi!"
     },
     "changelog": {
+      "toc": "İçindekiler",
+      "areas": {
+        "drops": "Drop'lar",
+        "badges": "Rozetler",
+        "points": "Puanlar",
+        "plus": "StreamPulse+",
+        "interface": "Arayüz",
+        "fixes": "Düzeltmeler",
+      },
       "documentTitle": "StreamPulse: Yenilikler",
       "brandSub": "Sürüm notları",
       "supportIntro": "Bir hata mı buldunuz, bir fikriniz mi var?",
@@ -9848,6 +9920,15 @@ export const translations = {
       "restored": "Копия восстановлена!"
     },
     "changelog": {
+      "toc": "Содержание",
+      "areas": {
+        "drops": "Drops",
+        "badges": "Значки",
+        "points": "Баллы",
+        "plus": "StreamPulse+",
+        "interface": "Интерфейс",
+        "fixes": "Исправления",
+      },
       "documentTitle": "StreamPulse: Что нового",
       "brandSub": "Примечания к выпуску",
       "supportIntro": "Нашли ошибку или у вас есть идея?",
@@ -10952,6 +11033,15 @@ export const translations = {
       "restored": "バックアップを復元しました！"
     },
     "changelog": {
+      "toc": "目次",
+      "areas": {
+        "drops": "ドロップ",
+        "badges": "バッジ",
+        "points": "ポイント",
+        "plus": "StreamPulse+",
+        "interface": "インターフェース",
+        "fixes": "修正",
+      },
       "documentTitle": "StreamPulse：新機能",
       "brandSub": "リリースノート",
       "supportIntro": "バグを見つけましたか？ 何かアイデアはありますか？",
@@ -12056,6 +12146,15 @@ export const translations = {
       "restored": "백업을 복원했습니다!"
     },
     "changelog": {
+      "toc": "목차",
+      "areas": {
+        "drops": "드롭",
+        "badges": "배지",
+        "points": "포인트",
+        "plus": "StreamPulse+",
+        "interface": "인터페이스",
+        "fixes": "수정 사항",
+      },
       "documentTitle": "StreamPulse: 새로운 소식",
       "brandSub": "릴리스 노트",
       "supportIntro": "버그를 발견하셨나요, 아니면 좋은 아이디어가 있으신가요?",

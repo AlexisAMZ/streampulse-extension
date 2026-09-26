@@ -2,7 +2,7 @@
 
 - **Date** : 2026-09-26
 - **Demandé par** : Alexis
-- **Statut** : implémenté en 26.9.28 (approche A, maquettes H2, P1, P2) ; reste à vérifier sur un vrai compte Twitch
+- **Statut** : implémenté en 26.9.27 (approche A, maquettes H2, P1, P2) ; reste à vérifier sur un vrai compte Twitch
 - **Maquettes** : `.impeccable/drops-mockups.html` (non versionné)
 
 ## Objectif
