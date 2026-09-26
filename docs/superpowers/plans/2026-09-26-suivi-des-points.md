@@ -1608,7 +1608,7 @@ const T = {
       healthLast: "Último ganho registrado: {{ago}}.", healthNever: "Nenhum ganho registrado por enquanto.",
       trackingTitle: "Registrar os pontos ganhos", trackingBody: "Ativo enquanto houver uma aba da Twitch aberta, em todos os seus canais.",
       reset: "Zerar", resetConfirm: "Confirmar a exclusão", resetDone: "Histórico de pontos apagado.",
-      reasonClaim: "Bônus especiais", reasonWatch: "Assistir 5 minutos", reasonStreak: "Sequência de lives assistidas", reasonRaid: "Participar de uma raid",
+      reasonClaim: "Bônus especiais", reasonWatch: "Assistir 5 minutos", reasonStreak: "Sequência de lives", reasonRaid: "Participar de uma raid",
       reasonFollow: "Seguir o canal", reasonCheer: "1º cheer do mês", reasonSubGift: "1º sub de presente do mês", reasonOther: "Outros ganhos",
     },
     statPoints: "Pontos ganhos",
