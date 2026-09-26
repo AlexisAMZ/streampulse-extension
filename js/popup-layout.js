@@ -152,7 +152,13 @@ function update(change, listId, id, delta) {
 export async function initLayout() {
   // Les libellés changent avec la langue et les compteurs : on réajuste à chaque changement de taille.
   if (typeof ResizeObserver === "function") {
-    const observer = new ResizeObserver(() => fitTopbar());
+    // Ajuster à l'image suivante, hors du rappel : changer la barre pendant que
+    // l'observateur la mesure déclenche « ResizeObserver loop completed ».
+    let frame = 0;
+    const observer = new ResizeObserver(() => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(fitTopbar);
+    });
     document.querySelectorAll(".tabs, .topbar-end").forEach((element) => observer.observe(element));
   }
   const stored = await chrome.storage.local.get(LAYOUT_KEY);
