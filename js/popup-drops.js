@@ -4,6 +4,7 @@
 // alimente ; tous les calculs viennent de drops-data.js.
 
 import { t, getCurrentLanguage } from "./i18n.js";
+import { currentGroup, normalizeAuto } from "./badge-auto.js";
 import {
   DROPS_KEYS,
   BADGE_AUTO_KEY,
@@ -421,16 +422,20 @@ function badgeCard({ title, image, condition, fallback, game, paid, owned, endsA
   item.append(card);
   // Bouton frère de la carte (un bouton ne peut pas en contenir un autre).
   if (autoId && !owned) {
-    const on = badgeAuto?.badgeId === autoId;
-    const auto = el("button", on ? "badge-auto is-on" : "badge-auto");
+    // Trois états : en cours (le jeu regardé), en file (un autre jeu, plus tard), ou libre.
+    const state = autoState(autoId);
+    const on = state !== "off";
+    const auto = el("button", on ? `badge-auto is-on${state === "queued" ? " is-queued" : ""}` : "badge-auto");
     // Lecture automatique (triangle) ou mode en cours (point qui pulse).
-    auto.innerHTML = on
+    auto.innerHTML = state === "running"
       ? '<span class="badge-auto-dot" aria-hidden="true"></span>'
-      : '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>';
-    auto.append(el("span", null, t(on ? "popup.drops.badgeAutoOn" : "popup.drops.badgeAuto")));
+      : state === "queued"
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>';
+    auto.append(el("span", null, t(state === "running" ? "popup.drops.badgeAutoOn" : state === "queued" ? "popup.drops.badgeAutoQueued" : "popup.drops.badgeAuto")));
     auto.type = "button";
     auto.dataset.auto = autoId;
-    auto.title = t(on ? "popup.drops.badgeAutoStop" : "popup.drops.badgeAutoHint");
+    auto.title = t(on ? "popup.drops.badgeAutoRemove" : "popup.drops.badgeAutoHint");
     auto.setAttribute("aria-pressed", on ? "true" : "false");
     item.classList.add("has-auto");
     item.append(auto);
@@ -515,6 +520,7 @@ async function translateBadges(ids) {
 
 function renderCatalog() {
   if (!$("badges-catalog")) return;
+  renderAutoBar();
   const context = { now: Date.now(), campaigns: campaigns.campaigns, names: activeNames({ rewards: rewards.rewards, campaigns: campaigns.campaigns, drops: progress.drops }) };
   const available = catalogBadges(badges, "all", "", context).filter((badge) => badge.available);
   // Les récompenses de campagne comptent avec les badges : jamais obtenues (Twitch ne le dit pas).
@@ -696,6 +702,7 @@ function bind() {
       else openStream(event);
     });
   }
+  $("badges-auto-all")?.addEventListener("click", toggleAutoAll);
   $("badges-more")?.addEventListener("click", () => {
     badgeLimit += 40;
     renderCatalog();
@@ -705,24 +712,53 @@ function bind() {
   $("badges-unlock")?.addEventListener("click", () => deps.openPlus());
 }
 
-/** Lance ou coupe l'obtention automatique d'un badge (le service worker gère l'onglet). */
+/** « running » : badge du jeu regardé ; « queued » : en file ; « off » : pas dans le mode auto. */
+function autoState(badgeId) {
+  if (!badgeAuto?.jobs.some((job) => job.badgeId === badgeId)) return "off";
+  return currentGroup(badgeAuto)?.jobs.some((job) => job.badgeId === badgeId) ? "running" : "queued";
+}
+
+const sendAuto = (message) => chrome.runtime.sendMessage(message).catch((error) => console.warn("[popup] mode auto :", error?.message || error));
+
+/** Bouton « Récupérer tous les badges possibles » et état de la file. */
+function renderAutoBar() {
+  const button = $("badges-auto-all");
+  const status = $("badges-auto-status");
+  if (!button || !status) return;
+  const all = badgeAuto?.mode === "all";
+  button.textContent = t(all ? "popup.drops.badgeAutoAllStop" : "popup.drops.badgeAutoAll");
+  button.classList.toggle("is-on", all);
+  button.setAttribute("aria-pressed", all ? "true" : "false");
+  const group = currentGroup(badgeAuto);
+  status.hidden = !group;
+  if (group) status.textContent = t("popup.drops.badgeAutoStatus", { count: badgeAuto.jobs.length, game: group.game });
+}
+
+/** Mode « tous les badges » : lance la file complète, ou arrête tout. */
+function toggleAutoAll() {
+  if (badgeAuto?.mode === "all") sendAuto({ type: "badgeAutoStop" });
+  else sendAuto({ type: "badgeAutoStart", all: true });
+}
+
+/** Ajoute un badge à la file du mode auto, ou l'en retire (le service worker gère l'onglet). */
 function toggleAuto(badgeId) {
-  if (badgeAuto?.badgeId === badgeId) {
-    chrome.runtime.sendMessage({ type: "badgeAutoStop" }).catch((error) => console.warn("[popup] mode auto :", error?.message || error));
+  if (autoState(badgeId) !== "off") {
+    sendAuto({ type: "badgeAutoStop", badgeId });
     return;
   }
   const badge = badges.badges.find((item) => item.id === badgeId);
   const context = { now: Date.now(), campaigns: campaigns.campaigns };
   const campaign = badge && catalogBadges({ ...badges, badges: [badge] }, "all", "", context)[0]?.campaign;
   if (!campaign) return;
-  chrome.runtime
-    .sendMessage({ type: "badgeAutoStart", badge: { badgeId, title: badge.title, image: badge.image, game: campaign.game, gameId: campaign.gameId, campaignId: campaign.id } })
-    .catch((error) => console.warn("[popup] mode auto :", error?.message || error));
+  sendAuto({
+    type: "badgeAutoStart",
+    badge: { badgeId, title: badge.title, image: badge.image, game: campaign.game, gameId: campaign.gameId, campaignId: campaign.id, endsAt: campaign.endsAt },
+  });
 }
 
 async function reload() {
   const stored = await chrome.storage.local.get([...DROPS_KEYS, PREFERENCES_KEY, BADGE_AUTO_KEY]);
-  badgeAuto = stored[BADGE_AUTO_KEY] || null;
+  badgeAuto = normalizeAuto(stored[BADGE_AUTO_KEY]);
   progress = progressFrom(stored);
   campaigns = campaignsFrom(stored);
   rewards = rewardsFrom(stored);

@@ -1024,3 +1024,12 @@ body.is-settings .new-dot { background: var(--violet); box-shadow: 0 0 0 3px var
 .referral-paypal-label { font-size: 12px; font-weight: 700; }
 .referral-paypal .referral-row { margin: 2px 0; flex-wrap: nowrap; }
 .referral-paypal .text-input { flex: 1; min-width: 0; }
+
+/* Mode auto : tous les badges possibles */
+.badges-auto-bar { display: grid; gap: 6px; margin: 10px 0 12px; }
+.badges-auto-all { justify-self: start; }
+.badges-auto-all.is-on { background: var(--surface); box-shadow: inset 0 0 0 1px var(--violet-line); color: var(--text); }
+.badges-auto-status { margin: 0; color: var(--lcd-accent, var(--text)); font-size: 12px; font-weight: 700; }
+.badges-auto-bar .badges-note { margin: 0; }
+.badge-auto.is-queued { background: var(--surface); box-shadow: inset 0 0 0 1px var(--violet-line); color: var(--text); }
+.badge-auto.is-queued svg { color: var(--violet); }

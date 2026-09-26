@@ -504,6 +504,12 @@ export const translations = {
         "badgeAutoOn": "En cours · Arrêter",
         "badgeAutoHint": "Mode auto : ouvre un live dans un onglet épinglé et muet, puis le ferme dès que le badge est obtenu",
         "badgeAutoStop": "Arrêter le mode auto",
+        "badgeAutoQueued": "En file · Retirer",
+        "badgeAutoRemove": "Retirer ce badge du mode auto",
+        "badgeAutoAll": "Récupérer tous les badges possibles",
+        "badgeAutoAllStop": "Arrêter le mode auto",
+        "badgeAutoStatus": "Mode auto : {{count}} badge(s) en file · en cours sur {{game}}",
+        "badgeAutoAllHint": "Un onglet épinglé et muet regarde un live à la fois (Twitch ne compte qu'un live à la fois). Les paliers d'un même jeu (30 min, 1 h, 90 min…) avancent ensemble, puis l'onglet passe au jeu suivant.",
         "badgesUnit": "DISPONIBLES",
         "badgesLcdOwned": "Obtenus : {{count}}",
         "badgesLcdFree": "Gratuits : {{count}}",
@@ -914,6 +920,18 @@ export const translations = {
       }
     },
     "background": {
+      "badgeAuto": {
+        "bannerTitle": "Mode auto StreamPulse",
+        "bannerAll": "StreamPulse récupère tous les badges possibles",
+        "bannerBadges": "Sur {{game}} : {{badges}}",
+        "bannerMinutes": "Drop en cours : {{done}} / {{required}} min",
+        "bannerNext": "Ensuite : {{badges}} badge(s) sur {{games}} autre(s) jeu(x)",
+        "bannerHint": "Laisse cet onglet ouvert : il change de live tout seul.",
+        "bannerStop": "Arrêter",
+        "obtained": "{{name}} est à toi.",
+        "doneTitle": "Mode auto terminé",
+        "doneMessage": "Plus aucun badge à récupérer pour l'instant : l'onglet a été fermé."
+      },
       "errors": {
         "notificationsDisabled": "Active les notifications Chrome pour lancer un test.",
         "invalidHandle": "Nom de chaîne invalide pour {{platform}}.",
@@ -1629,6 +1647,12 @@ export const translations = {
         "badgeAutoOn": "Running · Stop",
         "badgeAutoHint": "Auto mode: opens a live stream in a pinned, muted tab and closes it once the badge is earned",
         "badgeAutoStop": "Stop auto mode",
+        "badgeAutoQueued": "Queued · Remove",
+        "badgeAutoRemove": "Remove this badge from auto mode",
+        "badgeAutoAll": "Get every available badge",
+        "badgeAutoAllStop": "Stop auto mode",
+        "badgeAutoStatus": "Auto mode: {{count}} badge(s) queued · now on {{game}}",
+        "badgeAutoAllHint": "A pinned, muted tab watches one live at a time (Twitch only counts one live at a time). Tiers of the same game (30 min, 1 h, 90 min…) progress together, then the tab moves to the next game.",
         "badgesUnit": "AVAILABLE",
         "badgesLcdOwned": "Owned: {{count}}",
         "badgesLcdFree": "Free: {{count}}",
@@ -2039,6 +2063,18 @@ export const translations = {
       }
     },
     "background": {
+      "badgeAuto": {
+        "bannerTitle": "StreamPulse auto mode",
+        "bannerAll": "StreamPulse is getting every available badge",
+        "bannerBadges": "On {{game}}: {{badges}}",
+        "bannerMinutes": "Current Drop: {{done}} / {{required}} min",
+        "bannerNext": "Next: {{badges}} badge(s) on {{games}} other game(s)",
+        "bannerHint": "Keep this tab open: it switches lives on its own.",
+        "bannerStop": "Stop",
+        "obtained": "{{name}} is yours.",
+        "doneTitle": "Auto mode finished",
+        "doneMessage": "No more badges to get for now: the tab was closed."
+      },
       "errors": {
         "notificationsDisabled": "Enable Chrome notifications to run a test.",
         "invalidHandle": "Invalid {{platform}} identifier.",
@@ -2754,6 +2790,12 @@ export const translations = {
         "badgeAutoOn": "En curso · Detener",
         "badgeAutoHint": "Modo auto: abre un directo en una pestaña fijada y silenciada, y la cierra al obtener la insignia",
         "badgeAutoStop": "Detener el modo auto",
+        "badgeAutoQueued": "En cola · Quitar",
+        "badgeAutoRemove": "Quitar esta insignia del modo auto",
+        "badgeAutoAll": "Conseguir todas las insignias posibles",
+        "badgeAutoAllStop": "Detener el modo auto",
+        "badgeAutoStatus": "Modo auto: {{count}} insignia(s) en cola · ahora en {{game}}",
+        "badgeAutoAllHint": "Una pestaña fijada y silenciada ve un directo a la vez (Twitch solo cuenta un directo a la vez). Los niveles de un mismo juego (30 min, 1 h, 90 min…) avanzan juntos y luego la pestaña pasa al siguiente juego.",
         "badgesUnit": "DISPONIBLES",
         "badgesLcdOwned": "Obtenidas: {{count}}",
         "badgesLcdFree": "Gratis: {{count}}",
@@ -3164,6 +3206,18 @@ export const translations = {
       "htmlLang": "es"
     },
     "background": {
+      "badgeAuto": {
+        "bannerTitle": "Modo auto de StreamPulse",
+        "bannerAll": "StreamPulse consigue todas las insignias posibles",
+        "bannerBadges": "En {{game}}: {{badges}}",
+        "bannerMinutes": "Drop en curso: {{done}} / {{required}} min",
+        "bannerNext": "Después: {{badges}} insignia(s) en {{games}} juego(s) más",
+        "bannerHint": "Deja esta pestaña abierta: cambia de directo sola.",
+        "bannerStop": "Detener",
+        "obtained": "{{name}} es tuya.",
+        "doneTitle": "Modo auto terminado",
+        "doneMessage": "No quedan insignias por conseguir por ahora: se cerró la pestaña."
+      },
       "errors": {
         "notificationsDisabled": "Activa las notificaciones de Chrome para lanzar una prueba.",
         "invalidHandle": "Identificador de canal inválido para {{platform}}.",
@@ -3866,6 +3920,12 @@ export const translations = {
         "badgeAutoOn": "Em andamento · Parar",
         "badgeAutoHint": "Modo auto: abre uma live numa aba fixada e sem som, e fecha quando o emblema for obtido",
         "badgeAutoStop": "Parar o modo auto",
+        "badgeAutoQueued": "Na fila · Remover",
+        "badgeAutoRemove": "Remover este emblema do modo auto",
+        "badgeAutoAll": "Pegar todos os emblemas possíveis",
+        "badgeAutoAllStop": "Parar o modo auto",
+        "badgeAutoStatus": "Modo auto: {{count}} emblema(s) na fila · agora em {{game}}",
+        "badgeAutoAllHint": "Uma aba fixada e sem som assiste a uma live por vez (a Twitch só conta uma live por vez). Os níveis do mesmo jogo (30 min, 1 h, 90 min…) avançam juntos e depois a aba passa para o próximo jogo.",
         "badgesUnit": "DISPONÍVEIS",
         "badgesLcdOwned": "Obtidos: {{count}}",
         "badgesLcdFree": "Grátis: {{count}}",
@@ -4276,6 +4336,18 @@ export const translations = {
       "htmlLang": "pt-BR"
     },
     "background": {
+      "badgeAuto": {
+        "bannerTitle": "Modo auto do StreamPulse",
+        "bannerAll": "O StreamPulse está pegando todos os emblemas possíveis",
+        "bannerBadges": "Em {{game}}: {{badges}}",
+        "bannerMinutes": "Drop em andamento: {{done}} / {{required}} min",
+        "bannerNext": "Depois: {{badges}} emblema(s) em mais {{games}} jogo(s)",
+        "bannerHint": "Deixe esta aba aberta: ela troca de live sozinha.",
+        "bannerStop": "Parar",
+        "obtained": "{{name}} é seu.",
+        "doneTitle": "Modo auto concluído",
+        "doneMessage": "Nenhum emblema para pegar por enquanto: a aba foi fechada."
+      },
       "errors": {
         "notificationsDisabled": "Ative as notificações do Chrome para rodar um teste.",
         "invalidHandle": "Identificador de canal inválido para {{platform}}.",
@@ -4986,6 +5058,12 @@ export const translations = {
         "badgeAutoOn": "Läuft · Stoppen",
         "badgeAutoHint": "Automodus: öffnet einen Livestream in einem angehefteten, stummen Tab und schließt ihn, sobald das Abzeichen erhalten ist",
         "badgeAutoStop": "Automodus beenden",
+        "badgeAutoQueued": "In der Warteschlange · Entfernen",
+        "badgeAutoRemove": "Dieses Abzeichen aus dem Auto-Modus entfernen",
+        "badgeAutoAll": "Alle möglichen Abzeichen holen",
+        "badgeAutoAllStop": "Auto-Modus beenden",
+        "badgeAutoStatus": "Auto-Modus: {{count}} Abzeichen in der Warteschlange · jetzt bei {{game}}",
+        "badgeAutoAllHint": "Ein angehefteter, stummer Tab schaut einen Livestream nach dem anderen (Twitch zählt nur einen gleichzeitig). Stufen desselben Spiels (30 Min., 1 Std., 90 Min. …) laufen zusammen, danach wechselt der Tab zum nächsten Spiel.",
         "badgesUnit": "VERFÜGBAR",
         "badgesLcdOwned": "Erhalten: {{count}}",
         "badgesLcdFree": "Gratis: {{count}}",
@@ -5396,6 +5474,18 @@ export const translations = {
       }
     },
     "background": {
+      "badgeAuto": {
+        "bannerTitle": "StreamPulse Auto-Modus",
+        "bannerAll": "StreamPulse holt alle möglichen Abzeichen",
+        "bannerBadges": "Bei {{game}}: {{badges}}",
+        "bannerMinutes": "Aktueller Drop: {{done}} / {{required}} Min.",
+        "bannerNext": "Danach: {{badges}} Abzeichen in {{games}} weiteren Spiel(en)",
+        "bannerHint": "Lass diesen Tab offen: Er wechselt den Livestream von selbst.",
+        "bannerStop": "Beenden",
+        "obtained": "{{name}} gehört dir.",
+        "doneTitle": "Auto-Modus fertig",
+        "doneMessage": "Gerade keine Abzeichen mehr zu holen: Der Tab wurde geschlossen."
+      },
       "errors": {
         "notificationsDisabled": "Aktivieren Sie Chrome-Benachrichtigungen, um einen Test durchzuführen.",
         "invalidHandle": "Ungültige {{platform}}-Kennung.",
@@ -6111,6 +6201,12 @@ export const translations = {
         "badgeAutoOn": "In corso · Ferma",
         "badgeAutoHint": "Modalità auto: apre una live in una scheda fissata e muta e la chiude appena ottieni il badge",
         "badgeAutoStop": "Ferma la modalità auto",
+        "badgeAutoQueued": "In coda · Rimuovi",
+        "badgeAutoRemove": "Rimuovi questo badge dalla modalità auto",
+        "badgeAutoAll": "Ottieni tutti i badge possibili",
+        "badgeAutoAllStop": "Ferma la modalità auto",
+        "badgeAutoStatus": "Modalità auto: {{count}} badge in coda · ora su {{game}}",
+        "badgeAutoAllHint": "Una scheda fissata e silenziata guarda una live alla volta (Twitch ne conta solo una alla volta). I livelli dello stesso gioco (30 min, 1 h, 90 min…) avanzano insieme, poi la scheda passa al gioco successivo.",
         "badgesUnit": "DISPONIBILI",
         "badgesLcdOwned": "Ottenuti: {{count}}",
         "badgesLcdFree": "Gratis: {{count}}",
@@ -6521,6 +6617,18 @@ export const translations = {
       }
     },
     "background": {
+      "badgeAuto": {
+        "bannerTitle": "Modalità auto di StreamPulse",
+        "bannerAll": "StreamPulse ottiene tutti i badge possibili",
+        "bannerBadges": "Su {{game}}: {{badges}}",
+        "bannerMinutes": "Drop in corso: {{done}} / {{required}} min",
+        "bannerNext": "Poi: {{badges}} badge su altri {{games}} giochi",
+        "bannerHint": "Lascia aperta questa scheda: cambia live da sola.",
+        "bannerStop": "Ferma",
+        "obtained": "{{name}} è tuo.",
+        "doneTitle": "Modalità auto finita",
+        "doneMessage": "Nessun badge da ottenere per ora: la scheda è stata chiusa."
+      },
       "errors": {
         "notificationsDisabled": "Abilita le notifiche di Chrome per eseguire un test.",
         "invalidHandle": "Identificatore {{platform}} non valido.",
@@ -7236,6 +7344,12 @@ export const translations = {
         "badgeAutoOn": "W toku · Zatrzymaj",
         "badgeAutoHint": "Tryb auto: otwiera transmisję w przypiętej, wyciszonej karcie i zamyka ją po zdobyciu odznaki",
         "badgeAutoStop": "Zatrzymaj tryb auto",
+        "badgeAutoQueued": "W kolejce · Usuń",
+        "badgeAutoRemove": "Usuń tę odznakę z trybu auto",
+        "badgeAutoAll": "Zdobądź wszystkie możliwe odznaki",
+        "badgeAutoAllStop": "Zatrzymaj tryb auto",
+        "badgeAutoStatus": "Tryb auto: {{count}} odznak(i) w kolejce · teraz {{game}}",
+        "badgeAutoAllHint": "Przypięta, wyciszona karta ogląda jedną transmisję naraz (Twitch liczy tylko jedną naraz). Poziomy tej samej gry (30 min, 1 h, 90 min…) postępują razem, potem karta przechodzi do następnej gry.",
         "badgesUnit": "DOSTĘPNE",
         "badgesLcdOwned": "Zdobyte: {{count}}",
         "badgesLcdFree": "Darmowe: {{count}}",
@@ -7646,6 +7760,18 @@ export const translations = {
       }
     },
     "background": {
+      "badgeAuto": {
+        "bannerTitle": "Tryb auto StreamPulse",
+        "bannerAll": "StreamPulse zdobywa wszystkie możliwe odznaki",
+        "bannerBadges": "W {{game}}: {{badges}}",
+        "bannerMinutes": "Bieżący drop: {{done}} / {{required}} min",
+        "bannerNext": "Potem: {{badges}} odznak(i) w {{games}} innych grach",
+        "bannerHint": "Zostaw tę kartę otwartą: sama zmienia transmisję.",
+        "bannerStop": "Zatrzymaj",
+        "obtained": "{{name}} jest twoja.",
+        "doneTitle": "Tryb auto zakończony",
+        "doneMessage": "Na razie nie ma więcej odznak do zdobycia: karta została zamknięta."
+      },
       "errors": {
         "notificationsDisabled": "Włącz powiadomienia Chrome, aby przeprowadzić test.",
         "invalidHandle": "Nieprawidłowy identyfikator {{platform}}.",
@@ -8361,6 +8487,12 @@ export const translations = {
         "badgeAutoOn": "Sürüyor · Durdur",
         "badgeAutoHint": "Otomatik mod: yayını sabitlenmiş ve sessiz bir sekmede açar, rozet kazanılınca kapatır",
         "badgeAutoStop": "Otomatik modu durdur",
+        "badgeAutoQueued": "Sırada · Kaldır",
+        "badgeAutoRemove": "Bu rozeti otomatik moddan kaldır",
+        "badgeAutoAll": "Alınabilecek tüm rozetleri al",
+        "badgeAutoAllStop": "Otomatik modu durdur",
+        "badgeAutoStatus": "Otomatik mod: sırada {{count}} rozet · şu an {{game}}",
+        "badgeAutoAllHint": "Sabitlenmiş ve sessiz bir sekme aynı anda tek bir yayını izler (Twitch aynı anda yalnızca birini sayar). Aynı oyunun kademeleri (30 dk, 1 sa, 90 dk…) birlikte ilerler, sonra sekme sıradaki oyuna geçer.",
         "badgesUnit": "ALINABİLİR",
         "badgesLcdOwned": "Alınan: {{count}}",
         "badgesLcdFree": "Ücretsiz: {{count}}",
@@ -8771,6 +8903,18 @@ export const translations = {
       }
     },
     "background": {
+      "badgeAuto": {
+        "bannerTitle": "StreamPulse otomatik mod",
+        "bannerAll": "StreamPulse alınabilecek tüm rozetleri alıyor",
+        "bannerBadges": "{{game}}: {{badges}}",
+        "bannerMinutes": "Süren drop: {{done}} / {{required}} dk",
+        "bannerNext": "Sonra: {{games}} başka oyunda {{badges}} rozet",
+        "bannerHint": "Bu sekmeyi açık bırak: yayını kendisi değiştirir.",
+        "bannerStop": "Durdur",
+        "obtained": "{{name}} artık senin.",
+        "doneTitle": "Otomatik mod bitti",
+        "doneMessage": "Şimdilik alınacak rozet kalmadı: sekme kapatıldı."
+      },
       "errors": {
         "notificationsDisabled": "Bir test yapmak için Chrome bildirimlerini etkinleştirin.",
         "invalidHandle": "Geçersiz {{platform}} tanımlayıcısı.",
@@ -9486,6 +9630,12 @@ export const translations = {
         "badgeAutoOn": "Идёт · Остановить",
         "badgeAutoHint": "Авторежим: открывает трансляцию в закреплённой беззвучной вкладке и закрывает её, как только значок получен",
         "badgeAutoStop": "Остановить авторежим",
+        "badgeAutoQueued": "В очереди · Убрать",
+        "badgeAutoRemove": "Убрать этот значок из авторежима",
+        "badgeAutoAll": "Получить все доступные значки",
+        "badgeAutoAllStop": "Остановить авторежим",
+        "badgeAutoStatus": "Авторежим: в очереди {{count}} знач. · сейчас {{game}}",
+        "badgeAutoAllHint": "Закреплённая беззвучная вкладка смотрит одну трансляцию за раз (Twitch засчитывает только одну одновременно). Уровни одной игры (30 мин, 1 ч, 90 мин…) идут вместе, затем вкладка переходит к следующей игре.",
         "badgesUnit": "ДОСТУПНО",
         "badgesLcdOwned": "Получено: {{count}}",
         "badgesLcdFree": "Бесплатных: {{count}}",
@@ -9896,6 +10046,18 @@ export const translations = {
       }
     },
     "background": {
+      "badgeAuto": {
+        "bannerTitle": "Авторежим StreamPulse",
+        "bannerAll": "StreamPulse получает все доступные значки",
+        "bannerBadges": "{{game}}: {{badges}}",
+        "bannerMinutes": "Текущий дроп: {{done}} / {{required}} мин",
+        "bannerNext": "Далее: {{badges}} знач. в других играх ({{games}})",
+        "bannerHint": "Не закрывай эту вкладку: она сама меняет трансляцию.",
+        "bannerStop": "Остановить",
+        "obtained": "{{name}} теперь твой.",
+        "doneTitle": "Авторежим завершён",
+        "doneMessage": "Пока больше нечего получать: вкладка закрыта."
+      },
       "errors": {
         "notificationsDisabled": "Включите уведомления Chrome, чтобы запустить тест.",
         "invalidHandle": "Неверный идентификатор {{platform}}.",
@@ -10611,6 +10773,12 @@ export const translations = {
         "badgeAutoOn": "実行中 · 停止",
         "badgeAutoHint": "自動モード：固定・ミュートしたタブで配信を開き、バッジ獲得後に閉じます",
         "badgeAutoStop": "自動モードを停止",
+        "badgeAutoQueued": "待機中 · 外す",
+        "badgeAutoRemove": "このバッジを自動モードから外す",
+        "badgeAutoAll": "取得できるバッジをすべて取る",
+        "badgeAutoAllStop": "自動モードを止める",
+        "badgeAutoStatus": "自動モード：待機 {{count}} 個 · 現在 {{game}}",
+        "badgeAutoAllHint": "固定・ミュートしたタブが一度に1つの配信を視聴します（Twitch は同時に1つしか数えません）。同じゲームの段階（30分、1時間、90分…）はまとめて進み、その後次のゲームへ移ります。",
         "badgesUnit": "入手可能",
         "badgesLcdOwned": "取得済み：{{count}}",
         "badgesLcdFree": "無料：{{count}}",
@@ -11021,6 +11189,18 @@ export const translations = {
       }
     },
     "background": {
+      "badgeAuto": {
+        "bannerTitle": "StreamPulse 自動モード",
+        "bannerAll": "StreamPulse が取得できるバッジをすべて取っています",
+        "bannerBadges": "{{game}}：{{badges}}",
+        "bannerMinutes": "進行中のドロップ：{{done}} / {{required}} 分",
+        "bannerNext": "次：ほかの {{games}} ゲームで {{badges}} 個",
+        "bannerHint": "このタブは開いたままにしてください。配信は自動で切り替わります。",
+        "bannerStop": "止める",
+        "obtained": "{{name}} を獲得しました。",
+        "doneTitle": "自動モード完了",
+        "doneMessage": "今は取得できるバッジがありません。タブを閉じました。"
+      },
       "errors": {
         "notificationsDisabled": "テストを実行するには、Chromeの通知を有効にしてください。",
         "invalidHandle": "{{platform}} 識別子が無効です。",
@@ -11736,6 +11916,12 @@ export const translations = {
         "badgeAutoOn": "진행 중 · 중지",
         "badgeAutoHint": "자동 모드: 고정·음소거 탭에서 방송을 열고 배지를 얻으면 닫습니다",
         "badgeAutoStop": "자동 모드 중지",
+        "badgeAutoQueued": "대기 중 · 빼기",
+        "badgeAutoRemove": "이 배지를 자동 모드에서 빼기",
+        "badgeAutoAll": "받을 수 있는 배지 모두 받기",
+        "badgeAutoAllStop": "자동 모드 중지",
+        "badgeAutoStatus": "자동 모드: {{count}}개 대기 · 현재 {{game}}",
+        "badgeAutoAllHint": "고정되고 음소거된 탭이 한 번에 하나의 방송을 시청합니다(Twitch는 동시에 하나만 인정). 같은 게임의 단계(30분, 1시간, 90분…)는 함께 진행되고, 그다음 탭이 다음 게임으로 넘어갑니다.",
         "badgesUnit": "획득 가능",
         "badgesLcdOwned": "획득함: {{count}}",
         "badgesLcdFree": "무료: {{count}}",
@@ -12146,6 +12332,18 @@ export const translations = {
       }
     },
     "background": {
+      "badgeAuto": {
+        "bannerTitle": "StreamPulse 자동 모드",
+        "bannerAll": "StreamPulse가 받을 수 있는 배지를 모두 받는 중",
+        "bannerBadges": "{{game}}: {{badges}}",
+        "bannerMinutes": "진행 중인 드롭: {{done}} / {{required}}분",
+        "bannerNext": "다음: 다른 게임 {{games}}개에서 배지 {{badges}}개",
+        "bannerHint": "이 탭을 열어 두세요. 방송은 알아서 바뀝니다.",
+        "bannerStop": "중지",
+        "obtained": "{{name}} 획득!",
+        "doneTitle": "자동 모드 완료",
+        "doneMessage": "지금은 받을 배지가 없습니다. 탭을 닫았습니다."
+      },
       "errors": {
         "notificationsDisabled": "테스트를 실행하려면 Chrome 알림을 활성화하세요.",
         "invalidHandle": "{{platform}} 식별자가 유효하지 않습니다.",

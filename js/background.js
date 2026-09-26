@@ -25,8 +25,9 @@ import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-aler
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "./plus.js";
 import { createPointsStore } from "./points-store.js";
 import { createDropsStore } from "./drops-store.js";
-import { BADGE_AUTO_KEY, CLAIM_OK_STATUSES, badgesFrom, isPaidBadge } from "./drops-data.js";
+import { BADGE_AUTO_KEY, CLAIM_OK_STATUSES, isPaidBadge } from "./drops-data.js";
 import { createDropsClient } from "./drops-gql.js";
+import { createBadgeAuto } from "./badge-auto-worker.js";
 import { searchChannels } from "./channel-search.js";
 import { syncEventSubRaid, stopEventSubRaid } from "./eventsubRaid.js";
 import {
@@ -1058,90 +1059,9 @@ async function refreshRewardsFromWorker() {
   await checkBadgeAuto();
 }
 
-// ─── Obtention automatique d'un badge ─────────────────────────────────────────
-// Un onglet épinglé et muet regarde un live de la campagne ; dès que Twitch
-// compte le badge parmi ceux de l'utilisateur, l'onglet se ferme et une
-// notification le signale. Les Drops prêts sont récupérés par l'alarme habituelle.
-
-const channelOf = (url) => (String(url || "").match(/^https:\/\/www\.twitch\.tv\/([a-z0-9_]{2,25})\/?(?:[?#]|$)/i) || [])[1] || "";
-
-async function openBadgeTab(auto, tabId) {
-  const url = await dropsStreamUrl({ gameId: auto.gameId, game: auto.game });
-  if (tabId) {
-    await chrome.tabs.update(tabId, { url, pinned: true, muted: true });
-    return tabId;
-  }
-  const tab = await chrome.tabs.create({ url, active: false, pinned: true });
-  await chrome.tabs.update(tab.id, { muted: true });
-  return tab.id;
-}
-
-async function startBadgeAuto(badge) {
-  const previous = (await chrome.storage.local.get(BADGE_AUTO_KEY))[BADGE_AUTO_KEY];
-  const tabId = await openBadgeTab(badge, previous?.tabId && (await tabExists(previous.tabId)) ? previous.tabId : 0);
-  await chrome.storage.local.set({ [BADGE_AUTO_KEY]: { ...badge, tabId, startedAt: Date.now() } });
-  // Les Drops du live doivent être suivis pour que la récupération auto passe.
-  scheduleDropsAlarm();
-}
-
-async function stopBadgeAuto({ closeTab = true } = {}) {
-  const auto = (await chrome.storage.local.get(BADGE_AUTO_KEY))[BADGE_AUTO_KEY];
-  await chrome.storage.local.remove(BADGE_AUTO_KEY);
-  if (closeTab && auto?.tabId && (await tabExists(auto.tabId))) await chrome.tabs.remove(auto.tabId);
-  return auto;
-}
-
-async function tabExists(tabId) {
-  try {
-    return Boolean(await chrome.tabs.get(tabId));
-  } catch (_) {
-    return false;
-  }
-}
-
-function checkBadgeAfterClaim() {
-  chrome.storage.local.get(BADGE_AUTO_KEY)
-    .then((stored) => (stored[BADGE_AUTO_KEY] ? refreshRewardsFromWorker() : null))
-    .catch((error) => console.warn("[StreamPulse] mode auto badge :", error?.code || error?.message || error));
-}
-
-async function checkBadgeAuto() {
-  const stored = await chrome.storage.local.get([BADGE_AUTO_KEY, "streamPulseDropsBadges", "streamPulseDropsCampaigns"]);
-  const auto = stored[BADGE_AUTO_KEY];
-  if (!auto) return;
-  if (badgesFrom(stored).owned.includes(auto.badgeId)) {
-    await stopBadgeAuto();
-    const prefs = await PreferenceStore.get();
-    await NotificationCenter.show({
-      title: translateWithPrefs(prefs, "background.notifications.badgeAutoTitle"),
-      message: translateWithPrefs(prefs, "background.notifications.badgeAutoMessage", { name: auto.title }),
-    });
-    return;
-  }
-  const campaign = (stored.streamPulseDropsCampaigns?.campaigns || []).find((item) => item.id === auto.campaignId);
-  if (campaign?.endsAt && campaign.endsAt < Date.now()) {
-    await stopBadgeAuto();
-    return;
-  }
-  // Onglet fermé à la main ou live terminé : on repart sur un live en cours.
-  const tab = auto.tabId ? await chrome.tabs.get(auto.tabId).catch(() => null) : null;
-  if (!tab) return;
-  const login = channelOf(tab.url);
-  if (login && (await isChannelLive(login))) return;
-  await openBadgeTab(auto, tab.id);
-}
-
-async function isChannelLive(login) {
-  try {
-    await ensureConfig();
-    const data = await fetchTwitchJson(`https://api.twitch.tv/helix/streams?user_login=${encodeURIComponent(login)}&type=live`, { headers: twitchHeaders() });
-    return Boolean(data?.data?.length);
-  } catch (error) {
-    // Sans réponse de Helix, on garde l'onglet tel quel plutôt que de changer de chaîne à l'aveugle.
-    console.warn("[StreamPulse] mode auto badge :", error?.message || error);
-    return true;
-  }
-}
+// ─── Mode auto des badges ─────────────────────────────────────────────────────
+// File de badges regardée par un onglet épinglé et muet, un jeu à la fois :
+// voir js/badge-auto-worker.js et js/badge-auto.js.
 
 /**
  * Exécuté dans la page Twitch (monde MAIN) : lecteur en qualité minimale et
@@ -1174,23 +1094,43 @@ function lowPowerPlayer() {
   apply();
 }
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
-  if (changeInfo.status !== "complete") return;
-  chrome.storage.local.get(BADGE_AUTO_KEY)
-    .then((stored) => {
-      if (stored[BADGE_AUTO_KEY]?.tabId !== tabId) return null;
-      return chrome.scripting.executeScript({ target: { tabId }, world: "MAIN", func: lowPowerPlayer });
-    })
-    .catch((error) => console.warn("[StreamPulse] mode auto badge, lecteur :", error?.message || error));
+/** Jeu du live d'une chaîne : "" hors ligne, null si Helix ne répond pas. */
+async function streamGameOf(login) {
+  try {
+    await ensureConfig();
+    const data = await fetchTwitchJson(`https://api.twitch.tv/helix/streams?user_login=${encodeURIComponent(login)}&type=live`, { headers: twitchHeaders() });
+    return String(data?.data?.[0]?.game_id || "");
+  } catch (error) {
+    console.warn("[StreamPulse] mode auto badges :", error?.message || error);
+    return null;
+  }
+}
+
+const badgeAuto = createBadgeAuto({
+  streamUrl: dropsStreamUrl,
+  streamGameOf,
+  lowPowerPlayer,
+  translate: async (key, params) => translateWithPrefs(await PreferenceStore.get(), key, params),
+  notify: async (titleKey, messageKey, params = {}) => {
+    const prefs = await PreferenceStore.get();
+    await NotificationCenter.show({ title: translateWithPrefs(prefs, titleKey), message: translateWithPrefs(prefs, messageKey, params) });
+  },
+  // Les Drops du live doivent être suivis pour que la récupération auto passe.
+  onStart: () => scheduleDropsAlarm(),
 });
 
-chrome.tabs.onRemoved.addListener((tabId) => {
-  chrome.storage.local.get(BADGE_AUTO_KEY).then((stored) => {
-    // Onglet fermé par l'utilisateur : le mode auto s'arrête avec lui.
-    if (stored[BADGE_AUTO_KEY]?.tabId === tabId) return chrome.storage.local.remove(BADGE_AUTO_KEY);
-    return null;
-  }).catch((error) => console.warn("[StreamPulse] mode auto badge :", error?.message || error));
-});
+function checkBadgeAuto() {
+  return badgeAuto.check();
+}
+
+function checkBadgeAfterClaim() {
+  badgeAuto.isActive()
+    .then((active) => (active ? refreshRewardsFromWorker() : null))
+    .catch((error) => console.warn("[StreamPulse] mode auto badges :", error?.code || error?.message || error));
+}
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => badgeAuto.onTabUpdated(tabId, changeInfo));
+chrome.tabs.onRemoved.addListener((tabId) => badgeAuto.onTabRemoved(tabId));
 
 /** Alerte pour les nouveaux badges gratuits (3 au plus d'un coup). */
 async function announceBadges(badges) {
@@ -1237,7 +1177,9 @@ async function dropsStreamUrl({ gameId, game }) {
   try {
     await ensureConfig();
     const data = await fetchTwitchJson(`https://api.twitch.tv/helix/streams?game_id=${gameId}&type=live&first=20`, { headers: twitchHeaders() });
-    const stream = (data?.data || []).find((item) => item.user_login);
+    // Un live avec le tag Drops fait progresser la campagne ; à défaut, le premier live du jeu.
+    const live = (data?.data || []).filter((item) => item.user_login);
+    const stream = live.find((item) => (item.tags || []).some((tag) => /drops/i.test(String(tag)))) || live[0];
     return stream ? `https://www.twitch.tv/${encodeURIComponent(stream.user_login)}` : directory;
   } catch (error) {
     console.warn("[StreamPulse] recherche d'un live pour la campagne :", error?.message || error);
@@ -3959,21 +3901,27 @@ function handleMessage(request, sender, sendResponse) {
       })();
       return true;
 
-    case "badgeAutoStart":
-      startBadgeAuto({
-        badgeId: String(request.badge?.badgeId || ""),
-        title: String(request.badge?.title || "").slice(0, 120),
-        image: String(request.badge?.image || ""),
-        game: String(request.badge?.game || "").slice(0, 120),
-        gameId: String(request.badge?.gameId || ""),
-        campaignId: String(request.badge?.campaignId || ""),
-      })
-        .then(() => sendResponse({ success: true }))
+    case "badgeAutoStart": {
+      // { badge } : un badge de plus dans la file ; { all: true } : tous les badges gratuits possibles.
+      const raw = request.badge || {};
+      const job = raw.badgeId ? {
+        badgeId: String(raw.badgeId),
+        title: String(raw.title || "").slice(0, 120),
+        image: String(raw.image || ""),
+        game: String(raw.game || "").slice(0, 120),
+        gameId: String(raw.gameId || ""),
+        campaignId: String(raw.campaignId || ""),
+        endsAt: Number(raw.endsAt) || 0,
+        addedAt: Date.now(),
+      } : null;
+      badgeAuto.start({ job, all: request.all === true })
+        .then((result) => sendResponse({ success: true, ...result }))
         .catch((error) => sendResponse({ error: error?.message || String(error) }));
       return true;
+    }
 
     case "badgeAutoStop":
-      stopBadgeAuto()
+      badgeAuto.stop(String(request.badgeId || ""))
         .then(() => sendResponse({ success: true }))
         .catch((error) => sendResponse({ error: error?.message || String(error) }));
       return true;
