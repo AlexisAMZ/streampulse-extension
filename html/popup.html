@@ -254,6 +254,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>
           <span data-i18n="popup.osd.menuDrops">Drops</span>
         </button>
+        <button id="menu-tab-badges" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-badges" data-panel="badges" tabindex="-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
+          <span data-i18n="popup.osd.menuBadges">Badges</span>
+        </button>
         <button id="menu-tab-plus" class="menu-tab menu-tab-plus" type="button" role="tab" aria-selected="false" aria-controls="menu-plus" data-panel="plus" tabindex="-1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg>
           <span data-i18n="popup.osd.menuPlus">StreamPulse+</span>
@@ -658,12 +662,6 @@
             <button type="button" class="button button-quiet" id="drops-open-campaigns" data-i18n="popup.drops.openCampaigns">Ouvrir les campagnes</button>
           </div>
 
-          <h3 class="drops-section"><span data-i18n="popup.drops.badges">Badges et récompenses</span><small id="drops-rewards-meta"></small></h3>
-          <ul class="drops-campaigns" id="drops-rewards"></ul>
-          <p class="drops-empty" id="drops-rewards-empty" data-i18n="popup.drops.badgesEmpty" hidden>Aucune campagne de badges en cours pour l'instant.</p>
-          <p class="drops-subtitle"><span data-i18n="popup.drops.newBadges">Nouveaux badges</span><small id="drops-badges-meta"></small></p>
-          <ul class="drops-campaigns" id="drops-badges"></ul>
-          <p class="drops-empty" id="drops-badges-sync" role="status"></p>
 
           <h3 class="drops-section"><span data-i18n="popup.drops.history">Historique</span><span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span><small id="drops-history-meta"></small></h3>
           <div class="drops-history" id="drops-history"></div>
@@ -679,6 +677,18 @@
             </span>
             <input id="pref-drops-tracking" type="checkbox" role="switch" />
           </label>
+        </section>
+
+        <section class="menu-panel drops-panel" id="menu-badges" role="tabpanel" aria-labelledby="menu-tab-badges" hidden>
+          <div class="pts-head">
+            <h2 data-i18n="popup.osd.menuBadges">Badges</h2>
+          </div>
+          <h3 class="drops-section"><span data-i18n="popup.drops.badges">Badges et récompenses</span><small id="drops-rewards-meta"></small></h3>
+          <ul class="drops-campaigns" id="drops-rewards"></ul>
+          <p class="drops-empty" id="drops-rewards-empty" data-i18n="popup.drops.badgesEmpty" hidden>Aucune campagne de badges en cours pour l'instant.</p>
+          <h3 class="drops-section"><span data-i18n="popup.drops.newBadges">Nouveaux badges</span><small id="drops-badges-meta"></small></h3>
+          <ul class="drops-campaigns" id="drops-badges"></ul>
+          <p class="drops-empty" id="drops-badges-sync" role="status"></p>
         </section>
 
         <!-- StreamPulse+ -->

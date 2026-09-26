@@ -1049,8 +1049,11 @@ async function claimDropFromWorker(instanceId, auto) {
   }
   const result = await dropsStore.recordClaim({ instanceId, ok, status, auto });
   if (result.entry) announceDrops([result.entry]).catch(() => {});
-  else if (ok) console.warn("[StreamPulse] récupération du Drop refusée :", status || "sans statut");
-  return result.recorded;
+  const claimed = ok && CLAIM_OK_STATUSES.includes(status);
+  if (ok && !claimed) console.warn("[StreamPulse] récupération du Drop refusée :", status || "sans statut");
+  // Récupéré mais absent de la progression locale : on relit pour remettre la liste à jour.
+  if (claimed && !result.entry) refreshDropsFromWorker({ minGapMs: 0 }).catch(() => {});
+  return claimed;
 }
 
 /** Confie une commande au premier onglet Twitch qui a le relais des Drops. */
@@ -3761,8 +3764,15 @@ function handleMessage(request, sender, sendResponse) {
     // Bouton « Récupérer » du popup : récupération auto coupée, ou refusée par Twitch.
     case "claimDrop":
       claimDropFromWorker(String(request.instanceId || ""), false)
-        .then((claimed) => claimed || sendDropsCommand({ action: "claim", instanceId: String(request.instanceId || "") }))
-        .then((sent) => sendResponse({ success: true, sent }))
+        .then(async (claimed) => {
+          if (claimed) return { sent: true };
+          if (await sendDropsCommand({ action: "claim", instanceId: String(request.instanceId || "") })) return { sent: true };
+          // Twitch refuse la récupération hors de sa page : on ouvre l'inventaire,
+          // où le Drop se récupère d'un clic.
+          await chrome.tabs.create({ url: "https://www.twitch.tv/drops/inventory", active: true });
+          return { sent: true, opened: true };
+        })
+        .then((result) => sendResponse({ success: true, ...result }))
         .catch((error) => sendResponse({ error: error?.message || String(error) }));
       return true;
 

@@ -440,8 +440,14 @@ async function claim(button) {
   claiming.set(instanceId, Date.now());
   button.disabled = true;
   button.textContent = t("popup.drops.claiming");
-  const sent = await chrome.runtime.sendMessage({ type: "claimDrop", instanceId }).then((response) => response?.sent === true, () => false);
-  if (sent) return;
+  const response = await chrome.runtime.sendMessage({ type: "claimDrop", instanceId }).catch(() => null);
+  if (response?.sent && !response.opened) return;
+  if (response?.opened) {
+    claiming.delete(instanceId);
+    render();
+    $("drops-updated").textContent = t("popup.drops.claimOpened");
+    return;
+  }
   // Aucun onglet Twitch pour l'exécuter : on le dit, et le bouton revient.
   claiming.delete(instanceId);
   render();
