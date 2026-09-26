@@ -73,6 +73,7 @@ const autoOpenInventoryToggle = document.getElementById("pref-auto-open-inventor
 const autoOpenInventoryIntervalSelect = document.getElementById("pref-auto-open-inventory-interval");
 const hideTwitchExtensionsToggle = document.getElementById("pref-hide-twitch-extensions");
 const autoCancelRaidsToggle = document.getElementById("pref-auto-cancel-raids");
+const updateNotificationsToggle = document.getElementById("pref-update-notifications");
 const preventTabDiscardToggle = document.getElementById("pref-prevent-tab-discard");
 const streamerFaviconToggle = document.getElementById("pref-enable-streamer-favicon");
 const tabLiveIconToggle = document.getElementById("pref-enable-tab-live-icon");
@@ -976,6 +977,9 @@ function renderPreferences() {
   }
   if (autoCancelRaidsToggle) {
     autoCancelRaidsToggle.checked = prefs.autoCancelRaids === true;
+  }
+  if (updateNotificationsToggle) {
+    updateNotificationsToggle.checked = prefs.updateNotifications !== false;
   }
   if (preventTabDiscardToggle) {
     preventTabDiscardToggle.checked = prefs.preventTabDiscard !== false;
@@ -1940,6 +1944,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     autoCancelRaidsToggle?.addEventListener("change", (e) => {
       updatePreferences({ autoCancelRaids: e.target.checked });
+    });
+    updateNotificationsToggle?.addEventListener("change", (e) => {
+      updatePreferences({ updateNotifications: e.target.checked });
     });
     preventTabDiscardToggle?.addEventListener("change", (e) => {
       updatePreferences({ preventTabDiscard: e.target.checked });

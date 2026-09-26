@@ -323,6 +323,23 @@ export const RELEASES = [
         },
       },
       {
+        type: "new",
+        area: "interface",
+        text: {
+          fr: "Une notification annonce chaque mise à jour de StreamPulse, une seule fois par version, et un clic ouvre les nouveautés. Ça se désactive dans les Réglages, onglet Alertes.",
+          en: "A notification announces every StreamPulse update, once per version, and a click opens What's new. It can be turned off in Settings, Alerts tab.",
+          es: "Una notificación anuncia cada actualización de StreamPulse, una sola vez por versión, y un clic abre las novedades. Se puede desactivar en los Ajustes, pestaña Alertas.",
+          "pt-BR": "Uma notificação anuncia cada atualização do StreamPulse, uma vez por versão, e um clique abre as novidades. Dá para desativar nas Configurações, aba Alertas.",
+          de: "Eine Benachrichtigung kündigt jedes StreamPulse-Update an, einmal pro Version, ein Klick öffnet die Neuigkeiten. Deaktivierbar in den Einstellungen, Tab Alarme.",
+          it: "Una notifica annuncia ogni aggiornamento di StreamPulse, una sola volta per versione, e un clic apre le novità. Disattivabile nelle Impostazioni, scheda Avvisi.",
+          pl: "Powiadomienie zapowiada każdą aktualizację StreamPulse, raz na wersję, a kliknięcie otwiera nowości. Można je wyłączyć w Ustawieniach, karcie Alerty.",
+          tr: "Bir bildirim, StreamPulse'un her güncellemesini sürüm başına bir kez duyurur ve tıklamak yenilikleri açar. Ayarlar'daki Uyarılar sekmesinden kapatılabilir.",
+          ru: "Уведомление сообщает о каждом обновлении StreamPulse — один раз на версию, а клик открывает новинки. Отключается в настройках, вкладка «Оповещения».",
+          ja: "StreamPulse の更新をバージョンごとに1回、通知でお知らせし、クリックで新着情報を開けます。設定の「アラート」タブでオフにできます。",
+          ko: "StreamPulse 업데이트를 버전당 한 번 알림으로 알려주고, 클릭하면 새 소식이 열립니다. 설정의 알림 탭에서 끌 수 있습니다.",
+        },
+      },
+      {
         type: "improved",
         area: "points",
         text: {

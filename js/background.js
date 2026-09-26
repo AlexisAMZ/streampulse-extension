@@ -669,6 +669,7 @@ class PreferenceStore {
       predictionAlerts: preferences.predictionAlerts !== false,
       raidAlerts: preferences.raidAlerts !== false,
       backgroundRaidAlerts: preferences.backgroundRaidAlerts === true,
+      updateNotifications: preferences.updateNotifications !== false,
       soundsEnabled: preferences.soundsEnabled !== false,
       autoClaimChannelPoints: preferences.autoClaimChannelPoints !== false,
       autoClaimDrops: preferences.autoClaimDrops !== false,
@@ -3118,6 +3119,29 @@ async function migrateAutoCancelRaidsOff() {
   }
 }
 
+// Notification « StreamPulse a été mis à jour » : une seule fois par version.
+// Le drapeau dédié survit à un éventuel double déclenchement de onInstalled,
+// qui ne remet pas seenPatchNotesVersion à jour. Clic : ouvre la page des
+// nouveautés. Désactivable dans les Réglages, onglet Alertes.
+const UPDATE_NOTICE_VERSION_KEY = "updateNoticeShownVersion";
+
+async function notifyUpdateOnce(version) {
+  try {
+    const preferences = await PreferenceStore.get();
+    if (preferences.updateNotifications === false) return;
+    const stored = await chrome.storage.local.get(UPDATE_NOTICE_VERSION_KEY);
+    if (stored[UPDATE_NOTICE_VERSION_KEY] === version) return;
+    await chrome.storage.local.set({ [UPDATE_NOTICE_VERSION_KEY]: version });
+    await NotificationCenter.show({
+      title: translateWithPrefs(preferences, "background.notifications.updateTitle"),
+      message: translateWithPrefs(preferences, "background.notifications.updateMessage"),
+      url: chrome.runtime.getURL("html/changelog.html"),
+    });
+  } catch (error) {
+    console.warn("Update notice failed:", error?.message || error);
+  }
+}
+
 chrome.runtime.onInstalled.addListener(async (details) => {
   initDone = true;
   await fetchRemoteConfig(); // load credentials before first poll
@@ -3160,9 +3184,11 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   ) {
     // Les notes ne s'ouvrent plus d'elles-memes : ouvrir un onglet sans que
     // l'utilisateur l'ait demande est intrusif. On memorise seulement la
-    // version vue, pour signaler la nouveaute sur le bouton du popup.
+    // version vue, pour signaler la nouveaute sur le bouton du popup, et la
+    // notification de mise a jour (si active) prend le relais.
     if (seenPatchNotesVersion !== currentVersion) {
       await chrome.storage.local.set({ patchNotesUnread: true });
+      await notifyUpdateOnce(currentVersion);
     }
   }
   await syncUpdateBadge();
