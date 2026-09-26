@@ -438,11 +438,11 @@ export const translations = {
         "ready": "Prêt",
         "claim": "Récupérer",
         "claiming": "Récupération…",
-        "claimNoTab": "Ouvre un onglet Twitch pour récupérer ce Drop.",
+        "claimNoTab": "Récupération impossible pour l'instant : connecte-toi à Twitch, puis réessaie.",
         "claimedAuto": "Récupéré automatiquement à {{time}}",
         "claimedAt": "Récupéré à {{time}}",
         "inInventory": "Dans l'inventaire",
-        "emptyProgress": "Aucun Drop en cours. Regarde un live avec les Drops activés, un onglet Twitch ouvert : ta progression s'affichera ici.",
+        "emptyProgress": "Aucun Drop en cours. Regarde un live avec les Drops activés : ta progression s'affichera ici.",
         "staleHint": "ouvre Twitch pour mettre à jour",
         "bandOpen": "Ouvrir le panneau Drops",
         "bandClaimed": "Drop récupéré · {{name}}",
@@ -474,7 +474,7 @@ export const translations = {
         "historyEmpty": "Aucun Drop obtenu depuis le début du suivi. Ils s'ajouteront ici, mois par mois.",
         "lockedBody": "L'historique de tous tes Drops obtenus, mois par mois, avec le jeu et la chaîne. Réservé à StreamPulse+.",
         "trackingTitle": "Suivre les Drops",
-        "trackingBody": "Actif tant qu'un onglet Twitch est ouvert : progression, campagnes et récupération."
+        "trackingBody": "Progression et récupération même sans onglet Twitch ouvert. La liste des campagnes se met à jour quand tu passes sur Twitch."
       },
       "osd": {
         "tabsLabel": "Vues du popup",
@@ -1448,11 +1448,11 @@ export const translations = {
         "ready": "Ready",
         "claim": "Claim",
         "claiming": "Claiming…",
-        "claimNoTab": "Open a Twitch tab to claim this Drop.",
+        "claimNoTab": "Can't claim right now: sign in to Twitch, then try again.",
         "claimedAuto": "Claimed automatically at {{time}}",
         "claimedAt": "Claimed at {{time}}",
         "inInventory": "In your inventory",
-        "emptyProgress": "No Drop in progress. Watch a live with Drops enabled while a Twitch tab is open: your progress will show up here.",
+        "emptyProgress": "No Drop in progress. Watch a live with Drops enabled: your progress will show up here.",
         "staleHint": "open Twitch to update",
         "bandOpen": "Open the Drops panel",
         "bandClaimed": "Drop claimed · {{name}}",
@@ -1484,7 +1484,7 @@ export const translations = {
         "historyEmpty": "No Drop earned since tracking started. They will show up here, month by month.",
         "lockedBody": "The history of every Drop you earned, month by month, with the game and the channel. StreamPulse+ only.",
         "trackingTitle": "Track Drops",
-        "trackingBody": "Active while a Twitch tab is open: progress, campaigns and claiming."
+        "trackingBody": "Progress and claiming even without a Twitch tab open. The campaign list updates when you visit Twitch."
       },
       "osd": {
         "tabsLabel": "Popup views",
@@ -2458,11 +2458,11 @@ export const translations = {
         "ready": "Listo",
         "claim": "Reclamar",
         "claiming": "Reclamando…",
-        "claimNoTab": "Abre una pestaña de Twitch para reclamar este Drop.",
+        "claimNoTab": "No se puede reclamar ahora: inicia sesión en Twitch y vuelve a intentarlo.",
         "claimedAuto": "Reclamado automáticamente a las {{time}}",
         "claimedAt": "Reclamado a las {{time}}",
         "inInventory": "En el inventario",
-        "emptyProgress": "Ningún Drop en curso. Mira un directo con Drops activados con una pestaña de Twitch abierta: tu progreso aparecerá aquí.",
+        "emptyProgress": "Ningún Drop en curso. Mira un directo con Drops activados: tu progreso aparecerá aquí.",
         "staleHint": "abre Twitch para actualizar",
         "bandOpen": "Abrir el panel Drops",
         "bandClaimed": "Drop reclamado · {{name}}",
@@ -2494,7 +2494,7 @@ export const translations = {
         "historyEmpty": "Ningún Drop obtenido desde que empezó el seguimiento. Aparecerán aquí, mes a mes.",
         "lockedBody": "El historial de todos tus Drops obtenidos, mes a mes, con el juego y el canal. Exclusivo de StreamPulse+.",
         "trackingTitle": "Seguir los Drops",
-        "trackingBody": "Activo mientras haya una pestaña de Twitch abierta: progreso, campañas y reclamo."
+        "trackingBody": "Progreso y reclamo incluso sin una pestaña de Twitch abierta. La lista de campañas se actualiza cuando visitas Twitch."
       },
       "osd": {
         "tabsLabel": "Popup views",
@@ -3455,11 +3455,11 @@ export const translations = {
         "ready": "Pronto",
         "claim": "Resgatar",
         "claiming": "Resgatando…",
-        "claimNoTab": "Abra uma aba da Twitch para resgatar este Drop.",
+        "claimNoTab": "Não foi possível resgatar agora: entre na Twitch e tente de novo.",
         "claimedAuto": "Resgatado automaticamente às {{time}}",
         "claimedAt": "Resgatado às {{time}}",
         "inInventory": "No inventário",
-        "emptyProgress": "Nenhum Drop em andamento. Assista a uma live com Drops ativados com uma aba da Twitch aberta: seu progresso aparecerá aqui.",
+        "emptyProgress": "Nenhum Drop em andamento. Assista a uma live com Drops ativados: seu progresso aparecerá aqui.",
         "staleHint": "abra a Twitch para atualizar",
         "bandOpen": "Abrir o painel Drops",
         "bandClaimed": "Drop resgatado · {{name}}",
@@ -3491,7 +3491,7 @@ export const translations = {
         "historyEmpty": "Nenhum Drop obtido desde o início do acompanhamento. Eles vão aparecer aqui, mês a mês.",
         "lockedBody": "O histórico de todos os Drops obtidos, mês a mês, com o jogo e o canal. Exclusivo do StreamPulse+.",
         "trackingTitle": "Acompanhar os Drops",
-        "trackingBody": "Ativo enquanto uma aba da Twitch estiver aberta: progresso, campanhas e resgate."
+        "trackingBody": "Progresso e resgate mesmo sem uma aba da Twitch aberta. A lista de campanhas é atualizada quando você visita a Twitch."
       },
       "osd": {
         "tabsLabel": "Popup views",
@@ -4460,11 +4460,11 @@ export const translations = {
         "ready": "Bereit",
         "claim": "Abholen",
         "claiming": "Wird abgeholt…",
-        "claimNoTab": "Öffne einen Twitch-Tab, um diesen Drop abzuholen.",
+        "claimNoTab": "Abholen gerade nicht möglich: Melde dich bei Twitch an und versuche es erneut.",
         "claimedAuto": "Automatisch abgeholt um {{time}}",
         "claimedAt": "Abgeholt um {{time}}",
         "inInventory": "Im Inventar",
-        "emptyProgress": "Kein Drop in Arbeit. Schau einen Livestream mit aktivierten Drops, während ein Twitch-Tab offen ist: Dein Fortschritt erscheint hier.",
+        "emptyProgress": "Kein Drop in Arbeit. Schau einen Livestream mit aktivierten Drops: Dein Fortschritt erscheint hier.",
         "staleHint": "öffne Twitch zum Aktualisieren",
         "bandOpen": "Drops-Panel öffnen",
         "bandClaimed": "Drop abgeholt · {{name}}",
@@ -4496,7 +4496,7 @@ export const translations = {
         "historyEmpty": "Seit Beginn der Erfassung noch kein Drop erhalten. Sie erscheinen hier, Monat für Monat.",
         "lockedBody": "Der Verlauf aller erhaltenen Drops, Monat für Monat, mit Spiel und Kanal. Nur mit StreamPulse+.",
         "trackingTitle": "Drops verfolgen",
-        "trackingBody": "Aktiv, solange ein Twitch-Tab offen ist: Fortschritt, Kampagnen und Abholen."
+        "trackingBody": "Fortschritt und Abholen auch ohne offenen Twitch-Tab. Die Kampagnenliste wird aktualisiert, wenn du Twitch besuchst."
       },
       "osd": {
         "tabsLabel": "Popup views",
@@ -5470,11 +5470,11 @@ export const translations = {
         "ready": "Pronto",
         "claim": "Riscatta",
         "claiming": "Riscatto…",
-        "claimNoTab": "Apri una scheda di Twitch per riscattare questo Drop.",
+        "claimNoTab": "Impossibile riscattare ora: accedi a Twitch, poi riprova.",
         "claimedAuto": "Riscattato automaticamente alle {{time}}",
         "claimedAt": "Riscattato alle {{time}}",
         "inInventory": "Nell'inventario",
-        "emptyProgress": "Nessun Drop in corso. Guarda una diretta con i Drops attivi tenendo aperta una scheda di Twitch: i tuoi progressi appariranno qui.",
+        "emptyProgress": "Nessun Drop in corso. Guarda una diretta con i Drops attivi: i tuoi progressi appariranno qui.",
         "staleHint": "apri Twitch per aggiornare",
         "bandOpen": "Apri il pannello Drops",
         "bandClaimed": "Drop riscattato · {{name}}",
@@ -5506,7 +5506,7 @@ export const translations = {
         "historyEmpty": "Nessun Drop ottenuto dall'inizio del monitoraggio. Appariranno qui, mese per mese.",
         "lockedBody": "La cronologia di tutti i Drops ottenuti, mese per mese, con il gioco e il canale. Riservato a StreamPulse+.",
         "trackingTitle": "Segui i Drops",
-        "trackingBody": "Attivo finché è aperta una scheda di Twitch: progressi, campagne e riscatto."
+        "trackingBody": "Progressi e riscatto anche senza una scheda di Twitch aperta. L'elenco delle campagne si aggiorna quando visiti Twitch."
       },
       "osd": {
         "tabsLabel": "Popup views",
@@ -6480,11 +6480,11 @@ export const translations = {
         "ready": "Gotowe",
         "claim": "Odbierz",
         "claiming": "Odbieranie…",
-        "claimNoTab": "Otwórz kartę Twitcha, aby odebrać ten Drop.",
+        "claimNoTab": "Nie można teraz odebrać: zaloguj się na Twitchu i spróbuj ponownie.",
         "claimedAuto": "Odebrano automatycznie o {{time}}",
         "claimedAt": "Odebrano o {{time}}",
         "inInventory": "W ekwipunku",
-        "emptyProgress": "Brak Dropsów w toku. Oglądaj transmisję z włączonymi Dropsami przy otwartej karcie Twitcha: tutaj pojawi się twój postęp.",
+        "emptyProgress": "Brak Dropsów w toku. Oglądaj transmisję z włączonymi Dropsami: tutaj pojawi się twój postęp.",
         "staleHint": "otwórz Twitcha, aby odświeżyć",
         "bandOpen": "Otwórz panel Dropsów",
         "bandClaimed": "Odebrano Drop · {{name}}",
@@ -6516,7 +6516,7 @@ export const translations = {
         "historyEmpty": "Od początku śledzenia nie zdobyto jeszcze żadnego Dropsa. Pojawią się tutaj, miesiąc po miesiącu.",
         "lockedBody": "Historia wszystkich zdobytych Dropsów, miesiąc po miesiącu, z grą i kanałem. Tylko w StreamPulse+.",
         "trackingTitle": "Śledź Dropsy",
-        "trackingBody": "Działa, gdy otwarta jest karta Twitcha: postęp, kampanie i odbieranie."
+        "trackingBody": "Postęp i odbieranie nawet bez otwartej karty Twitcha. Lista kampanii odświeża się, gdy odwiedzasz Twitcha."
       },
       "osd": {
         "tabsLabel": "Popup views",
@@ -7490,11 +7490,11 @@ export const translations = {
         "ready": "Hazır",
         "claim": "Al",
         "claiming": "Alınıyor…",
-        "claimNoTab": "Bu Drop'u almak için bir Twitch sekmesi aç.",
+        "claimNoTab": "Şu anda alınamıyor: Twitch'e giriş yap ve tekrar dene.",
         "claimedAuto": "Otomatik alındı · {{time}}",
         "claimedAt": "Alındı · {{time}}",
         "inInventory": "Envanterde",
-        "emptyProgress": "Devam eden Drop yok. Bir Twitch sekmesi açıkken Drops'u açık bir yayın izle: ilerlemen burada görünecek.",
+        "emptyProgress": "Devam eden Drop yok. Drops'u açık bir yayın izle: ilerlemen burada görünecek.",
         "staleHint": "güncellemek için Twitch'i aç",
         "bandOpen": "Drops panelini aç",
         "bandClaimed": "Drop alındı · {{name}}",
@@ -7526,7 +7526,7 @@ export const translations = {
         "historyEmpty": "Takip başladığından beri henüz Drop kazanılmadı. Burada ay ay görünecekler.",
         "lockedBody": "Kazandığın tüm Drop'ların geçmişi, ay ay, oyun ve kanalla birlikte. Yalnızca StreamPulse+ ile.",
         "trackingTitle": "Drops'u takip et",
-        "trackingBody": "Bir Twitch sekmesi açık olduğu sürece etkin: ilerleme, kampanyalar ve alma."
+        "trackingBody": "Twitch sekmesi açık olmasa bile ilerleme ve alma. Kampanya listesi Twitch'e girdiğinde güncellenir."
       },
       "osd": {
         "tabsLabel": "Popup views",
@@ -8500,11 +8500,11 @@ export const translations = {
         "ready": "Готово",
         "claim": "Получить",
         "claiming": "Получение…",
-        "claimNoTab": "Откройте вкладку Twitch, чтобы получить этот Drop.",
+        "claimNoTab": "Сейчас получить не удалось: войдите в Twitch и попробуйте снова.",
         "claimedAuto": "Получено автоматически в {{time}}",
         "claimedAt": "Получено в {{time}}",
         "inInventory": "В инвентаре",
-        "emptyProgress": "Нет Drops в процессе. Смотрите трансляцию с включёнными Drops при открытой вкладке Twitch: прогресс появится здесь.",
+        "emptyProgress": "Нет Drops в процессе. Смотрите трансляцию с включёнными Drops: прогресс появится здесь.",
         "staleHint": "откройте Twitch для обновления",
         "bandOpen": "Открыть панель Drops",
         "bandClaimed": "Drop получен · {{name}}",
@@ -8536,7 +8536,7 @@ export const translations = {
         "historyEmpty": "С начала отслеживания Drops ещё не получены. Они появятся здесь, по месяцам.",
         "lockedBody": "История всех полученных Drops по месяцам, с игрой и каналом. Только в StreamPulse+.",
         "trackingTitle": "Отслеживать Drops",
-        "trackingBody": "Работает, пока открыта вкладка Twitch: прогресс, кампании и получение."
+        "trackingBody": "Прогресс и получение даже без открытой вкладки Twitch. Список кампаний обновляется, когда вы заходите на Twitch."
       },
       "osd": {
         "tabsLabel": "Popup views",
@@ -9510,11 +9510,11 @@ export const translations = {
         "ready": "受け取り可能",
         "claim": "受け取る",
         "claiming": "受け取り中…",
-        "claimNoTab": "このドロップを受け取るには Twitch のタブを開いてください。",
+        "claimNoTab": "今は受け取れません。Twitch にログインしてから、もう一度お試しください。",
         "claimedAuto": "{{time}} に自動で受け取り済み",
         "claimedAt": "{{time}} に受け取り済み",
         "inInventory": "インベントリ内",
-        "emptyProgress": "進行中のドロップはありません。Twitch のタブを開いたまま、ドロップ対象の配信を視聴すると、ここに進捗が表示されます。",
+        "emptyProgress": "進行中のドロップはありません。ドロップ対象の配信を視聴すると、ここに進捗が表示されます。",
         "staleHint": "Twitch を開いて更新",
         "bandOpen": "Drops パネルを開く",
         "bandClaimed": "ドロップ受け取り済み · {{name}}",
@@ -9546,7 +9546,7 @@ export const translations = {
         "historyEmpty": "記録を始めてから獲得したドロップはまだありません。ここに月ごとに表示されます。",
         "lockedBody": "獲得したすべてのドロップの履歴を、ゲームとチャンネル付きで月ごとに確認できます。StreamPulse+ 限定。",
         "trackingTitle": "ドロップを記録",
-        "trackingBody": "Twitch のタブが開いている間は有効：進捗、キャンペーン、受け取り。"
+        "trackingBody": "Twitch のタブを開いていなくても進捗の確認と受け取りができます。キャンペーン一覧は Twitch を開いたときに更新されます。"
       },
       "osd": {
         "tabsLabel": "Popup views",
@@ -10520,11 +10520,11 @@ export const translations = {
         "ready": "수령 가능",
         "claim": "수령",
         "claiming": "수령 중…",
-        "claimNoTab": "이 드롭을 수령하려면 Twitch 탭을 여세요.",
+        "claimNoTab": "지금은 수령할 수 없습니다. Twitch에 로그인한 뒤 다시 시도하세요.",
         "claimedAuto": "{{time}}에 자동 수령됨",
         "claimedAt": "{{time}}에 수령됨",
         "inInventory": "인벤토리에 있음",
-        "emptyProgress": "진행 중인 드롭이 없습니다. Twitch 탭을 연 채로 드롭이 켜진 방송을 시청하면 여기에 진행 상황이 표시됩니다.",
+        "emptyProgress": "진행 중인 드롭이 없습니다. 드롭이 켜진 방송을 시청하면 여기에 진행 상황이 표시됩니다.",
         "staleHint": "Twitch를 열어 업데이트",
         "bandOpen": "Drops 패널 열기",
         "bandClaimed": "드롭 수령됨 · {{name}}",
@@ -10556,7 +10556,7 @@ export const translations = {
         "historyEmpty": "추적을 시작한 후 아직 획득한 드롭이 없습니다. 여기에 월별로 표시됩니다.",
         "lockedBody": "획득한 모든 드롭의 기록을 게임과 채널과 함께 월별로 볼 수 있습니다. StreamPulse+ 전용.",
         "trackingTitle": "드롭 추적",
-        "trackingBody": "Twitch 탭이 열려 있는 동안 작동: 진행 상황, 캠페인, 수령."
+        "trackingBody": "Twitch 탭을 열지 않아도 진행 상황 확인과 수령이 됩니다. 캠페인 목록은 Twitch를 방문할 때 업데이트됩니다."
       },
       "osd": {
         "tabsLabel": "Popup views",

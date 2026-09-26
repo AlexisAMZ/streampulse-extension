@@ -26,6 +26,7 @@ import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from
 import { createPointsStore } from "./points-store.js";
 import { createDropsStore } from "./drops-store.js";
 import { CLAIM_OK_STATUSES } from "./drops-data.js";
+import { createDropsClient } from "./drops-gql.js";
 import { syncEventSubRaid, stopEventSubRaid } from "./eventsubRaid.js";
 import {
   RAID_WATCHER_ALARM,
@@ -970,6 +971,58 @@ async function twitchTabs(preferredId) {
   return tabs
     .filter((tab) => tab.id !== undefined && tab.discarded !== true)
     .sort((a, b) => Number(b.id === preferredId) - Number(a.id === preferredId) || Number(b.active) - Number(a.active));
+}
+
+const dropsClient = createDropsClient({ fetch: (...args) => fetch(...args), cookies: chrome.cookies });
+const DROPS_ALARM = "streampulse-drops";
+const DROPS_ALARM_MINUTES = 10;
+/** Un onglet Twitch qui vient de relire l'inventaire dispense le service worker de le faire. */
+const DROPS_WORKER_MIN_GAP_MS = 4 * 60_000;
+
+function scheduleDropsAlarm() {
+  chrome.alarms.get(DROPS_ALARM, (existing) => {
+    if (!existing) chrome.alarms.create(DROPS_ALARM, { periodInMinutes: DROPS_ALARM_MINUTES, delayInMinutes: 1 });
+  });
+}
+
+/**
+ * Relit l'inventaire des Drops sans onglet Twitch ouvert (session lue dans le
+ * cookie), puis récupère les Drops prêts si la récupération auto est active.
+ * Utile quand on regarde sur un autre appareil, et pour un popup à jour.
+ */
+async function refreshDropsFromWorker({ minGapMs = DROPS_WORKER_MIN_GAP_MS } = {}) {
+  const prefs = await PreferenceStore.get();
+  if (prefs.dropsTracking === false) return { read: false, reason: "disabled" };
+  const stored = await chrome.storage.local.get("streamPulseDropsProgress");
+  if (Date.now() - (Number(stored.streamPulseDropsProgress?.updatedAt) || 0) < minGapMs) return { read: false, reason: "fresh" };
+  let inventory;
+  try {
+    inventory = await dropsClient.readInventory();
+  } catch (error) {
+    // Déconnecté de Twitch : rien à lire, ce n'est pas une panne.
+    if (error.code !== "signed-out") console.warn("[StreamPulse] lecture des Drops impossible :", error.code || error.message, error.detail || "");
+    return { read: false, reason: error.code || "error" };
+  }
+  const autoClaim = prefs.autoClaimDrops !== false;
+  const result = await dropsStore.recordInventory(inventory, { autoClaim });
+  announceDrops(result.added).catch(() => {});
+  for (const instanceId of result.claim) await claimDropFromWorker(instanceId, true);
+  return { read: true };
+}
+
+async function claimDropFromWorker(instanceId, auto) {
+  let status = "";
+  let ok = false;
+  try {
+    ({ status } = await dropsClient.claim(instanceId));
+    ok = true;
+  } catch (error) {
+    console.warn("[StreamPulse] récupération du Drop impossible :", error.code || error.message);
+  }
+  const result = await dropsStore.recordClaim({ instanceId, ok, status, auto });
+  if (result.entry) announceDrops([result.entry]).catch(() => {});
+  else if (ok) console.warn("[StreamPulse] récupération du Drop refusée :", status || "sans statut");
+  return result.recorded;
 }
 
 /** Confie une commande au premier onglet Twitch qui a le relais des Drops. */
@@ -2913,6 +2966,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   await NotificationCenter.init();
   scheduleWatcherAlarm();
   scheduleKeepAliveAlarm();
+  scheduleDropsAlarm();
 
   await pollStreamers({ forceNotification: false });
   const installReason = details?.reason || "install";
@@ -2957,6 +3011,7 @@ chrome.runtime.onStartup.addListener(async () => {
   await fetchRemoteConfig(); // refresh credentials on browser startup
   scheduleWatcherAlarm();
   scheduleKeepAliveAlarm();
+  scheduleDropsAlarm();
 
   const prefs = await PreferenceStore.ensureDefaults();
   setupAutoOpenInventoryAlarm(prefs);
@@ -2983,6 +3038,8 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         );
       }
     });
+  } else if (alarm.name === DROPS_ALARM) {
+    refreshDropsFromWorker().catch((error) => console.warn("[StreamPulse] Drops :", error?.message || error));
   } else if (alarm.name === AUTO_OPEN_INVENTORY_ALARM) {
     chrome.tabs.query({ url: "*://www.twitch.tv/drops/inventory*" }, (tabs) => {
       if (tabs && tabs.length > 0) {
@@ -3663,7 +3720,7 @@ function handleMessage(request, sender, sendResponse) {
           const readAt = Number(stored.streamPulseDropsProgress?.updatedAt) || 0;
           const campaignsAt = Number(stored.streamPulseDropsCampaigns?.updatedAt) || 0;
           const sent = request.force || now - readAt >= DROPS_POPUP_REFRESH_MS
-            ? await sendDropsCommand({ action: "inventory" })
+            ? (await refreshDropsFromWorker({ minGapMs: 0 })).read || (await sendDropsCommand({ action: "inventory" }))
             : false;
           if (now - campaignsAt >= 30 * 60_000) sendDropsCommand({ action: "campaigns" }).catch(() => {});
           sendResponse({ success: true, sent });
@@ -3675,7 +3732,8 @@ function handleMessage(request, sender, sendResponse) {
 
     // Bouton « Récupérer » du popup : récupération auto coupée, ou refusée par Twitch.
     case "claimDrop":
-      sendDropsCommand({ action: "claim", instanceId: String(request.instanceId || "") })
+      claimDropFromWorker(String(request.instanceId || ""), false)
+        .then((claimed) => claimed || sendDropsCommand({ action: "claim", instanceId: String(request.instanceId || "") }))
         .then((sent) => sendResponse({ success: true, sent }))
         .catch((error) => sendResponse({ error: error?.message || String(error) }));
       return true;
@@ -3888,6 +3946,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 scheduleWatcherAlarm();
 scheduleKeepAliveAlarm();
+scheduleDropsAlarm();
 
 (async () => {
   if (initDone) return;

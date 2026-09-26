@@ -35,6 +35,7 @@ const ES_MODULES = [
   "js/points-store.js",
   "js/drops-data.js",
   "js/drops-store.js",
+  "js/drops-gql.js",
   "js/popup-drops.js",
   "js/recap-draw.js",
   "js/recap-story.js",
