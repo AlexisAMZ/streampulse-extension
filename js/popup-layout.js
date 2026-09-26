@@ -12,7 +12,7 @@ const $ = (id) => document.getElementById(id);
 
 /** Les deux listes réordonnables : conteneur, éléments et leur identifiant. */
 const LISTS = {
-  tabs: { container: () => document.querySelector(".tabs"), items: () => [...document.querySelectorAll(".tabs > .tab-button, .tabs > #header-patch-notes")], id: (node) => node.dataset.tab || "changelog" },
+  tabs: { container: () => document.querySelector(".tabs"), items: () => [...document.querySelectorAll(".tabs > .tab-button")], id: (node) => node.dataset.tab },
   menu: { container: () => document.querySelector(".menu-nav"), items: () => [...document.querySelectorAll(".menu-nav > .menu-tab")], id: (node) => node.dataset.panel },
 };
 
@@ -24,6 +24,24 @@ function normalize(value) {
     hidden: Array.isArray(item?.hidden) ? item.hidden.filter((id) => typeof id === "string" && !LOCKED.has(id)) : [],
   });
   return { tabs: part(value?.tabs), menu: part(value?.menu) };
+}
+
+/**
+ * Libellés longs (allemand, russe…) ou onglets ajoutés : si la barre du haut
+ * déborde, on retire d'abord la durée de visionnage, puis le compteur de points.
+ */
+export function fitTopbar() {
+  const bar = document.querySelector(".topbar");
+  if (!bar) return;
+  // Déborde dès que la fin de la barre mord sur la marge droite.
+  const overflows = () => {
+    const end = bar.querySelector(".topbar-end")?.getBoundingClientRect().right || 0;
+    return end > bar.getBoundingClientRect().right - parseFloat(getComputedStyle(bar).paddingRight) + 1;
+  };
+  bar.classList.remove("is-tight", "is-tighter");
+  if (!overflows()) return;
+  bar.classList.add("is-tight");
+  if (overflows()) bar.classList.add("is-tighter");
 }
 
 /** Réordonne le DOM et masque ce qui doit l'être ; les éléments inconnus gardent leur place en fin. */
@@ -45,6 +63,7 @@ function apply() {
   if (active?.hidden) LISTS.menu.items().find((node) => !node.hidden)?.click();
   const tab = document.querySelector('.tabs > .tab-button[aria-selected="true"]');
   if (tab?.hidden) LISTS.tabs.items().find((node) => !node.hidden && node.dataset.tab)?.click();
+  fitTopbar();
 }
 
 function currentOrder(key) {
@@ -131,6 +150,11 @@ function update(change, listId, id, delta) {
 }
 
 export async function initLayout() {
+  // Les libellés changent avec la langue et les compteurs : on réajuste à chaque changement de taille.
+  if (typeof ResizeObserver === "function") {
+    const observer = new ResizeObserver(() => fitTopbar());
+    document.querySelectorAll(".tabs, .topbar-end").forEach((element) => observer.observe(element));
+  }
   const stored = await chrome.storage.local.get(LAYOUT_KEY);
   layout = normalize(stored[LAYOUT_KEY]);
   apply();
@@ -146,6 +170,6 @@ export async function initLayout() {
 }
 
 const DEFAULT_ORDER = {
-  tabs: ["streamers", "history", "settings", "changelog"],
-  menu: ["alerts", "automation", "player", "previews", "chat", "data", "points", "drops", "badges", "identity", "plus", "general"],
+  tabs: ["streamers", "history", "drops", "badges", "settings"],
+  menu: ["identity", "drops", "badges", "points", "alerts", "automation", "player", "previews", "chat", "data", "plus", "general"],
 };

@@ -422,7 +422,12 @@ function badgeCard({ title, image, condition, fallback, game, paid, owned, endsA
   // Bouton frère de la carte (un bouton ne peut pas en contenir un autre).
   if (autoId && !owned) {
     const on = badgeAuto?.badgeId === autoId;
-    const auto = el("button", on ? "badge-auto is-on" : "badge-auto", t(on ? "popup.drops.badgeAutoOn" : "popup.drops.badgeAuto"));
+    const auto = el("button", on ? "badge-auto is-on" : "badge-auto");
+    // Lecture automatique (triangle) ou mode en cours (point qui pulse).
+    auto.innerHTML = on
+      ? '<span class="badge-auto-dot" aria-hidden="true"></span>'
+      : '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>';
+    auto.append(el("span", null, t(on ? "popup.drops.badgeAutoOn" : "popup.drops.badgeAuto")));
     auto.type = "button";
     auto.dataset.auto = autoId;
     auto.title = t(on ? "popup.drops.badgeAutoStop" : "popup.drops.badgeAutoHint");
@@ -638,8 +643,7 @@ async function claim(button) {
 
 function bind() {
   const openPanel = () => {
-    $("tab-settings")?.click();
-    $("menu-tab-drops")?.click();
+    $("tab-drops")?.click();
   };
   $("activity-drops")?.addEventListener("click", openPanel);
   $("activity-drops")?.addEventListener("keydown", (event) => {

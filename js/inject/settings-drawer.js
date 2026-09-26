@@ -18,8 +18,11 @@
   var COSMETICS_KEY = "streamPulseCosmetics";
   var PLUS_GRACE_MS = 30 * 24 * 60 * 60 * 1000;
   var PLUS_URL = "https://streampulse.fr/plus";
-  var BADGE_FX = ["pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker"];
-  var NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow"];
+  var BADGE_FX = ["pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost", "halo", "crown"];
+  var NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow", "fire", "frost", "glitch", "ambassador", "founder"];
+  // Même règles que js/cosmetics-data.js : filleuls requis, et effets du fondateur.
+  var REFERRAL_FX = { ambassador: 1, halo: 3 };
+  var FOUNDER_FX = ["crown", "founder"];
   var LOGO_URL = chrome.runtime.getURL("images/photos/logosp.png");
   var MARK_URL = chrome.runtime.getURL("images/photos/128px.png");
 
@@ -139,6 +142,8 @@
       ctx.prefs = r[PREFERENCES_KEY] || {};
       ctx.lang = api ? api.resolve(ctx.prefs.language || navigator.language) : "en";
       ctx.plus = plusActive(r[PLUS_KEY]);
+      ctx.role = ctx.plus && r[PLUS_KEY].role === "admin" ? "admin" : "";
+      ctx.referrals = ctx.plus ? Math.max(0, Number(r[PLUS_KEY].referrals) || 0) : 0;
       ctx.cosmetics = normalizeCosmetics(r[COSMETICS_KEY]);
       if (done) done();
     });
@@ -156,6 +161,13 @@
   }
 
   // ---- éditeur des effets (tiroir et paramètres du tchat) ----------------------
+  /** Effet hors de portée : pas assez de filleuls, ou réservé au fondateur. */
+  function fxLocked(value) {
+    if (!value || ctx.role === "admin") return false;
+    if (FOUNDER_FX.indexOf(value) !== -1) return true;
+    return (REFERRAL_FX[value] || 0) > (ctx.referrals || 0);
+  }
+
   function chipGroup(title, values, labelPrefix, field, editor) {
     var group = el("div", "sp-fx-group");
     group.appendChild(el("div", "sp-fx-group-title", tr(title)));
@@ -172,6 +184,7 @@
           window.open(PLUS_URL, "_blank", "noopener");
           return;
         }
+        if (fxLocked(value)) return;
         var next = {};
         next.badgeFx = ctx.cosmetics.badgeFx;
         next.nameFx = ctx.cosmetics.nameFx;
@@ -232,9 +245,15 @@
     editor.name.className = "sp-fx-name" + (shown.nameFx ? " sp-paint sp-paint--" + shown.nameFx : "");
     editor.groups.forEach(function (group) {
       Array.prototype.forEach.call(group.chips.children, function (chip) {
-        var on = chip.getAttribute("data-value") === shown[group.field];
+        var value = chip.getAttribute("data-value");
+        var on = value === shown[group.field];
         chip.classList.toggle("on", on);
         chip.setAttribute("aria-checked", String(on));
+        // Les effets du fondateur ne sont montrés qu'à lui ; ceux d'ambassadeur restent visibles, grisés.
+        chip.hidden = FOUNDER_FX.indexOf(value) !== -1 && ctx.role !== "admin";
+        var locked = ctx.plus && fxLocked(value);
+        chip.classList.toggle("is-locked", locked);
+        chip.setAttribute("aria-disabled", String(locked));
       });
     });
 

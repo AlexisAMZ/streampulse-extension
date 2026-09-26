@@ -83,6 +83,7 @@
       "css": [
         "css/topbar.css",
         "css/inject/twitch-badge.css",
+        "css/fx-effects.css",
         "css/inject/twitch-ui.css"
       ],
       "run_at": "document_idle"

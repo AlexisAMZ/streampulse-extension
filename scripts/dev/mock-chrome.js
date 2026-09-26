@@ -269,6 +269,9 @@
       syncedAt: now - 10 * 24 * H,
       owned: ["bulbasaur", "d20"],
       badges: [
+        // Liés aux campagnes de badges c-eld et c-pay : ils portent le bouton du mode auto.
+        { id: "tarnished-sigil", title: "Tarnished Sigil", description: "This badge was earned by watching a streamer in the ELDEN RING category for 30 minutes", image: reward(140, "ER"), firstSeen: now - 2 * 24 * H },
+        { id: "payday-mask", title: "PAYDAY Mask", description: "This badge was earned by watching a streamer in the PAYDAY 3 category for 1 hour", image: reward(45, "P3"), firstSeen: now - 3 * 24 * H },
         { id: "ace-combat-8-nugget", title: "ACE COMBAT 8 Nugget", description: "This badge was earned by subscribing or gifting a sub to a streamer in the ACE COMBAT 8 category during the game's launch!", image: reward(210, "A"), firstSeen: now - 24 * H },
         { id: "rematch-blue-lock", title: "Rematch Blue Lock", description: "This badge was earned by watching a streamer in the Rematch category for 30 minutes", image: reward(200, "R"), firstSeen: now - 5 * 24 * H },
         { id: "dont-eat-the-mold", title: "Don't Eat The Mold", description: "This badge was earned by watching a streamer in the CONTROL Resonant category for 1 hour", image: reward(100, "M"), firstSeen: now - 5 * 24 * H },
@@ -288,7 +291,8 @@
     // ?plus=1 : licence active et deux règles d'alerte de démonstration.
     ...(params.get("plus") === "1"
       ? {
-          streamPulsePlus: { licenseKey: "SP-DEMO-2026-PLUS-0001", plan: "lifetime", status: "active", verifiedAt: now },
+          // &role=admin : rang fondateur ; &refs=3 : filleuls (effets d'ambassadeur).
+          streamPulsePlus: { licenseKey: "SP-DEMO-2026-PLUS-0001", plan: "lifetime", status: "active", verifiedAt: now, referrals: Number(params.get("refs")) || 0, role: params.get("role") === "admin" ? "admin" : "" },
           streamPulseCosmetics: { badgeFx: "shine", nameFx: "aurora" },
           streamPulsePredictionRule: { enabled: true, strategy: "majority", percent: 5, maxPoints: 2000, reserve: 1000, secondsBeforeEnd: 20 },
           streamPulsePredictionHistory: [
@@ -401,6 +405,17 @@
         return { success: true, preferences: store.betaGeneralPreferences };
       case "claimDrop":
         return { success: true, sent: true };
+      case "searchChannels": {
+        // Démo : quelques chaînes qui commencent comme la saisie, dont une déjà suivie.
+        const q = String(message.query || "").toLowerCase();
+        const pool = [
+          { login: `${q}`, displayName: `${q[0].toUpperCase()}${q.slice(1)}`, live: true, game: "Just Chatting", followers: 0 },
+          { login: `${q}_tv`, displayName: `${q.toUpperCase()}_TV`, live: false, game: "", followers: 482000 },
+          { login: "pixelkat", displayName: "Pixelkat", live: true, game: "Grand Theft Auto V", followers: 0 },
+          { login: `${q}live`, displayName: `${q}Live`, live: false, game: "", followers: 12400 },
+        ];
+        return { items: pool.map((item) => ({ platform: message.platform, avatar: "", ...item })) };
+      }
       default:
         return {};
     }

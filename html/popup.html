@@ -6,6 +6,7 @@
     <title>StreamPulse</title>
     <link rel="stylesheet" href="../css/tokens.css" />
     <link rel="stylesheet" href="../css/popup.css" />
+    <link rel="stylesheet" href="../css/fx-effects.css" />
   </head>
   <body data-theme="dark">
     <div class="toast-container" id="toast-container" role="status" aria-live="polite"></div>
@@ -19,11 +20,9 @@
       <nav class="tabs" role="tablist" data-i18n-attr-ariaLabel="popup.osd.tabsLabel">
         <button id="tab-streamers" class="tab-button active" type="button" role="tab" aria-selected="true" aria-controls="streamers-view" data-tab="streamers" data-i18n="popup.tabs.streamers">Streamers</button>
         <button id="tab-history" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="history-view" data-tab="history" data-i18n="popup.tabs.history">Historique</button>
+        <button id="tab-drops" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="settings-section" data-tab="drops" tabindex="-1"><span data-i18n="popup.osd.menuDrops">Drops</span><span class="new-dot" data-new="drops" hidden></span></button>
+        <button id="tab-badges" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="settings-section" data-tab="badges" tabindex="-1"><span data-i18n="popup.osd.menuBadges">Badges</span><span class="new-dot" data-new="badges" hidden></span></button>
         <button id="tab-settings" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="settings-section" data-tab="settings" data-i18n="popup.tabs.settings">Réglages</button>
-        <button id="header-patch-notes" class="topbar-link" type="button">
-          <span data-i18n="popup.osd.changelog">Nouveautés</span>
-          <span class="unread-dot" id="header-patch-dot" hidden></span>
-        </button>
       </nav>
       <div class="topbar-end">
         <span class="stat-pill stat-points" data-i18n-attr-title="popup.stats.pointsClaimed" title="Points récupérés">
@@ -33,6 +32,10 @@
         <span class="stat-pill stat-time" data-i18n-attr-title="popup.cplus.watchTimeLabel" title="Temps de visionnage ce mois-ci">
           <span id="stat-watchtime">--</span>
         </span>
+        <button id="header-patch-notes" type="button" class="icon-button news-button" data-i18n-attr-title="popup.osd.changelog" data-i18n-attr-ariaLabel="popup.osd.changelog" title="Nouveautés" aria-label="Nouveautés">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.94 15.5a2 2 0 0 0-1.44-1.44l-6.13-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.13a.5.5 0 0 1 .96 0l1.58 6.13a2 2 0 0 0 1.44 1.44l6.13 1.58a.5.5 0 0 1 0 .96l-6.13 1.58a2 2 0 0 0-1.44 1.44l-1.58 6.13a.5.5 0 0 1-.96 0z"/><path d="M20 3v4M22 5h-4M4 17v2M5 18H3"/></svg>
+          <span class="unread-dot" id="header-patch-dot" hidden></span>
+        </button>
         <button id="refresh-button" type="button" class="icon-button" data-i18n-attr-title="popup.refresh" data-i18n-attr-ariaLabel="popup.refresh" title="Actualiser" aria-label="Actualiser">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg>
         </button>
@@ -190,9 +193,9 @@
             <span class="perk-glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
             <span class="perk-text"><b data-i18n="popup.plus.perkPredictions">Prédictions assistées</b><span data-i18n="popup.plus.perkPredictionsBody">Historique de tes paris, taux de réussite, mise auto selon ta règle.</span></span>
           </li>
-          <li class="plus-perk">
-            <span class="perk-glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="6.5" cy="12" r="2.5"/><circle cx="17.5" cy="15.5" r="2.5"/><path d="M12 22a10 10 0 1 1 10-10c0 2-1.5 3-3 3h-2a2 2 0 0 0-1.5 3.3A1.5 1.5 0 0 1 12 22z"/></svg></span>
-            <span class="perk-text"><b data-i18n="popup.plus.perkThemes">Thèmes et badge personnalisés</b><span data-i18n="popup.plus.perkThemesBody">Couleur du badge dans le tchat, thèmes du popup.</span></span>
+          <li class="plus-perk plus-perk-fx">
+            <span class="perk-glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.94 15.5a2 2 0 0 0-1.44-1.44l-6.13-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.13a.5.5 0 0 1 .96 0l1.58 6.13a2 2 0 0 0 1.44 1.44l6.13 1.58a.5.5 0 0 1 0 .96l-6.13 1.58a2 2 0 0 0-1.44 1.44l-1.58 6.13a.5.5 0 0 1-.96 0z"/></svg></span>
+            <span class="perk-text"><b data-i18n="popup.plus.perkFx">Effets de pseudo et de badge</b><span id="plus-fx-count"></span><span class="plus-fx-strip" id="plus-fx-strip" aria-hidden="true"></span></span>
           </li>
         </ul>
       </div>
@@ -227,6 +230,12 @@
         <button class="button button-quiet" id="plus-deactivate" type="button" data-i18n="popup.plus.deactivate">Retirer la licence de ce navigateur</button>
       </aside>
 
+      <section class="plus-referral" aria-labelledby="plus-referral-title">
+        <h3 class="plus-referral-title" id="plus-referral-title" data-i18n="popup.referral.plusTitle">Parraine tes amis</h3>
+        <p class="plus-referral-body" data-i18n="popup.referral.plusBody">Ton code leur offre le premier mois. Toi, tu gagnes un mois gratuit par ami (formule mensuelle) et ces récompenses :</p>
+        <ol class="referral-tiers" id="plus-referral-tiers"></ol>
+      </section>
+
       <button class="icon-button plus-close" id="plus-close" type="button" data-i18n-attr-ariaLabel="popup.plus.close" data-i18n-attr-title="popup.plus.close" aria-label="Fermer" title="Fermer">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
@@ -235,7 +244,26 @@
     <!-- Menu: settings grouped by intent -->
     <section id="settings-section" class="menu hidden" role="tabpanel" aria-labelledby="tab-settings">
       <nav class="menu-nav" role="tablist" aria-orientation="vertical" data-i18n-attr-ariaLabel="popup.osd.menuLabel">
-        <button id="menu-tab-alerts" class="menu-tab" type="button" role="tab" aria-selected="true" aria-controls="menu-alerts" data-panel="alerts">
+        <button id="menu-tab-identity" class="menu-tab" type="button" role="tab" aria-selected="true" aria-controls="menu-identity" data-panel="identity">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+          <span data-i18n="popup.osd.menuIdentity">Pseudo et badge</span>
+          <span class="new-pill" data-new="identity" data-i18n="popup.news.new" hidden>Nouveau</span>
+        </button>
+        <button id="menu-tab-drops" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-drops" data-panel="drops" tabindex="-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>
+          <span data-i18n="popup.osd.menuDrops">Drops</span>
+          <span class="new-pill" data-new="drops" data-i18n="popup.news.new" hidden>Nouveau</span>
+        </button>
+        <button id="menu-tab-badges" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-badges" data-panel="badges" tabindex="-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
+          <span data-i18n="popup.osd.menuBadges">Badges</span>
+          <span class="new-pill" data-new="badges" data-i18n="popup.news.new" hidden>Nouveau</span>
+        </button>
+        <button id="menu-tab-points" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-points" data-panel="points" tabindex="-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 19 9 12 22 5 9"/><line x1="5" y1="9" x2="19" y2="9"/></svg>
+          <span data-i18n="popup.osd.menuPoints">Points</span>
+        </button>
+        <button id="menu-tab-alerts" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-alerts" data-panel="alerts" tabindex="-1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
           <span data-i18n="popup.osd.menuAlerts">Alertes</span>
         </button>
@@ -259,22 +287,6 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
           <span data-i18n="popup.osd.menuData">Temps et données</span>
         </button>
-        <button id="menu-tab-points" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-points" data-panel="points" tabindex="-1">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 19 9 12 22 5 9"/><line x1="5" y1="9" x2="19" y2="9"/></svg>
-          <span data-i18n="popup.osd.menuPoints">Points</span>
-        </button>
-        <button id="menu-tab-drops" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-drops" data-panel="drops" tabindex="-1">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>
-          <span data-i18n="popup.osd.menuDrops">Drops</span>
-        </button>
-        <button id="menu-tab-badges" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-badges" data-panel="badges" tabindex="-1">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
-          <span data-i18n="popup.osd.menuBadges">Badges</span>
-        </button>
-        <button id="menu-tab-identity" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-identity" data-panel="identity" tabindex="-1">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-          <span data-i18n="popup.osd.menuIdentity">Pseudo et badge</span>
-        </button>
         <button id="menu-tab-plus" class="menu-tab menu-tab-plus" type="button" role="tab" aria-selected="false" aria-controls="menu-plus" data-panel="plus" tabindex="-1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg>
           <span data-i18n="popup.osd.menuPlus">StreamPulse+</span>
@@ -287,7 +299,7 @@
 
       <div class="menu-panels" id="menu-panels">
         <!-- Alertes -->
-        <section class="menu-panel" id="menu-alerts" role="tabpanel" aria-labelledby="menu-tab-alerts">
+        <section class="menu-panel" id="menu-alerts" role="tabpanel" aria-labelledby="menu-tab-alerts" hidden>
           <h2 data-i18n="popup.osd.menuAlerts">Alertes</h2>
 
           <p class="settings-note" data-i18n="popup.settings.alertsPerStreamerNote">Ces alertes se règlent sur chaque streamer, depuis sa carte : notifications, changement de catégorie et de titre.</p>
@@ -520,14 +532,6 @@
         <section class="menu-panel" id="menu-chat" role="tabpanel" aria-labelledby="menu-tab-chat" hidden>
           <h2 data-i18n="popup.osd.menuChat">Chat</h2>
 
-          <label class="settings-toggle">
-            <span class="settings-text">
-              <span class="settings-title" data-i18n="popup.settings.communityBadgeTitle">Badge communautaire</span>
-              <span class="settings-description" data-i18n="popup.settings.communityBadgeDescription">Affiche l'icône StreamPulse à côté des pseudos des utilisateurs dans le tchat Twitch.</span>
-            </span>
-            <input id="pref-community-badge" type="checkbox" role="switch" />
-          </label>
-
           <div class="field-stack">
             <label class="settings-title" for="pref-chat-keywords" data-i18n="onboarding.chatFilterTitle">Filtre de chat (Anti-Spoiler)</label>
             <span class="settings-description" data-i18n="popup.settings.chatFilterDescription">Mots-clés à masquer (séparés par des virgules).</span>
@@ -739,24 +743,17 @@
           </div>
         </section>
 
-        <section class="menu-panel" id="menu-identity" role="tabpanel" aria-labelledby="menu-tab-identity" hidden>
+        <section class="menu-panel" id="menu-identity" role="tabpanel" aria-labelledby="menu-tab-identity">
           <h2 data-i18n="popup.osd.menuIdentity">Pseudo et badge</h2>
           <p class="settings-description" data-i18n="popup.identity.intro">L'apparence de ton badge StreamPulse et de ton pseudo dans le chat Twitch, visible par les autres utilisateurs de StreamPulse.</p>
-          <div class="settings-row badge-color-row">
+          <p class="identity-rank" id="identity-rank" role="status" hidden></p>
+          <label class="settings-toggle">
             <span class="settings-text">
-              <label class="settings-title" for="pref-badge-color-mode" data-i18n="popup.settings.badgeColorTitle">Couleur du badge</label>
-              <span class="settings-description" data-i18n="popup.settings.badgeColorDescription">Choisissez la teinte de l'icône affichée dans le tchat.</span>
+              <span class="settings-title" data-i18n="popup.settings.communityBadgeTitle">Badge communautaire</span>
+              <span class="settings-description" data-i18n="popup.settings.communityBadgeDescription">Affiche l'icône StreamPulse à côté des pseudos des utilisateurs dans le tchat Twitch.</span>
             </span>
-            <span class="badge-color-controls">
-              <select id="pref-badge-color-mode" class="settings-select">
-                <option value="author" data-i18n="popup.settings.badgeColorAuthor">Couleur du pseudo</option>
-                <option value="theme" data-i18n="popup.settings.badgeColorTheme">Selon le thème Twitch</option>
-                <option value="custom" data-i18n="popup.settings.badgeColorCustom">Couleur personnalisée</option>
-              </select>
-              <input id="pref-badge-color-value" class="badge-color-input" type="color" value="#9146ff" data-i18n-attr-ariaLabel="popup.settings.badgeColorCustom" hidden />
-            </span>
-          </div>
-          <p class="settings-description badge-plus-note" id="badge-plus-note" data-i18n="popup.settings.badgePlusOff">Avec StreamPulse+, ta couleur personnalisée est visible par tous les utilisateurs de StreamPulse.</p>
+            <input id="pref-community-badge" type="checkbox" role="switch" />
+          </label>
           <div class="cosmetic-preview identity-preview">
             <span class="cosmetic-preview-label" data-i18n="popup.cosmetics.preview">Aperçu dans le tchat</span>
             <span class="cosmetic-line" aria-hidden="true"><span class="cosmetic-badge" id="cosmetic-badge"></span><b class="cosmetic-name" id="cosmetic-name" data-i18n="popup.cosmetics.sampleName">TonPseudo</b><span class="cosmetic-msg">: gg !</span></span>

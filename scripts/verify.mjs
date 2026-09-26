@@ -396,10 +396,13 @@ if (!htmlIssues) pass(`${htmlFiles.length} HTML files reference only existing lo
 // should be committed in config.js.
 const envPath = abs(".env");
 const packaged = [...jsFiles, ...htmlFiles, "manifest.json"];
+// Identifiants publics des fiches (visibles dans l'URL du store) : pas des secrets.
+const PUBLIC_ENV = /_(EXTENSION|PRODUCT|ADDON)_ID$/;
 if (fs.existsSync(envPath)) {
   const secrets = fs
     .readFileSync(envPath, "utf8")
     .split("\n")
+    .filter((l) => !PUBLIC_ENV.test(l.split("=")[0].trim()))
     .map((l) => l.split("=").slice(1).join("=").trim().replace(/^["']|["']$/g, ""))
     .filter((v) => v.length >= 12);
   let leaks = 0;

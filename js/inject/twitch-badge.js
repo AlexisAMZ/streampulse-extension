@@ -50,8 +50,8 @@
   // Effets publics des abonnes : empreinte -> { b: effet du badge, n: pseudo special }.
   var badgeStyles = new Map();
   var COSMETICS_KEY = "streamPulseCosmetics";
-  var BADGE_FX = ["pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "halo"];
-  var NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow", "ambassador"];
+  var BADGE_FX = ["pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost", "halo", "crown"];
+  var NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow", "fire", "frost", "glitch", "ambassador", "founder"];
   var REFRESH_MS = 5 * 60 * 1000;
   // Empreinte du compte Twitch connecte et licence de ce navigateur.
   var ownHash = "";
@@ -60,34 +60,40 @@
   var badgeLang = "en";
   var MONTH_MS = 30.44 * 24 * 60 * 60 * 1000;
   // Reglages locaux de son propre badge : appliques tout de suite, sans attendre le serveur.
-  var ownLocal = { color: null, b: "", n: "" };
+  var ownLocal = { b: "", n: "" };
+  // Rang de ce navigateur (fondateur, ambassadeur), d'apres la licence locale.
+  var ownRank = "";
+  var RANKS = ["founder", "ambassador"];
 
-  function readOwnLocal(prefs, cosmetics) {
-    var color = prefs && HEX_RE.test(prefs.communityBadgeColor || "") ? prefs.communityBadgeColor.toLowerCase() : null;
+  function readOwnLocal(cosmetics) {
     var c = cosmetics || {};
     ownLocal = {
-      color: color,
       b: BADGE_FX.indexOf(c.badgeFx) !== -1 ? c.badgeFx : "",
       n: NAME_FX.indexOf(c.nameFx) !== -1 ? c.nameFx : ""
     };
   }
 
+  /** Meme regle que rankOf() dans js/cosmetics-data.js. */
+  function rankOfRecord(record) {
+    if (!activePlusKey(record)) return "";
+    if (record.role === "admin") return "founder";
+    return (Number(record.referrals) || 0) >= 1 ? "ambassador" : "";
+  }
+
   /** Son propre badge suit les reglages de ce navigateur, meme avant la reponse du serveur. */
   function applyOwnLocal() {
     if (!ownHash) return;
-    if (viewerPlus && ownLocal.color) badgeColors.set(ownHash, ownLocal.color);
-    else badgeColors.delete(ownHash);
+    // La couleur personnalisee du badge a ete retiree : son propre badge suit la couleur du pseudo.
+    badgeColors.delete(ownHash);
     if (viewerPlus) {
       // Formule et anciennete viennent du serveur ; en attendant, la licence locale suffit.
       var known = badgeStyles.get(ownHash) || {};
-      badgeStyles.set(ownHash, { b: ownLocal.b, n: ownLocal.n, p: known.p || ownPlan, s: known.s || 0 });
+      badgeStyles.set(ownHash, { b: ownLocal.b, n: ownLocal.n, p: known.p || ownPlan, s: known.s || 0, r: ownRank || known.r || "" });
     } else {
       badgeStyles.delete(ownHash);
     }
   }
 
-  // "author" (couleur du pseudo), "theme" (blanc/noir), ou une couleur hexa.
-  var badgeColorMode = "author";
   var badgeIconUrl = (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getURL)
     ? chrome.runtime.getURL("images/photos/128px.png")
     : "";
@@ -226,7 +232,8 @@
             var n = NAME_FX.indexOf(style.n) !== -1 ? style.n : "";
             var p = style.p === "lifetime" || style.p === "monthly" ? style.p : "";
             var since = Number(style.s) || 0;
-            if (/^[a-f0-9]{12}$/.test(h) && (b || n || p)) nextStyles.set(h, { b: b, n: n, p: p, s: since });
+            var r = RANKS.indexOf(style.r) !== -1 ? style.r : "";
+            if (/^[a-f0-9]{12}$/.test(h) && (b || n || p)) nextStyles.set(h, { b: b, n: n, p: p, s: since, r: r });
           });
           badgeStyles = nextStyles;
           applyOwnLocal();
@@ -266,11 +273,11 @@
   function publishBadgeColor(hash) {
     if (!hash) return;
     try {
-      chrome.storage.local.get([PLUS_KEY, PUBLISHED_KEY, COSMETICS_KEY, "betaGeneralPreferences"], function (res) {
+      chrome.storage.local.get([PLUS_KEY, PUBLISHED_KEY, COSMETICS_KEY], function (res) {
         var key = activePlusKey(res && res[PLUS_KEY]);
         if (!key) return;
-        var prefs = (res && res.betaGeneralPreferences) || {};
-        var color = HEX_RE.test(prefs.communityBadgeColor || "") ? prefs.communityBadgeColor.toLowerCase() : null;
+        // Couleur personnalisee retiree : null efface celle qu'une ancienne version avait publiee.
+        var color = null;
         var cosmetics = (res && res[COSMETICS_KEY]) || {};
         var badgeFx = BADGE_FX.indexOf(cosmetics.badgeFx) !== -1 ? cosmetics.badgeFx : "";
         var nameFx = NAME_FX.indexOf(cosmetics.nameFx) !== -1 ? cosmetics.nameFx : "";
@@ -396,14 +403,6 @@
 
   // ── Creation du badge ────────────────────────────────────────────────────
 
-  function normalizeColorMode(value) {
-    if (value === "theme" || value === "author") return value;
-    if (typeof value === "string" && /^#[0-9a-fA-F]{6}$/.test(value.trim())) {
-      return value.trim().toLowerCase();
-    }
-    return "author";
-  }
-
   /** Blanc sur le theme sombre de Twitch, noir sur le theme clair. */
   function themeColor() {
     var root = document.documentElement;
@@ -440,16 +439,12 @@
   }
 
   /**
-   * Couleur d'un badge. Celle qu'un abonne StreamPulse+ a choisie pour son
-   * propre badge l'emporte toujours ; sinon le reglage de ce navigateur
-   * (couleur du pseudo ou selon le theme) s'applique. La couleur personnalisee
-   * ne concerne que son propre badge, et seulement avec StreamPulse+.
+   * Couleur d'un badge : celle du pseudo. Une couleur publiee par une ancienne
+   * version (reglage retire en 26.9.28) reste respectee jusqu'a son expiration.
    */
   function resolveBadgeColor(messageEl, hash) {
-    if (hash && hash === ownHash && viewerPlus && HEX_RE.test(badgeColorMode)) return badgeColorMode;
     var publicColor = hash && badgeColors.get(hash);
-    if (publicColor) return publicColor;
-    return badgeColorMode === "theme" ? themeColor() : authorColor(messageEl);
+    return publicColor || authorColor(messageEl);
   }
 
   function createBadgeElement(messageEl, hash) {
@@ -636,13 +631,23 @@
     return months === 1 ? tr("monthOne") : tr("months", { count: months });
   }
 
+  /** Deuxieme ligne de la carte : le rang d'abord, puis l'anciennete d'abonne. */
+  function rankLine(style, plus) {
+    if (!plus) return tr("freeLine");
+    if (style.r === "founder") return tr("founder");
+    if (style.r === "ambassador") return tr("ambassador") + " · " + memberLine(style);
+    return memberLine(style);
+  }
+
   function showBadgeCard(badge) {
     try {
       var hash = badge.getAttribute("data-sp-hash");
       var style = hash && badgeStyles.get(hash);
       var plus = !!(style && style.p);
+      var rank = (style && style.r) || "";
       var card = getBadgeCard();
       card.classList.toggle("is-plus", plus);
+      card.classList.toggle("is-founder", rank === "founder");
       var title = card.querySelector(".sp-badge-card__title");
       title.textContent = "StreamPulse";
       if (plus) {
@@ -650,7 +655,7 @@
         mark.textContent = "+";
         title.appendChild(mark);
       }
-      card.querySelector(".sp-badge-card__line").textContent = plus ? memberLine(style) : tr("freeLine");
+      card.querySelector(".sp-badge-card__line").textContent = rankLine(style, plus);
       var rect = badge.getBoundingClientRect();
       card.classList.add("is-visible");
       var width = card.offsetWidth;
@@ -822,9 +827,10 @@
       var prefs = (res && res.betaGeneralPreferences) || {};
       viewerPlus = !!activePlusKey(res && res[PLUS_KEY]);
       ownPlan = viewerPlus ? (res[PLUS_KEY].plan === "monthly" ? "monthly" : "lifetime") : "";
+      ownRank = rankOfRecord(res && res[PLUS_KEY]);
       var i18n = typeof window !== "undefined" ? window.__SP_I18N__ : null;
       badgeLang = i18n ? i18n.resolve(prefs.language || navigator.language) : "en";
-      readOwnLocal(prefs, res && res[COSMETICS_KEY]);
+      readOwnLocal(res && res[COSMETICS_KEY]);
       // Badge desactive par defaut depuis 26.9.18 : il envoie une empreinte du
       // pseudo, donc il ne demarre qu'avec l'accord explicite de l'utilisateur.
       if (prefs.communityBadge !== true) {
@@ -832,8 +838,7 @@
         return;
       }
 
-      badgeColorMode = normalizeColorMode(prefs.communityBadgeColor);
-      log("init", badgeIconUrl ? "icone OK" : "icone MANQUANTE", "| couleur :", badgeColorMode);
+      log("init", badgeIconUrl ? "icone OK" : "icone MANQUANTE");
       initBadges();
       setupChatObserver();
       setupBadgeCard();
@@ -845,17 +850,16 @@
 
       chrome.storage.onChanged.addListener(function (changes, area) {
         if (area !== "local") return;
-        var prefsChange = changes.betaGeneralPreferences;
         var cosmeticsChange = changes[COSMETICS_KEY];
         var plusChange = changes[PLUS_KEY];
-        if (!prefsChange && !cosmeticsChange && !plusChange) return;
-        if (prefsChange) badgeColorMode = normalizeColorMode((prefsChange.newValue || {}).communityBadgeColor);
+        if (!cosmeticsChange && !plusChange) return;
         if (plusChange) {
           viewerPlus = !!activePlusKey(plusChange.newValue);
           ownPlan = viewerPlus ? (plusChange.newValue.plan === "monthly" ? "monthly" : "lifetime") : "";
+          ownRank = rankOfRecord(plusChange.newValue);
         }
-        chrome.storage.local.get(["betaGeneralPreferences", COSMETICS_KEY], function (res) {
-          readOwnLocal((res && res.betaGeneralPreferences) || {}, res && res[COSMETICS_KEY]);
+        chrome.storage.local.get(COSMETICS_KEY, function (res) {
+          readOwnLocal(res && res[COSMETICS_KEY]);
           // Aucune requete ni boucle : seuls les messages deja affiches sont retouches.
           applyOwnLocal();
           refreshVisibleCosmetics();

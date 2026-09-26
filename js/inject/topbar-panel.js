@@ -35,60 +35,6 @@
     return row;
   }
 
-  var BADGE_MODES = [
-    { value: "author", label: "badgeAuthor" },
-    { value: "theme", label: "badgeTheme" },
-    { value: "custom", label: "badgeCustom" },
-  ];
-
-  /**
-   * Couleur du badge de tchat : les trois modes du réglage, en compact.
-   * Une couleur hexadécimale stockée signifie le mode personnalisé.
-   */
-  function badgeColorRow(state, deps) {
-    var stored = state.prefs.communityBadgeColor || "author";
-    var custom = stored !== "author" && stored !== "theme";
-
-    var row = el("div", "sp-tb-badge-row");
-    row.appendChild(el("span", "sp-tb-badge-label", deps.tr("badgeColor")));
-
-    var group = el("div", "sp-tb-badge-modes");
-    var picker = document.createElement("input");
-    picker.type = "color";
-    picker.className = "sp-tb-badge-picker";
-    picker.value = custom ? stored : "#9146ff";
-    picker.hidden = !custom;
-
-    BADGE_MODES.forEach(function (mode) {
-      var b = el("button", "sp-tb-badge-mode", deps.tr(mode.label));
-      b.type = "button";
-      var active = mode.value === "custom" ? custom : stored === mode.value;
-      if (active) b.classList.add("on");
-      b.addEventListener("click", function () {
-        group.querySelectorAll(".sp-tb-badge-mode").forEach(function (o) {
-          o.classList.remove("on");
-        });
-        b.classList.add("on");
-        picker.hidden = mode.value !== "custom";
-        deps.onToggle(
-          "communityBadgeColor",
-          mode.value === "custom" ? picker.value : mode.value
-        );
-      });
-      group.appendChild(b);
-    });
-
-    // "change" et non "input" : le sélecteur émet en continu pendant le
-    // glissement, ce qui écrirait la préférence à chaque pixel.
-    picker.addEventListener("change", function () {
-      deps.onToggle("communityBadgeColor", picker.value);
-    });
-
-    group.appendChild(picker);
-    row.appendChild(group);
-    return row;
-  }
-
   /**
    * Section « cette chaîne » : absente hors d'une page de chaîne, plutôt que
    * d'afficher un bloc vide sur l'accueil ou le répertoire.
@@ -129,7 +75,6 @@
         toggleRow(item.key, deps.tr(item.label), state.prefs[item.key] !== false)
       );
     });
-    wrap.appendChild(badgeColorRow(state, deps));
 
     return wrap;
   }

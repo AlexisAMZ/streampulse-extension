@@ -18,6 +18,11 @@
       const source = await (await fetch("/html/popup.html")).text();
       const parsed = new DOMParser().parseFromString(source, "text/html");
       parsed.querySelectorAll("script").forEach((node) => node.remove());
+      // Feuilles de style du vrai popup absentes d'ici (fx-effects.css…) : reprises telles quelles.
+      const loaded = new Set([...document.querySelectorAll('link[rel="stylesheet"]')].map((link) => link.getAttribute("href")));
+      parsed.head.querySelectorAll('link[rel="stylesheet"]').forEach((link) => {
+        if (!loaded.has(link.getAttribute("href"))) document.head.append(link.cloneNode());
+      });
       document.body.innerHTML = parsed.body.innerHTML;
 
       await import("/js/popup.js");

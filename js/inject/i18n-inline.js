@@ -37,6 +37,8 @@
       "chatRowNote": "Vu par les autres utilisateurs de StreamPulse."
     },
     "badge": {
+      "founder": "Fondateur de StreamPulse",
+      "ambassador": "Ambassadeur",
       "lifetime": "Membre à vie",
       "months": "Abonné depuis {{count}} mois",
       "monthOne": "Abonné depuis 1 mois",
@@ -46,10 +48,6 @@
     "topbar": {
       "previews": "Previews au survol",
       "thisChannel": "Cette chaîne",
-      "badgeColor": "Couleur du badge",
-      "badgeAuthor": "Pseudo",
-      "badgeTheme": "Thème",
-      "badgeCustom": "Perso",
       "liveNow": "En direct",
       "noneLive": "Personne en direct",
       "watchedHere": "Regardé ici",
@@ -114,6 +112,17 @@
         "soundsTitle": "Son des notifications"
       },
       "cosmetics": {
+        "heartbeat": "Battement",
+        "float": "Lévitation",
+        "wobble": "Secousse",
+        "prism": "Prisme",
+        "glitch": "Glitch",
+        "fire": "Braise",
+        "frost": "Givre",
+        "crown": "Couronne",
+        "founder": "Fondateur",
+        "ambassador": "Ambassadeur",
+        "halo": "Halo doré",
         "badgeTitle": "Effet du badge",
         "badgeBody": "Anime le logo StreamPulse à côté de ton pseudo.",
         "nameTitle": "Pseudo spécial",
@@ -158,6 +167,8 @@
       "chatRowNote": "Seen by other StreamPulse users."
     },
     "badge": {
+      "founder": "StreamPulse founder",
+      "ambassador": "Ambassador",
       "lifetime": "Lifetime member",
       "months": "Subscribed for {{count}} months",
       "monthOne": "Subscribed for 1 month",
@@ -167,10 +178,6 @@
     "topbar": {
       "previews": "Hover previews",
       "thisChannel": "This channel",
-      "badgeColor": "Badge colour",
-      "badgeAuthor": "Username",
-      "badgeTheme": "Theme",
-      "badgeCustom": "Custom",
       "liveNow": "Live now",
       "noneLive": "Nobody live right now",
       "watchedHere": "Watched here",
@@ -235,6 +242,17 @@
         "soundsTitle": "Notification sound"
       },
       "cosmetics": {
+        "heartbeat": "Heartbeat",
+        "float": "Float",
+        "wobble": "Wobble",
+        "prism": "Prism",
+        "glitch": "Glitch",
+        "fire": "Ember",
+        "frost": "Frost",
+        "crown": "Crown",
+        "founder": "Founder",
+        "ambassador": "Ambassador",
+        "halo": "Golden halo",
         "badgeTitle": "Badge effect",
         "badgeBody": "Animates the StreamPulse logo next to your name.",
         "nameTitle": "Special name",
@@ -279,6 +297,8 @@
       "chatRowNote": "Visto por otros usuarios de StreamPulse."
     },
     "badge": {
+      "founder": "Fundador de StreamPulse",
+      "ambassador": "Embajador",
       "lifetime": "Miembro de por vida",
       "months": "Suscrito desde hace {{count}} meses",
       "monthOne": "Suscrito desde hace 1 mes",
@@ -288,10 +308,6 @@
     "topbar": {
       "previews": "Vistas previas",
       "thisChannel": "Este canal",
-      "badgeColor": "Color de la insignia",
-      "badgeAuthor": "Nombre",
-      "badgeTheme": "Tema",
-      "badgeCustom": "Personal.",
       "liveNow": "En directo",
       "noneLive": "Nadie en directo",
       "watchedHere": "Visto aquí",
@@ -356,6 +372,17 @@
         "soundsTitle": "Sonido de las notificaciones"
       },
       "cosmetics": {
+        "heartbeat": "Latido",
+        "float": "Levitación",
+        "wobble": "Sacudida",
+        "prism": "Prisma",
+        "glitch": "Glitch",
+        "fire": "Brasa",
+        "frost": "Escarcha",
+        "crown": "Corona",
+        "founder": "Fundador",
+        "ambassador": "Embajador",
+        "halo": "Halo dorado",
         "badgeTitle": "Efecto de la insignia",
         "badgeBody": "Anima el logo de StreamPulse junto a tu nombre.",
         "nameTitle": "Nombre especial",
@@ -400,6 +427,8 @@
       "chatRowNote": "Visto por outros usuários do StreamPulse."
     },
     "badge": {
+      "founder": "Fundador do StreamPulse",
+      "ambassador": "Embaixador",
       "lifetime": "Membro vitalício",
       "months": "Assinante há {{count}} meses",
       "monthOne": "Assinante há 1 mês",
@@ -409,10 +438,6 @@
     "topbar": {
       "previews": "Prévias ao passar",
       "thisChannel": "Este canal",
-      "badgeColor": "Cor do distintivo",
-      "badgeAuthor": "Nome",
-      "badgeTheme": "Tema",
-      "badgeCustom": "Custom",
       "liveNow": "Ao vivo",
       "noneLive": "Ninguém ao vivo",
       "watchedHere": "Assistido aqui",
@@ -477,6 +502,17 @@
         "soundsTitle": "Som das notificações"
       },
       "cosmetics": {
+        "heartbeat": "Batimento",
+        "float": "Levitação",
+        "wobble": "Balanço",
+        "prism": "Prisma",
+        "glitch": "Glitch",
+        "fire": "Brasa",
+        "frost": "Geada",
+        "crown": "Coroa",
+        "founder": "Fundador",
+        "ambassador": "Embaixador",
+        "halo": "Halo dourado",
         "badgeTitle": "Efeito do emblema",
         "badgeBody": "Anima o logo do StreamPulse ao lado do seu nome.",
         "nameTitle": "Nome especial",
@@ -521,6 +557,8 @@
       "chatRowNote": "Für andere StreamPulse-Nutzer sichtbar."
     },
     "badge": {
+      "founder": "Gründer von StreamPulse",
+      "ambassador": "Botschafter",
       "lifetime": "Mitglied auf Lebenszeit",
       "months": "Seit {{count}} Monaten dabei",
       "monthOne": "Seit 1 Monat dabei",
@@ -530,10 +568,6 @@
     "topbar": {
       "previews": "Hover-Vorschau",
       "thisChannel": "Dieser Kanal",
-      "badgeColor": "Farbe des Abzeichens",
-      "badgeAuthor": "Name",
-      "badgeTheme": "Theme",
-      "badgeCustom": "Eigene",
       "liveNow": "Jetzt live",
       "noneLive": "Niemand ist live",
       "watchedHere": "Hier geschaut",
@@ -598,6 +632,17 @@
         "soundsTitle": "Benachrichtigungston"
       },
       "cosmetics": {
+        "heartbeat": "Herzschlag",
+        "float": "Schweben",
+        "wobble": "Wackeln",
+        "prism": "Prisma",
+        "glitch": "Glitch",
+        "fire": "Glut",
+        "frost": "Frost",
+        "crown": "Krone",
+        "founder": "Gründer",
+        "ambassador": "Botschafter",
+        "halo": "Goldener Heiligenschein",
         "badgeTitle": "Abzeichen-Effekt",
         "badgeBody": "Animiert das StreamPulse-Logo neben deinem Namen.",
         "nameTitle": "Spezieller Name",
@@ -642,6 +687,8 @@
       "chatRowNote": "Visto dagli altri utenti StreamPulse."
     },
     "badge": {
+      "founder": "Fondatore di StreamPulse",
+      "ambassador": "Ambasciatore",
       "lifetime": "Membro a vita",
       "months": "Abbonato da {{count}} mesi",
       "monthOne": "Abbonato da 1 mese",
@@ -651,10 +698,6 @@
     "topbar": {
       "previews": "Anteprime al passaggio",
       "thisChannel": "Questo canale",
-      "badgeColor": "Colore del badge",
-      "badgeAuthor": "Nome",
-      "badgeTheme": "Tema",
-      "badgeCustom": "Custom",
       "liveNow": "Ora in diretta",
       "noneLive": "Nessuno in diretta",
       "watchedHere": "Guardato qui",
@@ -719,6 +762,17 @@
         "soundsTitle": "Suono di notifica"
       },
       "cosmetics": {
+        "heartbeat": "Battito",
+        "float": "Levitazione",
+        "wobble": "Scossa",
+        "prism": "Prisma",
+        "glitch": "Glitch",
+        "fire": "Brace",
+        "frost": "Brina",
+        "crown": "Corona",
+        "founder": "Fondatore",
+        "ambassador": "Ambasciatore",
+        "halo": "Alone dorato",
         "badgeTitle": "Effetto del badge",
         "badgeBody": "Anima il logo StreamPulse accanto al tuo nome.",
         "nameTitle": "Nome speciale",
@@ -763,6 +817,8 @@
       "chatRowNote": "Widoczne dla innych użytkowników StreamPulse."
     },
     "badge": {
+      "founder": "Założyciel StreamPulse",
+      "ambassador": "Ambasador",
       "lifetime": "Członek dożywotni",
       "months": "Subskrybuje od {{count}} mies.",
       "monthOne": "Subskrybuje od 1 miesiąca",
@@ -772,10 +828,6 @@
     "topbar": {
       "previews": "Najedź kursorem na podglądy",
       "thisChannel": "Ten kanał",
-      "badgeColor": "Kolor odznaki",
-      "badgeAuthor": "Pseudonim",
-      "badgeTheme": "Motyw",
-      "badgeCustom": "Własny",
       "liveNow": "Na żywo",
       "noneLive": "Nikt nie nadaje",
       "watchedHere": "Oglądane tutaj",
@@ -840,6 +892,17 @@
         "soundsTitle": "Dźwięk powiadomienia"
       },
       "cosmetics": {
+        "heartbeat": "Bicie serca",
+        "float": "Lewitacja",
+        "wobble": "Drganie",
+        "prism": "Pryzmat",
+        "glitch": "Glitch",
+        "fire": "Żar",
+        "frost": "Szron",
+        "crown": "Korona",
+        "founder": "Założyciel",
+        "ambassador": "Ambasador",
+        "halo": "Złota aureola",
         "badgeTitle": "Efekt odznaki",
         "badgeBody": "Animuje logo StreamPulse obok Twojej nazwy.",
         "nameTitle": "Specjalna nazwa",
@@ -884,6 +947,8 @@
       "chatRowNote": "Diğer StreamPulse kullanıcıları görür."
     },
     "badge": {
+      "founder": "StreamPulse kurucusu",
+      "ambassador": "Elçi",
       "lifetime": "Ömür boyu üye",
       "months": "{{count}} aydır abone",
       "monthOne": "1 aydır abone",
@@ -893,10 +958,6 @@
     "topbar": {
       "previews": "Fareyle önizleme",
       "thisChannel": "Bu kanal",
-      "badgeColor": "Rozet rengi",
-      "badgeAuthor": "Kullanıcı adı",
-      "badgeTheme": "Tema",
-      "badgeCustom": "Özel",
       "liveNow": "Şu anda yayında",
       "noneLive": "Kimse yayında değil",
       "watchedHere": "Burada izlenen",
@@ -961,6 +1022,17 @@
         "soundsTitle": "Bildirim sesi"
       },
       "cosmetics": {
+        "heartbeat": "Kalp atışı",
+        "float": "Süzülme",
+        "wobble": "Sallanma",
+        "prism": "Prizma",
+        "glitch": "Glitch",
+        "fire": "Kor",
+        "frost": "Kırağı",
+        "crown": "Taç",
+        "founder": "Kurucu",
+        "ambassador": "Elçi",
+        "halo": "Altın hale",
         "badgeTitle": "Rozet efekti",
         "badgeBody": "Adının yanındaki StreamPulse logosunu canlandırır.",
         "nameTitle": "Özel ad",
@@ -1005,6 +1077,8 @@
       "chatRowNote": "Видно другим пользователям StreamPulse."
     },
     "badge": {
+      "founder": "Основатель StreamPulse",
+      "ambassador": "Посол",
       "lifetime": "Пожизненный участник",
       "months": "Подписка {{count}} мес.",
       "monthOne": "Подписка 1 месяц",
@@ -1014,10 +1088,6 @@
     "topbar": {
       "previews": "Превью при наведении",
       "thisChannel": "Этот канал",
-      "badgeColor": "Цвет значка",
-      "badgeAuthor": "Ник",
-      "badgeTheme": "Тема",
-      "badgeCustom": "Свой",
       "liveNow": "В эфире",
       "noneLive": "Никого нет в эфире",
       "watchedHere": "Просмотрено здесь",
@@ -1082,6 +1152,17 @@
         "soundsTitle": "Звук уведомления"
       },
       "cosmetics": {
+        "heartbeat": "Сердцебиение",
+        "float": "Левитация",
+        "wobble": "Покачивание",
+        "prism": "Призма",
+        "glitch": "Глитч",
+        "fire": "Угли",
+        "frost": "Иней",
+        "crown": "Корона",
+        "founder": "Основатель",
+        "ambassador": "Посол",
+        "halo": "Золотой ореол",
         "badgeTitle": "Эффект значка",
         "badgeBody": "Анимирует логотип StreamPulse рядом с вашим ником.",
         "nameTitle": "Особый ник",
@@ -1126,6 +1207,8 @@
       "chatRowNote": "他の StreamPulse ユーザーに表示されます。"
     },
     "badge": {
+      "founder": "StreamPulse 創設者",
+      "ambassador": "アンバサダー",
       "lifetime": "永久メンバー",
       "months": "{{count}}か月利用中",
       "monthOne": "1か月利用中",
@@ -1135,10 +1218,6 @@
     "topbar": {
       "previews": "ホバー時のプレビュー",
       "thisChannel": "このチャンネル",
-      "badgeColor": "バッジの色",
-      "badgeAuthor": "ユーザー名",
-      "badgeTheme": "テーマ",
-      "badgeCustom": "カスタム",
       "liveNow": "配信中",
       "noneLive": "配信中の人はいません",
       "watchedHere": "ここでの視聴",
@@ -1203,6 +1282,17 @@
         "soundsTitle": "通知音"
       },
       "cosmetics": {
+        "heartbeat": "鼓動",
+        "float": "浮遊",
+        "wobble": "ゆらゆら",
+        "prism": "プリズム",
+        "glitch": "グリッチ",
+        "fire": "残り火",
+        "frost": "霜",
+        "crown": "王冠",
+        "founder": "創設者",
+        "ambassador": "アンバサダー",
+        "halo": "金色の光輪",
         "badgeTitle": "バッジのエフェクト",
         "badgeBody": "名前の横の StreamPulse ロゴをアニメーションさせます。",
         "nameTitle": "スペシャルネーム",
@@ -1247,6 +1337,8 @@
       "chatRowNote": "다른 StreamPulse 사용자에게 보입니다."
     },
     "badge": {
+      "founder": "StreamPulse 창립자",
+      "ambassador": "앰배서더",
       "lifetime": "평생 멤버",
       "months": "{{count}}개월째 구독 중",
       "monthOne": "1개월째 구독 중",
@@ -1256,10 +1348,6 @@
     "topbar": {
       "previews": "마우스 오버 시 미리보기",
       "thisChannel": "이 채널",
-      "badgeColor": "배지 색상",
-      "badgeAuthor": "사용자 이름",
-      "badgeTheme": "테마",
-      "badgeCustom": "사용자 지정",
       "liveNow": "방송 중",
       "noneLive": "방송 중인 사람이 없습니다",
       "watchedHere": "여기서 시청",
@@ -1324,6 +1412,17 @@
         "soundsTitle": "알림 소리"
       },
       "cosmetics": {
+        "heartbeat": "심장 박동",
+        "float": "공중 부양",
+        "wobble": "흔들림",
+        "prism": "프리즘",
+        "glitch": "글리치",
+        "fire": "불씨",
+        "frost": "서리",
+        "crown": "왕관",
+        "founder": "창립자",
+        "ambassador": "앰배서더",
+        "halo": "황금 후광",
         "badgeTitle": "배지 효과",
         "badgeBody": "닉네임 옆 StreamPulse 로고에 애니메이션을 줍니다.",
         "nameTitle": "특별 닉네임",

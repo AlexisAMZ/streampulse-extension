@@ -8,9 +8,10 @@ import { initPoints } from "./popup-points.js";
 import { initDrops } from "./popup-drops.js";
 import { initLayout } from "./popup-layout.js";
 import { initReviewAsk } from "./popup-review.js";
+import { IDENTITY_STORAGE_KEYS, initIdentity, renderIdentity } from "./popup-identity.js";
 import { HISTORY_KEY, formatClock, selectMissed, summarize } from "./history-data.js";
 import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalizePredictionRule, summarize as summarizePredictions } from "./predictions-data.js";
-import { LICENSE_VERIFY_URL, PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
+import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
 import {
   SMART_ALERTS_KEY,
   MAX_RULES_PER_STREAMER,
@@ -522,189 +523,6 @@ function renderSmart() {
   renderSmartRules();
 }
 
-// ─── Couleur d'accent et badge (StreamPulse+) ─────────────────────────────────
-
-export const ACCENT_KEY = "streamPulseAccent";
-
-/**
- * La couleur d'accent a été retirée de StreamPulse+ : le popup reste violet,
- * même si une ancienne couleur est encore rangée dans le storage.
- */
-function renderAccent() {
-  const active = plusActive();
-  delete document.body.dataset.accent;
-  const note = $("badge-plus-note");
-  if (note) note.textContent = t(active ? "popup.settings.badgePlusOn" : "popup.settings.badgePlusOff");
-}
-
-export const COSMETICS_KEY = "streamPulseCosmetics";
-const BADGE_FX = ["pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "halo"];
-const NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow", "ambassador"];
-/** Effets d'ambassadeur : nombre de filleuls abonnés exigé (mêmes paliers que le serveur). */
-const REFERRAL_FX = { ambassador: 1, halo: 3 };
-let cosmetics = { badgeFx: "", nameFx: "" };
-
-function normalizeCosmetics(value) {
-  const input = value && typeof value === "object" ? value : {};
-  return {
-    badgeFx: BADGE_FX.includes(input.badgeFx) ? input.badgeFx : "",
-    nameFx: NAME_FX.includes(input.nameFx) ? input.nameFx : "",
-  };
-}
-
-let chatName = "";
-
-const referralsCount = () => Math.max(0, Number(plusRecord?.referrals) || 0);
-const fxLocked = (value) => (REFERRAL_FX[value] || 0) > referralsCount();
-
-/**
- * Un aperçu cliquable par effet : le pseudo de l'utilisateur (ou « TonPseudo »)
- * avec l'effet appliqué, ou le logo StreamPulse animé. Plus lisible qu'un menu.
- */
-function fxOption(kind, value, selected) {
-  const plus = plusActive();
-  const locked = plus && fxLocked(value);
-  const button = node("button", "fx-option");
-  button.type = "button";
-  button.setAttribute("role", "radio");
-  button.setAttribute("aria-checked", String(value === selected));
-  button.dataset.kind = kind;
-  button.dataset.value = value;
-  if (locked) button.setAttribute("aria-disabled", "true");
-  if (kind === "name") {
-    const sample = node("b", `fx-sample-name${value ? ` sp-paint sp-paint--${value}` : ""}`, chatName || t("popup.cosmetics.sampleName"));
-    button.append(sample);
-  } else {
-    button.append(node("span", `cosmetic-badge${value ? ` sp-fx-${value}` : ""}`));
-  }
-  button.append(node("span", "fx-label", t(`popup.cosmetics.${value || "none"}`)));
-  if (locked) {
-    button.append(node("span", "fx-lock", t("popup.referral.needed", { count: REFERRAL_FX[value] })));
-    button.title = t("popup.referral.needed", { count: REFERRAL_FX[value] });
-  } else if (!plus && value) {
-    button.append(node("span", "fx-plus", t("popup.plus.badge")));
-  }
-  return button;
-}
-
-function renderCosmetics() {
-  const shown = plusActive() ? cosmetics : { badgeFx: "", nameFx: "" };
-  $("cosmetic-name-fx")?.replaceChildren(...["", ...NAME_FX].map((value) => fxOption("name", value, shown.nameFx)));
-  $("cosmetic-badge-fx")?.replaceChildren(...["", ...BADGE_FX].map((value) => fxOption("badge", value, shown.badgeFx)));
-  if ($("cosmetic-badge")) $("cosmetic-badge").className = `cosmetic-badge${shown.badgeFx ? ` sp-fx-${shown.badgeFx}` : ""}`;
-  if ($("cosmetic-name")) {
-    $("cosmetic-name").className = `cosmetic-name${shown.nameFx ? ` sp-paint sp-paint--${shown.nameFx}` : ""}`;
-    $("cosmetic-name").textContent = chatName || t("popup.cosmetics.sampleName");
-  }
-}
-
-function initCosmetics() {
-  for (const id of ["cosmetic-name-fx", "cosmetic-badge-fx"]) {
-    $(id)?.addEventListener("click", (event) => {
-      const button = event.target.closest(".fx-option");
-      if (!button || button.getAttribute("aria-disabled") === "true") return;
-      if (!plusActive()) {
-        if (button.dataset.value) openPlus();
-        return;
-      }
-      const field = button.dataset.kind === "name" ? "nameFx" : "badgeFx";
-      cosmetics = normalizeCosmetics({ ...cosmetics, [field]: button.dataset.value });
-      chrome.storage.local.set({ [COSMETICS_KEY]: cosmetics });
-      renderCosmetics();
-    });
-  }
-  plusListeners.add(() => renderCosmetics());
-}
-
-// ─── Parrainage (StreamPulse+) ────────────────────────────────────────────────
-
-const REFERRAL_TIERS = [
-  { count: 1, key: "popup.referral.tierName" },
-  { count: 3, key: "popup.referral.tierBadge" },
-  { count: 5, key: "popup.referral.tierDevice" },
-  { count: 10, key: "popup.referral.tierGift" },
-];
-let referralCode = "";
-
-function renderReferral() {
-  const block = $("referral-block");
-  if (!block) return;
-  const active = plusActive();
-  const count = referralsCount();
-  $("referral-code").hidden = !referralCode;
-  $("referral-code").textContent = referralCode;
-  $("referral-copy").hidden = !referralCode;
-  $("referral-get").hidden = Boolean(referralCode);
-  $("referral-get").textContent = t(active ? "popup.referral.get" : "popup.plusMenu.discover");
-  $("referral-tiers").replaceChildren(...REFERRAL_TIERS.map((tier) => {
-    const item = node("li", count >= tier.count ? "referral-tier is-done" : "referral-tier");
-    item.append(node("b", null, t("popup.referral.friends", { count: tier.count })), node("span", null, t(tier.key)));
-    return item;
-  }));
-  if (active && count && !$("referral-status").dataset.busy) $("referral-status").textContent = t("popup.referral.count", { count });
-}
-
-async function fetchReferral() {
-  const status = $("referral-status");
-  status.dataset.busy = "1";
-  status.textContent = t("popup.referral.loading");
-  try {
-    const response = await fetch(LICENSE_VERIFY_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "referral", key: plusRecord.licenseKey }),
-    });
-    const payload = await response.json().catch(() => ({}));
-    if (response.status === 503) {
-      status.textContent = t("popup.referral.soon");
-      return;
-    }
-    if (!response.ok || !payload.code) throw new Error(payload.error || `HTTP ${response.status}`);
-    referralCode = payload.code;
-    plusRecord = { ...plusRecord, referrals: Number(payload.referrals) || 0 };
-    await chrome.storage.local.set({ [PLUS_KEY]: plusRecord, streamPulseReferralCode: referralCode });
-    status.textContent = t("popup.referral.count", { count: referralsCount() });
-  } catch (error) {
-    console.warn("[popup] code de parrainage indisponible :", error?.message || error);
-    status.textContent = t("popup.referral.error");
-  } finally {
-    delete status.dataset.busy;
-    renderReferral();
-  }
-}
-
-function initReferral() {
-  $("referral-get")?.addEventListener("click", () => (plusActive() ? fetchReferral() : openPlus()));
-  $("referral-copy")?.addEventListener("click", async () => {
-    await navigator.clipboard.writeText(referralCode).catch(() => {});
-    $("referral-status").textContent = t("popup.referral.copied");
-  });
-  plusListeners.add(() => renderReferral());
-}
-
-/**
- * La couleur personnalisée du badge est un avantage StreamPulse+ : sans licence,
- * la choisir ouvre l'écran d'abonnement. Écouté en capture, avant le gestionnaire
- * de popup.js qui enregistrerait le réglage.
- */
-function initBadgeColorLock() {
-  document.addEventListener(
-    "change",
-    (event) => {
-      const select = event.target;
-      if (select?.id !== "pref-badge-color-mode" || select.value !== "custom" || plusActive()) return;
-      event.stopImmediatePropagation();
-      select.value = "author";
-      openPlus();
-    },
-    true,
-  );
-  plusListeners.add((active) => {
-    const option = document.querySelector('#pref-badge-color-mode option[value="custom"]');
-    if (option) option.textContent = `${t("popup.settings.badgeColorCustom")}${active ? "" : " · PLUS"}`;
-  });
-}
-
 /**
  * Le téléchargement des clips est un avantage StreamPulse+ : sans licence,
  * l'activer ouvre l'écran d'abonnement. Écouté en capture, avant popup.js.
@@ -721,10 +539,6 @@ function initClipDownloadLock() {
     },
     true,
   );
-}
-
-function initAccent() {
-  plusListeners.add(() => renderAccent());
 }
 
 // ─── Prédictions assistées (StreamPulse+) ────────────────────────────────────
@@ -868,19 +682,13 @@ export async function initFeatures() {
   initHistory();
   initPlus();
   initSmartAlerts();
-  initAccent();
-  initBadgeColorLock();
   initClipDownloadLock();
-  initCosmetics();
-  initReferral();
   initPredictions();
 
-  const stored = await chrome.storage.local.get([PLUS_KEY, SMART_ALERTS_KEY, ACCENT_KEY, COSMETICS_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers", "userProfile", "streamPulseReferralCode"]);
-  // Pseudo choisi dans l'extension, pour les aperçus des effets.
-  chatName = String(stored.userProfile?.displayName || stored.userProfile?.handle || "").slice(0, 25);
-  referralCode = typeof stored.streamPulseReferralCode === "string" ? stored.streamPulseReferralCode : "";
+  const stored = await chrome.storage.local.get([PLUS_KEY, SMART_ALERTS_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers", ...IDENTITY_STORAGE_KEYS]);
   plusRecord = stored[PLUS_KEY] || null;
-  cosmetics = normalizeCosmetics(stored[COSMETICS_KEY]);
+  plusListeners.add(() => renderIdentity());
+  initIdentity({ getRecord: () => plusRecord, isPlus: plusActive, openPlus, stored });
   predictionRule = normalizePredictionRule(stored[PREDICTION_RULE_KEY]);
   predictionHistory = Array.isArray(stored[PREDICTION_HISTORY_KEY]) ? stored[PREDICTION_HISTORY_KEY] : [];
   recheckOnOpen().catch(() => {});
@@ -906,9 +714,6 @@ export async function initFeatures() {
     if (changes[PREDICTION_HISTORY_KEY]) {
       predictionHistory = changes[PREDICTION_HISTORY_KEY].newValue || [];
       renderPredictions();
-    }
-    if (changes[ACCENT_KEY]) {
-      renderAccent();
     }
     if (changes.betaGeneralStreamers) {
       smartStreamers = changes.betaGeneralStreamers.newValue || [];

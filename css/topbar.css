@@ -111,8 +111,6 @@
 .sp-tb-badge-mode { padding: 4px 8px; border: 0; border-radius: 7px; background: transparent; color: var(--sp-text-2); font: 600 11px/1.2 var(--sp-body); cursor: pointer; appearance: none; transition: background 0.15s ease, color 0.15s ease; }
 .sp-tb-badge-mode:hover { color: var(--sp-text); }
 .sp-tb-badge-mode.on { background: var(--sp-violet); color: #ffffff; }
-.sp-tb-badge-picker { width: 26px; height: 24px; padding: 1px; border: 0; border-radius: 6px; background: transparent; cursor: pointer; }
-.sp-tb-badge-picker[hidden] { display: none !important; }
 
 .sp-tb-live { display: flex; align-items: center; gap: 10px; width: 100%; margin-bottom: 2px; padding: 7px 8px; border: 0; border-radius: 12px; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; transition: background 0.15s ease; }
 .sp-tb-live:hover { background: var(--sp-surface); }

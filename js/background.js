@@ -27,6 +27,7 @@ import { createPointsStore } from "./points-store.js";
 import { createDropsStore } from "./drops-store.js";
 import { BADGE_AUTO_KEY, CLAIM_OK_STATUSES, badgesFrom, isPaidBadge } from "./drops-data.js";
 import { createDropsClient } from "./drops-gql.js";
+import { searchChannels } from "./channel-search.js";
 import { syncEventSubRaid, stopEventSubRaid } from "./eventsubRaid.js";
 import {
   RAID_WATCHER_ALARM,
@@ -911,6 +912,28 @@ async function resolveChannelAvatar(platform, channel) {
   }
 
   return "";
+}
+
+// ─── Suggestions de chaînes (champ d'ajout du popup) ─────────────────────────
+// Une frappe = une requête au plus toutes les 220 ms côté popup ; ce cache d'une
+// minute évite de redemander la même saisie (retour arrière, retape).
+const SUGGEST_TTL_MS = 60_000;
+const suggestCache = new Map();
+
+const channelSearchFetchers = {
+  twitch: (query) =>
+    fetchTwitchJson(`https://api.twitch.tv/helix/search/channels?query=${encodeURIComponent(query)}&first=10`, { headers: twitchHeaders() }, 8000),
+  kick: (query) => fetchJson(`https://kick.com/api/search?searched_word=${encodeURIComponent(query)}`, {}, 8000),
+};
+
+async function suggestChannels(platform, query) {
+  const key = `${platform}:${String(query || "").toLowerCase()}`;
+  const cached = suggestCache.get(key);
+  if (cached && Date.now() - cached.at < SUGGEST_TTL_MS) return cached.items;
+  const items = await searchChannels(platform, query, channelSearchFetchers);
+  if (suggestCache.size > 100) suggestCache.clear();
+  suggestCache.set(key, { at: Date.now(), items });
+  return items;
 }
 
 // ─── Suivi des points de chaîne ───────────────────────────────────────────────
@@ -3475,6 +3498,15 @@ function handleMessage(request, sender, sendResponse) {
         .catch(() => sendResponse({ user: null }));
       return true;
     }
+
+    case "searchChannels":
+      suggestChannels(String(request.platform || ""), String(request.query || ""))
+        .then((items) => sendResponse({ items }))
+        .catch((error) => {
+          console.warn("[StreamPulse] suggestions de chaînes :", error?.message || error);
+          sendResponse({ items: [], error: "unavailable" });
+        });
+      return true;
 
     case "updateUserProfile": {
       const profile = request.profile || {};

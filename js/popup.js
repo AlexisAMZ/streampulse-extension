@@ -24,6 +24,8 @@ import {
 } from "./platforms.js";
 import { createAllChannelsTile, createChannelRow, createMiniCard, formatNumber, renderStage, renderStageEmpty } from "./ui.js";
 import { initFeatures, renderHistory } from "./popup-features.js";
+import { initNews, markSeen } from "./popup-news.js";
+import { initSuggest } from "./popup-suggest.js";
 
 const PREFERENCES_STORAGE_KEY = "betaGeneralPreferences";
 
@@ -112,8 +114,6 @@ const watchTimeToggle = document.getElementById("pref-watch-time");
 const pointsTrackingToggle = document.getElementById("pref-points-tracking");
 const dropsTrackingToggle = document.getElementById("pref-drops-tracking");
 const communityBadgeToggle = document.getElementById("pref-community-badge");
-const badgeColorMode = document.getElementById("pref-badge-color-mode");
-const badgeColorValue = document.getElementById("pref-badge-color-value");
 const patchNotesButton = document.getElementById("open-patch-notes");
 const patchNotesDot = document.getElementById("patch-notes-dot");
 
@@ -1013,16 +1013,6 @@ function renderPreferences() {
   if (pointsTrackingToggle) {
     pointsTrackingToggle.checked = prefs.pointsTracking !== false;
   }
-  if (badgeColorMode) {
-    // Une couleur hexadecimale stockee signifie le mode personnalise.
-    const stored = prefs.communityBadgeColor || "author";
-    const isCustom = stored !== "author" && stored !== "theme";
-    badgeColorMode.value = isCustom ? "custom" : stored;
-    if (badgeColorValue) {
-      badgeColorValue.hidden = !isCustom;
-      if (isCustom) badgeColorValue.value = stored;
-    }
-  }
   if (communityBadgeToggle) {
     communityBadgeToggle.checked = prefs.communityBadge === true;
   }
@@ -1139,14 +1129,33 @@ async function renderEventLogs() {
   }
 }
 
-function setActiveTab(tabName) {
-  currentTab = tabName;
+/**
+ * Rubriques des Réglages qui ont aussi leur onglet dans la barre du haut :
+ * l'onglet surligné suit la rubrique affichée.
+ */
+const PANEL_TABS = new Set(["drops", "badges"]);
+
+function highlightTab(tabName) {
   tabButtons.forEach((button) => {
     const isActive = button.dataset.tab === tabName;
     button.classList.toggle("active", isActive);
     button.setAttribute("aria-selected", isActive ? "true" : "false");
     button.tabIndex = isActive ? 0 : -1;
   });
+}
+
+function setActiveTab(tabName) {
+  if (PANEL_TABS.has(tabName)) {
+    showMenuPanel(tabName);
+  } else if (tabName === "settings") {
+    // « Réglages » ne rouvre pas Drops ou Badges : ils ont leur propre onglet.
+    const current = document.querySelector('.menu-nav > .menu-tab[aria-selected="true"]')?.dataset.panel;
+    const first = [...document.querySelectorAll(".menu-nav > .menu-tab")].find((tab) => !tab.hidden && !PANEL_TABS.has(tab.dataset.panel));
+    const target = current && !PANEL_TABS.has(current) ? current : first?.dataset.panel;
+    if (target) showMenuPanel(target);
+  }
+  currentTab = tabName;
+  highlightTab(tabName);
 
   document.body.classList.toggle("is-settings", tabName !== "streamers");
   if (tabName !== "streamers") closeSheet({ restoreFocus: false });
@@ -1616,6 +1625,11 @@ function showMenuPanel(panelName, { focus = false } = {}) {
   });
   const panels = document.getElementById("menu-panels");
   if (panels) panels.scrollTop = 0;
+  markSeen(panelName);
+  if (currentTab !== "streamers" && currentTab !== "history") {
+    currentTab = PANEL_TABS.has(panelName) ? panelName : "settings";
+    highlightTab(currentTab);
+  }
 }
 
 function initMenuNav() {
@@ -1813,6 +1827,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       next.focus();
     });
     initMenuNav();
+    initNews().catch((error) => console.warn("[popup] news init failed:", error));
+    initSuggest({ input: streamerInput, form: document.getElementById("add-streamer-form"), getPlatform: () => state.selectedPlatform, getStreamers: () => state.streamers });
     initHomeInteractions();
     initFeatures().catch((error) => console.warn("[popup] features init failed:", error));
 
@@ -2020,20 +2036,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (communityBadgeToggle) {
-      badgeColorMode?.addEventListener("change", (e) => {
-        const mode = e.target.value;
-        const custom = mode === "custom";
-        if (badgeColorValue) badgeColorValue.hidden = !custom;
-        updatePreferences({
-          communityBadgeColor: custom ? badgeColorValue?.value || "#9146ff" : mode,
-        });
-      });
-      // "change" et non "input" : le selecteur de couleur emet en continu
-      // pendant le glissement, ce qui declencherait un toast par pixel.
-      badgeColorValue?.addEventListener("change", (e) => {
-        updatePreferences({ communityBadgeColor: e.target.value });
-      });
-
       communityBadgeToggle.addEventListener("change", (e) => {
         updatePreferences({ communityBadge: e.target.checked });
       });

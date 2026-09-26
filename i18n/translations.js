@@ -166,6 +166,16 @@ export const translations = {
       "closeWindow": "Fermer la fenêtre"
     },
     "popup": {
+      "news": {
+        "new": "Nouveau",
+      },
+      "suggest": {
+        "label": "Suggestions de chaînes",
+        "live": "En direct",
+        "liveGame": "En direct · {{game}}",
+        "followers": "{{count}} abonnés",
+        "followed": "Déjà suivi",
+      },
       "history": {
         "newBadge": "Nouveau",
 
@@ -191,6 +201,8 @@ export const translations = {
         "agoDays": "il y a {{count}} j"
       },
       "plus": {
+        "perkFx": "Effets de pseudo et de badge",
+        "perkFxCount": "{{badges}} effets de badge et {{names}} de pseudo, vus dans le tchat Twitch.",
         "badge": "PLUS",
         "open": "Découvrir StreamPulse+",
         "title": "Va plus loin",
@@ -202,8 +214,6 @@ export const translations = {
         "perkRecapBody": "Heures par catégorie, courbe de l'année, image à partager.",
         "perkPredictions": "Prédictions assistées",
         "perkPredictionsBody": "Historique de tes paris, taux de réussite, mise auto selon ta règle.",
-        "perkThemes": "Thèmes et badge personnalisés",
-        "perkThemesBody": "Couleur du badge dans le tchat, thèmes du popup.",
         "soon": "Bientôt",
         "plansLabel": "Formule",
         "monthly": "Mensuel",
@@ -273,6 +283,15 @@ export const translations = {
         "openRecap": "Ouvrir mon récap"
       },
       "cosmetics": {
+        "heartbeat": "Battement",
+        "float": "Lévitation",
+        "wobble": "Secousse",
+        "prism": "Prisme",
+        "glitch": "Glitch",
+        "fire": "Braise",
+        "frost": "Givre",
+        "crown": "Couronne",
+        "founder": "Fondateur",
         "ambassador": "Ambassadeur",
         "halo": "Halo doré",
         "badgeTitle": "Effet du badge",
@@ -481,8 +500,8 @@ export const translations = {
         "badgeFree": "gratuit",
         "badgePaid": "payant",
         "badgeOwned": "obtenu",
-        "badgeAuto": "Auto",
-        "badgeAutoOn": "Auto ●",
+        "badgeAuto": "Obtenir en auto",
+        "badgeAutoOn": "En cours · Arrêter",
         "badgeAutoHint": "Mode auto : ouvre un live dans un onglet épinglé et muet, puis le ferme dès que le badge est obtenu",
         "badgeAutoStop": "Arrêter le mode auto",
         "badgesUnit": "DISPONIBLES",
@@ -523,9 +542,13 @@ export const translations = {
         "never": "Non merci"
       },
       "identity": {
+        "rankFounder": "Fondateur de StreamPulse",
+        "rankAmbassador": "Ambassadeur · amis parrainés : {{count}}",
         "intro": "L'apparence de ton badge StreamPulse et de ton pseudo dans le chat Twitch, visible par les autres utilisateurs de StreamPulse."
       },
       "referral": {
+        "plusTitle": "Parraine tes amis",
+        "plusBody": "Ton code leur offre le premier mois. Toi, tu gagnes un mois gratuit par ami (formule mensuelle) et ces récompenses :",
         "title": "Parrainage",
         "body": "Partage ton code : ton ami a son premier mois offert. Toi, tu gagnes un mois gratuit par ami (formule mensuelle) et des récompenses d'ambassadeur.",
         "get": "Obtenir mon code",
@@ -537,8 +560,8 @@ export const translations = {
         "count": "Amis parrainés : {{count}}",
         "friends": "Amis : {{count}}",
         "needed": "Amis : {{count}}",
-        "tierName": "Effet de pseudo Ambassadeur",
-        "tierBadge": "Effet de badge Halo doré",
+        "tierName": "Effet de pseudo",
+        "tierBadge": "Effet de badge",
         "tierDevice": "Un appareil de plus",
         "tierGift": "Une licence à vie à offrir"
       },
@@ -670,8 +693,6 @@ export const translations = {
       "greetingMorning": "Bonjour",
       "greetingSub": "Voici qui est en ligne.",
       "settings": {
-        "badgePlusOn": "StreamPulse+ actif : ta couleur personnalisée est visible par tous les utilisateurs de StreamPulse.",
-        "badgePlusOff": "Avec StreamPulse+, ta couleur personnalisée est visible par tous les utilisateurs de StreamPulse.",
         "liveNotificationsTitle": "Notifications Chrome",
         "liveNotificationsDescription": "Appliqué à tous tes streamers suivis : tu peux ensuite l'ajuster par streamer.",
         "gameAlertsTitle": "Alertes changement de catégorie",
@@ -738,11 +759,6 @@ export const translations = {
         "communityBadgeTitle": "Badge communautaire",
         "saved": "Réglage enregistré",
         "patchNotes": "Voir les nouveautés",
-        "badgeColorTitle": "Couleur du badge",
-        "badgeColorDescription": "Choisissez la teinte de l'icône affichée dans le tchat.",
-        "badgeColorAuthor": "Couleur du pseudo",
-        "badgeColorTheme": "Selon le thème Twitch",
-        "badgeColorCustom": "Couleur personnalisée",
         "communityBadgeDescription": "Affiche l'icône StreamPulse à côté de votre pseudo et de ceux des autres utilisateurs dans le tchat Twitch. Une empreinte de votre pseudo, calculée dans votre navigateur, est envoyée à streampulse.fr ; le pseudo lui-même n'est jamais transmis.",
         "chatFilterDescription": "Mots-clés à masquer (séparés par des virgules).",
         "languageTitle": "Langue de l'extension",
@@ -1069,6 +1085,8 @@ export const translations = {
         "chatRowNote": "Vu par les autres utilisateurs de StreamPulse."
       },
       "badge": {
+        "founder": "Fondateur de StreamPulse",
+        "ambassador": "Ambassadeur",
         "lifetime": "Membre à vie",
         "months": "Abonné depuis {{count}} mois",
         "monthOne": "Abonné depuis 1 mois",
@@ -1078,10 +1096,6 @@ export const translations = {
       "topbar": {
         "previews": "Previews au survol",
         "thisChannel": "Cette chaîne",
-        "badgeColor": "Couleur du badge",
-        "badgeAuthor": "Pseudo",
-        "badgeTheme": "Thème",
-        "badgeCustom": "Perso",
         "liveNow": "En direct",
         "noneLive": "Personne en direct",
         "watchedHere": "Regardé ici",
@@ -1256,6 +1270,16 @@ export const translations = {
       "closeWindow": "Close window"
     },
     "popup": {
+      "news": {
+        "new": "New",
+      },
+      "suggest": {
+        "label": "Channel suggestions",
+        "live": "Live",
+        "liveGame": "Live · {{game}}",
+        "followers": "{{count}} followers",
+        "followed": "Already added",
+      },
       "history": {
         "newBadge": "New",
 
@@ -1281,6 +1305,8 @@ export const translations = {
         "agoDays": "{{count}} d ago"
       },
       "plus": {
+        "perkFx": "Username and badge effects",
+        "perkFxCount": "{{badges}} badge effects and {{names}} username effects, seen in Twitch chat.",
         "badge": "PLUS",
         "open": "Discover StreamPulse+",
         "title": "Go further",
@@ -1292,8 +1318,6 @@ export const translations = {
         "perkRecapBody": "Hours by category, your year in a chart, an image to share.",
         "perkPredictions": "Assisted predictions",
         "perkPredictionsBody": "Your bet history, win rate, auto-bet with your own rule.",
-        "perkThemes": "Custom themes and badge",
-        "perkThemesBody": "Chat badge color, popup themes.",
         "soon": "Soon",
         "plansLabel": "Plan",
         "monthly": "Monthly",
@@ -1363,6 +1387,15 @@ export const translations = {
         "openRecap": "Open my recap"
       },
       "cosmetics": {
+        "heartbeat": "Heartbeat",
+        "float": "Float",
+        "wobble": "Wobble",
+        "prism": "Prism",
+        "glitch": "Glitch",
+        "fire": "Ember",
+        "frost": "Frost",
+        "crown": "Crown",
+        "founder": "Founder",
         "ambassador": "Ambassador",
         "halo": "Golden halo",
         "badgeTitle": "Badge effect",
@@ -1571,8 +1604,8 @@ export const translations = {
         "badgeFree": "free",
         "badgePaid": "paid",
         "badgeOwned": "owned",
-        "badgeAuto": "Auto",
-        "badgeAutoOn": "Auto ●",
+        "badgeAuto": "Get it automatically",
+        "badgeAutoOn": "Running · Stop",
         "badgeAutoHint": "Auto mode: opens a live stream in a pinned, muted tab and closes it once the badge is earned",
         "badgeAutoStop": "Stop auto mode",
         "badgesUnit": "AVAILABLE",
@@ -1613,9 +1646,13 @@ export const translations = {
         "never": "No thanks"
       },
       "identity": {
+        "rankFounder": "StreamPulse founder",
+        "rankAmbassador": "Ambassador · friends referred: {{count}}",
         "intro": "How your StreamPulse badge and your name look in Twitch chat, visible to other StreamPulse users."
       },
       "referral": {
+        "plusTitle": "Refer your friends",
+        "plusBody": "Your code gives them their first month free. You get a free month per friend (monthly plan) and these rewards:",
         "title": "Referral",
         "body": "Share your code: your friend gets their first month free. You get a free month per friend (monthly plan) and ambassador rewards.",
         "get": "Get my code",
@@ -1627,8 +1664,8 @@ export const translations = {
         "count": "Friends referred: {{count}}",
         "friends": "Friends: {{count}}",
         "needed": "Friends: {{count}}",
-        "tierName": "Ambassador name effect",
-        "tierBadge": "Golden halo badge effect",
+        "tierName": "Username effect",
+        "tierBadge": "Badge effect",
         "tierDevice": "One more device",
         "tierGift": "A lifetime license to give away"
       },
@@ -1760,8 +1797,6 @@ export const translations = {
       "greetingMorning": "Good morning",
       "greetingSub": "Here's who's online.",
       "settings": {
-        "badgePlusOn": "StreamPulse+ is active: your custom color is visible to every StreamPulse user.",
-        "badgePlusOff": "With StreamPulse+, your custom color is visible to every StreamPulse user.",
         "liveNotificationsTitle": "Chrome notifications",
         "liveNotificationsDescription": "Applied to all your followed streamers: you can fine-tune per streamer afterwards.",
         "gameAlertsTitle": "Category change alerts",
@@ -1828,11 +1863,6 @@ export const translations = {
         "communityBadgeTitle": "Community badge",
         "saved": "Setting saved",
         "patchNotes": "See what's new",
-        "badgeColorTitle": "Badge colour",
-        "badgeColorDescription": "Choose the tint of the icon shown in chat.",
-        "badgeColorAuthor": "Username colour",
-        "badgeColorTheme": "Match Twitch theme",
-        "badgeColorCustom": "Custom colour",
         "communityBadgeDescription": "Shows the StreamPulse icon next to your username and those of other users in Twitch chat. A fingerprint of your username, computed in your browser, is sent to streampulse.fr; the username itself is never transmitted.",
         "chatFilterDescription": "Hide messages containing these words (comma separated).",
         "themeTitle": "Theme",
@@ -2159,6 +2189,8 @@ export const translations = {
         "chatRowNote": "Seen by other StreamPulse users."
       },
       "badge": {
+        "founder": "StreamPulse founder",
+        "ambassador": "Ambassador",
         "lifetime": "Lifetime member",
         "months": "Subscribed for {{count}} months",
         "monthOne": "Subscribed for 1 month",
@@ -2168,10 +2200,6 @@ export const translations = {
       "topbar": {
         "previews": "Hover previews",
         "thisChannel": "This channel",
-        "badgeColor": "Badge colour",
-        "badgeAuthor": "Username",
-        "badgeTheme": "Theme",
-        "badgeCustom": "Custom",
         "liveNow": "Live now",
         "noneLive": "Nobody live right now",
         "watchedHere": "Watched here",
@@ -2346,6 +2374,16 @@ export const translations = {
       "htmlLang": "es"
     },
     "popup": {
+      "news": {
+        "new": "Nuevo",
+      },
+      "suggest": {
+        "label": "Sugerencias de canales",
+        "live": "En directo",
+        "liveGame": "En directo · {{game}}",
+        "followers": "{{count}} seguidores",
+        "followed": "Ya añadido",
+      },
       "history": {
         "newBadge": "Nuevo",
 
@@ -2371,6 +2409,8 @@ export const translations = {
         "agoDays": "{{count}} d ago"
       },
       "plus": {
+        "perkFx": "Efectos de nombre e insignia",
+        "perkFxCount": "{{badges}} efectos de insignia y {{names}} de nombre, visibles en el chat de Twitch.",
         "badge": "PLUS",
         "open": "Discover StreamPulse+",
         "title": "Go further",
@@ -2382,8 +2422,6 @@ export const translations = {
         "perkRecapBody": "Hours by category, your year in a chart, an image to share.",
         "perkPredictions": "Assisted predictions",
         "perkPredictionsBody": "Your bet history, win rate, auto-bet with your own rule.",
-        "perkThemes": "Custom themes and badge",
-        "perkThemesBody": "Chat badge color, popup themes.",
         "soon": "Soon",
         "plansLabel": "Plan",
         "monthly": "Monthly",
@@ -2453,6 +2491,15 @@ export const translations = {
         "openRecap": "Abrir mi resumen"
       },
       "cosmetics": {
+        "heartbeat": "Latido",
+        "float": "Levitación",
+        "wobble": "Sacudida",
+        "prism": "Prisma",
+        "glitch": "Glitch",
+        "fire": "Brasa",
+        "frost": "Escarcha",
+        "crown": "Corona",
+        "founder": "Fundador",
         "ambassador": "Embajador",
         "halo": "Halo dorado",
         "badgeTitle": "Efecto de la insignia",
@@ -2661,8 +2708,8 @@ export const translations = {
         "badgeFree": "gratis",
         "badgePaid": "de pago",
         "badgeOwned": "obtenida",
-        "badgeAuto": "Auto",
-        "badgeAutoOn": "Auto ●",
+        "badgeAuto": "Obtener en auto",
+        "badgeAutoOn": "En curso · Detener",
         "badgeAutoHint": "Modo auto: abre un directo en una pestaña fijada y silenciada, y la cierra al obtener la insignia",
         "badgeAutoStop": "Detener el modo auto",
         "badgesUnit": "DISPONIBLES",
@@ -2703,9 +2750,13 @@ export const translations = {
         "never": "No, gracias"
       },
       "identity": {
+        "rankFounder": "Fundador de StreamPulse",
+        "rankAmbassador": "Embajador · amigos invitados: {{count}}",
         "intro": "El aspecto de tu insignia StreamPulse y de tu nombre en el chat de Twitch, visible para otros usuarios de StreamPulse."
       },
       "referral": {
+        "plusTitle": "Invita a tus amigos",
+        "plusBody": "Tu código les regala el primer mes. Tú ganas un mes gratis por amigo (plan mensual) y estas recompensas:",
         "title": "Recomendación",
         "body": "Comparte tu código: tu amigo tiene su primer mes gratis. Tú ganas un mes gratis por amigo (plan mensual) y recompensas de embajador.",
         "get": "Obtener mi código",
@@ -2717,8 +2768,8 @@ export const translations = {
         "count": "Amigos recomendados: {{count}}",
         "friends": "Amigos: {{count}}",
         "needed": "Amigos: {{count}}",
-        "tierName": "Efecto de nombre Embajador",
-        "tierBadge": "Efecto de insignia Halo dorado",
+        "tierName": "Efecto de nombre",
+        "tierBadge": "Efecto de insignia",
         "tierDevice": "Un dispositivo más",
         "tierGift": "Una licencia de por vida para regalar"
       },
@@ -2735,7 +2786,7 @@ export const translations = {
         "tabsLabel": "Popup views",
         "tabDirect": "Live",
         "tabMenu": "Menu",
-        "changelog": "What's new",
+        "changelog": "Novedades",
         "updated": "Updated at {{time}}",
         "screenLabel": "Selected channel",
         "guideLabel": "Followed channels",
@@ -2849,8 +2900,6 @@ export const translations = {
       "greetingMorning": "Buenos días",
       "greetingSub": "Aquí tienes quién está en línea.",
       "settings": {
-        "badgePlusOn": "StreamPulse+ activo: tu color personalizado es visible para todos los usuarios de StreamPulse.",
-        "badgePlusOff": "Con StreamPulse+, tu color personalizado es visible para todos los usuarios de StreamPulse.",
         "liveNotificationsTitle": "Notificaciones de Chrome",
         "liveNotificationsDescription": "Se aplica a todos los streamers que sigues: puedes ajustarlo por streamer después.",
         "gameAlertsTitle": "Alertas de cambio de categoría",
@@ -2869,11 +2918,6 @@ export const translations = {
         "communityBadgeTitle": "Insignia comunitaria",
         "saved": "Ajuste guardado",
         "patchNotes": "Ver las novedades",
-        "badgeColorTitle": "Color de la insignia",
-        "badgeColorDescription": "Elige el tono del icono mostrado en el chat.",
-        "badgeColorAuthor": "Color del nombre",
-        "badgeColorTheme": "Según el tema de Twitch",
-        "badgeColorCustom": "Color personalizado",
         "communityBadgeDescription": "Muestra el icono de StreamPulse junto a tu nombre y a los de otros usuarios en el chat de Twitch. Se envía a streampulse.fr una huella de tu nombre, calculada en tu navegador; el nombre nunca se transmite.",
         "chatFilterDescription": "Palabras a ocultar (separadas por comas).",
         "languageTitle": "Idioma de la extensión",
@@ -3249,6 +3293,8 @@ export const translations = {
         "chatRowNote": "Visto por otros usuarios de StreamPulse."
       },
       "badge": {
+        "founder": "Fundador de StreamPulse",
+        "ambassador": "Embajador",
         "lifetime": "Miembro de por vida",
         "months": "Suscrito desde hace {{count}} meses",
         "monthOne": "Suscrito desde hace 1 mes",
@@ -3258,10 +3304,6 @@ export const translations = {
       "topbar": {
         "previews": "Vistas previas",
         "thisChannel": "Este canal",
-        "badgeColor": "Color de la insignia",
-        "badgeAuthor": "Nombre",
-        "badgeTheme": "Tema",
-        "badgeCustom": "Personal.",
         "liveNow": "En directo",
         "noneLive": "Nadie en directo",
         "watchedHere": "Visto aquí",
@@ -3428,6 +3470,16 @@ export const translations = {
       "htmlLang": "pt-BR"
     },
     "popup": {
+      "news": {
+        "new": "Novo",
+      },
+      "suggest": {
+        "label": "Sugestões de canais",
+        "live": "Ao vivo",
+        "liveGame": "Ao vivo · {{game}}",
+        "followers": "{{count}} seguidores",
+        "followed": "Já adicionado",
+      },
       "history": {
         "newBadge": "Novo",
         "durationMinutes": "{{count}} min",
@@ -3448,6 +3500,8 @@ export const translations = {
         "agoDays": "{{count}} d ago"
       },
       "plus": {
+        "perkFx": "Efeitos de nome e emblema",
+        "perkFxCount": "{{badges}} efeitos de emblema e {{names}} de nome, vistos no chat da Twitch.",
         "badge": "PLUS",
         "open": "Discover StreamPulse+",
         "title": "Go further",
@@ -3459,8 +3513,6 @@ export const translations = {
         "perkRecapBody": "Hours by category, your year in a chart, an image to share.",
         "perkPredictions": "Assisted predictions",
         "perkPredictionsBody": "Your bet history, win rate, auto-bet with your own rule.",
-        "perkThemes": "Custom themes and badge",
-        "perkThemesBody": "Chat badge color, popup themes.",
         "soon": "Soon",
         "plansLabel": "Plan",
         "monthly": "Monthly",
@@ -3530,6 +3582,15 @@ export const translations = {
         "openRecap": "Abrir meu resumo"
       },
       "cosmetics": {
+        "heartbeat": "Batimento",
+        "float": "Levitação",
+        "wobble": "Balanço",
+        "prism": "Prisma",
+        "glitch": "Glitch",
+        "fire": "Brasa",
+        "frost": "Geada",
+        "crown": "Coroa",
+        "founder": "Fundador",
         "ambassador": "Embaixador",
         "halo": "Halo dourado",
         "badgeTitle": "Efeito do emblema",
@@ -3738,8 +3799,8 @@ export const translations = {
         "badgeFree": "grátis",
         "badgePaid": "pago",
         "badgeOwned": "obtido",
-        "badgeAuto": "Auto",
-        "badgeAutoOn": "Auto ●",
+        "badgeAuto": "Obter no automático",
+        "badgeAutoOn": "Em andamento · Parar",
         "badgeAutoHint": "Modo auto: abre uma live numa aba fixada e sem som, e fecha quando o emblema for obtido",
         "badgeAutoStop": "Parar o modo auto",
         "badgesUnit": "DISPONÍVEIS",
@@ -3780,9 +3841,13 @@ export const translations = {
         "never": "Não, obrigado"
       },
       "identity": {
+        "rankFounder": "Fundador do StreamPulse",
+        "rankAmbassador": "Embaixador · amigos indicados: {{count}}",
         "intro": "A aparência do seu emblema StreamPulse e do seu nome no chat da Twitch, visível para outros usuários do StreamPulse."
       },
       "referral": {
+        "plusTitle": "Indique seus amigos",
+        "plusBody": "Seu código dá a eles o primeiro mês grátis. Você ganha um mês grátis por amigo (plano mensal) e estas recompensas:",
         "title": "Indicação",
         "body": "Compartilhe seu código: seu amigo ganha o primeiro mês grátis. Você ganha um mês grátis por amigo (plano mensal) e recompensas de embaixador.",
         "get": "Obter meu código",
@@ -3794,8 +3859,8 @@ export const translations = {
         "count": "Amigos indicados: {{count}}",
         "friends": "Amigos: {{count}}",
         "needed": "Amigos: {{count}}",
-        "tierName": "Efeito de nome Embaixador",
-        "tierBadge": "Efeito de emblema Halo dourado",
+        "tierName": "Efeito de nome",
+        "tierBadge": "Efeito de emblema",
         "tierDevice": "Mais um dispositivo",
         "tierGift": "Uma licença vitalícia para presentear"
       },
@@ -3812,7 +3877,7 @@ export const translations = {
         "tabsLabel": "Popup views",
         "tabDirect": "Live",
         "tabMenu": "Menu",
-        "changelog": "What's new",
+        "changelog": "Novidades",
         "updated": "Updated at {{time}}",
         "screenLabel": "Selected channel",
         "guideLabel": "Followed channels",
@@ -3926,8 +3991,6 @@ export const translations = {
       "greetingMorning": "Bom dia",
       "greetingSub": "Veja quem está online.",
       "settings": {
-        "badgePlusOn": "StreamPulse+ ativo: sua cor personalizada fica visível para todos os usuários do StreamPulse.",
-        "badgePlusOff": "Com o StreamPulse+, sua cor personalizada fica visível para todos os usuários do StreamPulse.",
         "liveNotificationsTitle": "Notificações do Chrome",
         "liveNotificationsDescription": "Aplicado a todos os streamers que você segue: você pode ajustar por streamer depois.",
         "gameAlertsTitle": "Alertas de mudança de categoria",
@@ -3946,11 +4009,6 @@ export const translations = {
         "communityBadgeTitle": "Distintivo comunitário",
         "saved": "Configuração salva",
         "patchNotes": "Ver as novidades",
-        "badgeColorTitle": "Cor do distintivo",
-        "badgeColorDescription": "Escolha o tom do ícone exibido no chat.",
-        "badgeColorAuthor": "Cor do nome",
-        "badgeColorTheme": "Conforme o tema da Twitch",
-        "badgeColorCustom": "Cor personalizada",
         "communityBadgeDescription": "Exibe o ícone do StreamPulse ao lado do seu nome e dos demais usuários no chat da Twitch. Uma impressão do seu nome, calculada no seu navegador, é enviada para streampulse.fr; o nome em si nunca é transmitido.",
         "chatFilterDescription": "Palavras a esconder (separadas por vírgulas).",
         "languageTitle": "Idioma da extensão",
@@ -4321,6 +4379,8 @@ export const translations = {
         "chatRowNote": "Visto por outros usuários do StreamPulse."
       },
       "badge": {
+        "founder": "Fundador do StreamPulse",
+        "ambassador": "Embaixador",
         "lifetime": "Membro vitalício",
         "months": "Assinante há {{count}} meses",
         "monthOne": "Assinante há 1 mês",
@@ -4330,10 +4390,6 @@ export const translations = {
       "topbar": {
         "previews": "Prévias ao passar",
         "thisChannel": "Este canal",
-        "badgeColor": "Cor do distintivo",
-        "badgeAuthor": "Nome",
-        "badgeTheme": "Tema",
-        "badgeCustom": "Custom",
         "liveNow": "Ao vivo",
         "noneLive": "Ninguém ao vivo",
         "watchedHere": "Assistido aqui",
@@ -4508,6 +4564,16 @@ export const translations = {
       "closeWindow": "Fenster schließen"
     },
     "popup": {
+      "news": {
+        "new": "Neu",
+      },
+      "suggest": {
+        "label": "Kanalvorschläge",
+        "live": "Live",
+        "liveGame": "Live · {{game}}",
+        "followers": "{{count}} Follower",
+        "followed": "Bereits hinzugefügt",
+      },
       "history": {
         "newBadge": "Neu",
 
@@ -4533,6 +4599,8 @@ export const translations = {
         "agoDays": "{{count}} d ago"
       },
       "plus": {
+        "perkFx": "Effekte für Name und Abzeichen",
+        "perkFxCount": "{{badges}} Abzeichen-Effekte und {{names}} Namenseffekte, sichtbar im Twitch-Chat.",
         "badge": "PLUS",
         "open": "Discover StreamPulse+",
         "title": "Go further",
@@ -4544,8 +4612,6 @@ export const translations = {
         "perkRecapBody": "Hours by category, your year in a chart, an image to share.",
         "perkPredictions": "Assisted predictions",
         "perkPredictionsBody": "Your bet history, win rate, auto-bet with your own rule.",
-        "perkThemes": "Custom themes and badge",
-        "perkThemesBody": "Chat badge color, popup themes.",
         "soon": "Soon",
         "plansLabel": "Plan",
         "monthly": "Monthly",
@@ -4615,6 +4681,15 @@ export const translations = {
         "openRecap": "Rückblick öffnen"
       },
       "cosmetics": {
+        "heartbeat": "Herzschlag",
+        "float": "Schweben",
+        "wobble": "Wackeln",
+        "prism": "Prisma",
+        "glitch": "Glitch",
+        "fire": "Glut",
+        "frost": "Frost",
+        "crown": "Krone",
+        "founder": "Gründer",
         "ambassador": "Botschafter",
         "halo": "Goldener Heiligenschein",
         "badgeTitle": "Abzeichen-Effekt",
@@ -4823,8 +4898,8 @@ export const translations = {
         "badgeFree": "gratis",
         "badgePaid": "kostenpflichtig",
         "badgeOwned": "erhalten",
-        "badgeAuto": "Auto",
-        "badgeAutoOn": "Auto ●",
+        "badgeAuto": "Automatisch holen",
+        "badgeAutoOn": "Läuft · Stoppen",
         "badgeAutoHint": "Automodus: öffnet einen Livestream in einem angehefteten, stummen Tab und schließt ihn, sobald das Abzeichen erhalten ist",
         "badgeAutoStop": "Automodus beenden",
         "badgesUnit": "VERFÜGBAR",
@@ -4865,9 +4940,13 @@ export const translations = {
         "never": "Nein danke"
       },
       "identity": {
+        "rankFounder": "Gründer von StreamPulse",
+        "rankAmbassador": "Botschafter · geworbene Freunde: {{count}}",
         "intro": "Wie dein StreamPulse-Abzeichen und dein Name im Twitch-Chat aussehen, sichtbar für andere StreamPulse-Nutzer."
       },
       "referral": {
+        "plusTitle": "Wirb deine Freunde",
+        "plusBody": "Dein Code schenkt ihnen den ersten Monat. Du bekommst pro Freund einen Gratismonat (Monatsabo) und diese Belohnungen:",
         "title": "Empfehlung",
         "body": "Teile deinen Code: Dein Freund bekommt den ersten Monat gratis. Du bekommst einen Gratismonat pro Freund (Monatsplan) und Botschafter-Belohnungen.",
         "get": "Meinen Code holen",
@@ -4879,8 +4958,8 @@ export const translations = {
         "count": "Geworbene Freunde: {{count}}",
         "friends": "Freunde: {{count}}",
         "needed": "Freunde: {{count}}",
-        "tierName": "Namenseffekt Botschafter",
-        "tierBadge": "Abzeicheneffekt Goldener Heiligenschein",
+        "tierName": "Namenseffekt",
+        "tierBadge": "Abzeichen-Effekt",
         "tierDevice": "Ein Gerät mehr",
         "tierGift": "Eine lebenslange Lizenz zum Verschenken"
       },
@@ -4897,7 +4976,7 @@ export const translations = {
         "tabsLabel": "Popup views",
         "tabDirect": "Live",
         "tabMenu": "Menu",
-        "changelog": "What's new",
+        "changelog": "Neuigkeiten",
         "updated": "Updated at {{time}}",
         "screenLabel": "Selected channel",
         "guideLabel": "Followed channels",
@@ -5012,8 +5091,6 @@ export const translations = {
       "greetingMorning": "Guten Morgen",
       "greetingSub": "Hier erfahren Sie, wer online ist.",
       "settings": {
-        "badgePlusOn": "StreamPulse+ aktiv: Deine eigene Farbe ist für alle StreamPulse-Nutzer sichtbar.",
-        "badgePlusOff": "Mit StreamPulse+ ist deine eigene Farbe für alle StreamPulse-Nutzer sichtbar.",
         "liveNotificationsTitle": "Chrome-Benachrichtigungen",
         "liveNotificationsDescription": "Gilt für alle gefolgten Streamer: anschließend pro Streamer anpassbar.",
         "gameAlertsTitle": "Benachrichtigungen zu Kategorieänderungen",
@@ -5080,11 +5157,6 @@ export const translations = {
         "communityBadgeTitle": "Community-Abzeichen",
         "saved": "Einstellung gespeichert",
         "patchNotes": "Neuigkeiten ansehen",
-        "badgeColorTitle": "Farbe des Abzeichens",
-        "badgeColorDescription": "Wähle den Farbton des im Chat angezeigten Symbols.",
-        "badgeColorAuthor": "Farbe des Namens",
-        "badgeColorTheme": "Passend zum Twitch-Theme",
-        "badgeColorCustom": "Eigene Farbe",
         "communityBadgeDescription": "Zeigt das StreamPulse-Symbol neben deinem Namen und dem anderer Nutzer im Twitch-Chat. Ein im Browser berechneter Fingerabdruck deines Namens wird an streampulse.fr gesendet; der Name selbst wird nie übertragen.",
         "chatFilterDescription": "Nachrichten ausblenden, die diese Wörter enthalten (durch Kommas getrennt).",
         "themeTitle": "Thema",
@@ -5411,6 +5483,8 @@ export const translations = {
         "chatRowNote": "Für andere StreamPulse-Nutzer sichtbar."
       },
       "badge": {
+        "founder": "Gründer von StreamPulse",
+        "ambassador": "Botschafter",
         "lifetime": "Mitglied auf Lebenszeit",
         "months": "Seit {{count}} Monaten dabei",
         "monthOne": "Seit 1 Monat dabei",
@@ -5420,10 +5494,6 @@ export const translations = {
       "topbar": {
         "previews": "Hover-Vorschau",
         "thisChannel": "Dieser Kanal",
-        "badgeColor": "Farbe des Abzeichens",
-        "badgeAuthor": "Name",
-        "badgeTheme": "Theme",
-        "badgeCustom": "Eigene",
         "liveNow": "Jetzt live",
         "noneLive": "Niemand ist live",
         "watchedHere": "Hier geschaut",
@@ -5598,6 +5668,16 @@ export const translations = {
       "closeWindow": "Chiudi la finestra"
     },
     "popup": {
+      "news": {
+        "new": "Nuovo",
+      },
+      "suggest": {
+        "label": "Suggerimenti di canali",
+        "live": "In diretta",
+        "liveGame": "In diretta · {{game}}",
+        "followers": "{{count}} follower",
+        "followed": "Già aggiunto",
+      },
       "history": {
         "newBadge": "Nuovo",
 
@@ -5623,6 +5703,8 @@ export const translations = {
         "agoDays": "{{count}} d ago"
       },
       "plus": {
+        "perkFx": "Effetti per nome e badge",
+        "perkFxCount": "{{badges}} effetti per il badge e {{names}} per il nome, visibili nella chat di Twitch.",
         "badge": "PLUS",
         "open": "Discover StreamPulse+",
         "title": "Go further",
@@ -5634,8 +5716,6 @@ export const translations = {
         "perkRecapBody": "Hours by category, your year in a chart, an image to share.",
         "perkPredictions": "Assisted predictions",
         "perkPredictionsBody": "Your bet history, win rate, auto-bet with your own rule.",
-        "perkThemes": "Custom themes and badge",
-        "perkThemesBody": "Chat badge color, popup themes.",
         "soon": "Soon",
         "plansLabel": "Plan",
         "monthly": "Monthly",
@@ -5705,6 +5785,15 @@ export const translations = {
         "openRecap": "Apri il riepilogo"
       },
       "cosmetics": {
+        "heartbeat": "Battito",
+        "float": "Levitazione",
+        "wobble": "Scossa",
+        "prism": "Prisma",
+        "glitch": "Glitch",
+        "fire": "Brace",
+        "frost": "Brina",
+        "crown": "Corona",
+        "founder": "Fondatore",
         "ambassador": "Ambasciatore",
         "halo": "Alone dorato",
         "badgeTitle": "Effetto del badge",
@@ -5913,8 +6002,8 @@ export const translations = {
         "badgeFree": "gratis",
         "badgePaid": "a pagamento",
         "badgeOwned": "ottenuto",
-        "badgeAuto": "Auto",
-        "badgeAutoOn": "Auto ●",
+        "badgeAuto": "Ottieni in automatico",
+        "badgeAutoOn": "In corso · Ferma",
         "badgeAutoHint": "Modalità auto: apre una live in una scheda fissata e muta e la chiude appena ottieni il badge",
         "badgeAutoStop": "Ferma la modalità auto",
         "badgesUnit": "DISPONIBILI",
@@ -5955,9 +6044,13 @@ export const translations = {
         "never": "No, grazie"
       },
       "identity": {
+        "rankFounder": "Fondatore di StreamPulse",
+        "rankAmbassador": "Ambasciatore · amici invitati: {{count}}",
         "intro": "L'aspetto del tuo badge StreamPulse e del tuo nome nella chat di Twitch, visibile agli altri utenti di StreamPulse."
       },
       "referral": {
+        "plusTitle": "Invita i tuoi amici",
+        "plusBody": "Il tuo codice regala loro il primo mese. Tu ottieni un mese gratis per ogni amico (piano mensile) e questi premi:",
         "title": "Invita un amico",
         "body": "Condividi il tuo codice: il tuo amico ha il primo mese gratis. Tu ottieni un mese gratis per amico (piano mensile) e ricompense da ambasciatore.",
         "get": "Ottieni il mio codice",
@@ -5969,8 +6062,8 @@ export const translations = {
         "count": "Amici invitati: {{count}}",
         "friends": "Amici: {{count}}",
         "needed": "Amici: {{count}}",
-        "tierName": "Effetto nome Ambasciatore",
-        "tierBadge": "Effetto badge Alone dorato",
+        "tierName": "Effetto per il nome",
+        "tierBadge": "Effetto per il badge",
         "tierDevice": "Un dispositivo in più",
         "tierGift": "Una licenza a vita da regalare"
       },
@@ -5987,7 +6080,7 @@ export const translations = {
         "tabsLabel": "Popup views",
         "tabDirect": "Live",
         "tabMenu": "Menu",
-        "changelog": "What's new",
+        "changelog": "Novità",
         "updated": "Updated at {{time}}",
         "screenLabel": "Selected channel",
         "guideLabel": "Followed channels",
@@ -6102,8 +6195,6 @@ export const translations = {
       "greetingMorning": "Buongiorno",
       "greetingSub": "Ecco chi è online.",
       "settings": {
-        "badgePlusOn": "StreamPulse+ attivo: il tuo colore personalizzato è visibile a tutti gli utenti StreamPulse.",
-        "badgePlusOff": "Con StreamPulse+, il tuo colore personalizzato è visibile a tutti gli utenti StreamPulse.",
         "liveNotificationsTitle": "Notifiche di Chrome",
         "liveNotificationsDescription": "Applicato a tutti gli streamer seguiti: puoi regolarlo per streamer dopo.",
         "gameAlertsTitle": "Avvisi di cambio di categoria",
@@ -6170,11 +6261,6 @@ export const translations = {
         "communityBadgeTitle": "Badge della comunità",
         "saved": "Impostazione salvata",
         "patchNotes": "Vedi le novità",
-        "badgeColorTitle": "Colore del badge",
-        "badgeColorDescription": "Scegli la tinta dell'icona mostrata in chat.",
-        "badgeColorAuthor": "Colore del nome",
-        "badgeColorTheme": "In base al tema di Twitch",
-        "badgeColorCustom": "Colore personalizzato",
         "communityBadgeDescription": "Mostra l'icona StreamPulse accanto al tuo nome e a quello degli altri utenti nella chat di Twitch. Un'impronta del tuo nome, calcolata nel browser, viene inviata a streampulse.fr; il nome non viene mai trasmesso.",
         "chatFilterDescription": "Nascondi i messaggi contenenti queste parole (separate da virgole).",
         "themeTitle": "Tema",
@@ -6501,6 +6587,8 @@ export const translations = {
         "chatRowNote": "Visto dagli altri utenti StreamPulse."
       },
       "badge": {
+        "founder": "Fondatore di StreamPulse",
+        "ambassador": "Ambasciatore",
         "lifetime": "Membro a vita",
         "months": "Abbonato da {{count}} mesi",
         "monthOne": "Abbonato da 1 mese",
@@ -6510,10 +6598,6 @@ export const translations = {
       "topbar": {
         "previews": "Anteprime al passaggio",
         "thisChannel": "Questo canale",
-        "badgeColor": "Colore del badge",
-        "badgeAuthor": "Nome",
-        "badgeTheme": "Tema",
-        "badgeCustom": "Custom",
         "liveNow": "Ora in diretta",
         "noneLive": "Nessuno in diretta",
         "watchedHere": "Guardato qui",
@@ -6688,6 +6772,16 @@ export const translations = {
       "closeWindow": "Zamknij okno"
     },
     "popup": {
+      "news": {
+        "new": "Nowość",
+      },
+      "suggest": {
+        "label": "Podpowiedzi kanałów",
+        "live": "Na żywo",
+        "liveGame": "Na żywo · {{game}}",
+        "followers": "Obserwujący: {{count}}",
+        "followed": "Już dodano",
+      },
       "history": {
         "newBadge": "Nowe",
 
@@ -6713,6 +6807,8 @@ export const translations = {
         "agoDays": "{{count}} d ago"
       },
       "plus": {
+        "perkFx": "Efekty nicku i odznaki",
+        "perkFxCount": "{{badges}} efektów odznaki i {{names}} efektów nicku, widocznych na czacie Twitcha.",
         "badge": "PLUS",
         "open": "Discover StreamPulse+",
         "title": "Go further",
@@ -6724,8 +6820,6 @@ export const translations = {
         "perkRecapBody": "Hours by category, your year in a chart, an image to share.",
         "perkPredictions": "Assisted predictions",
         "perkPredictionsBody": "Your bet history, win rate, auto-bet with your own rule.",
-        "perkThemes": "Custom themes and badge",
-        "perkThemesBody": "Chat badge color, popup themes.",
         "soon": "Soon",
         "plansLabel": "Plan",
         "monthly": "Monthly",
@@ -6795,6 +6889,15 @@ export const translations = {
         "openRecap": "Otwórz podsumowanie"
       },
       "cosmetics": {
+        "heartbeat": "Bicie serca",
+        "float": "Lewitacja",
+        "wobble": "Drganie",
+        "prism": "Pryzmat",
+        "glitch": "Glitch",
+        "fire": "Żar",
+        "frost": "Szron",
+        "crown": "Korona",
+        "founder": "Założyciel",
         "ambassador": "Ambasador",
         "halo": "Złota aureola",
         "badgeTitle": "Efekt odznaki",
@@ -7003,8 +7106,8 @@ export const translations = {
         "badgeFree": "darmowa",
         "badgePaid": "płatna",
         "badgeOwned": "zdobyta",
-        "badgeAuto": "Auto",
-        "badgeAutoOn": "Auto ●",
+        "badgeAuto": "Zdobądź automatycznie",
+        "badgeAutoOn": "W toku · Zatrzymaj",
         "badgeAutoHint": "Tryb auto: otwiera transmisję w przypiętej, wyciszonej karcie i zamyka ją po zdobyciu odznaki",
         "badgeAutoStop": "Zatrzymaj tryb auto",
         "badgesUnit": "DOSTĘPNE",
@@ -7045,9 +7148,13 @@ export const translations = {
         "never": "Nie, dzięki"
       },
       "identity": {
+        "rankFounder": "Założyciel StreamPulse",
+        "rankAmbassador": "Ambasador · poleceni znajomi: {{count}}",
         "intro": "Wygląd twojej odznaki StreamPulse i nicku na czacie Twitcha, widoczny dla innych użytkowników StreamPulse."
       },
       "referral": {
+        "plusTitle": "Poleć znajomym",
+        "plusBody": "Twój kod daje im pierwszy miesiąc za darmo. Ty dostajesz darmowy miesiąc za każdego znajomego (plan miesięczny) i te nagrody:",
         "title": "Polecenia",
         "body": "Udostępnij swój kod: twój znajomy dostaje pierwszy miesiąc gratis. Ty dostajesz darmowy miesiąc za każdego znajomego (plan miesięczny) i nagrody ambasadora.",
         "get": "Pobierz mój kod",
@@ -7059,8 +7166,8 @@ export const translations = {
         "count": "Poleceni znajomi: {{count}}",
         "friends": "Znajomi: {{count}}",
         "needed": "Znajomi: {{count}}",
-        "tierName": "Efekt nicku Ambasador",
-        "tierBadge": "Efekt odznaki Złota aureola",
+        "tierName": "Efekt nicku",
+        "tierBadge": "Efekt odznaki",
         "tierDevice": "Jedno urządzenie więcej",
         "tierGift": "Dożywotnia licencja do podarowania"
       },
@@ -7077,7 +7184,7 @@ export const translations = {
         "tabsLabel": "Popup views",
         "tabDirect": "Live",
         "tabMenu": "Menu",
-        "changelog": "What's new",
+        "changelog": "Nowości",
         "updated": "Updated at {{time}}",
         "screenLabel": "Selected channel",
         "guideLabel": "Followed channels",
@@ -7192,8 +7299,6 @@ export const translations = {
       "greetingMorning": "Dzień dobry",
       "greetingSub": "Oto, kto jest online.",
       "settings": {
-        "badgePlusOn": "StreamPulse+ aktywny: Twój kolor jest widoczny dla wszystkich użytkowników StreamPulse.",
-        "badgePlusOff": "Ze StreamPulse+ Twój kolor jest widoczny dla wszystkich użytkowników StreamPulse.",
         "liveNotificationsTitle": "Powiadomienia Chrome",
         "liveNotificationsDescription": "Dotyczy wszystkich obserwowanych streamerów: możesz potem dostosować dla każdego z nich.",
         "gameAlertsTitle": "Alerty o zmianie kategorii",
@@ -7260,11 +7365,6 @@ export const translations = {
         "communityBadgeTitle": "Odznaka społeczności",
         "saved": "Ustawienie zapisane",
         "patchNotes": "Zobacz nowości",
-        "badgeColorTitle": "Kolor odznaki",
-        "badgeColorDescription": "Wybierz odcień ikony wyświetlanej na czacie.",
-        "badgeColorAuthor": "Kolor pseudonimu",
-        "badgeColorTheme": "Zgodnie z motywem Twitcha",
-        "badgeColorCustom": "Własny kolor",
         "communityBadgeDescription": "Pokazuje ikonę StreamPulse obok Twojego pseudonimu i pseudonimów innych osób na czacie Twitcha. Odcisk Twojego pseudonimu, obliczony w przeglądarce, jest wysyłany do streampulse.fr; sam pseudonim nigdy nie jest przesyłany.",
         "chatFilterDescription": "Ukryj wiadomości zawierające te słowa (oddzielone przecinkami).",
         "themeTitle": "Motyw",
@@ -7591,6 +7691,8 @@ export const translations = {
         "chatRowNote": "Widoczne dla innych użytkowników StreamPulse."
       },
       "badge": {
+        "founder": "Założyciel StreamPulse",
+        "ambassador": "Ambasador",
         "lifetime": "Członek dożywotni",
         "months": "Subskrybuje od {{count}} mies.",
         "monthOne": "Subskrybuje od 1 miesiąca",
@@ -7600,10 +7702,6 @@ export const translations = {
       "topbar": {
         "previews": "Najedź kursorem na podglądy",
         "thisChannel": "Ten kanał",
-        "badgeColor": "Kolor odznaki",
-        "badgeAuthor": "Pseudonim",
-        "badgeTheme": "Motyw",
-        "badgeCustom": "Własny",
         "liveNow": "Na żywo",
         "noneLive": "Nikt nie nadaje",
         "watchedHere": "Oglądane tutaj",
@@ -7778,6 +7876,16 @@ export const translations = {
       "closeWindow": "Pencereyi kapat"
     },
     "popup": {
+      "news": {
+        "new": "Yeni",
+      },
+      "suggest": {
+        "label": "Kanal önerileri",
+        "live": "Canlı",
+        "liveGame": "Canlı · {{game}}",
+        "followers": "{{count}} takipçi",
+        "followed": "Zaten ekli",
+      },
       "history": {
         "newBadge": "Yeni",
 
@@ -7803,6 +7911,8 @@ export const translations = {
         "agoDays": "{{count}} d ago"
       },
       "plus": {
+        "perkFx": "Kullanıcı adı ve rozet efektleri",
+        "perkFxCount": "Twitch sohbetinde görünen {{badges}} rozet efekti ve {{names}} kullanıcı adı efekti.",
         "badge": "PLUS",
         "open": "Discover StreamPulse+",
         "title": "Go further",
@@ -7814,8 +7924,6 @@ export const translations = {
         "perkRecapBody": "Hours by category, your year in a chart, an image to share.",
         "perkPredictions": "Assisted predictions",
         "perkPredictionsBody": "Your bet history, win rate, auto-bet with your own rule.",
-        "perkThemes": "Custom themes and badge",
-        "perkThemesBody": "Chat badge color, popup themes.",
         "soon": "Soon",
         "plansLabel": "Plan",
         "monthly": "Monthly",
@@ -7885,6 +7993,15 @@ export const translations = {
         "openRecap": "Özetimi aç"
       },
       "cosmetics": {
+        "heartbeat": "Kalp atışı",
+        "float": "Süzülme",
+        "wobble": "Sallanma",
+        "prism": "Prizma",
+        "glitch": "Glitch",
+        "fire": "Kor",
+        "frost": "Kırağı",
+        "crown": "Taç",
+        "founder": "Kurucu",
         "ambassador": "Elçi",
         "halo": "Altın hale",
         "badgeTitle": "Rozet efekti",
@@ -8093,8 +8210,8 @@ export const translations = {
         "badgeFree": "ücretsiz",
         "badgePaid": "ücretli",
         "badgeOwned": "alındı",
-        "badgeAuto": "Oto",
-        "badgeAutoOn": "Oto ●",
+        "badgeAuto": "Otomatik kazan",
+        "badgeAutoOn": "Sürüyor · Durdur",
         "badgeAutoHint": "Otomatik mod: yayını sabitlenmiş ve sessiz bir sekmede açar, rozet kazanılınca kapatır",
         "badgeAutoStop": "Otomatik modu durdur",
         "badgesUnit": "ALINABİLİR",
@@ -8135,9 +8252,13 @@ export const translations = {
         "never": "Hayır, teşekkürler"
       },
       "identity": {
+        "rankFounder": "StreamPulse kurucusu",
+        "rankAmbassador": "Elçi · davet edilen arkadaş: {{count}}",
         "intro": "StreamPulse rozetinin ve adının Twitch sohbetindeki görünümü, diğer StreamPulse kullanıcılarına görünür."
       },
       "referral": {
+        "plusTitle": "Arkadaşlarını davet et",
+        "plusBody": "Kodun onlara ilk ayı hediye eder. Sen de her arkadaş için bir ay ücretsiz (aylık plan) ve şu ödülleri kazanırsın:",
         "title": "Davet",
         "body": "Kodunu paylaş: arkadaşın ilk ayı ücretsiz alır. Sen her arkadaş için bir ay ücretsiz (aylık plan) ve elçi ödülleri kazanırsın.",
         "get": "Kodumu al",
@@ -8149,8 +8270,8 @@ export const translations = {
         "count": "Davet edilen arkadaşlar: {{count}}",
         "friends": "Arkadaş: {{count}}",
         "needed": "Arkadaş: {{count}}",
-        "tierName": "Elçi ad efekti",
-        "tierBadge": "Altın hale rozet efekti",
+        "tierName": "Kullanıcı adı efekti",
+        "tierBadge": "Rozet efekti",
         "tierDevice": "Bir cihaz daha",
         "tierGift": "Hediye edilecek ömür boyu lisans"
       },
@@ -8167,7 +8288,7 @@ export const translations = {
         "tabsLabel": "Popup views",
         "tabDirect": "Live",
         "tabMenu": "Menu",
-        "changelog": "What's new",
+        "changelog": "Yenilikler",
         "updated": "Updated at {{time}}",
         "screenLabel": "Selected channel",
         "guideLabel": "Followed channels",
@@ -8282,8 +8403,6 @@ export const translations = {
       "greetingMorning": "Günaydın",
       "greetingSub": "İşte şu anda çevrimiçi olanlar.",
       "settings": {
-        "badgePlusOn": "StreamPulse+ etkin: özel rengin tüm StreamPulse kullanıcılarına görünür.",
-        "badgePlusOff": "StreamPulse+ ile özel rengin tüm StreamPulse kullanıcılarına görünür.",
         "liveNotificationsTitle": "Chrome bildirimleri",
         "liveNotificationsDescription": "Takip ettiğin tüm yayıncılara uygulanır: daha sonra yayıncı başına ayarlayabilirsin.",
         "gameAlertsTitle": "Kategori değişikliği uyarıları",
@@ -8350,11 +8469,6 @@ export const translations = {
         "communityBadgeTitle": "Topluluk rozeti",
         "saved": "Ayar kaydedildi",
         "patchNotes": "Yenilikleri gör",
-        "badgeColorTitle": "Rozet rengi",
-        "badgeColorDescription": "Sohbette görünen simgenin rengini seçin.",
-        "badgeColorAuthor": "Kullanıcı adı rengi",
-        "badgeColorTheme": "Twitch temasına göre",
-        "badgeColorCustom": "Özel renk",
         "communityBadgeDescription": "Twitch sohbetinde kullanıcı adınızın ve diğerlerinin yanında StreamPulse simgesini gösterir. Tarayıcınızda hesaplanan bir parmak izi streampulse.fr adresine gönderilir; adın kendisi asla iletilmez.",
         "chatFilterDescription": "Bu kelimeleri içeren mesajları gizle (virgülle ayrılmış).",
         "themeTitle": "Tema",
@@ -8681,6 +8795,8 @@ export const translations = {
         "chatRowNote": "Diğer StreamPulse kullanıcıları görür."
       },
       "badge": {
+        "founder": "StreamPulse kurucusu",
+        "ambassador": "Elçi",
         "lifetime": "Ömür boyu üye",
         "months": "{{count}} aydır abone",
         "monthOne": "1 aydır abone",
@@ -8690,10 +8806,6 @@ export const translations = {
       "topbar": {
         "previews": "Fareyle önizleme",
         "thisChannel": "Bu kanal",
-        "badgeColor": "Rozet rengi",
-        "badgeAuthor": "Kullanıcı adı",
-        "badgeTheme": "Tema",
-        "badgeCustom": "Özel",
         "liveNow": "Şu anda yayında",
         "noneLive": "Kimse yayında değil",
         "watchedHere": "Burada izlenen",
@@ -8868,6 +8980,16 @@ export const translations = {
       "closeWindow": "Закрыть окно"
     },
     "popup": {
+      "news": {
+        "new": "Новое",
+      },
+      "suggest": {
+        "label": "Подсказки каналов",
+        "live": "В эфире",
+        "liveGame": "В эфире · {{game}}",
+        "followers": "Подписчиков: {{count}}",
+        "followed": "Уже добавлен",
+      },
       "history": {
         "newBadge": "Новое",
 
@@ -8893,6 +9015,8 @@ export const translations = {
         "agoDays": "{{count}} d ago"
       },
       "plus": {
+        "perkFx": "Эффекты ника и значка",
+        "perkFxCount": "{{badges}} эффектов значка и {{names}} эффектов ника в чате Twitch.",
         "badge": "PLUS",
         "open": "Discover StreamPulse+",
         "title": "Go further",
@@ -8904,8 +9028,6 @@ export const translations = {
         "perkRecapBody": "Hours by category, your year in a chart, an image to share.",
         "perkPredictions": "Assisted predictions",
         "perkPredictionsBody": "Your bet history, win rate, auto-bet with your own rule.",
-        "perkThemes": "Custom themes and badge",
-        "perkThemesBody": "Chat badge color, popup themes.",
         "soon": "Soon",
         "plansLabel": "Plan",
         "monthly": "Monthly",
@@ -8975,6 +9097,15 @@ export const translations = {
         "openRecap": "Открыть сводку"
       },
       "cosmetics": {
+        "heartbeat": "Сердцебиение",
+        "float": "Левитация",
+        "wobble": "Покачивание",
+        "prism": "Призма",
+        "glitch": "Глитч",
+        "fire": "Угли",
+        "frost": "Иней",
+        "crown": "Корона",
+        "founder": "Основатель",
         "ambassador": "Посол",
         "halo": "Золотой ореол",
         "badgeTitle": "Эффект значка",
@@ -9183,8 +9314,8 @@ export const translations = {
         "badgeFree": "бесплатно",
         "badgePaid": "платно",
         "badgeOwned": "получен",
-        "badgeAuto": "Авто",
-        "badgeAutoOn": "Авто ●",
+        "badgeAuto": "Автополучение",
+        "badgeAutoOn": "Идёт · Остановить",
         "badgeAutoHint": "Авторежим: открывает трансляцию в закреплённой беззвучной вкладке и закрывает её, как только значок получен",
         "badgeAutoStop": "Остановить авторежим",
         "badgesUnit": "ДОСТУПНО",
@@ -9225,9 +9356,13 @@ export const translations = {
         "never": "Нет, спасибо"
       },
       "identity": {
+        "rankFounder": "Основатель StreamPulse",
+        "rankAmbassador": "Посол · приглашено друзей: {{count}}",
         "intro": "Как выглядят ваш значок StreamPulse и ник в чате Twitch, видно другим пользователям StreamPulse."
       },
       "referral": {
+        "plusTitle": "Приглашай друзей",
+        "plusBody": "Твой код дарит им первый месяц. Ты получаешь бесплатный месяц за каждого друга (месячный план) и эти награды:",
         "title": "Приглашения",
         "body": "Поделись кодом: другу первый месяц бесплатно. Тебе, бесплатный месяц за каждого друга (месячный план) и награды посла.",
         "get": "Получить код",
@@ -9239,8 +9374,8 @@ export const translations = {
         "count": "Приглашено друзей: {{count}}",
         "friends": "Друзей: {{count}}",
         "needed": "Друзей: {{count}}",
-        "tierName": "Эффект ника «Посол»",
-        "tierBadge": "Эффект значка «Золотой ореол»",
+        "tierName": "Эффект ника",
+        "tierBadge": "Эффект значка",
         "tierDevice": "Ещё одно устройство",
         "tierGift": "Вечная лицензия в подарок"
       },
@@ -9257,7 +9392,7 @@ export const translations = {
         "tabsLabel": "Popup views",
         "tabDirect": "Live",
         "tabMenu": "Menu",
-        "changelog": "What's new",
+        "changelog": "Что нового",
         "updated": "Updated at {{time}}",
         "screenLabel": "Selected channel",
         "guideLabel": "Followed channels",
@@ -9372,8 +9507,6 @@ export const translations = {
       "greetingMorning": "Доброе утро",
       "greetingSub": "Вот кто сейчас в сети.",
       "settings": {
-        "badgePlusOn": "StreamPulse+ активен: ваш цвет виден всем пользователям StreamPulse.",
-        "badgePlusOff": "Со StreamPulse+ ваш цвет виден всем пользователям StreamPulse.",
         "liveNotificationsTitle": "Уведомления Chrome",
         "liveNotificationsDescription": "Применяется ко всем отслеживаемым стримерам: потом можно настроить для каждого.",
         "gameAlertsTitle": "Уведомления об изменении категории",
@@ -9440,11 +9573,6 @@ export const translations = {
         "communityBadgeTitle": "Значок сообщества",
         "saved": "Настройка сохранена",
         "patchNotes": "Что нового",
-        "badgeColorTitle": "Цвет значка",
-        "badgeColorDescription": "Выберите оттенок значка в чате.",
-        "badgeColorAuthor": "Цвет ника",
-        "badgeColorTheme": "По теме Twitch",
-        "badgeColorCustom": "Свой цвет",
         "communityBadgeDescription": "Показывает значок StreamPulse рядом с вашим ником и никами других пользователей в чате Twitch. На streampulse.fr отправляется отпечаток ника, вычисленный в браузере; сам ник никогда не передаётся.",
         "chatFilterDescription": "Скрыть сообщения, содержащие эти слова (разделенные запятыми).",
         "themeTitle": "Тема",
@@ -9771,6 +9899,8 @@ export const translations = {
         "chatRowNote": "Видно другим пользователям StreamPulse."
       },
       "badge": {
+        "founder": "Основатель StreamPulse",
+        "ambassador": "Посол",
         "lifetime": "Пожизненный участник",
         "months": "Подписка {{count}} мес.",
         "monthOne": "Подписка 1 месяц",
@@ -9780,10 +9910,6 @@ export const translations = {
       "topbar": {
         "previews": "Превью при наведении",
         "thisChannel": "Этот канал",
-        "badgeColor": "Цвет значка",
-        "badgeAuthor": "Ник",
-        "badgeTheme": "Тема",
-        "badgeCustom": "Свой",
         "liveNow": "В эфире",
         "noneLive": "Никого нет в эфире",
         "watchedHere": "Просмотрено здесь",
@@ -9958,6 +10084,16 @@ export const translations = {
       "closeWindow": "ウィンドウを閉じる"
     },
     "popup": {
+      "news": {
+        "new": "NEW",
+      },
+      "suggest": {
+        "label": "チャンネルの候補",
+        "live": "配信中",
+        "liveGame": "配信中 · {{game}}",
+        "followers": "フォロワー {{count}}",
+        "followed": "追加済み",
+      },
       "history": {
         "newBadge": "新着",
 
@@ -9983,6 +10119,8 @@ export const translations = {
         "agoDays": "{{count}} d ago"
       },
       "plus": {
+        "perkFx": "名前とバッジのエフェクト",
+        "perkFxCount": "Twitch チャットで見えるバッジエフェクト {{badges}} 種と名前エフェクト {{names}} 種。",
         "badge": "PLUS",
         "open": "Discover StreamPulse+",
         "title": "Go further",
@@ -9994,8 +10132,6 @@ export const translations = {
         "perkRecapBody": "Hours by category, your year in a chart, an image to share.",
         "perkPredictions": "Assisted predictions",
         "perkPredictionsBody": "Your bet history, win rate, auto-bet with your own rule.",
-        "perkThemes": "Custom themes and badge",
-        "perkThemesBody": "Chat badge color, popup themes.",
         "soon": "Soon",
         "plansLabel": "Plan",
         "monthly": "Monthly",
@@ -10065,6 +10201,15 @@ export const translations = {
         "openRecap": "振り返りを開く"
       },
       "cosmetics": {
+        "heartbeat": "鼓動",
+        "float": "浮遊",
+        "wobble": "ゆらゆら",
+        "prism": "プリズム",
+        "glitch": "グリッチ",
+        "fire": "残り火",
+        "frost": "霜",
+        "crown": "王冠",
+        "founder": "創設者",
         "ambassador": "アンバサダー",
         "halo": "金色の光輪",
         "badgeTitle": "バッジのエフェクト",
@@ -10273,8 +10418,8 @@ export const translations = {
         "badgeFree": "無料",
         "badgePaid": "有料",
         "badgeOwned": "取得済み",
-        "badgeAuto": "自動",
-        "badgeAutoOn": "自動 ●",
+        "badgeAuto": "自動で入手",
+        "badgeAutoOn": "実行中 · 停止",
         "badgeAutoHint": "自動モード：固定・ミュートしたタブで配信を開き、バッジ獲得後に閉じます",
         "badgeAutoStop": "自動モードを停止",
         "badgesUnit": "入手可能",
@@ -10315,9 +10460,13 @@ export const translations = {
         "never": "今はしない"
       },
       "identity": {
+        "rankFounder": "StreamPulse 創設者",
+        "rankAmbassador": "アンバサダー · 紹介した友達：{{count}}",
         "intro": "Twitch チャットでの StreamPulse バッジと名前の見た目。他の StreamPulse ユーザーにも表示されます。"
       },
       "referral": {
+        "plusTitle": "友達を招待しよう",
+        "plusBody": "あなたのコードで友達は最初の1か月が無料。あなたは友達1人につき1か月無料（月額プラン）と、次の特典がもらえます：",
         "title": "紹介",
         "body": "コードをシェアしよう：友だちは最初の1か月が無料。あなたは友だち1人ごとに1か月無料（月額プラン）とアンバサダー特典がもらえます。",
         "get": "コードを取得",
@@ -10329,8 +10478,8 @@ export const translations = {
         "count": "紹介した友だち：{{count}}",
         "friends": "友だち {{count}} 人",
         "needed": "友だち {{count}} 人",
-        "tierName": "アンバサダーの名前エフェクト",
-        "tierBadge": "金色の光輪のバッジエフェクト",
+        "tierName": "名前エフェクト",
+        "tierBadge": "バッジエフェクト",
         "tierDevice": "デバイスを1台追加",
         "tierGift": "プレゼント用の買い切りライセンス"
       },
@@ -10347,7 +10496,7 @@ export const translations = {
         "tabsLabel": "Popup views",
         "tabDirect": "Live",
         "tabMenu": "Menu",
-        "changelog": "What's new",
+        "changelog": "新着情報",
         "updated": "Updated at {{time}}",
         "screenLabel": "Selected channel",
         "guideLabel": "Followed channels",
@@ -10462,8 +10611,6 @@ export const translations = {
       "greetingMorning": "おはようございます",
       "greetingSub": "現在オンライン中のユーザーはこちらです。",
       "settings": {
-        "badgePlusOn": "StreamPulse+ 有効：カスタムカラーはすべての StreamPulse ユーザーに表示されます。",
-        "badgePlusOff": "StreamPulse+ なら、カスタムカラーがすべての StreamPulse ユーザーに表示されます。",
         "liveNotificationsTitle": "Chromeの通知",
         "liveNotificationsDescription": "フォロー中のすべてのストリーマーに適用。後からストリーマーごとに調整できます。",
         "gameAlertsTitle": "カテゴリ変更の通知",
@@ -10530,11 +10677,6 @@ export const translations = {
         "communityBadgeTitle": "コミュニティバッジ",
         "saved": "設定を保存しました",
         "patchNotes": "新着情報を見る",
-        "badgeColorTitle": "バッジの色",
-        "badgeColorDescription": "チャットに表示されるアイコンの色を選びます。",
-        "badgeColorAuthor": "ユーザー名の色",
-        "badgeColorTheme": "Twitchのテーマに合わせる",
-        "badgeColorCustom": "カスタムカラー",
         "communityBadgeDescription": "Twitchチャットであなたと他のユーザーの名前の横にStreamPulseアイコンを表示します。ブラウザ内で計算されたユーザー名のハッシュがstreampulse.frに送信され、ユーザー名そのものは送信されません。",
         "chatFilterDescription": "これらの単語（カンマ区切り）を含むメッセージを非表示にする。",
         "themeTitle": "テーマ",
@@ -10861,6 +11003,8 @@ export const translations = {
         "chatRowNote": "他の StreamPulse ユーザーに表示されます。"
       },
       "badge": {
+        "founder": "StreamPulse 創設者",
+        "ambassador": "アンバサダー",
         "lifetime": "永久メンバー",
         "months": "{{count}}か月利用中",
         "monthOne": "1か月利用中",
@@ -10870,10 +11014,6 @@ export const translations = {
       "topbar": {
         "previews": "ホバー時のプレビュー",
         "thisChannel": "このチャンネル",
-        "badgeColor": "バッジの色",
-        "badgeAuthor": "ユーザー名",
-        "badgeTheme": "テーマ",
-        "badgeCustom": "カスタム",
         "liveNow": "配信中",
         "noneLive": "配信中の人はいません",
         "watchedHere": "ここでの視聴",
@@ -11048,6 +11188,16 @@ export const translations = {
       "closeWindow": "창 닫기"
     },
     "popup": {
+      "news": {
+        "new": "NEW",
+      },
+      "suggest": {
+        "label": "채널 추천",
+        "live": "생방송 중",
+        "liveGame": "생방송 중 · {{game}}",
+        "followers": "팔로워 {{count}}명",
+        "followed": "이미 추가됨",
+      },
       "history": {
         "newBadge": "새 항목",
 
@@ -11073,6 +11223,8 @@ export const translations = {
         "agoDays": "{{count}} d ago"
       },
       "plus": {
+        "perkFx": "닉네임 및 배지 효과",
+        "perkFxCount": "Twitch 채팅에 보이는 배지 효과 {{badges}}개와 닉네임 효과 {{names}}개.",
         "badge": "PLUS",
         "open": "Discover StreamPulse+",
         "title": "Go further",
@@ -11084,8 +11236,6 @@ export const translations = {
         "perkRecapBody": "Hours by category, your year in a chart, an image to share.",
         "perkPredictions": "Assisted predictions",
         "perkPredictionsBody": "Your bet history, win rate, auto-bet with your own rule.",
-        "perkThemes": "Custom themes and badge",
-        "perkThemesBody": "Chat badge color, popup themes.",
         "soon": "Soon",
         "plansLabel": "Plan",
         "monthly": "Monthly",
@@ -11155,6 +11305,15 @@ export const translations = {
         "openRecap": "요약 열기"
       },
       "cosmetics": {
+        "heartbeat": "심장 박동",
+        "float": "공중 부양",
+        "wobble": "흔들림",
+        "prism": "프리즘",
+        "glitch": "글리치",
+        "fire": "불씨",
+        "frost": "서리",
+        "crown": "왕관",
+        "founder": "창립자",
         "ambassador": "앰배서더",
         "halo": "황금 후광",
         "badgeTitle": "배지 효과",
@@ -11363,8 +11522,8 @@ export const translations = {
         "badgeFree": "무료",
         "badgePaid": "유료",
         "badgeOwned": "획득함",
-        "badgeAuto": "자동",
-        "badgeAutoOn": "자동 ●",
+        "badgeAuto": "자동으로 받기",
+        "badgeAutoOn": "진행 중 · 중지",
         "badgeAutoHint": "자동 모드: 고정·음소거 탭에서 방송을 열고 배지를 얻으면 닫습니다",
         "badgeAutoStop": "자동 모드 중지",
         "badgesUnit": "획득 가능",
@@ -11405,9 +11564,13 @@ export const translations = {
         "never": "괜찮아요"
       },
       "identity": {
+        "rankFounder": "StreamPulse 창립자",
+        "rankAmbassador": "앰배서더 · 추천한 친구: {{count}}",
         "intro": "Twitch 채팅에서 StreamPulse 배지와 닉네임이 보이는 모습으로, 다른 StreamPulse 사용자에게도 보입니다."
       },
       "referral": {
+        "plusTitle": "친구를 추천하세요",
+        "plusBody": "내 코드로 친구는 첫 달이 무료예요. 나는 친구 한 명당 한 달 무료(월간 플랜)와 다음 보상을 받아요:",
         "title": "추천",
         "body": "코드를 공유하세요. 친구는 첫 달이 무료입니다. 나는 친구 한 명당 한 달 무료(월간 플랜)와 앰배서더 보상을 받습니다.",
         "get": "내 코드 받기",
@@ -11419,8 +11582,8 @@ export const translations = {
         "count": "추천한 친구: {{count}}",
         "friends": "친구 {{count}}명",
         "needed": "친구 {{count}}명",
-        "tierName": "앰배서더 닉네임 효과",
-        "tierBadge": "황금 후광 배지 효과",
+        "tierName": "닉네임 효과",
+        "tierBadge": "배지 효과",
         "tierDevice": "기기 1대 추가",
         "tierGift": "선물할 평생 라이선스"
       },
@@ -11437,7 +11600,7 @@ export const translations = {
         "tabsLabel": "Popup views",
         "tabDirect": "Live",
         "tabMenu": "Menu",
-        "changelog": "What's new",
+        "changelog": "새 소식",
         "updated": "Updated at {{time}}",
         "screenLabel": "Selected channel",
         "guideLabel": "Followed channels",
@@ -11552,8 +11715,6 @@ export const translations = {
       "greetingMorning": "좋은 아침입니다",
       "greetingSub": "현재 온라인 상태인 사용자는 다음과 같습니다.",
       "settings": {
-        "badgePlusOn": "StreamPulse+ 활성: 내 맞춤 색상이 모든 StreamPulse 사용자에게 보입니다.",
-        "badgePlusOff": "StreamPulse+를 사용하면 내 맞춤 색상이 모든 StreamPulse 사용자에게 보입니다.",
         "liveNotificationsTitle": "Chrome 알림",
         "liveNotificationsDescription": "팔로우하는 모든 스트리머에게 적용됩니다. 이후 스트리머별로 조정할 수 있습니다.",
         "gameAlertsTitle": "카테고리 변경 알림",
@@ -11620,11 +11781,6 @@ export const translations = {
         "communityBadgeTitle": "커뮤니티 배지",
         "saved": "설정이 저장되었습니다",
         "patchNotes": "새로운 소식 보기",
-        "badgeColorTitle": "배지 색상",
-        "badgeColorDescription": "채팅에 표시되는 아이콘의 색상을 선택하세요.",
-        "badgeColorAuthor": "사용자 이름 색상",
-        "badgeColorTheme": "트위치 테마에 맞춤",
-        "badgeColorCustom": "사용자 지정 색상",
         "communityBadgeDescription": "트위치 채팅에서 내 이름과 다른 사용자 이름 옆에 StreamPulse 아이콘을 표시합니다. 브라우저에서 계산된 사용자 이름의 지문이 streampulse.fr로 전송되며, 이름 자체는 전송되지 않습니다.",
         "chatFilterDescription": "다음 단어들이 포함된 메시지를 숨깁니다(쉼표로 구분).",
         "themeTitle": "주제",
@@ -11951,6 +12107,8 @@ export const translations = {
         "chatRowNote": "다른 StreamPulse 사용자에게 보입니다."
       },
       "badge": {
+        "founder": "StreamPulse 창립자",
+        "ambassador": "앰배서더",
         "lifetime": "평생 멤버",
         "months": "{{count}}개월째 구독 중",
         "monthOne": "1개월째 구독 중",
@@ -11960,10 +12118,6 @@ export const translations = {
       "topbar": {
         "previews": "마우스 오버 시 미리보기",
         "thisChannel": "이 채널",
-        "badgeColor": "배지 색상",
-        "badgeAuthor": "사용자 이름",
-        "badgeTheme": "테마",
-        "badgeCustom": "사용자 지정",
         "liveNow": "방송 중",
         "noneLive": "방송 중인 사람이 없습니다",
         "watchedHere": "여기서 시청",

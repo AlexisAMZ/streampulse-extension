@@ -141,3 +141,12 @@ test("verifyLicense gère format, clé refusée, réseau et succès", async () =
   assert.equal(result.ok, true);
   assert.equal(result.record.plan, "lifetime");
 });
+
+test("verifyLicense garde le rôle fondateur et ignore tout autre rôle", async () => {
+  const reply = (role) => async () => ({ ok: true, status: 200, json: async () => ({ valid: true, plan: "lifetime", referrals: 2, role }) });
+  const admin = await verifyLicense("SP-ABCD-1234-EFGH-5678", reply("admin"), NOW);
+  assert.equal(admin.record.role, "admin");
+  assert.equal(admin.record.referrals, 2);
+  assert.equal((await verifyLicense("SP-ABCD-1234-EFGH-5678", reply("root"), NOW)).record.role, "");
+  assert.equal((await verifyLicense("SP-ABCD-1234-EFGH-5678", reply(undefined), NOW)).record.role, "");
+});
