@@ -26,56 +26,75 @@ const PAD = 84;
 const SPLIT_X = 760;
 const MAX_ROWS = 7;
 
+const TILE_H = 104;
+const TILE_GAP = 20;
+
+function drawTile(ctx, tile, x, y, w) {
+  drawPanel(ctx, x, y, w, TILE_H, 16);
+  ctx.fillStyle = FAINT;
+  setFont(ctx, 700, 16, MONO);
+  ctx.fillText(fitText(ctx, tile.label.toUpperCase(), w - 48), x + 24, y + 38);
+  ctx.fillStyle = tile.color || INK;
+  setFittedFont(ctx, tile.value, w - 48, 800, 40, DISPLAY, 22);
+  ctx.fillText(fitText(ctx, tile.value, w - 48), x + 24, y + 84);
+}
+
+/**
+ * Tuiles des chiffres. Avec les points : chaines et points cote a cote, la
+ * chaine favorite seule sur toute la largeur (un pseudo Twitch va jusqu'a 25
+ * caracteres). Sans points : une seule rangee. Renvoie le bas des tuiles.
+ */
+function drawTiles(ctx, model, top, width) {
+  const { labels } = model;
+  const channels = { label: labels.statChannels, value: String(model.streamerCount) };
+  const favorite = { label: labels.statTop, value: model.top[0]?.channel || "—" };
+  const rows = model.points
+    ? [[[channels, 1], [{ label: labels.statPoints, value: model.points.label, color: LCD }, 1]], [[favorite, 1]]]
+    : [[[channels, 0.55], [favorite, 1.45]]];
+  let y = top;
+  rows.forEach((row) => {
+    const unit = (width - TILE_GAP * (row.length - 1)) / row.reduce((sum, [, weight]) => sum + weight, 0);
+    let x = PAD;
+    row.forEach(([tile, weight]) => {
+      drawTile(ctx, tile, x, y, unit * weight);
+      x += unit * weight + TILE_GAP;
+    });
+    y += TILE_H + 16;
+  });
+  return y - 16;
+}
+
 function drawLeftColumn(ctx, model) {
   const { labels } = model;
   const maxWidth = SPLIT_X - PAD - 60;
 
-  drawEyebrow(ctx, labels.eyebrow, PAD, 112, 20);
+  drawEyebrow(ctx, labels.eyebrow, PAD, 104, 20);
 
   ctx.fillStyle = INK;
-  setFont(ctx, 800, 58, DISPLAY);
-  ctx.fillText(fitText(ctx, labels.heading, maxWidth), PAD, 186);
+  setFittedFont(ctx, labels.heading, maxWidth, 800, 58, DISPLAY);
+  ctx.fillText(fitText(ctx, labels.heading, maxWidth), PAD, 176);
 
   ctx.fillStyle = MUTED;
   setFont(ctx, 500, 26);
-  ctx.fillText(fitText(ctx, labels.period, maxWidth), PAD, 232);
+  ctx.fillText(fitText(ctx, labels.period, maxWidth), PAD, 220);
 
-  // Le total est le chiffre que l'on retient.
+  // Le total est le chiffre que l'on retient. Au-dela de 100 h, il rapetisse
+  // pour ne pas deborder sur le panneau des chaines.
   ctx.fillStyle = FAINT;
   setFont(ctx, 700, 18, MONO);
-  ctx.fillText(labels.statTime.toUpperCase(), PAD, 330);
+  ctx.fillText(labels.statTime.toUpperCase(), PAD, 296);
+  const totalText = formatDuration(model.totalSeconds);
   ctx.fillStyle = INK;
-  setFont(ctx, 800, 124, DISPLAY);
-  ctx.fillText(formatDuration(model.totalSeconds), PAD - 4, 450);
+  setFittedFont(ctx, totalText, maxWidth, 800, 124, DISPLAY);
+  ctx.fillText(totalText, PAD - 4, 402);
 
-  // Deux tuiles, trois quand la période compte des points de chaîne.
-  const tileY = 500;
-  const tileH = 128;
-  const tiles = [
-    { label: labels.statChannels, value: String(model.streamerCount) },
-    { label: labels.statTop, value: model.top[0]?.channel || "—" },
-    ...(model.points ? [{ label: labels.statPoints, value: model.points.label, color: LCD }] : []),
-  ];
-  // Avec trois tuiles, le nom de la chaine favorite garde la place de s'afficher en entier.
-  const weights = tiles.length === 3 ? [0.7, 1.4, 1] : tiles.map(() => 1);
-  const unit = (maxWidth - 20 * (tiles.length - 1)) / weights.reduce((sum, w) => sum + w, 0);
-  let x = PAD;
-  tiles.forEach((tile, i) => {
-    const tileW = unit * weights[i];
-    drawPanel(ctx, x, tileY, tileW, tileH, 16);
-    ctx.fillStyle = FAINT;
-    setFont(ctx, 700, 16, MONO);
-    ctx.fillText(fitText(ctx, tile.label.toUpperCase(), tileW - 48), x + 24, tileY + 42);
-    ctx.fillStyle = tile.color || INK;
-    setFittedFont(ctx, tile.value, tileW - 48, 800, 44, DISPLAY);
-    ctx.fillText(fitText(ctx, tile.value, tileW - 48), x + 24, tileY + 100);
-    x += tileW + 20;
-  });
+  const tilesBottom = drawTiles(ctx, model, 436, maxWidth);
 
+  const platformsY = tilesBottom + 48;
   ctx.fillStyle = FAINT;
   setFont(ctx, 700, 16, MONO);
-  ctx.fillText(labels.statPlatforms.toUpperCase(), PAD, 690);
-  drawPlatformSplit(ctx, PAD, 708, maxWidth, 16, model.platforms, model.totalSeconds, { legendSize: 20 });
+  ctx.fillText(labels.statPlatforms.toUpperCase(), PAD, platformsY);
+  drawPlatformSplit(ctx, PAD, platformsY + 18, maxWidth, 16, model.platforms, model.totalSeconds, { legendSize: 20 });
 }
 
 function drawTopList(ctx, model, avatars) {
@@ -133,5 +152,5 @@ export function drawRecapCard(ctx, model, assets = {}) {
   drawBackground(ctx, CARD_WIDTH, CARD_HEIGHT);
   drawLeftColumn(ctx, model);
   drawTopList(ctx, model, avatars);
-  drawBrand(ctx, assets.logo, PAD, CARD_HEIGHT - 70, { size: 44, nameSize: 30, urlSize: 20 });
+  drawBrand(ctx, assets.logo, PAD, CARD_HEIGHT - 54, { size: 44, nameSize: 30 });
 }

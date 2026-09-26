@@ -548,9 +548,9 @@ export const translations = {
       },
       "referral": {
         "plusTitle": "Parraine tes amis",
-        "plusBody": "Ton code leur offre le premier mois. Toi, tu gagnes un mois gratuit par ami (formule mensuelle) et ces récompenses :",
+        "plusBody": "Ton ami a 2,99 € offerts (1er mois gratuit, ou la formule à vie à 16 €). Toi, tu gagnes de l'argent et ces récompenses :",
         "title": "Parrainage",
-        "body": "Partage ton code : ton ami a son premier mois offert. Toi, tu gagnes un mois gratuit par ami (formule mensuelle) et des récompenses d'ambassadeur.",
+        "body": "Partage ton code : ton ami a 2,99 € offerts (1er mois gratuit, ou la formule à vie à 16 €). Toi, tu touches 1 € par mois tant qu'il reste abonné, ou 5 € d'un coup s'il prend la formule à vie, versés sur PayPal.",
         "get": "Obtenir mon code",
         "copy": "Copier",
         "copied": "Code copié !",
@@ -563,7 +563,17 @@ export const translations = {
         "tierName": "Effet de pseudo",
         "tierBadge": "Effet de badge",
         "tierDevice": "Un appareil de plus",
-        "tierGift": "Une licence à vie à offrir"
+        "each": "Chaque ami",
+        "tierMoney": "1 €/mois, ou 5 € s'il prend la formule à vie",
+        "balance": "À verser",
+        "earned": "Gagné : {{earned}} · déjà versé : {{paid}}",
+        "payoutRule": "Versé sur ton PayPal dès {{min}}. Réservé aux majeurs.",
+        "paypalLabel": "Adresse PayPal",
+        "paypalPlaceholder": "toi@exemple.fr",
+        "paypalSave": "Enregistrer",
+        "paypalSaved": "Adresse PayPal enregistrée.",
+        "paypalInvalid": "Cette adresse e-mail n'est pas valide.",
+        "paypalMissing": "Ajoute ton adresse PayPal pour recevoir tes gains."
       },
       "layout": {
         "title": "Disposition",
@@ -999,6 +1009,8 @@ export const translations = {
         "statTop": "Le plus regardé",
         "statPlatforms": "Plateformes",
         "statPoints": "Points gagnés",
+        "statPointsSince": "Points depuis le {{date}}",
+        "statPointsTotal": "Points gagnés au total",
         "topTitle": "Top chaînes"
       }
     },
@@ -1661,9 +1673,9 @@ export const translations = {
       },
       "referral": {
         "plusTitle": "Refer your friends",
-        "plusBody": "Your code gives them their first month free. You get a free month per friend (monthly plan) and these rewards:",
+        "plusBody": "Your friend gets €2.99 off (first month free, or the lifetime plan for €16). You earn money and these rewards:",
         "title": "Referral",
-        "body": "Share your code: your friend gets their first month free. You get a free month per friend (monthly plan) and ambassador rewards.",
+        "body": "Share your code: your friend gets €2.99 off (first month free, or the lifetime plan for €16). You get €1 a month while they stay subscribed, or €5 at once if they take the lifetime plan, paid to PayPal.",
         "get": "Get my code",
         "copy": "Copy",
         "copied": "Code copied!",
@@ -1676,7 +1688,17 @@ export const translations = {
         "tierName": "Username effect",
         "tierBadge": "Badge effect",
         "tierDevice": "One more device",
-        "tierGift": "A lifetime license to give away"
+        "each": "Every friend",
+        "tierMoney": "€1/month, or €5 for a lifetime plan",
+        "balance": "To be paid",
+        "earned": "Earned: {{earned}} · already paid: {{paid}}",
+        "payoutRule": "Paid to your PayPal from {{min}}. Adults only.",
+        "paypalLabel": "PayPal address",
+        "paypalPlaceholder": "you@example.com",
+        "paypalSave": "Save",
+        "paypalSaved": "PayPal address saved.",
+        "paypalInvalid": "This email address isn't valid.",
+        "paypalMissing": "Add your PayPal address to receive your earnings."
       },
       "layout": {
         "title": "Layout",
@@ -2112,6 +2134,8 @@ export const translations = {
         "statTop": "Most watched",
         "statPlatforms": "Platforms",
         "statPoints": "Points earned",
+        "statPointsSince": "Points since {{date}}",
+        "statPointsTotal": "Total points earned",
         "topTitle": "Top channels"
       }
     },
@@ -2774,9 +2798,9 @@ export const translations = {
       },
       "referral": {
         "plusTitle": "Invita a tus amigos",
-        "plusBody": "Tu código les regala el primer mes. Tú ganas un mes gratis por amigo (plan mensual) y estas recompensas:",
+        "plusBody": "Tu amigo tiene 2,99 € de descuento (1.er mes gratis, o el plan de por vida a 16 €). Tú ganas dinero y estas recompensas:",
         "title": "Recomendación",
-        "body": "Comparte tu código: tu amigo tiene su primer mes gratis. Tú ganas un mes gratis por amigo (plan mensual) y recompensas de embajador.",
+        "body": "Comparte tu código: tu amigo tiene 2,99 € de descuento (1.er mes gratis, o el plan de por vida a 16 €). Tú recibes 1 € al mes mientras siga suscrito, o 5 € de una vez si elige el plan de por vida, pagados por PayPal.",
         "get": "Obtener mi código",
         "copy": "Copiar",
         "copied": "¡Código copiado!",
@@ -2789,7 +2813,17 @@ export const translations = {
         "tierName": "Efecto de nombre",
         "tierBadge": "Efecto de insignia",
         "tierDevice": "Un dispositivo más",
-        "tierGift": "Una licencia de por vida para regalar"
+        "each": "Cada amigo",
+        "tierMoney": "1 €/mes, o 5 € por un plan de por vida",
+        "balance": "Por pagar",
+        "earned": "Ganado: {{earned}} · ya pagado: {{paid}}",
+        "payoutRule": "Se paga a tu PayPal desde {{min}}. Solo mayores de edad.",
+        "paypalLabel": "Dirección de PayPal",
+        "paypalPlaceholder": "tu@ejemplo.com",
+        "paypalSave": "Guardar",
+        "paypalSaved": "Dirección de PayPal guardada.",
+        "paypalInvalid": "Esta dirección de correo no es válida.",
+        "paypalMissing": "Añade tu dirección de PayPal para recibir tus ganancias."
       },
       "layout": {
         "title": "Disposición",
@@ -3225,6 +3259,8 @@ export const translations = {
         "statTop": "Lo más visto",
         "statPlatforms": "Plataformas",
         "statPoints": "Puntos ganados",
+        "statPointsSince": "Puntos desde el {{date}}",
+        "statPointsTotal": "Puntos ganados en total",
         "topTitle": "Top canales"
       }
     },
@@ -3874,9 +3910,9 @@ export const translations = {
       },
       "referral": {
         "plusTitle": "Indique seus amigos",
-        "plusBody": "Seu código dá a eles o primeiro mês grátis. Você ganha um mês grátis por amigo (plano mensal) e estas recompensas:",
+        "plusBody": "Seu amigo ganha 2,99 € de desconto (1º mês grátis, ou o plano vitalício por 16 €). Você ganha dinheiro e estas recompensas:",
         "title": "Indicação",
-        "body": "Compartilhe seu código: seu amigo ganha o primeiro mês grátis. Você ganha um mês grátis por amigo (plano mensal) e recompensas de embaixador.",
+        "body": "Compartilhe seu código: seu amigo ganha 2,99 € de desconto (1º mês grátis, ou o plano vitalício por 16 €). Você recebe 1 € por mês enquanto ele continuar assinante, ou 5 € de uma vez se ele escolher o plano vitalício, pagos no PayPal.",
         "get": "Obter meu código",
         "copy": "Copiar",
         "copied": "Código copiado!",
@@ -3889,7 +3925,17 @@ export const translations = {
         "tierName": "Efeito de nome",
         "tierBadge": "Efeito de emblema",
         "tierDevice": "Mais um dispositivo",
-        "tierGift": "Uma licença vitalícia para presentear"
+        "each": "Cada amigo",
+        "tierMoney": "1 €/mês, ou 5 € por um plano vitalício",
+        "balance": "A receber",
+        "earned": "Ganho: {{earned}} · já pago: {{paid}}",
+        "payoutRule": "Pago no seu PayPal a partir de {{min}}. Só para maiores de idade.",
+        "paypalLabel": "Endereço do PayPal",
+        "paypalPlaceholder": "voce@exemplo.com",
+        "paypalSave": "Salvar",
+        "paypalSaved": "Endereço do PayPal salvo.",
+        "paypalInvalid": "Este endereço de e-mail não é válido.",
+        "paypalMissing": "Adicione seu endereço do PayPal para receber seus ganhos."
       },
       "layout": {
         "title": "Disposição",
@@ -4325,6 +4371,8 @@ export const translations = {
         "statTop": "Mais assistido",
         "statPlatforms": "Plataformas",
         "statPoints": "Pontos ganhos",
+        "statPointsSince": "Pontos desde {{date}}",
+        "statPointsTotal": "Pontos ganhos no total",
         "topTitle": "Top canais"
       }
     },
@@ -4982,9 +5030,9 @@ export const translations = {
       },
       "referral": {
         "plusTitle": "Wirb deine Freunde",
-        "plusBody": "Dein Code schenkt ihnen den ersten Monat. Du bekommst pro Freund einen Gratismonat (Monatsabo) und diese Belohnungen:",
+        "plusBody": "Dein Freund bekommt 2,99 € Rabatt (1. Monat gratis oder lebenslang für 16 €). Du verdienst Geld und diese Belohnungen:",
         "title": "Empfehlung",
-        "body": "Teile deinen Code: Dein Freund bekommt den ersten Monat gratis. Du bekommst einen Gratismonat pro Freund (Monatsplan) und Botschafter-Belohnungen.",
+        "body": "Teile deinen Code: Dein Freund bekommt 2,99 € Rabatt (1. Monat gratis oder lebenslang für 16 €). Du bekommst 1 € pro Monat, solange er abonniert bleibt, oder 5 € auf einmal für den lebenslangen Plan, ausgezahlt über PayPal.",
         "get": "Meinen Code holen",
         "copy": "Kopieren",
         "copied": "Code kopiert!",
@@ -4997,7 +5045,17 @@ export const translations = {
         "tierName": "Namenseffekt",
         "tierBadge": "Abzeichen-Effekt",
         "tierDevice": "Ein Gerät mehr",
-        "tierGift": "Eine lebenslange Lizenz zum Verschenken"
+        "each": "Jeder Freund",
+        "tierMoney": "1 €/Monat oder 5 € für einen lebenslangen Plan",
+        "balance": "Offen",
+        "earned": "Verdient: {{earned}} · bereits ausgezahlt: {{paid}}",
+        "payoutRule": "Auszahlung auf dein PayPal ab {{min}}. Nur für Volljährige.",
+        "paypalLabel": "PayPal-Adresse",
+        "paypalPlaceholder": "du@beispiel.de",
+        "paypalSave": "Speichern",
+        "paypalSaved": "PayPal-Adresse gespeichert.",
+        "paypalInvalid": "Diese E-Mail-Adresse ist ungültig.",
+        "paypalMissing": "Füge deine PayPal-Adresse hinzu, um deine Einnahmen zu erhalten."
       },
       "layout": {
         "title": "Anordnung",
@@ -5433,6 +5491,8 @@ export const translations = {
         "statTop": "Am meisten geschaut",
         "statPlatforms": "Plattformen",
         "statPoints": "Verdiente Punkte",
+        "statPointsSince": "Punkte seit {{date}}",
+        "statPointsTotal": "Punkte insgesamt",
         "topTitle": "Top-Kanäle"
       }
     },
@@ -6095,9 +6155,9 @@ export const translations = {
       },
       "referral": {
         "plusTitle": "Invita i tuoi amici",
-        "plusBody": "Il tuo codice regala loro il primo mese. Tu ottieni un mese gratis per ogni amico (piano mensile) e questi premi:",
+        "plusBody": "Il tuo amico ha 2,99 € di sconto (1° mese gratis, o il piano a vita a 16 €). Tu guadagni soldi e questi premi:",
         "title": "Invita un amico",
-        "body": "Condividi il tuo codice: il tuo amico ha il primo mese gratis. Tu ottieni un mese gratis per amico (piano mensile) e ricompense da ambasciatore.",
+        "body": "Condividi il tuo codice: il tuo amico ha 2,99 € di sconto (1° mese gratis, o il piano a vita a 16 €). Tu ricevi 1 € al mese finché resta abbonato, o 5 € in una volta se sceglie il piano a vita, pagati su PayPal.",
         "get": "Ottieni il mio codice",
         "copy": "Copia",
         "copied": "Codice copiato!",
@@ -6110,7 +6170,17 @@ export const translations = {
         "tierName": "Effetto per il nome",
         "tierBadge": "Effetto per il badge",
         "tierDevice": "Un dispositivo in più",
-        "tierGift": "Una licenza a vita da regalare"
+        "each": "Ogni amico",
+        "tierMoney": "1 €/mese, o 5 € per un piano a vita",
+        "balance": "Da pagare",
+        "earned": "Guadagnato: {{earned}} · già pagato: {{paid}}",
+        "payoutRule": "Pagato sul tuo PayPal da {{min}}. Solo maggiorenni.",
+        "paypalLabel": "Indirizzo PayPal",
+        "paypalPlaceholder": "tu@esempio.it",
+        "paypalSave": "Salva",
+        "paypalSaved": "Indirizzo PayPal salvato.",
+        "paypalInvalid": "Questo indirizzo e-mail non è valido.",
+        "paypalMissing": "Aggiungi il tuo indirizzo PayPal per ricevere i guadagni."
       },
       "layout": {
         "title": "Disposizione",
@@ -6546,6 +6616,8 @@ export const translations = {
         "statTop": "Il più visto",
         "statPlatforms": "Piattaforme",
         "statPoints": "Punti guadagnati",
+        "statPointsSince": "Punti dal {{date}}",
+        "statPointsTotal": "Punti guadagnati in totale",
         "topTitle": "Top canali"
       }
     },
@@ -7208,9 +7280,9 @@ export const translations = {
       },
       "referral": {
         "plusTitle": "Poleć znajomym",
-        "plusBody": "Twój kod daje im pierwszy miesiąc za darmo. Ty dostajesz darmowy miesiąc za każdego znajomego (plan miesięczny) i te nagrody:",
+        "plusBody": "Twój znajomy dostaje 2,99 € zniżki (1. miesiąc za darmo lub plan dożywotni za 16 €). Ty zarabiasz pieniądze i te nagrody:",
         "title": "Polecenia",
-        "body": "Udostępnij swój kod: twój znajomy dostaje pierwszy miesiąc gratis. Ty dostajesz darmowy miesiąc za każdego znajomego (plan miesięczny) i nagrody ambasadora.",
+        "body": "Udostępnij swój kod: znajomy dostaje 2,99 € zniżki (1. miesiąc za darmo lub plan dożywotni za 16 €). Ty dostajesz 1 € miesięcznie, dopóki subskrybuje, albo 5 € od razu za plan dożywotni, wypłacane na PayPal.",
         "get": "Pobierz mój kod",
         "copy": "Kopiuj",
         "copied": "Kod skopiowany!",
@@ -7223,7 +7295,17 @@ export const translations = {
         "tierName": "Efekt nicku",
         "tierBadge": "Efekt odznaki",
         "tierDevice": "Jedno urządzenie więcej",
-        "tierGift": "Dożywotnia licencja do podarowania"
+        "each": "Każdy znajomy",
+        "tierMoney": "1 €/mies. lub 5 € za plan dożywotni",
+        "balance": "Do wypłaty",
+        "earned": "Zarobione: {{earned}} · już wypłacone: {{paid}}",
+        "payoutRule": "Wypłata na twój PayPal od {{min}}. Tylko dla pełnoletnich.",
+        "paypalLabel": "Adres PayPal",
+        "paypalPlaceholder": "ty@przyklad.pl",
+        "paypalSave": "Zapisz",
+        "paypalSaved": "Adres PayPal zapisany.",
+        "paypalInvalid": "Ten adres e-mail jest nieprawidłowy.",
+        "paypalMissing": "Dodaj adres PayPal, aby otrzymywać zarobki."
       },
       "layout": {
         "title": "Układ",
@@ -7659,6 +7741,8 @@ export const translations = {
         "statTop": "Najczęściej oglądany",
         "statPlatforms": "Platformy",
         "statPoints": "Zdobyte punkty",
+        "statPointsSince": "Punkty od {{date}}",
+        "statPointsTotal": "Zdobyte punkty łącznie",
         "topTitle": "Top kanały"
       }
     },
@@ -8321,9 +8405,9 @@ export const translations = {
       },
       "referral": {
         "plusTitle": "Arkadaşlarını davet et",
-        "plusBody": "Kodun onlara ilk ayı hediye eder. Sen de her arkadaş için bir ay ücretsiz (aylık plan) ve şu ödülleri kazanırsın:",
+        "plusBody": "Arkadaşın 2,99 € indirim alır (ilk ay ücretsiz ya da ömür boyu plan 16 €). Sen de para ve şu ödülleri kazanırsın:",
         "title": "Davet",
-        "body": "Kodunu paylaş: arkadaşın ilk ayı ücretsiz alır. Sen her arkadaş için bir ay ücretsiz (aylık plan) ve elçi ödülleri kazanırsın.",
+        "body": "Kodunu paylaş: arkadaşın 2,99 € indirim alır (ilk ay ücretsiz ya da ömür boyu plan 16 €). Abone kaldığı sürece ayda 1 €, ömür boyu plan alırsa tek seferde 5 € kazanırsın; PayPal'a ödenir.",
         "get": "Kodumu al",
         "copy": "Kopyala",
         "copied": "Kod kopyalandı!",
@@ -8336,7 +8420,17 @@ export const translations = {
         "tierName": "Kullanıcı adı efekti",
         "tierBadge": "Rozet efekti",
         "tierDevice": "Bir cihaz daha",
-        "tierGift": "Hediye edilecek ömür boyu lisans"
+        "each": "Her arkadaş",
+        "tierMoney": "Ayda 1 € ya da ömür boyu plan için 5 €",
+        "balance": "Ödenecek",
+        "earned": "Kazanılan: {{earned}} · ödenen: {{paid}}",
+        "payoutRule": "{{min}} tutarından itibaren PayPal'ına ödenir. Yalnızca reşit olanlar için.",
+        "paypalLabel": "PayPal adresi",
+        "paypalPlaceholder": "sen@ornek.com",
+        "paypalSave": "Kaydet",
+        "paypalSaved": "PayPal adresi kaydedildi.",
+        "paypalInvalid": "Bu e-posta adresi geçerli değil.",
+        "paypalMissing": "Kazançlarını almak için PayPal adresini ekle."
       },
       "layout": {
         "title": "Düzen",
@@ -8772,6 +8866,8 @@ export const translations = {
         "statTop": "En çok izlenen",
         "statPlatforms": "Platformlar",
         "statPoints": "Kazanılan puan",
+        "statPointsSince": "{{date}} tarihinden beri puan",
+        "statPointsTotal": "Toplam kazanılan puan",
         "topTitle": "En iyi kanallar"
       }
     },
@@ -9434,9 +9530,9 @@ export const translations = {
       },
       "referral": {
         "plusTitle": "Приглашай друзей",
-        "plusBody": "Твой код дарит им первый месяц. Ты получаешь бесплатный месяц за каждого друга (месячный план) и эти награды:",
+        "plusBody": "Друг получает скидку 2,99 € (первый месяц бесплатно или план навсегда за 16 €). Ты зарабатываешь деньги и эти награды:",
         "title": "Приглашения",
-        "body": "Поделись кодом: другу первый месяц бесплатно. Тебе, бесплатный месяц за каждого друга (месячный план) и награды посла.",
+        "body": "Поделись кодом: друг получает скидку 2,99 € (первый месяц бесплатно или план навсегда за 16 €). Ты получаешь 1 € в месяц, пока он подписан, или 5 € сразу за план навсегда — выплаты на PayPal.",
         "get": "Получить код",
         "copy": "Копировать",
         "copied": "Код скопирован!",
@@ -9449,7 +9545,17 @@ export const translations = {
         "tierName": "Эффект ника",
         "tierBadge": "Эффект значка",
         "tierDevice": "Ещё одно устройство",
-        "tierGift": "Вечная лицензия в подарок"
+        "each": "Каждый друг",
+        "tierMoney": "1 €/мес. или 5 € за план навсегда",
+        "balance": "К выплате",
+        "earned": "Заработано: {{earned}} · уже выплачено: {{paid}}",
+        "payoutRule": "Выплата на твой PayPal от {{min}}. Только для совершеннолетних.",
+        "paypalLabel": "Адрес PayPal",
+        "paypalPlaceholder": "ty@primer.ru",
+        "paypalSave": "Сохранить",
+        "paypalSaved": "Адрес PayPal сохранён.",
+        "paypalInvalid": "Этот адрес эл. почты недействителен.",
+        "paypalMissing": "Добавь адрес PayPal, чтобы получать заработок."
       },
       "layout": {
         "title": "Расположение",
@@ -9885,6 +9991,8 @@ export const translations = {
         "statTop": "Любимый канал",
         "statPlatforms": "Платформы",
         "statPoints": "Заработано баллов",
+        "statPointsSince": "Баллы с {{date}}",
+        "statPointsTotal": "Всего баллов",
         "topTitle": "Топ каналов"
       }
     },
@@ -10547,9 +10655,9 @@ export const translations = {
       },
       "referral": {
         "plusTitle": "友達を招待しよう",
-        "plusBody": "あなたのコードで友達は最初の1か月が無料。あなたは友達1人につき1か月無料（月額プラン）と、次の特典がもらえます：",
+        "plusBody": "友達は 2.99 € 引き（最初の1か月無料、または買い切りプランが 16 €）。あなたはお金と次の特典がもらえます：",
         "title": "紹介",
-        "body": "コードをシェアしよう：友だちは最初の1か月が無料。あなたは友だち1人ごとに1か月無料（月額プラン）とアンバサダー特典がもらえます。",
+        "body": "コードをシェアしよう：友達は 2.99 € 引き（最初の1か月無料、または買い切りプランが 16 €）。友達が加入している間は毎月 1 €、買い切りなら一度に 5 € を PayPal で受け取れます。",
         "get": "コードを取得",
         "copy": "コピー",
         "copied": "コードをコピーしました！",
@@ -10562,7 +10670,17 @@ export const translations = {
         "tierName": "名前エフェクト",
         "tierBadge": "バッジエフェクト",
         "tierDevice": "デバイスを1台追加",
-        "tierGift": "プレゼント用の買い切りライセンス"
+        "each": "友達1人ごと",
+        "tierMoney": "毎月 1 €、買い切りなら 5 €",
+        "balance": "支払い予定",
+        "earned": "獲得：{{earned}} ・ 支払い済み：{{paid}}",
+        "payoutRule": "{{min}} から PayPal に支払われます。成人のみ対象。",
+        "paypalLabel": "PayPal のアドレス",
+        "paypalPlaceholder": "you@example.com",
+        "paypalSave": "保存",
+        "paypalSaved": "PayPal のアドレスを保存しました。",
+        "paypalInvalid": "このメールアドレスは無効です。",
+        "paypalMissing": "報酬を受け取るには PayPal のアドレスを追加してください。"
       },
       "layout": {
         "title": "レイアウト",
@@ -10998,6 +11116,8 @@ export const translations = {
         "statTop": "一番見た",
         "statPlatforms": "プラットフォーム",
         "statPoints": "獲得ポイント",
+        "statPointsSince": "{{date}}からのポイント",
+        "statPointsTotal": "累計獲得ポイント",
         "topTitle": "トップチャンネル"
       }
     },
@@ -11660,9 +11780,9 @@ export const translations = {
       },
       "referral": {
         "plusTitle": "친구를 추천하세요",
-        "plusBody": "내 코드로 친구는 첫 달이 무료예요. 나는 친구 한 명당 한 달 무료(월간 플랜)와 다음 보상을 받아요:",
+        "plusBody": "친구는 2.99 € 할인(첫 달 무료, 또는 평생 플랜 16 €). 당신은 돈과 다음 보상을 받습니다:",
         "title": "추천",
-        "body": "코드를 공유하세요. 친구는 첫 달이 무료입니다. 나는 친구 한 명당 한 달 무료(월간 플랜)와 앰배서더 보상을 받습니다.",
+        "body": "코드를 공유하세요: 친구는 2.99 € 할인(첫 달 무료, 또는 평생 플랜 16 €). 친구가 구독하는 동안 매달 1 €, 평생 플랜이면 한 번에 5 €를 PayPal로 받습니다.",
         "get": "내 코드 받기",
         "copy": "복사",
         "copied": "코드를 복사했습니다!",
@@ -11675,7 +11795,17 @@ export const translations = {
         "tierName": "닉네임 효과",
         "tierBadge": "배지 효과",
         "tierDevice": "기기 1대 추가",
-        "tierGift": "선물할 평생 라이선스"
+        "each": "친구마다",
+        "tierMoney": "매달 1 €, 평생 플랜은 5 €",
+        "balance": "지급 예정",
+        "earned": "획득: {{earned}} · 지급 완료: {{paid}}",
+        "payoutRule": "{{min}}부터 PayPal로 지급됩니다. 성인만 가능합니다.",
+        "paypalLabel": "PayPal 주소",
+        "paypalPlaceholder": "you@example.com",
+        "paypalSave": "저장",
+        "paypalSaved": "PayPal 주소를 저장했습니다.",
+        "paypalInvalid": "유효한 이메일 주소가 아닙니다.",
+        "paypalMissing": "수익을 받으려면 PayPal 주소를 추가하세요."
       },
       "layout": {
         "title": "배치",
@@ -12111,6 +12241,8 @@ export const translations = {
         "statTop": "가장 많이 본",
         "statPlatforms": "플랫폼",
         "statPoints": "획득 포인트",
+        "statPointsSince": "{{date}}부터 포인트",
+        "statPointsTotal": "누적 획득 포인트",
         "topTitle": "인기 채널"
       }
     },

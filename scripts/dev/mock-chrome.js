@@ -294,6 +294,9 @@
           // &role=admin : rang fondateur ; &refs=3 : filleuls (effets d'ambassadeur).
           streamPulsePlus: { licenseKey: "SP-DEMO-2026-PLUS-0001", plan: "lifetime", status: "active", verifiedAt: now, referrals: Number(params.get("refs")) || 0, role: params.get("role") === "admin" ? "admin" : "" },
           streamPulseCosmetics: { badgeFx: "shine", nameFx: "aurora" },
+          // Parrainage : code, gains (7 € gagnés, 5 € versés) et adresse PayPal, fraîchement lus.
+          streamPulseReferralCode: "AMI-DEMO42",
+          streamPulseReferralEarnings: { earnedCents: 700, paidCents: 500, balanceCents: 200, paypal: params.get("paypal") === "0" ? "" : "demo@exemple.fr", payoutMinCents: 1000, fetchedAt: now },
           streamPulsePredictionRule: { enabled: true, strategy: "majority", percent: 5, maxPoints: 2000, reserve: 1000, secondsBeforeEnd: 20 },
           streamPulsePredictionHistory: [
             { eventId: "p1", channel: "novastream", title: "Top 1 sur cette game ?", outcomeTitle: "Oui", points: 850, payout: 1540, status: "won", placedAt: now - 3600e3 },

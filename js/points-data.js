@@ -348,3 +348,29 @@ export function channelName(state, channelId) {
   const channel = (state || emptyState()).channels[channelId] || {};
   return channel.displayName || channel.login || `#${channelId}`;
 }
+
+const localDayKey = (timestamp) => {
+  const date = new Date(timestamp);
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+};
+
+/**
+ * Points des coffres récupérés avant le suivi par jour, repris du journal
+ * d'événements (ses 100 dernières entrées sont datées). Seuls les jours de
+ * [fromKey, beforeKey[ comptent : à partir de beforeKey, le suivi par jour
+ * fait foi. beforeKey vide : aucune borne de fin.
+ */
+export function pointsFromLogs(logs, { fromKey, beforeKey }) {
+  let points = 0;
+  let firstDay = "";
+  for (const log of Array.isArray(logs) ? logs : []) {
+    if (log?.type !== "points") continue;
+    const value = Math.floor(Number(log.value));
+    if (!Number.isFinite(value) || value <= 0 || value > MAX_POINTS) continue;
+    const day = localDayKey(Number(log.timestamp) || 0);
+    if (day < fromKey || (beforeKey && day >= beforeKey)) continue;
+    points += value;
+    if (!firstDay || day < firstDay) firstDay = day;
+  }
+  return { points, firstDay };
+}

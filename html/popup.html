@@ -232,7 +232,7 @@
 
       <section class="plus-referral" aria-labelledby="plus-referral-title">
         <h3 class="plus-referral-title" id="plus-referral-title" data-i18n="popup.referral.plusTitle">Parraine tes amis</h3>
-        <p class="plus-referral-body" data-i18n="popup.referral.plusBody">Ton code leur offre le premier mois. Toi, tu gagnes un mois gratuit par ami (formule mensuelle) et ces récompenses :</p>
+        <p class="plus-referral-body" data-i18n="popup.referral.plusBody">Ton ami a 2,99 € offerts (1er mois gratuit, ou la formule à vie à 16 €). Toi, tu gagnes de l'argent et ces récompenses :</p>
         <ol class="referral-tiers" id="plus-referral-tiers"></ol>
       </section>
 
@@ -779,13 +779,29 @@
 
           <h3 class="settings-group-header" data-i18n="popup.referral.title">Parrainage</h3>
           <div class="referral" id="referral-block">
-            <p class="settings-description" data-i18n="popup.referral.body">Partage ton code : ton ami a son premier mois offert. Toi, tu gagnes un mois gratuit par ami (formule mensuelle) et des récompenses d'ambassadeur.</p>
+            <p class="settings-description" data-i18n="popup.referral.body">Partage ton code : ton ami a 2,99 € offerts. Toi, tu touches 1 € par mois tant qu'il reste abonné, ou 5 € d'un coup s'il prend la formule à vie, versés sur PayPal.</p>
             <div class="referral-row">
               <span class="referral-code" id="referral-code" hidden></span>
               <button class="button button-quiet" id="referral-copy" type="button" data-i18n="popup.referral.copy" hidden>Copier</button>
               <button class="button button-primary" id="referral-get" type="button" data-i18n="popup.referral.get">Obtenir mon code</button>
             </div>
             <p class="settings-description" id="referral-status" role="status"></p>
+            <div class="referral-earnings" id="referral-earnings" hidden>
+              <div class="referral-balance-row">
+                <span class="referral-balance-label" data-i18n="popup.referral.balance">À verser</span>
+                <b class="referral-balance" id="referral-balance"></b>
+              </div>
+              <p class="settings-description" id="referral-earned"></p>
+              <p class="settings-description" id="referral-payout-rule"></p>
+              <form class="referral-paypal" id="referral-paypal-form">
+                <label class="referral-paypal-label" for="referral-paypal" data-i18n="popup.referral.paypalLabel">Adresse PayPal</label>
+                <div class="referral-row">
+                  <input class="text-input" id="referral-paypal" type="email" autocomplete="email" spellcheck="false" maxlength="200" data-i18n-attr-placeholder="popup.referral.paypalPlaceholder" placeholder="toi@exemple.fr" />
+                  <button class="button button-quiet" type="submit" data-i18n="popup.referral.paypalSave">Enregistrer</button>
+                </div>
+                <p class="settings-description" id="referral-paypal-status" role="status"></p>
+              </form>
+            </div>
             <ol class="referral-tiers" id="referral-tiers"></ol>
           </div>
 

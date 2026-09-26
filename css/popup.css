@@ -1012,3 +1012,15 @@ body.is-settings .new-dot { background: var(--violet); box-shadow: 0 0 0 3px var
 .topbar.is-tight .tabs { gap: 11px; }
 .topbar.is-tight .stat-time { display: none; }
 .topbar.is-tighter .stat-points { display: none; }
+
+/* Gains du parrainage */
+.referral-tier--money { background: var(--lcd-soft); box-shadow: inset 0 0 0 1px var(--lcd-line); }
+.referral-earnings { display: grid; gap: 4px; margin: 4px 0 10px; padding: 12px; border-radius: 12px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2); }
+.referral-earnings .settings-description { margin: 0; }
+.referral-balance-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.referral-balance-label { color: var(--text-2); font-size: 12px; font-weight: 700; }
+.referral-balance { font-family: var(--display); font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+.referral-paypal { display: grid; gap: 2px; margin-top: 6px; }
+.referral-paypal-label { font-size: 12px; font-weight: 700; }
+.referral-paypal .referral-row { margin: 2px 0; flex-wrap: nowrap; }
+.referral-paypal .text-input { flex: 1; min-width: 0; }

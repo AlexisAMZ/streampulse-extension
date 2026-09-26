@@ -6,16 +6,17 @@
 import { t } from "./i18n.js";
 import { LICENSE_VERIFY_URL, PLUS_KEY } from "./plus.js";
 import { BADGE_FX, NAME_FX, fxLock, normalizeCosmetics, rankOf, visibleFx } from "./cosmetics-data.js";
+import { isPaypalAddress, normalizeEarnings, shouldRefreshEarnings } from "./referral-data.js";
 
 export const COSMETICS_KEY = "streamPulseCosmetics";
 const REFERRAL_CODE_KEY = "streamPulseReferralCode";
+const REFERRAL_EARNINGS_KEY = "streamPulseReferralEarnings";
 
 /** Paliers du parrainage (mêmes seuils que le serveur) ; les deux premiers débloquent un effet. */
 const REFERRAL_TIERS = [
   { count: 1, key: "popup.referral.tierName", fx: { kind: "name", value: "ambassador" } },
   { count: 3, key: "popup.referral.tierBadge", fx: { kind: "badge", value: "halo" } },
   { count: 5, key: "popup.referral.tierDevice" },
-  { count: 10, key: "popup.referral.tierGift" },
 ];
 
 /** Aperçus de l'écran StreamPulse+ : un échantillon lisible de ce qu'on obtient. */
@@ -34,6 +35,7 @@ let deps = { getRecord: () => null, isPlus: () => false, openPlus: () => {} };
 let cosmetics = { badgeFx: "", nameFx: "" };
 let chatName = "";
 let referralCode = "";
+let earnings = null;
 
 function access() {
   const record = deps.getRecord();
@@ -120,7 +122,10 @@ function initCosmeticsPickers() {
 
 /** Paliers avec l'aperçu animé de l'effet débloqué, cochés quand ils sont atteints. */
 function tierItems(count) {
-  return REFERRAL_TIERS.map((tier) => {
+  // Tuile « argent » en tête : c'est la récompense principale, pour chaque ami.
+  const money = node("li", "referral-tier referral-tier--money");
+  money.append(node("b", null, t("popup.referral.each")), node("span", null, t("popup.referral.tierMoney")));
+  return [money, ...REFERRAL_TIERS.map((tier) => {
     const item = node("li", count >= tier.count ? "referral-tier is-done" : "referral-tier");
     item.append(node("b", null, t("popup.referral.friends", { count: tier.count })));
     if (tier.fx) {
@@ -132,7 +137,24 @@ function tierItems(count) {
     }
     item.append(node("span", null, t(tier.key)));
     return item;
-  });
+  })];
+}
+
+const euros = (cents) => new Intl.NumberFormat(document.documentElement.lang || undefined, { style: "currency", currency: "EUR" }).format(cents / 100);
+
+/** Gains, seuil de versement et adresse PayPal (abonnés avec un code seulement). */
+function renderEarnings() {
+  const box = $("referral-earnings");
+  if (!box) return;
+  const visible = Boolean(referralCode && deps.isPlus() && earnings);
+  box.hidden = !visible;
+  if (!visible) return;
+  $("referral-balance").textContent = euros(earnings.balanceCents);
+  $("referral-earned").textContent = t("popup.referral.earned", { earned: euros(earnings.earnedCents), paid: euros(earnings.paidCents) });
+  $("referral-payout-rule").textContent = t("popup.referral.payoutRule", { min: euros(earnings.payoutMinCents) });
+  const input = $("referral-paypal");
+  if (document.activeElement !== input) input.value = earnings.paypal;
+  if (!earnings.paypal && !$("referral-paypal-status").dataset.busy) $("referral-paypal-status").textContent = t("popup.referral.paypalMissing");
 }
 
 function renderReferral() {
@@ -148,12 +170,14 @@ function renderReferral() {
   $("referral-get").textContent = t(current.plus ? "popup.referral.get" : "popup.plusMenu.discover");
   const status = $("referral-status");
   if (current.plus && count && !status.dataset.busy) status.textContent = t("popup.referral.count", { count });
+  renderEarnings();
 }
 
-async function fetchReferral() {
+/** Code, filleuls et gains. `quiet` : rafraîchissement en arrière-plan, sans message d'attente. */
+async function fetchReferral({ quiet = false } = {}) {
   const status = $("referral-status");
   status.dataset.busy = "1";
-  status.textContent = t("popup.referral.loading");
+  if (!quiet) status.textContent = t("popup.referral.loading");
   try {
     const record = deps.getRecord();
     const response = await fetch(LICENSE_VERIFY_URL, {
@@ -168,20 +192,63 @@ async function fetchReferral() {
     }
     if (!response.ok || !payload.code) throw new Error(payload.error || `HTTP ${response.status}`);
     referralCode = payload.code;
+    earnings = normalizeEarnings(payload);
     const referrals = Math.max(0, Number(payload.referrals) || 0);
     // La mise à jour de la licence redessine tout par chrome.storage.onChanged.
-    await chrome.storage.local.set({ [PLUS_KEY]: { ...deps.getRecord(), referrals }, [REFERRAL_CODE_KEY]: referralCode });
+    await chrome.storage.local.set({
+      [PLUS_KEY]: { ...deps.getRecord(), referrals },
+      [REFERRAL_CODE_KEY]: referralCode,
+      [REFERRAL_EARNINGS_KEY]: earnings,
+    });
     status.textContent = t("popup.referral.count", { count: referrals });
   } catch (error) {
     console.warn("[popup] code de parrainage indisponible :", error?.message || error);
-    status.textContent = t("popup.referral.error");
+    if (!quiet) status.textContent = t("popup.referral.error");
   } finally {
     delete status.dataset.busy;
     renderReferral();
   }
 }
 
+/** Enregistre l'adresse PayPal où verser les gains (vide : effacée). */
+async function savePaypal() {
+  const input = $("referral-paypal");
+  const status = $("referral-paypal-status");
+  const paypal = input.value.trim();
+  if (paypal && !isPaypalAddress(paypal)) {
+    status.textContent = t("popup.referral.paypalInvalid");
+    return;
+  }
+  status.dataset.busy = "1";
+  status.textContent = t("popup.referral.loading");
+  try {
+    const response = await fetch(LICENSE_VERIFY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "payout", key: deps.getRecord()?.licenseKey, paypal }),
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (response.status === 422) {
+      status.textContent = t("popup.referral.paypalInvalid");
+      return;
+    }
+    if (!response.ok || !payload.ok) throw new Error(payload.error || `HTTP ${response.status}`);
+    earnings = { ...earnings, paypal: payload.paypal };
+    await chrome.storage.local.set({ [REFERRAL_EARNINGS_KEY]: earnings });
+    status.textContent = t(payload.paypal ? "popup.referral.paypalSaved" : "popup.referral.paypalMissing");
+  } catch (error) {
+    console.warn("[popup] adresse PayPal non enregistrée :", error?.message || error);
+    status.textContent = t("popup.referral.error");
+  } finally {
+    delete status.dataset.busy;
+  }
+}
+
 function initReferralActions() {
+  $("referral-paypal-form")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    savePaypal();
+  });
   $("referral-get")?.addEventListener("click", () => (deps.isPlus() ? fetchReferral() : deps.openPlus()));
   $("referral-copy")?.addEventListener("click", async () => {
     await navigator.clipboard.writeText(referralCode).catch(() => {});
@@ -219,11 +286,14 @@ export function initIdentity({ getRecord, isPlus, openPlus, stored }) {
   deps = { getRecord, isPlus, openPlus };
   chatName = String(stored.userProfile?.displayName || stored.userProfile?.handle || "").slice(0, 25);
   referralCode = typeof stored[REFERRAL_CODE_KEY] === "string" ? stored[REFERRAL_CODE_KEY] : "";
+  earnings = stored[REFERRAL_EARNINGS_KEY] && typeof stored[REFERRAL_EARNINGS_KEY] === "object" ? stored[REFERRAL_EARNINGS_KEY] : null;
   cosmetics = normalizeCosmetics(stored[COSMETICS_KEY]);
   initCosmeticsPickers();
   initReferralActions();
   renderShowcase();
   renderIdentity();
+  // Les gains bougent lentement : un appel toutes les 6 heures au plus.
+  if (referralCode && isPlus() && shouldRefreshEarnings(earnings)) fetchReferral({ quiet: true });
 }
 
-export const IDENTITY_STORAGE_KEYS = [COSMETICS_KEY, REFERRAL_CODE_KEY, "userProfile"];
+export const IDENTITY_STORAGE_KEYS = [COSMETICS_KEY, REFERRAL_CODE_KEY, REFERRAL_EARNINGS_KEY, "userProfile"];

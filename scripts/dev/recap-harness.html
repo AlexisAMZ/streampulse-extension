@@ -1,0 +1,56 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Banc récap</title>
+<style>
+@font-face { font-family: "Unbounded"; font-weight: 400 900; src: url("/font/unbounded-latin-10.woff2"); unicode-range: U+0000-00FF, U+20AC; }
+@font-face { font-family: "Unbounded"; font-weight: 400 900; src: url("/font/unbounded-latin-ext-9.woff2"); unicode-range: U+0100-02BA; }
+@font-face { font-family: "Unbounded"; font-weight: 400 900; src: url("/font/unbounded-cyrillic-8.woff2"); unicode-range: U+0400-045F; }
+@font-face { font-family: "Onest"; font-weight: 100 900; src: url("/font/onest-latin-6.woff2"); unicode-range: U+0000-00FF, U+20AC; }
+@font-face { font-family: "Onest"; font-weight: 100 900; src: url("/font/onest-latin-ext-5.woff2"); unicode-range: U+0100-02BA; }
+@font-face { font-family: "Onest"; font-weight: 100 900; src: url("/font/onest-cyrillic-4.woff2"); unicode-range: U+0400-045F; }
+body { margin: 0; background: #000; }
+canvas { display: block; }
+</style></head>
+<body><canvas id="c"></canvas>
+<script type="module">
+const ROOT = "/";
+const { drawRecapCard, CARD_WIDTH, CARD_HEIGHT } = await import(ROOT + "js/recap-card.js");
+const { drawRecapStory, STORY_WIDTH, STORY_HEIGHT } = await import(ROOT + "js/recap-story.js");
+const { translations } = await import(ROOT + "i18n/translations.js");
+const q = new URLSearchParams(location.search);
+const lang = q.get("lang") || "fr";
+const extreme = q.get("case") === "extreme";
+const c = translations[lang].recap.card;
+const H = 3600;
+const top = extreme
+  ? [
+      ["xXx_LeGrandStreamerDuDimanche_xXx", 1207 * H + 8 * 60], ["pauleta_twitch", 941 * H], ["ravusssssssssssssss", 802 * H],
+      ["minos", 399 * H], ["anyme023", 250 * H], ["domingo", 125 * H], ["mourad2twitch", 99 * H],
+    ]
+  : [["pauleta_twitch", 42 * H + 53 * 60], ["ravusssss", 41 * H + 19 * 60], ["minos", 39 * H + 15 * 60], ["anyme023", 25 * H + 25 * 60], ["domingo", 12 * H + 34 * 60], ["mourad2twitch", 5 * H + 36 * 60], ["jokaa45", 4 * H + 37 * 60]];
+const totalSeconds = extreme ? 12345 * H + 59 * 60 : 207 * H + 8 * 60;
+const model = {
+  totalSeconds,
+  streamerCount: extreme ? 1234 : 83,
+  top: top.map(([channel, watchSeconds], i) => ({ channel, watchSeconds, platform: i === 2 ? "kick" : "twitch" })),
+  platforms: { twitch: totalSeconds * 0.8, kick: totalSeconds * 0.2 },
+  points: { total: extreme ? 12345678 : 820, label: extreme ? "+12 345 678" : "+820" },
+  noPoints: q.get("points") === "0",
+  labels: {
+    eyebrow: c.eyebrow,
+    heading: extreme ? c.heading.replace("{{name}}", "Maximilian-Alexander") : c.headingAnon,
+    period: extreme ? "Wrapped 2026 · 1 janvier – 31 décembre" : "Wrapped 2026",
+    statTime: c.statTime, statChannels: c.statChannels, statTop: c.statTop, statPlatforms: c.statPlatforms, topTitle: c.topTitle, statPoints: c.statPointsSince.replace("{{date}}", "26 sept."),
+  },
+};
+const logo = new Image();
+logo.src = ROOT + "images/photos/logosp.png";
+await logo.decode().catch(() => {});
+await Promise.all([document.fonts.load('800 48px "Unbounded"'), document.fonts.load('600 24px "Onest"'), document.fonts.load('800 48px "Unbounded"', "Мои"), document.fonts.load('600 24px "Onest"', "Мои")]);
+const story = q.get("fmt") === "story";
+if (model.noPoints) model.points = null;
+const canvas = document.getElementById("c");
+canvas.width = story ? STORY_WIDTH : CARD_WIDTH;
+canvas.height = story ? STORY_HEIGHT : CARD_HEIGHT;
+(story ? drawRecapStory : drawRecapCard)(canvas.getContext("2d"), model, { avatars: new Map(), logo });
+document.title = "ok";
+</script></body></html>

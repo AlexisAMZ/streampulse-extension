@@ -195,22 +195,17 @@ export function drawEyebrow(ctx, text, x, y, size) {
 }
 
 /** Logo + nom de marque + url. Renvoie la largeur occupee. */
-export function drawBrand(ctx, logo, x, y, { size = 44, nameSize = 30, urlSize = 20, align = "left", width = 0 } = {}) {
+export function drawBrand(ctx, logo, x, y, { size = 44, nameSize = 30, align = "left", width = 0 } = {}) {
+  // Logo + adresse du site : le nom StreamPulse n'est ecrit qu'une fois sur la carte.
+  const name = "streampulse.fr";
   setFont(ctx, 700, nameSize, DISPLAY);
-  const nameWidth = ctx.measureText("StreamPulse").width;
-  setFont(ctx, 400, urlSize);
-  const urlWidth = ctx.measureText("streampulse.fr").width;
+  const nameWidth = ctx.measureText(name).width;
   const gap = 16;
-  const total = (logo ? size + gap : 0) + nameWidth + gap + urlWidth;
+  const total = (logo ? size + gap : 0) + nameWidth;
   const startX = align === "center" ? x + (width - total) / 2 : x;
 
   if (logo) ctx.drawImage(logo, startX, y - size * 0.78, size, size);
-  const textX = startX + (logo ? size + gap : 0);
   ctx.fillStyle = INK;
-  setFont(ctx, 700, nameSize, DISPLAY);
-  ctx.fillText("StreamPulse", textX, y);
-  ctx.fillStyle = FAINT;
-  setFont(ctx, 400, urlSize);
-  ctx.fillText("streampulse.fr", textX + nameWidth + gap, y);
+  ctx.fillText(name, startX + (logo ? size + gap : 0), y);
   return total;
 }

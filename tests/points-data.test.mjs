@@ -200,3 +200,20 @@ test("stateFrom et toStorage font l'aller-retour, et stateFrom répare une forme
   assert.deepEqual(stateFrom(toStorage(state)), state);
   assert.deepEqual(stateFrom({ [POINTS_DAILY_KEY]: [] }), emptyState());
 });
+
+test("points d'avant le suivi par jour, repris du journal d'événements", async () => {
+  const { pointsFromLogs } = await import("../js/points-data.js");
+  const at = (y, m, d, h = 12) => new Date(y, m - 1, d, h).getTime();
+  const logs = [
+    { type: "points", value: 50, timestamp: at(2026, 9, 26) }, // déjà dans le suivi par jour
+    { type: "points", value: 50, timestamp: at(2026, 9, 25) },
+    { type: "points", value: 60, timestamp: at(2026, 9, 24) },
+    { type: "drop", value: 1, timestamp: at(2026, 9, 24) },
+    { type: "points", value: 50, timestamp: at(2026, 9, 10) }, // hors période
+    { type: "points", value: "x", timestamp: at(2026, 9, 24) },
+    null,
+  ];
+  assert.deepEqual(pointsFromLogs(logs, { fromKey: "2026-09-20", beforeKey: "2026-09-26" }), { points: 110, firstDay: "2026-09-24" });
+  assert.deepEqual(pointsFromLogs(logs, { fromKey: "2026-09-26", beforeKey: "2026-09-26" }), { points: 0, firstDay: "" });
+  assert.deepEqual(pointsFromLogs(undefined, { fromKey: "2026-09-01", beforeKey: "" }), { points: 0, firstDay: "" });
+});

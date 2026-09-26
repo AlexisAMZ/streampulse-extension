@@ -41,7 +41,7 @@ function drawHeader(ctx, model) {
   drawEyebrow(ctx, eyebrow, cx, SAFE_TOP, 26);
 
   ctx.fillStyle = INK;
-  setFont(ctx, 800, 64, DISPLAY);
+  setFittedFont(ctx, labels.heading, CONTENT_W, 800, 64, DISPLAY);
   ctx.fillText(fitText(ctx, labels.heading, CONTENT_W), cx, SAFE_TOP + 92);
 
   ctx.fillStyle = MUTED;
@@ -51,9 +51,10 @@ function drawHeader(ctx, model) {
   ctx.fillStyle = FAINT;
   setFont(ctx, 700, 22, MONO);
   ctx.fillText(labels.statTime.toUpperCase(), cx, SAFE_TOP + 252);
+  const totalText = formatDuration(model.totalSeconds);
   ctx.fillStyle = INK;
-  setFont(ctx, 800, 150, DISPLAY);
-  ctx.fillText(formatDuration(model.totalSeconds), cx, SAFE_TOP + 394);
+  setFittedFont(ctx, totalText, CONTENT_W, 800, 150, DISPLAY);
+  ctx.fillText(totalText, cx, SAFE_TOP + 394);
 
   ctx.textAlign = "left";
 }
@@ -78,7 +79,7 @@ function drawTiles(ctx, model, top) {
     setFont(ctx, 700, 20, MONO);
     ctx.fillText(fitText(ctx, tile.label.toUpperCase(), w - 56), x + 28, top + 50);
     ctx.fillStyle = tile.color || INK;
-    setFittedFont(ctx, tile.value, w - 56, 800, 54, DISPLAY);
+    setFittedFont(ctx, tile.value, w - 56, 800, 54, DISPLAY, 26);
     ctx.fillText(fitText(ctx, tile.value, w - 56), x + 28, top + 118);
     x += w + gap;
   });
@@ -147,7 +148,6 @@ export function drawRecapStory(ctx, model, assets = {}) {
   drawBrand(ctx, assets.logo, 0, y + 100, {
     size: 52,
     nameSize: 36,
-    urlSize: 24,
     align: "center",
     width: STORY_WIDTH,
   });

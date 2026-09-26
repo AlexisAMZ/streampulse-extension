@@ -5,12 +5,15 @@ import { listPeriods, collectEntries, buildRecap, buildTimeline, formatDuration,
 import { PLUS_KEY, isPlusActive, plusPageUrl } from "./plus.js";
 import { drawRecapCard, CARD_WIDTH, CARD_HEIGHT } from "./recap-card.js";
 import { drawRecapStory, STORY_WIDTH, STORY_HEIGHT } from "./recap-story.js";
-import { POINTS_KEYS, REASON_LABEL_KEYS, channelName, dayKeysForPeriod, daySeries, stateFrom, summarizeDays } from "./points-data.js";
+import { POINTS_KEYS, REASON_LABEL_KEYS, channelName, dayKeysForPeriod, daySeries, pointsFromLogs, stateFrom, summarizeDays } from "./points-data.js";
 
 const WATCH_TIME_KEY = "betaWatchTimeData";
 const WATCH_TIME_DAILY_KEY = "streamPulseWatchTimeDaily";
 const PREFERENCES_KEY = "betaGeneralPreferences";
+const STATS_KEY = "betaGeneralStats";
+const EVENT_LOGS_KEY = "betaEventLogs";
 const TOP_LIMIT = 7;
+const EXPORT_SCALE = 2;
 
 // Les deux formats partagent le meme modele : seule la mise en page change.
 const FORMATS = {
@@ -95,6 +98,46 @@ function pointsFor(period) {
   return summary.total > 0 ? summary : null;
 }
 
+/** Premier jour (AAAA-MM-JJ) d'une periode du recap. */
+function periodStartKey(period) {
+  if (period.kind === "rolling") return rollingDayKeys(period.days).at(-1);
+  if (period.kind === "year") return `${period.year}-01-01`;
+  return `${period.month}-01`;
+}
+
+/**
+ * Points affiches sur l'image, pour de vrai sur la periode :
+ *   - le suivi par jour (tous les gains, depuis sa mise en service) ;
+ *   - avant lui, les coffres dates du journal d'evenements (ses 100 dernieres entrees).
+ * Le Wrapped annuel reprend en plus le compteur tenu depuis l'installation
+ * quand il est plus grand : un total sur l'annee ne repart pas de zero.
+ * `since` : premier jour couvert, quand il tombe apres le debut de la periode.
+ */
+function cardPoints(period, points) {
+  const startKey = periodStartKey(period);
+  const firstTracked = Object.keys(stored.points?.daily || {}).sort()[0] || "";
+  const backfill = pointsFromLogs(stored.eventLogs, { fromKey: startKey, beforeKey: firstTracked });
+  const dated = (points?.total || 0) + backfill.points;
+  const total = period.kind === "year" ? Math.max(dated, stored.lifetimePoints) : dated;
+  if (total <= 0) return null;
+  const covered = backfill.firstDay || firstTracked;
+  return {
+    total,
+    label: `+${formatPoints(total)}`,
+    lifetime: total > dated,
+    since: covered && covered > startKey ? covered : "",
+  };
+}
+
+/** Libelle de la tuile des points : total depuis l'installation, ou « depuis le … » si la periode n'est couverte qu'en partie. */
+function pointsLabel(points) {
+  if (points?.lifetime) return t("recap.card.statPointsTotal");
+  if (!points?.since) return t("recap.card.statPoints");
+  const [y, m, d] = points.since.split("-").map(Number);
+  const date = new Date(y, m - 1, d).toLocaleDateString(locale(), { day: "numeric", month: "short" });
+  return t("recap.card.statPointsSince", { date });
+}
+
 function monthLabel(month) {
   const [y, m] = month.split("-").map(Number);
   const label = new Date(y, m - 1, 1).toLocaleDateString(locale(), { month: "long", year: "numeric" });
@@ -134,7 +177,7 @@ function findPeriod(id) {
   return periodsFor(stored).find((p) => p.id === id);
 }
 
-function buildLabels(period) {
+function buildLabels(period, points) {
   return {
     eyebrow: t("recap.card.eyebrow"),
     heading: stored.pseudo ? t("recap.card.heading", { name: stored.pseudo }) : t("recap.card.headingAnon"),
@@ -144,7 +187,7 @@ function buildLabels(period) {
     statTop: t("recap.card.statTop"),
     statPlatforms: t("recap.card.statPlatforms"),
     topTitle: t("recap.card.topTitle"),
-    statPoints: t("recap.card.statPoints"),
+    statPoints: pointsLabel(points),
   };
 }
 
@@ -164,10 +207,14 @@ function populatePeriods() {
 function draw() {
   if (!currentRecap) return;
   const format = FORMATS[currentFormat];
-  canvas.width = format.width;
-  canvas.height = format.height;
+  // Dessin au double de la taille : l'image exportee reste nette une fois
+  // agrandie (X, Discord, story). L'ecran la reduit a sa place avec le CSS.
+  canvas.width = format.width * EXPORT_SCALE;
+  canvas.height = format.height * EXPORT_SCALE;
   canvas.dataset.format = currentFormat;
-  format.draw(canvas.getContext("2d"), currentRecap, currentAssets);
+  const ctx = canvas.getContext("2d");
+  ctx.scale(EXPORT_SCALE, EXPORT_SCALE);
+  format.draw(ctx, currentRecap, currentAssets);
   // Équivalent textuel du canvas pour les lecteurs d'écran (role="img").
   const topChannel = currentRecap.top?.[0]?.channel;
   canvas.setAttribute(
@@ -199,13 +246,14 @@ async function renderPeriod() {
     return;
   }
 
+  const shownPoints = cardPoints(period, points);
   const avatars = await loadAvatars(recap.top);
   if (token !== renderToken) return; // une autre periode a ete choisie entre-temps
 
   currentRecap = {
     ...recap,
-    points: points ? { total: points.total, label: `+${formatPoints(points.total)}` } : null,
-    labels: buildLabels(period),
+    points: shownPoints,
+    labels: buildLabels(period, shownPoints),
     periodTitle: periodTitle(period),
   };
   currentAssets = { ...currentAssets, avatars };
@@ -375,7 +423,7 @@ function openShareComposer() {
 }
 
 async function readStorage() {
-  const data = await chrome.storage.local.get([WATCH_TIME_KEY, WATCH_TIME_DAILY_KEY, PREFERENCES_KEY, PLUS_KEY, ...POINTS_KEYS]);
+  const data = await chrome.storage.local.get([WATCH_TIME_KEY, WATCH_TIME_DAILY_KEY, PREFERENCES_KEY, PLUS_KEY, STATS_KEY, EVENT_LOGS_KEY, ...POINTS_KEYS]);
   const prefs = data[PREFERENCES_KEY] || {};
   return {
     monthly: data[WATCH_TIME_KEY] || {},
@@ -383,6 +431,9 @@ async function readStorage() {
     pseudo: typeof prefs.pseudo === "string" ? prefs.pseudo.trim().slice(0, 40) : "",
     plus: isPlusActive(data[PLUS_KEY]),
     points: stateFrom(data),
+    // Compteur historique des points recuperes, depuis l'installation (sans date).
+    lifetimePoints: Math.max(0, Number(data[STATS_KEY]?.channelPointsClaimed) || 0),
+    eventLogs: Array.isArray(data[EVENT_LOGS_KEY]) ? data[EVENT_LOGS_KEY] : [],
   };
 }
 

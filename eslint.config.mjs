@@ -29,6 +29,7 @@ const ES_MODULES = [
   "js/smart-alerts.js",
   "js/recap-card.js",
   "js/recap-data.js",
+  "js/referral-data.js",
   "js/predictions-data.js",
   "js/points-bonus.js",
   "js/points-data.js",
