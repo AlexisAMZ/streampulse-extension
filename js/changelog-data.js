@@ -67,6 +67,22 @@ export const RELEASES = [
       {
         type: "new",
         text: {
+          fr: "Plus besoin d'ouvrir Twitch : StreamPulse relit tes Drops toutes les 10 minutes et récupère ceux qui sont prêts, même si tu regardes sur ton téléphone ou ta télé. Nouvelle section Badges et récompenses : les campagnes de badges de chat en cours (Pokémon, SUBtember…), avec leurs conditions et leur date de fin.",
+          en: "No need to open Twitch anymore: StreamPulse checks your Drops every 10 minutes and claims the ready ones, even when you watch on your phone or TV. New Badges and rewards section: running chat badge campaigns (Pokémon, SUBtember…), with their requirements and end date.",
+          es: "Ya no hace falta abrir Twitch: StreamPulse revisa tus Drops cada 10 minutos y reclama los que están listos, incluso si miras en el móvil o la tele. Nueva sección Insignias y recompensas: las campañas de insignias de chat en curso (Pokémon, SUBtember…), con sus condiciones y fecha de fin.",
+          "pt-BR": "Não é mais preciso abrir a Twitch: o StreamPulse verifica seus Drops a cada 10 minutos e resgata os prontos, mesmo se você assiste no celular ou na TV. Nova seção Emblemas e recompensas: as campanhas de emblemas de chat em andamento (Pokémon, SUBtember…), com condições e data de término.",
+          de: "Twitch muss nicht mehr offen sein: StreamPulse prüft deine Drops alle 10 Minuten und holt bereite ab, auch wenn du am Handy oder Fernseher schaust. Neuer Bereich Abzeichen und Belohnungen: laufende Chat-Abzeichen-Kampagnen (Pokémon, SUBtember…) mit Bedingungen und Enddatum.",
+          it: "Non serve più aprire Twitch: StreamPulse controlla i tuoi Drops ogni 10 minuti e riscatta quelli pronti, anche se guardi dal telefono o dalla TV. Nuova sezione Badge e ricompense: le campagne di badge della chat in corso (Pokémon, SUBtember…), con condizioni e data di fine.",
+          pl: "Nie trzeba już otwierać Twitcha: StreamPulse co 10 minut sprawdza twoje Dropsy i odbiera gotowe, nawet gdy oglądasz na telefonie lub telewizorze. Nowa sekcja Odznaki i nagrody: trwające kampanie odznak czatu (Pokémon, SUBtember…) z warunkami i datą końca.",
+          tr: "Artık Twitch'i açmana gerek yok: StreamPulse Drop'larını 10 dakikada bir kontrol eder ve hazır olanları alır, telefonda ya da TV'de izlesen bile. Yeni Rozetler ve ödüller bölümü: devam eden sohbet rozeti kampanyaları (Pokémon, SUBtember…), koşulları ve bitiş tarihiyle.",
+          ru: "Больше не нужно открывать Twitch: StreamPulse проверяет ваши Drops каждые 10 минут и получает готовые, даже если вы смотрите с телефона или телевизора. Новый раздел «Значки и награды»: текущие кампании значков чата (Pokémon, SUBtember…) с условиями и датой окончания.",
+          ja: "Twitch を開く必要はもうありません。StreamPulse が 10 分ごとにドロップを確認し、スマホやテレビで視聴していても受け取り可能なものを受け取ります。新セクション「バッジと報酬」：開催中のチャットバッジキャンペーン（ポケモン、SUBtember など）を条件と終了日付きで表示します。",
+          ko: "이제 Twitch를 열 필요가 없습니다. StreamPulse가 10분마다 드롭을 확인하고, 휴대폰이나 TV로 시청해도 준비된 드롭을 수령합니다. 새 배지와 보상 섹션: 진행 중인 채팅 배지 캠페인(포켓몬, SUBtember 등)을 조건과 종료일과 함께 보여줍니다.",
+        },
+      },
+      {
+        type: "new",
+        text: {
           fr: "Nouveau panneau Drops dans les Réglages : tes Drops Twitch en cours avec leur progression et le temps restant, ceux prêts à récupérer, et les campagnes de Twitch avec des filtres (nouvelles, finissent bientôt, à venir), celles de tes jeux en premier. Avec StreamPulse+, l'historique de tous tes Drops obtenus, mois par mois, avec le jeu et la chaîne.",
           en: "New Drops panel in Settings: your Twitch Drops in progress with their progress and time left, the ones ready to claim, and Twitch's campaigns with filters (new, ending soon, upcoming), your games first. With StreamPulse+, the history of every Drop you earned, month by month, with the game and the channel.",
           es: "Nuevo panel Drops en los Ajustes: tus Drops de Twitch en curso con su progreso y el tiempo restante, los que están listos para reclamar y las campañas de Twitch con filtros (nuevas, terminan pronto, próximas), primero las de tus juegos. Con StreamPulse+, el historial de todos tus Drops obtenidos, mes a mes, con el juego y el canal.",
