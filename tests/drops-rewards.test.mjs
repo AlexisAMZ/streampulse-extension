@@ -86,3 +86,24 @@ test("gameFromUrl lit la catégorie du lien d'un badge", () => {
   assert.equal(gameFromUrl("https://www.twitch.tv/directory/category/control-resonant"), "control resonant");
   assert.equal(gameFromUrl(null), "");
 });
+
+import { badgeCampaignFor, normalizeCampaigns } from "../js/drops-data.js";
+
+test("un badge est relié à la campagne de Drops en cours de son jeu, qui donne sa vraie date de fin", () => {
+  const now = Date.parse("2026-09-26T20:00:00Z");
+  const campaigns = normalizeCampaigns([
+    { id: "rm", name: "REMATCH", status: "ACTIVE", startAt: "2026-09-23T23:01:00Z", endAt: "2026-10-21T22:58:00Z", game: { displayName: "REMATCH" }, owner: { name: "Twitch Gaming" } },
+    { id: "dd", name: "D&D", status: "ACTIVE", startAt: "2026-09-24T01:15:00Z", endAt: "2026-10-21T06:58:00Z", game: { displayName: "Dungeons & Dragons" }, owner: { name: "Twitch Gaming" } },
+  ]);
+  const raw = { badges: [
+    { setID: "rematch-blue-lock", title: "Rematch Blue Lock", description: "watching a streamer in the Rematch category for 30 minutes" },
+    { setID: "d20", title: "d20", description: "watching Dungeon Masters on Twitch.", clickURL: "https://www.twitch.tv/directory/category/dungeons-&-dragons" },
+    { setID: "old", title: "Old", description: "nothing to do with it" },
+  ], owned: [] };
+  const { state } = mergeBadges({ updatedAt: 0, syncedAt: 0, badges: [], owned: [] }, raw, now);
+  assert.equal(badgeCampaignFor(state.badges[0], campaigns, now).id, "rm");
+  assert.equal(badgeCampaignFor(state.badges[1], campaigns, now).id, "dd");
+  const available = catalogBadges(state, "available", "", { now, campaigns, names: new Set() });
+  assert.deepEqual(available.map((b) => b.id).sort(), ["d20", "rematch-blue-lock"]);
+  assert.equal(available.find((b) => b.id === "d20").campaign.endsAt, Date.parse("2026-10-21T06:58:00Z"));
+});

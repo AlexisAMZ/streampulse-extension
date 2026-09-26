@@ -355,10 +355,11 @@ function renderRewards(now) {
 
 function badgeRow(badge) {
   const item = el("li");
-  const row = el(badge.url ? "button" : "div", "camp-row badge-row");
-  if (badge.url) {
+  const url = badge.campaign ? campaignUrl(badge.campaign.id) : badge.url;
+  const row = el(url ? "button" : "div", "camp-row badge-row");
+  if (url) {
     row.type = "button";
-    row.dataset.url = badge.url;
+    row.dataset.url = url;
   }
   const main = el("span", "camp-main");
   main.append(el("b", null, badge.title), el("small", "badge-desc", badge.description));
@@ -366,7 +367,9 @@ function badgeRow(badge) {
   const side = el("span", "camp-side");
   if (badge.available && !badge.owned) side.append(el("span", "camp-when is-new", t("popup.drops.badgeAvailable")));
   side.append(el("span", badge.owned ? "drops-tag" : badge.paid ? "camp-badge" : "camp-when is-new", t(badge.owned ? "popup.drops.badgeOwned" : badge.paid ? "popup.drops.badgePaid" : "popup.drops.badgeFree")));
-  if (badge.firstSeen) side.append(el("span", "camp-when", shortDate(badge.firstSeen)));
+  // Relié à une campagne de Drops : sa vraie date de fin, et un lien vers elle.
+  if (badge.campaign?.endsAt) side.append(el("span", isEndingSoon(badge.campaign, Date.now()) ? "camp-when is-soon" : "camp-when", t("popup.drops.endsIn", { time: spanLabel(badge.campaign.endsAt - Date.now()) })));
+  else if (badge.firstSeen) side.append(el("span", "camp-when", shortDate(badge.firstSeen)));
   row.append(thumb(badge.image, "drop-img is-small"), main, side);
   item.append(row);
   return item;
@@ -388,7 +391,7 @@ function renderBadges(now) {
 
 function renderCatalog() {
   if (!$("badges-catalog")) return;
-  const context = { now: Date.now(), names: activeNames({ rewards: rewards.rewards, campaigns: campaigns.campaigns, drops: progress.drops }) };
+  const context = { now: Date.now(), campaigns: campaigns.campaigns, names: activeNames({ rewards: rewards.rewards, campaigns: campaigns.campaigns, drops: progress.drops }) };
   const counts = countBadges(badges, context);
   document.querySelectorAll("#badges-filters [data-filter]").forEach((button) => {
     const active = button.dataset.filter === badgeFilter;

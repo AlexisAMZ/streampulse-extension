@@ -591,6 +591,28 @@ const BADGE_TESTS = {
  * Catalogue complet : filtre, recherche dans le nom et la description, les
  * plus récemment apparus d'abord, puis par ordre alphabétique.
  */
+/**
+ * Campagne de Drops en cours qui distribue un badge. Les badges d'événement de
+ * Twitch sont des campagnes de Drops (souvent de « Twitch Gaming ») dont la
+ * récompense est un badge : elles portent les vraies dates. On les relie par
+ * le jeu du lien du badge, sinon par le jeu cité dans sa description.
+ */
+export function badgeCampaignFor(badge, campaigns, now) {
+  const game = fold(badge.game).trim();
+  const text = fold(`${badge.title} ${badge.description}`);
+  let best = null;
+  for (const campaign of campaigns) {
+    if (!isActiveCampaign(campaign, now)) continue;
+    const name = fold(campaign.game).trim();
+    if (name.length < 4) continue;
+    const exact = campaign.badgeOnly !== false && game && game === name;
+    if (!exact && !text.includes(name)) continue;
+    const score = (exact ? 2 : 1) + (/twitch gaming/i.test(campaign.owner) ? 1 : 0);
+    if (!best || score > best.score) best = { campaign, score };
+  }
+  return best?.campaign || null;
+}
+
 export function catalogBadges(state, filterId = "all", query = "", context = {}) {
   const owned = new Set(state.owned);
   const now = context.now ?? Date.now();
@@ -599,14 +621,18 @@ export function catalogBadges(state, filterId = "all", query = "", context = {})
   const year = new Date(now).getFullYear();
   // Une année passée dans la description (« 2025 ») : l'événement est fini.
   const pastYear = (badge) => (fold(badge.description).match(/\b20\d\d\b/g) || []).some((value) => Number(value) < year);
+  const campaigns = context.campaigns || [];
   const isAvailable = (badge) =>
+    Boolean(badge.campaign) ||
     titles.has(fold(badge.title).trim()) ||
     (badge.firstSeen > 0 && now - badge.firstSeen <= NEW_BADGE_MS) ||
     (!pastYear(badge) && names.some((name) => fold(badge.description).includes(name) || (badge.game && fold(badge.game) === name)));
   const needle = String(query || "").trim().toLowerCase();
   const test = BADGE_TESTS[filterId] || BADGE_TESTS.all;
   return state.badges
-    .map((badge) => ({ ...badge, owned: owned.has(badge.id), paid: isPaidBadge(badge), available: isAvailable(badge) }))
+    .map((badge) => ({ ...badge, owned: owned.has(badge.id), paid: isPaidBadge(badge) }))
+    .map((badge) => ({ ...badge, campaign: pastYear(badge) ? null : badgeCampaignFor(badge, campaigns, now) }))
+    .map((badge) => ({ ...badge, available: isAvailable(badge) }))
     .filter((badge) => test(badge) && (!needle || `${badge.title} ${badge.description}`.toLowerCase().includes(needle)))
     .sort((a, b) => Number(b.available) - Number(a.available) || (b.firstSeen || 0) - (a.firstSeen || 0) || a.title.localeCompare(b.title));
 }
