@@ -6,6 +6,7 @@ import { t, getCurrentLanguage } from "./i18n.js";
 import { thankPlusSubscriber } from "./plus-thanks.js";
 import { initPoints } from "./popup-points.js";
 import { initDrops } from "./popup-drops.js";
+import { initLayout } from "./popup-layout.js";
 import { HISTORY_KEY, formatClock, selectMissed, summarize } from "./history-data.js";
 import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalizePredictionRule, summarize as summarizePredictions } from "./predictions-data.js";
 import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
@@ -792,6 +793,7 @@ export async function initFeatures() {
   renderPlus();
   initPoints({ isPlus: plusActive, onPlusChange: (listener) => plusListeners.add(listener), openPlus })
     .catch((error) => console.warn("[popup] points init failed:", error));
+  initLayout().catch((error) => console.warn("[popup] layout init failed:", error));
   initDrops({ isPlus: plusActive, onPlusChange: (listener) => plusListeners.add(listener), openPlus })
     .catch((error) => console.warn("[popup] drops init failed:", error));
 

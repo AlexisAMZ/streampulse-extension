@@ -491,6 +491,15 @@ export const translations = {
         "trackingTitle": "Suivre les Drops",
         "trackingBody": "Progression et récupération même sans onglet Twitch ouvert. La liste des campagnes se met à jour quand tu passes sur Twitch."
       },
+      "layout": {
+        "title": "Disposition",
+        "description": "Choisis l'ordre des onglets et des rubriques, et masque ceux dont tu ne te sers pas.",
+        "tabs": "Barre du haut",
+        "menu": "Rubriques des Réglages",
+        "reset": "Rétablir l'ordre d'origine",
+        "moveUp": "Monter {{name}}",
+        "moveDown": "Descendre {{name}}"
+      },
       "osd": {
         "tabsLabel": "Vues du popup",
         "tabDirect": "Direct",
@@ -1517,6 +1526,15 @@ export const translations = {
         "lockedBody": "The history of every Drop you earned, month by month, with the game and the channel. StreamPulse+ only.",
         "trackingTitle": "Track Drops",
         "trackingBody": "Progress and claiming even without a Twitch tab open. The campaign list updates when you visit Twitch."
+      },
+      "layout": {
+        "title": "Layout",
+        "description": "Choose the order of tabs and sections, and hide the ones you don't use.",
+        "tabs": "Top bar",
+        "menu": "Settings sections",
+        "reset": "Restore the original order",
+        "moveUp": "Move {{name}} up",
+        "moveDown": "Move {{name}} down"
       },
       "osd": {
         "tabsLabel": "Popup views",
@@ -2545,6 +2563,15 @@ export const translations = {
         "trackingTitle": "Seguir los Drops",
         "trackingBody": "Progreso y reclamo incluso sin una pestaña de Twitch abierta. La lista de campañas se actualiza cuando visitas Twitch."
       },
+      "layout": {
+        "title": "Disposición",
+        "description": "Elige el orden de las pestañas y secciones, y oculta las que no uses.",
+        "tabs": "Barra superior",
+        "menu": "Secciones de Ajustes",
+        "reset": "Restablecer el orden original",
+        "moveUp": "Subir {{name}}",
+        "moveDown": "Bajar {{name}}"
+      },
       "osd": {
         "tabsLabel": "Popup views",
         "tabDirect": "Live",
@@ -3558,6 +3585,15 @@ export const translations = {
         "lockedBody": "O histórico de todos os Drops obtidos, mês a mês, com o jogo e o canal. Exclusivo do StreamPulse+.",
         "trackingTitle": "Acompanhar os Drops",
         "trackingBody": "Progresso e resgate mesmo sem uma aba da Twitch aberta. A lista de campanhas é atualizada quando você visita a Twitch."
+      },
+      "layout": {
+        "title": "Disposição",
+        "description": "Escolha a ordem das abas e seções e oculte as que você não usa.",
+        "tabs": "Barra superior",
+        "menu": "Seções das Configurações",
+        "reset": "Restaurar a ordem original",
+        "moveUp": "Subir {{name}}",
+        "moveDown": "Descer {{name}}"
       },
       "osd": {
         "tabsLabel": "Popup views",
@@ -4580,6 +4616,15 @@ export const translations = {
         "lockedBody": "Der Verlauf aller erhaltenen Drops, Monat für Monat, mit Spiel und Kanal. Nur mit StreamPulse+.",
         "trackingTitle": "Drops verfolgen",
         "trackingBody": "Fortschritt und Abholen auch ohne offenen Twitch-Tab. Die Kampagnenliste wird aktualisiert, wenn du Twitch besuchst."
+      },
+      "layout": {
+        "title": "Anordnung",
+        "description": "Wähle die Reihenfolge der Tabs und Bereiche und blende nicht genutzte aus.",
+        "tabs": "Obere Leiste",
+        "menu": "Bereiche der Einstellungen",
+        "reset": "Ursprüngliche Reihenfolge",
+        "moveUp": "{{name}} nach oben",
+        "moveDown": "{{name}} nach unten"
       },
       "osd": {
         "tabsLabel": "Popup views",
@@ -5608,6 +5653,15 @@ export const translations = {
         "trackingTitle": "Segui i Drops",
         "trackingBody": "Progressi e riscatto anche senza una scheda di Twitch aperta. L'elenco delle campagne si aggiorna quando visiti Twitch."
       },
+      "layout": {
+        "title": "Disposizione",
+        "description": "Scegli l'ordine di schede e sezioni e nascondi quelle che non usi.",
+        "tabs": "Barra superiore",
+        "menu": "Sezioni delle Impostazioni",
+        "reset": "Ripristina l'ordine originale",
+        "moveUp": "Sposta su {{name}}",
+        "moveDown": "Sposta giù {{name}}"
+      },
       "osd": {
         "tabsLabel": "Popup views",
         "tabDirect": "Live",
@@ -6634,6 +6688,15 @@ export const translations = {
         "lockedBody": "Historia wszystkich zdobytych Dropsów, miesiąc po miesiącu, z grą i kanałem. Tylko w StreamPulse+.",
         "trackingTitle": "Śledź Dropsy",
         "trackingBody": "Postęp i odbieranie nawet bez otwartej karty Twitcha. Lista kampanii odświeża się, gdy odwiedzasz Twitcha."
+      },
+      "layout": {
+        "title": "Układ",
+        "description": "Wybierz kolejność kart i sekcji oraz ukryj te, których nie używasz.",
+        "tabs": "Górny pasek",
+        "menu": "Sekcje Ustawień",
+        "reset": "Przywróć pierwotną kolejność",
+        "moveUp": "Przesuń w górę: {{name}}",
+        "moveDown": "Przesuń w dół: {{name}}"
       },
       "osd": {
         "tabsLabel": "Popup views",
@@ -7662,6 +7725,15 @@ export const translations = {
         "trackingTitle": "Drops'u takip et",
         "trackingBody": "Twitch sekmesi açık olmasa bile ilerleme ve alma. Kampanya listesi Twitch'e girdiğinde güncellenir."
       },
+      "layout": {
+        "title": "Düzen",
+        "description": "Sekmelerin ve bölümlerin sırasını seç, kullanmadıklarını gizle.",
+        "tabs": "Üst çubuk",
+        "menu": "Ayarlar bölümleri",
+        "reset": "Özgün sırayı geri yükle",
+        "moveUp": "{{name}} yukarı taşı",
+        "moveDown": "{{name}} aşağı taşı"
+      },
       "osd": {
         "tabsLabel": "Popup views",
         "tabDirect": "Live",
@@ -8688,6 +8760,15 @@ export const translations = {
         "lockedBody": "История всех полученных Drops по месяцам, с игрой и каналом. Только в StreamPulse+.",
         "trackingTitle": "Отслеживать Drops",
         "trackingBody": "Прогресс и получение даже без открытой вкладки Twitch. Список кампаний обновляется, когда вы заходите на Twitch."
+      },
+      "layout": {
+        "title": "Расположение",
+        "description": "Выберите порядок вкладок и разделов и скройте ненужные.",
+        "tabs": "Верхняя панель",
+        "menu": "Разделы настроек",
+        "reset": "Вернуть исходный порядок",
+        "moveUp": "Поднять: {{name}}",
+        "moveDown": "Опустить: {{name}}"
       },
       "osd": {
         "tabsLabel": "Popup views",
@@ -9716,6 +9797,15 @@ export const translations = {
         "trackingTitle": "ドロップを記録",
         "trackingBody": "Twitch のタブを開いていなくても進捗の確認と受け取りができます。キャンペーン一覧は Twitch を開いたときに更新されます。"
       },
+      "layout": {
+        "title": "レイアウト",
+        "description": "タブと項目の並び順を選び、使わないものは非表示にできます。",
+        "tabs": "上部バー",
+        "menu": "設定の項目",
+        "reset": "元の順番に戻す",
+        "moveUp": "{{name}} を上へ",
+        "moveDown": "{{name}} を下へ"
+      },
       "osd": {
         "tabsLabel": "Popup views",
         "tabDirect": "Live",
@@ -10742,6 +10832,15 @@ export const translations = {
         "lockedBody": "획득한 모든 드롭의 기록을 게임과 채널과 함께 월별로 볼 수 있습니다. StreamPulse+ 전용.",
         "trackingTitle": "드롭 추적",
         "trackingBody": "Twitch 탭을 열지 않아도 진행 상황 확인과 수령이 됩니다. 캠페인 목록은 Twitch를 방문할 때 업데이트됩니다."
+      },
+      "layout": {
+        "title": "배치",
+        "description": "탭과 항목의 순서를 정하고, 쓰지 않는 것은 숨길 수 있습니다.",
+        "tabs": "상단 바",
+        "menu": "설정 항목",
+        "reset": "원래 순서로 되돌리기",
+        "moveUp": "{{name}} 위로",
+        "moveDown": "{{name}} 아래로"
       },
       "osd": {
         "tabsLabel": "Popup views",

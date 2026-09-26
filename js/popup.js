@@ -1626,7 +1626,7 @@ function initMenuNav() {
     if (tab) showMenuPanel(tab.dataset.panel);
   });
   nav.addEventListener("keydown", (event) => {
-    const list = Array.from(nav.querySelectorAll(".menu-tab"));
+    const list = Array.from(nav.querySelectorAll(".menu-tab")).filter((tab) => !tab.hidden);
     const index = list.indexOf(document.activeElement);
     if (index === -1) return;
     const targets = {
@@ -1796,7 +1796,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Motif ARIA tabs : flèches + Home/End avec tabindex itinérant (setActiveTab
     // gère déjà tabIndex), sur le modèle du menu latéral des réglages.
     document.querySelector(".tabs")?.addEventListener("keydown", (event) => {
-      const list = Array.from(tabs);
+      // Ordre et visibilité choisis dans « Disposition » : on relit le DOM.
+      const list = Array.from(document.querySelectorAll(".tabs > .tab-button")).filter((tab) => !tab.hidden);
       const index = list.indexOf(document.activeElement);
       if (index === -1) return;
       const targets = {
