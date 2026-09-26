@@ -1065,6 +1065,25 @@ async function claimDropFromWorker(instanceId, auto) {
   return claimed;
 }
 
+/**
+ * Live où gagner une campagne : le stream le plus regardé du jeu (Helix), sinon
+ * la catégorie filtrée sur les Drops. Les badges de « Twitch Gaming » se gagnent
+ * sur n'importe quelle chaîne du jeu qui a les Drops activés.
+ */
+async function dropsStreamUrl({ gameId, game }) {
+  const directory = `https://www.twitch.tv/directory/game/${encodeURIComponent(game || "")}?filter=drops`;
+  if (!/^\d{1,20}$/.test(String(gameId || ""))) return directory;
+  try {
+    await ensureConfig();
+    const data = await fetchTwitchJson(`https://api.twitch.tv/helix/streams?game_id=${gameId}&type=live&first=20`, { headers: twitchHeaders() });
+    const stream = (data?.data || []).find((item) => item.user_login);
+    return stream ? `https://www.twitch.tv/${encodeURIComponent(stream.user_login)}` : directory;
+  } catch (error) {
+    console.warn("[StreamPulse] recherche d'un live pour la campagne :", error?.message || error);
+    return directory;
+  }
+}
+
 /** Confie une commande au premier onglet Twitch qui a le relais des Drops. */
 async function sendDropsCommand(command, preferredId) {
   for (const tab of await twitchTabs(preferredId)) {
@@ -3768,6 +3787,13 @@ function handleMessage(request, sender, sendResponse) {
           sendResponse({ error: error?.message || String(error) });
         }
       })();
+      return true;
+
+    case "openDropsStream":
+      dropsStreamUrl({ gameId: request.gameId, game: request.game })
+        .then((url) => chrome.tabs.create({ url }))
+        .then(() => sendResponse({ success: true }))
+        .catch((error) => sendResponse({ error: error?.message || String(error) }));
       return true;
 
     // Bouton « Récupérer » du popup : récupération auto coupée, ou refusée par Twitch.

@@ -245,7 +245,11 @@
     if (Date.now() - lastClaimTime < 4000) return;
 
     if (isPointsActive && tryClaimChannelPoints()) return;
-    if (isDropsActive && tryClaimDrops()) return;
+    // Sur les pages Drops que l'on regarde soi-même, pas de clic : la
+    // récupération passe par Twitch (dropsRecorder.js) et l'utilisateur garde la
+    // main. Seul l'onglet d'inventaire ouvert en arrière-plan clique encore.
+    const watchingDropsPage = /^\/drops(\/|$)/.test(location.pathname) && document.visibilityState === "visible";
+    if (isDropsActive && !watchingDropsPage && tryClaimDrops()) return;
     if (isMomentsActive && tryClaimMoments()) return;
   }
 

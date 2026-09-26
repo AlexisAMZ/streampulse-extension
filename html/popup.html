@@ -683,18 +683,22 @@
           <div class="pts-head">
             <h2 data-i18n="popup.osd.menuBadges">Badges</h2>
           </div>
+          <div class="smart-locked" id="badges-locked">
+            <p class="settings-description" data-i18n="popup.drops.badgesLocked">Les badges de chat obtenables en ce moment, avec comment les gagner, leur date de fin et un live pour les obtenir en un clic. Réservé à StreamPulse+.</p>
+            <button class="button button-primary" id="badges-unlock" type="button" data-i18n="popup.smart.unlock">Débloquer</button>
+          </div>
+          <div id="badges-content">
           <h3 class="drops-section"><span data-i18n="popup.drops.badges">Badges et récompenses</span><small id="drops-rewards-meta"></small></h3>
           <ul class="drops-campaigns" id="drops-rewards"></ul>
           <p class="drops-empty" id="drops-rewards-empty" data-i18n="popup.drops.badgesEmpty" hidden>Aucune campagne de badges en cours pour l'instant.</p>
-          <h3 class="drops-section"><span data-i18n="popup.drops.newBadges">Nouveaux badges</span><small id="drops-badges-meta"></small></h3>
-          <ul class="drops-campaigns" id="drops-badges"></ul>
+          <ul id="drops-badges" hidden></ul>
+          <small id="drops-badges-meta" hidden></small>
           <p class="drops-empty" id="drops-badges-sync" role="status"></p>
 
-          <h3 class="drops-section"><span data-i18n="popup.drops.allBadges">Tous les badges</span></h3>
-          <p class="settings-description" data-i18n="popup.drops.catalogNote">Twitch ne date pas ses badges. « Disponibles » regroupe ceux apparus depuis moins de 30 jours et ceux dont le jeu a une campagne en cours : c'est une estimation.</p>
+          <h3 class="drops-section"><span data-i18n="popup.drops.allBadges">Badges disponibles</span></h3>
+          <p class="settings-description" data-i18n="popup.drops.catalogNote">Seuls les badges obtenables en ce moment sont listés. Clique sur un badge pour ouvrir un live où le gagner.</p>
           <div class="drops-filters" id="badges-filters" role="group" data-i18n-attr-ariaLabel="popup.drops.allBadges">
-            <button type="button" class="drops-filter active" aria-pressed="true" data-filter="available"><span data-i18n="popup.drops.badgeFilterAvailable">Disponibles</span><em data-count="available"></em></button>
-            <button type="button" class="drops-filter" aria-pressed="false" data-filter="all"><span data-i18n="popup.drops.filterAll">Toutes</span><em data-count="all"></em></button>
+            <button type="button" class="drops-filter active" aria-pressed="true" data-filter="all"><span data-i18n="popup.drops.filterAll">Toutes</span><em data-count="all"></em></button>
             <button type="button" class="drops-filter" aria-pressed="false" data-filter="free"><span data-i18n="popup.drops.badgeFilterFree">Gratuits</span><em data-count="free"></em></button>
             <button type="button" class="drops-filter" aria-pressed="false" data-filter="paid"><span data-i18n="popup.drops.badgeFilterPaid">Payants</span><em data-count="paid"></em></button>
             <button type="button" class="drops-filter" aria-pressed="false" data-filter="missing"><span data-i18n="popup.drops.badgeFilterMissing">À obtenir</span><em data-count="missing"></em></button>
@@ -707,6 +711,7 @@
           <ul class="drops-campaigns" id="badges-catalog"></ul>
           <p class="drops-empty" id="badges-catalog-empty" data-i18n="popup.drops.noBadgeMatch" hidden>Aucun badge ne correspond.</p>
           <button id="badges-more" class="button button-quiet" type="button" data-i18n="popup.drops.showMore" hidden>Voir plus</button>
+          </div>
         </section>
 
         <!-- StreamPulse+ -->

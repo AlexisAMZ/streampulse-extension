@@ -8,12 +8,10 @@ import {
   DROPS_KEYS,
   badgesFrom,
   catalogBadges,
-  countBadges,
   activeNames,
   newBadges,
   activeRewards,
   bandModel,
-  campaignUrl,
   campaignsFrom,
   countFilters,
   currentDrops,
@@ -55,7 +53,7 @@ let history = [];
 let prefs = {};
 let myGames = new Set();
 let filter = "all";
-let badgeFilter = "available";
+let badgeFilter = "all";
 let badgeQuery = "";
 let badgeLimit = 40;
 /** Récupérations demandées depuis ce popup : instanceId → heure de la demande. */
@@ -258,7 +256,8 @@ function campaignRow(campaign, now) {
   const item = el("li");
   const button = el("button", mine ? "camp-row is-mine" : "camp-row");
   button.type = "button";
-  button.dataset.url = campaignUrl(campaign.id);
+  button.dataset.gameId = campaign.gameId || "";
+  button.dataset.game = campaign.game;
   if (campaign.name) button.title = campaign.name;
 
   const box = el("span", "camp-box");
@@ -355,11 +354,15 @@ function renderRewards(now) {
 
 function badgeRow(badge) {
   const item = el("li");
-  const url = badge.campaign ? campaignUrl(badge.campaign.id) : badge.url;
-  const row = el(url ? "button" : "div", "camp-row badge-row");
-  if (url) {
+  // Badge d'une campagne en cours : un clic ouvre un live où le gagner.
+  const row = el(badge.campaign || badge.url ? "button" : "div", "camp-row badge-row");
+  if (badge.campaign) {
     row.type = "button";
-    row.dataset.url = url;
+    row.dataset.gameId = badge.campaign.gameId || "";
+    row.dataset.game = badge.campaign.game;
+  } else if (badge.url) {
+    row.type = "button";
+    row.dataset.url = badge.url;
   }
   const main = el("span", "camp-main");
   main.append(el("b", null, badge.title), el("small", "badge-desc", badge.description));
@@ -392,7 +395,17 @@ function renderBadges(now) {
 function renderCatalog() {
   if (!$("badges-catalog")) return;
   const context = { now: Date.now(), campaigns: campaigns.campaigns, names: activeNames({ rewards: rewards.rewards, campaigns: campaigns.campaigns, drops: progress.drops }) };
-  const counts = countBadges(badges, context);
+  const available = catalogBadges(badges, "all", "", context).filter((badge) => badge.available);
+  const counts = {
+    all: available.length,
+    free: available.filter((badge) => !badge.paid).length,
+    paid: available.filter((badge) => badge.paid).length,
+    missing: available.filter((badge) => !badge.owned).length,
+    owned: available.filter((badge) => badge.owned).length,
+  };
+  const plus = deps.isPlus();
+  $("badges-locked").hidden = plus;
+  $("badges-content").hidden = !plus;
   document.querySelectorAll("#badges-filters [data-filter]").forEach((button) => {
     const active = button.dataset.filter === badgeFilter;
     button.classList.toggle("active", active);
@@ -400,9 +413,10 @@ function renderCatalog() {
     const count = button.querySelector("[data-count]");
     if (count) count.textContent = badges.badges.length ? String(counts[button.dataset.filter] ?? 0) : "";
   });
-  const list = catalogBadges(badges, badgeFilter, badgeQuery, context);
+  // Seuls les badges obtenables en ce moment : les événements finis n'intéressent personne.
+  const list = catalogBadges(badges, badgeFilter, badgeQuery, context).filter((badge) => badge.available);
   $("badges-catalog").replaceChildren(...list.slice(0, badgeLimit).map(badgeRow));
-  $("badges-catalog-empty").hidden = list.length > 0 || !badges.badges.length;
+  $("badges-catalog-empty").hidden = list.length > 0;
   $("badges-more").hidden = list.length <= badgeLimit;
 }
 
@@ -508,10 +522,17 @@ function bind() {
     const row = event.target.closest("[data-url]");
     if (row) openTab(row.dataset.url);
   });
-  $("drops-campaigns")?.addEventListener("click", (event) => {
-    const row = event.target.closest("[data-url]");
-    if (row) openTab(row.dataset.url);
-  });
+  const openStream = (event) => {
+    const row = event.target.closest("[data-game], [data-url]");
+    if (!row) return false;
+    if (row.dataset.game !== undefined) {
+      chrome.runtime.sendMessage({ type: "openDropsStream", gameId: row.dataset.gameId, game: row.dataset.game }).catch(() => {});
+    } else {
+      openTab(row.dataset.url);
+    }
+    return true;
+  };
+  $("drops-campaigns")?.addEventListener("click", openStream);
   $("drops-progress")?.addEventListener("click", (event) => {
     const button = event.target.closest("[data-claim]");
     if (button && !button.disabled) claim(button);
@@ -528,18 +549,14 @@ function bind() {
     badgeLimit = 40;
     renderCatalog();
   });
-  for (const id of ["badges-catalog", "drops-badges"]) {
-    $(id)?.addEventListener("click", (event) => {
-      const row = event.target.closest("[data-url]");
-      if (row) openTab(row.dataset.url);
-    });
-  }
+  for (const id of ["badges-catalog", "drops-badges"]) $(id)?.addEventListener("click", openStream);
   $("badges-more")?.addEventListener("click", () => {
     badgeLimit += 40;
     renderCatalog();
   });
   $("drops-open-campaigns")?.addEventListener("click", () => openTab(CAMPAIGNS_PAGE));
   $("drops-unlock")?.addEventListener("click", () => deps.openPlus());
+  $("badges-unlock")?.addEventListener("click", () => deps.openPlus());
 }
 
 async function reload() {
