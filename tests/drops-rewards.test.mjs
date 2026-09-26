@@ -39,8 +39,31 @@ test("catalogBadges filtre gratuits, payants, obtenus, à obtenir, et cherche da
   ], owned: ["d20"] };
   const { state } = mergeBadges({ updatedAt: 0, syncedAt: 0, badges: [], owned: [] }, raw, 1);
   assert.equal(state.badges.length, 3, "une ligne par set, quelle que soit la version");
-  assert.deepEqual(countBadges(state), { all: 3, free: 2, paid: 1, missing: 2, owned: 1 });
+  assert.deepEqual(countBadges(state), { available: 0, all: 3, free: 2, paid: 1, missing: 2, owned: 1 });
   assert.deepEqual(catalogBadges(state, "paid").map((b) => b.id), ["big-walk"]);
   assert.deepEqual(catalogBadges(state, "missing", "rematch").map((b) => b.id), ["rematch-blue-lock"]);
   assert.equal(catalogBadges(state, "owned")[0].owned, true);
 });
+
+import { activeNames } from "../js/drops-data.js";
+
+test("un badge est disponible si son jeu a une campagne en cours ou s'il vient d'apparaître", () => {
+  const now = Date.parse("2026-09-26T20:00:00Z");
+  const raw = { badges: [
+    { setID: "mold", title: "Don't Eat The Mold", description: "watching a streamer in the CONTROL Resonant category for 1 hour" },
+    { setID: "pichu", title: "Pichu", description: "earned during the Pokémon First Partners Collection campaign." },
+    { setID: "old", title: "Old", description: "watching Some Old Game in 2023" },
+  ], owned: [] };
+  const { state } = mergeBadges({ updatedAt: 0, syncedAt: 0, badges: [], owned: [] }, raw, now);
+  const rewards = normalizeRewards(raw_rewards());
+  const names = activeNames({ rewards }, now);
+  const available = catalogBadges(state, "available", "", { now, names }).map((b) => b.id);
+  assert.deepEqual(available.sort(), ["mold", "pichu"]);
+});
+
+function raw_rewards() {
+  return [
+    { id: "c", name: "CONTROL Resonant launch", startsAt: "2026-09-22T14:00:00Z", endsAt: "2026-10-13T13:59:59Z", game: { displayName: "CONTROL Resonant" }, rewards: [{ id: "r", name: "Sierra Helmet" }] },
+    { id: "p", name: "First Partners Collection", brand: "Pokemon", startsAt: "2026-08-24T17:00:00Z", endsAt: "2026-10-01T07:00:00Z", rewards: [{ id: "r1", name: "Poké Ball" }] },
+  ];
+}

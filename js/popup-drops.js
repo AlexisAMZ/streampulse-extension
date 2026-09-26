@@ -9,6 +9,7 @@ import {
   badgesFrom,
   catalogBadges,
   countBadges,
+  activeNames,
   newBadges,
   activeRewards,
   bandModel,
@@ -54,7 +55,7 @@ let history = [];
 let prefs = {};
 let myGames = new Set();
 let filter = "all";
-let badgeFilter = "all";
+let badgeFilter = "available";
 let badgeQuery = "";
 let badgeLimit = 40;
 /** Récupérations demandées depuis ce popup : instanceId → heure de la demande. */
@@ -359,6 +360,7 @@ function badgeRow(badge) {
   main.append(el("b", null, badge.title), el("small", "badge-desc", badge.description));
   if (badge.description) main.title = badge.description;
   const side = el("span", "camp-side");
+  if (badge.available && !badge.owned) side.append(el("span", "camp-when is-new", t("popup.drops.badgeAvailable")));
   side.append(el("span", badge.owned ? "drops-tag" : badge.paid ? "camp-badge" : "camp-when is-new", t(badge.owned ? "popup.drops.badgeOwned" : badge.paid ? "popup.drops.badgePaid" : "popup.drops.badgeFree")));
   if (badge.firstSeen) side.append(el("span", "camp-when", shortDate(badge.firstSeen)));
   row.append(thumb(badge.image, "drop-img is-small"), main, side);
@@ -382,7 +384,8 @@ function renderBadges(now) {
 
 function renderCatalog() {
   if (!$("badges-catalog")) return;
-  const counts = countBadges(badges);
+  const context = { now: Date.now(), names: activeNames({ rewards: rewards.rewards, campaigns: campaigns.campaigns, drops: progress.drops }) };
+  const counts = countBadges(badges, context);
   document.querySelectorAll("#badges-filters [data-filter]").forEach((button) => {
     const active = button.dataset.filter === badgeFilter;
     button.classList.toggle("active", active);
@@ -390,7 +393,7 @@ function renderCatalog() {
     const count = button.querySelector("[data-count]");
     if (count) count.textContent = badges.badges.length ? String(counts[button.dataset.filter] ?? 0) : "";
   });
-  const list = catalogBadges(badges, badgeFilter, badgeQuery);
+  const list = catalogBadges(badges, badgeFilter, badgeQuery, context);
   $("badges-catalog").replaceChildren(...list.slice(0, badgeLimit).map(badgeRow));
   $("badges-catalog-empty").hidden = list.length > 0 || !badges.badges.length;
   $("badges-more").hidden = list.length <= badgeLimit;

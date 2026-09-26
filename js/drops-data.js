@@ -538,9 +538,31 @@ export function mergeBadges(state, raw, now) {
 /** Payant si la description parle d'abonnement, de sub offert ou de Bits. */
 export const isPaidBadge = (badge) => /subscrib|gift|\bsubs?\b|\bbits?\b/i.test(badge.description || "");
 
-export const BADGE_FILTERS = Object.freeze(["all", "free", "paid", "missing", "owned"]);
+export const BADGE_FILTERS = Object.freeze(["available", "all", "free", "paid", "missing", "owned"]);
+
+/** Minuscules sans accents : « Pokémon » et « Pokemon » doivent se reconnaître. */
+const fold = (value) => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+/**
+ * Jeux et marques qui ont une campagne en cours (badges, Drops, progression).
+ * Twitch ne date pas ses badges : un badge dont la description cite l'un
+ * d'eux est très probablement encore obtenable.
+ */
+export function activeNames({ rewards = [], campaigns = [], drops = [] } = {}, now = Date.now()) {
+  const names = new Set();
+  const add = (value) => {
+    const name = fold(value).trim();
+    // Trop court, un nom trouverait des correspondances partout (« d20 », « Go »).
+    if (name.length >= 4) names.add(name);
+  };
+  for (const reward of activeRewards(rewards, now)) [reward.game, reward.brand, reward.name].forEach(add);
+  for (const campaign of campaigns) if (isActiveCampaign(campaign, now)) add(campaign.game);
+  for (const drop of drops) add(drop.game);
+  return names;
+}
 
 const BADGE_TESTS = {
+  available: (badge) => badge.available,
   all: () => true,
   free: (badge) => !badge.paid,
   paid: (badge) => badge.paid,
@@ -552,18 +574,22 @@ const BADGE_TESTS = {
  * Catalogue complet : filtre, recherche dans le nom et la description, les
  * plus récemment apparus d'abord, puis par ordre alphabétique.
  */
-export function catalogBadges(state, filterId = "all", query = "") {
+export function catalogBadges(state, filterId = "all", query = "", context = {}) {
   const owned = new Set(state.owned);
+  const now = context.now ?? Date.now();
+  const names = [...(context.names || [])];
+  const isAvailable = (badge) =>
+    (badge.firstSeen > 0 && now - badge.firstSeen <= NEW_BADGE_MS) || names.some((name) => fold(badge.description).includes(name) || fold(badge.title).includes(name));
   const needle = String(query || "").trim().toLowerCase();
   const test = BADGE_TESTS[filterId] || BADGE_TESTS.all;
   return state.badges
-    .map((badge) => ({ ...badge, owned: owned.has(badge.id), paid: isPaidBadge(badge) }))
+    .map((badge) => ({ ...badge, owned: owned.has(badge.id), paid: isPaidBadge(badge), available: isAvailable(badge) }))
     .filter((badge) => test(badge) && (!needle || `${badge.title} ${badge.description}`.toLowerCase().includes(needle)))
-    .sort((a, b) => (b.firstSeen || 0) - (a.firstSeen || 0) || a.title.localeCompare(b.title));
+    .sort((a, b) => Number(b.available) - Number(a.available) || (b.firstSeen || 0) - (a.firstSeen || 0) || a.title.localeCompare(b.title));
 }
 
-export function countBadges(state) {
-  const all = catalogBadges(state);
+export function countBadges(state, context = {}) {
+  const all = catalogBadges(state, "all", "", context);
   return Object.fromEntries(BADGE_FILTERS.map((id) => [id, all.filter(BADGE_TESTS[id]).length]));
 }
 

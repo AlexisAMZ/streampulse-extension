@@ -691,9 +691,10 @@
           <p class="drops-empty" id="drops-badges-sync" role="status"></p>
 
           <h3 class="drops-section"><span data-i18n="popup.drops.allBadges">Tous les badges</span></h3>
-          <p class="settings-description" data-i18n="popup.drops.catalogNote">Twitch n'indique pas si un badge peut encore être obtenu : sa description dit comment il s'obtenait. Les événements finis ne le donnent plus.</p>
+          <p class="settings-description" data-i18n="popup.drops.catalogNote">Twitch ne date pas ses badges. « Disponibles » regroupe ceux apparus depuis moins de 30 jours et ceux dont le jeu a une campagne en cours : c'est une estimation.</p>
           <div class="drops-filters" id="badges-filters" role="group" data-i18n-attr-ariaLabel="popup.drops.allBadges">
-            <button type="button" class="drops-filter active" aria-pressed="true" data-filter="all"><span data-i18n="popup.drops.filterAll">Toutes</span><em data-count="all"></em></button>
+            <button type="button" class="drops-filter active" aria-pressed="true" data-filter="available"><span data-i18n="popup.drops.badgeFilterAvailable">Disponibles</span><em data-count="available"></em></button>
+            <button type="button" class="drops-filter" aria-pressed="false" data-filter="all"><span data-i18n="popup.drops.filterAll">Toutes</span><em data-count="all"></em></button>
             <button type="button" class="drops-filter" aria-pressed="false" data-filter="free"><span data-i18n="popup.drops.badgeFilterFree">Gratuits</span><em data-count="free"></em></button>
             <button type="button" class="drops-filter" aria-pressed="false" data-filter="paid"><span data-i18n="popup.drops.badgeFilterPaid">Payants</span><em data-count="paid"></em></button>
             <button type="button" class="drops-filter" aria-pressed="false" data-filter="missing"><span data-i18n="popup.drops.badgeFilterMissing">À obtenir</span><em data-count="missing"></em></button>
