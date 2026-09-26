@@ -14,6 +14,7 @@ const STATS_KEY = "betaGeneralStats";
 const EVENT_LOGS_KEY = "betaEventLogs";
 const TOP_LIMIT = 7;
 const EXPORT_SCALE = 2;
+const EXPORT_JPEG_QUALITY = 0.92;
 
 // Les deux formats partagent le meme modele : seule la mise en page change.
 const FORMATS = {
@@ -388,9 +389,13 @@ function renderInsights(period, recap, points) {
 
 function fileName() {
   const slug = currentPeriod.replace(/[^a-z0-9-]/gi, "-");
-  return `streampulse-recap-${slug}-${currentFormat}.png`;
+  return `streampulse-recap-${slug}-${currentFormat}.jpg`;
 }
 
+/**
+ * JPEG haute qualité : le fond en dégradé pèse 3 à 4 Mo en PNG (X refuse
+ * au-delà de 5 Mo) contre moins de 1 Mo ici, sans perte visible sur le texte.
+ */
 function exportImage() {
   canvas.toBlob((blob) => {
     if (!blob) {
@@ -407,7 +412,7 @@ function exportImage() {
     link.remove();
     // Laisser au navigateur le temps de lire le blob avant de le liberer.
     setTimeout(() => URL.revokeObjectURL(url), 60000);
-  }, "image/png");
+  }, "image/jpeg", EXPORT_JPEG_QUALITY);
 }
 
 function openShareComposer() {
