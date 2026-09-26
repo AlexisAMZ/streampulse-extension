@@ -529,6 +529,10 @@ function renderCatalog() {
   $("badges-catalog-empty").hidden = list.length + rewardCards.length > 0;
   $("badges-more").hidden = list.length <= badgeLimit;
   $("badges-total").textContent = String(counts.all);
+  // Aperçu gratuit : le nombre de badges à obtenir se voit, le détail reste réservé.
+  $("badges-teaser").hidden = plus || counts.all === 0;
+  $("badges-teaser-total").textContent = String(counts.all);
+  $("badges-teaser-meta").replaceChildren(el("span", null, t("popup.drops.badgesLcdFree", { count: counts.free })));
   $("badges-lcd-meta").replaceChildren(...[
     t("popup.drops.badgesLcdOwned", { count: counts.owned }),
     t("popup.drops.badgesLcdFree", { count: counts.free }),
