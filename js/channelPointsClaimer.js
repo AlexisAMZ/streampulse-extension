@@ -11,6 +11,8 @@
   let isDropsActive = true;
   let isMomentsActive = true;
   let lastClaimTime = 0;
+  /** Module js/points-bonus.js, chargé plus bas par import() dynamique. */
+  let bonusRules = null;
 
   // Twitch routes that are not channel pages; the first path segment on these is
   // a feature name, not a streamer login.
@@ -62,44 +64,35 @@
     }
   }
 
+  function describeButton(btn, summary) {
+    return {
+      label: btn.getAttribute("aria-label") || "",
+      className: typeof btn.className === "string" ? btn.className : "",
+      dataTarget: btn.getAttribute("data-a-target") || "",
+      disabled: btn.hasAttribute("disabled"),
+      hasBonusIcon: Boolean(btn.querySelector(".claimable-bonus__icon")),
+      hasChestPath: Boolean(btn.querySelector(`path[d="${bonusRules.CHEST_PATH}"]`)),
+      inPointsSummary: summary.contains(btn),
+    };
+  }
+
   function tryClaimChannelPoints() {
-    let btn = document.querySelector(
-      'button[aria-label="Claim Bonus"], button[aria-label="Récupérer le bonus"], button[aria-label*="Bonus"]'
+    // Règles chargées de façon asynchrone : rien à faire tant qu'elles manquent.
+    if (!bonusRules) return false;
+
+    // La caisse n'est cherchée que dans la zone des points : chercher « Bonus »
+    // sur toute la page attrapait le bouton cadeau du SUBtember (voir
+    // js/points-bonus.js). Le compteur de cette zone ouvre le popover de points,
+    // isBonusChest l'écarte aussi.
+    const summary = document.querySelector(
+      "[data-test-selector='community-points-summary'], .community-points-summary"
     );
+    if (!summary) return false;
 
-    if (!btn) {
-      const icon = document.querySelector(".claimable-bonus__icon");
-      if (icon) btn = icon.closest("button");
-    }
-
-    if (!btn) {
-      // SVG path du coffre Twitch, indépendant de la langue et des classes
-      const svgPath = document.querySelector('path[d="M13 12h-2v2h2v-2Z"]');
-      if (svgPath) btn = svgPath.closest("button");
-    }
-
-    if (!btn) {
-      // Repli inspiré du rendu actuel de Twitch, indépendant de la langue :
-      // quand un bonus est disponible, le résumé de points affiche un « +N ».
-      // On ne clique QUE un bouton réellement marqué « caisse de bonus »
-      // (classe claimable-bonus) : le premier bouton de la zone est le
-      // compteur, qui ouvre le popover de points — le cliquer en boucle
-      // toutes les 2,5 s est exactement le scénario gênant à éviter.
-      const summary = document.querySelector(
-        "[data-test-selector='community-points-summary'], .community-points-summary"
-      );
-      if (summary && /\+\s*\d/.test(summary.textContent || "")) {
-        const chest = Array.from(summary.querySelectorAll("button")).find(
-          (b) =>
-            b.classList.contains("claimable-bonus") ||
-            Boolean(b.querySelector(".claimable-bonus__icon")) ||
-            /claimable-bonus/.test(b.className)
-        );
-        if (chest && !chest.hasAttribute("disabled")) btn = chest;
-      }
-    }
-
-    if (!btn) return false;
+    const buttons = Array.from(summary.querySelectorAll("button"));
+    const index = bonusRules.pickBonusChest(buttons.map((b) => describeButton(b, summary)));
+    if (index < 0) return false;
+    const btn = buttons[index];
 
     // Garde anti-reclic : si ce bouton vient déjà d'être cliqué et reste
     // visible (claim en cours, ou faux positif), ne pas re-cliquer — un
@@ -112,13 +105,10 @@
     btn.click();
 
     let points = 50;
-    const summary = btn.closest("[data-test-selector='community-points-summary']");
-    if (summary) {
-      const match = (summary.textContent || "").match(/\+\s*(\d+)/);
-      if (match) {
-        const val = parseInt(match[1], 10);
-        if (val > 0 && val <= 10000) points = val;
-      }
+    const match = (summary.textContent || "").match(/\+\s*(\d+)/);
+    if (match) {
+      const val = parseInt(match[1], 10);
+      if (val > 0 && val <= 10000) points = val;
     }
     setTimeout(() => {
       try {
@@ -283,6 +273,15 @@
     const anyActive = isPointsActive || isDropsActive || isMomentsActive;
     anyActive ? start() : stop();
   }
+
+  import(chrome.runtime.getURL("js/points-bonus.js"))
+    .then((module) => {
+      bonusRules = module;
+    })
+    .catch((error) => {
+      // Sans ces règles, les points ne sont plus récupérés ; Drops et Moments continuent.
+      console.warn("[StreamPulse] règles de la caisse de bonus indisponibles", error);
+    });
 
   chrome.storage.local.get([PREFERENCES_KEY], (result) => {
     if (chrome.runtime.lastError) {

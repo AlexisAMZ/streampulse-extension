@@ -3,7 +3,7 @@
   "default_locale": "en",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "26.9.21",
+  "version": "26.9.26",
   "permissions": [
     "storage",
     "alarms",
@@ -170,7 +170,8 @@
     },
     {
       "resources": [
-        "js/predictions-data.js"
+        "js/predictions-data.js",
+        "js/points-bonus.js"
       ],
       "matches": [
         "https://www.twitch.tv/*"

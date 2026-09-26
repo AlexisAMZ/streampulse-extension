@@ -48,6 +48,46 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.26",
+    date: "2026-09-26",
+    changes: [
+      {
+        type: "fix",
+        text: {
+          fr: "La récupération automatique des points ouvrait parfois la fenêtre pour offrir des abonnements : pendant le SUBtember, le bouton cadeau de Twitch contient le mot « bonus » et était pris pour la caisse de points. Seule la caisse est désormais cliquée.",
+          en: "Auto-claiming channel points could open the Gift Subs window: during SUBtember, Twitch's gift button contains the word \"bonus\" and was mistaken for the points chest. Only the chest is clicked now.",
+          es: "La recogida automática de puntos podía abrir la ventana para regalar suscripciones: durante el SUBtember, el botón de regalo de Twitch contiene la palabra «bonus» y se confundía con el cofre de puntos. Ahora solo se pulsa el cofre.",
+          "pt-BR": "A coleta automática de pontos podia abrir a janela de presentear inscrições: durante o SUBtember, o botão de presente da Twitch contém a palavra \"bônus\" e era confundido com o baú de pontos. Agora só o baú é clicado.",
+          de: "Das automatische Einsammeln der Kanalpunkte konnte das Fenster zum Verschenken von Abos öffnen: Während des SUBtember enthält der Geschenk-Button von Twitch das Wort „Bonus“ und wurde mit der Punktetruhe verwechselt. Jetzt wird nur noch die Truhe angeklickt.",
+          it: "La raccolta automatica dei punti poteva aprire la finestra per regalare abbonamenti: durante il SUBtember, il pulsante regalo di Twitch contiene la parola «bonus» e veniva scambiato per lo scrigno dei punti. Ora viene cliccato solo lo scrigno.",
+          pl: "Automatyczne odbieranie punktów mogło otwierać okno podarowania subskrypcji: w trakcie SUBtember przycisk prezentu na Twitchu zawiera słowo „bonus” i był mylony ze skrzynią punktów. Teraz klikana jest tylko skrzynia.",
+          tr: "Kanal puanlarını otomatik toplama, abonelik hediye etme penceresini açabiliyordu: SUBtember boyunca Twitch'in hediye düğmesinde \"bonus\" kelimesi geçiyor ve puan sandığıyla karıştırılıyordu. Artık yalnızca sandık tıklanıyor.",
+          ru: "Автосбор баллов канала мог открывать окно подарочных подписок: во время SUBtember кнопка подарка на Twitch содержит слово «бонус» и принималась за сундук с баллами. Теперь нажимается только сундук.",
+          ja: "チャンネルポイントの自動受け取りで、サブギフトの画面が開くことがありました。SUBtember 期間中は Twitch のギフトボタンに「ボーナス」という語が入り、ポイントの宝箱と取り違えていました。今は宝箱だけをクリックします。",
+          ko: "채널 포인트 자동 수령 중 구독 선물 창이 열리는 경우가 있었습니다. SUBtember 기간에는 Twitch 선물 버튼에 '보너스'라는 단어가 들어가 포인트 상자로 착각했습니다. 이제 상자만 클릭합니다."
+        }
+      }
+    ],
+    thanks: [
+      {
+        handle: "shiroa",
+        for: {
+          fr: "signalement de la récupération des points qui ouvrait aussi la fenêtre pour offrir des abonnements",
+          en: "reporting the points auto-claim that also opened the Gift Subs window",
+          es: "informar de la recogida de puntos que también abría la ventana para regalar suscripciones",
+          "pt-BR": "relatar a coleta de pontos que também abria a janela de presentear inscrições",
+          de: "Meldung des Punkte-Einsammelns, das auch das Fenster zum Verschenken von Abos öffnete",
+          it: "segnalazione della raccolta dei punti che apriva anche la finestra per regalare abbonamenti",
+          pl: "zgłoszenie odbierania punktów, które otwierało też okno podarowania subskrypcji",
+          tr: "puan toplamanın abonelik hediye etme penceresini de açtığını bildirme",
+          ru: "сообщение о том, что автосбор баллов открывал и окно подарочных подписок",
+          ja: "ポイント自動受け取りでサブギフトの画面まで開いてしまう問題の報告",
+          ko: "포인트 자동 수령 시 구독 선물 창까지 열리던 문제 제보"
+        }
+      }
+    ]
+  },
+  {
     version: "26.9.21",
     date: "2026-09-21",
     title: {
