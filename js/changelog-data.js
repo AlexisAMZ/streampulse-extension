@@ -48,6 +48,75 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.27",
+    date: "2026-09-27",
+    title: {
+      fr: "D'où viennent tes points ?",
+      en: "Where do your points come from?",
+      es: "¿De dónde vienen tus puntos?",
+      "pt-BR": "De onde vêm seus pontos?",
+      de: "Woher kommen deine Punkte?",
+      it: "Da dove vengono i tuoi punti?",
+      pl: "Skąd biorą się twoje punkty?",
+      tr: "Puanların nereden geliyor?",
+      ru: "Откуда берутся твои баллы?",
+      ja: "ポイントの出どころは？",
+      ko: "포인트는 어디서 왔을까?",
+    },
+    changes: [
+      {
+        type: "new",
+        text: {
+          fr: "Nouveau panneau Points dans les Réglages : StreamPulse enregistre chaque point de chaîne gagné sur Twitch et te montre combien tu en as gagné sur chaque chaîne. Avec StreamPulse+, tu vois d'où ils viennent (regarder, bonus, raids, suivis, séries, cheers et subs offerts), ce que ton abonnement t'a rapporté en plus, et une fiche par streamer avec le journal de tes gains. Le récap affiche aussi tes points gagnés.",
+          en: "New Points panel in Settings: StreamPulse records every channel point you earn on Twitch and shows how many you earned on each channel. With StreamPulse+, see where they come from (watching, bonuses, raids, follows, streaks, cheers and gift subs), what your sub added on top, and a card for each streamer with a log of your gains. Your recap now shows the points you earned too.",
+          es: "Nuevo panel Puntos en los Ajustes: StreamPulse registra cada punto de canal que ganas en Twitch y te muestra cuántos ganaste en cada canal. Con StreamPulse+, ves de dónde vienen (ver, bonos, raids, follows, rachas, cheers y suscripciones regaladas), lo que tu suscripción añadió y una ficha por streamer con el registro de tus ganancias. El resumen también muestra tus puntos ganados.",
+          "pt-BR": "Novo painel Pontos nas Configurações: o StreamPulse registra cada ponto de canal que você ganha na Twitch e mostra quantos você ganhou em cada canal. Com o StreamPulse+, você vê de onde eles vêm (assistir, bônus, raids, follows, sequências, cheers e subs de presente), o que sua inscrição rendeu a mais e uma ficha por streamer com o registro dos seus ganhos. O resumo também mostra os pontos ganhos.",
+          de: "Neues Punkte-Panel in den Einstellungen: StreamPulse erfasst jeden Kanalpunkt, den du auf Twitch verdienst, und zeigt, wie viele du auf jedem Kanal verdient hast. Mit StreamPulse+ siehst du, woher sie kommen (Zuschauen, Boni, Raids, Follows, Serien, Cheers und verschenkte Abos), was dein Abo zusätzlich gebracht hat, und eine Übersicht pro Streamer mit dem Protokoll deiner Gewinne. Auch dein Rückblick zeigt jetzt deine verdienten Punkte.",
+          it: "Nuovo pannello Punti nelle Impostazioni: StreamPulse registra ogni punto canale che guadagni su Twitch e mostra quanti ne hai guadagnati su ogni canale. Con StreamPulse+ vedi da dove vengono (visione, bonus, raid, follow, serie, cheer e abbonamenti regalati), quanto ti ha fruttato in più l'abbonamento e una scheda per ogni streamer con il registro dei guadagni. Anche il riepilogo mostra i punti guadagnati.",
+          pl: "Nowy panel Punkty w Ustawieniach: StreamPulse zapisuje każdy punkt kanału zdobyty na Twitchu i pokazuje, ile zdobyłeś na każdym kanale. Ze StreamPulse+ widzisz, skąd pochodzą (oglądanie, bonusy, rajdy, obserwacje, serie, cheery i podarowane suby), ile dodała twoja subskrypcja oraz kartę każdego streamera z dziennikiem zysków. Podsumowanie pokazuje też zdobyte punkty.",
+          tr: "Ayarlar'da yeni Puanlar paneli: StreamPulse, Twitch'te kazandığın her kanal puanını kaydeder ve her kanalda ne kadar kazandığını gösterir. StreamPulse+ ile puanların nereden geldiğini (izleme, bonuslar, baskınlar, takipler, seriler, cheer'lar ve hediye abonelikler), aboneliğinin ne kadar ekstra kazandırdığını ve kazanç kaydıyla her yayıncı için bir kartı görürsün. Özet de artık kazandığın puanları gösteriyor.",
+          ru: "Новая панель «Баллы» в настройках: StreamPulse записывает каждый балл канала, заработанный на Twitch, и показывает, сколько вы получили на каждом канале. Со StreamPulse+ видно, откуда они берутся (просмотр, бонусы, рейды, подписки на канал, серии, чиры и подаренные подписки), сколько добавила ваша подписка, и карточку каждого стримера с журналом начислений. Итоги теперь тоже показывают заработанные баллы.",
+          ja: "設定に新しい「ポイント」パネル：StreamPulse が Twitch で獲得したチャンネルポイントをすべて記録し、チャンネルごとの獲得数を表示します。StreamPulse+ なら、出どころ（視聴、ボーナス、レイド、フォロー、連続視聴、チア、ギフトサブ）、サブスクで上乗せされた分、配信者ごとの獲得履歴も確認できます。まとめにも獲得ポイントが表示されます。",
+          ko: "설정에 새로운 포인트 패널: StreamPulse가 Twitch에서 획득한 모든 채널 포인트를 기록하고 채널별 획득량을 보여줍니다. StreamPulse+로는 출처(시청, 보너스, 레이드, 팔로우, 연속 시청, 응원, 구독 선물), 구독으로 추가된 포인트, 획득 기록이 담긴 스트리머별 카드까지 볼 수 있습니다. 요약에도 획득 포인트가 표시됩니다.",
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          fr: "Des libellés trop longs pour leur bouton ont été raccourcis en italien, polonais, turc, russe et français (aperçus au survol, aide et FAQ, temps de visionnage…).",
+          en: "Labels that overflowed their buttons were shortened in Italian, Polish, Turkish, Russian and French (hover previews, help & FAQ, watch time…).",
+          es: "Se acortaron etiquetas demasiado largas para su botón en italiano, polaco, turco, ruso y francés (vistas previas al pasar el ratón, ayuda y FAQ, tiempo de visualización…).",
+          "pt-BR": "Rótulos longos demais para o botão foram encurtados em italiano, polonês, turco, russo e francês (prévias ao passar o mouse, ajuda e FAQ, tempo assistido…).",
+          de: "Zu lange Beschriftungen wurden auf Italienisch, Polnisch, Türkisch, Russisch und Französisch gekürzt (Hover-Vorschau, Hilfe & FAQ, Wiedergabezeit…).",
+          it: "Le etichette troppo lunghe per il loro pulsante sono state accorciate in italiano, polacco, turco, russo e francese (anteprime al passaggio, aiuto e FAQ, tempo di visione…).",
+          pl: "Skrócono zbyt długie etykiety w językach włoskim, polskim, tureckim, rosyjskim i francuskim (podgląd po najechaniu, pomoc i FAQ, czas oglądania…).",
+          tr: "Düğmesine sığmayan etiketler İtalyanca, Lehçe, Türkçe, Rusça ve Fransızcada kısaltıldı (fareyle önizleme, yardım ve SSS, izleme süresi…).",
+          ru: "Слишком длинные подписи сокращены на итальянском, польском, турецком, русском и французском (превью при наведении, справка и FAQ, время просмотра…).",
+          ja: "ボタンに収まらなかったラベルを、イタリア語・ポーランド語・トルコ語・ロシア語・フランス語で短くしました（ホバープレビュー、ヘルプと FAQ、視聴時間など）。",
+          ko: "버튼에 들어가지 않던 라벨을 이탈리아어, 폴란드어, 터키어, 러시아어, 프랑스어에서 짧게 줄였습니다(마우스 오버 미리보기, 도움말 및 FAQ, 시청 시간 등).",
+        },
+      },
+    ],
+    thanks: [
+      {
+        handle: "shiroa",
+        for: {
+          fr: "idée du suivi des points par chaîne",
+          en: "the idea of per-channel points tracking",
+          es: "la idea del registro de puntos por canal",
+          "pt-BR": "a ideia do registro de pontos por canal",
+          de: "die Idee der Punkteerfassung pro Kanal",
+          it: "l'idea del registro dei punti per canale",
+          pl: "pomysł śledzenia punktów na każdym kanale",
+          tr: "kanal başına puan takibi fikri",
+          ru: "идея учёта баллов по каналам",
+          ja: "チャンネル別ポイント記録のアイデア",
+          ko: "채널별 포인트 기록 아이디어",
+        },
+      },
+    ],
+  },
+  {
     version: "26.9.26",
     date: "2026-09-26",
     changes: [
