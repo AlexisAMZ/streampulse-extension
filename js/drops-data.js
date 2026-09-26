@@ -14,6 +14,8 @@ export const DROPS_SINCE_KEY = "streamPulseDropsSince";
 export const DROPS_REWARDS_KEY = "streamPulseDropsRewards";
 /** Badges globaux de Twitch, avec la date où StreamPulse a vu chacun pour la première fois. */
 export const DROPS_BADGES_KEY = "streamPulseDropsBadges";
+/** Badge en cours d'obtention automatique : { badgeId, title, image, game, gameId, tabId, startedAt }. */
+export const BADGE_AUTO_KEY = "streamPulseBadgeAuto";
 export const DROPS_KEYS = [DROPS_PROGRESS_KEY, DROPS_CAMPAIGNS_KEY, DROPS_HISTORY_KEY, DROPS_SINCE_KEY, DROPS_REWARDS_KEY, DROPS_BADGES_KEY];
 /** Un badge vu pour la première fois depuis moins longtemps est « nouveau ». */
 export const NEW_BADGE_MS = 30 * 86_400_000;

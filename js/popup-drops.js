@@ -6,6 +6,7 @@
 import { t, getCurrentLanguage } from "./i18n.js";
 import {
   DROPS_KEYS,
+  BADGE_AUTO_KEY,
   badgesFrom,
   catalogBadges,
   activeNames,
@@ -38,6 +39,7 @@ const BADGE_TEXT_URL = "https://streampulse.fr/api/twitch-badges";
 const BADGE_TEXT_KEY = "streamPulseBadgeText";
 const BADGE_TEXT_MAX_AGE_MS = 7 * 86_400_000;
 let badgeText = {};
+let badgeAuto = null;
 /** Une seule tentative par badge et par ouverture du popup : pas de boucle si le site ne traduit pas. */
 const badgeTextTried = new Set();
 const PREFERENCES_KEY = "betaGeneralPreferences";
@@ -385,7 +387,7 @@ const categoryOf = (description) => /in the (.+?) category/i.exec(String(descrip
  * Carte d'un badge ou d'une récompense : image, nom, condition courte, jeu,
  * coût et échéance. Un clic ouvre un live où la gagner.
  */
-function badgeCard({ title, image, condition, fallback, game, paid, owned, endsAt, gameId, link, tooltip }) {
+function badgeCard({ title, image, condition, fallback, game, paid, owned, endsAt, gameId, link, tooltip, autoId }) {
   const now = Date.now();
   const item = el("li");
   const card = el(game || link ? "button" : "div", owned ? "badge-card is-owned" : "badge-card");
@@ -417,6 +419,17 @@ function badgeCard({ title, image, condition, fallback, game, paid, owned, endsA
   if (endsAt > now) foot.append(el("span", endsAt - now < 48 * 3_600_000 ? "badge-when is-soon" : "badge-when", t("popup.drops.endsIn", { time: spanLabel(endsAt - now) })));
   card.append(art, body, foot);
   item.append(card);
+  // Bouton frère de la carte (un bouton ne peut pas en contenir un autre).
+  if (autoId && !owned) {
+    const on = badgeAuto?.badgeId === autoId;
+    const auto = el("button", on ? "badge-auto is-on" : "badge-auto", t(on ? "popup.drops.badgeAutoOn" : "popup.drops.badgeAuto"));
+    auto.type = "button";
+    auto.dataset.auto = autoId;
+    auto.title = t(on ? "popup.drops.badgeAutoStop" : "popup.drops.badgeAutoHint");
+    auto.setAttribute("aria-pressed", on ? "true" : "false");
+    item.classList.add("has-auto");
+    item.append(auto);
+  }
   return item;
 }
 
@@ -434,6 +447,8 @@ function badgeRow(badge) {
     owned: badge.owned,
     endsAt: badge.campaign?.endsAt || 0,
     tooltip: text,
+    // Le mode auto a besoin d'une campagne en cours : c'est elle qui dit où regarder.
+    autoId: badge.campaign && !badge.paid ? badge.id : "",
   });
 }
 
@@ -670,7 +685,13 @@ function bind() {
     badgeLimit = 40;
     renderCatalog();
   });
-  for (const id of ["badges-catalog", "drops-badges"]) $(id)?.addEventListener("click", openStream);
+  for (const id of ["badges-catalog", "drops-badges"]) {
+    $(id)?.addEventListener("click", (event) => {
+      const auto = event.target.closest("[data-auto]");
+      if (auto) toggleAuto(auto.dataset.auto);
+      else openStream(event);
+    });
+  }
   $("badges-more")?.addEventListener("click", () => {
     badgeLimit += 40;
     renderCatalog();
@@ -680,8 +701,24 @@ function bind() {
   $("badges-unlock")?.addEventListener("click", () => deps.openPlus());
 }
 
+/** Lance ou coupe l'obtention automatique d'un badge (le service worker gère l'onglet). */
+function toggleAuto(badgeId) {
+  if (badgeAuto?.badgeId === badgeId) {
+    chrome.runtime.sendMessage({ type: "badgeAutoStop" }).catch((error) => console.warn("[popup] mode auto :", error?.message || error));
+    return;
+  }
+  const badge = badges.badges.find((item) => item.id === badgeId);
+  const context = { now: Date.now(), campaigns: campaigns.campaigns };
+  const campaign = badge && catalogBadges({ ...badges, badges: [badge] }, "all", "", context)[0]?.campaign;
+  if (!campaign) return;
+  chrome.runtime
+    .sendMessage({ type: "badgeAutoStart", badge: { badgeId, title: badge.title, image: badge.image, game: campaign.game, gameId: campaign.gameId, campaignId: campaign.id } })
+    .catch((error) => console.warn("[popup] mode auto :", error?.message || error));
+}
+
 async function reload() {
-  const stored = await chrome.storage.local.get([...DROPS_KEYS, PREFERENCES_KEY]);
+  const stored = await chrome.storage.local.get([...DROPS_KEYS, PREFERENCES_KEY, BADGE_AUTO_KEY]);
+  badgeAuto = stored[BADGE_AUTO_KEY] || null;
   progress = progressFrom(stored);
   campaigns = campaignsFrom(stored);
   rewards = rewardsFrom(stored);
@@ -699,7 +736,7 @@ export async function initDrops({ isPlus, onPlusChange, openPlus }) {
   bind();
   onPlusChange(() => render());
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === "local" && (DROPS_KEYS.some((key) => key in changes) || PREFERENCES_KEY in changes)) reload().catch(() => {});
+    if (area === "local" && (DROPS_KEYS.some((key) => key in changes) || PREFERENCES_KEY in changes || BADGE_AUTO_KEY in changes)) reload().catch(() => {});
   });
   await reload();
   // Les jeux regardés ne changent pas pendant que le popup est ouvert : lus une fois.

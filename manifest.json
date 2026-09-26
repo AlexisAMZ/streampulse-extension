@@ -9,7 +9,8 @@
     "alarms",
     "cookies",
     "notifications",
-    "offscreen"
+    "offscreen",
+    "scripting"
   ],
   "host_permissions": [
     "https://api.twitch.tv/*",

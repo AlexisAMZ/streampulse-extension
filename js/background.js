@@ -25,7 +25,7 @@ import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-aler
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "./plus.js";
 import { createPointsStore } from "./points-store.js";
 import { createDropsStore } from "./drops-store.js";
-import { CLAIM_OK_STATUSES, isPaidBadge } from "./drops-data.js";
+import { BADGE_AUTO_KEY, CLAIM_OK_STATUSES, badgesFrom, isPaidBadge } from "./drops-data.js";
 import { createDropsClient } from "./drops-gql.js";
 import { syncEventSubRaid, stopEventSubRaid } from "./eventsubRaid.js";
 import {
@@ -1017,7 +1017,7 @@ const REWARDS_EVERY_MS = 30 * 60_000;
 
 /** Campagnes de badges et récompenses, relues au plus toutes les 30 minutes. */
 async function refreshRewardsFromWorker() {
-  const stored = await chrome.storage.local.get(["streamPulseDropsRewards", "streamPulseDropsBadges"]);
+  const stored = await chrome.storage.local.get(["streamPulseDropsRewards", "streamPulseDropsBadges", BADGE_AUTO_KEY]);
   const now = Date.now();
   // Deux délais séparés : une lecture réussie de l'un ne doit jamais bloquer l'autre.
   const warn = (what) => (error) => {
@@ -1026,12 +1026,148 @@ async function refreshRewardsFromWorker() {
   if (now - (Number(stored.streamPulseDropsRewards?.updatedAt) || 0) >= REWARDS_EVERY_MS) {
     await dropsClient.readRewards().then((list) => dropsStore.recordRewards(list), warn("campagnes de badges"));
   }
-  if (now - (Number(stored.streamPulseDropsBadges?.updatedAt) || 0) >= REWARDS_EVERY_MS) {
+  // En mode auto, les badges obtenus se relisent à chaque passage pour fermer l'onglet au plus vite.
+  if (stored[BADGE_AUTO_KEY] || now - (Number(stored.streamPulseDropsBadges?.updatedAt) || 0) >= REWARDS_EVERY_MS) {
     await dropsClient.readBadges()
       .then((raw) => dropsStore.recordBadges(raw))
       .then(({ added }) => announceBadges(added), warn("badges globaux"));
   }
+  await checkBadgeAuto();
 }
+
+// ─── Obtention automatique d'un badge ─────────────────────────────────────────
+// Un onglet épinglé et muet regarde un live de la campagne ; dès que Twitch
+// compte le badge parmi ceux de l'utilisateur, l'onglet se ferme et une
+// notification le signale. Les Drops prêts sont récupérés par l'alarme habituelle.
+
+const channelOf = (url) => (String(url || "").match(/^https:\/\/www\.twitch\.tv\/([a-z0-9_]{2,25})\/?(?:[?#]|$)/i) || [])[1] || "";
+
+async function openBadgeTab(auto, tabId) {
+  const url = await dropsStreamUrl({ gameId: auto.gameId, game: auto.game });
+  if (tabId) {
+    await chrome.tabs.update(tabId, { url, pinned: true, muted: true });
+    return tabId;
+  }
+  const tab = await chrome.tabs.create({ url, active: false, pinned: true });
+  await chrome.tabs.update(tab.id, { muted: true });
+  return tab.id;
+}
+
+async function startBadgeAuto(badge) {
+  const previous = (await chrome.storage.local.get(BADGE_AUTO_KEY))[BADGE_AUTO_KEY];
+  const tabId = await openBadgeTab(badge, previous?.tabId && (await tabExists(previous.tabId)) ? previous.tabId : 0);
+  await chrome.storage.local.set({ [BADGE_AUTO_KEY]: { ...badge, tabId, startedAt: Date.now() } });
+  // Les Drops du live doivent être suivis pour que la récupération auto passe.
+  scheduleDropsAlarm();
+}
+
+async function stopBadgeAuto({ closeTab = true } = {}) {
+  const auto = (await chrome.storage.local.get(BADGE_AUTO_KEY))[BADGE_AUTO_KEY];
+  await chrome.storage.local.remove(BADGE_AUTO_KEY);
+  if (closeTab && auto?.tabId && (await tabExists(auto.tabId))) await chrome.tabs.remove(auto.tabId);
+  return auto;
+}
+
+async function tabExists(tabId) {
+  try {
+    return Boolean(await chrome.tabs.get(tabId));
+  } catch (_) {
+    return false;
+  }
+}
+
+function checkBadgeAfterClaim() {
+  chrome.storage.local.get(BADGE_AUTO_KEY)
+    .then((stored) => (stored[BADGE_AUTO_KEY] ? refreshRewardsFromWorker() : null))
+    .catch((error) => console.warn("[StreamPulse] mode auto badge :", error?.code || error?.message || error));
+}
+
+async function checkBadgeAuto() {
+  const stored = await chrome.storage.local.get([BADGE_AUTO_KEY, "streamPulseDropsBadges", "streamPulseDropsCampaigns"]);
+  const auto = stored[BADGE_AUTO_KEY];
+  if (!auto) return;
+  if (badgesFrom(stored).owned.includes(auto.badgeId)) {
+    await stopBadgeAuto();
+    const prefs = await PreferenceStore.get();
+    await NotificationCenter.show({
+      title: translateWithPrefs(prefs, "background.notifications.badgeAutoTitle"),
+      message: translateWithPrefs(prefs, "background.notifications.badgeAutoMessage", { name: auto.title }),
+    });
+    return;
+  }
+  const campaign = (stored.streamPulseDropsCampaigns?.campaigns || []).find((item) => item.id === auto.campaignId);
+  if (campaign?.endsAt && campaign.endsAt < Date.now()) {
+    await stopBadgeAuto();
+    return;
+  }
+  // Onglet fermé à la main ou live terminé : on repart sur un live en cours.
+  const tab = auto.tabId ? await chrome.tabs.get(auto.tabId).catch(() => null) : null;
+  if (!tab) return;
+  const login = channelOf(tab.url);
+  if (login && (await isChannelLive(login))) return;
+  await openBadgeTab(auto, tab.id);
+}
+
+async function isChannelLive(login) {
+  try {
+    await ensureConfig();
+    const data = await fetchTwitchJson(`https://api.twitch.tv/helix/streams?user_login=${encodeURIComponent(login)}&type=live`, { headers: twitchHeaders() });
+    return Boolean(data?.data?.length);
+  } catch (error) {
+    // Sans réponse de Helix, on garde l'onglet tel quel plutôt que de changer de chaîne à l'aveugle.
+    console.warn("[StreamPulse] mode auto badge :", error?.message || error);
+    return true;
+  }
+}
+
+/**
+ * Exécuté dans la page Twitch (monde MAIN) : lecteur en qualité minimale et
+ * volume à 1 %. Le lecteur n'a pas d'API publique : on le trouve dans l'arbre
+ * React, comme le font les autres extensions. Il réessaie tant qu'il n'est pas prêt.
+ */
+function lowPowerPlayer() {
+  let tries = 0;
+  const apply = () => {
+    tries += 1;
+    const root = document.querySelector(".video-player, [data-a-target='video-player']");
+    const fiberKey = root && Object.keys(root).find((key) => key.startsWith("__reactFiber$"));
+    let node = fiberKey ? root[fiberKey] : null;
+    let player = null;
+    for (let depth = 0; node && depth < 60 && !player; depth += 1, node = node.return) {
+      const props = node.memoizedProps || {};
+      player = props.mediaPlayerInstance?.core || props.mediaPlayerInstance || null;
+    }
+    const qualities = player?.getQualities?.() || [];
+    if (!player || !qualities.length) {
+      if (tries < 30) setTimeout(apply, 2000);
+      return;
+    }
+    const lowest = [...qualities].sort((a, b) => (a.bitrate || a.height || 0) - (b.bitrate || b.height || 0))[0];
+    player.setAutoSwitchQuality?.(false);
+    player.setQuality?.(lowest);
+    player.setVolume?.(0.01);
+    player.setMuted?.(false);
+  };
+  apply();
+}
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  if (changeInfo.status !== "complete") return;
+  chrome.storage.local.get(BADGE_AUTO_KEY)
+    .then((stored) => {
+      if (stored[BADGE_AUTO_KEY]?.tabId !== tabId) return null;
+      return chrome.scripting.executeScript({ target: { tabId }, world: "MAIN", func: lowPowerPlayer });
+    })
+    .catch((error) => console.warn("[StreamPulse] mode auto badge, lecteur :", error?.message || error));
+});
+
+chrome.tabs.onRemoved.addListener((tabId) => {
+  chrome.storage.local.get(BADGE_AUTO_KEY).then((stored) => {
+    // Onglet fermé par l'utilisateur : le mode auto s'arrête avec lui.
+    if (stored[BADGE_AUTO_KEY]?.tabId === tabId) return chrome.storage.local.remove(BADGE_AUTO_KEY);
+    return null;
+  }).catch((error) => console.warn("[StreamPulse] mode auto badge :", error?.message || error));
+});
 
 /** Alerte pour les nouveaux badges gratuits (3 au plus d'un coup). */
 async function announceBadges(badges) {
@@ -1062,6 +1198,8 @@ async function claimDropFromWorker(instanceId, auto) {
   if (ok && !claimed) console.warn("[StreamPulse] récupération du Drop refusée :", status || "sans statut");
   // Récupéré mais absent de la progression locale : on relit pour remettre la liste à jour.
   if (claimed && !result.entry) refreshDropsFromWorker({ minGapMs: 0 }).catch(() => {});
+  // Un Drop récupéré peut être le badge attendu : relecture immédiate en mode auto.
+  if (claimed) checkBadgeAfterClaim();
   return claimed;
 }
 
@@ -3789,6 +3927,25 @@ function handleMessage(request, sender, sendResponse) {
       })();
       return true;
 
+    case "badgeAutoStart":
+      startBadgeAuto({
+        badgeId: String(request.badge?.badgeId || ""),
+        title: String(request.badge?.title || "").slice(0, 120),
+        image: String(request.badge?.image || ""),
+        game: String(request.badge?.game || "").slice(0, 120),
+        gameId: String(request.badge?.gameId || ""),
+        campaignId: String(request.badge?.campaignId || ""),
+      })
+        .then(() => sendResponse({ success: true }))
+        .catch((error) => sendResponse({ error: error?.message || String(error) }));
+      return true;
+
+    case "badgeAutoStop":
+      stopBadgeAuto()
+        .then(() => sendResponse({ success: true }))
+        .catch((error) => sendResponse({ error: error?.message || String(error) }));
+      return true;
+
     case "openDropsStream":
       dropsStreamUrl({ gameId: request.gameId, game: request.game })
         .then((url) => chrome.tabs.create({ url }))
@@ -3821,6 +3978,7 @@ function handleMessage(request, sender, sendResponse) {
           const prefs = await PreferenceStore.get();
           if (prefs.dropsTracking !== false) {
             setTimeout(() => sendDropsCommand({ action: "inventory" }, sender.tab?.id).catch(() => {}), 3000);
+            setTimeout(checkBadgeAfterClaim, 5000);
           } else {
             await announceDrops([{ name: "", game: "", channel: String(request.channel || ""), at: Date.now() }]);
           }

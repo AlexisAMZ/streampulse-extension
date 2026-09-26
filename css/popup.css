@@ -894,6 +894,12 @@ button.badge-card:focus-visible { box-shadow: inset 0 0 0 1px var(--violet-line)
 .badge-card-art img { width: 30px; height: 30px; object-fit: contain; }
 .badge-card-body { display: grid; gap: 2px; min-width: 0; }
 .badge-card-foot { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; }
+#badges-catalog li, #drops-badges li { position: relative; }
+.badge-auto { position: absolute; right: 8px; bottom: 8px; padding: 3px 9px; border: 0; border-radius: 999px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--violet-line); color: var(--text-2); font-size: 10.5px; font-weight: 800; cursor: pointer; transition: background var(--dur-fast) ease, color var(--dur-fast) ease; }
+.badge-auto:hover, .badge-auto:focus-visible { background: var(--violet-soft, rgba(145, 70, 255, 0.18)); color: var(--text); }
+.badge-auto.is-on { background: var(--violet, #9146ff); box-shadow: none; color: #fff; animation: badge-auto-pulse 2s ease-in-out infinite; }
+@keyframes badge-auto-pulse { 50% { box-shadow: 0 0 0 4px rgba(145, 70, 255, 0.25); } }
+@media (prefers-reduced-motion: reduce) { .badge-auto.is-on { animation: none; } }
 
 /* ── Demande d'avis ── */
 .review-ask { position: fixed; right: 16px; bottom: 72px; left: 16px; z-index: 40; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--violet-line), var(--shadow-pop); color: var(--text); }
