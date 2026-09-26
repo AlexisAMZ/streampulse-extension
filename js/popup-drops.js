@@ -32,6 +32,13 @@ import {
 } from "./drops-data.js";
 
 const $ = (id) => document.getElementById(id);
+/** Descriptions de badges traduites par le site (DeepL), gardées par langue. */
+const BADGE_TEXT_URL = "https://streampulse.fr/api/twitch-badges";
+const BADGE_TEXT_KEY = "streamPulseBadgeText";
+const BADGE_TEXT_MAX_AGE_MS = 7 * 86_400_000;
+let badgeText = {};
+/** Une seule tentative par badge et par ouverture du popup : pas de boucle si le site ne traduit pas. */
+const badgeTextTried = new Set();
 const PREFERENCES_KEY = "betaGeneralPreferences";
 const WATCH_DAILY_KEY = "streamPulseWatchTimeDaily";
 const CAMPAIGNS_PAGE = "https://www.twitch.tv/drops/campaigns";
@@ -365,7 +372,8 @@ function badgeRow(badge) {
     row.dataset.url = badge.url;
   }
   const main = el("span", "camp-main");
-  main.append(el("b", null, badge.title), el("small", "badge-desc", badge.description));
+  const description = badgeText[getCurrentLanguage()]?.[badge.id]?.text || badge.description;
+  main.append(el("b", null, badge.title), el("small", "badge-desc", description));
   if (badge.description) main.title = badge.description;
   const side = el("span", "camp-side");
   if (badge.available && !badge.owned) side.append(el("span", "camp-when is-new", t("popup.drops.badgeAvailable")));
@@ -392,6 +400,32 @@ function renderBadges(now) {
   sync.textContent = badges.syncedAt ? t("popup.drops.badgesSince", { date: shortDate(badges.syncedAt) }) : t("popup.drops.badgesSyncing");
 }
 
+/**
+ * Demande au site la traduction des badges affichés qui en manquent. Une
+ * seule requête à la fois par lot ; en cas d'échec, l'anglais reste affiché.
+ */
+async function translateBadges(ids) {
+  const lang = getCurrentLanguage();
+  if (!lang || lang === "en") return;
+  const now = Date.now();
+  const known = badgeText[lang] || {};
+  const missing = ids.filter((id) => !badgeTextTried.has(`${lang}:${id}`) && !(known[id] && now - known[id].at < BADGE_TEXT_MAX_AGE_MS)).slice(0, 60);
+  if (!missing.length) return;
+  missing.forEach((id) => badgeTextTried.add(`${lang}:${id}`));
+  try {
+    const response = await fetch(`${BADGE_TEXT_URL}?lang=${encodeURIComponent(lang)}&ids=${missing.map(encodeURIComponent).join(",")}`);
+    if (!response.ok) return;
+    const { translations = {} } = await response.json();
+    const next = { ...(badgeText[lang] || {}) };
+    for (const [id, text] of Object.entries(translations)) if (typeof text === "string" && text) next[id] = { text: text.slice(0, 400), at: now };
+    badgeText = { ...badgeText, [lang]: next };
+    await chrome.storage.local.set({ [BADGE_TEXT_KEY]: badgeText });
+    renderCatalog();
+  } catch (error) {
+    console.warn("[popup] traduction des badges indisponible :", error?.message || error);
+  }
+}
+
 function renderCatalog() {
   if (!$("badges-catalog")) return;
   const context = { now: Date.now(), campaigns: campaigns.campaigns, names: activeNames({ rewards: rewards.rewards, campaigns: campaigns.campaigns, drops: progress.drops }) };
@@ -415,7 +449,9 @@ function renderCatalog() {
   });
   // Seuls les badges obtenables en ce moment : les événements finis n'intéressent personne.
   const list = catalogBadges(badges, badgeFilter, badgeQuery, context).filter((badge) => badge.available);
-  $("badges-catalog").replaceChildren(...list.slice(0, badgeLimit).map(badgeRow));
+  const shown = list.slice(0, badgeLimit);
+  $("badges-catalog").replaceChildren(...shown.map(badgeRow));
+  translateBadges(shown.map((badge) => badge.id));
   $("badges-catalog-empty").hidden = list.length > 0;
   $("badges-more").hidden = list.length <= badgeLimit;
 }
@@ -567,6 +603,8 @@ async function reload() {
   badges = badgesFrom(stored);
   history = historyFrom(stored);
   prefs = stored[PREFERENCES_KEY] || {};
+  const text = (await chrome.storage.local.get(BADGE_TEXT_KEY))[BADGE_TEXT_KEY];
+  if (text && typeof text === "object") badgeText = text;
   render();
 }
 
