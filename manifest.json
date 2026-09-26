@@ -44,10 +44,21 @@
       ],
       "all_frames": false,
       "js": [
-        "js/inject/predictions-bridge.js"
+        "js/inject/predictions-bridge.js",
+        "js/inject/points-bridge.js"
       ],
       "run_at": "document_start",
       "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://www.twitch.tv/*"
+      ],
+      "all_frames": false,
+      "js": [
+        "js/pointsRecorder.js"
+      ],
+      "run_at": "document_start"
     },
     {
       "matches": [

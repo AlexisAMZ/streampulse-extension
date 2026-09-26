@@ -687,6 +687,7 @@ class PreferenceStore {
       enableStreamerFavicon: preferences.enableStreamerFavicon !== false,
       enableFastForwardButton: preferences.enableFastForwardButton !== false,
       watchTimeTracker: preferences.watchTimeTracker !== false,
+      pointsTracking: preferences.pointsTracking !== false,
       chatKeywords: typeof preferences.chatKeywords === "string" ? preferences.chatKeywords : "",
       chatBlockedUsers: typeof preferences.chatBlockedUsers === "string" ? preferences.chatBlockedUsers : "",
       language: normalizeLanguage(preferences.language),

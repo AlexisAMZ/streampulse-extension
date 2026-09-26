@@ -34,6 +34,7 @@ export const DEFAULT_PREFERENCES = {
   enableStreamerFavicon: true,
   enableFastForwardButton: true,
   watchTimeTracker: true,
+  pointsTracking: true,
   chatKeywords: "",
   chatBlockedUsers: "",
   language: DEFAULT_LANGUAGE,
