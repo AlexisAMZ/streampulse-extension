@@ -22,8 +22,10 @@ test("chaque effet a son rendu CSS", () => {
   const css = ["css/popup.css", "css/fx-effects.css", "css/inject/twitch-badge.css"]
     .map((file) => readFileSync(new URL(`../${file}`, import.meta.url), "utf8"))
     .join("\n");
-  for (const fx of BADGE_FX) assert.match(css, new RegExp(`sp-chat-badge--fx-${fx}\\b`), `badge ${fx}`);
-  for (const fx of BADGE_FX) assert.match(css, new RegExp(`\\.cosmetic-badge\\.sp-fx-${fx}\\b`), `aperçu ${fx}`);
+  // « tenure » n'est pas un effet mais la tuile d'ancienneté (voir le test des tuiles).
+  const effects = BADGE_FX.filter((fx) => fx !== "tenure");
+  for (const fx of effects) assert.match(css, new RegExp(`sp-chat-badge--fx-${fx}\\b`), `badge ${fx}`);
+  for (const fx of effects) assert.match(css, new RegExp(`\\.cosmetic-badge\\.sp-fx-${fx}\\b`), `aperçu ${fx}`);
   for (const fx of NAME_FX) assert.match(css, new RegExp(`\\.sp-paint--${fx}\\b`), `pseudo ${fx}`);
 });
 

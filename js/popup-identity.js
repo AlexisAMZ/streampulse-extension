@@ -70,7 +70,14 @@ function fxSample(kind, value, text) {
   if (kind === "name") {
     return node("b", `fx-sample-name${value ? ` sp-paint sp-paint--${value}` : ""}`, text || chatName || t("popup.cosmetics.sampleName"));
   }
+  // « Ancienneté » : la tuile de son palier (celle d'un an en exemple sans StreamPulse+).
+  if (value === "tenure") return tenureTile(ownTier() || "y1");
   return node("span", `cosmetic-badge${value ? ` sp-fx-${value}` : ""}`);
+}
+
+function ownTier() {
+  const current = access();
+  return current.plus ? tenureTier(current.plan, current.since) : "";
 }
 
 /**
@@ -115,8 +122,12 @@ function renderCosmetics() {
   const shown = current.plus ? cosmetics : { badgeFx: "", nameFx: "" };
   $("cosmetic-name-fx")?.replaceChildren(...["", ...visibleFx(NAME_FX, current)].map((value) => fxOption("name", value, shown.nameFx, current)));
   $("cosmetic-badge-fx")?.replaceChildren(...["", ...visibleFx(BADGE_FX, current)].map((value) => fxOption("badge", value, shown.badgeFx, current)));
-  if ($("cosmetic-badge")) $("cosmetic-badge").className = `cosmetic-badge${shown.badgeFx ? ` sp-fx-${shown.badgeFx}` : ""}`;
-  const tier = current.plus ? tenureTier(current.plan, current.since) : "";
+  // Un seul badge : le logo personnalisé, ou la tuile d'ancienneté si elle est choisie.
+  const tier = shown.badgeFx === "tenure" ? tenureTier(current.plan, current.since) : "";
+  if ($("cosmetic-badge")) {
+    $("cosmetic-badge").className = `cosmetic-badge${shown.badgeFx && !tier ? ` sp-fx-${shown.badgeFx}` : ""}`;
+    $("cosmetic-badge").hidden = Boolean(tier);
+  }
   if ($("cosmetic-tile")) $("cosmetic-tile").className = tier ? `cosmetic-tile sp-tier sp-tier-${tier}` : "cosmetic-tile";
   renderTenure(current);
   if ($("cosmetic-name")) {

@@ -5,8 +5,9 @@
 // copie, tout comme l'API du site (api/streampulse-badges.mjs) :
 // tests/cosmetics-data.test.mjs vérifie que les copies de l'extension suivent.
 
+// « tenure » : badge d'ancienneté à la place du logo personnalisé (tenureTier()).
 export const BADGE_FX = Object.freeze([
-  "pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker",
+  "tenure", "pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker",
   "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost",
   "halo", "crown",
   "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean",

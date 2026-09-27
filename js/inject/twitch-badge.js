@@ -50,7 +50,7 @@
   // Effets publics des abonnes : empreinte -> { b: effet du badge, n: pseudo special }.
   var badgeStyles = new Map();
   var COSMETICS_KEY = "streamPulseCosmetics";
-  var BADGE_FX = ["pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost", "halo", "crown", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
+  var BADGE_FX = ["tenure", "pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost", "halo", "crown", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
   var NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow", "fire", "frost", "glitch", "ambassador", "founder", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
   var REFRESH_MS = 5 * 60 * 1000;
   // Empreinte du compte Twitch connecte et licence de ce navigateur.
@@ -79,33 +79,22 @@
   }
 
   /**
-   * Badge d'anciennete StreamPulse+ : un badge a part, juste apres le logo.
-   * Il garde ses propres animations et ne prend jamais l'effet choisi pour le logo.
+   * Apparence du logo d'un abonne : son effet, ou sa tuile d'anciennete s'il a
+   * choisi « Anciennete » (badgeFx "tenure"). Jamais les deux a la fois.
    */
-  function syncTenure(badge, style) {
-    if (!badge || !badge.parentNode) return;
-    var next = badge.nextElementSibling;
-    var tenure = next && next.classList.contains("sp-tenure-badge") ? next : null;
-    var tier = style ? tenureTier(style.p, style.s) : "";
-    if (!tier) {
-      if (tenure) tenure.remove();
+  function applyLook(badge, style) {
+    badge.className = badge.className
+      .replace(/\bsp-chat-badge--fx-\S+/g, "")
+      .replace(/\bsp-tier(-\S+)?/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (!style || !style.b) return;
+    if (style.b !== "tenure") {
+      badge.classList.add("sp-chat-badge--fx-" + style.b);
       return;
     }
-    if (!tenure) {
-      tenure = document.createElement("span");
-      var hash = badge.getAttribute("data-sp-hash");
-      if (hash) tenure.setAttribute("data-sp-hash", hash);
-      tenure.setAttribute("aria-label", "StreamPulse+");
-      var mark = document.createElement("span");
-      mark.className = "sp-tenure-img";
-      var mask = "url(" + badgeIconUrl + ")";
-      mark.style.setProperty("-webkit-mask-image", mask);
-      mark.style.setProperty("mask-image", mask);
-      tenure.appendChild(mark);
-      badge.parentNode.insertBefore(tenure, badge.nextSibling);
-    }
-    tenure.className = "sp-tenure-badge sp-tier sp-tier-" + tier +
-      (badge.classList.contains("sp-chat-badge--standalone") ? " sp-tenure-badge--standalone" : "");
+    var tier = tenureTier(style.p, style.s);
+    if (tier) badge.classList.add("sp-tier", "sp-tier-" + tier);
   }
 
   function readOwnLocal(cosmetics) {
@@ -508,8 +497,7 @@
     mark.style.setProperty("-webkit-mask-image", mask);
     mark.style.setProperty("mask-image", mask);
     mark.style.setProperty("--sp-badge-color", resolveBadgeColor(messageEl, hash));
-    var style = hash && badgeStyles.get(hash);
-    if (style && style.b) badge.classList.add("sp-chat-badge--fx-" + style.b);
+    applyLook(badge, hash && badgeStyles.get(hash));
 
     badge.appendChild(mark);
     return badge;
@@ -720,11 +708,11 @@
   function setupBadgeCard() {
     // Delegation : deux ecouteurs pour tout le tchat, aucun par badge.
     document.addEventListener("mouseover", function (event) {
-      var badge = event.target && event.target.closest ? event.target.closest(".sp-chat-badge, .sp-tenure-badge") : null;
+      var badge = event.target && event.target.closest ? event.target.closest(".sp-chat-badge") : null;
       if (badge) showBadgeCard(badge);
     }, true);
     document.addEventListener("mouseout", function (event) {
-      var badge = event.target && event.target.closest ? event.target.closest(".sp-chat-badge, .sp-tenure-badge") : null;
+      var badge = event.target && event.target.closest ? event.target.closest(".sp-chat-badge") : null;
       if (badge && !badge.contains(event.relatedTarget)) hideBadgeCard();
     }, true);
     window.addEventListener("scroll", hideBadgeCard, true);
@@ -741,10 +729,7 @@
         if (!line) continue;
         var mark = badge.querySelector(".sp-chat-badge-img");
         if (mark) mark.style.setProperty("--sp-badge-color", resolveBadgeColor(line, hash));
-        badge.className = badge.className.replace(/\bsp-chat-badge--fx-\S+/g, "").replace(/\s+/g, " ").trim();
-        var style = badgeStyles.get(hash);
-        if (style && style.b) badge.classList.add("sp-chat-badge--fx-" + style.b);
-        syncTenure(badge, style);
+        applyLook(badge, badgeStyles.get(hash));
         var name = line.querySelector('[data-a-target="chat-message-username"], .chat-author__display-name, .seventv-chat-user-username');
         if (name) {
           name.className = name.className.replace(/\bsp-paint(--\S+)?/g, "").replace(/\s+/g, " ").trim();
@@ -759,9 +744,6 @@
 
   function injectBadge(messageEl, hash) {
     if (messageEl.querySelector(".sp-chat-badge")) return;
-    // Badge d'anciennete orphelin (ligne recopiee par Twitch ou 7TV) : il suit toujours le logo.
-    var stray = messageEl.querySelectorAll(".sp-tenure-badge");
-    for (var s = 0; s < stray.length; s++) stray[s].remove();
 
     var slot = findBadgeSlot(messageEl);
     if (slot) {
@@ -769,7 +751,6 @@
       // Seul dans son emplacement, rien ne l'espace du pseudo qui suit.
       if (!slot.children.length) badge.classList.add("sp-chat-badge--standalone");
       slot.appendChild(badge);
-      syncTenure(badge, hash && badgeStyles.get(hash));
       ensureSpacing(badge);
       return;
     }
@@ -785,7 +766,6 @@
       var standalone = createBadgeElement(messageEl, hash);
       standalone.classList.add("sp-chat-badge--standalone");
       usernameEl.parentNode.insertBefore(standalone, usernameEl);
-      syncTenure(standalone, hash && badgeStyles.get(hash));
     }
   }
 

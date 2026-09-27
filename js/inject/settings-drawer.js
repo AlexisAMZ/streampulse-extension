@@ -18,7 +18,7 @@
   var COSMETICS_KEY = "streamPulseCosmetics";
   var PLUS_GRACE_MS = 30 * 24 * 60 * 60 * 1000;
   var PLUS_URL = "https://streampulse.fr/plus";
-  var BADGE_FX = ["pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost", "halo", "crown", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
+  var BADGE_FX = ["tenure", "pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost", "halo", "crown", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
   var NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow", "fire", "frost", "glitch", "ambassador", "founder", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
   // Même règles que js/cosmetics-data.js : filleuls requis, et effets du fondateur.
   var REFERRAL_FX = { ambassador: 1, halo: 3 };
@@ -233,19 +233,11 @@
     badge.appendChild(mark);
     var name = el("span", "sp-fx-name", sampleName());
     name.style.setProperty("--sp-paint-glow", "#9146ff");
-    // Badge d'anciennete : a part du logo, il ne prend jamais l'effet choisi.
-    var tenure = el("span", "sp-tenure-badge");
-    var tenureMark = el("span", "sp-tenure-img");
-    tenureMark.style.setProperty("-webkit-mask-image", mask);
-    tenureMark.style.setProperty("mask-image", mask);
-    tenure.appendChild(tenureMark);
     preview.appendChild(badge);
-    preview.appendChild(tenure);
     preview.appendChild(name);
     preview.appendChild(el("span", "sp-fx-sample", ": gg !"));
     root.appendChild(preview);
     editor.badge = badge;
-    editor.tenure = tenure;
     editor.name = name;
 
     root.appendChild(chipGroup("shared.cosmetics.nameTitle", NAME_FX, "shared.cosmetics.", "nameFx", editor));
@@ -263,9 +255,11 @@
   function paintEditor(editor) {
     var shown = ctx.plus ? ctx.cosmetics : { badgeFx: "", nameFx: "" };
     editor.root.classList.toggle("is-locked", !ctx.plus);
-    editor.badge.className = "sp-chat-badge" + (shown.badgeFx ? " sp-chat-badge--fx-" + shown.badgeFx : "");
-    editor.tenure.className = "sp-tenure-badge" + (ctx.tier ? " sp-tier sp-tier-" + ctx.tier : "");
-    editor.tenure.hidden = !ctx.tier;
+    // « Anciennete » : la tuile de son palier remplace le logo personnalise.
+    var look = shown.badgeFx === "tenure"
+      ? (ctx.tier ? " sp-tier sp-tier-" + ctx.tier : "")
+      : (shown.badgeFx ? " sp-chat-badge--fx-" + shown.badgeFx : "");
+    editor.badge.className = "sp-chat-badge" + look;
     editor.name.className = "sp-fx-name" + (shown.nameFx ? " sp-paint sp-paint--" + shown.nameFx : "");
     editor.groups.forEach(function (group) {
       Array.prototype.forEach.call(group.chips.children, function (chip) {
