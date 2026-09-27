@@ -109,3 +109,17 @@ test("un badge est relié à la campagne de Drops en cours de son jeu, qui donne
   assert.deepEqual(available.map((b) => b.id).sort(), ["d20", "rematch-blue-lock"]);
   assert.equal(available.find((b) => b.id === "d20").campaign.endsAt, Date.parse("2026-10-21T06:58:00Z"));
 });
+
+test("un badge d'événement terminé (LoL Classic) n'est jamais proposé, même avec une campagne LoL de badges en cours", () => {
+  const now = Date.parse("2026-09-27T20:00:00Z");
+  const campaigns = normalizeCampaigns([
+    { id: "lolbadge", name: "LoL", status: "ACTIVE", startAt: "2026-09-20T18:00:00Z", endAt: "2026-10-10T15:59:00Z", game: { displayName: "League of Legends" }, owner: { name: "Twitch Gaming" } },
+  ]);
+  const raw = { badges: [
+    { setID: "league-of-legends-classic", title: "League of Legends Classic", description: "This badge was earned by supporting a streamer during the LoL Classic Twitch Rivals launch!" },
+  ], owned: [] };
+  const { state } = mergeBadges({ updatedAt: 0, syncedAt: 0, badges: [], owned: [] }, raw, now);
+  assert.equal(badgeCampaignFor(state.badges[0], campaigns, now), null);
+  const all = catalogBadges({ ...state, badges: state.badges.map((b) => ({ ...b, firstSeen: now })) }, "all", "", { now, campaigns, names: new Set() });
+  assert.equal(all[0].available, false);
+});

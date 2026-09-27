@@ -55,6 +55,23 @@ export const RELEASES = [
     date: "2026-09-27",
     changes: [
       {
+        type: "fix",
+        area: "badges",
+        text: {
+          fr: "Le badge « League of Legends Classic », lié à un événement terminé, n'est plus proposé comme disponible ni visé par le mode auto.",
+          en: "The “League of Legends Classic” badge, from an event that has ended, is no longer shown as available or targeted by auto mode.",
+          es: "La insignia «League of Legends Classic», de un evento ya terminado, ya no aparece como disponible ni la busca el modo automático.",
+          "pt-BR": "O selo “League of Legends Classic”, de um evento já encerrado, não aparece mais como disponível nem é buscado pelo modo automático.",
+          de: "Das Abzeichen „League of Legends Classic“ aus einem beendeten Event wird nicht mehr als verfügbar angezeigt und vom Auto-Modus nicht mehr angesteuert.",
+          it: "Il badge «League of Legends Classic», legato a un evento concluso, non viene più mostrato come disponibile né cercato dalla modalità automatica.",
+          pl: "Odznaka „League of Legends Classic” z zakończonego wydarzenia nie jest już pokazywana jako dostępna ani wybierana przez tryb automatyczny.",
+          tr: "Sona ermiş bir etkinliğe ait “League of Legends Classic” rozeti artık mevcut olarak gösterilmiyor ve otomatik mod tarafından hedeflenmiyor.",
+          ru: "Значок «League of Legends Classic» с завершившегося события больше не отображается как доступный и не выбирается автоматическим режимом.",
+          ja: "終了したイベントの「League of Legends Classic」バッジは、入手可能として表示されず、自動モードの対象にもならなくなりました。",
+          ko: "종료된 이벤트의 ‘League of Legends Classic’ 배지는 더 이상 획득 가능으로 표시되지 않으며 자동 모드 대상에서도 빠집니다.",
+        },
+      },
+      {
         type: "improved",
         area: "plus",
         text: {

@@ -606,7 +606,17 @@ const BADGE_OWNER = /twitch gaming|badge/i;
 
 export const isBadgeCampaign = (campaign) => BADGE_OWNER.test(campaign.owner || "") || campaign.badgeOnly === true;
 
+/**
+ * Badges d'événements terminés que rien dans le catalogue de Twitch ne date :
+ * ils partagent le nom d'un jeu dont une campagne de badges est en cours, et
+ * seraient proposés à tort. Identifiants Twitch (setID).
+ */
+export const RETIRED_BADGES = new Set([
+  "league-of-legends-classic", // lancement de LoL Classic en Twitch Rivals
+]);
+
 export function badgeCampaignFor(badge, campaigns, now) {
+  if (RETIRED_BADGES.has(badge.id)) return null;
   const game = fold(badge.game).trim();
   const text = fold(`${badge.title} ${badge.description}`);
   let best = null;
@@ -635,9 +645,10 @@ export function catalogBadges(state, filterId = "all", query = "", context = {})
   const pastYear = (badge) => (fold(badge.description).match(/\b20\d\d\b/g) || []).some((value) => Number(value) < year);
   const campaigns = context.campaigns || [];
   const isAvailable = (badge) =>
+    !RETIRED_BADGES.has(badge.id) && (
     Boolean(badge.campaign) ||
     titles.has(fold(badge.title).trim()) ||
-    (badge.firstSeen > 0 && now - badge.firstSeen <= NEW_BADGE_MS);
+    (badge.firstSeen > 0 && now - badge.firstSeen <= NEW_BADGE_MS));
   const needle = String(query || "").trim().toLowerCase();
   const test = BADGE_TESTS[filterId] || BADGE_TESTS.all;
   return state.badges
