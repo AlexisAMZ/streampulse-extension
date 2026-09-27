@@ -54,7 +54,6 @@ export const RELEASES = [
     version: "26.9.29",
     date: "2026-09-27",
     changes: [
-      },
       {
         type: "improved",
         area: "plus",
