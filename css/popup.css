@@ -1047,8 +1047,8 @@ body.is-settings .new-dot { background: var(--violet); box-shadow: 0 0 0 3px var
 .badge-auto.is-queued { background: var(--surface); box-shadow: inset 0 0 0 1px var(--violet-line); color: var(--text); }
 .badge-auto.is-queued svg { color: var(--violet); }
 
-/* Tuile d'ancienneté (26.9.28) : sans StreamPulse+, le logo reste nu. */
-.cosmetic-tile { display: contents; }
+/* Badge d'ancienneté (26.9.28) : à part du logo, masqué sans StreamPulse+. */
+.cosmetic-tile:not(.sp-tier) { display: none; }
 .tenure-ladder { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px 6px; margin: 8px 0 0; padding: 12px 8px; border-radius: 10px; background: #18181b; list-style: none; }
 .tenure-step { display: grid; justify-items: center; gap: 5px; min-width: 0; }
 .tenure-ladder:has(.is-current) .tenure-step:not(.is-current) { opacity: 0.5; }

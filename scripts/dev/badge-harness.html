@@ -54,7 +54,7 @@
       setTimeout(() => {
         const line = document.querySelector(".chat-line__message").cloneNode(true);
         line.classList.remove("sp-badge-processed");
-        line.querySelector(".sp-chat-badge")?.remove();
+        line.querySelectorAll(".sp-chat-badge, .sp-tenure-badge").forEach((badge) => badge.remove());
         const name = line.querySelector(".chat-author__display-name");
         name.className = "chat-author__display-name";
         line.lastElementChild.textContent = ": nouveau message";

@@ -233,11 +233,19 @@
     badge.appendChild(mark);
     var name = el("span", "sp-fx-name", sampleName());
     name.style.setProperty("--sp-paint-glow", "#9146ff");
+    // Badge d'anciennete : a part du logo, il ne prend jamais l'effet choisi.
+    var tenure = el("span", "sp-tenure-badge");
+    var tenureMark = el("span", "sp-tenure-img");
+    tenureMark.style.setProperty("-webkit-mask-image", mask);
+    tenureMark.style.setProperty("mask-image", mask);
+    tenure.appendChild(tenureMark);
     preview.appendChild(badge);
+    preview.appendChild(tenure);
     preview.appendChild(name);
     preview.appendChild(el("span", "sp-fx-sample", ": gg !"));
     root.appendChild(preview);
     editor.badge = badge;
+    editor.tenure = tenure;
     editor.name = name;
 
     root.appendChild(chipGroup("shared.cosmetics.nameTitle", NAME_FX, "shared.cosmetics.", "nameFx", editor));
@@ -255,7 +263,9 @@
   function paintEditor(editor) {
     var shown = ctx.plus ? ctx.cosmetics : { badgeFx: "", nameFx: "" };
     editor.root.classList.toggle("is-locked", !ctx.plus);
-    editor.badge.className = "sp-chat-badge" + (shown.badgeFx ? " sp-chat-badge--fx-" + shown.badgeFx : "") + (ctx.tier ? " sp-tier sp-tier-" + ctx.tier : "");
+    editor.badge.className = "sp-chat-badge" + (shown.badgeFx ? " sp-chat-badge--fx-" + shown.badgeFx : "");
+    editor.tenure.className = "sp-tenure-badge" + (ctx.tier ? " sp-tier sp-tier-" + ctx.tier : "");
+    editor.tenure.hidden = !ctx.tier;
     editor.name.className = "sp-fx-name" + (shown.nameFx ? " sp-paint sp-paint--" + shown.nameFx : "");
     editor.groups.forEach(function (group) {
       Array.prototype.forEach.call(group.chips.children, function (chip) {
