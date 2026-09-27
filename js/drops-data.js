@@ -613,6 +613,10 @@ export const isBadgeCampaign = (campaign) => BADGE_OWNER.test(campaign.owner || 
  */
 export const RETIRED_BADGES = new Set([
   "league-of-legends-classic", // lancement de LoL Classic en Twitch Rivals
+  "elden-ring-recluse", // sortie de Nightreign
+  "elden-ring-wylder", // sortie de Nightreign
+  "raging-wolf-helm", // lancement de Shadow of the Erdtree
+  "sorcerer-rogier-elden-ring",
 ]);
 
 export function badgeCampaignFor(badge, campaigns, now) {
