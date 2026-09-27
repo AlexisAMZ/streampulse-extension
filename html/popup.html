@@ -791,30 +791,22 @@
             <span class="cosmetic-preview-label" data-i18n="popup.cosmetics.preview">Aperçu dans le tchat</span>
             <span class="cosmetic-line" aria-hidden="true"><span class="cosmetic-badge" id="cosmetic-badge"></span><span class="cosmetic-tile" id="cosmetic-tile"><span class="cosmetic-badge"></span></span><b class="cosmetic-name" id="cosmetic-name" data-i18n="popup.cosmetics.sampleName">TonPseudo</b><span class="cosmetic-msg">: gg !</span></span>
           </div>
-          <div class="look-tabs" role="tablist" data-i18n-attr-ariaLabel="popup.osd.menuIdentity">
-            <button class="look-tab" id="look-tab-badge" type="button" role="tab" aria-selected="true" aria-controls="look-badge" data-look="badge" data-i18n="popup.cosmetics.tabBadge">Badge</button>
-            <button class="look-tab" id="look-tab-name" type="button" role="tab" aria-selected="false" aria-controls="look-name" data-look="name" data-i18n="popup.cosmetics.tabName">Pseudo</button>
+          <div class="look-head">
+            <h3 class="settings-group-header" data-i18n="popup.cosmetics.tabBadge">Badge</h3>
           </div>
-          <div class="look-panel" id="look-badge" role="tabpanel" aria-labelledby="look-tab-badge">
-            <h3 class="settings-group-header" data-i18n="popup.cosmetics.shapeTitle">Forme</h3>
-            <div class="look-shapes" id="cosmetic-shape" role="radiogroup" data-i18n-attr-ariaLabel="popup.cosmetics.shapeTitle"></div>
-            <div id="cosmetic-logo-colors">
-              <h3 class="settings-group-header" data-i18n="popup.cosmetics.colorTitle">Couleur</h3>
-              <p class="settings-description" data-i18n="popup.cosmetics.colorBody">Le même nuancier que ton pseudo, chaque couleur avec son animation.</p>
-              <div class="fx-picker is-list" id="cosmetic-badge-fx" role="radiogroup" data-i18n-attr-ariaLabel="popup.cosmetics.colorTitle"></div>
-            </div>
-            <div id="cosmetic-tenure-block" hidden>
-              <h3 class="settings-group-header" data-i18n="popup.cosmetics.tenureTitle">Badge d'ancienneté</h3>
-              <p class="settings-description" data-i18n="popup.cosmetics.tenureBody">Ton badge évolue avec ton ancienneté d'abonnement, avec ses propres animations.</p>
-              <ol class="tenure-ladder" id="cosmetic-tenure"></ol>
+          <div class="fx-picker is-list" id="cosmetic-badge-fx" role="radiogroup" data-i18n-attr-ariaLabel="popup.cosmetics.tabBadge"></div>
+          <div id="cosmetic-tenure-block" hidden>
+            <p class="settings-description" data-i18n="popup.cosmetics.tenureBody">Ton badge évolue avec ton ancienneté d'abonnement, avec ses propres animations.</p>
+            <ol class="tenure-ladder" id="cosmetic-tenure"></ol>
+          </div>
+          <div class="look-head">
+            <h3 class="settings-group-header" data-i18n="popup.cosmetics.tabName">Pseudo</h3>
+            <div class="look-switch" role="group" data-i18n-attr-ariaLabel="popup.cosmetics.tabName">
+              <button type="button" class="look-switch-btn" data-sample="label" aria-pressed="true" data-i18n="popup.cosmetics.showPaintName">Nom de la couleur</button>
+              <button type="button" class="look-switch-btn" data-sample="user" aria-pressed="false" data-i18n="popup.cosmetics.showUsername">Ton pseudo</button>
             </div>
           </div>
-          <div class="look-panel" id="look-name" role="tabpanel" aria-labelledby="look-tab-name" hidden>
-            <h3 class="settings-group-header" data-i18n="popup.cosmetics.colorTitle">Couleur</h3>
-            <p class="settings-description" data-i18n="popup.cosmetics.nameBody">Le même nuancier que ton badge, vu par les utilisateurs de StreamPulse.</p>
-            <div class="fx-picker is-list" id="cosmetic-name-fx" role="radiogroup" data-i18n-attr-ariaLabel="popup.cosmetics.nameTitle"></div>
-          </div>
-
+          <div class="fx-picker is-list" id="cosmetic-name-fx" role="radiogroup" data-i18n-attr-ariaLabel="popup.cosmetics.tabName"></div>
         </section>
 
         <!-- StreamPulse+ -->

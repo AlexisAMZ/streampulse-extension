@@ -101,7 +101,7 @@ function fxOption(kind, value, selected, current) {
   // elle-même ; pour le logo, le logo déjà coloré puis son nom.
   const label = t(`popup.cosmetics.${value || "none"}`);
   button.append(node("span", "fx-radio"));
-  if (kind === "name") button.append(fxSample("name", value, label));
+  if (kind === "name") button.append(fxSample("name", value, nameSample === "label" ? label : ""));
   else button.append(fxSample("badge", value), node("span", "fx-label", label));
   if (lock === "referrals") {
     const needed = REFERRAL_TIERS.find((tier) => tier.fx?.value === value)?.count || 1;
@@ -126,51 +126,24 @@ function renderRank(current) {
   else if (rank === "ambassador") target.textContent = t("popup.identity.rankAmbassador", { count: current.referrals });
 }
 
-/** Couleurs proposées pour le logo : le nuancier commun puis les récompenses. */
-const LOGO_FX = BADGE_FX.filter((value) => !TENURE_STYLES[value]);
-const SHAPES = ["logo", "tenure", "pager"];
-let lookTab = "badge";
-// Dernière couleur de logo choisie : reprise quand on revient à la forme Logo.
-let lastLogoFx = "";
+// Liste des pseudos : le nom de chaque couleur écrit avec elle (« label ») ou
+// son propre pseudo (« user »), comme la bascule Paint Name / Username de 7TV.
+let nameSample = "label";
 
-const shapeOf = (badgeFx) => (TENURE_STYLES[badgeFx] ? badgeFx : "logo");
-
-/** Trois cartes de forme : Logo (sa couleur), Jauge et Pager (son palier). */
-function shapeCard(shape, selected, current) {
-  const button = node("button", "look-shape");
-  button.type = "button";
-  button.setAttribute("role", "radio");
-  button.setAttribute("aria-checked", String(shape === selected));
-  button.dataset.shape = shape;
-  button.dataset.lock = fxLock(shape === "logo" ? "" : shape, current);
-  const art = node("span", "look-shape-art");
-  const tier = ownTier() || "y1";
-  art.append(shape === "logo" ? fxSample("badge", selected === "logo" ? cosmetics.badgeFx : lastLogoFx) : tenureTile(tier, TENURE_STYLES[shape]));
-  const sub = shape === "logo" ? t("popup.cosmetics.shapeLogoSub") : t("popup.cosmetics.shapeTenureSub", { tier: t(`popup.cosmetics.tier_${tier}`) });
-  button.append(art, node("b", null, t(`popup.cosmetics.shape_${shape}`)), node("small", null, sub));
-  if (button.dataset.lock === "plus") button.append(node("span", "fx-plus", t("popup.plus.badge")));
-  return button;
-}
-
-function renderLookTabs() {
-  document.querySelectorAll(".look-tab").forEach((tab) => tab.setAttribute("aria-selected", String(tab.dataset.look === lookTab)));
-  if ($("look-badge")) $("look-badge").hidden = lookTab !== "badge";
-  if ($("look-name")) $("look-name").hidden = lookTab !== "name";
+function renderNameSwitch() {
+  document.querySelectorAll(".look-switch-btn").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.sample === nameSample)));
 }
 
 function renderCosmetics() {
   const current = access();
   const shown = current.plus ? cosmetics : { badgeFx: "", nameFx: "" };
-  const shape = shapeOf(shown.badgeFx);
-  if (shape === "logo") lastLogoFx = shown.badgeFx;
-  $("cosmetic-shape")?.replaceChildren(...SHAPES.map((value) => shapeCard(value, shape, current)));
-  $("cosmetic-badge-fx")?.replaceChildren(...["", ...visibleFx(LOGO_FX, current)].map((value) => fxOption("badge", value, shape === "logo" ? shown.badgeFx : null, current)));
+  // Tous les badges dans une seule liste : logo classique, logos colorés,
+  // Jauge et Pager d'ancienneté, récompenses (et les éditions spéciales à venir).
+  $("cosmetic-badge-fx")?.replaceChildren(...["", ...visibleFx(BADGE_FX, current)].map((value) => fxOption("badge", value, shown.badgeFx, current)));
   $("cosmetic-name-fx")?.replaceChildren(...["", ...visibleFx(NAME_FX, current)].map((value) => fxOption("name", value, shown.nameFx, current)));
-  if ($("cosmetic-logo-colors")) $("cosmetic-logo-colors").hidden = shape !== "logo";
-  if ($("cosmetic-tenure-block")) $("cosmetic-tenure-block").hidden = shape === "logo";
-  // Un seul badge : le logo coloré, ou la tuile d'ancienneté si elle est choisie.
   const style = TENURE_STYLES[shown.badgeFx] || "";
   const tier = style ? tenureTier(current.plan, current.since) : "";
+  if ($("cosmetic-tenure-block")) $("cosmetic-tenure-block").hidden = !style;
   if ($("cosmetic-badge")) {
     $("cosmetic-badge").className = `cosmetic-badge${shown.badgeFx && !tier ? ` sp-fx-${shown.badgeFx}` : ""}`;
     $("cosmetic-badge").hidden = Boolean(tier);
@@ -181,14 +154,8 @@ function renderCosmetics() {
     $("cosmetic-name").className = `cosmetic-name${shown.nameFx ? ` sp-paint sp-paint--${shown.nameFx}` : ""}`;
     $("cosmetic-name").textContent = chatName || t("popup.cosmetics.sampleName");
   }
-  renderLookTabs();
+  renderNameSwitch();
   renderRank(current);
-}
-
-function saveCosmetics(patch) {
-  cosmetics = normalizeCosmetics({ ...cosmetics, ...patch });
-  chrome.storage.local.set({ [COSMETICS_KEY]: cosmetics }).catch((error) => console.warn("[popup] effets :", error?.message || error));
-  renderCosmetics();
 }
 
 function initCosmeticsPickers() {
@@ -201,21 +168,14 @@ function initCosmeticsPickers() {
         return;
       }
       if (button.dataset.lock) return;
-      saveCosmetics({ [button.dataset.kind === "name" ? "nameFx" : "badgeFx"]: button.dataset.value });
+      cosmetics = normalizeCosmetics({ ...cosmetics, [button.dataset.kind === "name" ? "nameFx" : "badgeFx"]: button.dataset.value });
+      chrome.storage.local.set({ [COSMETICS_KEY]: cosmetics }).catch((error) => console.warn("[popup] effets :", error?.message || error));
+      renderCosmetics();
     });
   }
-  $("cosmetic-shape")?.addEventListener("click", (event) => {
-    const button = event.target.closest(".look-shape");
-    if (!button) return;
-    if (button.dataset.lock === "plus") {
-      deps.openPlus();
-      return;
-    }
-    saveCosmetics({ badgeFx: button.dataset.shape === "logo" ? lastLogoFx : button.dataset.shape });
-  });
-  document.querySelectorAll(".look-tab").forEach((tab) => tab.addEventListener("click", () => {
-    lookTab = tab.dataset.look;
-    renderLookTabs();
+  document.querySelectorAll(".look-switch-btn").forEach((button) => button.addEventListener("click", () => {
+    nameSample = button.dataset.sample;
+    renderCosmetics();
   }));
 }
 
