@@ -74,9 +74,14 @@ export function visibleFx(list, access = {}) {
   return isFounder(access) ? [...list] : list.filter((value) => !FOUNDER_FX.includes(value));
 }
 
+/** Effet du badge tant que l'abonné n'en a jamais choisi : son badge d'ancienneté. */
+export const DEFAULT_BADGE_FX = "tenure";
+
 /** Réglage rangé : un effet inconnu est oublié, jamais transmis. */
 export function normalizeCosmetics(value) {
   const input = value && typeof value === "object" ? value : {};
+  // Jamais choisi (absent) : ancienneté ; « Aucun » choisi est rangé comme "".
+  if (input.badgeFx === undefined) return { badgeFx: DEFAULT_BADGE_FX, nameFx: NAME_FX.includes(input.nameFx) ? input.nameFx : "" };
   return {
     badgeFx: BADGE_FX.includes(input.badgeFx) ? input.badgeFx : "",
     nameFx: NAME_FX.includes(input.nameFx) ? input.nameFx : "",

@@ -100,7 +100,8 @@
   function readOwnLocal(cosmetics) {
     var c = cosmetics || {};
     ownLocal = {
-      b: BADGE_FX.indexOf(c.badgeFx) !== -1 ? c.badgeFx : "",
+      // Jamais choisi : badge d'anciennete, comme normalizeCosmetics() du popup.
+      b: c.badgeFx === undefined ? "tenure" : BADGE_FX.indexOf(c.badgeFx) !== -1 ? c.badgeFx : "",
       n: NAME_FX.indexOf(c.nameFx) !== -1 ? c.nameFx : ""
     };
   }
@@ -311,7 +312,7 @@
         // Couleur personnalisee retiree : null efface celle qu'une ancienne version avait publiee.
         var color = null;
         var cosmetics = (res && res[COSMETICS_KEY]) || {};
-        var badgeFx = BADGE_FX.indexOf(cosmetics.badgeFx) !== -1 ? cosmetics.badgeFx : "";
+        var badgeFx = cosmetics.badgeFx === undefined ? "tenure" : BADGE_FX.indexOf(cosmetics.badgeFx) !== -1 ? cosmetics.badgeFx : "";
         var nameFx = NAME_FX.indexOf(cosmetics.nameFx) !== -1 ? cosmetics.nameFx : "";
         var today = new Date().toISOString().slice(0, 10);
         var wanted = [hash, color || "none", badgeFx, nameFx, today].join("|");

@@ -63,7 +63,10 @@ test("rang : fondateur, puis ambassadeur dès un filleul", () => {
 
 test("un effet inconnu est oublié", () => {
   assert.deepEqual(normalizeCosmetics({ badgeFx: "crown", nameFx: "nope" }), { badgeFx: "crown", nameFx: "" });
-  assert.deepEqual(normalizeCosmetics(null), { badgeFx: "", nameFx: "" });
+  // Jamais choisi : badge d'ancienneté par défaut ; « Aucun » choisi reste "".
+  assert.deepEqual(normalizeCosmetics(null), { badgeFx: "tenure", nameFx: "" });
+  assert.deepEqual(normalizeCosmetics({ nameFx: "gold" }), { badgeFx: "tenure", nameFx: "gold" });
+  assert.deepEqual(normalizeCosmetics({ badgeFx: "", nameFx: "" }), { badgeFx: "", nameFx: "" });
 });
 
 const MONTH = 30.44 * 24 * 60 * 60 * 1000;

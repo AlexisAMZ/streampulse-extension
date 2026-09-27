@@ -132,7 +132,8 @@
   function normalizeCosmetics(value) {
     var input = value && typeof value === "object" ? value : {};
     return {
-      badgeFx: BADGE_FX.indexOf(input.badgeFx) !== -1 ? input.badgeFx : "",
+      // Jamais choisi : badge d'anciennete, comme normalizeCosmetics() du popup.
+      badgeFx: input.badgeFx === undefined ? "tenure" : BADGE_FX.indexOf(input.badgeFx) !== -1 ? input.badgeFx : "",
       nameFx: NAME_FX.indexOf(input.nameFx) !== -1 ? input.nameFx : "",
     };
   }
