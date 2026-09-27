@@ -18,12 +18,14 @@
   var COSMETICS_KEY = "streamPulseCosmetics";
   var PLUS_GRACE_MS = 30 * 24 * 60 * 60 * 1000;
   var PLUS_URL = "https://streampulse.fr/plus";
-  var BADGE_FX = ["tenure", "pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost", "halo", "crown", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
+  var BADGE_FX = ["tenure", "pager", "pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost", "halo", "crown", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
   var NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow", "fire", "frost", "glitch", "ambassador", "founder", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
   // Même règles que js/cosmetics-data.js : filleuls requis, et effets du fondateur.
   var REFERRAL_FX = { ambassador: 1, halo: 3 };
   var FOUNDER_FX = ["crown", "founder"];
   // Copie de TENURE_TIERS (js/cosmetics-data.js) : tuile d'anciennete de l'aperçu.
+  // Copie de TENURE_STYLES (js/cosmetics-data.js).
+  var TENURE_STYLES = { tenure: "gauge", pager: "pager" };
   var TENURE_TIERS = [[48, "y4"], [36, "y3"], [24, "y2"], [18, "y1h"], [12, "y1"], [9, "m9"], [6, "m6"], [3, "m3"], [0, "m1"]];
   var MONTH_MS = 30.44 * 24 * 60 * 60 * 1000;
 
@@ -257,8 +259,9 @@
     var shown = ctx.plus ? ctx.cosmetics : { badgeFx: "", nameFx: "" };
     editor.root.classList.toggle("is-locked", !ctx.plus);
     // « Anciennete » : la tuile de son palier remplace le logo personnalise.
-    var look = shown.badgeFx === "tenure"
-      ? (ctx.tier ? " sp-tier sp-tier-" + ctx.tier : "")
+    var tenureStyle = TENURE_STYLES[shown.badgeFx];
+    var look = tenureStyle
+      ? (ctx.tier ? " sp-tier sp-tier--" + tenureStyle + " sp-tier-" + ctx.tier : "")
       : (shown.badgeFx ? " sp-chat-badge--fx-" + shown.badgeFx : "");
     editor.badge.className = "sp-chat-badge" + look;
     editor.name.className = "sp-fx-name" + (shown.nameFx ? " sp-paint sp-paint--" + shown.nameFx : "");

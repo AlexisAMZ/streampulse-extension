@@ -5,9 +5,9 @@
 // copie, tout comme l'API du site (api/streampulse-badges.mjs) :
 // tests/cosmetics-data.test.mjs vérifie que les copies de l'extension suivent.
 
-// « tenure » : badge d'ancienneté à la place du logo personnalisé (tenureTier()).
+// « tenure » (Jauge) et « pager » : badge d'ancienneté à la place du logo personnalisé.
 export const BADGE_FX = Object.freeze([
-  "tenure", "pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker",
+  "tenure", "pager", "pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker",
   "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost",
   "halo", "crown",
   "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean",
@@ -73,6 +73,9 @@ export function fxLock(value, access = {}) {
 export function visibleFx(list, access = {}) {
   return isFounder(access) ? [...list] : list.filter((value) => !FOUNDER_FX.includes(value));
 }
+
+/** Styles du badge d'ancienneté : effet choisi → classe CSS (sp-tier--<style>). */
+export const TENURE_STYLES = Object.freeze({ tenure: "gauge", pager: "pager" });
 
 /** Effet du badge tant que l'abonné n'en a jamais choisi : son badge d'ancienneté. */
 export const DEFAULT_BADGE_FX = "tenure";

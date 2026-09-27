@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { BADGE_FX, NAME_FX, FOUNDER_FX, REFERRAL_FX, TENURE_TIERS, TEXTURE_FX, fxLock, normalizeCosmetics, rankOf, tenureTier, visibleFx } from "../js/cosmetics-data.js";
+import { BADGE_FX, NAME_FX, FOUNDER_FX, REFERRAL_FX, TENURE_STYLES, TENURE_TIERS, TEXTURE_FX, fxLock, normalizeCosmetics, rankOf, tenureTier, visibleFx } from "../js/cosmetics-data.js";
 
 /** Tableau littéral `var NOM = [...]` d'un script classique. */
 function arrayIn(file, name) {
@@ -22,8 +22,8 @@ test("chaque effet a son rendu CSS", () => {
   const css = ["css/popup.css", "css/fx-effects.css", "css/inject/twitch-badge.css"]
     .map((file) => readFileSync(new URL(`../${file}`, import.meta.url), "utf8"))
     .join("\n");
-  // « tenure » n'est pas un effet mais la tuile d'ancienneté (voir le test des tuiles).
-  const effects = BADGE_FX.filter((fx) => fx !== "tenure");
+  // « tenure » et « pager » ne sont pas des effets mais les styles d'ancienneté (voir le test des tuiles).
+  const effects = BADGE_FX.filter((fx) => !TENURE_STYLES[fx]);
   for (const fx of effects) assert.match(css, new RegExp(`sp-chat-badge--fx-${fx}\\b`), `badge ${fx}`);
   for (const fx of effects) assert.match(css, new RegExp(`\\.cosmetic-badge\\.sp-fx-${fx}\\b`), `aperçu ${fx}`);
   for (const fx of NAME_FX) assert.match(css, new RegExp(`\\.sp-paint--${fx}\\b`), `pseudo ${fx}`);
@@ -95,13 +95,19 @@ for (const file of ["js/inject/twitch-badge.js", "js/inject/settings-drawer.js"]
     const match = /var TENURE_TIERS = (\[.*?\]\]);/.exec(source);
     assert.ok(match, `TENURE_TIERS introuvable dans ${file}`);
     assert.deepEqual(JSON.parse(match[1]), TENURE_TIERS.map((tier) => [...tier]));
+    const styles = /var TENURE_STYLES = (\{[^}]*\});/.exec(source);
+    assert.ok(styles, `TENURE_STYLES introuvable dans ${file}`);
+    assert.deepEqual(JSON.parse(styles[1].replace(/(\w+):/g, '"$1":')), { ...TENURE_STYLES });
   });
 }
 
 test("chaque tuile et chaque texture a son rendu CSS", () => {
   const css = readFileSync(new URL("../css/fx-effects.css", import.meta.url), "utf8");
-  for (const [, key] of TENURE_TIERS) assert.match(css, new RegExp(`\\.sp-tier-${key}\\b`), `tuile ${key}`);
-  assert.match(css, /\.sp-tier-life\b/);
+  for (const style of Object.values(TENURE_STYLES)) {
+    for (const key of [...TENURE_TIERS.map(([, tier]) => tier), "life"]) {
+      assert.match(css, new RegExp(`\\.sp-tier--${style}\\.sp-tier-${key}\\b`), `${style} ${key}`);
+    }
+  }
   for (const fx of TEXTURE_FX) {
     assert.ok(BADGE_FX.includes(fx) && NAME_FX.includes(fx), fx);
     assert.match(css, new RegExp(`\\.sp-paint--${fx}\\b`), `texture ${fx}`);

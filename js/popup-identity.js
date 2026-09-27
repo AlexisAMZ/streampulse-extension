@@ -5,7 +5,7 @@
 
 import { t } from "./i18n.js";
 import { LICENSE_VERIFY_URL, PLUS_KEY } from "./plus.js";
-import { BADGE_FX, NAME_FX, TENURE_TIERS, fxLock, normalizeCosmetics, rankOf, tenureTier, visibleFx } from "./cosmetics-data.js";
+import { BADGE_FX, NAME_FX, TENURE_STYLES, TENURE_TIERS, fxLock, normalizeCosmetics, rankOf, tenureTier, visibleFx } from "./cosmetics-data.js";
 import { isPaypalAddress, normalizeEarnings, shouldRefreshEarnings } from "./referral-data.js";
 
 export const COSMETICS_KEY = "streamPulseCosmetics";
@@ -46,21 +46,25 @@ function access() {
 const TENURE_LADDER = [...TENURE_TIERS.map(([, key]) => key).reverse(), "life"];
 
 /** Une tuile d'ancienneté avec le logo : aperçu du popup et échelle des paliers. */
-function tenureTile(tier, badgeClass = "cosmetic-badge") {
-  const tile = node("span", tier ? `cosmetic-tile sp-tier sp-tier-${tier}` : "cosmetic-tile");
-  tile.append(node("span", badgeClass));
+function tenureTile(tier, style = "gauge") {
+  const tile = node("span", tileClass(tier, style));
+  tile.append(node("span", "cosmetic-badge"));
   return tile;
 }
 
+function tileClass(tier, style) {
+  return tier ? `cosmetic-tile sp-tier sp-tier--${style} sp-tier-${tier}` : "cosmetic-tile";
+}
+
 /** Échelle des paliers ; le sien est mis en avant quand StreamPulse+ est actif. */
-function renderTenure(current) {
+function renderTenure(current, style) {
   const list = $("cosmetic-tenure");
   if (!list) return;
   const mine = current.plus ? tenureTier(current.plan, current.since) : "";
   list.replaceChildren(...TENURE_LADDER.map((tier) => {
     const item = node("li", `tenure-step${tier === mine ? " is-current" : ""}`);
     if (tier === mine) item.setAttribute("aria-current", "true");
-    item.append(tenureTile(tier), node("span", "tenure-label", t(`popup.cosmetics.tier_${tier}`)));
+    item.append(tenureTile(tier, style), node("span", "tenure-label", t(`popup.cosmetics.tier_${tier}`)));
     return item;
   }));
 }
@@ -70,8 +74,8 @@ function fxSample(kind, value, text) {
   if (kind === "name") {
     return node("b", `fx-sample-name${value ? ` sp-paint sp-paint--${value}` : ""}`, text || chatName || t("popup.cosmetics.sampleName"));
   }
-  // « Ancienneté » : la tuile de son palier (celle d'un an en exemple sans StreamPulse+).
-  if (value === "tenure") return tenureTile(ownTier() || "y1");
+  // « Ancienneté » (Jauge ou Pager) : la tuile de son palier (celle d'un an en exemple sans StreamPulse+).
+  if (TENURE_STYLES[value]) return tenureTile(ownTier() || "y1", TENURE_STYLES[value]);
   return node("span", `cosmetic-badge${value ? ` sp-fx-${value}` : ""}`);
 }
 
@@ -123,13 +127,15 @@ function renderCosmetics() {
   $("cosmetic-name-fx")?.replaceChildren(...["", ...visibleFx(NAME_FX, current)].map((value) => fxOption("name", value, shown.nameFx, current)));
   $("cosmetic-badge-fx")?.replaceChildren(...["", ...visibleFx(BADGE_FX, current)].map((value) => fxOption("badge", value, shown.badgeFx, current)));
   // Un seul badge : le logo personnalisé, ou la tuile d'ancienneté si elle est choisie.
-  const tier = shown.badgeFx === "tenure" ? tenureTier(current.plan, current.since) : "";
+  const style = TENURE_STYLES[shown.badgeFx] || "";
+  const tier = style ? tenureTier(current.plan, current.since) : "";
   if ($("cosmetic-badge")) {
     $("cosmetic-badge").className = `cosmetic-badge${shown.badgeFx && !tier ? ` sp-fx-${shown.badgeFx}` : ""}`;
     $("cosmetic-badge").hidden = Boolean(tier);
   }
-  if ($("cosmetic-tile")) $("cosmetic-tile").className = tier ? `cosmetic-tile sp-tier sp-tier-${tier}` : "cosmetic-tile";
-  renderTenure(current);
+  if ($("cosmetic-tile")) $("cosmetic-tile").className = tileClass(tier, style);
+  // L'échelle des paliers suit le style choisi (Jauge par défaut).
+  renderTenure(current, style || "gauge");
   if ($("cosmetic-name")) {
     $("cosmetic-name").className = `cosmetic-name${shown.nameFx ? ` sp-paint sp-paint--${shown.nameFx}` : ""}`;
     $("cosmetic-name").textContent = chatName || t("popup.cosmetics.sampleName");

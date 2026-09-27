@@ -50,7 +50,7 @@
   // Effets publics des abonnes : empreinte -> { b: effet du badge, n: pseudo special }.
   var badgeStyles = new Map();
   var COSMETICS_KEY = "streamPulseCosmetics";
-  var BADGE_FX = ["tenure", "pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost", "halo", "crown", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
+  var BADGE_FX = ["tenure", "pager", "pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost", "halo", "crown", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
   var NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow", "fire", "frost", "glitch", "ambassador", "founder", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
   var REFRESH_MS = 5 * 60 * 1000;
   // Empreinte du compte Twitch connecte et licence de ce navigateur.
@@ -67,6 +67,8 @@
   // Debut de son propre abonnement (licence locale), pour sa tuile avant la reponse du serveur.
   var ownSince = 0;
   // Copie de TENURE_TIERS (js/cosmetics-data.js) : mois requis, cle de la tuile.
+  // Copie de TENURE_STYLES (js/cosmetics-data.js).
+  var TENURE_STYLES = { tenure: "gauge", pager: "pager" };
   var TENURE_TIERS = [[48, "y4"], [36, "y3"], [24, "y2"], [18, "y1h"], [12, "y1"], [9, "m9"], [6, "m6"], [3, "m3"], [0, "m1"]];
 
   /** Meme regle que tenureTier() dans js/cosmetics-data.js. */
@@ -80,7 +82,7 @@
 
   /**
    * Apparence du logo d'un abonne : son effet, ou sa tuile d'anciennete s'il a
-   * choisi « Anciennete » (badgeFx "tenure"). Jamais les deux a la fois.
+   * choisi « Anciennete » (badgeFx "tenure" : Jauge, "pager" : Pager). Jamais les deux a la fois.
    */
   function applyLook(badge, style) {
     badge.className = badge.className
@@ -89,12 +91,13 @@
       .replace(/\s+/g, " ")
       .trim();
     if (!style || !style.b) return;
-    if (style.b !== "tenure") {
+    var tenure = TENURE_STYLES[style.b];
+    if (!tenure) {
       badge.classList.add("sp-chat-badge--fx-" + style.b);
       return;
     }
     var tier = tenureTier(style.p, style.s);
-    if (tier) badge.classList.add("sp-tier", "sp-tier-" + tier);
+    if (tier) badge.classList.add("sp-tier", "sp-tier--" + tenure, "sp-tier-" + tier);
   }
 
   function readOwnLocal(cosmetics) {

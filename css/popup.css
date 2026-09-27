@@ -1053,7 +1053,9 @@ body.is-settings .new-dot { background: var(--violet); box-shadow: 0 0 0 3px var
 .tenure-step { display: grid; justify-items: center; gap: 5px; min-width: 0; }
 .tenure-ladder:has(.is-current) .tenure-step:not(.is-current) { opacity: 0.5; }
 .tenure-step .cosmetic-tile.sp-tier { width: 32px !important; height: 32px !important; border-radius: 7px !important; }
-.tenure-step .sp-tier .cosmetic-badge { width: 28px !important; height: 28px !important; }
+.tenure-step .sp-tier .cosmetic-badge { width: 23px !important; height: 23px !important; }
 .tenure-step.is-current .cosmetic-tile { outline: 2px solid var(--violet); outline-offset: 2px; }
 .tenure-label { overflow: hidden; max-width: 100%; color: #adadb8; font-size: 11px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
 .tenure-step.is-current .tenure-label { color: #efeff1; }
+.tenure-step .cosmetic-tile.sp-tier--gauge { border-radius: 50% !important; }
+.tenure-step .cosmetic-tile.sp-tier--gauge .cosmetic-badge { width: 20px !important; height: 20px !important; }
