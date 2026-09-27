@@ -1,2 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="#fff" d="M30 3H66L54 23H42L37 31H100L71 79H41L30 97H8L31 59H59L64 51H0Z"/></svg>
-<!-- Logo StreamPulse pour les petites tailles (badge du tchat, 16-18 px) : meme silhouette que images/photos/128px.png, traits epaissis et espaces elargis pour rester lisible a l echelle 1. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 104 104"><path fill="#fff" d="M23.9 14.6L61.5 14.6L53.4 26.5L29.9 26.5L24.1 34.7L98.9 34.7L75.9 66.6L39.9 66.7L27.1 85.3L12.8 85.3L33.6 54.9L69.8 54.8L75.7 46.5L0.9 46.5Z"/></svg>
+<!-- Logo StreamPulse en vectoriel, trace fidele de images/photos/128px.png : plus net que l image une fois reduit a la taille du badge du tchat (16-18 px). -->

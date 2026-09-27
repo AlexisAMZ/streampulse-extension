@@ -54,22 +54,6 @@ export const RELEASES = [
     version: "26.9.29",
     date: "2026-09-27",
     changes: [
-      {
-        type: "improved",
-        area: "badges",
-        text: {
-          fr: "Le logo du badge StreamPulse est redessiné pour les petites tailles : traits plus épais et formes plus ouvertes, il se reconnaît enfin dans le tchat, même sur un écran 1080p.",
-          en: "The StreamPulse badge logo is redrawn for small sizes: thicker strokes and more open shapes make it recognizable in chat, even on a 1080p screen.",
-          es: "El logo de la insignia StreamPulse se ha redibujado para tamaños pequeños: trazos más gruesos y formas más abiertas, ahora se reconoce en el chat, incluso en una pantalla 1080p.",
-          "pt-BR": "O logo do selo StreamPulse foi redesenhado para tamanhos pequenos: traços mais grossos e formas mais abertas, agora ele é reconhecível no chat, mesmo numa tela 1080p.",
-          de: "Das Logo des StreamPulse-Abzeichens wurde für kleine Größen neu gezeichnet: dickere Striche und offenere Formen machen es im Chat erkennbar, selbst auf einem 1080p-Bildschirm.",
-          it: "Il logo del badge StreamPulse è stato ridisegnato per le piccole dimensioni: tratti più spessi e forme più aperte, ora si riconosce in chat anche su uno schermo 1080p.",
-          pl: "Logo odznaki StreamPulse narysowano od nowa dla małych rozmiarów: grubsze linie i bardziej otwarte kształty sprawiają, że jest rozpoznawalne na czacie, nawet na ekranie 1080p.",
-          tr: "StreamPulse rozet logosu küçük boyutlar için yeniden çizildi: daha kalın çizgiler ve daha açık biçimler sayesinde 1080p bir ekranda bile sohbette tanınıyor.",
-          ru: "Логотип значка StreamPulse перерисован для маленьких размеров: более толстые линии и открытые формы делают его узнаваемым в чате даже на экране 1080p.",
-          ja: "StreamPulse バッジのロゴを小さいサイズ向けに描き直しました。線を太く、形を開いたことで、1080p の画面でもチャットで見分けられます。",
-          ko: "StreamPulse 배지 로고를 작은 크기에 맞게 다시 그렸습니다. 선을 굵게, 모양을 넓게 해 1080p 화면에서도 채팅에서 알아볼 수 있습니다.",
-        },
       },
       {
         type: "improved",
