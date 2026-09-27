@@ -1059,3 +1059,39 @@ body.is-settings .new-dot { background: var(--violet); box-shadow: 0 0 0 3px var
 .tenure-step.is-current .tenure-label { color: #efeff1; }
 .tenure-step .cosmetic-tile.sp-tier--gauge { border-radius: 50% !important; }
 .tenure-step .cosmetic-tile.sp-tier--gauge .cosmetic-badge { width: 20px !important; height: 20px !important; }
+
+/* Pseudo et badge (26.9.28) : deux onglets, forme du badge puis nuancier commun. */
+.look-tabs { display: flex; gap: 4px; margin: 16px 0 4px; padding: 4px; border-radius: 12px; background: var(--surface); }
+.look-tab { flex: 1; height: 34px; border: 0; border-radius: 9px; background: none; color: var(--text-2); font: 700 13px/1 var(--body); cursor: pointer; transition: background var(--dur-fast) ease, color var(--dur-fast) ease; }
+.look-tab:hover { color: var(--text); }
+.look-tab[aria-selected="true"] { background: var(--surface-2); color: var(--text); }
+.look-tab:focus-visible, .look-shape:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.look-shapes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
+.look-shape { position: relative; display: grid; justify-items: center; gap: 6px; padding: 14px 8px 10px; border: 0; border-radius: 12px; background: #18181b; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08); color: #efeff1; font: inherit; cursor: pointer; transition: box-shadow var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out); }
+.look-shape:hover { transform: translateY(-1px); box-shadow: inset 0 0 0 1px var(--violet-line); }
+.look-shape[aria-checked="true"] { box-shadow: inset 0 0 0 2px var(--violet); }
+.look-shape b { font-size: 13px; }
+.look-shape small { overflow: hidden; max-width: 100%; color: rgba(239, 239, 241, 0.7); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.look-shape-art { display: grid; place-items: center; width: 36px; height: 36px; }
+.look-shape-art .cosmetic-badge { width: 32px; height: 32px; }
+.look-shape-art .cosmetic-tile.sp-tier { width: 34px !important; height: 34px !important; border-radius: 8px !important; }
+.look-shape-art .cosmetic-tile.sp-tier--gauge { border-radius: 50% !important; }
+.look-shape-art .cosmetic-tile.sp-tier .cosmetic-badge { width: 24px !important; height: 24px !important; }
+.look-shape-art .cosmetic-tile.sp-tier--gauge .cosmetic-badge { width: 21px !important; height: 21px !important; }
+.look-shape .fx-plus { position: absolute; top: 6px; right: 6px; }
+
+/* Nuancier en liste compacte (26.9.28), à la manière des « paints » de 7TV :
+   rond de sélection, puis le nom écrit dans sa couleur (pseudo) ou le logo
+   coloré et son nom (badge). */
+.fx-picker.is-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px 6px; }
+.fx-picker.is-list .fx-option { display: flex; align-items: center; justify-content: flex-start; gap: 9px; min-width: 0; height: 36px; padding: 0 10px; border-radius: 9px; background: none; box-shadow: none; }
+.fx-picker.is-list .fx-option:hover { transform: none; background: var(--surface); box-shadow: none; }
+.fx-picker.is-list .fx-option[aria-checked="true"] { background: var(--surface); box-shadow: inset 0 0 0 1.5px var(--violet); }
+.fx-radio { flex: none; width: 14px; height: 14px; border-radius: 50%; box-shadow: inset 0 0 0 2px rgba(239, 239, 241, 0.35); }
+.fx-option[aria-checked="true"] .fx-radio { box-shadow: inset 0 0 0 4px var(--violet), inset 0 0 0 7px #efeff1; }
+.fx-picker.is-list .cosmetic-badge { flex: none; width: 20px; height: 20px; }
+.fx-picker.is-list .fx-label { overflow: hidden; color: #efeff1; font-size: 12.5px; font-weight: 600; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
+.fx-picker.is-list .fx-sample-name { font-size: 13px; }
+.fx-picker.is-list .fx-lock,
+.fx-picker.is-list .fx-plus,
+.fx-picker.is-list .fx-founder { position: static; flex: none; margin-left: auto; }

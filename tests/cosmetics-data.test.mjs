@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { BADGE_FX, NAME_FX, FOUNDER_FX, REFERRAL_FX, TENURE_STYLES, TENURE_TIERS, TEXTURE_FX, fxLock, normalizeCosmetics, rankOf, tenureTier, visibleFx } from "../js/cosmetics-data.js";
+import { BADGE_FX, NAME_FX, FOUNDER_FX, REFERRAL_FX, COLOR_FX, LEGACY_FX, TENURE_STYLES, TENURE_TIERS, TEXTURE_FX, fxLock, normalizeCosmetics, rankOf, tenureTier, visibleFx } from "../js/cosmetics-data.js";
 
 /** Tableau littéral `var NOM = [...]` d'un script classique. */
 function arrayIn(file, name) {
@@ -112,4 +112,22 @@ test("chaque tuile et chaque texture a son rendu CSS", () => {
     assert.ok(BADGE_FX.includes(fx) && NAME_FX.includes(fx), fx);
     assert.match(css, new RegExp(`\\.sp-paint--${fx}\\b`), `texture ${fx}`);
   }
+});
+
+test("un seul nuancier pour le logo et le pseudo, chaque couleur rendue des deux côtés", () => {
+  const css = readFileSync(new URL("../css/fx-effects.css", import.meta.url), "utf8");
+  for (const fx of COLOR_FX) {
+    assert.ok(BADGE_FX.includes(fx) && NAME_FX.includes(fx), fx);
+    assert.match(css, new RegExp(`\\.cosmetic-badge\\.sp-fx-${fx}\\b`), `logo ${fx}`);
+    assert.match(css, new RegExp(`\\.sp-paint--${fx}\\b`), `pseudo ${fx}`);
+  }
+  for (const gone of ["pulse", "bounce", "spin", "neon", "glitch", "prism"]) {
+    assert.ok(!BADGE_FX.includes(gone) && !NAME_FX.includes(gone), gone);
+  }
+});
+
+test("effets retirés : Prisme devient Arc-en-ciel, les animations redeviennent classiques", () => {
+  assert.equal(LEGACY_FX.prism, "rainbow");
+  assert.deepEqual(normalizeCosmetics({ badgeFx: "prism", nameFx: "neon" }), { badgeFx: "rainbow", nameFx: "" });
+  assert.deepEqual(normalizeCosmetics({ badgeFx: "pulse", nameFx: "gold" }), { badgeFx: "", nameFx: "gold" });
 });

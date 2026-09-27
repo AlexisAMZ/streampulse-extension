@@ -50,8 +50,10 @@
   // Effets publics des abonnes : empreinte -> { b: effet du badge, n: pseudo special }.
   var badgeStyles = new Map();
   var COSMETICS_KEY = "streamPulseCosmetics";
-  var BADGE_FX = ["tenure", "pager", "pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost", "halo", "crown", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
-  var NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow", "fire", "frost", "glitch", "ambassador", "founder", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
+  var BADGE_FX = ["tenure", "pager", "aurora", "sunset", "lcd", "gold", "rainbow", "fire", "frost", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean", "halo", "crown"];
+  // Effets retires en 26.9.28 : Prisme devient Arc-en-ciel (copie de LEGACY_FX).
+  var LEGACY_FX = { prism: "rainbow" };
+  var NAME_FX = ["aurora", "sunset", "lcd", "gold", "rainbow", "fire", "frost", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean", "ambassador", "founder"];
   var REFRESH_MS = 5 * 60 * 1000;
   // Empreinte du compte Twitch connecte et licence de ce navigateur.
   var ownHash = "";
@@ -67,6 +69,12 @@
   // Debut de son propre abonnement (licence locale), pour sa tuile avant la reponse du serveur.
   var ownSince = 0;
   // Copie de TENURE_TIERS (js/cosmetics-data.js) : mois requis, cle de la tuile.
+  /** Effet du badge connu, Prisme repris en Arc-en-ciel ; sinon logo classique. */
+  function badgeFxOf(value) {
+    var fx = LEGACY_FX[value] || value;
+    return BADGE_FX.indexOf(fx) !== -1 ? fx : "";
+  }
+
   // Copie de TENURE_STYLES (js/cosmetics-data.js).
   var TENURE_STYLES = { tenure: "gauge", pager: "pager" };
   var TENURE_TIERS = [[48, "y4"], [36, "y3"], [24, "y2"], [18, "y1h"], [12, "y1"], [9, "m9"], [6, "m6"], [3, "m3"], [0, "m1"]];
@@ -104,7 +112,7 @@
     var c = cosmetics || {};
     ownLocal = {
       // Jamais choisi : badge d'anciennete, comme normalizeCosmetics() du popup.
-      b: c.badgeFx === undefined ? "tenure" : BADGE_FX.indexOf(c.badgeFx) !== -1 ? c.badgeFx : "",
+      b: c.badgeFx === undefined ? "tenure" : badgeFxOf(c.badgeFx),
       n: NAME_FX.indexOf(c.nameFx) !== -1 ? c.nameFx : ""
     };
   }
@@ -264,7 +272,7 @@
           var nextStyles = new Map();
           Object.keys(styles).forEach(function (h) {
             var style = styles[h] || {};
-            var b = BADGE_FX.indexOf(style.b) !== -1 ? style.b : "";
+            var b = badgeFxOf(style.b);
             var n = NAME_FX.indexOf(style.n) !== -1 ? style.n : "";
             var p = style.p === "lifetime" || style.p === "monthly" ? style.p : "";
             var since = Number(style.s) || 0;
@@ -315,7 +323,7 @@
         // Couleur personnalisee retiree : null efface celle qu'une ancienne version avait publiee.
         var color = null;
         var cosmetics = (res && res[COSMETICS_KEY]) || {};
-        var badgeFx = cosmetics.badgeFx === undefined ? "tenure" : BADGE_FX.indexOf(cosmetics.badgeFx) !== -1 ? cosmetics.badgeFx : "";
+        var badgeFx = cosmetics.badgeFx === undefined ? "tenure" : badgeFxOf(cosmetics.badgeFx);
         var nameFx = NAME_FX.indexOf(cosmetics.nameFx) !== -1 ? cosmetics.nameFx : "";
         var today = new Date().toISOString().slice(0, 10);
         var wanted = [hash, color || "none", badgeFx, nameFx, today].join("|");

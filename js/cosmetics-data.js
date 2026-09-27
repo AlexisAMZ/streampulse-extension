@@ -5,23 +5,28 @@
 // copie, tout comme l'API du site (api/streampulse-badges.mjs) :
 // tests/cosmetics-data.test.mjs vérifie que les copies de l'extension suivent.
 
-// « tenure » (Jauge) et « pager » : badge d'ancienneté à la place du logo personnalisé.
-export const BADGE_FX = Object.freeze([
-  "tenure", "pager", "pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker",
-  "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost",
-  "halo", "crown",
+/**
+ * Nuancier commun au logo et au pseudo : dégradés puis textures, chacun avec sa
+ * propre animation (css/fx-effects.css). Depuis 26.9.28, plus d'animation à
+ * choisir à part : la couleur porte son mouvement.
+ */
+export const COLOR_FX = Object.freeze([
+  "aurora", "sunset", "lcd", "gold", "rainbow", "fire", "frost",
   "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean",
 ]);
 
-export const NAME_FX = Object.freeze([
-  "aurora", "sunset", "lcd", "gold", "neon", "rainbow",
-  "fire", "frost", "glitch",
-  "ambassador", "founder",
-  "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean",
-]);
-
-/** Textures (26.9.28) : proposées à la fois pour le pseudo et pour le logo. */
+/** Textures du nuancier. */
 export const TEXTURE_FX = Object.freeze(["galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"]);
+
+// « tenure » (Jauge) et « pager » : badge d'ancienneté à la place du logo coloré.
+// « halo » et « crown » : récompenses (parrainage, fondateur).
+export const BADGE_FX = Object.freeze(["tenure", "pager", ...COLOR_FX, "halo", "crown"]);
+
+// « ambassador » et « founder » : récompenses (parrainage, fondateur).
+export const NAME_FX = Object.freeze([...COLOR_FX, "ambassador", "founder"]);
+
+/** Effets retirés en 26.9.28 : repris par leur équivalent, les autres redeviennent classiques. */
+export const LEGACY_FX = Object.freeze({ prism: "rainbow" });
 
 const MONTH_MS = 30.44 * 24 * 60 * 60 * 1000;
 
@@ -85,8 +90,9 @@ export function normalizeCosmetics(value) {
   const input = value && typeof value === "object" ? value : {};
   // Jamais choisi (absent) : ancienneté ; « Aucun » choisi est rangé comme "".
   if (input.badgeFx === undefined) return { badgeFx: DEFAULT_BADGE_FX, nameFx: NAME_FX.includes(input.nameFx) ? input.nameFx : "" };
+  const badgeFx = LEGACY_FX[input.badgeFx] || input.badgeFx;
   return {
-    badgeFx: BADGE_FX.includes(input.badgeFx) ? input.badgeFx : "",
+    badgeFx: BADGE_FX.includes(badgeFx) ? badgeFx : "",
     nameFx: NAME_FX.includes(input.nameFx) ? input.nameFx : "",
   };
 }

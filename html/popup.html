@@ -791,15 +791,29 @@
             <span class="cosmetic-preview-label" data-i18n="popup.cosmetics.preview">Aperçu dans le tchat</span>
             <span class="cosmetic-line" aria-hidden="true"><span class="cosmetic-badge" id="cosmetic-badge"></span><span class="cosmetic-tile" id="cosmetic-tile"><span class="cosmetic-badge"></span></span><b class="cosmetic-name" id="cosmetic-name" data-i18n="popup.cosmetics.sampleName">TonPseudo</b><span class="cosmetic-msg">: gg !</span></span>
           </div>
-          <h3 class="settings-group-header" data-i18n="popup.cosmetics.nameTitle">Pseudo spécial</h3>
-          <p class="settings-description" data-i18n="popup.cosmetics.nameBody">Un dégradé ou un effet sur ton pseudo, vu par les utilisateurs de StreamPulse.</p>
-          <div class="fx-picker" id="cosmetic-name-fx" role="radiogroup" data-i18n-attr-ariaLabel="popup.cosmetics.nameTitle"></div>
-          <h3 class="settings-group-header" data-i18n="popup.cosmetics.badgeTitle">Effet du badge</h3>
-          <p class="settings-description" data-i18n="popup.cosmetics.badgeBody">Anime le logo StreamPulse à côté de ton pseudo.</p>
-          <div class="fx-picker" id="cosmetic-badge-fx" role="radiogroup" data-i18n-attr-ariaLabel="popup.cosmetics.badgeTitle"></div>
-          <h3 class="settings-group-header" data-i18n="popup.cosmetics.tenureTitle">Badge d'ancienneté</h3>
-          <p class="settings-description" data-i18n="popup.cosmetics.tenureBody">Choisis « Ancienneté · Jauge » ou « Ancienneté · Pager » dans l'effet du badge : ton logo personnalisé laisse place à un badge qui évolue avec ton ancienneté d'abonnement.</p>
-          <ol class="tenure-ladder" id="cosmetic-tenure"></ol>
+          <div class="look-tabs" role="tablist" data-i18n-attr-ariaLabel="popup.osd.menuIdentity">
+            <button class="look-tab" id="look-tab-badge" type="button" role="tab" aria-selected="true" aria-controls="look-badge" data-look="badge" data-i18n="popup.cosmetics.tabBadge">Badge</button>
+            <button class="look-tab" id="look-tab-name" type="button" role="tab" aria-selected="false" aria-controls="look-name" data-look="name" data-i18n="popup.cosmetics.tabName">Pseudo</button>
+          </div>
+          <div class="look-panel" id="look-badge" role="tabpanel" aria-labelledby="look-tab-badge">
+            <h3 class="settings-group-header" data-i18n="popup.cosmetics.shapeTitle">Forme</h3>
+            <div class="look-shapes" id="cosmetic-shape" role="radiogroup" data-i18n-attr-ariaLabel="popup.cosmetics.shapeTitle"></div>
+            <div id="cosmetic-logo-colors">
+              <h3 class="settings-group-header" data-i18n="popup.cosmetics.colorTitle">Couleur</h3>
+              <p class="settings-description" data-i18n="popup.cosmetics.colorBody">Le même nuancier que ton pseudo, chaque couleur avec son animation.</p>
+              <div class="fx-picker is-list" id="cosmetic-badge-fx" role="radiogroup" data-i18n-attr-ariaLabel="popup.cosmetics.colorTitle"></div>
+            </div>
+            <div id="cosmetic-tenure-block" hidden>
+              <h3 class="settings-group-header" data-i18n="popup.cosmetics.tenureTitle">Badge d'ancienneté</h3>
+              <p class="settings-description" data-i18n="popup.cosmetics.tenureBody">Ton badge évolue avec ton ancienneté d'abonnement, avec ses propres animations.</p>
+              <ol class="tenure-ladder" id="cosmetic-tenure"></ol>
+            </div>
+          </div>
+          <div class="look-panel" id="look-name" role="tabpanel" aria-labelledby="look-tab-name" hidden>
+            <h3 class="settings-group-header" data-i18n="popup.cosmetics.colorTitle">Couleur</h3>
+            <p class="settings-description" data-i18n="popup.cosmetics.nameBody">Le même nuancier que ton badge, vu par les utilisateurs de StreamPulse.</p>
+            <div class="fx-picker is-list" id="cosmetic-name-fx" role="radiogroup" data-i18n-attr-ariaLabel="popup.cosmetics.nameTitle"></div>
+          </div>
 
         </section>
 

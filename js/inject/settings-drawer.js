@@ -18,8 +18,10 @@
   var COSMETICS_KEY = "streamPulseCosmetics";
   var PLUS_GRACE_MS = 30 * 24 * 60 * 60 * 1000;
   var PLUS_URL = "https://streampulse.fr/plus";
-  var BADGE_FX = ["tenure", "pager", "pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost", "halo", "crown", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
-  var NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow", "fire", "frost", "glitch", "ambassador", "founder", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
+  var BADGE_FX = ["tenure", "pager", "aurora", "sunset", "lcd", "gold", "rainbow", "fire", "frost", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean", "halo", "crown"];
+  // Effets retires en 26.9.28 : Prisme devient Arc-en-ciel (copie de LEGACY_FX).
+  var LEGACY_FX = { prism: "rainbow" };
+  var NAME_FX = ["aurora", "sunset", "lcd", "gold", "rainbow", "fire", "frost", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean", "ambassador", "founder"];
   // Même règles que js/cosmetics-data.js : filleuls requis, et effets du fondateur.
   var REFERRAL_FX = { ambassador: 1, halo: 3 };
   var FOUNDER_FX = ["crown", "founder"];
@@ -135,7 +137,7 @@
     var input = value && typeof value === "object" ? value : {};
     return {
       // Jamais choisi : badge d'anciennete, comme normalizeCosmetics() du popup.
-      badgeFx: input.badgeFx === undefined ? "tenure" : BADGE_FX.indexOf(input.badgeFx) !== -1 ? input.badgeFx : "",
+      badgeFx: input.badgeFx === undefined ? "tenure" : BADGE_FX.indexOf(LEGACY_FX[input.badgeFx] || input.badgeFx) !== -1 ? LEGACY_FX[input.badgeFx] || input.badgeFx : "",
       nameFx: NAME_FX.indexOf(input.nameFx) !== -1 ? input.nameFx : "",
     };
   }
