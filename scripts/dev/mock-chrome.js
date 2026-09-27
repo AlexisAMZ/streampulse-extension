@@ -107,6 +107,39 @@
   if (scenario === "offline") channels = makeChannels(6, 0);
   if (scenario === "many") channels = makeChannels(42, 7);
 
+  // ?real=/chemin.json : vraies chaînes Twitch (format de /api/streamer-live?all=1,
+  // { data: [{ login, name, avatar, live, stream }] }), pour les visuels promo.
+  // La première chaîne de la liste est celle mise en avant sur la scène.
+  if (params.get("real")) {
+    const request = new XMLHttpRequest();
+    request.open("GET", params.get("real"), false);
+    request.send();
+    const list = JSON.parse(request.responseText).data || [];
+    const streamers = [];
+    const statuses = {};
+    list.forEach((item) => {
+      const id = `twitch:${item.login}`;
+      const live = Boolean(item.live && item.stream);
+      streamers.push({ id, platform: "twitch", handle: item.login, displayName: item.name || item.login, avatarUrl: item.avatar || "", notificationsEnabled: true, gameNotificationsEnabled: true, titleNotificationsEnabled: false });
+      statuses[id] = {
+        updatedAt: now - 60 * 1000,
+        viewers: live ? item.stream.viewers : undefined,
+        active: {
+          isLive: live,
+          supportsLiveStatus: true,
+          title: live ? item.stream.title : "",
+          game: live ? item.stream.game : "",
+          lastGame: "",
+          lastTitle: "",
+          viewers: live ? item.stream.viewers : undefined,
+          startedAt: live ? item.stream.startedAt : null,
+          thumbnailUrl: live ? String(item.stream.thumbnail || "").replace("{width}", "1280").replace("{height}", "720") : "",
+        },
+      };
+    });
+    channels = { streamers, statuses };
+  }
+
   const monthKey = new Date().toISOString().slice(0, 7);
   const watchTime = { [monthKey]: {} };
   channels.streamers.slice(0, 6).forEach((s, i) => {
@@ -245,6 +278,11 @@
   };
 
   const store = {
+    // Visuels promo : pas de bandeau « Tu aimes StreamPulse ? ».
+    ...(params.get("real") ? {
+      streamPulseReviewAsk: { firstSeen: now, done: true },
+      streamPulseBadgeAsk: { firstSeen: now, done: true },
+    } : {}),
     betaGeneralStreamers: channels.streamers,
     betaGeneralStatuses: channels.statuses,
     betaGeneralPreferences: {
@@ -316,7 +354,8 @@
       : {}),
     userProfile: { displayName: "AlexisAMZ" },
     patchNotesUnread: true,
-    betaPinnedIds: channels.streamers[1] ? [channels.streamers[1].id] : [],
+    // Mode ?real= : la première chaîne du fichier est épinglée, la scène la met en avant.
+    betaPinnedIds: params.get("real") ? channels.streamers.slice(0, 1).map((item) => item.id) : channels.streamers[1] ? [channels.streamers[1].id] : [],
     betaChannelGroups: channels.streamers.length
       ? [{ id: "g_rp", name: "Soirée RP", memberIds: channels.streamers.slice(1, 3).map((s) => s.id) }]
       : [],
