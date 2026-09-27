@@ -14,6 +14,10 @@ body {
   color: var(--text);
   font: 400 15px/1.55 var(--body);
   -webkit-font-smoothing: antialiased;
+  /* Colonne flex : le pied de page reste au bas du viewport sur les pages
+     courtes (fin d'onboarding, restore) au lieu de flotter sous le contenu. */
+  display: flex;
+  flex-direction: column;
 }
 body::before {
   content: "";
@@ -34,7 +38,8 @@ svg { flex: none; }
 ::selection { background: var(--violet); color: #ffffff; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 6px; }
 
-.page-shell { width: min(1120px, 92vw); margin: 0 auto; padding: 22px 0 56px; }
+.page-shell { width: min(1120px, 92vw); margin: 0 auto; padding: 22px 0 56px; display: flex; flex-direction: column; flex: 1; }
+.page-shell > main { flex: 1; }
 
 /* Head */
 .site-head { display: flex; align-items: center; gap: 16px; min-height: 60px; }

@@ -96,7 +96,7 @@ export const translations = {
       "metaSounds": "SONS",
       "tabsGroupLabel": "ONGLETS & ARRIÈRE-PLAN",
       "tabsGroupHint": "Gestion visuelle et maintien de l'activité des onglets.",
-      "pinLabel": "📌 ÉPINGLER L'EXTENSION",
+      "pinLabel": "ÉPINGLER L'EXTENSION",
       "autoOpenInventoryTitle": "Ouverture auto de l'inventaire Drops",
       "autoOpenInventoryDescription": "Ouvrir l'inventaire Twitch en arrière-plan pour réclamer vos Drops.",
       "streamerFaviconTitle": "Avatar du streamer sur l'onglet",
@@ -138,7 +138,7 @@ export const translations = {
       "currentHint": "Vérifie ta sélection. Retire un streamer si tu t'es trompé avant de terminer.",
       "removeStreamer": "Retirer",
       "nextStepTitle": "Dernière étape",
-      "pinCallout": "📌 Pour retrouver l’extension facilement, pense à l’épingler :",
+      "pinCallout": "Pour retrouver l’extension facilement, pense à l’épingler :",
       "pinStep1": "<strong>Clique</strong> sur l'icône puzzle en haut à droite",
       "pinStep2": "<strong>Cherche</strong> <span class=\"highlight\">StreamPulse</span>",
       "pinStep3": "<strong>Épingle</strong> l’extension pour l’avoir toujours sous la main",
@@ -151,7 +151,7 @@ export const translations = {
       "backBtn": "Retour",
       "finishTitle": "Tu es prêt !",
       "finishDescription": "StreamPulse est configuré. Épingle l'extension pour y accéder facilement.",
-      "finish": "Lancer StreamPulse 🚀",
+      "finish": "Lancer StreamPulse",
       "footerText": "Créé par <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
         "invalidHandle": "Merci de saisir un identifiant valide pour {{platform}}.",
@@ -546,6 +546,14 @@ export const translations = {
         "rate": "Laisser un avis",
         "later": "Plus tard",
         "never": "Non merci"
+      },
+      "badgeAsk": {
+        "title": "Affiche ton badge dans le tchat",
+        "body": "Repère et sois repéré par les autres utilisateurs de StreamPulse dans le tchat Twitch. Si tu l'actives : une empreinte de ton pseudo est envoyée à streampulse.fr une fois par jour maximum.",
+        "activate": "Activer le badge",
+        "later": "Plus tard",
+        "dismiss": "Non merci",
+        "activated": "Badge activé : tu apparaîtras avec l'icône StreamPulse dans le tchat."
       },
       "identity": {
         "rankFounder": "Fondateur de StreamPulse",
@@ -1246,7 +1254,7 @@ export const translations = {
       "metaSounds": "SOUNDS",
       "tabsGroupLabel": "TABS & BACKGROUND",
       "tabsGroupHint": "Tab appearance and keeping tabs alive.",
-      "pinLabel": "📌 PIN THE EXTENSION",
+      "pinLabel": "PIN THE EXTENSION",
       "autoOpenInventoryTitle": "Auto-open Drops inventory",
       "autoOpenInventoryDescription": "Open the Twitch inventory in the background to claim your Drops.",
       "streamerFaviconTitle": "Streamer avatar on the tab",
@@ -1288,7 +1296,7 @@ export const translations = {
       "currentHint": "Review your selection. Remove a streamer if you made a mistake before finishing.",
       "removeStreamer": "Remove",
       "nextStepTitle": "Final step",
-      "pinCallout": "📌 Pin the extension so it stays easy to find:",
+      "pinCallout": "Pin the extension so it stays easy to find:",
       "pinStep1": "<strong>Click</strong> the puzzle icon in the toolbar",
       "pinStep2": "<strong>Find</strong> <span class=\"highlight\">StreamPulse</span>",
       "pinStep3": "<strong>Pin</strong> the extension to keep it handy",
@@ -1301,7 +1309,7 @@ export const translations = {
       "backBtn": "Back",
       "finishTitle": "You're all set!",
       "finishDescription": "StreamPulse is ready. Pin the extension for quick access.",
-      "finish": "Launch StreamPulse 🚀",
+      "finish": "Launch StreamPulse",
       "footerText": "Created by <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
         "invalidHandle": "Please enter a valid {{platform}} identifier.",
@@ -1696,6 +1704,14 @@ export const translations = {
         "rate": "Leave a review",
         "later": "Later",
         "never": "No thanks"
+      },
+      "badgeAsk": {
+        "title": "Show your badge in chat",
+        "body": "Spot and be spotted by other StreamPulse users in Twitch chat. If you turn it on: a hash of your username is sent to streampulse.fr at most once a day.",
+        "activate": "Turn on the badge",
+        "later": "Later",
+        "dismiss": "No thanks",
+        "activated": "Badge on: you'll now appear with the StreamPulse icon in chat."
       },
       "identity": {
         "rankFounder": "StreamPulse founder",
@@ -2395,7 +2411,7 @@ export const translations = {
       "metaSounds": "SONIDOS",
       "tabsGroupLabel": "PESTAÑAS Y SEGUNDO PLANO",
       "tabsGroupHint": "Aspecto de las pestañas y mantenimiento de su actividad.",
-      "pinLabel": "📌 ANCLAR LA EXTENSIÓN",
+      "pinLabel": "ANCLAR LA EXTENSIÓN",
       "autoOpenInventoryTitle": "Apertura automática del inventario de Drops",
       "autoOpenInventoryDescription": "Abrir el inventario de Twitch en segundo plano para reclamar tus Drops.",
       "streamerFaviconTitle": "Avatar del streamer en la pestaña",
@@ -2437,7 +2453,7 @@ export const translations = {
       "currentHint": "Revisa tu selección. Quita un streamer si te has equivocado antes de finalizar.",
       "removeStreamer": "Quitar",
       "nextStepTitle": "Último paso",
-      "pinCallout": "📌 Para encontrar la extensión fácilmente, no olvides anclarla:",
+      "pinCallout": "Para encontrar la extensión fácilmente, no olvides anclarla:",
       "pinStep1": "<strong>Haz clic</strong> en el icono de puzzle arriba a la derecha",
       "pinStep2": "<strong>Busca</strong> <span class=\"highlight\">StreamPulse</span>",
       "pinStep3": "<strong>Ancla</strong> la extensión para tenerla siempre a mano",
@@ -2450,7 +2466,7 @@ export const translations = {
       "backBtn": "Atrás",
       "finishTitle": "¡Todo listo!",
       "finishDescription": "StreamPulse está configurado. Ancla la extensión para acceder fácilmente.",
-      "finish": "Lanzar StreamPulse 🚀",
+      "finish": "Lanzar StreamPulse",
       "footerText": "Creado por <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
         "invalidHandle": "Introduce un identificador válido para {{platform}}.",
@@ -2846,6 +2862,14 @@ export const translations = {
         "rate": "Dejar una reseña",
         "later": "Más tarde",
         "never": "No, gracias"
+      },
+      "badgeAsk": {
+        "title": "Muestra tu insignia en el chat",
+        "body": "Reconoce y hazte reconocer por otros usuarios de StreamPulse en el chat de Twitch. Si la activas: se envía una huella de tu nombre de usuario a streampulse.fr como máximo una vez al día.",
+        "activate": "Activar la insignia",
+        "later": "Más tarde",
+        "dismiss": "No, gracias",
+        "activated": "Insignia activada: aparecerás con el icono de StreamPulse en el chat."
       },
       "identity": {
         "rankFounder": "Fundador de StreamPulse",
@@ -3537,7 +3561,7 @@ export const translations = {
       "metaSounds": "SONS",
       "tabsGroupLabel": "ABAS E SEGUNDO PLANO",
       "tabsGroupHint": "Aparência das abas e manutenção da atividade delas.",
-      "pinLabel": "📌 FIXAR A EXTENSÃO",
+      "pinLabel": "FIXAR A EXTENSÃO",
       "autoOpenInventoryTitle": "Abertura automática do inventário de Drops",
       "autoOpenInventoryDescription": "Abrir o inventário da Twitch em segundo plano para resgatar seus Drops.",
       "streamerFaviconTitle": "Avatar do streamer na aba",
@@ -3579,7 +3603,7 @@ export const translations = {
       "currentHint": "Confira sua seleção. Remova um streamer se errou antes de finalizar.",
       "removeStreamer": "Remover",
       "nextStepTitle": "Última etapa",
-      "pinCallout": "📌 Para achar a extensão facilmente, fixe ela:",
+      "pinCallout": "Para achar a extensão facilmente, fixe ela:",
       "pinStep1": "<strong>Clique</strong> no ícone de quebra-cabeça no canto superior direito",
       "pinStep2": "<strong>Procure</strong> <span class=\"highlight\">StreamPulse</span>",
       "pinStep3": "<strong>Fixe</strong> a extensão para tê-la sempre à mão",
@@ -3592,7 +3616,7 @@ export const translations = {
       "backBtn": "Voltar",
       "finishTitle": "Pronto!",
       "finishDescription": "O StreamPulse está configurado. Fixe a extensão para acessar fácil.",
-      "finish": "Iniciar StreamPulse 🚀",
+      "finish": "Iniciar StreamPulse",
       "footerText": "Criado por <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
         "invalidHandle": "Digite um identificador válido para {{platform}}.",
@@ -3983,6 +4007,14 @@ export const translations = {
         "rate": "Avaliar",
         "later": "Mais tarde",
         "never": "Não, obrigado"
+      },
+      "badgeAsk": {
+        "title": "Mostre seu emblema no chat",
+        "body": "Reconheça e seja reconhecido por outros usuários do StreamPulse no chat da Twitch. Se ativar: um hash do seu nome de usuário é enviado a streampulse.fr no máximo uma vez por dia.",
+        "activate": "Ativar o emblema",
+        "later": "Mais tarde",
+        "dismiss": "Não, obrigado",
+        "activated": "Emblema ativado: você aparecerá com o ícone do StreamPulse no chat."
       },
       "identity": {
         "rankFounder": "Fundador do StreamPulse",
@@ -4678,7 +4710,7 @@ export const translations = {
       "metaSounds": "KLÄNGE",
       "tabsGroupLabel": "TABS & HINTERGRUND",
       "tabsGroupHint": "Tab-Erscheinungsbild und Tabs am Leben erhalten.",
-      "pinLabel": "📌 PINNEN SIE DIE VERLÄNGERUNG",
+      "pinLabel": "PINNEN SIE DIE ERWEITERUNG",
       "autoOpenInventoryTitle": "Drops-Inventar automatisch öffnen",
       "autoOpenInventoryDescription": "Öffne das Twitch-Inventar im Hintergrund, um deine Drops zu erhalten.",
       "streamerFaviconTitle": "Streamer-Avatar auf der Registerkarte",
@@ -4720,7 +4752,7 @@ export const translations = {
       "currentHint": "Überprüfen Sie Ihre Auswahl. Entfernen Sie einen Streamer, wenn Sie vor dem Abschluss einen Fehler gemacht haben.",
       "removeStreamer": "Entfernen",
       "nextStepTitle": "Letzter Schritt",
-      "pinCallout": "📌 Pinne die Erweiterung an, damit sie leicht zu finden ist:",
+      "pinCallout": "Pinne die Erweiterung an, damit sie leicht zu finden ist:",
       "pinStep1": "<strong>Klicken</strong> Sie auf das Puzzle-Symbol in der Symbolleiste",
       "pinStep2": "<strong>Suchen</strong> <span class=\"highlight\">StreamPulse</span>",
       "pinStep3": "<strong>Pinnen</strong> Sie die Erweiterung, damit Sie sie griffbereit haben",
@@ -4733,7 +4765,7 @@ export const translations = {
       "backBtn": "Zurück",
       "finishTitle": "Sie sind bereit!",
       "finishDescription": "StreamPulse ist bereit. Stecken Sie die Erweiterung fest, um schnell darauf zugreifen zu können.",
-      "finish": "Starten Sie StreamPulse 🚀",
+      "finish": "Starten Sie StreamPulse",
       "footerText": "Erstellt von <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
         "invalidHandle": "Bitte geben Sie eine gültige {{platform}}-Kennung ein.",
@@ -5128,6 +5160,14 @@ export const translations = {
         "rate": "Bewerten",
         "later": "Später",
         "never": "Nein danke"
+      },
+      "badgeAsk": {
+        "title": "Zeig dein Abzeichen im Chat",
+        "body": "Erkenne andere StreamPulse-Nutzer im Twitch-Chat und werde von ihnen erkannt. Wenn du es aktivierst: Ein Hash deines Benutzernamens wird höchstens einmal täglich an streampulse.fr gesendet.",
+        "activate": "Abzeichen aktivieren",
+        "later": "Später",
+        "dismiss": "Nein danke",
+        "activated": "Abzeichen aktiv: Du erscheinst jetzt mit dem StreamPulse-Symbol im Chat."
       },
       "identity": {
         "rankFounder": "Gründer von StreamPulse",
@@ -5828,7 +5868,7 @@ export const translations = {
       "metaSounds": "SUONO",
       "tabsGroupLabel": "TAB E SFONDO",
       "tabsGroupHint": "Aspetto delle schede e mantenimento in vita delle schede.",
-      "pinLabel": "📌 PIN L'ESTENSIONE",
+      "pinLabel": "PIN L'ESTENSIONE",
       "autoOpenInventoryTitle": "Apertura automatica dell'inventario dei drop",
       "autoOpenInventoryDescription": "Apri l'inventario Twitch in background per richiedere i tuoi Drop.",
       "streamerFaviconTitle": "Avatar dello streamer nella scheda",
@@ -5870,7 +5910,7 @@ export const translations = {
       "currentHint": "Rivedi la tua selezione. Rimuovi uno streamer se hai commesso un errore prima di finire.",
       "removeStreamer": "Rimuovi",
       "nextStepTitle": "Passaggio finale",
-      "pinCallout": "📌 Appunta l'estensione in modo che sia facile da trovare:",
+      "pinCallout": "Appunta l'estensione in modo che sia facile da trovare:",
       "pinStep1": "<strong>Fai clic</strong> sull'icona del puzzle nella barra degli strumenti",
       "pinStep2": "<strong>Trova</strong> <span class=\"highlight\">StreamPulse</span>",
       "pinStep3": "<strong>Fissa</strong> l'estensione per tenerla a portata di mano",
@@ -5883,7 +5923,7 @@ export const translations = {
       "backBtn": "Indietro",
       "finishTitle": "È tutto pronto!",
       "finishDescription": "StreamPulse è pronto. Blocca l'estensione per un accesso rapido.",
-      "finish": "Avvia StreamPulse 🚀",
+      "finish": "Avvia StreamPulse",
       "footerText": "Creato da <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
         "invalidHandle": "Inserisci un identificatore {{platform}} valido.",
@@ -6278,6 +6318,14 @@ export const translations = {
         "rate": "Lascia una recensione",
         "later": "Più tardi",
         "never": "No, grazie"
+      },
+      "badgeAsk": {
+        "title": "Mostra il tuo badge in chat",
+        "body": "Riconosci e fatti riconoscere dagli altri utenti di StreamPulse nella chat di Twitch. Se lo attivi: un'empreinta del tuo nome utente viene inviata a streampulse.fr al massimo una volta al giorno.",
+        "activate": "Attiva il badge",
+        "later": "Più tardi",
+        "dismiss": "No grazie",
+        "activated": "Badge attivo: apparirai con l'icona di StreamPulse in chat."
       },
       "identity": {
         "rankFounder": "Fondatore di StreamPulse",
@@ -6978,7 +7026,7 @@ export const translations = {
       "metaSounds": "DŹWIĘKI",
       "tabsGroupLabel": "ZAKŁADKI I TŁO",
       "tabsGroupHint": "Wygląd zakładek i utrzymywanie zakładek przy życiu.",
-      "pinLabel": "📌 PRZYPIN ROZSZERZENIE",
+      "pinLabel": "PRZYPIN ROZSZERZENIE",
       "autoOpenInventoryTitle": "Automatycznie otwieraj ekwipunek Drops",
       "autoOpenInventoryDescription": "Otwórz w tle ekwipunek Twitcha, aby odebrać swoje dropy.",
       "streamerFaviconTitle": "Awatar streamera na karcie",
@@ -7020,7 +7068,7 @@ export const translations = {
       "currentHint": "Przejrzyj swój wybór. Usuń streamera, jeśli popełniłeś błąd przed zakończeniem.",
       "removeStreamer": "Usunąć",
       "nextStepTitle": "Ostatni krok",
-      "pinCallout": "📌 Przypnij rozszerzenie, aby było łatwe do znalezienia:",
+      "pinCallout": "Przypnij rozszerzenie, aby było łatwe do znalezienia:",
       "pinStep1": "<strong>Kliknij</strong> ikonę łamigłówki na pasku narzędzi",
       "pinStep2": "<strong>Znajdź</strong> <span class=\"highlight\">StreamPulse</span>",
       "pinStep3": "<strong>Przypnij</strong> rozszerzenie, aby mieć je pod ręką",
@@ -7033,7 +7081,7 @@ export const translations = {
       "backBtn": "Powrót",
       "finishTitle": "Wszystko gotowe!",
       "finishDescription": "StreamPulse jest gotowy. Przypnij rozszerzenie, aby uzyskać szybki dostęp.",
-      "finish": "Uruchom StreamPulse 🚀",
+      "finish": "Uruchom StreamPulse",
       "footerText": "Utworzono przez <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
         "invalidHandle": "Proszę wprowadzić prawidłowy identyfikator {{platform}}.",
@@ -7428,6 +7476,14 @@ export const translations = {
         "rate": "Wystaw opinię",
         "later": "Później",
         "never": "Nie, dzięki"
+      },
+      "badgeAsk": {
+        "title": "Pokaż swoją odznakę na czacie",
+        "body": "Wypatruj innych użytkowników StreamPulse i daj się zauważyć na czacie Twitch. Po włączeniu: odcisk twojego nicku jest wysyłany do streampulse.fr najwyżej raz dziennie.",
+        "activate": "Włącz odznakę",
+        "later": "Później",
+        "dismiss": "Nie, dziękuję",
+        "activated": "Odznaka włączona: będziesz widoczny z ikoną StreamPulse na czacie."
       },
       "identity": {
         "rankFounder": "Założyciel StreamPulse",
@@ -8128,7 +8184,7 @@ export const translations = {
       "metaSounds": "SESLER",
       "tabsGroupLabel": "SEKMELER VE ARKA PLAN",
       "tabsGroupHint": "Sekmelerin görünümü ve sekmelerin açık kalması.",
-      "pinLabel": "📌 UZANTİYI SABİTLE",
+      "pinLabel": "UZANTİYI SABİTLE",
       "autoOpenInventoryTitle": "Otomatik açılan Drops envanteri",
       "autoOpenInventoryDescription": "Drops’larınızı almak için arka planda Twitch envanterini açın.",
       "streamerFaviconTitle": "Sekmedeki yayıncı avatarı",
@@ -8170,7 +8226,7 @@ export const translations = {
       "currentHint": "Seçiminizi gözden geçirin. İşlemi tamamlamadan önce bir süs şeridini yanlışlıkla eklediyseniz, onu kaldırın.",
       "removeStreamer": "Kaldır",
       "nextStepTitle": "Son adım",
-      "pinCallout": "📌 Uzantıyı kolayca bulabilmek için sabitleyin:",
+      "pinCallout": "Uzantıyı kolayca bulabilmek için sabitleyin:",
       "pinStep1": "<strong>Araç çubuğundaki bulmaca simgesine</strong> tıklayın",
       "pinStep2": "<strong>Bul</strong> <span class=\"highlight\">StreamPulse</span>",
       "pinStep3": "<strong>Uzantıyı </strong>'e sabitleyin, böylece her zaman elinizin altında olsun",
@@ -8183,7 +8239,7 @@ export const translations = {
       "backBtn": "Geri",
       "finishTitle": "Her şey hazır!",
       "finishDescription": "StreamPulse hazır. Hızlı erişim için uzantıyı sabitleyin.",
-      "finish": "StreamPulse'u başlatın 🚀",
+      "finish": "StreamPulse'u başlatın",
       "footerText": "Oluşturan: <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
         "invalidHandle": "Lütfen geçerli bir {{platform}} tanımlayıcısı girin.",
@@ -8578,6 +8634,14 @@ export const translations = {
         "rate": "Yorum yap",
         "later": "Sonra",
         "never": "Hayır, teşekkürler"
+      },
+      "badgeAsk": {
+        "title": "Rozetini sohbette göster",
+        "body": "Twitch sohbetindeki diğer StreamPulse kullanıcılarını gör ve onlara görül. Açarsan: kullanıcı adının bir özeti günde en fazla bir kez streampulse.fr'ye gönderilir.",
+        "activate": "Rozeti aç",
+        "later": "Daha sonra",
+        "dismiss": "Hayır, teşekkürler",
+        "activated": "Rozet açıldı: artık sohbette StreamPulse simgesiyle görüneceksin."
       },
       "identity": {
         "rankFounder": "StreamPulse kurucusu",
@@ -9278,7 +9342,7 @@ export const translations = {
       "metaSounds": "ЗВУКИ",
       "tabsGroupLabel": "ВКЛАДКИ И ОБЩАЯ ИНФОРМАЦИЯ",
       "tabsGroupHint": "Внешний вид вкладок и поддержание их активности.",
-      "pinLabel": "📌 Закрепить расширение",
+      "pinLabel": "Закрепить расширение",
       "autoOpenInventoryTitle": "Автоматическое открытие инвентаря «Drops»",
       "autoOpenInventoryDescription": "Откройте инвентарь Twitch в фоновом режиме, чтобы получить свои Drops.",
       "streamerFaviconTitle": "Аватар стримера на вкладке",
@@ -9320,7 +9384,7 @@ export const translations = {
       "currentHint": "Проверьте свой выбор. Если вы допустили ошибку, удалите стример до того, как завершите выбор.",
       "removeStreamer": "Удалить",
       "nextStepTitle": "Последний шаг",
-      "pinCallout": "📌 Закрепите расширение, чтобы его было легко найти:",
+      "pinCallout": "Закрепите расширение, чтобы его было легко найти:",
       "pinStep1": "<strong>Нажмите</strong> на значок пазла на панели инструментов",
       "pinStep2": "<strong>Найти</strong> <span class=\"highlight\">StreamPulse</span>",
       "pinStep3": "<strong>Добавьте</strong> это расширение в закладки, чтобы оно всегда было под рукой",
@@ -9333,7 +9397,7 @@ export const translations = {
       "backBtn": "Назад",
       "finishTitle": "Всё готово!",
       "finishDescription": "StreamPulse готов к работе. Закрепите расширение для быстрого доступа.",
-      "finish": "Запустить StreamPulse 🚀",
+      "finish": "Запустить StreamPulse",
       "footerText": "Автор: <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
         "invalidHandle": "Введите действительный идентификатор {{platform}}.",
@@ -9728,6 +9792,14 @@ export const translations = {
         "rate": "Оставить отзыв",
         "later": "Позже",
         "never": "Нет, спасибо"
+      },
+      "badgeAsk": {
+        "title": "Покажите свой значок в чате",
+        "body": "Замечайте других пользователей StreamPulse и будьте заметны в чате Twitch. При включении: хеш вашего ника отправляется на streampulse.fr не чаще одного раза в день.",
+        "activate": "Включить значок",
+        "later": "Позже",
+        "dismiss": "Нет, спасибо",
+        "activated": "Значок включён: теперь вы будете отображаться с иконкой StreamPulse в чате."
       },
       "identity": {
         "rankFounder": "Основатель StreamPulse",
@@ -10428,7 +10500,7 @@ export const translations = {
       "metaSounds": "サウンド",
       "tabsGroupLabel": "TABS と背景",
       "tabsGroupHint": "タブの外観とタブの維持。",
-      "pinLabel": "📌 拡張機能をピン留めする",
+      "pinLabel": "拡張機能をピン留めする",
       "autoOpenInventoryTitle": "自動オープンでインベントリが開く",
       "autoOpenInventoryDescription": "バックグラウンドでTwitchのインベントリを開いて、ドロップを受け取ってください。",
       "streamerFaviconTitle": "タブ上のストリーマーのアバター",
@@ -10470,7 +10542,7 @@ export const translations = {
       "currentHint": "選択内容を確認してください。間違えた場合は、完了する前にストリーマーを削除してください。",
       "removeStreamer": "削除",
       "nextStepTitle": "最後のステップ",
-      "pinCallout": "📌 拡張機能をピン留めして、すぐに見つけられるようにしましょう：",
+      "pinCallout": "拡張機能をピン留めして、すぐに見つけられるようにしましょう：",
       "pinStep1": "<strong>ツールバーにあるパズルアイコンをクリック</strong>",
       "pinStep2": "<strong>検索</strong> <span class=\"highlight\">StreamPulse</span>",
       "pinStep3": "<strong>この拡張機能を</strong>ピン留めして、いつでも使えるようにしましょう",
@@ -10483,7 +10555,7 @@ export const translations = {
       "backBtn": "戻る",
       "finishTitle": "これで準備完了です！",
       "finishDescription": "StreamPulseの準備が整いました。拡張機能をピン留めして、すぐにアクセスできるようにしましょう。",
-      "finish": "StreamPulse を起動 🚀",
+      "finish": "StreamPulse を起動",
       "footerText": "作成者：<a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
         "invalidHandle": "有効な {{platform}} 識別子を入力してください。",
@@ -10878,6 +10950,14 @@ export const translations = {
         "rate": "レビューを書く",
         "later": "あとで",
         "never": "今はしない"
+      },
+      "badgeAsk": {
+        "title": "チャットでバッジを見せる",
+        "body": "Twitch チャットで他の StreamPulse ユーザーとお互いを認識し合えます。オンにすると、ユーザー名のハッシュが 1 日最大 1 回 streampulse.fr に送信されます。",
+        "activate": "バッジをオンにする",
+        "later": "後で",
+        "dismiss": "いいえ、結構です",
+        "activated": "バッジがオンになりました。チャットで StreamPulse のアイコンが表示されます。"
       },
       "identity": {
         "rankFounder": "StreamPulse 創設者",
@@ -11578,7 +11658,7 @@ export const translations = {
       "metaSounds": "사운드",
       "tabsGroupLabel": "TABS 및 배경",
       "tabsGroupHint": "탭의 모양과 탭 유지.",
-      "pinLabel": "📌 확장 프로그램 고정하기",
+      "pinLabel": "확장 프로그램 고정하기",
       "autoOpenInventoryTitle": "자동 열기: 인벤토리 비우기",
       "autoOpenInventoryDescription": "백그라운드에서 Twitch 인벤토리를 열어 드롭을 수령하세요.",
       "streamerFaviconTitle": "탭에 표시되는 스트리머 아바타",
@@ -11620,7 +11700,7 @@ export const translations = {
       "currentHint": "선택 내용을 다시 한 번 확인하세요. 실수를 했다면 완료하기 전에 스트리머를 제거하세요.",
       "removeStreamer": "제거",
       "nextStepTitle": "마지막 단계",
-      "pinCallout": "📌 확장 프로그램을 쉽게 찾을 수 있도록 고정해 두세요:",
+      "pinCallout": "확장 프로그램을 쉽게 찾을 수 있도록 고정해 두세요:",
       "pinStep1": "<strong>툴바에서 퍼즐 아이콘을 </strong>클릭하세요</strong>",
       "pinStep2": "<strong>찾기</strong> <span class=\"highlight\">StreamPulse</span>",
       "pinStep3": "<strong>이 확장 프로그램을 </strong>에 고정해 두면 언제든지 편리하게 사용할 수 있습니다.",
@@ -11633,7 +11713,7 @@ export const translations = {
       "backBtn": "뒤로",
       "finishTitle": "이제 다 끝났습니다!",
       "finishDescription": "StreamPulse가 준비되었습니다. 빠르게 이용할 수 있도록 확장 프로그램을 고정해 두세요.",
-      "finish": "StreamPulse 실행하기 🚀",
+      "finish": "StreamPulse 실행하기",
       "footerText": "작성자: <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
         "invalidHandle": "유효한 {{platform}} 식별자를 입력해 주세요.",
@@ -12028,6 +12108,14 @@ export const translations = {
         "rate": "리뷰 남기기",
         "later": "나중에",
         "never": "괜찮아요"
+      },
+      "badgeAsk": {
+        "title": "채팅에 배지를 보여주세요",
+        "body": "Twitch 채팅에서 다른 StreamPulse 사용자와 서로를 알아볼 수 있습니다. 켜면: 사용자 이름의 해시가 하루 최대 1회 streampulse.fr로 전송됩니다.",
+        "activate": "배지 켜기",
+        "later": "나중에",
+        "dismiss": "아니요, 괜찮습니다",
+        "activated": "배지가 켜졌습니다. 이제 채팅에서 StreamPulse 아이콘이 표시됩니다."
       },
       "identity": {
         "rankFounder": "StreamPulse 창립자",

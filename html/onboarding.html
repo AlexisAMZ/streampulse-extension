@@ -102,15 +102,15 @@
                 </div>
 
                 <div class="badge-setting">
-                  <label class="settings-toggle">
-                    <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.communityBadgeTitle"></span><span class="settings-description" data-i18n="popup.settings.communityBadgeDescription"></span></span>
-                    <input id="onboarding-community-badge" type="checkbox" role="switch" />
-                  </label>
                   <div class="badge-preview" aria-hidden="true">
                     <span class="badge-preview-badge"></span>
                     <span class="badge-preview-name" id="badge-preview-name">@toi</span>
                     <span class="badge-preview-msg" data-i18n="onboarding.badgePreviewMessage">Regarde, c'est mon badge StreamPulse !</span>
                   </div>
+                  <label class="settings-toggle">
+                    <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.communityBadgeTitle"></span><span class="settings-description" data-i18n="popup.settings.communityBadgeDescription"></span></span>
+                    <input id="onboarding-community-badge" type="checkbox" role="switch" />
+                  </label>
                   <p class="settings-privacy" data-i18n="onboarding.badgePrivacyNote">Désactivé par défaut. Si tu l'actives : une empreinte de ton pseudo est envoyée à streampulse.fr au maximum une fois par jour. Rien d'autre ne quitte ton navigateur.</p>
                 </div>
               </div>
@@ -197,10 +197,6 @@
                   <input id="onboarding-auto-claim-drops" type="checkbox" role="switch" checked />
                 </label>
                 <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="popup.osd.autoClaimMoments"></span><span class="settings-description" data-i18n="popup.settings.autoClaimMomentsDescription"></span></span>
-                  <input id="onboarding-auto-claim-moments" type="checkbox" role="switch" checked />
-                </label>
-                <label class="settings-toggle">
                   <span class="settings-text"><span class="settings-title" data-i18n="onboarding.autoOpenInventoryTitle">Ouverture auto de l'inventaire Drops</span><span class="settings-description" data-i18n="onboarding.autoOpenInventoryDescription">Ouvrir l'inventaire Twitch en arrière-plan pour réclamer vos Drops.</span></span>
                   <input id="onboarding-auto-open-inventory" type="checkbox" role="switch" />
                 </label>
@@ -276,13 +272,35 @@
 
         <!-- Step 4: finish -->
         <section class="wizard-step" data-step="4">
-          <div class="step-frame step-frame-single">
-            <div class="finish-frame">
-              <div class="finish-check" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17 19 7"/></svg>
+          <div class="step-frame">
+            <div class="step-header">
+              <h2 class="headline finish-title" data-i18n="onboarding.finishTitle">Tu es prêt !</h2>
+              <p class="lede finish-desc" data-i18n="onboarding.finishDescription">StreamPulse est configuré. Épingle l'extension pour y accéder facilement.</p>
+
+              <div class="finish-watched" id="finish-watched" hidden>
+                <p class="finish-watched-label">
+                  <span data-i18n="onboarding.currentHeader">Streamers suivis</span>
+                  <span class="finish-watched-count" id="finish-watched-count"></span>
+                </p>
+                <div class="finish-watched-row" id="finish-watched-row"></div>
               </div>
-              <h2 class="display finish-title" data-i18n="onboarding.finishTitle" data-i18n-mode="html">Tout est prêt<span class="name-suffix" id="finish-name-suffix"></span>.</h2>
-              <p class="lede welcome-sub" data-i18n="onboarding.finishDescription">StreamPulse va te prévenir dès qu'un streamer suivi se lance. Pense à épingler l'extension.</p>
+
+              <button id="finish-button" class="btn btn-primary btn-finish" type="button" data-i18n="onboarding.finish">Lancer StreamPulse</button>
+              <p class="finish-hint" data-i18n="onboarding.nextHint">Tu pourras ajouter d'autres streamers depuis le menu principal.</p>
+            </div>
+
+            <div class="step-content finish-side">
+              <div class="notif-mock" id="notif-mock" aria-hidden="true">
+                <div class="notif-mock-head">
+                  <img class="notif-mock-app" src="../images/photos/128px.png" alt="" />
+                  <span>StreamPulse</span>
+                </div>
+                <div class="notif-mock-body">
+                  <img class="notif-mock-avatar" id="notif-mock-avatar" alt="" referrerpolicy="no-referrer" />
+                  <span class="notif-mock-name" id="notif-mock-name"></span>
+                  <span class="notif-mock-live"><span class="notif-mock-dot" aria-hidden="true"></span><span data-i18n="popup.suggest.live">En direct</span></span>
+                </div>
+              </div>
 
               <div class="glass pin-instructions">
                 <h2 class="group-title" data-i18n="onboarding.pinLabel">Épingler l'extension</h2>
@@ -292,9 +310,6 @@
                   <li data-i18n="onboarding.pinStep3" data-i18n-mode="html"><strong>Épingle</strong> l'extension pour l'avoir toujours sous la main</li>
                 </ol>
               </div>
-
-              <button id="finish-button" class="btn btn-primary btn-finish" type="button" data-i18n="onboarding.finish">Lancer StreamPulse</button>
-              <p class="finish-hint" data-i18n="onboarding.nextHint">Tu pourras ajouter d'autres streamers depuis le menu principal.</p>
             </div>
           </div>
         </section>

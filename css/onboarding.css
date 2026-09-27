@@ -16,7 +16,9 @@
 .step-counter-divider { margin: 0 3px; }
 
 /* Steps */
-.stage { padding: 56px 0 8px; }
+/* Grille + centrage vertical : les étapes courtes (fin) respirent entre
+   l'en-tête et le pied ; les étapes hautes débordent et défilent normalement. */
+.stage { padding: 56px 0 8px; display: grid; align-content: center; }
 .wizard-step { display: none; }
 .wizard-step.active { display: block; }
 @media (prefers-reduced-motion: no-preference) {
@@ -24,7 +26,6 @@
   /* Titre d'accueil traduit d'un bloc (une seule chaîne i18n) : l'animation
      porte sur la ligne entière, pas sur des mots positionnés par nth-child. */
   .welcome-display .welcome-line { display: inline-block; animation: word-in 700ms var(--ease-out) both; }
-  .finish-check { animation: pop 520ms var(--ease-out) both; }
 }
 /* onboarding.js switches steps on animationend of these two classes: they must
    always animate, even with reduced motion (1ms there, see below). */
@@ -38,8 +39,7 @@
 }
 .step-frame { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 64px; align-items: start; }
 .step-frame-single { grid-template-columns: 1fr; justify-items: center; text-align: center; }
-.welcome-frame,
-.finish-frame { display: grid; justify-items: center; gap: 24px; width: min(820px, 100%); }
+.welcome-frame { display: grid; justify-items: center; gap: 24px; width: min(820px, 100%); }
 .welcome-display { font-size: clamp(52px, 8vw, 104px); }
 .welcome-sub { margin-inline: auto; }
 .step-header { position: sticky; top: 32px; display: grid; gap: 20px; }
@@ -147,31 +147,58 @@
 .group-title { font-family: var(--display); font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
 .settings-group-hint { margin: 4px 0 10px; color: var(--text-2); font-size: 13px; }
 .settings-toggle { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 14px 0; box-shadow: inset 0 1px 0 var(--line); cursor: pointer; }
-/* Badge communautaire à l'étape pseudo : le choix se fait avec un aperçu
-   du rendu réel dans le tchat (même masque que css/inject/twitch-badge.css). */
-.badge-setting { margin-top: 16px; padding-top: 4px; }
-.badge-setting .settings-toggle { box-shadow: none; padding-top: 0; }
-.badge-preview { display: flex; align-items: center; gap: 7px; margin: 2px 0 10px; padding: 9px 12px; border-radius: 10px; background: #18181b; font-size: 13px; }
-.badge-preview-badge { width: 18px; height: 18px; flex: none; background-color: var(--violet); -webkit-mask: url("../images/photos/128px.png") center / contain no-repeat; mask: url("../images/photos/128px.png") center / contain no-repeat; }
+/* Badge communautaire à l'étape pseudo : l'aperçu du tchat passe en premier
+   (c'est lui qui vend le réglage), l'interrupteur suit, la note de
+   confidentialité ferme le bloc. */
+.badge-setting { margin-top: 18px; display: grid; gap: 10px; }
+.badge-setting .settings-toggle { box-shadow: none; }
+.badge-preview { display: flex; align-items: center; gap: 8px; padding: 13px 14px; border-radius: 12px; background: #18181b; font-size: 13.5px; }
+.badge-preview-badge { width: 20px; height: 20px; flex: none; background-color: var(--violet); -webkit-mask: url("../images/photos/128px.png") center / contain no-repeat; mask: url("../images/photos/128px.png") center / contain no-repeat; }
 .badge-preview-name { flex: none; color: #bf94ff; font-weight: 700; }
 .badge-preview-msg { overflow: hidden; color: #efeff1; text-overflow: ellipsis; white-space: nowrap; }
+.badge-setting .settings-privacy { margin: 0; }
 .settings-text { display: grid; gap: 2px; min-width: 0; }
 .settings-title { font-weight: 600; }
 .settings-description { color: var(--text-2); font-size: 13px; line-height: 1.45; }
 
 /* Finish */
-.finish-check { display: grid; place-items: center; width: 92px; height: 92px; border-radius: 50%; background: var(--lcd); color: var(--lcd-ink); }
-.finish-check svg { width: 42px; height: 42px; }
-.finish-title { font-size: clamp(44px, 6.4vw, 80px); }
-.name-suffix { color: var(--violet-text); }
-.pin-instructions { display: grid; gap: 14px; width: min(540px, 100%); text-align: left; }
+.finish-title { font-size: clamp(36px, 4.6vw, 58px); }
+.finish-desc { max-width: 42ch; }
+/* Bandeau des streamers suivis : la preuve de ce que StreamPulse surveille. */
+.finish-watched { display: grid; gap: 10px; }
+.finish-watched-label { display: flex; align-items: baseline; gap: 8px; color: var(--text-2); font-size: 12px; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; }
+.finish-watched-count { color: var(--text-3); font-variant-numeric: tabular-nums; }
+.finish-watched-row { display: flex; align-items: center; }
+.finish-watched-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--surface-2); object-fit: cover; box-shadow: 0 0 0 3px var(--bg); }
+.finish-watched-avatar + .finish-watched-avatar,
+.finish-watched-avatar + .finish-watched-more { margin-left: -10px; }
+.finish-watched-more { display: grid; place-items: center; height: 44px; min-width: 44px; padding: 0 10px; border-radius: 999px; background: var(--surface-2); box-shadow: 0 0 0 3px var(--bg); color: var(--text-2); font-size: 12px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.btn-finish { height: 58px; margin-top: 8px; padding: 0 32px; font-size: 15px; justify-self: start; }
+.finish-hint { color: var(--text-3); font-size: 14px; }
+/* Aperçu de notification : ce que l'utilisateur verra au prochain direct.
+   Moment signé de l'écran : entre comme une vraie notification système. */
+.notif-mock { display: grid; gap: 16px; padding: 18px 20px 20px; border-radius: 22px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line), var(--shadow-pop); }
+.notif-mock-head { display: flex; align-items: center; gap: 8px; color: var(--text-3); font-size: 12.5px; font-weight: 700; }
+.notif-mock-app { width: 16px; height: 16px; }
+.notif-mock-body { display: flex; align-items: center; gap: 14px; }
+.notif-mock-avatar { flex: none; width: 48px; height: 48px; border-radius: 50%; background: var(--surface-2); object-fit: cover; }
+.notif-mock-name { flex: 1; min-width: 0; overflow: hidden; font-size: 15.5px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.notif-mock-live { flex: none; display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 12px; border-radius: 999px; background: var(--violet-soft); box-shadow: inset 0 0 0 1px var(--violet-line); color: var(--violet-text); font-size: 12.5px; font-weight: 700; }
+.notif-mock-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--violet); }
+@media (prefers-reduced-motion: no-preference) {
+  .wizard-step.active .notif-mock { animation: notif-in 640ms var(--ease-out) 240ms both; }
+}
+@keyframes notif-in {
+  from { opacity: 0; transform: translateY(-16px) scale(0.98); }
+  60% { opacity: 1; }
+  to { opacity: 1; transform: none; }
+}
+.pin-instructions { display: grid; gap: 14px; }
 .pin-steps { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; counter-reset: pin; }
 .pin-steps li { display: flex; align-items: baseline; gap: 12px; color: var(--text-2); counter-increment: pin; }
 .pin-steps li::before { content: counter(pin); display: grid; flex: none; place-items: center; width: 28px; height: 28px; border-radius: 9px; background: var(--surface-2); color: var(--text); font-size: 13px; font-weight: 800; }
 .pin-steps strong { color: var(--text); }
 .highlight { padding: 1px 7px; border-radius: 6px; background: var(--lcd); color: var(--lcd-ink); font-weight: 700; }
-.btn-finish { height: 58px; padding: 0 32px; font-size: 15px; }
-.finish-hint { color: var(--text-3); font-size: 14px; }
 
 @media (max-width: 960px) {
   .step-frame { grid-template-columns: 1fr; gap: 32px; }
@@ -183,8 +210,8 @@
    horizontal avec les chaînes longues (allemand, russe). */
 @media (max-width: 720px) {
   .step-frame { gap: 24px; }
-  .welcome-frame,
-  .finish-frame { gap: 18px; padding: 0 16px; }
+  .welcome-frame { gap: 18px; padding: 0 16px; }
+  .finish-side { padding: 0 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .step-pill,

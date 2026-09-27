@@ -42,6 +42,7 @@ const ES_MODULES = [
   "js/popup-drops.js",
   "js/popup-layout.js",
   "js/popup-review.js",
+  "js/popup-badge-ask.js",
   "js/popup-identity.js",
   "js/popup-news.js",
   "js/popup-suggest.js",

@@ -30,7 +30,6 @@ const currentStreamersSection = document.getElementById("current-streamers");
 const streamerList = document.getElementById("streamer-list");
 const streamerCount = document.getElementById("streamer-count");
 const finishButton = document.getElementById("finish-button");
-const finishNameSuffix = document.getElementById("finish-name-suffix");
 const languageOptions = document.getElementById("language-options");
 const stepCounterCurrent = document.getElementById("step-counter-current");
 
@@ -54,7 +53,6 @@ const preferenceToggleDefinitions = [
   { element: document.getElementById("onboarding-hide-extensions"), key: "hideTwitchExtensions" },
   { element: document.getElementById("onboarding-auto-claim"), key: "autoClaimChannelPoints" },
   { element: document.getElementById("onboarding-auto-claim-drops"), key: "autoClaimDrops" },
-  { element: document.getElementById("onboarding-auto-claim-moments"), key: "autoClaimMoments" },
   { element: document.getElementById("onboarding-auto-open-inventory"), key: "autoOpenInventory" },
   { element: document.getElementById("onboarding-auto-cancel-raids"), key: "autoCancelRaids" },
   { element: document.getElementById("onboarding-prevent-tab-discard"), key: "preventTabDiscard" },
@@ -103,7 +101,7 @@ function goToStep(targetStep, direction = "forward") {
     targetEl.classList.add("active");
     currentStep = targetStep;
     updateStepper();
-    if (targetStep === 4) renderFinishName();
+    if (targetStep === 4) renderFinishPanel();
   }, { once: true });
 }
 
@@ -252,10 +250,64 @@ async function saveUserProfile() {
   }
 }
 
-function renderFinishName() {
-  if (!finishNameSuffix) return;
-  const name = userProfile.displayName || userProfile.handle;
-  finishNameSuffix.textContent = name ? `, ${name}` : "";
+/**
+ * Écran final : bandeau des streamers suivis et aperçu de notification.
+ * Le titre traduit est réécrit par applyTranslations (innerHTML) : tout
+ * élément inséré dedans serait détruit au prochain rafraîchissement i18n,
+ * donc le nom n'est plus injecté dans le titre.
+ */
+function renderFinishPanel() {
+  const watched = document.getElementById("finish-watched");
+  const watchedRow = document.getElementById("finish-watched-row");
+  const watchedCount = document.getElementById("finish-watched-count");
+  const notifMock = document.getElementById("notif-mock");
+  if (!watched || !watchedRow || !watchedCount || !notifMock) return;
+
+  const runtime =
+    (typeof chrome !== "undefined" && chrome.runtime) ||
+    (typeof browser !== "undefined" && browser.runtime) ||
+    null;
+  const iconFor = (platformId) => {
+    const definition = getPlatformDefinition(platformId);
+    return runtime ? runtime.getURL(definition.icon) : `../${definition.icon}`;
+  };
+
+  const streamers = currentStreamers;
+  watched.hidden = streamers.length === 0;
+  notifMock.hidden = streamers.length === 0;
+  if (streamers.length === 0) return;
+
+  watchedCount.textContent = ` · ${streamers.length}`;
+
+  const MAX_AVATARS = 6;
+  watchedRow.replaceChildren();
+  streamers.slice(0, MAX_AVATARS).forEach((streamer) => {
+    const platformId = streamer.platform || DEFAULT_PLATFORM;
+    const avatar = document.createElement("img");
+    avatar.className = "finish-watched-avatar";
+    const fallback = iconFor(platformId);
+    avatar.src = streamer.avatarUrl || fallback;
+    avatar.alt = streamer.displayName || formatHandleForDisplay(platformId, streamer.handle || streamer.twitch) || "Streamer";
+    avatar.referrerPolicy = "no-referrer";
+    avatar.onerror = function () { this.onerror = null; this.src = fallback; };
+    watchedRow.append(avatar);
+  });
+  const extra = streamers.length - MAX_AVATARS;
+  if (extra > 0) {
+    const more = document.createElement("span");
+    more.className = "finish-watched-more";
+    more.textContent = `+${extra}`;
+    watchedRow.append(more);
+  }
+
+  const first = streamers[0];
+  const firstPlatform = first.platform || DEFAULT_PLATFORM;
+  const mockAvatar = document.getElementById("notif-mock-avatar");
+  const mockName = document.getElementById("notif-mock-name");
+  const mockFallback = iconFor(firstPlatform);
+  mockAvatar.src = first.avatarUrl || mockFallback;
+  mockAvatar.onerror = function () { this.onerror = null; this.src = mockFallback; };
+  mockName.textContent = first.displayName || formatHandleForDisplay(firstPlatform, first.handle || first.twitch) || first.handle;
 }
 
 /* ════════════════════════════════
@@ -695,7 +747,6 @@ function setupUpdateModeUI() {
 
   const newSettingElementIds = [
     "onboarding-auto-claim-drops",
-    "onboarding-auto-claim-moments",
     "onboarding-auto-cancel-raids",
     "onboarding-hide-extensions",
     "onboarding-streamer-favicon",

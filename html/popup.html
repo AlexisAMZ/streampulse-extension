@@ -60,6 +60,19 @@
       </div>
     </aside>
 
+    <aside class="badge-ask" id="badge-ask" role="dialog" hidden>
+      <span class="badge-ask-mark" aria-hidden="true"></span>
+      <div class="badge-ask-text">
+        <b data-i18n="popup.badgeAsk.title">Affiche ton badge dans le tchat</b>
+        <span data-i18n="popup.badgeAsk.body">Repère et sois repéré par les autres utilisateurs de StreamPulse dans le tchat Twitch. Si tu l'actives : une empreinte de ton pseudo est envoyée à streampulse.fr une fois par jour maximum.</span>
+      </div>
+      <div class="badge-ask-actions">
+        <button id="badge-ask-activate" type="button" class="button button-primary" data-i18n="popup.badgeAsk.activate">Activer le badge</button>
+        <button id="badge-ask-later" type="button" class="button button-quiet" data-i18n="popup.badgeAsk.later">Plus tard</button>
+        <button id="badge-ask-never" type="button" class="button button-link" data-i18n="popup.badgeAsk.dismiss">Non merci</button>
+      </div>
+    </aside>
+
     <main id="streamers-view" class="home" role="tabpanel" aria-labelledby="tab-streamers">
       <section class="stage" id="stage" data-state="empty">
         <div class="stage-media" id="stage-media"></div>
