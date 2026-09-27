@@ -292,7 +292,7 @@
     ...(params.get("plus") === "1"
       ? {
           // &role=admin : rang fondateur ; &refs=3 : filleuls (effets d'ambassadeur).
-          streamPulsePlus: { licenseKey: "SP-DEMO-2026-PLUS-0001", plan: "lifetime", status: "active", verifiedAt: now, referrals: Number(params.get("refs")) || 0, role: params.get("role") === "admin" ? "admin" : "" },
+          streamPulsePlus: { licenseKey: "SP-DEMO-2026-PLUS-0001", plan: params.get("plan") || "lifetime", since: now - (Number(params.get("months")) || 0) * 30.44 * 864e5, status: "active", verifiedAt: now, referrals: Number(params.get("refs")) || 0, role: params.get("role") === "admin" ? "admin" : "" },
           streamPulseCosmetics: { badgeFx: "shine", nameFx: "aurora" },
           // Parrainage : code, gains (7 € gagnés, 5 € versés) et adresse PayPal, fraîchement lus.
           streamPulseReferralCode: "AMI-DEMO42",

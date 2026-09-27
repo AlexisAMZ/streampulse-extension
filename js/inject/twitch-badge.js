@@ -50,8 +50,8 @@
   // Effets publics des abonnes : empreinte -> { b: effet du badge, n: pseudo special }.
   var badgeStyles = new Map();
   var COSMETICS_KEY = "streamPulseCosmetics";
-  var BADGE_FX = ["pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost", "halo", "crown"];
-  var NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow", "fire", "frost", "glitch", "ambassador", "founder"];
+  var BADGE_FX = ["pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker", "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost", "halo", "crown", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
+  var NAME_FX = ["aurora", "sunset", "lcd", "gold", "neon", "rainbow", "fire", "frost", "glitch", "ambassador", "founder", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"];
   var REFRESH_MS = 5 * 60 * 1000;
   // Empreinte du compte Twitch connecte et licence de ce navigateur.
   var ownHash = "";
@@ -64,6 +64,26 @@
   // Rang de ce navigateur (fondateur, ambassadeur), d'apres la licence locale.
   var ownRank = "";
   var RANKS = ["founder", "ambassador"];
+  // Debut de son propre abonnement (licence locale), pour sa tuile avant la reponse du serveur.
+  var ownSince = 0;
+  // Copie de TENURE_TIERS (js/cosmetics-data.js) : mois requis, cle de la tuile.
+  var TENURE_TIERS = [[48, "y4"], [36, "y3"], [24, "y2"], [18, "y1h"], [12, "y1"], [9, "m9"], [6, "m6"], [3, "m3"], [0, "m1"]];
+
+  /** Meme regle que tenureTier() dans js/cosmetics-data.js. */
+  function tenureTier(plan, since) {
+    if (plan === "lifetime") return "life";
+    if (plan !== "monthly") return "";
+    var months = Number(since) > 0 ? Math.max(0, Math.floor((Date.now() - Number(since)) / MONTH_MS)) : 0;
+    for (var i = 0; i < TENURE_TIERS.length; i++) if (months >= TENURE_TIERS[i][0]) return TENURE_TIERS[i][1];
+    return "m1";
+  }
+
+  /** Tuile d'anciennete StreamPulse+ sous le logo : retiree puis reposee selon l'abonne. */
+  function applyTier(badge, style) {
+    badge.className = badge.className.replace(/\bsp-tier(-\S+)?/g, "").replace(/\s+/g, " ").trim();
+    var tier = style ? tenureTier(style.p, style.s) : "";
+    if (tier) badge.classList.add("sp-tier", "sp-tier-" + tier);
+  }
 
   function readOwnLocal(cosmetics) {
     var c = cosmetics || {};
@@ -88,7 +108,7 @@
     if (viewerPlus) {
       // Formule et anciennete viennent du serveur ; en attendant, la licence locale suffit.
       var known = badgeStyles.get(ownHash) || {};
-      badgeStyles.set(ownHash, { b: ownLocal.b, n: ownLocal.n, p: known.p || ownPlan, s: known.s || 0, r: ownRank || known.r || "" });
+      badgeStyles.set(ownHash, { b: ownLocal.b, n: ownLocal.n, p: known.p || ownPlan, s: known.s || ownSince, r: ownRank || known.r || "" });
     } else {
       badgeStyles.delete(ownHash);
     }
@@ -467,6 +487,7 @@
     mark.style.setProperty("--sp-badge-color", resolveBadgeColor(messageEl, hash));
     var style = hash && badgeStyles.get(hash);
     if (style && style.b) badge.classList.add("sp-chat-badge--fx-" + style.b);
+    applyTier(badge, style);
 
     badge.appendChild(mark);
     return badge;
@@ -701,6 +722,7 @@
         badge.className = badge.className.replace(/\bsp-chat-badge--fx-\S+/g, "").replace(/\s+/g, " ").trim();
         var style = badgeStyles.get(hash);
         if (style && style.b) badge.classList.add("sp-chat-badge--fx-" + style.b);
+        applyTier(badge, style);
         var name = line.querySelector('[data-a-target="chat-message-username"], .chat-author__display-name, .seventv-chat-user-username');
         if (name) {
           name.className = name.className.replace(/\bsp-paint(--\S+)?/g, "").replace(/\s+/g, " ").trim();
@@ -828,6 +850,7 @@
       viewerPlus = !!activePlusKey(res && res[PLUS_KEY]);
       ownPlan = viewerPlus ? (res[PLUS_KEY].plan === "monthly" ? "monthly" : "lifetime") : "";
       ownRank = rankOfRecord(res && res[PLUS_KEY]);
+      ownSince = viewerPlus ? Number(res[PLUS_KEY].since) || 0 : 0;
       var i18n = typeof window !== "undefined" ? window.__SP_I18N__ : null;
       badgeLang = i18n ? i18n.resolve(prefs.language || navigator.language) : "en";
       readOwnLocal(res && res[COSMETICS_KEY]);
@@ -857,6 +880,7 @@
           viewerPlus = !!activePlusKey(plusChange.newValue);
           ownPlan = viewerPlus ? (plusChange.newValue.plan === "monthly" ? "monthly" : "lifetime") : "";
           ownRank = rankOfRecord(plusChange.newValue);
+          ownSince = viewerPlus ? Number(plusChange.newValue.since) || 0 : 0;
         }
         chrome.storage.local.get(COSMETICS_KEY, function (res) {
           readOwnLocal(res && res[COSMETICS_KEY]);

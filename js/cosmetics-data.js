@@ -9,13 +9,36 @@ export const BADGE_FX = Object.freeze([
   "pulse", "shine", "rainbow", "glow", "bounce", "spin", "flicker",
   "heartbeat", "float", "wobble", "prism", "glitch", "fire", "frost",
   "halo", "crown",
+  "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean",
 ]);
 
 export const NAME_FX = Object.freeze([
   "aurora", "sunset", "lcd", "gold", "neon", "rainbow",
   "fire", "frost", "glitch",
   "ambassador", "founder",
+  "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean",
 ]);
+
+/** Textures (26.9.28) : proposées à la fois pour le pseudo et pour le logo. */
+export const TEXTURE_FX = Object.freeze(["galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"]);
+
+const MONTH_MS = 30.44 * 24 * 60 * 60 * 1000;
+
+/**
+ * Tuiles d'ancienneté StreamPulse+ (fond du logo, façon 7TV), du plus ancien
+ * palier au plus récent : mois d'abonnement requis → clé de la tuile.
+ */
+export const TENURE_TIERS = Object.freeze([
+  [48, "y4"], [36, "y3"], [24, "y2"], [18, "y1h"], [12, "y1"], [9, "m9"], [6, "m6"], [3, "m3"], [0, "m1"],
+]);
+
+/** Tuile d'un abonné : « life » pour la licence à vie, sinon selon les mois écoulés depuis `since`. */
+export function tenureTier(plan, since, now = Date.now()) {
+  if (plan === "lifetime") return "life";
+  if (plan !== "monthly") return "";
+  const months = Number(since) > 0 ? Math.max(0, Math.floor((now - Number(since)) / MONTH_MS)) : 0;
+  return TENURE_TIERS.find(([min]) => months >= min)[1];
+}
 
 /** Effets d'ambassadeur : nombre de filleuls abonnés exigé (mêmes paliers que le serveur). */
 export const REFERRAL_FX = Object.freeze({ ambassador: 1, halo: 3 });

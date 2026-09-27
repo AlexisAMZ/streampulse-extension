@@ -5,7 +5,7 @@
 
 import { t } from "./i18n.js";
 import { LICENSE_VERIFY_URL, PLUS_KEY } from "./plus.js";
-import { BADGE_FX, NAME_FX, fxLock, normalizeCosmetics, rankOf, visibleFx } from "./cosmetics-data.js";
+import { BADGE_FX, NAME_FX, TENURE_TIERS, fxLock, normalizeCosmetics, rankOf, tenureTier, visibleFx } from "./cosmetics-data.js";
 import { isPaypalAddress, normalizeEarnings, shouldRefreshEarnings } from "./referral-data.js";
 
 export const COSMETICS_KEY = "streamPulseCosmetics";
@@ -39,7 +39,30 @@ let earnings = null;
 
 function access() {
   const record = deps.getRecord();
-  return { plus: deps.isPlus(), role: record?.role || "", referrals: Math.max(0, Number(record?.referrals) || 0) };
+  return { plus: deps.isPlus(), role: record?.role || "", referrals: Math.max(0, Number(record?.referrals) || 0), plan: record?.plan || "", since: Number(record?.since) || 0 };
+}
+
+/** Paliers affichés, du premier mois à la licence à vie. */
+const TENURE_LADDER = [...TENURE_TIERS.map(([, key]) => key).reverse(), "life"];
+
+/** Une tuile d'ancienneté avec le logo : aperçu du popup et échelle des paliers. */
+function tenureTile(tier, badgeClass = "cosmetic-badge") {
+  const tile = node("span", tier ? `cosmetic-tile sp-tier sp-tier-${tier}` : "cosmetic-tile");
+  tile.append(node("span", badgeClass));
+  return tile;
+}
+
+/** Échelle des paliers ; le sien est mis en avant quand StreamPulse+ est actif. */
+function renderTenure(current) {
+  const list = $("cosmetic-tenure");
+  if (!list) return;
+  const mine = current.plus ? tenureTier(current.plan, current.since) : "";
+  list.replaceChildren(...TENURE_LADDER.map((tier) => {
+    const item = node("li", `tenure-step${tier === mine ? " is-current" : ""}`);
+    if (tier === mine) item.setAttribute("aria-current", "true");
+    item.append(tenureTile(tier), node("span", "tenure-label", t(`popup.cosmetics.tier_${tier}`)));
+    return item;
+  }));
 }
 
 /** Rendu d'un effet : le pseudo (ou le texte donné) peint, ou le logo StreamPulse animé. */
@@ -93,6 +116,9 @@ function renderCosmetics() {
   $("cosmetic-name-fx")?.replaceChildren(...["", ...visibleFx(NAME_FX, current)].map((value) => fxOption("name", value, shown.nameFx, current)));
   $("cosmetic-badge-fx")?.replaceChildren(...["", ...visibleFx(BADGE_FX, current)].map((value) => fxOption("badge", value, shown.badgeFx, current)));
   if ($("cosmetic-badge")) $("cosmetic-badge").className = `cosmetic-badge${shown.badgeFx ? ` sp-fx-${shown.badgeFx}` : ""}`;
+  const tier = current.plus ? tenureTier(current.plan, current.since) : "";
+  if ($("cosmetic-tile")) $("cosmetic-tile").className = tier ? `cosmetic-tile sp-tier sp-tier-${tier}` : "cosmetic-tile";
+  renderTenure(current);
   if ($("cosmetic-name")) {
     $("cosmetic-name").className = `cosmetic-name${shown.nameFx ? ` sp-paint sp-paint--${shown.nameFx}` : ""}`;
     $("cosmetic-name").textContent = chatName || t("popup.cosmetics.sampleName");

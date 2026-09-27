@@ -55,6 +55,40 @@ export const RELEASES = [
     date: "2026-09-27",
     changes: [
       {
+        type: "new",
+        area: "plus",
+        text: {
+          fr: "Badge d'ancienneté StreamPulse+ : dans le tchat, ton logo est posé sur une tuile dont le fond évolue avec ton abonnement, de 1 mois à 4 ans, avec une tuile dorée pour la licence à vie.",
+          en: "StreamPulse+ loyalty badge: in chat, your logo sits on a tile whose background evolves with your subscription, from 1 month to 4 years, with a gold tile for lifetime licenses.",
+          es: "Insignia de antigüedad StreamPulse+: en el chat, tu logo va sobre una baldosa cuyo fondo evoluciona con tu suscripción, de 1 mes a 4 años, con una baldosa dorada para la licencia de por vida.",
+          "pt-BR": "Selo de tempo de assinatura StreamPulse+: no chat, seu logo fica sobre um bloco cujo fundo evolui com a sua assinatura, de 1 mês a 4 anos, com um bloco dourado para a licença vitalícia.",
+          de: "StreamPulse+-Treue-Abzeichen: Im Chat sitzt dein Logo auf einer Kachel, deren Hintergrund sich mit deinem Abo weiterentwickelt, von 1 Monat bis 4 Jahre, mit einer goldenen Kachel für die lebenslange Lizenz.",
+          it: "Badge di anzianità StreamPulse+: in chat il tuo logo poggia su una tessera il cui sfondo cambia con l'abbonamento, da 1 mese a 4 anni, con una tessera dorata per la licenza a vita.",
+          pl: "Odznaka stażu StreamPulse+: na czacie twoje logo leży na kafelku, którego tło zmienia się wraz z subskrypcją, od 1 miesiąca do 4 lat, ze złotym kafelkiem dla licencji dożywotniej.",
+          tr: "StreamPulse+ kıdem rozeti: sohbette logon, arka planı aboneliğinle birlikte değişen bir karonun üzerinde durur; 1 aydan 4 yıla kadar, ömür boyu lisans için altın bir karo.",
+          ru: "Значок стажа StreamPulse+: в чате твой логотип лежит на плитке, фон которой меняется вместе с подпиской, от 1 месяца до 4 лет, а для пожизненной лицензии плитка золотая.",
+          ja: "StreamPulse+ 継続バッジ：チャットではロゴがタイルの上に表示され、背景はサブスク期間に応じて 1 か月から 4 年まで変化します。永久ライセンスは金色のタイルです。",
+          ko: "StreamPulse+ 구독 기간 배지: 채팅에서 로고가 타일 위에 놓이고, 배경은 1개월부터 4년까지 구독 기간에 따라 바뀝니다. 평생 라이선스는 금색 타일입니다.",
+        },
+      },
+      {
+        type: "new",
+        area: "plus",
+        text: {
+          fr: "9 textures pour ton pseudo et ton logo : Galaxie, Holographique, Lave, Marbre, Chrome, Paillettes, Sucre d'orge, Toxique et Océan.",
+          en: "9 textures for your name and logo: Galaxy, Holographic, Lava, Marble, Chrome, Glitter, Candy cane, Toxic and Ocean.",
+          es: "9 texturas para tu nombre y tu logo: Galaxia, Holográfico, Lava, Mármol, Cromo, Purpurina, Bastón de caramelo, Tóxico y Océano.",
+          "pt-BR": "9 texturas para o seu nome e o seu logo: Galáxia, Holográfico, Lava, Mármore, Cromo, Glitter, Bengala doce, Tóxico e Oceano.",
+          de: "9 Texturen für deinen Namen und dein Logo: Galaxie, Holografisch, Lava, Marmor, Chrom, Glitzer, Zuckerstange, Toxisch und Ozean.",
+          it: "9 texture per il tuo nome e il tuo logo: Galassia, Olografico, Lava, Marmo, Cromo, Glitter, Bastoncino di zucchero, Tossico e Oceano.",
+          pl: "9 tekstur dla nazwy i logo: Galaktyka, Holograficzny, Lawa, Marmur, Chrom, Brokat, Laska cukrowa, Toksyczny i Ocean.",
+          tr: "Adın ve logon için 9 doku: Galaksi, Holografik, Lav, Mermer, Krom, Simli, Şeker kamışı, Toksik ve Okyanus.",
+          ru: "9 текстур для ника и логотипа: Галактика, Голограмма, Лава, Мрамор, Хром, Блёстки, Леденец, Токсичный и Океан.",
+          ja: "名前とロゴに 9 種類のテクスチャ：ギャラクシー、ホログラム、溶岩、大理石、クローム、グリッター、キャンディケイン、トキシック、オーシャン。",
+          ko: "닉네임과 로고용 텍스처 9종: 갤럭시, 홀로그램, 용암, 대리석, 크롬, 글리터, 캔디 케인, 독성, 바다.",
+        },
+      },
+      {
         type: "fix",
         area: "onboarding",
         text: {

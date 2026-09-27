@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { BADGE_FX, NAME_FX, FOUNDER_FX, REFERRAL_FX, fxLock, normalizeCosmetics, rankOf, visibleFx } from "../js/cosmetics-data.js";
+import { BADGE_FX, NAME_FX, FOUNDER_FX, REFERRAL_FX, TENURE_TIERS, TEXTURE_FX, fxLock, normalizeCosmetics, rankOf, tenureTier, visibleFx } from "../js/cosmetics-data.js";
 
 /** Tableau littéral `var NOM = [...]` d'un script classique. */
 function arrayIn(file, name) {
@@ -62,4 +62,43 @@ test("rang : fondateur, puis ambassadeur dès un filleul", () => {
 test("un effet inconnu est oublié", () => {
   assert.deepEqual(normalizeCosmetics({ badgeFx: "crown", nameFx: "nope" }), { badgeFx: "crown", nameFx: "" });
   assert.deepEqual(normalizeCosmetics(null), { badgeFx: "", nameFx: "" });
+});
+
+const MONTH = 30.44 * 24 * 60 * 60 * 1000;
+const NOW = 1_800_000_000_000;
+
+test("tuile d'ancienneté : paliers de 1 mois à 4 ans, à vie à part", () => {
+  const at = (months) => tenureTier("monthly", NOW - months * MONTH - 1000, NOW);
+  assert.equal(at(0), "m1");
+  assert.equal(at(2), "m1");
+  assert.equal(at(3), "m3");
+  assert.equal(at(8), "m6");
+  assert.equal(at(11), "m9");
+  assert.equal(at(12), "y1");
+  assert.equal(at(18), "y1h");
+  assert.equal(at(30), "y2");
+  assert.equal(at(47), "y3");
+  assert.equal(at(80), "y4");
+  assert.equal(tenureTier("monthly", 0, NOW), "m1"); // date inconnue : premier palier
+  assert.equal(tenureTier("lifetime", NOW, NOW), "life");
+  assert.equal(tenureTier("", NOW, NOW), "");
+});
+
+for (const file of ["js/inject/twitch-badge.js", "js/inject/settings-drawer.js"]) {
+  test(`${file} calcule les tuiles comme le popup`, () => {
+    const source = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
+    const match = /var TENURE_TIERS = (\[.*?\]\]);/.exec(source);
+    assert.ok(match, `TENURE_TIERS introuvable dans ${file}`);
+    assert.deepEqual(JSON.parse(match[1]), TENURE_TIERS.map((tier) => [...tier]));
+  });
+}
+
+test("chaque tuile et chaque texture a son rendu CSS", () => {
+  const css = readFileSync(new URL("../css/fx-effects.css", import.meta.url), "utf8");
+  for (const [, key] of TENURE_TIERS) assert.match(css, new RegExp(`\\.sp-tier-${key}\\b`), `tuile ${key}`);
+  assert.match(css, /\.sp-tier-life\b/);
+  for (const fx of TEXTURE_FX) {
+    assert.ok(BADGE_FX.includes(fx) && NAME_FX.includes(fx), fx);
+    assert.match(css, new RegExp(`\\.sp-paint--${fx}\\b`), `texture ${fx}`);
+  }
 });

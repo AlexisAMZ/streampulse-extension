@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <!-- Banc du badge communautaire : faux tchat Twitch, licence Plus et effets choisis.
-         ?badge=glow&name=neon&plus=1 -->
+         ?badge=glow&name=neon&plus=1&plan=monthly&months=12 (tuile d'ancienneté) -->
     <title>badge-harness</title>
     <link rel="stylesheet" href="/css/inject/twitch-badge.css" />
+    <link rel="stylesheet" href="/css/fx-effects.css" />
     <style>
       body { background: #0e0e10; color: #efeff1; font: 14px/1.5 sans-serif; padding: 24px; }
       .chat-line__message { padding: 4px 0; }
@@ -16,7 +17,7 @@
       const store = {
         betaGeneralPreferences: { communityBadge: true, communityBadgeColor: "author" },
         streamPulseCosmetics: { badgeFx: params.get("badge") || "glow", nameFx: params.get("name") || "neon" },
-        ...(params.get("plus") === "0" ? {} : { streamPulsePlus: { licenseKey: "SP-DEMO-2026-PLUS-0001", plan: "lifetime", status: "active", verifiedAt: Date.now() } }),
+        ...(params.get("plus") === "0" ? {} : { streamPulsePlus: { licenseKey: "SP-DEMO-2026-PLUS-0001", plan: params.get("plan") || "lifetime", since: Date.now() - Number(params.get("months") || 0) * 30.44 * 864e5, status: "active", verifiedAt: Date.now() } }),
       };
       const pick = (keys) => {
         if (keys == null) return { ...store };

@@ -117,5 +117,7 @@ export async function verifyLicense(input, fetchImpl, now = Date.now(), device =
   const referrals = Math.max(0, Math.floor(Number(payload.referrals) || 0));
   // Rôle posé à la main sur la licence (métadonnée Stripe sp_role) : « admin » pour le fondateur.
   const role = payload.role === "admin" ? "admin" : "";
-  return { ok: true, record: { licenseKey, plan, status: "active", verifiedAt: now, referrals, role } };
+  // Début de l'abonnement : tuile d'ancienneté de son propre badge.
+  const since = Math.max(0, Number(payload.since) || 0);
+  return { ok: true, record: { licenseKey, plan, status: "active", verifiedAt: now, referrals, role, since } };
 }
