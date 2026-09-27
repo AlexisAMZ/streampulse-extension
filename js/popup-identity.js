@@ -60,8 +60,10 @@ function tileClass(tier, style) {
 function renderTenure(current, style) {
   const list = $("cosmetic-tenure");
   if (!list) return;
-  const mine = current.plus ? tenureTier(current.plan, current.since) : "";
-  list.replaceChildren(...TENURE_LADDER.map((tier) => {
+  const mine = current.plus ? tenureTier(current.plan, current.since, Date.now(), rankOf(current)) : "";
+  // Le fondateur voit son palier à lui en bout d'échelle.
+  const ladder = mine === "founder" ? [...TENURE_LADDER, "founder"] : TENURE_LADDER;
+  list.replaceChildren(...ladder.map((tier) => {
     const item = node("li", `tenure-step${tier === mine ? " is-current" : ""}`);
     if (tier === mine) item.setAttribute("aria-current", "true");
     item.append(tenureTile(tier, style), node("span", "tenure-label", t(`popup.cosmetics.tier_${tier}`)));
@@ -81,7 +83,7 @@ function fxSample(kind, value, text) {
 
 function ownTier() {
   const current = access();
-  return current.plus ? tenureTier(current.plan, current.since) : "";
+  return current.plus ? tenureTier(current.plan, current.since, Date.now(), rankOf(current)) : "";
 }
 
 /**
@@ -142,7 +144,7 @@ function renderCosmetics() {
   $("cosmetic-badge-fx")?.replaceChildren(...["", ...visibleFx(BADGE_FX, current)].map((value) => fxOption("badge", value, shown.badgeFx, current)));
   $("cosmetic-name-fx")?.replaceChildren(...["", ...visibleFx(NAME_FX, current)].map((value) => fxOption("name", value, shown.nameFx, current)));
   const style = TENURE_STYLES[shown.badgeFx] || "";
-  const tier = style ? tenureTier(current.plan, current.since) : "";
+  const tier = style ? tenureTier(current.plan, current.since, Date.now(), rankOf(current)) : "";
   if ($("cosmetic-tenure-block")) $("cosmetic-tenure-block").hidden = !style;
   if ($("cosmetic-badge")) {
     $("cosmetic-badge").className = `cosmetic-badge${shown.badgeFx && !tier ? ` sp-fx-${shown.badgeFx}` : ""}`;

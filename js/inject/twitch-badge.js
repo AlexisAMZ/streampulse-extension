@@ -80,7 +80,8 @@
   var TENURE_TIERS = [[48, "y4"], [36, "y3"], [24, "y2"], [18, "y1h"], [12, "y1"], [9, "m9"], [6, "m6"], [3, "m3"], [0, "m1"]];
 
   /** Meme regle que tenureTier() dans js/cosmetics-data.js. */
-  function tenureTier(plan, since) {
+  function tenureTier(plan, since, rank) {
+    if (rank === "founder" && plan) return "founder";
     if (plan === "lifetime") return "life";
     if (plan !== "monthly") return "";
     var months = Number(since) > 0 ? Math.max(0, Math.floor((Date.now() - Number(since)) / MONTH_MS)) : 0;
@@ -104,7 +105,7 @@
       badge.classList.add("sp-chat-badge--fx-" + style.b);
       return;
     }
-    var tier = tenureTier(style.p, style.s);
+    var tier = tenureTier(style.p, style.s, style.r);
     if (tier) badge.classList.add("sp-tier", "sp-tier--" + tenure, "sp-tier-" + tier);
   }
 
@@ -286,12 +287,18 @@
             rescanVisibleMessages();
             return;
           }
+          // La liste du serveur fait foi : elle remplace la liste locale, pour
+          // qu'un badge disparaisse quand son extension a ete supprimee (le
+          // serveur oublie une empreinte non revue depuis 7 jours).
+          var next = new Set();
           for (var i = 0; i < list.length; i++) {
             var hash = String(list[i] || "").toLowerCase().trim();
             // Ignorer tout ce qui n'a pas la forme d'une empreinte : une
             // reponse d'une ancienne version contiendrait des pseudos.
-            if (/^[a-f0-9]{12}$/.test(hash)) badgeHashes.add(hash);
+            if (/^[a-f0-9]{12}$/.test(hash)) next.add(hash);
           }
+          if (ownHash) next.add(ownHash);
+          badgeHashes = next;
           chrome.storage.local.set({ [STORAGE_KEY]: Array.from(badgeHashes) });
           log(badgeHashes.size, "empreintes chargees,", badgeColors.size, "couleurs");
           rescanVisibleMessages();

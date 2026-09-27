@@ -38,8 +38,12 @@ export const TENURE_TIERS = Object.freeze([
   [48, "y4"], [36, "y3"], [24, "y2"], [18, "y1h"], [12, "y1"], [9, "m9"], [6, "m6"], [3, "m3"], [0, "m1"],
 ]);
 
-/** Tuile d'un abonné : « life » pour la licence à vie, sinon selon les mois écoulés depuis `since`. */
-export function tenureTier(plan, since, now = Date.now()) {
+/**
+ * Tuile d'un abonné : « founder » pour le fondateur, « life » pour la licence
+ * à vie, sinon selon les mois écoulés depuis `since`.
+ */
+export function tenureTier(plan, since, now = Date.now(), rank = "") {
+  if (rank === "founder" && plan) return "founder";
   if (plan === "lifetime") return "life";
   if (plan !== "monthly") return "";
   const months = Number(since) > 0 ? Math.max(0, Math.floor((now - Number(since)) / MONTH_MS)) : 0;

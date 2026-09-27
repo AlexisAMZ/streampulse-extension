@@ -17,7 +17,7 @@
       const store = {
         betaGeneralPreferences: { communityBadge: true, communityBadgeColor: "author" },
         streamPulseCosmetics: { badgeFx: params.get("badge") || "glow", nameFx: params.get("name") || "neon" },
-        ...(params.get("plus") === "0" ? {} : { streamPulsePlus: { licenseKey: "SP-DEMO-2026-PLUS-0001", plan: params.get("plan") || "lifetime", since: Date.now() - Number(params.get("months") || 0) * 30.44 * 864e5, status: "active", verifiedAt: Date.now() } }),
+        ...(params.get("plus") === "0" ? {} : { streamPulsePlus: { licenseKey: "SP-DEMO-2026-PLUS-0001", plan: params.get("plan") || "lifetime", since: Date.now() - Number(params.get("months") || 0) * 30.44 * 864e5, role: params.get("role") || "", status: "active", verifiedAt: Date.now() } }),
       };
       const pick = (keys) => {
         if (keys == null) return { ...store };

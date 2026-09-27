@@ -34,6 +34,7 @@
   /** Meme regle que tenureTier() dans js/cosmetics-data.js. */
   function tenureTier(record) {
     if (!record) return "";
+    if (record.role === "admin") return "founder";
     if (record.plan === "lifetime") return "life";
     var since = Number(record.since) || 0;
     var months = since > 0 ? Math.max(0, Math.floor((Date.now() - since) / MONTH_MS)) : 0;

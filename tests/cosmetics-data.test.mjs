@@ -86,6 +86,9 @@ test("tuile d'ancienneté : paliers de 1 mois à 4 ans, à vie à part", () => {
   assert.equal(at(80), "y4");
   assert.equal(tenureTier("monthly", 0, NOW), "m1"); // date inconnue : premier palier
   assert.equal(tenureTier("lifetime", NOW, NOW), "life");
+  assert.equal(tenureTier("lifetime", NOW, NOW, "founder"), "founder");
+  assert.equal(tenureTier("monthly", NOW, NOW, "founder"), "founder");
+  assert.equal(tenureTier("", NOW, NOW, "founder"), "");
   assert.equal(tenureTier("", NOW, NOW), "");
 });
 
@@ -104,7 +107,7 @@ for (const file of ["js/inject/twitch-badge.js", "js/inject/settings-drawer.js"]
 test("chaque tuile et chaque texture a son rendu CSS", () => {
   const css = readFileSync(new URL("../css/fx-effects.css", import.meta.url), "utf8");
   for (const style of Object.values(TENURE_STYLES)) {
-    for (const key of [...TENURE_TIERS.map(([, tier]) => tier), "life"]) {
+    for (const key of [...TENURE_TIERS.map(([, tier]) => tier), "life", "founder"]) {
       assert.match(css, new RegExp(`\\.sp-tier--${style}\\.sp-tier-${key}\\b`), `${style} ${key}`);
     }
   }
