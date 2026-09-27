@@ -153,7 +153,7 @@
 .badge-setting { margin-top: 18px; display: grid; gap: 10px; }
 .badge-setting .settings-toggle { box-shadow: none; }
 .badge-preview { display: flex; align-items: center; gap: 8px; padding: 13px 14px; border-radius: 12px; background: #18181b; font-size: 13.5px; }
-.badge-preview-badge { width: 20px; height: 20px; flex: none; background-color: var(--violet); -webkit-mask: url("../images/photos/128px.png") center / contain no-repeat; mask: url("../images/photos/128px.png") center / contain no-repeat; }
+.badge-preview-badge { width: 20px; height: 20px; flex: none; background-color: var(--violet); -webkit-mask: url("../images/photos/badge-mark.svg") center / contain no-repeat; mask: url("../images/photos/badge-mark.svg") center / contain no-repeat; }
 .badge-preview-name { flex: none; color: #bf94ff; font-weight: 700; }
 .badge-preview-msg { overflow: hidden; color: #efeff1; text-overflow: ellipsis; white-space: nowrap; }
 .badge-setting .settings-privacy { margin: 0; }

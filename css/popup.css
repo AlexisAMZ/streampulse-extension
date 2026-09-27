@@ -644,7 +644,7 @@ body.is-settings .plus-badge:not(.is-active) { background: var(--surface-2); box
 .cosmetic-preview { display: grid; gap: 8px; padding: 12px 0; box-shadow: inset 0 -1px 0 var(--line); }
 .cosmetic-preview-label { color: var(--text-3); font-size: 12px; font-weight: 600; }
 .cosmetic-line { display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-radius: 10px; background: #18181b; color: #efeff1; font-size: 13px; }
-.cosmetic-badge { --sp-badge-color: var(--violet); width: 18px; height: 18px; flex: none; background-color: var(--violet); -webkit-mask: url("../images/photos/128px.png") center / contain no-repeat; mask: url("../images/photos/128px.png") center / contain no-repeat; }
+.cosmetic-badge { --sp-badge-color: var(--violet); width: 18px; height: 18px; flex: none; background-color: var(--violet); -webkit-mask: url("../images/photos/badge-mark.svg") center / contain no-repeat; mask: url("../images/photos/badge-mark.svg") center / contain no-repeat; }
 .cosmetic-name { color: #bf94ff; font-weight: 700; }
 .cosmetic-msg { color: #efeff1; }
 .cosmetic-badge.sp-fx-pulse { animation: sp-badge-pulse 2.4s ease-in-out infinite; }
@@ -921,7 +921,7 @@ body:has(#plus-view:not(.hidden)) .review-ask { display: none; }
    Même gabarit que la demande d'avis : les deux ne montrent jamais ensemble. */
 .badge-ask { position: fixed; right: 16px; bottom: 72px; left: 16px; z-index: 40; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--violet-line), var(--shadow-pop); color: var(--text); }
 .badge-ask[hidden] { display: none; }
-.badge-ask-mark { width: 22px; height: 22px; flex: none; background-color: var(--violet); -webkit-mask: url("../images/photos/128px.png") center / contain no-repeat; mask: url("../images/photos/128px.png") center / contain no-repeat; }
+.badge-ask-mark { width: 22px; height: 22px; flex: none; background-color: var(--violet); -webkit-mask: url("../images/photos/badge-mark.svg") center / contain no-repeat; mask: url("../images/photos/badge-mark.svg") center / contain no-repeat; }
 .badge-ask-text { display: grid; gap: 2px; font-size: 12px; }
 .badge-ask-text span { color: var(--text-2); }
 .badge-ask-actions { display: flex; align-items: center; gap: 6px; }

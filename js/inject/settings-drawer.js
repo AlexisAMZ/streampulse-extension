@@ -42,7 +42,8 @@
     return "m1";
   }
   var LOGO_URL = chrome.runtime.getURL("images/photos/logosp.png");
-  var MARK_URL = chrome.runtime.getURL("images/photos/128px.png");
+  // Logo dessiné pour les petites tailles (badge du tchat).
+  var MARK_URL = chrome.runtime.getURL("images/photos/badge-mark.svg");
 
   // Réglages activés tant que l'utilisateur ne les a pas coupés.
   // Reglages actifs par defaut : sans cette liste, prefOn() les lit comme

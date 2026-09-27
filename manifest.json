@@ -166,6 +166,7 @@
     {
       "resources": [
         "images/photos/128px.png",
+        "images/photos/badge-mark.svg",
         "images/photos/logosp.png"
       ],
       "matches": [

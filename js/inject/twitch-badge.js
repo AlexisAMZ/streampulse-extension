@@ -140,7 +140,7 @@
   }
 
   var badgeIconUrl = (typeof chrome !== "undefined" && chrome.runtime && chrome.runtime.getURL)
-    ? chrome.runtime.getURL("images/photos/128px.png")
+    ? chrome.runtime.getURL("images/photos/badge-mark.svg")
     : "";
 
   // ── Hachage des pseudos ──────────────────────────────────────────────────
