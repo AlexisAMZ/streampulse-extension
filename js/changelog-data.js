@@ -51,6 +51,29 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.29",
+    date: "2026-09-27",
+    changes: [
+      {
+        type: "improved",
+        area: "plus",
+        text: {
+          fr: "Badge d'ancienneté Jauge plus lisible dans le tchat : un disque plein de la couleur de ton palier, un anneau blanc qui se remplit et un logo bien net, avec un reflet à partir d'un an.",
+          en: "The Gauge loyalty badge is easier to read in chat: a solid disc in your tier's color, a white ring that fills up and a crisp logo, with a shine from one year on.",
+          es: "La insignia de antigüedad Indicador se lee mejor en el chat: un disco lleno del color de tu nivel, un anillo blanco que se llena y un logo nítido, con un brillo a partir de un año.",
+          "pt-BR": "O selo de fidelidade Medidor ficou mais legível no chat: um disco cheio na cor do seu nível, um anel branco que se enche e um logo nítido, com um brilho a partir de um ano.",
+          de: "Das Treue-Abzeichen Anzeige ist im Chat besser lesbar: eine volle Scheibe in der Farbe deiner Stufe, ein weißer Ring, der sich füllt, und ein scharfes Logo, ab einem Jahr mit Glanz.",
+          it: "Il badge di anzianità Indicatore si legge meglio in chat: un disco pieno del colore del tuo livello, un anello bianco che si riempie e un logo nitido, con un riflesso da un anno in su.",
+          pl: "Odznaka stażu Wskaźnik jest czytelniejsza na czacie: pełny krąg w kolorze twojego poziomu, biały pierścień, który się wypełnia, i wyraźne logo, z połyskiem od roku.",
+          tr: "Gösterge kıdem rozeti sohbette daha okunaklı: seviyenin renginde dolu bir daire, dolan beyaz bir halka ve net bir logo; bir yıldan sonra parıltılı.",
+          ru: "Значок стажа «Шкала» лучше читается в чате: сплошной круг цвета твоего уровня, белое кольцо, которое заполняется, и чёткий логотип, с бликом начиная с года.",
+          ja: "継続バッジ「ゲージ」がチャットで見やすくなりました。段階の色で塗られた円、満ちていく白いリング、くっきりしたロゴで、1 年目からは光沢が入ります。",
+          ko: "구독 기간 배지 ‘게이지’가 채팅에서 더 잘 보입니다. 단계 색으로 채운 원, 차오르는 흰 고리, 선명한 로고에 1년부터는 반짝임이 더해집니다.",
+        },
+      },
+    ],
+  },
+  {
     version: "26.9.28",
     date: "2026-09-27",
     changes: [
