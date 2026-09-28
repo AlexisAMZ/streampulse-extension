@@ -82,7 +82,7 @@ export const translations = {
       "profilePreviewSuffix": "Voici qui est en ligne.",
       "documentTitle": "Première configuration",
       "welcomeTagline": "EXTENSION CHROME · TWITCH · KICK · YOUTUBE",
-      "welcomeDescription": "Ajoute ton premier streamer pour recevoir ses notifications. Tu pourras en ajouter d'autres ensuite directement depuis StreamPulse.",
+      "welcomeDescription": "Bienvenue dans StreamPulse : notifications de live, récupération auto des points et des Drops. Commence par choisir la langue de l'interface.",
       "languagePrompt": "Choisis la langue de l’extension",
       "languageHint": "Tu pourras la modifier plus tard depuis les réglages.",
       "preferencesTitle": "Réglages recommandés",
@@ -149,8 +149,9 @@ export const translations = {
       "stepFinish": "C'est parti",
       "continueBtn": "Continuer",
       "backBtn": "Retour",
-      "finishTitle": "Tu es prêt !",
+      "finishTitle": "C'est prêt !",
       "finishDescription": "StreamPulse est configuré. Épingle l'extension pour y accéder facilement.",
+      "finishOpenHint": "Clique sur l'icône StreamPulse dans la barre d'outils pour ouvrir le popup.",
       "finish": "Lancer StreamPulse",
       "footerText": "Créé par <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -745,8 +746,8 @@ export const translations = {
       "greetingMorning": "Bonjour",
       "greetingSub": "Voici qui est en ligne.",
       "settings": {
-        "liveNotificationsTitle": "Notifications Chrome",
-        "liveNotificationsDescription": "Appliqué à tous tes streamers suivis : tu peux ensuite l'ajuster par streamer.",
+        "liveAlertsTitle": "Alertes de live",
+        "liveAlertsBody": "Une notification quand un streamer démarre un live. S'applique à tous tes streamers, ajustable sur chaque carte.",
         "gameAlertsTitle": "Alertes changement de catégorie",
         "gameAlertsDescription": "Appliqué à tous tes streamers suivis : tu peux ensuite l'ajuster par streamer.",
         "titleAlertsTitle": "Alertes changement de titre",
@@ -1057,7 +1058,7 @@ export const translations = {
       "download": "Télécharger l'image",
       "share": "Partager sur X",
       "shareHint": "X ne récupère pas l'image tout seul : télécharge-la, puis ajoute-la à ton post.",
-      "dailyHint": "Le suivi jour par jour a commencé avec cette mise à jour : les périodes de 7 et 30 jours se remplissent à partir de maintenant.",
+      "dailyHint": "Les périodes de 7 et 30 jours se remplissent au fil du visionnage : elles se complètent petit à petit.",
       "error": "Impossible de générer le récap. Recharge la page et réessaie.",
       "openButton": "Créer mon récap",
       "shareText": "Mon récap StreamPulse ({{period}}) : {{time}} de stream sur {{count}} chaînes. Le plus regardé : {{top}}.",
@@ -1119,7 +1120,7 @@ export const translations = {
       "documentTitle": "StreamPulse : Nouveautés",
       "brandSub": "Notes de version",
       "supportIntro": "Un bug, une idée ?",
-      "supportLink": "Écrivez-nous",
+      "supportLink": "Écris-nous",
       "supportUrl": "https://streampulse.fr/support",
       "pageTitle": "Les nouveautés",
       "build": "BUILD",
@@ -1337,6 +1338,7 @@ export const translations = {
       "backBtn": "Back",
       "finishTitle": "You're all set!",
       "finishDescription": "StreamPulse is ready. Pin the extension for quick access.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "Launch StreamPulse",
       "footerText": "Created by <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -1931,8 +1933,8 @@ export const translations = {
       "greetingMorning": "Good morning",
       "greetingSub": "Here's who's online.",
       "settings": {
-        "liveNotificationsTitle": "Chrome notifications",
-        "liveNotificationsDescription": "Applied to all your followed streamers: you can fine-tune per streamer afterwards.",
+        "liveAlertsTitle": "Live alerts",
+        "liveAlertsBody": "A notification when a streamer goes live. Applies to all your streamers, adjustable on each card.",
         "gameAlertsTitle": "Category change alerts",
         "gameAlertsDescription": "Applied to all your followed streamers: you can fine-tune per streamer afterwards.",
         "titleAlertsTitle": "Title change alerts",
@@ -2522,6 +2524,7 @@ export const translations = {
       "backBtn": "Atrás",
       "finishTitle": "¡Todo listo!",
       "finishDescription": "StreamPulse está configurado. Ancla la extensión para acceder fácilmente.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "Lanzar StreamPulse",
       "footerText": "Creado por <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -3116,8 +3119,8 @@ export const translations = {
       "greetingMorning": "Buenos días",
       "greetingSub": "Aquí tienes quién está en línea.",
       "settings": {
-        "liveNotificationsTitle": "Notificaciones de Chrome",
-        "liveNotificationsDescription": "Se aplica a todos los streamers que sigues: puedes ajustarlo por streamer después.",
+        "liveAlertsTitle": "Live alerts",
+        "liveAlertsBody": "A notification when a streamer goes live. Applies to all your streamers, adjustable on each card.",
         "gameAlertsTitle": "Alertas de cambio de categoría",
         "gameAlertsDescription": "Se aplica a todos los streamers que sigues: puedes ajustarlo por streamer después.",
         "titleAlertsTitle": "Alertas de cambio de título",
@@ -3700,6 +3703,7 @@ export const translations = {
       "backBtn": "Voltar",
       "finishTitle": "Pronto!",
       "finishDescription": "O StreamPulse está configurado. Fixe a extensão para acessar fácil.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "Iniciar StreamPulse",
       "footerText": "Criado por <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -4289,8 +4293,8 @@ export const translations = {
       "greetingMorning": "Bom dia",
       "greetingSub": "Veja quem está online.",
       "settings": {
-        "liveNotificationsTitle": "Notificações do Chrome",
-        "liveNotificationsDescription": "Aplicado a todos os streamers que você segue: você pode ajustar por streamer depois.",
+        "liveAlertsTitle": "Live alerts",
+        "liveAlertsBody": "A notification when a streamer goes live. Applies to all your streamers, adjustable on each card.",
         "gameAlertsTitle": "Alertas de mudança de categoria",
         "gameAlertsDescription": "Aplicado a todos os streamers que você segue: você pode ajustar por streamer depois.",
         "titleAlertsTitle": "Alertas de mudança de título",
@@ -4877,6 +4881,7 @@ export const translations = {
       "backBtn": "Zurück",
       "finishTitle": "Sie sind bereit!",
       "finishDescription": "StreamPulse ist bereit. Stecken Sie die Erweiterung fest, um schnell darauf zugreifen zu können.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "Starten Sie StreamPulse",
       "footerText": "Erstellt von <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -5471,8 +5476,8 @@ export const translations = {
       "greetingMorning": "Guten Morgen",
       "greetingSub": "Hier erfahren Sie, wer online ist.",
       "settings": {
-        "liveNotificationsTitle": "Chrome-Benachrichtigungen",
-        "liveNotificationsDescription": "Gilt für alle gefolgten Streamer: anschließend pro Streamer anpassbar.",
+        "liveAlertsTitle": "Live alerts",
+        "liveAlertsBody": "A notification when a streamer goes live. Applies to all your streamers, adjustable on each card.",
         "gameAlertsTitle": "Benachrichtigungen zu Kategorieänderungen",
         "gameAlertsDescription": "Gilt für alle gefolgten Streamer: anschließend pro Streamer anpassbar.",
         "titleAlertsTitle": "Benachrichtigungen bei Titeländerung",
@@ -6063,6 +6068,7 @@ export const translations = {
       "backBtn": "Indietro",
       "finishTitle": "È tutto pronto!",
       "finishDescription": "StreamPulse è pronto. Blocca l'estensione per un accesso rapido.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "Avvia StreamPulse",
       "footerText": "Creato da <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -6657,8 +6663,8 @@ export const translations = {
       "greetingMorning": "Buongiorno",
       "greetingSub": "Ecco chi è online.",
       "settings": {
-        "liveNotificationsTitle": "Notifiche di Chrome",
-        "liveNotificationsDescription": "Applicato a tutti gli streamer seguiti: puoi regolarlo per streamer dopo.",
+        "liveAlertsTitle": "Live alerts",
+        "liveAlertsBody": "A notification when a streamer goes live. Applies to all your streamers, adjustable on each card.",
         "gameAlertsTitle": "Avvisi di cambio di categoria",
         "gameAlertsDescription": "Applicato a tutti gli streamer seguiti: puoi regolarlo per streamer dopo.",
         "titleAlertsTitle": "Avvisi di cambio titolo",
@@ -7249,6 +7255,7 @@ export const translations = {
       "backBtn": "Powrót",
       "finishTitle": "Wszystko gotowe!",
       "finishDescription": "StreamPulse jest gotowy. Przypnij rozszerzenie, aby uzyskać szybki dostęp.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "Uruchom StreamPulse",
       "footerText": "Utworzono przez <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -7843,8 +7850,8 @@ export const translations = {
       "greetingMorning": "Dzień dobry",
       "greetingSub": "Oto, kto jest online.",
       "settings": {
-        "liveNotificationsTitle": "Powiadomienia Chrome",
-        "liveNotificationsDescription": "Dotyczy wszystkich obserwowanych streamerów: możesz potem dostosować dla każdego z nich.",
+        "liveAlertsTitle": "Live alerts",
+        "liveAlertsBody": "A notification when a streamer goes live. Applies to all your streamers, adjustable on each card.",
         "gameAlertsTitle": "Alerty o zmianie kategorii",
         "gameAlertsDescription": "Dotyczy wszystkich obserwowanych streamerów: możesz potem dostosować dla każdego z nich.",
         "titleAlertsTitle": "Alerty o zmianie tytułu",
@@ -8435,6 +8442,7 @@ export const translations = {
       "backBtn": "Geri",
       "finishTitle": "Her şey hazır!",
       "finishDescription": "StreamPulse hazır. Hızlı erişim için uzantıyı sabitleyin.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "StreamPulse'u başlatın",
       "footerText": "Oluşturan: <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -9029,8 +9037,8 @@ export const translations = {
       "greetingMorning": "Günaydın",
       "greetingSub": "İşte şu anda çevrimiçi olanlar.",
       "settings": {
-        "liveNotificationsTitle": "Chrome bildirimleri",
-        "liveNotificationsDescription": "Takip ettiğin tüm yayıncılara uygulanır: daha sonra yayıncı başına ayarlayabilirsin.",
+        "liveAlertsTitle": "Live alerts",
+        "liveAlertsBody": "A notification when a streamer goes live. Applies to all your streamers, adjustable on each card.",
         "gameAlertsTitle": "Kategori değişikliği uyarıları",
         "gameAlertsDescription": "Takip ettiğin tüm yayıncılara uygulanır: daha sonra yayıncı başına ayarlayabilirsin.",
         "titleAlertsTitle": "Başlık değişikliği uyarıları",
@@ -9621,6 +9629,7 @@ export const translations = {
       "backBtn": "Назад",
       "finishTitle": "Всё готово!",
       "finishDescription": "StreamPulse готов к работе. Закрепите расширение для быстрого доступа.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "Запустить StreamPulse",
       "footerText": "Автор: <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -10215,8 +10224,8 @@ export const translations = {
       "greetingMorning": "Доброе утро",
       "greetingSub": "Вот кто сейчас в сети.",
       "settings": {
-        "liveNotificationsTitle": "Уведомления Chrome",
-        "liveNotificationsDescription": "Применяется ко всем отслеживаемым стримерам: потом можно настроить для каждого.",
+        "liveAlertsTitle": "Live alerts",
+        "liveAlertsBody": "A notification when a streamer goes live. Applies to all your streamers, adjustable on each card.",
         "gameAlertsTitle": "Уведомления об изменении категории",
         "gameAlertsDescription": "Применяется ко всем отслеживаемым стримерам: потом можно настроить для каждого.",
         "titleAlertsTitle": "Оповещения об изменении названия",
@@ -10807,6 +10816,7 @@ export const translations = {
       "backBtn": "戻る",
       "finishTitle": "これで準備完了です！",
       "finishDescription": "StreamPulseの準備が整いました。拡張機能をピン留めして、すぐにアクセスできるようにしましょう。",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "StreamPulse を起動",
       "footerText": "作成者：<a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -11401,8 +11411,8 @@ export const translations = {
       "greetingMorning": "おはようございます",
       "greetingSub": "現在オンライン中のユーザーはこちらです。",
       "settings": {
-        "liveNotificationsTitle": "Chromeの通知",
-        "liveNotificationsDescription": "フォロー中のすべてのストリーマーに適用。後からストリーマーごとに調整できます。",
+        "liveAlertsTitle": "Live alerts",
+        "liveAlertsBody": "A notification when a streamer goes live. Applies to all your streamers, adjustable on each card.",
         "gameAlertsTitle": "カテゴリ変更の通知",
         "gameAlertsDescription": "フォロー中のすべてのストリーマーに適用。後からストリーマーごとに調整できます。",
         "titleAlertsTitle": "タイトル変更の通知",
@@ -11993,6 +12003,7 @@ export const translations = {
       "backBtn": "뒤로",
       "finishTitle": "이제 다 끝났습니다!",
       "finishDescription": "StreamPulse가 준비되었습니다. 빠르게 이용할 수 있도록 확장 프로그램을 고정해 두세요.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "StreamPulse 실행하기",
       "footerText": "작성자: <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -12587,8 +12598,8 @@ export const translations = {
       "greetingMorning": "좋은 아침입니다",
       "greetingSub": "현재 온라인 상태인 사용자는 다음과 같습니다.",
       "settings": {
-        "liveNotificationsTitle": "Chrome 알림",
-        "liveNotificationsDescription": "팔로우하는 모든 스트리머에게 적용됩니다. 이후 스트리머별로 조정할 수 있습니다.",
+        "liveAlertsTitle": "Live alerts",
+        "liveAlertsBody": "A notification when a streamer goes live. Applies to all your streamers, adjustable on each card.",
         "gameAlertsTitle": "카테고리 변경 알림",
         "gameAlertsDescription": "팔로우하는 모든 스트리머에게 적용됩니다. 이후 스트리머별로 조정할 수 있습니다.",
         "titleAlertsTitle": "제목 변경 알림",

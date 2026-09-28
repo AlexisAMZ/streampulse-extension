@@ -37,7 +37,7 @@ html { scrollbar-color: color-mix(in srgb, var(--text-3) 55%, transparent) trans
 .cl-item:last-child { box-shadow: none; }
 .cl-copy { display: grid; gap: 6px; max-width: 70ch; }
 .cl-lead { color: var(--text); font-family: var(--body); font-size: 17px; font-weight: 700; line-height: 1.35; text-wrap: balance; }
-.cl-text { color: var(--text-2); font-size: 15.5px; line-height: 1.62; }
+.cl-text { max-width: 70ch; color: var(--text-2); font-size: 15.5px; line-height: 1.62; }
 .cl-copy > .cl-text:only-child { color: var(--text); }
 .cl-empty { color: var(--text-2); }
 
