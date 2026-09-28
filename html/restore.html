@@ -44,7 +44,11 @@
             <div><dt data-i18n="backup.restorePage.months">Mois de visionnage</dt><dd id="sum-months">0</dd></div>
             <div><dt data-i18n="backup.restorePage.exportedAt">Sauvegardée le</dt><dd id="sum-date">—</dd></div>
           </dl>
-          <p class="note" data-i18n="backup.restorePage.warning">Les streamers et le temps de visionnage de la sauvegarde s'ajoutent à ceux déjà présents. Tes réglages actuels sont conservés.</p>
+          <p class="note" data-i18n="backup.restorePage.warning">Les streamers et le temps de visionnage de la sauvegarde s'ajoutent à ceux déjà présents.</p>
+          <label class="restore-settings" id="restore-settings-row" hidden>
+            <input id="restore-replace-settings" type="checkbox" role="switch" checked />
+            <span data-i18n="backup.restorePage.replaceSettings">Remplacer aussi mes réglages par ceux de la sauvegarde</span>
+          </label>
           <div class="restore-actions">
             <button class="btn btn-ghost" id="restore-cancel" type="button" data-i18n="backup.restorePage.other">Choisir un autre fichier</button>
             <button class="btn btn-primary" id="restore-confirm" type="button" data-i18n="backup.restorePage.restore">Ajouter à mes données</button>

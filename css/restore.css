@@ -35,6 +35,8 @@
 .summary dt { color: var(--text-2); font-size: 12px; }
 .summary dd { margin: 4px 0 0; font-family: var(--display); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 .note { color: var(--text-2); font-size: 14px; }
+.restore-settings { display: flex; align-items: center; gap: 12px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); font-weight: 600; }
+.restore-settings input[type="checkbox"]:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .restore-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 18px; }
 
 .restore-done { display: grid; justify-items: center; gap: 16px; padding: 40px 24px; text-align: center; }
