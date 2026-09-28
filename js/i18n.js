@@ -5,6 +5,7 @@ import {
   formatTemplate,
   matchLanguage,
 } from "../i18n/translations.js";
+import { detectInstallLanguage } from "./preferences-data.js";
 
 const PREFERENCES_KEY = "betaGeneralPreferences";
 const LANGUAGE_PROP = "language";
@@ -27,7 +28,14 @@ async function readStoredLanguage() {
   } catch (error) {
     console.warn("Language read error:", error);
   }
-  return DEFAULT_LANGUAGE;
+  // Aucun choix stocké (nouvelle installation, stockage lu avant le service
+  // worker) : suivre la langue du navigateur plutôt que tomber direct sur
+  // l'anglais — même règle que PreferenceStore.ensureDefaults côté SW.
+  const uiLanguage =
+    (typeof chrome !== "undefined" && chrome?.i18n?.getUILanguage?.()) ||
+    (typeof navigator !== "undefined" ? navigator.language : "") ||
+    "";
+  return detectInstallLanguage(uiLanguage);
 }
 
 function getTranslationObject(lang) {
@@ -170,9 +178,15 @@ export function applyTranslations(root = document) {
     }
   });
 
+  // Le parseur HTML minuscule les noms d'attributs : la forme historique
+  // data-i18n-attr-ariaLabel devient data-i18n-attr-arialabel, et la forme
+  // lue data-i18n-attr-aria-label. Les deux doivent produire aria-label —
+  // sinon le libellé arrive en "arialabel", attribut que rien ne lit.
+  const ATTR_ALIASES = { arialabel: "aria-label" };
+
   const attrElements = scope.querySelectorAll
     ? scope.querySelectorAll(
-        "[data-i18n-attr-placeholder], [data-i18n-attr-title], [data-i18n-attr-ariaLabel], [data-i18n-attr-value]"
+        "[data-i18n-attr-placeholder], [data-i18n-attr-title], [data-i18n-attr-aria-label], [data-i18n-attr-arialabel], [data-i18n-attr-value]"
       )
     : [];
 
@@ -182,8 +196,9 @@ export function applyTranslations(root = document) {
       const attrName = camelToKebab(dataKey.slice("i18nAttr".length));
       if (!attrName) return;
       const translated = t(dataValue);
-      element.setAttribute(attrName, translated);
-      if (attrName === "value") {
+      const finalName = ATTR_ALIASES[attrName] || attrName;
+      element.setAttribute(finalName, translated);
+      if (finalName === "value") {
         element.value = translated;
       }
     });
