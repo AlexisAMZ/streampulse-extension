@@ -100,3 +100,10 @@ test("la langue d'installation vient de Chrome, avec repli anglais", () => {
   assert.equal(detectInstallLanguage("xx-YY"), "en");
   assert.equal(detectInstallLanguage(undefined), "en");
 });
+
+test("playerVolumeBoost : borné à 100-300, sinon défaut", () => {
+  assert.equal(sanitizePreferences({ playerVolumeBoost: 150 }).playerVolumeBoost, 150);
+  assert.equal(sanitizePreferences({ playerVolumeBoost: 20 }).playerVolumeBoost, 100);
+  assert.equal(sanitizePreferences({ playerVolumeBoost: 999 }).playerVolumeBoost, 300);
+  assert.equal(sanitizePreferences({}).playerVolumeBoost, 100);
+});

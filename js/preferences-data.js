@@ -41,6 +41,8 @@ export const DEFAULT_PREFERENCES = {
   autoRefreshPlayerErrors: true,
   enableClipDownload: false,
   playerQuality: "auto",
+  // Amplification du volume du lecteur : 100 % = aucune amplification, 300 % max.
+  playerVolumeBoost: 100,
   // Position de l'indicateur de latence : "viewers" = sous le lecteur, à
   // côté du nombre de spectateurs ; "chat" = dans l'en-tête du chat, à la
   // place du titre « Chat du stream ».
@@ -97,6 +99,14 @@ function clampInventoryIntervalHours(value) {
   return Number.isFinite(hours)
     ? Math.min(24, Math.max(1, Math.round(hours)))
     : 24;
+}
+
+// 100 % (aucune amplification) à 300 %, au dix de pourcentage près.
+function clampVolumeBoost(value) {
+  const boost = Number(value);
+  return Number.isFinite(boost)
+    ? Math.min(300, Math.max(100, Math.round(boost)))
+    : 100;
 }
 
 /**
@@ -165,6 +175,7 @@ export function sanitizePreferences(preferences = {}) {
     autoRefreshPlayerErrors: preferences.autoRefreshPlayerErrors !== false,
     enableClipDownload: optIn(preferences, "enableClipDownload"),
     playerQuality: PLAYER_QUALITIES.includes(preferences.playerQuality) ? preferences.playerQuality : "auto",
+    playerVolumeBoost: clampVolumeBoost(preferences.playerVolumeBoost),
     latencyPlacement: LATENCY_PLACEMENTS.includes(preferences.latencyPlacement)
       ? preferences.latencyPlacement
       : "viewers",

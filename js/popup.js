@@ -1966,6 +1966,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       next.focus();
     });
     initMenuNav();
+    // « Page complète » du tiroir Twitch : ?menu=<panneau> ouvre les réglages
+    // directement sur la rubrique demandée.
+    const requestedPanel = new URLSearchParams(location.search).get("menu");
+    if (requestedPanel && document.querySelector(`.menu-tab[data-panel="${CSS.escape(requestedPanel)}"]`)) {
+      showMenuPanel(requestedPanel);
+    }
     initNews().catch((error) => console.warn("[popup] news init failed:", error));
     initSuggest({ input: streamerInput, form: document.getElementById("add-streamer-form"), getPlatform: () => state.selectedPlatform, getStreamers: () => state.streamers });
     initHomeInteractions();
