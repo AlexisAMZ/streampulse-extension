@@ -3522,6 +3522,29 @@ function respond(promiseFactory, sendResponse, label = "") {
     });
 }
 
+/**
+ * Un seul onglet compte par chaîne et par minute : le premier battement gagne,
+ * les autres ne créditent que la présence. Sans onglet (popup, tests), compter.
+ * La carte est petite (une entrée par chaîne regardée) mais purgée quand elle
+ * grossit, pour ne rien garder au-delà de la minute utile.
+ */
+const watchTimeClaims = new Map();
+
+function watchTimeTabClaims(platform, channel, tabId) {
+  if (!platform || !channel) return true;
+  const key = `${platform}:${channel}`;
+  const now = Date.now();
+  const previous = watchTimeClaims.get(key);
+  if (previous && now - previous.at < 60_000 && previous.tabId !== tabId) return false;
+  watchTimeClaims.set(key, { tabId, at: now });
+  if (watchTimeClaims.size > 500) {
+    for (const [claimKey, claim] of watchTimeClaims) {
+      if (now - claim.at > 5 * 60_000) watchTimeClaims.delete(claimKey);
+    }
+  }
+  return true;
+}
+
 function handleMessage(request, sender, sendResponse) {
   // 1) Toute origine doit être notre extension : onMessage n'accepte en
   //    principe que le canal interne, mais on ne fait pas confiance au
@@ -3876,12 +3899,17 @@ function handleMessage(request, sender, sendResponse) {
       return true;
 
 
-    case "trackWatchTime":
+    case "trackWatchTime": {
+      // Un seul onglet compte par chaîne et par minute : deux fenêtres sur le
+      // même live ne doivent pas doubler le temps de visionnage. Sans onglet
+      // (popup, tests), compter normalement.
+      const tabId = sender?.tab?.id;
+      const claimedSeconds = (Number(request.seconds) || 0) > 0 && !watchTimeTabClaims(request.platform, request.channel, tabId);
       (async () => {
         try {
           const { channel, platform, seconds } = request;
           if (channel && platform) {
-            const secs = Number(seconds) || 0;
+            const secs = claimedSeconds ? 0 : Number(seconds) || 0;
             const game = secs > 0 ? String(request.game || "") || (await currentGameOf(platform, channel)) : "";
             // Record immediately: never block on avatar resolution
             await WatchTimeStore.record(platform, channel, secs, "", game);
@@ -3906,12 +3934,13 @@ function handleMessage(request, sender, sendResponse) {
                 .catch(() => {});
             }
           }
-          sendResponse({ success: true });
+          sendResponse({ success: true, counted: !claimedSeconds });
         } catch (error) {
           sendResponse({ error: error.message });
         }
       })();
       return true;
+    }
 
     case "markHistorySeen":
       HistoryStore.markSeen(String(request.id || ""))
