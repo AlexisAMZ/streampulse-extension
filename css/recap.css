@@ -1,6 +1,6 @@
 /* Recap page: controls on the left, the image being generated on the right. */
 
-.recap { display: grid; grid-template-columns: minmax(300px, 380px) minmax(0, 1fr); gap: 56px; align-items: start; margin-top: 44px; }
+.recap { display: grid; grid-template-columns: minmax(280px, 340px) minmax(0, 1fr); gap: 48px; align-items: start; margin-top: 44px; }
 .recap-side { position: sticky; top: 28px; display: grid; gap: 26px; }
 .recap-intro { display: grid; gap: 16px; }
 .page-title { font-size: clamp(44px, 5vw, 68px); }
@@ -42,15 +42,16 @@
   background: var(--surface);
   box-shadow: inset 0 0 0 1px var(--line), 0 50px 80px -50px rgba(0, 0, 0, 0.85);
 }
-.stage canvas { width: auto; height: auto; max-width: 100%; max-height: 80vh; border-radius: 14px; }
+.stage { padding: 14px; }
+.stage canvas { display: block; width: 100%; height: auto; border-radius: 14px; }
 .empty { display: grid; gap: 8px; padding: 36px; }
 .empty-title { font-family: var(--display); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
 .empty-body { max-width: 52ch; color: var(--text-2); }
 
 /* Recap avance (StreamPulse+) */
-.insights { display: grid; gap: 22px; padding: 26px; }
+.insights { display: grid; gap: 18px; padding: 20px; }
 .insights-head { display: flex; align-items: center; gap: 10px; }
-.insights-title { font-family: var(--display); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+.insights-title { font-family: var(--display); font-size: 17px; font-weight: 700; letter-spacing: -0.02em; }
 .plus-tag { display: inline-block; padding: 2px 8px; border-radius: 999px; background: var(--lcd); color: var(--lcd-ink); font-family: var(--body); font-size: 12px; font-weight: 700; letter-spacing: 0; vertical-align: 3px; }
 .insights-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px; }
 .insight { display: grid; align-content: start; gap: 12px; min-width: 0; }

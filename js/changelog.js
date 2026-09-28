@@ -78,7 +78,10 @@ function renderItem(change) {
   const item = el("li", "cl-item");
   const { lead, body } = splitLead(localized(change.text));
   const copy = el("div", "cl-copy");
-  if (lead) copy.append(el("h3", "cl-lead", lead));
+  // Les anciennes versions portent des « lead » vides ou blancs : un h3 vide
+  // casse la hiérarchie et le sommaire, on ne le rend que s'il dit quelque chose.
+  const leadText = typeof lead === "string" ? lead.trim() : "";
+  if (leadText) copy.append(el("h3", "cl-lead", leadText));
   copy.append(el("p", "cl-text", body));
   item.append(copy);
   const type = TYPE_KEYS[change.type] ? change.type : "other";

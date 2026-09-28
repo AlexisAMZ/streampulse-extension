@@ -82,7 +82,7 @@ export const translations = {
       "profilePreviewSuffix": "Voici qui est en ligne.",
       "documentTitle": "Première configuration",
       "welcomeTagline": "EXTENSION CHROME · TWITCH · KICK · YOUTUBE",
-      "welcomeDescription": "Ajoute ton premier streamer pour recevoir ses notifications. Tu pourras en ajouter d'autres ensuite directement depuis StreamPulse.",
+      "welcomeDescription": "Bienvenue dans StreamPulse : notifications de live, récupération auto des points et des Drops. Commence par choisir la langue de l'interface.",
       "languagePrompt": "Choisis la langue de l’extension",
       "languageHint": "Tu pourras la modifier plus tard depuis les réglages.",
       "preferencesTitle": "Réglages recommandés",
@@ -149,8 +149,9 @@ export const translations = {
       "stepFinish": "C'est parti",
       "continueBtn": "Continuer",
       "backBtn": "Retour",
-      "finishTitle": "Tu es prêt !",
+      "finishTitle": "C'est prêt !",
       "finishDescription": "StreamPulse est configuré. Épingle l'extension pour y accéder facilement.",
+      "finishOpenHint": "Clique sur l'icône StreamPulse dans la barre d'outils pour ouvrir le popup.",
       "finish": "Lancer StreamPulse",
       "footerText": "Créé par <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -1090,7 +1091,7 @@ export const translations = {
       "download": "Télécharger l'image",
       "share": "Partager sur X",
       "shareHint": "X ne récupère pas l'image tout seul : télécharge-la, puis ajoute-la à ton post.",
-      "dailyHint": "Le suivi jour par jour a commencé avec cette mise à jour : les périodes de 7 et 30 jours se remplissent à partir de maintenant.",
+      "dailyHint": "Les périodes de 7 et 30 jours se remplissent au fil du visionnage : elles se complètent petit à petit.",
       "error": "Impossible de générer le récap. Recharge la page et réessaie.",
       "openButton": "Créer mon récap",
       "shareText": "Mon récap StreamPulse ({{period}}) : {{time}} de stream sur {{count}} chaînes. Le plus regardé : {{top}}.",
@@ -1153,7 +1154,7 @@ export const translations = {
       "documentTitle": "StreamPulse : Nouveautés",
       "brandSub": "Notes de version",
       "supportIntro": "Un bug, une idée ?",
-      "supportLink": "Écrivez-nous",
+      "supportLink": "Écris-nous",
       "supportUrl": "https://streampulse.fr/support",
       "pageTitle": "Les nouveautés",
       "build": "BUILD",
@@ -1385,6 +1386,7 @@ export const translations = {
       "backBtn": "Back",
       "finishTitle": "You're all set!",
       "finishDescription": "StreamPulse is ready. Pin the extension for quick access.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "Launch StreamPulse",
       "footerText": "Created by <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -2618,6 +2620,7 @@ export const translations = {
       "backBtn": "Atrás",
       "finishTitle": "¡Todo listo!",
       "finishDescription": "StreamPulse está configurado. Ancla la extensión para acceder fácilmente.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "Lanzar StreamPulse",
       "footerText": "Creado por <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -3844,6 +3847,7 @@ export const translations = {
       "backBtn": "Voltar",
       "finishTitle": "Pronto!",
       "finishDescription": "O StreamPulse está configurado. Fixe a extensão para acessar fácil.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "Iniciar StreamPulse",
       "footerText": "Criado por <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -5069,6 +5073,7 @@ export const translations = {
       "backBtn": "Zurück",
       "finishTitle": "Sie sind bereit!",
       "finishDescription": "StreamPulse ist bereit. Stecken Sie die Erweiterung fest, um schnell darauf zugreifen zu können.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "Starten Sie StreamPulse",
       "footerText": "Erstellt von <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -6303,6 +6308,7 @@ export const translations = {
       "backBtn": "Indietro",
       "finishTitle": "È tutto pronto!",
       "finishDescription": "StreamPulse è pronto. Blocca l'estensione per un accesso rapido.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "Avvia StreamPulse",
       "footerText": "Creato da <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -7537,6 +7543,7 @@ export const translations = {
       "backBtn": "Powrót",
       "finishTitle": "Wszystko gotowe!",
       "finishDescription": "StreamPulse jest gotowy. Przypnij rozszerzenie, aby uzyskać szybki dostęp.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "Uruchom StreamPulse",
       "footerText": "Utworzono przez <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -8771,6 +8778,7 @@ export const translations = {
       "backBtn": "Geri",
       "finishTitle": "Her şey hazır!",
       "finishDescription": "StreamPulse hazır. Hızlı erişim için uzantıyı sabitleyin.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "StreamPulse'u başlatın",
       "footerText": "Oluşturan: <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -10005,6 +10013,7 @@ export const translations = {
       "backBtn": "Назад",
       "finishTitle": "Всё готово!",
       "finishDescription": "StreamPulse готов к работе. Закрепите расширение для быстрого доступа.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "Запустить StreamPulse",
       "footerText": "Автор: <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -11239,6 +11248,7 @@ export const translations = {
       "backBtn": "戻る",
       "finishTitle": "これで準備完了です！",
       "finishDescription": "StreamPulseの準備が整いました。拡張機能をピン留めして、すぐにアクセスできるようにしましょう。",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "StreamPulse を起動",
       "footerText": "作成者：<a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {
@@ -12473,6 +12483,7 @@ export const translations = {
       "backBtn": "뒤로",
       "finishTitle": "이제 다 끝났습니다!",
       "finishDescription": "StreamPulse가 준비되었습니다. 빠르게 이용할 수 있도록 확장 프로그램을 고정해 두세요.",
+      "finishOpenHint": "Click the StreamPulse icon in the toolbar to open the popup.",
       "finish": "StreamPulse 실행하기",
       "footerText": "작성자: <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
       "feedback": {

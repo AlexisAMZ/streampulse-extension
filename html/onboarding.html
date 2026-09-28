@@ -207,6 +207,27 @@
               </div>
 
               <div class="settings-group">
+                <h2 class="group-title" data-i18n="onboarding.notificationsGroupTitle">Notifications</h2>
+                <p class="settings-group-hint" data-i18n="onboarding.notificationsGroupHint">Personnalise la façon dont StreamPulse te prévient.</p>
+                <label class="settings-toggle">
+                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.liveAlertsTitle"></span><span class="settings-description" data-i18n="popup.settings.liveAlertsBody"></span></span>
+                  <input id="onboarding-live-notifications" type="checkbox" role="switch" checked />
+                </label>
+                <label class="settings-toggle">
+                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.gameAlertsTitle"></span><span class="settings-description" data-i18n="popup.settings.gameAlertsDescription"></span></span>
+                  <input id="onboarding-game-alerts" type="checkbox" role="switch" />
+                </label>
+                <label class="settings-toggle">
+                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.titleAlertsTitle"></span><span class="settings-description" data-i18n="popup.settings.titleAlertsDescription"></span></span>
+                  <input id="onboarding-title-alerts" type="checkbox" role="switch" />
+                </label>
+                <label class="settings-toggle">
+                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.soundsTitle"></span><span class="settings-description" data-i18n="popup.settings.soundsDescription"></span></span>
+                  <input id="onboarding-sounds" type="checkbox" role="switch" checked />
+                </label>
+              </div>
+
+              <div class="settings-group">
                 <h2 class="group-title" data-i18n="onboarding.playerGroupTitle">Lecteur Twitch</h2>
                 <p class="settings-group-hint" data-i18n="onboarding.playerGroupHint">Optimise le lecteur pour rattraper le direct et masquer le superflu.</p>
                 <label class="settings-toggle">
@@ -237,23 +258,6 @@
                   <input id="onboarding-prevent-tab-discard" type="checkbox" role="switch" checked />
                 </label>
               </div>
-
-              <div class="settings-group">
-                <h2 class="group-title" data-i18n="onboarding.notificationsGroupTitle">Notifications</h2>
-                <p class="settings-group-hint" data-i18n="onboarding.notificationsGroupHint">Personnalise la façon dont StreamPulse te prévient.</p>
-                <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.liveNotificationsTitle"></span><span class="settings-description" data-i18n="popup.settings.liveNotificationsDescription"></span></span>
-                  <input id="onboarding-live-notifications" type="checkbox" role="switch" checked />
-                </label>
-                <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.gameAlertsTitle"></span><span class="settings-description" data-i18n="popup.settings.gameAlertsDescription"></span></span>
-                  <input id="onboarding-game-alerts" type="checkbox" role="switch" />
-                </label>
-                <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.soundsTitle"></span><span class="settings-description" data-i18n="popup.settings.soundsDescription"></span></span>
-                  <input id="onboarding-sounds" type="checkbox" role="switch" checked />
-                </label>
-                </div>
               </details>
 
               <div class="step-nav">
@@ -276,6 +280,7 @@
             <div class="step-header">
               <h2 class="headline finish-title" data-i18n="onboarding.finishTitle">Tu es prêt !</h2>
               <p class="lede finish-desc" data-i18n="onboarding.finishDescription">StreamPulse est configuré. Épingle l'extension pour y accéder facilement.</p>
+              <p class="finish-open-hint" id="finish-open-hint" hidden data-i18n="onboarding.finishOpenHint">Clique sur l'icône StreamPulse dans la barre d'outils pour ouvrir le popup.</p>
 
               <div class="finish-watched" id="finish-watched" hidden>
                 <p class="finish-watched-label">
