@@ -618,6 +618,12 @@ class DataStore {
   }
 
   static async saveStatuses(statuses) {
+    // Chaque sondage réécrivait l'objet entier, même quand rien n'a bougé :
+    // une écriture storage de moins par tour de sondage calme.
+    const stored = await chrome.storage.local.get(STORAGE_KEYS.STATUSES);
+    if (JSON.stringify(stored[STORAGE_KEYS.STATUSES] || {}) === JSON.stringify(statuses || {})) {
+      return;
+    }
     await chrome.storage.local.set({
       [STORAGE_KEYS.STATUSES]: statuses,
     });
@@ -1476,6 +1482,16 @@ class WatchTimeStore {
     return { ...(games || {}), [name]: ((games || {})[name] || 0) + seconds };
   }
 
+  /** Fusionne un jeu simple ou un cumul multi-jeux dans les categories existantes. */
+  static _mergeGames(existing, game, seconds) {
+    if (game && typeof game === "object") {
+      let merged = existing || {};
+      for (const [name, secs] of Object.entries(game)) merged = this._addGame(merged, name, secs);
+      return merged;
+    }
+    return this._addGame(existing, game, seconds);
+  }
+
   static async _recordDaily(platform, channel, seconds, avatarUrl, game = "") {
     const DAILY_RETENTION = 400;
     const stored = await chrome.storage.local.get(STORAGE_KEYS.WATCH_TIME_DAILY);
@@ -1492,7 +1508,7 @@ class WatchTimeStore {
           ...previous,
           watchSeconds: previous.watchSeconds + seconds,
           avatarUrl: avatarUrl || previous.avatarUrl,
-          games: this._addGame(previous.games, game, seconds),
+          games: this._mergeGames(previous.games, game, seconds),
         },
       },
     };
@@ -1516,7 +1532,89 @@ class WatchTimeStore {
   static record(platform, channel, seconds, avatarUrl = "", game = "") {
     // Skip pure presence pings (no actual data to record)
     if (seconds <= 0) return Promise.resolve();
-    return this._enqueue(() => this._record(platform, channel, seconds, avatarUrl, game));
+    return this._enqueue(() => this._stage(platform, channel, seconds, avatarUrl, game));
+  }
+
+  // ── Cumul en attente ──
+  // Chaque battement réécrivait deux gros objets toutes les 60 s (le mois sur
+  // 3 fenêtres, le quotidien sur 400 jours). On cumule en mémoire, on garde
+  // une copie en storage.session (survit à un redémarrage du service worker)
+  // et on n'écrit le stockage durable qu'au plus toutes les 5 minutes, à
+  // l'alarme dédiée et à la suspension du SW.
+
+  static PENDING_KEY = "watchTimePending";
+  static FLUSH_INTERVAL_MS = 5 * 60_000;
+  static _pending = null;
+  static _lastFlushAt = 0;
+  static _flushing = false;
+
+  static async _stage(platform, channel, seconds, avatarUrl = "", game = "") {
+    const key = `${platform}:${channel}`;
+    const pending = this._pending || {};
+    const entry = pending[key] || { platform, channel, seconds: 0, avatarUrl: "", games: {} };
+    entry.seconds += seconds;
+    if (avatarUrl && !entry.avatarUrl) entry.avatarUrl = avatarUrl;
+    entry.games = this._mergeGames(entry.games, game, seconds);
+    pending[key] = entry;
+    this._pending = pending;
+    await this._persistPending();
+    if (Date.now() - this._lastFlushAt >= this.FLUSH_INTERVAL_MS) await this.flush();
+  }
+
+  static async _persistPending() {
+    try {
+      await chrome.storage.session.set({ [this.PENDING_KEY]: this._pending });
+    } catch (error) {
+      // storage.session peut être indisponible (tests, quota) : le cumul en
+      // mémoire suffit tant que le SW vit, seule la copie est perdue.
+      console.warn("[WatchTime] copie du cumul en session impossible :", error?.message || error);
+    }
+  }
+
+  /** Redmarre le cumul après un réveil du SW (copie storage.session). */
+  static async restorePending() {
+    if (this._pending) return;
+    try {
+      const stored = await chrome.storage.session.get(this.PENDING_KEY);
+      const pending = stored[this.PENDING_KEY];
+      if (pending && typeof pending === "object" && Object.keys(pending).length) {
+        this._pending = pending;
+      }
+    } catch (error) {
+      console.warn("[WatchTime] reprise du cumul impossible :", error?.message || error);
+    }
+  }
+
+  /** Écrit le cumul dans le stockage durable (au plus toutes les 5 minutes). */
+  static async flush() {
+    if (this._flushing) return;
+    const pending = this._pending;
+    if (!pending || !Object.keys(pending).length) return;
+    this._flushing = true;
+    this._pending = null;
+    try {
+      await chrome.storage.session.remove(this.PENDING_KEY);
+    } catch {
+      // La copie de session est retirée au mieux : la source est écrite après.
+    }
+    try {
+      for (const entry of Object.values(pending)) {
+        await this._record(entry.platform, entry.channel, entry.seconds, entry.avatarUrl, entry.games || {});
+      }
+      this._lastFlushAt = Date.now();
+    } catch (error) {
+      // Échec d'écriture : on remet le cumul en attente plutôt que de perdre
+      // le temps de visionnage, la prochaine alarme refera le travail.
+      console.warn("[WatchTime] écriture du cumul impossible :", error?.message || error);
+      const back = this._pending || {};
+      for (const [key, entry] of Object.entries(pending)) {
+        if (!back[key]) back[key] = entry;
+      }
+      this._pending = back;
+      await this._persistPending();
+    } finally {
+      this._flushing = false;
+    }
   }
 
   static async _record(platform, channel, seconds, avatarUrl = "", game = "") {
@@ -1530,7 +1628,7 @@ class WatchTimeStore {
     }
 
     data[month][key].watchSeconds += seconds;
-    data[month][key].games = this._addGame(data[month][key].games, game, seconds);
+    data[month][key].games = this._mergeGames(data[month][key].games, game, seconds);
     // Update avatar if we got a fresher one
     if (avatarUrl) data[month][key].avatarUrl = avatarUrl;
 
@@ -1550,6 +1648,9 @@ class WatchTimeStore {
   }
 
   static async getSummary(monthKey = null) {
+    // Le cumul en attente fait partie du total : le vider avant de lire,
+    // sinon le récap affiche jusqu'à 5 minutes de retard.
+    await this.flush();
     const data = await this._getData();
     const key = monthKey || this._getMonthKey();
     const monthData = data[key] || {};
@@ -1911,8 +2012,30 @@ class PlatformChecker {
     }
   }
 
+  // État YouTube par chaîne : une page /live complète (plus oEmbed) à chaque
+  // tour de sondage coûtait cher pour un statut qui change rarement. Cadence
+  // propre de 5 minutes, en mémoire : un SW réveillé refait une mesure fraîche.
+  static YOUTUBE_STATUS_TTL_MS = 5 * 60_000;
+  static _youtubeStatusCache = new Map();
+
   static async getYoutubeStatus(handle) {
     const sanitized = sanitizeHandle("youtube", handle);
+    const cached = this._youtubeStatusCache.get(sanitized);
+    if (cached && Date.now() - cached.at < this.YOUTUBE_STATUS_TTL_MS) {
+      return cached.result;
+    }
+    const result = await this._fetchYoutubeStatus(sanitized);
+    this._youtubeStatusCache.set(sanitized, { at: Date.now(), result });
+    if (this._youtubeStatusCache.size > 300) {
+      const now = Date.now();
+      for (const [key, entry] of this._youtubeStatusCache) {
+        if (now - entry.at >= this.YOUTUBE_STATUS_TTL_MS) this._youtubeStatusCache.delete(key);
+      }
+    }
+    return result;
+  }
+
+  static async _fetchYoutubeStatus(sanitized) {
     const base = {
       platform: "youtube",
       url: buildProfileUrl("youtube", sanitized),
@@ -3241,6 +3364,19 @@ function scheduleKeepAliveAlarm() {
   });
 }
 
+const WATCH_TIME_FLUSH_ALARM = "streampulseWatchTimeFlush";
+
+/** Vide le cumul du temps de visionnage au plus toutes les 5 minutes. */
+function scheduleWatchTimeFlushAlarm() {
+  chrome.alarms.get(WATCH_TIME_FLUSH_ALARM, (existing) => {
+    if (existing) return;
+    chrome.alarms.create(WATCH_TIME_FLUSH_ALARM, {
+      periodInMinutes: Math.ceil(WatchTimeStore.FLUSH_INTERVAL_MS / 60_000),
+      delayInMinutes: Math.ceil(WatchTimeStore.FLUSH_INTERVAL_MS / 60_000),
+    });
+  });
+}
+
 // Keep-alive heartbeat removed: the KEEP_ALIVE_ALARM is sufficient in MV3.
 // setInterval doesn't persist across SW termination anyway.
 
@@ -3410,7 +3546,9 @@ chrome.runtime.onStartup.addListener(async () => {
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === RAID_WATCHER_ALARM) {
+  if (alarm.name === WATCH_TIME_FLUSH_ALARM) {
+    WatchTimeStore.flush().catch((error) => console.warn("[WatchTime] vidage :", error?.message || error));
+  } else if (alarm.name === RAID_WATCHER_ALARM) {
     refreshRaidWatcher();
   } else if (alarm.name === WATCHER_ALARM) {
     pollStreamers({ forceNotification: false }).catch((error) => {
@@ -4346,6 +4484,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 scheduleWatcherAlarm();
 scheduleKeepAliveAlarm();
 scheduleDropsAlarm();
+scheduleWatchTimeFlushAlarm();
+
+// Le SW peut s'arrêter entre deux vidages : reprendre le cumul laissé en
+// storage.session, et vider au moment où le navigateur suspend le SW.
+WatchTimeStore.restorePending().catch((error) => {
+  console.warn("[WatchTime] reprise du cumul au démarrage :", error?.message || error);
+});
+if (chrome.runtime.onSuspend?.addListener) {
+  chrome.runtime.onSuspend.addListener(() => {
+    WatchTimeStore.flush().catch(() => {});
+  });
+}
 
 (async () => {
   if (initDone) return;

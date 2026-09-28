@@ -256,6 +256,10 @@
   function teardown() {
     if (timer) clearTimeout(timer);
     timer = null;
+    if (pendingCheck) {
+      cancelAnimationFrame(pendingCheck);
+      pendingCheck = 0;
+    }
     if (typeof observer !== "undefined") observer.disconnect();
   }
 
@@ -273,9 +277,18 @@
 
   // Twitch re-rend la barre latérale en continu : on ne reconstruit que si le
   // bloc a disparu ou si de nouvelles cartes n'ont pas encore leur étoile.
+  // Le contrôle est coalescé au rythme des frames (comme les autres
+  // observateurs de l'inject) : un scan DOM par mutation coûtait plus cher
+  // que la mutation elle-même pendant les rafales de re-rendu.
+  var pendingCheck = 0;
   var observer = new MutationObserver(function () {
     if (!alive()) return teardown();
-    if (!document.getElementById(SECTION_ID) || document.querySelector(CARD + ":not(.sp-fav-host)")) schedule(false);
+    if (pendingCheck) return;
+    pendingCheck = requestAnimationFrame(function () {
+      pendingCheck = 0;
+      if (!alive()) return teardown();
+      if (!document.getElementById(SECTION_ID) || document.querySelector(CARD + ":not(.sp-fav-host)")) schedule(false);
+    });
   });
 
   chrome.storage.onChanged.addListener(function (changes, area) {
