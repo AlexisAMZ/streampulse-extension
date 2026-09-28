@@ -971,7 +971,8 @@ export const translations = {
         "bannerStop": "Arrêter",
         "obtained": "{{name}} est à toi.",
         "doneTitle": "Mode auto terminé",
-        "doneMessage": "Plus aucun badge à récupérer pour l'instant : l'onglet a été fermé."
+        "doneMessage": "Plus aucun badge à récupérer pour l'instant : l'onglet a été fermé.",
+        "stoppedPlus": "StreamPulse+ est inactif : la récupération automatique des badges s'est arrêtée."
       },
       "errors": {
         "notificationsDisabled": "Active les notifications Chrome pour lancer un test.",
@@ -2158,7 +2159,8 @@ export const translations = {
         "bannerStop": "Stop",
         "obtained": "{{name}} is yours.",
         "doneTitle": "Auto mode finished",
-        "doneMessage": "No more badges to get for now: the tab was closed."
+        "doneMessage": "No more badges to get for now: the tab was closed.",
+        "stoppedPlus": "StreamPulse+ is inactive: automatic badge collection has stopped."
       },
       "errors": {
         "notificationsDisabled": "Enable Chrome notifications to run a test.",
@@ -3345,7 +3347,8 @@ export const translations = {
         "bannerStop": "Detener",
         "obtained": "{{name}} es tuya.",
         "doneTitle": "Modo auto terminado",
-        "doneMessage": "No quedan insignias por conseguir por ahora: se cerró la pestaña."
+        "doneMessage": "No quedan insignias por conseguir por ahora: se cerró la pestaña.",
+        "stoppedPlus": "StreamPulse+ is inactive: automatic badge collection has stopped."
       },
       "errors": {
         "notificationsDisabled": "Activa las notificaciones de Chrome para lanzar una prueba.",
@@ -4519,7 +4522,8 @@ export const translations = {
         "bannerStop": "Parar",
         "obtained": "{{name}} é seu.",
         "doneTitle": "Modo auto concluído",
-        "doneMessage": "Nenhum emblema para pegar por enquanto: a aba foi fechada."
+        "doneMessage": "Nenhum emblema para pegar por enquanto: a aba foi fechada.",
+        "stoppedPlus": "StreamPulse+ is inactive: automatic badge collection has stopped."
       },
       "errors": {
         "notificationsDisabled": "Ative as notificações do Chrome para rodar um teste.",
@@ -5701,7 +5705,8 @@ export const translations = {
         "bannerStop": "Beenden",
         "obtained": "{{name}} gehört dir.",
         "doneTitle": "Auto-Modus fertig",
-        "doneMessage": "Gerade keine Abzeichen mehr zu holen: Der Tab wurde geschlossen."
+        "doneMessage": "Gerade keine Abzeichen mehr zu holen: Der Tab wurde geschlossen.",
+        "stoppedPlus": "StreamPulse+ is inactive: automatic badge collection has stopped."
       },
       "errors": {
         "notificationsDisabled": "Aktivieren Sie Chrome-Benachrichtigungen, um einen Test durchzuführen.",
@@ -6888,7 +6893,8 @@ export const translations = {
         "bannerStop": "Ferma",
         "obtained": "{{name}} è tuo.",
         "doneTitle": "Modalità auto finita",
-        "doneMessage": "Nessun badge da ottenere per ora: la scheda è stata chiusa."
+        "doneMessage": "Nessun badge da ottenere per ora: la scheda è stata chiusa.",
+        "stoppedPlus": "StreamPulse+ is inactive: automatic badge collection has stopped."
       },
       "errors": {
         "notificationsDisabled": "Abilita le notifiche di Chrome per eseguire un test.",
@@ -8075,7 +8081,8 @@ export const translations = {
         "bannerStop": "Zatrzymaj",
         "obtained": "{{name}} jest twoja.",
         "doneTitle": "Tryb auto zakończony",
-        "doneMessage": "Na razie nie ma więcej odznak do zdobycia: karta została zamknięta."
+        "doneMessage": "Na razie nie ma więcej odznak do zdobycia: karta została zamknięta.",
+        "stoppedPlus": "StreamPulse+ is inactive: automatic badge collection has stopped."
       },
       "errors": {
         "notificationsDisabled": "Włącz powiadomienia Chrome, aby przeprowadzić test.",
@@ -9262,7 +9269,8 @@ export const translations = {
         "bannerStop": "Durdur",
         "obtained": "{{name}} artık senin.",
         "doneTitle": "Otomatik mod bitti",
-        "doneMessage": "Şimdilik alınacak rozet kalmadı: sekme kapatıldı."
+        "doneMessage": "Şimdilik alınacak rozet kalmadı: sekme kapatıldı.",
+        "stoppedPlus": "StreamPulse+ is inactive: automatic badge collection has stopped."
       },
       "errors": {
         "notificationsDisabled": "Bir test yapmak için Chrome bildirimlerini etkinleştirin.",
@@ -10449,7 +10457,8 @@ export const translations = {
         "bannerStop": "Остановить",
         "obtained": "{{name}} теперь твой.",
         "doneTitle": "Авторежим завершён",
-        "doneMessage": "Пока больше нечего получать: вкладка закрыта."
+        "doneMessage": "Пока больше нечего получать: вкладка закрыта.",
+        "stoppedPlus": "StreamPulse+ is inactive: automatic badge collection has stopped."
       },
       "errors": {
         "notificationsDisabled": "Включите уведомления Chrome, чтобы запустить тест.",
@@ -11636,7 +11645,8 @@ export const translations = {
         "bannerStop": "止める",
         "obtained": "{{name}} を獲得しました。",
         "doneTitle": "自動モード完了",
-        "doneMessage": "今は取得できるバッジがありません。タブを閉じました。"
+        "doneMessage": "今は取得できるバッジがありません。タブを閉じました。",
+        "stoppedPlus": "StreamPulse+ is inactive: automatic badge collection has stopped."
       },
       "errors": {
         "notificationsDisabled": "テストを実行するには、Chromeの通知を有効にしてください。",
@@ -12823,7 +12833,8 @@ export const translations = {
         "bannerStop": "중지",
         "obtained": "{{name}} 획득!",
         "doneTitle": "자동 모드 완료",
-        "doneMessage": "지금은 받을 배지가 없습니다. 탭을 닫았습니다."
+        "doneMessage": "지금은 받을 배지가 없습니다. 탭을 닫았습니다.",
+        "stoppedPlus": "StreamPulse+ is inactive: automatic badge collection has stopped."
       },
       "errors": {
         "notificationsDisabled": "테스트를 실행하려면 Chrome 알림을 활성화하세요.",

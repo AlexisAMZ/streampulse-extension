@@ -58,8 +58,12 @@ const campaigns = [
 const badge = (id, game) => ({ id, title: `Badge ${id}`, description: `Watch ${game}`, image: "", url: "", game, firstSeen: 0 });
 const badges = [badge("t30", "VALORANT"), badge("t60", "VALORANT"), badge("t90", "VALORANT"), badge("l1", "League of Legends"), { ...badge("sub", "VALORANT"), description: "Subscribe to a VALORANT streamer" }];
 
+// Licence Plus active : le mode auto des badges est une fonctionnalité Plus.
+const plusRecord = () => ({ status: "active", licenseKey: "SP-AAAA-BBBB-CCCC-DDDD", plan: "monthly", verifiedAt: now, checkedAt: now });
+
 test("tous les badges : un jeu à la fois, paliers ensemble, puis fin", async () => {
   const { store, tabs, log } = fakeChrome();
+  store.streamPulsePlus = plusRecord();
   store.streamPulseDropsBadges = { updatedAt: now, syncedAt: now, badges, owned: [] };
   store.streamPulseDropsCampaigns = { updatedAt: now, campaigns };
   const notes = [];
@@ -115,6 +119,7 @@ test("tous les badges : un jeu à la fois, paliers ensemble, puis fin", async ()
 
 test("un badge à la main, retrait d'un badge, onglet fermé par l'utilisateur", async () => {
   const { store, tabs } = fakeChrome();
+  store.streamPulsePlus = plusRecord();
   store.streamPulseDropsBadges = { updatedAt: now, syncedAt: now, badges, owned: [] };
   store.streamPulseDropsCampaigns = { updatedAt: now, campaigns };
   const { createBadgeAuto } = await import("../js/badge-auto-worker.js");
@@ -140,4 +145,50 @@ test("un badge à la main, retrait d'un badge, onglet fermé par l'utilisateur",
   auto.onTabRemoved(tabId);
   await auto.check();
   assert.equal(store.streamPulseBadgeAuto, undefined);
+});
+
+test("sans StreamPulse+ actif, « tous les badges » est refusé", async () => {
+  const { store, tabs } = fakeChrome();
+  store.streamPulseDropsBadges = { updatedAt: now, syncedAt: now, badges, owned: [] };
+  store.streamPulseDropsCampaigns = { updatedAt: now, campaigns };
+  const { createBadgeAuto } = await import("../js/badge-auto-worker.js");
+  const auto = createBadgeAuto({
+    streamUrl: async ({ gameId }) => `https://www.twitch.tv/live${gameId}`,
+    streamGameOf: async () => "516575",
+    notify: async () => {},
+    translate: async (key) => key,
+    onStart: () => {},
+    lowPowerPlayer: () => {},
+  });
+  const result = await auto.start({ all: true });
+  assert.deepEqual(result, { started: false, plusRequired: true });
+  assert.equal(store.streamPulseBadgeAuto, undefined);
+  assert.equal(tabs.size, 0);
+});
+
+test("la licence Plus qui expire arrête une récupération en cours", async () => {
+  const { store, tabs } = fakeChrome();
+  store.streamPulsePlus = plusRecord();
+  store.streamPulseDropsBadges = { updatedAt: now, syncedAt: now, badges, owned: [] };
+  store.streamPulseDropsCampaigns = { updatedAt: now, campaigns };
+  const notes = [];
+  const { createBadgeAuto } = await import("../js/badge-auto-worker.js");
+  const auto = createBadgeAuto({
+    streamUrl: async ({ gameId }) => `https://www.twitch.tv/live${gameId}`,
+    streamGameOf: async () => "516575",
+    notify: async (title, message) => notes.push(message),
+    translate: async (key) => key,
+    onStart: () => {},
+    lowPowerPlayer: () => {},
+  });
+  await auto.start({ all: true });
+  assert.equal(tabs.size, 1);
+
+  // Résiliation puis délai de grâce dépassé (verifiedAt ancien) : le passage
+  // suivant du mode auto doit tout arrêter et prévenir.
+  store.streamPulsePlus = { ...plusRecord(), verifiedAt: now - 40 * 24 * HOUR, checkedAt: now - 40 * 24 * HOUR };
+  await auto.check();
+  assert.equal(store.streamPulseBadgeAuto, undefined);
+  assert.equal(tabs.size, 0);
+  assert.deepEqual(notes, ["background.badgeAuto.stoppedPlus"]);
 });
