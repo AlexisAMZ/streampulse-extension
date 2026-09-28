@@ -27,6 +27,7 @@ const ES_MODULES = [
   "js/recap.js",
   "js/restore.js",
   "js/smart-alerts.js",
+  "js/streamers-data.js",
   "js/quiet-hours.js",
   "js/twitch-rate-limit.js",
   "js/recap-card.js",

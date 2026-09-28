@@ -31,6 +31,7 @@ import { createDropsClient } from "./drops-gql.js";
 import { createBadgeAuto } from "./badge-auto-worker.js";
 import { searchChannels } from "./channel-search.js";
 import { syncEventSubRaid, stopEventSubRaid } from "./eventsubRaid.js";
+import { applyStreamerOrder, sanitizePinnedIds } from "./streamers-data.js";
 import {
   RAID_WATCHER_ALARM,
   syncRaidWatcher,
@@ -4262,6 +4263,29 @@ function handleMessage(request, sender, sendResponse) {
           sendResponse({ error: error?.message || String(error) });
         }
       })();
+      return true;
+
+    case "reorderStreamers":
+      // { order: [id, …] } : la popup n'envoie qu'un ordre d'identifiants, le
+      // service worker l'applique au stockage courant — un statut rafraîchi
+      // pendant le glisser ne peut plus être écrasé par sa copie d'ouverture.
+      respond(async () => {
+        const streamers = await DataStore.getStreamers();
+        const reordered = applyStreamerOrder(streamers, request.order);
+        await DataStore.saveStreamers(reordered);
+        return { streamers: reordered };
+      }, sendResponse, "reorderStreamers");
+      return true;
+
+    case "setPinnedStreamers":
+      // { pinnedIds: [id, …] } : même principe, écrit depuis le stockage
+      // courant et nettoyé (ids inconnus, doublons).
+      respond(async () => {
+        const streamers = await DataStore.getStreamers();
+        const pinnedIds = sanitizePinnedIds(streamers, request.pinnedIds);
+        await chrome.storage.local.set({ betaPinnedIds: pinnedIds });
+        return { pinnedIds };
+      }, sendResponse, "setPinnedStreamers");
       return true;
 
     default:

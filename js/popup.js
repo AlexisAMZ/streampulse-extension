@@ -344,14 +344,34 @@ function clearDropMarkers() {
   });
 }
 
+/** Applique un ordre de streamers : le service worker écrit depuis le stockage
+ * courant (un statut rafraîchi pendant le glisser ne peut pas être écrasé par
+ * notre copie d'ouverture). Repli local si le message échoue. */
+async function writeStreamerOrder(reordered) {
+  try {
+    const response = await chrome.runtime.sendMessage({
+      type: "reorderStreamers",
+      order: reordered.map((streamer) => streamer.id),
+    });
+    if (Array.isArray(response?.streamers)) {
+      state.streamers = response.streamers;
+      return;
+    }
+    throw new Error(response?.error || "réponse sans liste");
+  } catch (error) {
+    console.warn("[popup] réordonnancement côté service worker impossible :", error?.message || error);
+    state.streamers = reordered;
+    await chrome.storage.local.set({ betaGeneralStreamers: reordered });
+  }
+}
+
 async function reorderStreamers(from, to) {
   if (!Number.isInteger(from) || !Number.isInteger(to) || from === to) return false;
   if (from < 0 || to < 0 || from >= state.streamers.length || to >= state.streamers.length) return false;
   const reordered = [...state.streamers];
   const [moved] = reordered.splice(from, 1);
   reordered.splice(to, 0, moved);
-  state.streamers = reordered;
-  await chrome.storage.local.set({ betaGeneralStreamers: reordered });
+  await writeStreamerOrder(reordered);
   renderStreamers();
   return true;
 }
@@ -362,8 +382,7 @@ async function swapStreamers(indexA, indexB) {
   if (indexA < 0 || indexB < 0 || indexA >= state.streamers.length || indexB >= state.streamers.length) return false;
   const reordered = [...state.streamers];
   [reordered[indexA], reordered[indexB]] = [reordered[indexB], reordered[indexA]];
-  state.streamers = reordered;
-  await chrome.storage.local.set({ betaGeneralStreamers: reordered });
+  await writeStreamerOrder(reordered);
   renderStreamers();
   return true;
 }
@@ -551,8 +570,24 @@ const streamerCallbacks = {
 // --- Pins and groups: popup-only data, stored beside the streamer list ---
 async function togglePin(id) {
   const pinned = !isPinned(id);
-  state.pinnedIds = pinned ? [...state.pinnedIds, id] : state.pinnedIds.filter((x) => x !== id);
-  await chrome.storage.local.set({ [PINS_KEY]: state.pinnedIds });
+  const pinnedIds = pinned ? [...state.pinnedIds, id] : state.pinnedIds.filter((x) => x !== id);
+  // Écrit par le service worker depuis le stockage courant, comme l'ordre.
+  try {
+    const response = await chrome.runtime.sendMessage({ type: "setPinnedStreamers", pinnedIds });
+    if (Array.isArray(response?.pinnedIds)) {
+      // Faux positif : sendMessage n'écrit pas `state`, la réponse remplace
+      // simplement la liste locale par la version validée côté SW.
+      /* eslint-disable-next-line require-atomic-updates -- réponse du SW, pas d'écriture concurrente de state. */
+      state.pinnedIds = response.pinnedIds;
+    } else {
+      throw new Error(response?.error || "réponse sans liste");
+    }
+  } catch (error) {
+    console.warn("[popup] épinglage côté service worker impossible :", error?.message || error);
+    /* eslint-disable-next-line require-atomic-updates -- repli : même valeur calculée avant l'attente. */
+    state.pinnedIds = pinnedIds;
+    await chrome.storage.local.set({ [PINS_KEY]: pinnedIds });
+  }
   showFeedback(t(pinned ? "popup.cplus.pinned" : "popup.cplus.unpinned", { name: nameFor(id) }), "success");
   renderStreamers();
 }
