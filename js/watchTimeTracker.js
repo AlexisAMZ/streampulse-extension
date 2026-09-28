@@ -46,6 +46,12 @@
     if (!segment || segment.length > 60) return null;
 
     if (IGNORED_ROUTES[platform]?.has(segment)) return null;
+    // La route popout (lecteur seul, sans page de chaîne) est ignorée comme
+    // les autres routes système ; sur Twitch, la liste partagée de l'inject
+    // (js/inject/dom.js) fait foi. Kick garde sa propre liste, plus courte :
+    // un login légitime homonyme d'une route Twitch ne doit pas être filtré.
+    if (platform === "twitch" && segment === "popout") return null;
+    if (platform === "twitch" && window.__SP_DOM__?.isChannelLogin && !window.__SP_DOM__.isChannelLogin(segment)) return null;
 
     return { platform, channel: segment };
   }
@@ -82,8 +88,27 @@
 
   // ── Heartbeat ──
 
+  /**
+   * Vrai seulement si l'utilisateur regarde réellement : onglet visible et
+   * une vidéo en lecture. Sans cela, un onglet en arrière-plan ou un live en
+   * pause comptait 60 secondes par minute, même sans rien regarder.
+   */
+  function isActuallyWatching() {
+    if (document.visibilityState !== "visible") return false;
+    for (const video of document.querySelectorAll("video")) {
+      if (!video.paused && !video.ended && video.readyState >= 2) return true;
+    }
+    return false;
+  }
+
   function sendHeartbeat() {
     if (!currentChannel || !currentPlatform) return;
+    // Temps mort (onglet masqué, vidéo en pause) : la fenêtre partielle
+    // repart de maintenant, pour ne rien compter rétroactivement.
+    if (!isActuallyWatching()) {
+      lastHeartbeatTime = Date.now();
+      return;
+    }
     lastHeartbeatTime = Date.now();
     safeSend({
       type: "trackWatchTime",

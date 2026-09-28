@@ -31,9 +31,13 @@ function sandbox({ respond = () => ({ data: {} }), cookie = "", apollo = null } 
   win.top = win;
   new Function("window", "location", "document", SOURCE)(win, { origin: ORIGIN }, { cookie });
 
+  // La poignée de main READY apporte le jeton de session ; les commandes le
+  // portent et chaque réponse le rend (le relais refuse sinon).
+  const TOKEN = "jeton-test";
+  listeners.forEach((listener) => listener({ source: win, data: { source: "streampulse:drops:ready", token: TOKEN } }));
   const run = async (action, fields = {}) => {
     const id = `cmd-${posted.length}`;
-    listeners.forEach((listener) => listener({ source: win, data: { source: "streampulse:drops:cmd", v: 1, id, action, ...fields } }));
+    listeners.forEach((listener) => listener({ source: win, data: { source: "streampulse:drops:cmd", v: 1, token: TOKEN, id, action, ...fields } }));
     for (let i = 0; i < 20 && !posted.some((item) => item.message.id === id); i++) await new Promise((resolve) => setTimeout(resolve, 0));
     return posted.find((item) => item.message.id === id)?.message;
   };

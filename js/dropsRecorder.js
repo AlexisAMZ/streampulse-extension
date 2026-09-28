@@ -31,6 +31,14 @@
   let inventoryAskedAt = 0;
   let timer = null;
 
+  // Jeton de session : les messages du pont doivent le porter. Le code du pont
+  // est public, sans lui n'importe quel script de la page pouvait forger un
+  // « gain de Drop » en copiant la balise source. Le jeton transite par la
+  // poignée de main READY : le forger exigerait d'écouter activement StreamPulse.
+  const TOKEN = globalThis.crypto?.randomUUID
+    ? crypto.randomUUID()
+    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+
   /**
    * Extension rechargée ou mise à jour : ce script, resté dans un onglet ouvert
    * avant, n'a plus accès à chrome.*. On arrête tout au lieu de lever une erreur
@@ -60,7 +68,7 @@
   function command(action, fields = {}) {
     if (action === "inventory") inventoryAskedAt = Date.now();
     if (action === "campaigns") campaignsTriedAt = Date.now();
-    window.postMessage({ source: COMMAND, v: 1, id: `${Date.now()}-${++sequence}`, action, ...fields }, location.origin);
+    window.postMessage({ source: COMMAND, v: 1, token: TOKEN, id: `${Date.now()}-${++sequence}`, action, ...fields }, location.origin);
   }
 
   function claimAll(instanceIds, auto) {
@@ -95,6 +103,7 @@
     if (event.source !== window || !enabled) return;
     const message = event.data;
     if (!message || message.source !== SOURCE || message.v !== 1) return;
+    if (message.token !== TOKEN) return;
     if (message.kind === "event" && message.data && typeof message.data === "object") onEvent(message.data);
     else if (message.kind === "result" && typeof message.action === "string") onResult(message);
   });
@@ -141,7 +150,7 @@
   // qu'une fois la préférence connue, pour ne rien relayer à tort.
   chrome.storage.local.get([PREFERENCES_KEY], (result) => {
     enabled = chrome.runtime.lastError ? true : isEnabled(result?.[PREFERENCES_KEY]);
-    window.postMessage({ source: READY }, location.origin);
+    window.postMessage({ source: READY, token: TOKEN }, location.origin);
     if (enabled) start();
   });
 })();

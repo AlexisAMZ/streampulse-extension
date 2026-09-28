@@ -15,9 +15,12 @@
   // objet : il faut descendre de quatre niveaux, on en autorise six.
   const MAX_DEPTH = 6;
 
-  /** Un canal par relais : chacun a son signal « prêt » et sa file d'attente. */
-  const points = { ready: "streampulse:points:ready", isReady: false, queue: [], post: (data) => ({ source: "streampulse:points", v: 1, data }) };
-  const drops = { ready: "streampulse:drops:ready", isReady: false, queue: [], post: (event) => ({ source: "streampulse:drops", v: 1, kind: "event", data: event }) };
+  /** Un canal par relais : chacun a son signal « prêt » et sa file d'attente.
+      Le relais envoie un jeton de session dans le signal : chaque message
+      doit le porter, sinon n'importe quel script de la page pourrait forger
+      des gains en copiant ces balises publiques. */
+  const points = { ready: "streampulse:points:ready", isReady: false, queue: [], token: "", post: (data) => ({ source: "streampulse:points", v: 1, token: points.token, data }) };
+  const drops = { ready: "streampulse:drops:ready", isReady: false, queue: [], token: "", post: (event) => ({ source: "streampulse:drops", v: 1, token: drops.token, kind: "event", data: event }) };
   const MARKERS = [
     { type: "points-earned", channel: points, payload: (message) => message.data },
     { type: "drop-progress", channel: drops, payload: (message) => ({ type: message.type, data: message.data }) },
@@ -68,6 +71,8 @@
     if (event.source !== window || !event.data) return;
     const channel = [points, drops].find((item) => item.ready === event.data.source);
     if (!channel) return;
+    channel.token = typeof event.data.token === "string" ? event.data.token : "";
+    if (!channel.token) return;
     channel.isReady = true;
     channel.queue.splice(0).forEach((payload) => window.postMessage(channel.post(payload), location.origin));
   });
