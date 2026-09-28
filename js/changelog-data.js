@@ -51,8 +51,44 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.30",
+    date: "2026-09-29",
+    changes: [
+      {
+        type: "new",
+        area: "plus",
+        text: {
+          fr: "Le parrainage sort de sa cachette : il est maintenant dans les Réglages généraux, et un bouton « Copier mon code » attend à la fin de ton récap.",
+          en: "Referrals step into the light: they now live in General settings, and a “Copy my code” button waits at the end of your recap.",
+          es: "El programa de amigos sale de su escondite: ahora está en los ajustes generales y un botón «Copiar mi código» te espera al final de tu resumen.",
+          "pt-BR": "O programa de indicações saiu do esconderijo: ele agora está nos ajustes gerais, e um botão “Copiar meu código” espera no final do seu resumo.",
+          de: "Das Freundschaftswerben kommt aus seinem Versteck: es gibt es jetzt in den allgemeinen Einstellungen, und am Ende deines Rückblicks wartet die Schaltfläche „Code kopieren“.",
+          it: "Il programma inviti esce dal nascondiglio: ora si trova nelle impostazioni generali e alla fine del tuo riepilogo ti aspetta il pulsante «Copia il mio codice».",
+          pl: "Polecanie wychodzi z ukrycia: znajdziesz je teraz w ogólnych ustawieniach, a na końcu podsumowania czeka przycisk „Skopiuj mój kod”.",
+          tr: "Arkadaşını davet etme artık saklanmıyor: genel ayarlarda yerini aldı, özetinin sonunda da “Kodumu kopyala” düğmesi seni bekliyor.",
+          ru: "Реферальная программа больше не прячется: она появилась в общих настройках, а в конце итогов вас ждёт кнопка «Скопировать код».",
+          ja: "紹介プログラムが見える場所に：全般設定に追加され、まとめの最後に「コードをコピー」ボタンが付きました。",
+          ko: "추천 프로그램이 드러났습니다: 일반 설정에 추가되었고, 요약 마지막에 “내 코드 복사” 버튼이 생겼습니다.",
+        },
+      },
+    ],
+  },
+  {
     version: "26.9.29",
     date: "2026-09-27",
+    title: {
+      fr: "Un badge d'ancienneté plus lisible",
+      en: "A clearer seniority badge",
+      es: "Una insignia de antigüedad más legible",
+      "pt-BR": "Um emblema de antiguidade mais legível",
+      de: "Ein besser lesbares Treueabzeichen",
+      it: "Un badge di anzianità più leggibile",
+      pl: "Czytelniejsza odznaka stażu",
+      tr: "Daha okunaklı bir kıdem rozeti",
+      ru: "Значок стажа стал четче",
+      ja: "見やすくなった継続バッジ",
+      ko: "더 선명해진 연속 배지",
+    },
     changes: [
       {
         type: "fix",
@@ -127,6 +163,19 @@ export const RELEASES = [
   {
     version: "26.9.28",
     date: "2026-09-27",
+    title: {
+      fr: "Badge d'ancienneté et effets façon 7TV",
+      en: "Seniority badge and 7TV-style effects",
+      es: "Insignia de antigüedad y efectos estilo 7TV",
+      "pt-BR": "Emblema de antiguidade e efeitos estilo 7TV",
+      de: "Treueabzeichen und Effekte im 7TV-Stil",
+      it: "Badge di anzianità ed effetti stile 7TV",
+      pl: "Odznaka stażu i efekty jak w 7TV",
+      tr: "Kıdem rozeti ve 7TV tarzı efektler",
+      ru: "Значок стажа и эффекты в стиле 7TV",
+      ja: "継続バッジと7TV風エフェクト",
+      ko: "연속 배지와 7TV 스타일 효과",
+    },
     changes: [
       {
         type: "new",
@@ -629,6 +678,19 @@ export const RELEASES = [
   {
     version: "26.9.26",
     date: "2026-09-26",
+    title: {
+      fr: "Les points, sans faux clic",
+      en: "Channel points, no stray clicks",
+      es: "Los puntos, sin clics erróneos",
+      "pt-BR": "Os pontos, sem cliques errados",
+      de: "Kanalpunkte ohne Fehlklicks",
+      it: "I punti, senza clic sbagliati",
+      pl: "Punkty bez błędnych kliknięć",
+      tr: "Kanal puanları, yanlış tıklama yok",
+      ru: "Баллы без случайных кликов",
+      ja: "ポイント受け取りの誤クリックを修正",
+      ko: "잘못된 클릭 없는 포인트 받기",
+    },
     changes: [
       {
         type: "fix",
@@ -768,6 +830,19 @@ export const RELEASES = [
   {
     version: "26.9.20",
     date: "2026-09-17",
+    title: {
+      fr: "Connexion réparée, vérifications plus légères",
+      en: "Connection fixed, lighter live checks",
+      es: "Conexión reparada, comprobaciones más ligeras",
+      "pt-BR": "Conexão restaurada, verificações mais leves",
+      de: "Verbindung repariert, leichtere Live-Prüfungen",
+      it: "Connessione riparata, controlli più leggeri",
+      pl: "Połączenie naprawione, lżejsze sprawdzanie",
+      tr: "Bağlantı onarıldı, daha hafif kontroller",
+      ru: "Связь восстановлена, проверки стали легче",
+      ja: "接続を修復、ライブ確認を軽量化",
+      ko: "연결 복구, 더 가벼운 라이브 확인",
+    },
     changes: [
       {
         type: "fix",

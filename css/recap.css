@@ -84,3 +84,18 @@
 .brand-plus { display: inline-block; margin-left: 3px; color: #ffffff; font-size: 1.35em; line-height: 0; vertical-align: -0.06em; }
 
 .points-insights { margin-top: 24px; padding-top: 20px; box-shadow: inset 0 1px 0 var(--line); }
+
+/* Parrainage : mention discrète en fin de récap, visible seulement avec un code. */
+.recap-referral {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 14px;
+  margin: 20px 0 0;
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 1.45;
+  text-align: center;
+}
+.recap-referral .btn { flex: none; font-size: 12px; padding: 7px 14px; }

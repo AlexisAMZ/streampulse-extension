@@ -589,6 +589,8 @@ export const translations = {
         "intro": "L'apparence de ton badge StreamPulse et de ton pseudo dans le chat Twitch, visible par les autres utilisateurs de StreamPulse."
       },
       "referral": {
+        "generalBody": "Un mois offert pour chaque ami qui prend StreamPulse+ avec ton code.",
+        "generalOpen": "Voir mon code",
         "plusTitle": "Parraine tes amis",
         "plusBody": "Ton ami a 2,99 € offerts (1er mois gratuit, ou la formule à vie à 16 €). Toi, tu gagnes de l'argent et ces récompenses :",
         "title": "Parrainage",
@@ -1022,6 +1024,10 @@ export const translations = {
       }
     },
     "recap": {
+      "referral": {
+        "body": "Parrainage : un mois offert pour chaque ami qui prend StreamPulse+ avec ton code.",
+        "copy": "Copier mon code"
+      },
       "periodYear": "Wrapped {{year}}",
       "plus": {
         "title": "Récap avancé",
@@ -1775,6 +1781,8 @@ export const translations = {
         "intro": "How your StreamPulse badge and your name look in Twitch chat, visible to other StreamPulse users."
       },
       "referral": {
+        "generalBody": "One free month for every friend who takes StreamPulse+ with your code.",
+        "generalOpen": "See my code",
         "plusTitle": "Refer your friends",
         "plusBody": "Your friend gets €2.99 off (first month free, or the lifetime plan for €16). You earn money and these rewards:",
         "title": "Referral",
@@ -2208,6 +2216,10 @@ export const translations = {
       }
     },
     "recap": {
+      "referral": {
+        "body": "Referrals: one free month for every friend who takes StreamPulse+ with your code.",
+        "copy": "Copy my code"
+      },
       "periodYear": "Wrapped {{year}}",
       "plus": {
         "title": "Advanced recap",
@@ -2961,6 +2973,8 @@ export const translations = {
         "intro": "El aspecto de tu insignia StreamPulse y de tu nombre en el chat de Twitch, visible para otros usuarios de StreamPulse."
       },
       "referral": {
+        "generalBody": "Un mes gratis por cada amigo que contrate StreamPulse+ con tu código.",
+        "generalOpen": "Ver mi código",
         "plusTitle": "Invita a tus amigos",
         "plusBody": "Tu amigo tiene 2,99 € de descuento (1.er mes gratis, o el plan de por vida a 16 €). Tú ganas dinero y estas recompensas:",
         "title": "Recomendación",
@@ -3394,6 +3408,10 @@ export const translations = {
       }
     },
     "recap": {
+      "referral": {
+        "body": "Recomienda StreamPulse: un mes gratis por cada amigo que lo contrate con tu código.",
+        "copy": "Copiar mi código"
+      },
       "periodYear": "Wrapped {{year}}",
       "plus": {
         "title": "Resumen avanzado",
@@ -4134,6 +4152,8 @@ export const translations = {
         "intro": "A aparência do seu emblema StreamPulse e do seu nome no chat da Twitch, visível para outros usuários do StreamPulse."
       },
       "referral": {
+        "generalBody": "Um mês grátis para cada amigo que assinar o StreamPulse+ com o seu código.",
+        "generalOpen": "Ver meu código",
         "plusTitle": "Indique seus amigos",
         "plusBody": "Seu amigo ganha 2,99 € de desconto (1º mês grátis, ou o plano vitalício por 16 €). Você ganha dinheiro e estas recompensas:",
         "title": "Indicação",
@@ -4567,6 +4587,10 @@ export const translations = {
       }
     },
     "recap": {
+      "referral": {
+        "body": "Indique o StreamPulse: um mês grátis para cada amigo que assinar com o seu código.",
+        "copy": "Copiar meu código"
+      },
       "periodYear": "Wrapped {{year}}",
       "plus": {
         "title": "Resumo avançado",
@@ -5315,6 +5339,8 @@ export const translations = {
         "intro": "Wie dein StreamPulse-Abzeichen und dein Name im Twitch-Chat aussehen, sichtbar für andere StreamPulse-Nutzer."
       },
       "referral": {
+        "generalBody": "Ein Gratismonat für jeden Freund, der mit deinem Code StreamPulse+ abonniert.",
+        "generalOpen": "Code anzeigen",
         "plusTitle": "Wirb deine Freunde",
         "plusBody": "Dein Freund bekommt 2,99 € Rabatt (1. Monat gratis oder lebenslang für 16 €). Du verdienst Geld und diese Belohnungen:",
         "title": "Empfehlung",
@@ -5748,6 +5774,10 @@ export const translations = {
       }
     },
     "recap": {
+      "referral": {
+        "body": "Weiterempfehlen: ein Gratismonat für jeden Freund, der mit deinem Code abonniert.",
+        "copy": "Code kopieren"
+      },
       "periodYear": "Wrapped {{year}}",
       "plus": {
         "title": "Erweiterter Rückblick",
@@ -6501,6 +6531,8 @@ export const translations = {
         "intro": "L'aspetto del tuo badge StreamPulse e del tuo nome nella chat di Twitch, visibile agli altri utenti di StreamPulse."
       },
       "referral": {
+        "generalBody": "Un mese gratis per ogni amico che attiva StreamPulse+ con il tuo codice.",
+        "generalOpen": "Vedi il mio codice",
         "plusTitle": "Invita i tuoi amici",
         "plusBody": "Il tuo amico ha 2,99 € di sconto (1° mese gratis, o il piano a vita a 16 €). Tu guadagni soldi e questi premi:",
         "title": "Invita un amico",
@@ -6934,6 +6966,10 @@ export const translations = {
       }
     },
     "recap": {
+      "referral": {
+        "body": "Invita StreamPulse: un mese gratis per ogni amico che lo attiva con il tuo codice.",
+        "copy": "Copia il mio codice"
+      },
       "periodYear": "Wrapped {{year}}",
       "plus": {
         "title": "Riepilogo avanzato",
@@ -7687,6 +7723,8 @@ export const translations = {
         "intro": "Wygląd twojej odznaki StreamPulse i nicku na czacie Twitcha, widoczny dla innych użytkowników StreamPulse."
       },
       "referral": {
+        "generalBody": "Miesiąc gratis za każdego znajomego, który wykupi StreamPulse+ z twoim kodem.",
+        "generalOpen": "Pokaż mój kod",
         "plusTitle": "Poleć znajomym",
         "plusBody": "Twój znajomy dostaje 2,99 € zniżki (1. miesiąc za darmo lub plan dożywotni za 16 €). Ty zarabiasz pieniądze i te nagrody:",
         "title": "Polecenia",
@@ -8120,6 +8158,10 @@ export const translations = {
       }
     },
     "recap": {
+      "referral": {
+        "body": "Polecaj StreamPulse: miesiąc gratis za każdego znajomego, który wykupi go z twoim kodem.",
+        "copy": "Skopiuj mój kod"
+      },
       "periodYear": "Wrapped {{year}}",
       "plus": {
         "title": "Rozszerzone podsumowanie",
@@ -8873,6 +8915,8 @@ export const translations = {
         "intro": "StreamPulse rozetinin ve adının Twitch sohbetindeki görünümü, diğer StreamPulse kullanıcılarına görünür."
       },
       "referral": {
+        "generalBody": "Kodunla StreamPulse+ alan her arkadaş için bir ay ücretsiz.",
+        "generalOpen": "Kodumu gör",
         "plusTitle": "Arkadaşlarını davet et",
         "plusBody": "Arkadaşın 2,99 € indirim alır (ilk ay ücretsiz ya da ömür boyu plan 16 €). Sen de para ve şu ödülleri kazanırsın:",
         "title": "Davet",
@@ -9306,6 +9350,10 @@ export const translations = {
       }
     },
     "recap": {
+      "referral": {
+        "body": "StreamPulse'ı öner: kodunla alan her arkadaş için bir ay ücretsiz.",
+        "copy": "Kodumu kopyala"
+      },
       "periodYear": "Wrapped {{year}}",
       "plus": {
         "title": "Gelişmiş özet",
@@ -10059,6 +10107,8 @@ export const translations = {
         "intro": "Как выглядят ваш значок StreamPulse и ник в чате Twitch, видно другим пользователям StreamPulse."
       },
       "referral": {
+        "generalBody": "Бесплатный месяц за каждого друга, оформившего StreamPulse+ с вашим кодом.",
+        "generalOpen": "Показать код",
         "plusTitle": "Приглашай друзей",
         "plusBody": "Друг получает скидку 2,99 € (первый месяц бесплатно или план навсегда за 16 €). Ты зарабатываешь деньги и эти награды:",
         "title": "Приглашения",
@@ -10492,6 +10542,10 @@ export const translations = {
       }
     },
     "recap": {
+      "referral": {
+        "body": "Приглашайте друзей: бесплатный месяц за каждого, кто оформит подписку с вашим кодом.",
+        "copy": "Скопировать код"
+      },
       "periodYear": "Wrapped {{year}}",
       "plus": {
         "title": "Расширенная сводка",
@@ -11245,6 +11299,8 @@ export const translations = {
         "intro": "Twitch チャットでの StreamPulse バッジと名前の見た目。他の StreamPulse ユーザーにも表示されます。"
       },
       "referral": {
+        "generalBody": "あなたのコードで StreamPulse+ を利用した友だち 1 人につき、1 か月分の特典。",
+        "generalOpen": "コードを表示",
         "plusTitle": "友達を招待しよう",
         "plusBody": "友達は 2.99 € 引き（最初の1か月無料、または買い切りプランが 16 €）。あなたはお金と次の特典がもらえます：",
         "title": "紹介",
@@ -11678,6 +11734,10 @@ export const translations = {
       }
     },
     "recap": {
+      "referral": {
+        "body": "紹介プログラム：あなたのコードで利用した友だち 1 人につき、1 か月分の特典。",
+        "copy": "コードをコピー"
+      },
       "periodYear": "Wrapped {{year}}",
       "plus": {
         "title": "詳細な振り返り",
@@ -12431,6 +12491,8 @@ export const translations = {
         "intro": "Twitch 채팅에서 StreamPulse 배지와 닉네임이 보이는 모습으로, 다른 StreamPulse 사용자에게도 보입니다."
       },
       "referral": {
+        "generalBody": "내 코드로 StreamPulse+를 구독하는 친구마다 한 달 무료.",
+        "generalOpen": "내 코드 보기",
         "plusTitle": "친구를 추천하세요",
         "plusBody": "친구는 2.99 € 할인(첫 달 무료, 또는 평생 플랜 16 €). 당신은 돈과 다음 보상을 받습니다:",
         "title": "추천",
@@ -12864,6 +12926,10 @@ export const translations = {
       }
     },
     "recap": {
+      "referral": {
+        "body": "추천 프로그램: 내 코드로 구독하는 친구마다 한 달 무료.",
+        "copy": "내 코드 복사"
+      },
       "periodYear": "Wrapped {{year}}",
       "plus": {
         "title": "고급 요약",

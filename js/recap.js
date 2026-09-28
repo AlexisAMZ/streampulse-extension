@@ -12,6 +12,9 @@ const WATCH_TIME_DAILY_KEY = "streamPulseWatchTimeDaily";
 const PREFERENCES_KEY = "betaGeneralPreferences";
 const STATS_KEY = "betaGeneralStats";
 const EVENT_LOGS_KEY = "betaEventLogs";
+// Code AMI-XXXXXX mis en cache par la popup (popup-identity.js). Vide tant que
+// l'utilisateur n'a pas réclamé son code dans les Réglages.
+const REFERRAL_CODE_KEY = "streamPulseReferralCode";
 const TOP_LIMIT = 7;
 const EXPORT_SCALE = 2;
 const EXPORT_JPEG_QUALITY = 0.92;
@@ -428,13 +431,14 @@ function openShareComposer() {
 }
 
 async function readStorage() {
-  const data = await chrome.storage.local.get([WATCH_TIME_KEY, WATCH_TIME_DAILY_KEY, PREFERENCES_KEY, PLUS_KEY, STATS_KEY, EVENT_LOGS_KEY, ...POINTS_KEYS]);
+  const data = await chrome.storage.local.get([WATCH_TIME_KEY, WATCH_TIME_DAILY_KEY, PREFERENCES_KEY, PLUS_KEY, STATS_KEY, EVENT_LOGS_KEY, REFERRAL_CODE_KEY, ...POINTS_KEYS]);
   const prefs = data[PREFERENCES_KEY] || {};
   return {
     monthly: data[WATCH_TIME_KEY] || {},
     daily: data[WATCH_TIME_DAILY_KEY] || {},
     pseudo: typeof prefs.pseudo === "string" ? prefs.pseudo.trim().slice(0, 40) : "",
     plus: isPlusActive(data[PLUS_KEY]),
+    referralCode: typeof data[REFERRAL_CODE_KEY] === "string" ? data[REFERRAL_CODE_KEY] : "",
     points: stateFrom(data),
     // Compteur historique des points recuperes, depuis l'installation (sans date).
     lifetimePoints: Math.max(0, Number(data[STATS_KEY]?.channelPointsClaimed) || 0),
@@ -490,8 +494,28 @@ async function init() {
   if (unlock) unlock.href = plusPageUrl(getCurrentLanguage());
   document.getElementById("download").addEventListener("click", exportImage);
   document.getElementById("share").addEventListener("click", openShareComposer);
+  wireReferral(stored.referralCode);
 
   await renderPeriod();
+}
+
+/** Mention discrète du parrainage : visible seulement avec un code en main. */
+function wireReferral(code) {
+  const row = document.getElementById("recap-referral");
+  if (!row || !code) return;
+  row.hidden = false;
+  const button = document.getElementById("recap-referral-copy");
+  button?.addEventListener("click", async () => {
+    await navigator.clipboard.writeText(code).catch(() => {});
+    if (!button || button.dataset.busy) return;
+    button.dataset.busy = "1";
+    const label = button.textContent;
+    button.textContent = t("popup.referral.copied");
+    setTimeout(() => {
+      button.textContent = label;
+      delete button.dataset.busy;
+    }, 2000);
+  });
 }
 
 function onError(error) {

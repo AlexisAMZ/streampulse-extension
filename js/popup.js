@@ -1913,6 +1913,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     addStreamerForm?.addEventListener("submit", handleAddStreamer);
+    // Parrainage : l'entrée des Réglages généraux renvoie vers le bloc complet
+    // (code, gains, paliers) qui vit dans l'onglet StreamPulse+.
+    document.getElementById("referral-general-open")?.addEventListener("click", () => {
+      document.querySelector('.menu-nav > .menu-tab[data-panel="plus"]')?.click();
+      document.getElementById("referral-block")?.scrollIntoView({ block: "start", behavior: "smooth" });
+    });
     soundsToggle?.addEventListener("change", (e) => {
       updatePreferences({ soundsEnabled: e.target.checked });
     });
