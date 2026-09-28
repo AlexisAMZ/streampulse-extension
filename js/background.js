@@ -23,6 +23,7 @@ import { DEFAULT_PREFERENCES } from "./preferences-data.js";
 import { thankPlusSubscriber } from "./plus-thanks.js";
 import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-alerts.js";
 import { isWithinQuietHours } from "./quiet-hours.js";
+import { isRateLimitError, rateLimitResetAt } from "./twitch-rate-limit.js";
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "./plus.js";
 import { createPointsStore } from "./points-store.js";
 import { createDropsStore } from "./drops-store.js";
@@ -84,7 +85,7 @@ async function fetchRemoteConfig() {
     // aléatoire contourne le cache Edge (Vercel a deja servi des reponses
     // perimees contenant un token mort apres une rotation de credentials).
     const url = `${REMOTE_CONFIG_URL}?t=${Date.now()}`;
-    const res = await fetch(url, { cache: "no-store" });
+    const res = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS) });
     if (!res.ok) return;
     const data = await res.json();
     if (data?.clientId) {
@@ -120,7 +121,10 @@ function ensureConfig() {
  */
 async function refreshRemoteConfigForce() {
   try {
-    const res = await fetch(`${REMOTE_CONFIG_URL}?t=${Date.now()}`, { cache: "no-store" });
+    const res = await fetch(`${REMOTE_CONFIG_URL}?t=${Date.now()}`, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS),
+    });
     if (!res.ok) return false;
     const data = await res.json();
     if (!data?.clientId) return false;
@@ -144,10 +148,56 @@ async function fetchTwitchJson(url, options = {}, timeoutMs = 15000) {
   try {
     return await fetchJson(url, options, timeoutMs);
   } catch (error) {
+    if (isRateLimitError(error)) {
+      // 429 : on note la pause (persistee) et on laisse l'erreur remonter ;
+      // le sondage courant garde l'etat precedent pour chaque streamer.
+      await recordTwitchRateLimit(error);
+      throw error;
+    }
     if (!/^(401|403) /.test(String(error?.message || ""))) throw error;
     const refreshed = await refreshRemoteConfigForce();
     if (!refreshed) throw error;
     return fetchJson(url, options, timeoutMs);
+  }
+}
+
+// ─── Pause persistée après un 429 Helix ──────────────────────────────────────
+
+const TWITCH_RATE_LIMIT_KEY = "streampulse:twitchRateLimitedUntil";
+
+/** Persiste la pause imposée par un 429 (survit aux redémarrages du SW). */
+async function recordTwitchRateLimit(error) {
+  const until = rateLimitResetAt(error?.headers, Date.now());
+  if (!until) return;
+  console.warn(
+    "[SP] quota Twitch atteint : sondage Twitch en pause jusqu'à",
+    new Date(until).toISOString()
+  );
+  try {
+    await chrome.storage.local.set({ [TWITCH_RATE_LIMIT_KEY]: until });
+  } catch (storageError) {
+    console.warn("[SP] pause Twitch non persistée", storageError);
+  }
+}
+
+/** Renvoie l'instant (ms) jusqu'auquel le sondage Twitch est en pause, ou 0. */
+async function twitchRateLimitUntil() {
+  try {
+    const stored = await chrome.storage.local.get(TWITCH_RATE_LIMIT_KEY);
+    const until = Number(stored[TWITCH_RATE_LIMIT_KEY]) || 0;
+    return Date.now() < until ? until : 0;
+  } catch (error) {
+    console.warn("[SP] lecture de la pause Twitch impossible", error);
+    return 0;
+  }
+}
+
+/** Un cycle de sondage complet sans 429 : la pause eventuelle expire. */
+async function clearTwitchRateLimit() {
+  try {
+    await chrome.storage.local.remove(TWITCH_RATE_LIMIT_KEY);
+  } catch (error) {
+    console.warn("[SP] effacement de la pause Twitch impossible", error);
   }
 }
 
@@ -321,7 +371,13 @@ async function fetchJson(url, options = {}, timeoutMs = 15000) {
       signal: controller.signal,
     });
     if (!response.ok) {
-      throw new Error(`${response.status} ${response.statusText}`);
+      // statusCode + headers portés par l'erreur : fetchTwitchJson s'en sert
+      // pour reconnaitre un 429 et lire Ratelimit-Reset / Retry-After sans
+      // avoir à refaire la requête.
+      const error = new Error(`${response.status} ${response.statusText}`);
+      error.statusCode = response.status;
+      error.headers = response.headers;
+      throw error;
     }
     return await response.json();
   } finally {
@@ -1819,7 +1875,7 @@ class PlatformChecker {
     try {
       const resp = await fetch(
         `https://www.youtube.com/@${encodeURIComponent(sanitized)}`,
-        { redirect: "follow" }
+        { redirect: "follow", signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS) }
       );
       if (!resp.ok) return null;
       const html = await resp.text();
@@ -1859,7 +1915,10 @@ class PlatformChecker {
       const liveUrl = isYoutubeChannelId(sanitized)
         ? `https://www.youtube.com/channel/${encodeURIComponent(channel.id)}/live`
         : `https://www.youtube.com/@${encodeURIComponent(sanitized)}/live`;
-      const res = await fetch(liveUrl, { redirect: "follow" });
+      const res = await fetch(liveUrl, {
+        redirect: "follow",
+        signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS),
+      });
       if (res.ok) {
         const html = await res.text();
         videoId =
@@ -1886,7 +1945,8 @@ class PlatformChecker {
       const res = await fetch(
         `https://www.youtube.com/oembed?url=${encodeURIComponent(
           `https://www.youtube.com/watch?v=${videoId}`
-        )}&format=json`
+        )}&format=json`,
+        { signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS) }
       );
       if (res.ok) {
         const data = await res.json();
@@ -2816,11 +2876,24 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
     .map((streamer) => sanitizeLogin(streamer.twitch || streamer.handle))
     .filter(Boolean);
   if (twitchLogins.length > 0) {
-    try {
-      twitchBatch.streams = await fetchTwitchStreamsBatch(twitchLogins);
-    } catch (error) {
-      twitchBatch.error = error?.message || "batch_failed";
-      console.warn("Twitch batched status error:", twitchBatch.error);
+    const rateLimitedUntil = await twitchRateLimitUntil();
+    if (rateLimitedUntil) {
+      // Pause 429 : aucune requête Twitch envoyée, l'état précédent de chaque
+      // streamer est conservé (isError => previousLiveState recopié) — ni
+      // bascule offline/on-line, ni erreur affichée, et le quota respire.
+      twitchBatch.error = "rate_limited";
+      console.info(
+        "[SP] sondage Twitch en pause (quota) jusqu'à",
+        new Date(rateLimitedUntil).toISOString()
+      );
+    } else {
+      try {
+        twitchBatch.streams = await fetchTwitchStreamsBatch(twitchLogins);
+        clearTwitchRateLimit();
+      } catch (error) {
+        twitchBatch.error = error?.message || "batch_failed";
+        console.warn("Twitch batched status error:", twitchBatch.error);
+      }
     }
   }
 
@@ -3465,16 +3538,20 @@ function handleMessage(request, sender, sendResponse) {
       // from web_accessible_resources for CWS compliance). They request the
       // resolved config here instead: which also gives them the live Vercel
       // credentials rather than the empty local fallback.
+      //
+      // Le jeton d'accès Twitch n'est PAS renvoyé : aucun content script n'en
+      // a besoin (twitchPlayerEnhancer ne lit que features) et un jeton
+      // diffusable à n'importe quelle page hôte serait un secret public.
       (async () => {
         try {
           await ensureConfig();
           sendResponse({
             clientId: CONFIG.clientId || "",
-            accessToken: CONFIG.accessToken || "",
             features: CONFIG.features || {},
           });
-        } catch {
-          sendResponse({ clientId: "", accessToken: "", features: {} });
+        } catch (error) {
+          console.warn("[SP] getConfig indisponible", error);
+          sendResponse({ clientId: "", features: {} });
         }
       })();
       return true;
