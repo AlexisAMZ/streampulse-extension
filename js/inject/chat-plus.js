@@ -22,10 +22,28 @@
 
   var el = window.__SP_DOM__.el;
 
+  // Langue de l'EXTENSION (le réglage), pas celle de l'interface de Twitch :
+  // document.documentElement.lang suit la page hôte. Lue une fois au départ,
+  // puis suivie via storage.onChanged comme le reste de l'inject.
+  var extensionLang = "";
+
   function lang() {
     var api = window.__SP_I18N__;
-    var htmlLang = document.documentElement.lang || navigator.language;
-    return api ? api.resolve(htmlLang) : "en";
+    if (!api) return "en";
+    return api.resolve(extensionLang || navigator.language);
+  }
+
+  try {
+    chrome.storage.local.get(["betaGeneralPreferences"], function (res) {
+      extensionLang = (res && res.betaGeneralPreferences && res.betaGeneralPreferences.language) || "";
+    });
+    chrome.storage.onChanged.addListener(function (changes, area) {
+      if (area !== "local" || !changes.betaGeneralPreferences) return;
+      var prefs = changes.betaGeneralPreferences.newValue || {};
+      extensionLang = prefs.language || "";
+    });
+  } catch (_e) {
+    // Contexte d'extension invalidé : la langue de repli suffit.
   }
 
   function build() {

@@ -3375,7 +3375,13 @@ function handleMessage(request, sender, sendResponse) {
 
     case "openSettings":
       try {
-        chrome.tabs.create({ url: chrome.runtime.getURL("html/popup.html") });
+        // Cible optionnelle : le popup lit ?menu=<panneau> et ouvre les
+        // réglages sur cette rubrique (bouton « Page complète » du tiroir).
+        const settingsPanel = String(request.panel || "");
+        const settingsUrl =
+          chrome.runtime.getURL("html/popup.html") +
+          (settingsPanel ? "?menu=" + encodeURIComponent(settingsPanel) : "");
+        chrome.tabs.create({ url: settingsUrl });
         sendResponse({ success: true });
       } catch (e) {
         sendResponse({ success: false, error: e?.message });
