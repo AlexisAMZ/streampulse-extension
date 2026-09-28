@@ -42,7 +42,7 @@ Success means the viewer never misses a live they care about, and never has to c
 - **Strings**: every UI string goes through `i18n/translations.js` (`data-i18n` attributes and `t()`). Layouts must survive long German or Russian strings.
 - **Injected UI**: it lives inside Twitch's page, next to Twitch's own dark and light themes. It must not break or visually fight the host page.
 - **Performance**: content scripts run on every Twitch page. The popup opens often and must paint instantly.
-- **Data**: the community badge sends a hashed Twitch username to streampulse.fr at most once a day. That is the only network data the extension sends about the user.
+- **Data**: what reaches streampulse.fr: the license key with this browser's device id, verified at most once a day; the community badge, only after an explicit opt-in, sends a hashed Twitch username at most once a day; the badge list and the remote configuration are read from the same domain (reads, no user data); the Kick app token is fetched through streampulse.fr. Nothing else about the user leaves the browser. *(list corrected by the 2026-09-28 audit; previously described as "only the badge")*.
 - **Terminology**: Streamers, Live / En direct, Points de chaîne, Drops, Moments, Raids, Récap, Temps de visionnage.
 - **Sibling projects**: a Firefox port (`../StreampulseFirefox`) and the website (`../StreampulseSite`) exist. Cross-project consistency is an open decision.
 - **Open decision**: tutoiement vs vouvoiement in French copy (both are currently mixed).

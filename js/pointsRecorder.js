@@ -14,10 +14,19 @@
 
   const isEnabled = (prefs) => !prefs || prefs.pointsTracking !== false;
 
+  // Jeton de session : les messages du pont doivent le porter. Le code du pont
+  // est public, sans lui n'importe quel script de la page pouvait forger un
+  // « gain de points » en copiant la balise source. Le jeton transite par la
+  // poignée de main READY : le forger exigerait d'écouter activement StreamPulse.
+  const TOKEN = globalThis.crypto?.randomUUID
+    ? crypto.randomUUID()
+    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+
   window.addEventListener("message", (event) => {
     if (event.source !== window) return;
     const message = event.data;
     if (!message || message.source !== SOURCE || message.v !== 1) return;
+    if (message.token !== TOKEN) return;
     if (!enabled || !message.data || typeof message.data !== "object") return;
     try {
       chrome.runtime.sendMessage({ type: "recordPointsGain", data: message.data }).catch(() => {});
@@ -34,6 +43,6 @@
   // qu'une fois la préférence connue, pour ne rien relayer à tort.
   chrome.storage.local.get([PREFERENCES_KEY], (result) => {
     enabled = chrome.runtime.lastError ? true : isEnabled(result?.[PREFERENCES_KEY]);
-    window.postMessage({ source: READY }, location.origin);
+    window.postMessage({ source: READY, token: TOKEN }, location.origin);
   });
 })();

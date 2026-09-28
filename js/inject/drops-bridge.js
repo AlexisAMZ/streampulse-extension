@@ -247,13 +247,24 @@
     claim: (message) => claim(message.instanceId),
   };
 
+  // Jeton de session transmis par dropsRecorder.js dans sa poignée de main :
+  // les commandes doivent le porter et chaque réponse le rend, sinon
+  // n'importe quel script de la page pourrait commander ou forger un résultat.
+  let sessionToken = "";
+
   window.addEventListener("message", (event) => {
     if (event.source !== window) return;
     const message = event.data;
-    if (!message || message.source !== COMMAND || message.v !== 1) return;
+    if (!message || typeof message.source !== "string") return;
+    if (message.source === "streampulse:drops:ready") {
+      sessionToken = typeof message.token === "string" ? message.token : "";
+      return;
+    }
+    if (message.source !== COMMAND || message.v !== 1) return;
+    if (!sessionToken || message.token !== sessionToken) return;
     const run = ACTIONS[message.action];
     if (!run) return;
-    const reply = (fields) => window.postMessage({ source: SOURCE, v: 1, kind: "result", id: message.id, action: message.action, instanceId: message.instanceId, auto: message.auto, ...fields }, location.origin);
+    const reply = (fields) => window.postMessage({ source: SOURCE, v: 1, token: sessionToken, kind: "result", id: message.id, action: message.action, instanceId: message.instanceId, auto: message.auto, ...fields }, location.origin);
     Promise.resolve()
       .then(() => run(message))
       .then((data) => reply({ ok: true, data }), (error) => reply({ ok: false, error: error?.code || "error", detail: error?.detail || "" }));

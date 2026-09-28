@@ -39,18 +39,29 @@ function sandbox({ prefs = {}, stored = {}, respond = () => ({}) } = {}) {
   };
   const fakeSetTimeout = (fn) => timers.push(fn);
   new Function("window", "location", "chrome", "setTimeout", "setInterval", SOURCE)(win, { origin: ORIGIN }, chrome, fakeSetTimeout, () => {});
-  const fromPage = (data) => pageListeners.forEach((listener) => listener({ source: win, data }));
+  // Le jeton de session du READY est reporté par défaut dans les messages de
+  // la page ; un test peut le remplacer pour simuler une falsification.
+  const fromPage = (data) => pageListeners.forEach((listener) => listener({ source: win, data: { token: posted[0]?.token, ...data } }));
   const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
   const commands = () => posted.filter((message) => message.source === "streampulse:drops:cmd");
   return { posted, sent, fromPage, flush, commands, timers, storageListeners, chrome, runtime: () => runtimeListener };
 }
 
-test("le relais annonce qu'il est prêt, puis relit l'inventaire et les campagnes périmés", async () => {
+test("le relais annonce qu'il est prêt avec un jeton de session, puis relit l'inventaire et les campagnes périmés", async () => {
   const box = sandbox();
-  assert.deepEqual(box.posted[0], { source: "streampulse:drops:ready" });
+  assert.equal(box.posted[0].source, "streampulse:drops:ready");
+  assert.ok(box.posted[0].token, "un jeton de session est transmis au pont");
   assert.equal(box.timers.length, 1, "première lecture différée, le temps que la page envoie ses requêtes");
   box.timers[0]();
   assert.deepEqual(box.commands().map((command) => command.action), ["inventory", "campaigns"]);
+});
+
+test("un message sans le bon jeton de session est ignoré", async () => {
+  const box = sandbox({ respond: () => ({ refresh: true, claim: [] }) });
+  box.fromPage({ source: "streampulse:drops", v: 1, token: "jeton forgé", kind: "event", data: { type: "drop-progress", data: { drop_id: "x" } } });
+  box.fromPage({ source: "streampulse:drops", v: 1, token: undefined, kind: "event", data: { type: "drop-progress", data: { drop_id: "x" } } });
+  await box.flush();
+  assert.equal(box.sent.length, 0, "aucun événement forgé ne part au service worker");
 });
 
 test("une lecture récente d'un autre onglet évite une relecture", async () => {
