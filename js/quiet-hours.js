@@ -47,3 +47,29 @@ export function isWithinQuietHours(when, preferences) {
   // Plage traversant minuit : [23:00 → 00:00[ ou [00:00 → 08:00[.
   return nowMinutes >= startMinutes || nowMinutes < endMinutes;
 }
+
+/**
+ * bornes par défaut de l'interface, partagées par le popup et l'onboarding.
+ */
+export const DEFAULT_QUIET_START = "23:00";
+export const DEFAULT_QUIET_END = "08:00";
+
+/** « 8:05 » → « 08:05 » ; toute entrée invalide retombe sur `fallback`. */
+export function normalizeQuietTime(value, fallback) {
+  const parsed = parseHhMm(value);
+  return parsed ? `${String(parsed.hours).padStart(2, "0")}:${String(parsed.minutes).padStart(2, "0")}` : fallback;
+}
+
+/**
+ * Variante à bornes séparées (popup) : mêmes règles que isWithinQuietHours,
+ * sans l'objet de préférences. Début = fin : jamais.
+ */
+export function isQuietNow(now, start = DEFAULT_QUIET_START, end = DEFAULT_QUIET_END) {
+  // Côté interface, une saisie sale retombe sur les défauts affichés ; le
+  // service worker, lui, refuse une borne invalide (jamais silencieux).
+  return isWithinQuietHours(now, {
+    quietHoursEnabled: true,
+    quietHoursStart: normalizeQuietTime(start, DEFAULT_QUIET_START),
+    quietHoursEnd: normalizeQuietTime(end, DEFAULT_QUIET_END),
+  });
+}
