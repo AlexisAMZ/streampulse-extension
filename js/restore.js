@@ -13,7 +13,7 @@ const views = {
   done: document.getElementById("restore-done"),
 };
 const fileInput = document.getElementById("file-input");
-const dropZone = document.getElementById("drop-zone");
+const dropZone = document.getElementById("restore-pick");
 const errorEl = document.getElementById("restore-error");
 const confirmButton = document.getElementById("restore-confirm");
 
