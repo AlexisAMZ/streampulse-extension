@@ -20,7 +20,6 @@ import {
 } from "./platforms.js";
 import { HISTORY_KEY, addSession, emptyHistory, markSeen, patchSession, removeEntry } from "./history-data.js";
 import { DEFAULT_PREFERENCES } from "./preferences-data.js";
-import { thankPlusSubscriber } from "./plus-thanks.js";
 import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-alerts.js";
 import { isWithinQuietHours } from "./quiet-hours.js";
 import { isRateLimitError, rateLimitResetAt } from "./twitch-rate-limit.js";
@@ -836,6 +835,21 @@ class EventLogStore {
   // addLog() wrote under the literal "undefined" key. Recover those logs once.
   static LEGACY_KEY = "undefined";
 
+  // File d'attente : addLog fait un lire-modifier-ecrire ; deux appels
+  // concurrents (alerte de Drop + clic de point de chaîne) s'écrasaient
+  // l'un l'autre et perdaient des entrées. Les opérations passent par la
+  // file, une seule écriture à la fois.
+  static _queue = Promise.resolve();
+
+  static _enqueue(operation) {
+    const run = this._queue.then(operation);
+    // La file ne doit jamais rester rejetée : on journalise et on enchaîne.
+    this._queue = run.catch((error) => {
+      console.warn("[SP] journal d'événements :", error?.message || error);
+    });
+    return run;
+  }
+
   static async getLogs() {
     try {
       const stored = await chrome.storage.local.get([
@@ -853,29 +867,30 @@ class EventLogStore {
         return legacy;
       }
       return [];
-    } catch (_) {
+    } catch (error) {
+      console.warn("[SP] lecture du journal d'événements impossible", error);
       return [];
     }
   }
 
-  static async addLog(entry = {}) {
-    try {
-      const logs = await this.getLogs();
-      const newLog = {
-        id: `log_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
-        timestamp: Date.now(),
-        type: entry.type || "info", // "drop", "moment", "raid", "prediction", "points"
-        channel: entry.channel || "",
-        text: entry.text || "",
-        value: entry.value || 0,
-      };
-      logs.unshift(newLog);
-      if (logs.length > 100) logs.pop();
-      await chrome.storage.local.set({ [STORAGE_KEYS.EVENT_LOGS]: logs });
-      return newLog;
-    } catch (_) {
-      return null;
-    }
+  static addLog(entry = {}) {
+    return this._enqueue(() => this._writeLog(entry));
+  }
+
+  static async _writeLog(entry = {}) {
+    const logs = await this.getLogs();
+    const newLog = {
+      id: `log_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+      timestamp: Date.now(),
+      type: entry.type || "info", // "drop", "moment", "raid", "prediction", "points"
+      channel: entry.channel || "",
+      text: entry.text || "",
+      value: entry.value || 0,
+    };
+    logs.unshift(newLog);
+    if (logs.length > 100) logs.pop();
+    await chrome.storage.local.set({ [STORAGE_KEYS.EVENT_LOGS]: logs });
+    return newLog;
   }
 
   static async clearLogs() {
@@ -3470,44 +3485,64 @@ async function openStreamerFromNotification(streamerId) {
   }
 }
 
+// Actions qui écrivent des données ou pilotent l'extension : réservées aux
+// pages de l'extension (popup, onboarding, réglages…). Les pages web ne les
+// voient jamais, même via un content script.
+const SENSITIVE_MESSAGE_TYPES = new Set([
+  "removeStreamer",
+  "resetPoints",
+  "resetStat",
+  "clearEventLogs",
+  "updateUserProfile",
+  "badgeAutoStart",
+  "updatePreferences",
+  "resetPreferences",
+  "reorderStreamers",
+  "setPinnedStreamers",
+]);
+
+function isExtensionPage(sender) {
+  const prefix = chrome.runtime.getURL("");
+  return Boolean(sender?.url && sender.url.startsWith(prefix));
+}
+
+/**
+ * Enveloppe commune des handlers : une réponse part toujours (succès ou
+ * erreur explicite), et un rejet de promesse ne laisse jamais la popup
+ * sans réponse ni le SW avec un « Uncaught (in promise) ».
+ */
+function respond(promiseFactory, sendResponse, label = "") {
+  Promise.resolve()
+    .then(promiseFactory)
+    .then((data) => sendResponse({ success: true, ...(data || {}) }))
+    .catch((error) => {
+      console.warn("[SP] message", label, ":", error?.message || error);
+      sendResponse({ error: error?.message || String(error) });
+    });
+}
+
 function handleMessage(request, sender, sendResponse) {
+  // 1) Toute origine doit être notre extension : onMessage n'accepte en
+  //    principe que le canal interne, mais on ne fait pas confiance au
+  //    silence — un expéditeur sans identité est refusé.
+  if (sender?.id !== chrome.runtime.id) {
+    console.warn("[SP] message refusé (expéditeur inconnu)", request?.type, sender?.id);
+    sendResponse({ error: "forbidden" });
+    return false;
+  }
+  // 2) Les actions sensibles n'acceptent que les pages de l'extension :
+  //    les content scripts tournent sur des pages web (sender.url = site
+  //    hôte) et ne doivent pas piloter les données ni les réglages.
+  if (SENSITIVE_MESSAGE_TYPES.has(request?.type) && !isExtensionPage(sender)) {
+    console.warn(
+      "[SP] message sensible refusé hors pages de l'extension",
+      request?.type,
+      sender?.url
+    );
+    sendResponse({ error: "forbidden" });
+    return false;
+  }
   switch (request?.type) {
-    case "notify":
-      (async () => {
-        try {
-          await NotificationCenter.show({
-            title: request.title,
-            message: request.message,
-            url: request.url || null,
-            streamerId: request.streamerId || null,
-            platform: request.platform || null,
-            requireInteraction: Boolean(request.requireInteraction),
-            priority:
-              typeof request.priority === "number"
-                ? request.priority
-                : request.requireInteraction
-                ? 2
-                : 0,
-            playSound: request.playSound !== false,
-          });
-          sendResponse({ success: true });
-        } catch (error) {
-          sendResponse({ error: error?.message || String(error) });
-        }
-      })();
-      return true;
-
-    case "schedule":
-      (async () => {
-        try {
-          await NotificationCenter.schedule(request);
-          sendResponse({ success: true });
-        } catch (error) {
-          sendResponse({ error: error?.message || String(error) });
-        }
-      })();
-      return true;
-
     case "openPatchNotes":
       (async () => {
         try {
@@ -3552,55 +3587,6 @@ function handleMessage(request, sender, sendResponse) {
         } catch (error) {
           console.warn("[SP] getConfig indisponible", error);
           sendResponse({ clientId: "", features: {} });
-        }
-      })();
-      return true;
-
-    case "streampulse:fetchJson":
-      (async () => {
-        try {
-          const data = await fetchJson(
-            request.url,
-            request.options || {},
-            request.timeoutMs || 15000
-          );
-          sendResponse({ success: true, data });
-        } catch (error) {
-          sendResponse({
-            success: false,
-            error: error?.message || String(error),
-          });
-        }
-      })();
-      return true;
-
-    case "streampulse:fetchImage":
-      // Fetch an image URL via the background (has proper credentials/cookies)
-      // and return it as a base64 data URL so the popup can display it.
-      (async () => {
-        const { url } = request;
-        if (!url) { sendResponse({ success: false }); return; }
-        try {
-          const response = await fetch(url, {
-            credentials: "include",
-            headers: {
-              "Referer": "https://kick.com/",
-              "Accept": "image/webp,image/avif,image/*,*/*",
-            },
-          });
-          if (!response.ok) { sendResponse({ success: false, status: response.status }); return; }
-          const mimeType = response.headers.get("content-type")?.split(";")[0] || "image/webp";
-          const buffer = await response.arrayBuffer();
-          const bytes = new Uint8Array(buffer);
-          let binary = "";
-          const CHUNK = 8192;
-          for (let i = 0; i < bytes.length; i += CHUNK) {
-            binary += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK));
-          }
-          const dataUrl = `data:${mimeType};base64,${btoa(binary)}`;
-          sendResponse({ success: true, dataUrl });
-        } catch (e) {
-          sendResponse({ success: false, error: e?.message });
         }
       })();
       return true;
@@ -3870,25 +3856,22 @@ function handleMessage(request, sender, sendResponse) {
         toggleGameNotifications: "gameNotificationsEnabled",
         toggleTitleNotifications: "titleNotificationsEnabled",
       };
-      (async () => {
+      respond(async () => {
         const preferences = await PreferenceStore.get();
         const streamers = await DataStore.getStreamers();
         const idx = streamers.findIndex((s) => s.id === request.id);
         if (idx === -1) {
-          sendResponse({ error: translateWithPrefs(preferences, "background.errors.streamerNotFound", { platform: "" }) });
-          return;
+          throw new Error(translateWithPrefs(preferences, "background.errors.streamerNotFound", { platform: "" }));
         }
         streamers[idx][flagByType[request.type]] = Boolean(request.enabled);
         await DataStore.saveStreamers(streamers);
-        sendResponse({ success: true });
-      })();
+        return {};
+      }, sendResponse, request.type);
       return true;
     }
 
     case "refreshStatuses":
-      PlatformChecker.refreshAll().then(() => {
-        sendResponse({ success: true });
-      });
+      respond(() => PlatformChecker.refreshAll(), sendResponse, "refreshStatuses");
       return true;
 
 
@@ -3939,45 +3922,6 @@ function handleMessage(request, sender, sendResponse) {
       HistoryStore.removeEntry(String(request.id || ""))
         .then(() => sendResponse({ success: true }))
         .catch((error) => sendResponse({ error: error.message }));
-      return true;
-
-    case "activatePlus":
-      (async () => {
-        try {
-          const result = await verifyLicense(request.key, fetch, Date.now(), await getDeviceId(chrome.storage.local));
-          if (result.ok) await chrome.storage.local.set({ [PLUS_KEY]: result.record });
-          sendResponse(result);
-          if (result.ok) {
-            const prefs = await PreferenceStore.get();
-            const lang = normalizeLanguage(prefs?.language);
-            thankPlusSubscriber(result.record.licenseKey, (key) => translate(lang, key)).catch(() => {});
-          }
-          if (result.ok) pollStreamers().catch(() => {});
-        } catch (error) {
-          sendResponse({ error: error?.message || String(error) });
-        }
-      })();
-      return true;
-
-    case "deactivatePlus":
-      chrome.storage.local.remove(PLUS_KEY).then(() => sendResponse({ success: true }));
-      return true;
-
-    case "getWatchTimeSummary":
-      (async () => {
-        try {
-          const summary = await WatchTimeStore.getSummary(request.month || null);
-          sendResponse({ success: true, summary });
-        } catch (error) {
-          sendResponse({ error: error.message });
-        }
-      })();
-      return true;
-
-    case "getStats":
-      StatsStore.get().then((stats) => {
-        sendResponse({ success: true, stats });
-      });
       return true;
 
     case "recordPointsGain":
@@ -4219,17 +4163,13 @@ function handleMessage(request, sender, sendResponse) {
       return true;
 
     case "getEventLogs":
-      EventLogStore.getLogs().then((logs) => {
-        sendResponse({ success: true, logs });
-      });
+      respond(async () => ({ logs: await EventLogStore.getLogs() }), sendResponse, "getEventLogs");
       return true;
 
     case "clearEventLogs":
-      EventLogStore.clearLogs().then((logs) => {
-        sendResponse({ success: true, logs });
-      });
+      respond(async () => ({ logs: await EventLogStore.clearLogs() }), sendResponse, "clearEventLogs");
       return true;
-    
+
     case "resetStat":
       (async () => {
         try {
