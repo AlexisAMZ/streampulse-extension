@@ -27,14 +27,10 @@ const ES_MODULES = [
   "js/recap.js",
   "js/restore.js",
   "js/smart-alerts.js",
-<<<<<<< HEAD
   "js/streamers-data.js",
   "js/quiet-hours.js",
   "js/twitch-rate-limit.js",
-=======
   "js/inline-confirm.js",
-  "js/quiet-hours.js",
->>>>>>> refonte/reglages-popup
   "js/recap-card.js",
   "js/recap-data.js",
   "js/referral-data.js",
