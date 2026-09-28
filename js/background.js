@@ -1960,6 +1960,11 @@ class PlatformChecker {
 class NotificationCenter {
   static storageKey = `${NOTIFICATION_NAMESPACE}:scheduled`;
   static alarmPrefix = `${NOTIFICATION_NAMESPACE}:alarm:`;
+  // Cible de chaque notification (URL a ouvrir / streamer a ouvrir),
+  // persistee en storage.session : le SW peut etre tue entre l'affichage de
+  // la notification et le clic, et le clic doit survivre a ce redemarrage.
+  static targetsStorageKey = `${NOTIFICATION_NAMESPACE}:targets`;
+  static targetsMaxEntries = 50;
   static clickMap = new Map();
   static initialized = false;
 
@@ -1981,27 +1986,13 @@ class NotificationCenter {
     return this.getDefaultIcon();
   }
 
+  // Les listeners chrome.notifications.* sont poses au top-level du service
+  // worker (synchrone) : les enregistrer ici, apres un await, laissait une
+  // fenetre morte a chaque demarrage (clic perdu) — MV3 peut livrer l'evenement
+  // avant la fin de init().
   static async init() {
     if (this.initialized) return;
     this.initialized = true;
-
-    chrome.notifications.onClicked.addListener((notificationId) => {
-      const info = this.clickMap.get(notificationId);
-      if (!info) return;
-      this.clickMap.delete(notificationId);
-      chrome.notifications.clear(notificationId);
-      if (info.streamerId) {
-        openStreamerFromNotification(info.streamerId);
-      } else if (info.url) {
-        chrome.tabs.create({ url: info.url });
-      }
-    });
-
-    chrome.notifications.onClosed.addListener((notificationId) => {
-      if (this.clickMap.has(notificationId)) {
-        this.clickMap.delete(notificationId);
-      }
-    });
 
     const entries = await this.getScheduled();
     entries.forEach((entry) => {
@@ -2010,6 +2001,77 @@ class NotificationCenter {
         periodInMinutes: entry.intervalMinutes,
       });
     });
+  }
+
+  static async persistTargets(targets) {
+    try {
+      await chrome.storage.session.set({
+        [this.targetsStorageKey]: targets,
+      });
+    } catch (error) {
+      console.warn("[SP] persistance de la cible de notification impossible", error);
+    }
+  }
+
+  static async readStoredTargets() {
+    try {
+      const stored = await chrome.storage.session.get(this.targetsStorageKey);
+      const targets = stored?.[this.targetsStorageKey];
+      return targets && typeof targets === "object" ? targets : {};
+    } catch (error) {
+      console.warn("[SP] lecture des cibles de notification impossible", error);
+      return {};
+    }
+  }
+
+  static async rememberTarget(id, info) {
+    // Cap memoire : les notifications d'il y a longtemps n'ont plus de cible.
+    if (this.clickMap.size >= this.targetsMaxEntries) {
+      const oldest = this.clickMap.keys().next().value;
+      this.clickMap.delete(oldest);
+    }
+    this.clickMap.set(id, info);
+    const stored = await this.readStoredTargets();
+    const ids = Object.keys(stored);
+    if (ids.length >= this.targetsMaxEntries) {
+      delete stored[ids[0]];
+    }
+    stored[id] = info;
+    await this.persistTargets(stored);
+  }
+
+  static async forgetTarget(id) {
+    this.clickMap.delete(id);
+    const stored = await this.readStoredTargets();
+    if (id in stored) {
+      delete stored[id];
+      await this.persistTargets(stored);
+    }
+  }
+
+  // Renvoie la cible du clic (memoire d'abord, session ensuite) puis l'oublie :
+  // une notification ne s'ouvre qu'une fois.
+  static async consumeTarget(id) {
+    let info = this.clickMap.get(id) || null;
+    if (!info) info = (await this.readStoredTargets())[id] || null;
+    await this.forgetTarget(id);
+    return info;
+  }
+
+  static async handleClicked(notificationId) {
+    const info = await this.consumeTarget(notificationId);
+    if (!info) return;
+    try {
+      await chrome.notifications.clear(notificationId);
+    } catch (error) {
+      // La notification peut deja avoir disparu : l'ouverture, elle, reste valide.
+      console.warn("[SP] notification deja fermee au clic", error);
+    }
+    if (info.streamerId) {
+      openStreamerFromNotification(info.streamerId);
+    } else if (info.url) {
+      chrome.tabs.create({ url: info.url });
+    }
   }
 
   /**
@@ -2055,12 +2117,7 @@ class NotificationCenter {
     const id = `${NOTIFICATION_NAMESPACE}-${Date.now()}-${Math.random()
       .toString(36)
       .slice(2, 10)}`;
-    // Cap clickMap to prevent unbounded growth
-    if (this.clickMap.size > 50) {
-      const oldest = this.clickMap.keys().next().value;
-      this.clickMap.delete(oldest);
-    }
-    this.clickMap.set(id, {
+    await this.rememberTarget(id, {
       url: options.url || null,
       streamerId: options.streamerId || null,
       platform: options.platform || null,
@@ -2148,6 +2205,20 @@ class NotificationCenter {
     await chrome.storage.local.set({ [this.storageKey]: entries });
   }
 }
+
+// Clic et fermeture de notification : poses au top-level, synchrones des le
+// demarrage du SW. Les enregistrer dans init(), apres un await, laissait une
+// fenetre sans listener a chaque redemarrage du worker (clic perdu).
+chrome.notifications.onClicked.addListener((notificationId) => {
+  NotificationCenter.handleClicked(notificationId).catch((error) => {
+    console.warn("[SP] clic de notification non traite", error);
+  });
+});
+chrome.notifications.onClosed.addListener((notificationId) => {
+  NotificationCenter.forgetTarget(notificationId).catch((error) => {
+    console.warn("[SP] nettoyage de la cible de notification impossible", error);
+  });
+});
 
 class NotificationSystem {
   // Avatar du streamer si connu, icone de plateforme sinon — logique partagée
@@ -3262,8 +3333,23 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 async function openStreamerFromNotification(streamerId) {
   if (!streamerId) return;
-  const streamer = streamerCache.get(streamerId);
-  const states = streamerStates.get(streamerId);
+  let streamer = streamerCache.get(streamerId);
+  let states = streamerStates.get(streamerId);
+
+  // Le clic peut arriver apres un redemarrage du SW : les caches memoires sont
+  // alors vides, on relit le stockage (source de verite persistante).
+  if (!streamer || !states) {
+    try {
+      const [streamers, statuses] = await Promise.all([
+        DataStore.getStreamers(),
+        DataStore.getStatuses(),
+      ]);
+      streamer = streamer || streamers.find((item) => item.id === streamerId) || null;
+      states = states || statuses?.[streamerId] || null;
+    } catch (error) {
+      console.warn("[SP] relecture du streamer pour notification impossible", error);
+    }
+  }
 
   const platform = normalizePlatform(
     streamer?.platform || states?.active?.platform || DEFAULT_PLATFORM
