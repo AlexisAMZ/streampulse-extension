@@ -236,22 +236,19 @@ function sanitizeLogin(value = "") {
 
 const _kickToken = { value: null, expiresAt: 0 };
 
-async function getKickCredentials() {
-  const data = await chrome.storage.local.get("streampulse:kickCreds");
-  const stored = data["streampulse:kickCreds"];
-  if (stored?.clientId && stored?.clientSecret) return stored;
-  // Repli : identifiants servis par la config distante streampulse.fr
-  // (variables Vercel STREAMPULSE_KICK_CLIENT_ID / _CLIENT_SECRET), hydratées
-  // dans CONFIG par fetchRemoteConfig().
-  if (CONFIG.kickClientId && CONFIG.kickClientSecret) {
-    return { clientId: CONFIG.kickClientId, clientSecret: CONFIG.kickClientSecret };
-  }
-  return null;
-}
-
 // Vol unique : sans lui, deux sondages concurrents demandent chacun un jeton
-// a id.kick.com et le second ecrase le premier, pour rien.
+// au proxy et le second ecrase le premier, pour rien.
 let _kickTokenInFlight = null;
+const KICK_TOKEN_STORAGE_KEY = "streampulse:kickToken";
+const KICK_TOKEN_MARGIN_MS = 120_000;
+const NETWORK_TIMEOUT_MS = 8000;
+
+// Le repli OAuth cote client a ete supprime (le secret client ne doit jamais
+// vivre dans le navigateur) : on efface les credentials Kick que les versions
+// precedentes pouvaient stocker. Idempotent, fire-and-forget.
+chrome.storage.local.remove("streampulse:kickCreds").catch((error) => {
+  console.warn("[kick] nettoyage des credentials locales impossible", error);
+});
 
 function getKickAppToken() {
   _kickTokenInFlight ||= fetchKickAppToken().finally(() => {
@@ -260,76 +257,43 @@ function getKickAppToken() {
   return _kickTokenInFlight;
 }
 
+function isKickTokenFresh(token) {
+  return Boolean(token?.value) && Date.now() < Number(token.expiresAt || 0) - KICK_TOKEN_MARGIN_MS;
+}
+
+async function readCachedKickToken() {
+  if (isKickTokenFresh(_kickToken)) return _kickToken.value;
+  const stored = await chrome.storage.local.get(KICK_TOKEN_STORAGE_KEY);
+  const cached = stored[KICK_TOKEN_STORAGE_KEY];
+  if (!isKickTokenFresh(cached)) return null;
+  /* eslint-disable require-atomic-updates -- getKickAppToken() serialise les appels. */
+  _kickToken.value = cached.value;
+  _kickToken.expiresAt = cached.expiresAt;
+  /* eslint-enable require-atomic-updates */
+  return cached.value;
+}
+
+// Jeton d'application Kick : memoire, puis stockage, puis le proxy
+// streampulse.fr (le secret client ne quitte jamais le serveur).
 async function fetchKickAppToken() {
-  // Les identifiants Kick peuvent venir de la config distante : garantit qu'elle
-  // est hydratee (cache d'abord) avant de conclure a une absence de creds.
-  await ensureConfig();
-
-  // 1) Voie privilégiée : le proxy streampulse.fr fabrique le jeton — le client
-  // secret ne quitte jamais le serveur. Échec silencieux si l'endpoint est
-  // indisponible (ancien déploiement) : on retombe sur les credentials locaux.
+  const cached = await readCachedKickToken();
+  if (cached) return cached;
   try {
-    const resp = await fetch(`https://streampulse.fr/api/kick-token?t=${Date.now()}`, { cache: "no-store" });
-    if (resp.ok) {
-      const json = await resp.json();
-      const expiresAt = json.expires_at ?? Date.now() + (json.expires_in ?? 3600) * 1000;
-      if (json.access_token && Date.now() < expiresAt - 120_000) {
-        _kickToken.value = json.access_token;
-        _kickToken.expiresAt = expiresAt;
-        await chrome.storage.local.set({
-          "streampulse:kickToken": { value: json.access_token, expiresAt },
-        });
-        return json.access_token;
-      }
-    }
-  } catch { /* repli ci-dessous */ }
-
-  // 2) Repli : credentials locaux (saveKickCreds / config distante transitoire)
-  const creds = await getKickCredentials();
-  if (!creds?.clientId || !creds?.clientSecret) return null;
-
-  // Use in-memory cache
-  if (_kickToken.value && Date.now() < _kickToken.expiresAt - 120_000) {
-    return _kickToken.value;
-  }
-
-  // Check persistent cache
-  const stored = await chrome.storage.local.get("streampulse:kickToken");
-  const cached = stored["streampulse:kickToken"];
-  if (cached?.value && Date.now() < cached.expiresAt - 120_000) {
-    /* eslint-disable require-atomic-updates -- getKickAppToken() serialise les
-       appels concurrents par une promesse partagee, aucun entrelacement
-       possible ici. La regle ne voit pas ce garde, place dans l'appelant. */
-    _kickToken.value = cached.value;
-    _kickToken.expiresAt = cached.expiresAt;
-    /* eslint-enable require-atomic-updates */
-    return _kickToken.value;
-  }
-
-  // Fetch fresh token
-  try {
-    const resp = await fetch("https://id.kick.com/oauth/token", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        grant_type: "client_credentials",
-        client_id: creds.clientId,
-        client_secret: creds.clientSecret,
-      }),
+    const resp = await fetch(`https://streampulse.fr/api/kick-token?t=${Date.now()}`, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS),
     });
     if (!resp.ok) return null;
     const json = await resp.json();
-    if (!json.access_token) return null;
-    const expiresAt = Date.now() + (json.expires_in ?? 3600) * 1000;
-    /* eslint-disable require-atomic-updates -- meme raison : appel serialise. */
-    _kickToken.value = json.access_token;
+    const expiresAt = json.expires_at ?? Date.now() + (json.expires_in ?? 3600) * 1000;
+    const token = { value: json.access_token, expiresAt };
+    if (!isKickTokenFresh(token)) return null;
+    _kickToken.value = token.value;
     _kickToken.expiresAt = expiresAt;
-    /* eslint-enable require-atomic-updates */
-    await chrome.storage.local.set({
-      "streampulse:kickToken": { value: json.access_token, expiresAt },
-    });
-    return json.access_token;
-  } catch {
+    await chrome.storage.local.set({ [KICK_TOKEN_STORAGE_KEY]: token });
+    return token.value;
+  } catch (error) {
+    console.warn("[kick] jeton indisponible", error);
     return null;
   }
 }
@@ -337,7 +301,10 @@ async function fetchKickAppToken() {
 async function fetchKickOfficial(slug, token) {
   const resp = await fetch(
     `https://api.kick.com/public/v1/channels?slug=${encodeURIComponent(slug)}`,
-    { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } }
+    {
+      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+      signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS),
+    }
   );
   if (!resp.ok) throw new Error(`${resp.status}`);
   const json = await resp.json();
@@ -3398,39 +3365,6 @@ function handleMessage(request, sender, sendResponse) {
         } catch {
           sendResponse({ clientId: "", accessToken: "", features: {} });
         }
-      })();
-      return true;
-
-    case "streampulse:saveKickCreds":
-      (async () => {
-        const { clientId, clientSecret } = request;
-        if (!clientId || !clientSecret) {
-          // Clear credentials
-          await chrome.storage.local.remove(["streampulse:kickCreds", "streampulse:kickToken"]);
-          _kickToken.value = null;
-          _kickToken.expiresAt = 0;
-          sendResponse({ success: true });
-          return;
-        }
-        await chrome.storage.local.set({
-          "streampulse:kickCreds": { clientId, clientSecret },
-        });
-        // Invalidate cached token
-        _kickToken.value = null;
-        _kickToken.expiresAt = 0;
-        await chrome.storage.local.remove("streampulse:kickToken");
-        // Test token immediately
-        const token = await getKickAppToken();
-        sendResponse({ success: !!token });
-      })();
-      return true;
-
-    case "streampulse:getKickCreds":
-      (async () => {
-        const creds = await getKickCredentials();
-        const stored = await chrome.storage.local.get("streampulse:kickToken");
-        const hasToken = !!(stored["streampulse:kickToken"]?.value);
-        sendResponse({ clientId: creds?.clientId || "", hasToken });
       })();
       return true;
 
