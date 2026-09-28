@@ -35,7 +35,7 @@
   width: 360px;
   max-width: calc(100vw - 16px);
   border-radius: 18px;
-  background: radial-gradient(120% 50% at 100% 0%, rgba(145, 70, 255, 0.2), transparent 60%), var(--sp-bg);
+  background: radial-gradient(120% 50% at 100% 0%, var(--sp-violet-soft), transparent 60%), var(--sp-bg);
   box-shadow: 0 0 0 1px var(--sp-line-2), 0 28px 56px -16px rgba(0, 0, 0, 0.8);
   color: var(--sp-text);
   font: 400 13px/1.4 var(--sp-body);
@@ -111,10 +111,10 @@
 
 .sp-fav-row { position: relative; display: flex; align-items: center; gap: 10px; padding: 5px 10px; color: var(--color-text-base, #efeff1) !important; text-decoration: none !important; }
 .sp-fav-row:hover { background: var(--color-background-interactable-hover, rgba(83, 83, 95, 0.48)); }
-.sp-fav-av { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 30px; height: 30px; overflow: hidden; border-radius: 50%; background: rgba(145, 70, 255, 0.24); font-size: 12px; font-weight: 700; }
+.sp-fav-av { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 30px; height: 30px; overflow: hidden; border-radius: 50%; background: var(--sp-violet-soft); font-size: 12px; font-weight: 700; }
 .sp-fav-av img { width: 100%; height: 100%; object-fit: cover; }
 .sp-fav-row:not(.is-live) .sp-fav-av { filter: grayscale(1); opacity: 0.55; }
-.sp-fav-row.is-live .sp-fav-av { box-shadow: 0 0 0 2px var(--color-background-alt, #1f1f23), 0 0 0 3.5px #9146ff; }
+.sp-fav-row.is-live .sp-fav-av { box-shadow: 0 0 0 2px var(--color-background-alt, #1f1f23), 0 0 0 3.5px var(--sp-violet); }
 .sp-fav-meta { display: flex; flex: 1; flex-direction: column; min-width: 0; line-height: 1.25; }
 .sp-fav-name,
 .sp-fav-cat { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

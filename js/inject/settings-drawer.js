@@ -59,22 +59,39 @@
 
   var TABS = [
     {
-      id: "general",
-      label: "twitchUi.tabGeneral",
+      id: "alerts",
+      label: "twitchUi.tabAlerts",
       groups: [
-        { title: "shared.settings.groupAutomation", keys: [
+        { title: "shared.settings.groupNotifications", keys: [
+          ["liveNotifications", "liveAlertsTitle", "liveMassHint"],
+          ["gameNotifications", "gameAlertsTitle", "liveMassHint"],
+          ["titleNotifications", "titleAlertsTitle", "liveMassHint"],
+          ["soundsEnabled", "soundsTitle"],
+        ] },
+      ],
+    },
+    {
+      id: "rewards",
+      label: "twitchUi.tabRewards",
+      groups: [
+        { title: "shared.settings.groupRewards", keys: [
           ["autoClaimChannelPoints", "autoClaimTitle"],
           ["autoClaimDrops", "autoClaimDropsTitle"],
           ["autoClaimMoments", "autoClaimMomentsTitle"],
-          ["autoCancelRaids", "autoCancelRaidsTitle"],
+          ["autoCancelRaids", "autoCancelRaidsTitle", "autoCancelRaidsHint"],
         ] },
-        { title: "shared.settings.groupChat", keys: [
-          ["keepQualityInBackground", "keepQualityTitle"],
+      ],
+    },
+    {
+      id: "player",
+      label: "twitchUi.tabPlayer",
+      groups: [
+        { title: "shared.settings.groupPlayer", keys: [
           ["enableFastForwardButton", "fastForwardTitle"],
           ["enablePipButton", "pipButtonTitle"],
+          ["keepQualityInBackground", "keepQualityTitle"],
           ["autoRefreshPlayerErrors", "autoRefreshTitle"],
           ["hideTwitchExtensions", "hideTwitchExtensionsTitle"],
-          ["communityBadge", "communityBadgeTitle"],
         ] },
       ],
     },
@@ -91,18 +108,16 @@
       ],
     },
     {
-      id: "alerts",
-      label: "twitchUi.tabAlerts",
+      id: "profile",
+      label: "twitchUi.tabProfile",
+      cosmetics: true,
       groups: [
-        { title: "shared.settings.groupNotifications", keys: [
-          ["liveNotifications", "liveNotificationsTitle"],
-          ["gameNotifications", "gameAlertsTitle"],
-          ["titleNotifications", "titleAlertsTitle"],
-          ["soundsEnabled", "soundsTitle"],
+        { title: "shared.settings.groupProfile", keys: [
+          ["communityBadge", "communityBadgeTitle"],
         ] },
       ],
     },
-    { id: "plus", label: "Plus", plus: true },
+    { id: "plus", label: "twitchUi.tabPlus", plus: true },
   ];
 
   var ICON_CLOSE =
@@ -112,7 +127,7 @@
 
   var ctx = { lang: "en", prefs: {}, plus: false, cosmetics: { badgeFx: "", nameFx: "" } };
   var drawer = null;
-  var activeTab = "general";
+  var activeTab = "alerts";
   var editors = [];
 
   // ---- utilitaires -------------------------------------------------------------
@@ -304,12 +319,20 @@
   }
 
   // ---- tiroir ------------------------------------------------------------------
-  function toggleRow(key, labelKey) {
+  function toggleRow(key, labelKey, hintKey) {
     var row = el("button", "sp-tb-row");
     row.type = "button";
     row.setAttribute("role", "switch");
     row.setAttribute("data-sp-pref", key);
-    row.appendChild(el("span", null, tr("shared.settings." + labelKey)));
+    var text = el("span", "sp-tb-row-text");
+    text.appendChild(el("span", null, tr("shared.settings." + labelKey)));
+    // Indices courts sous le libellé : effet en masse (« tous tes streamers »),
+    // dépendance entre réglages — ce que l'interrupteur seul ne dit pas.
+    if (hintKey) {
+      var hint = tr("twitchUi." + hintKey);
+      if (hint !== "twitchUi." + hintKey) text.appendChild(el("span", "sp-tb-hint", hint));
+    }
+    row.appendChild(text);
     row.appendChild(el("span", "sp-tb-sw"));
     row.addEventListener("click", function () {
       savePref(key, !prefOn(key));
@@ -362,11 +385,19 @@
       var section = el("div", "sp-tb-section");
       section.appendChild(el("div", "sp-tb-section-title", tr(group.title)));
       group.keys.forEach(function (pair) {
-        section.appendChild(toggleRow(pair[0], pair[1]));
+        section.appendChild(toggleRow(pair[0], pair[1], pair[2]));
       });
       if (group.mode) section.appendChild(modeRow());
       body.appendChild(section);
     });
+    // Profil et badge : les effets Plus (cadenassés hors Plus) vivent sous le
+    // badge communautaire, comme dans le popup.
+    if (tab.cosmetics) {
+      var fx = el("div", "sp-tb-section");
+      fx.appendChild(el("div", "sp-tb-section-title", tr("twitchUi.chatRow")));
+      fx.appendChild(buildCosmetics());
+      body.appendChild(fx);
+    }
     return body;
   }
 
@@ -431,8 +462,11 @@
     full.lastChild.textContent = tr("twitchUi.fullPage");
     full.addEventListener("click", function (e) {
       e.preventDefault();
+      // La page complète ouvre le popup sur la rubrique affichée (panneau
+      // cible lu par le popup dans son adresse).
+      var PANEL_BY_TAB = { alerts: "notifications", rewards: "rewards", player: "player", previews: "previews", profile: "identity", plus: "plus" };
       try {
-        chrome.runtime.sendMessage({ type: "openSettings" });
+        chrome.runtime.sendMessage({ type: "openSettings", panel: PANEL_BY_TAB[activeTab] || "" });
       } catch (_e) {
         // Contexte d'extension invalidé : rien à ouvrir.
       }
