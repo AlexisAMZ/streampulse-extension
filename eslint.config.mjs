@@ -27,6 +27,8 @@ const ES_MODULES = [
   "js/recap.js",
   "js/restore.js",
   "js/smart-alerts.js",
+  "js/inline-confirm.js",
+  "js/quiet-hours.js",
   "js/recap-card.js",
   "js/recap-data.js",
   "js/referral-data.js",

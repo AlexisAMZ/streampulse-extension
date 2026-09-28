@@ -102,6 +102,9 @@ function fxOption(kind, value, selected, current) {
   // Comme les « paints » de 7TV : le nom de la couleur est écrit avec la couleur
   // elle-même ; pour le logo, le logo déjà coloré puis son nom.
   const label = t(`popup.cosmetics.${value || "none"}`);
+  // Le nom peut être tronqué en vue liste (ellipses) : le title le rend en
+  // entier au survol ; les branches ci-dessous le remplacent si besoin.
+  button.title = label;
   button.append(node("span", "fx-radio"));
   if (kind === "name") button.append(fxSample("name", value, nameSample === "label" ? label : ""));
   else button.append(fxSample("badge", value), node("span", "fx-label", label));

@@ -1,5 +1,7 @@
 import { BACKUP_KEYS, buildBackup, backupFileName } from "./backup.js";
 import { DEFAULT_PREFERENCES } from "./preferences-data.js";
+import { bindInlineConfirm } from "./inline-confirm.js";
+import { DEFAULT_QUIET_END, DEFAULT_QUIET_START, normalizeQuietTime } from "./quiet-hours.js";
 import {
   initI18n,
   applyTranslations,
@@ -23,11 +25,9 @@ import {
   sanitizeHandle,
 } from "./platforms.js";
 import { createAllChannelsTile, createChannelRow, createMiniCard, formatNumber, renderStage, renderStageEmpty } from "./ui.js";
-import { initFeatures, renderHistory } from "./popup-features.js";
+import { initFeatures, plusActive, renderHistory } from "./popup-features.js";
 import { initNews, markSeen } from "./popup-news.js";
 import { initSuggest } from "./popup-suggest.js";
-
-const PREFERENCES_STORAGE_KEY = "betaGeneralPreferences";
 
 const defaultPreferences = DEFAULT_PREFERENCES;
 
@@ -65,6 +65,21 @@ const sheetSearchEl = document.getElementById("sheet-search");
 const sheetGroupsEl = document.getElementById("sheet-groups");
 const sheetTotalEl = document.getElementById("sheet-total");
 const soundsToggle = document.getElementById("pref-sounds");
+const liveNotificationsToggle = document.getElementById("pref-live-notifications");
+const gameNotificationsToggle = document.getElementById("pref-game-notifications");
+const titleNotificationsToggle = document.getElementById("pref-title-notifications");
+const quietHoursToggle = document.getElementById("pref-quiet-hours");
+const quietHoursStartInput = document.getElementById("pref-quiet-hours-start");
+const quietHoursEndInput = document.getElementById("pref-quiet-hours-end");
+const quietHoursTimesRow = document.getElementById("quiet-hours-times");
+const dropAlertsToggle = document.getElementById("pref-drop-alerts");
+const raidAlertsToggle = document.getElementById("pref-raid-alerts");
+const predictionsPopupToggle = document.getElementById("pref-predictions-popup");
+const volumeBoostInput = document.getElementById("pref-volume-boost");
+const volumeBoostValue = document.getElementById("volume-boost-value");
+const clipDownloadLock = document.getElementById("clip-download-lock");
+const previewsSub = document.getElementById("previews-sub");
+const raidDependencyStatus = document.getElementById("raid-dependency-status");
 const backgroundRaidAlertsToggle = document.getElementById("pref-background-raid-alerts");
 const autoClaimToggle = document.getElementById("pref-auto-claim");
 const autoClaimDropsToggle = document.getElementById("pref-auto-claim-drops");
@@ -97,7 +112,7 @@ const previewsDelayValue = document.getElementById("previews-delay-value");
 const previewsAnimationsToggle = document.getElementById("pref-previews-animations");
 const chatKeywordsInput = document.getElementById("pref-chat-keywords");
 const blockedUsersInput = document.getElementById("pref-blocked-users");
-const saveChatFilterButton = document.getElementById("save-chat-filter");
+const chatSaveStatus = document.getElementById("chat-save-status");
 const testNotificationButton = document.getElementById("test-notification");
 const tabButtons = Array.from(document.querySelectorAll(".tab-button"));
 const languageOptions = document.getElementById("language-options-popup");
@@ -105,7 +120,8 @@ const languageOptions = document.getElementById("language-options-popup");
 const statPointsEl = document.getElementById("stat-points");
 const btnExport = document.getElementById("btn-export");
 const btnImport = document.getElementById("btn-import");
-const btnResetStats = document.getElementById("btn-reset-stats");
+const btnResetPreferences = document.getElementById("btn-reset-preferences");
+const resetPrefsStatus = document.getElementById("reset-prefs-status");
 
 const watchTimeMonthSelect = document.getElementById("watch-time-month");
 const wtTotalTime = document.getElementById("wt-total-time");
@@ -186,18 +202,13 @@ function applyTheme(theme) {
 }
 
 function initTheme() {
-  const saved = state.preferences.theme || "dark";
-  applyTheme(saved);
+  applyTheme(state.preferences.theme || "dark");
   document.querySelectorAll(".theme-toggle-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const theme = btn.dataset.themeValue;
-      applyTheme(theme);
-      state.preferences.theme = theme;
-      chrome.storage.local.get(PREFERENCES_STORAGE_KEY).then((data) => {
-        const prefs = data[PREFERENCES_STORAGE_KEY] || {};
-        prefs.theme = theme;
-        chrome.storage.local.set({ [PREFERENCES_STORAGE_KEY]: prefs });
-      });
+      // Écriture via updatePreferences uniquement : la préférence theme vit
+      // dans betaGeneralPreferences comme les autres (et déclenche le
+      // re-render du panneau Général).
+      updatePreferences({ theme: btn.dataset.themeValue }, { silent: true }).then(() => applyTheme(state.preferences.theme || "dark"));
     });
   });
 }
@@ -950,8 +961,97 @@ async function handleSavePseudo() {
   }
 }
 
+/**
+ * Sous-réglages visuellement et fonctionnellement désactivés quand leur
+ * interrupteur principal est coupé (heures calmes, aperçus).
+ */
+function setSubEnabled(container, enabled) {
+  if (!container) return;
+  container.classList.toggle("is-off", !enabled);
+  container.querySelectorAll("input, select, textarea, button").forEach((control) => {
+    control.disabled = !enabled;
+  });
+}
+
+function syncQuietHoursTimes() {
+  setSubEnabled(quietHoursTimesRow, state.preferences?.quietHoursEnabled === true);
+}
+
+function syncPreviewsSub(enabled) {
+  setSubEnabled(previewsSub, enabled);
+}
+
+/** Cadenas Plus du téléchargement de clips : visible seulement sans licence. */
+function syncClipDownloadLock() {
+  if (!clipDownloadLock) return;
+  clipDownloadLock.hidden = plusActive();
+  if (clipDownloadToggle) {
+    // Sans licence, le réglage s'affiche éteint : initClipDownloadLock()
+    // remet le interrupteur à OFF si on tente de l'activer.
+    clipDownloadToggle.checked = plusActive() ? state.preferences?.enableClipDownload !== false : false;
+  }
+}
+
+/**
+ * Dépendance affichée : l'annulation auto des raids se coupe quand les raids
+ * entrants sont surveillés (les points se gagnent en suivant le raid). Le
+ * texte d'état est annoncé aux lecteurs d'écran (role="status").
+ */
+function syncRaidDependency() {
+  if (!raidDependencyStatus) return;
+  const watched = state.preferences?.backgroundRaidAlerts === true;
+  const cancelled = state.preferences?.autoCancelRaids === true;
+  const active = watched && !cancelled;
+  raidDependencyStatus.hidden = !active;
+  raidDependencyStatus.textContent = active ? t("popup.settings.raidDependencyActive") : "";
+}
+
+/** Retour d'enregistrement du filtre de chat : un seul mode, auto au changement,
+ * annoncé dans la zone de statut prévue à côté des champs (role="status"). */
+let chatSaveStatusTimer = 0;
+function announceChatSaved(ok) {
+  if (!chatSaveStatus) return;
+  clearTimeout(chatSaveStatusTimer);
+  if (!ok) {
+    chatSaveStatus.textContent = t("popup.feedback.saveFailed");
+    return;
+  }
+  chatSaveStatus.textContent = t("popup.feedback.chatFilterSaved");
+  chatSaveStatusTimer = setTimeout(() => {
+    chatSaveStatus.textContent = "";
+  }, 2500);
+}
+
 function renderPreferences() {
-  const prefs = state.preferences || defaultPreferences;
+  const prefs = state.preferences || defaultPreferences;  if (liveNotificationsToggle) {
+    liveNotificationsToggle.checked = prefs.liveNotifications !== false;
+  }
+  if (gameNotificationsToggle) {
+    gameNotificationsToggle.checked = prefs.gameNotifications === true;
+  }
+  if (titleNotificationsToggle) {
+    titleNotificationsToggle.checked = prefs.titleNotifications === true;
+  }
+  if (dropAlertsToggle) {
+    dropAlertsToggle.checked = prefs.dropAlerts !== false;
+  }
+  if (raidAlertsToggle) {
+    raidAlertsToggle.checked = prefs.raidAlerts !== false;
+  }
+  if (predictionsPopupToggle) {
+    predictionsPopupToggle.checked = prefs.enablePredictionsPopup !== false;
+  }
+  if (quietHoursToggle) {
+    quietHoursToggle.checked = prefs.quietHoursEnabled === true;
+  }
+  if (quietHoursStartInput) {
+    quietHoursStartInput.value = normalizeQuietTime(prefs.quietHoursStart, DEFAULT_QUIET_START);
+  }
+  if (quietHoursEndInput) {
+    quietHoursEndInput.value = normalizeQuietTime(prefs.quietHoursEnd, DEFAULT_QUIET_END);
+  }
+  syncQuietHoursTimes();
+  syncRaidDependency();
   if (soundsToggle) {
     soundsToggle.checked = prefs.soundsEnabled !== false;
   }
@@ -1006,6 +1106,12 @@ function renderPreferences() {
   if (playerQualitySelect) {
     playerQualitySelect.value = prefs.playerQuality || "auto";
   }
+  if (volumeBoostInput) {
+    const boost = Math.min(300, Math.max(100, Number(prefs.playerVolumeBoost) || 100));
+    volumeBoostInput.value = String(boost);
+    if (volumeBoostValue) volumeBoostValue.textContent = String(boost);
+  }
+  syncClipDownloadLock();
   if (latencyPlacementSelect) {
     latencyPlacementSelect.value = prefs.latencyPlacement === "chat" ? "chat" : "viewers";
   }
@@ -1027,6 +1133,7 @@ function renderPreferences() {
   if (previewsEnabledToggle) {
     previewsEnabledToggle.checked = prefs.previewsEnabled !== false;
   }
+  syncPreviewsSub(Boolean(prefs.previewsEnabled !== false));
   if (previewsDirectoryToggle) {
     previewsDirectoryToggle.checked = prefs.previewsSurfaceDirectory !== false;
   }
@@ -1157,8 +1264,8 @@ function setActiveTab(tabName) {
     showMenuPanel(tabName);
   } else if (tabName === "settings") {
     // « Réglages » ne rouvre pas Drops ou Badges : ils ont leur propre onglet.
-    const current = document.querySelector('.menu-nav > .menu-tab[aria-selected="true"]')?.dataset.panel;
-    const first = [...document.querySelectorAll(".menu-nav > .menu-tab")].find((tab) => !tab.hidden && !PANEL_TABS.has(tab.dataset.panel));
+    const current = document.querySelector('.menu-nav .menu-tab[aria-selected="true"]')?.dataset.panel;
+    const first = [...document.querySelectorAll(".menu-nav .menu-tab")].find((tab) => !tab.hidden && !PANEL_TABS.has(tab.dataset.panel));
     const target = current && !PANEL_TABS.has(current) ? current : first?.dataset.panel;
     if (target) showMenuPanel(target);
   }
@@ -1442,22 +1549,10 @@ async function handleExport() {
   }
 }
 
-async function handleResetStats() {
-  if (!confirm(t("popup.stats.confirmReset") || "Réinitialiser les statistiques ?")) return;
-
-  if (btnResetStats) btnResetStats.disabled = true;
-  try {
-    await sendMessage({
-      type: "resetStat",
-      stat: "channelPointsClaimed",
-    });
-    await renderStats();
-    showFeedback(t("popup.stats.resetSuccess") || "Statistiques remises à zéro", "success");
-  } catch {
-    showFeedback(t("popup.stats.resetError") || "Reset failed", "error");
-  }
-  if (btnResetStats) btnResetStats.disabled = false;
-}
+// La remise à zéro des points vit uniquement dans Activité (btn-reset-points,
+// confirmation inline 2 clics dans popup-points.js) : un seul compteur, un seul
+// geste destructeur. À suivre hors périmètre : resetPoints devrait aussi
+// remettre betaGeneralStats.channelPointsClaimed (compteur de l'en-tête).
 
 function handleImportClick() {
   // A file picker opened from the popup makes Chrome close the popup, which
@@ -1567,7 +1662,7 @@ async function handleAddStreamer(event) {
   await loadStreamers();
 }
 
-async function updatePreferences(updates) {
+async function updatePreferences(updates, { silent = false } = {}) {
   // Une valeur undefined disparait a la serialisation de sendMessage : la
   // charge utile arrivait vide au service worker, qui repondait « Aucune
   // preference a mettre a jour ». On filtre ici et on nomme la cle, pour que
@@ -1616,7 +1711,8 @@ async function updatePreferences(updates) {
   const toastKey = specificKey
     ? SPECIFIC_TOASTS[specificKey][updates[specificKey] ? 0 : 1]
     : "popup.settings.saved";
-  showFeedback(t(toastKey));
+  // Les enregistrements continus (chat, thème) ont leur retour inline : pas de toast à chaque frappe.
+  if (!silent) showFeedback(t(toastKey));
 
   return true;
 }
@@ -1896,10 +1992,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       renderEventLogs().catch(() => {});
     });
 
-    document.getElementById("btn-clear-logs")?.addEventListener("click", async () => {
-      await chrome.runtime.sendMessage({ type: "clearEventLogs" });
-      renderEventLogs().catch(() => {});
-    });
+    document.getElementById("btn-clear-logs") &&
+      bindInlineConfirm(document.getElementById("btn-clear-logs"), {
+        arm: t("popup.settings.logClear"),
+        confirm: t("common.confirm"),
+      }, () => {
+        chrome.runtime.sendMessage({ type: "clearEventLogs" }).catch((error) => console.warn("[popup] effacement du journal :", error));
+        renderEventLogs().catch(() => {});
+      });
 
     refreshButton?.addEventListener("click", async () => {
       refreshButton.disabled = true;
@@ -2062,29 +2162,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (chatKeywordsInput) {
-      chatKeywordsInput.addEventListener("change", (e) => {
-        updatePreferences({ chatKeywords: e.target.value });
+      chatKeywordsInput.addEventListener("change", async (e) => {
+        const ok = await updatePreferences({ chatKeywords: e.target.value });
+        announceChatSaved(ok);
       });
     }
 
     if (blockedUsersInput) {
-      blockedUsersInput.addEventListener("change", (e) => {
-        updatePreferences({ chatBlockedUsers: e.target.value });
-      });
-    }
-
-    if (saveChatFilterButton) {
-      saveChatFilterButton.addEventListener("click", async () => {
-        const keywords = chatKeywordsInput?.value || "";
-        const blocked = blockedUsersInput?.value || "";
-        const ok = await updatePreferences({
-          chatKeywords: keywords,
-          chatBlockedUsers: blocked,
-        });
-        if (ok) {
-          showFeedback(t("popup.feedback.chatFilterSaved"), "success");
-          markButtonSuccess(saveChatFilterButton);
-        }
+      blockedUsersInput.addEventListener("change", async (e) => {
+        const ok = await updatePreferences({ chatBlockedUsers: e.target.value });
+        announceChatSaved(ok);
       });
     }
 
@@ -2100,7 +2187,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     btnExport?.addEventListener("click", handleExport);
     btnImport?.addEventListener("click", handleImportClick);
-    btnResetStats?.addEventListener("click", handleResetStats);
+
+    // Réinitialiser les réglages : confirmation inline en 2 clics, jamais
+    // confirm(). Le service worker remet les défauts en gardant la langue et
+    // le thème ; la popup se redessine avec les préférences renvoyées.
+    if (btnResetPreferences) {
+      bindInlineConfirm(
+        btnResetPreferences,
+        { arm: t("popup.settings.resetPrefsArm"), confirm: t("popup.settings.resetPrefsConfirm") },
+        async () => {
+          const result = await sendMessage({ type: "resetPreferences" });
+          if (result?.success) {
+            state.preferences = { ...state.preferences, ...result.preferences };
+            renderPreferences();
+            if (resetPrefsStatus) resetPrefsStatus.textContent = t("popup.settings.resetPrefsDone");
+          } else if (resetPrefsStatus) {
+            resetPrefsStatus.textContent = t("popup.feedback.saveFailed");
+          }
+        },
+      );
+    }
 
     pseudoSaveButton?.addEventListener("click", handleSavePseudo);
     pseudoInput?.addEventListener("keydown", (e) => {
