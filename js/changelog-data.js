@@ -51,6 +51,158 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.30",
+    date: "2026-09-28",
+    title: { "fr": "Des réglages clairs, une base fiable", "en": "Clearer settings, a stronger base", "es": "Clearer settings, a stronger base", "pt-BR": "Clearer settings, a stronger base", "de": "Clearer settings, a stronger base", "it": "Clearer settings, a stronger base", "pl": "Clearer settings, a stronger base", "tr": "Clearer settings, a stronger base", "ru": "Clearer settings, a stronger base", "ja": "Clearer settings, a stronger base", "ko": "Clearer settings, a stronger base" },
+    changes: [
+      {
+        type: "fix",
+        text: {
+          "fr": "La page de restauration de sauvegarde fonctionne de nouveau : le fichier est lu, l'aperçu s'affiche et « Ajouter à mes données » refait son travail.",
+          "en": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
+          "es": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
+          "pt-BR": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
+          "de": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
+          "it": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
+          "pl": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
+          "tr": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
+          "ru": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
+          "ja": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
+          "ko": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised."
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          "fr": "Les réglages sont rangés en 8 rubriques claires, ouverture sur Notifications, fonctions Plus à leur place avec leur cadenas, et une section Outils : Drops, Badges, Activité, StreamPulse+, Aide. Le tiroir Twitch suit la même organisation.",
+          "en": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
+          "es": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
+          "pt-BR": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
+          "de": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
+          "it": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
+          "pl": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
+          "tr": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
+          "ru": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
+          "ja": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
+          "ko": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout."
+        },
+      },
+      {
+        type: "new",
+        text: {
+          "fr": "Bouton « Réinitialiser les réglages » : tout revient comme à l'installation, ta langue et ton thème sont conservés.",
+          "en": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
+          "es": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
+          "pt-BR": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
+          "de": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
+          "it": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
+          "pl": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
+          "tr": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
+          "ru": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
+          "ja": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
+          "ko": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept."
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          "fr": "Les alertes de live, de catégorie et de titre s'appliquent à tous tes streamers d'un coup ; chaque carte reste ajustable séparément.",
+          "en": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
+          "es": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
+          "pt-BR": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
+          "de": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
+          "it": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
+          "pl": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
+          "tr": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
+          "ru": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
+          "ja": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
+          "ko": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own."
+        },
+      },
+      {
+        type: "fix",
+        text: {
+          "fr": "Le clic sur une notification rouvre la bonne chaîne, même après une mise en veille de l'extension, et les heures calmes silencient vraiment la nuit.",
+          "en": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
+          "es": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
+          "pt-BR": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
+          "de": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
+          "it": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
+          "pl": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
+          "tr": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
+          "ru": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
+          "ja": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
+          "ko": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night."
+        },
+      },
+      {
+        type: "fix",
+        text: {
+          "fr": "Le temps de visionnage ne compte plus un onglet en arrière-plan ni un live en pause, et deux fenêtres sur le même live ne comptent plus double.",
+          "en": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
+          "es": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
+          "pt-BR": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
+          "de": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
+          "it": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
+          "pl": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
+          "tr": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
+          "ru": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
+          "ja": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
+          "ko": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice."
+        },
+      },
+      {
+        type: "fix",
+        text: {
+          "fr": "Connexion Kick plus fiable : le jeton est réutilisé au lieu d'être redemandé à chaque mesure, et le repli qui exposait des clés côté serveur est supprimé.",
+          "en": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
+          "es": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
+          "pt-BR": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
+          "de": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
+          "it": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
+          "pl": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
+          "tr": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
+          "ru": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
+          "ja": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
+          "ko": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed."
+        },
+      },
+      {
+        type: "fix",
+        text: {
+          "fr": "Ton pseudo se modifie de nouveau dans « Profil et badge », et couper le badge communautaire l'arrête aussitôt, sans recharger la page.",
+          "en": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
+          "es": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
+          "pt-BR": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
+          "de": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
+          "it": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
+          "pl": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
+          "tr": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
+          "ru": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
+          "ja": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
+          "ko": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed."
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          "fr": "L'onboarding commence par les notifications, tient dans les petits écrans, et « Lancer StreamPulse » ouvre le popup directement.",
+          "en": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
+          "es": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
+          "pt-BR": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
+          "de": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
+          "it": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
+          "pl": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
+          "tr": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
+          "ru": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
+          "ja": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
+          "ko": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly."
+        },
+      },
+    ],
+  },
+
+  {
     version: "26.9.29",
     date: "2026-09-27",
     changes: [
