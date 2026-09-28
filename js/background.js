@@ -22,6 +22,7 @@ import { HISTORY_KEY, addSession, emptyHistory, markSeen, patchSession, removeEn
 import { DEFAULT_PREFERENCES } from "./preferences-data.js";
 import { thankPlusSubscriber } from "./plus-thanks.js";
 import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-alerts.js";
+import { isWithinQuietHours } from "./quiet-hours.js";
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "./plus.js";
 import { createPointsStore } from "./points-store.js";
 import { createDropsStore } from "./drops-store.js";
@@ -2836,6 +2837,18 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
   // notification groupée sera envoyée après la boucle, pas 1 par streamer.
   const catchUpLive = [];
 
+  // Heures calmes : aucune alerte (live, catégorie, titre, rattrapage) pendant
+  // la plage. L'état live reste persisté normalement, donc à la sortie de la
+  // plage aucune session déjà annoncée ne repart en doublon.
+  const quietNow = isWithinQuietHours(Date.now(), preferences);
+  // Les envois sont mis en file et partent APRES la persistance de l'état
+  // (statuses + live-state) : si le SW est tué en plein envoi, on perd au pire
+  // une alerte au lieu de la rediffuser au sondage suivant (doublon).
+  const queuedAlerts = [];
+  const queueAlert = (send) => {
+    if (!quietNow) queuedAlerts.push(send);
+  };
+
   for (const status of statuses) {
     const streamer = streamerById.get(status.id);
     const previousLiveState = streamerLiveState.get(streamer.id) || {
@@ -2905,10 +2918,10 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
 
     if (smartDecision) {
       if (notificationsEnabled && smartDecision.notifyRule) {
-        await NotificationSystem.notifyLive(streamer, status.active, preferences);
+        queueAlert(() => NotificationSystem.notifyLive(streamer, status.active, preferences));
       }
     } else if (forceNotification && notificationsEnabled && nextLiveState.isLive) {
-      await NotificationSystem.notifyLive(streamer, status.active, preferences);
+      queueAlert(() => NotificationSystem.notifyLive(streamer, status.active, preferences));
     } else if (notificationsEnabled && nextLiveState.isLive) {
       const wasLive = previousLiveState.isLive;
       const sessionChanged =
@@ -2938,10 +2951,8 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
               formatHandleForDisplay(platform, streamer.handle || streamer.twitch)
           );
         } else {
-          await NotificationSystem.notifyLive(
-            streamer,
-            status.active,
-            preferences
+          queueAlert(() =>
+            NotificationSystem.notifyLive(streamer, status.active, preferences)
           );
         }
       } else {
@@ -2952,23 +2963,23 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
         if (previousLiveState.isLive && nextLiveState.isLive && previousLiveState.game !== nextLiveState.game) {
           console.info("[SP] changement de categorie detecte:", streamer.handle, {
             prefGame: preferences.gameNotifications,
-            prefLive: preferences.liveNotifications,
             streamerToggle: streamer.gameNotificationsEnabled,
           });
         }
         if (previousLiveState.isLive && nextLiveState.isLive && previousLiveState.title !== nextLiveState.title) {
           console.info("[SP] changement de titre detecte:", streamer.handle, {
             prefTitle: preferences.titleNotifications,
-            prefLive: preferences.liveNotifications,
             streamerToggle: streamer.titleNotificationsEnabled,
             sessionIdentique:
               !previousLiveState.sessionId || !nextLiveState.sessionId ||
               previousLiveState.sessionId === nextLiveState.sessionId,
           });
         }
+        // Les toggles globaux des réglages sont des actions en masse (ils
+        // écrivent notificationsEnabled sur chaque streamer) : le toggle du
+        // streamer est ici la seule source de vérité.
         const shouldNotifyGame =
           gameNotificationsEnabled &&
-          preferences.liveNotifications !== false &&
           previousLiveState.isLive &&
           previousLiveState.game &&
           nextLiveState.game &&
@@ -2978,19 +2989,20 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
             previousLiveState.sessionId === nextLiveState.sessionId);
 
         if (shouldNotifyGame) {
-          await NotificationSystem.notifyGameChange(
-            streamer,
-            previousLiveState.game,
-            nextLiveState.game,
-            preferences,
-            nextLiveState.platform
+          queueAlert(() =>
+            NotificationSystem.notifyGameChange(
+              streamer,
+              previousLiveState.game,
+              nextLiveState.game,
+              preferences,
+              nextLiveState.platform
+            )
           );
         }
 
         const titleNotificationsEnabled = streamer.titleNotificationsEnabled !== false;
         const shouldNotifyTitle =
           titleNotificationsEnabled &&
-          preferences.liveNotifications !== false &&
           previousLiveState.isLive &&
           previousLiveState.title &&
           nextLiveState.title &&
@@ -3000,12 +3012,14 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
             previousLiveState.sessionId === nextLiveState.sessionId);
 
         if (shouldNotifyTitle) {
-          await NotificationSystem.notifyTitleChange(
-            streamer,
-            previousLiveState.title,
-            nextLiveState.title,
-            preferences,
-            nextLiveState.platform
+          queueAlert(() =>
+            NotificationSystem.notifyTitleChange(
+              streamer,
+              previousLiveState.title,
+              nextLiveState.title,
+              preferences,
+              nextLiveState.platform
+            )
           );
         }
       }
@@ -3013,23 +3027,6 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
 
     streamerStates.set(status.id, status);
     streamerLiveState.set(streamer.id, nextLiveState);
-  }
-
-  // Rattrapage au démarrage : une seule notification récapitulative, quel que
-  // soit le nombre de streamers trouvés déjà en direct.
-  if (catchUpLive.length > 0) {
-    const lang = normalizeLanguage(preferences?.language);
-    const shown = catchUpLive.slice(0, 3).join(", ");
-    const rest = catchUpLive.length - 3;
-    const names = rest > 0 ? `${shown} +${rest}` : shown;
-    await NotificationCenter.show({
-      title: translate(lang, "background.notifications.startupBatchTitle"),
-      message: translate(lang, "background.notifications.startupBatchBody", { names }),
-      iconUrl: NotificationCenter.getDefaultIcon(),
-      requireInteraction: false,
-      priority: 1,
-      playSound: preferences?.soundsEnabled !== false,
-    });
   }
 
   const statusesObject = {};
@@ -3048,6 +3045,34 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
     await DataStore.saveLiveState(liveStateObject);
   } catch (err) {
     console.warn("Failed to persist live state:", err?.message || err);
+  }
+
+  // L'état est persisté : les alertes partent maintenant, une à une. Un SW tué
+  // ici perd une alerte, mais ne rediffusera jamais une session déjà annoncée.
+  for (const send of queuedAlerts) {
+    try {
+      await send();
+    } catch (error) {
+      console.warn("[SP] alerte non envoyée :", error?.message || error);
+    }
+  }
+
+  // Rattrapage au démarrage : une seule notification récapitulative, quel que
+  // soit le nombre de streamers trouvés déjà en direct. Silencieuse pendant
+  // les heures calmes, comme les alertes individuelles.
+  if (catchUpLive.length > 0 && !quietNow) {
+    const lang = normalizeLanguage(preferences?.language);
+    const shown = catchUpLive.slice(0, 3).join(", ");
+    const rest = catchUpLive.length - 3;
+    const names = rest > 0 ? `${shown} +${rest}` : shown;
+    await NotificationCenter.show({
+      title: translate(lang, "background.notifications.startupBatchTitle"),
+      message: translate(lang, "background.notifications.startupBatchBody", { names }),
+      iconUrl: NotificationCenter.getDefaultIcon(),
+      requireInteraction: false,
+      priority: 1,
+      playSound: preferences?.soundsEnabled !== false,
+    });
   }
 
   const liveCount = statuses.reduce((total, status) => {
