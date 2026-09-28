@@ -3,7 +3,6 @@ import {
   translations,
   DEFAULT_LANGUAGE,
   formatTemplate,
-  matchLanguage,
   resolveLocale,
 } from "../i18n/translations.js";
 import {
@@ -19,7 +18,14 @@ import {
   sanitizeHandle,
 } from "./platforms.js";
 import { HISTORY_KEY, addSession, emptyHistory, markSeen, patchSession, removeEntry } from "./history-data.js";
-import { DEFAULT_PREFERENCES } from "./preferences-data.js";
+import {
+  DEFAULT_PREFERENCES,
+  detectInstallLanguage,
+  normalizeLanguage,
+  notificationFieldsFromUpdates,
+  resetPreferencesFrom,
+  sanitizePreferences,
+} from "./preferences-data.js";
 import { thankPlusSubscriber } from "./plus-thanks.js";
 import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-alerts.js";
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "./plus.js";
@@ -35,9 +41,6 @@ import {
   syncRaidWatcher,
   stopRaidWatcher,
 } from "./raidWatcher.js";
-
-/** Qualites proposees pour le lecteur Twitch. "auto" laisse Twitch decider. */
-const PLAYER_QUALITIES = ["auto", "source", "1440", "1080", "720", "480", "360"];
 
 const STORAGE_KEYS = {
   STREAMERS: "betaGeneralStreamers",
@@ -438,10 +441,6 @@ function normalizeStreamer(raw) {
   };
 }
 
-function normalizeLanguage(value) {
-  return matchLanguage(value) || DEFAULT_LANGUAGE;
-}
-
 function resolveExternalUrl(rawValue, defaultOrigin = "") {
   if (!rawValue) {
     return "";
@@ -564,15 +563,6 @@ function formatNumberForLanguage(lang, value) {
   }
 }
 
-// Bornes 1-24 h : une seule source de coercion, shared par sanitize() et le
-// handler updatePreferences (prealablement dupliquees avec des regles differentes).
-function clampInventoryIntervalHours(value) {
-  const hours = Number(value);
-  return Number.isFinite(hours)
-    ? Math.min(24, Math.max(1, Math.round(hours)))
-    : 24;
-}
-
 class DataStore {
   static async getStreamers() {
     const stored = await chrome.storage.local.get(STORAGE_KEYS.STREAMERS);
@@ -639,86 +629,13 @@ class DataStore {
   }
 }
 
-/**
- * Couleur du badge communautaire : un mode connu, ou une couleur hexadecimale.
- * Toute autre valeur retombe sur le defaut plutot que d'etre ecrite telle quelle.
- */
-function sanitizeBadgeColor(value) {
-  if (value === "theme" || value === "author") return value;
-  if (typeof value === "string" && /^#[0-9a-fA-F]{6}$/.test(value.trim())) {
-    return value.trim().toLowerCase();
-  }
-  return DEFAULT_PREFERENCES.communityBadgeColor;
-}
-
 class PreferenceStore {
+  // Coercion unique : sanitizePreferences() vit dans js/preferences-data.js
+  // (module pur, partage avec la popup, teste par tests/preferences-data.test.mjs).
+  // Toute cle de DEFAULT_PREFERENCES y est coerce : la parite est verifiee
+  // statiquement par scripts/verify.mjs.
   static sanitize(preferences = {}) {
-    const SORT_ORDER_VALUES = ["live", "name-asc", "name-desc", "custom"];
-    const PREVIEWS_SIZES = ["s", "m", "l"];
-    const LATENCY_PLACEMENTS = ["viewers", "chat"];
-    const previewsDelay = Number(preferences.previewsShowDelayMs);
-    return {
-      liveNotifications: preferences.liveNotifications !== false,
-      gameNotifications: Boolean(preferences.gameNotifications),
-      titleNotifications: Boolean(preferences.titleNotifications),
-      // Ces trois cles etaient absentes de sanitize() : elles etaient acceptees
-      // par le handler updatePreferences puis perdues a l'ecriture, et le spread
-      // de DEFAULT_PREFERENCES dans set() les remettait a true. Impossible de les
-      // desactiver. La parite DEFAULT_PREFERENCES / sanitize() est desormais
-      // verifiee par scripts/verify.mjs.
-      dropAlerts: preferences.dropAlerts !== false,
-      predictionAlerts: preferences.predictionAlerts !== false,
-      raidAlerts: preferences.raidAlerts !== false,
-      backgroundRaidAlerts: preferences.backgroundRaidAlerts === true,
-      updateNotifications: preferences.updateNotifications !== false,
-      soundsEnabled: preferences.soundsEnabled !== false,
-      autoClaimChannelPoints: preferences.autoClaimChannelPoints !== false,
-      autoClaimDrops: preferences.autoClaimDrops !== false,
-      autoClaimMoments: preferences.autoClaimMoments !== false,
-      autoOpenInventory: Boolean(preferences.autoOpenInventory),
-      autoOpenInventoryIntervalHours: clampInventoryIntervalHours(preferences.autoOpenInventoryIntervalHours),
-      hideTwitchExtensions: Boolean(preferences.hideTwitchExtensions),
-      keepQualityInBackground: preferences.keepQualityInBackground === true,
-      enablePipButton: preferences.enablePipButton !== false,
-      autoRefreshPlayerErrors: preferences.autoRefreshPlayerErrors !== false,
-      enableClipDownload: preferences.enableClipDownload !== false,
-      playerQuality: PLAYER_QUALITIES.includes(preferences.playerQuality) ? preferences.playerQuality : "auto",
-      latencyPlacement: LATENCY_PLACEMENTS.includes(preferences.latencyPlacement)
-        ? preferences.latencyPlacement
-        : "viewers",
-      // Les alertes de raid rapportent des points en suivant le raid : garder
-      // l'annulation automatique active rendrait les deux fonctionnalités
-      // contradictoires (le raid est annulé avant qu'on puisse le suivre).
-      // Tant que le détecteur de raids est actif, l'annulation est forcée off.
-      autoCancelRaids:
-        preferences.autoCancelRaids === true && preferences.backgroundRaidAlerts !== true,
-      preventTabDiscard: preferences.preventTabDiscard !== false,
-      enablePredictionsPopup: preferences.enablePredictionsPopup !== false,
-      enableTabLiveIcon: preferences.enableTabLiveIcon !== false,
-      enableStreamerFavicon: preferences.enableStreamerFavicon !== false,
-      enableFastForwardButton: preferences.enableFastForwardButton !== false,
-      watchTimeTracker: preferences.watchTimeTracker !== false,
-      pointsTracking: preferences.pointsTracking !== false,
-      dropsTracking: preferences.dropsTracking !== false,
-      chatKeywords: typeof preferences.chatKeywords === "string" ? preferences.chatKeywords : "",
-      chatBlockedUsers: typeof preferences.chatBlockedUsers === "string" ? preferences.chatBlockedUsers : "",
-      language: normalizeLanguage(preferences.language),
-      sortOrder: SORT_ORDER_VALUES.includes(preferences.sortOrder) ? preferences.sortOrder : "live",
-      previewsEnabled: preferences.previewsEnabled !== false,
-      previewsMode: preferences.previewsMode === "video" ? "video" : "image",
-      previewsSurfaceDirectory: preferences.previewsSurfaceDirectory !== false,
-      previewsSurfaceSidebar: preferences.previewsSurfaceSidebar !== false,
-      previewsSurfaceClips: preferences.previewsSurfaceClips !== false,
-      previewsSurfaceSearch: preferences.previewsSurfaceSearch !== false,
-      previewsSize: PREVIEWS_SIZES.includes(preferences.previewsSize) ? preferences.previewsSize : "m",
-      previewsAudio: preferences.previewsAudio === true,
-      previewsShowDelayMs: Number.isFinite(previewsDelay)
-        ? Math.min(2000, Math.max(0, previewsDelay))
-        : 200,
-      previewsAnimations: preferences.previewsAnimations !== false,
-      communityBadge: preferences.communityBadge === true,
-      communityBadgeColor: sanitizeBadgeColor(preferences.communityBadgeColor),
-    };
+    return sanitizePreferences(preferences);
   }
 
   static async get() {
@@ -746,23 +663,60 @@ class PreferenceStore {
     return sanitized;
   }
 
-  static async update(updates) {
-    const current = await this.get();
-    const merged = { ...current, ...updates };
-    return this.set(merged);
+  // Read-modify-write sequencé : deux bascules rapides (popup ouverte sur deux
+  // surfaces, ou rafale de clics) s'ecrasaient sinon — meme pattern que
+  // StatsStore et HistoryStore.
+  static _queue = Promise.resolve();
+
+  static _enqueue(task) {
+    const run = this._queue.then(task, task);
+    this._queue = run.catch(() => {});
+    return run;
+  }
+
+  static update(updates) {
+    return this._enqueue(async () => {
+      const current = await this.get();
+      const merged = { ...current, ...updates };
+      return this.set(merged);
+    });
   }
 
   static async ensureDefaults() {
     const stored = await chrome.storage.local.get(PREFERENCES_KEY);
     if (!stored[PREFERENCES_KEY]) {
-      await this.set(DEFAULT_PREFERENCES);
-      return { ...DEFAULT_PREFERENCES };
+      // Nouvelle installation : la langue de Chrome, jamais un choix stocké
+      // (il n'y en a pas encore) ni le défaut du produit.
+      const language = detectInstallLanguage(
+        typeof chrome.i18n?.getUILanguage === "function" ? chrome.i18n.getUILanguage() : undefined
+      );
+      await this.set({ ...DEFAULT_PREFERENCES, language });
+      return { ...DEFAULT_PREFERENCES, language };
     }
     return {
       ...DEFAULT_PREFERENCES,
       ...this.sanitize(stored[PREFERENCES_KEY]),
     };
   }
+}
+
+/**
+ * Les réglages d'alertes globales ne sont jamais des verrous : changer
+ * liveNotifications / gameNotifications / titleNotifications applique la
+ * valeur à tous les streamers existants (et sert de défaut aux nouveaux,
+ * cf. addStreamer).
+ */
+async function propagateNotificationPreferences(preferences) {
+  const fields = notificationFieldsFromUpdates(preferences);
+  if (fields.length === 0) return null;
+  const streamers = await DataStore.getStreamers();
+  if (streamers.length === 0) return [];
+  const updated = streamers.map((streamer) => {
+    const next = { ...streamer };
+    for (const [field, value] of fields) next[field] = value;
+    return next;
+  });
+  return DataStore.saveStreamers(updated);
 }
 
 class StatsStore {
@@ -3592,7 +3546,11 @@ function handleMessage(request, sender, sendResponse) {
             id: `${platform}:${handle}`,
             platform,
             handle,
-            notificationsEnabled: true,
+            // Défauts des nouveaux streamers : les réglages globaux du moment,
+            // pas un true en dur (les réglages globaux ne sont pas des verrous).
+            notificationsEnabled: preferences.liveNotifications,
+            gameNotificationsEnabled: preferences.gameNotifications,
+            titleNotificationsEnabled: preferences.titleNotifications,
             socials: {},
           };
 
@@ -4169,9 +4127,28 @@ function handleMessage(request, sender, sendResponse) {
           }
 
           const preferences = await PreferenceStore.update(updates);
+          // Les réglages d'alertes globales sont des actions en masse : la
+          // valeur choisie s'applique aussi à tous les streamers existants.
+          await propagateNotificationPreferences(updates);
           if ("backgroundRaidAlerts" in updates) {
             refreshRaidWatcher();
           }
+          sendResponse({ success: true, preferences });
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
+        }
+      })();
+      return true;
+
+    case "resetPreferences":
+      (async () => {
+        try {
+          // Tout revient au défaut, sauf la langue et le thème choisis.
+          const current = await PreferenceStore.get();
+          const preferences = await PreferenceStore.set(resetPreferencesFrom(current));
+          // Les alertes par streamer reprennent aussi leurs défauts.
+          await propagateNotificationPreferences(preferences);
+          refreshRaidWatcher();
           sendResponse({ success: true, preferences });
         } catch (error) {
           sendResponse({ error: error?.message || String(error) });
