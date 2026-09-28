@@ -82,3 +82,27 @@ test("mergeBackup ne renvoie que les clés présentes dans la sauvegarde", () =>
   );
   assert.deepEqual(Object.keys(data), ["betaGeneralStats"]);
 });
+
+test("mergeBackup remplace les réglages quand on le demande, en gardant les champs absents de la sauvegarde", () => {
+  const current = {
+    betaGeneralPreferences: { language: "fr", theme: "light", soundsEnabled: false },
+    streamPulseLayout: { tabs: { order: ["a"], hidden: [] } },
+  };
+  const incoming = {
+    betaGeneralPreferences: { language: "en", soundsEnabled: true },
+    streamPulseLayout: { tabs: { order: ["b"], hidden: ["c"] } },
+  };
+  const { data } = mergeBackup(current, incoming, { replaceSettings: true });
+  assert.deepEqual(data.betaGeneralPreferences, { language: "en", theme: "light", soundsEnabled: true });
+  assert.deepEqual(data.streamPulseLayout, { tabs: { order: ["b"], hidden: ["c"] } });
+  const kept = mergeBackup(current, incoming).data;
+  assert.equal(kept.betaGeneralPreferences.soundsEnabled, false, "sans l'option, les réglages actuels gagnent");
+  assert.deepEqual(kept.streamPulseLayout, current.streamPulseLayout);
+});
+
+test("hasSettings détecte une sauvegarde qui contient des réglages", async () => {
+  const { hasSettings } = await import("../js/backup.js");
+  assert.equal(hasSettings({ betaGeneralPreferences: { theme: "dark" } }), true);
+  assert.equal(hasSettings({ betaGeneralPreferences: {} , betaGeneralStreamers: [] }), false);
+  assert.equal(hasSettings({ streamPulseLayout: { tabs: {} } }), true);
+});
