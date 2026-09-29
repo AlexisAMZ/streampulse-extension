@@ -508,12 +508,12 @@ input[type="checkbox"][role="switch"]:checked::before { transform: translateX(16
 @keyframes toast-fade-out { to { opacity: 0; } }
 
 /* ── History: missed lives with their replay ── */
-.history { display: grid; grid-template-rows: auto minmax(0, 1fr); height: 100%; padding-top: 54px; }
+.history { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); height: 100%; padding-top: 54px; }
 .history-head { display: flex; align-items: center; gap: 16px; margin: 16px 16px 12px; padding: 12px 14px; border-radius: 14px; background: var(--lcd-soft); box-shadow: inset 0 0 0 1px var(--lcd-line); }
-.history-summary { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
-.history-summary strong { font-family: var(--display); font-size: 20px; font-weight: 800; letter-spacing: -0.03em; white-space: nowrap; }
-.history-summary span { overflow: hidden; color: var(--text-2); text-overflow: ellipsis; white-space: nowrap; }
-.history-head .segmented { margin-left: auto; }
+.history-summary { display: flex; flex: 1 1 auto; align-items: baseline; gap: 10px; min-width: 0; }
+.history-summary strong { flex: none; font-family: var(--display); font-size: 20px; font-weight: 800; letter-spacing: -0.03em; white-space: nowrap; }
+.history-summary span { min-width: 0; overflow: hidden; color: var(--text-2); text-overflow: ellipsis; white-space: nowrap; }
+.history-head .segmented { flex: none; margin-left: auto; }
 .history-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0 16px 16px; overflow-y: auto; overscroll-behavior: contain; list-style: none; align-content: start; }
 .history-grid > li { position: relative; }
 .vod-dismiss { position: absolute; top: 6px; right: 6px; z-index: 2; display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 8px; background: rgba(11, 12, 34, 0.78); color: var(--paper); cursor: pointer; opacity: 0; transition: opacity var(--dur-fast) ease, background-color var(--dur-fast) ease; }

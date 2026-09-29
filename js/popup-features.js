@@ -23,6 +23,14 @@ import {
 
 const $ = (id) => document.getElementById(id);
 
+// Titre tronqué par ellipse : le title garde la version complète.
+function vodTitle(entry) {
+  const label = [entry.title, entry.game].filter(Boolean).join(" · ") || entry.game || "";
+  const span = node("span", "vod-title", label);
+  span.title = label;
+  return span;
+}
+
 function node(tag, className, text) {
   const element = document.createElement(tag);
   if (className) element.className = className;
@@ -97,7 +105,7 @@ function createVodCard(entry) {
   const text = node("span", "vod-text");
   text.append(
     node("span", "vod-name", name),
-    node("span", "vod-title", [entry.title, entry.game].filter(Boolean).join(" · ") || entry.game || ""),
+    vodTitle(entry),
     node("span", "vod-ago", agoLabel(entry.endedAt)),
   );
   info.append(avatar, text);
@@ -138,7 +146,9 @@ export async function renderHistory() {
 
   $("history-count").textContent =
     stats.count === 1 ? t("popup.history.countSingular") : t("popup.history.countPlural", { count: stats.count });
-  $("history-sub").textContent = t("popup.history.summary", { duration: durationLabel(stats.totalSeconds) });
+  const sub = $("history-sub");
+  sub.textContent = t("popup.history.summary", { duration: durationLabel(stats.totalSeconds) });
+  sub.title = sub.textContent;
 
   grid.replaceChildren(...missed.map(createVodCard));
   grid.hidden = missed.length === 0;
