@@ -792,9 +792,10 @@ button.pts-row:focus-visible { background: var(--surface-2); }
 .chip-drops.is-claimed svg { color: var(--lcd-ink); }
 .chip-drops:hover,
 .chip-drops:focus-visible { box-shadow: inset 0 0 0 1px var(--violet-line); }
-.chip-fill { position: absolute; bottom: 0; left: 0; height: 3px; background: var(--lcd-accent); transition: width var(--dur-base) var(--ease-out); }
+.chip-fill { position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--lcd-accent); transform: scaleX(0); transform-origin: left center; transition: transform var(--dur-base) var(--ease-out); }
 .drops-bar { display: block; height: 6px; overflow: hidden; border-radius: 3px; background: var(--line-2); }
-.drops-bar i { display: block; height: 100%; border-radius: 3px; background: var(--lcd-accent); transition: width var(--dur-base) var(--ease-out); }
+/* Remplie par transform: scaleX (fillTransform, js/popup-drops.js) : le rail arrondi rogne l'extrémité. */
+.drops-bar i { display: block; width: 100%; height: 100%; background: var(--lcd-accent); transform: scaleX(0); transform-origin: left center; transition: transform var(--dur-base) var(--ease-out); }
 
 .drops-auto { border: 0; cursor: pointer; }
 .drops-auto.is-on { background: var(--lcd-soft); box-shadow: inset 0 0 0 1px var(--lcd-line); color: var(--text); }
