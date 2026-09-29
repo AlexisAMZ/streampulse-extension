@@ -9,7 +9,7 @@
 
 const DEFAULT_LIMIT = 8;
 
-export const ROLLING_PERIODS = [
+const ROLLING_PERIODS = [
   { id: "7d", days: 7 },
   { id: "30d", days: 30 },
 ];

@@ -7,7 +7,7 @@ import { streamerCache, streamerStates } from "./state.js";
 import { DataStore } from "./stores.js";
 
 // Avatar cache for watch time (avoids repeated API calls)
-export const wtAvatarCache = new Map();
+const wtAvatarCache = new Map();
 
 export async function resolveChannelAvatar(platform, channel) {
   const cacheKey = `${platform}:${channel}`;
@@ -153,7 +153,7 @@ export class WatchTimeStore {
     await chrome.storage.local.set({ [STORAGE_KEYS.WATCH_TIME_DAILY]: next });
   }
 
-  // record() et getSummary() font du read-modify-write sur la meme cle :
+  // record() et flush() font du read-modify-write sur la meme cle :
   // ils passent par une file pour ne jamais s'ecarter (meme pattern que HistoryStore).
   static _queue = Promise.resolve();
 
@@ -280,54 +280,6 @@ export class WatchTimeStore {
       console.warn("[WatchTime] daily record failed:", error);
     }
   }
-
-  static async getSummary(monthKey = null) {
-    // Le cumul en attente fait partie du total : le vider avant de lire,
-    // sinon le récap affiche jusqu'à 5 minutes de retard.
-    await this.flush();
-    const data = await this._getData();
-    const key = monthKey || this._getMonthKey();
-    const monthData = data[key] || {};
-
-    const entries = Object.values(monthData);
-    entries.sort((a, b) => b.watchSeconds - a.watchSeconds);
-
-    const topWatchedRaw = entries.slice(0, 10);
-
-    // Resolve missing avatars before returning
-    const topWatched = await Promise.all(
-      topWatchedRaw.map(async (e) => {
-        let avatarUrl = e.avatarUrl || "";
-        if (!avatarUrl) {
-          avatarUrl = await resolveChannelAvatar(e.platform, e.channel);
-          // Persist resolved avatar for next time
-          if (avatarUrl && monthData[`${e.platform}:${e.channel}`]) {
-            monthData[`${e.platform}:${e.channel}`].avatarUrl = avatarUrl;
-          }
-        }
-        return {
-          platform: e.platform,
-          channel: e.channel,
-          watchSeconds: e.watchSeconds,
-          avatarUrl,
-        };
-      })
-    );
-
-    // Persister les avatars resolus ICI ferait un RMW concurrent avec record() :
-    // on laisse record() en être responsable (il met deja avatarUrl a jour).
-
-    const totalSeconds = entries.reduce((s, e) => s + e.watchSeconds, 0);
-    const availableMonths = Object.keys(data).sort().reverse();
-
-    return {
-      month: key,
-      availableMonths,
-      totalSeconds,
-      channelCount: entries.length,
-      topWatched,
-    };
-  }
 }
 
 
@@ -337,7 +289,7 @@ export class WatchTimeStore {
  * La carte est petite (une entrée par chaîne regardée) mais purgée quand elle
  * grossit, pour ne rien garder au-delà de la minute utile.
  */
-export const watchTimeClaims = new Map();
+const watchTimeClaims = new Map();
 
 export function watchTimeTabClaims(platform, channel, tabId) {
   if (!platform || !channel) return true;

@@ -1,28 +1,27 @@
 // Primitives de dessin partagees par les deux formats de recap (PC et mobile).
 // Aucune mise en page ici : uniquement des briques reutilisables.
 
-export const VIOLET = "#9146ff";
-export const VIOLET_LIGHT = "#c4a3ff";
+const VIOLET = "#9146ff";
 export const INK = "#f4f2f7";
 export const MUTED = "#c0b9d2";
 export const FAINT = "#8f88a6";
 export const LCD = "#c6d4a0";
 // Fonts of streampulse.fr, bundled with the extension (css/tokens.css).
-export const SANS = "Onest, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+const SANS = "Onest, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
 export const DISPLAY = "Unbounded, Onest, -apple-system, 'Segoe UI', sans-serif";
 export const MONO = SANS;
 
-export const PLATFORM_COLORS = {
+const PLATFORM_COLORS = {
   twitch: "#9146ff",
   kick: "#53fc18",
 };
 
-export function platformColor(platform) {
+function platformColor(platform) {
   return PLATFORM_COLORS[platform] || FAINT;
 }
 
 /** Palette stable par pseudo : deux chaines n'ont pas la meme pastille. */
-export function colorForChannel(channel) {
+function colorForChannel(channel) {
   let hash = 0;
   for (let i = 0; i < channel.length; i++) {
     hash = (hash * 31 + channel.charCodeAt(i)) >>> 0;
@@ -30,7 +29,7 @@ export function colorForChannel(channel) {
   return `hsl(${hash % 360} 58% 45%)`;
 }
 
-export function roundRect(ctx, x, y, w, h, r) {
+function roundRect(ctx, x, y, w, h, r) {
   const radius = Math.max(0, Math.min(r, w / 2, h / 2));
   ctx.beginPath();
   ctx.moveTo(x + radius, y);

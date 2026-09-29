@@ -5,10 +5,9 @@
 // Actions qui écrivent des données ou pilotent l'extension : réservées aux
 // pages de l'extension (popup, onboarding, réglages…). Les pages web ne les
 // voient jamais, même via un content script.
-export const SENSITIVE_MESSAGE_TYPES = new Set([
+const SENSITIVE_MESSAGE_TYPES = new Set([
   "removeStreamer",
   "resetPoints",
-  "resetStat",
   "clearEventLogs",
   "updateUserProfile",
   "badgeAutoStart",

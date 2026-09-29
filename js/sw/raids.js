@@ -78,7 +78,7 @@ export async function notifyIncomingRaid({ channel, raider, viewers }) {
 
 // Le handle IRC est en minuscules ; on récupère le nom d'affichage connu des
 // données de l'extension avant de retomber sur le handle brut.
-export async function resolveChannelDisplayName(channel) {
+async function resolveChannelDisplayName(channel) {
   try {
     const stored = await chrome.storage.local.get(STORAGE_KEYS.STREAMERS);
     const streamers = Array.isArray(stored[STORAGE_KEYS.STREAMERS])

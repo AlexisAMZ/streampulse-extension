@@ -6,7 +6,7 @@ import { CONFIG } from "./config.js";
 import { PREFERENCES_KEY, STORAGE_KEYS } from "./constants.js";
 import { normalizeStreamer } from "./normalize.js";
 
-export const DEFAULT_STATS = {
+const DEFAULT_STATS = {
   channelPointsClaimed: 0,
   dropsClaimed: 0,
   momentsClaimed: 0,

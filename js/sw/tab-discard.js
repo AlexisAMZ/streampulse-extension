@@ -31,7 +31,7 @@ export function onPreferencesChangedForTabDiscard(changes, area) {
 }
 
 /** Onglets qu'on avait marqués (chaînes des trois plateformes) : on les relâche tous. */
-export async function unmarkDiscardableTabs() {
+async function unmarkDiscardableTabs() {
   let tabs;
   try {
     tabs = await chrome.tabs.query({ autoDiscardable: false });

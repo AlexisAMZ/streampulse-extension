@@ -6,10 +6,10 @@ import { fetchJson, fetchTwitchJson, twitchHeaders } from "./config.js";
 // ─── Suggestions de chaînes (champ d'ajout du popup) ─────────────────────────
 // Une frappe = une requête au plus toutes les 220 ms côté popup ; ce cache d'une
 // minute évite de redemander la même saisie (retour arrière, retape).
-export const SUGGEST_TTL_MS = 60_000;
-export const suggestCache = new Map();
+const SUGGEST_TTL_MS = 60_000;
+const suggestCache = new Map();
 
-export const channelSearchFetchers = {
+const channelSearchFetchers = {
   twitch: (query) =>
     fetchTwitchJson(`https://api.twitch.tv/helix/search/channels?query=${encodeURIComponent(query)}&first=10`, { headers: twitchHeaders() }, 8000),
   kick: (query) => fetchJson(`https://kick.com/api/search?searched_word=${encodeURIComponent(query)}`, {}, 8000),

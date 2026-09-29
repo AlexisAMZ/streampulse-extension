@@ -3,12 +3,12 @@
 import { translateWithPrefs } from "./i18n.js";
 import { PreferenceStore } from "./stores.js";
 
-export const BADGE_COLOR_LIVE = "#f7f4e3";
-export const BADGE_COLOR_IDLE = "#6C5CE7";
+const BADGE_COLOR_LIVE = "#f7f4e3";
+const BADGE_COLOR_IDLE = "#6C5CE7";
 
-export const BADGE_LIVE_COUNT_KEY = "streampulse:badgeLiveCount";
+const BADGE_LIVE_COUNT_KEY = "streampulse:badgeLiveCount";
 /** Violet Twitch, comme la pastille inline des notes dans la popup. */
-export const BADGE_COLOR_UPDATE = "#9146ff";
+const BADGE_COLOR_UPDATE = "#9146ff";
 
 export class ActionBadge {
   static formatBadgeCount(count) {

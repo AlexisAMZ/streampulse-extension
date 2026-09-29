@@ -22,8 +22,8 @@ export const pointsStore = createPointsStore({ storage: chrome.storage.local, re
 
 export const dropsStore = createDropsStore({ storage: chrome.storage.local, resolveChannels: resolveTwitchChannels });
 /** Un Drop gagné hors de la vue (lecture tardive) ne déclenche pas d'alerte. */
-export const DROP_ALERT_MAX_AGE_MS = 60 * 60_000;
-export const DROP_ALERTS_PER_READ = 3;
+const DROP_ALERT_MAX_AGE_MS = 60 * 60_000;
+const DROP_ALERTS_PER_READ = 3;
 /** Le popup ouvert ne relance pas une lecture plus récente que ce délai. */
 export const DROPS_POPUP_REFRESH_MS = 2 * 60_000;
 
@@ -49,18 +49,18 @@ export async function announceDrops(entries) {
 }
 
 /** Onglets Twitch, celui qui a parlé d'abord, puis l'onglet actif. */
-export async function twitchTabs(preferredId) {
+async function twitchTabs(preferredId) {
   const tabs = await chrome.tabs.query({ url: "https://www.twitch.tv/*" });
   return tabs
     .filter((tab) => tab.id !== undefined && tab.discarded !== true)
     .sort((a, b) => Number(b.id === preferredId) - Number(a.id === preferredId) || Number(b.active) - Number(a.active));
 }
 
-export const dropsClient = createDropsClient({ fetch: (...args) => fetch(...args), cookies: chrome.cookies });
+const dropsClient = createDropsClient({ fetch: (...args) => fetch(...args), cookies: chrome.cookies });
 
-export const DROPS_ALARM_MINUTES = 10;
+const DROPS_ALARM_MINUTES = 10;
 /** Un onglet Twitch qui vient de relire l'inventaire dispense le service worker de le faire. */
-export const DROPS_WORKER_MIN_GAP_MS = 4 * 60_000;
+const DROPS_WORKER_MIN_GAP_MS = 4 * 60_000;
 
 export function scheduleDropsAlarm() {
   chrome.alarms.get(DROPS_ALARM, (existing) => {
@@ -96,10 +96,10 @@ export async function refreshDropsFromWorker({ minGapMs = DROPS_WORKER_MIN_GAP_M
   return { read: true };
 }
 
-export const REWARDS_EVERY_MS = 30 * 60_000;
+const REWARDS_EVERY_MS = 30 * 60_000;
 
 /** Campagnes de badges et récompenses, relues au plus toutes les 30 minutes. */
-export async function refreshRewardsFromWorker() {
+async function refreshRewardsFromWorker() {
   const stored = await chrome.storage.local.get(["streamPulseDropsRewards", "streamPulseDropsBadges", BADGE_AUTO_KEY]);
   const now = Date.now();
   // Deux délais séparés : une lecture réussie de l'un ne doit jamais bloquer l'autre.
@@ -144,7 +144,7 @@ export const badgeAuto = createBadgeAuto({
   onStart: () => scheduleDropsAlarm(),
 });
 
-export function checkBadgeAuto() {
+function checkBadgeAuto() {
   return badgeAuto.check();
 }
 
@@ -157,7 +157,7 @@ export function checkBadgeAfterClaim() {
 
 
 /** Alerte pour les nouveaux badges gratuits (3 au plus d'un coup). */
-export async function announceBadges(badges) {
+async function announceBadges(badges) {
   const free = badges.filter((badge) => !isPaidBadge(badge)).slice(0, 3);
   if (!free.length) return;
   const prefs = await PreferenceStore.get();

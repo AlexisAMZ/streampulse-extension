@@ -13,7 +13,7 @@ import { DataStore, PreferenceStore } from "./stores.js";
 
 let initDone = false;
 
-export async function openOnboarding(mode = "") {
+async function openOnboarding(mode = "") {
   const query = mode ? `?mode=${encodeURIComponent(mode)}` : "";
   const url = chrome.runtime.getURL(`html/onboarding.html${query}`);
   try {
@@ -37,10 +37,10 @@ export async function openPatchNotes() {
 // donc deja 4h en storage et ne verraient jamais le nouveau defaut. On les
 // bascule une seule fois, marquee par un drapeau, pour qu'un retour manuel a 4h
 // ne soit pas ecrase a la mise a jour suivante.
-export const INVENTORY_INTERVAL_MIGRATION_KEY = "autoOpenInventoryIntervalMigratedTo24h";
-export const LEGACY_AUTO_OPEN_INVENTORY_INTERVAL_HOURS = 4;
+const INVENTORY_INTERVAL_MIGRATION_KEY = "autoOpenInventoryIntervalMigratedTo24h";
+const LEGACY_AUTO_OPEN_INVENTORY_INTERVAL_HOURS = 4;
 
-export async function migrateAutoOpenInventoryInterval() {
+async function migrateAutoOpenInventoryInterval() {
   try {
     const stored = await chrome.storage.local.get(INVENTORY_INTERVAL_MIGRATION_KEY);
     if (stored[INVENTORY_INTERVAL_MIGRATION_KEY]) return;
@@ -65,9 +65,9 @@ export async function migrateAutoOpenInventoryInterval() {
 // automatique passe a desactivee par defaut. L'ancien defaut (active) etait deja
 // ecrit en storage chez tout le monde : on bascule une seule fois, marque par un
 // drapeau, pour qu'un utilisateur qui la reactive ne soit pas ecrase ensuite.
-export const RAID_CANCEL_MIGRATION_KEY = "autoCancelRaidsMigratedToOff";
+const RAID_CANCEL_MIGRATION_KEY = "autoCancelRaidsMigratedToOff";
 
-export async function migrateAutoCancelRaidsOff() {
+async function migrateAutoCancelRaidsOff() {
   try {
     const stored = await chrome.storage.local.get(RAID_CANCEL_MIGRATION_KEY);
     if (stored[RAID_CANCEL_MIGRATION_KEY]) return;
@@ -82,9 +82,9 @@ export async function migrateAutoCancelRaidsOff() {
 // Le drapeau dédié survit à un éventuel double déclenchement de onInstalled,
 // qui ne remet pas seenPatchNotesVersion à jour. Clic : ouvre la page des
 // nouveautés. Désactivable dans les Réglages, onglet Alertes.
-export const UPDATE_NOTICE_VERSION_KEY = "updateNoticeShownVersion";
+const UPDATE_NOTICE_VERSION_KEY = "updateNoticeShownVersion";
 
-export async function notifyUpdateOnce(version) {
+async function notifyUpdateOnce(version) {
   try {
     const preferences = await PreferenceStore.get();
     if (preferences.updateNotifications === false) return;

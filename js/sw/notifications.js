@@ -3,7 +3,7 @@
 import { DEFAULT_LANGUAGE } from "../../i18n/translations.js";
 import { DEFAULT_PLATFORM, buildProfileUrl, formatHandleForDisplay, getPlatformIcon, getPlatformLabelKey, normalizePlatform, platformSupportsLiveStatus, sanitizeHandle } from "../platforms.js";
 import { DEFAULT_PREFERENCES, normalizeLanguage } from "../preferences-data.js";
-import { CONFIG, pollIntervalMinutes } from "./config.js";
+import { CONFIG } from "./config.js";
 import { NOTIFICATION_NAMESPACE } from "./constants.js";
 import { formatNumberForLanguage, translate } from "./i18n.js";
 import { streamerCache, streamerStates } from "./state.js";
@@ -193,51 +193,8 @@ export class NotificationCenter {
     return id;
   }
 
-  static async schedule(options = {}) {
-    await this.init();
-    const entries = await this.getScheduled();
-    const alarmName = options.name
-      ? `${this.alarmPrefix}${options.name}`
-      : `${this.alarmPrefix}${Date.now()}`;
-    const interval = Math.max(
-      Number(options.intervalMinutes) || pollIntervalMinutes(),
-      0.1
-    );
-    const updated = entries.filter((entry) => entry.alarmName !== alarmName);
-    updated.push({
-      alarmName,
-      title: options.title || translate(DEFAULT_LANGUAGE, "common.appName"),
-      message: options.message || "",
-      url: options.url || null,
-      streamerId: options.streamerId || null,
-      platform: options.platform || null,
-      intervalMinutes: interval,
-      requireInteraction: Boolean(options.requireInteraction),
-      priority:
-        typeof options.priority === "number"
-          ? options.priority
-          : options.requireInteraction
-          ? 2
-          : 0,
-      playSound: options.playSound !== false,
-      iconUrl: this.resolveIcon(options.iconUrl),
-    });
-    await this.saveScheduled(updated);
-    chrome.alarms.create(alarmName, {
-      delayInMinutes: 0.1,
-      periodInMinutes: interval,
-    });
-    return alarmName;
-  }
-
-  static async cancel(name) {
-    const entries = await this.getScheduled();
-    const alarmName = `${this.alarmPrefix}${name}`;
-    const filtered = entries.filter((entry) => entry.alarmName !== alarmName);
-    await this.saveScheduled(filtered);
-    chrome.alarms.clear(alarmName);
-  }
-
+  // Notifications programmées : plus aucune n'est créée, mais des alarmes
+  // d'anciennes versions peuvent subsister ; elles s'affichent encore.
   static async handleAlarm(alarmName) {
     await this.init();
     if (!alarmName.startsWith(this.alarmPrefix)) return false;
@@ -251,10 +208,6 @@ export class NotificationCenter {
   static async getScheduled() {
     const stored = await chrome.storage.local.get(this.storageKey);
     return stored[this.storageKey] || [];
-  }
-
-  static async saveScheduled(entries) {
-    await chrome.storage.local.set({ [this.storageKey]: entries });
   }
 }
 
@@ -464,7 +417,7 @@ export class NotificationSystem {
   }
 }
 
-export class SoundManager {
+class SoundManager {
   static async play(filePath = "sons/notification.mp3") {
     if (!filePath) return;
     try {
@@ -496,7 +449,7 @@ export class SoundManager {
   }
 }
 
-export async function openStreamerFromNotification(streamerId) {
+async function openStreamerFromNotification(streamerId) {
   if (!streamerId) return;
   let streamer = streamerCache.get(streamerId);
   let states = streamerStates.get(streamerId);

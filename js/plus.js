@@ -38,7 +38,7 @@ export async function portalUrl(licenseKey, fetchImpl) {
 }
 
 /** Page d'achat ouverte par le bouton « Débloquer StreamPulse+ ». */
-export const PLUS_CHECKOUT_URL = "https://streampulse.fr/plus";
+const PLUS_CHECKOUT_URL = "https://streampulse.fr/plus";
 
 /** Dossier de langue du site (le français est à la racine). */
 const SITE_DIRS = { fr: "", "pt-BR": "pt-br" };
@@ -55,10 +55,10 @@ export function plusPageUrl(lang, plan) {
 /** Sans nouvelle vérification réussie, la licence reste active ce délai (hors ligne). */
 export const PLUS_GRACE_MS = PLUS_RULE.PLUS_GRACE_MS;
 
-export const PLUS_PLANS = ["monthly", "lifetime"];
+const PLUS_PLANS = ["monthly", "lifetime"];
 
 /** Identifiant de ce navigateur : une clé vaut pour 2 appareils. */
-export const DEVICE_KEY = "streamPulseDeviceId";
+const DEVICE_KEY = "streamPulseDeviceId";
 
 /** Lit ou crée l'identifiant d'appareil (32 caractères hexadécimaux). */
 export async function getDeviceId(storage) {

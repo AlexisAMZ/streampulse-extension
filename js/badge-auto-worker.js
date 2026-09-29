@@ -14,7 +14,7 @@ const channelOf = (url) => (String(url || "").match(/^https:\/\/www\.twitch\.tv\
  * haut de la page et remplacée à chaque mise à jour. Le bouton Arrêter passe
  * par le service worker.
  */
-export function showAutoBanner(view) {
+function showAutoBanner(view) {
   const ID = "sp-badge-auto-banner";
   document.getElementById(ID)?.remove();
   if (!view) return;

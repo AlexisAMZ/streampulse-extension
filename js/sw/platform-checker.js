@@ -7,7 +7,7 @@ import { fetchKickOfficial, getKickAppToken } from "./kick-token.js";
 import { resolveKickAsset, sanitizeLogin } from "./normalize.js";
 import { pollStreamers } from "./polling.js";
 
-export const TWITCH_STREAMS_BATCH_SIZE = 100;
+const TWITCH_STREAMS_BATCH_SIZE = 100;
 
 export function twitchStreamToStatus(stream) {
   if (!stream) return { isLive: false };

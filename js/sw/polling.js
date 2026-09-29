@@ -21,7 +21,7 @@ import { DataStore, PreferenceStore } from "./stores.js";
  * résilié, remboursement) : la licence est retirée. Erreur réseau : on garde
  * la licence, isPlusActive applique alors le délai de grâce hors ligne.
  */
-export async function recheckPlusLicense(record) {
+async function recheckPlusLicense(record) {
   if (!needsRecheck(record)) return;
   const now = Date.now();
   const device = await getDeviceId(chrome.storage.local);
@@ -41,7 +41,7 @@ export async function recheckPlusLicense(record) {
  * Se lit avant que le sondage en cours n'ecrase l'etat, donc renvoie bien
  * l'avant-dernier passage en direct et non celui d'aujourd'hui.
  */
-export function lastSeenOf(streamerId) {
+function lastSeenOf(streamerId) {
   const previous = streamerLiveState.get(streamerId);
   if (!previous) return {};
   const lastTitle = previous.title || previous.lastTitle || "";
@@ -59,7 +59,7 @@ export function lastSeenOf(streamerId) {
  * streamer. Un échec du batch marque tous les streamers Twitch en erreur
  * (la boucle de sondage préserve alors leur état live précédent).
  */
-export async function buildStreamerStatus(streamer, twitchBatch = null) {
+async function buildStreamerStatus(streamer, twitchBatch = null) {
   const platform = streamer.platform || "twitch";
   let status;
   if (twitchBatch && platform === "twitch") {
@@ -124,7 +124,7 @@ export async function buildStreamerStatus(streamer, twitchBatch = null) {
   };
 }
 
-export let _pollInFlight = null;
+let _pollInFlight = null;
 
 export async function pollStreamers({ forceNotification = false } = {}) {
   // Re-entrancy guard: dedupe concurrent calls
@@ -144,7 +144,7 @@ export async function pollStreamers({ forceNotification = false } = {}) {
  * Journal de diagnostic : un changement de jeu/titre sans alerte est invisible
  * pour l'utilisateur. La console du SW dit alors quel garde a bloqué l'envoi.
  */
-export function logChangeDiagnostics(streamer, previous, next, preferences) {
+function logChangeDiagnostics(streamer, previous, next, preferences) {
   if (!previous.isLive || !next.isLive || next.isError) return;
   if (previous.game !== next.game) {
     console.info("[SP] changement de categorie detecte:", streamer.handle, {
@@ -304,7 +304,7 @@ async function notifyCatchUp(catchUpLive, preferences) {
   });
 }
 
-export async function _pollStreamersImpl({ forceNotification = false } = {}) {
+async function _pollStreamersImpl({ forceNotification = false } = {}) {
   await ensureConfig(); // credentials avant tout appel Twitch (redémarrage du SW MV3)
   const streamers = await DataStore.getStreamers();
   const preferences = await PreferenceStore.get();
@@ -340,7 +340,7 @@ export async function _pollStreamersImpl({ forceNotification = false } = {}) {
   return statuses;
 }
 
-export async function precacheThumbnails(statuses) {
+async function precacheThumbnails(statuses) {
   const CACHE_KEY = "streampulse:thumbCache";
   let cache = {};
   try {

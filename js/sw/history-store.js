@@ -10,7 +10,7 @@ import { PlatformChecker } from "./platform-checker.js";
 // Chaque fin de live d'un streamer suivi devient une entree d'historique. Une
 // session est « regardee » si le tracker de temps de visionnage a vu la chaine
 // ouverte pendant qu'elle etait en direct.
-export const LAST_WATCHED_KEY = "streamPulseLastWatched";
+const LAST_WATCHED_KEY = "streamPulseLastWatched";
 
 export class HistoryStore {
   static _queue = Promise.resolve();

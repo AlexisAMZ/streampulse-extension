@@ -3,7 +3,7 @@
 import { DEFAULT_LANGUAGE, formatTemplate, resolveLocale, translations } from "../../i18n/translations.js";
 import { normalizeLanguage } from "../preferences-data.js";
 
-export function resolveTranslationValue(lang, key) {
+function resolveTranslationValue(lang, key) {
   if (!key) return null;
   const segments = key.split(".");
   let current = translations[lang] || translations[DEFAULT_LANGUAGE] || {};

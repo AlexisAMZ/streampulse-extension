@@ -18,26 +18,26 @@ export const DROPS_BADGES_KEY = "streamPulseDropsBadges";
 export const BADGE_AUTO_KEY = "streamPulseBadgeAuto";
 export const DROPS_KEYS = [DROPS_PROGRESS_KEY, DROPS_CAMPAIGNS_KEY, DROPS_HISTORY_KEY, DROPS_SINCE_KEY, DROPS_REWARDS_KEY, DROPS_BADGES_KEY];
 /** Un badge vu pour la première fois depuis moins longtemps est « nouveau ». */
-export const NEW_BADGE_MS = 30 * 86_400_000;
+const NEW_BADGE_MS = 30 * 86_400_000;
 
 const MINUTE_MS = 60_000;
 const HOUR_MS = 60 * MINUTE_MS;
 const DAY_MS = 24 * HOUR_MS;
 
 export const HISTORY_LIMIT = 2000;
-export const HISTORY_RETENTION_DAYS = 400;
-export const NEW_CAMPAIGN_MS = 3 * DAY_MS;
-export const ENDING_SOON_MS = 48 * HOUR_MS;
+const HISTORY_RETENTION_DAYS = 400;
+const NEW_CAMPAIGN_MS = 3 * DAY_MS;
+const ENDING_SOON_MS = 48 * HOUR_MS;
 /** Au-delà, la progression affichée n'est plus décomptée : elle vient d'une vieille lecture. */
 export const STALE_MS = 30 * MINUTE_MS;
 /** Durée pendant laquelle l'accueil annonce un Drop tout juste récupéré. */
-export const RECENT_CLAIM_MS = HOUR_MS;
+const RECENT_CLAIM_MS = HOUR_MS;
 /** Un Drop vu récupéré et une récompense de l'inventaire sont le même gain s'ils sont si proches. */
 const SAME_AWARD_MS = 2 * HOUR_MS;
 const EXPIRED_KEEP_MS = 7 * DAY_MS;
 const MAX_MINUTES = 100_000;
 
-export const CAMPAIGN_FILTERS = Object.freeze(["all", "new", "ending", "upcoming"]);
+const CAMPAIGN_FILTERS = Object.freeze(["all", "new", "ending", "upcoming"]);
 /** Statuts renvoyés par Twitch quand la récompense est bien dans l'inventaire. */
 export const CLAIM_OK_STATUSES = Object.freeze(["ELIGIBLE_FOR_ALL", "DROP_INSTANCE_ALREADY_CLAIMED"]);
 
@@ -150,7 +150,7 @@ function pickCurrent(candidates, now) {
   return sortDrops([...ready, ...byCampaign.values()]);
 }
 
-export function sortDrops(drops) {
+function sortDrops(drops) {
   return [...drops].sort((a, b) => Number(isClaimable(b)) - Number(isClaimable(a)) || remainingMinutes(a) - remainingMinutes(b) || (a.endsAt || Infinity) - (b.endsAt || Infinity));
 }
 
@@ -344,7 +344,7 @@ export function pruneHistory(history, now) {
 // ─── Campagnes ────────────────────────────────────────────────────────────────
 
 /** Une campagne lue par GraphQL ou dans le cache de la page Twitch. */
-export function normalizeCampaign(raw) {
+function normalizeCampaign(raw) {
   if (!isPlainObject(raw)) return null;
   const id = idOf(raw.id);
   const game = text(raw.game?.displayName || raw.game?.name, 120);
@@ -386,11 +386,9 @@ export function pruneCampaigns(campaigns, now) {
   return campaigns.filter((campaign) => !campaign.endsAt || campaign.endsAt > now - EXPIRED_KEEP_MS);
 }
 
-export const campaignUrl = (id) => `https://www.twitch.tv/drops/campaigns?dropID=${encodeURIComponent(id)}`;
-
 const isUpcoming = (campaign, now) => campaign.startsAt > now || campaign.status === "UPCOMING";
 
-export function isActiveCampaign(campaign, now) {
+function isActiveCampaign(campaign, now) {
   if (campaign.status && campaign.status !== "ACTIVE") return false;
   return (!campaign.startsAt || campaign.startsAt <= now) && (!campaign.endsAt || campaign.endsAt > now);
 }
@@ -444,7 +442,7 @@ export function countFilters(campaigns, now) {
 // ─── Campagnes de récompenses (badges) ───────────────────────────────────────
 
 /** Une campagne `rewardCampaignsAvailableToUser`, avec ses conditions et ses récompenses. */
-export function normalizeReward(raw) {
+function normalizeReward(raw) {
   if (!isPlainObject(raw)) return null;
   const id = idOf(raw.id);
   const rewards = list(raw.rewards)
@@ -553,7 +551,7 @@ export function gameFromUrl(url) {
 /** Payant si la description parle d'abonnement, de sub offert ou de Bits. */
 export const isPaidBadge = (badge) => /subscrib|gift|\bsubs?\b|\bbits?\b/i.test(badge.description || "");
 
-export const BADGE_FILTERS = Object.freeze(["available", "all", "free", "paid", "missing", "owned"]);
+const BADGE_FILTERS = Object.freeze(["available", "all", "free", "paid", "missing", "owned"]);
 
 /** Minuscules sans accents : « Pokémon » et « Pokemon » doivent se reconnaître. */
 const fold = (value) => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -611,7 +609,7 @@ export const isBadgeCampaign = (campaign) => BADGE_OWNER.test(campaign.owner || 
  * ils partagent le nom d'un jeu dont une campagne de badges est en cours, et
  * seraient proposés à tort. Identifiants Twitch (setID).
  */
-export const RETIRED_BADGES = new Set([
+const RETIRED_BADGES = new Set([
   "league-of-legends-classic", // lancement de LoL Classic en Twitch Rivals
   "elden-ring-recluse", // sortie de Nightreign
   "elden-ring-wylder", // sortie de Nightreign

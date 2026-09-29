@@ -47,7 +47,7 @@ export function scheduleKeepAliveAlarm() {
   });
 }
 
-export const WATCH_TIME_FLUSH_ALARM = "streampulseWatchTimeFlush";
+const WATCH_TIME_FLUSH_ALARM = "streampulseWatchTimeFlush";
 
 /** Vide le cumul du temps de visionnage au plus toutes les 5 minutes. */
 export function scheduleWatchTimeFlushAlarm() {

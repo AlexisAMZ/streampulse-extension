@@ -2,7 +2,6 @@
 
 import { syncUpdateBadge } from "./action-badge.js";
 import { CONFIG, ensureConfig } from "./config.js";
-import { STORAGE_KEYS } from "./constants.js";
 import { HistoryStore } from "./history-store.js";
 import { translateWithPrefs } from "./i18n.js";
 import { openPatchNotes } from "./lifecycle.js";
@@ -187,23 +186,5 @@ export function handleGetEventLogs(request, sender, sendResponse) {
 
 export function handleClearEventLogs(request, sender, sendResponse) {
   respond(async () => ({ logs: await EventLogStore.clearLogs() }), sendResponse, "clearEventLogs");
-  return true;
-}
-
-export function handleResetStat(request, sender, sendResponse) {
-  (async () => {
-    try {
-      const { stat } = request;
-      if (stat) {
-
-        const current = await StatsStore.get();
-        current[stat] = 0;
-        await chrome.storage.local.set({ [STORAGE_KEYS.STATS]: current });
-      }
-      sendResponse({ success: true });
-    } catch (error) {
-      sendResponse({ error: error?.message || String(error) });
-    }
-  })();
   return true;
 }

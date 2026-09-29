@@ -4,14 +4,14 @@ import { NETWORK_TIMEOUT_MS } from "./constants.js";
 
 // ─── Kick Official API: App Access Token ─────────────────────────────────────
 
-export const _kickToken = { value: null, expiresAt: 0 };
+const _kickToken = { value: null, expiresAt: 0 };
 
 // Vol unique : sans lui, deux sondages concurrents demandent chacun un jeton
 // au proxy et le second ecrase le premier, pour rien.
-export let _kickTokenInFlight = null;
+let _kickTokenInFlight = null;
 
-export const KICK_TOKEN_STORAGE_KEY = "streampulse:kickToken";
-export const KICK_TOKEN_MARGIN_MS = 120_000;
+const KICK_TOKEN_STORAGE_KEY = "streampulse:kickToken";
+const KICK_TOKEN_MARGIN_MS = 120_000;
 
 
 export function getKickAppToken() {
@@ -21,11 +21,11 @@ export function getKickAppToken() {
   return _kickTokenInFlight;
 }
 
-export function isKickTokenFresh(token) {
+function isKickTokenFresh(token) {
   return Boolean(token?.value) && Date.now() < Number(token.expiresAt || 0) - KICK_TOKEN_MARGIN_MS;
 }
 
-export async function readCachedKickToken() {
+async function readCachedKickToken() {
   if (isKickTokenFresh(_kickToken)) return _kickToken.value;
   const stored = await chrome.storage.local.get(KICK_TOKEN_STORAGE_KEY);
   const cached = stored[KICK_TOKEN_STORAGE_KEY];
@@ -39,7 +39,7 @@ export async function readCachedKickToken() {
 
 // Jeton d'application Kick : memoire, puis stockage, puis le proxy
 // streampulse.fr (le secret client ne quitte jamais le serveur).
-export async function fetchKickAppToken() {
+async function fetchKickAppToken() {
   const cached = await readCachedKickToken();
   if (cached) return cached;
   try {

@@ -7,7 +7,7 @@ export function sanitizeLogin(value = "") {
   return sanitizeHandle("twitch", value);
 }
 
-export function normalizeSocialLinks(rawSocials) {
+function normalizeSocialLinks(rawSocials) {
   if (!rawSocials || typeof rawSocials !== "object") {
     return {};
   }
@@ -120,7 +120,7 @@ export function resolveExternalUrl(rawValue, defaultOrigin = "") {
   return value;
 }
 
-export function fillDimensions(url, width = 1280, height = 720) {
+function fillDimensions(url, width = 1280, height = 720) {
   if (!url || typeof url !== "string") return url;
   return url
     .replace("{width}", String(width))

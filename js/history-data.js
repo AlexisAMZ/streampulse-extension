@@ -4,11 +4,11 @@
 export const HISTORY_KEY = "streamPulseHistory";
 
 /** Au-delà, les sessions les plus anciennes sont oubliées. */
-export const HISTORY_MAX_ENTRIES = 60;
+const HISTORY_MAX_ENTRIES = 60;
 export const HISTORY_MAX_AGE_MS = 14 * 24 * 60 * 60 * 1000;
 
 /** Une session plus courte ne mérite pas d'entrée (coupure réseau, test de stream). */
-export const HISTORY_MIN_DURATION_SEC = 5 * 60;
+const HISTORY_MIN_DURATION_SEC = 5 * 60;
 
 export function emptyHistory() {
   return { entries: [] };
@@ -19,7 +19,7 @@ function toTime(value) {
   return Number.isFinite(time) ? time : null;
 }
 
-export function sessionDurationSec(startedAt, endedAt) {
+function sessionDurationSec(startedAt, endedAt) {
   const start = toTime(startedAt);
   const end = toTime(endedAt);
   if (start === null || end === null || end <= start) return 0;

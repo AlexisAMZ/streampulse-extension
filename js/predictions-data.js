@@ -6,10 +6,10 @@ export const PREDICTION_RULE_KEY = "streamPulsePredictionRule";
 export const PREDICTION_HISTORY_KEY = "streamPulsePredictionHistory";
 export const HISTORY_LIMIT = 200;
 /** Mise minimale acceptée par Twitch. */
-export const MIN_BET = 10;
+const MIN_BET = 10;
 /** Sans nouvelle lecture de la chaîne pendant ce délai, le résultat est inconnu. */
 export const STALE_MS = 10 * 60 * 1000;
-export const STRATEGIES = ["majority", "underdog"];
+const STRATEGIES = ["majority", "underdog"];
 
 export const DEFAULT_RULE = Object.freeze({
   enabled: false,

@@ -81,7 +81,7 @@ export function visibleFx(list, access = {}) {
 export const TENURE_STYLES = PLUS_RULE.TENURE_STYLES;
 
 /** Effet du badge tant que l'abonné n'en a jamais choisi : son badge d'ancienneté. */
-export const DEFAULT_BADGE_FX = "tenure";
+const DEFAULT_BADGE_FX = "tenure";
 
 /** Réglage rangé : un effet inconnu est oublié, jamais transmis. */
 export function normalizeCosmetics(value) {
