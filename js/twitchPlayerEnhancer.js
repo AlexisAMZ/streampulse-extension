@@ -301,7 +301,7 @@
     window.setTimeout(() => {
       const video = findVideoElement();
       if (video?.paused) {
-        video.play().catch(() => {});
+        video.play().catch(() => {}); // Lecture refusée par le navigateur (autoplay) : attendu.
       }
       window.setTimeout(() => seekToBufferedEnd(video), 120);
     }, RETRY_GRACE_MS);
@@ -432,7 +432,7 @@
         if (!video) return;
         seekToBufferedEnd(video);
         if (video.paused) {
-          video.play().catch(() => {});
+          video.play().catch(() => {}); // Lecture refusée par le navigateur (autoplay) : attendu.
         }
       };
 
@@ -450,7 +450,7 @@
           }
           acceleratedVideo = video;
           isHolding = true;
-          video.play().catch(() => {});
+          video.play().catch(() => {}); // Lecture refusée par le navigateur (autoplay) : attendu.
           video.playbackRate = 2;
         }, 500);
         button.setPointerCapture?.(pointerId);
@@ -716,7 +716,7 @@
     if (typeof AudioContext === "undefined") return false;
     if (!boostAudioCtx) boostAudioCtx = new AudioContext();
     if (boostAudioCtx.state === "suspended") {
-      boostAudioCtx.resume().catch(() => {});
+      boostAudioCtx.resume().catch((error) => console.warn("[StreamPulse] amplification audio :", error?.message || error));
     }
     if (boostWiredVideo === video && boostGainNode) {
       boostGainNode.gain.value = boostLevel;
@@ -1105,7 +1105,7 @@
           value: 1,
           channel: getCurrentChannel(),
           raidTarget: target,
-        }).catch(() => {});
+        }).catch(() => {}); // SW endormi ou contexte invalidé : échec attendu.
       } catch (_) {
         // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
       }
@@ -1423,7 +1423,7 @@
         seekToBufferedEnd(video);
       }
       if (video.paused) {
-        video.play().catch(() => {});
+        video.play().catch(() => {}); // Lecture refusée par le navigateur (autoplay) : attendu.
       }
       this.update(true);
     }

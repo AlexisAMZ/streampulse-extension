@@ -34,7 +34,7 @@
 
   function safeSend(msg) {
     try {
-      chrome.runtime.sendMessage(msg).catch(() => {});
+      chrome.runtime.sendMessage(msg).catch(() => {}); // SW endormi ou contexte invalidé : échec attendu.
     } catch (_) {
       // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
     }

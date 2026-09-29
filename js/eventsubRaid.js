@@ -47,10 +47,6 @@ let lastNotifiedAt = new Map();
 // IRC prend le relais, et on economise les requetes Helix + les logs.
 let fatalAuthRejected = false;
 
-export function eventSubActive() {
-  return Boolean(socket && sessionId);
-}
-
 export function stopEventSubRaid() {
   wantedLogins = new Set();
   sessionId = null;

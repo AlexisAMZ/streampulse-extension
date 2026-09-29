@@ -30,6 +30,7 @@ export function createPointsStore({ storage, resolveChannels, now = () => Date.n
 
   function enqueue(task) {
     const run = queue.then(task, task);
+    // L'échec reste porté par `run`, rendu à l'appelant : la file, elle, continue.
     queue = run.catch(() => {});
     return run;
   }

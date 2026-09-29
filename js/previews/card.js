@@ -273,7 +273,10 @@
       if (hlsPromise) return hlsPromise;
       hlsPromise = import(chrome.runtime.getURL("js/vendor/hls.light.min.js"))
         .then(() => NS.Hls || globalThis.Hls || null)
-        .catch(() => null);
+        .catch((error) => {
+          console.warn("[StreamPulse] aperçus : lecteur HLS indisponible", error?.message || error);
+          return null;
+        });
       return hlsPromise;
     }
 
@@ -313,7 +316,7 @@
           hls.loadSource(variantUrl);
           hls.attachMedia(videoEl);
           const p = videoEl.play();
-          if (p && typeof p.catch === "function") p.catch(() => {});
+          if (p && typeof p.catch === "function") p.catch(() => {}); // Lecture refusée par le navigateur (autoplay) : attendu.
           return;
         } catch (_e) {
           hls = null;
@@ -324,7 +327,7 @@
         try {
           videoEl.src = variantUrl;
           const p = videoEl.play();
-          if (p && typeof p.catch === "function") p.catch(() => {});
+          if (p && typeof p.catch === "function") p.catch(() => {}); // Lecture refusée par le navigateur (autoplay) : attendu.
         } catch (_e) {
           /* keep the image fallback */
         }

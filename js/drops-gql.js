@@ -50,7 +50,7 @@ export const INVENTORY_QUERY_LITE = `query StreamPulseDropsInventoryLite {
 // Campagnes de récompenses (badges de chat, objets offerts) : un circuit séparé
 // des Drops, attribué automatiquement. Lecture acceptée sans Client-Integrity
 // (vérifié sur twitch.tv le 2026-09-26) ; Twitch ne donne pas l'avancée.
-export const REWARDS_QUERY = `query StreamPulseRewardCampaigns {
+const REWARDS_QUERY = `query StreamPulseRewardCampaigns {
   rewardCampaignsAvailableToUser {
     id name brand startsAt endsAt summary externalURL
     unlockRequirements { subsGoal minuteWatchedGoal }
@@ -61,7 +61,7 @@ export const REWARDS_QUERY = `query StreamPulseRewardCampaigns {
 
 // Tous les badges globaux de Twitch, et ceux que l'utilisateur possède déjà.
 // Lecture acceptée sans Client-Integrity (vérifié sur twitch.tv le 2026-09-26).
-export const BADGES_QUERY = `query StreamPulseGlobalBadges {
+const BADGES_QUERY = `query StreamPulseGlobalBadges {
   badges { setID version title description clickURL imageURL(size: NORMAL) }
   currentUser { id availableBadges { setID } }
 }`;
@@ -70,7 +70,7 @@ const failure = (code, detail = "") => Object.assign(new Error(code), { code, de
 
 /** Jeton de session Twitch lu dans le cookie, ou "" si l'utilisateur n'est pas connecté. */
 export async function twitchToken(cookies) {
-  const cookie = await cookies.get({ url: "https://www.twitch.tv", name: "auth-token" }).catch(() => null);
+  const cookie = await cookies.get({ url: "https://www.twitch.tv", name: "auth-token" }).catch(() => null); // Cookie illisible : traité comme déconnecté.
   return cookie?.value ? decodeURIComponent(cookie.value) : "";
 }
 
@@ -87,7 +87,7 @@ export function createDropsClient({ fetch, cookies }) {
       body: JSON.stringify({ query }),
     });
     if (response.status === 401) throw failure("signed-out");
-    const json = await response.json().catch(() => null);
+    const json = await response.json().catch(() => null); // Corps non JSON : le statut HTTP fait foi.
     const errors = Array.isArray(json?.errors) ? json.errors.map((error) => String(error?.message || "")) : [];
     if (errors.some((message) => /integrity/i.test(message))) throw failure("integrity");
     if (!json?.data) throw failure(errors.length ? "graphql" : `http-${response.status}`, errors.join(" | ").slice(0, 300));

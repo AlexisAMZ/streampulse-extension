@@ -468,7 +468,7 @@ async function init() {
   await Promise.all([
     document.fonts.load('700 48px "Unbounded"'),
     document.fonts.load('600 24px "Onest"'),
-  ]).catch(() => {});
+  ]).catch((error) => console.warn("[recap] polices non chargées :", error?.message || error));
   currentAssets = { avatars: new Map(), logo: await loadImage("../images/photos/logosp.png") };
   populatePeriods();
 
@@ -506,7 +506,7 @@ function wireReferral(code) {
   row.hidden = false;
   const button = document.getElementById("recap-referral-copy");
   button?.addEventListener("click", async () => {
-    await navigator.clipboard.writeText(code).catch(() => {});
+    await navigator.clipboard.writeText(code).catch((error) => console.warn("[recap] copie du code impossible :", error?.message || error));
     if (!button || button.dataset.busy) return;
     button.dataset.busy = "1";
     const label = button.textContent;

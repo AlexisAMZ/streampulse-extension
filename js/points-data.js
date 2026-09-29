@@ -10,8 +10,8 @@ export const POINTS_JOURNAL_KEY = "streamPulsePointsJournal";
 export const POINTS_CHANNELS_KEY = "streamPulsePointsChannels";
 export const POINTS_KEYS = [POINTS_DAILY_KEY, POINTS_JOURNAL_KEY, POINTS_CHANNELS_KEY];
 
-export const DAILY_RETENTION_DAYS = 400;
-export const JOURNAL_RETENTION_DAYS = 60;
+const DAILY_RETENTION_DAYS = 400;
+const JOURNAL_RETENTION_DAYS = 60;
 export const JOURNAL_LIMIT = 1000;
 const DAY_MS = 86_400_000;
 const MAX_POINTS = 1_000_000;
@@ -52,7 +52,6 @@ const FIRSTS = ["FOLLOW", "CHEER", "SUB_GIFT"];
 /** Seuls ces gains portent le multiplicateur d'abonnement de façon fiable. */
 const FACTOR_SOURCES = new Set(["WATCH", "CLAIM"]);
 
-export const PANEL_PERIODS = Object.freeze(["today", "7d", "30d", "all"]);
 const ROLLING = { today: 1, "7d": 7, "30d": 30 };
 
 const isPlainObject = (value) => value !== null && typeof value === "object" && !Array.isArray(value);

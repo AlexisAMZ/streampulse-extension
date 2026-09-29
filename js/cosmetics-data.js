@@ -2,8 +2,13 @@
 //
 // Source unique côté popup. js/inject/twitch-badge.js et
 // js/inject/settings-drawer.js (scripts classiques, sans import) en gardent une
-// copie, tout comme l'API du site (api/streampulse-badges.mjs) :
+// copie des listes d'effets, tout comme l'API du site (api/streampulse-badges.mjs) :
 // tests/cosmetics-data.test.mjs vérifie que les copies de l'extension suivent.
+// Les paliers d'ancienneté viennent de js/inject/plus-rule.js, partagé tel quel.
+
+import "./inject/plus-rule.js";
+
+const PLUS_RULE = globalThis.StreamPulsePlusRule;
 
 /**
  * Nuancier commun au logo et au pseudo : dégradés puis textures, chacun avec sa
@@ -28,26 +33,15 @@ export const NAME_FX = Object.freeze([...COLOR_FX, "ambassador", "founder"]);
 /** Effets retirés en 26.9.28 : repris par leur équivalent, les autres redeviennent classiques. */
 export const LEGACY_FX = Object.freeze({ prism: "rainbow" });
 
-const MONTH_MS = 30.44 * 24 * 60 * 60 * 1000;
-
 /**
- * Tuiles d'ancienneté StreamPulse+ (fond du logo, façon 7TV), du plus ancien
- * palier au plus récent : mois d'abonnement requis → clé de la tuile.
+ * Tuiles d'ancienneté StreamPulse+ : mois d'abonnement requis → clé de la tuile
+ * (source : js/inject/plus-rule.js).
  */
-export const TENURE_TIERS = Object.freeze([
-  [48, "y4"], [36, "y3"], [24, "y2"], [18, "y1h"], [12, "y1"], [9, "m9"], [6, "m6"], [3, "m3"], [0, "m1"],
-]);
+export const TENURE_TIERS = PLUS_RULE.TENURE_TIERS;
 
-/**
- * Tuile d'un abonné : « founder » pour le fondateur, « life » pour la licence
- * à vie, sinon selon les mois écoulés depuis `since`.
- */
+/** Tuile d'un abonné : « founder », « life », sinon selon les mois écoulés depuis `since`. */
 export function tenureTier(plan, since, now = Date.now(), rank = "") {
-  if (rank === "founder" && plan) return "founder";
-  if (plan === "lifetime") return "life";
-  if (plan !== "monthly") return "";
-  const months = Number(since) > 0 ? Math.max(0, Math.floor((now - Number(since)) / MONTH_MS)) : 0;
-  return TENURE_TIERS.find(([min]) => months >= min)[1];
+  return PLUS_RULE.tenureTier(plan, since, now, rank);
 }
 
 /** Effets d'ambassadeur : nombre de filleuls abonnés exigé (mêmes paliers que le serveur). */
@@ -84,10 +78,10 @@ export function visibleFx(list, access = {}) {
 }
 
 /** Styles du badge d'ancienneté : effet choisi → classe CSS (sp-tier--<style>). */
-export const TENURE_STYLES = Object.freeze({ tenure: "gauge", pager: "pager" });
+export const TENURE_STYLES = PLUS_RULE.TENURE_STYLES;
 
 /** Effet du badge tant que l'abonné n'en a jamais choisi : son badge d'ancienneté. */
-export const DEFAULT_BADGE_FX = "tenure";
+const DEFAULT_BADGE_FX = "tenure";
 
 /** Réglage rangé : un effet inconnu est oublié, jamais transmis. */
 export function normalizeCosmetics(value) {

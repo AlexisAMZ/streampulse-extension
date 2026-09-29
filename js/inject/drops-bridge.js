@@ -139,7 +139,7 @@
 
     const response = await nativeFetch.call(window, GQL_URL, { method: "POST", headers, body: JSON.stringify({ query }), credentials: "omit" });
     if (response.status === 401) throw failure("signed-out");
-    const json = await response.json().catch(() => null);
+    const json = await response.json().catch(() => null); // Corps non JSON : le statut HTTP fait foi.
     const errors = Array.isArray(json?.errors) ? json.errors.map((error) => String(error?.message || "")) : [];
     if (errors.some((message) => /integrity/i.test(message))) throw failure("integrity");
     if (!json?.data) throw failure(errors.length ? "graphql" : `http-${response.status}`, errors.join(" | ").slice(0, 300));

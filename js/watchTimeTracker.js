@@ -24,16 +24,10 @@
     return null;
   }
 
-  const IGNORED_ROUTES = {
-    twitch: new Set([
-      "directory", "settings", "subscriptions", "drops",
-      "wallet", "u", "search", "videos", "moderator",
-      "inventory", "friends",
-    ]),
-    kick: new Set([
-      "categories", "following", "search", "dashboard",
-    ]),
-  };
+  // Routes système de Kick. Sur Twitch, la liste partagée de js/inject/dom.js
+  // fait foi (popout compris) ; Kick garde sa propre liste, plus courte : un
+  // login légitime homonyme d'une route Twitch ne doit pas être filtré.
+  const KICK_IGNORED_ROUTES = new Set(["categories", "following", "search", "dashboard"]);
 
   function extractChannel() {
     const platform = detectPlatform();
@@ -45,13 +39,9 @@
     const segment = path[0].toLowerCase();
     if (!segment || segment.length > 60) return null;
 
-    if (IGNORED_ROUTES[platform]?.has(segment)) return null;
-    // La route popout (lecteur seul, sans page de chaîne) est ignorée comme
-    // les autres routes système ; sur Twitch, la liste partagée de l'inject
-    // (js/inject/dom.js) fait foi. Kick garde sa propre liste, plus courte :
-    // un login légitime homonyme d'une route Twitch ne doit pas être filtré.
-    if (platform === "twitch" && segment === "popout") return null;
-    if (platform === "twitch" && window.__SP_DOM__?.isChannelLogin && !window.__SP_DOM__.isChannelLogin(segment)) return null;
+    if (platform === "kick" && KICK_IGNORED_ROUTES.has(segment)) return null;
+    // dom.js n'est injecté que sur Twitch (accès optionnel : ce script tourne aussi sur Kick).
+    if (platform === "twitch" && window.__SP_DOM__?.isChannelLogin(segment) === false) return null;
 
     return { platform, channel: segment };
   }
@@ -80,7 +70,7 @@
 
   function safeSend(msg) {
     try {
-      chrome.runtime.sendMessage(msg).catch(() => {});
+      chrome.runtime.sendMessage(msg).catch(() => {}); // SW endormi ou contexte invalidé : échec attendu.
     } catch (_) {
       // Extension context invalidated (reloaded): ignore
     }

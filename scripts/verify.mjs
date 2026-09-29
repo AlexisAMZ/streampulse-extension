@@ -59,6 +59,38 @@ const missing = [...refs].filter((f) => !exists(f));
 if (missing.length) missing.forEach((f) => fail(`manifest references a missing file: ${f}`));
 else pass(`all ${refs.size} manifest-referenced files exist`);
 
+// Dépendances des content scripts classiques : un script qui lit un global
+// partagé doit être injecté APRÈS le fichier qui le définit, dans la même
+// entrée (chaque entrée du manifest est un ensemble ordonné indépendant).
+{
+  const SHARED_GLOBALS = [
+    ["StreamPulsePlusRule", "js/inject/plus-rule.js"],
+    ["__SP_DOM__", "js/inject/dom.js"],
+    ["__SP_I18N__", "js/inject/i18n-inline.js"],
+  ];
+  let depIssues = 0;
+  for (const cs of manifest.content_scripts ?? []) {
+    const list = cs.js ?? [];
+    const seen = new Set(list.filter((f, i) => list.indexOf(f) !== i));
+    seen.forEach((f) => { depIssues++; fail(`manifest injects ${f} twice in the same content_scripts entry`); });
+    list.forEach((file, index) => {
+      if (!exists(file)) return;
+      const src = fs.readFileSync(abs(file), "utf8");
+      for (const [globalName, provider] of SHARED_GLOBALS) {
+        // Un accès optionnel (window.X?.) tolère l'absence du global (ex. Kick).
+        const strict = src.split(`${globalName}?.`).join("");
+        if (file === provider || !strict.includes(globalName)) continue;
+        const at = list.indexOf(provider);
+        if (at === -1 || at > index) {
+          depIssues++;
+          fail(`${file} reads window.${globalName} but ${provider} is not injected before it in the same content_scripts entry`);
+        }
+      }
+    });
+  }
+  if (!depIssues) pass("content scripts load the shared globals they read (plus-rule, dom, i18n-inline) first");
+}
+
 // ── 2. i18n ─────────────────────────────────────────────────────────────────
 const locales = fs.readdirSync(abs("_locales")).filter((d) => fs.statSync(abs(`_locales/${d}`)).isDirectory());
 const localeMsgs = {};
@@ -295,9 +327,9 @@ if (!syntaxFails) pass(`${jsFiles.length} JS files parse cleanly`);
 // sanitizePreferences() vivent ensemble (PreferenceStore.sanitize() n'est plus
 // qu'un delegue, et le module pur est teste par tests/preferences-data.test.mjs).
 {
-  const bgSrc = fs.existsSync(abs("js/background.js"))
-    ? fs.readFileSync(abs("js/background.js"), "utf8")
-    : "";
+  // Le service worker est découpé : js/background.js assemble les modules de js/sw/.
+  const swFiles = ["js/background.js", ...(fs.existsSync(abs("js/sw")) ? fs.readdirSync(abs("js/sw")).filter((f) => f.endsWith(".js")).map((f) => `js/sw/${f}`) : [])];
+  const bgSrc = swFiles.filter((f) => fs.existsSync(abs(f))).map((f) => fs.readFileSync(abs(f), "utf8")).join("\n");
   const defSrc = fs.existsSync(abs("js/preferences-data.js"))
     ? fs.readFileSync(abs("js/preferences-data.js"), "utf8")
     : "";

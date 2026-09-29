@@ -83,7 +83,7 @@ function normalizeQuietHour(value, fallback) {
 }
 
 /** Langue connue, sinon la langue par défaut du produit. */
-function normalizeLanguage(value) {
+export function normalizeLanguage(value) {
   return matchLanguage(value) || DEFAULT_LANGUAGE;
 }
 

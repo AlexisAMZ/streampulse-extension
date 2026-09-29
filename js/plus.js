@@ -1,7 +1,13 @@
 // StreamPulse+ : état de la licence. Module pur sauf verifyLicense, qui reçoit
 // son fetch en paramètre pour rester testable.
 
-export const PLUS_KEY = "streamPulsePlus";
+import "./inject/plus-rule.js";
+
+// Règle « Plus actif » : une seule source, js/inject/plus-rule.js, partagée
+// avec les content scripts classiques.
+const PLUS_RULE = globalThis.StreamPulsePlusRule;
+
+export const PLUS_KEY = PLUS_RULE.PLUS_KEY;
 
 /**
  * Serveur de licences sur streampulse.fr, adossé à Stripe. Il répond avec un
@@ -17,7 +23,7 @@ export function releaseDevice(licenseKey, device, fetchImpl) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ action: "release", key: licenseKey, device }),
-  }).catch(() => {});
+  }).catch((error) => console.warn("[StreamPulse+] libération de l'appareil :", error?.message || error));
 }
 
 /** Lien vers le portail client Stripe pour la clé de ce navigateur. */
@@ -32,7 +38,7 @@ export async function portalUrl(licenseKey, fetchImpl) {
 }
 
 /** Page d'achat ouverte par le bouton « Débloquer StreamPulse+ ». */
-export const PLUS_CHECKOUT_URL = "https://streampulse.fr/plus";
+const PLUS_CHECKOUT_URL = "https://streampulse.fr/plus";
 
 /** Dossier de langue du site (le français est à la racine). */
 const SITE_DIRS = { fr: "", "pt-BR": "pt-br" };
@@ -47,12 +53,12 @@ export function plusPageUrl(lang, plan) {
 }
 
 /** Sans nouvelle vérification réussie, la licence reste active ce délai (hors ligne). */
-export const PLUS_GRACE_MS = 30 * 24 * 60 * 60 * 1000;
+export const PLUS_GRACE_MS = PLUS_RULE.PLUS_GRACE_MS;
 
-export const PLUS_PLANS = ["monthly", "lifetime"];
+const PLUS_PLANS = ["monthly", "lifetime"];
 
 /** Identifiant de ce navigateur : une clé vaut pour 2 appareils. */
-export const DEVICE_KEY = "streamPulseDeviceId";
+const DEVICE_KEY = "streamPulseDeviceId";
 
 /** Lit ou crée l'identifiant d'appareil (32 caractères hexadécimaux). */
 export async function getDeviceId(storage) {
@@ -85,10 +91,7 @@ export function needsRecheck(record, now = Date.now()) {
 }
 
 export function isPlusActive(record, now = Date.now()) {
-  if (!record || record.status !== "active" || !record.licenseKey) return false;
-  const verifiedAt = Number(record.verifiedAt) || 0;
-  if (record.plan === "lifetime") return true;
-  return now - verifiedAt <= PLUS_GRACE_MS;
+  return PLUS_RULE.isPlusActive(record, now);
 }
 
 /**

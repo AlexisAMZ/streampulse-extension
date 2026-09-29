@@ -18,7 +18,7 @@ export async function thankPlusSubscriber(licenseKey, translate) {
       `streampulse-plus-thanks-${Date.now()}`,
       {
         type: "basic",
-        iconUrl: chrome.runtime.getURL("images/photos/logo.png"),
+        iconUrl: chrome.runtime.getURL("images/photos/logosp-128.png"),
         title: translate("background.notifications.plusThanksTitle"),
         message: translate("background.notifications.plusThanksMessage"),
         requireInteraction: true,

@@ -414,7 +414,6 @@
       case "clearEventLogs":
       case "dropsRefresh":
       case "openPatchNotes":
-      case "resetStat":
       case "updateUserProfile":
         return { success: true };
       case "removeStreamer":

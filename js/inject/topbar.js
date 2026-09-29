@@ -88,7 +88,7 @@
   if (window.__SP_TOPBAR_INSTALLED__) return;
   window.__SP_TOPBAR_INSTALLED__ = true;
 
-  var LOGO_URL = chrome.runtime.getURL("images/photos/logosp.png");
+  var LOGO_URL = chrome.runtime.getURL("images/photos/logosp-128.png");
   // Memes destinations que la carte de soutien du popup.
   var TIP_LINKS = [
     { label: "Revolut", url: "https://revolut.me/alexisamz" },

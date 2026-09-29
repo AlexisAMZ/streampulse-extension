@@ -11,8 +11,8 @@
   window.__streampulsePlayerButtons = true;
 
   const PREFERENCES_KEY = "betaGeneralPreferences";
-  const PLUS_KEY = "streamPulsePlus";
-  const PLUS_GRACE_MS = 30 * 24 * 60 * 60 * 1000;
+  const PLUS_RULE = window.StreamPulsePlusRule; // js/inject/plus-rule.js, chargé avant (manifest)
+  const PLUS_KEY = PLUS_RULE.PLUS_KEY;
   const PIP_ID = "streampulse-pip-btn";
   const CLIP_ID = "streampulse-clip-dl-btn";
   const STYLE_ID = "streampulse-player-buttons-style";
@@ -54,9 +54,7 @@
 
   function plusActive(record) {
     if (isDevInstall()) return true;
-    if (!record || record.status !== "active" || !record.licenseKey) return false;
-    if (record.plan === "lifetime") return true;
-    return Date.now() - (Number(record.verifiedAt) || 0) <= PLUS_GRACE_MS;
+    return PLUS_RULE.isPlusActive(record);
   }
 
   function clipSlugFromLocation() {

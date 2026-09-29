@@ -43,10 +43,10 @@
 
   // Couleurs publiques des abonnes StreamPulse+ : empreinte -> couleur hexa.
   var badgeColors = new Map();
-  var PLUS_KEY = "streamPulsePlus";
+  var PLUS_RULE = window.StreamPulsePlusRule; // js/inject/plus-rule.js, chargé avant (manifest)
+  var PLUS_KEY = PLUS_RULE.PLUS_KEY;
   var PUBLISHED_KEY = "streampulseBadgePublished";
   var HEX_RE = /^#[0-9a-f]{6}$/i;
-  var PLUS_GRACE_MS = 30 * 24 * 60 * 60 * 1000;
   // Effets publics des abonnes : empreinte -> { b: effet du badge, n: pseudo special }.
   var badgeStyles = new Map();
   var COSMETICS_KEY = "streamPulseCosmetics";
@@ -60,7 +60,7 @@
   var viewerPlus = false;
   var ownPlan = "";
   var badgeLang = "en";
-  var MONTH_MS = 30.44 * 24 * 60 * 60 * 1000;
+  var MONTH_MS = PLUS_RULE.MONTH_MS;
   // Reglages locaux de son propre badge : appliques tout de suite, sans attendre le serveur.
   var ownLocal = { b: "", n: "" };
   // Rang de ce navigateur (fondateur, ambassadeur), d'apres la licence locale.
@@ -68,25 +68,17 @@
   var RANKS = ["founder", "ambassador"];
   // Debut de son propre abonnement (licence locale), pour sa tuile avant la reponse du serveur.
   var ownSince = 0;
-  // Copie de TENURE_TIERS (js/cosmetics-data.js) : mois requis, cle de la tuile.
   /** Effet du badge connu, Prisme repris en Arc-en-ciel ; sinon logo classique. */
   function badgeFxOf(value) {
     var fx = LEGACY_FX[value] || value;
     return BADGE_FX.indexOf(fx) !== -1 ? fx : "";
   }
 
-  // Copie de TENURE_STYLES (js/cosmetics-data.js).
-  var TENURE_STYLES = { tenure: "gauge", pager: "pager" };
-  var TENURE_TIERS = [[48, "y4"], [36, "y3"], [24, "y2"], [18, "y1h"], [12, "y1"], [9, "m9"], [6, "m6"], [3, "m3"], [0, "m1"]];
+  // Paliers et styles d'ancienneté : js/inject/plus-rule.js.
+  var TENURE_STYLES = PLUS_RULE.TENURE_STYLES;
 
-  /** Meme regle que tenureTier() dans js/cosmetics-data.js. */
   function tenureTier(plan, since, rank) {
-    if (rank === "founder" && plan) return "founder";
-    if (plan === "lifetime") return "life";
-    if (plan !== "monthly") return "";
-    var months = Number(since) > 0 ? Math.max(0, Math.floor((Date.now() - Number(since)) / MONTH_MS)) : 0;
-    for (var i = 0; i < TENURE_TIERS.length; i++) if (months >= TENURE_TIERS[i][0]) return TENURE_TIERS[i][1];
-    return "m1";
+    return PLUS_RULE.tenureTier(plan, since, Date.now(), rank);
   }
 
   /**
@@ -303,17 +295,17 @@
           log(badgeHashes.size, "empreintes chargees,", badgeColors.size, "couleurs");
           rescanVisibleMessages();
         })
-        .catch(function () {});
+        .catch(function (error) {
+          log("service de badges indisponible :", error && error.message);
+        });
     } catch (_e) {
       // Le service de badges est optionnel : son indisponibilite ne doit pas gener le tchat.
     }
   }
 
-  /** Cle de licence si StreamPulse+ est actif (meme regle que js/plus.js). */
+  /** Clé de licence si StreamPulse+ est actif (règle de js/inject/plus-rule.js). */
   function activePlusKey(record) {
-    if (!record || record.status !== "active" || !record.licenseKey) return null;
-    if (record.plan === "lifetime") return record.licenseKey;
-    return Date.now() - (Number(record.verifiedAt) || 0) <= PLUS_GRACE_MS ? record.licenseKey : null;
+    return PLUS_RULE.isPlusActive(record) ? record.licenseKey : null;
   }
 
   /**

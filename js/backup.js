@@ -8,7 +8,7 @@
 // (liee a l'appareil) et les notifications programmees (liees a chrome.alarms,
 // qui ne se restaurent pas) en sont exclus.
 
-export const BACKUP_APP = "StreamPulse";
+const BACKUP_APP = "StreamPulse";
 export const BACKUP_FORMAT = 1;
 
 // Au-dela, ce n'est pas une sauvegarde StreamPulse : on refuse avant de lire.
@@ -43,7 +43,7 @@ export const BACKUP_KEYS = [
  * Reglages proprement dits : par defaut ceux de l'installation courante gagnent ;
  * avec l'option replaceSettings, ceux de la sauvegarde les remplacent.
  */
-export const SETTINGS_KEYS = [PREFERENCES, LAYOUT, COSMETICS, PREDICTION_RULE];
+const SETTINGS_KEYS = [PREFERENCES, LAYOUT, COSMETICS, PREDICTION_RULE];
 
 /** La sauvegarde validee contient-elle des reglages a proposer de restaurer ? */
 export function hasSettings(data) {

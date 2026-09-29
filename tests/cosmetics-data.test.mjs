@@ -93,14 +93,11 @@ test("tuile d'ancienneté : paliers de 1 mois à 4 ans, à vie à part", () => {
 });
 
 for (const file of ["js/inject/twitch-badge.js", "js/inject/settings-drawer.js"]) {
-  test(`${file} calcule les tuiles comme le popup`, () => {
+  test(`${file} calcule les tuiles avec la règle partagée`, () => {
     const source = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
-    const match = /var TENURE_TIERS = (\[.*?\]\]);/.exec(source);
-    assert.ok(match, `TENURE_TIERS introuvable dans ${file}`);
-    assert.deepEqual(JSON.parse(match[1]), TENURE_TIERS.map((tier) => [...tier]));
-    const styles = /var TENURE_STYLES = (\{[^}]*\});/.exec(source);
-    assert.ok(styles, `TENURE_STYLES introuvable dans ${file}`);
-    assert.deepEqual(JSON.parse(styles[1].replace(/(\w+):/g, '"$1":')), { ...TENURE_STYLES });
+    assert.doesNotMatch(source, /TENURE_TIERS\s*=|30\.44/, `${file} ne doit pas recopier les paliers`);
+    assert.match(source, /PLUS_RULE\.tenureTier\(/);
+    assert.match(source, /TENURE_STYLES = PLUS_RULE\.TENURE_STYLES/);
   });
 }
 

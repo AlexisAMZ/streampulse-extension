@@ -3,8 +3,8 @@
 // (background.js fournit Helix pour Twitch et l'API publique de Kick).
 // YouTube n'a pas de recherche publique sans clé : pas de suggestions.
 
-export const SUGGEST_MIN_CHARS = 2;
-export const SUGGEST_LIMIT = 6;
+const SUGGEST_MIN_CHARS = 2;
+const SUGGEST_LIMIT = 6;
 const MAX_QUERY = 25;
 
 /**
