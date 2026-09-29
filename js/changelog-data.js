@@ -58,6 +58,38 @@ export const RELEASES = [
       {
         type: "fix",
         text: {
+          "fr": "La page d'accueil de l'installation ne déborde plus sur les écrans étroits ni en allemand ou en russe.",
+          "en": "The welcome page no longer overflows on narrow screens or in German and Russian.",
+          "es": "La página de bienvenida ya no se desborda en pantallas estrechas ni en alemán o ruso.",
+          "pt-BR": "A página de boas-vindas não transborda mais em telas estreitas nem em alemão ou russo.",
+          "de": "Die Willkommensseite läuft auf schmalen Bildschirmen sowie auf Deutsch und Russisch nicht mehr über.",
+          "it": "La pagina di benvenuto non sborda più su schermi stretti né in tedesco o russo.",
+          "pl": "Strona powitalna nie wychodzi już poza ekran na wąskich ekranach ani po niemiecku i rosyjsku.",
+          "tr": "Karşılama sayfası dar ekranlarda, Almanca ve Rusçada artık taşmıyor.",
+          "ru": "Страница приветствия больше не выходит за края на узких экранах и на немецком или русском.",
+          "ja": "ウェルカムページが狭い画面やドイツ語・ロシア語ではみ出さなくなりました。",
+          "ko": "환영 페이지가 좁은 화면이나 독일어·러시아어에서 더 이상 넘치지 않습니다."
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          "fr": "Les titres coupés dans le popup s'affichent en entier au survol.",
+          "en": "Truncated titles in the popup now show in full on hover.",
+          "es": "Los títulos recortados del popup se muestran completos al pasar el ratón.",
+          "pt-BR": "Os títulos cortados no popup aparecem inteiros ao passar o mouse.",
+          "de": "Abgeschnittene Titel im Popup werden beim Überfahren vollständig angezeigt.",
+          "it": "I titoli troncati nel popup si vedono per intero al passaggio del mouse.",
+          "pl": "Przycięte tytuły w okienku pokazują się w całości po najechaniu kursorem.",
+          "tr": "Popup'ta kesilen başlıklar üzerine gelince tam olarak görünüyor.",
+          "ru": "Обрезанные заголовки в попапе показываются целиком при наведении.",
+          "ja": "ポップアップで省略されたタイトルは、ホバーすると全文が表示されます。",
+          "ko": "팝업에서 잘린 제목이 마우스를 올리면 전체로 표시됩니다."
+        },
+      },
+      {
+        type: "fix",
+        text: {
           "fr": "La page de restauration de sauvegarde fonctionne de nouveau : le fichier est lu, l'aperçu s'affiche et « Ajouter à mes données » refait son travail.",
           "en": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
           "es": "La página de restauración de copias vuelve a funcionar: el archivo se lee, aparece la vista previa y «Añadir a mis datos» hace su trabajo.",
