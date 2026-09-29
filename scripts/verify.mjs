@@ -295,9 +295,9 @@ if (!syntaxFails) pass(`${jsFiles.length} JS files parse cleanly`);
 // sanitizePreferences() vivent ensemble (PreferenceStore.sanitize() n'est plus
 // qu'un delegue, et le module pur est teste par tests/preferences-data.test.mjs).
 {
-  const bgSrc = fs.existsSync(abs("js/background.js"))
-    ? fs.readFileSync(abs("js/background.js"), "utf8")
-    : "";
+  // Le service worker est découpé : js/background.js assemble les modules de js/sw/.
+  const swFiles = ["js/background.js", ...(fs.existsSync(abs("js/sw")) ? fs.readdirSync(abs("js/sw")).filter((f) => f.endsWith(".js")).map((f) => `js/sw/${f}`) : [])];
+  const bgSrc = swFiles.filter((f) => fs.existsSync(abs(f))).map((f) => fs.readFileSync(abs(f), "utf8")).join("\n");
   const defSrc = fs.existsSync(abs("js/preferences-data.js"))
     ? fs.readFileSync(abs("js/preferences-data.js"), "utf8")
     : "";
