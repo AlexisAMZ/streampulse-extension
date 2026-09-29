@@ -115,7 +115,7 @@ export default {
       "removeSuccess": "Creator removed."
     },
     "errors": {
-      "extensionUnavailable": "Unable to reach the extension.",
+      "extensionUnavailable": "StreamPulse isn't responding. Reload this page; if it keeps happening, restart Chrome.",
       "removeFailed": "Unable to remove this streamer."
     },
     "closeWindow": "Close window"
@@ -576,7 +576,7 @@ export default {
       "moveDown": "Move {{name}} down"
     },
     "osd": {
-      "tabsLabel": "Popup views",
+      "tabsLabel": "Popup view tabs",
       "tabDirect": "Live",
       "tabMenu": "Menu",
       "changelog": "What's new",
@@ -760,12 +760,12 @@ export default {
       "streamerFaviconDescription": "Replace the tab icon with the live streamer's profile picture.",
       "tabLiveIconTitle": "Red LIVE dot on the tab",
       "tabLiveIconDescription": "Show a red LIVE dot on the tab icon while the stream is live.",
-      "groupEventLog": "Event log",
+      "groupEventLog": "Activity log",
       "logFilterAll": "All",
       "logClear": "Clear",
       "logClearTitle": "Clear the log",
       "logEmpty": "No events recorded.",
-      "logError": "Could not read the log.",
+      "logError": "Couldn't read the log. Close and reopen the popup.",
       "groupFaq": "Help & FAQ",
       "faqPointsTitle": "Channel Points & Drops",
       "faqPointsBody": "StreamPulse clicks the channel points chest for you and claims your Drops as soon as they appear.",
@@ -829,12 +829,12 @@ export default {
       "previewsSizeTitle": "Size",
       "previewsAudioTitle": "Audio (video mode)",
       "previewsAudioDescription": "Enable sound in video previews.",
-      "previewsDelayTitle": "Show delay",
+      "previewsDelayTitle": "Preview delay",
       "previewsAnimationsTitle": "Animations",
       "previewsAnimationsDescription": "Fades the preview in and out. Turn off to show it instantly.",
       "groupChat": "Chat",
       "groupData": "Data",
-      "groupWatchTime": "Watch Time",
+      "groupWatchTime": "Time watched",
       "watchTimeTitle": "Watch Time Tracker",
       "watchTimeDescription": "Track time spent on each channel."
     },
@@ -932,7 +932,7 @@ export default {
       "importSuccess": "Data imported successfully!",
       "chatFilterSaved": "Chat filter saved.",
       "blockedUsersSaved": "Blocked users saved.",
-      "importError": "Error importing data."
+      "importError": "Import failed: this file may not be a StreamPulse backup. Pick another file."
     },
     "meta": {
       "footerText": "Created by <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>"
@@ -1083,7 +1083,7 @@ export default {
       "doneTitle": "Data added!",
       "doneBody": "Open StreamPulse from the toolbar to find all your streamers.",
       "close": "Close tab",
-      "failed": "The import failed. Try again."
+      "failed": "Import failed: your data couldn't be saved in the browser. Try again; if it keeps happening, reload this page."
     },
     "title": "Backup",
     "description": "Download a file with your streamers, settings, stats and watch time, to restore them later or in another browser.",
@@ -1201,7 +1201,7 @@ export default {
       "pictureInPicture": "Picture-in-Picture",
       "clipDownload": "Download clip (MP4)",
       "clipDownloading": "Downloading clip…",
-      "clipDownloadFailed": "Download failed, try again",
+      "clipDownloadFailed": "Download failed. Reload the clip page and try again.",
       "latencyEmpty": "Latency: --",
       "latencyValue": "Latency: {{value}}s",
       "offline": "OFFLINE"

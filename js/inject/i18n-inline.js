@@ -263,7 +263,7 @@
       "pictureInPicture": "Picture-in-Picture",
       "clipDownload": "Download clip (MP4)",
       "clipDownloading": "Downloading clip…",
-      "clipDownloadFailed": "Download failed, try again",
+      "clipDownloadFailed": "Download failed. Reload the clip page and try again.",
       "latencyEmpty": "Latency: --",
       "latencyValue": "Latency: {{value}}s",
       "offline": "OFFLINE"
