@@ -187,17 +187,56 @@ function renderPlus() {
   plusListeners.forEach((listener) => listener(active));
 }
 
+// Vue Plus = vraie modale : le reste du popup devient inerte, Tab boucle
+// dans la vue et le focus revient à l'élément qui l'a ouverte.
+const PLUS_FOCUSABLE = 'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])';
+let plusOpener = null;
+
+function setBackgroundInert(view, inert) {
+  Array.from(document.body.children).forEach((child) => {
+    if (child === view || child.id === "toast-container" || child.tagName === "SCRIPT") return;
+    child.inert = inert;
+  });
+}
+
+function trapPlusFocus(event) {
+  const view = $("plus-view");
+  if (event.key !== "Tab" || !view) return;
+  const focusable = [...view.querySelectorAll(PLUS_FOCUSABLE)].filter((el) => el.offsetParent !== null);
+  if (!focusable.length) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  const outside = !view.contains(document.activeElement) || document.activeElement === view;
+  if (event.shiftKey && (document.activeElement === first || outside)) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && (document.activeElement === last || outside)) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
 export function openPlus() {
   const view = $("plus-view");
   if (!view) return;
+  if (view.classList.contains("hidden")) {
+    const active = document.activeElement;
+    plusOpener = active && active !== document.body && !view.contains(active) ? active : null;
+  }
   view.classList.remove("hidden");
+  setBackgroundInert(view, true);
   view.tabIndex = -1;
   view.focus({ preventScroll: true });
 }
 
-function closePlus() {
-  $("plus-view")?.classList.add("hidden");
-  $("open-plus")?.focus();
+export function closePlus({ restoreFocus = true } = {}) {
+  const view = $("plus-view");
+  if (!view || view.classList.contains("hidden")) return;
+  view.classList.add("hidden");
+  setBackgroundInert(view, false);
+  const target = plusOpener?.isConnected && plusOpener.offsetParent !== null ? plusOpener : $("open-plus");
+  plusOpener = null;
+  if (restoreFocus) target?.focus();
 }
 
 function showKeyError(key) {
@@ -209,13 +248,14 @@ function showKeyError(key) {
 
 function initPlus() {
   $("open-plus")?.addEventListener("click", openPlus);
-  $("plus-close")?.addEventListener("click", closePlus);
+  $("plus-close")?.addEventListener("click", () => closePlus());
   $("plus-menu-open")?.addEventListener("click", openPlus);
   $("plus-menu-recap")?.addEventListener("click", () => {
     chrome.tabs.create({ url: chrome.runtime.getURL("html/recap.html") }, () => window.close());
   });
   $("plus-view")?.addEventListener("keydown", (event) => {
     if (event.key === "Escape") closePlus();
+    else trapPlusFocus(event);
   });
 
   const plans = document.querySelectorAll(".plus-plan");
