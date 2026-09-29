@@ -721,7 +721,26 @@ function registerEventListeners() {
   finishButton?.addEventListener("click", () => {
     // L'étape d'après a déjà dit quoi faire (épingler l'extension) : ce
     // bouton n'a plus qu'à sauver le profil et fermer l'onglet.
-    saveUserProfile().finally(() => window.close());
+    saveUserProfile().finally(closeOnboardingTab);
+  });
+}
+
+// window.close() peut être ignoré pour un onglet ouvert par chrome.tabs.create :
+// on ferme alors l'onglet par l'API tabs.
+function closeOnboardingTab() {
+  if (!chrome?.tabs?.getCurrent) {
+    window.close();
+    return;
+  }
+  chrome.tabs.getCurrent((tab) => {
+    if (chrome.runtime.lastError || !tab?.id) {
+      window.close();
+      return;
+    }
+    chrome.tabs.remove(tab.id).catch((error) => {
+      console.warn("[onboarding] fermeture de l'onglet", error);
+      window.close();
+    });
   });
 }
 

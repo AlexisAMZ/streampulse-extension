@@ -42,6 +42,12 @@ function el(tag, className = "", text = "") {
   return node;
 }
 
+// Texte tronqué par ellipse : le title rend la version complète au survol.
+function withTitle(node) {
+  node.title = node.textContent;
+  return node;
+}
+
 function button(className, { label = "", icon = "", text = "" } = {}) {
   const node = el("button", className);
   node.type = "button";
@@ -399,7 +405,7 @@ export function renderStage(stage, media, feature, streamer, status, options, ca
   text.append(
     pills,
     el("p", "feature-name", label),
-    el("p", "feature-sub", [active.title || t("popup.card.defaultLiveTitle"), active.game, platformLabel].filter(Boolean).join(" · ")),
+    withTitle(el("p", "feature-sub", [active.title || t("popup.card.defaultLiveTitle"), active.game, platformLabel].filter(Boolean).join(" · "))),
   );
 
   const alerts = el("div", "feature-alerts");
@@ -602,7 +608,7 @@ export function createChannelRow(streamer, status, options, callbacks) {
   }
   const name = el("span", "row-name");
   highlight(name, label, query);
-  main.append(name, el("span", "row-meta", rowMeta(active, supported, isLive, viewers, platformLabel)));
+  main.append(name, withTitle(el("span", "row-meta", rowMeta(active, supported, isLive, viewers, platformLabel))));
 
   const state = el("span", `row-state${isLive ? " is-live" : ""}`);
   state.append(el("i"), document.createTextNode(t(isLive ? "popup.cplus.stateLive" : "popup.cplus.stateOffline")));
