@@ -44,8 +44,8 @@
 .welcome-sub { margin-inline: auto; }
 .step-header { position: sticky; top: 32px; display: grid; gap: 20px; }
 .step-desc { max-width: 40ch; color: var(--text-2); font-size: 17px; line-height: 1.6; }
-.step-content { display: grid; gap: 16px; }
-.step-nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; }
+.step-content { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; min-width: 0; }
+.step-nav { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 12px; }
 .step-nav-center { justify-content: center; }
 /* Étape facultative : le lien « Passer » reste discret entre Retour et Continuer. */
 .btn-skip { margin-left: auto; color: var(--text-3); text-decoration: none; }
@@ -107,7 +107,7 @@
 
 /* Streamers */
 .streamers-card { display: grid; gap: 16px; }
-.streamer-form { display: grid; gap: 12px; }
+.streamer-form { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; min-width: 0; }
 .platform-picker { display: flex; flex-wrap: wrap; gap: 8px; }
 .platform-button { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border: 0; border-radius: 12px; background: var(--bg); box-shadow: inset 0 0 0 1px var(--line); color: var(--text-2); font-weight: 600; cursor: pointer; }
 .platform-button img { width: 18px; height: 18px; }
@@ -150,9 +150,9 @@
 /* Badge communautaire à l'étape pseudo : l'aperçu du tchat passe en premier
    (c'est lui qui vend le réglage), l'interrupteur suit, la note de
    confidentialité ferme le bloc. */
-.badge-setting { margin-top: 18px; display: grid; gap: 10px; }
+.badge-setting { margin-top: 18px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; min-width: 0; }
 .badge-setting .settings-toggle { box-shadow: none; }
-.badge-preview { display: flex; align-items: center; gap: 8px; padding: 13px 14px; border-radius: 12px; background: #18181b; font-size: 13.5px; }
+.badge-preview { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; min-width: 0; padding: 13px 14px; border-radius: 12px; background: #18181b; font-size: 13.5px; }
 .badge-preview-badge { width: 20px; height: 20px; flex: none; background-color: var(--violet); -webkit-mask: url("../images/photos/badge-mark.svg") center / contain no-repeat; mask: url("../images/photos/badge-mark.svg") center / contain no-repeat; }
 .badge-preview-name { flex: none; color: #bf94ff; font-weight: 700; }
 .badge-preview-msg { overflow: hidden; color: #efeff1; text-overflow: ellipsis; white-space: nowrap; }

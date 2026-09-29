@@ -68,8 +68,8 @@
 .tl-bar.is-empty { background: var(--line-2); }
 .timeline-axis { display: flex; justify-content: space-between; color: var(--text-3); font-size: 12px; }
 .timeline-peak { color: var(--text-2); font-size: 13px; }
-.insights-locked { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 22px 26px; }
-.insights-locked-text { display: grid; gap: 6px; }
+.insights-locked { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; padding: 22px 26px; }
+.insights-locked-text { display: grid; flex: 1 1 240px; gap: 6px; min-width: 0; }
 .insights-locked .btn { flex: none; }
 
 @media (max-width: 1100px) {
