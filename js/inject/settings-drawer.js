@@ -25,21 +25,15 @@
   // Même règles que js/cosmetics-data.js : filleuls requis, et effets du fondateur.
   var REFERRAL_FX = { ambassador: 1, halo: 3 };
   var FOUNDER_FX = ["crown", "founder"];
-  // Copie de TENURE_TIERS (js/cosmetics-data.js) : tuile d'anciennete de l'aperçu.
-  // Copie de TENURE_STYLES (js/cosmetics-data.js).
-  var TENURE_STYLES = { tenure: "gauge", pager: "pager" };
-  var TENURE_TIERS = [[48, "y4"], [36, "y3"], [24, "y2"], [18, "y1h"], [12, "y1"], [9, "m9"], [6, "m6"], [3, "m3"], [0, "m1"]];
-  var MONTH_MS = 30.44 * 24 * 60 * 60 * 1000;
+  // Paliers et styles d'ancienneté : js/inject/plus-rule.js.
+  var TENURE_STYLES = PLUS_RULE.TENURE_STYLES;
 
-  /** Meme regle que tenureTier() dans js/cosmetics-data.js. */
+  /** Tuile d'ancienneté de l'aperçu, d'après la licence locale. */
   function tenureTier(record) {
     if (!record) return "";
     if (record.role === "admin") return "founder";
     if (record.plan === "lifetime") return "life";
-    var since = Number(record.since) || 0;
-    var months = since > 0 ? Math.max(0, Math.floor((Date.now() - since) / MONTH_MS)) : 0;
-    for (var i = 0; i < TENURE_TIERS.length; i++) if (months >= TENURE_TIERS[i][0]) return TENURE_TIERS[i][1];
-    return "m1";
+    return PLUS_RULE.tenureTier("monthly", record.since);
   }
   var LOGO_URL = chrome.runtime.getURL("images/photos/logosp.png");
   // Logo dessiné pour les petites tailles (badge du tchat).
