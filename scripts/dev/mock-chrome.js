@@ -11,6 +11,7 @@
   const params = new URLSearchParams(location.search);
   const scenario = params.get("state") || "live";
   const now = Date.now();
+  const MANIFEST_VERSION = "26.9.13";
 
   function svgData(svg) {
     return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
@@ -277,12 +278,25 @@
     ],
   };
 
+  // Bandeaux de l'accueil. Par défaut, le banc est une première ouverture après
+  // mise à jour : aucun bandeau (voir askGate dans js/popup-review.js).
+  // &ask=review | badge : ouverture suivante, le bandeau voulu sort après le
+  // coup d'œil (4 s), comme chez un utilisateur existant.
+  const ASK = params.get("ask");
+  const askStore = ASK === "review" || ASK === "badge"
+    ? {
+        streamPulseAskVersion: MANIFEST_VERSION,
+        streamPulseReviewAsk: ASK === "review" ? { firstSeen: now - 20 * 24 * H } : { firstSeen: now, done: true },
+        streamPulseBadgeAsk: { firstSeen: now - 10 * 24 * H },
+      }
+    : {};
+
   const store = {
     // Visuels promo : pas de bandeau « Tu aimes StreamPulse ? ».
     ...(params.get("real") ? {
       streamPulseReviewAsk: { firstSeen: now, done: true },
       streamPulseBadgeAsk: { firstSeen: now, done: true },
-    } : {}),
+    } : askStore),
     betaGeneralStreamers: channels.streamers,
     betaGeneralStatuses: channels.statuses,
     betaGeneralPreferences: {
@@ -468,7 +482,7 @@
     runtime: {
       sendMessage,
       getURL: (path) => `/${String(path).replace(/^\//, "")}`,
-      getManifest: () => ({ version: "26.9.13" }),
+      getManifest: () => ({ version: MANIFEST_VERSION }),
     },
     tabs: {
       create: (options, callback) => {
