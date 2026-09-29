@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title data-i18n="onboarding.documentTitle">StreamPulse : première configuration</title>
+    <title data-i18n="onboarding.documentTitle">Première configuration</title>
     <link rel="icon" href="../images/photos/128px.png" />
     <link rel="stylesheet" href="../css/tokens.css" />
     <link rel="stylesheet" href="../css/pages.css" />
@@ -36,7 +36,7 @@
           </button>
           <button type="button" class="step-pill" data-step="4">
             <span class="step-num">5</span>
-            <span class="step-label" data-i18n="onboarding.stepFinish">Lancement</span>
+            <span class="step-label" data-i18n="onboarding.stepFinish">C'est parti</span>
           </button>
         </nav>
 
@@ -53,7 +53,7 @@
               <h1 class="display welcome-display">
                 <span class="welcome-line" data-i18n="onboarding.welcomeTitle">Ne rate plus jamais un live.</span>
               </h1>
-              <p class="lede welcome-sub" data-i18n="onboarding.welcomeDescription">Une extension pour suivre tes streamers en un coup d'œil. Commence par choisir la langue de l'interface.</p>
+              <p class="lede welcome-sub" data-i18n="onboarding.welcomeDescription">Bienvenue dans StreamPulse : notifications de live, récupération auto des points et des Drops. Commence par choisir la langue de l'interface.</p>
 
               <div class="language-options" id="language-options"></div>
 
@@ -72,7 +72,7 @@
           <div class="step-frame">
             <div class="step-header">
               <h2 class="headline step-title" data-i18n="onboarding.profileTitle" data-i18n-mode="html">Quel est ton <span class="accent">pseudo</span> ?</h2>
-              <p class="step-desc" data-i18n="onboarding.profileDescription">Renseigne ton pseudo Twitch : on récupère ta photo de profil pour t'accueillir comme il faut à chaque ouverture.</p>
+              <p class="step-desc" data-i18n="onboarding.profileDescription">Optionnel : renseigne ton pseudo Twitch et on récupère ta photo de profil pour t'accueillir. Pas de compte Twitch, ou tu préfères ne pas le donner ? Passe cette étape, tout marche quand même.</p>
             </div>
 
             <div class="step-content">
@@ -88,7 +88,7 @@
                   </div>
                   <div class="profile-info">
                     <span class="profile-info-name" id="profile-preview-name">…</span>
-                    <span class="profile-info-line" id="profile-hint" data-state="idle" data-i18n="onboarding.profileHintIdle" aria-live="polite">Saisis ton pseudo : recherche automatique.</span>
+                    <span class="profile-info-line" id="profile-hint" data-state="idle" data-i18n="onboarding.profileHintIdle" aria-live="polite">Saisis ton pseudo : on cherche automatiquement ton profil Twitch.</span>
                   </div>
                 </div>
 
@@ -108,7 +108,7 @@
                     <span class="badge-preview-msg" data-i18n="onboarding.badgePreviewMessage">Regarde, c'est mon badge StreamPulse !</span>
                   </div>
                   <label class="settings-toggle">
-                    <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.communityBadgeTitle"></span><span class="settings-description" data-i18n="popup.settings.communityBadgeDescription"></span></span>
+                    <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.communityBadgeTitle">Badge communautaire</span><span class="settings-description" data-i18n="popup.settings.communityBadgeDescription">Affiche l'icône StreamPulse à côté de ton pseudo et de celui des autres utilisateurs de StreamPulse dans le chat Twitch. Une empreinte de ton pseudo, calculée dans ton navigateur, est envoyée à streampulse.fr ; le pseudo lui-même n'est jamais transmis.</span></span>
                     <input id="onboarding-community-badge" type="checkbox" role="switch" />
                   </label>
                   <p class="settings-privacy" data-i18n="onboarding.badgePrivacyNote">Désactivé par défaut. Si tu l'actives : une empreinte de ton pseudo est envoyée à streampulse.fr au maximum une fois par jour. Rien d'autre ne quitte ton navigateur.</p>
@@ -135,7 +135,7 @@
           <div class="step-frame">
             <div class="step-header">
               <h2 class="headline step-title" data-i18n="onboarding.formLabelBase" data-i18n-mode="html">Tes <span class="accent">streamers</span><br />à suivre.</h2>
-              <p class="step-desc" data-i18n="onboarding.helperTextBase">Saisis un identifiant ou colle le lien d'une chaîne. Tu pourras toujours en ajouter plus tard.</p>
+              <p class="step-desc" data-i18n="onboarding.helperTextBase">Saisis le pseudo du streamer ou colle le lien de sa chaîne.</p>
             </div>
 
             <div class="step-content">
@@ -153,7 +153,7 @@
 
                 <section id="current-streamers" class="current-streamers" hidden>
                   <div class="section-row">
-                    <span class="section-label" data-i18n="onboarding.currentHeader">Streamers suivis</span>
+                    <span class="section-label" data-i18n="onboarding.currentHeader">Tes streamers</span>
                     <span class="section-line"></span>
                     <span class="section-count" id="streamer-count">00</span>
                   </div>
@@ -181,27 +181,27 @@
           <div class="step-frame">
             <div class="step-header">
               <h2 class="headline step-title" data-i18n="onboarding.preferencesTitle" data-i18n-mode="html">Quelques <span class="accent">préférences</span>.</h2>
-              <p class="step-desc" data-i18n="onboarding.preferencesDescription">Active ce qui t'intéresse : tout est modifiable plus tard depuis les réglages.</p>
+              <p class="step-desc" data-i18n="onboarding.preferencesDescription">Active les options qui te conviennent. Tu pourras les modifier plus tard dans les réglages.</p>
             </div>
 
             <div class="step-content">
               <div class="settings-group">
-                <h2 class="group-title" data-i18n="onboarding.qualityGroupTitle">Récompenses et automatisation</h2>
-                <p class="settings-group-hint" data-i18n="onboarding.qualityGroupHint">Réclamation automatique des bonus et des récompenses.</p>
+                <h2 class="group-title" data-i18n="onboarding.qualityGroupTitle">Automatisation</h2>
+                <p class="settings-group-hint" data-i18n="onboarding.qualityGroupHint">Automatise les petites actions répétitives.</p>
                 <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.autoClaimTitle"></span><span class="settings-description" data-i18n="popup.settings.autoClaimDescription"></span></span>
+                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.autoClaimTitle">Récupération auto des points</span><span class="settings-description" data-i18n="popup.settings.autoClaimDescription">Twitch : clique pour toi sur le coffre bonus de Points de chaîne dès qu'il apparaît. Kick : affiche ton solde de points.</span></span>
                   <input id="onboarding-auto-claim" type="checkbox" role="switch" checked />
                 </label>
                 <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="popup.osd.autoClaimDrops"></span><span class="settings-description" data-i18n="popup.settings.autoClaimDropsDescription"></span></span>
+                  <span class="settings-text"><span class="settings-title" data-i18n="popup.osd.autoClaimDrops">Récupération auto des Drops</span><span class="settings-description" data-i18n="popup.settings.autoClaimDropsDescription">Récupère tes Drops dès qu'ils sont prêts à être réclamés. Twitch uniquement.</span></span>
                   <input id="onboarding-auto-claim-drops" type="checkbox" role="switch" checked />
                 </label>
                 <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="onboarding.autoOpenInventoryTitle">Ouverture auto de l'inventaire Drops</span><span class="settings-description" data-i18n="onboarding.autoOpenInventoryDescription">Ouvrir l'inventaire Twitch en arrière-plan pour réclamer vos Drops.</span></span>
+                  <span class="settings-text"><span class="settings-title" data-i18n="onboarding.autoOpenInventoryTitle">Ouverture auto de l'inventaire Drops</span><span class="settings-description" data-i18n="onboarding.autoOpenInventoryDescription">Ouvre l'inventaire Twitch dans un onglet en arrière-plan, à la fréquence choisie, pour récupérer tes Drops terminés. Twitch uniquement ; nécessite une session Twitch ouverte.</span></span>
                   <input id="onboarding-auto-open-inventory" type="checkbox" role="switch" />
                 </label>
                 <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.autoCancelRaidsTitle"></span><span class="settings-description" data-i18n="popup.settings.autoCancelRaidsDescription"></span></span>
+                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.autoCancelRaidsTitle">Annulation automatique des Raids</span><span class="settings-description" data-i18n="popup.settings.autoCancelRaidsDescription">Reste sur la chaîne quand un Raid Twitch veut t'emmener ailleurs. Se coupe quand les alertes de raids entrants sont actives : les points se gagnent en suivant le raid.</span></span>
                   <input id="onboarding-auto-cancel-raids" type="checkbox" role="switch" />
                 </label>
               </div>
@@ -210,32 +210,32 @@
                 <h2 class="group-title" data-i18n="onboarding.notificationsGroupTitle">Notifications</h2>
                 <p class="settings-group-hint" data-i18n="onboarding.notificationsGroupHint">Personnalise la façon dont StreamPulse te prévient.</p>
                 <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.liveAlertsTitle"></span><span class="settings-description" data-i18n="popup.settings.liveAlertsBody"></span></span>
+                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.liveAlertsTitle">Alertes de live</span><span class="settings-description" data-i18n="popup.settings.liveAlertsBody">Une notification quand un streamer démarre un live. S'applique à tous tes streamers, ajustable sur chaque carte.</span></span>
                   <input id="onboarding-live-notifications" type="checkbox" role="switch" checked />
                 </label>
                 <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.gameAlertsTitle"></span><span class="settings-description" data-i18n="popup.settings.gameAlertsDescription"></span></span>
+                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.gameAlertsTitle">Alertes changement de catégorie</span><span class="settings-description" data-i18n="popup.settings.gameAlertsDescription">Appliqué à tous tes streamers suivis : tu peux ensuite l'ajuster par streamer.</span></span>
                   <input id="onboarding-game-alerts" type="checkbox" role="switch" />
                 </label>
                 <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.titleAlertsTitle"></span><span class="settings-description" data-i18n="popup.settings.titleAlertsDescription"></span></span>
+                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.titleAlertsTitle">Alertes changement de titre</span><span class="settings-description" data-i18n="popup.settings.titleAlertsDescription">Appliqué à tous tes streamers suivis : tu peux ensuite l'ajuster par streamer.</span></span>
                   <input id="onboarding-title-alerts" type="checkbox" role="switch" />
                 </label>
                 <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.soundsTitle"></span><span class="settings-description" data-i18n="popup.settings.soundsDescription"></span></span>
+                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.soundsTitle">Son des notifications</span><span class="settings-description" data-i18n="popup.settings.soundsDescription">Joue un son avec les notifications de live, de catégorie et de titre. Les autres notifications restent silencieuses.</span></span>
                   <input id="onboarding-sounds" type="checkbox" role="switch" checked />
                 </label>
               </div>
 
               <div class="settings-group">
                 <h2 class="group-title" data-i18n="onboarding.playerGroupTitle">Lecteur Twitch</h2>
-                <p class="settings-group-hint" data-i18n="onboarding.playerGroupHint">Optimise le lecteur pour rattraper le direct et masquer le superflu.</p>
+                <p class="settings-group-hint" data-i18n="onboarding.playerGroupHint">Optimise le lecteur pour rattraper le direct.</p>
                 <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.fastForwardTitle"></span><span class="settings-description" data-i18n="popup.settings.fastForwardDescription"></span></span>
+                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.fastForwardTitle">Bouton d'avance rapide</span><span class="settings-description" data-i18n="popup.settings.fastForwardDescription">Ajoute un bouton au lecteur Twitch et Kick pour rattraper le direct quand la vidéo a pris du retard.</span></span>
                   <input id="onboarding-fast-forward" type="checkbox" role="switch" checked />
                 </label>
                 <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.hideTwitchExtensionsTitle"></span><span class="settings-description" data-i18n="popup.settings.hideTwitchExtensionsDescription"></span></span>
+                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.hideTwitchExtensionsTitle">Masquer les extensions Twitch</span><span class="settings-description" data-i18n="popup.settings.hideTwitchExtensionsDescription">Masque les extensions de streamers affichées par-dessus la vidéo Twitch (sondages, classements, boutiques…).</span></span>
                   <input id="onboarding-hide-extensions" type="checkbox" role="switch" />
                 </label>
               </div>
@@ -254,7 +254,7 @@
                   <input id="onboarding-tab-live-icon" type="checkbox" role="switch" checked />
                 </label>
                 <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.preventTabDiscardTitle"></span><span class="settings-description" data-i18n="popup.settings.preventTabDiscardDescription"></span></span>
+                  <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.preventTabDiscardTitle">Empêcher la mise en veille de l'onglet</span><span class="settings-description" data-i18n="popup.settings.preventTabDiscardDescription">Empêche Chrome de mettre en veille les pages de chaîne Twitch et Kick, pour que les points et les Drops continuent de tomber. Désactivé, les onglets déjà protégés retrouvent leur comportement normal.</span></span>
                   <input id="onboarding-prevent-tab-discard" type="checkbox" role="switch" checked />
                 </label>
               </div>
@@ -278,19 +278,19 @@
         <section class="wizard-step" data-step="4">
           <div class="step-frame">
             <div class="step-header">
-              <h2 class="headline finish-title" data-i18n="onboarding.finishTitle">Tu es prêt !</h2>
+              <h2 class="headline finish-title" data-i18n="onboarding.finishTitle">C'est prêt !</h2>
               <p class="lede finish-desc" data-i18n="onboarding.finishDescription">StreamPulse est configuré. Épingle l'extension pour y accéder facilement.</p>
 
               <div class="finish-watched" id="finish-watched" hidden>
                 <p class="finish-watched-label">
-                  <span data-i18n="onboarding.currentHeader">Streamers suivis</span>
+                  <span data-i18n="onboarding.currentHeader">Tes streamers</span>
                   <span class="finish-watched-count" id="finish-watched-count"></span>
                 </p>
                 <div class="finish-watched-row" id="finish-watched-row"></div>
               </div>
 
               <button id="finish-button" class="btn btn-primary btn-finish" type="button" data-i18n="onboarding.finish">Terminer</button>
-              <p class="finish-hint" data-i18n="onboarding.nextHint">Tu pourras ajouter d'autres streamers depuis le menu principal.</p>
+              <p class="finish-hint" data-i18n="onboarding.nextHint">Tu pourras ajouter d'autres streamers depuis le popup de StreamPulse.</p>
             </div>
 
             <div class="step-content finish-side">

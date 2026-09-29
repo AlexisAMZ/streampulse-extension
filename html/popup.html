@@ -43,7 +43,7 @@
     </header>
 
     <div class="notif-blocked" id="notif-blocked" role="status" hidden>
-      <span data-i18n="popup.notifBlockedBody">Chrome bloque les notifications de StreamPulse : tu ne seras pas prévenu des lives.</span>
+      <span data-i18n="popup.notifBlockedBody">Chrome bloque les notifications de StreamPulse : aucune alerte de live ne peut s'afficher.</span>
       <button id="notif-blocked-open" type="button" class="button button-quiet" data-i18n="popup.notifBlockedAction">Réglages</button>
     </div>
 
@@ -63,8 +63,8 @@
     <aside class="badge-ask" id="badge-ask" role="dialog" hidden>
       <span class="badge-ask-mark" aria-hidden="true"></span>
       <div class="badge-ask-text">
-        <b data-i18n="popup.badgeAsk.title">Affiche ton badge dans le tchat</b>
-        <span data-i18n="popup.badgeAsk.body">Repère et sois repéré par les autres utilisateurs de StreamPulse dans le tchat Twitch. Si tu l'actives : une empreinte de ton pseudo est envoyée à streampulse.fr une fois par jour maximum.</span>
+        <b data-i18n="popup.badgeAsk.title">Affiche ton badge dans le chat</b>
+        <span data-i18n="popup.badgeAsk.body">Repère les autres utilisateurs de StreamPulse dans le chat Twitch, et montre-leur que tu en fais partie. Si tu l'actives : une empreinte de ton pseudo est envoyée à streampulse.fr une fois par jour maximum.</span>
       </div>
       <div class="badge-ask-actions">
         <button id="badge-ask-activate" type="button" class="button button-primary" data-i18n="popup.badgeAsk.activate">Activer le badge</button>
@@ -95,7 +95,7 @@
       <section class="activity" data-i18n-attr-ariaLabel="popup.cplus.activityLabel">
         <span class="chip chip-auto" id="activity-auto">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg>
-          <span data-i18n="popup.cplus.autoClaimOn">Auto-claim actif</span>
+          <span data-i18n="popup.cplus.autoClaimOn">Récupération auto active</span>
         </span>
         <span class="chip" id="activity-points" hidden>
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 3h12l4 6-10 12L2 9z"/></svg>
@@ -185,7 +185,7 @@
       <div class="history-empty" id="history-empty" hidden>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
         <p class="history-empty-title" data-i18n="popup.history.emptyTitle">Aucun live raté</p>
-        <p class="history-empty-body" data-i18n="popup.history.emptyBody">Quand un streamer suivi termine un live sans que tu l'aies regardé, il apparaît ici avec sa rediffusion.</p>
+        <p class="history-empty-body" data-i18n="popup.history.emptyBody">Quand un de tes streamers termine un live sans que tu l'aies regardé, il apparaît ici avec sa rediffusion.</p>
       </div>
     </section>
 
@@ -200,7 +200,7 @@
           </li>
           <li class="plus-perk">
             <span class="perk-glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg></span>
-            <span class="perk-text"><b data-i18n="popup.plus.perkRecap">Récap avancé et Wrapped annuel</b><span data-i18n="popup.plus.perkRecapBody">Heures par catégorie, courbe de l'année, image à partager.</span></span>
+            <span class="perk-text"><b data-i18n="popup.plus.perkRecap">Récap avancé et récap de l'année</b><span data-i18n="popup.plus.perkRecapBody">Heures par catégorie, courbe de l'année, image à partager.</span></span>
           </li>
           <li class="plus-perk">
             <span class="perk-glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
@@ -216,7 +216,7 @@
       <aside class="plus-offer" id="plus-offer">
         <div class="plus-plans" role="radiogroup" data-i18n-attr-ariaLabel="popup.plus.plansLabel" aria-label="Formule">
           <button class="plus-plan" type="button" role="radio" aria-checked="false" data-plan="monthly">
-            <span class="plan-text"><b data-i18n="popup.plus.monthly">Mensuel</b><small data-i18n="popup.plus.monthlyNote">Sans engagement</small></span>
+            <span class="plan-text"><b data-i18n="popup.plus.monthly">Mensuel</b><small data-i18n="popup.plus.monthlyNote">7 jours gratuits, sans engagement</small></span>
             <span class="plan-price"><span data-i18n="popup.plus.monthlyPrice">2,99 €</span><small data-i18n="popup.plus.perMonth">/mois</small></span>
           </button>
           <button class="plus-plan active" type="button" role="radio" aria-checked="true" data-plan="lifetime">
@@ -268,7 +268,7 @@
           </button>
           <button id="menu-tab-player" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-player" data-panel="player" tabindex="-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>
-            <span data-i18n="popup.osd.menuPlayer">Lecteur Twitch</span>
+            <span data-i18n="popup.osd.menuPlayer">Lecteur</span>
           </button>
           <button id="menu-tab-previews" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-previews" data-panel="previews" tabindex="-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="m10 8 5 3-5 3z"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
@@ -329,7 +329,7 @@
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.liveAlertsTitle">Alertes de live</span>
-              <span class="settings-description" data-i18n="popup.settings.liveAlertsBody">Prévenir quand un streamer suivi passe en direct. S'applique à tous tes streamers ; ajustable ensuite sur chaque carte.</span>
+              <span class="settings-description" data-i18n="popup.settings.liveAlertsBody">Une notification quand un streamer démarre un live. S'applique à tous tes streamers, ajustable sur chaque carte.</span>
             </span>
             <input id="pref-live-notifications" type="checkbox" role="switch" />
           </label>
@@ -350,7 +350,7 @@
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.soundsTitle">Son des notifications</span>
-              <span class="settings-description" data-i18n="popup.settings.soundsDescription">Activer ou couper le son lors des alertes de live, de catégorie et de titre.</span>
+              <span class="settings-description" data-i18n="popup.settings.soundsDescription">Joue un son avec les notifications de live, de catégorie et de titre. Les autres notifications restent silencieuses.</span>
             </span>
             <input id="pref-sounds" type="checkbox" role="switch" />
           </label>
@@ -358,7 +358,7 @@
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.quietHoursTitle">Heures calmes</span>
-              <span class="settings-description" data-i18n="popup.settings.quietHoursBody">Mettre les notifications en pause entre les heures choisies. La plage peut passer minuit.</span>
+              <span class="settings-description" data-i18n="popup.settings.quietHoursBody">Aucune notification pendant cette plage ; elle peut passer minuit.</span>
             </span>
             <input id="pref-quiet-hours" type="checkbox" role="switch" />
           </label>
@@ -371,7 +371,7 @@
 
           <h3 class="settings-group-header smart-head"><span data-i18n="popup.smart.title">Alertes intelligentes</span><span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span></h3>
           <div class="smart-locked" id="smart-locked">
-            <p class="settings-description" data-i18n="popup.smart.lockedBody">Choisis quand être prévenu : un jeu précis, un mot dans le titre, un nombre de viewers. Réservé à StreamPulse+.</p>
+            <p class="settings-description" data-i18n="popup.smart.lockedBody">Choisis quand recevoir une notification : un jeu précis, un mot dans le titre, un nombre de viewers. Réservé à StreamPulse+.</p>
             <button class="button button-primary" id="smart-unlock" type="button" data-i18n="popup.smart.unlock">Débloquer</button>
           </div>
           <div class="smart-editor" id="smart-editor" hidden>
@@ -386,27 +386,27 @@
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.dropAlertsTitle">Drop obtenu</span>
-              <span class="settings-description" data-i18n="popup.settings.dropAlertsBody">Notifier quand un Drop est récupéré automatiquement. Notifications silencieuses.</span>
+              <span class="settings-description" data-i18n="popup.settings.dropAlertsBody">Une notification quand un Drop est récupéré. Twitch. Notification silencieuse.</span>
             </span>
             <input id="pref-drop-alerts" type="checkbox" role="switch" />
           </label>
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.raidCancelledTitle">Raid annulé</span>
-              <span class="settings-description" data-i18n="popup.settings.raidCancelledBody">Notifier quand StreamPulse annule une redirection de raid. Notifications silencieuses.</span>
+              <span class="settings-description" data-i18n="popup.settings.raidCancelledBody">Une notification quand un raid est annulé automatiquement. Twitch. Notification silencieuse.</span>
             </span>
             <input id="pref-raid-alerts" type="checkbox" role="switch" />
           </label>
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.backgroundRaidAlertsTitle">Alertes de raids entrants (bêta)</span>
-              <span class="settings-description" data-i18n="popup.settings.backgroundRaidAlertsDescription">Surveiller tous les streamers Twitch suivis et notifier dès qu'un raid arrive, même hors de la page.</span>
+              <span class="settings-description" data-i18n="popup.settings.backgroundRaidAlertsDescription">Surveille tes streamers Twitch dans StreamPulse et t'envoie une notification dès qu'un raid arrive, même sans onglet Twitch ouvert. Coupe l'annulation automatique des Raids.</span>
             </span>
             <input id="pref-background-raid-alerts" type="checkbox" role="switch" />
           </label>
           <label class="settings-toggle">
             <span class="settings-text">
-              <span class="settings-title" data-i18n="popup.settings.updateNotificationsTitle">Nouvelle version</span>
+              <span class="settings-title" data-i18n="popup.settings.updateNotificationsTitle">Notification de mise à jour</span>
               <span class="settings-description" data-i18n="popup.settings.updateNotificationsDescription">Prévenir quand StreamPulse est mis à jour (une seule fois par version), avec un clic vers les nouveautés.</span>
             </span>
             <input id="pref-update-notifications" type="checkbox" role="switch" />
@@ -425,7 +425,7 @@
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.autoClaimTitle">Récupération auto des points</span>
-              <span class="settings-description" data-i18n="popup.settings.autoClaimDescription">Twitch : cliquer automatiquement les bonus de points de chaîne. Kick : afficher le compteur de points.</span>
+              <span class="settings-description" data-i18n="popup.settings.autoClaimDescription">Twitch : clique pour toi sur le coffre bonus de Points de chaîne dès qu'il apparaît. Kick : affiche ton solde de points.</span>
             </span>
             <input id="pref-auto-claim" type="checkbox" role="switch" />
           </label>
@@ -441,14 +441,14 @@
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.osd.autoClaimDrops">Récupération auto des Drops</span>
-              <span class="settings-description" data-i18n="popup.settings.autoClaimDropsDescription">Réclamer automatiquement les Drops Twitch dès qu'ils sont disponibles.</span>
+              <span class="settings-description" data-i18n="popup.settings.autoClaimDropsDescription">Récupère tes Drops dès qu'ils sont prêts à être réclamés. Twitch uniquement.</span>
             </span>
             <input id="pref-auto-claim-drops" type="checkbox" role="switch" />
           </label>
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.drops.trackingTitle">Historique des Drops</span>
-              <span class="settings-description" data-i18n="popup.drops.trackingBody">Progression et récupération même sans onglet Twitch ouvert. La récupération auto s'appuie sur ce suivi.</span>
+              <span class="settings-description" data-i18n="popup.drops.trackingBody">Progression et récupération même sans onglet Twitch ouvert. La Récupération auto des Drops s'appuie sur cet historique ; la liste des campagnes se met à jour quand tu passes sur Twitch.</span>
             </span>
             <input id="pref-drops-tracking" type="checkbox" role="switch" />
           </label>
@@ -458,14 +458,14 @@
               <label class="settings-toggle">
                 <span class="settings-text">
                   <span class="settings-title" data-i18n="popup.settings.autoOpenInventoryTitle">Ouverture auto de l'inventaire Drops</span>
-                  <span class="settings-description" data-i18n="popup.settings.autoOpenInventoryDescription">Ouvrir l'inventaire Twitch en arrière-plan pour réclamer automatiquement tes Drops.</span>
+                  <span class="settings-description" data-i18n="popup.settings.autoOpenInventoryDescription">Ouvre l'inventaire Twitch dans un onglet en arrière-plan, à la fréquence choisie, pour récupérer tes Drops terminés. Twitch uniquement ; nécessite une session Twitch ouverte.</span>
                 </span>
                 <input id="pref-auto-open-inventory" type="checkbox" role="switch" />
               </label>
               <div class="settings-sub-row" id="auto-open-inventory-interval-wrap">
                 <label class="settings-title" for="pref-auto-open-inventory-interval" data-i18n="popup.settings.inventoryFrequencyLabel">Fréquence d'ouverture</label>
                 <select id="pref-auto-open-inventory-interval" class="settings-select">
-                  <option value="1" data-i18n="popup.settings.inventoryEvery1h">Toutes les 1h</option>
+                  <option value="1" data-i18n="popup.settings.inventoryEvery1h">Toutes les heures</option>
                   <option value="2" data-i18n="popup.settings.inventoryEvery2h">Toutes les 2h</option>
                   <option value="4" data-i18n="popup.settings.inventoryEvery4h">Toutes les 4h</option>
                   <option value="6" data-i18n="popup.settings.inventoryEvery6h">Toutes les 6h</option>
@@ -476,11 +476,11 @@
             </div>
           </details>
 
-          <h3 class="settings-group-header" data-i18n="popup.osd.autoClaimMoments">Moments</h3>
+          <h3 class="settings-group-header" data-i18n="popup.osd.autoClaimMoments">Récupération auto des Moments</h3>
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.osd.autoClaimMoments">Récupération auto des Moments</span>
-              <span class="settings-description" data-i18n="popup.settings.autoClaimMomentsDescription">Réclamer automatiquement les Moments Twitch.</span>
+              <span class="settings-description" data-i18n="popup.settings.autoClaimMomentsDescription">Récupère les Moments dès qu'ils apparaissent sur le lecteur. Twitch uniquement.</span>
             </span>
             <input id="pref-auto-claim-moments" type="checkbox" role="switch" />
           </label>
@@ -489,17 +489,17 @@
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.autoCancelRaidsTitle">Annulation automatique des Raids</span>
-              <span class="settings-description" data-i18n="popup.settings.autoCancelRaidsDescription">Annuler automatiquement la redirection lors d'un Raid Twitch. Se désactive quand les alertes de raids entrants sont actives : les points se gagnent en suivant le raid.</span>
+              <span class="settings-description" data-i18n="popup.settings.autoCancelRaidsDescription">Reste sur la chaîne quand un Raid Twitch veut t'emmener ailleurs. Se coupe quand les alertes de raids entrants sont actives : les points se gagnent en suivant le raid.</span>
             </span>
             <input id="pref-auto-cancel-raids" type="checkbox" role="switch" />
           </label>
           <p class="settings-description dependency-status" id="raid-dependency-status" role="status" hidden></p>
 
-          <h3 class="settings-group-header" data-i18n="popup.pred.title">Prédictions</h3>
+          <h3 class="settings-group-header" data-i18n="popup.pred.title">Prédictions assistées</h3>
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.predictionsWidgetTitle">Widget de prédictions</span>
-              <span class="settings-description" data-i18n="popup.settings.predictionsWidgetBody">Afficher le widget de vote sur les prédictions Twitch.</span>
+              <span class="settings-description" data-i18n="popup.settings.predictionsWidgetBody">Affiche le widget des prédictions sur les pages de chaîne Twitch.</span>
             </span>
             <input id="pref-predictions-popup" type="checkbox" role="switch" />
           </label>
@@ -539,13 +539,13 @@
 
         <!-- Lecteur Twitch -->
         <section class="menu-panel" id="menu-player" role="tabpanel" aria-labelledby="menu-tab-player" hidden>
-          <h2 data-i18n="popup.osd.menuPlayer">Lecteur Twitch</h2>
+          <h2 data-i18n="popup.osd.menuPlayer">Lecteur</h2>
 
           <h3 class="settings-group-header" data-i18n="popup.settings.playerButtonsGroup">Boutons</h3>
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.fastForwardTitle">Bouton d'avance rapide</span>
-              <span class="settings-description" data-i18n="popup.settings.fastForwardDescription">Ajouter un bouton sur le lecteur Twitch et Kick pour rattraper instantanément le direct.</span>
+              <span class="settings-description" data-i18n="popup.settings.fastForwardDescription">Ajoute un bouton au lecteur Twitch et Kick pour rattraper le direct quand la vidéo a pris du retard.</span>
             </span>
             <input id="pref-fast-forward" type="checkbox" role="switch" />
           </label>
@@ -562,12 +562,12 @@
               <span class="field-value"><span id="volume-boost-value">100</span> %</span>
             </div>
             <input id="pref-volume-boost" type="range" min="100" max="300" step="10" value="100" class="settings-range" />
-            <span class="settings-description" data-i18n="popup.settings.volumeBoostBody">Monter le volume du lecteur au-delà du maximum habituel.</span>
+            <span class="settings-description" data-i18n="popup.settings.volumeBoostBody">Monte le son du lecteur au-delà de 100 %. Twitch et Kick.</span>
           </div>
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.clipDownloadTitle">Téléchargement des clips<span class="plus-tag" id="clip-download-lock" data-i18n="popup.plus.badge" hidden>PLUS</span></span>
-              <span class="settings-description" data-i18n="popup.settings.clipDownloadDescription">Ajouter un bouton pour enregistrer les clips Twitch en MP4. Réservé à StreamPulse+.</span>
+              <span class="settings-description" data-i18n="popup.settings.clipDownloadDescription">Ajoute un bouton sur les pages de clips Twitch pour les enregistrer en MP4. Réservé à StreamPulse+.</span>
             </span>
             <input id="pref-clip-download" type="checkbox" role="switch" />
           </label>
@@ -589,7 +589,7 @@
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.keepQualityTitle">Garder la qualité en arrière-plan</span>
-              <span class="settings-description" data-i18n="popup.settings.keepQualityDescription">Empêcher Twitch de baisser la qualité quand l'onglet n'est pas affiché. Utilise plus de ressources ; s'applique au prochain chargement de la page.</span>
+              <span class="settings-description" data-i18n="popup.settings.keepQualityDescription">Empêche Twitch de baisser la qualité ou de mettre en pause quand l'onglet n'est pas affiché. Utilise plus de ressources ; s'applique au prochain chargement de la page.</span>
             </span>
             <input id="pref-keep-quality" type="checkbox" role="switch" />
           </label>
@@ -599,20 +599,20 @@
             <label class="settings-title" for="pref-latency-placement" data-i18n="popup.settings.latencyPlacementLabel">Position de la latence</label>
             <select id="pref-latency-placement" class="settings-select">
               <option value="viewers" data-i18n="popup.settings.latencyViewers">Sous le lecteur</option>
-              <option value="chat" data-i18n="popup.settings.latencyChat">Dans l'en-tête du tchat</option>
+              <option value="chat" data-i18n="popup.settings.latencyChat">Dans l'en-tête du chat</option>
             </select>
           </div>
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.hideTwitchExtensionsTitle">Masquer les extensions Twitch</span>
-              <span class="settings-description" data-i18n="popup.settings.hideTwitchExtensionsDescription">Masquer les incrustations d'extensions sur le lecteur vidéo.</span>
+              <span class="settings-description" data-i18n="popup.settings.hideTwitchExtensionsDescription">Masque les extensions de streamers affichées par-dessus la vidéo Twitch (sondages, classements, boutiques…).</span>
             </span>
             <input id="pref-hide-twitch-extensions" type="checkbox" role="switch" />
           </label>
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.autoRefreshTitle">Relancer le lecteur en cas d'erreur</span>
-              <span class="settings-description" data-i18n="popup.settings.autoRefreshDescription">Cliquer « Réessayer » à ta place sur les erreurs #1000 à #5000, et recharger l'onglet si cela ne suffit pas.</span>
+              <span class="settings-description" data-i18n="popup.settings.autoRefreshDescription">Quand le lecteur Twitch s'arrête sur une erreur, StreamPulse clique « Réessayer » pour toi, puis recharge l'onglet si ça ne suffit pas.</span>
             </span>
             <input id="pref-auto-refresh" type="checkbox" role="switch" />
           </label>
@@ -625,7 +625,7 @@
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.osd.previewsTitle">Aperçus au survol</span>
-              <span class="settings-description" data-i18n="popup.settings.previewsEnableDescription">Affiche un aperçu du live en survolant une chaîne ou un clip.</span>
+              <span class="settings-description" data-i18n="popup.settings.previewsEnableDescription">Affiche un aperçu du live quand tu survoles une chaîne ou un clip sur Twitch.</span>
             </span>
             <input id="pref-previews-enabled" type="checkbox" role="switch" />
           </label>
@@ -642,7 +642,7 @@
             <label class="settings-toggle">
               <span class="settings-text">
                 <span class="settings-title" data-i18n="popup.settings.previewsAudioTitle">Audio (mode vidéo)</span>
-                <span class="settings-description" data-i18n="popup.settings.previewsAudioDescription">Activer le son dans les aperçus vidéo.</span>
+                <span class="settings-description" data-i18n="popup.settings.previewsAudioDescription">Joue le son dans les aperçus en mode Vidéo.</span>
               </span>
               <input id="pref-previews-audio" type="checkbox" role="switch" />
             </label>
@@ -680,6 +680,7 @@
                 <label class="settings-toggle">
                   <span class="settings-text">
                     <span class="settings-title" data-i18n="popup.settings.previewsAnimationsTitle">Animations</span>
+                    <span class="settings-description" data-i18n="popup.settings.previewsAnimationsDescription">Fait apparaître et disparaître l'aperçu en douceur. Désactive pour un affichage immédiat.</span>
                   </span>
                   <input id="pref-previews-animations" type="checkbox" role="switch" />
                 </label>
@@ -692,16 +693,16 @@
         <section class="menu-panel" id="menu-chat" role="tabpanel" aria-labelledby="menu-tab-chat" hidden>
           <h2 data-i18n="popup.osd.menuChat">Chat</h2>
 
-          <p class="settings-note" data-i18n="popup.settings.chatAutoSaveNote">Tes modifications sont enregistrées dès que tu quittes le champ.</p>
+          <p class="settings-note" data-i18n="popup.settings.chatAutoSaveNote">C'est enregistré dès que tu quittes le champ.</p>
           <div class="field-stack">
-            <label class="settings-title" for="pref-chat-keywords" data-i18n="onboarding.chatFilterTitle">Filtre de chat (Anti-Spoiler)</label>
-            <span class="settings-description" data-i18n="popup.settings.chatFilterDescription">Mots-clés à masquer (séparés par des virgules).</span>
+            <label class="settings-title" for="pref-chat-keywords" data-i18n="onboarding.chatFilterTitle">Mots-clés masqués</label>
+            <span class="settings-description" data-i18n="popup.settings.chatFilterDescription">Masque dans le chat Twitch et Kick les messages qui contiennent ces mots (séparés par des virgules).</span>
             <textarea id="pref-chat-keywords" rows="3" class="settings-textarea" placeholder="Ex : spoiler, mot1, mot2" data-i18n-attr-placeholder="onboarding.chatFilterPlaceholder"></textarea>
           </div>
 
           <div class="field-stack">
             <label class="settings-title" for="pref-blocked-users" data-i18n="onboarding.blockedUsersTitle">Utilisateurs masqués</label>
-            <span class="settings-description" data-i18n="onboarding.blockedUsersDescription">Masquer les messages d'utilisateurs spécifiques (séparés par des virgules).</span>
+            <span class="settings-description" data-i18n="onboarding.blockedUsersDescription">Masque dans le chat Twitch et Kick les messages de ces utilisateurs (séparés par des virgules).</span>
             <textarea id="pref-blocked-users" rows="3" class="settings-textarea" placeholder="bot, spammer" data-i18n-attr-placeholder="onboarding.blockedUsersPlaceholder"></textarea>
           </div>
           <p class="settings-description dependency-status" id="chat-save-status" role="status"></p>
@@ -728,7 +729,7 @@
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.preventTabDiscardTitle">Empêcher la mise en veille de l'onglet</span>
-              <span class="settings-description" data-i18n="popup.settings.preventTabDiscardDescription">Twitch et Kick : empêcher Chrome de décharger l'onglet d'une chaîne en direct. En le désactivant, les onglets déjà marqués retrouvent leur comportement normal.</span>
+              <span class="settings-description" data-i18n="popup.settings.preventTabDiscardDescription">Empêche Chrome de mettre en veille les pages de chaîne Twitch et Kick, pour que les points et les Drops continuent de tomber. Désactivé, les onglets déjà protégés retrouvent leur comportement normal.</span>
             </span>
             <input id="pref-prevent-tab-discard" type="checkbox" role="switch" />
           </label>
@@ -756,9 +757,9 @@
             <div class="pts-tiles" id="points-reasons" hidden></div>
             <h3 class="list-caption pts-caption"><span data-i18n="popup.points.byChannel">Par chaîne</span><span class="pts-hint" id="points-click-hint" data-i18n="popup.points.clickHint" hidden>Clique sur une chaîne pour le détail</span></h3>
             <ol class="pts-list" id="points-channels"></ol>
-            <p class="wt-empty-state" id="points-empty" data-i18n="popup.points.empty" hidden>Aucun gain de points sur cette période.</p>
+            <p class="wt-empty-state" id="points-empty" data-i18n="popup.points.empty" hidden>Aucun gain de points sur cette période. Regarde un live Twitch avec StreamPulse actif : chaque gain sera compté ici.</p>
             <div class="smart-locked" id="points-locked">
-              <p class="settings-description" data-i18n="popup.points.lockedBody">D'où viennent tes points ? Réservé à StreamPulse+.</p>
+              <p class="settings-description" data-i18n="popup.points.lockedBody">D'où viennent tes points ? Visionnage, bonus, raids, séries, bonus d'abonné, fiche de chaque streamer et journal des gains. Réservé à StreamPulse+.</p>
               <button class="button button-primary" id="points-unlock" type="button" data-i18n="popup.smart.unlock">Débloquer</button>
             </div>
           </div>
@@ -792,7 +793,7 @@
             </div>
             <h3 class="list-caption" data-i18n="popup.watchTime.topWatched">Les plus regardés</h3>
             <ol id="wt-top-watched" class="wt-ranking"></ol>
-            <p class="wt-empty-state hidden" id="wt-empty" data-i18n="popup.watchTime.empty">Aucune donnée ce mois-ci.</p>
+            <p class="wt-empty-state hidden" id="wt-empty" data-i18n="popup.watchTime.empty">Aucune donnée ce mois-ci. Regarde un live pour commencer !</p>
           </div>
 
           <h3 class="settings-group-header" data-i18n="popup.settings.groupEventLog">Journal d'activité</h3>
@@ -846,8 +847,8 @@
 
           <label class="settings-toggle">
             <span class="settings-text">
-              <span class="settings-title" data-i18n="popup.drops.trackingTitle">Suivre les Drops</span>
-              <span class="settings-description" data-i18n="popup.drops.trackingBody">Progression et récupération même sans onglet Twitch ouvert. La liste des campagnes se met à jour quand tu passes sur Twitch.</span>
+              <span class="settings-title" data-i18n="popup.drops.trackingTitle">Historique des Drops</span>
+              <span class="settings-description" data-i18n="popup.drops.trackingBody">Progression et récupération même sans onglet Twitch ouvert. La Récupération auto des Drops s'appuie sur cet historique ; la liste des campagnes se met à jour quand tu passes sur Twitch.</span>
             </span>
             <input id="pref-drops-tracking" type="checkbox" role="switch" />
           </label>
@@ -873,7 +874,7 @@
             <div class="badges-auto-bar">
               <button class="button button-primary badges-auto-all" id="badges-auto-all" type="button" aria-pressed="false" data-i18n="popup.drops.badgeAutoAll">Récupérer tous les badges possibles</button>
               <p class="badges-auto-status" id="badges-auto-status" role="status" hidden></p>
-              <p class="badges-note" data-i18n="popup.drops.badgeAutoAllHint">Un onglet épinglé et muet regarde un live à la fois : Twitch ne compte qu'un live à la fois. Les paliers d'un même jeu avancent ensemble.</p>
+              <p class="badges-note" data-i18n="popup.drops.badgeAutoAllHint">Un onglet épinglé et muet regarde un live à la fois (Twitch ne compte qu'un live à la fois). Les paliers d'un même jeu (30 min, 1 h, 90 min…) avancent ensemble, puis l'onglet passe au jeu suivant.</p>
             </div>
             <div class="badges-toolbar">
               <div class="segmented" id="badges-filters" role="group" data-i18n-attr-ariaLabel="popup.drops.allBadges">
@@ -916,12 +917,12 @@
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.communityBadgeTitle">Badge communautaire</span>
-              <span class="settings-description" data-i18n="popup.settings.communityBadgeDescription">Affiche l'icône StreamPulse à côté des pseudos des utilisateurs dans le tchat Twitch.</span>
+              <span class="settings-description" data-i18n="popup.settings.communityBadgeDescription">Affiche l'icône StreamPulse à côté de ton pseudo et de celui des autres utilisateurs de StreamPulse dans le chat Twitch. Une empreinte de ton pseudo, calculée dans ton navigateur, est envoyée à streampulse.fr ; le pseudo lui-même n'est jamais transmis.</span>
             </span>
             <input id="pref-community-badge" type="checkbox" role="switch" />
           </label>
           <div class="cosmetic-preview identity-preview">
-            <span class="cosmetic-preview-label" data-i18n="popup.cosmetics.preview">Aperçu dans le tchat</span>
+            <span class="cosmetic-preview-label" data-i18n="popup.cosmetics.preview">Aperçu dans le chat</span>
             <span class="cosmetic-line" aria-hidden="true"><span class="cosmetic-badge" id="cosmetic-badge"></span><span class="cosmetic-tile" id="cosmetic-tile"><span class="cosmetic-badge"></span></span><b class="cosmetic-name" id="cosmetic-name" data-i18n="popup.cosmetics.sampleName">TonPseudo</b><span class="cosmetic-msg">: gg !</span></span>
           </div>
           <div class="look-head">
@@ -954,7 +955,7 @@
 
           <h3 class="settings-group-header" data-i18n="popup.referral.title">Parrainage</h3>
           <div class="referral" id="referral-block">
-            <p class="settings-description" data-i18n="popup.referral.body">Partage ton code : ton ami a 2,99 € offerts. Toi, tu touches 1 € par mois tant qu'il reste abonné, ou 5 € d'un coup s'il prend la formule à vie, versés sur PayPal.</p>
+            <p class="settings-description" data-i18n="popup.referral.body">Partage ton code : ton ami a 2,99 € offerts (1er mois gratuit, ou la formule à vie à 16 €). Toi, tu touches 1 € par mois tant qu'il reste abonné, ou 5 € d'un coup s'il prend la formule à vie, versés sur PayPal.</p>
             <div class="referral-row">
               <span class="referral-code" id="referral-code" hidden></span>
               <button class="button button-quiet" id="referral-copy" type="button" data-i18n="popup.referral.copy" hidden>Copier</button>
@@ -1021,22 +1022,22 @@
           <h3 class="settings-group-header" data-i18n="popup.settings.dataGroup">Données</h3>
           <label class="settings-toggle">
             <span class="settings-text">
-              <span class="settings-title" data-i18n="popup.osd.watchTimeTitle">Suivi du temps de visionnage</span>
-              <span class="settings-description" data-i18n="popup.settings.watchTimeDescription">Suivi du temps passé sur chaque chaîne.</span>
+              <span class="settings-title" data-i18n="popup.osd.watchTimeTitle">Compter le temps de visionnage</span>
+              <span class="settings-description" data-i18n="popup.settings.watchTimeDescription">Compte le temps passé sur chaque chaîne Twitch et Kick, pour tes statistiques et ton Récap.</span>
             </span>
             <input id="pref-watch-time" type="checkbox" role="switch" />
           </label>
           <h4 class="list-caption backup-caption" data-i18n="backup.title">Sauvegarde</h4>
           <div class="backup-block">
-            <p class="settings-description" data-i18n="backup.description">Télécharge un fichier avec tes streamers, réglages, statistiques et temps de visionnage.</p>
+            <p class="settings-description" data-i18n="backup.description">Télécharge un fichier avec tes streamers, réglages, statistiques et temps de visionnage, pour les restaurer plus tard ou sur un autre navigateur.</p>
             <div class="data-actions">
               <button id="btn-export" class="button button-quiet" type="button" data-i18n="backup.export">Sauvegarder mes données</button>
-              <button id="btn-import" class="button button-quiet" type="button" data-i18n="backup.import">Restaurer une sauvegarde</button>
+              <button id="btn-import" class="button button-quiet" type="button" data-i18n="backup.import">Importer une sauvegarde</button>
             </div>
           </div>
 
           <h3 class="settings-group-header" data-i18n="popup.settings.resetPrefsTitle">Réinitialiser les réglages</h3>
-          <p class="settings-description" data-i18n="popup.settings.resetPrefsBody">Tout remettre par défaut : alertes, récompenses, lecteur, aperçus. Ta langue et ton thème sont conservés.</p>
+          <p class="settings-description" data-i18n="popup.settings.resetPrefsBody">Remet tous les réglages par défaut : notifications, récompenses, lecteur, aperçus. Ta langue et ton thème sont conservés.</p>
           <div class="settings-row">
             <span class="settings-description" id="reset-prefs-status" role="status"></span>
             <button id="btn-reset-preferences" class="button button-quiet" type="button" data-i18n="popup.settings.resetPrefsArm">Réinitialiser</button>
@@ -1054,21 +1055,21 @@
                 <span data-i18n="popup.settings.faqPointsTitle">Points de chaîne et Drops</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
               </summary>
-              <p class="faq-body" data-i18n="popup.settings.faqPointsBody">StreamPulse clique automatiquement sur le coffre de points de chaîne et réclame tes Drops dès qu'ils apparaissent.</p>
+              <p class="faq-body" data-i18n="popup.settings.faqPointsBody">Sur Twitch, StreamPulse clique sur le coffre de Points de chaîne et récupère tes Drops dès qu'ils sont disponibles, si la Récupération auto correspondante est active.</p>
             </details>
             <details class="faq-item">
               <summary>
                 <span data-i18n="popup.settings.faqPlayerTitle">Lecteur et anti-pause</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
               </summary>
-              <p class="faq-body" data-i18n="popup.settings.faqPlayerBody">Le flux vidéo continue de tourner en arrière-plan sans coupure d'audio.</p>
+              <p class="faq-body" data-i18n="popup.settings.faqPlayerBody">Avec « Garder la qualité en arrière-plan », Twitch ne voit plus que l'onglet est caché : la vidéo et le son continuent sans baisse de qualité.</p>
             </details>
             <details class="faq-item">
               <summary>
                 <span data-i18n="popup.settings.faqPredictionsTitle">Prédictions et Raids</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
               </summary>
-              <p class="faq-body" data-i18n="popup.settings.faqPredictionsBody">Un widget déplaçable s'affiche sur la vidéo pour voter rapidement.</p>
+              <p class="faq-body" data-i18n="popup.settings.faqPredictionsBody">Un widget déplaçable s'affiche sur la vidéo pour voter rapidement. Les redirections de raid sont annulées si l'option est active.</p>
             </details>
           </div>
 

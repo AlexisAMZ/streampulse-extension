@@ -57,11 +57,11 @@
             <p class="hint" data-i18n="recap.shareHint">X ne récupère pas l'image tout seul : télécharge-la, puis ajoute-la à ton post.</p>
           </div>
 
-          <p class="disclaimer" id="daily-hint" hidden data-i18n="recap.dailyHint">Le suivi jour par jour a commencé avec cette mise à jour.</p>
+          <p class="disclaimer" id="daily-hint" hidden data-i18n="recap.dailyHint">Les périodes de 7 et 30 jours se remplissent au fil du visionnage : elles se complètent petit à petit.</p>
         </aside>
 
         <section class="recap-preview">
-          <p class="state" id="state" data-i18n="recap.loading">Chargement de tes stats…</p>
+          <p class="state" id="state" data-i18n="recap.loading">Chargement de tes statistiques…</p>
 
           <div class="stage" id="stage" hidden>
             <canvas id="recap-canvas" width="1600" height="900" role="img"></canvas>
@@ -69,7 +69,7 @@
 
           <div class="panel empty" id="empty" hidden>
             <p class="empty-title" data-i18n="recap.emptyTitle">Rien à afficher pour cette période.</p>
-            <p class="empty-body" data-i18n="recap.emptyBody">Le suivi du temps de visionnage n'a rien enregistré sur cette période.</p>
+            <p class="empty-body" data-i18n="recap.emptyBody">Aucun temps de visionnage enregistré sur cette période. Vérifie que « Compter le temps de visionnage » est activé dans Réglages, rubrique Temps et données.</p>
           </div>
 
           <section class="panel insights" id="insights" hidden aria-labelledby="insights-title">
@@ -106,7 +106,7 @@
 
           <section class="panel insights-locked" id="insights-locked" hidden>
             <div class="insights-locked-text">
-              <p class="insights-title"><span data-i18n="recap.plus.lockedTitle">Récap avancé et Wrapped annuel</span> <span class="plus-tag">PLUS</span></p>
+              <p class="insights-title"><span data-i18n="recap.plus.lockedTitle">Récap avancé et récap de l'année</span> <span class="plus-tag">PLUS</span></p>
               <p class="empty-body" data-i18n="recap.plus.lockedBody">Tes heures par catégorie, la courbe de ton activité et ton année entière en une image.</p>
             </div>
             <a class="btn btn-primary" id="insights-unlock" href="https://streampulse.fr/plus" target="_blank" rel="noopener" data-i18n="recap.plus.unlock">Débloquer</a>

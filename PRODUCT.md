@@ -14,7 +14,7 @@ web
 - They follow a list of streamers they add by hand (handle or channel URL). No account and no import of existing follows.
 - Typical scene *(inferred)*: in the evening at a desk, a Twitch or Kick tab already open. They click the toolbar icon for a two-second check of who is live, then jump into a stream. The other key moment is a desktop notification that a streamer just went live.
 - A significant share follows many channels across both platforms *(inferred from sort, filters and drag reordering)*.
-- Primary language is French. The interface ships in 15 languages (EN, ES, PT-BR, DE, IT, NL, PL, RU, SV, CS, ID, JA, KO…).
+- Primary language is French. The interface ships in 11 languages (FR, EN, ES, PT-BR, DE, IT, PL, TR, RU, JA, KO).
 
 ## Product Purpose
 
@@ -45,7 +45,7 @@ Success means the viewer never misses a live they care about, and never has to c
 - **Data**: what reaches streampulse.fr: the license key with this browser's device id, verified at most once a day; the community badge, only after an explicit opt-in, sends a hashed Twitch username at most once a day; the badge list and the remote configuration are read from the same domain (reads, no user data); the Kick app token is fetched through streampulse.fr. Nothing else about the user leaves the browser. *(list corrected by the 2026-09-28 audit; previously described as "only the badge")*.
 - **Terminology**: Streamers, Live / En direct, Points de chaîne, Drops, Moments, Raids, Récap, Temps de visionnage.
 - **Sibling projects**: a Firefox port (`../StreampulseFirefox`) and the website (`../StreampulseSite`) exist. Cross-project consistency is an open decision.
-- **Open decision**: tutoiement vs vouvoiement in French copy (both are currently mixed).
+- **French voice**: tutoiement everywhere, gender-neutral phrasing, fixed glossary (decided 2026-09-29, see the « Voix » section of `DESIGN.md`).
 
 ## Brand Commitments
 
@@ -71,4 +71,4 @@ Success means the viewer never misses a live they care about, and never has to c
 ## Accessibility & Inclusion
 
 - **Target** *(inferred)*: WCAG 2.2 AA for extension pages and injected UI. That covers contrast, keyboard operation, visible focus, status messages announced to screen readers, and reduced motion.
-- **Localization**: 15 languages, so there are no hard-coded strings and layouts must tolerate text expansion.
+- **Localization**: 11 languages, so there are no hard-coded strings and layouts must tolerate text expansion.

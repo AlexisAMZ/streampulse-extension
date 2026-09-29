@@ -69,7 +69,7 @@
     "predictions": {
       "label": "Prédiction en cours",
       "loading": "Chargement…",
-      "action": "Miser / Voter dans le Chat",
+      "action": "Miser ou voter dans le chat",
       "close": "Fermer",
       "fallbackTitle": "Prédiction Twitch"
     },
@@ -89,7 +89,7 @@
       "pictureInPicture": "Picture-in-Picture",
       "clipDownload": "Télécharger le clip (MP4)",
       "clipDownloading": "Téléchargement du clip…",
-      "clipDownloadFailed": "Échec du téléchargement, réessayez",
+      "clipDownloadFailed": "Téléchargement impossible. Recharge la page du clip et réessaie.",
       "latencyEmpty": "Latence : --",
       "latencyValue": "Latence : {{value}}s",
       "offline": "HORS LIGNE"
@@ -100,12 +100,12 @@
     "shared": {
       "settings": {
         "groupAutomation": "Automatisation",
-        "groupPreviews": "Previews au survol",
+        "groupPreviews": "Aperçus au survol",
         "groupNotifications": "Notifications",
         "groupChat": "Chat",
         "autoClaimTitle": "Récupération auto des points",
-        "autoClaimDropsTitle": "Auto-claim Drops Twitch",
-        "autoClaimMomentsTitle": "Auto-claim Moments Twitch",
+        "autoClaimDropsTitle": "Récupération auto des Drops",
+        "autoClaimMomentsTitle": "Récupération auto des Moments",
         "autoCancelRaidsTitle": "Annulation automatique des Raids",
         "autoRefreshTitle": "Relancer le lecteur en cas d'erreur",
         "keepQualityTitle": "Garder la qualité en arrière-plan",
@@ -113,12 +113,12 @@
         "pipButtonTitle": "Bouton Picture-in-Picture",
         "hideTwitchExtensionsTitle": "Masquer les extensions Twitch",
         "communityBadgeTitle": "Badge communautaire",
-        "previewsEnableTitle": "Previews au survol",
+        "previewsEnableTitle": "Aperçus au survol",
         "previewsModeTitle": "Mode d'aperçu",
         "previewsModeImage": "Image",
         "previewsModeVideo": "Vidéo",
         "previewsSurfaceDirectory": "Répertoire",
-        "previewsSurfaceSidebar": "Sidebar",
+        "previewsSurfaceSidebar": "Barre latérale",
         "previewsAudioTitle": "Audio (mode vidéo)",
         "liveAlertsTitle": "Alertes de live",
         "gameAlertsTitle": "Alertes changement de catégorie",
@@ -184,7 +184,7 @@
         "lcd": "Écran LCD",
         "gold": "Or",
         "neon": "Néon",
-        "preview": "Aperçu dans le tchat",
+        "preview": "Aperçu dans le chat",
         "sampleName": "TonPseudo"
       }
     }
