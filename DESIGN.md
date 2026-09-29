@@ -12,6 +12,31 @@ Décisions de design durables et assumées. Modifie ce fichier quand une décisi
 | Récap | Experience | L'image produite est le produit ; l'interface s'efface. |
 | Changelog | Read | Structuré pour la lecture. |
 
+## Voix
+
+Décision du propriétaire du 2026-09-29, valable pour tout texte français (extension, pages, fiches des stores).
+
+- **Tutoiement partout.** Jamais « vous / votre / vos » adressé à l'utilisateur, ni d'impératif en « -ez ».
+- **Accords neutres.** Pas de participe ou d'adjectif au masculin qui désigne l'utilisateur (« tu es prêt », « tu seras prévenu », « connecté ») : on reformule (« C'est prêt ! », « On te prévient dès que… », « nécessite une session Twitch ouverte »). Pas de point médian.
+- **Réglages.** Libellé = ce que ça fait. Description = l'effet réel, la plateforme concernée (Twitch / Kick / YouTube) et les dépendances (« nécessite… », « au prochain chargement de la page »). Pas de jargon technique (codes d'erreur, noms d'API, anglicismes comme « overlay », « Wrapped »).
+- **Erreurs.** Le problème, puis quoi faire (« {{platform}} ne répond pas. Vérifie ta connexion Internet et réessaie dans un instant. »). Jamais « Erreur » seul ni « Réessaie » sans contexte.
+
+Glossaire FR :
+
+| Terme | Emploi | À éviter |
+|---|---|---|
+| streamer | une personne ajoutée dans StreamPulse | « créateur », « chaîne » pour la personne |
+| chaîne | la page Twitch / Kick / YouTube elle-même | |
+| Ajouter à StreamPulse | ajouter un streamer à l'extension | « Suivre » (réservé au Follow de Twitch) |
+| Compter / Historique | mesurer les points gagnés, garder la liste des Drops | « Suivre » au sens de mesurer, « Tracker » |
+| Récupération auto | des Points de chaîne, Drops, Moments (pastille : « Récupération auto active ») | « Auto-claim » |
+| Aperçus, Barre latérale, Répertoire | aperçus au survol et leurs emplacements | « Previews », « Sidebar » |
+| chat | le chat d'une chaîne, comme l'interface française de Twitch | « tchat » |
+| En direct / un live | statut / nom | |
+| Récap | avec accent ; le récap annuel est « récap de l'année » | « Recap », « Wrapped » |
+| Drops, Moments, Raids, Points de chaîne | majuscule quand c'est la fonction | |
+| Notifications | les réglages d'alertes ; « alerte » reste pour un type (« alerte de catégorie ») | |
+
 ## Décisions verrouillées
 
 ### La popup est fixe 780×600
@@ -26,7 +51,7 @@ Les variables injectées sont préfixées `--sp-*` (css/inject/twitch-ui.css) po
 `#9146FF`, `#53FC18` et `#FF0000` (YouTube) identifient les plateformes d'un streamer ; la couleur d'accent de StreamPulse vit dans `css/tokens.css` (`--violet`, 5 palettes). Les hexadécimaux de plateforme n'apparaissent que comme anneaux/étiquettes d'identification.
 
 ### Les cosmétiques Plus sont des fonctionnalités
-Textes dégradés (`sp-paint`), glows, bounce et flicker des badges de tchat sont des effets **choisis et payés par l'utilisateur Plus** pour son propre badge : ce sont des features, pas des anti-patterns de design. Ils sont dupliqués volontairement entre `css/inject/twitch-badge.css` (rendu réel) et l'aperçu de `css/popup.css` (préview popup) — garder les deux en synchro à chaque modification.
+Textes dégradés (`sp-paint`), glows, bounce et flicker des badges de chat sont des effets **choisis et payés par l'utilisateur Plus** pour son propre badge : ce sont des features, pas des anti-patterns de design. Ils sont dupliqués volontairement entre `css/inject/twitch-badge.css` (rendu réel) et l'aperçu de `css/popup.css` (préview popup) — garder les deux en synchro à chaque modification.
 
 ### Mouvement
 `prefers-reduced-motion` est honoré dans chaque feuille de style, y compris injectée. Les animations d'interface (non cosmetiques) utilisent `--ease-out`, jamais de rebond.
@@ -38,7 +63,7 @@ Sur la scène de la popup, Twitch affiche sa thumbnail (capture), disponible pub
 Chaque carte de live porte sa corbeille (au survol, comme l'épingle) avec confirmation inline sur la carte (`mini-confirm`). La liste complète (sheet) garde sa corbeille par ligne. Ne jamais supprimer sans confirmation.
 
 ### Exceptions volontaires aux détecteurs d'anti-patterns
-Constats assumés, à ne pas « corriger » : glows violets et textes dégradés des cosmétiques Plus (voir plus haut) ; rebond `sp-badge-bounce` des badges de tchat (feature Plus) ; `#c4a3ff` (`--violet-text`) sur les titres (marque) ; groupes de réglages encadrés dans leur panneau (menu popup, insights du récap, aperçu tchat de l'onboarding) — boîtes dans boîtes assumées ; pills du stepper et champs compacts du popup (surface souris fixe, padding validé au rendu).
+Constats assumés, à ne pas « corriger » : glows violets et textes dégradés des cosmétiques Plus (voir plus haut) ; rebond `sp-badge-bounce` des badges de chat (feature Plus) ; `#c4a3ff` (`--violet-text`) sur les titres (marque) ; groupes de réglages encadrés dans leur panneau (menu popup, insights du récap, aperçu du chat de l'onboarding) — boîtes dans boîtes assumées ; pills du stepper et champs compacts du popup (surface souris fixe, padding validé au rendu).
 
 ## Tokens
 

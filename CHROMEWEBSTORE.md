@@ -16,30 +16,30 @@
 
 ### Description Détaillée (Detailed Description - FR)
 ```text
-StreamPulse réunit Twitch, Kick et YouTube dans une seule extension légère. Elle surveille vos streamers préférés, automatise les clics répétitifs et garde votre navigateur rapide.
+StreamPulse réunit Twitch, Kick et YouTube dans une seule extension légère. Elle surveille tes streamers préférés, automatise les clics répétitifs et garde ton navigateur rapide.
 
-🌍 Entièrement traduite en 15 langues.
+🌍 Entièrement traduite en 11 langues.
 
 Fonctionnalités principales :
-• Points de chaîne et Drops Twitch : StreamPulse récupère automatiquement vos bonus de points de chaîne et vos Drops Twitch pendant que vous regardez, et comptabilise les points gagnés sur Kick.
-• Alertes live en temps réel : Recevez une notification sur votre bureau dès qu'un streamer suivi lance son direct, et, si vous le souhaitez, quand il change le titre de son stream.
-• Bouton « Ajouter à StreamPulse » : Suivez un streamer en un clic depuis sa page de chaîne Twitch.
-• Aperçus au survol : Prévisualisez un stream en direct en survolant le lien d'une chaîne sur Twitch, sans quitter l'onglet en cours.
-• Anti-pause et récupération du lecteur : Le stream continue quand vous changez d'onglet, et le lecteur se relance tout seul après une erreur comme la #2000 de Twitch.
-• Filtre de chat : Masquez les messages par mot-clé ou ceux de certains utilisateurs, sur Twitch et Kick.
-• Temps de visionnage et récap : Suivez votre temps passé sur chaque chaîne, puis créez une image récap à partager sur les 7 ou 30 derniers jours ou sur un mois, au format PC (16:9) ou mobile (9:16).
-• Badge communautaire : Repérez l'icône StreamPulse à côté des autres utilisateurs de l'extension dans le tchat Twitch. Désactivable à tout moment.
-• Tableau de bord unifié : Un pop-up unique pour Twitch, Kick et YouTube qui montre d'un coup d'œil qui est en direct.
+• Points de chaîne et Drops Twitch : StreamPulse récupère automatiquement tes bonus de Points de chaîne et tes Drops Twitch pendant que tu regardes, et affiche ton solde de points sur Kick.
+• Notifications de live en temps réel : reçois une notification sur ton bureau dès qu'un de tes streamers lance son live et, si tu le souhaites, quand il change de titre ou de catégorie.
+• Bouton « Ajouter à StreamPulse » : ajoute un streamer en un clic depuis sa page de chaîne Twitch.
+• Aperçus au survol : vois un live en survolant le lien d'une chaîne sur Twitch, sans quitter l'onglet en cours.
+• Anti-pause et relance du lecteur : le live continue quand tu changes d'onglet, et le lecteur Twitch se relance tout seul après une erreur.
+• Filtre de chat : masque les messages par mot-clé ou ceux de certains utilisateurs, sur Twitch et Kick.
+• Temps de visionnage et Récap : compte ton temps passé sur chaque chaîne, puis crée une image Récap à partager sur les 7 ou 30 derniers jours ou sur un mois, au format PC (16:9) ou mobile (9:16).
+• Badge communautaire : repère l'icône StreamPulse à côté des autres utilisateurs de l'extension dans le chat Twitch. Désactivable à tout moment.
+• Tableau de bord unifié : un popup unique pour Twitch, Kick et YouTube qui montre d'un coup d'œil qui est en direct.
 
 Confidentialité :
-StreamPulse ne demande aucun compte et ne contient ni publicité ni traceur. Vos streamers, vos réglages et votre temps de visionnage restent stockés sur votre appareil. Seul le badge communautaire envoie une donnée à notre serveur : une empreinte (hash) de votre pseudo Twitch (jamais le pseudo lui-même), au plus une fois par jour. Désactivez le badge dans les réglages pour l'arrêter.
+StreamPulse ne demande aucun compte et ne contient ni publicité ni traceur. Tes streamers, tes réglages et ton temps de visionnage restent stockés sur ton appareil. Seul le badge communautaire envoie une donnée à notre serveur : une empreinte (hash) de ton pseudo Twitch (jamais le pseudo lui-même), au plus une fois par jour. Désactive le badge dans les réglages pour l'arrêter.
 ```
 
 ### Detailed Description (EN)
 ```text
 StreamPulse brings Twitch, Kick and YouTube together in one lightweight extension. It keeps an eye on your favorite streamers, automates repetitive clicks and keeps your browser fast.
 
-🌍 Fully translated into 15 languages.
+🌍 Fully translated into 11 languages.
 
 Key Features:
 • Twitch Channel Points & Drops: StreamPulse automatically claims your Twitch channel point bonuses and Drops while you watch, and counts the points you earn on Kick.
@@ -160,7 +160,7 @@ locale ne la retire.
 Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décochés : le temps de visionnage, les streamers suivis et les points ne quittent jamais l'appareil (`chrome.storage.local`). Les pseudos des streamers ajoutés sont envoyés aux API publiques de Twitch et Kick uniquement pour obtenir leur statut en direct, ce qui relève du fonctionnement annoncé de l'extension.
 
 ### Détail à fournir si la console le demande
-**FR** : `Le badge communautaire, désactivé par défaut et activé seulement avec l'accord de l'utilisateur (écran d'installation ou Réglages → Chat), envoie au plus une fois par jour une empreinte SHA-256 salée et tronquée du pseudo Twitch de l'utilisateur à streampulse.fr. Le pseudo en clair n'est jamais transmis ni stocké. Cette empreinte sert uniquement à afficher le badge StreamPulse dans le tchat Twitch des autres utilisateurs de l'extension.`
+**FR** : `Le badge communautaire, désactivé par défaut et activé seulement avec l'accord de l'utilisateur (écran d'installation ou Réglages → Chat), envoie au plus une fois par jour une empreinte SHA-256 salée et tronquée du pseudo Twitch de l'utilisateur à streampulse.fr. Le pseudo en clair n'est jamais transmis ni stocké. Cette empreinte sert uniquement à afficher le badge StreamPulse dans le chat Twitch des autres utilisateurs de l'extension.`
 **EN** : `The community badge, off by default and only turned on with the user's consent (install screen or Settings → Chat), sends a salted, truncated SHA-256 hash of the user's Twitch username to streampulse.fr at most once a day. The plain username is never sent or stored. The hash is only used to show the StreamPulse badge in Twitch chat for other extension users.`
 
 ### Certifications (les trois à cocher)
