@@ -35,7 +35,7 @@
     if (record.plan === "lifetime") return "life";
     return PLUS_RULE.tenureTier("monthly", record.since);
   }
-  var LOGO_URL = chrome.runtime.getURL("images/photos/logosp.png");
+  var LOGO_URL = chrome.runtime.getURL("images/photos/logosp-128.png");
   // Logo dessiné pour les petites tailles (badge du tchat).
   var MARK_URL = chrome.runtime.getURL("images/photos/badge-mark.svg");
 

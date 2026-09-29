@@ -21,7 +21,7 @@ export class NotificationCenter {
   static initialized = false;
 
   static getDefaultIcon() {
-    return chrome.runtime.getURL("images/photos/logo.png");
+    return chrome.runtime.getURL("images/photos/logosp-128.png");
   }
 
   static resolveIcon(icon) {

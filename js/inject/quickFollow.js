@@ -98,7 +98,7 @@
   var BTN_ID = "sp-channel-add-btn";
   var STREAMERS_KEY = "betaGeneralStreamers";
   var PREFERENCES_KEY = "betaGeneralPreferences";
-  var LOGO_URL = chrome.runtime.getURL("images/photos/logosp.png");
+  var LOGO_URL = chrome.runtime.getURL("images/photos/logosp-128.png");
 
   // Routes canoniques + test de login partages (js/inject/dom.js).
 
