@@ -1109,7 +1109,7 @@ export default {
     "supportLink": "문의하기",
     "supportUrl": "https://streampulse.fr/ko/support",
     "pageTitle": "변경 내역",
-    "build": "빌드",
+    "build": "BUILD",
     "updateInstalled": "업데이트 설치 완료",
     "updatePrefix": "업데이트",
     "thanksTitle": "그들 덕분에",

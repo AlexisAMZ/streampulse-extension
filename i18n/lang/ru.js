@@ -1109,7 +1109,7 @@ export default {
     "supportLink": "Напиши нам",
     "supportUrl": "https://streampulse.fr/ru/support",
     "pageTitle": "Что нового",
-    "build": "СБОРКА",
+    "build": "BUILD",
     "updateInstalled": "ОБНОВЛЕНИЕ УСТАНОВЛЕНО",
     "updatePrefix": "ОБНОВЛЕНИЕ",
     "thanksTitle": "Спасибо им",

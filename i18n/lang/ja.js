@@ -1109,7 +1109,7 @@ export default {
     "supportLink": "お問い合わせ",
     "supportUrl": "https://streampulse.fr/ja/support",
     "pageTitle": "更新履歴",
-    "build": "ビルド",
+    "build": "BUILD",
     "updateInstalled": "アップデート完了",
     "updatePrefix": "アップデート",
     "thanksTitle": "みなさんに感謝",

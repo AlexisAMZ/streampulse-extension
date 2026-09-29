@@ -32,6 +32,7 @@
       .shot .sp-preview__media { height: 240px; }
       .shot .sp-preview__fallback { display: none; }
     </style>
+    <script src="/js/inject/i18n-inline.js"></script>
     <script src="/js/inject/dom.js"></script>
     <script src="/js/inject/topbar-panel.js"></script>
   </head>
@@ -93,14 +94,15 @@
         }
       }
       const icon = (d) => `<svg class="sp-tb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
-      const labelsFr = { thisChannel: "Cette chaîne", watchedHere: "Regardé ici", followed: "Suivi", follow: "Suivre", previews: "Aperçus au survol", autoClaim: "Points auto", fastForward: "Avance rapide", badgeColor: "Couleur du badge", badgeAuthor: "Pseudo", badgeTheme: "Thème", badgeCustom: "Perso", liveNow: "En direct", noneLive: "Personne en live", more: "+{{count}} autres", tip: "Offrir un Bubble Tea", settings: "Tous les réglages" };
-      const labelsEn = { thisChannel: "This channel", watchedHere: "Watched here", followed: "Tracked", follow: "Track", previews: "Hover previews", autoClaim: "Auto points", fastForward: "Fast-forward", badgeColor: "Badge color", badgeAuthor: "Username", badgeTheme: "Theme", badgeCustom: "Custom", liveNow: "Live now", noneLive: "Nobody live", more: "+{{count}} more", tip: "Buy me a Bubble Tea", settings: "All settings" };
-      const labels = EN ? labelsEn : labelsFr;
+      // Libellés réels du panneau : même source que le content script (i18n-inline.js).
+      const i18nApi = self.__SP_I18N__;
+      const i18nLang = i18nApi ? i18nApi.resolve(EN ? "en" : "fr") : null;
+      const tr = (key) => (i18nApi ? i18nApi.get(i18nLang, "topbar." + key) : key);
       const panel = self.__SP_TOPBAR_PANEL__.build(
         {
           points: 12480,
           watchSeconds: 34080,
-          prefs: { previewsEnabled: true, autoClaimChannelPoints: true, enableFastForwardButton: false, communityBadgeColor: "author" },
+          prefs: { previewsEnabled: true, autoClaimChannelPoints: true, enableFastForwardButton: false },
           channel: "pixelkat",
           channelTracked: false,
           channelWatchSeconds: 5400,
@@ -111,7 +113,7 @@
           ],
         },
         {
-          tr: (key) => labels[key] || key,
+          tr,
           fmtNum: (n) => new Intl.NumberFormat(EN ? "en" : "fr").format(n),
           fmtDur: (s) => `${Math.floor(s / 3600)}h${String(Math.floor((s % 3600) / 60)).padStart(2, "0")}`,
           logoUrl: "/images/photos/logosp-128.png",

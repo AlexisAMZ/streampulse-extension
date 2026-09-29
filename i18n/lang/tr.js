@@ -1109,7 +1109,7 @@ export default {
     "supportLink": "Bana yaz",
     "supportUrl": "https://streampulse.fr/tr/support",
     "pageTitle": "Değişiklik Günlüğü",
-    "build": "SÜRÜM",
+    "build": "BUILD",
     "updateInstalled": "GÜNCELLEME YÜKLENDİ",
     "updatePrefix": "GÜNCELLEME",
     "thanksTitle": "Onlara teşekkürler",

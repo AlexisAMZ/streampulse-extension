@@ -1109,7 +1109,7 @@ export default {
     "supportLink": "Schreib uns",
     "supportUrl": "https://streampulse.fr/de/support",
     "pageTitle": "Das Changelog",
-    "build": "BAUEN",
+    "build": "BUILD",
     "updateInstalled": "UPDATE INSTALLIERT",
     "updatePrefix": "UPDATE",
     "thanksTitle": "Dank ihnen",
