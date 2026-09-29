@@ -50,6 +50,23 @@ export async function fetchTwitchStreamsBatch(logins) {
 }
 
 
+/**
+ * Vignettes Kick : uniquement les URLs fournies par l'API (les URLs construites
+ * en secours répondent 403 en réel), dédoublonnées, 5 au plus, avec un
+ * cache-buster par minute.
+ */
+function kickThumbnailCandidates(stream, cacheBucket) {
+  const apiRaw = [stream?.thumbnail?.url, stream?.thumbnail?.src, stream?.thumbnail_url, stream?.thumbnail];
+  const resolved = apiRaw
+    .map((raw) => resolveKickAsset(raw))
+    .filter((url) => url && !url.includes("null") && !url.includes("undefined"));
+  return [...new Set(resolved)].slice(0, 5).map((url) => {
+    if (url.includes("cb=")) return url;
+    const separator = url.includes("?") ? "&" : "?";
+    return `${url}${separator}cb=${cacheBucket}`;
+  });
+}
+
 export class PlatformChecker {
   static async getTwitchUser(login) {
     const sanitized = sanitizeLogin(login);
@@ -184,39 +201,10 @@ export class PlatformChecker {
     // Optimize: Cache for 60 seconds to prevent flickering on every popup open
     const cb = Math.floor(Date.now() / 60000); // 1-minute cache bucket
 
-    // Uniquement les URLs fournies par l'API. Kick renvoie `thumbnail: null`
-    // quand il n'a pas d'image ; les URLs construites qui étaient sondées en
-    // secours (images.kick.com/v2/stream-thumbnails/..., files.kick.com/
-    // stream-thumbnails/...) répondent 403 en réel : elles ne donnaient jamais
-    // d'image et rajoutaient des probes mortes qui retardaient le chargement.
-    const apiRaw = [
-      stream?.thumbnail?.url,
-      stream?.thumbnail?.src,
-      stream?.thumbnail_url,
-      stream?.thumbnail,
-    ];
-
-    const distinctUrls = new Set();
-    const allCandidates = [];
-    for (const raw of apiRaw) {
-      const resolved = resolveKickAsset(raw);
-      if (resolved && !resolved.includes("null") && !resolved.includes("undefined")) {
-        if (!distinctUrls.has(resolved)) {
-          distinctUrls.add(resolved);
-          allCandidates.push(resolved);
-        }
-      }
-    }
-
-    // Cache bust, keep top 5
-    const thumbnailCandidates = allCandidates.slice(0, 5).map(url => {
-      if (url.includes("cb=")) return url;
-      const separator = url.includes("?") ? "&" : "?";
-      return `${url}${separator}cb=${cb}`;
-    });
-
+    // Kick renvoie `thumbnail: null` quand il n'a pas d'image.
+    const thumbnailCandidates = kickThumbnailCandidates(stream, cb);
     const thumbnail = thumbnailCandidates[0] || "";
-    
+
     const viewerCount =
       Number(stream?.viewer_count ?? stream?.viewers ?? stream?.view_count) ||
       0;

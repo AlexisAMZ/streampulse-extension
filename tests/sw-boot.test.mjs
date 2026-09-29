@@ -109,3 +109,46 @@ test("incrementStat et getEventLogs", { skip }, async () => {
 test("type de message inconnu : pas de réponse", { skip }, async () => {
   assert.equal(await send({ type: "inconnu" }, popup()), undefined);
 });
+
+test("addStreamer refuse un doublon et une chaîne introuvable", { skip }, async () => {
+  await fake.storage.local.set({ betaGeneralStreamers: [{ id: "dup", platform: "twitch", handle: "dup" }] });
+  const duplicate = await send({ type: "addStreamer", platform: "twitch", handle: "DUP" }, popup());
+  assert.equal(typeof duplicate.error, "string");
+  // Réseau coupé : YouTube ne résout pas la chaîne, rien n'est écrit.
+  const missing = await send({ type: "addStreamer", platform: "youtube", handle: "inconnu" }, popup());
+  assert.equal(typeof missing.error, "string");
+  const { betaGeneralStreamers } = await fake.storage.local.get("betaGeneralStreamers");
+  assert.equal(betaGeneralStreamers.length, 1);
+});
+
+test("sondage : rattrapage groupé puis alerte de catégorie, état conservé en erreur", { skip }, async () => {
+  let game = "Chess";
+  let helixDown = false;
+  globalThis.fetch = async (url) => {
+    const href = String(url);
+    if (href.includes("streampulse-config")) return Response.json({ clientId: "cid", accessToken: "tok" });
+    if (href.includes("helix/streams")) {
+      if (helixDown) return new Response("", { status: 500, statusText: "down" });
+      return Response.json({ data: [{ user_login: "caster", id: "s1", game_name: game, title: "t", viewer_count: 5, started_at: new Date().toISOString() }] });
+    }
+    throw new Error(`réseau coupé (test) ${href}`);
+  };
+  await fake.storage.local.set({
+    betaGeneralStreamers: [{ id: "caster", platform: "twitch", handle: "caster", notificationsEnabled: true, gameNotificationsEnabled: true }],
+  });
+  const notifications = () => fake.calls.filter(([name]) => name === "notifications.create").map(([, , options]) => options.title);
+
+  const before = notifications().length;
+  await send({ type: "refreshStatuses" }, popup());
+  assert.equal(notifications().length, before + 1, "une seule notification de rattrapage");
+
+  game = "Poker";
+  await send({ type: "refreshStatuses" }, popup());
+  assert.equal(notifications().length, before + 2, "alerte de changement de catégorie");
+
+  helixDown = true;
+  await send({ type: "refreshStatuses" }, popup());
+  const { streamPulseLiveState } = await fake.storage.local.get("streamPulseLiveState");
+  assert.equal(streamPulseLiveState.caster.isLive, true, "l'erreur d'API ne passe pas le streamer hors ligne");
+  assert.equal(notifications().length, before + 2);
+});

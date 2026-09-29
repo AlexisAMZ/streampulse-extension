@@ -161,26 +161,15 @@ export function logChangeDiagnostics(streamer, previous, next, preferences) {
   }
 }
 
-export async function _pollStreamersImpl({ forceNotification = false } = {}) {
-  await ensureConfig(); // hydrate credentials before any Twitch API call (MV3 SW restart safety)
-  const streamers = await DataStore.getStreamers();
-  const preferences = await PreferenceStore.get();
-  if (streamers.length === 0) {
-    // Don't wipe statuses/live-state here. A transient empty read from
-    // chrome.storage (or a single-poll race) shouldn't destroy the dedup state
-    // for genuinely-followed streamers: it would cause every previously-live
-    // streamer to re-fire its "now live" notification on the next poll.
-    await ActionBadge.update(0, preferences);
-    return [];
-  }
-
-  // ALWAYS restore from the dedicated LIVE_STATE storage key (not just when
-  // size === 0). MV3 service workers can be terminated between any two polls,
-  // and this Map is module-level (lost on every restart). Without restoring
-  // from storage, every poll on a fresh SW would see `wasLive = false` and
-  // re-fire the "live" notification: i.e. one notification per poll interval.
-  // Using a dedicated key (vs. piggybacking on STATUSES) means notification
-  // dedup survives even if the statuses object is transiently wiped.
+/**
+ * TOUJOURS restaurer depuis la clé LIVE_STATE dédiée (pas seulement quand la
+ * Map est vide) : le SW MV3 peut être tué entre deux sondages et cette Map
+ * vit en mémoire. Sans cette restauration, chaque sondage d'un SW neuf
+ * verrait `wasLive = false` et renverrait l'alerte « en direct ». Une clé
+ * dédiée (et non STATUSES) garde la déduplication même si les statuts sont
+ * effacés un instant.
+ */
+async function restoreLiveState() {
   try {
     const savedLiveState = await DataStore.getLiveState();
     Object.entries(savedLiveState || {}).forEach(([id, entry]) => {
@@ -190,137 +179,108 @@ export async function _pollStreamersImpl({ forceNotification = false } = {}) {
   } catch (err) {
     console.warn("Failed to restore live state:", err?.message || err);
   }
+}
 
-  // Alertes intelligentes : actives seulement avec StreamPulse+.
+/** Alertes intelligentes : actives seulement avec StreamPulse+. */
+async function loadSmartRules() {
   const plusStored = await chrome.storage.local.get([PLUS_KEY, SMART_ALERTS_KEY]);
   await recheckPlusLicense(plusStored[PLUS_KEY]);
   const plusActive = isPlusActive((await chrome.storage.local.get(PLUS_KEY))[PLUS_KEY]);
-  const smartRules = plusActive ? normalizeRules(plusStored[SMART_ALERTS_KEY]) : {};
+  return plusActive ? normalizeRules(plusStored[SMART_ALERTS_KEY]) : {};
+}
 
-  const streamerById = new Map();
-  streamers.forEach((streamer) => {
-    streamerCache.set(streamer.id, streamer);
-    streamerById.set(streamer.id, streamer);
-  });
-
-  // Sonde groupée Twitch : 1 requête Helix par tranche de 100 streamers au
-  // lieu d'1 requête par streamer. Un échec du batch est propagé tel quel
-  // (chaque streamer Twitch repart en isError, l'état live précédent est
-  // conservé par la boucle ci-dessous).
-  const twitchBatch = { streams: new Map(), error: "" };
+/**
+ * Sonde groupée Twitch : 1 requête Helix par tranche de 100 streamers au lieu
+ * d'1 requête par streamer. Un échec du batch est propagé tel quel (chaque
+ * streamer Twitch repart en isError, l'état live précédent est conservé).
+ */
+async function probeTwitchBatch(streamers) {
   const twitchLogins = streamers
     .filter((streamer) => normalizePlatform(streamer.platform || "twitch") === "twitch")
     .map((streamer) => sanitizeLogin(streamer.twitch || streamer.handle))
     .filter(Boolean);
-  if (twitchLogins.length > 0) {
-    const rateLimitedUntil = await twitchRateLimitUntil();
-    if (rateLimitedUntil) {
-      // Pause 429 : aucune requête Twitch envoyée, l'état précédent de chaque
-      // streamer est conservé (isError => previousLiveState recopié) — ni
-      // bascule offline/on-line, ni erreur affichée, et le quota respire.
-      twitchBatch.error = "rate_limited";
-      console.info(
-        "[SP] sondage Twitch en pause (quota) jusqu'à",
-        new Date(rateLimitedUntil).toISOString()
-      );
-    } else {
-      try {
-        twitchBatch.streams = await fetchTwitchStreamsBatch(twitchLogins);
-        clearTwitchRateLimit();
-      } catch (error) {
-        twitchBatch.error = error?.message || "batch_failed";
-        console.warn("Twitch batched status error:", twitchBatch.error);
-      }
-    }
+  if (twitchLogins.length === 0) return { streams: new Map(), error: "" };
+  const rateLimitedUntil = await twitchRateLimitUntil();
+  if (rateLimitedUntil) {
+    // Pause 429 : aucune requête Twitch envoyée, l'état précédent de chaque
+    // streamer est conservé — ni bascule, ni erreur affichée, et le quota respire.
+    console.info("[SP] sondage Twitch en pause (quota) jusqu'à", new Date(rateLimitedUntil).toISOString());
+    return { streams: new Map(), error: "rate_limited" };
   }
+  try {
+    const streams = await fetchTwitchStreamsBatch(twitchLogins);
+    clearTwitchRateLimit();
+    return { streams, error: "" };
+  } catch (error) {
+    const message = error?.message || "batch_failed";
+    console.warn("Twitch batched status error:", message);
+    return { streams: new Map(), error: message };
+  }
+}
 
-  // Kick reste sondé par chaine (pas d'API batch) : on borne la concurrence.
+/** Kick et YouTube restent sondés par chaîne (pas d'API groupée) : concurrence bornée. */
+async function buildAllStatuses(streamers, twitchBatch) {
   const statuses = [];
   const CONCURRENCY = 3;
   for (let i = 0; i < streamers.length; i += CONCURRENCY) {
     const batch = streamers.slice(i, i + CONCURRENCY);
-    const results = await Promise.all(batch.map((streamer) => buildStreamerStatus(streamer, twitchBatch)));
-    statuses.push(...results);
+    statuses.push(...(await Promise.all(batch.map((streamer) => buildStreamerStatus(streamer, twitchBatch)))));
+  }
+  return statuses;
+}
+
+/** Transforme une alerte planifiée en envoi (ou en nom pour le rattrapage groupé). */
+function dispatchAlert(alert, { streamer, status, next, preferences, queueAlert, catchUpLive }) {
+  if (alert.type === "catchUp") {
+    const platform = status.platform || streamer.platform || "twitch";
+    catchUpLive.push(streamer.displayName || formatHandleForDisplay(platform, streamer.handle || streamer.twitch));
+  } else if (alert.type === "live") {
+    queueAlert(() => NotificationSystem.notifyLive(streamer, status.active, preferences));
+  } else if (alert.type === "game") {
+    queueAlert(() => NotificationSystem.notifyGameChange(streamer, alert.from, alert.to, preferences, next.platform));
+  } else if (alert.type === "title") {
+    queueAlert(() => NotificationSystem.notifyTitleChange(streamer, alert.from, alert.to, preferences, next.platform));
+  }
+}
+
+/** Un streamer : état live suivant, fin de live, alertes planifiées. */
+function processStatus(status, context) {
+  const { streamer } = context;
+  const previous = streamerLiveState.get(streamer.id) || EMPTY_LIVE_STATE;
+  const now = Date.now();
+  const next = nextLiveStateFrom(status, previous, streamer, now);
+
+  // Fin de live : entrée d'historique (la VOD Twitch est cherchée ensuite).
+  if (didStreamEnd(previous, next)) {
+    HistoryStore.recordEnded(streamer, previous).catch((error) => console.warn("History record failed:", error?.message || error));
   }
 
-  // Streamers déjà en direct au premier sondage (rattrapage) : une seule
-  // notification groupée sera envoyée après la boucle, pas 1 par streamer.
-  const catchUpLive = [];
+  // Règles d'alerte du streamer : elles remplacent l'alerte classique.
+  const smartDecision = next.isError
+    ? null
+    : decideSmartAlert(context.smartRules[streamer.id], status.active, previous.isLive ? previous.matchedRuleIds || [] : []);
+  if (smartDecision) next.matchedRuleIds = smartDecision.matchedIds;
 
-  // Heures calmes : aucune alerte (live, catégorie, titre, rattrapage) pendant
-  // la plage. L'état live reste persisté normalement, donc à la sortie de la
-  // plage aucune session déjà annoncée ne repart en doublon.
-  const quietNow = isWithinQuietHours(Date.now(), preferences);
-  // Les envois sont mis en file et partent APRES la persistance de l'état
-  // (statuses + live-state) : si le SW est tué en plein envoi, on perd au pire
-  // une alerte au lieu de la rediffuser au sondage suivant (doublon).
-  const queuedAlerts = [];
-  const queueAlert = (send) => {
-    if (!quietNow) queuedAlerts.push(send);
-  };
+  logChangeDiagnostics(streamer, previous, next, context.preferences);
+  const alerts = planStreamerAlerts({ streamer, previous, next, smartDecision, forceNotification: context.forceNotification, now });
+  for (const alert of alerts) dispatchAlert(alert, { ...context, status, next });
 
-  for (const status of statuses) {
-    const streamer = streamerById.get(status.id);
-    const previousLiveState = streamerLiveState.get(streamer.id) || EMPTY_LIVE_STATE;
-    const now = Date.now();
-    const nextLiveState = nextLiveStateFrom(status, previousLiveState, streamer, now);
+  streamerStates.set(status.id, status);
+  streamerLiveState.set(streamer.id, next);
+}
 
-    // Fin de live : entree d'historique (la VOD Twitch est cherchee ensuite).
-    if (didStreamEnd(previousLiveState, nextLiveState)) {
-      HistoryStore.recordEnded(streamer, previousLiveState).catch((error) =>
-        console.warn("History record failed:", error?.message || error)
-      );
-    }
-
-    // Regles d'alerte du streamer : elles remplacent l'alerte classique.
-    const smartDecision = nextLiveState.isError
-      ? null
-      : decideSmartAlert(
-          smartRules[streamer.id],
-          status.active,
-          previousLiveState.isLive ? previousLiveState.matchedRuleIds || [] : []
-        );
-    if (smartDecision) nextLiveState.matchedRuleIds = smartDecision.matchedIds;
-
-    logChangeDiagnostics(streamer, previousLiveState, nextLiveState, preferences);
-    const alerts = planStreamerAlerts({ streamer, previous: previousLiveState, next: nextLiveState, smartDecision, forceNotification, now });
-    for (const alert of alerts) {
-      if (alert.type === "catchUp") {
-        const platform = status.platform || streamer.platform || "twitch";
-        catchUpLive.push(streamer.displayName || formatHandleForDisplay(platform, streamer.handle || streamer.twitch));
-      } else if (alert.type === "live") {
-        queueAlert(() => NotificationSystem.notifyLive(streamer, status.active, preferences));
-      } else if (alert.type === "game") {
-        queueAlert(() => NotificationSystem.notifyGameChange(streamer, alert.from, alert.to, preferences, nextLiveState.platform));
-      } else if (alert.type === "title") {
-        queueAlert(() => NotificationSystem.notifyTitleChange(streamer, alert.from, alert.to, preferences, nextLiveState.platform));
-      }
-    }
-
-    streamerStates.set(status.id, status);
-    streamerLiveState.set(streamer.id, nextLiveState);
-  }
-
-  const statusesObject = {};
-  statuses.forEach((status) => {
-    statusesObject[status.id] = status;
-  });
-  await DataStore.saveStatuses(statusesObject);
-
-  // Persist live-state separately so notification dedup survives SW restarts.
-  // Storing as a plain object (Map serialization) keyed by streamer.id.
+/** Statuts (popup) et état live (déduplication des alertes) persistés séparément. */
+async function persistPollState(statuses) {
+  await DataStore.saveStatuses(Object.fromEntries(statuses.map((status) => [status.id, status])));
   try {
-    const liveStateObject = {};
-    streamerLiveState.forEach((value, key) => {
-      liveStateObject[key] = value;
-    });
-    await DataStore.saveLiveState(liveStateObject);
+    await DataStore.saveLiveState(Object.fromEntries(streamerLiveState));
   } catch (err) {
     console.warn("Failed to persist live state:", err?.message || err);
   }
+}
 
-  // L'état est persisté : les alertes partent maintenant, une à une. Un SW tué
-  // ici perd une alerte, mais ne rediffusera jamais une session déjà annoncée.
+/** L'état est persisté : les alertes partent une à une. Un SW tué ici perd une alerte, jamais un doublon. */
+async function sendQueuedAlerts(queuedAlerts) {
   for (const send of queuedAlerts) {
     try {
       await send();
@@ -328,28 +288,55 @@ export async function _pollStreamersImpl({ forceNotification = false } = {}) {
       console.warn("[SP] alerte non envoyée :", error?.message || error);
     }
   }
+}
 
-  // Rattrapage au démarrage : une seule notification récapitulative, quel que
-  // soit le nombre de streamers trouvés déjà en direct. Silencieuse pendant
-  // les heures calmes, comme les alertes individuelles.
-  if (catchUpLive.length > 0 && !quietNow) {
-    const lang = normalizeLanguage(preferences?.language);
-    const names = catchUpNames(catchUpLive);
-    await NotificationCenter.show({
-      title: translate(lang, "background.notifications.startupBatchTitle"),
-      message: translate(lang, "background.notifications.startupBatchBody", { names }),
-      iconUrl: NotificationCenter.getDefaultIcon(),
-      requireInteraction: false,
-      priority: 1,
-      playSound: preferences?.soundsEnabled !== false,
-    });
+/** Rattrapage au démarrage : une seule notification récapitulative. */
+async function notifyCatchUp(catchUpLive, preferences) {
+  if (catchUpLive.length === 0) return;
+  const lang = normalizeLanguage(preferences?.language);
+  await NotificationCenter.show({
+    title: translate(lang, "background.notifications.startupBatchTitle"),
+    message: translate(lang, "background.notifications.startupBatchBody", { names: catchUpNames(catchUpLive) }),
+    iconUrl: NotificationCenter.getDefaultIcon(),
+    requireInteraction: false,
+    priority: 1,
+    playSound: preferences?.soundsEnabled !== false,
+  });
+}
+
+export async function _pollStreamersImpl({ forceNotification = false } = {}) {
+  await ensureConfig(); // credentials avant tout appel Twitch (redémarrage du SW MV3)
+  const streamers = await DataStore.getStreamers();
+  const preferences = await PreferenceStore.get();
+  if (streamers.length === 0) {
+    // Ne pas effacer statuts ni état live : une lecture vide passagère ne doit
+    // pas détruire la déduplication (chaque live renverrait son alerte).
+    await ActionBadge.update(0, preferences);
+    return [];
   }
+  await restoreLiveState();
+  const smartRules = await loadSmartRules();
+  const streamerById = new Map(streamers.map((streamer) => [streamer.id, streamer]));
+  streamers.forEach((streamer) => streamerCache.set(streamer.id, streamer));
+  const statuses = await buildAllStatuses(streamers, await probeTwitchBatch(streamers));
 
+  // Heures calmes : aucune alerte (live, catégorie, titre, rattrapage). L'état
+  // live reste persisté, donc aucune session annoncée ne repart en doublon.
+  // Les envois partent APRÈS la persistance de l'état (voir sendQueuedAlerts).
+  const quietNow = isWithinQuietHours(Date.now(), preferences);
+  const queuedAlerts = [];
+  const catchUpLive = [];
+  const queueAlert = (send) => {
+    if (!quietNow) queuedAlerts.push(send);
+  };
+  for (const status of statuses) {
+    processStatus(status, { streamer: streamerById.get(status.id), preferences, smartRules, forceNotification, queueAlert, catchUpLive });
+  }
+  await persistPollState(statuses);
+  await sendQueuedAlerts(queuedAlerts);
+  if (!quietNow) await notifyCatchUp(catchUpLive, preferences);
   await ActionBadge.update(countLive(statuses), preferences);
-
-  // Pre-cache thumbnails for live streamers (background)
-  precacheThumbnails(statuses).catch(() => {});
-
+  precacheThumbnails(statuses).catch((error) => console.warn("[SP] cache des vignettes :", error?.message || error));
   return statuses;
 }
 
