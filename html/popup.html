@@ -27,9 +27,11 @@
       <div class="topbar-end">
         <span class="stat-pill stat-points" data-i18n-attr-title="popup.stats.pointsClaimed" title="Points récupérés">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 3h12l4 6-10 12L2 9z"/></svg>
+          <span class="visually-hidden" data-i18n="popup.stats.pointsClaimed">Points récupérés</span>
           <span id="header-points-value2">--</span>
         </span>
         <span class="stat-pill stat-time" data-i18n-attr-title="popup.cplus.watchTimeLabel" title="Temps de visionnage ce mois-ci">
+          <span class="visually-hidden" data-i18n="popup.cplus.watchTimeLabel">Temps de visionnage ce mois-ci</span>
           <span id="stat-watchtime">--</span>
         </span>
         <button id="header-patch-notes" type="button" class="icon-button news-button" data-i18n-attr-title="popup.osd.changelog" data-i18n-attr-ariaLabel="popup.osd.changelog" title="Nouveautés" aria-label="Nouveautés">
@@ -47,37 +49,11 @@
       <button id="notif-blocked-open" type="button" class="button button-quiet" data-i18n="popup.notifBlockedAction">Réglages</button>
     </div>
 
-    <aside class="review-ask" id="review-ask" role="dialog" hidden>
-      <span class="review-ask-stars" aria-hidden="true">★★★★★</span>
-      <div class="review-ask-text">
-        <b data-i18n="popup.review.title">Tu aimes StreamPulse ?</b>
-        <span data-i18n="popup.review.body">Un avis sur le store aide énormément une extension indépendante. Merci d'avance !</span>
-      </div>
-      <div class="review-ask-actions">
-        <button id="review-ask-rate" type="button" class="button button-primary" data-i18n="popup.review.rate">Laisser un avis</button>
-        <button id="review-ask-later" type="button" class="button button-quiet" data-i18n="popup.review.later">Plus tard</button>
-        <button id="review-ask-never" type="button" class="button button-link" data-i18n="popup.review.never">Non merci</button>
-      </div>
-    </aside>
-
-    <aside class="badge-ask" id="badge-ask" role="dialog" hidden>
-      <span class="badge-ask-mark" aria-hidden="true"></span>
-      <div class="badge-ask-text">
-        <b data-i18n="popup.badgeAsk.title">Affiche ton badge dans le chat</b>
-        <span data-i18n="popup.badgeAsk.body">Repère les autres utilisateurs de StreamPulse dans le chat Twitch, et montre-leur que tu en fais partie. Si tu l'actives : une empreinte de ton pseudo est envoyée à streampulse.fr une fois par jour maximum.</span>
-      </div>
-      <div class="badge-ask-actions">
-        <button id="badge-ask-activate" type="button" class="button button-primary" data-i18n="popup.badgeAsk.activate">Activer le badge</button>
-        <button id="badge-ask-later" type="button" class="button button-quiet" data-i18n="popup.badgeAsk.later">Plus tard</button>
-        <button id="badge-ask-never" type="button" class="button button-link" data-i18n="popup.badgeAsk.dismiss">Non merci</button>
-      </div>
-    </aside>
-
-    <main id="streamers-view" class="home" role="tabpanel" aria-labelledby="tab-streamers">
+    <main id="streamers-view" class="home" data-roster="loading" role="tabpanel" aria-labelledby="tab-streamers">
       <section class="stage" id="stage" data-state="empty">
         <div class="stage-media" id="stage-media"></div>
         <div class="greeting">
-          <h1 class="greeting-title" id="greeting-title">Bonsoir.<br /><span class="greeting-sub">Voici qui est en ligne.</span></h1>
+          <h1 class="greeting-title" id="greeting-title">Bonsoir.<br /><span class="greeting-sub greeting-sub-loading" aria-hidden="true"></span></h1>
           <p class="greeting-hint" id="greeting-live-count" role="status"></p>
         </div>
         <div class="stage-pager" id="stage-pager" hidden>
@@ -107,7 +83,7 @@
         </span>
         <button id="open-all-channels" type="button" class="search-trigger">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <span data-i18n="popup.cplus.search">Chercher une chaîne</span>
+          <span data-i18n="popup.cplus.search">Chercher un streamer</span>
         </button>
       </section>
 
@@ -132,7 +108,7 @@
           <label for="streamer-input" class="visually-hidden" data-i18n="popup.addStreamerTitleBase">Ajouter un streamer</label>
           <div class="add-field">
             <span class="input-prefix" id="handle-prefix" aria-hidden="true">@</span>
-            <input id="streamer-input" name="streamer" type="text" maxlength="80" autocomplete="off" autocapitalize="none" spellcheck="false" required data-i18n-attr-placeholder="popup.addStreamerHelperBase" placeholder="Saisissez le lien ou l’identifiant du créateur." />
+            <input id="streamer-input" name="streamer" type="text" maxlength="80" autocomplete="off" autocapitalize="none" spellcheck="false" required data-i18n-attr-placeholder="popup.addStreamerHelperBase" placeholder="Colle le lien ou l’identifiant du streamer." />
             <button type="submit" class="add-submit" data-i18n="popup.addStreamerSubmit">Ajouter</button>
           </div>
           <p id="feedback-message" class="feedback-message" hidden></p>
@@ -170,6 +146,32 @@
         <ul class="sheet-list" id="sheet-list"></ul>
       </section>
     </main>
+
+    <aside class="review-ask" id="review-ask" role="region" aria-labelledby="review-ask-title" hidden>
+      <span class="review-ask-stars" aria-hidden="true">★★★★★</span>
+      <div class="review-ask-text">
+        <b id="review-ask-title" data-i18n="popup.review.title">Tu aimes StreamPulse ?</b>
+        <span data-i18n="popup.review.body">Un avis sur le store aide énormément une extension indépendante. Merci d'avance !</span>
+      </div>
+      <div class="review-ask-actions">
+        <button id="review-ask-rate" type="button" class="button button-primary" data-i18n="popup.review.rate">Laisser un avis</button>
+        <button id="review-ask-later" type="button" class="button button-quiet" data-i18n="popup.review.later">Plus tard</button>
+        <button id="review-ask-never" type="button" class="button button-link" data-i18n="popup.review.never">Non merci</button>
+      </div>
+    </aside>
+
+    <aside class="badge-ask" id="badge-ask" role="region" aria-labelledby="badge-ask-title" hidden>
+      <span class="badge-ask-mark" aria-hidden="true"></span>
+      <div class="badge-ask-text">
+        <b id="badge-ask-title" data-i18n="popup.badgeAsk.title">Affiche ton badge dans le chat</b>
+        <span data-i18n="popup.badgeAsk.body">Repère les autres utilisateurs de StreamPulse dans le chat Twitch, et montre-leur ton badge. Si tu l'actives : une empreinte de ton pseudo est envoyée à streampulse.fr une fois par jour maximum.</span>
+      </div>
+      <div class="badge-ask-actions">
+        <button id="badge-ask-activate" type="button" class="button button-primary" data-i18n="popup.badgeAsk.activate">Activer le badge</button>
+        <button id="badge-ask-later" type="button" class="button button-quiet" data-i18n="popup.badgeAsk.later">Plus tard</button>
+        <button id="badge-ask-never" type="button" class="button button-link" data-i18n="popup.badgeAsk.dismiss">Non merci</button>
+      </div>
+    </aside>
 
     <section id="history-view" class="history hidden" role="tabpanel" aria-labelledby="tab-history">
       <div class="history-head">
