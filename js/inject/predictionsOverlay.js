@@ -33,6 +33,15 @@
     });
   }
 
+  // Langue de l'extension (pas celle de l'interface Twitch), résolue au
+  // chargement des préférences et suivie à chaud.
+  let lang = "en";
+
+  function tr(key) {
+    const api = window.__SP_I18N__;
+    return api ? api.get(lang, "predictions." + key) : key;
+  }
+
   function createOverlay() {
     if (document.getElementById(WIDGET_ID)) return;
 
@@ -45,21 +54,27 @@
       <div class="sp-pred-head" id="${WIDGET_ID}-header">
         <span class="sp-pred-label">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg>
-          Prédiction en cours
         </span>
-        <button class="sp-pred-close" id="${WIDGET_ID}-close" type="button" aria-label="Fermer">
+        <button class="sp-pred-close" id="${WIDGET_ID}-close" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
         </button>
       </div>
       <div class="sp-pred-body" id="${WIDGET_ID}-body">
-        <div class="sp-pred-title" id="${WIDGET_ID}-title">Chargement…</div>
+        <div class="sp-pred-title" id="${WIDGET_ID}-title"></div>
         <div class="sp-pred-options" id="${WIDGET_ID}-options">
           <div class="sp-pred-opt sp-pred-opt-a" id="${WIDGET_ID}-opt1">--</div>
           <div class="sp-pred-opt sp-pred-opt-b" id="${WIDGET_ID}-opt2">--</div>
         </div>
-        <button class="sp-pred-action" id="${WIDGET_ID}-action" type="button">Miser / Voter dans le Chat</button>
+        <button class="sp-pred-action" id="${WIDGET_ID}-action" type="button"></button>
       </div>
     `;
+
+    // Textes traduits posés après le gabarit : les gabarits innerHTML avec du
+    // texte interpolé seraient une injection en puissance.
+    overlayEl.querySelector(".sp-pred-label").appendChild(document.createTextNode(tr("label")));
+    overlayEl.querySelector(".sp-pred-close").setAttribute("aria-label", tr("close"));
+    document.getElementById(`${WIDGET_ID}-title`).textContent = tr("loading");
+    document.getElementById(`${WIDGET_ID}-action`).textContent = tr("action");
 
     const playerContainer = document.querySelector('.video-player__container, [data-a-target="video-player"]');
     if (playerContainer) {
@@ -122,7 +137,7 @@
     const opt1El = document.getElementById(`${WIDGET_ID}-opt1`);
     const opt2El = document.getElementById(`${WIDGET_ID}-opt2`);
 
-    const titleText = predWidget.textContent || "Prédiction Twitch";
+    const titleText = predWidget.textContent || tr("fallbackTitle");
     if (titleEl) titleEl.textContent = titleText.slice(0, 80);
 
     const outcomes = document.querySelectorAll('.community-prediction-highlight-outcome, [data-test-selector="prediction-outcome"]');
@@ -136,7 +151,10 @@
 
   function init() {
     chrome.storage.local.get([PREFERENCES_KEY], (res) => {
-      isEnabled = res?.[PREFERENCES_KEY]?.enablePredictionsPopup !== false;
+      const prefs = res?.[PREFERENCES_KEY] || {};
+      isEnabled = prefs.enablePredictionsPopup !== false;
+      const api = window.__SP_I18N__;
+      lang = api ? api.resolve(prefs.language || navigator.language) : "en";
       if (isEnabled && !checkIntervalId) {
         // Pas de porte sur document.hidden ici : le panneau doit apparaître
         // (et alerter) dès qu'une prédiction démarre, même onglet en arrière-plan.
@@ -146,7 +164,10 @@
 
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area === "local" && changes[PREFERENCES_KEY]) {
-        isEnabled = changes[PREFERENCES_KEY].newValue?.enablePredictionsPopup !== false;
+        const prefs = changes[PREFERENCES_KEY].newValue || {};
+        isEnabled = prefs.enablePredictionsPopup !== false;
+        const api = window.__SP_I18N__;
+        lang = api ? api.resolve(prefs.language || navigator.language) : lang;
         if (!isEnabled && checkIntervalId) {
           // Désactivé à chaud : arrêter la boucle et masquer le panneau.
           clearInterval(checkIntervalId);

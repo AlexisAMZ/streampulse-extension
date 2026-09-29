@@ -3,7 +3,6 @@ import {
   translations,
   DEFAULT_LANGUAGE,
   formatTemplate,
-  matchLanguage,
   resolveLocale,
 } from "../i18n/translations.js";
 import {
@@ -13,15 +12,24 @@ import {
   getHandleComparisonKey,
   getPlatformIcon,
   getPlatformLabelKey,
+  isChannelPageUrl,
   isYoutubeChannelId,
   normalizePlatform,
   platformSupportsLiveStatus,
   sanitizeHandle,
 } from "./platforms.js";
 import { HISTORY_KEY, addSession, emptyHistory, markSeen, patchSession, removeEntry } from "./history-data.js";
-import { DEFAULT_PREFERENCES } from "./preferences-data.js";
-import { thankPlusSubscriber } from "./plus-thanks.js";
+import {
+  DEFAULT_PREFERENCES,
+  detectInstallLanguage,
+  normalizeLanguage,
+  notificationFieldsFromUpdates,
+  resetPreferencesFrom,
+  sanitizePreferences,
+} from "./preferences-data.js";
 import { SMART_ALERTS_KEY, normalizeRules, decideSmartAlert } from "./smart-alerts.js";
+import { isWithinQuietHours } from "./quiet-hours.js";
+import { isRateLimitError, rateLimitResetAt } from "./twitch-rate-limit.js";
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "./plus.js";
 import { createPointsStore } from "./points-store.js";
 import { createDropsStore } from "./drops-store.js";
@@ -30,14 +38,12 @@ import { createDropsClient } from "./drops-gql.js";
 import { createBadgeAuto } from "./badge-auto-worker.js";
 import { searchChannels } from "./channel-search.js";
 import { syncEventSubRaid, stopEventSubRaid } from "./eventsubRaid.js";
+import { applyStreamerOrder, sanitizePinnedIds } from "./streamers-data.js";
 import {
   RAID_WATCHER_ALARM,
   syncRaidWatcher,
   stopRaidWatcher,
 } from "./raidWatcher.js";
-
-/** Qualites proposees pour le lecteur Twitch. "auto" laisse Twitch decider. */
-const PLAYER_QUALITIES = ["auto", "source", "1440", "1080", "720", "480", "360"];
 
 const STORAGE_KEYS = {
   STREAMERS: "betaGeneralStreamers",
@@ -83,7 +89,7 @@ async function fetchRemoteConfig() {
     // aléatoire contourne le cache Edge (Vercel a deja servi des reponses
     // perimees contenant un token mort apres une rotation de credentials).
     const url = `${REMOTE_CONFIG_URL}?t=${Date.now()}`;
-    const res = await fetch(url, { cache: "no-store" });
+    const res = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS) });
     if (!res.ok) return;
     const data = await res.json();
     if (data?.clientId) {
@@ -119,7 +125,10 @@ function ensureConfig() {
  */
 async function refreshRemoteConfigForce() {
   try {
-    const res = await fetch(`${REMOTE_CONFIG_URL}?t=${Date.now()}`, { cache: "no-store" });
+    const res = await fetch(`${REMOTE_CONFIG_URL}?t=${Date.now()}`, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS),
+    });
     if (!res.ok) return false;
     const data = await res.json();
     if (!data?.clientId) return false;
@@ -143,10 +152,56 @@ async function fetchTwitchJson(url, options = {}, timeoutMs = 15000) {
   try {
     return await fetchJson(url, options, timeoutMs);
   } catch (error) {
+    if (isRateLimitError(error)) {
+      // 429 : on note la pause (persistee) et on laisse l'erreur remonter ;
+      // le sondage courant garde l'etat precedent pour chaque streamer.
+      await recordTwitchRateLimit(error);
+      throw error;
+    }
     if (!/^(401|403) /.test(String(error?.message || ""))) throw error;
     const refreshed = await refreshRemoteConfigForce();
     if (!refreshed) throw error;
     return fetchJson(url, options, timeoutMs);
+  }
+}
+
+// ─── Pause persistée après un 429 Helix ──────────────────────────────────────
+
+const TWITCH_RATE_LIMIT_KEY = "streampulse:twitchRateLimitedUntil";
+
+/** Persiste la pause imposée par un 429 (survit aux redémarrages du SW). */
+async function recordTwitchRateLimit(error) {
+  const until = rateLimitResetAt(error?.headers, Date.now());
+  if (!until) return;
+  console.warn(
+    "[SP] quota Twitch atteint : sondage Twitch en pause jusqu'à",
+    new Date(until).toISOString()
+  );
+  try {
+    await chrome.storage.local.set({ [TWITCH_RATE_LIMIT_KEY]: until });
+  } catch (storageError) {
+    console.warn("[SP] pause Twitch non persistée", storageError);
+  }
+}
+
+/** Renvoie l'instant (ms) jusqu'auquel le sondage Twitch est en pause, ou 0. */
+async function twitchRateLimitUntil() {
+  try {
+    const stored = await chrome.storage.local.get(TWITCH_RATE_LIMIT_KEY);
+    const until = Number(stored[TWITCH_RATE_LIMIT_KEY]) || 0;
+    return Date.now() < until ? until : 0;
+  } catch (error) {
+    console.warn("[SP] lecture de la pause Twitch impossible", error);
+    return 0;
+  }
+}
+
+/** Un cycle de sondage complet sans 429 : la pause eventuelle expire. */
+async function clearTwitchRateLimit() {
+  try {
+    await chrome.storage.local.remove(TWITCH_RATE_LIMIT_KEY);
+  } catch (error) {
+    console.warn("[SP] effacement de la pause Twitch impossible", error);
   }
 }
 
@@ -236,22 +291,19 @@ function sanitizeLogin(value = "") {
 
 const _kickToken = { value: null, expiresAt: 0 };
 
-async function getKickCredentials() {
-  const data = await chrome.storage.local.get("streampulse:kickCreds");
-  const stored = data["streampulse:kickCreds"];
-  if (stored?.clientId && stored?.clientSecret) return stored;
-  // Repli : identifiants servis par la config distante streampulse.fr
-  // (variables Vercel STREAMPULSE_KICK_CLIENT_ID / _CLIENT_SECRET), hydratées
-  // dans CONFIG par fetchRemoteConfig().
-  if (CONFIG.kickClientId && CONFIG.kickClientSecret) {
-    return { clientId: CONFIG.kickClientId, clientSecret: CONFIG.kickClientSecret };
-  }
-  return null;
-}
-
 // Vol unique : sans lui, deux sondages concurrents demandent chacun un jeton
-// a id.kick.com et le second ecrase le premier, pour rien.
+// au proxy et le second ecrase le premier, pour rien.
 let _kickTokenInFlight = null;
+const KICK_TOKEN_STORAGE_KEY = "streampulse:kickToken";
+const KICK_TOKEN_MARGIN_MS = 120_000;
+const NETWORK_TIMEOUT_MS = 8000;
+
+// Le repli OAuth cote client a ete supprime (le secret client ne doit jamais
+// vivre dans le navigateur) : on efface les credentials Kick que les versions
+// precedentes pouvaient stocker. Idempotent, fire-and-forget.
+chrome.storage.local.remove("streampulse:kickCreds").catch((error) => {
+  console.warn("[kick] nettoyage des credentials locales impossible", error);
+});
 
 function getKickAppToken() {
   _kickTokenInFlight ||= fetchKickAppToken().finally(() => {
@@ -260,76 +312,43 @@ function getKickAppToken() {
   return _kickTokenInFlight;
 }
 
+function isKickTokenFresh(token) {
+  return Boolean(token?.value) && Date.now() < Number(token.expiresAt || 0) - KICK_TOKEN_MARGIN_MS;
+}
+
+async function readCachedKickToken() {
+  if (isKickTokenFresh(_kickToken)) return _kickToken.value;
+  const stored = await chrome.storage.local.get(KICK_TOKEN_STORAGE_KEY);
+  const cached = stored[KICK_TOKEN_STORAGE_KEY];
+  if (!isKickTokenFresh(cached)) return null;
+  /* eslint-disable require-atomic-updates -- getKickAppToken() serialise les appels. */
+  _kickToken.value = cached.value;
+  _kickToken.expiresAt = cached.expiresAt;
+  /* eslint-enable require-atomic-updates */
+  return cached.value;
+}
+
+// Jeton d'application Kick : memoire, puis stockage, puis le proxy
+// streampulse.fr (le secret client ne quitte jamais le serveur).
 async function fetchKickAppToken() {
-  // Les identifiants Kick peuvent venir de la config distante : garantit qu'elle
-  // est hydratee (cache d'abord) avant de conclure a une absence de creds.
-  await ensureConfig();
-
-  // 1) Voie privilégiée : le proxy streampulse.fr fabrique le jeton — le client
-  // secret ne quitte jamais le serveur. Échec silencieux si l'endpoint est
-  // indisponible (ancien déploiement) : on retombe sur les credentials locaux.
+  const cached = await readCachedKickToken();
+  if (cached) return cached;
   try {
-    const resp = await fetch(`https://streampulse.fr/api/kick-token?t=${Date.now()}`, { cache: "no-store" });
-    if (resp.ok) {
-      const json = await resp.json();
-      const expiresAt = json.expires_at ?? Date.now() + (json.expires_in ?? 3600) * 1000;
-      if (json.access_token && Date.now() < expiresAt - 120_000) {
-        _kickToken.value = json.access_token;
-        _kickToken.expiresAt = expiresAt;
-        await chrome.storage.local.set({
-          "streampulse:kickToken": { value: json.access_token, expiresAt },
-        });
-        return json.access_token;
-      }
-    }
-  } catch { /* repli ci-dessous */ }
-
-  // 2) Repli : credentials locaux (saveKickCreds / config distante transitoire)
-  const creds = await getKickCredentials();
-  if (!creds?.clientId || !creds?.clientSecret) return null;
-
-  // Use in-memory cache
-  if (_kickToken.value && Date.now() < _kickToken.expiresAt - 120_000) {
-    return _kickToken.value;
-  }
-
-  // Check persistent cache
-  const stored = await chrome.storage.local.get("streampulse:kickToken");
-  const cached = stored["streampulse:kickToken"];
-  if (cached?.value && Date.now() < cached.expiresAt - 120_000) {
-    /* eslint-disable require-atomic-updates -- getKickAppToken() serialise les
-       appels concurrents par une promesse partagee, aucun entrelacement
-       possible ici. La regle ne voit pas ce garde, place dans l'appelant. */
-    _kickToken.value = cached.value;
-    _kickToken.expiresAt = cached.expiresAt;
-    /* eslint-enable require-atomic-updates */
-    return _kickToken.value;
-  }
-
-  // Fetch fresh token
-  try {
-    const resp = await fetch("https://id.kick.com/oauth/token", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        grant_type: "client_credentials",
-        client_id: creds.clientId,
-        client_secret: creds.clientSecret,
-      }),
+    const resp = await fetch(`https://streampulse.fr/api/kick-token?t=${Date.now()}`, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS),
     });
     if (!resp.ok) return null;
     const json = await resp.json();
-    if (!json.access_token) return null;
-    const expiresAt = Date.now() + (json.expires_in ?? 3600) * 1000;
-    /* eslint-disable require-atomic-updates -- meme raison : appel serialise. */
-    _kickToken.value = json.access_token;
+    const expiresAt = json.expires_at ?? Date.now() + (json.expires_in ?? 3600) * 1000;
+    const token = { value: json.access_token, expiresAt };
+    if (!isKickTokenFresh(token)) return null;
+    _kickToken.value = token.value;
     _kickToken.expiresAt = expiresAt;
-    /* eslint-enable require-atomic-updates */
-    await chrome.storage.local.set({
-      "streampulse:kickToken": { value: json.access_token, expiresAt },
-    });
-    return json.access_token;
-  } catch {
+    await chrome.storage.local.set({ [KICK_TOKEN_STORAGE_KEY]: token });
+    return token.value;
+  } catch (error) {
+    console.warn("[kick] jeton indisponible", error);
     return null;
   }
 }
@@ -337,7 +356,10 @@ async function fetchKickAppToken() {
 async function fetchKickOfficial(slug, token) {
   const resp = await fetch(
     `https://api.kick.com/public/v1/channels?slug=${encodeURIComponent(slug)}`,
-    { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } }
+    {
+      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+      signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS),
+    }
   );
   if (!resp.ok) throw new Error(`${resp.status}`);
   const json = await resp.json();
@@ -353,7 +375,13 @@ async function fetchJson(url, options = {}, timeoutMs = 15000) {
       signal: controller.signal,
     });
     if (!response.ok) {
-      throw new Error(`${response.status} ${response.statusText}`);
+      // statusCode + headers portés par l'erreur : fetchTwitchJson s'en sert
+      // pour reconnaitre un 429 et lire Ratelimit-Reset / Retry-After sans
+      // avoir à refaire la requête.
+      const error = new Error(`${response.status} ${response.statusText}`);
+      error.statusCode = response.status;
+      error.headers = response.headers;
+      throw error;
     }
     return await response.json();
   } finally {
@@ -436,10 +464,6 @@ function normalizeStreamer(raw) {
     createdAt: raw.createdAt || Date.now(),
     socials: normalizeSocialLinks(raw.socials),
   };
-}
-
-function normalizeLanguage(value) {
-  return matchLanguage(value) || DEFAULT_LANGUAGE;
 }
 
 function resolveExternalUrl(rawValue, defaultOrigin = "") {
@@ -564,15 +588,6 @@ function formatNumberForLanguage(lang, value) {
   }
 }
 
-// Bornes 1-24 h : une seule source de coercion, shared par sanitize() et le
-// handler updatePreferences (prealablement dupliquees avec des regles differentes).
-function clampInventoryIntervalHours(value) {
-  const hours = Number(value);
-  return Number.isFinite(hours)
-    ? Math.min(24, Math.max(1, Math.round(hours)))
-    : 24;
-}
-
 class DataStore {
   static async getStreamers() {
     const stored = await chrome.storage.local.get(STORAGE_KEYS.STREAMERS);
@@ -594,6 +609,12 @@ class DataStore {
   }
 
   static async saveStatuses(statuses) {
+    // Chaque sondage réécrivait l'objet entier, même quand rien n'a bougé :
+    // une écriture storage de moins par tour de sondage calme.
+    const stored = await chrome.storage.local.get(STORAGE_KEYS.STATUSES);
+    if (JSON.stringify(stored[STORAGE_KEYS.STATUSES] || {}) === JSON.stringify(statuses || {})) {
+      return;
+    }
     await chrome.storage.local.set({
       [STORAGE_KEYS.STATUSES]: statuses,
     });
@@ -639,86 +660,13 @@ class DataStore {
   }
 }
 
-/**
- * Couleur du badge communautaire : un mode connu, ou une couleur hexadecimale.
- * Toute autre valeur retombe sur le defaut plutot que d'etre ecrite telle quelle.
- */
-function sanitizeBadgeColor(value) {
-  if (value === "theme" || value === "author") return value;
-  if (typeof value === "string" && /^#[0-9a-fA-F]{6}$/.test(value.trim())) {
-    return value.trim().toLowerCase();
-  }
-  return DEFAULT_PREFERENCES.communityBadgeColor;
-}
-
 class PreferenceStore {
+  // Coercion unique : sanitizePreferences() vit dans js/preferences-data.js
+  // (module pur, partage avec la popup, teste par tests/preferences-data.test.mjs).
+  // Toute cle de DEFAULT_PREFERENCES y est coerce : la parite est verifiee
+  // statiquement par scripts/verify.mjs.
   static sanitize(preferences = {}) {
-    const SORT_ORDER_VALUES = ["live", "name-asc", "name-desc", "custom"];
-    const PREVIEWS_SIZES = ["s", "m", "l"];
-    const LATENCY_PLACEMENTS = ["viewers", "chat"];
-    const previewsDelay = Number(preferences.previewsShowDelayMs);
-    return {
-      liveNotifications: preferences.liveNotifications !== false,
-      gameNotifications: Boolean(preferences.gameNotifications),
-      titleNotifications: Boolean(preferences.titleNotifications),
-      // Ces trois cles etaient absentes de sanitize() : elles etaient acceptees
-      // par le handler updatePreferences puis perdues a l'ecriture, et le spread
-      // de DEFAULT_PREFERENCES dans set() les remettait a true. Impossible de les
-      // desactiver. La parite DEFAULT_PREFERENCES / sanitize() est desormais
-      // verifiee par scripts/verify.mjs.
-      dropAlerts: preferences.dropAlerts !== false,
-      predictionAlerts: preferences.predictionAlerts !== false,
-      raidAlerts: preferences.raidAlerts !== false,
-      backgroundRaidAlerts: preferences.backgroundRaidAlerts === true,
-      updateNotifications: preferences.updateNotifications !== false,
-      soundsEnabled: preferences.soundsEnabled !== false,
-      autoClaimChannelPoints: preferences.autoClaimChannelPoints !== false,
-      autoClaimDrops: preferences.autoClaimDrops !== false,
-      autoClaimMoments: preferences.autoClaimMoments !== false,
-      autoOpenInventory: Boolean(preferences.autoOpenInventory),
-      autoOpenInventoryIntervalHours: clampInventoryIntervalHours(preferences.autoOpenInventoryIntervalHours),
-      hideTwitchExtensions: Boolean(preferences.hideTwitchExtensions),
-      keepQualityInBackground: preferences.keepQualityInBackground === true,
-      enablePipButton: preferences.enablePipButton !== false,
-      autoRefreshPlayerErrors: preferences.autoRefreshPlayerErrors !== false,
-      enableClipDownload: preferences.enableClipDownload !== false,
-      playerQuality: PLAYER_QUALITIES.includes(preferences.playerQuality) ? preferences.playerQuality : "auto",
-      latencyPlacement: LATENCY_PLACEMENTS.includes(preferences.latencyPlacement)
-        ? preferences.latencyPlacement
-        : "viewers",
-      // Les alertes de raid rapportent des points en suivant le raid : garder
-      // l'annulation automatique active rendrait les deux fonctionnalités
-      // contradictoires (le raid est annulé avant qu'on puisse le suivre).
-      // Tant que le détecteur de raids est actif, l'annulation est forcée off.
-      autoCancelRaids:
-        preferences.autoCancelRaids === true && preferences.backgroundRaidAlerts !== true,
-      preventTabDiscard: preferences.preventTabDiscard !== false,
-      enablePredictionsPopup: preferences.enablePredictionsPopup !== false,
-      enableTabLiveIcon: preferences.enableTabLiveIcon !== false,
-      enableStreamerFavicon: preferences.enableStreamerFavicon !== false,
-      enableFastForwardButton: preferences.enableFastForwardButton !== false,
-      watchTimeTracker: preferences.watchTimeTracker !== false,
-      pointsTracking: preferences.pointsTracking !== false,
-      dropsTracking: preferences.dropsTracking !== false,
-      chatKeywords: typeof preferences.chatKeywords === "string" ? preferences.chatKeywords : "",
-      chatBlockedUsers: typeof preferences.chatBlockedUsers === "string" ? preferences.chatBlockedUsers : "",
-      language: normalizeLanguage(preferences.language),
-      sortOrder: SORT_ORDER_VALUES.includes(preferences.sortOrder) ? preferences.sortOrder : "live",
-      previewsEnabled: preferences.previewsEnabled !== false,
-      previewsMode: preferences.previewsMode === "video" ? "video" : "image",
-      previewsSurfaceDirectory: preferences.previewsSurfaceDirectory !== false,
-      previewsSurfaceSidebar: preferences.previewsSurfaceSidebar !== false,
-      previewsSurfaceClips: preferences.previewsSurfaceClips !== false,
-      previewsSurfaceSearch: preferences.previewsSurfaceSearch !== false,
-      previewsSize: PREVIEWS_SIZES.includes(preferences.previewsSize) ? preferences.previewsSize : "m",
-      previewsAudio: preferences.previewsAudio === true,
-      previewsShowDelayMs: Number.isFinite(previewsDelay)
-        ? Math.min(2000, Math.max(0, previewsDelay))
-        : 200,
-      previewsAnimations: preferences.previewsAnimations !== false,
-      communityBadge: preferences.communityBadge === true,
-      communityBadgeColor: sanitizeBadgeColor(preferences.communityBadgeColor),
-    };
+    return sanitizePreferences(preferences);
   }
 
   static async get() {
@@ -746,23 +694,60 @@ class PreferenceStore {
     return sanitized;
   }
 
-  static async update(updates) {
-    const current = await this.get();
-    const merged = { ...current, ...updates };
-    return this.set(merged);
+  // Read-modify-write sequencé : deux bascules rapides (popup ouverte sur deux
+  // surfaces, ou rafale de clics) s'ecrasaient sinon — meme pattern que
+  // StatsStore et HistoryStore.
+  static _queue = Promise.resolve();
+
+  static _enqueue(task) {
+    const run = this._queue.then(task, task);
+    this._queue = run.catch(() => {});
+    return run;
+  }
+
+  static update(updates) {
+    return this._enqueue(async () => {
+      const current = await this.get();
+      const merged = { ...current, ...updates };
+      return this.set(merged);
+    });
   }
 
   static async ensureDefaults() {
     const stored = await chrome.storage.local.get(PREFERENCES_KEY);
     if (!stored[PREFERENCES_KEY]) {
-      await this.set(DEFAULT_PREFERENCES);
-      return { ...DEFAULT_PREFERENCES };
+      // Nouvelle installation : la langue de Chrome, jamais un choix stocké
+      // (il n'y en a pas encore) ni le défaut du produit.
+      const language = detectInstallLanguage(
+        typeof chrome.i18n?.getUILanguage === "function" ? chrome.i18n.getUILanguage() : undefined
+      );
+      await this.set({ ...DEFAULT_PREFERENCES, language });
+      return { ...DEFAULT_PREFERENCES, language };
     }
     return {
       ...DEFAULT_PREFERENCES,
       ...this.sanitize(stored[PREFERENCES_KEY]),
     };
   }
+}
+
+/**
+ * Les réglages d'alertes globales ne sont jamais des verrous : changer
+ * liveNotifications / gameNotifications / titleNotifications applique la
+ * valeur à tous les streamers existants (et sert de défaut aux nouveaux,
+ * cf. addStreamer).
+ */
+async function propagateNotificationPreferences(preferences) {
+  const fields = notificationFieldsFromUpdates(preferences);
+  if (fields.length === 0) return null;
+  const streamers = await DataStore.getStreamers();
+  if (streamers.length === 0) return [];
+  const updated = streamers.map((streamer) => {
+    const next = { ...streamer };
+    for (const [field, value] of fields) next[field] = value;
+    return next;
+  });
+  return DataStore.saveStreamers(updated);
 }
 
 class StatsStore {
@@ -812,6 +797,21 @@ class EventLogStore {
   // addLog() wrote under the literal "undefined" key. Recover those logs once.
   static LEGACY_KEY = "undefined";
 
+  // File d'attente : addLog fait un lire-modifier-ecrire ; deux appels
+  // concurrents (alerte de Drop + clic de point de chaîne) s'écrasaient
+  // l'un l'autre et perdaient des entrées. Les opérations passent par la
+  // file, une seule écriture à la fois.
+  static _queue = Promise.resolve();
+
+  static _enqueue(operation) {
+    const run = this._queue.then(operation);
+    // La file ne doit jamais rester rejetée : on journalise et on enchaîne.
+    this._queue = run.catch((error) => {
+      console.warn("[SP] journal d'événements :", error?.message || error);
+    });
+    return run;
+  }
+
   static async getLogs() {
     try {
       const stored = await chrome.storage.local.get([
@@ -829,29 +829,30 @@ class EventLogStore {
         return legacy;
       }
       return [];
-    } catch (_) {
+    } catch (error) {
+      console.warn("[SP] lecture du journal d'événements impossible", error);
       return [];
     }
   }
 
-  static async addLog(entry = {}) {
-    try {
-      const logs = await this.getLogs();
-      const newLog = {
-        id: `log_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
-        timestamp: Date.now(),
-        type: entry.type || "info", // "drop", "moment", "raid", "prediction", "points"
-        channel: entry.channel || "",
-        text: entry.text || "",
-        value: entry.value || 0,
-      };
-      logs.unshift(newLog);
-      if (logs.length > 100) logs.pop();
-      await chrome.storage.local.set({ [STORAGE_KEYS.EVENT_LOGS]: logs });
-      return newLog;
-    } catch (_) {
-      return null;
-    }
+  static addLog(entry = {}) {
+    return this._enqueue(() => this._writeLog(entry));
+  }
+
+  static async _writeLog(entry = {}) {
+    const logs = await this.getLogs();
+    const newLog = {
+      id: `log_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+      timestamp: Date.now(),
+      type: entry.type || "info", // "drop", "moment", "raid", "prediction", "points"
+      channel: entry.channel || "",
+      text: entry.text || "",
+      value: entry.value || 0,
+    };
+    logs.unshift(newLog);
+    if (logs.length > 100) logs.pop();
+    await chrome.storage.local.set({ [STORAGE_KEYS.EVENT_LOGS]: logs });
+    return newLog;
   }
 
   static async clearLogs() {
@@ -1436,6 +1437,16 @@ class WatchTimeStore {
     return { ...(games || {}), [name]: ((games || {})[name] || 0) + seconds };
   }
 
+  /** Fusionne un jeu simple ou un cumul multi-jeux dans les categories existantes. */
+  static _mergeGames(existing, game, seconds) {
+    if (game && typeof game === "object") {
+      let merged = existing || {};
+      for (const [name, secs] of Object.entries(game)) merged = this._addGame(merged, name, secs);
+      return merged;
+    }
+    return this._addGame(existing, game, seconds);
+  }
+
   static async _recordDaily(platform, channel, seconds, avatarUrl, game = "") {
     const DAILY_RETENTION = 400;
     const stored = await chrome.storage.local.get(STORAGE_KEYS.WATCH_TIME_DAILY);
@@ -1452,7 +1463,7 @@ class WatchTimeStore {
           ...previous,
           watchSeconds: previous.watchSeconds + seconds,
           avatarUrl: avatarUrl || previous.avatarUrl,
-          games: this._addGame(previous.games, game, seconds),
+          games: this._mergeGames(previous.games, game, seconds),
         },
       },
     };
@@ -1476,7 +1487,89 @@ class WatchTimeStore {
   static record(platform, channel, seconds, avatarUrl = "", game = "") {
     // Skip pure presence pings (no actual data to record)
     if (seconds <= 0) return Promise.resolve();
-    return this._enqueue(() => this._record(platform, channel, seconds, avatarUrl, game));
+    return this._enqueue(() => this._stage(platform, channel, seconds, avatarUrl, game));
+  }
+
+  // ── Cumul en attente ──
+  // Chaque battement réécrivait deux gros objets toutes les 60 s (le mois sur
+  // 3 fenêtres, le quotidien sur 400 jours). On cumule en mémoire, on garde
+  // une copie en storage.session (survit à un redémarrage du service worker)
+  // et on n'écrit le stockage durable qu'au plus toutes les 5 minutes, à
+  // l'alarme dédiée et à la suspension du SW.
+
+  static PENDING_KEY = "watchTimePending";
+  static FLUSH_INTERVAL_MS = 5 * 60_000;
+  static _pending = null;
+  static _lastFlushAt = 0;
+  static _flushing = false;
+
+  static async _stage(platform, channel, seconds, avatarUrl = "", game = "") {
+    const key = `${platform}:${channel}`;
+    const pending = this._pending || {};
+    const entry = pending[key] || { platform, channel, seconds: 0, avatarUrl: "", games: {} };
+    entry.seconds += seconds;
+    if (avatarUrl && !entry.avatarUrl) entry.avatarUrl = avatarUrl;
+    entry.games = this._mergeGames(entry.games, game, seconds);
+    pending[key] = entry;
+    this._pending = pending;
+    await this._persistPending();
+    if (Date.now() - this._lastFlushAt >= this.FLUSH_INTERVAL_MS) await this.flush();
+  }
+
+  static async _persistPending() {
+    try {
+      await chrome.storage.session.set({ [this.PENDING_KEY]: this._pending });
+    } catch (error) {
+      // storage.session peut être indisponible (tests, quota) : le cumul en
+      // mémoire suffit tant que le SW vit, seule la copie est perdue.
+      console.warn("[WatchTime] copie du cumul en session impossible :", error?.message || error);
+    }
+  }
+
+  /** Redmarre le cumul après un réveil du SW (copie storage.session). */
+  static async restorePending() {
+    if (this._pending) return;
+    try {
+      const stored = await chrome.storage.session.get(this.PENDING_KEY);
+      const pending = stored[this.PENDING_KEY];
+      if (pending && typeof pending === "object" && Object.keys(pending).length) {
+        this._pending = pending;
+      }
+    } catch (error) {
+      console.warn("[WatchTime] reprise du cumul impossible :", error?.message || error);
+    }
+  }
+
+  /** Écrit le cumul dans le stockage durable (au plus toutes les 5 minutes). */
+  static async flush() {
+    if (this._flushing) return;
+    const pending = this._pending;
+    if (!pending || !Object.keys(pending).length) return;
+    this._flushing = true;
+    this._pending = null;
+    try {
+      await chrome.storage.session.remove(this.PENDING_KEY);
+    } catch {
+      // La copie de session est retirée au mieux : la source est écrite après.
+    }
+    try {
+      for (const entry of Object.values(pending)) {
+        await this._record(entry.platform, entry.channel, entry.seconds, entry.avatarUrl, entry.games || {});
+      }
+      this._lastFlushAt = Date.now();
+    } catch (error) {
+      // Échec d'écriture : on remet le cumul en attente plutôt que de perdre
+      // le temps de visionnage, la prochaine alarme refera le travail.
+      console.warn("[WatchTime] écriture du cumul impossible :", error?.message || error);
+      const back = this._pending || {};
+      for (const [key, entry] of Object.entries(pending)) {
+        if (!back[key]) back[key] = entry;
+      }
+      this._pending = back;
+      await this._persistPending();
+    } finally {
+      this._flushing = false;
+    }
   }
 
   static async _record(platform, channel, seconds, avatarUrl = "", game = "") {
@@ -1490,7 +1583,7 @@ class WatchTimeStore {
     }
 
     data[month][key].watchSeconds += seconds;
-    data[month][key].games = this._addGame(data[month][key].games, game, seconds);
+    data[month][key].games = this._mergeGames(data[month][key].games, game, seconds);
     // Update avatar if we got a fresher one
     if (avatarUrl) data[month][key].avatarUrl = avatarUrl;
 
@@ -1510,6 +1603,9 @@ class WatchTimeStore {
   }
 
   static async getSummary(monthKey = null) {
+    // Le cumul en attente fait partie du total : le vider avant de lire,
+    // sinon le récap affiche jusqu'à 5 minutes de retard.
+    await this.flush();
     const data = await this._getData();
     const key = monthKey || this._getMonthKey();
     const monthData = data[key] || {};
@@ -1851,7 +1947,7 @@ class PlatformChecker {
     try {
       const resp = await fetch(
         `https://www.youtube.com/@${encodeURIComponent(sanitized)}`,
-        { redirect: "follow" }
+        { redirect: "follow", signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS) }
       );
       if (!resp.ok) return null;
       const html = await resp.text();
@@ -1871,8 +1967,30 @@ class PlatformChecker {
     }
   }
 
+  // État YouTube par chaîne : une page /live complète (plus oEmbed) à chaque
+  // tour de sondage coûtait cher pour un statut qui change rarement. Cadence
+  // propre de 5 minutes, en mémoire : un SW réveillé refait une mesure fraîche.
+  static YOUTUBE_STATUS_TTL_MS = 5 * 60_000;
+  static _youtubeStatusCache = new Map();
+
   static async getYoutubeStatus(handle) {
     const sanitized = sanitizeHandle("youtube", handle);
+    const cached = this._youtubeStatusCache.get(sanitized);
+    if (cached && Date.now() - cached.at < this.YOUTUBE_STATUS_TTL_MS) {
+      return cached.result;
+    }
+    const result = await this._fetchYoutubeStatus(sanitized);
+    this._youtubeStatusCache.set(sanitized, { at: Date.now(), result });
+    if (this._youtubeStatusCache.size > 300) {
+      const now = Date.now();
+      for (const [key, entry] of this._youtubeStatusCache) {
+        if (now - entry.at >= this.YOUTUBE_STATUS_TTL_MS) this._youtubeStatusCache.delete(key);
+      }
+    }
+    return result;
+  }
+
+  static async _fetchYoutubeStatus(sanitized) {
     const base = {
       platform: "youtube",
       url: buildProfileUrl("youtube", sanitized),
@@ -1891,7 +2009,10 @@ class PlatformChecker {
       const liveUrl = isYoutubeChannelId(sanitized)
         ? `https://www.youtube.com/channel/${encodeURIComponent(channel.id)}/live`
         : `https://www.youtube.com/@${encodeURIComponent(sanitized)}/live`;
-      const res = await fetch(liveUrl, { redirect: "follow" });
+      const res = await fetch(liveUrl, {
+        redirect: "follow",
+        signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS),
+      });
       if (res.ok) {
         const html = await res.text();
         videoId =
@@ -1918,7 +2039,8 @@ class PlatformChecker {
       const res = await fetch(
         `https://www.youtube.com/oembed?url=${encodeURIComponent(
           `https://www.youtube.com/watch?v=${videoId}`
-        )}&format=json`
+        )}&format=json`,
+        { signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS) }
       );
       if (res.ok) {
         const data = await res.json();
@@ -1993,6 +2115,11 @@ class PlatformChecker {
 class NotificationCenter {
   static storageKey = `${NOTIFICATION_NAMESPACE}:scheduled`;
   static alarmPrefix = `${NOTIFICATION_NAMESPACE}:alarm:`;
+  // Cible de chaque notification (URL a ouvrir / streamer a ouvrir),
+  // persistee en storage.session : le SW peut etre tue entre l'affichage de
+  // la notification et le clic, et le clic doit survivre a ce redemarrage.
+  static targetsStorageKey = `${NOTIFICATION_NAMESPACE}:targets`;
+  static targetsMaxEntries = 50;
   static clickMap = new Map();
   static initialized = false;
 
@@ -2014,27 +2141,13 @@ class NotificationCenter {
     return this.getDefaultIcon();
   }
 
+  // Les listeners chrome.notifications.* sont poses au top-level du service
+  // worker (synchrone) : les enregistrer ici, apres un await, laissait une
+  // fenetre morte a chaque demarrage (clic perdu) — MV3 peut livrer l'evenement
+  // avant la fin de init().
   static async init() {
     if (this.initialized) return;
     this.initialized = true;
-
-    chrome.notifications.onClicked.addListener((notificationId) => {
-      const info = this.clickMap.get(notificationId);
-      if (!info) return;
-      this.clickMap.delete(notificationId);
-      chrome.notifications.clear(notificationId);
-      if (info.streamerId) {
-        openStreamerFromNotification(info.streamerId);
-      } else if (info.url) {
-        chrome.tabs.create({ url: info.url });
-      }
-    });
-
-    chrome.notifications.onClosed.addListener((notificationId) => {
-      if (this.clickMap.has(notificationId)) {
-        this.clickMap.delete(notificationId);
-      }
-    });
 
     const entries = await this.getScheduled();
     entries.forEach((entry) => {
@@ -2043,6 +2156,77 @@ class NotificationCenter {
         periodInMinutes: entry.intervalMinutes,
       });
     });
+  }
+
+  static async persistTargets(targets) {
+    try {
+      await chrome.storage.session.set({
+        [this.targetsStorageKey]: targets,
+      });
+    } catch (error) {
+      console.warn("[SP] persistance de la cible de notification impossible", error);
+    }
+  }
+
+  static async readStoredTargets() {
+    try {
+      const stored = await chrome.storage.session.get(this.targetsStorageKey);
+      const targets = stored?.[this.targetsStorageKey];
+      return targets && typeof targets === "object" ? targets : {};
+    } catch (error) {
+      console.warn("[SP] lecture des cibles de notification impossible", error);
+      return {};
+    }
+  }
+
+  static async rememberTarget(id, info) {
+    // Cap memoire : les notifications d'il y a longtemps n'ont plus de cible.
+    if (this.clickMap.size >= this.targetsMaxEntries) {
+      const oldest = this.clickMap.keys().next().value;
+      this.clickMap.delete(oldest);
+    }
+    this.clickMap.set(id, info);
+    const stored = await this.readStoredTargets();
+    const ids = Object.keys(stored);
+    if (ids.length >= this.targetsMaxEntries) {
+      delete stored[ids[0]];
+    }
+    stored[id] = info;
+    await this.persistTargets(stored);
+  }
+
+  static async forgetTarget(id) {
+    this.clickMap.delete(id);
+    const stored = await this.readStoredTargets();
+    if (id in stored) {
+      delete stored[id];
+      await this.persistTargets(stored);
+    }
+  }
+
+  // Renvoie la cible du clic (memoire d'abord, session ensuite) puis l'oublie :
+  // une notification ne s'ouvre qu'une fois.
+  static async consumeTarget(id) {
+    let info = this.clickMap.get(id) || null;
+    if (!info) info = (await this.readStoredTargets())[id] || null;
+    await this.forgetTarget(id);
+    return info;
+  }
+
+  static async handleClicked(notificationId) {
+    const info = await this.consumeTarget(notificationId);
+    if (!info) return;
+    try {
+      await chrome.notifications.clear(notificationId);
+    } catch (error) {
+      // La notification peut deja avoir disparu : l'ouverture, elle, reste valide.
+      console.warn("[SP] notification deja fermee au clic", error);
+    }
+    if (info.streamerId) {
+      openStreamerFromNotification(info.streamerId);
+    } else if (info.url) {
+      chrome.tabs.create({ url: info.url });
+    }
   }
 
   /**
@@ -2088,12 +2272,7 @@ class NotificationCenter {
     const id = `${NOTIFICATION_NAMESPACE}-${Date.now()}-${Math.random()
       .toString(36)
       .slice(2, 10)}`;
-    // Cap clickMap to prevent unbounded growth
-    if (this.clickMap.size > 50) {
-      const oldest = this.clickMap.keys().next().value;
-      this.clickMap.delete(oldest);
-    }
-    this.clickMap.set(id, {
+    await this.rememberTarget(id, {
       url: options.url || null,
       streamerId: options.streamerId || null,
       platform: options.platform || null,
@@ -2181,6 +2360,20 @@ class NotificationCenter {
     await chrome.storage.local.set({ [this.storageKey]: entries });
   }
 }
+
+// Clic et fermeture de notification : poses au top-level, synchrones des le
+// demarrage du SW. Les enregistrer dans init(), apres un await, laissait une
+// fenetre sans listener a chaque redemarrage du worker (clic perdu).
+chrome.notifications.onClicked.addListener((notificationId) => {
+  NotificationCenter.handleClicked(notificationId).catch((error) => {
+    console.warn("[SP] clic de notification non traite", error);
+  });
+});
+chrome.notifications.onClosed.addListener((notificationId) => {
+  NotificationCenter.forgetTarget(notificationId).catch((error) => {
+    console.warn("[SP] nettoyage de la cible de notification impossible", error);
+  });
+});
 
 class NotificationSystem {
   // Avatar du streamer si connu, icone de plateforme sinon — logique partagée
@@ -2777,11 +2970,24 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
     .map((streamer) => sanitizeLogin(streamer.twitch || streamer.handle))
     .filter(Boolean);
   if (twitchLogins.length > 0) {
-    try {
-      twitchBatch.streams = await fetchTwitchStreamsBatch(twitchLogins);
-    } catch (error) {
-      twitchBatch.error = error?.message || "batch_failed";
-      console.warn("Twitch batched status error:", twitchBatch.error);
+    const rateLimitedUntil = await twitchRateLimitUntil();
+    if (rateLimitedUntil) {
+      // Pause 429 : aucune requête Twitch envoyée, l'état précédent de chaque
+      // streamer est conservé (isError => previousLiveState recopié) — ni
+      // bascule offline/on-line, ni erreur affichée, et le quota respire.
+      twitchBatch.error = "rate_limited";
+      console.info(
+        "[SP] sondage Twitch en pause (quota) jusqu'à",
+        new Date(rateLimitedUntil).toISOString()
+      );
+    } else {
+      try {
+        twitchBatch.streams = await fetchTwitchStreamsBatch(twitchLogins);
+        clearTwitchRateLimit();
+      } catch (error) {
+        twitchBatch.error = error?.message || "batch_failed";
+        console.warn("Twitch batched status error:", twitchBatch.error);
+      }
     }
   }
 
@@ -2797,6 +3003,18 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
   // Streamers déjà en direct au premier sondage (rattrapage) : une seule
   // notification groupée sera envoyée après la boucle, pas 1 par streamer.
   const catchUpLive = [];
+
+  // Heures calmes : aucune alerte (live, catégorie, titre, rattrapage) pendant
+  // la plage. L'état live reste persisté normalement, donc à la sortie de la
+  // plage aucune session déjà annoncée ne repart en doublon.
+  const quietNow = isWithinQuietHours(Date.now(), preferences);
+  // Les envois sont mis en file et partent APRES la persistance de l'état
+  // (statuses + live-state) : si le SW est tué en plein envoi, on perd au pire
+  // une alerte au lieu de la rediffuser au sondage suivant (doublon).
+  const queuedAlerts = [];
+  const queueAlert = (send) => {
+    if (!quietNow) queuedAlerts.push(send);
+  };
 
   for (const status of statuses) {
     const streamer = streamerById.get(status.id);
@@ -2867,10 +3085,10 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
 
     if (smartDecision) {
       if (notificationsEnabled && smartDecision.notifyRule) {
-        await NotificationSystem.notifyLive(streamer, status.active, preferences);
+        queueAlert(() => NotificationSystem.notifyLive(streamer, status.active, preferences));
       }
     } else if (forceNotification && notificationsEnabled && nextLiveState.isLive) {
-      await NotificationSystem.notifyLive(streamer, status.active, preferences);
+      queueAlert(() => NotificationSystem.notifyLive(streamer, status.active, preferences));
     } else if (notificationsEnabled && nextLiveState.isLive) {
       const wasLive = previousLiveState.isLive;
       const sessionChanged =
@@ -2900,10 +3118,8 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
               formatHandleForDisplay(platform, streamer.handle || streamer.twitch)
           );
         } else {
-          await NotificationSystem.notifyLive(
-            streamer,
-            status.active,
-            preferences
+          queueAlert(() =>
+            NotificationSystem.notifyLive(streamer, status.active, preferences)
           );
         }
       } else {
@@ -2914,23 +3130,23 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
         if (previousLiveState.isLive && nextLiveState.isLive && previousLiveState.game !== nextLiveState.game) {
           console.info("[SP] changement de categorie detecte:", streamer.handle, {
             prefGame: preferences.gameNotifications,
-            prefLive: preferences.liveNotifications,
             streamerToggle: streamer.gameNotificationsEnabled,
           });
         }
         if (previousLiveState.isLive && nextLiveState.isLive && previousLiveState.title !== nextLiveState.title) {
           console.info("[SP] changement de titre detecte:", streamer.handle, {
             prefTitle: preferences.titleNotifications,
-            prefLive: preferences.liveNotifications,
             streamerToggle: streamer.titleNotificationsEnabled,
             sessionIdentique:
               !previousLiveState.sessionId || !nextLiveState.sessionId ||
               previousLiveState.sessionId === nextLiveState.sessionId,
           });
         }
+        // Les toggles globaux des réglages sont des actions en masse (ils
+        // écrivent notificationsEnabled sur chaque streamer) : le toggle du
+        // streamer est ici la seule source de vérité.
         const shouldNotifyGame =
           gameNotificationsEnabled &&
-          preferences.liveNotifications !== false &&
           previousLiveState.isLive &&
           previousLiveState.game &&
           nextLiveState.game &&
@@ -2940,19 +3156,20 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
             previousLiveState.sessionId === nextLiveState.sessionId);
 
         if (shouldNotifyGame) {
-          await NotificationSystem.notifyGameChange(
-            streamer,
-            previousLiveState.game,
-            nextLiveState.game,
-            preferences,
-            nextLiveState.platform
+          queueAlert(() =>
+            NotificationSystem.notifyGameChange(
+              streamer,
+              previousLiveState.game,
+              nextLiveState.game,
+              preferences,
+              nextLiveState.platform
+            )
           );
         }
 
         const titleNotificationsEnabled = streamer.titleNotificationsEnabled !== false;
         const shouldNotifyTitle =
           titleNotificationsEnabled &&
-          preferences.liveNotifications !== false &&
           previousLiveState.isLive &&
           previousLiveState.title &&
           nextLiveState.title &&
@@ -2962,12 +3179,14 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
             previousLiveState.sessionId === nextLiveState.sessionId);
 
         if (shouldNotifyTitle) {
-          await NotificationSystem.notifyTitleChange(
-            streamer,
-            previousLiveState.title,
-            nextLiveState.title,
-            preferences,
-            nextLiveState.platform
+          queueAlert(() =>
+            NotificationSystem.notifyTitleChange(
+              streamer,
+              previousLiveState.title,
+              nextLiveState.title,
+              preferences,
+              nextLiveState.platform
+            )
           );
         }
       }
@@ -2975,23 +3194,6 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
 
     streamerStates.set(status.id, status);
     streamerLiveState.set(streamer.id, nextLiveState);
-  }
-
-  // Rattrapage au démarrage : une seule notification récapitulative, quel que
-  // soit le nombre de streamers trouvés déjà en direct.
-  if (catchUpLive.length > 0) {
-    const lang = normalizeLanguage(preferences?.language);
-    const shown = catchUpLive.slice(0, 3).join(", ");
-    const rest = catchUpLive.length - 3;
-    const names = rest > 0 ? `${shown} +${rest}` : shown;
-    await NotificationCenter.show({
-      title: translate(lang, "background.notifications.startupBatchTitle"),
-      message: translate(lang, "background.notifications.startupBatchBody", { names }),
-      iconUrl: NotificationCenter.getDefaultIcon(),
-      requireInteraction: false,
-      priority: 1,
-      playSound: preferences?.soundsEnabled !== false,
-    });
   }
 
   const statusesObject = {};
@@ -3010,6 +3212,34 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
     await DataStore.saveLiveState(liveStateObject);
   } catch (err) {
     console.warn("Failed to persist live state:", err?.message || err);
+  }
+
+  // L'état est persisté : les alertes partent maintenant, une à une. Un SW tué
+  // ici perd une alerte, mais ne rediffusera jamais une session déjà annoncée.
+  for (const send of queuedAlerts) {
+    try {
+      await send();
+    } catch (error) {
+      console.warn("[SP] alerte non envoyée :", error?.message || error);
+    }
+  }
+
+  // Rattrapage au démarrage : une seule notification récapitulative, quel que
+  // soit le nombre de streamers trouvés déjà en direct. Silencieuse pendant
+  // les heures calmes, comme les alertes individuelles.
+  if (catchUpLive.length > 0 && !quietNow) {
+    const lang = normalizeLanguage(preferences?.language);
+    const shown = catchUpLive.slice(0, 3).join(", ");
+    const rest = catchUpLive.length - 3;
+    const names = rest > 0 ? `${shown} +${rest}` : shown;
+    await NotificationCenter.show({
+      title: translate(lang, "background.notifications.startupBatchTitle"),
+      message: translate(lang, "background.notifications.startupBatchBody", { names }),
+      iconUrl: NotificationCenter.getDefaultIcon(),
+      requireInteraction: false,
+      priority: 1,
+      playSound: preferences?.soundsEnabled !== false,
+    });
   }
 
   const liveCount = statuses.reduce((total, status) => {
@@ -3085,6 +3315,19 @@ function scheduleKeepAliveAlarm() {
     chrome.alarms.create(KEEP_ALIVE_ALARM, {
       periodInMinutes: Math.max(DEFAULT_POLL_INTERVAL / 2, 0.5),
       delayInMinutes: 0.1,
+    });
+  });
+}
+
+const WATCH_TIME_FLUSH_ALARM = "streampulseWatchTimeFlush";
+
+/** Vide le cumul du temps de visionnage au plus toutes les 5 minutes. */
+function scheduleWatchTimeFlushAlarm() {
+  chrome.alarms.get(WATCH_TIME_FLUSH_ALARM, (existing) => {
+    if (existing) return;
+    chrome.alarms.create(WATCH_TIME_FLUSH_ALARM, {
+      periodInMinutes: Math.ceil(WatchTimeStore.FLUSH_INTERVAL_MS / 60_000),
+      delayInMinutes: Math.ceil(WatchTimeStore.FLUSH_INTERVAL_MS / 60_000),
     });
   });
 }
@@ -3258,7 +3501,9 @@ chrome.runtime.onStartup.addListener(async () => {
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === RAID_WATCHER_ALARM) {
+  if (alarm.name === WATCH_TIME_FLUSH_ALARM) {
+    WatchTimeStore.flush().catch((error) => console.warn("[WatchTime] vidage :", error?.message || error));
+  } else if (alarm.name === RAID_WATCHER_ALARM) {
     refreshRaidWatcher();
   } else if (alarm.name === WATCHER_ALARM) {
     pollStreamers({ forceNotification: false }).catch((error) => {
@@ -3295,8 +3540,23 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 async function openStreamerFromNotification(streamerId) {
   if (!streamerId) return;
-  const streamer = streamerCache.get(streamerId);
-  const states = streamerStates.get(streamerId);
+  let streamer = streamerCache.get(streamerId);
+  let states = streamerStates.get(streamerId);
+
+  // Le clic peut arriver apres un redemarrage du SW : les caches memoires sont
+  // alors vides, on relit le stockage (source de verite persistante).
+  if (!streamer || !states) {
+    try {
+      const [streamers, statuses] = await Promise.all([
+        DataStore.getStreamers(),
+        DataStore.getStatuses(),
+      ]);
+      streamer = streamer || streamers.find((item) => item.id === streamerId) || null;
+      states = states || statuses?.[streamerId] || null;
+    } catch (error) {
+      console.warn("[SP] relecture du streamer pour notification impossible", error);
+    }
+  }
 
   const platform = normalizePlatform(
     streamer?.platform || states?.active?.platform || DEFAULT_PLATFORM
@@ -3319,44 +3579,87 @@ async function openStreamerFromNotification(streamerId) {
   }
 }
 
+// Actions qui écrivent des données ou pilotent l'extension : réservées aux
+// pages de l'extension (popup, onboarding, réglages…). Les pages web ne les
+// voient jamais, même via un content script.
+const SENSITIVE_MESSAGE_TYPES = new Set([
+  "removeStreamer",
+  "resetPoints",
+  "resetStat",
+  "clearEventLogs",
+  "updateUserProfile",
+  "badgeAutoStart",
+  "updatePreferences",
+  "resetPreferences",
+  "reorderStreamers",
+  "setPinnedStreamers",
+]);
+
+function isExtensionPage(sender) {
+  const prefix = chrome.runtime.getURL("");
+  return Boolean(sender?.url && sender.url.startsWith(prefix));
+}
+
+/**
+ * Enveloppe commune des handlers : une réponse part toujours (succès ou
+ * erreur explicite), et un rejet de promesse ne laisse jamais la popup
+ * sans réponse ni le SW avec un « Uncaught (in promise) ».
+ */
+function respond(promiseFactory, sendResponse, label = "") {
+  Promise.resolve()
+    .then(promiseFactory)
+    .then((data) => sendResponse({ success: true, ...(data || {}) }))
+    .catch((error) => {
+      console.warn("[SP] message", label, ":", error?.message || error);
+      sendResponse({ error: error?.message || String(error) });
+    });
+}
+
+/**
+ * Un seul onglet compte par chaîne et par minute : le premier battement gagne,
+ * les autres ne créditent que la présence. Sans onglet (popup, tests), compter.
+ * La carte est petite (une entrée par chaîne regardée) mais purgée quand elle
+ * grossit, pour ne rien garder au-delà de la minute utile.
+ */
+const watchTimeClaims = new Map();
+
+function watchTimeTabClaims(platform, channel, tabId) {
+  if (!platform || !channel) return true;
+  const key = `${platform}:${channel}`;
+  const now = Date.now();
+  const previous = watchTimeClaims.get(key);
+  if (previous && now - previous.at < 60_000 && previous.tabId !== tabId) return false;
+  watchTimeClaims.set(key, { tabId, at: now });
+  if (watchTimeClaims.size > 500) {
+    for (const [claimKey, claim] of watchTimeClaims) {
+      if (now - claim.at > 5 * 60_000) watchTimeClaims.delete(claimKey);
+    }
+  }
+  return true;
+}
+
 function handleMessage(request, sender, sendResponse) {
+  // 1) Toute origine doit être notre extension : onMessage n'accepte en
+  //    principe que le canal interne, mais on ne fait pas confiance au
+  //    silence — un expéditeur sans identité est refusé.
+  if (sender?.id !== chrome.runtime.id) {
+    console.warn("[SP] message refusé (expéditeur inconnu)", request?.type, sender?.id);
+    sendResponse({ error: "forbidden" });
+    return false;
+  }
+  // 2) Les actions sensibles n'acceptent que les pages de l'extension :
+  //    les content scripts tournent sur des pages web (sender.url = site
+  //    hôte) et ne doivent pas piloter les données ni les réglages.
+  if (SENSITIVE_MESSAGE_TYPES.has(request?.type) && !isExtensionPage(sender)) {
+    console.warn(
+      "[SP] message sensible refusé hors pages de l'extension",
+      request?.type,
+      sender?.url
+    );
+    sendResponse({ error: "forbidden" });
+    return false;
+  }
   switch (request?.type) {
-    case "notify":
-      (async () => {
-        try {
-          await NotificationCenter.show({
-            title: request.title,
-            message: request.message,
-            url: request.url || null,
-            streamerId: request.streamerId || null,
-            platform: request.platform || null,
-            requireInteraction: Boolean(request.requireInteraction),
-            priority:
-              typeof request.priority === "number"
-                ? request.priority
-                : request.requireInteraction
-                ? 2
-                : 0,
-            playSound: request.playSound !== false,
-          });
-          sendResponse({ success: true });
-        } catch (error) {
-          sendResponse({ error: error?.message || String(error) });
-        }
-      })();
-      return true;
-
-    case "schedule":
-      (async () => {
-        try {
-          await NotificationCenter.schedule(request);
-          sendResponse({ success: true });
-        } catch (error) {
-          sendResponse({ error: error?.message || String(error) });
-        }
-      })();
-      return true;
-
     case "openPatchNotes":
       (async () => {
         try {
@@ -3375,7 +3678,13 @@ function handleMessage(request, sender, sendResponse) {
 
     case "openSettings":
       try {
-        chrome.tabs.create({ url: chrome.runtime.getURL("html/popup.html") });
+        // Cible optionnelle : le popup lit ?menu=<panneau> et ouvre les
+        // réglages sur cette rubrique (bouton « Page complète » du tiroir).
+        const settingsPanel = String(request.panel || "");
+        const settingsUrl =
+          chrome.runtime.getURL("html/popup.html") +
+          (settingsPanel ? "?menu=" + encodeURIComponent(settingsPanel) : "");
+        chrome.tabs.create({ url: settingsUrl });
         sendResponse({ success: true });
       } catch (e) {
         sendResponse({ success: false, error: e?.message });
@@ -3387,98 +3696,20 @@ function handleMessage(request, sender, sendResponse) {
       // from web_accessible_resources for CWS compliance). They request the
       // resolved config here instead: which also gives them the live Vercel
       // credentials rather than the empty local fallback.
+      //
+      // Le jeton d'accès Twitch n'est PAS renvoyé : aucun content script n'en
+      // a besoin (twitchPlayerEnhancer ne lit que features) et un jeton
+      // diffusable à n'importe quelle page hôte serait un secret public.
       (async () => {
         try {
           await ensureConfig();
           sendResponse({
             clientId: CONFIG.clientId || "",
-            accessToken: CONFIG.accessToken || "",
             features: CONFIG.features || {},
           });
-        } catch {
-          sendResponse({ clientId: "", accessToken: "", features: {} });
-        }
-      })();
-      return true;
-
-    case "streampulse:saveKickCreds":
-      (async () => {
-        const { clientId, clientSecret } = request;
-        if (!clientId || !clientSecret) {
-          // Clear credentials
-          await chrome.storage.local.remove(["streampulse:kickCreds", "streampulse:kickToken"]);
-          _kickToken.value = null;
-          _kickToken.expiresAt = 0;
-          sendResponse({ success: true });
-          return;
-        }
-        await chrome.storage.local.set({
-          "streampulse:kickCreds": { clientId, clientSecret },
-        });
-        // Invalidate cached token
-        _kickToken.value = null;
-        _kickToken.expiresAt = 0;
-        await chrome.storage.local.remove("streampulse:kickToken");
-        // Test token immediately
-        const token = await getKickAppToken();
-        sendResponse({ success: !!token });
-      })();
-      return true;
-
-    case "streampulse:getKickCreds":
-      (async () => {
-        const creds = await getKickCredentials();
-        const stored = await chrome.storage.local.get("streampulse:kickToken");
-        const hasToken = !!(stored["streampulse:kickToken"]?.value);
-        sendResponse({ clientId: creds?.clientId || "", hasToken });
-      })();
-      return true;
-
-    case "streampulse:fetchJson":
-      (async () => {
-        try {
-          const data = await fetchJson(
-            request.url,
-            request.options || {},
-            request.timeoutMs || 15000
-          );
-          sendResponse({ success: true, data });
         } catch (error) {
-          sendResponse({
-            success: false,
-            error: error?.message || String(error),
-          });
-        }
-      })();
-      return true;
-
-    case "streampulse:fetchImage":
-      // Fetch an image URL via the background (has proper credentials/cookies)
-      // and return it as a base64 data URL so the popup can display it.
-      (async () => {
-        const { url } = request;
-        if (!url) { sendResponse({ success: false }); return; }
-        try {
-          const response = await fetch(url, {
-            credentials: "include",
-            headers: {
-              "Referer": "https://kick.com/",
-              "Accept": "image/webp,image/avif,image/*,*/*",
-            },
-          });
-          if (!response.ok) { sendResponse({ success: false, status: response.status }); return; }
-          const mimeType = response.headers.get("content-type")?.split(";")[0] || "image/webp";
-          const buffer = await response.arrayBuffer();
-          const bytes = new Uint8Array(buffer);
-          let binary = "";
-          const CHUNK = 8192;
-          for (let i = 0; i < bytes.length; i += CHUNK) {
-            binary += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK));
-          }
-          const dataUrl = `data:${mimeType};base64,${btoa(binary)}`;
-          sendResponse({ success: true, dataUrl });
-        } catch (e) {
-          sendResponse({ success: false, error: e?.message });
+          console.warn("[SP] getConfig indisponible", error);
+          sendResponse({ clientId: "", features: {} });
         }
       })();
       return true;
@@ -3592,7 +3823,11 @@ function handleMessage(request, sender, sendResponse) {
             id: `${platform}:${handle}`,
             platform,
             handle,
-            notificationsEnabled: true,
+            // Défauts des nouveaux streamers : les réglages globaux du moment,
+            // pas un true en dur (les réglages globaux ne sont pas des verrous).
+            notificationsEnabled: preferences.liveNotifications,
+            gameNotificationsEnabled: preferences.gameNotifications,
+            titleNotificationsEnabled: preferences.titleNotifications,
             socials: {},
           };
 
@@ -3748,34 +3983,36 @@ function handleMessage(request, sender, sendResponse) {
         toggleGameNotifications: "gameNotificationsEnabled",
         toggleTitleNotifications: "titleNotificationsEnabled",
       };
-      (async () => {
+      respond(async () => {
         const preferences = await PreferenceStore.get();
         const streamers = await DataStore.getStreamers();
         const idx = streamers.findIndex((s) => s.id === request.id);
         if (idx === -1) {
-          sendResponse({ error: translateWithPrefs(preferences, "background.errors.streamerNotFound", { platform: "" }) });
-          return;
+          throw new Error(translateWithPrefs(preferences, "background.errors.streamerNotFound", { platform: "" }));
         }
         streamers[idx][flagByType[request.type]] = Boolean(request.enabled);
         await DataStore.saveStreamers(streamers);
-        sendResponse({ success: true });
-      })();
+        return {};
+      }, sendResponse, request.type);
       return true;
     }
 
     case "refreshStatuses":
-      PlatformChecker.refreshAll().then(() => {
-        sendResponse({ success: true });
-      });
+      respond(() => PlatformChecker.refreshAll(), sendResponse, "refreshStatuses");
       return true;
 
 
-    case "trackWatchTime":
+    case "trackWatchTime": {
+      // Un seul onglet compte par chaîne et par minute : deux fenêtres sur le
+      // même live ne doivent pas doubler le temps de visionnage. Sans onglet
+      // (popup, tests), compter normalement.
+      const tabId = sender?.tab?.id;
+      const claimedSeconds = (Number(request.seconds) || 0) > 0 && !watchTimeTabClaims(request.platform, request.channel, tabId);
       (async () => {
         try {
           const { channel, platform, seconds } = request;
           if (channel && platform) {
-            const secs = Number(seconds) || 0;
+            const secs = claimedSeconds ? 0 : Number(seconds) || 0;
             const game = secs > 0 ? String(request.game || "") || (await currentGameOf(platform, channel)) : "";
             // Record immediately: never block on avatar resolution
             await WatchTimeStore.record(platform, channel, secs, "", game);
@@ -3800,12 +4037,13 @@ function handleMessage(request, sender, sendResponse) {
                 .catch(() => {});
             }
           }
-          sendResponse({ success: true });
+          sendResponse({ success: true, counted: !claimedSeconds });
         } catch (error) {
           sendResponse({ error: error.message });
         }
       })();
       return true;
+    }
 
     case "markHistorySeen":
       HistoryStore.markSeen(String(request.id || ""))
@@ -3817,45 +4055,6 @@ function handleMessage(request, sender, sendResponse) {
       HistoryStore.removeEntry(String(request.id || ""))
         .then(() => sendResponse({ success: true }))
         .catch((error) => sendResponse({ error: error.message }));
-      return true;
-
-    case "activatePlus":
-      (async () => {
-        try {
-          const result = await verifyLicense(request.key, fetch, Date.now(), await getDeviceId(chrome.storage.local));
-          if (result.ok) await chrome.storage.local.set({ [PLUS_KEY]: result.record });
-          sendResponse(result);
-          if (result.ok) {
-            const prefs = await PreferenceStore.get();
-            const lang = normalizeLanguage(prefs?.language);
-            thankPlusSubscriber(result.record.licenseKey, (key) => translate(lang, key)).catch(() => {});
-          }
-          if (result.ok) pollStreamers().catch(() => {});
-        } catch (error) {
-          sendResponse({ error: error?.message || String(error) });
-        }
-      })();
-      return true;
-
-    case "deactivatePlus":
-      chrome.storage.local.remove(PLUS_KEY).then(() => sendResponse({ success: true }));
-      return true;
-
-    case "getWatchTimeSummary":
-      (async () => {
-        try {
-          const summary = await WatchTimeStore.getSummary(request.month || null);
-          sendResponse({ success: true, summary });
-        } catch (error) {
-          sendResponse({ error: error.message });
-        }
-      })();
-      return true;
-
-    case "getStats":
-      StatsStore.get().then((stats) => {
-        sendResponse({ success: true, stats });
-      });
       return true;
 
     case "recordPointsGain":
@@ -4097,17 +4296,13 @@ function handleMessage(request, sender, sendResponse) {
       return true;
 
     case "getEventLogs":
-      EventLogStore.getLogs().then((logs) => {
-        sendResponse({ success: true, logs });
-      });
+      respond(async () => ({ logs: await EventLogStore.getLogs() }), sendResponse, "getEventLogs");
       return true;
 
     case "clearEventLogs":
-      EventLogStore.clearLogs().then((logs) => {
-        sendResponse({ success: true, logs });
-      });
+      respond(async () => ({ logs: await EventLogStore.clearLogs() }), sendResponse, "clearEventLogs");
       return true;
-    
+
     case "resetStat":
       (async () => {
         try {
@@ -4169,9 +4364,28 @@ function handleMessage(request, sender, sendResponse) {
           }
 
           const preferences = await PreferenceStore.update(updates);
+          // Les réglages d'alertes globales sont des actions en masse : la
+          // valeur choisie s'applique aussi à tous les streamers existants.
+          await propagateNotificationPreferences(updates);
           if ("backgroundRaidAlerts" in updates) {
             refreshRaidWatcher();
           }
+          sendResponse({ success: true, preferences });
+        } catch (error) {
+          sendResponse({ error: error?.message || String(error) });
+        }
+      })();
+      return true;
+
+    case "resetPreferences":
+      (async () => {
+        try {
+          // Tout revient au défaut, sauf la langue et le thème choisis.
+          const current = await PreferenceStore.get();
+          const preferences = await PreferenceStore.set(resetPreferencesFrom(current));
+          // Les alertes par streamer reprennent aussi leurs défauts.
+          await propagateNotificationPreferences(preferences);
+          refreshRaidWatcher();
           sendResponse({ success: true, preferences });
         } catch (error) {
           sendResponse({ error: error?.message || String(error) });
@@ -4200,6 +4414,29 @@ function handleMessage(request, sender, sendResponse) {
           sendResponse({ error: error?.message || String(error) });
         }
       })();
+      return true;
+
+    case "reorderStreamers":
+      // { order: [id, …] } : la popup n'envoie qu'un ordre d'identifiants, le
+      // service worker l'applique au stockage courant — un statut rafraîchi
+      // pendant le glisser ne peut plus être écrasé par sa copie d'ouverture.
+      respond(async () => {
+        const streamers = await DataStore.getStreamers();
+        const reordered = applyStreamerOrder(streamers, request.order);
+        await DataStore.saveStreamers(reordered);
+        return { streamers: reordered };
+      }, sendResponse, "reorderStreamers");
+      return true;
+
+    case "setPinnedStreamers":
+      // { pinnedIds: [id, …] } : même principe, écrit depuis le stockage
+      // courant et nettoyé (ids inconnus, doublons).
+      respond(async () => {
+        const streamers = await DataStore.getStreamers();
+        const pinnedIds = sanitizePinnedIds(streamers, request.pinnedIds);
+        await chrome.storage.local.set({ betaPinnedIds: pinnedIds });
+        return { pinnedIds };
+      }, sendResponse, "setPinnedStreamers");
       return true;
 
     default:
@@ -4231,6 +4468,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 scheduleWatcherAlarm();
 scheduleKeepAliveAlarm();
 scheduleDropsAlarm();
+scheduleWatchTimeFlushAlarm();
+
+// Le SW peut s'arrêter entre deux vidages : reprendre le cumul laissé en
+// storage.session, et vider au moment où le navigateur suspend le SW.
+WatchTimeStore.restorePending().catch((error) => {
+  console.warn("[WatchTime] reprise du cumul au démarrage :", error?.message || error);
+});
+if (chrome.runtime.onSuspend?.addListener) {
+  chrome.runtime.onSuspend.addListener(() => {
+    WatchTimeStore.flush().catch(() => {});
+  });
+}
 
 (async () => {
   if (initDone) return;
@@ -4258,20 +4507,77 @@ scheduleDropsAlarm();
   }
 })();
 
+// --- preventTabDiscard ------------------------------------------------------
+// Le réglage ne concerne que les pages de chaîne Twitch et Kick : ce sont les
+// seules pages que l'extension maintient actives (lecteur, points, drops).
+// YouTube et les pages hors chaîne (répertoire, réglages…) peuvent être
+// déchargées par le navigateur sans rien casser.
+
+// onUpdated pleut à chaque changement de titre ou d'URL : relire le stockage à
+// chaque événement serait inutile, on garde une copie locale invalidée par
+// storage.onChanged. null = pas encore lu (premier événement après réveil).
+let preventTabDiscardEnabled = null;
+
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area !== "local" || !changes[PREFERENCES_KEY]) return;
+  const previous = preventTabDiscardEnabled;
+  const stored = changes[PREFERENCES_KEY].newValue || {};
+  preventTabDiscardEnabled = stored.preventTabDiscard !== false;
+  // En coupant le réglage, rendre leurs onglets au navigateur : sans ça, un
+  // onglet marqué resterait non déchargeable pour toujours.
+  if (previous === true && preventTabDiscardEnabled === false) {
+    unmarkDiscardableTabs().catch((error) => {
+      console.warn("[tabs] remise autoDiscardable impossible :", error?.message || error);
+    });
+  }
+});
+
+/** Onglets qu'on avait marqués (chaînes des trois plateformes) : on les relâche tous. */
+async function unmarkDiscardableTabs() {
+  let tabs;
+  try {
+    tabs = await chrome.tabs.query({ autoDiscardable: false });
+  } catch (error) {
+    console.warn("[tabs] query autoDiscardable impossible :", error?.message || error);
+    return;
+  }
+  const results = await Promise.allSettled(
+    tabs
+      .filter((tab) => {
+        if (typeof tab.url !== "string") return false;
+        try {
+          const host = new URL(tab.url).hostname.toLowerCase().replace(/^www\./, "");
+          return host === "twitch.tv" || host === "kick.com" || host === "youtube.com";
+        } catch {
+          return false;
+        }
+      })
+      .map((tab) => chrome.tabs.update(tab.id, { autoDiscardable: true })),
+  );
+  for (const result of results) {
+    if (result.status === "rejected") {
+      console.warn("[tabs] update autoDiscardable :", result.reason?.message || result.reason);
+    }
+  }
+}
+
 if (chrome.tabs?.onUpdated?.addListener) {
   chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-    if (
-      tab?.url &&
-      (tab.url.includes("twitch.tv") || tab.url.includes("kick.com") || tab.url.includes("youtube.com"))
-    ) {
-      try {
+    const url = tab?.url || changeInfo?.url;
+    if (!url || !isChannelPageUrl(url)) return;
+    try {
+      if (preventTabDiscardEnabled === null) {
         const prefs = await PreferenceStore.get();
-        if (prefs.preventTabDiscard && tab.autoDiscardable !== false) {
-          await chrome.tabs.update(tabId, { autoDiscardable: false });
-        }
-      } catch (_) {
-        // L'onglet peut avoir ete ferme entre la lecture des preferences et l'ecriture.
+        // Faux positif : storage.onChanged met la même valeur à jour, pas une
+        // écriture concurrente obsolète ; le pire cas est une relecture.
+        /* eslint-disable-next-line require-atomic-updates -- cache invalidé par storage.onChanged. */
+        preventTabDiscardEnabled = prefs.preventTabDiscard !== false;
       }
+      if (!preventTabDiscardEnabled || tab.autoDiscardable === false) return;
+      await chrome.tabs.update(tabId, { autoDiscardable: false });
+    } catch (error) {
+      // L'onglet peut avoir été fermé entre l'événement et la mise à jour.
+      console.warn("[tabs] preventTabDiscard :", error?.message || error);
     }
   });
 }

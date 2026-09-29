@@ -17,8 +17,13 @@
   // Au-delà, le panneau dépasserait la hauteur utile du menu déroulant Twitch.
   var MAX_LIVE = 5;
 
-  /** Les interrupteurs qui agissent sur la page où l'on se trouve. */
-  var CHANNEL_TOGGLES = [
+  /**
+   * Réglages rapides : ces interrupteurs sont GLOBAUX (ils changent le
+   * réglage pour toutes les chaînes, pas seulement celle-ci). Ils vivent dans
+   * leur propre section pour ne pas se faire passer pour des réglages de
+   * la page où l'on se trouve.
+   */
+  var QUICK_TOGGLES = [
     { key: "previewsEnabled", label: "previews" },
     { key: "autoClaimChannelPoints", label: "autoClaim" },
     { key: "enableFastForwardButton", label: "fastForward" },
@@ -29,6 +34,8 @@
   function toggleRow(key, label, on) {
     var row = el("button", "sp-tb-row");
     row.type = "button";
+    row.setAttribute("role", "switch");
+    row.setAttribute("aria-checked", String(on));
     row.setAttribute("data-sp-toggle", key);
     row.appendChild(el("span", null, label));
     row.appendChild(el("span", "sp-tb-sw" + (on ? " on" : "")));
@@ -36,8 +43,9 @@
   }
 
   /**
-   * Section « cette chaîne » : absente hors d'une page de chaîne, plutôt que
-   * d'afficher un bloc vide sur l'accueil ou le répertoire.
+   * Section « cette chaîne » : le nom, le temps passé ici et l'ajout à
+   * StreamPulse. Absente hors d'une page de chaîne, plutôt que d'afficher un
+   * bloc vide sur l'accueil ou le répertoire.
    */
   function channelSection(state, deps) {
     if (!state.channel) return null;
@@ -70,12 +78,18 @@
     head.appendChild(follow);
     wrap.appendChild(head);
 
-    CHANNEL_TOGGLES.forEach(function (item) {
+    return wrap;
+  }
+
+  /** Section « réglages rapides » : les interrupteurs globaux, dits tels quels. */
+  function quickSection(state, deps) {
+    var wrap = el("div", "sp-tb-section");
+    wrap.appendChild(el("div", "sp-tb-section-title", deps.tr("quickSettings")));
+    QUICK_TOGGLES.forEach(function (item) {
       wrap.appendChild(
         toggleRow(item.key, deps.tr(item.label), state.prefs[item.key] !== false)
       );
     });
-
     return wrap;
   }
 
@@ -154,6 +168,7 @@
 
     var channel = channelSection(state, deps);
     if (channel) p.appendChild(channel);
+    p.appendChild(quickSection(state, deps));
     p.appendChild(liveSection(state, deps));
 
     // Le panneau n'offrait que Revolut, la ou le popup laisse le choix.
@@ -182,12 +197,13 @@
     });
     p.appendChild(settings);
 
-    // Un seul écouteur pour tous les interrupteurs de la section chaîne.
+    // Un seul écouteur pour tous les interrupteurs de la section réglages rapides.
     Array.prototype.forEach.call(p.querySelectorAll("[data-sp-toggle]"), function (row) {
       row.addEventListener("click", function () {
         var sw = row.querySelector(".sp-tb-sw");
         var next = !sw.classList.contains("on");
         sw.classList.toggle("on", next);
+        row.setAttribute("aria-checked", String(next));
         deps.onToggle(row.getAttribute("data-sp-toggle"), next);
       });
     });

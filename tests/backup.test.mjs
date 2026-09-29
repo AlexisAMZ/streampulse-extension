@@ -31,7 +31,7 @@ const storage = {
   streamPulseHistory: { "2026-09-12": [{ channel: "gotaga", minutes: 42 }] },
   streamPulseSmartAlerts: [{ handle: "gotaga", game: "Just Chatting" }],
   streamPulseCosmetics: { badgeFx: "glow", nameFx: "" },
-  streamPulseAccent: "violet",
+  streamPulseLayout: { tabs: { order: ["history"], hidden: [] }, menu: { order: [], hidden: [] } },
   streamPulsePredictionRule: { percent: 10, maxPoints: 5000 },
   streamPulsePointsDaily: { "2026-09-26": { 123: { WATCH: { count: 1, points: 10, base: 10 } } } },
   streamPulsePointsJournal: [],

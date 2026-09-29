@@ -28,19 +28,27 @@ const GROUPS = "betaChannelGroups";
 const HISTORY = "streamPulseHistory";
 const SMART_ALERTS = "streamPulseSmartAlerts";
 const COSMETICS = "streamPulseCosmetics";
-const ACCENT = "streamPulseAccent";
+const LAYOUT = "streamPulseLayout";
 const PREDICTION_RULE = "streamPulsePredictionRule";
 
 // La licence StreamPulse+, l'identifiant d'appareil et les alarmes restent
 // dehors : ils sont lies a CETTE installation et n'ont pas de sens ailleurs.
 export const BACKUP_KEYS = [
   STREAMERS, PREFERENCES, STATS, WATCH_MONTHLY, WATCH_DAILY, PROFILE,
-  PINNED, GROUPS, HISTORY, SMART_ALERTS, COSMETICS, ACCENT, PREDICTION_RULE,
+  PINNED, GROUPS, HISTORY, SMART_ALERTS, COSMETICS, LAYOUT, PREDICTION_RULE,
   POINTS_DAILY_KEY, POINTS_JOURNAL_KEY, POINTS_CHANNELS_KEY, DROPS_HISTORY_KEY,
 ];
 
-/** Caches derives des donnees restaurees : vides a la restauration, recalcules ensuite. */
-export const RESET_ON_RESTORE = ["betaGeneralStatuses", "streamPulseLiveState", "streampulse:thumbCache"];
+/**
+ * Reglages proprement dits : par defaut ceux de l'installation courante gagnent ;
+ * avec l'option replaceSettings, ceux de la sauvegarde les remplacent.
+ */
+export const SETTINGS_KEYS = [PREFERENCES, LAYOUT, COSMETICS, PREDICTION_RULE];
+
+/** La sauvegarde validee contient-elle des reglages a proposer de restaurer ? */
+export function hasSettings(data) {
+  return SETTINGS_KEYS.some((key) => isPlainObject(data?.[key]) && Object.keys(data[key]).length > 0);
+}
 
 const MONTH_KEY = /^\d{4}-\d{2}$/;
 const DAY_KEY = /^\d{4}-\d{2}-\d{2}$/;
@@ -201,6 +209,7 @@ function cleanValue(key, value) {
     case PROFILE:
     case HISTORY:
     case COSMETICS:
+    case LAYOUT:
     case PREDICTION_RULE:
       return isPlainObject(value) ? value : undefined;
     case PINNED:
@@ -210,8 +219,6 @@ function cleanValue(key, value) {
       return Array.isArray(value) ? value.filter(isPlainObject) : undefined;
     case SMART_ALERTS:
       return Array.isArray(value) || isPlainObject(value) ? value : undefined;
-    case ACCENT:
-      return typeof value === "string" ? value : undefined;
     case POINTS_DAILY_KEY:
       return isPlainObject(value) ? cleanPointsDaily(value) : undefined;
     case POINTS_JOURNAL_KEY:
@@ -333,14 +340,22 @@ function hasProfile(profile) {
  * Fusionne les donnees validees d'une sauvegarde (parseBackup().data) avec le
  * contenu actuel du storage. Ne renvoie que les cles presentes dans la sauvegarde.
  *
+ * Avec `replaceSettings`, les reglages (SETTINGS_KEYS) de la sauvegarde
+ * remplacent ceux de l'installation ; les champs qu'elle ignore sont gardes.
+ *
+ * @param {{replaceSettings?: boolean}} [options]
  * @returns {{data: Record<string, unknown>, addedStreamers: number}}
  */
-export function mergeBackup(current, incoming) {
+export function mergeBackup(current, incoming, { replaceSettings = false } = {}) {
   const now = isPlainObject(current) ? current : {};
   const data = {};
   let addedStreamers = 0;
 
   for (const [key, value] of Object.entries(incoming || {})) {
+    if (replaceSettings && SETTINGS_KEYS.includes(key)) {
+      data[key] = { ...(isPlainObject(now[key]) ? now[key] : {}), ...value };
+      continue;
+    }
     switch (key) {
       case STREAMERS: {
         const result = mergeStreamers(Array.isArray(now[key]) ? now[key] : [], value);
@@ -381,8 +396,8 @@ export function mergeBackup(current, incoming) {
         break;
       case SMART_ALERTS:
       case COSMETICS:
+      case LAYOUT:
       case PREDICTION_RULE:
-      case ACCENT:
         // Reglages simples : ceux de l'installation courante restent prioritaires.
         data[key] = now[key] !== undefined ? now[key] : value;
         break;

@@ -5,7 +5,7 @@
 // close the popup, and the chosen file was silently lost.
 
 import { initI18n, applyTranslations, t, getCurrentLanguage, resolveLocale } from "./i18n.js";
-import { BACKUP_KEYS, MAX_BACKUP_BYTES, mergeBackup, parseBackup } from "./backup.js";
+import { BACKUP_KEYS, MAX_BACKUP_BYTES, hasSettings, mergeBackup, parseBackup } from "./backup.js";
 
 const views = {
   pick: document.getElementById("restore-pick"),
@@ -13,9 +13,11 @@ const views = {
   done: document.getElementById("restore-done"),
 };
 const fileInput = document.getElementById("file-input");
-const dropZone = document.getElementById("drop-zone");
+const dropZone = document.getElementById("restore-pick");
 const errorEl = document.getElementById("restore-error");
 const confirmButton = document.getElementById("restore-confirm");
+const settingsRow = document.getElementById("restore-settings-row");
+const replaceSettingsInput = document.getElementById("restore-replace-settings");
 
 let pending = null;
 
@@ -56,6 +58,10 @@ async function readFile(file) {
 
   // Preview against what is stored now: only the streamers missing here count.
   const preview = mergeBackup(await chrome.storage.local.get(BACKUP_KEYS), parsed.data);
+  // The switch is only offered, and pre-ticked, when the backup carries settings.
+  const backupHasSettings = hasSettings(parsed.data);
+  settingsRow.hidden = !backupHasSettings;
+  replaceSettingsInput.checked = backupHasSettings;
   pending = parsed;
   document.getElementById("file-name").textContent = file.name;
   document.getElementById("sum-streamers").textContent = String(preview.addedStreamers);
@@ -71,8 +77,10 @@ async function restore() {
   confirmButton.disabled = true;
   errorEl.hidden = true;
   try {
-    // Merge, never replace: the backup adds to what is already there.
-    const { data } = mergeBackup(await chrome.storage.local.get(BACKUP_KEYS), pending.data);
+    // Merge, never replace, except settings when the switch asks for it.
+    const { data } = mergeBackup(await chrome.storage.local.get(BACKUP_KEYS), pending.data, {
+      replaceSettings: replaceSettingsInput.checked,
+    });
     await chrome.storage.local.set(data);
     // The service worker rereads the streamers and rebuilds its caches.
     chrome.runtime.sendMessage({ type: "refreshStatuses" }).catch(() => {});

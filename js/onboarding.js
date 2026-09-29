@@ -18,6 +18,7 @@ import {
   normalizePlatform,
   sanitizeHandle,
 } from "./platforms.js";
+import { DEFAULT_PREFERENCES } from "./preferences-data.js";
 
 /* ── DOM refs ── */
 const form = document.getElementById("onboarding-form");
@@ -48,6 +49,7 @@ const btnNext1 = document.getElementById("btn-next-1");
 const preferenceToggleDefinitions = [
   { element: document.getElementById("onboarding-live-notifications"), key: "liveNotifications" },
   { element: document.getElementById("onboarding-game-alerts"), key: "gameNotifications" },
+  { element: document.getElementById("onboarding-title-alerts"), key: "titleNotifications" },
   { element: document.getElementById("onboarding-sounds"), key: "soundsEnabled" },
   { element: document.getElementById("onboarding-fast-forward"), key: "enableFastForwardButton" },
   { element: document.getElementById("onboarding-hide-extensions"), key: "hideTwitchExtensions" },
@@ -66,7 +68,12 @@ const preferenceToggleDefinitions = [
  * absente vaut « non ». Le badge communautaire envoie une empreinte du pseudo,
  * il demande donc un accord explicite ; suivre les raids rapporte des points.
  */
-const OFF_BY_DEFAULT = new Set(["communityBadge", "autoCancelRaids"]);
+// Défauts réels du produit (js/preferences-data.js) : une clé à false dans
+// DEFAULT_PREFERENCES est opt-in — sans réponse du service worker, les
+// interrupteurs reflètent quand même la vérité.
+const OFF_BY_DEFAULT = new Set(
+  Object.keys(DEFAULT_PREFERENCES).filter((key) => DEFAULT_PREFERENCES[key] === false)
+);
 const isEnabled = (preferences, key) => (OFF_BY_DEFAULT.has(key) ? preferences?.[key] === true : preferences?.[key] !== false);
 
 const LANGUAGE_FLAGS = { fr: "🇫🇷", en: "🇬🇧", es: "🇪🇸", "pt-BR": "🇧🇷", de: "🇩🇪", it: "🇮🇹", pl: "🇵🇱", tr: "🇹🇷", ru: "🇷🇺", ja: "🇯🇵", ko: "🇰🇷" };
@@ -712,7 +719,23 @@ function registerEventListeners() {
   });
 
   finishButton?.addEventListener("click", () => {
-    saveUserProfile().finally(() => window.close());
+    saveUserProfile().finally(async () => {
+      // Ouvrir le popup tout de suite quand Chrome le permet ; sinon dire
+      // clairement quoi faire, laisser le temps de lire, puis fermer.
+      let opened = false;
+      try {
+        if (chrome.action?.openPopup) {
+          await chrome.action.openPopup();
+          opened = true;
+        }
+      } catch (_e) {
+        // openPopup peut manquer (Firefox, anciens Chrome) ou refuser hors
+        // geste utilisateur : le repli ci-dessous prend le relais.
+      }
+      const hint = document.getElementById("finish-open-hint");
+      if (!opened && hint) hint.hidden = false;
+      setTimeout(() => window.close(), opened ? 400 : 8000);
+    });
   });
 }
 

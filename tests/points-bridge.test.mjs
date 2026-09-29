@@ -58,7 +58,7 @@ function sandbox() {
   };
   win.top = win;
   new Function("window", "location", SOURCE)(win, { origin: ORIGIN });
-  const ready = () => pageListeners.forEach((listener) => listener({ source: win, data: { source: "streampulse:points:ready" } }));
+  const ready = () => pageListeners.forEach((listener) => listener({ source: win, data: { source: "streampulse:points:ready", token: "jeton-points" } }));
   return { win, posted, ready, FakeWebSocket, pageListeners };
 }
 
@@ -68,7 +68,7 @@ test("un gain reçu par Hermes est transmis une fois", () => {
   const socket = new win.WebSocket("wss://hermes.twitch.tv/v1");
   socket.receive(hermes(pointsEarned));
   assert.equal(posted.length, 1);
-  assert.deepEqual(posted[0].message, { source: "streampulse:points", v: 1, data: pointsEarned.data });
+  assert.deepEqual(posted[0].message, { source: "streampulse:points", v: 1, token: "jeton-points", data: pointsEarned.data });
   assert.equal(posted[0].origin, ORIGIN);
 });
 
@@ -114,7 +114,7 @@ test("Twitch garde ses propres écouteurs et un vrai WebSocket", () => {
 
 function dropsSandbox() {
   const box = sandbox();
-  box.readyDrops = () => box.pageListeners.forEach((listener) => listener({ source: box.win, data: { source: "streampulse:drops:ready" } }));
+  box.readyDrops = () => box.pageListeners.forEach((listener) => listener({ source: box.win, data: { source: "streampulse:drops:ready", token: "jeton-drops" } }));
   return box;
 }
 
@@ -129,8 +129,8 @@ test("une avancée de Drop reçue par Hermes part vers le relais des Drops, pas 
   socket.receive(hermes(dropProgress));
   socket.receive(pubsub(dropClaim));
   assert.deepEqual(posted.map((item) => item.message), [
-    { source: "streampulse:drops", v: 1, kind: "event", data: dropProgress },
-    { source: "streampulse:drops", v: 1, kind: "event", data: dropClaim },
+    { source: "streampulse:drops", v: 1, token: "jeton-drops", kind: "event", data: dropProgress },
+    { source: "streampulse:drops", v: 1, token: "jeton-drops", kind: "event", data: dropClaim },
   ]);
 });
 
@@ -143,4 +143,12 @@ test("les événements de Drops attendent leur propre relais, indépendamment de
   assert.deepEqual(posted.map((item) => item.message.source), ["streampulse:points"]);
   dropsReady();
   assert.deepEqual(posted.map((item) => item.message.source), ["streampulse:points", "streampulse:drops"]);
+});
+
+test("sans jeton de session dans le signal, le relais n'est pas considéré prêt", () => {
+  const { win, posted, pageListeners } = sandbox();
+  pageListeners.forEach((listener) => listener({ source: win, data: { source: "streampulse:points:ready", token: "" } }));
+  const socket = new win.WebSocket("wss://hermes.twitch.tv/v1");
+  socket.receive(hermes(pointsEarned));
+  assert.equal(posted.length, 0, "aucun message ne part sans jeton : il serait refusé par le relais");
 });

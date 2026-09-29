@@ -187,6 +187,54 @@ export function getPlatformDefinition(platform) {
   return PLATFORM_DEFINITIONS[key] || PLATFORM_DEFINITIONS[DEFAULT_PLATFORM];
 }
 
+/* Routes Twitch dont le premier segment est une fonctionnalité, pas un login :
+   même liste que js/inject/dom.js (NON_CHANNEL_ROUTES). Toute divergence entre
+   les deux listes se verrait attribuer un traitement incohérent selon la
+   surface, donc garder les deux alignées à chaque évolution. */
+const TWITCH_NON_CHANNEL_ROUTES = new Set([
+  "directory", "settings", "drops", "downloads", "subscriptions", "wallet",
+  "inventory", "friends", "u", "videos", "search", "prime", "turbo", "store",
+  "jobs", "p", "moderator", "popout", "team", "communities", "payments",
+  "following", "dashboard", "activate", "collections", "products", "broadcast",
+  "creatorcamp", "bits", "login", "signup", "logout", "messages",
+  "notifications", "privacy", "security", "squad",
+]);
+
+/* Routes Kick équivalentes : les segments bien connus du site, sans visée
+   exhaustive. Une route manquante laisse simplement la page comptée comme une
+   chaîne, ce qui dégrade moins qu'exclure un vrai login. */
+const KICK_NON_CHANNEL_ROUTES = new Set([
+  "dashboard", "browse", "search", "messages", "account", "account-settings",
+  "video", "videos", "categories", "category", "community", "support", "help",
+  "help-center", "about", "blog", "terms", "privacy", "dmca", "jobs", "login",
+  "signup", "clip", "clips", "embed", "chat", "static", "public", "rewards",
+  "store", "gifts", "offline",
+]);
+
+const CHANNEL_LOGIN = /^[a-z0-9_]{1,25}$/;
+
+/**
+ * Vrai pour une page de chaîne Twitch ou Kick (premier segment = un login).
+ * YouTube est volontairement exclu : ses onglets n'hébergent rien que
+ * l'extension doive maintenir éveillé. Fausse pour la racine, les routes
+ * système et les URL non pertinentes.
+ */
+export function isChannelPageUrl(url) {
+  if (typeof url !== "string" || !url) return false;
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return false;
+  }
+  const host = parsed.hostname.toLowerCase().replace(/^www\./, "");
+  const first = (parsed.pathname.split("/").filter(Boolean)[0] || "").toLowerCase();
+  if (!CHANNEL_LOGIN.test(first)) return false;
+  if (host === "twitch.tv") return !TWITCH_NON_CHANNEL_ROUTES.has(first);
+  if (host === "kick.com") return !KICK_NON_CHANNEL_ROUTES.has(first);
+  return false;
+}
+
 // Note: To avoid circular dependency with i18n, we export the Label Key getter
 // and let the consumer translate it. But for compatibility with existing code expectation:
 // If we want a simple getPlatformLabel(platform) that returns the translated string,

@@ -285,45 +285,45 @@ for (const f of jsFiles) {
 }
 if (!syntaxFails) pass(`${jsFiles.length} JS files parse cleanly`);
 
-// ── 3bis. Preferences : DEFAULT_PREFERENCES vs sanitize() ───────────────────
+// ── 3bis. Preferences : DEFAULT_PREFERENCES vs sanitizePreferences() ────────
 // PreferenceStore.set() ecrit `{...DEFAULT_PREFERENCES, ...sanitize(prefs)}`.
-// Toute cle absente de sanitize() est donc silencieusement rabattue sur son
+// Toute cle absente de la coercion est donc silencieusement rabattue sur son
 // defaut a chaque ecriture : le reglage est accepte par le handler, puis perdu,
 // et l'utilisateur ne peut jamais le desactiver. C'est le bug qui a touche
 // dropAlerts / predictionAlerts / raidAlerts en 26.8.9. Ce controle est
-// statique parce que background.js est un service worker sans export.
+// statique : il porte sur js/preferences-data.js, ou DEFAULT_PREFERENCES et
+// sanitizePreferences() vivent ensemble (PreferenceStore.sanitize() n'est plus
+// qu'un delegue, et le module pur est teste par tests/preferences-data.test.mjs).
 {
   const bgSrc = fs.existsSync(abs("js/background.js"))
     ? fs.readFileSync(abs("js/background.js"), "utf8")
     : "";
-  // DEFAULT_PREFERENCES vit desormais dans js/preferences-data.js (module
-  // partage avec la popup) : la parité se verifie entre ce fichier et sanitize().
   const defSrc = fs.existsSync(abs("js/preferences-data.js"))
     ? fs.readFileSync(abs("js/preferences-data.js"), "utf8")
     : "";
   const defStart = defSrc.indexOf("export const DEFAULT_PREFERENCES = {");
-  const sanStart = bgSrc.indexOf("static sanitize(preferences");
-  const getStart = bgSrc.indexOf("static async get()", sanStart);
+  const sanStart = defSrc.indexOf("export function sanitizePreferences(preferences");
+  const sanEnd = sanStart === -1 ? -1 : defSrc.indexOf("\n}", sanStart);
 
-  if (defStart === -1 || sanStart === -1 || getStart === -1) {
-    warn("js/preferences-data.js: DEFAULT_PREFERENCES or PreferenceStore.sanitize() not found, preference parity not checked");
+  if (defStart === -1 || sanStart === -1 || sanEnd === -1) {
+    warn("js/preferences-data.js: DEFAULT_PREFERENCES or sanitizePreferences() not found, preference parity not checked");
   } else {
     const defBody = defSrc.slice(defStart, defSrc.indexOf("\n};", defStart));
-    const sanBody = bgSrc.slice(sanStart, getStart);
+    const sanBody = defSrc.slice(sanStart, sanEnd);
     const keysOf = (body, indent) =>
       [...body.matchAll(new RegExp(`^\\s{${indent}}([A-Za-z0-9_]+):`, "gm"))].map((m) => m[1]);
     const defKeys = keysOf(defBody, 2);
-    const sanKeys = new Set(keysOf(sanBody, 6));
+    const sanKeys = new Set(keysOf(sanBody, 4));
     const dropped = defKeys.filter((k) => !sanKeys.has(k));
 
     if (!defKeys.length) {
-      warn("js/background.js: DEFAULT_PREFERENCES parsed as empty, preference parity not checked");
+      warn("js/preferences-data.js: DEFAULT_PREFERENCES parsed as empty, preference parity not checked");
     } else if (dropped.length) {
       dropped.forEach((k) =>
-        fail(`preference "${k}" is in DEFAULT_PREFERENCES but not returned by sanitize(): it cannot be turned off, the write resets it to its default`)
+        fail(`preference "${k}" is in DEFAULT_PREFERENCES but not returned by sanitizePreferences(): it cannot be turned off, the write resets it to its default`)
       );
     } else {
-      pass(`${defKeys.length} preferences survive sanitize(): none silently reset on write`);
+      pass(`${defKeys.length} preferences survive sanitizePreferences(): none silently reset on write`);
     }
 
     // Survivre a sanitize() ne suffit pas : le handler "updatePreferences" ne

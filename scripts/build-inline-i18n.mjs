@@ -32,13 +32,19 @@ const SHARED_SETTINGS = [
   "autoRefreshTitle", "keepQualityTitle", "fastForwardTitle", "pipButtonTitle", "hideTwitchExtensionsTitle", "communityBadgeTitle",
   "previewsEnableTitle", "previewsModeTitle", "previewsModeImage", "previewsModeVideo",
   "previewsSurfaceDirectory", "previewsSurfaceSidebar", "previewsAudioTitle",
-  "liveNotificationsTitle", "gameAlertsTitle", "titleAlertsTitle", "soundsTitle",
+  "liveAlertsTitle", "gameAlertsTitle", "titleAlertsTitle", "soundsTitle",
 ];
+
+/** Titres de rubriques vivant dans popup.osd (noms du menu du popup). */
+const SHARED_OSD = ["groupRewards", "groupPlayer", "groupProfile"];
 
 function sharedPopupStrings(popup) {
   const settings = {};
   for (const key of SHARED_SETTINGS) {
     if (popup?.settings?.[key]) settings[key] = popup.settings[key];
+  }
+  for (const key of SHARED_OSD) {
+    if (popup?.osd?.[key]) settings[key] = popup.osd[key];
   }
   return { settings, cosmetics: popup?.cosmetics || {} };
 }

@@ -5,6 +5,7 @@
 
 import { BADGE_AUTO_KEY, DROPS_BADGES_KEY, DROPS_CAMPAIGNS_KEY, DROPS_PROGRESS_KEY, badgesFrom, campaignsFrom, catalogBadges, progressFrom } from "./drops-data.js";
 import { addJobs, bannerModel, currentGroup, freeBadgeJobs, normalizeAuto, pruneJobs, removeJob } from "./badge-auto.js";
+import { PLUS_KEY, isPlusActive } from "./plus.js";
 
 const channelOf = (url) => (String(url || "").match(/^https:\/\/www\.twitch\.tv\/([a-z0-9_]{2,25})\/?(?:[?#]|$)/i) || [])[1] || "";
 
@@ -74,6 +75,10 @@ export function createBadgeAuto(deps) {
   const read = async () => normalizeAuto((await chrome.storage.local.get(BADGE_AUTO_KEY))[BADGE_AUTO_KEY]);
   const write = (state) => chrome.storage.local.set({ [BADGE_AUTO_KEY]: state });
 
+  /** Le mode auto des badges est une fonctionnalité Plus : la licence peut
+   * expirer (résiliation, remboursement, grâce dépassée) en cours de route. */
+  const plusActive = async () => isPlusActive((await chrome.storage.local.get(PLUS_KEY))[PLUS_KEY]);
+
   async function tabExists(tabId) {
     if (!tabId) return false;
     try {
@@ -135,6 +140,14 @@ export function createBadgeAuto(deps) {
   const check = () => serial(async () => {
     let state = await read();
     if (!state) return;
+    // Plus inactif : on arrête tout au passage suivant, comme si l'utilisateur
+    // avait arrêté lui-même (état retiré, onglet fermé), et on le dit.
+    if (!(await plusActive())) {
+      await chrome.storage.local.remove(BADGE_AUTO_KEY);
+      await closeTab(state.tabId);
+      await deps.notify("background.notifications.badgeAutoTitle", "background.badgeAuto.stoppedPlus");
+      return;
+    }
     const owned = badgesFrom(await chrome.storage.local.get(DROPS_BADGES_KEY)).owned;
     if (state.mode === "all") state = addJobs(state, freeBadgeJobs(await catalog()));
     const { state: next, obtained } = pruneJobs(state, { owned, now: Date.now() });
@@ -167,6 +180,9 @@ export function createBadgeAuto(deps) {
 
   /** Ajoute un badge à la file (ou lance « tous les badges possibles »). */
   const start = ({ job = null, all = false } = {}) => serial(async () => {
+    // Même garde que l'interface (le volet badges n'apparaît qu'aux abonnés) :
+    // un démarrage direct par message ne doit pas contourner la licence.
+    if (!(await plusActive())) return { started: false, plusRequired: true };
     const previous = await read();
     let state = addJobs(previous, job ? [job] : [], all ? { mode: "all" } : {});
     if (all) state = addJobs(state, freeBadgeJobs(await catalog()));
