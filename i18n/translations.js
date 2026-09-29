@@ -166,6 +166,8 @@ export const translations = {
       "closeWindow": "Fermer la fenêtre"
     },
     "popup": {
+      "greetingSubNobody": "Personne en direct.",
+      "greetingSubEmpty": "Bienvenue sur StreamPulse.",
       "news": {
         "new": "Nouveau",
       },
@@ -369,6 +371,7 @@ export const translations = {
         "noStreamers": "Ajoute d'abord un streamer depuis l'accueil."
       },
       "cplus": {
+        "addFromSearch": "Ajouter « {{name}} »",
 
 
         "emptyCta": "Ajouter ton premier streamer",
@@ -384,11 +387,11 @@ export const translations = {
         "prev": "Live précédent",
         "next": "Live suivant",
         "activityLabel": "Activité du jour",
-        "autoClaimOn": "Auto-claim actif",
+        "autoClaimOn": "Récupération auto active",
         "pointsToday": "+{{count}} pts aujourd'hui",
         "dropsToday": "{{count}} Drop aujourd'hui",
         "dropsTodayPlural": "{{count}} Drops aujourd'hui",
-        "search": "Chercher une chaîne",
+        "search": "Chercher un streamer",
         "searchLabel": "Chercher",
         "allChannels": "Toutes les chaînes",
         "offlineTile": "{{count}} hors ligne",
@@ -404,14 +407,14 @@ export const translations = {
         "deleteGroup": "Supprimer le groupe {{name}}",
         "noGroup": "Sans groupe",
         "groupLabel": "Groupe de {{name}}",
-        "noMatch": "Aucune chaîne ne correspond.",
+        "noMatch": "Aucun streamer ne correspond.",
         "close": "Fermer",
         "recap": "Mon récap",
         "watchTimeLabel": "Temps de visionnage ce mois-ci",
-        "nobodyTitle": "Personne en live pour l'instant",
-        "nobodyBody": "Vos {{count}} chaînes sont hors ligne. StreamPulse vous prévient dès qu'une d'elles lance un live.",
-        "emptyTitle": "Ajoutez votre premier streamer",
-        "emptyBody": "Saisissez un pseudo ou collez le lien d'une chaîne Twitch, Kick ou YouTube en bas de la fenêtre.",
+        "nobodyTitle": "Tout le monde fait une pause",
+        "nobodyBody": "Tes {{count}} streamers sont hors ligne. On te prévient dès que l'un d'eux lance un live.",
+        "emptyTitle": "Ajoute ton premier streamer",
+        "emptyBody": "Tape un pseudo ou colle le lien d'une chaîne Twitch, Kick ou YouTube en bas de la fenêtre.",
         "stateLive": "En live",
         "stateOffline": "Hors ligne",
         "feature": "Mettre {{name}} en avant",
@@ -576,8 +579,8 @@ export const translations = {
         "never": "Non merci"
       },
       "badgeAsk": {
-        "title": "Affiche ton badge dans le tchat",
-        "body": "Repère et sois repéré par les autres utilisateurs de StreamPulse dans le tchat Twitch. Si tu l'actives : une empreinte de ton pseudo est envoyée à streampulse.fr une fois par jour maximum.",
+        "title": "Affiche ton badge dans le chat",
+        "body": "Repère les autres utilisateurs de StreamPulse dans le chat Twitch, et montre-leur ton badge. Si tu l'actives : une empreinte de ton pseudo est envoyée à streampulse.fr une fois par jour maximum.",
         "activate": "Activer le badge",
         "later": "Plus tard",
         "dismiss": "Non merci",
@@ -728,7 +731,7 @@ export const translations = {
       },
       "addStreamerTitleBase": "Ajouter un streamer",
       "addStreamerTitlePlatform": "Ajouter un streamer {{platform}}",
-      "addStreamerHelperBase": "Saisissez le lien ou l’identifiant du créateur.",
+      "addStreamerHelperBase": "Colle le lien ou l’identifiant du streamer.",
       "addStreamerHelperPlatform": "Ajoutez un créateur disponible sur {{platform}}.",
       "addStreamerSubmit": "Ajouter",
       "platformSelectorLabel": "Plateforme du streamer",
@@ -737,7 +740,7 @@ export const translations = {
         "kick": "ex: Teuf",
         "youtube": "@handle ou lien de chaîne YouTube",
       },
-      "emptyState": "Aucun streamer suivi. Ajoutez-en un pour commencer.",
+      "emptyState": "Aucun streamer pour l'instant. Ajoutes-en un pour commencer.",
       "sort": {
         "live": "En ligne d'abord",
         "nameAsc": "Nom A → Z",
@@ -970,6 +973,10 @@ export const translations = {
         "apiError": "Erreur de connexion à {{platform}}. Réessayez dans un instant."
       },
       "feedback": {
+        "undoDone": "{{name}} est de retour dans ta liste.",
+        "undoFailed": "Impossible de remettre ce streamer. Ajoute-le à nouveau.",
+        "undo": "Annuler",
+        "openFailed": "Impossible d'ouvrir la chaîne. Réessaie.",
         "saveFailed": "Impossible d'enregistrer. Réessaie.",
         "adding": "Ajout en cours…",
         "addSuccessPlatform": "{{handle}} ajouté à StreamPulse pour {{platform}} !",
@@ -1406,6 +1413,8 @@ export const translations = {
       "closeWindow": "Close window"
     },
     "popup": {
+      "greetingSubNobody": "Nobody's live right now.",
+      "greetingSubEmpty": "Welcome to StreamPulse.",
       "news": {
         "new": "New",
       },
@@ -1609,6 +1618,7 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+        "addFromSearch": "Add “{{name}}”",
 
 
         "emptyCta": "Add your first streamer",
@@ -1644,11 +1654,11 @@ export const translations = {
         "deleteGroup": "Delete group {{name}}",
         "noGroup": "No group",
         "groupLabel": "Group for {{name}}",
-        "noMatch": "No channel matches.",
+        "noMatch": "No streamer matches.",
         "close": "Close",
         "recap": "My recap",
         "watchTimeLabel": "Watch time this month",
-        "nobodyTitle": "Nobody is live right now",
+        "nobodyTitle": "Everyone’s taking a break",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
         "emptyBody": "Type a handle or paste a Twitch, Kick or YouTube channel link at the bottom of the window.",
@@ -1977,7 +1987,7 @@ export const translations = {
         "kick": "e.g. trainwreckstv",
         "youtube": "@handle or YouTube channel URL",
       },
-      "emptyState": "No streamers followed yet. Add one to get started.",
+      "emptyState": "No streamers yet. Add one to get started.",
       "sort": {
         "live": "Online first",
         "nameAsc": "Name A → Z",
@@ -2210,6 +2220,10 @@ export const translations = {
         "apiError": "Connection error with {{platform}}. Please try again in a moment."
       },
       "feedback": {
+        "undoDone": "{{name}} is back in your list.",
+        "undoFailed": "Couldn't restore this streamer. Add it again.",
+        "undo": "Undo",
+        "openFailed": "Couldn't open the channel. Try again.",
         "saveFailed": "Could not save. Try again.",
         "adding": "Adding streamer…",
         "addSuccessPlatform": "{{handle}} has been added to StreamPulse for {{platform}}!",
@@ -2646,6 +2660,8 @@ export const translations = {
       "htmlLang": "es"
     },
     "popup": {
+      "greetingSubNobody": "Nobody's live right now.",
+      "greetingSubEmpty": "Welcome to StreamPulse.",
       "news": {
         "new": "Nuevo",
       },
@@ -2849,6 +2865,7 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+        "addFromSearch": "Add “{{name}}”",
 
 
         "emptyCta": "Añade tu primer streamer",
@@ -2888,7 +2905,7 @@ export const translations = {
         "close": "Close",
         "recap": "My recap",
         "watchTimeLabel": "Watch time this month",
-        "nobodyTitle": "Nobody is live right now",
+        "nobodyTitle": "Everyone’s taking a break",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
         "emptyBody": "Escribe un usuario o pega el enlace de un canal de Twitch, Kick o YouTube en la parte inferior de la ventana.",
@@ -3449,6 +3466,10 @@ export const translations = {
         "apiError": "Error de conexión con {{platform}}. Inténtalo de nuevo en un momento."
       },
       "feedback": {
+        "undoDone": "{{name}} is back in your list.",
+        "undoFailed": "Couldn't restore this streamer. Add it again.",
+        "undo": "Undo",
+        "openFailed": "Couldn't open the channel. Try again.",
         "saveFailed": "Could not save. Try again.",
         "adding": "Añadiendo…",
         "addSuccessPlatform": "¡{{handle}} añadido a StreamPulse para {{platform}}!",
@@ -3878,6 +3899,8 @@ export const translations = {
       "htmlLang": "pt-BR"
     },
     "popup": {
+      "greetingSubNobody": "Nobody's live right now.",
+      "greetingSubEmpty": "Welcome to StreamPulse.",
       "news": {
         "new": "Novo",
       },
@@ -4076,6 +4099,7 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+        "addFromSearch": "Add “{{name}}”",
 
 
         "emptyCta": "Adicione seu primeiro streamer",
@@ -4115,7 +4139,7 @@ export const translations = {
         "close": "Close",
         "recap": "My recap",
         "watchTimeLabel": "Watch time this month",
-        "nobodyTitle": "Nobody is live right now",
+        "nobodyTitle": "Everyone’s taking a break",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
         "emptyBody": "Digite um nome de usuário ou cole o link de um canal da Twitch, Kick ou YouTube na parte de baixo da janela.",
@@ -4676,6 +4700,10 @@ export const translations = {
         "apiError": "Erro de conexão com {{platform}}. Tente de novo em instantes."
       },
       "feedback": {
+        "undoDone": "{{name}} is back in your list.",
+        "undoFailed": "Couldn't restore this streamer. Add it again.",
+        "undo": "Undo",
+        "openFailed": "Couldn't open the channel. Try again.",
         "saveFailed": "Could not save. Try again.",
         "adding": "Adicionando…",
         "addSuccessPlatform": "{{handle}} adicionado ao StreamPulse para {{platform}}!",
@@ -5108,6 +5136,8 @@ export const translations = {
       "closeWindow": "Fenster schließen"
     },
     "popup": {
+      "greetingSubNobody": "Nobody's live right now.",
+      "greetingSubEmpty": "Welcome to StreamPulse.",
       "news": {
         "new": "Neu",
       },
@@ -5311,6 +5341,7 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+        "addFromSearch": "Add “{{name}}”",
 
 
         "emptyCta": "Füge deinen ersten Streamer hinzu",
@@ -5350,7 +5381,7 @@ export const translations = {
         "close": "Close",
         "recap": "My recap",
         "watchTimeLabel": "Watch time this month",
-        "nobodyTitle": "Nobody is live right now",
+        "nobodyTitle": "Everyone’s taking a break",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
         "emptyBody": "Gib einen Namen ein oder füge unten im Fenster den Link eines Twitch-, Kick- oder YouTube-Kanals ein.",
@@ -5912,6 +5943,10 @@ export const translations = {
         "apiError": "Verbindungsfehler mit {{platform}}. Bitte versuchen Sie es gleich noch einmal."
       },
       "feedback": {
+        "undoDone": "{{name}} is back in your list.",
+        "undoFailed": "Couldn't restore this streamer. Add it again.",
+        "undo": "Undo",
+        "openFailed": "Couldn't open the channel. Try again.",
         "saveFailed": "Could not save. Try again.",
         "adding": "Streamer hinzufügen…",
         "addSuccessPlatform": "{{handle}} wurde zu StreamPulse für {{platform}} hinzugefügt!",
@@ -6348,6 +6383,8 @@ export const translations = {
       "closeWindow": "Chiudi la finestra"
     },
     "popup": {
+      "greetingSubNobody": "Nobody's live right now.",
+      "greetingSubEmpty": "Welcome to StreamPulse.",
       "news": {
         "new": "Nuovo",
       },
@@ -6551,6 +6588,7 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+        "addFromSearch": "Add “{{name}}”",
 
 
         "emptyCta": "Aggiungi il tuo primo streamer",
@@ -6590,7 +6628,7 @@ export const translations = {
         "close": "Close",
         "recap": "My recap",
         "watchTimeLabel": "Watch time this month",
-        "nobodyTitle": "Nobody is live right now",
+        "nobodyTitle": "Everyone’s taking a break",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
         "emptyBody": "Scrivi un nome utente o incolla il link di un canale Twitch, Kick o YouTube in fondo alla finestra.",
@@ -7152,6 +7190,10 @@ export const translations = {
         "apiError": "Errore di connessione con {{platform}}. Per favore riprova tra poco."
       },
       "feedback": {
+        "undoDone": "{{name}} is back in your list.",
+        "undoFailed": "Couldn't restore this streamer. Add it again.",
+        "undo": "Undo",
+        "openFailed": "Couldn't open the channel. Try again.",
         "saveFailed": "Could not save. Try again.",
         "adding": "Aggiunta dello streamer…",
         "addSuccessPlatform": "{{handle}} è stato aggiunto a StreamPulse per {{platform}}!",
@@ -7588,6 +7630,8 @@ export const translations = {
       "closeWindow": "Zamknij okno"
     },
     "popup": {
+      "greetingSubNobody": "Nobody's live right now.",
+      "greetingSubEmpty": "Welcome to StreamPulse.",
       "news": {
         "new": "Nowość",
       },
@@ -7791,6 +7835,7 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+        "addFromSearch": "Add “{{name}}”",
 
 
         "emptyCta": "Dodaj pierwszego streamera",
@@ -7830,7 +7875,7 @@ export const translations = {
         "close": "Close",
         "recap": "My recap",
         "watchTimeLabel": "Watch time this month",
-        "nobodyTitle": "Nobody is live right now",
+        "nobodyTitle": "Everyone’s taking a break",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
         "emptyBody": "Wpisz nazwę użytkownika albo wklej link do kanału Twitch, Kick lub YouTube na dole okna.",
@@ -8392,6 +8437,10 @@ export const translations = {
         "apiError": "Błąd połączenia z {{platform}}. Spróbuj ponownie za chwilę."
       },
       "feedback": {
+        "undoDone": "{{name}} is back in your list.",
+        "undoFailed": "Couldn't restore this streamer. Add it again.",
+        "undo": "Undo",
+        "openFailed": "Couldn't open the channel. Try again.",
         "saveFailed": "Could not save. Try again.",
         "adding": "Dodawanie streamera…",
         "addSuccessPlatform": "{{handle}} został dodany do StreamPulse dla {{platform}}!",
@@ -8828,6 +8877,8 @@ export const translations = {
       "closeWindow": "Pencereyi kapat"
     },
     "popup": {
+      "greetingSubNobody": "Nobody's live right now.",
+      "greetingSubEmpty": "Welcome to StreamPulse.",
       "news": {
         "new": "Yeni",
       },
@@ -9031,6 +9082,7 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+        "addFromSearch": "Add “{{name}}”",
 
 
         "emptyCta": "İlk streamerını ekle",
@@ -9070,7 +9122,7 @@ export const translations = {
         "close": "Close",
         "recap": "My recap",
         "watchTimeLabel": "Watch time this month",
-        "nobodyTitle": "Nobody is live right now",
+        "nobodyTitle": "Everyone’s taking a break",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
         "emptyBody": "Pencerenin altına bir kullanıcı adı yaz ya da bir Twitch, Kick veya YouTube kanal bağlantısı yapıştır.",
@@ -9632,6 +9684,10 @@ export const translations = {
         "apiError": "{{platform}} ile bağlantı hatası oluştu. Lütfen bir süre sonra tekrar deneyin."
       },
       "feedback": {
+        "undoDone": "{{name}} is back in your list.",
+        "undoFailed": "Couldn't restore this streamer. Add it again.",
+        "undo": "Undo",
+        "openFailed": "Couldn't open the channel. Try again.",
         "saveFailed": "Could not save. Try again.",
         "adding": "Streamer ekleniyor…",
         "addSuccessPlatform": "{{handle}}, {{platform}} için StreamPulse’a eklendi!",
@@ -10068,6 +10124,8 @@ export const translations = {
       "closeWindow": "Закрыть окно"
     },
     "popup": {
+      "greetingSubNobody": "Nobody's live right now.",
+      "greetingSubEmpty": "Welcome to StreamPulse.",
       "news": {
         "new": "Новое",
       },
@@ -10271,6 +10329,7 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+        "addFromSearch": "Add “{{name}}”",
 
 
         "emptyCta": "Добавьте первого стримера",
@@ -10310,7 +10369,7 @@ export const translations = {
         "close": "Close",
         "recap": "My recap",
         "watchTimeLabel": "Watch time this month",
-        "nobodyTitle": "Nobody is live right now",
+        "nobodyTitle": "Everyone’s taking a break",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
         "emptyBody": "Введите ник или вставьте ссылку на канал Twitch, Kick или YouTube внизу окна.",
@@ -10872,6 +10931,10 @@ export const translations = {
         "apiError": "Ошибка подключения к {{platform}}. Пожалуйста, попробуйте снова через некоторое время."
       },
       "feedback": {
+        "undoDone": "{{name}} is back in your list.",
+        "undoFailed": "Couldn't restore this streamer. Add it again.",
+        "undo": "Undo",
+        "openFailed": "Couldn't open the channel. Try again.",
         "saveFailed": "Could not save. Try again.",
         "adding": "Добавление стримера…",
         "addSuccessPlatform": "{{handle}} добавлен в StreamPulse для {{platform}}!",
@@ -11308,6 +11371,8 @@ export const translations = {
       "closeWindow": "ウィンドウを閉じる"
     },
     "popup": {
+      "greetingSubNobody": "Nobody's live right now.",
+      "greetingSubEmpty": "Welcome to StreamPulse.",
       "news": {
         "new": "NEW",
       },
@@ -11511,6 +11576,7 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+        "addFromSearch": "Add “{{name}}”",
 
 
         "emptyCta": "最初のストリーマーを追加",
@@ -11550,7 +11616,7 @@ export const translations = {
         "close": "Close",
         "recap": "My recap",
         "watchTimeLabel": "Watch time this month",
-        "nobodyTitle": "Nobody is live right now",
+        "nobodyTitle": "Everyone’s taking a break",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
         "emptyBody": "ウィンドウ下部にユーザー名を入力するか、Twitch・Kick・YouTube のチャンネルリンクを貼り付けてください。",
@@ -12112,6 +12178,10 @@ export const translations = {
         "apiError": "{{platform}} との接続エラーが発生しました。しばらくしてからもう一度お試しください。"
       },
       "feedback": {
+        "undoDone": "{{name}} is back in your list.",
+        "undoFailed": "Couldn't restore this streamer. Add it again.",
+        "undo": "Undo",
+        "openFailed": "Couldn't open the channel. Try again.",
         "saveFailed": "Could not save. Try again.",
         "adding": "ストリーマーの追加…",
         "addSuccessPlatform": "{{platform}}向けのStreamPulseに{{handle}}が追加されました！",
@@ -12548,6 +12618,8 @@ export const translations = {
       "closeWindow": "창 닫기"
     },
     "popup": {
+      "greetingSubNobody": "Nobody's live right now.",
+      "greetingSubEmpty": "Welcome to StreamPulse.",
       "news": {
         "new": "NEW",
       },
@@ -12751,6 +12823,7 @@ export const translations = {
         "noStreamers": "Add a streamer from the home screen first."
       },
       "cplus": {
+        "addFromSearch": "Add “{{name}}”",
 
 
         "emptyCta": "첫 스트리머 추가하기",
@@ -12790,7 +12863,7 @@ export const translations = {
         "close": "Close",
         "recap": "My recap",
         "watchTimeLabel": "Watch time this month",
-        "nobodyTitle": "Nobody is live right now",
+        "nobodyTitle": "Everyone’s taking a break",
         "nobodyBody": "Your {{count}} channels are offline. StreamPulse will tell you as soon as one of them goes live.",
         "emptyTitle": "Add your first streamer",
         "emptyBody": "창 아래쪽에 사용자 이름을 입력하거나 Twitch, Kick, YouTube 채널 링크를 붙여넣으세요.",
@@ -13352,6 +13425,10 @@ export const translations = {
         "apiError": "{{platform}} 연결 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
       },
       "feedback": {
+        "undoDone": "{{name}} is back in your list.",
+        "undoFailed": "Couldn't restore this streamer. Add it again.",
+        "undo": "Undo",
+        "openFailed": "Couldn't open the channel. Try again.",
         "saveFailed": "Could not save. Try again.",
         "adding": "스트리머 추가 중…",
         "addSuccessPlatform": "{{platform}}용 StreamPulse에 {{handle}}이 추가되었습니다!",

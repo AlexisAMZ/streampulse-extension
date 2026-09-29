@@ -19,13 +19,16 @@ import {
   PLATFORM_DEFINITIONS,
   formatHandleForDisplay,
   getHandleComparisonKey,
+  getPlatformIcon,
   getPlatformLabelKey,
   getPlatformPlaceholderKey,
   normalizePlatform,
   sanitizeHandle,
 } from "./platforms.js";
 import { createAllChannelsTile, createChannelRow, createMiniCard, formatNumber, renderStage, renderStageEmpty } from "./ui.js";
-import { initFeatures, plusActive, renderHistory } from "./popup-features.js";
+import { openChannel } from "./open-channel.js";
+import { UNDO_WINDOW_MS, addMessageFor, restoreGroups, restoreMessages, snapshotStreamer } from "./streamer-undo.js";
+import { closePlus, initFeatures, plusActive, renderHistory } from "./popup-features.js";
 import { initNews, markSeen } from "./popup-news.js";
 import { initSuggest } from "./popup-suggest.js";
 
@@ -159,7 +162,7 @@ function sanitizeInput(value = "", platform = state.selectedPlatform) {
   return sanitizeHandle(platform, value);
 }
 
-function showFeedback(message, type = "success") {
+function showFeedback(message, type = "success", action = null) {
   if (!message) return;
   if (!toastContainer) return;
 
@@ -175,9 +178,26 @@ function showFeedback(message, type = "success") {
   if (type === "error") toast.setAttribute("role", "alert");
   toast.textContent = message;
   toast.addEventListener("click", () => removeToast(toast));
+  if (action) toast.appendChild(createToastAction(toast, action));
   toastContainer.appendChild(toast);
 
-  setTimeout(() => removeToast(toast), TOAST_DURATION);
+  setTimeout(() => removeToast(toast), action?.duration || TOAST_DURATION);
+}
+
+function createToastAction(toast, { label, onClick }) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "toast-action";
+  button.textContent = label;
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    removeToast(toast);
+    Promise.resolve(onClick()).catch((error) => {
+      console.warn("[popup] action du toast en échec", error);
+      showFeedback(t("popup.feedback.undoFailed"), "error");
+    });
+  }, { once: true });
+  return button;
 }
 
 function removeToast(toast) {
@@ -545,6 +565,28 @@ async function toggleStreamerAlert(id, enabled, { type, key, onKey, offKey }) {
   return true;
 }
 
+async function undoRemove(snapshot, name) {
+  const added = await sendMessage(addMessageFor(snapshot));
+  if (!added?.success) {
+    showFeedback(added?.error || t("popup.feedback.undoFailed"), "error");
+    return;
+  }
+  const streamers = added.streamers || [];
+  const restored = streamers.find((s) => s.id === snapshot.streamer.id) || streamers[streamers.length - 1];
+  if (!restored) return;
+  const current = await chrome.storage.local.get([PINS_KEY, GROUPS_KEY]);
+  const pinnedIds = Array.isArray(current[PINS_KEY]) ? current[PINS_KEY] : [];
+  for (const message of restoreMessages(snapshot, restored.id, { streamers, pinnedIds })) {
+    const reply = await sendMessage(message);
+    if (reply?.error) console.warn("[popup] restauration partielle", message.type, reply.error);
+  }
+  const groups = Array.isArray(current[GROUPS_KEY]) ? current[GROUPS_KEY] : [];
+  const nextGroups = restoreGroups(groups, snapshot, restored.id);
+  if (nextGroups !== groups) await saveGroups(nextGroups);
+  showFeedback(t("popup.feedback.undoDone", { name }), "success");
+  await loadStreamers();
+}
+
 const streamerCallbacks = {
   onToggleNotify: (id, enabled) => toggleStreamerAlert(id, enabled, {
     type: "toggleNotifications",
@@ -564,13 +606,24 @@ const streamerCallbacks = {
     onKey: "popup.toast.titleNotifyEnabled",
     offKey: "popup.toast.titleNotifyDisabled",
   }),
-  onOpen: (url) => {
-    chrome.tabs.create({ url }, () => window.close());
+  onOpen: async (url) => {
+    try {
+      await openChannel(chrome, url);
+      window.close();
+    } catch (error) {
+      console.warn("[popup] ouverture de la chaîne impossible", error);
+      showFeedback(t("popup.feedback.openFailed"), "error");
+    }
   },
   onRemove: async (id, name) => {
+    const snapshot = snapshotStreamer(state, id);
     const result = await sendMessage({ type: "removeStreamer", id });
     if (result?.success) {
-      showFeedback(t("popup.feedback.removeSuccess", { name }), "success");
+      showFeedback(t("popup.feedback.removeSuccess", { name }), "success", snapshot && {
+        label: t("popup.feedback.undo"),
+        duration: UNDO_WINDOW_MS,
+        onClick: () => undoRemove(snapshot, name),
+      });
       await loadStreamers();
     } else if (result?.error) {
       showFeedback(result.error, "error");
@@ -679,6 +732,13 @@ function safeAvatarUrl(raw) {
   }
 }
 
+// Le sous-titre suit l'état réel : invitation à ajouter, personne en
+// direct, ou la liste des lives.
+function greetingSubKey(liveCount) {
+  if (!state.streamers.length) return "popup.greetingSubEmpty";
+  return liveCount ? "popup.greetingSub" : "popup.greetingSubNobody";
+}
+
 function renderGreeting(live = state.streamers.filter((s) => isLiveId(s.id))) {
   const titleEl = document.getElementById("greeting-title");
   if (titleEl) {
@@ -686,11 +746,13 @@ function renderGreeting(live = state.streamers.filter((s) => isLiveId(s.id))) {
     const hello = new Date().getHours() < 18 ? t("popup.greetingMorning") : t("popup.greetingEvening");
     const sub = document.createElement("span");
     sub.className = "greeting-sub";
-    sub.textContent = t("popup.greetingSub");
+    sub.textContent = t(greetingSubKey(live.length));
     titleEl.replaceChildren(document.createTextNode(name ? `${hello} ${name}.` : `${hello}.`), document.createElement("br"), sub);
   }
   const hintEl = document.getElementById("greeting-live-count");
-  if (hintEl) {
+  if (hintEl && !live.length) {
+    hintEl.textContent = "";
+  } else if (hintEl) {
     const countKey = live.length > 1 ? "popup.greetingLiveCountPlural" : "popup.greetingLiveCountSingular";
     const parts = [t(countKey, { count: live.length })];
     const newest = live.find((s) => justLiveIds.has(s.id));
@@ -780,6 +842,8 @@ function renderStreamers() {
   const liveCountEl = document.getElementById("live-count");
   if (liveCountEl) liveCountEl.textContent = t("popup.cplus.liveOf", { live: live.length, total: state.streamers.length });
 
+  const homeEl = document.getElementById("streamers-view");
+  if (homeEl) homeEl.dataset.roster = state.streamers.length ? "some" : "none";
   renderGreeting(live);
   renderFeatured();
   if (sheetEl && !sheetEl.hidden) renderSheet();
@@ -920,6 +984,25 @@ function renderGroupChips() {
   sheetGroupsEl.replaceChildren(fragment);
 }
 
+// Recherche sans résultat : on propose d'ajouter ce qui a été tapé. On
+// préremplit la barre d'ajout plutôt que de lancer l'ajout, pour laisser
+// choisir la plateforme avant de valider.
+function createAddFromSearchButton(typed) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "button button-primary empty-add";
+  button.textContent = t("popup.cplus.addFromSearch", { name: typed });
+  button.title = button.textContent;
+  button.addEventListener("click", () => {
+    closeSheet({ restoreFocus: false });
+    if (!streamerInput) return;
+    streamerInput.value = typed;
+    streamerInput.focus();
+    streamerInput.select();
+  });
+  return button;
+}
+
 function renderSheet() {
   if (!sheetListEl) return;
   const query = state.sheetQuery.trim().toLowerCase();
@@ -942,6 +1025,8 @@ function renderSheet() {
     const empty = document.createElement("li");
     empty.className = "empty-state";
     empty.textContent = t(state.streamers.length ? "popup.cplus.noMatch" : "popup.emptyState");
+    const typed = state.sheetQuery.trim();
+    if (typed) empty.appendChild(createAddFromSearchButton(typed));
     fragment.appendChild(empty);
   }
   rows.forEach((streamer) => {
@@ -1313,7 +1398,7 @@ function setActiveTab(tabName) {
   const streamersView = document.getElementById("streamers-view");
   const settingsSection = document.getElementById("settings-section");
   const historyView = document.getElementById("history-view");
-  document.getElementById("plus-view")?.classList.add("hidden");
+  closePlus({ restoreFocus: false });
   historyView?.classList.toggle("hidden", tabName !== "history");
 
   if (tabName === "streamers") {
@@ -1428,9 +1513,10 @@ function resolveWatchTimeEntry(entry) {
   // Fallback: platform icon
   if (!avatarUrl) {
     try {
-      const iconPath = platform === "kick" ? "images/social/Kick.png" : "images/social/twitch.png";
-      avatarUrl = chrome.runtime.getURL(iconPath);
-    } catch { /* ignore */ }
+      avatarUrl = chrome.runtime.getURL(getPlatformIcon(platform));
+    } catch (error) {
+      console.warn("[popup] icône de plateforme introuvable", error);
+    }
   }
 
   return { displayName, avatarUrl, platform };
@@ -1447,15 +1533,14 @@ function buildWtRankingItem(entry, valueHtml) {
   avatarImg.loading = "lazy";
   avatarImg.onerror = function () {
     this.onerror = null;
-    const icon = platform === "kick" ? "images/social/Kick.png" : "images/social/twitch.png";
-    this.src = chrome.runtime.getURL(icon);
+    this.src = chrome.runtime.getURL(getPlatformIcon(platform));
   };
 
   const info = document.createElement("div");
   info.className = "wt-entry-info";
   info.innerHTML = `
     <span class="wt-channel">${escapeHtml(displayName)}</span>
-    <span class="wt-platform-badge">${escapeHtml(platform)}</span>
+    <span class="wt-platform-badge">${escapeHtml(t(getPlatformLabelKey(platform)))}</span>
   `;
 
   const value = document.createElement("span");
@@ -1857,6 +1942,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     // Show skeleton placeholders immediately
     showSkeletons(3);
+    renderPlatformPicker();
 
     // Storage round-trip: only the keys needed for first paint.
     // betaWatchTimeData can be large (months of records) and is only shown in the
