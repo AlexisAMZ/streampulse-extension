@@ -135,8 +135,6 @@ const watchTimeToggle = document.getElementById("pref-watch-time");
 const pointsTrackingToggle = document.getElementById("pref-points-tracking");
 const dropsTrackingToggle = document.getElementById("pref-drops-tracking");
 const communityBadgeToggle = document.getElementById("pref-community-badge");
-const patchNotesButton = document.getElementById("open-patch-notes");
-const patchNotesDot = document.getElementById("patch-notes-dot");
 
 const pseudoInput = document.getElementById("pref-pseudo-input");
 const pseudoSaveButton = document.getElementById("pref-pseudo-save");
@@ -2376,25 +2374,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-// Notes de version : elles ne s'ouvrent plus d'elles-memes a chaque mise a
-// jour. Deux acces, l'un dans l'en-tete et l'autre dans les reglages, et une
-// pastille sur les deux tant que la version n'a pas ete consultee.
+// Notes de version : une seule entrée, l'icône Nouveautés de la barre du haut,
+// et un seul signal, son point, tant que la version n'a pas été consultée.
 {
   const headerButton = document.getElementById("header-patch-notes");
   const headerDot = document.getElementById("header-patch-dot");
-  const dots = [patchNotesDot, headerDot].filter(Boolean);
 
-  if (patchNotesButton || headerButton) {
-    chrome.storage.local.get("patchNotesUnread", ({ patchNotesUnread }) => {
-      dots.forEach((d) => (d.hidden = !patchNotesUnread));
-    });
+  if (headerButton) {
+    chrome.storage.local
+      .get("patchNotesUnread")
+      .then(({ patchNotesUnread }) => {
+        if (headerDot) headerDot.hidden = !patchNotesUnread;
+      })
+      .catch((error) => console.warn("[popup] nouveautés non lues :", error?.message || error));
 
-    const open = () => {
-      dots.forEach((d) => (d.hidden = true));
+    headerButton.addEventListener("click", () => {
+      if (headerDot) headerDot.hidden = true;
       sendMessage({ type: "openPatchNotes" });
-    };
-    patchNotesButton?.addEventListener("click", open);
-    headerButton?.addEventListener("click", open);
+    });
   }
 }
 

@@ -129,15 +129,19 @@ body.is-settings .topbar-link:hover,
 body.is-settings .tab-button.active { color: var(--text); }
 body.is-settings .tab-button.active { box-shadow: inset 0 -2px 0 var(--violet); }
 .unread-dot { position: absolute; top: 7px; right: -9px; width: 6px; height: 6px; border-radius: 50%; background: var(--lcd); }
-.unread-dot-inline { position: static; background: var(--violet); }
 .topbar-end { display: flex; flex: none; align-items: center; gap: 6px; margin-left: auto; }
-.stat-pill { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.stat-points { background: var(--lcd); color: var(--lcd-ink); }
-.stat-points svg { width: 12px; height: 12px; }
-.stat-time { background: rgba(11, 12, 34, 0.6); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16); }
-.topbar .icon-button { width: 30px; height: 30px; background: rgba(11, 12, 34, 0.55); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18); color: var(--paper); }
-body.is-settings .stat-time,
-body.is-settings .topbar .icon-button { background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text); }
+/* Hiérarchie de la barre : les onglets d'abord ; à droite, des relevés en
+   texte (points, temps de visionnage), puis deux actions en icônes sans cadre. */
+.stat-pill { display: inline-flex; align-items: center; gap: 5px; height: 30px; padding: 0 4px; color: rgba(255, 255, 255, 0.78); font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.stat-pill svg { width: 12px; height: 12px; flex: none; }
+.stat-points svg { color: var(--lcd); }
+.stat-time { margin-right: 4px; }
+.topbar .icon-button { width: 30px; height: 30px; background: transparent; box-shadow: none; color: rgba(255, 255, 255, 0.78); transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease; }
+.topbar .icon-button:hover { background: rgba(255, 255, 255, 0.12); color: var(--paper); }
+body.is-settings .stat-pill,
+body.is-settings .topbar .icon-button { color: var(--text-2); }
+body.is-settings .stat-points svg { color: var(--lcd-accent); }
+body.is-settings .topbar .icon-button:hover { background: var(--surface-2); color: var(--text); }
 .points-bump { animation: bump 420ms var(--ease-out); }
 @keyframes bump { 40% { transform: scale(1.08); } }
 
@@ -1001,15 +1005,13 @@ button.badge-card:focus-visible { box-shadow: inset 0 0 0 1px var(--violet-line)
 /* ── Barre du haut : Nouveautés en icône discrète, pastilles des nouveaux onglets ── */
 .news-button { position: relative; }
 .news-button svg { width: 16px; height: 16px; }
-.news-button .unread-dot { top: 5px; right: 5px; box-shadow: 0 0 0 2px var(--bg); }
+.news-button .unread-dot { top: 5px; right: 5px; box-shadow: 0 0 0 2px #0b0c22; }
 body.is-settings .news-button .unread-dot { box-shadow: 0 0 0 2px var(--surface); }
-.new-dot { position: absolute; top: 6px; right: -8px; width: 6px; height: 6px; border-radius: 50%; background: var(--lcd); box-shadow: 0 0 0 3px rgba(198, 212, 160, 0.22); }
+/* Un seul signal par nouveauté : ce point, éteint dès que la rubrique est ouverte (popup-news.js). */
+.new-dot { position: absolute; top: 6px; right: -8px; width: 6px; height: 6px; border-radius: 50%; background: var(--lcd); }
 .new-dot[hidden] { display: none; }
-body.is-settings .new-dot { background: var(--violet); box-shadow: 0 0 0 3px var(--violet-soft); }
-
-/* ── Menu des Réglages : étiquette « Nouveau » ── */
-.new-pill { margin-left: auto; padding: 2px 7px; border-radius: 999px; background: var(--lcd); color: var(--lcd-ink); font-size: 9.5px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
-.new-pill[hidden] { display: none; }
+body.is-settings .new-dot { background: var(--violet); }
+.new-dot-inline { position: static; flex: none; margin-left: auto; }
 
 /* ── Écran StreamPulse+ : aperçu des effets et parrainage ── */
 .plus-main { min-height: 0; overflow-y: auto; scrollbar-width: none; }
