@@ -71,19 +71,30 @@
       "js": [
         "js/inject/i18n-inline.js",
         "js/inject/dom.js",
+        "js/inject/plus-rule.js",
         "js/inject/topbar-panel.js",
         "js/inject/settings-drawer.js",
         "js/inject/topbar.js",
         "js/inject/quickFollow.js",
         "js/inject/twitch-badge.js",
         "js/inject/chat-plus.js",
-        "js/inject/sidebar-favorites.js"
+        "js/inject/sidebar-favorites.js",
+        "js/inject/player-tip.js",
+        "js/channelPointsClaimer.js",
+        "js/twitchPlayerEnhancer.js",
+        "js/twitchPlayerButtons.js",
+        "js/chatFilter.js",
+        "js/watchTimeTracker.js",
+        "js/tabEnhancer.js",
+        "js/inject/predictionsOverlay.js",
+        "js/inject/predictionsAssist.js"
       ],
       "css": [
         "css/topbar.css",
         "css/inject/twitch-badge.css",
         "css/fx-effects.css",
-        "css/inject/twitch-ui.css"
+        "css/inject/twitch-ui.css",
+        "css/inject/predictions.css"
       ],
       "run_at": "document_idle"
     },
@@ -105,29 +116,6 @@
         "css/previews.css"
       ],
       "run_at": "document_idle"
-    },
-    {
-      "matches": [
-        "https://www.twitch.tv/*"
-      ],
-      "all_frames": false,
-      "js": [
-        "js/inject/i18n-inline.js",
-        "js/inject/dom.js",
-        "js/inject/player-tip.js",
-        "js/channelPointsClaimer.js",
-        "js/twitchPlayerEnhancer.js",
-        "js/twitchPlayerButtons.js",
-        "js/chatFilter.js",
-        "js/watchTimeTracker.js",
-        "js/tabEnhancer.js",
-        "js/inject/predictionsOverlay.js",
-        "js/inject/predictionsAssist.js"
-      ],
-      "run_at": "document_idle",
-      "css": [
-        "css/inject/predictions.css"
-      ]
     },
     {
       "matches": [

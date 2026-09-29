@@ -14,9 +14,9 @@
   if (window.top !== window || window.__SP_DRAWER__) return;
 
   var PREFERENCES_KEY = "betaGeneralPreferences";
-  var PLUS_KEY = "streamPulsePlus";
+  var PLUS_RULE = window.StreamPulsePlusRule; // js/inject/plus-rule.js, chargé avant (manifest)
+  var PLUS_KEY = PLUS_RULE.PLUS_KEY;
   var COSMETICS_KEY = "streamPulseCosmetics";
-  var PLUS_GRACE_MS = 30 * 24 * 60 * 60 * 1000;
   var PLUS_URL = "https://streampulse.fr/plus";
   var BADGE_FX = ["tenure", "pager", "aurora", "sunset", "lcd", "gold", "rainbow", "fire", "frost", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean", "halo", "crown"];
   // Effets retires en 26.9.28 : Prisme devient Arc-en-ciel (copie de LEGACY_FX).
@@ -143,11 +143,8 @@
     return !!(chrome.runtime && chrome.runtime.id);
   }
 
-  /** Même règle que js/plus.js : à vie toujours active, mensuelle 30 jours après la dernière vérification. */
   function plusActive(record) {
-    if (!record || record.status !== "active" || !record.licenseKey) return false;
-    if (record.plan === "lifetime") return true;
-    return Date.now() - (Number(record.verifiedAt) || 0) <= PLUS_GRACE_MS;
+    return PLUS_RULE.isPlusActive(record);
   }
 
   function normalizeCosmetics(value) {

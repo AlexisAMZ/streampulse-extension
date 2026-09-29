@@ -43,10 +43,10 @@
 
   // Couleurs publiques des abonnes StreamPulse+ : empreinte -> couleur hexa.
   var badgeColors = new Map();
-  var PLUS_KEY = "streamPulsePlus";
+  var PLUS_RULE = window.StreamPulsePlusRule; // js/inject/plus-rule.js, chargé avant (manifest)
+  var PLUS_KEY = PLUS_RULE.PLUS_KEY;
   var PUBLISHED_KEY = "streampulseBadgePublished";
   var HEX_RE = /^#[0-9a-f]{6}$/i;
-  var PLUS_GRACE_MS = 30 * 24 * 60 * 60 * 1000;
   // Effets publics des abonnes : empreinte -> { b: effet du badge, n: pseudo special }.
   var badgeStyles = new Map();
   var COSMETICS_KEY = "streamPulseCosmetics";
@@ -309,11 +309,9 @@
     }
   }
 
-  /** Cle de licence si StreamPulse+ est actif (meme regle que js/plus.js). */
+  /** Clé de licence si StreamPulse+ est actif (règle de js/inject/plus-rule.js). */
   function activePlusKey(record) {
-    if (!record || record.status !== "active" || !record.licenseKey) return null;
-    if (record.plan === "lifetime") return record.licenseKey;
-    return Date.now() - (Number(record.verifiedAt) || 0) <= PLUS_GRACE_MS ? record.licenseKey : null;
+    return PLUS_RULE.isPlusActive(record) ? record.licenseKey : null;
   }
 
   /**

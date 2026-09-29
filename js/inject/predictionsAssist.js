@@ -6,8 +6,8 @@
 
   if (window.top !== window) return;
 
-  const PLUS_KEY = "streamPulsePlus";
-  const PLUS_GRACE_MS = 30 * 24 * 60 * 60 * 1000;
+  const PLUS_RULE = window.StreamPulsePlusRule; // js/inject/plus-rule.js, chargé avant (manifest)
+  const PLUS_KEY = PLUS_RULE.PLUS_KEY;
   const POLL_MS = 10_000;
   const FAST_POLL_MS = 3_000;
   const REQUEST_TIMEOUT_MS = 8_000;
@@ -21,11 +21,8 @@
     return window.__SP_DOM__.isChannelLogin(segment) ? segment.toLowerCase() : "";
   }
 
-  /** Même règle que js/plus.js : à vie toujours active, mensuelle 30 jours après la dernière vérification. */
   function plusActive(record) {
-    if (!record || record.status !== "active" || !record.licenseKey) return false;
-    if (record.plan === "lifetime") return true;
-    return Date.now() - (Number(record.verifiedAt) || 0) <= PLUS_GRACE_MS;
+    return PLUS_RULE.isPlusActive(record);
   }
 
   window.addEventListener("message", (event) => {

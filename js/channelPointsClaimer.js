@@ -14,27 +14,6 @@
   /** Module js/points-bonus.js, chargé plus bas par import() dynamique. */
   let bonusRules = null;
 
-  // Twitch routes that are not channel pages; the first path segment on these is
-  // a feature name, not a streamer login.
-  const NON_CHANNEL_ROUTES = new Set([
-    "directory",
-    "settings",
-    "drops",
-    "downloads",
-    "subscriptions",
-    "wallet",
-    "inventory",
-    "friends",
-    "u",
-    "videos",
-    "search",
-    "prime",
-    "turbo",
-    "store",
-    "jobs",
-    "p",
-  ]);
-
   /**
    * Best-effort current channel login, used to label event logs.
    * Prefers the DOM (accurate on embeds and after SPA navigation) and falls back
@@ -55,10 +34,9 @@
       if (fromName) return fromName.toLowerCase();
 
       const segment = location.pathname.replace(/^\//, "").split("/")[0] || "";
+      // Routes système et format de login : liste unique de js/inject/dom.js.
       const candidate = segment.toLowerCase();
-      if (!candidate || NON_CHANNEL_ROUTES.has(candidate)) return "";
-      if (!/^[a-z0-9_]{3,25}$/.test(candidate)) return "";
-      return candidate;
+      return window.__SP_DOM__.isChannelLogin(candidate) ? candidate : "";
     } catch (_) {
       return "";
     }
