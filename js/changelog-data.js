@@ -53,22 +53,22 @@ export const RELEASES = [
   {
     version: "26.9.30",
     date: "2026-09-28",
-    title: { "fr": "Des réglages clairs, une base fiable", "en": "Clearer settings, a stronger base", "es": "Clearer settings, a stronger base", "pt-BR": "Clearer settings, a stronger base", "de": "Clearer settings, a stronger base", "it": "Clearer settings, a stronger base", "pl": "Clearer settings, a stronger base", "tr": "Clearer settings, a stronger base", "ru": "Clearer settings, a stronger base", "ja": "Clearer settings, a stronger base", "ko": "Clearer settings, a stronger base" },
+    title: { "fr": "Un popup plus vif, des réglages clairs", "en": "A snappier popup, clearer settings", "es": "Un popup más ágil, ajustes más claros", "pt-BR": "Um popup mais ágil, ajustes mais claros", "de": "Schnelleres Popup, klarere Einstellungen", "it": "Popup più rapido, impostazioni più chiare", "pl": "Szybszy popup, czytelniejsze ustawienia", "tr": "Daha hızlı popup, daha net ayarlar", "ru": "Быстрее попап, понятнее настройки", "ja": "より速いポップアップ、わかりやすい設定", "ko": "더 빠른 팝업, 더 명확한 설정" },
     changes: [
       {
         type: "fix",
         text: {
           "fr": "La page de restauration de sauvegarde fonctionne de nouveau : le fichier est lu, l'aperçu s'affiche et « Ajouter à mes données » refait son travail.",
           "en": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
-          "es": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
-          "pt-BR": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
-          "de": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
-          "it": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
-          "pl": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
-          "tr": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
-          "ru": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
-          "ja": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
-          "ko": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised."
+          "es": "La página de restauración de copias vuelve a funcionar: el archivo se lee, aparece la vista previa y «Añadir a mis datos» hace su trabajo.",
+          "pt-BR": "A página de restauração de backup voltou a funcionar: o arquivo é lido, a prévia aparece e “Adicionar aos meus dados” faz o seu trabalho.",
+          "de": "Die Seite zum Wiederherstellen einer Sicherung funktioniert wieder: Die Datei wird gelesen, die Vorschau erscheint und „Zu meinen Daten hinzufügen“ tut, was es soll.",
+          "it": "La pagina di ripristino del backup funziona di nuovo: il file viene letto, l'anteprima compare e «Aggiungi ai miei dati» fa il suo lavoro.",
+          "pl": "Strona przywracania kopii zapasowej znowu działa: plik jest wczytywany, podgląd się wyświetla, a „Dodaj do moich danych” robi, co trzeba.",
+          "tr": "Yedek geri yükleme sayfası yeniden çalışıyor: dosya okunuyor, önizleme görünüyor ve “Verilerime ekle” işini yapıyor.",
+          "ru": "Страница восстановления резервной копии снова работает: файл читается, превью появляется, а «Добавить к моим данным» делает своё дело.",
+          "ja": "バックアップの復元ページが再び動作します。ファイルが読み込まれ、プレビューが表示され、「自分のデータに追加」も正しく機能します。",
+          "ko": "백업 복원 페이지가 다시 작동합니다. 파일을 읽고, 미리보기가 표시되며 「내 데이터에 추가」도 제대로 동작합니다."
         },
       },
       {
@@ -76,15 +76,15 @@ export const RELEASES = [
         text: {
           "fr": "Les réglages sont rangés en 8 rubriques claires, ouverture sur Notifications, fonctions Plus à leur place avec leur cadenas, et une section Outils : Drops, Badges, Activité, StreamPulse+, Aide. Le tiroir Twitch suit la même organisation.",
           "en": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
-          "es": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
-          "pt-BR": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
-          "de": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
-          "it": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
-          "pl": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
-          "tr": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
-          "ru": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
-          "ja": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
-          "ko": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout."
+          "es": "Los ajustes se ordenan en 8 secciones claras, empiezan por Notificaciones, las funciones Plus están en su sitio con su candado y hay una sección Herramientas: Drops, Insignias, Actividad, StreamPulse+, Ayuda. El panel de Twitch sigue la misma organización.",
+          "pt-BR": "Os ajustes estão organizados em 8 seções claras, abrindo em Notificações, com os recursos Plus no lugar certo com o cadeado, e uma área Ferramentas: Drops, Emblemas, Atividade, StreamPulse+, Ajuda. A gaveta da Twitch segue a mesma organização.",
+          "de": "Die Einstellungen sind in 8 klare Bereiche gegliedert, starten bei Benachrichtigungen, Plus-Funktionen stehen mit Schloss an ihrem Platz, dazu ein Werkzeuge-Bereich: Drops, Abzeichen, Aktivität, StreamPulse+, Hilfe. Die Twitch-Seitenleiste folgt demselben Aufbau.",
+          "it": "Le impostazioni sono ordinate in 8 sezioni chiare, si aprono su Notifiche, le funzioni Plus stanno al loro posto con il lucchetto e c'è un'area Strumenti: Drops, Badge, Attività, StreamPulse+, Aiuto. Il pannello Twitch segue la stessa struttura.",
+          "pl": "Ustawienia podzielono na 8 czytelnych sekcji, zaczynając od Powiadomień, funkcje Plus są na swoim miejscu z kłódką, a sekcja Narzędzia zawiera: Dropy, Odznaki, Aktywność, StreamPulse+, Pomoc. Panel na Twitchu ma ten sam układ.",
+          "tr": "Ayarlar 8 net bölüme ayrıldı: Bildirimler ile açılıyor, Plus özellikleri kilit simgesiyle yerinde, ayrıca bir Araçlar alanı var: Drop'lar, Rozetler, Etkinlik, StreamPulse+, Yardım. Twitch çekmecesi de aynı düzeni izliyor.",
+          "ru": "Настройки разложены по 8 понятным разделам: открываются на «Уведомлениях», функции Plus стоят на своих местах с замком, а в разделе «Инструменты» — дропы, значки, активность, StreamPulse+, помощь. Панель на Twitch устроена так же.",
+          "ja": "設定を8つのわかりやすいセクションに整理しました。通知から始まり、Plus機能は鍵マーク付きで本来の場所に、さらにツール欄(ドロップ、バッジ、アクティビティ、StreamPulse+、ヘルプ)を用意。Twitchのドロワーも同じ構成です。",
+          "ko": "설정이 8개의 명확한 섹션으로 정리되었습니다. 알림부터 시작하고, Plus 기능은 자물쇠와 함께 제자리에, 도구 영역(드롭, 배지, 활동, StreamPulse+, 도움말)도 있습니다. Twitch 서랍도 같은 구성을 따릅니다."
         },
       },
       {
@@ -92,15 +92,15 @@ export const RELEASES = [
         text: {
           "fr": "Bouton « Réinitialiser les réglages » : tout revient comme à l'installation, ta langue et ton thème sont conservés.",
           "en": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
-          "es": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
-          "pt-BR": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
-          "de": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
-          "it": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
-          "pl": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
-          "tr": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
-          "ru": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
-          "ja": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
-          "ko": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept."
+          "es": "Nuevo botón «Restablecer ajustes»: todo vuelve a como estaba al instalar, y se conservan tu idioma y tu tema.",
+          "pt-BR": "Novo botão “Redefinir ajustes”: tudo volta ao padrão da instalação, mantendo seu idioma e seu tema.",
+          "de": "Neue Schaltfläche „Einstellungen zurücksetzen“: Alles kehrt zum Installationszustand zurück, Sprache und Design bleiben erhalten.",
+          "it": "Nuovo pulsante «Ripristina impostazioni»: tutto torna come all'installazione, lingua e tema restano quelli che hai scelto.",
+          "pl": "Nowy przycisk „Resetuj ustawienia”: wszystko wraca do stanu z instalacji, a Twój język i motyw zostają.",
+          "tr": "Yeni “Ayarları sıfırla” düğmesi: her şey kurulumdaki haline döner, dilin ve temanın korunur.",
+          "ru": "Новая кнопка «Сбросить настройки»: всё возвращается как после установки, язык и тема сохраняются.",
+          "ja": "新しい「設定をリセット」ボタン。すべてインストール時の状態に戻り、言語とテーマはそのまま残ります。",
+          "ko": "새로운 「설정 초기화」 버튼: 모든 것이 설치 직후 상태로 돌아가며, 언어와 테마는 유지됩니다."
         },
       },
       {
@@ -108,15 +108,15 @@ export const RELEASES = [
         text: {
           "fr": "Les alertes de live, de catégorie et de titre s'appliquent à tous tes streamers d'un coup ; chaque carte reste ajustable séparément.",
           "en": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
-          "es": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
-          "pt-BR": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
-          "de": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
-          "it": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
-          "pl": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
-          "tr": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
-          "ru": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
-          "ja": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
-          "ko": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own."
+          "es": "Las alertas de directo, categoría y título se aplican a todos tus streamers a la vez; cada tarjeta se puede ajustar por separado.",
+          "pt-BR": "Os alertas de live, categoria e título agora valem para todos os seus streamers de uma vez; cada cartão continua ajustável separadamente.",
+          "de": "Live-, Kategorie- und Titel-Benachrichtigungen gelten jetzt für alle deine Streamer auf einmal; jede Karte lässt sich weiterhin einzeln anpassen.",
+          "it": "Gli avvisi di live, categoria e titolo ora valgono per tutti i tuoi streamer in una volta; ogni scheda resta regolabile singolarmente.",
+          "pl": "Alerty o live, kategorii i tytule działają teraz dla wszystkich streamerów naraz; każdą kartę nadal można ustawić osobno.",
+          "tr": "Yayın, kategori ve başlık uyarıları artık tüm yayıncılarına tek seferde uygulanıyor; her kart yine ayrı ayrı ayarlanabilir.",
+          "ru": "Оповещения о трансляции, категории и названии теперь применяются ко всем стримерам сразу; каждую карточку по-прежнему можно настроить отдельно.",
+          "ja": "配信・カテゴリ・タイトルの通知が、すべての配信者に一括で適用されるようになりました。各カードは個別にも調整できます。",
+          "ko": "방송, 카테고리, 제목 알림이 이제 모든 스트리머에게 한 번에 적용됩니다. 각 카드는 여전히 개별 조정이 가능합니다."
         },
       },
       {
@@ -124,31 +124,31 @@ export const RELEASES = [
         text: {
           "fr": "Le clic sur une notification rouvre la bonne chaîne, même après une mise en veille de l'extension, et les heures calmes silencient vraiment la nuit.",
           "en": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
-          "es": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
-          "pt-BR": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
-          "de": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
-          "it": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
-          "pl": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
-          "tr": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
-          "ru": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
-          "ja": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
-          "ko": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night."
+          "es": "Al pulsar una notificación se abre el canal correcto, incluso si la extensión estaba en reposo, y las horas tranquilas silencian de verdad la noche.",
+          "pt-BR": "Clicar numa notificação abre o canal certo de novo, mesmo depois de a extensão entrar em repouso, e o horário silencioso realmente silencia a noite.",
+          "de": "Ein Klick auf eine Benachrichtigung öffnet wieder den richtigen Kanal, auch nachdem die Erweiterung geruht hat, und die Ruhezeiten sind nachts wirklich still.",
+          "it": "Un clic su una notifica riapre il canale giusto, anche dopo che l'estensione è andata in pausa, e le ore silenziose zittiscono davvero la notte.",
+          "pl": "Kliknięcie powiadomienia znów otwiera właściwy kanał, nawet po uśpieniu rozszerzenia, a godziny ciszy naprawdę wyciszają noc.",
+          "tr": "Bir bildirime tıklamak, eklenti uykudan sonra bile doğru kanalı yeniden açıyor ve sessiz saatler geceyi gerçekten sessizleştiriyor.",
+          "ru": "Клик по уведомлению снова открывает нужный канал, даже после «сна» расширения, а тихие часы действительно глушат ночь.",
+          "ja": "通知をクリックすると、拡張機能がスリープした後でも正しいチャンネルが開くようになり、おやすみ時間も夜間しっかり通知を止めます。",
+          "ko": "알림을 클릭하면 확장 프로그램이 절전된 후에도 올바른 채널이 다시 열리며, 방해 금지 시간이 밤에 제대로 조용해집니다."
         },
       },
       {
         type: "fix",
         text: {
-          "fr": "Le temps de visionnage ne compte plus un onglet en arrière-plan ni un live en pause, et deux fenêtres sur le même live ne comptent plus double.",
-          "en": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
-          "es": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
-          "pt-BR": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
-          "de": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
-          "it": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
-          "pl": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
-          "tr": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
-          "ru": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
-          "ja": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice.",
-          "ko": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice."
+          "fr": "Le temps de visionnage ne compte plus un onglet en arrière-plan ni un live en pause, et deux fenêtres sur le même live ne comptent plus double. YouTube s'y affiche correctement, avec le bon logo.",
+          "en": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice. YouTube shows up correctly there, with the right logo.",
+          "es": "El tiempo de visualización ya no cuenta una pestaña en segundo plano ni un directo en pausa, y dos ventanas del mismo directo ya no cuentan doble. YouTube aparece correctamente, con su logo.",
+          "pt-BR": "O tempo assistido não conta mais uma aba em segundo plano nem uma live pausada, e duas janelas na mesma live não contam em dobro. O YouTube aparece corretamente, com o logo certo.",
+          "de": "Die Zuschauzeit zählt keinen Hintergrund-Tab und keinen pausierten Stream mehr, und zwei Fenster mit demselben Live zählen nicht mehr doppelt. YouTube wird dort korrekt angezeigt, mit dem richtigen Logo.",
+          "it": "Il tempo di visione non conta più una scheda in background né una live in pausa, e due finestre sulla stessa live non contano più doppio. YouTube compare correttamente, con il logo giusto.",
+          "pl": "Czas oglądania nie liczy już karty w tle ani wstrzymanego live'a, a dwa okna z tym samym live'em nie liczą się podwójnie. YouTube wyświetla się poprawnie, z właściwym logo.",
+          "tr": "İzleme süresi artık arka plandaki bir sekmeyi ya da duraklatılmış bir yayını saymıyor, aynı yayındaki iki pencere de çift sayılmıyor. YouTube doğru logosuyla düzgün görünüyor.",
+          "ru": "Время просмотра больше не учитывает фоновую вкладку и трансляцию на паузе, а два окна с одним и тем же эфиром не считаются дважды. YouTube отображается правильно, с верным логотипом.",
+          "ja": "視聴時間は、バックグラウンドのタブや一時停止中の配信をカウントしなくなり、同じ配信を2つのウィンドウで開いても二重に数えません。YouTubeも正しいロゴで正しく表示されます。",
+          "ko": "시청 시간이 더 이상 백그라운드 탭이나 일시 정지된 방송을 세지 않고, 같은 방송을 두 창에서 봐도 두 번 세지 않습니다. YouTube도 올바른 로고와 함께 제대로 표시됩니다."
         },
       },
       {
@@ -156,15 +156,15 @@ export const RELEASES = [
         text: {
           "fr": "Connexion Kick plus fiable : le jeton est réutilisé au lieu d'être redemandé à chaque mesure, et le repli qui exposait des clés côté serveur est supprimé.",
           "en": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
-          "es": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
-          "pt-BR": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
-          "de": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
-          "it": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
-          "pl": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
-          "tr": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
-          "ru": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
-          "ja": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
-          "ko": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed."
+          "es": "Conexión con Kick más fiable: el token se reutiliza en lugar de pedirse en cada comprobación, y se elimina el mecanismo de respaldo que exponía claves en el servidor.",
+          "pt-BR": "Conexão com a Kick mais confiável: o token é reutilizado em vez de ser pedido a cada verificação, e o fallback que expunha chaves no servidor foi removido.",
+          "de": "Zuverlässigere Kick-Verbindung: Das Token wird wiederverwendet, statt bei jeder Prüfung neu angefordert zu werden, und der Fallback, der serverseitig Schlüssel preisgab, ist entfernt.",
+          "it": "Connessione a Kick più affidabile: il token viene riutilizzato invece di essere richiesto a ogni controllo, e il ripiego che esponeva chiavi lato server è stato rimosso.",
+          "pl": "Bardziej niezawodne połączenie z Kick: token jest używany ponownie zamiast pobierania go przy każdym sprawdzeniu, a usunięto mechanizm awaryjny, który ujawniał klucze po stronie serwera.",
+          "tr": "Daha güvenilir Kick bağlantısı: jeton her kontrolde yeniden istenmek yerine tekrar kullanılıyor ve anahtarları sunucu tarafında açığa çıkaran yedek yol kaldırıldı.",
+          "ru": "Более надёжное подключение к Kick: токен используется повторно, а не запрашивается при каждой проверке, а запасной путь, раскрывавший ключи на сервере, удалён.",
+          "ja": "Kickとの接続がより安定しました。トークンはチェックのたびに再取得せず再利用され、サーバー側でキーを露出していたフォールバックは削除されました。",
+          "ko": "Kick 연결이 더 안정적입니다. 토큰을 매번 다시 요청하지 않고 재사용하며, 서버 측에서 키를 노출하던 대체 경로는 제거되었습니다."
         },
       },
       {
@@ -172,15 +172,15 @@ export const RELEASES = [
         text: {
           "fr": "Ton pseudo se modifie de nouveau dans « Profil et badge », et couper le badge communautaire l'arrête aussitôt, sans recharger la page.",
           "en": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
-          "es": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
-          "pt-BR": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
-          "de": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
-          "it": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
-          "pl": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
-          "tr": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
-          "ru": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
-          "ja": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
-          "ko": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed."
+          "es": "Tu nombre se puede editar de nuevo en «Perfil e insignia», y desactivar la insignia de la comunidad la detiene al instante, sin recargar la página.",
+          "pt-BR": "Seu nome de exibição pode ser editado de novo em “Perfil e emblema”, e desligar o emblema da comunidade o interrompe na hora, sem recarregar a página.",
+          "de": "Dein Anzeigename lässt sich in „Profil & Abzeichen“ wieder ändern, und das Community-Abzeichen verschwindet beim Ausschalten sofort, ohne Neuladen.",
+          "it": "Il tuo nome si modifica di nuovo in «Profilo e badge», e disattivare il badge della community lo ferma subito, senza ricaricare la pagina.",
+          "pl": "Nazwę znów można zmienić w „Profil i odznaka”, a wyłączenie odznaki społeczności działa od razu, bez przeładowania strony.",
+          "tr": "Görünen adın “Profil ve rozet” bölümünde yeniden düzenlenebiliyor ve topluluk rozetini kapatmak onu sayfayı yenilemeden hemen durduruyor.",
+          "ru": "Никнейм снова можно изменить в «Профиле и значке», а отключение значка сообщества срабатывает сразу, без перезагрузки страницы.",
+          "ja": "「プロフィールとバッジ」で表示名を再び編集できるようになり、コミュニティバッジをオフにするとページを再読み込みせずにすぐ止まります。",
+          "ko": "「프로필 및 배지」에서 닉네임을 다시 수정할 수 있으며, 커뮤니티 배지를 끄면 새로고침 없이 바로 멈춥니다."
         },
       },
       {
@@ -188,15 +188,175 @@ export const RELEASES = [
         text: {
           "fr": "L'onboarding commence par les notifications et tient dans les petits écrans.",
           "en": "Onboarding starts with notifications and fits small screens.",
-          "es": "Onboarding starts with notifications and fits small screens.",
-          "pt-BR": "Onboarding starts with notifications and fits small screens.",
-          "de": "Onboarding starts with notifications and fits small screens.",
-          "it": "Onboarding starts with notifications and fits small screens.",
-          "pl": "Onboarding starts with notifications and fits small screens.",
-          "tr": "Onboarding starts with notifications and fits small screens.",
-          "ru": "Onboarding starts with notifications and fits small screens.",
-          "ja": "Onboarding starts with notifications and fits small screens.",
-          "ko": "Onboarding starts with notifications and fits small screens."
+          "es": "La bienvenida empieza por las notificaciones y cabe en pantallas pequeñas.",
+          "pt-BR": "As boas-vindas começam pelas notificações e cabem em telas pequenas.",
+          "de": "Das Onboarding beginnt mit den Benachrichtigungen und passt auf kleine Bildschirme.",
+          "it": "L'onboarding parte dalle notifiche e sta negli schermi piccoli.",
+          "pl": "Wprowadzenie zaczyna się od powiadomień i mieści się na małych ekranach.",
+          "tr": "Karşılama akışı bildirimlerle başlıyor ve küçük ekranlara sığıyor.",
+          "ru": "Знакомство с расширением начинается с уведомлений и помещается на маленьких экранах.",
+          "ja": "オンボーディングは通知の設定から始まり、小さな画面にも収まります。",
+          "ko": "온보딩이 알림 설정부터 시작하며 작은 화면에도 맞게 표시됩니다."
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          "fr": "« Regarder » bascule sur l'onglet déjà ouvert sur la chaîne au lieu d'en ouvrir un nouveau.",
+          "en": "“Watch” switches to the tab already open on that channel instead of opening a new one.",
+          "es": "«Ver» cambia a la pestaña que ya tiene abierto el canal en lugar de abrir otra.",
+          "pt-BR": "“Assistir” muda para a aba já aberta no canal em vez de abrir uma nova.",
+          "de": "„Ansehen“ wechselt zum bereits geöffneten Tab des Kanals, statt einen neuen zu öffnen.",
+          "it": "«Guarda» passa alla scheda già aperta sul canale invece di aprirne una nuova.",
+          "pl": "„Oglądaj” przełącza na kartę, w której kanał jest już otwarty, zamiast otwierać nową.",
+          "tr": "“İzle”, yeni bir sekme açmak yerine kanalın zaten açık olduğu sekmeye geçiyor.",
+          "ru": "«Смотреть» переключает на уже открытую вкладку с каналом, а не открывает новую.",
+          "ja": "「視聴」は新しいタブを開かず、そのチャンネルを開いている既存のタブに切り替えます。",
+          "ko": "「시청」은 새 탭을 여는 대신 해당 채널이 이미 열려 있는 탭으로 전환합니다."
+        },
+      },
+      {
+        type: "new",
+        text: {
+          "fr": "Après avoir retiré un streamer, « Annuler » le remet en place avec ses notifications, son épingle et son groupe.",
+          "en": "After removing a streamer, “Undo” puts them back with their notifications, pin and group.",
+          "es": "Tras quitar a un streamer, «Deshacer» lo devuelve a su sitio con sus notificaciones, su fijado y su grupo.",
+          "pt-BR": "Depois de remover um streamer, “Desfazer” o coloca de volta com as notificações, o fixado e o grupo.",
+          "de": "Nach dem Entfernen eines Streamers stellt „Rückgängig“ ihn samt Benachrichtigungen, Anheftung und Gruppe wieder her.",
+          "it": "Dopo aver rimosso uno streamer, «Annulla» lo rimette al suo posto con notifiche, fissaggio e gruppo.",
+          "pl": "Po usunięciu streamera „Cofnij” przywraca go razem z powiadomieniami, przypięciem i grupą.",
+          "tr": "Bir yayıncıyı kaldırdıktan sonra “Geri al”, onu bildirimleri, sabitlemesi ve grubuyla birlikte geri getiriyor.",
+          "ru": "После удаления стримера «Отменить» возвращает его вместе с уведомлениями, закреплением и группой.",
+          "ja": "配信者を削除した後、「元に戻す」で通知設定・ピン留め・グループごと元どおりになります。",
+          "ko": "스트리머를 삭제한 뒤 「실행 취소」를 누르면 알림, 고정, 그룹까지 그대로 복원됩니다."
+        },
+      },
+      {
+        type: "new",
+        text: {
+          "fr": "Une recherche sans résultat propose d'ajouter directement ce que tu as tapé.",
+          "en": "A search with no results offers to add exactly what you typed.",
+          "es": "Una búsqueda sin resultados te propone añadir directamente lo que escribiste.",
+          "pt-BR": "Uma busca sem resultados sugere adicionar direto o que você digitou.",
+          "de": "Findet die Suche nichts, kannst du das Eingetippte direkt hinzufügen.",
+          "it": "Una ricerca senza risultati propone di aggiungere direttamente ciò che hai digitato.",
+          "pl": "Wyszukiwanie bez wyników proponuje od razu dodać to, co wpisałeś.",
+          "tr": "Sonuç bulunamayan bir arama, yazdığını doğrudan eklemeyi öneriyor.",
+          "ru": "Если поиск ничего не нашёл, можно сразу добавить то, что ты ввёл.",
+          "ja": "検索結果がないときは、入力した名前をそのまま追加できます。",
+          "ko": "검색 결과가 없으면 입력한 내용을 바로 추가하도록 제안합니다."
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          "fr": "L'accueil s'adapte quand personne n'est en direct ou que ta liste est vide.",
+          "en": "The home screen adapts when nobody is live or your list is empty.",
+          "es": "La pantalla de inicio se adapta cuando nadie está en directo o tu lista está vacía.",
+          "pt-BR": "A tela inicial se adapta quando ninguém está ao vivo ou sua lista está vazia.",
+          "de": "Die Startansicht passt sich an, wenn niemand live ist oder deine Liste leer ist.",
+          "it": "La schermata iniziale si adatta quando nessuno è in diretta o la tua lista è vuota.",
+          "pl": "Ekran główny dostosowuje się, gdy nikt nie nadaje lub Twoja lista jest pusta.",
+          "tr": "Ana ekran, kimse yayında değilken ya da listen boşken buna göre uyum sağlıyor.",
+          "ru": "Главный экран подстраивается, когда никто не в эфире или твой список пуст.",
+          "ja": "誰も配信していないときやリストが空のときに合わせて、ホーム画面の表示が変わります。",
+          "ko": "아무도 방송 중이 아니거나 목록이 비어 있을 때 홈 화면이 그에 맞게 바뀝니다."
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          "fr": "Meilleure accessibilité au clavier et contrastes renforcés dans le popup.",
+          "en": "Better keyboard accessibility and stronger contrast in the popup.",
+          "es": "Mejor accesibilidad con teclado y más contraste en el popup.",
+          "pt-BR": "Melhor acessibilidade pelo teclado e contraste reforçado no popup.",
+          "de": "Bessere Tastaturbedienung und stärkere Kontraste im Popup.",
+          "it": "Migliore accessibilità da tastiera e contrasti più marcati nel popup.",
+          "pl": "Lepsza obsługa klawiaturą i mocniejsze kontrasty w popupie.",
+          "tr": "Popup'ta daha iyi klavye erişilebilirliği ve güçlendirilmiş kontrastlar.",
+          "ru": "Удобнее управлять с клавиатуры, контраст в попапе стал выше.",
+          "ja": "ポップアップのキーボード操作性を改善し、コントラストを強化しました。",
+          "ko": "팝업의 키보드 접근성을 개선하고 대비를 강화했습니다."
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          "fr": "Les demandes d'avis et de badge ne cachent plus tes lives : elles attendent quelques secondes et se placent sous la scène.",
+          "en": "Review and badge prompts no longer hide your lives: they wait a few seconds and sit below the stage.",
+          "es": "Las peticiones de reseña y de insignia ya no tapan tus directos: esperan unos segundos y se colocan bajo el escenario.",
+          "pt-BR": "Os pedidos de avaliação e de emblema não escondem mais suas lives: esperam alguns segundos e ficam abaixo do palco.",
+          "de": "Bitten um Bewertung und Abzeichen verdecken deine Lives nicht mehr: Sie warten ein paar Sekunden und erscheinen unter der Bühne.",
+          "it": "Le richieste di recensione e di badge non coprono più le tue live: aspettano qualche secondo e si mettono sotto la scena.",
+          "pl": "Prośby o opinię i odznakę nie zasłaniają już Twoich live'ów: czekają kilka sekund i pojawiają się pod sceną.",
+          "tr": "Değerlendirme ve rozet istekleri artık yayınlarını gizlemiyor: birkaç saniye bekleyip sahnenin altına yerleşiyor.",
+          "ru": "Просьбы об отзыве и значке больше не закрывают твои эфиры: они ждут несколько секунд и появляются под сценой.",
+          "ja": "レビューやバッジのお願いが配信を隠さなくなりました。数秒待ってからステージの下に表示されます。",
+          "ko": "리뷰 및 배지 요청이 더 이상 방송을 가리지 않습니다. 몇 초 기다린 뒤 무대 아래에 표시됩니다."
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          "fr": "Barre du haut plus calme : un seul point par nouveauté, qui s'éteint dès que tu l'as vue.",
+          "en": "A calmer top bar: a single dot per new thing, gone as soon as you've seen it.",
+          "es": "Barra superior más tranquila: un solo punto por novedad, que se apaga en cuanto la ves.",
+          "pt-BR": "Barra superior mais calma: um único ponto por novidade, que some assim que você a vê.",
+          "de": "Ruhigere obere Leiste: ein einziger Punkt pro Neuigkeit, der verschwindet, sobald du sie gesehen hast.",
+          "it": "Barra in alto più calma: un solo punto per ogni novità, che si spegne appena l'hai vista.",
+          "pl": "Spokojniejszy górny pasek: jedna kropka na nowość, która znika, gdy tylko ją zobaczysz.",
+          "tr": "Daha sakin üst çubuk: her yenilik için tek bir nokta, gördüğün anda sönüyor.",
+          "ru": "Верхняя панель спокойнее: одна точка на каждую новинку, и она гаснет, как только ты её увидел.",
+          "ja": "上部バーが落ち着いた表示に。新着ごとにドットは1つだけで、確認するとすぐ消えます。",
+          "ko": "상단 바가 더 차분해졌습니다. 새 소식마다 점 하나만 표시되고, 확인하면 바로 사라집니다."
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          "fr": "StreamPulse s'ouvre plus vite : seule ta langue est chargée.",
+          "en": "StreamPulse opens faster: only your language is loaded.",
+          "es": "StreamPulse se abre más rápido: solo se carga tu idioma.",
+          "pt-BR": "O StreamPulse abre mais rápido: só o seu idioma é carregado.",
+          "de": "StreamPulse öffnet sich schneller: Nur deine Sprache wird geladen.",
+          "it": "StreamPulse si apre più in fretta: viene caricata solo la tua lingua.",
+          "pl": "StreamPulse otwiera się szybciej: wczytywany jest tylko Twój język.",
+          "tr": "StreamPulse daha hızlı açılıyor: yalnızca senin dilin yükleniyor.",
+          "ru": "StreamPulse открывается быстрее: загружается только твой язык.",
+          "ja": "StreamPulseの起動が速くなりました。読み込むのは使用中の言語だけです。",
+          "ko": "StreamPulse가 더 빨리 열립니다. 사용 중인 언어만 불러옵니다."
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          "fr": "Les pages Twitch chargent moins de code et d'images StreamPulse.",
+          "en": "Twitch pages load less StreamPulse code and fewer images.",
+          "es": "Las páginas de Twitch cargan menos código e imágenes de StreamPulse.",
+          "pt-BR": "As páginas da Twitch carregam menos código e imagens do StreamPulse.",
+          "de": "Twitch-Seiten laden weniger Code und Bilder von StreamPulse.",
+          "it": "Le pagine di Twitch caricano meno codice e immagini di StreamPulse.",
+          "pl": "Strony Twitcha wczytują mniej kodu i obrazów StreamPulse.",
+          "tr": "Twitch sayfaları daha az StreamPulse kodu ve görseli yüklüyor.",
+          "ru": "Страницы Twitch загружают меньше кода и картинок StreamPulse.",
+          "ja": "TwitchのページでStreamPulseが読み込むコードと画像が減りました。",
+          "ko": "Twitch 페이지에서 불러오는 StreamPulse 코드와 이미지가 줄었습니다."
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          "fr": "Textes plus clairs et traductions complètes dans les 11 langues : plus de phrases restées en anglais.",
+          "en": "Clearer wording and complete translations in all 11 languages: no more sentences left in English.",
+          "es": "Textos más claros y traducciones completas en los 11 idiomas: ya no quedan frases en inglés.",
+          "pt-BR": "Textos mais claros e traduções completas nos 11 idiomas: nenhuma frase ficou em inglês.",
+          "de": "Klarere Texte und vollständige Übersetzungen in allen 11 Sprachen: keine Sätze mehr, die auf Englisch geblieben sind.",
+          "it": "Testi più chiari e traduzioni complete in tutte le 11 lingue: niente più frasi rimaste in inglese.",
+          "pl": "Jaśniejsze teksty i pełne tłumaczenia we wszystkich 11 językach: koniec ze zdaniami po angielsku.",
+          "tr": "Daha net metinler ve 11 dilin tamamında eksiksiz çeviriler: İngilizce kalan cümle yok.",
+          "ru": "Тексты понятнее, переводы полные на всех 11 языках: больше никаких фраз, оставшихся на английском.",
+          "ja": "文言をよりわかりやすくし、11言語すべてで翻訳を完成させました。英語のまま残った文はもうありません。",
+          "ko": "문구를 더 명확하게 다듬고 11개 언어 모두 번역을 완성했습니다. 영어로 남은 문장은 더 이상 없습니다."
         },
       },
     ],
@@ -3602,7 +3762,3 @@ export function getLatestRelease() {
   return RELEASES.length ? RELEASES[0] : null;
 }
 
-/** Release correspondant exactement a une version, ou null. */
-export function getRelease(version) {
-  return RELEASES.find((entry) => entry.version === version) || null;
-}
