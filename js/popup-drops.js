@@ -147,10 +147,22 @@ function thumb(url, className) {
   return box;
 }
 
+/** Jauge : width 100 % fixe, remplie par scaleX (bornée ; illisible → vide). Pur, testé. */
+export function fillTransform(percentValue) {
+  const value = Number(percentValue);
+  if (!Number.isFinite(value)) return "scaleX(0)";
+  const ratio = Math.min(1, Math.max(0, value / 100));
+  return `scaleX(${Math.round(ratio * 1000) / 1000})`;
+}
+
+function setFill(element, percentValue) {
+  if (element) element.style.transform = fillTransform(percentValue);
+}
+
 function bar(drop) {
   const track = el("span", "drops-bar");
   const fill = el("i");
-  fill.style.width = `${percent(drop)}%`;
+  setFill(fill, percent(drop));
   track.append(fill);
   return track;
 }
@@ -182,15 +194,15 @@ function renderChip(now) {
     const left = isClaimable(drop) ? t("popup.drops.ready") : minutesLabel(remainingMinutes(drop));
     const more = model.others ? plural(model.others, "popup.drops.bandMoreOne", "popup.drops.bandMoreOther") : "";
     text = [drop.name, left, more].filter(Boolean).join(" · ");
-    fill.style.width = `${percent(drop)}%`;
+    setFill(fill, percent(drop));
     chip.title = [drop.game, channelLabel(drop), model.stale ? t("popup.drops.staleHint") : endsLabel(drop, now)].filter(Boolean).join(" · ");
   } else if (model?.kind === "claimed") {
     text = t("popup.drops.bandClaimed", { name: model.entry.name });
-    fill.style.width = "0";
+    setFill(fill, 0);
     chip.title = model.entry.game || "";
   } else {
     text = plural(today, "popup.cplus.dropsToday", "popup.cplus.dropsTodayPlural");
-    fill.style.width = "0";
+    setFill(fill, 0);
     chip.title = "";
   }
   if (label) label.textContent = text;

@@ -1,7 +1,8 @@
-// Pastilles « Nouveau » des fonctions récentes : un point sur les onglets Drops
-// et Badges de la barre du haut, une étiquette dans le menu des Réglages
-// (Drops, Badges, Pseudo et badge). Chacune disparaît dès que sa rubrique est
-// ouverte, et ce choix est gardé dans chrome.storage.
+// Signal « Nouveau » des fonctions récentes : un seul par nouveauté. Un point
+// sur les onglets Drops et Badges de la barre du haut (leur entrée visible
+// depuis l'accueil), un point sur « Profil et badge » dans le menu des
+// Réglages (sa seule entrée). Chacun disparaît dès que sa rubrique est ouverte,
+// par l'onglet ou par le menu, et ce choix est gardé dans chrome.storage.
 
 export const NEWS_KEY = "streamPulseSeenNew";
 const NEW_FEATURES = ["drops", "badges", "identity"];

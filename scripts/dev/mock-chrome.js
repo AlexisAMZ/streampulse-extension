@@ -5,12 +5,18 @@
  * Toutes les chaînes, vignettes et statistiques sont fictives.
  *
  * Paramètres d'URL : state=live|offline|empty|many|loading, theme=light,
- * lang=fr|en|de…
+ * lang=fr|en|de…, ask=review|badge (bandeau de l'accueil après le coup d'œil).
+ *
+ * Les messages qui écrivent le stockage (reorderStreamers, setPinnedStreamers,
+ * resetPreferences, updatePreferences) reprennent la logique pure du vrai
+ * service worker (js/streamers-data.js, js/preferences-data.js) et passent par
+ * storage.local.set : la popup reçoit ses onChanged comme en vrai.
  */
 (function installMockChrome() {
   const params = new URLSearchParams(location.search);
   const scenario = params.get("state") || "live";
   const now = Date.now();
+  const MANIFEST_VERSION = "26.9.13";
 
   function svgData(svg) {
     return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
@@ -277,12 +283,25 @@
     ],
   };
 
+  // Bandeaux de l'accueil. Par défaut, le banc est une première ouverture après
+  // mise à jour : aucun bandeau (voir askGate dans js/popup-review.js).
+  // &ask=review | badge : ouverture suivante, le bandeau voulu sort après le
+  // coup d'œil (4 s), comme chez un utilisateur existant.
+  const ASK = params.get("ask");
+  const askStore = ASK === "review" || ASK === "badge"
+    ? {
+        streamPulseAskVersion: MANIFEST_VERSION,
+        streamPulseReviewAsk: ASK === "review" ? { firstSeen: now - 20 * 24 * H } : { firstSeen: now, done: true },
+        streamPulseBadgeAsk: { firstSeen: now - 10 * 24 * H },
+      }
+    : {};
+
   const store = {
     // Visuels promo : pas de bandeau « Tu aimes StreamPulse ? ».
     ...(params.get("real") ? {
       streamPulseReviewAsk: { firstSeen: now, done: true },
       streamPulseBadgeAsk: { firstSeen: now, done: true },
-    } : {}),
+    } : askStore),
     betaGeneralStreamers: channels.streamers,
     betaGeneralStatuses: channels.statuses,
     betaGeneralPreferences: {
@@ -444,6 +463,26 @@
       case "updatePreferences":
         store.betaGeneralPreferences = { ...store.betaGeneralPreferences, ...message.updates };
         return { success: true, preferences: store.betaGeneralPreferences };
+      case "resetPreferences": {
+        // Comme le service worker : tout au défaut, sauf la langue et le thème.
+        const { resetPreferencesFrom } = await import("/js/preferences-data.js");
+        const preferences = resetPreferencesFrom(store.betaGeneralPreferences);
+        await local.set({ betaGeneralPreferences: preferences });
+        return { success: true, preferences };
+      }
+      case "reorderStreamers": {
+        // Ordre appliqué au stockage courant, jamais à une copie de la popup.
+        const { applyStreamerOrder } = await import("/js/streamers-data.js");
+        const streamers = applyStreamerOrder(store.betaGeneralStreamers, message.order);
+        await local.set({ betaGeneralStreamers: streamers });
+        return { streamers };
+      }
+      case "setPinnedStreamers": {
+        const { sanitizePinnedIds } = await import("/js/streamers-data.js");
+        const pinnedIds = sanitizePinnedIds(store.betaGeneralStreamers, message.pinnedIds);
+        await local.set({ betaPinnedIds: pinnedIds });
+        return { pinnedIds };
+      }
       case "claimDrop":
         return { success: true, sent: true };
       case "searchChannels": {
@@ -467,7 +506,7 @@
     runtime: {
       sendMessage,
       getURL: (path) => `/${String(path).replace(/^\//, "")}`,
-      getManifest: () => ({ version: "26.9.13" }),
+      getManifest: () => ({ version: MANIFEST_VERSION }),
     },
     tabs: {
       create: (options, callback) => {

@@ -20,8 +20,8 @@
       <nav class="tabs" role="tablist" data-i18n-attr-ariaLabel="popup.osd.tabsLabel">
         <button id="tab-streamers" class="tab-button active" type="button" role="tab" aria-selected="true" aria-controls="streamers-view" data-tab="streamers" data-i18n="popup.tabs.streamers">Streamers</button>
         <button id="tab-history" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="history-view" data-tab="history" data-i18n="popup.tabs.history">Historique</button>
-        <button id="tab-drops" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="settings-section" data-tab="drops" tabindex="-1"><span data-i18n="popup.osd.menuDrops">Drops</span><span class="new-dot" data-new="drops" hidden></span></button>
-        <button id="tab-badges" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="settings-section" data-tab="badges" tabindex="-1"><span data-i18n="popup.osd.menuBadges">Badges</span><span class="new-dot" data-new="badges" hidden></span></button>
+        <button id="tab-drops" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="settings-section" data-tab="drops" tabindex="-1"><span data-i18n="popup.osd.menuDrops">Drops</span><span class="new-dot" data-new="drops" hidden><span class="visually-hidden" data-i18n="popup.news.new">Nouveau</span></span></button>
+        <button id="tab-badges" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="settings-section" data-tab="badges" tabindex="-1"><span data-i18n="popup.osd.menuBadges">Badges</span><span class="new-dot" data-new="badges" hidden><span class="visually-hidden" data-i18n="popup.news.new">Nouveau</span></span></button>
         <button id="tab-settings" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="settings-section" data-tab="settings" data-i18n="popup.tabs.settings">Réglages</button>
       </nav>
       <div class="topbar-end">
@@ -31,6 +31,7 @@
           <span id="header-points-value2">--</span>
         </span>
         <span class="stat-pill stat-time" data-i18n-attr-title="popup.cplus.watchTimeLabel" title="Temps de visionnage ce mois-ci">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
           <span class="visually-hidden" data-i18n="popup.cplus.watchTimeLabel">Temps de visionnage ce mois-ci</span>
           <span id="stat-watchtime">--</span>
         </span>
@@ -87,6 +88,40 @@
         </button>
       </section>
 
+
+      <!-- Bandeaux ponctuels (avis, badge) : ils prennent la place de la ligne
+           d'activité, dans la grille, sans recouvrir la bande des lives. Un seul à
+           la fois, jamais à la première ouverture d'une version ni pendant le coup
+           d'œil (js/popup-review.js). -->
+      <aside class="ask review-ask" id="review-ask" role="region" aria-labelledby="review-ask-title" hidden>
+        <svg class="ask-mark review-ask-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg>
+        <p class="ask-text review-ask-text">
+          <b id="review-ask-title" data-i18n="popup.review.title">Tu aimes StreamPulse ?</b>
+          <span data-i18n="popup.review.body">Un avis sur le store aide énormément une extension indépendante. Merci d'avance !</span>
+        </p>
+        <div class="ask-actions review-ask-actions">
+          <button id="review-ask-rate" type="button" class="button button-primary" data-i18n="popup.review.rate">Laisser un avis</button>
+          <div class="ask-secondary">
+            <button id="review-ask-later" type="button" class="ask-link" data-i18n="popup.review.later">Plus tard</button>
+            <button id="review-ask-never" type="button" class="ask-link" data-i18n="popup.review.never">Non merci</button>
+          </div>
+        </div>
+      </aside>
+
+      <aside class="ask badge-ask" id="badge-ask" role="region" aria-labelledby="badge-ask-title" hidden>
+        <span class="ask-mark badge-ask-mark" aria-hidden="true"></span>
+        <p class="ask-text badge-ask-text">
+          <b id="badge-ask-title" data-i18n="popup.badgeAsk.title">Affiche ton badge dans le chat</b>
+          <span data-i18n="popup.badgeAsk.body">Repère les autres utilisateurs de StreamPulse dans le chat Twitch, et montre-leur ton badge. Si tu l'actives : une empreinte de ton pseudo est envoyée à streampulse.fr une fois par jour maximum.</span>
+        </p>
+        <div class="ask-actions badge-ask-actions">
+          <button id="badge-ask-activate" type="button" class="button button-primary" data-i18n="popup.badgeAsk.activate">Activer le badge</button>
+          <div class="ask-secondary">
+            <button id="badge-ask-later" type="button" class="ask-link" data-i18n="popup.badgeAsk.later">Plus tard</button>
+            <button id="badge-ask-never" type="button" class="ask-link" data-i18n="popup.badgeAsk.dismiss">Non merci</button>
+          </div>
+        </div>
+      </aside>
 
       <section class="live-strip">
         <div class="strip-head">
@@ -146,32 +181,6 @@
         <ul class="sheet-list" id="sheet-list"></ul>
       </section>
     </main>
-
-    <aside class="review-ask" id="review-ask" role="region" aria-labelledby="review-ask-title" hidden>
-      <span class="review-ask-stars" aria-hidden="true">★★★★★</span>
-      <div class="review-ask-text">
-        <b id="review-ask-title" data-i18n="popup.review.title">Tu aimes StreamPulse ?</b>
-        <span data-i18n="popup.review.body">Un avis sur le store aide énormément une extension indépendante. Merci d'avance !</span>
-      </div>
-      <div class="review-ask-actions">
-        <button id="review-ask-rate" type="button" class="button button-primary" data-i18n="popup.review.rate">Laisser un avis</button>
-        <button id="review-ask-later" type="button" class="button button-quiet" data-i18n="popup.review.later">Plus tard</button>
-        <button id="review-ask-never" type="button" class="button button-link" data-i18n="popup.review.never">Non merci</button>
-      </div>
-    </aside>
-
-    <aside class="badge-ask" id="badge-ask" role="region" aria-labelledby="badge-ask-title" hidden>
-      <span class="badge-ask-mark" aria-hidden="true"></span>
-      <div class="badge-ask-text">
-        <b id="badge-ask-title" data-i18n="popup.badgeAsk.title">Affiche ton badge dans le chat</b>
-        <span data-i18n="popup.badgeAsk.body">Repère les autres utilisateurs de StreamPulse dans le chat Twitch, et montre-leur ton badge. Si tu l'actives : une empreinte de ton pseudo est envoyée à streampulse.fr une fois par jour maximum.</span>
-      </div>
-      <div class="badge-ask-actions">
-        <button id="badge-ask-activate" type="button" class="button button-primary" data-i18n="popup.badgeAsk.activate">Activer le badge</button>
-        <button id="badge-ask-later" type="button" class="button button-quiet" data-i18n="popup.badgeAsk.later">Plus tard</button>
-        <button id="badge-ask-never" type="button" class="button button-link" data-i18n="popup.badgeAsk.dismiss">Non merci</button>
-      </div>
-    </aside>
 
     <section id="history-view" class="history hidden" role="tabpanel" aria-labelledby="tab-history">
       <div class="history-head">
@@ -287,7 +296,7 @@
           <button id="menu-tab-identity" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-identity" data-panel="identity" tabindex="-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
             <span data-i18n="popup.osd.menuIdentity">Profil et badge</span>
-            <span class="new-pill" data-new="identity" data-i18n="popup.news.new" hidden>Nouveau</span>
+            <span class="new-dot new-dot-inline" data-new="identity" hidden><span class="visually-hidden" data-i18n="popup.news.new">Nouveau</span></span>
           </button>
           <button id="menu-tab-general" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-general" data-panel="general" tabindex="-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
@@ -299,12 +308,10 @@
           <button id="menu-tab-drops" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-drops" data-panel="drops" tabindex="-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>
             <span data-i18n="popup.osd.menuDrops">Drops</span>
-            <span class="new-pill" data-new="drops" data-i18n="popup.news.new" hidden>Nouveau</span>
           </button>
           <button id="menu-tab-badges" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-badges" data-panel="badges" tabindex="-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>
             <span data-i18n="popup.osd.menuBadges">Badges</span>
-            <span class="new-pill" data-new="badges" data-i18n="popup.news.new" hidden>Nouveau</span>
           </button>
           <button id="menu-tab-activity" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-activity" data-panel="activity" tabindex="-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
@@ -1100,13 +1107,6 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5L2.5 9.3l6.6-.8z"/></svg>
             <span data-i18n="popup.settings.starGithub">Mettre une étoile sur GitHub</span>
           </a>
-
-          <div class="panel-actions">
-            <button id="open-patch-notes" class="button button-quiet" type="button">
-              <span data-i18n="popup.settings.patchNotes">Voir les nouveautés</span>
-              <span class="unread-dot unread-dot-inline" id="patch-notes-dot" hidden></span>
-            </button>
-          </div>
 
           <h3 class="settings-group-header" data-i18n="popup.supportDev">Offrir un Bubble Tea au développeur</h3>
           <div class="link-row">
