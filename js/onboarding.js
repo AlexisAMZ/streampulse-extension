@@ -719,23 +719,9 @@ function registerEventListeners() {
   });
 
   finishButton?.addEventListener("click", () => {
-    saveUserProfile().finally(async () => {
-      // Ouvrir le popup tout de suite quand Chrome le permet ; sinon dire
-      // clairement quoi faire, laisser le temps de lire, puis fermer.
-      let opened = false;
-      try {
-        if (chrome.action?.openPopup) {
-          await chrome.action.openPopup();
-          opened = true;
-        }
-      } catch (_e) {
-        // openPopup peut manquer (Firefox, anciens Chrome) ou refuser hors
-        // geste utilisateur : le repli ci-dessous prend le relais.
-      }
-      const hint = document.getElementById("finish-open-hint");
-      if (!opened && hint) hint.hidden = false;
-      setTimeout(() => window.close(), opened ? 400 : 8000);
-    });
+    // L'étape d'après a déjà dit quoi faire (épingler l'extension) : ce
+    // bouton n'a plus qu'à sauver le profil et fermer l'onglet.
+    saveUserProfile().finally(() => window.close());
   });
 }
 

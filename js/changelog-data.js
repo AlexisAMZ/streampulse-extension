@@ -186,17 +186,17 @@ export const RELEASES = [
       {
         type: "improved",
         text: {
-          "fr": "L'onboarding commence par les notifications, tient dans les petits écrans, et « Lancer StreamPulse » ouvre le popup directement.",
-          "en": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
-          "es": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
-          "pt-BR": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
-          "de": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
-          "it": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
-          "pl": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
-          "tr": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
-          "ru": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
-          "ja": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly.",
-          "ko": "Onboarding starts with notifications, fits small screens, and “Launch StreamPulse” opens the popup directly."
+          "fr": "L'onboarding commence par les notifications et tient dans les petits écrans.",
+          "en": "Onboarding starts with notifications and fits small screens.",
+          "es": "Onboarding starts with notifications and fits small screens.",
+          "pt-BR": "Onboarding starts with notifications and fits small screens.",
+          "de": "Onboarding starts with notifications and fits small screens.",
+          "it": "Onboarding starts with notifications and fits small screens.",
+          "pl": "Onboarding starts with notifications and fits small screens.",
+          "tr": "Onboarding starts with notifications and fits small screens.",
+          "ru": "Onboarding starts with notifications and fits small screens.",
+          "ja": "Onboarding starts with notifications and fits small screens.",
+          "ko": "Onboarding starts with notifications and fits small screens."
         },
       },
     ],
