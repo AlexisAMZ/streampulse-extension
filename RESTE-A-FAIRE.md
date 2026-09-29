@@ -21,8 +21,9 @@ Les 16 langues sont complètes : 357 clés chacune, 0 clé manquante.
 | `pl` | ✅ | | `ru` | ✅ |
 | `ja` | ✅ | | `ko` | ✅ |
 
-Pour publier `hi` une fois traduit : passer `ready: true` dans
-`i18n/translations.js`, puis `npm run verify`.
+Pour publier `hi` une fois traduit : créer `i18n/lang/hi.js`, l'importer dans
+`i18n/translations.js`, le déclarer (`ready: true`) dans `i18n/meta.js`, puis
+`npm run verify`.
 
 ---
 

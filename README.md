@@ -122,7 +122,7 @@ Full policy: [streampulse.fr/privacy](https://streampulse.fr/privacy)
 Bug reports, ideas and pull requests are welcome.
 
 - **Found a bug?** [Open an issue](https://github.com/AlexisAMZ/streampulse-extension/issues/new) with your browser, the page and what happened.
-- **Speak another language?** Every string lives in [`i18n/translations.js`](i18n/translations.js). Fixes and new languages are easy first contributions.
+- **Speak another language?** Every string lives in [`i18n/lang/`](i18n/lang/), one file per language. Fixes and new languages are easy first contributions.
 - **Sending code?** Run `npm run lint` and `npm test` before opening the PR.
 
 ## License

@@ -1,20 +1,65 @@
 import {
   AVAILABLE_LANGUAGES,
   DEFAULT_LANGUAGE,
-  translations,
   formatTemplate,
   matchLanguage,
-} from "../i18n/translations.js";
+} from "../i18n/meta.js";
 import { detectInstallLanguage } from "./preferences-data.js";
+
+// Les chaînes ne sont plus toutes chargées d'un bloc (≈ 700 Ko pour 11
+// langues) : initI18n() importe la langue choisie (i18n/lang/<code>.js) et
+// l'anglais, qui sert de repli clé par clé. Une fois l'init résolue, t() reste
+// synchrone. Avant l'init, t() rend la clé brute : tout rendu doit l'attendre.
 
 const PREFERENCES_KEY = "betaGeneralPreferences";
 const LANGUAGE_PROP = "language";
 
 let currentLanguage = DEFAULT_LANGUAGE;
 const listeners = new Set();
+/** Dictionnaires chargés, par code de langue. */
+const dictionaries = new Map();
+/** Imports en cours, pour ne jamais charger deux fois la même langue. */
+const pendingLoads = new Map();
+let warnedBeforeInit = false;
+/**
+ * Numéro de la dernière demande de langue (init ou clic). Un chargement plus
+ * lent qu'un clic suivant ne doit pas écraser le choix le plus récent.
+ */
+let latestRequest = 0;
 
-function isValidLanguage(code) {
-  return Boolean(translations[code]);
+function applyLanguage(code) {
+  currentLanguage = code;
+}
+
+async function importLanguage(code) {
+  // `code` sort toujours de matchLanguage() : un des codes du registre.
+  const module = await import(`../i18n/lang/${code}.js`);
+  const dictionary = module?.default;
+  if (!dictionary || typeof dictionary !== "object") {
+    throw new Error(`i18n/lang/${code}.js n'exporte aucun dictionnaire`);
+  }
+  dictionaries.set(code, dictionary);
+  return true;
+}
+
+function loadLanguage(code) {
+  if (dictionaries.has(code)) return Promise.resolve(true);
+  if (!pendingLoads.has(code)) {
+    const load = importLanguage(code)
+      .catch((error) => {
+        console.warn(`[i18n] chargement de la langue « ${code} » impossible :`, error);
+        return false;
+      })
+      .finally(() => pendingLoads.delete(code));
+    pendingLoads.set(code, load);
+  }
+  return pendingLoads.get(code);
+}
+
+/** Charge `code` et l'anglais de repli ; vrai si `code` est utilisable. */
+async function ensureLanguage(code) {
+  const [loaded] = await Promise.all([loadLanguage(code), loadLanguage(DEFAULT_LANGUAGE)]);
+  return loaded;
 }
 
 async function readStoredLanguage() {
@@ -38,26 +83,31 @@ async function readStoredLanguage() {
   return detectInstallLanguage(uiLanguage);
 }
 
-function getTranslationObject(lang) {
-  return translations[lang] || translations[DEFAULT_LANGUAGE] || {};
+function lookup(dictionary, segments) {
+  let current = dictionary;
+  for (const segment of segments) {
+    if (current && Object.prototype.hasOwnProperty.call(current, segment)) {
+      current = current[segment];
+    } else {
+      return null;
+    }
+  }
+  return current;
 }
 
 function resolveTranslation(key, lang) {
   if (!key) return null;
   const segments = key.split(".");
-  let current = getTranslationObject(lang);
-  for (const segment of segments) {
-    if (current && Object.prototype.hasOwnProperty.call(current, segment)) {
-      current = current[segment];
-    } else {
-      current = null;
-      break;
-    }
-  }
-  if (current == null && lang !== DEFAULT_LANGUAGE) {
-    return resolveTranslation(key, DEFAULT_LANGUAGE);
-  }
-  return current;
+  const own = dictionaries.has(lang) ? lookup(dictionaries.get(lang), segments) : null;
+  if (own != null || lang === DEFAULT_LANGUAGE) return own;
+  const fallback = dictionaries.get(DEFAULT_LANGUAGE);
+  return fallback ? lookup(fallback, segments) : null;
+}
+
+function warnIfNotReady(key) {
+  if (dictionaries.size > 0 || warnedBeforeInit) return;
+  warnedBeforeInit = true;
+  console.warn(`[i18n] t("${key}") appelé avant initI18n() : la clé brute s'affiche.`);
 }
 
 function notifyLanguageChange() {
@@ -78,55 +128,61 @@ export function getCurrentLanguage() {
   return currentLanguage;
 }
 
+/** Langues dont les chaînes sont en mémoire (diagnostic et tests). */
+export function getLoadedLanguages() {
+  return [...dictionaries.keys()];
+}
+
 export async function initI18n(preloadedLanguage = null) {
   // The caller may hand us a raw stored value ("pt_BR", "EN"), so normalize it
   // instead of trusting it blindly: an unmatched tag would silently render keys.
-  const matched = matchLanguage(preloadedLanguage);
-  if (matched) {
-    currentLanguage = matched;
-  } else {
-    currentLanguage = await readStoredLanguage();
+  const request = ++latestRequest;
+  const requested = matchLanguage(preloadedLanguage) || (await readStoredLanguage());
+  const usable = await ensureLanguage(requested);
+  if (request === latestRequest) {
+    applyLanguage(usable ? requested : DEFAULT_LANGUAGE);
   }
   return currentLanguage;
 }
 
-export async function setLanguage(requestedLang) {
-  const nextLang = matchLanguage(requestedLang);
-  if (!nextLang || !isValidLanguage(nextLang)) {
-    return currentLanguage;
-  }
-  if (nextLang === currentLanguage) {
-    return currentLanguage;
-  }
-
-  // Apply locally first so the UI switches even if the service worker is asleep
-  // or rejects the write; storage below is the durable source of truth.
-  currentLanguage = nextLang;
-  notifyLanguageChange();
-
-  let persisted;
+async function persistLanguage(nextLang) {
   try {
     const response = await chrome.runtime.sendMessage({
       type: "updatePreferences",
       updates: { [LANGUAGE_PROP]: nextLang },
     });
-    persisted = Boolean(response?.success);
-  } catch {
-    persisted = false;
+    if (response?.success) return;
+  } catch (error) {
+    console.warn("[i18n] service worker injoignable, écriture directe de la langue :", error?.message || error);
+  }
+  try {
+    const stored = await chrome.storage.local.get(PREFERENCES_KEY);
+    const prefs = stored?.[PREFERENCES_KEY] || {};
+    await chrome.storage.local.set({
+      [PREFERENCES_KEY]: { ...prefs, [LANGUAGE_PROP]: nextLang },
+    });
+  } catch (fallbackError) {
+    console.warn("Language fallback write error:", fallbackError);
+  }
+}
+
+export async function setLanguage(requestedLang) {
+  const nextLang = matchLanguage(requestedLang);
+  if (!nextLang || nextLang === currentLanguage) {
+    return currentLanguage;
+  }
+  const request = ++latestRequest;
+  // Les chaînes d'abord : les abonnés re-rendent aussitôt avec t().
+  const loaded = await ensureLanguage(nextLang);
+  if (!loaded || request !== latestRequest || nextLang === currentLanguage) {
+    return currentLanguage;
   }
 
-  if (!persisted) {
-    try {
-      const stored = await chrome.storage.local.get(PREFERENCES_KEY);
-      const prefs = stored?.[PREFERENCES_KEY] || {};
-      await chrome.storage.local.set({
-        [PREFERENCES_KEY]: { ...prefs, [LANGUAGE_PROP]: nextLang },
-      });
-    } catch (fallbackError) {
-      console.warn("Language fallback write error:", fallbackError);
-    }
-  }
-
+  // Apply locally first so the UI switches even if the service worker is asleep
+  // or rejects the write; storage below is the durable source of truth.
+  applyLanguage(nextLang);
+  notifyLanguageChange();
+  await persistLanguage(nextLang);
   return currentLanguage;
 }
 
@@ -137,6 +193,7 @@ export function onLanguageChange(callback) {
 }
 
 export function t(key, params = {}, lang = currentLanguage) {
+  warnIfNotReady(key);
   const resolved = resolveTranslation(key, lang);
   if (typeof resolved === "string") {
     return formatTemplate(resolved, params);
@@ -212,4 +269,4 @@ export async function syncDocumentLanguage(htmlLangKey) {
   }
 }
 
-export { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES, resolveLocale } from "../i18n/translations.js";
+export { DEFAULT_LANGUAGE, AVAILABLE_LANGUAGES, resolveLocale } from "../i18n/meta.js";

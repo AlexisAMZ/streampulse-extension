@@ -15,11 +15,12 @@ canvas { display: block; }
 const ROOT = "/";
 const { drawRecapCard, CARD_WIDTH, CARD_HEIGHT } = await import(ROOT + "js/recap-card.js");
 const { drawRecapStory, STORY_WIDTH, STORY_HEIGHT } = await import(ROOT + "js/recap-story.js");
-const { translations } = await import(ROOT + "i18n/translations.js");
+const { matchLanguage } = await import(ROOT + "i18n/meta.js");
 const q = new URLSearchParams(location.search);
-const lang = q.get("lang") || "fr";
+const lang = matchLanguage(q.get("lang") || "fr") || "fr";
 const extreme = q.get("case") === "extreme";
-const c = translations[lang].recap.card;
+const { default: strings } = await import(ROOT + `i18n/lang/${lang}.js`);
+const c = strings.recap.card;
 const H = 3600;
 const top = extreme
   ? [

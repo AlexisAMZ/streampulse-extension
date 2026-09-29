@@ -8,7 +8,7 @@
  * worker : scripts/verify.mjs vérifie statiquement que DEFAULT_PREFERENCES et
  * sanitizePreferences exposent exactement les mêmes clés.
  */
-import { DEFAULT_LANGUAGE, matchLanguage } from "../i18n/translations.js";
+import { DEFAULT_LANGUAGE, matchLanguage } from "../i18n/meta.js";
 
 /** Qualités proposées pour le lecteur Twitch. "auto" laisse Twitch décider. */
 export const PLAYER_QUALITIES = ["auto", "source", "1440", "1080", "720", "480", "360"];

@@ -7,7 +7,7 @@ import globals from "globals";
 // Les parser dans le mauvais mode produit de faux positifs, d'ou la separation.
 const ES_MODULES = [
   "config.js",
-  "i18n/translations.js",
+  "i18n/**/*.js",
   "js/background.js",
   "js/sw/**/*.js",
   "js/backup.js",

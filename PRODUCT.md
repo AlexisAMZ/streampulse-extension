@@ -39,7 +39,7 @@ Success means the viewer never misses a live they care about, and never has to c
 ## Capabilities and Constraints
 
 - **Platform**: Manifest V3 extension, no remote code. Plain HTML/CSS/ES modules with no framework and no build step for the UI. The zip is packaged by `scripts/build-zip.mjs`.
-- **Strings**: every UI string goes through `i18n/translations.js` (`data-i18n` attributes and `t()`). Layouts must survive long German or Russian strings.
+- **Strings**: every UI string goes through `i18n/lang/<code>.js`, one file per language (`data-i18n` attributes and `t()`). Layouts must survive long German or Russian strings.
 - **Injected UI**: it lives inside Twitch's page, next to Twitch's own dark and light themes. It must not break or visually fight the host page.
 - **Performance**: content scripts run on every Twitch page. The popup opens often and must paint instantly.
 - **Data**: what reaches streampulse.fr: the license key with this browser's device id, verified at most once a day; the community badge, only after an explicit opt-in, sends a hashed Twitch username at most once a day; the badge list and the remote configuration are read from the same domain (reads, no user data); the Kick app token is fetched through streampulse.fr. Nothing else about the user leaves the browser. *(list corrected by the 2026-09-28 audit; previously described as "only the badge")*.

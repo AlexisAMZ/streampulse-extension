@@ -1,6 +1,6 @@
 // Notifications système : affichage, cibles de clic, alertes de live / catégorie / titre, son.
 
-import { DEFAULT_LANGUAGE } from "../../i18n/translations.js";
+import { DEFAULT_LANGUAGE } from "../../i18n/meta.js";
 import { DEFAULT_PLATFORM, buildProfileUrl, formatHandleForDisplay, getPlatformIcon, getPlatformLabelKey, normalizePlatform, platformSupportsLiveStatus, sanitizeHandle } from "../platforms.js";
 import { DEFAULT_PREFERENCES, normalizeLanguage } from "../preferences-data.js";
 import { CONFIG } from "./config.js";

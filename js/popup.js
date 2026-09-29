@@ -1938,9 +1938,9 @@ function initHomeInteractions() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    // Show skeleton placeholders immediately
+    // Show skeleton placeholders immediately. The platform picker waits for
+    // initI18n below: its labels come from t(), empty until a language loads.
     showSkeletons(3);
-    renderPlatformPicker();
 
     // Storage round-trip: only the keys needed for first paint.
     // betaWatchTimeData can be large (months of records) and is only shown in the

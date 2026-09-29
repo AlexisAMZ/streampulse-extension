@@ -1,13 +1,17 @@
-import { test } from "node:test";
+import { before, test } from "node:test";
 import assert from "node:assert/strict";
-import { applyTranslations } from "../js/i18n.js";
+import { applyTranslations, initI18n } from "../js/i18n.js";
 
 // Le parseur HTML minuscule les noms d'attributs : data-i18n-attr-ariaLabel
 // (forme historique) arrive dans le dataset comme "i18nAttrArialabel", et le
 // bug écrivait setAttribute("arialabel") — un attribut que rien ne lit, donc
 // des boutons sans nom accessible dans toutes les pages. Ces tests simulent
-// ce que le navigateur produit réellement pour les deux formes. Le module
-// démarre sur la langue par défaut (en) : t("common.confirm") => "Confirm".
+// ce que le navigateur produit réellement pour les deux formes. Les chaînes se
+// chargent à l'init : en anglais, t("common.confirm") => "Confirm".
+
+before(async () => {
+  await initI18n("en");
+});
 
 function fakeElement(dataset) {
   const attributes = {};

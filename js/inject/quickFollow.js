@@ -13,7 +13,7 @@
  *  - Label text is driven by the extension language preference, mirroring
  *    topbar.js (same 4 locales, same base-subtag fallback).
  *  - Isolated world, plain script (no modules): strings are inlined rather than
- *    imported from i18n/translations.js, which is an ES module.
+ *    imported from i18n/lang/<code>.js, which are ES modules.
  */
 (function () {
   "use strict";
@@ -123,7 +123,7 @@
 
   /**
    * Lit une clé inject.quickFollow.*.
-   * Les chaînes vivent dans i18n/translations.js et sont exposées par
+   * Les chaînes vivent dans i18n/lang/<code>.js et sont exposées par
    * js/inject/i18n-inline.js, chargé avant ce script.
    */
   function t(key, params) {

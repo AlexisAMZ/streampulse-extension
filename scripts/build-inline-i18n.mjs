@@ -1,15 +1,16 @@
 /**
- * Génère js/inject/i18n-inline.js depuis i18n/translations.js.
+ * Génère js/inject/i18n-inline.js depuis i18n/lang/<code>.js (via
+ * l'agrégateur i18n/translations.js).
  *
  * POURQUOI CE FICHIER EXISTE
  * Les content scripts sont injectés comme scripts classiques (manifest.json),
- * ils ne peuvent donc pas `import` le module ES i18n/translations.js. Chacun
+ * ils ne peuvent donc pas `import` les modules ES de i18n/. Chacun
  * embarquait sa propre petite table de traductions, limitée à 4 langues et
  * dupliquée : impossible à maintenir sur 16 langues.
  *
  * Ce script extrait le sous-ensemble de clés dont les content scripts ont
  * besoin et l'émet en script classique exposant window.__SP_I18N__.
- * translations.js reste la source unique de vérité.
+ * Les fichiers i18n/lang/<code>.js restent la source unique de vérité.
  *
  * Relancer après toute modification des clés `inject.*` :
  *   node scripts/build-inline-i18n.mjs
@@ -55,7 +56,7 @@ const payload = {};
 for (const { code } of ALL_LANGUAGES) {
   const block = translations[code]?.[NAMESPACE];
   if (!block) {
-    throw new Error(`translations.${code}.${NAMESPACE} manquant : lancer expand-languages d'abord.`);
+    throw new Error(`i18n/lang/${code}.js n'a pas de bloc ${NAMESPACE}.* : le recopier depuis en.js.`);
   }
   payload[code] = { ...block, shared: sharedPopupStrings(translations[code]?.popup) };
 }

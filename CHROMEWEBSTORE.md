@@ -98,7 +98,7 @@ agrandie. Les 15 dossiers utilisent actuellement la même capture manuelle pour
 `01-dashboard`, en anglais ; les textes du cadre restent traduits par langue.
 
 Langues couvertes : CS, DE, EN, ES, FR, ID, IT, JA, KO, NL, PL, PT-BR, RU, SV, TR.
-`hi` n'a pas de dossier tant que `ready: false` dans `i18n/translations.js`.
+`hi` n'a pas de dossier tant qu'il n'est pas déclaré `ready: true` dans `i18n/meta.js`.
 
 ### Garde-fou « marketing responsable »
 

@@ -122,9 +122,10 @@ else {
   pass(`${locales.length} locales (${locales.join(", ")}) parse with matching key sets`);
 }
 
-// ── 2b. translations.js ─────────────────────────────────────────────────────
+// ── 2b. translations (i18n/lang/<code>.js) ──────────────────────────────────
 // _locales/ only carries appName/appDesc (what the manifest needs). The real UI
-// strings live in i18n/translations.js, so completeness must be checked there:
+// strings live in i18n/lang/<code>.js (one file per language, gathered by the
+// i18n/translations.js aggregator), so completeness must be checked there:
 // a missing key silently falls back to English at runtime and ships unnoticed.
 {
   const flatten = (node, prefix = "") =>
@@ -213,6 +214,36 @@ else {
       pass(`translations.js: ${declared.length} languages complete (${referenceKeys.length} keys each)`);
     }
 
+    // Une langue = un fichier source. Un fichier non déclaré ne serait jamais
+    // chargé par js/i18n.js ; une langue déclarée sans fichier casserait l'import.
+    const langDir = "i18n/lang";
+    const langFiles = exists(langDir)
+      ? fs.readdirSync(abs(langDir)).filter((f) => f.endsWith(".js")).map((f) => f.slice(0, -3))
+      : [];
+    const withoutFile = declared.filter((c) => !langFiles.includes(c));
+    const undeclared = langFiles.filter((c) => !declared.includes(c));
+    withoutFile.forEach((c) => fail(`${langDir}/${c}.js is missing: every language in ALL_LANGUAGES needs its own file`));
+    undeclared.forEach((c) => fail(`${langDir}/${c}.js is not declared in ALL_LANGUAGES (i18n/meta.js)`));
+    if (!withoutFile.length && !undeclared.length) {
+      pass(`${langDir}: one source file per declared language (${langFiles.length})`);
+    }
+
+    // Les pages chargent une seule langue via js/i18n.js : l'agrégateur (toutes
+    // les langues, ~700 Ko) est réservé au service worker. Un import depuis un
+    // module de page le ferait revenir à chaque ouverture du popup.
+    const walkJs = (dir) =>
+      fs.readdirSync(abs(dir), { withFileTypes: true }).flatMap((e) =>
+        e.isDirectory() ? walkJs(`${dir}/${e.name}`) : e.name.endsWith(".js") ? [`${dir}/${e.name}`] : [],
+      );
+    const pageModules = walkJs("js").filter((f) => !f.startsWith("js/sw/") && f !== "js/background.js");
+    const aggregatorImport = /(?:from\s+|import\(\s*)["'][^"']*i18n\/translations\.js["']/;
+    const leaking = pageModules.filter((f) => aggregatorImport.test(fs.readFileSync(abs(f), "utf8")));
+    if (leaking.length) {
+      leaking.forEach((f) => fail(`${f} imports i18n/translations.js: pages must use i18n/meta.js and js/i18n.js (one language)`));
+    } else {
+      pass("extension pages load one language (no import of the i18n/translations.js aggregator outside the service worker)");
+    }
+
     // Une langue publiée (ready: true) ne doit pas être un simple copier-coller
     // de l'anglais : ce serait promettre une traduction inexistante.
     const flattenPairs = (node, prefix = "") =>
@@ -295,7 +326,7 @@ const walk = (dir, out = []) => {
   }
   return out;
 };
-const jsFiles = [...walk("js"), "config.js", "i18n/translations.js"].filter((f) => f.endsWith(".js"));
+const jsFiles = [...walk("js"), "config.js", ...walk("i18n")].filter((f) => f.endsWith(".js"));
 const checkAs = (file, ext) => {
   const dest = path.join(tmp, `check.${ext}`);
   fs.copyFileSync(abs(file), dest);

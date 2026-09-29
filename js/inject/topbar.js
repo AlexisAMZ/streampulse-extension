@@ -44,7 +44,7 @@
     }
   }
 
-  // Les chaînes vivent dans i18n/translations.js (clés inject.topbar.*) et sont
+  // Les chaînes vivent dans i18n/lang/<code>.js (clés inject.topbar.*) et sont
   // exposées ici par js/inject/i18n-inline.js, chargé avant ce script. Les
   // content scripts étant injectés en scripts classiques, ils ne peuvent pas
   // importer le module ES directement.
