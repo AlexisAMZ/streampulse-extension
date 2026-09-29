@@ -106,5 +106,5 @@
       data = module;
       setTimeout(tick, 4_000);
     })
-    .catch(() => {});
+    .catch((error) => console.warn("[StreamPulse] prédictions : module indisponible", error?.message || error));
 })();

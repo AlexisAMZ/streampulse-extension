@@ -9,6 +9,7 @@ import { respond } from "./message-dispatch.js";
 import { NotificationCenter } from "./notifications.js";
 import { EventLogStore, PreferenceStore, StatsStore } from "./stores.js";
 import { WatchTimeStore, currentGameOf, resolveChannelAvatar, watchTimeTabClaims } from "./watchtime.js";
+import { warnWith } from "./log.js";
 
 export function handleOpenPatchNotes(request, sender, sendResponse) {
   (async () => {
@@ -81,7 +82,7 @@ export function handleTrackWatchTime(request, sender, sendResponse) {
         const game = secs > 0 ? String(request.game || "") || (await currentGameOf(platform, channel)) : "";
         // Record immediately: never block on avatar resolution
         await WatchTimeStore.record(platform, channel, secs, "", game);
-        HistoryStore.markWatched(platform, channel).catch(() => {});
+        HistoryStore.markWatched(platform, channel).catch(warnWith("historique regardé"));
         // Best-effort avatar update (fire-and-forget, doesn't block response)
         if (secs > 0) {
           resolveChannelAvatar(platform, channel)
@@ -99,7 +100,7 @@ export function handleTrackWatchTime(request, sender, sendResponse) {
                 });
               }
             })
-            .catch(() => {});
+            .catch(warnWith("avatar du temps de visionnage"));
         }
       }
       sendResponse({ success: true, counted: !claimedSeconds });

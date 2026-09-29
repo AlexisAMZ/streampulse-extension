@@ -126,6 +126,7 @@ export class PreferenceStore {
 
   static _enqueue(task) {
     const run = this._queue.then(task, task);
+    // L'échec reste porté par `run`, rendu à l'appelant : la file, elle, continue.
     this._queue = run.catch(() => {});
     return run;
   }
@@ -204,6 +205,7 @@ export class StatsStore {
 
   static _enqueue(task) {
     const run = this._queue.then(task, task);
+    // L'échec reste porté par `run`, rendu à l'appelant : la file, elle, continue.
     this._queue = run.catch(() => {});
     return run;
   }

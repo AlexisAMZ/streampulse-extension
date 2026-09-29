@@ -46,7 +46,7 @@ function showAutoBanner(view) {
   stop.textContent = view.stop;
   stop.style.cssText = "flex:none;margin-left:auto;padding:7px 12px;border:0;border-radius:10px;background:#E6E3EC;color:#1A0B14;font:800 12px system-ui,sans-serif;cursor:pointer";
   stop.addEventListener("click", () => {
-    chrome.runtime.sendMessage({ type: "badgeAutoStop" }).catch(() => {});
+    chrome.runtime.sendMessage({ type: "badgeAutoStop" }).catch((error) => console.warn("[StreamPulse] arrêt du mode auto :", error?.message || error));
     bar.remove();
   });
   bar.append(dot, body, stop);
@@ -100,7 +100,7 @@ export function createBadgeAuto(deps) {
   }
 
   async function closeTab(tabId) {
-    if (await tabExists(tabId)) await chrome.tabs.remove(tabId).catch(() => {});
+    if (await tabExists(tabId)) await chrome.tabs.remove(tabId).catch(() => {}); // Onglet fermé entre-temps : attendu.
   }
 
   /** Texte de la bannière, dans la langue de l'utilisateur. */
@@ -124,7 +124,7 @@ export function createBadgeAuto(deps) {
   async function paintBanner(state) {
     if (!(await tabExists(state?.tabId))) return;
     const view = await bannerView(state);
-    await chrome.scripting.executeScript({ target: { tabId: state.tabId }, func: showAutoBanner, args: [view] }).catch(() => {});
+    await chrome.scripting.executeScript({ target: { tabId: state.tabId }, func: showAutoBanner, args: [view] }).catch((error) => console.warn("[StreamPulse] bandeau du mode auto :", error?.message || error));
   }
 
   /** Badges du catalogue avec leur campagne en cours (pour « tous les badges »). */

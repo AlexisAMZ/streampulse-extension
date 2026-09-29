@@ -111,7 +111,10 @@ export class PlatformChecker {
         const official = await fetchKickOfficial(sanitized, token);
         if (official) return { _source: "official", ...official };
       }
-    } catch { /* fall through to V2 */ }
+    } catch (error) {
+      // Repli sur l'API V2 non officielle.
+      console.warn("[SP] Kick API officielle :", error?.message || error);
+    }
 
     // Fallback: unofficial V2 API
     try {
@@ -253,7 +256,10 @@ export class PlatformChecker {
       Object.entries(stored || {}).forEach(([handle, entry]) => {
         if (entry?.id) this._youtubeCache.set(handle, entry);
       });
-    } catch { /* cache perdu : on re-résoudra */ }
+    } catch (error) {
+      // Cache perdu : on re-résoudra.
+      console.warn("[SP] cache des chaînes YouTube illisible :", error?.message || error);
+    }
   }
 
   static async saveYoutubeCache() {
@@ -261,7 +267,9 @@ export class PlatformChecker {
       await chrome.storage.local.set({
         "streampulse:youtubeChannels": Object.fromEntries(this._youtubeCache),
       });
-    } catch { /* best effort */ }
+    } catch (error) {
+      console.warn("[SP] cache des chaînes YouTube non écrit :", error?.message || error);
+    }
   }
 
   static async resolveYoutubeChannel(handle) {
@@ -380,7 +388,10 @@ export class PlatformChecker {
         title = data.title || "";
         displayName = data.author_name || displayName;
       }
-    } catch { /* titre optionnel */ }
+    } catch (error) {
+      // Titre optionnel : le live reste signalé sans lui.
+      console.warn("[SP] oEmbed YouTube :", error?.message || error);
+    }
 
     const cb = Math.floor(Date.now() / 60000); // 1-minute cache bucket
     const thumbnailUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;

@@ -56,7 +56,10 @@ export class ActionBadge {
     // effacerait le badge.
     try {
       await chrome.storage.local.set({ [BADGE_LIVE_COUNT_KEY]: liveCount });
-    } catch { /* le rendu retombera sur 0 */ }
+    } catch (error) {
+      // Le rendu retombera sur 0.
+      console.warn("[SP] badge : compteur non persisté", error?.message || error);
+    }
     await this.render(preferences);
   }
 
@@ -74,7 +77,10 @@ export class ActionBadge {
     let stored = {};
     try {
       stored = await chrome.storage.local.get([BADGE_LIVE_COUNT_KEY, "patchNotesUnread"]);
-    } catch { /* valeurs par defaut ci-dessous */ }
+    } catch (error) {
+      // Valeurs par défaut ci-dessous.
+      console.warn("[SP] badge : lecture du stockage impossible", error?.message || error);
+    }
     const liveCount = Number(stored[BADGE_LIVE_COUNT_KEY]) || 0;
     if (liveCount > 0) {
       await this.setLive(liveCount, prefs);

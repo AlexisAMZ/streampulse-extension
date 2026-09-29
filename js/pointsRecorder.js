@@ -29,7 +29,7 @@
     if (message.token !== TOKEN) return;
     if (!enabled || !message.data || typeof message.data !== "object") return;
     try {
-      chrome.runtime.sendMessage({ type: "recordPointsGain", data: message.data }).catch(() => {});
+      chrome.runtime.sendMessage({ type: "recordPointsGain", data: message.data }).catch(() => {}); // SW endormi ou contexte invalidé : échec attendu.
     } catch {
       // Contexte d'extension invalidé par une mise à jour : ce gain est perdu.
     }

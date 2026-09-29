@@ -70,7 +70,7 @@
 
   function safeSend(msg) {
     try {
-      chrome.runtime.sendMessage(msg).catch(() => {});
+      chrome.runtime.sendMessage(msg).catch(() => {}); // SW endormi ou contexte invalidé : échec attendu.
     } catch (_) {
       // Extension context invalidated (reloaded): ignore
     }

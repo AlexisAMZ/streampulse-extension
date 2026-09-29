@@ -159,6 +159,7 @@ export class WatchTimeStore {
 
   static _enqueue(task) {
     const run = this._queue.then(task, task);
+    // L'échec reste porté par `run`, rendu à l'appelant : la file, elle, continue.
     this._queue = run.catch(() => {});
     return run;
   }
@@ -228,8 +229,9 @@ export class WatchTimeStore {
     this._pending = null;
     try {
       await chrome.storage.session.remove(this.PENDING_KEY);
-    } catch {
+    } catch (error) {
       // La copie de session est retirée au mieux : la source est écrite après.
+      console.warn("[WatchTime] copie de session non retirée :", error?.message || error);
     }
     try {
       for (const entry of Object.values(pending)) {

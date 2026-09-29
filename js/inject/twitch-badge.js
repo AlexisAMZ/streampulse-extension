@@ -295,7 +295,9 @@
           log(badgeHashes.size, "empreintes chargees,", badgeColors.size, "couleurs");
           rescanVisibleMessages();
         })
-        .catch(function () {});
+        .catch(function (error) {
+          log("service de badges indisponible :", error && error.message);
+        });
     } catch (_e) {
       // Le service de badges est optionnel : son indisponibilite ne doit pas gener le tchat.
     }

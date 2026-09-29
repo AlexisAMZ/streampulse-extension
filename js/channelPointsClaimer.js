@@ -95,7 +95,7 @@
           stat: "channelPointsClaimed",
           value: points,
           channel: getCurrentChannel(),
-        }).catch(() => {});
+        }).catch(() => {}); // SW endormi ou contexte invalidé : échec attendu.
       } catch (_) {
         // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
       }
@@ -110,7 +110,7 @@
     setTimeout(() => {
       try {
         // Le service worker relit l'inventaire pour compter ce Drop avec son nom.
-        chrome.runtime.sendMessage({ type: "dropClaimedByClick", channel }).catch(() => {});
+        chrome.runtime.sendMessage({ type: "dropClaimedByClick", channel }).catch(() => {}); // SW endormi ou contexte invalidé : échec attendu.
       } catch (_) {
         // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
       }
@@ -208,7 +208,7 @@
               stat: "momentsClaimed",
               value: 1,
               channel,
-            }).catch(() => {});
+            }).catch(() => {}); // SW endormi ou contexte invalidé : échec attendu.
           } catch (_) {
             // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
           }

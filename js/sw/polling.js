@@ -15,6 +15,7 @@ import { PlatformChecker, fetchTwitchStreamsBatch, twitchStreamToStatus } from "
 import { EMPTY_LIVE_STATE, catchUpNames, countLive, didStreamEnd, nextLiveStateFrom, planStreamerAlerts, restoreLiveStateEntry } from "./poll-logic.js";
 import { streamerCache, streamerLiveState, streamerStates } from "./state.js";
 import { DataStore, PreferenceStore } from "./stores.js";
+import { warnWith } from "./log.js";
 
 /**
  * Revérifie la licence StreamPulse+ une fois par jour. Clé refusée (abonnement
@@ -346,7 +347,9 @@ async function precacheThumbnails(statuses) {
   try {
     const stored = await chrome.storage.local.get(CACHE_KEY);
     cache = stored[CACHE_KEY] || {};
-  } catch { /* ignore */ }
+  } catch (error) {
+    console.warn("[SP] lecture du cache des vignettes :", error?.message || error);
+  }
 
   let changed = false;
 
@@ -375,6 +378,6 @@ async function precacheThumbnails(statuses) {
   }
 
   if (changed) {
-    await chrome.storage.local.set({ [CACHE_KEY]: cache }).catch(() => {});
+    await chrome.storage.local.set({ [CACHE_KEY]: cache }).catch(warnWith("écriture du cache des vignettes"));
   }
 }

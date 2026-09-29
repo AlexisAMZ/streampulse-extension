@@ -23,7 +23,7 @@ export function releaseDevice(licenseKey, device, fetchImpl) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ action: "release", key: licenseKey, device }),
-  }).catch(() => {});
+  }).catch((error) => console.warn("[StreamPulse+] libération de l'appareil :", error?.message || error));
 }
 
 /** Lien vers le portail client Stripe pour la clé de ce navigateur. */

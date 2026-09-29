@@ -3,6 +3,7 @@
 import { CLAIM_OK_STATUSES } from "../drops-data.js";
 import { DROPS_POPUP_REFRESH_MS, announceDrops, badgeAuto, checkBadgeAfterClaim, claimDropFromWorker, dropsStore, dropsStreamUrl, pointsStore, refreshDropsFromWorker, sendDropsCommand } from "./drops.js";
 import { PreferenceStore } from "./stores.js";
+import { warnWith } from "./log.js";
 
 export function handleRecordPointsGain(request, sender, sendResponse) {
   (async () => {
@@ -14,7 +15,7 @@ export function handleRecordPointsGain(request, sender, sendResponse) {
       }
       const result = await pointsStore.record(request.data);
       sendResponse({ success: true, ...result });
-      if (result.recorded) pointsStore.resolveNames().catch(() => {});
+      if (result.recorded) pointsStore.resolveNames().catch(warnWith("noms des chaînes (points)"));
     } catch (error) {
       sendResponse({ error: error?.message || String(error) });
     }
@@ -40,7 +41,7 @@ export function handleRecordDropsInventory(request, sender, sendResponse) {
       }
       const result = await dropsStore.recordInventory(request.data, { autoClaim: prefs.autoClaimDrops !== false });
       sendResponse({ success: true, recorded: result.recorded, claim: result.claim });
-      announceDrops(result.added).catch(() => {});
+      announceDrops(result.added).catch(warnWith("annonce des Drops"));
     } catch (error) {
       sendResponse({ error: error?.message || String(error) });
     }
@@ -58,7 +59,7 @@ export function handleRecordDropsEvent(request, sender, sendResponse) {
       }
       const result = await dropsStore.recordEvent(request.data, { autoClaim: prefs.autoClaimDrops !== false });
       sendResponse({ success: true, ...result });
-      if (result.channelId) dropsStore.resolveNames().catch(() => {});
+      if (result.channelId) dropsStore.resolveNames().catch(warnWith("noms des chaînes (Drops)"));
     } catch (error) {
       sendResponse({ error: error?.message || String(error) });
     }
@@ -91,7 +92,7 @@ export function handleRecordDropClaim(request, sender, sendResponse) {
         auto: request.auto !== false,
       });
       sendResponse({ success: true, recorded: result.recorded });
-      if (result.entry) announceDrops([result.entry]).catch(() => {});
+      if (result.entry) announceDrops([result.entry]).catch(warnWith("annonce du Drop récupéré"));
       else if (request.ok !== true || !CLAIM_OK_STATUSES.includes(request.status)) {
         console.warn("[StreamPulse] récupération du Drop refusée :", request.error || request.status || "sans statut");
       }
@@ -118,7 +119,7 @@ export function handleDropsRefresh(request, sender, sendResponse) {
       const sent = request.force || now - readAt >= DROPS_POPUP_REFRESH_MS
         ? (await refreshDropsFromWorker({ minGapMs: 0 })).read || (await sendDropsCommand({ action: "inventory" }))
         : false;
-      if (now - campaignsAt >= 30 * 60_000) sendDropsCommand({ action: "campaigns" }).catch(() => {});
+      if (now - campaignsAt >= 30 * 60_000) sendDropsCommand({ action: "campaigns" }).catch(warnWith("relecture des campagnes"));
       sendResponse({ success: true, sent });
     } catch (error) {
       sendResponse({ error: error?.message || String(error) });
@@ -186,7 +187,7 @@ export function handleDropClaimedByClick(request, sender, sendResponse) {
     try {
       const prefs = await PreferenceStore.get();
       if (prefs.dropsTracking !== false) {
-        setTimeout(() => sendDropsCommand({ action: "inventory" }, sender.tab?.id).catch(() => {}), 3000);
+        setTimeout(() => sendDropsCommand({ action: "inventory" }, sender.tab?.id).catch(warnWith("relecture de l'inventaire")), 3000);
         setTimeout(checkBadgeAfterClaim, 5000);
       } else {
         await announceDrops([{ name: "", game: "", channel: String(request.channel || ""), at: Date.now() }]);

@@ -18,6 +18,7 @@ export class HistoryStore {
   /** Serialise les ecritures : plusieurs lives peuvent finir dans le meme sondage. */
   static _enqueue(task) {
     const run = this._queue.then(task, task);
+    // L'échec reste porté par `run`, rendu à l'appelant : la file, elle, continue.
     this._queue = run.catch(() => {});
     return run;
   }

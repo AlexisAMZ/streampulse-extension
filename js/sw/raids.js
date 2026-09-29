@@ -53,8 +53,9 @@ export async function notifyIncomingRaid({ channel, raider, viewers }) {
   let iconUrl = null;
   try {
     iconUrl = await resolveChannelAvatar("twitch", channel);
-  } catch (_) {
+  } catch (error) {
     // L'avatar est décoratif : la notification part sans icône dédiée.
+    console.warn("[SP] avatar du raid :", error?.message || error);
   }
 
   await NotificationCenter.show({
@@ -93,8 +94,9 @@ async function resolveChannelDisplayName(channel) {
     if (match?.displayName || match?.name) {
       return match.displayName || match.name;
     }
-  } catch (_) {
+  } catch (error) {
     // Lecture de storage échouée : on retombe sur le handle.
+    console.warn("[SP] nom de la chaîne raidée :", error?.message || error);
   }
   return formatHandleForDisplay("twitch", channel);
 }

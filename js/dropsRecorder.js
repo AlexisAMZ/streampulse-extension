@@ -57,7 +57,7 @@
   function send(message) {
     if (!contextAlive()) return Promise.resolve(null);
     try {
-      return chrome.runtime.sendMessage(message).catch(() => null);
+      return chrome.runtime.sendMessage(message).catch(() => null); // SW endormi ou contexte invalidé : échec attendu.
     } catch {
       // Contexte d'extension invalidé par une mise à jour : on arrête de relayer.
       enabled = false;

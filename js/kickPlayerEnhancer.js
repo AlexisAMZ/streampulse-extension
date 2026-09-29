@@ -91,7 +91,7 @@
       if (video && video.buffered.length) {
         const end = video.buffered.end(video.buffered.length - 1);
         video.currentTime = end - 0.5; // Jump to end minus safety buffer
-        video.play().catch(()=>{});
+        video.play().catch(()=>{}); // Lecture refusée par le navigateur (autoplay) : attendu.
       }
     };
 

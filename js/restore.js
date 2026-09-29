@@ -83,7 +83,7 @@ async function restore() {
     });
     await chrome.storage.local.set(data);
     // The service worker rereads the streamers and rebuilds its caches.
-    chrome.runtime.sendMessage({ type: "refreshStatuses" }).catch(() => {});
+    chrome.runtime.sendMessage({ type: "refreshStatuses" }).catch((error) => console.warn("[restore] rafraîchissement des statuts :", error?.message || error));
     // eslint-disable-next-line require-atomic-updates -- a single confirm click owns this restore.
     pending = null;
     showView("done");

@@ -11,6 +11,7 @@ import { translateWithPrefs } from "./i18n.js";
 import { lowPowerPlayer } from "./low-power-player.js";
 import { NotificationCenter } from "./notifications.js";
 import { EventLogStore, PreferenceStore, StatsStore } from "./stores.js";
+import { warnWith } from "./log.js";
 
 export const pointsStore = createPointsStore({ storage: chrome.storage.local, resolveChannels: resolveTwitchChannels });
 
@@ -91,7 +92,7 @@ export async function refreshDropsFromWorker({ minGapMs = DROPS_WORKER_MIN_GAP_M
   }
   const autoClaim = prefs.autoClaimDrops !== false;
   const result = await dropsStore.recordInventory(inventory, { autoClaim });
-  announceDrops(result.added).catch(() => {});
+  announceDrops(result.added).catch(warnWith("annonce des Drops"));
   for (const instanceId of result.claim) await claimDropFromWorker(instanceId, true);
   return { read: true };
 }
@@ -180,11 +181,11 @@ export async function claimDropFromWorker(instanceId, auto) {
     console.warn("[StreamPulse] récupération du Drop impossible :", error.code || error.message);
   }
   const result = await dropsStore.recordClaim({ instanceId, ok, status, auto });
-  if (result.entry) announceDrops([result.entry]).catch(() => {});
+  if (result.entry) announceDrops([result.entry]).catch(warnWith("annonce du Drop récupéré"));
   const claimed = ok && CLAIM_OK_STATUSES.includes(status);
   if (ok && !claimed) console.warn("[StreamPulse] récupération du Drop refusée :", status || "sans statut");
   // Récupéré mais absent de la progression locale : on relit pour remettre la liste à jour.
-  if (claimed && !result.entry) refreshDropsFromWorker({ minGapMs: 0 }).catch(() => {});
+  if (claimed && !result.entry) refreshDropsFromWorker({ minGapMs: 0 }).catch(warnWith("relecture des Drops"));
   // Un Drop récupéré peut être le badge attendu : relecture immédiate en mode auto.
   if (claimed) checkBadgeAfterClaim();
   return claimed;
