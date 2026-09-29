@@ -1,7 +1,7 @@
 // Handlers de messages runtime (voir messages.js pour la table).
 
 import { sanitizeHandle } from "../platforms.js";
-import { applyStreamerOrder, sanitizePinnedIds } from "../streamers-data.js";
+import { applyStreamerOrder, pruneStreamerRefs, sanitizePinnedIds } from "../streamers-data.js";
 import { translateWithPrefs } from "./i18n.js";
 import { reply, respond } from "./message-dispatch.js";
 import { addStreamer } from "./add-streamer.js";
@@ -58,6 +58,15 @@ export function handleAddStreamer(request, sender, sendResponse) {
   return true;
 }
 
+async function pruneRemovedStreamerRefs(targetId) {
+  // Épingle et groupe : sinon l'id reste orphelin (l'Annuler du popup les
+  // restaure depuis sa propre photo, prise avant la suppression).
+  const stored = await chrome.storage.local.get(["betaPinnedIds", "betaChannelGroups"]);
+  const pruned = pruneStreamerRefs({ pinnedIds: stored.betaPinnedIds, groups: stored.betaChannelGroups }, targetId);
+  if (!pruned.changed) return;
+  await chrome.storage.local.set({ betaPinnedIds: pruned.pinnedIds, betaChannelGroups: pruned.groups });
+}
+
 export function handleRemoveStreamer(request, sender, sendResponse) {
   (async () => {
     try {
@@ -65,6 +74,7 @@ export function handleRemoveStreamer(request, sender, sendResponse) {
       const streamers = await DataStore.getStreamers();
       const filtered = streamers.filter((s) => s.id !== targetId);
       await DataStore.saveStreamers(filtered);
+      await pruneRemovedStreamerRefs(targetId);
       streamerStates.delete(targetId);
       streamerCache.delete(targetId);
       streamerLiveState.delete(targetId);

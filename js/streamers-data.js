@@ -41,3 +41,21 @@ export function sanitizePinnedIds(streamers, pinnedIds) {
   }
   return result;
 }
+
+/**
+ * Références orphelines après suppression d'un streamer : retire son id des
+ * épingles et des groupes (copies neuves). `changed` indique s'il faut écrire.
+ */
+export function pruneStreamerRefs({ pinnedIds, groups }, id) {
+  const pins = Array.isArray(pinnedIds) ? pinnedIds : [];
+  const list = Array.isArray(groups) ? groups : [];
+  const nextPins = pins.filter((pin) => pin !== id);
+  let changed = nextPins.length !== pins.length;
+  const nextGroups = list.map((group) => {
+    const members = Array.isArray(group?.memberIds) ? group.memberIds : [];
+    if (!members.includes(id)) return group;
+    changed = true;
+    return { ...group, memberIds: members.filter((member) => member !== id) };
+  });
+  return { pinnedIds: nextPins, groups: nextGroups, changed };
+}
