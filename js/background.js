@@ -40,6 +40,15 @@ import { searchChannels } from "./channel-search.js";
 import { syncEventSubRaid, stopEventSubRaid } from "./eventsubRaid.js";
 import { applyStreamerOrder, sanitizePinnedIds } from "./streamers-data.js";
 import {
+  EMPTY_LIVE_STATE,
+  catchUpNames,
+  countLive,
+  didStreamEnd,
+  nextLiveStateFrom,
+  planStreamerAlerts,
+  restoreLiveStateEntry,
+} from "./sw/poll-logic.js";
+import {
   RAID_WATCHER_ALARM,
   syncRaidWatcher,
   stopRaidWatcher,
@@ -2897,11 +2906,26 @@ async function pollStreamers({ forceNotification = false } = {}) {
   return _pollInFlight;
 }
 
-// Rattrapage : un stream détecté en direct alors qu'il a démarré depuis plus
-// de 10 minutes n'est pas un événement « vient de partir » (navigateur fermé,
-// SW endormi, extension rechargée). Ces streamers ne déclenchent pas 1
-// notification chacun : ils alimentent une seule notification groupée.
-const CATCHUP_THRESHOLD_MS = 10 * 60 * 1000;
+/**
+ * Journal de diagnostic : un changement de jeu/titre sans alerte est invisible
+ * pour l'utilisateur. La console du SW dit alors quel garde a bloqué l'envoi.
+ */
+function logChangeDiagnostics(streamer, previous, next, preferences) {
+  if (!previous.isLive || !next.isLive || next.isError) return;
+  if (previous.game !== next.game) {
+    console.info("[SP] changement de categorie detecte:", streamer.handle, {
+      prefGame: preferences.gameNotifications,
+      streamerToggle: streamer.gameNotificationsEnabled,
+    });
+  }
+  if (previous.title !== next.title) {
+    console.info("[SP] changement de titre detecte:", streamer.handle, {
+      prefTitle: preferences.titleNotifications,
+      streamerToggle: streamer.titleNotificationsEnabled,
+      sessionIdentique: !previous.sessionId || !next.sessionId || previous.sessionId === next.sessionId,
+    });
+  }
+}
 
 async function _pollStreamersImpl({ forceNotification = false } = {}) {
   await ensureConfig(); // hydrate credentials before any Twitch API call (MV3 SW restart safety)
@@ -2926,23 +2950,8 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
   try {
     const savedLiveState = await DataStore.getLiveState();
     Object.entries(savedLiveState || {}).forEach(([id, entry]) => {
-      if (!streamerLiveState.has(id) && entry && typeof entry === "object") {
-        streamerLiveState.set(id, {
-          isLive: Boolean(entry.isLive),
-          platform: entry.platform || null,
-          game: entry.game || "",
-          sessionId: entry.sessionId || null,
-          title: entry.title || "",
-          lastTitle: entry.lastTitle || "",
-          lastGame: entry.lastGame || "",
-          avatarUrl: entry.avatarUrl || "",
-          startedAt: entry.startedAt || null,
-          thumbnailUrl: entry.thumbnailUrl || "",
-          matchedRuleIds: Array.isArray(entry.matchedRuleIds) ? entry.matchedRuleIds : [],
-          supportsLiveStatus: entry.supportsLiveStatus !== false,
-          updatedAt: typeof entry.updatedAt === "number" ? entry.updatedAt : undefined,
-        });
-      }
+      const restored = restoreLiveStateEntry(entry);
+      if (!streamerLiveState.has(id) && restored) streamerLiveState.set(id, restored);
     });
   } catch (err) {
     console.warn("Failed to restore live state:", err?.message || err);
@@ -3018,60 +3027,16 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
 
   for (const status of statuses) {
     const streamer = streamerById.get(status.id);
-    const previousLiveState = streamerLiveState.get(streamer.id) || {
-      isLive: false,
-      platform: null,
-      game: "",
-      sessionId: null,
-      title: "",
-      supportsLiveStatus: false,
-    };
-
-    const nextLiveState = {
-      isLive: Boolean(status.active?.isLive),
-      platform: status.active?.platform || null,
-      game: status.active?.game || "",
-      sessionId: status.active?.sessionId || null,
-      title: status.active?.title || "",
-      // Persistes pour survivre aux sondages hors ligne successifs : `title`
-      // et `game` repassent a vide des que la chaine n'est plus en direct.
-      lastTitle: status.active?.title || status.active?.lastTitle || "",
-      lastGame: status.active?.game || status.active?.lastGame || "",
-      avatarUrl: status.avatarUrl || streamer.avatarUrl || null,
-      startedAt: status.active?.isLive ? status.active?.startedAt || previousLiveState.startedAt || null : null,
-      thumbnailUrl: status.active?.isLive ? status.active?.thumbnailUrl || previousLiveState.thumbnailUrl || "" : "",
-      matchedRuleIds: [],
-      supportsLiveStatus: status.active?.supportsLiveStatus !== false,
-      // Horodaté pour la détection de rattrapage : si notre dernière
-      // observation remonte à trop longtemps, un live détecté n'est pas
-      // un événement « vient de partir » (navigateur fermé, SW endormi).
-      updatedAt: Date.now(),
-      isError: Boolean(status.active?.isError),
-    };
-
-    // If there was an API error, preserve the previous live state to prevent offline/online flapping
-    if (nextLiveState.isError) {
-      nextLiveState.isLive = previousLiveState.isLive;
-      nextLiveState.sessionId = previousLiveState.sessionId;
-      nextLiveState.game = previousLiveState.game;
-      nextLiveState.title = previousLiveState.title;
-      nextLiveState.startedAt = previousLiveState.startedAt || null;
-      nextLiveState.thumbnailUrl = previousLiveState.thumbnailUrl || "";
-      nextLiveState.matchedRuleIds = previousLiveState.matchedRuleIds || [];
-    }
+    const previousLiveState = streamerLiveState.get(streamer.id) || EMPTY_LIVE_STATE;
+    const now = Date.now();
+    const nextLiveState = nextLiveStateFrom(status, previousLiveState, streamer, now);
 
     // Fin de live : entree d'historique (la VOD Twitch est cherchee ensuite).
-    if (previousLiveState.isLive && !nextLiveState.isLive && !nextLiveState.isError) {
+    if (didStreamEnd(previousLiveState, nextLiveState)) {
       HistoryStore.recordEnded(streamer, previousLiveState).catch((error) =>
         console.warn("History record failed:", error?.message || error)
       );
     }
-
-    // Mode « par streamer d'abord » : le toggle du streamer est la seule
-    // source de vérite (les toggles globaux des reglages sont des actions en
-    // masse, plus des verrous — sinon deux interrupteurs doivent etre actifs
-    // pour qu'une alerte parte, et personne ne comprend pourquoi elle ne part pas).
-    const notificationsEnabled = streamer.notificationsEnabled !== false;
 
     // Regles d'alerte du streamer : elles remplacent l'alerte classique.
     const smartDecision = nextLiveState.isError
@@ -3083,112 +3048,18 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
         );
     if (smartDecision) nextLiveState.matchedRuleIds = smartDecision.matchedIds;
 
-    if (smartDecision) {
-      if (notificationsEnabled && smartDecision.notifyRule) {
+    logChangeDiagnostics(streamer, previousLiveState, nextLiveState, preferences);
+    const alerts = planStreamerAlerts({ streamer, previous: previousLiveState, next: nextLiveState, smartDecision, forceNotification, now });
+    for (const alert of alerts) {
+      if (alert.type === "catchUp") {
+        const platform = status.platform || streamer.platform || "twitch";
+        catchUpLive.push(streamer.displayName || formatHandleForDisplay(platform, streamer.handle || streamer.twitch));
+      } else if (alert.type === "live") {
         queueAlert(() => NotificationSystem.notifyLive(streamer, status.active, preferences));
-      }
-    } else if (forceNotification && notificationsEnabled && nextLiveState.isLive) {
-      queueAlert(() => NotificationSystem.notifyLive(streamer, status.active, preferences));
-    } else if (notificationsEnabled && nextLiveState.isLive) {
-      const wasLive = previousLiveState.isLive;
-      const sessionChanged =
-        previousLiveState.sessionId &&
-        nextLiveState.sessionId &&
-        previousLiveState.sessionId !== nextLiveState.sessionId;
-
-      if (!wasLive || sessionChanged) {
-        // Rattrapage : pas d'alerte individuelle mensongère (« X est en
-        // direct ! » pour un stream de 3 h) ni de rafale au démarrage.
-        // Deux signaux, l'un couvre l'autre : l'âge de notre dernière
-        // observation persistée (fonctionne pour toutes les plateformes,
-        // YouTube n'expose pas de startedAt), et le startedAt de l'API
-        // quand il existe.
-        const stateAge =
-          typeof previousLiveState.updatedAt === "number"
-            ? Date.now() - previousLiveState.updatedAt
-            : Number.POSITIVE_INFINITY;
-        const startedAtMs = nextLiveState.startedAt ? Date.parse(nextLiveState.startedAt) : NaN;
-        const isCatchUp =
-          stateAge > CATCHUP_THRESHOLD_MS ||
-          (Number.isFinite(startedAtMs) && Date.now() - startedAtMs > CATCHUP_THRESHOLD_MS);
-        if (isCatchUp) {
-          const platform = status.platform || streamer.platform || "twitch";
-          catchUpLive.push(
-            streamer.displayName ||
-              formatHandleForDisplay(platform, streamer.handle || streamer.twitch)
-          );
-        } else {
-          queueAlert(() =>
-            NotificationSystem.notifyLive(streamer, status.active, preferences)
-          );
-        }
-      } else {
-        const gameNotificationsEnabled = streamer.gameNotificationsEnabled !== false;
-        // Journal de diagnostic : un changement de jeu/titre sans alerte est
-        // invisible pour l'utilisateur. Le SW console (chrome://extensions →
-        // inspect) dit alors exactement quel garde a bloque l'envoi.
-        if (previousLiveState.isLive && nextLiveState.isLive && previousLiveState.game !== nextLiveState.game) {
-          console.info("[SP] changement de categorie detecte:", streamer.handle, {
-            prefGame: preferences.gameNotifications,
-            streamerToggle: streamer.gameNotificationsEnabled,
-          });
-        }
-        if (previousLiveState.isLive && nextLiveState.isLive && previousLiveState.title !== nextLiveState.title) {
-          console.info("[SP] changement de titre detecte:", streamer.handle, {
-            prefTitle: preferences.titleNotifications,
-            streamerToggle: streamer.titleNotificationsEnabled,
-            sessionIdentique:
-              !previousLiveState.sessionId || !nextLiveState.sessionId ||
-              previousLiveState.sessionId === nextLiveState.sessionId,
-          });
-        }
-        // Les toggles globaux des réglages sont des actions en masse (ils
-        // écrivent notificationsEnabled sur chaque streamer) : le toggle du
-        // streamer est ici la seule source de vérité.
-        const shouldNotifyGame =
-          gameNotificationsEnabled &&
-          previousLiveState.isLive &&
-          previousLiveState.game &&
-          nextLiveState.game &&
-          previousLiveState.game !== nextLiveState.game &&
-          (!previousLiveState.sessionId ||
-            !nextLiveState.sessionId ||
-            previousLiveState.sessionId === nextLiveState.sessionId);
-
-        if (shouldNotifyGame) {
-          queueAlert(() =>
-            NotificationSystem.notifyGameChange(
-              streamer,
-              previousLiveState.game,
-              nextLiveState.game,
-              preferences,
-              nextLiveState.platform
-            )
-          );
-        }
-
-        const titleNotificationsEnabled = streamer.titleNotificationsEnabled !== false;
-        const shouldNotifyTitle =
-          titleNotificationsEnabled &&
-          previousLiveState.isLive &&
-          previousLiveState.title &&
-          nextLiveState.title &&
-          previousLiveState.title !== nextLiveState.title &&
-          (!previousLiveState.sessionId ||
-            !nextLiveState.sessionId ||
-            previousLiveState.sessionId === nextLiveState.sessionId);
-
-        if (shouldNotifyTitle) {
-          queueAlert(() =>
-            NotificationSystem.notifyTitleChange(
-              streamer,
-              previousLiveState.title,
-              nextLiveState.title,
-              preferences,
-              nextLiveState.platform
-            )
-          );
-        }
+      } else if (alert.type === "game") {
+        queueAlert(() => NotificationSystem.notifyGameChange(streamer, alert.from, alert.to, preferences, nextLiveState.platform));
+      } else if (alert.type === "title") {
+        queueAlert(() => NotificationSystem.notifyTitleChange(streamer, alert.from, alert.to, preferences, nextLiveState.platform));
       }
     }
 
@@ -3229,9 +3100,7 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
   // les heures calmes, comme les alertes individuelles.
   if (catchUpLive.length > 0 && !quietNow) {
     const lang = normalizeLanguage(preferences?.language);
-    const shown = catchUpLive.slice(0, 3).join(", ");
-    const rest = catchUpLive.length - 3;
-    const names = rest > 0 ? `${shown} +${rest}` : shown;
+    const names = catchUpNames(catchUpLive);
     await NotificationCenter.show({
       title: translate(lang, "background.notifications.startupBatchTitle"),
       message: translate(lang, "background.notifications.startupBatchBody", { names }),
@@ -3242,10 +3111,7 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
     });
   }
 
-  const liveCount = statuses.reduce((total, status) => {
-    return total + (status.active?.isLive ? 1 : 0);
-  }, 0);
-  await ActionBadge.update(liveCount, preferences);
+  await ActionBadge.update(countLive(statuses), preferences);
 
   // Pre-cache thumbnails for live streamers (background)
   precacheThumbnails(statuses).catch(() => {});
