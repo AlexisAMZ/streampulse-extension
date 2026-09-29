@@ -5,7 +5,12 @@
  * Toutes les chaînes, vignettes et statistiques sont fictives.
  *
  * Paramètres d'URL : state=live|offline|empty|many|loading, theme=light,
- * lang=fr|en|de…
+ * lang=fr|en|de…, ask=review|badge (bandeau de l'accueil après le coup d'œil).
+ *
+ * Les messages qui écrivent le stockage (reorderStreamers, setPinnedStreamers,
+ * resetPreferences, updatePreferences) reprennent la logique pure du vrai
+ * service worker (js/streamers-data.js, js/preferences-data.js) et passent par
+ * storage.local.set : la popup reçoit ses onChanged comme en vrai.
  */
 (function installMockChrome() {
   const params = new URLSearchParams(location.search);
@@ -459,6 +464,26 @@
       case "updatePreferences":
         store.betaGeneralPreferences = { ...store.betaGeneralPreferences, ...message.updates };
         return { success: true, preferences: store.betaGeneralPreferences };
+      case "resetPreferences": {
+        // Comme le service worker : tout au défaut, sauf la langue et le thème.
+        const { resetPreferencesFrom } = await import("/js/preferences-data.js");
+        const preferences = resetPreferencesFrom(store.betaGeneralPreferences);
+        await local.set({ betaGeneralPreferences: preferences });
+        return { success: true, preferences };
+      }
+      case "reorderStreamers": {
+        // Ordre appliqué au stockage courant, jamais à une copie de la popup.
+        const { applyStreamerOrder } = await import("/js/streamers-data.js");
+        const streamers = applyStreamerOrder(store.betaGeneralStreamers, message.order);
+        await local.set({ betaGeneralStreamers: streamers });
+        return { streamers };
+      }
+      case "setPinnedStreamers": {
+        const { sanitizePinnedIds } = await import("/js/streamers-data.js");
+        const pinnedIds = sanitizePinnedIds(store.betaGeneralStreamers, message.pinnedIds);
+        await local.set({ betaPinnedIds: pinnedIds });
+        return { pinnedIds };
+      }
       case "claimDrop":
         return { success: true, sent: true };
       case "searchChannels": {
