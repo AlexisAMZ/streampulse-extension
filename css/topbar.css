@@ -139,7 +139,11 @@
 
 /* ── "Add to StreamPulse" on channel pages: geometry of Twitch's own action
    buttons (pill 32px, 14px, 600), so it reads as a native control ── */
-.sp-qf-wrap { display: inline-flex; flex-shrink: 0; align-items: center; margin-right: 8px; }
+.sp-qf-wrap {
+  /* Hors du panneau : le bouton n'hérite pas de ses variables, sans ça son fond est vide. */
+  --sp-violet: #9146ff;
+  display: inline-flex; flex-shrink: 0; align-items: center; margin-right: 8px;
+}
 .sp-qf-btn {
   display: inline-flex;
   align-items: center;
