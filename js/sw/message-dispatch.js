@@ -6,12 +6,10 @@
 // pages de l'extension (popup, onboarding, réglages…). Les pages web ne les
 // voient jamais, même via un content script.
 const SENSITIVE_MESSAGE_TYPES = new Set([
-  "removeStreamer",
   "resetPoints",
   "clearEventLogs",
   "updateUserProfile",
   "badgeAutoStart",
-  "updatePreferences",
   "resetPreferences",
   "reorderStreamers",
   "setPinnedStreamers",

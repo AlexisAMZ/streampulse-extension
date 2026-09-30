@@ -51,6 +51,45 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.31",
+    date: "2026-09-30",
+    title: { "fr": "Les boutons de Twitch répondent de nouveau", "en": "Twitch buttons respond again", "es": "Los botones de Twitch responden de nuevo", "pt-BR": "Os botões na Twitch voltaram a responder", "de": "Die Twitch-Schaltflächen reagieren wieder", "it": "I pulsanti su Twitch rispondono di nuovo", "pl": "Przyciski na Twitchu znowu działają", "tr": "Twitch düğmeleri yeniden çalışıyor", "ru": "Кнопки на Twitch снова работают", "ja": "Twitch上のボタンが再び動作します", "ko": "Twitch의 버튼이 다시 작동합니다" },
+    changes: [
+      {
+        type: "fix",
+        text: {
+          "fr": "Sur Twitch, retirer un streamer avec le bouton « Ajouter à StreamPulse » marche de nouveau, et les réglages du panneau et du tiroir StreamPulse s'enregistrent de nouveau.",
+          "en": "On Twitch, removing a streamer with the “Add to StreamPulse” button works again, and the settings in the StreamPulse panel and drawer save again.",
+          "es": "En Twitch, quitar un streamer con el botón «Añadir a StreamPulse» vuelve a funcionar, y los ajustes del panel y del cajón de StreamPulse se guardan de nuevo.",
+          "pt-BR": "Na Twitch, remover um streamer com o botão “Adicionar ao StreamPulse” voltou a funcionar, e os ajustes do painel e da gaveta do StreamPulse voltam a ser salvos.",
+          "de": "Auf Twitch funktioniert das Entfernen eines Streamers über „Zu StreamPulse hinzufügen“ wieder, und die Einstellungen im StreamPulse-Panel und -Drawer werden wieder gespeichert.",
+          "it": "Su Twitch, rimuovere uno streamer con il pulsante «Aggiungi a StreamPulse» funziona di nuovo, e le impostazioni del pannello e del cassetto StreamPulse si salvano di nuovo.",
+          "pl": "Na Twitchu usuwanie streamera przyciskiem „Dodaj do StreamPulse” znowu działa, a ustawienia w panelu i szufladzie StreamPulse znowu się zapisują.",
+          "tr": "Twitch'te “StreamPulse'a ekle” düğmesiyle yayıncıyı kaldırma yeniden çalışıyor ve StreamPulse panelindeki ve çekmecesindeki ayarlar yeniden kaydediliyor.",
+          "ru": "На Twitch снова работает удаление стримера кнопкой «Добавить в StreamPulse», а настройки в панели и выдвижном меню StreamPulse снова сохраняются.",
+          "ja": "Twitchで「StreamPulseに追加」ボタンによるストリーマーの削除が再び動作し、StreamPulseのパネルとドロワーの設定も再び保存されます。",
+          "ko": "Twitch에서 「StreamPulse에 추가」 버튼으로 스트리머를 제거하는 기능이 다시 작동하고, StreamPulse 패널과 서랍의 설정도 다시 저장됩니다."
+        },
+      },
+      {
+        type: "fix",
+        text: {
+          "fr": "Le bouton « Ajouter à StreamPulse » retrouve son fond violet sur les pages Twitch.",
+          "en": "The “Add to StreamPulse” button gets its purple background back on Twitch pages.",
+          "es": "El botón «Añadir a StreamPulse» recupera su fondo morado en las páginas de Twitch.",
+          "pt-BR": "O botão “Adicionar ao StreamPulse” recupera o fundo roxo nas páginas da Twitch.",
+          "de": "Die Schaltfläche „Zu StreamPulse hinzufügen“ hat auf Twitch-Seiten wieder ihren violetten Hintergrund.",
+          "it": "Il pulsante «Aggiungi a StreamPulse» ritrova lo sfondo viola nelle pagine di Twitch.",
+          "pl": "Przycisk „Dodaj do StreamPulse” odzyskuje fioletowe tło na stronach Twitcha.",
+          "tr": "“StreamPulse'a ekle” düğmesi Twitch sayfalarında mor arka planına yeniden kavuştu.",
+          "ru": "Кнопка «Добавить в StreamPulse» снова получила фиолетовый фон на страницах Twitch.",
+          "ja": "「StreamPulseに追加」ボタンが、Twitchのページで紫の背景に戻りました。",
+          "ko": "「StreamPulse에 추가」 버튼이 Twitch 페이지에서 보라색 배경으로 돌아왔습니다."
+        },
+      },
+    ],
+  },
+  {
     version: "26.9.30",
     date: "2026-09-28",
     title: { "fr": "Un popup plus vif, des réglages clairs", "en": "A snappier popup, clearer settings", "es": "Un popup más ágil, ajustes más claros", "pt-BR": "Um popup mais ágil, ajustes mais claros", "de": "Schnelleres Popup, klarere Einstellungen", "it": "Popup più rapido, impostazioni più chiare", "pl": "Szybszy popup, czytelniejsze ustawienia", "tr": "Daha hızlı popup, daha net ayarlar", "ru": "Быстрее попап, понятнее настройки", "ja": "より速いポップアップ、わかりやすい設定", "ko": "더 빠른 팝업, 더 명확한 설정" },

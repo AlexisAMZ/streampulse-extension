@@ -56,7 +56,14 @@ test("expéditeur étranger refusé", { skip }, async () => {
 });
 
 test("action sensible refusée depuis un content script", { skip }, async () => {
-  assert.deepEqual(await send({ type: "updatePreferences", updates: { theme: "light" } }, twitchTab()), { error: "forbidden" });
+  assert.deepEqual(await send({ type: "resetPreferences" }, twitchTab()), { error: "forbidden" });
+});
+
+test("un content script peut mettre à jour une préférence validée", { skip }, async () => {
+  const written = await send({ type: "updatePreferences", updates: { theme: "light" } }, twitchTab());
+  assert.equal(written.success, true);
+  const unknown = await send({ type: "updatePreferences", updates: { nope: 1 } }, twitchTab());
+  assert.equal(typeof unknown.error, "string");
 });
 
 test("getStreamers renvoie la liste, les statuts et les préférences", { skip }, async () => {

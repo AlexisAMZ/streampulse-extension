@@ -21,17 +21,24 @@ test("rejectReason: expéditeur étranger refusé", () => {
 });
 
 test("rejectReason: action sensible refusée depuis un content script", () => {
-  assert.equal(rejectReason({ type: "updatePreferences" }, contentScript, identity), "not-extension-page");
-  assert.equal(rejectReason({ type: "updatePreferences" }, popup, identity), null);
+  assert.equal(rejectReason({ type: "resetPreferences" }, contentScript, identity), "not-extension-page");
+  assert.equal(rejectReason({ type: "resetPreferences" }, popup, identity), null);
   assert.equal(rejectReason({ type: "trackWatchTime" }, contentScript, identity), null);
+});
+
+test("rejectReason: removeStreamer et updatePreferences autorisés depuis nos content scripts, pas depuis un inconnu", () => {
+  for (const type of ["removeStreamer", "updatePreferences"]) {
+    assert.equal(rejectReason({ type }, contentScript, identity), null);
+    assert.equal(rejectReason({ type }, { id: "intrus", url: contentScript.url }, identity), "unknown-sender");
+  }
 });
 
 test("dispatcher: refuse et répond forbidden", (t) => {
   silence(t);
   const calls = [];
-  const dispatch = createMessageDispatcher({ updatePreferences: () => calls.push("x") }, () => identity);
+  const dispatch = createMessageDispatcher({ resetPreferences: () => calls.push("x") }, () => identity);
   const responses = [];
-  assert.equal(dispatch({ type: "updatePreferences" }, contentScript, (r) => responses.push(r)), false);
+  assert.equal(dispatch({ type: "resetPreferences" }, contentScript, (r) => responses.push(r)), false);
   assert.deepEqual(responses, [{ error: "forbidden" }]);
   assert.deepEqual(calls, []);
 });
