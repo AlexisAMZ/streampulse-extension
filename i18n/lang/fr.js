@@ -842,7 +842,11 @@ export default {
       "groupData": "Données",
       "groupWatchTime": "Temps de visionnage",
       "watchTimeTitle": "Compter le temps de visionnage",
-      "watchTimeDescription": "Compte le temps passé sur chaque chaîne Twitch et Kick, pour tes statistiques et ton Récap."
+      "watchTimeDescription": "Compte le temps passé sur chaque chaîne Twitch et Kick, pour tes statistiques et ton Récap.",
+      "syncTitle": "Synchroniser entre mes appareils",
+      "syncDescription": "Tes streamers, tes réglages et ta langue suivent le profil de ton navigateur, sans compte ni serveur StreamPulse. Ton temps de visionnage, tes points et tes Drops restent sur cet appareil.",
+      "syncStatus": "Dernière synchro : {{time}}",
+      "syncError": "Synchro en pause : la limite de stockage du navigateur est atteinte, raccourcis ta liste de streamers.",
     },
     "watchTime": {
       "totalTime": "Temps total",

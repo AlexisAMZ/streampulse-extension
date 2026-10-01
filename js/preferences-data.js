@@ -56,6 +56,9 @@ export const DEFAULT_PREFERENCES = {
   watchTimeTracker: true,
   pointsTracking: true,
   dropsTracking: true,
+  // Synchro multi-appareils via chrome.storage.sync : opt-in, rien ne quitte
+  // l'appareil sans elle. La langue et les réglages voyagent avec la liste.
+  crossDeviceSync: false,
   chatKeywords: "",
   chatBlockedUsers: "",
   language: DEFAULT_LANGUAGE,
@@ -193,6 +196,8 @@ export function sanitizePreferences(preferences = {}) {
     watchTimeTracker: preferences.watchTimeTracker !== false,
     pointsTracking: preferences.pointsTracking !== false,
     dropsTracking: preferences.dropsTracking !== false,
+    // Opt-in : la synchro ne part que sur un accord explicite.
+    crossDeviceSync: optIn(preferences, "crossDeviceSync"),
     chatKeywords: typeof preferences.chatKeywords === "string" ? preferences.chatKeywords : "",
     chatBlockedUsers: typeof preferences.chatBlockedUsers === "string" ? preferences.chatBlockedUsers : "",
     language: normalizeLanguage(preferences.language),

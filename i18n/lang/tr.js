@@ -842,7 +842,11 @@ export default {
       "groupData": "Veriler",
       "groupWatchTime": "İzleme Süresi",
       "watchTimeTitle": "İzleme süresini say",
-      "watchTimeDescription": "İstatistiklerin ve Özetin için her Twitch ve Kick kanalında geçirdiğin süreyi sayar."
+      "watchTimeDescription": "İstatistiklerin ve Özetin için her Twitch ve Kick kanalında geçirdiğin süreyi sayar.",
+      "syncTitle": "Cihazlarım arasında eşitle",
+      "syncDescription": "Yayıncıların, ayarların ve dilin tarayıcı profilini takip eder — hesap yok, StreamPulse sunucusu yok. İzleme süren, puanların ve Drops'ların bu cihazda kalır.",
+      "syncStatus": "Son eşitleme: {{time}}",
+      "syncError": "Eşitleme duraklatıldı: tarayıcının depolama sınırına ulaşıldı, yayıncı listeni kısalt.",
     },
     "watchTime": {
       "totalTime": "Toplam süre",

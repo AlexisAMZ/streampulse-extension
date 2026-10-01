@@ -1,5 +1,6 @@
 import { BACKUP_KEYS, buildBackup, backupFileName } from "./backup.js";
 import { DEFAULT_PREFERENCES } from "./preferences-data.js";
+import { SYNC_STATUS_KEY } from "./sync-data.js";
 import { bindInlineConfirm } from "./inline-confirm.js";
 import { DEFAULT_QUIET_END, DEFAULT_QUIET_START, normalizeQuietTime } from "./quiet-hours.js";
 import {
@@ -132,6 +133,8 @@ const wtTotalChannels = document.getElementById("wt-total-channels");
 const wtTopWatched = document.getElementById("wt-top-watched");
 const wtEmpty = document.getElementById("wt-empty");
 const watchTimeToggle = document.getElementById("pref-watch-time");
+const syncToggle = document.getElementById("pref-cross-device-sync");
+const syncStatusEl = document.getElementById("sync-status");
 const pointsTrackingToggle = document.getElementById("pref-points-tracking");
 const dropsTrackingToggle = document.getElementById("pref-drops-tracking");
 const communityBadgeToggle = document.getElementById("pref-community-badge");
@@ -1146,6 +1149,30 @@ function announceChatSaved(ok) {
   }, 2500);
 }
 
+/** « il y a 5 minutes », « il y a 2 heures »… dans la langue de l'interface. */
+function sinceLabel(at) {
+  const minutes = Math.max(1, Math.round((Date.now() - at) / 60_000));
+  const relative = new Intl.RelativeTimeFormat(getCurrentLanguage(), { numeric: "auto" });
+  if (minutes < 60) return relative.format(-minutes, "minute");
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return relative.format(-hours, "hour");
+  return relative.format(-Math.round(hours / 24), "day");
+}
+
+/** État de la synchro sous le réglage : rien tant qu'elle n'a jamais tourné. */
+function renderSyncStatus() {
+  if (!syncStatusEl) return;
+  chrome.storage.local.get(SYNC_STATUS_KEY).then((stored) => {
+    const status = stored[SYNC_STATUS_KEY] || {};
+    const lastAt = Math.max(Number(status.lastPushAt) || 0, Number(status.lastPullAt) || 0);
+    const parts = [];
+    if (lastAt) parts.push(t("popup.settings.syncStatus", { time: sinceLabel(lastAt) }));
+    if (status.lastError) parts.push(t("popup.settings.syncError"));
+    syncStatusEl.textContent = parts.join(" · ");
+    syncStatusEl.hidden = parts.length === 0;
+  }).catch(() => {});
+}
+
 function renderPreferences() {
   const prefs = state.preferences || defaultPreferences;  if (liveNotificationsToggle) {
     liveNotificationsToggle.checked = prefs.liveNotifications !== false;
@@ -1245,6 +1272,10 @@ function renderPreferences() {
   if (watchTimeToggle) {
     watchTimeToggle.checked = prefs.watchTimeTracker !== false;
   }
+  if (syncToggle) {
+    syncToggle.checked = prefs.crossDeviceSync === true;
+  }
+  renderSyncStatus();
   if (dropsTrackingToggle) {
     dropsTrackingToggle.checked = prefs.dropsTracking !== false;
   }
@@ -2007,6 +2038,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (changes.betaGeneralStats) {
         renderStats();
       }
+      // État de la synchro multi-appareils (poussée/tirée par le service worker).
+      if (changes[SYNC_STATUS_KEY]) {
+        renderSyncStatus();
+      }
       // Statuses refreshed by the background while the popup is open.
       if (changes.betaGeneralStatuses) {
         state.statuses = changes.betaGeneralStatuses.newValue || {};
@@ -2271,6 +2306,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (watchTimeToggle) {
       watchTimeToggle.addEventListener("change", (e) => {
         updatePreferences({ watchTimeTracker: e.target.checked });
+      });
+    }
+    if (syncToggle) {
+      syncToggle.addEventListener("change", (e) => {
+        updatePreferences({ crossDeviceSync: e.target.checked });
       });
     }
 

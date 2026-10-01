@@ -842,7 +842,11 @@ export default {
       "groupData": "データ",
       "groupWatchTime": "視聴時間",
       "watchTimeTitle": "視聴時間を記録",
-      "watchTimeDescription": "Twitch と Kick の各チャンネルで過ごした時間を記録し、統計と振り返りに使います。"
+      "watchTimeDescription": "Twitch と Kick の各チャンネルで過ごした時間を記録し、統計と振り返りに使います。",
+      "syncTitle": "デバイス間で同期",
+      "syncDescription": "配信者・設定・言語がブラウザのプロファイルに追随します。アカウントもStreamPulseのサーバーも不要。視聴時間・ポイント・ドロップはこの端末に残ります。",
+      "syncStatus": "最終同期：{{time}}",
+      "syncError": "同期を一時停止中：ブラウザの保存容量の上限に達したため、配信者リストを減らしてください。",
     },
     "watchTime": {
       "totalTime": "合計時間",

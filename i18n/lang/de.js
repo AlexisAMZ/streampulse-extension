@@ -842,7 +842,11 @@ export default {
       "groupData": "Daten",
       "groupWatchTime": "Wiedergabezeit",
       "watchTimeTitle": "Wiedergabezeit erfassen",
-      "watchTimeDescription": "Erfasst die Zeit auf jedem Twitch- und Kick-Kanal, für deine Statistiken und deinen Rückblick."
+      "watchTimeDescription": "Erfasst die Zeit auf jedem Twitch- und Kick-Kanal, für deine Statistiken und deinen Rückblick.",
+      "syncTitle": "Zwischen meinen Geräten synchronisieren",
+      "syncDescription": "Deine Streamer, Einstellungen und Sprache folgen deinem Browserprofil — ohne Konto, ohne StreamPulse-Server. Zuschauzeit, Punkte und Drops bleiben auf diesem Gerät.",
+      "syncStatus": "Letzte Synchronisierung: {{time}}",
+      "syncError": "Synchronisierung pausiert: Das Speicherlimit des Browsers ist erreicht, kürze deine Streamerliste.",
     },
     "watchTime": {
       "totalTime": "Gesamtzeit",

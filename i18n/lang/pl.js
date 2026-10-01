@@ -842,7 +842,11 @@ export default {
       "groupData": "Dane",
       "groupWatchTime": "Czas oglądania",
       "watchTimeTitle": "Licz czas oglądania",
-      "watchTimeDescription": "Liczy czas spędzony na każdym kanale Twitcha i Kicka, do twoich statystyk i podsumowania."
+      "watchTimeDescription": "Liczy czas spędzony na każdym kanale Twitcha i Kicka, do twoich statystyk i podsumowania.",
+      "syncTitle": "Synchronizuj między moimi urządzeniami",
+      "syncDescription": "Twoi streamerzy, ustawienia i język podążają za profilem Twojej przeglądarki — bez konta i bez serwera StreamPulse. Czas oglądania, punkty i dropy zostają na tym urządzeniu.",
+      "syncStatus": "Ostatnia synchronizacja: {{time}}",
+      "syncError": "Synchronizacja wstrzymana: osiągnięto limit pamięci przeglądarki, skróć listę streamerów.",
     },
     "watchTime": {
       "totalTime": "Całkowity czas",

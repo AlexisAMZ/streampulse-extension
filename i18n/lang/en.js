@@ -842,7 +842,11 @@ export default {
       "groupData": "Data",
       "groupWatchTime": "Time watched",
       "watchTimeTitle": "Watch Time Tracker",
-      "watchTimeDescription": "Track time spent on each channel."
+      "watchTimeDescription": "Track time spent on each channel.",
+      "syncTitle": "Sync across my devices",
+      "syncDescription": "Your streamers, settings and language follow your browser profile — no account, no StreamPulse server. Watch time, points and Drops stay on this device.",
+      "syncStatus": "Last sync: {{time}}",
+      "syncError": "Sync paused: the browser storage limit is reached, trim your streamer list.",
     },
     "watchTime": {
       "totalTime": "Total time",

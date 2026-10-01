@@ -842,7 +842,11 @@ export default {
       "groupData": "데이터",
       "groupWatchTime": "시청 시간",
       "watchTimeTitle": "시청 시간 집계",
-      "watchTimeDescription": "통계와 요약을 위해 Twitch 및 Kick 채널별 시청 시간을 집계합니다."
+      "watchTimeDescription": "통계와 요약을 위해 Twitch 및 Kick 채널별 시청 시간을 집계합니다.",
+      "syncTitle": "내 기기 간 동기화",
+      "syncDescription": "스트리머, 설정, 언어가 브라우저 프로필을 따라갑니다. 계정도 StreamPulse 서버도 필요 없습니다. 시청 시간, 포인트, 드롭은 이 기기에 남습니다.",
+      "syncStatus": "마지막 동기화: {{time}}",
+      "syncError": "동기화 일시 중지: 브라우저 저장소 한도에 도달했습니다. 스트리머 목록을 줄여 주세요.",
     },
     "watchTime": {
       "totalTime": "총 소요 시간",
