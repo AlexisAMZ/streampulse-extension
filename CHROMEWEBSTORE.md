@@ -25,7 +25,7 @@ StreamPulse réunit Twitch, Kick et YouTube dans une seule extension légère. E
 Fonctionnalités principales :
 • Points de chaîne et Drops Twitch : StreamPulse récupère automatiquement tes bonus de Points de chaîne et tes Drops Twitch pendant que tu regardes, et affiche ton solde de points sur Kick.
 • Notifications de live en temps réel : reçois une notification sur ton bureau dès qu'un de tes streamers lance son live et, si tu le souhaites, quand il change de titre ou de catégorie.
-• Bouton « Ajouter à StreamPulse » : ajoute un streamer en un clic depuis sa page de chaîne Twitch.
+• Bouton « Ajouter à StreamPulse » : ajoute un streamer en un clic depuis sa page de chaîne, sur Twitch ou YouTube.
 • Aperçus au survol : vois un live en survolant le lien d'une chaîne sur Twitch, sans quitter l'onglet en cours.
 • Anti-pause et relance du lecteur : le live continue quand tu changes d'onglet, et le lecteur Twitch se relance tout seul après une erreur.
 • Filtre de chat : masque les messages par mot-clé ou ceux de certains utilisateurs, sur Twitch et Kick.
@@ -48,7 +48,7 @@ StreamPulse brings Twitch, Kick and YouTube together in one lightweight extensio
 Key Features:
 • Twitch Channel Points & Drops: StreamPulse automatically claims your Twitch channel point bonuses and Drops while you watch, and counts the points you earn on Kick.
 • Real-Time Live Alerts: Get a desktop notification as soon as a streamer you follow goes live and, if you want, when they change their stream title.
-• "Add to StreamPulse" Button: Track a streamer in one click from their Twitch channel page.
+• "Add to StreamPulse" Button: Track a streamer in one click from their Twitch or YouTube channel page.
 • Live Hover Previews: Preview a live stream by hovering over a channel link on Twitch, without leaving your current tab.
 • Anti-Pause & Player Recovery: Streams keep playing when you switch tabs, and the player restarts by itself after errors such as Twitch #2000.
 • Chat Filtering: Hide messages by keyword or from specific users, on Twitch and Kick.
@@ -240,7 +240,7 @@ StreamPulse reúne Twitch, Kick y YouTube en una sola extensión ligera. Vigila 
 Características principales:
 • Puntos de canal y Drops de Twitch: StreamPulse reclama automáticamente tus bonificaciones de puntos de canal y tus Drops de Twitch mientras miras, y cuenta los puntos que ganas en Kick.
 • Alertas en directo: Recibe una notificación de escritorio en cuanto un streamer que sigues empieza a emitir y, si quieres, cuando cambia el título de su stream.
-• Botón «Añadir a StreamPulse»: Sigue a un streamer con un clic desde su página de canal de Twitch.
+• Botón «Añadir a StreamPulse»: Sigue a un streamer con un clic desde su página de canal, en Twitch o YouTube.
 • Vistas previas al pasar el cursor: Previsualiza un stream en directo pasando el ratón por el enlace de un canal en Twitch, sin salir de la pestaña actual.
 • Antipausa y recuperación del reproductor: El stream sigue al cambiar de pestaña y el reproductor se reinicia solo tras errores como el #2000 de Twitch.
 • Filtro de chat: Oculta mensajes por palabra clave o de ciertos usuarios, en Twitch y Kick.
@@ -274,7 +274,7 @@ O StreamPulse reúne Twitch, Kick e YouTube em uma única extensão leve. Ele ac
 Principais recursos:
 • Pontos do canal e Drops da Twitch: O StreamPulse resgata automaticamente seus bônus de pontos do canal e seus Drops da Twitch enquanto você assiste, e contabiliza os pontos ganhos na Kick.
 • Alertas ao vivo em tempo real: Receba uma notificação na área de trabalho assim que um streamer que você segue entrar ao vivo e, se quiser, quando ele mudar o título da transmissão.
-• Botão "Adicionar ao StreamPulse": Acompanhe um streamer com um clique na página do canal na Twitch.
+• Botão "Adicionar ao StreamPulse": Acompanhe um streamer com um clique na página do canal, na Twitch ou no YouTube.
 • Prévias ao passar o mouse: Veja uma prévia de uma live passando o mouse sobre o link de um canal na Twitch, sem sair da aba atual.
 • Antipausa e recuperação do player: A live continua quando você troca de aba, e o player reinicia sozinho após erros como o #2000 da Twitch.
 • Filtro de chat: Oculte mensagens por palavra-chave ou de usuários específicos, na Twitch e na Kick.
@@ -308,7 +308,7 @@ StreamPulse vereint Twitch, Kick und YouTube in einer schlanken Erweiterung. Sie
 Hauptfunktionen:
 • Twitch-Kanalpunkte und Drops: StreamPulse holt deine Kanalpunkte-Boni und Twitch-Drops automatisch ab, während du zuschaust, und zählt die auf Kick gesammelten Punkte.
 • Live-Benachrichtigungen in Echtzeit: Erhalte eine Desktop-Benachrichtigung, sobald ein gefolgter Streamer live geht, und auf Wunsch auch, wenn er den Titel seines Streams ändert.
-• Button „Zu StreamPulse hinzufügen“: Folge einem Streamer mit einem Klick direkt auf seiner Twitch-Kanalseite.
+• Button „Zu StreamPulse hinzufügen“: Folge einem Streamer mit einem Klick direkt auf seiner Twitch- oder YouTube-Kanalseite.
 • Vorschau beim Überfahren: Sieh dir einen Livestream an, indem du mit der Maus über einen Kanallink auf Twitch fährst, ohne den aktuellen Tab zu verlassen.
 • Anti-Pause und Player-Wiederherstellung: Der Stream läuft beim Tabwechsel weiter, und der Player startet nach Fehlern wie Twitch #2000 automatisch wieder.
 • Chatfilter: Blende Nachrichten nach Stichwörtern oder von bestimmten Nutzern aus, auf Twitch und Kick.
@@ -343,7 +343,7 @@ StreamPulse riunisce Twitch, Kick e YouTube in un'unica estensione leggera. Tien
 Funzionalità principali:
 • Punti canale e Drops di Twitch: StreamPulse riscatta automaticamente i bonus dei punti canale e i Drops di Twitch mentre guardi, e conteggia i punti guadagnati su Kick.
 • Avvisi live in tempo reale: Ricevi una notifica sul desktop appena uno streamer che segui va in diretta e, se vuoi, quando cambia il titolo della sua live.
-• Pulsante "Aggiungi a StreamPulse": Segui uno streamer con un clic dalla sua pagina del canale Twitch.
+• Pulsante "Aggiungi a StreamPulse": Segui uno streamer con un clic dalla sua pagina del canale, su Twitch o YouTube.
 • Anteprime al passaggio del mouse: Guarda l'anteprima di una live passando il mouse sul link di un canale su Twitch, senza lasciare la scheda attuale.
 • Anti-pausa e ripristino del player: La live continua quando cambi scheda e il player si riavvia da solo dopo errori come il #2000 di Twitch.
 • Filtro chat: Nascondi i messaggi per parola chiave o di determinati utenti, su Twitch e Kick.
@@ -377,7 +377,7 @@ StreamPulse łączy Twitcha, Kicka i YouTube w jednym lekkim rozszerzeniu. Śled
 Główne funkcje:
 • Punkty kanału i dropy na Twitchu: StreamPulse automatycznie odbiera bonusy punktów kanału i dropy na Twitchu podczas oglądania oraz liczy punkty zdobyte na Kicku.
 • Powiadomienia o transmisjach na żywo: Otrzymuj powiadomienie na pulpicie, gdy obserwowany streamer rozpocznie transmisję, a jeśli chcesz, także gdy zmieni jej tytuł.
-• Przycisk „Dodaj do StreamPulse”: Śledź streamera jednym kliknięciem na jego stronie kanału na Twitchu.
+• Przycisk „Dodaj do StreamPulse”: Śledź streamera jednym kliknięciem na jego stronie kanału, na Twitchu lub YouTube.
 • Podgląd po najechaniu: Zobacz podgląd transmisji, najeżdżając kursorem na link kanału na Twitchu, bez opuszczania bieżącej karty.
 • Antypauza i przywracanie odtwarzacza: Transmisja gra dalej po zmianie karty, a odtwarzacz sam się restartuje po błędach takich jak #2000 na Twitchu.
 • Filtr czatu: Ukrywaj wiadomości według słów kluczowych lub od wybranych użytkowników, na Twitchu i Kicku.
@@ -411,7 +411,7 @@ StreamPulse, Twitch, Kick ve YouTube'u tek bir hafif eklentide birleştirir. Sev
 Başlıca özellikler:
 • Twitch kanal puanları ve Drops: StreamPulse, sen izlerken Twitch kanal puanı bonuslarını ve Drops ödüllerini otomatik olarak alır, Kick'te kazandığın puanları da sayar.
 • Anlık canlı yayın bildirimleri: Takip ettiğin bir yayıncı yayına başlar başlamaz masaüstü bildirimi al; istersen yayın başlığını değiştirdiğinde de haberdar ol.
-• "StreamPulse'a ekle" düğmesi: Bir yayıncıyı Twitch kanal sayfasından tek tıkla takip et.
+• "StreamPulse'a ekle" düğmesi: Bir yayıncıyı Twitch veya YouTube kanal sayfasından tek tıkla takip et.
 • Üzerine gelince önizleme: Twitch'te bir kanal bağlantısının üzerine gelerek canlı yayını önizle, bulunduğun sekmeden çıkmadan.
 • Duraklatma önleme ve oynatıcı kurtarma: Sekme değiştirdiğinde yayın durmaz, oynatıcı Twitch #2000 gibi hatalardan sonra kendiliğinden yeniden başlar.
 • Sohbet filtresi: Mesajları anahtar kelimeye göre ya da belirli kullanıcılardan gizle, Twitch ve Kick'te.
@@ -445,7 +445,7 @@ StreamPulse объединяет Twitch, Kick и YouTube в одном лёгк�
 Основные возможности:
 • Баллы канала и дропсы Twitch: StreamPulse автоматически забирает бонусы баллов канала и дропсы Twitch, пока вы смотрите, и считает баллы, заработанные на Kick.
 • Оповещения о трансляциях: Получайте уведомление на рабочем столе, как только отслеживаемый стример выходит в эфир, а по желанию и когда он меняет название трансляции.
-• Кнопка «Добавить в StreamPulse»: Отслеживайте стримера в один клик прямо со страницы его канала на Twitch.
+• Кнопка «Добавить в StreamPulse»: Отслеживайте стримера в один клик прямо со страницы его канала, на Twitch или YouTube.
 • Превью при наведении: Смотрите превью трансляции, наведя курсор на ссылку канала на Twitch, не покидая текущую вкладку.
 • Антипауза и восстановление плеера: Трансляция не останавливается при переключении вкладок, а плеер сам перезапускается после ошибок вроде #2000 на Twitch.
 • Фильтр чата: Скрывайте сообщения по ключевым словам или от определённых пользователей на Twitch и Kick.
@@ -479,7 +479,7 @@ StreamPulseは、Twitch、Kick、YouTubeをひとつの軽量な拡張機能に�
 主な機能：
 • Twitchのチャンネルポイントとドロップ：視聴中にTwitchのチャンネルポイントのボーナスとドロップを自動で受け取り、Kickで獲得したポイントも集計します。
 • リアルタイム配信通知：フォロー中の配信者が配信を始めるとすぐにデスクトップ通知が届きます。配信タイトルの変更も通知できます。
-• 「StreamPulseに追加」ボタン：Twitchのチャンネルページからワンクリックで配信者を追加できます。
+• 「StreamPulseに追加」ボタン：TwitchやYouTubeのチャンネルページからワンクリックで配信者を追加できます。
 • ホバープレビュー：Twitchでチャンネルのリンクにカーソルを合わせるだけで、今のタブを離れずに配信をプレビューできます。
 • 一時停止防止とプレーヤー復旧：タブを切り替えても配信は止まらず、Twitchの#2000などのエラー後もプレーヤーが自動で再起動します。
 • チャットフィルター：TwitchとKickで、キーワードや特定ユーザーのメッセージを非表示にできます。
@@ -513,7 +513,7 @@ StreamPulse는 트위치, Kick, YouTube를 하나의 가벼운 확장 프로그�
 주요 기능:
 • 트위치 채널 포인트와 드롭: 시청하는 동안 트위치 채널 포인트 보너스와 드롭을 자동으로 받고, Kick에서 얻은 포인트도 집계합니다.
 • 실시간 방송 알림: 팔로우한 스트리머가 방송을 시작하면 바로 데스크톱 알림을 받고, 원하면 방송 제목이 바뀔 때도 알림을 받을 수 있습니다.
-• "StreamPulse에 추가" 버튼: 트위치 채널 페이지에서 한 번의 클릭으로 스트리머를 추가하세요.
+• "StreamPulse에 추가" 버튼: 트위치 또는 YouTube 채널 페이지에서 한 번의 클릭으로 스트리머를 추가하세요.
 • 마우스오버 미리보기: 트위치에서 채널 링크에 마우스를 올려 현재 탭을 벗어나지 않고 방송을 미리 볼 수 있습니다.
 • 일시정지 방지와 플레이어 복구: 탭을 바꿔도 방송이 멈추지 않으며, 트위치 #2000 같은 오류 후에도 플레이어가 자동으로 다시 시작됩니다.
 • 채팅 필터: 트위치와 Kick에서 키워드나 특정 사용자의 메시지를 숨길 수 있습니다.
