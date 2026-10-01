@@ -182,8 +182,10 @@ export function plusActive() {
 
 function renderPlus() {
   const active = plusActive();
+  const deviceLimited = plusRecord?.status === "device_limited";
   $("open-plus")?.classList.toggle("is-active", active);
-  if ($("plus-offer")) $("plus-offer").hidden = active;
+  if ($("plus-offer")) $("plus-offer").hidden = active || deviceLimited;
+  if ($("plus-device-limited")) $("plus-device-limited").hidden = !deviceLimited;
   if ($("plus-active")) $("plus-active").hidden = !active;
   if (active && $("plus-active-plan")) {
     const key = plusRecord.licenseKey.replace(/^(SP-[A-Z0-9]{4}).*(.{4})$/, "$1-…-$2");
@@ -344,6 +346,30 @@ function initPlus() {
   $("plus-manage")?.addEventListener("click", async () => {
     const button = $("plus-manage");
     const error = $("plus-manage-error");
+    if (!plusRecord?.licenseKey || !button) return;
+    button.disabled = true;
+    if (error) error.hidden = true;
+    try {
+      const url = await portalUrl(plusRecord.licenseKey, fetch);
+      if (url) {
+        openTab(url);
+        return;
+      }
+      throw new Error("no_portal");
+    } catch {
+      if (error) {
+        error.textContent = t("popup.plus.manageError");
+        error.hidden = false;
+      }
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  // Limite d'appareils atteinte : même portail, depuis le bandeau dédié.
+  $("plus-manage-devices")?.addEventListener("click", async () => {
+    const button = $("plus-manage-devices");
+    const error = $("plus-manage-devices-error");
     if (!plusRecord?.licenseKey || !button) return;
     button.disabled = true;
     if (error) error.hidden = true;
@@ -693,7 +719,9 @@ function initSmartAlerts() {
 const OPEN_RECHECK_MS = 5 * 60 * 1000;
 
 async function recheckOnOpen() {
-  if (!plusRecord?.licenseKey || plusRecord.status !== "active") return;
+  // device_limited reste contrôlé à chaque ouverture : dès qu'une place est
+  // libérée dans le portail, ce navigateur se réactive tout seul.
+  if (!plusRecord?.licenseKey || !["active", "device_limited"].includes(plusRecord.status)) return;
   const now = Date.now();
   if (now - (Number(plusRecord.checkedAt || plusRecord.verifiedAt) || 0) < OPEN_RECHECK_MS) return;
   const result = await verifyLicense(plusRecord.licenseKey, fetch, now, await getDeviceId(chrome.storage.local));
@@ -701,10 +729,16 @@ async function recheckOnOpen() {
     // eslint-disable-next-line require-atomic-updates -- la dernière vérification fait foi.
     plusRecord = { ...result.record, checkedAt: now };
     await chrome.storage.local.set({ [PLUS_KEY]: plusRecord });
-  } else if (["invalid", "format", "device_limit"].includes(result.error)) {
+  } else if (["invalid", "format"].includes(result.error)) {
     // eslint-disable-next-line require-atomic-updates -- la dernière vérification fait foi.
     plusRecord = null;
     await chrome.storage.local.remove(PLUS_KEY);
+  } else if (result.error === "device_limit") {
+    // La clé reste, avec un statut dédié : l'utilisateur voit POURQUOI c'est
+    // verrouillé au lieu d'un « Débloquer » injustifié, et le portail peut
+    // libérer une place. L'effacer ferait perdre la clé de ce navigateur.
+    plusRecord = { ...plusRecord, status: "device_limited", checkedAt: now };
+    await chrome.storage.local.set({ [PLUS_KEY]: plusRecord });
   } else {
     return;
   }
