@@ -598,7 +598,11 @@ export function gameFromDescription(description) {
   return (ofCategory?.[1] || watchFor?.[1] || "").trim().slice(0, 80);
 }
 
-/** Payant si la description parle d'abonnement, de sub offert ou de Bits. */
+/**
+ * Payant = l'action demandée coûte : prendre un sub, en offrir un, acheter ou
+ * poser des Bits. Les badges gagnés en regardant se gagnent gratuitement —
+ * une description qui parle d'un abonnement sans le demander ne paie pas.
+ */
 export const isPaidBadge = (badge) => /subscrib|gift|\bsubs?\b|\bbits?\b/i.test(badge.description || "");
 
 const BADGE_FILTERS = Object.freeze(["available", "all", "free", "paid", "missing", "owned"]);
