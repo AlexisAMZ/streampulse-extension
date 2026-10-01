@@ -145,19 +145,22 @@
 
   // ---- bouton ---------------------------------------------------------------
 
-  // Même D.A. que les boutons de YouTube (chip sombre #272727, pilule radius 18,
-  // Roboto 500) : au repos il passe pour un natif. Une fois la chaîne suivie,
-  // le pill passe en violet StreamPulse pour marquer l'état.
+  // La D.A. vient du bouton « S'abonner » lui-même : fond, texte, rayon,
+  // hauteur, padding et police sont recopiés de son style calculé via des
+  // variables CSS. Le pill colle donc au thème (clair/sombre) et aux refontes
+  // de YouTube sans maintenance ; les valeurs en dur ne servent qu'au tout
+  // premier rendu, avant qu'un vrai bouton soit mesurable.
   var STYLE = [
-    "#" + BTN_ID + " { display: inline-flex; align-items: center; gap: 7px; height: 36px;",
-    "  padding: 0 16px 0 13px; margin-left: 8px; border-radius: 18px; vertical-align: middle;",
-    "  border: 0; background: #272727; color: #f1f1f1; cursor: pointer;",
-    "  font-family: Roboto, Arial, sans-serif; font-size: 14px; font-weight: 500;",
-    "  letter-spacing: 0; white-space: nowrap; }",
-    "#" + BTN_ID + ":hover { background: #3f3f3f; }",
-    "#" + BTN_ID + ":focus-visible { outline: 2px solid #f1f1f1; outline-offset: 1px; }",
+    "#" + BTN_ID + " { display: inline-flex; align-items: center; gap: 7px;",
+    "  margin-left: 8px; vertical-align: middle; cursor: pointer; white-space: nowrap;",
+    "  background: var(--sp-bg, #272727); color: var(--sp-color, #f1f1f1);",
+    "  border-radius: var(--sp-radius, 18px); height: var(--sp-height, 36px);",
+    "  padding: var(--sp-padding, 0 16px 0 13px); border: var(--sp-border, 0);",
+    "  font-family: var(--sp-font, Roboto, Arial, sans-serif);",
+    "  font-size: var(--sp-font-size, 14px); font-weight: var(--sp-weight, 500); }",
+    "#" + BTN_ID + ":hover { filter: brightness(.94); }",
     "#" + BTN_ID + ".is-tracked { background: #9146FF; color: #fff; }",
-    "#" + BTN_ID + ".is-tracked:hover { background: #a25eff; }",
+    "#" + BTN_ID + ".is-tracked:hover { background: #a25eff; filter: none; }",
     "#" + BTN_ID + ".is-busy { opacity: .55; pointer-events: none; }",
     "#" + BTN_ID + " img { width: 16px; height: 16px; }",
   ].join("\n");
@@ -177,6 +180,27 @@
     btn.title = tracked ? t("remove") : t("add");
     btn.setAttribute("aria-pressed", tracked ? "true" : "false");
     btn.classList.toggle("is-tracked", tracked);
+  }
+
+  /**
+   * Copie le style calculé du vrai bouton « S'abonner » dans les variables
+   * CSS du pill. L'état suivi (violet) reste géré par la classe : sa règle,
+   * plus spécifique, garde la priorité sur les variables.
+   */
+  function applyNativeStyle(btn, anchor) {
+    var source = anchor.querySelector("button") || anchor;
+    if (!source || source.tagName !== "BUTTON") return; // squelette de chargement : rien à mesurer.
+    var style = window.getComputedStyle(source);
+    if (style.backgroundColor === "rgba(0, 0, 0, 0)") return;
+    btn.style.setProperty("--sp-bg", style.backgroundColor);
+    btn.style.setProperty("--sp-color", style.color);
+    btn.style.setProperty("--sp-radius", style.borderRadius);
+    btn.style.setProperty("--sp-height", style.height);
+    btn.style.setProperty("--sp-padding", style.padding);
+    btn.style.setProperty("--sp-border", style.borderStyle === "none" ? "0" : style.border);
+    btn.style.setProperty("--sp-font", style.fontFamily);
+    btn.style.setProperty("--sp-font-size", style.fontSize);
+    btn.style.setProperty("--sp-weight", style.fontWeight);
   }
 
   function onClick(e, btn, handle) {
@@ -256,6 +280,9 @@
         anchor.insertAdjacentElement("afterend", existing);
       }
       renderState(existing, handle);
+      // Recopié à chaque passage : le thème ou le bouton de YouTube peuvent
+      // changer sans navigation.
+      applyNativeStyle(existing, anchor);
     });
   }
 
