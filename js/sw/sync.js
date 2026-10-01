@@ -7,11 +7,13 @@
 
 import {
   SYNC_META_KEY,
+  SYNC_PINNED_KEY,
   SYNC_PREFS_KEY,
   SYNC_STATUS_KEY,
   SYNC_STREAMERS_PREFIX,
   chunkForSync,
   isRemoteSync,
+  mergePinnedIds,
   mergePreferences,
   mergeStreamers,
 } from "../sync-data.js";
@@ -79,6 +81,7 @@ export async function pushToSync() {
   const data = {
     [SYNC_META_KEY]: { rev, updatedAt: Date.now(), device, chunks: chunks.length },
     [SYNC_PREFS_KEY]: localStored[PREFERENCES_KEY] || {},
+    [SYNC_PINNED_KEY]: localStored.betaPinnedIds || [],
   };
   chunks.forEach((chunk, index) => { data[`${SYNC_STREAMERS_PREFIX}${index}`] = chunk; });
   const staleKeys = [];
@@ -123,11 +126,17 @@ async function pullFromSync(meta) {
     ]);
     const streamers = mergeStreamers(localStreamers, remoteStreamers);
     const preferences = mergePreferences(localStored[PREFERENCES_KEY] || {}, stored[SYNC_PREFS_KEY] || {});
+    // Épingles : union des deux appareils, bornée aux streamers qui existent.
+    const knownIds = new Set(streamers.map((streamer) => streamer?.id).filter(Boolean));
+    const pinnedIds = mergePinnedIds(localStored.betaPinnedIds, stored[SYNC_PINNED_KEY]).filter((id) => knownIds.has(id));
     if (JSON.stringify(streamers) !== JSON.stringify(localStreamers)) {
       await DataStore.saveStreamers(streamers);
     }
     if (JSON.stringify(preferences) !== JSON.stringify(localStored[PREFERENCES_KEY] || {})) {
       await PreferenceStore.set(preferences);
+    }
+    if (JSON.stringify(pinnedIds) !== JSON.stringify(localStored.betaPinnedIds || [])) {
+      await chrome.storage.local.set({ betaPinnedIds: pinnedIds });
     }
     pulledRevs.add(Number(meta.rev));
     await setStatus({ lastPullAt: Date.now(), lastError: "" });
@@ -143,7 +152,7 @@ async function pullFromSync(meta) {
 async function clearSync() {
   const stored = await chrome.storage.sync.get(null);
   const keys = Object.keys(stored).filter(
-    (key) => key === SYNC_META_KEY || key === SYNC_PREFS_KEY || key.startsWith(SYNC_STREAMERS_PREFIX),
+    (key) => key === SYNC_META_KEY || key === SYNC_PREFS_KEY || key === SYNC_PINNED_KEY || key.startsWith(SYNC_STREAMERS_PREFIX),
   );
   if (keys.length) await chrome.storage.sync.remove(keys);
   await chrome.storage.local.remove(SYNC_STATUS_KEY);

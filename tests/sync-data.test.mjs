@@ -54,6 +54,13 @@ test("mergePreferences complète les réglages restés d'usine et protège les c
   assert.deepEqual(mergePreferences(local, undefined), local);
 });
 
+test("mergePinnedIds fait l'union ordonnée sans doublon", async () => {
+  const { mergePinnedIds } = await import("../js/sync-data.js");
+  assert.deepEqual(mergePinnedIds(["a", "b"], ["b", "c"]), ["a", "b", "c"]);
+  assert.deepEqual(mergePinnedIds(undefined, ["a", 1, ""]), ["a"]);
+  assert.deepEqual(mergePinnedIds(undefined, undefined), []);
+});
+
 test("isRemoteSync ignore les échos et les états incomplets", async () => {
   const { isRemoteSync } = await import("../js/sync-data.js");
   assert.equal(isRemoteSync({ device: "autre", rev: 3 }, "moi"), true);

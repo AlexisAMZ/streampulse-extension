@@ -6,6 +6,7 @@ import { DEFAULT_PREFERENCES } from "./preferences-data.js";
 export const SYNC_META_KEY = "sp:sync:meta";
 export const SYNC_PREFS_KEY = "sp:sync:prefs";
 export const SYNC_STREAMERS_PREFIX = "sp:sync:streamers.";
+export const SYNC_PINNED_KEY = "sp:sync:pinned";
 export const SYNC_STATUS_KEY = "sp:sync:status";
 
 /** Chrome refuse plus de 8 192 octets par clé : budget prudent pour le JSON d'une tranche. */
@@ -70,6 +71,19 @@ export function mergePreferences(local = {}, remote = {}) {
       ? JSON.stringify(theirs) !== JSON.stringify(defaultValue)
       : theirs !== defaultValue;
     if (untouchedHere && theirsIsChoice) merged[key] = theirs;
+  }
+  return merged;
+}
+
+/** Épingles : union des deux appareils, à filtrer ensuite sur les streamers connus. */
+export function mergePinnedIds(local, remote) {
+  const merged = [];
+  const seen = new Set();
+  for (const id of [...(Array.isArray(local) ? local : []), ...(Array.isArray(remote) ? remote : [])]) {
+    if (typeof id === "string" && id && !seen.has(id)) {
+      seen.add(id);
+      merged.push(id);
+    }
   }
   return merged;
 }
