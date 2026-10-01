@@ -442,23 +442,23 @@ export function countFilters(campaigns, now) {
 // ─── Campagnes de récompenses (badges) ───────────────────────────────────────
 
 /**
- * Type de récompense affiché par Twitch en pill (« Code », « Badge »…) : aucun
- * champ unique n'est documenté, on garde le premier non vide parmi ceux vus
- * dans le schéma. Les campagnes déjà en storage, sans type, s'affichent sans pill.
+ * Étiquette « Code » des récompenses : Twitch n'expose aucun champ de type GQL
+ * (huit noms candidats refusés, vérifiés un par un), donc on lit le résumé de
+ * la campagne — les campagnes à code y parlent de code. "" sinon : pas de pill.
  */
 function rewardTypeOf(raw) {
-  const value = [raw?.benefitType, raw?.archetype, raw?.itemType, raw?.deliveryType]
-    .find((item) => typeof item === "string" && item.trim());
-  return text(value, 40);
+  const haystack = `${text(raw?.name, 200)} ${text(raw?.summary, 400)}`.toLowerCase();
+  return /\bcode\b/.test(haystack) ? "CODE" : "";
 }
 
 /** Une campagne `rewardCampaignsAvailableToUser`, avec ses conditions et ses récompenses. */
 function normalizeReward(raw) {
   if (!isPlainObject(raw)) return null;
   const id = idOf(raw.id);
+  const type = rewardTypeOf(raw);
   const rewards = list(raw.rewards)
     .filter(isPlainObject)
-    .map((reward) => ({ id: idOf(reward.id), name: text(reward.name, 120), image: httpsUrl(reward.bannerImage?.image1xURL), type: rewardTypeOf(reward) }))
+    .map((reward) => ({ id: idOf(reward.id), name: text(reward.name, 120), image: httpsUrl(reward.bannerImage?.image1xURL), type }))
     .filter((reward) => reward.name);
   if (!id || !rewards.length) return null;
   const url = httpsUrl(raw.externalURL);

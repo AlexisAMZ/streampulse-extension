@@ -350,14 +350,18 @@ test("watchedMinutesFor estime la progression locale d'une campagne à objectif 
   assert.equal(watchedMinutesFor(watchDaily, { ...reward, startsAt: 0 }, now), 155);
 });
 
-test("normalizeReward garde le type de récompense (pill Code/Badge) du premier champ non vide", async () => {
+test("normalizeReward étiquette « Code » via le résumé de la campagne", async () => {
   const { normalizeRewards } = await import("../js/drops-data.js");
-  const camp = (rew) => normalizeRewards([{ id: "c1", rewards: [rew] }])[0]?.rewards[0];
-  assert.equal(camp({ id: "r1", name: "Sierra Helmet", benefitType: "CODE", archetype: "", itemType: "", deliveryType: "" }).type, "CODE");
-  assert.equal(camp({ id: "r1", name: "Sierra Helmet", benefitType: "", itemType: "ITEM", deliveryType: "" }).type, "ITEM");
-  assert.equal(camp({ id: "r1", name: "Sierra Helmet" }).type, "");
-  // Les campagnes en storage sans type (lues avant l'ajout du champ) passent telles quelles.
-  assert.equal(camp({ id: "r1", name: "Sierra Helmet", bannerImage: { image1xURL: "https://x/y.png" } }).image, "https://x/y.png");
+  const camp = (raw) => normalizeRewards([raw])[0]?.rewards[0];
+  assert.equal(
+    camp({ id: "c1", summary: "Preorder bonus: use the code in game", rewards: [{ id: "r1", name: "Sierra Helmet" }] }).type,
+    "CODE",
+  );
+  assert.equal(
+    camp({ id: "c1", name: "CONTROL Resonant rewards", rewards: [{ id: "r1", name: "Sierra Helmet" }] }).type,
+    "",
+  );
+  assert.equal(camp({ id: "c1", rewards: [{ id: "r1", name: "X" }] }).type, "");
 });
 
 test("gameFromDescription lit le jeu des badges sans lien de catégorie", async () => {

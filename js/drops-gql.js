@@ -50,15 +50,15 @@ export const INVENTORY_QUERY_LITE = `query StreamPulseDropsInventoryLite {
 // Campagnes de récompenses (badges de chat, codes de jeu, objets offerts) : un
 // circuit séparé des Drops, attribué automatiquement. Lecture acceptée sans
 // Client-Integrity (vérifié sur twitch.tv le 2026-09-26) ; Twitch ne donne pas
-// l'avancée. Le pill affiché par Twitch (« Code », « Badge »…) vient de l'un
-// des champs benefitType/archetype/itemType/deliveryType : on les demande tous,
-// normalizeReward gardera le premier non vide.
+// l'avancée. Le type affiché par la page Twitch (« Code »…) n'expose AUCUN
+// champ GQL : huit noms candidats ont été sondés un par un et tous refusés —
+// l'étiquette vient d'une heuristique sur le résumé (voir normalizeReward).
 const REWARDS_QUERY = `query StreamPulseRewardCampaigns {
   rewardCampaignsAvailableToUser {
     id name brand startsAt endsAt summary externalURL
     unlockRequirements { subsGoal minuteWatchedGoal }
     game { displayName }
-    rewards { id name benefitType archetype itemType deliveryType bannerImage { image1xURL } }
+    rewards { id name bannerImage { image1xURL } }
   }
 }`;
 
