@@ -547,27 +547,48 @@ export function badgesFrom(stored = {}) {
 export function mergeBadges(state, raw, now) {
   const first = !state.syncedAt;
   const known = new Map(state.badges.map((badge) => [badge.id, badge]));
-  const badges = [];
-  const added = [];
-  const seen = new Set();
+
+  // Une réponse liste toutes les versions de chaque set (paliers de sub…). Le
+  // catalogue n'en montre qu'une — la première rencontrée, stable d'une lecture
+  // à l'autre — mais retient la plus haute : quand elle monte, une nouvelle
+  // version de la série est apparue et le badge est signalé comme nouveauté.
+  const sets = new Map();
   for (const item of list(raw.badges)) {
     const id = text(item?.setID, 120);
-    if (!id || seen.has(id)) continue;
-    seen.add(id);
+    if (!id) continue;
+    const version = Number(item?.version);
+    const set = sets.get(id);
+    if (!set) {
+      sets.set(id, { base: item, top: Number.isFinite(version) ? version : undefined });
+      continue;
+    }
+    if (Number.isFinite(version) && (set.top === undefined || version > set.top)) set.top = version;
+  }
+
+  const badges = [];
+  const added = [];
+  for (const [id, set] of sets) {
+    const item = set.base;
     const before = known.get(id);
     const badge = {
       id,
+      version: set.top !== undefined ? String(set.top) : (before?.version || ""),
       title: text(item.title, 120) || id,
       description: text(item.description, 400),
       image: httpsUrl(item.imageURL),
       url: httpsUrl(item.clickURL),
       game: gameFromUrl(item.clickURL),
       firstSeen: before ? before.firstSeen : first ? 0 : now,
+      newVersionAt: before?.newVersionAt || 0,
     };
+    // Nouvelle version d'une série déjà connue (palier de sub en plus…) : la
+    // version du set a monté, on date la nouveauté sans toucher l'image de base.
+    if (before && set.top !== undefined && Number(before.version || 0) < set.top) {
+      badge.newVersionAt = now;
+    }
     if (!before && !first) added.push(badge);
     badges.push(badge);
   }
-  // Une réponse vide (panne passagère) ne doit pas effacer la liste.
   if (!badges.length) return { state, added: [] };
   return {
     state: { updatedAt: now, syncedAt: state.syncedAt || now, badges, owned: list(raw.owned).map((id) => text(id, 120)).filter(Boolean) },
@@ -722,10 +743,13 @@ export function countBadges(state, context = {}) {
 
 export function newBadges(state, now, windowMs = NEW_BADGE_MS) {
   const owned = new Set(state.owned);
+  // Nouveauté au sens large : set inédit, ou nouvelle version d'une série
+  // connue (palier de sub en plus) — la plus récente des deux dates fait foi.
   return state.badges
-    .filter((badge) => badge.firstSeen && now - badge.firstSeen <= windowMs)
+    .map((badge) => ({ ...badge, lastNews: Math.max(badge.firstSeen || 0, badge.newVersionAt || 0) }))
+    .filter((badge) => badge.lastNews > 0 && now - badge.lastNews <= windowMs)
     .map((badge) => ({ ...badge, owned: owned.has(badge.id), paid: isPaidBadge(badge) }))
-    .sort((a, b) => b.firstSeen - a.firstSeen);
+    .sort((a, b) => b.lastNews - a.lastNews);
 }
 
 // ─── Affichage ────────────────────────────────────────────────────────────────

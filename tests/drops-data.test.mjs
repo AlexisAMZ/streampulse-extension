@@ -373,3 +373,32 @@ test("gameFromDescription lit le jeu des badges sans lien de catégorie", async 
   assert.equal(gameFromDescription("This badge was earned by subscribing to a channel."), "");
   assert.equal(gameFromDescription(null), "");
 });
+
+test("mergeBadges date la nouveauté quand une série de badges monte de version", async () => {
+  const { mergeBadges, newBadges, badgesFrom } = await import("../js/drops-data.js");
+  const DAY = 86_400_000;
+  const now = 1_000_000_000;
+  const v12 = { setID: "sub-badge", version: "12", title: "Sub badge", description: "12 mois", imageURL: "https://a/12.png", clickURL: null };
+  const v6 = { ...v12, version: "6", imageURL: "https://a/6.png" };
+
+  // Première lecture : les paliers existants sont tous connus d'office, rien
+  // n'est nouveau ; la ligne du catalogue retient la version la plus haute.
+  const first = mergeBadges(badgesFrom({}), { badges: [v12, v6], owned: [] }, now);
+  assert.equal(first.state.badges[0].version, "12");
+  assert.equal(first.state.badges[0].newVersionAt, 0);
+  assert.equal(first.added.length, 0);
+
+  // La série monte au palier 24 : nouveauté datée, sans être « added ».
+  const later = mergeBadges(first.state, { badges: [{ ...v12, version: "24", imageURL: "https://a/24.png" }, v12, v6], owned: [] }, now + 5_000);
+  assert.equal(later.state.badges[0].version, "24");
+  assert.equal(later.state.badges[0].newVersionAt, now + 5_000);
+  assert.equal(later.state.badges[0].firstSeen, 0);
+  assert.equal(later.added.length, 0);
+
+  // Une lecture sans montée conserve la date ; newBadges la fait sortir de la
+  // fenêtre une fois les 30 jours passés.
+  const again = mergeBadges(later.state, { badges: [v12, v6], owned: [] }, now + 9_000);
+  assert.equal(again.state.badges[0].newVersionAt, now + 5_000);
+  assert.equal(newBadges(again.state, now + 9_000).length, 1);
+  assert.equal(newBadges(again.state, now + 5_000 + 31 * DAY).length, 0);
+});
