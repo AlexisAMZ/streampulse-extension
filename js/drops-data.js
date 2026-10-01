@@ -586,6 +586,18 @@ export function gameFromUrl(url) {
   }
 }
 
+/**
+ * Jeu cité dans la description d'un badge gagné en regardant, sans lien de
+ * catégorie : « … earned by watching X for 1 hour », « … watching 30 minutes
+ * of X category ». Souvent le seul indice de Twitch quand clickURL est null.
+ */
+export function gameFromDescription(description) {
+  const text = String(description || "");
+  const ofCategory = /watching (?:\d+|one|an?)?\s*(?:minutes?|hours?)?\s*of (.+?) category/i.exec(text);
+  const watchFor = /watch\w* (.+?) for (?:\d+|one|an?) (?:minutes?|hours?)/i.exec(text);
+  return (ofCategory?.[1] || watchFor?.[1] || "").trim().slice(0, 80);
+}
+
 /** Payant si la description parle d'abonnement, de sub offert ou de Bits. */
 export const isPaidBadge = (badge) => /subscrib|gift|\bsubs?\b|\bbits?\b/i.test(badge.description || "");
 

@@ -359,3 +359,17 @@ test("normalizeReward garde le type de récompense (pill Code/Badge) du premier 
   // Les campagnes en storage sans type (lues avant l'ajout du champ) passent telles quelles.
   assert.equal(camp({ id: "r1", name: "Sierra Helmet", bannerImage: { image1xURL: "https://x/y.png" } }).image, "https://x/y.png");
 });
+
+test("gameFromDescription lit le jeu des badges sans lien de catégorie", async () => {
+  const { gameFromDescription } = await import("../js/drops-data.js");
+  assert.equal(
+    gameFromDescription("This badge was earned by watching Dragon's Dogma 2: Dark Arisen for 1 hour"),
+    "Dragon's Dogma 2: Dark Arisen",
+  );
+  assert.equal(
+    gameFromDescription("This badge was earned by watching 30 minutes of RuneScape: Dragonwilds category"),
+    "RuneScape: Dragonwilds",
+  );
+  assert.equal(gameFromDescription("This badge was earned by subscribing to a channel."), "");
+  assert.equal(gameFromDescription(null), "");
+});

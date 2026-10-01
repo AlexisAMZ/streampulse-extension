@@ -33,6 +33,7 @@ import {
   rewardsFrom,
   summarizeHistory,
   watchedMinutesFor,
+  gameFromDescription,
 } from "./drops-data.js";
 
 const $ = (id) => document.getElementById(id);
@@ -499,7 +500,7 @@ function badgeRow(badge) {
     image: sharpImage(badge.image),
     condition: badgeCondition(badge.description),
     fallback: text,
-    game: badge.campaign?.game || categoryOf(badge.description),
+    game: badge.campaign?.game || categoryOf(badge.description) || gameFromDescription(badge.description),
     gameId: badge.campaign?.gameId || "",
     link: badge.campaign ? "" : badge.url,
     paid: badge.paid,
