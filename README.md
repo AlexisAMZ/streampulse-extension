@@ -13,7 +13,7 @@
   <a href="https://chromewebstore.google.com/detail/streampulse-multi-streame/ipfhbfabadbpkjimhdcjadopnahdpddh"><img src="https://img.shields.io/chrome-web-store/rating/ipfhbfabadbpkjimhdcjadopnahdpddh?label=rating&color=9146FF" alt="Chrome Web Store rating"></a>
   <a href="https://addons.mozilla.org/firefox/addon/streampulse-twitch-kick/"><img src="https://img.shields.io/amo/v/streampulse-twitch-kick?label=Firefox&logo=firefoxbrowser&logoColor=white&color=FF7139" alt="Firefox Add-ons"></a>
   <a href="https://github.com/AlexisAMZ/streampulse-extension/stargazers"><img src="https://img.shields.io/github/stars/AlexisAMZ/streampulse-extension?style=flat&logo=github&color=53FC18" alt="GitHub stars"></a>
-  <img src="https://img.shields.io/badge/languages-16-lightgrey" alt="16 languages">
+  <img src="https://img.shields.io/badge/languages-11-lightgrey" alt="11 languages">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-blue" alt="License: GPL-3.0"></a>
 </p>
 

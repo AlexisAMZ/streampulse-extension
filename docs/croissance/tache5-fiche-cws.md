@@ -3,7 +3,12 @@
 Date : 2026-09-28. Complément à `CHROMEWEBSTORE.md` (qui reste la référence ;
 les textes ci-dessous s'y substituent champ par champ).
 
-Constat : la fiche est déjà traduite en 15 langues et bien structurée. Le
+> Note (2026-10-01) : depuis la 26.9.30, le produit est en **11 langues**
+> (`id`, `nl`, `sv`, `cs`, `hi` retirées). Les décomptes ci-dessous, écrits à
+> la date du document, ont été actualisés pour décrire l'état courant.
+
+Constat : la fiche est déjà traduite (15 langues à la date du document, 11
+aujourd'hui) et bien structurée. Le
 travail restant porte sur (1) la description courte, trop courte et liste de
 fonctions plutôt que bénéfice, (2) la première capture, (3) la vérification
 des langues dans la console.
@@ -36,10 +41,10 @@ déjà les mots recherchés : Twitch, Drops, Points, Alerts).
    dans le store, aucune régénération locale ne la retire.
 2. **Première capture = tableau de bord**, car c'est l'écran le plus vu.
    Regénérer les captures localisées pour que la capture 1 ne soit plus la
-   version anglaise manuelle partagée par les 15 dossiers :
+   version anglaise manuelle partagée par les 11 dossiers :
 
    ```bash
-   npm run store:assets   # les 15 langues
+   npm run store:assets   # les 11 langues
    ```
 
 3. **Grande tuile promotionnelle** (`images/promo/marquee.png`, 1400×560) :
@@ -50,8 +55,8 @@ déjà les mots recherchés : Twitch, Drops, Points, Alerts).
 
 ## 3. Langues de la fiche — checklist console
 
-Le dépôt couvre 15 langues (CS, DE, EN, ES, FR, ID, IT, JA, KO, NL, PL,
-PT-BR, RU, SV, TR). Dans la console, chaque langue doit avoir : nom,
+Le dépôt couvre 11 langues (DE, EN, ES, FR, IT, JA, KO, PL,
+PT-BR, RU, TR). Dans la console, chaque langue doit avoir : nom,
 description courte (nouvelle version), description longue, 3 captures. À
 vérifier une par une, puis :
 

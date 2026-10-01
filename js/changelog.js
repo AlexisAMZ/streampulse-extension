@@ -13,7 +13,7 @@ import { initI18n, applyTranslations, t, resolveLocale, getCurrentLanguage } fro
  * Texte d'une note de version dans la langue choisie par l'utilisateur.
  *
  * Les notes ne vivent pas dans translations.js : elles changent à chaque
- * release et n'ont pas à passer le contrôle de complétude sur 16 langues.
+ * release et n'ont pas à passer le contrôle de complétude sur les 11 langues.
  */
 function localized(value) {
   return pickLocalized(value, getCurrentLanguage());

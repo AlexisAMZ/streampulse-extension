@@ -10,7 +10,7 @@ StreamPulse fait peau neuve 💜
 
 Le streamer en live s'affiche en grand, tes lives défilent en dessous, et tu gardes un œil sur tes points et tes Drops du jour.
 
-Twitch & Kick · 15 langues
+Twitch & Kick · 11 langues
 👉 streampulse.fr
 
 **Version courte**
@@ -27,7 +27,7 @@ StreamPulse has a brand new look 💜
 
 The streamer who's live takes the stage, your other lives scroll below, and today's points and Drops are one glance away.
 
-Twitch & Kick · 15 languages
+Twitch & Kick · 11 languages
 👉 streampulse.fr
 
 **Short version**

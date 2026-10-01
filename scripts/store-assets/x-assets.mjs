@@ -76,7 +76,7 @@ const COPY = {
       "Avatar &amp; pastille LIVE sur l'onglet",
       "Masquer les extensions Twitch",
       "Récap de visionnage",
-      "Twitch + Kick, 15 langues",
+      "Twitch + Kick, 11 langues",
     ],
   },
   en: {
@@ -100,7 +100,7 @@ const COPY = {
       "Avatar &amp; LIVE dot on the tab",
       "Hide Twitch extensions",
       "Watch time recap",
-      "Twitch + Kick, 15 languages",
+      "Twitch + Kick, 11 languages",
     ],
   },
 };

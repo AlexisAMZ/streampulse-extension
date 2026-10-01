@@ -2,7 +2,7 @@
  * Extraction des textes marketing.
  *
  * Deux sources, aucune invention :
- *   - CHROMEWEBSTORE.md : short + detailed descriptions déjà traduites (15 langues)
+ *   - CHROMEWEBSTORE.md : short + detailed descriptions déjà traduites (11 langues)
  *   - i18n/translations.js : les chaînes réellement affichées par l'extension
  */
 
@@ -148,7 +148,7 @@ export function resolveTagline(translated, lang) {
 /**
  * Typographie française : espace fine insécable avant ! ? ; et insécable avant
  * les deux-points. Sans ça le rendu casse la ligne entre le mot et la ponctuation
- * (« ...15 langues \n ! Gratuit »).
+ * (« ...11 langues \n ! Gratuit »).
  */
 export function applyTypography(text, lang) {
   if (lang !== "fr" || !text) return text;

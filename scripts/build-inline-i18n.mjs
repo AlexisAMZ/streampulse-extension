@@ -6,7 +6,7 @@
  * Les content scripts sont injectés comme scripts classiques (manifest.json),
  * ils ne peuvent donc pas `import` les modules ES de i18n/. Chacun
  * embarquait sa propre petite table de traductions, limitée à 4 langues et
- * dupliquée : impossible à maintenir sur 16 langues.
+ * dupliquée : impossible à maintenir sur 11 langues.
  *
  * Ce script extrait le sous-ensemble de clés dont les content scripts ont
  * besoin et l'émet en script classique exposant window.__SP_I18N__.

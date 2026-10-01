@@ -90,7 +90,7 @@ export function findBannedTerms(entries, lang) {
  * Retire d'une description les phrases porteuses d'un terme interdit.
  *
  * Les descriptions courtes du listing finissent toutes par une accroche du type
- * « Dispo en 15 langues ! Gratuit. » : on coupe cette phrase et on garde
+ * « Dispo en 11 langues ! Gratuit. » : on coupe cette phrase et on garde
  * l'énumération de fonctionnalités, qui elle est factuelle.
  */
 export function stripPromotionalSentences(text, lang) {

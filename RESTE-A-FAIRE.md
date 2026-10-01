@@ -1,29 +1,21 @@
 # Reste à faire
 
-État au commit `eba6094` (26.8.11). Chiffres mesurés sur le dépôt, pas estimés.
+État au commit `eba6094` (26.8.11), sections 1 et 3 mises à jour au 2026-10-01
+(26.9.31). Chiffres mesurés sur le dépôt, pas estimés.
 
 ---
 
 ## 1. Traductions : FAIT
 
-Les 16 langues sont complètes : 357 clés chacune, 0 clé manquante.
-15 langues sont publiées (`ready: true`), seul `hi` (hindi) reste en
-`ready: false` (10 % de chaînes encore identiques à l'anglais).
+Les 11 langues sont complètes : 1079 clés chacune, 0 clé manquante, toutes
+publiées (`ready: true`) : `fr`, `en`, `es`, `pt-BR`, `de`, `it`, `pl`, `tr`,
+`ru`, `ja`, `ko`.
 
-| Langue | Prête | | Langue | Prête |
-|---|---|---|---|---|
-| `fr` | ✅ | | `id` | ✅ |
-| `en` | ✅ | | `nl` | ✅ |
-| `es` | ✅ | | `hi` | ❌ (ready:false) |
-| `pt-BR` | ✅ | | `sv` | ✅ |
-| `de` | ✅ | | `cs` | ✅ |
-| `it` | ✅ | | `tr` | ✅ |
-| `pl` | ✅ | | `ru` | ✅ |
-| `ja` | ✅ | | `ko` | ✅ |
-
-Pour publier `hi` une fois traduit : créer `i18n/lang/hi.js`, l'importer dans
-`i18n/translations.js`, le déclarer (`ready: true`) dans `i18n/meta.js`, puis
-`npm run verify`.
+Les 5 langues du début (`id`, `nl`, `sv`, `cs`, `hi`) ont été retirées du
+produit à la 26.9.30 : leurs traductions n'étaient pas assez complètes pour
+être publiées. Pour ajouter une langue : créer `i18n/lang/<code>.js`,
+l'importer dans `i18n/translations.js`, la déclarer (`ready: true`) dans
+`i18n/meta.js`, puis `npm run verify`.
 
 ---
 
@@ -35,14 +27,11 @@ refuse une release avec des textes incomplets.
 
 ---
 
-## 3. `_locales/` limité à 4 langues : partiel
+## 3. `_locales/` : fait
 
-`_locales/` contient `en`, `es`, `fr`, `pt_BR` (2 clés : nom et description de
-la fiche Chrome Web Store). Les 12 autres langues voient la fiche en anglais.
-
-Rien ne casse (`default_locale: "en"`), mais la fiche Store ne suit pas les
-15 langues publiées dans l'interface. 24 traductions à faire (2 × 12), texte
-marketing à soigner.
+`_locales/` couvre les 11 langues de l'interface (2 clés chacune : nom et
+description de la fiche Chrome Web Store), vérifié par `verify.mjs`
+(`default_locale: "en"` reste le repli).
 
 ---
 
@@ -77,7 +66,7 @@ jamais été observées en fonctionnement :
 ## Commandes utiles
 
 ```bash
-npm run verify   # 11 contrôles, dont complétude des 16 langues
+npm run verify   # 23 contrôles, dont complétude des 11 langues
 npm run lint     # 0 erreur, 33 warnings préexistants
 npm run build    # lint + zip depuis `git ls-files`
 

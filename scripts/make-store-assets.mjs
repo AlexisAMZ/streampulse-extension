@@ -2,7 +2,7 @@
 /**
  * Génère les captures d'écran localisées du Chrome Web Store.
  *
- *   node scripts/make-store-assets.mjs            # les 15 langues
+ *   node scripts/make-store-assets.mjs            # les 11 langues
  *   node scripts/make-store-assets.mjs fr en      # seulement celles listées
  *   KEEP_BUILD=1 node scripts/make-store-assets.mjs fr   # garde les intermédiaires
  *
@@ -328,7 +328,7 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
   const tagline = resolveTagline(t("onboarding.welcomeTagline"), lang);
 
   // La description courte du listing se termine sur une accroche du type
-  // « Dispo en 15 langues ! Gratuit. » : « gratuit » est un mot-clé interdit sur
+  // « Dispo en 11 langues ! Gratuit. » : « gratuit » est un mot-clé interdit sur
   // les assets, on retire la phrase et on garde l'énumération factuelle.
   const featuresSubtitle = stripPromotionalSentences(listing[lang].short, lang);
   const bullets = listing[lang].bullets.map((bullet) => ({
