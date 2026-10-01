@@ -116,9 +116,12 @@ export function handleDropsRefresh(request, sender, sendResponse) {
       const now = Date.now();
       const readAt = Number(stored.streamPulseDropsProgress?.updatedAt) || 0;
       const campaignsAt = Number(stored.streamPulseDropsCampaigns?.updatedAt) || 0;
-      const sent = request.force || now - readAt >= DROPS_POPUP_REFRESH_MS
-        ? (await refreshDropsFromWorker({ minGapMs: 0 })).read || (await sendDropsCommand({ action: "inventory" }))
-        : false;
+      // Badges et récompenses : fenêtre courte à chaque ouverture du popup, sinon
+      // la liste ne suit qu'à l'alarme (10 min), elle-même bridée à 30 min.
+      // minGapMs infini : inventaire réputé frais, seuls badges et récompenses partent.
+      const inventoryGap = request.force || now - readAt >= DROPS_POPUP_REFRESH_MS ? 0 : Number.POSITIVE_INFINITY;
+      const result = await refreshDropsFromWorker({ minGapMs: inventoryGap, rewardsMaxAgeMs: DROPS_POPUP_REFRESH_MS });
+      const sent = result.read || (inventoryGap === 0 && (await sendDropsCommand({ action: "inventory" })));
       if (now - campaignsAt >= 30 * 60_000) sendDropsCommand({ action: "campaigns" }).catch(warnWith("relecture des campagnes"));
       sendResponse({ success: true, sent });
     } catch (error) {

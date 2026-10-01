@@ -73,11 +73,13 @@ export function scheduleDropsAlarm() {
  * Relit l'inventaire des Drops sans onglet Twitch ouvert (session lue dans le
  * cookie), puis récupère les Drops prêts si la récupération auto est active.
  * Utile quand on regarde sur un autre appareil, et pour un popup à jour.
+ * `rewardsMaxAgeMs` resserre la fenêtre de relecture des badges et récompenses
+ * (le popup la raccourcit, sinon sa liste ne suit qu'à l'alarme des 30 min).
  */
-export async function refreshDropsFromWorker({ minGapMs = DROPS_WORKER_MIN_GAP_MS } = {}) {
+export async function refreshDropsFromWorker({ minGapMs = DROPS_WORKER_MIN_GAP_MS, rewardsMaxAgeMs = REWARDS_EVERY_MS } = {}) {
   const prefs = await PreferenceStore.get();
   if (prefs.dropsTracking === false) return { read: false, reason: "disabled" };
-  refreshRewardsFromWorker().catch((error) => {
+  refreshRewardsFromWorker({ maxAgeMs: rewardsMaxAgeMs }).catch((error) => {
     if (error.code !== "signed-out") console.warn("[StreamPulse] badges :", error.code || error.message);
   });
   const stored = await chrome.storage.local.get("streamPulseDropsProgress");
@@ -99,19 +101,23 @@ export async function refreshDropsFromWorker({ minGapMs = DROPS_WORKER_MIN_GAP_M
 
 const REWARDS_EVERY_MS = 30 * 60_000;
 
-/** Campagnes de badges et récompenses, relues au plus toutes les 30 minutes. */
-async function refreshRewardsFromWorker() {
+/**
+ * Campagnes de badges et récompenses, relues au plus toutes les 30 minutes.
+ * `maxAgeMs` raccourcit la fenêtre (popup ouvert) : c'est le seul moyen pour
+ * l'utilisateur de voir la liste à jour sans attendre la prochaine alarme.
+ */
+async function refreshRewardsFromWorker({ maxAgeMs = REWARDS_EVERY_MS } = {}) {
   const stored = await chrome.storage.local.get(["streamPulseDropsRewards", "streamPulseDropsBadges", BADGE_AUTO_KEY]);
   const now = Date.now();
   // Deux délais séparés : une lecture réussie de l'un ne doit jamais bloquer l'autre.
   const warn = (what) => (error) => {
     if (error.code !== "signed-out") console.warn(`[StreamPulse] ${what} :`, error.code || error.message, error.detail || "");
   };
-  if (now - (Number(stored.streamPulseDropsRewards?.updatedAt) || 0) >= REWARDS_EVERY_MS) {
+  if (now - (Number(stored.streamPulseDropsRewards?.updatedAt) || 0) >= maxAgeMs) {
     await dropsClient.readRewards().then((list) => dropsStore.recordRewards(list), warn("campagnes de badges"));
   }
   // En mode auto, les badges obtenus se relisent à chaque passage pour fermer l'onglet au plus vite.
-  if (stored[BADGE_AUTO_KEY] || now - (Number(stored.streamPulseDropsBadges?.updatedAt) || 0) >= REWARDS_EVERY_MS) {
+  if (stored[BADGE_AUTO_KEY] || now - (Number(stored.streamPulseDropsBadges?.updatedAt) || 0) >= maxAgeMs) {
     await dropsClient.readBadges()
       .then((raw) => dropsStore.recordBadges(raw))
       .then(({ added }) => announceBadges(added), warn("badges globaux"));
