@@ -137,6 +137,7 @@
       "all_frames": false,
       "js": [
         "js/inject/i18n-inline.js",
+        "js/inject/quickFollowKick.js",
         "js/kickPlayerEnhancer.js",
         "js/kickChannelPoints.js",
         "js/chatFilter.js",
@@ -170,7 +171,8 @@
       ],
       "matches": [
         "https://www.twitch.tv/*",
-        "https://www.youtube.com/*"
+        "https://www.youtube.com/*",
+        "https://kick.com/*"
       ]
     },
     {
