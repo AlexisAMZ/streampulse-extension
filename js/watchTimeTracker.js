@@ -21,6 +21,7 @@
     const host = window.location.hostname;
     if (host.includes("twitch.tv")) return "twitch";
     if (host.includes("kick.com")) return "kick";
+    if (host.endsWith("youtube.com")) return "youtube";
     return null;
   }
 
@@ -36,6 +37,8 @@
     const path = window.location.pathname.split("/").filter(Boolean);
     if (path.length === 0) return null;
 
+    if (platform === "youtube") return youtubeChannel(path);
+
     const segment = path[0].toLowerCase();
     if (!segment || segment.length > 60) return null;
 
@@ -44,6 +47,26 @@
     if (platform === "twitch" && window.__SP_DOM__?.isChannelLogin(segment) === false) return null;
 
     return { platform, channel: segment };
+  }
+
+  /**
+   * Chaîne YouTube : @handle ou /channel/ID dans l'URL ; sinon (page watch d'un
+   * direct) le lien de la chaîne dans le DOM. Seuls les directs comptent, repérés
+   * par le chat en direct ou le badge du lecteur : une vidéo normale ou un VOD
+   * ne doit rien ajouter au temps de visionnage.
+   */
+  function youtubeChannel(path) {
+    const first = (path[0] || "").toLowerCase();
+    const fromUrl = first.startsWith("@")
+      ? first.slice(1)
+      : first === "channel"
+        ? (path[1] || "").toLowerCase()
+        : "";
+    if (!document.querySelector("ytd-live-chat-frame, .ytp-live-badge")) return null;
+    if (fromUrl) return { platform: "youtube", channel: fromUrl };
+    const href = document.querySelector("#channel-name a[href], ytd-channel-name a[href]")?.getAttribute("href") || "";
+    const handle = /\/@([\w.-]{1,60})/.exec(href)?.[1] || /\/channel\/(UC[\w-]{1,60})/.exec(href)?.[1] || "";
+    return handle ? { platform: "youtube", channel: handle.toLowerCase() } : null;
   }
 
   // ── Categorie du live (recap avance) ──

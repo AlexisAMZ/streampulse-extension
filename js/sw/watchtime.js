@@ -3,6 +3,7 @@
 import { normalizePlatform } from "../platforms.js";
 import { ensureConfig, fetchJson, fetchTwitchJson, twitchHeaders } from "./config.js";
 import { STORAGE_KEYS } from "./constants.js";
+import { PlatformChecker } from "./platform-checker.js";
 import { streamerCache, streamerStates } from "./state.js";
 import { DataStore } from "./stores.js";
 
@@ -55,6 +56,12 @@ export async function resolveChannelAvatar(platform, channel) {
         `https://kick.com/api/v2/channels/${encodeURIComponent(channel)}`
       );
       const url = data?.user?.profile_pic || "";
+      wtAvatarCache.set(cacheKey, url);
+      return url;
+    }
+    if (platform === "youtube") {
+      const resolved = await PlatformChecker.resolveYoutubeChannel(channel);
+      const url = resolved?.avatar || "";
       wtAvatarCache.set(cacheKey, url);
       return url;
     }
