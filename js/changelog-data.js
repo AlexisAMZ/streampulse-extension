@@ -51,6 +51,77 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.33",
+    date: "2026-10-01",
+    title: { "fr": "Ta liste te suit, YouTube aussi", "en": "Your list follows you, YouTube too", "es": "Tu lista te sigue, YouTube también", "pt-BR": "Sua lista acompanha você, YouTube também", "de": "Deine Liste folgt dir, YouTube auch", "it": "La tua lista ti segue, YouTube incluso", "pl": "Twoja lista podąża za Tobą, YouTube też", "tr": "Listen seninle gelir, YouTube dahil", "ru": "Ваш список следует за вами, и YouTube тоже", "ja": "リストは同期、YouTubeも対応", "ko": "목록이 따라갑니다, YouTube도 지원" },
+    changes: [
+      {
+        type: "new",
+        text: {
+          "fr": "Synchronisation entre tes appareils, activable dans Réglages → Données : tes streamers, tes épingles, tes réglages et ta langue suivent ton navigateur, sans compte ni serveur StreamPulse. Ton temps de visionnage, tes points et tes Drops restent sur chaque appareil.",
+          "en": "Sync across your devices, toggle it in Settings → Data: your streamers, pins, settings and language follow your browser — no account, no StreamPulse server. Watch time, points and Drops stay on each device.",
+          "es": "Sincronización entre tus dispositivos, activable en Ajustes → Datos: tus streamers, fijados, ajustes e idioma siguen tu navegador, sin cuenta ni servidor de StreamPulse. Tu tiempo de visualización, puntos y Drops se quedan en cada dispositivo.",
+          "pt-BR": "Sincronização entre seus dispositivos, ativável em Configurações → Dados: seus streamers, fixados, configurações e idioma seguem seu navegador, sem conta nem servidor do StreamPulse. Seu tempo assistido, pontos e Drops ficam em cada dispositivo.",
+          "de": "Synchronisierung zwischen deinen Geräten, aktivierbar unter Einstellungen → Daten: Deine Streamer, angehefteten Einträge, Einstellungen und Sprache folgen deinem Browser — ohne Konto, ohne StreamPulse-Server. Zuschauzeit, Punkte und Drops bleiben auf jedem Gerät.",
+          "it": "Sincronizzazione tra i tuoi dispositivi, attivabile in Impostazioni → Dati: i tuoi streamer, i fissati, le impostazioni e la lingua seguono il tuo browser, senza account né server StreamPulse. Tempo di visione, punti e Drops restano su ogni dispositivo.",
+          "pl": "Synchronizacja między urządzeniami, do włączenia w Ustawieniach → Dane: Twoi streamerzy, przypięte, ustawienia i język podążają za Twoją przeglądarką — bez konta i bez serwera StreamPulse. Czas oglądania, punkty i dropy zostają na każdym urządzeniu.",
+          "tr": "Ayarlar → Veriler'den açılabilen cihazlar arası eşitleme: yayıncıların, sabitlediklerin, ayarların ve dilin tarayıcını takip eder — hesap yok, StreamPulse sunucusu yok. İzleme süren, puanların ve Drops'ların her cihazda kalır.",
+          "ru": "Синхронизация между устройствами, включается в «Настройки → Данные»: ваши стримеры, закрепления, настройки и язык следуют за вашим браузером — без аккаунта и без сервера StreamPulse. Время просмотра, баллы и дропсы остаются на каждом устройстве.",
+          "ja": "設定 → データで有効化できるデバイス間同期：配信者・ピン留め・設定・言語がブラウザに追随します。アカウントもStreamPulseのサーバーも不要。視聴時間・ポイント・ドロップは各端末に残ります。",
+          "ko": "설정 → 데이터에서 켤 수 있는 기기 간 동기화: 스트리머, 고정, 설정, 언어가 브라우저를 따라갑니다. 계정도 StreamPulse 서버도 없습니다. 시청 시간, 포인트, 드롭은 각 기기에 남습니다."
+        },
+      },
+      {
+        type: "new",
+        text: {
+          "fr": "Le temps de visionnage compte maintenant YouTube : regarde un direct d'une chaîne suivie et les minutes partent dans tes statistiques et ton Récap, avatar à l'appui. Les vidéos normales et les rediffusions ne comptent pas.",
+          "en": "Watch time now counts YouTube: watch a live from a followed channel and the minutes land in your stats and Recap, avatar included. Regular videos and replays don't count.",
+          "es": "El tiempo de visualización ahora cuenta YouTube: mira un directo de un canal seguido y los minutos van a tus estadísticas y tu resumen, con su avatar. Los vídeos normales y las repeticiones no cuentan.",
+          "pt-BR": "O tempo assistido agora conta o YouTube: assista a uma live de um canal seguido e os minutos vão para suas estatísticas e seu resumo, com avatar. Vídeos normais e replays não contam.",
+          "de": "Die Zuschauzeit zählt jetzt YouTube: Schaue einen Stream eines gefolgten Kanals, und die Minuten landen in deiner Statistik und deinem Rückblick, Avatar inklusive. Normale Videos und Wiederholungen zählen nicht.",
+          "it": "Il tempo di visione ora conta YouTube: guarda una live di un canale seguito e i minuti finiscono nelle tue statistiche e nel tuo riepilogo, avatar compreso. I video normali e le repliche non contano.",
+          "pl": "Czas oglądania liczy teraz YouTube: oglądaj transmisję na żywo obserwowanego kanału, a minuty trafią do Twoich statystyk i podsumowania, z awatarem. Zwykłe filmy i powtórki się nie liczą.",
+          "tr": "İzleme süresi artık YouTube'u da sayıyor: takip ettiğin bir kanalın canlı yayınını izle, dakikalar istatistiklerine ve özetine eklenir, avatarıyla birlikte. Normal videolar ve tekrarlar sayılmaz.",
+          "ru": "Время просмотра учитывает YouTube: смотрите трансляцию канала, за которым вы следите, — минуты попадут в вашу статистику и итоги, с аватаром. Обычные видео и повторы не учитываются.",
+          "ja": "視聴時間がYouTubeに対応：フォロー中のチャンネルのライブを見ると、分が統計とまとめに加算され、アバターも表示されます。通常動画や再再生はカウントしません。",
+          "ko": "시청 시간이 YouTube를 지원합니다: 팔로우한 채널의 라이브를 보면 분이 통계와 결산에 반영되고 아바타도 표시됩니다. 일반 영상과 다시보기는 포함되지 않습니다."
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          "fr": "Onglet Badges enrichi : progression des campagnes à objectif de minutes avec le temps qui reste (estimée sur ton temps regardé, Twitch n'expose pas l'avancée), le type de chaque récompense est affiché (Code, Badge…) et les badges sans lien de catégorie sont enfin cliquables.",
+          "en": "Richer Badges tab: progress on minute-goal campaigns with the time left (estimated from your watch time — Twitch exposes no progress), each reward's type is shown (Code, Badge…) and badges without a category link are finally clickable.",
+          "es": "Pestaña de insignias más rica: progreso de las campañas con objetivo de minutos y el tiempo que falta (estimado según lo que miraste, Twitch no da el avance), el tipo de cada recompensa se muestra (Código, Insignia…) y las insignias sin enlace de categoría por fin se pueden pulsar.",
+          "pt-BR": "Aba de distintivos mais rica: progresso das campanhas com meta de minutos e o tempo que falta (estimado pelo que você assistiu, a Twitch não mostra o avanço), o tipo de cada recompensa é exibido (Código, Distintivo…) e distintivos sem link de categoria agora são clicáveis.",
+          "de": "Richerer Abzeichen-Tab: Fortschritt bei Kampagnen mit Minutenziel samt Restzeit (aus deiner Zuschauzeit geschätzt, Twitch liefert keinen Fortschritt), der Typ jeder Belohnung wird angezeigt (Code, Abzeichen…) und Abzeichen ohne Kategorie-Link sind endlich anklickbar.",
+          "it": "Scheda Badge più ricca: avanzamento delle campagne con obiettivo di minuti e tempo rimanente (stimato dal tuo tempo di visione, Twitch non fornisce l'avanzamento), il tipo di ogni ricompensa è mostrato (Codice, Badge…) e i badge senza link di categoria sono finalmente cliccabili.",
+          "pl": "Bogatsza karta odznak: postęp kampanii z celem minut i pozostały czas (szacowany na podstawie Twojego oglądania, Twitch nie podaje postępu), typ każdej nagrody jest wyświetlany (Kod, Odznaka…), a odznaki bez linku do kategorii są wreszcie klikalne.",
+          "tr": "Zenginleştirilmiş Rozetler sekmesi: dakika hedefli kampanyalarda ilerleme ve kalan süre (izleme süreden tahmin edilir, Twitch ilerleme vermiyor), her ödülün türü gösteriliyor (Kod, Rozet…) ve kategori bağlantısı olmayan rozetler artık tıklanabilir.",
+          "ru": "Обогащённая вкладка значков: прогресс кампаний с целью в минутах и оставшееся время (оценка по вашему времени просмотра — Twitch не даёт прогресса), показан тип каждой награды (Код, Значок…), а значки без ссылки на категорию наконец кликабельны.",
+          "ja": "バッジタブが強化されました：分数目標キャンペーンの進捗と残り時間を表示（あなたの視聴時間から推定、Twitchは進捗を公開しません）、報酬の種類（コード、バッジなど）を表示、カテゴリリンクのないバッジもついにクリック可能に。",
+          "ko": "배지 탭이 강화되었습니다: 분 목표 캠페인의 진행률과 남은 시간 표시(시청 시간 기준 추정, Twitch는 진행률을 제공하지 않음), 각 보상의 유형 표시(코드, 배지 등), 카테고리 링크 없는 배지도 드디어 클릭할 수 있습니다."
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          "fr": "Les notifications de nouveaux badges ont leur propre réglage, découplé des alertes de Drops — et les cinq interrupteurs d'alertes du popup répondent de nouveau : ils n'étaient plus câblés.",
+          "en": "New-badge notifications get their own setting, decoupled from Drops alerts — and the five alert switches in the pop-up respond again: they had come unwired.",
+          "es": "Las notificaciones de nuevas insignias tienen su propio ajuste, separado de las alertas de Drops, y los cinco interruptores de alertas del popup vuelven a responder: habían quedado sin conectar.",
+          "pt-BR": "As notificações de novos distintivos ganham configuração própria, separada das alertas de Drops — e os cinco interruptores de alerta do pop-up voltam a responder: estavam sem fiação.",
+          "de": "Benachrichtigungen über neue Abzeichen haben eine eigene Einstellung, entkoppelt von den Drop-Benachrichtigungen — und die fünf Benachrichtigungsschalter im Pop-up reagieren wieder: Sie waren nicht mehr verdrahtet.",
+          "it": "Le notifiche dei nuovi badge hanno un'impostazione propria, separata dagli avvisi Drops — e i cinque interruttori di notifica del pop-up rispondono di nuovo: erano rimasti scollegati.",
+          "pl": "Powiadomienia o nowych odznakach mają własne ustawienie, oddzielone od alertów dropów — a pięć przełączników alertów w okienku znów działa: były odłączone.",
+          "tr": "Yeni rozet bildirimleri artık kendi ayarına sahip, Drops bildirimlerinden ayrıldı — ve penceredeki beş bildirim anahtarı yeniden çalışıyor: bağlantıları kopmuştu.",
+          "ru": "У уведомлений о новых значках своя настройка, отдельная от уведомлений о дропсах, — и пять переключателей уведомлений во всплывающем окне снова работают: их проводка была отсоединена.",
+          "ja": "新バッジの通知に独自の設定ができ、ドロップ通知から独立しました。また、ポップアップの5つの通知スイッチが再び動作します。配線が外れていたためです。",
+          "ko": "새 배지 알림에 독립적인 설정이 생겨 드롭 알림과 분리되었고, 팝업의 5개 알림 스위치가 다시 작동합니다. 배선이 빠져 있었습니다."
+        },
+      },
+    ],
+  },
+  {
     version: "26.9.32",
     date: "2026-10-01",
     title: { "fr": "Le bandeau reste où tu le laisses", "en": "The strip stays where you leave it", "es": "La tira se queda donde la dejas", "pt-BR": "A faixa fica onde você deixa", "de": "Die Leiste bleibt, wo du sie lässt", "it": "La barra resta dove la lasci", "pl": "Pasek zostaje tam, gdzie go zostawisz", "tr": "Şerit bıraktığın yerde kalıyor", "ru": "Лента остаётся там, где вы её оставили", "ja": "バーは動かした位置に留まります", "ko": "스트립은 놓은 자리에 그대로 있습니다" },

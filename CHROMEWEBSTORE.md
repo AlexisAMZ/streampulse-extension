@@ -20,6 +20,8 @@ StreamPulse réunit Twitch, Kick et YouTube dans une seule extension légère. E
 
 🌍 Entièrement traduite en 11 langues.
 
+🔄 Synchro optionnelle entre tes appareils : tes streamers, tes épingles et tes réglages suivent ton navigateur, sans compte ni serveur.
+
 Fonctionnalités principales :
 • Points de chaîne et Drops Twitch : StreamPulse récupère automatiquement tes bonus de Points de chaîne et tes Drops Twitch pendant que tu regardes, et affiche ton solde de points sur Kick.
 • Notifications de live en temps réel : reçois une notification sur ton bureau dès qu'un de tes streamers lance son live et, si tu le souhaites, quand il change de titre ou de catégorie.
@@ -40,6 +42,8 @@ StreamPulse ne demande aucun compte et ne contient ni publicité ni traceur. Tes
 StreamPulse brings Twitch, Kick and YouTube together in one lightweight extension. It keeps an eye on your favorite streamers, automates repetitive clicks and keeps your browser fast.
 
 🌍 Fully translated into 11 languages.
+
+🔄 Optional sync across your devices: your streamers, pins and settings follow your browser — no account, no server.
 
 Key Features:
 • Twitch Channel Points & Drops: StreamPulse automatically claims your Twitch channel point bonuses and Drops while you watch, and counts the points you earn on Kick.
@@ -196,7 +200,8 @@ Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décoc
 
 | Version | Date | Description des changements | Statut CWS |
 |---------|------|-----------------------------|------------|
-| 26.9.32 | 2026-10-01 | Correctifs popup : le bandeau des lives ne se recentre plus tout seul pendant le défilement, et la liste des badges et campagnes se met à jour dès l'ouverture du popup (fenêtre de 2 minutes au lieu de 30). | Prêt pour publication |
+| 26.9.33 | 2026-10-01 | Synchro multi-appareils opt-in (streamers, épingles, réglages et langue via la synchro du navigateur, sans compte ni serveur), temps de visionnage sur YouTube (directs uniquement), onglet Badges enrichi (progression des campagnes avec temps restant, type des récompenses, badges cliquables), alertes de badges découplées des alertes de Drops, et réparation des cinq interrupteurs d'alertes du popup qui ne répondaient plus. | Prêt pour publication |
+| 26.9.32 | 2026-10-01 | Correctifs popup : le bandeau des lives ne se recentre plus tout seul pendant le défilement, et la liste des badges et campagnes se met à jour dès l'ouverture du popup (fenêtre de 2 minutes au lieu de 30). | Publiée |
 | 26.9.31 | 2026-09-30 | Correctif : sur Twitch, retirer un streamer avec le bouton « Ajouter à StreamPulse » marche de nouveau, les réglages du panneau et du tiroir StreamPulse s'enregistrent de nouveau, et le bouton retrouve son fond violet. | Publiée |
 | 26.9.30 | 2026-09-28 | Grand ménage : réglages rangés en 8 rubriques avec bouton « Réinitialiser les réglages », « Annuler » après suppression d'un streamer, temps de visionnage qui ne compte plus les onglets en arrière-plan ni les lives en pause, connexion Kick plus fiable, notifications qui rouvrent la bonne chaîne, popup plus rapide (seule la langue choisie est chargée) et traductions complètes dans les 11 langues. | Publiée |
 | 26.9.29 | 2026-09-27 | Parrainage visible dans les Réglages avec bouton « Copier mon code », badge d'ancienneté en jauge plus lisible dans le tchat, badges d'événements terminés (League of Legends Classic, Elden Ring) plus proposés comme disponibles, et retrait du badge du tchat sous 7 jours après désactivation. | Publiée |
@@ -231,6 +236,8 @@ StreamPulse reúne Twitch, Kick y YouTube en una sola extensión ligera. Vigila 
 
 🌍 Totalmente traducida a 11 idiomas.
 
+🔄 Sincronización opcional entre tus dispositivos: tus streamers, fijados y ajustes siguen tu navegador, sin cuenta ni servidor.
+
 Características principales:
 • Puntos de canal y Drops de Twitch: StreamPulse reclama automáticamente tus bonificaciones de puntos de canal y tus Drops de Twitch mientras miras, y cuenta los puntos que ganas en Kick.
 • Alertas en directo: Recibe una notificación de escritorio en cuanto un streamer que sigues empieza a emitir y, si quieres, cuando cambia el título de su stream.
@@ -263,6 +270,8 @@ O StreamPulse reúne Twitch, Kick e YouTube em uma única extensão leve. Ele ac
 
 🌍 Totalmente traduzido para 11 idiomas.
 
+🔄 Sincronização opcional entre seus dispositivos: seus streamers, fixados e configurações seguem seu navegador, sem conta nem servidor.
+
 Principais recursos:
 • Pontos do canal e Drops da Twitch: O StreamPulse resgata automaticamente seus bônus de pontos do canal e seus Drops da Twitch enquanto você assiste, e contabiliza os pontos ganhos na Kick.
 • Alertas ao vivo em tempo real: Receba uma notificação na área de trabalho assim que um streamer que você segue entrar ao vivo e, se quiser, quando ele mudar o título da transmissão.
@@ -294,6 +303,8 @@ O StreamPulse não exige conta e não tem anúncios nem rastreadores. Seus strea
 StreamPulse vereint Twitch, Kick und YouTube in einer schlanken Erweiterung. Sie behält deine Lieblingsstreamer im Blick, automatisiert wiederkehrende Klicks und hält deinen Browser schnell.
 
 🌍 Vollständig in 11 Sprachen übersetzt.
+
+🔄 Optionale Synchronisierung zwischen deinen Geräten: Deine Streamer, Angehefteten und Einstellungen folgen deinem Browser — ohne Konto, ohne Server.
 
 Hauptfunktionen:
 • Twitch-Kanalpunkte und Drops: StreamPulse holt deine Kanalpunkte-Boni und Twitch-Drops automatisch ab, während du zuschaust, und zählt die auf Kick gesammelten Punkte.
@@ -328,6 +339,8 @@ StreamPulse riunisce Twitch, Kick e YouTube in un'unica estensione leggera. Tien
 
 🌍 Tradotta interamente in 11 lingue.
 
+🔄 Sincronizzazione opzionale tra i tuoi dispositivi: i tuoi streamer, i fissati e le impostazioni seguono il tuo browser, senza account né server.
+
 Funzionalità principali:
 • Punti canale e Drops di Twitch: StreamPulse riscatta automaticamente i bonus dei punti canale e i Drops di Twitch mentre guardi, e conteggia i punti guadagnati su Kick.
 • Avvisi live in tempo reale: Ricevi una notifica sul desktop appena uno streamer che segui va in diretta e, se vuoi, quando cambia il titolo della sua live.
@@ -359,6 +372,8 @@ StreamPulse non richiede alcun account e non contiene pubblicità né tracker. I
 StreamPulse łączy Twitcha, Kicka i YouTube w jednym lekkim rozszerzeniu. Śledzi ulubionych streamerów, automatyzuje powtarzalne kliknięcia i nie spowalnia przeglądarki.
 
 🌍 W pełni przetłumaczone na 11 języków.
+
+🔄 Opcjonalna synchronizacja między urządzeniami: Twoi streamerzy, przypięte i ustawienia podążają za Twoją przeglądarką — bez konta i bez serwera.
 
 Główne funkcje:
 • Punkty kanału i dropy na Twitchu: StreamPulse automatycznie odbiera bonusy punktów kanału i dropy na Twitchu podczas oglądania oraz liczy punkty zdobyte na Kicku.
@@ -392,6 +407,8 @@ StreamPulse, Twitch, Kick ve YouTube'u tek bir hafif eklentide birleştirir. Sev
 
 🌍 11 dile tamamen çevrildi.
 
+🔄 Cihazların arasında isteğe bağlı eşitleme: yayıncıların, sabitlediklerin ve ayarların tarayıcını takip eder — hesap yok, sunucu yok.
+
 Başlıca özellikler:
 • Twitch kanal puanları ve Drops: StreamPulse, sen izlerken Twitch kanal puanı bonuslarını ve Drops ödüllerini otomatik olarak alır, Kick'te kazandığın puanları da sayar.
 • Anlık canlı yayın bildirimleri: Takip ettiğin bir yayıncı yayına başlar başlamaz masaüstü bildirimi al; istersen yayın başlığını değiştirdiğinde de haberdar ol.
@@ -423,6 +440,8 @@ StreamPulse hesap gerektirmez, reklam veya izleyici içermez. Yayıncıların, a
 StreamPulse объединяет Twitch, Kick и YouTube в одном лёгком расширении. Оно следит за любимыми стримерами, автоматизирует однообразные клики и не замедляет браузер.
 
 🌍 Полностью переведено на 11 языков.
+
+🔄 Необязательная синхронизация между устройствами: ваши стримеры, закрепления и настройки следуют за вашим браузером — без аккаунта и без сервера.
 
 Основные возможности:
 • Баллы канала и дропсы Twitch: StreamPulse автоматически забирает бонусы баллов канала и дропсы Twitch, пока вы смотрите, и считает баллы, заработанные на Kick.
@@ -456,6 +475,8 @@ StreamPulseは、Twitch、Kick、YouTubeをひとつの軽量な拡張機能に�
 
 🌍 11言語に完全対応。
 
+🔄 デバイス間のオプション同期：配信者・ピン留め・設定がブラウザに追随。アカウントもサーバーも不要。
+
 主な機能：
 • Twitchのチャンネルポイントとドロップ：視聴中にTwitchのチャンネルポイントのボーナスとドロップを自動で受け取り、Kickで獲得したポイントも集計します。
 • リアルタイム配信通知：フォロー中の配信者が配信を始めるとすぐにデスクトップ通知が届きます。配信タイトルの変更も通知できます。
@@ -487,6 +508,8 @@ StreamPulseはアカウント不要で、広告もトラッカーも含みませ
 StreamPulse는 트위치, Kick, YouTube를 하나의 가벼운 확장 프로그램으로 묶어 줍니다. 좋아하는 스트리머를 지켜보고, 반복적인 클릭을 자동화하며, 브라우저를 빠르게 유지합니다.
 
 🌍 11개 언어로 완전히 번역되었습니다.
+
+🔄 기기 간 선택 동기화: 스트리머, 고정, 설정이 브라우저를 따라갑니다. 계정도 서버도 없습니다.
 
 주요 기능:
 • 트위치 채널 포인트와 드롭: 시청하는 동안 트위치 채널 포인트 보너스와 드롭을 자동으로 받고, Kick에서 얻은 포인트도 집계합니다.
