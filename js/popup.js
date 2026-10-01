@@ -1,6 +1,9 @@
 import { BACKUP_KEYS, buildBackup, backupFileName } from "./backup.js";
 import { DEFAULT_PREFERENCES } from "./preferences-data.js";
 import { SYNC_STATUS_KEY } from "./sync-data.js";
+import { dropsHistoryCsv, importFromCsv, pointsJournalCsv } from "./history-csv.js";
+import { DROPS_HISTORY_KEY, historyFrom } from "./drops-data.js";
+import { POINTS_KEYS, stateFrom as pointsStateFrom } from "./points-data.js";
 import { bindInlineConfirm } from "./inline-confirm.js";
 import { DEFAULT_QUIET_END, DEFAULT_QUIET_START, normalizeQuietTime } from "./quiet-hours.js";
 import {
@@ -1708,6 +1711,63 @@ async function handleExport() {
   }
 }
 
+/** Télécharge un texte en fichier (même mécanique que la sauvegarde JSON). */
+function downloadTextFile(filename, text, mime) {
+  const blob = new Blob([text], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+}
+
+/** Export CSV du journal de points (60 jours de détail, une ligne par gain). */
+async function handleExportPointsCsv() {
+  try {
+    const stored = await chrome.storage.local.get(POINTS_KEYS);
+    const state = pointsStateFrom(stored);
+    downloadTextFile(`streampulse-points-${new Date().toISOString().slice(0, 10)}.csv`, pointsJournalCsv(state.journal, state.channels), "text/csv");
+  } catch (error) {
+    console.error("Points CSV export error:", error);
+    showFeedback(t("popup.osd.exportError"), "error");
+  }
+}
+
+/** Export CSV de l'historique des Drops obtenus. */
+async function handleExportDropsCsv() {
+  try {
+    const stored = await chrome.storage.local.get(DROPS_HISTORY_KEY);
+    downloadTextFile(`streampulse-drops-${new Date().toISOString().slice(0, 10)}.csv`, dropsHistoryCsv(historyFrom(stored)), "text/csv");
+  } catch (error) {
+    console.error("Drops CSV export error:", error);
+    showFeedback(t("popup.osd.exportError"), "error");
+  }
+}
+
+/** Import d'un CSV d'historique : fusion côté service worker, doublons ignorés. */
+async function handleImportCsv(file) {
+  try {
+    const text = await file.text();
+    const { drops, gains } = importFromCsv(text);
+    if (!drops.length && !gains.length) {
+      showFeedback(t("backup.importCsvError"), "error");
+      return;
+    }
+    const response = await chrome.runtime.sendMessage({ type: "importHistoryCsv", drops, gains });
+    if (response?.error) {
+      showFeedback(t("backup.importCsvError"), "error");
+      return;
+    }
+    showFeedback(t("backup.importCsvDone", { count: response.count || 0 }), "success");
+  } catch (error) {
+    console.error("CSV import error:", error);
+    showFeedback(t("backup.importCsvError"), "error");
+  }
+}
+
 // La remise à zéro des points vit uniquement dans Activité (btn-reset-points,
 // confirmation inline 2 clics dans popup-points.js) : un seul compteur, un seul
 // geste destructeur. À suivre hors périmètre : resetPoints devrait aussi
@@ -2399,6 +2459,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     btnExport?.addEventListener("click", handleExport);
+    document.getElementById("btn-export-points-csv")?.addEventListener("click", handleExportPointsCsv);
+    document.getElementById("btn-export-drops-csv")?.addEventListener("click", handleExportDropsCsv);
+    const csvInput = document.getElementById("csv-file-input");
+    document.getElementById("btn-import-csv")?.addEventListener("click", () => csvInput?.click());
+    csvInput?.addEventListener("change", () => {
+      const file = csvInput.files?.[0];
+      if (file) handleImportCsv(file);
+      csvInput.value = ""; // resélectionner le même fichier doit redéclencher.
+    });
     btnImport?.addEventListener("click", handleImportClick);
 
     // Réinitialiser les réglages : confirmation inline en 2 clics, jamais

@@ -446,6 +446,7 @@ export default {
       "bandOpen": "Drops-Panel öffnen",
       "bandClaimed": "Drop abgeholt · {{name}}",
       "bandMoreOne": "+{{count}} weiterer",
+      "timeLeft": "noch {{time}}",
       "bandMoreOther": "+{{count}} weitere",
       "campaigns": "Kampagnen",
       "campaignsMeta": "{{count}} aktiv · auf Twitch gelesen {{ago}}",
@@ -960,6 +961,10 @@ export default {
     }
   },
   "background": {
+      "contextMenu": {
+        "add": "Zu StreamPulse hinzufügen",
+        "added": "{{name}} wurde zu StreamPulse hinzugefügt"
+      },
     "badgeAuto": {
       "bannerTitle": "StreamPulse Auto-Modus",
       "bannerAll": "StreamPulse holt alle möglichen Abzeichen",
@@ -1104,6 +1109,11 @@ export default {
     "export": "Daten sichern",
     "import": "Sicherung wiederherstellen",
     "exported": "Sicherung heruntergeladen.",
+    "exportPointsCsv": "Punkte exportieren (CSV)",
+    "exportDropsCsv": "Drops exportieren (CSV)",
+    "importCsv": "Verlauf importieren (CSV)",
+    "importCsvDone": "{{count}} Zeilen importiert",
+    "importCsvError": "Datei unlesbar oder unerwartetes Format.",
     "invalid": "Diese Datei ist keine gültige StreamPulse-Sicherung.",
     "tooLarge": "Die Datei ist zu groß für eine StreamPulse-Sicherung."
   },

@@ -4,5 +4,8 @@
   },
   "appDesc": {
     "message": "Twitch・Kick・YouTubeの自動チャンネルポイント・ドロップ獲得、ライブ通知、見逃し配信の履歴、ホバープレビュー、チャットフィルター。無料・アカウント不要。"
+  },
+  "openPopupDesc": {
+    "message": "StreamPulseを開く"
   }
 }

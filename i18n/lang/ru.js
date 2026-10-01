@@ -446,6 +446,7 @@ export default {
       "bandOpen": "Открыть панель Drops",
       "bandClaimed": "Drop забран · {{name}}",
       "bandMoreOne": "+{{count}} ещё",
+      "timeLeft": "осталось {{time}}",
       "bandMoreOther": "+{{count}} ещё",
       "campaigns": "Кампании",
       "campaignsMeta": "Активных: {{count}} · загружено с Twitch {{ago}}",
@@ -960,6 +961,10 @@ export default {
     }
   },
   "background": {
+      "contextMenu": {
+        "add": "Добавить в StreamPulse",
+        "added": "{{name}} добавлен в StreamPulse"
+      },
     "badgeAuto": {
       "bannerTitle": "Авторежим StreamPulse",
       "bannerAll": "StreamPulse получает все доступные значки",
@@ -1104,6 +1109,11 @@ export default {
     "export": "Сохранить мои данные",
     "import": "Импортировать копию",
     "exported": "Резервная копия скачана.",
+    "exportPointsCsv": "Экспорт баллов (CSV)",
+    "exportDropsCsv": "Экспорт дропсов (CSV)",
+    "importCsv": "Импорт истории (CSV)",
+    "importCsvDone": "Импортировано строк: {{count}}",
+    "importCsvError": "Файл нечитается или формат неожиданный.",
     "invalid": "Этот файл не является резервной копией StreamPulse.",
     "tooLarge": "Файл слишком большой для резервной копии StreamPulse."
   },

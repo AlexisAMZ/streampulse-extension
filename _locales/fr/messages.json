@@ -4,5 +4,8 @@
   },
   "appDesc": {
     "message": "Récupération auto des points & Drops · alertes live · aperçus · filtres chat pour Twitch, Kick & YouTube. Gratuit, sans compte."
+  },
+  "openPopupDesc": {
+    "message": "Ouvrir StreamPulse"
   }
 }

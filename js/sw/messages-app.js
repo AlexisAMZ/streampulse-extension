@@ -10,6 +10,8 @@ import { NotificationCenter } from "./notifications.js";
 import { EventLogStore, PreferenceStore, StatsStore } from "./stores.js";
 import { WatchTimeStore, currentGameOf, resolveChannelAvatar, watchTimeTabClaims } from "./watchtime.js";
 import { warnWith } from "./log.js";
+import { DROPS_HISTORY_KEY, historyFrom, isHistoryEntry, pruneHistory } from "../drops-data.js";
+import { POINTS_KEYS, addGain, stateFrom, toStorage } from "../points-data.js";
 
 export function handleOpenPatchNotes(request, sender, sendResponse) {
   (async () => {
@@ -187,5 +189,48 @@ export function handleGetEventLogs(request, sender, sendResponse) {
 
 export function handleClearEventLogs(request, sender, sendResponse) {
   respond(async () => ({ logs: await EventLogStore.clearLogs() }), sendResponse, "clearEventLogs");
+  return true;
+}
+
+/**
+ * Fusion d'un historique importé en CSV : union par clé, sans doublon, dans le
+ * journal des points et l'historique des Drops. Le CSV vient de la page
+ * (js/history-csv.js a déjà validé la forme), le service worker fait foi sur
+ * l'écriture.
+ */
+export function handleImportHistoryCsv(request, sender, sendResponse) {
+  respond(async () => {
+    const dropsIn = Array.isArray(request.drops) ? request.drops.filter(isHistoryEntry) : [];
+    const gainsIn = Array.isArray(request.gains) ? request.gains : [];
+    let count = 0;
+    if (dropsIn.length) {
+      const stored = await chrome.storage.local.get(DROPS_HISTORY_KEY);
+      const current = historyFrom(stored);
+      const keys = new Set(current.map((entry) => entry.key));
+      const added = dropsIn.filter((entry) => !keys.has(entry.key));
+      if (added.length) {
+        await chrome.storage.local.set({ [DROPS_HISTORY_KEY]: pruneHistory([...current, ...added], Date.now()) });
+        count += added.length;
+      }
+    }
+    if (gainsIn.length) {
+      const stored = await chrome.storage.local.get(POINTS_KEYS);
+      let state = stateFrom(stored);
+      const before = state.journal.length;
+      for (const gain of gainsIn) {
+        // Le CSV ne connaît que le nom de chaîne : il sert d'identifiant et de
+        // fiche, le prochain gain réel de la chaîne réécrira la vraie fiche.
+        const channelId = String(gain.channelName || "").slice(0, 80) || gain.channelId || "";
+        const { channelName: _fromCsv, ...rest } = gain;
+        state = addGain(state, { ...rest, channelId });
+        if (channelId && !state.channels[channelId]) {
+          state = { ...state, channels: { ...state.channels, [channelId]: { name: channelId, avatarUrl: "" } } };
+        }
+      }
+      count += state.journal.length - before;
+      if (state.journal.length !== before) await chrome.storage.local.set(toStorage(state));
+    }
+    return { success: true, count };
+  }, sendResponse, "importHistoryCsv");
   return true;
 }

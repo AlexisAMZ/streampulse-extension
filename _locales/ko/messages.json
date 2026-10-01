@@ -4,5 +4,8 @@
   },
   "appDesc": {
     "message": "Twitch·Kick·YouTube 채널 포인트와 드롭 자동 획득, 라이브 알림, 놓친 방송 기록, 미리보기, 시청 시간, 채팅 필터. 계정 없이 무료."
+  },
+  "openPopupDesc": {
+    "message": "StreamPulse 열기"
   }
 }

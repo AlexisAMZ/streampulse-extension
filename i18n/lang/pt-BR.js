@@ -446,6 +446,7 @@ export default {
       "bandOpen": "Abrir o painel Drops",
       "bandClaimed": "Drop resgatado · {{name}}",
       "bandMoreOne": "+{{count}} outro",
+      "timeLeft": "faltam {{time}}",
       "bandMoreOther": "+{{count}} outros",
       "campaigns": "Campanhas",
       "campaignsMeta": "{{count}} ativas · lidas na Twitch {{ago}}",
@@ -960,6 +961,10 @@ export default {
     "htmlLang": "pt-BR"
   },
   "background": {
+      "contextMenu": {
+        "add": "Adicionar ao StreamPulse",
+        "added": "{{name}} adicionado ao StreamPulse"
+      },
     "badgeAuto": {
       "bannerTitle": "Modo auto do StreamPulse",
       "bannerAll": "O StreamPulse está pegando todos os emblemas possíveis",
@@ -1104,6 +1109,11 @@ export default {
     "export": "Fazer backup dos dados",
     "import": "Restaurar um backup",
     "exported": "Backup baixado.",
+    "exportPointsCsv": "Exportar pontos (CSV)",
+    "exportDropsCsv": "Exportar Drops (CSV)",
+    "importCsv": "Importar histórico (CSV)",
+    "importCsvDone": "{{count}} linhas importadas",
+    "importCsvError": "Arquivo ilegível ou formato inesperado.",
     "invalid": "Este arquivo não é um backup válido do StreamPulse.",
     "tooLarge": "O arquivo é grande demais para ser um backup do StreamPulse."
   },

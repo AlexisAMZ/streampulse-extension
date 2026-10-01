@@ -4,5 +4,8 @@
   },
   "appDesc": {
     "message": "Kanalpunkte & Drops automatisch sammeln, Live-Alerts, Verlauf, Hover-Vorschauen, Chat-Filter. Twitch, Kick & YouTube."
+  },
+  "openPopupDesc": {
+    "message": "StreamPulse öffnen"
   }
 }

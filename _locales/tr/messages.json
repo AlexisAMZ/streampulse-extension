@@ -4,5 +4,8 @@
   },
   "appDesc": {
     "message": "Twitch, Kick ve YouTube için otomatik Kanal Puanı ve Drops toplama, canlı bildirimler, önizlemeler ve sohbet filtreleri."
+  },
+  "openPopupDesc": {
+    "message": "StreamPulse'u aç"
   }
 }

@@ -13,6 +13,7 @@ const SENSITIVE_MESSAGE_TYPES = new Set([
   "resetPreferences",
   "reorderStreamers",
   "setPinnedStreamers",
+  "importHistoryCsv",
 ]);
 
 export function isExtensionPage(sender, extensionPrefix) {

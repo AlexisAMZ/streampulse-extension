@@ -35,6 +35,7 @@ const ES_MODULES = [
   "js/recap-card.js",
   "js/recap-data.js",
   "js/sync-data.js",
+  "js/history-csv.js",
   "js/referral-data.js",
   "js/badge-auto.js",
   "js/badge-auto-worker.js",

@@ -446,6 +446,7 @@ export default {
       "bandOpen": "ドロップパネルを開く",
       "bandClaimed": "ドロップ受け取り済み · {{name}}",
       "bandMoreOne": "ほか {{count}} 件",
+      "timeLeft": "のこり{{time}}",
       "bandMoreOther": "ほか {{count}} 件",
       "campaigns": "キャンペーン",
       "campaignsMeta": "開催中 {{count}} 件 · Twitch から{{ago}}に取得",
@@ -960,6 +961,10 @@ export default {
     }
   },
   "background": {
+      "contextMenu": {
+        "add": "StreamPulseに追加",
+        "added": "{{name}}をStreamPulseに追加しました"
+      },
     "badgeAuto": {
       "bannerTitle": "StreamPulse 自動モード",
       "bannerAll": "StreamPulse が取得できるバッジをすべて取っています",
@@ -1104,6 +1109,11 @@ export default {
     "export": "データをバックアップ",
     "import": "バックアップを復元",
     "exported": "バックアップをダウンロードしました。",
+    "exportPointsCsv": "ポイントを書き出す（CSV）",
+    "exportDropsCsv": "ドロップを書き出す（CSV）",
+    "importCsv": "履歴を取り込む（CSV）",
+    "importCsvDone": "{{count}} 行を取り込みました",
+    "importCsvError": "ファイルが読めないか、形式が正しくありません。",
     "invalid": "このファイルは有効なStreamPulseのバックアップではありません。",
     "tooLarge": "StreamPulseのバックアップとしては大きすぎるファイルです。"
   },

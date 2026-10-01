@@ -446,6 +446,7 @@ export default {
       "bandOpen": "드롭 패널 열기",
       "bandClaimed": "드롭 수령됨 · {{name}}",
       "bandMoreOne": "+{{count}}개 더",
+      "timeLeft": "{{time}} 남음",
       "bandMoreOther": "+{{count}}개 더",
       "campaigns": "캠페인",
       "campaignsMeta": "진행 중 {{count}}개 · Twitch에서 {{ago}} 읽음",
@@ -960,6 +961,10 @@ export default {
     }
   },
   "background": {
+      "contextMenu": {
+        "add": "StreamPulse에 추가",
+        "added": "{{name}}을(를) StreamPulse에 추가했습니다"
+      },
     "badgeAuto": {
       "bannerTitle": "StreamPulse 자동 모드",
       "bannerAll": "StreamPulse가 받을 수 있는 배지를 모두 받는 중",
@@ -1104,6 +1109,11 @@ export default {
     "export": "내 데이터 백업",
     "import": "백업 복원",
     "exported": "백업을 다운로드했습니다.",
+    "exportPointsCsv": "포인트 내보내기(CSV)",
+    "exportDropsCsv": "드롭 내보내기(CSV)",
+    "importCsv": "기록 가져오기(CSV)",
+    "importCsvDone": "{{count}}줄을 가져왔습니다",
+    "importCsvError": "파일을 읽을 수 없거나 형식이 올바르지 않습니다.",
     "invalid": "올바른 StreamPulse 백업 파일이 아닙니다.",
     "tooLarge": "StreamPulse 백업으로 보기에는 파일이 너무 큽니다."
   },

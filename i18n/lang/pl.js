@@ -446,6 +446,7 @@ export default {
       "bandOpen": "Otwórz panel Dropsów",
       "bandClaimed": "Odebrano Drop · {{name}}",
       "bandMoreOne": "+{{count}} inny",
+      "timeLeft": "jeszcze {{time}}",
       "bandMoreOther": "+{{count}} więcej",
       "campaigns": "Kampanie",
       "campaignsMeta": "Aktywne: {{count}} · odczytano z Twitcha {{ago}}",
@@ -960,6 +961,10 @@ export default {
     }
   },
   "background": {
+      "contextMenu": {
+        "add": "Dodaj do StreamPulse",
+        "added": "Dodano {{name}} do StreamPulse"
+      },
     "badgeAuto": {
       "bannerTitle": "Tryb auto StreamPulse",
       "bannerAll": "StreamPulse zdobywa wszystkie możliwe odznaki",
@@ -1104,6 +1109,11 @@ export default {
     "export": "Zapisz moje dane",
     "import": "Zaimportuj kopię",
     "exported": "Kopia zapasowa pobrana.",
+    "exportPointsCsv": "Eksportuj punkty (CSV)",
+    "exportDropsCsv": "Eksportuj dropy (CSV)",
+    "importCsv": "Importuj historię (CSV)",
+    "importCsvDone": "Zaimportowano wierszy: {{count}}",
+    "importCsvError": "Nieczytelny plik lub nieoczekiwany format.",
     "invalid": "Ten plik nie jest prawidłową kopią zapasową StreamPulse.",
     "tooLarge": "Plik jest za duży jak na kopię zapasową StreamPulse."
   },

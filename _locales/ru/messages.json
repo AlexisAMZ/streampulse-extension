@@ -4,5 +4,8 @@
   },
   "appDesc": {
     "message": "Автосбор Баллов канала и Drops, уведомления о live, история пропущенных эфиров, превью и фильтры чата. Twitch, Kick и YouTube."
+  },
+  "openPopupDesc": {
+    "message": "Открыть StreamPulse"
   }
 }

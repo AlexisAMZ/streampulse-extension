@@ -446,6 +446,7 @@ export default {
       "bandOpen": "Drops panelini aç",
       "bandClaimed": "Drop alındı · {{name}}",
       "bandMoreOne": "+{{count}} tane daha",
+      "timeLeft": "{{time}} kaldı",
       "bandMoreOther": "+{{count}} tane daha",
       "campaigns": "Kampanyalar",
       "campaignsMeta": "{{count}} aktif · Twitch'ten okundu, {{ago}}",
@@ -960,6 +961,10 @@ export default {
     }
   },
   "background": {
+      "contextMenu": {
+        "add": "StreamPulse'a ekle",
+        "added": "{{name}} StreamPulse'a eklendi"
+      },
     "badgeAuto": {
       "bannerTitle": "StreamPulse otomatik mod",
       "bannerAll": "StreamPulse alınabilecek tüm rozetleri alıyor",
@@ -1104,6 +1109,11 @@ export default {
     "export": "Verilerimi yedekle",
     "import": "Yedeği geri yükle",
     "exported": "Yedek indirildi.",
+    "exportPointsCsv": "Puanları dışa aktar (CSV)",
+    "exportDropsCsv": "Drops'ları dışa aktar (CSV)",
+    "importCsv": "Geçmişi içe aktar (CSV)",
+    "importCsvDone": "{{count}} satır içe aktarıldı",
+    "importCsvError": "Dosya okunamıyor veya format beklenmedik.",
     "invalid": "Bu dosya geçerli bir StreamPulse yedeği değil.",
     "tooLarge": "Dosya bir StreamPulse yedeği için çok büyük."
   },

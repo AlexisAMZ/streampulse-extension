@@ -4,5 +4,8 @@
   },
   "appDesc": {
     "message": "Punti Canale e Drops automatici, avvisi live, cronologia delle dirette perse, anteprime e filtri chat. Twitch, Kick e YouTube."
+  },
+  "openPopupDesc": {
+    "message": "Apri StreamPulse"
   }
 }
