@@ -47,15 +47,18 @@ export const INVENTORY_QUERY_LITE = `query StreamPulseDropsInventoryLite {
   }
 }`;
 
-// Campagnes de récompenses (badges de chat, objets offerts) : un circuit séparé
-// des Drops, attribué automatiquement. Lecture acceptée sans Client-Integrity
-// (vérifié sur twitch.tv le 2026-09-26) ; Twitch ne donne pas l'avancée.
+// Campagnes de récompenses (badges de chat, codes de jeu, objets offerts) : un
+// circuit séparé des Drops, attribué automatiquement. Lecture acceptée sans
+// Client-Integrity (vérifié sur twitch.tv le 2026-09-26) ; Twitch ne donne pas
+// l'avancée. Le pill affiché par Twitch (« Code », « Badge »…) vient de l'un
+// des champs benefitType/archetype/itemType/deliveryType : on les demande tous,
+// normalizeReward gardera le premier non vide.
 const REWARDS_QUERY = `query StreamPulseRewardCampaigns {
   rewardCampaignsAvailableToUser {
     id name brand startsAt endsAt summary externalURL
     unlockRequirements { subsGoal minuteWatchedGoal }
     game { displayName }
-    rewards { id name bannerImage { image1xURL } }
+    rewards { id name benefitType archetype itemType deliveryType bannerImage { image1xURL } }
   }
 }`;
 

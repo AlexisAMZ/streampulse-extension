@@ -441,13 +441,24 @@ export function countFilters(campaigns, now) {
 
 // ─── Campagnes de récompenses (badges) ───────────────────────────────────────
 
+/**
+ * Type de récompense affiché par Twitch en pill (« Code », « Badge »…) : aucun
+ * champ unique n'est documenté, on garde le premier non vide parmi ceux vus
+ * dans le schéma. Les campagnes déjà en storage, sans type, s'affichent sans pill.
+ */
+function rewardTypeOf(raw) {
+  const value = [raw?.benefitType, raw?.archetype, raw?.itemType, raw?.deliveryType]
+    .find((item) => typeof item === "string" && item.trim());
+  return text(value, 40);
+}
+
 /** Une campagne `rewardCampaignsAvailableToUser`, avec ses conditions et ses récompenses. */
 function normalizeReward(raw) {
   if (!isPlainObject(raw)) return null;
   const id = idOf(raw.id);
   const rewards = list(raw.rewards)
     .filter(isPlainObject)
-    .map((reward) => ({ id: idOf(reward.id), name: text(reward.name, 120), image: httpsUrl(reward.bannerImage?.image1xURL) }))
+    .map((reward) => ({ id: idOf(reward.id), name: text(reward.name, 120), image: httpsUrl(reward.bannerImage?.image1xURL), type: rewardTypeOf(reward) }))
     .filter((reward) => reward.name);
   if (!id || !rewards.length) return null;
   const url = httpsUrl(raw.externalURL);

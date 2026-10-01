@@ -352,6 +352,21 @@ function rewardRequirement(reward) {
   return parts.join(` ${t("popup.drops.badgeOr")} `);
 }
 
+/** Libellé localisé du pill de type (« Code », « Badge »…) ; valeur inconnue affichée telle quelle. */
+const REWARD_TYPE_KEYS = {
+  code: "popup.drops.rewardTypeCode",
+  badge: "popup.drops.rewardTypeBadge",
+  emote: "popup.drops.rewardTypeEmote",
+  item: "popup.drops.rewardTypeItem",
+};
+
+function rewardTypeLabel(type) {
+  const value = String(type || "").trim();
+  if (!value) return "";
+  const key = REWARD_TYPE_KEYS[value.toLowerCase()];
+  return key ? t(key) : value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+}
+
 function rewardRow(reward, now) {
   const item = el("li");
   const row = el(reward.url ? "button" : "div", "camp-row");
@@ -360,9 +375,12 @@ function rewardRow(reward, now) {
     row.dataset.url = reward.url;
   }
   if (reward.summary && reward.summary !== reward.name) row.title = reward.summary;
+  const title = el("b", null, reward.rewards.map((item) => item.name).join(" + "));
+  const typeLabel = rewardTypeLabel(reward.rewards.find((item) => item.type)?.type);
+  if (typeLabel) title.append(" ", el("span", "camp-type", typeLabel));
   const main = el("span", "camp-main");
   main.append(
-    el("b", null, reward.rewards.map((item) => item.name).join(" + ")),
+    title,
     el("small", null, [reward.brand || reward.game || reward.name, rewardRequirement(reward)].filter(Boolean).join(" · ")),
   );
   // Progression locale des campagnes à objectif de minutes : Twitch n'expose

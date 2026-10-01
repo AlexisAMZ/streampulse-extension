@@ -849,6 +849,7 @@ button.pts-row:focus-visible { background: var(--surface-2); }
 .camp-main b,
 .camp-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .camp-main b { font-size: 12.5px; }
+.camp-type { display: inline-block; padding: 0 6px; margin-left: 2px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text-2); font-size: 10px; font-weight: 700; letter-spacing: 0.02em; vertical-align: 1px; }
 .camp-main small { color: var(--text-3); font-size: 11px; }
 .camp-watch { color: var(--text-2); font-weight: 600; }
 .camp-bar { display: block; height: 3px; border-radius: 2px; background: var(--line-2); overflow: hidden; }
