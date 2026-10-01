@@ -485,6 +485,33 @@ export function activeRewards(rewards, now) {
     .sort((a, b) => (a.endsAt || Infinity) - (b.endsAt || Infinity));
 }
 
+/**
+ * Minutes regardées sur Twitch pour le jeu d'une campagne à objectif de
+ * minutes. Twitch n'expose pas d'avancée pour les campagnes de récompenses :
+ * on l'estime avec le temps de visionnage déjà enregistré (WATCH_TIME_DAILY).
+ * Les buckets sont journaliers, on démarre donc au lendemain du lancement et
+ * on ne compte que Twitch : l'estimation reste une borne basse de ce que
+ * Twitch crédite réellement.
+ */
+export function watchedMinutesFor(watchDaily, reward, now) {
+  if (!isPlainObject(watchDaily) || !Number(reward?.minutesGoal)) return 0;
+  const target = String(reward.game || "").trim().toLowerCase();
+  if (!target) return 0;
+  const fromDay = dayKey(new Date((Number(reward.startsAt) || 0) + DAY_MS));
+  const toDay = dayKey(new Date(Math.min(Number(reward.endsAt) || now, now)));
+  let seconds = 0;
+  for (const [day, channels] of Object.entries(watchDaily)) {
+    if (day < fromDay || day > toDay || !isPlainObject(channels)) continue;
+    for (const [key, entry] of Object.entries(channels)) {
+      if (!key.startsWith("twitch:")) continue;
+      for (const [name, value] of Object.entries(isPlainObject(entry?.games) ? entry.games : {})) {
+        if (name.trim().toLowerCase() === target) seconds += Number(value) || 0;
+      }
+    }
+  }
+  return Math.floor(seconds / 60);
+}
+
 // ─── Badges globaux ───────────────────────────────────────────────────────────
 
 export function badgesFrom(stored = {}) {

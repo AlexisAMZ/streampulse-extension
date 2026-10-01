@@ -465,6 +465,8 @@ export default {
       "badgesMeta": "W toku: {{count}} · przyznawane automatycznie",
       "badgesEmpty": "Obecnie nie trwa żadna kampania odznak.",
       "badgeWatch": "oglądaj {{time}}",
+      "badgeWatched": "{{watched}} z {{goal}}",
+      "badgeWatchLeft": "jeszcze {{left}}",
       "badgeSubOne": "1 sub",
       "badgeSubOther": "Suby: {{count}}",
       "badgeOr": "lub",

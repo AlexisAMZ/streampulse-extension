@@ -465,6 +465,8 @@ export default {
       "badgesMeta": "Активных: {{count}} · выдаются автоматически",
       "badgesEmpty": "Сейчас нет кампаний со значками.",
       "badgeWatch": "смотреть {{time}}",
+      "badgeWatched": "{{watched}} из {{goal}}",
+      "badgeWatchLeft": "осталось {{left}}",
       "badgeSubOne": "1 подписка",
       "badgeSubOther": "Подписок: {{count}}",
       "badgeOr": "или",

@@ -465,6 +465,8 @@ export default {
       "badgesMeta": "진행 중 {{count}}개 · 자동 지급",
       "badgesEmpty": "지금 진행 중인 배지 캠페인이 없습니다.",
       "badgeWatch": "{{time}} 시청",
+      "badgeWatched": "{{goal}} 중 {{watched}}",
+      "badgeWatchLeft": "{{left}} 남음",
       "badgeSubOne": "구독 1개",
       "badgeSubOther": "구독 {{count}}개",
       "badgeOr": "또는",

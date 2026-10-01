@@ -465,6 +465,8 @@ export default {
       "badgesMeta": "{{count}} em andamento · concedidos automaticamente",
       "badgesEmpty": "Nenhuma campanha de emblemas em andamento no momento.",
       "badgeWatch": "assistir {{time}}",
+      "badgeWatched": "{{watched}} de {{goal}}",
+      "badgeWatchLeft": "faltam {{left}}",
       "badgeSubOne": "1 inscrição",
       "badgeSubOther": "{{count}} inscrições",
       "badgeOr": "ou",

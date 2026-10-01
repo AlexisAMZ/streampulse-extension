@@ -465,6 +465,8 @@ export default {
       "badgesMeta": "{{count}} en cours · attribués automatiquement",
       "badgesEmpty": "Aucune campagne de badges en cours pour l'instant.",
       "badgeWatch": "regarder {{time}}",
+      "badgeWatched": "{{watched}} sur {{goal}}",
+      "badgeWatchLeft": "reste {{left}}",
       "badgeSubOne": "1 sub",
       "badgeSubOther": "{{count}} subs",
       "badgeOr": "ou",

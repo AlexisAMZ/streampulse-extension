@@ -32,6 +32,7 @@ import {
   remainingMinutes,
   rewardsFrom,
   summarizeHistory,
+  watchedMinutesFor,
 } from "./drops-data.js";
 
 const $ = (id) => document.getElementById(id);
@@ -63,6 +64,9 @@ let badges = badgesFrom({});
 let history = [];
 let prefs = {};
 let myGames = new Set();
+// Temps de visionnage brut (par jour, chaîne et jeu) : alimente l'estimation
+// locale de progression des campagnes de badges à objectif de minutes.
+let watchDaily = {};
 let filter = "all";
 let badgeFilter = "all";
 let badgeQuery = "";
@@ -361,6 +365,21 @@ function rewardRow(reward, now) {
     el("b", null, reward.rewards.map((item) => item.name).join(" + ")),
     el("small", null, [reward.brand || reward.game || reward.name, rewardRequirement(reward)].filter(Boolean).join(" · ")),
   );
+  // Progression locale des campagnes à objectif de minutes : Twitch n'expose
+  // pas d'avancée, on estime avec le temps regardé sur le jeu depuis le
+  // lancement (voir watchedMinutesFor) et on affiche ce qu'il reste.
+  if (reward.minutesGoal) {
+    const watched = Math.min(watchedMinutesFor(watchDaily, reward, now), reward.minutesGoal);
+    const left = reward.minutesGoal - watched;
+    const parts = [t("popup.drops.badgeWatched", { watched: minutesLabel(watched), goal: minutesLabel(reward.minutesGoal) })];
+    if (left > 0) parts.push(t("popup.drops.badgeWatchLeft", { left: minutesLabel(left) }));
+    main.append(el("small", "camp-watch", parts.join(" · ")));
+    const bar = el("span", "camp-bar");
+    const fill = el("span", "camp-bar-fill");
+    fill.style.width = `${Math.round((watched / reward.minutesGoal) * 100)}%`;
+    bar.append(fill);
+    main.append(bar);
+  }
   const side = el("span", "camp-side");
   if (reward.endsAt > now) side.append(el("span", isEndingSoon({ ...reward, status: "" }, now) ? "camp-when is-soon" : "camp-when", t("popup.drops.endsIn", { time: spanLabel(reward.endsAt - now) })));
   row.append(thumb(reward.rewards[0]?.image, "drop-img is-small"), main, side);
@@ -793,8 +812,10 @@ export async function initDrops({ isPlus, onPlusChange, openPlus }) {
   await reload();
   // Les jeux regardés ne changent pas pendant que le popup est ouvert : lus une fois.
   chrome.storage.local.get([WATCH_DAILY_KEY]).then((stored) => {
+    watchDaily = stored[WATCH_DAILY_KEY] || {};
     myGames = myGamesFrom(stored[WATCH_DAILY_KEY], Date.now());
     renderCampaigns(Date.now());
+    renderRewards(Date.now());
   }).catch(() => {});
   setInterval(render, TICK_MS);
   // Popup ouvert : on demande une lecture fraîche à un onglet Twitch, s'il y en a un.

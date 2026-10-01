@@ -465,6 +465,8 @@ export default {
       "badgesMeta": "開催中 {{count}} 件 · 自動で付与",
       "badgesEmpty": "現在開催中のバッジキャンペーンはありません。",
       "badgeWatch": "{{time}} 視聴",
+      "badgeWatched": "{{goal}}のうち{{watched}}",
+      "badgeWatchLeft": "のこり{{left}}",
       "badgeSubOne": "サブスク 1 件",
       "badgeSubOther": "サブスク {{count}} 件",
       "badgeOr": "または",

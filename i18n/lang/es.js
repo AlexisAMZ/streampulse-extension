@@ -465,6 +465,8 @@ export default {
       "badgesMeta": "{{count}} en curso · se otorgan automáticamente",
       "badgesEmpty": "Ninguna campaña de insignias en curso por ahora.",
       "badgeWatch": "ver {{time}}",
+      "badgeWatched": "{{watched}} de {{goal}}",
+      "badgeWatchLeft": "quedan {{left}}",
       "badgeSubOne": "1 suscripción",
       "badgeSubOther": "{{count}} suscripciones",
       "badgeOr": "o",

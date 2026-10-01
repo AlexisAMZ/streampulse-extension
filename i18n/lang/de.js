@@ -465,6 +465,8 @@ export default {
       "badgesMeta": "{{count}} laufend · automatisch vergeben",
       "badgesEmpty": "Gerade läuft keine Abzeichen-Kampagne.",
       "badgeWatch": "{{time}} zuschauen",
+      "badgeWatched": "{{watched}} von {{goal}}",
+      "badgeWatchLeft": "noch {{left}}",
       "badgeSubOne": "1 Abo",
       "badgeSubOther": "{{count}} Abos",
       "badgeOr": "oder",

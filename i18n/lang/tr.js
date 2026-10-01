@@ -465,6 +465,8 @@ export default {
       "badgesMeta": "{{count}} devam ediyor · otomatik verilir",
       "badgesEmpty": "Şu anda devam eden rozet kampanyası yok.",
       "badgeWatch": "{{time}} izle",
+      "badgeWatched": "{{watched}} / {{goal}}",
+      "badgeWatchLeft": "{{left}} kaldı",
       "badgeSubOne": "1 abonelik",
       "badgeSubOther": "{{count}} abonelik",
       "badgeOr": "veya",

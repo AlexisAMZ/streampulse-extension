@@ -321,3 +321,31 @@ test("isBadgeCampaign reconnaît les organisations de badges sans liste de réco
   assert.equal(isBadgeCampaign({ owner: "Twitch Gaming" }), true);
   assert.equal(isBadgeCampaign({ owner: "Riot Games", badgeOnly: null }), false);
 });
+
+test("watchedMinutesFor estime la progression locale d'une campagne à objectif de minutes", async () => {
+  const { watchedMinutesFor } = await import("../js/drops-data.js");
+  const HOUR = 3_600_000;
+  const start = Date.UTC(2026, 9, 1, 12); // 2026-10-01 12:00 UTC
+  const end = start + 7 * 24 * HOUR;
+  const now = end + 24 * HOUR;
+  const reward = { game: "PAYDAY 3", minutesGoal: 120, startsAt: start, endsAt: end };
+  const watchDaily = {
+    "2026-09-30": { "twitch:chan": { games: { "payday 3": 3600 } } },
+    "2026-10-01": { "twitch:chan": { games: { "PAYDAY 3": 1800 } } },
+    "2026-10-02": {
+      "twitch:chan": { games: { "payday 3": 2700, "Just Chatting": 600 } },
+      "kick:chan": { games: { "payday 3": 3600 } },
+    },
+    "2026-10-03": { "twitch:chan": { games: { " payday 3 ": 1200 } } },
+    "2026-10-09": { "twitch:chan": { games: { "payday 3": 3600 } } },
+  };
+  // Jour du lancement exclu (borne basse), Kick ignoré, fin de campagne respectée :
+  // 2700 + 1200 = 3900 s = 65 min.
+  assert.equal(watchedMinutesFor(watchDaily, reward, now), 65);
+  // Pas de jeu ou pas d'objectif : rien à estimer.
+  assert.equal(watchedMinutesFor(watchDaily, { ...reward, game: "" }, now), 0);
+  assert.equal(watchedMinutesFor(watchDaily, { ...reward, minutesGoal: 0 }, now), 0);
+  assert.equal(watchedMinutesFor("x", reward, now), 0);
+  // Sans date de lancement, tout l'historique connu compte : 9300 s = 155 min.
+  assert.equal(watchedMinutesFor(watchDaily, { ...reward, startsAt: 0 }, now), 155);
+});
