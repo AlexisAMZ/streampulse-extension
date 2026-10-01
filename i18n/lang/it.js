@@ -66,6 +66,8 @@ export default {
     "playerGroupTitle": "Player Twitch",
     "playerGroupHint": "Ottimizza il player per restare al passo con il live.",
     "qualityGroupTitle": "Automazione",
+    "syncGroupTitle": "Più dispositivi?",
+    "syncGroupHint": "Usi StreamPulse su più dispositivi? La sincronizzazione del browser porta la tua lista, i fissati e le impostazioni ovunque, senza account né server.",
     "qualityGroupHint": "Automatizza le piccole azioni ripetitive.",
     "autoClaimTitle": "Riscatto auto dei punti",
     "autoClaimDescription": "Twitch: clicca per te sul forziere bonus dei Punti canale appena compare. Kick: mostra il tuo saldo punti.",

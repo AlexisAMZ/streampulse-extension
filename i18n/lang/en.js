@@ -66,6 +66,8 @@ export default {
     "playerGroupTitle": "Player helpers",
     "playerGroupHint": "Keep the Twitch player close to real time.",
     "qualityGroupTitle": "Automation",
+    "syncGroupTitle": "Multiple devices?",
+    "syncGroupHint": "Do you use StreamPulse on more than one device? Browser sync carries your list, pins and settings everywhere — no account, no server.",
     "qualityGroupHint": "Automate repetitive tasks to save time.",
     "autoClaimTitle": "Auto-claim channel points",
     "autoClaimDescription": "Automatically click Twitch channel point bonuses for you.",

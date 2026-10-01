@@ -66,6 +66,8 @@ export default {
     "playerGroupTitle": "Twitch-Player",
     "playerGroupHint": "Optimiere den Player, um wieder live zu sein.",
     "qualityGroupTitle": "Automatisierung",
+    "syncGroupTitle": "Mehrere Geräte?",
+    "syncGroupHint": "Nutzt du StreamPulse auf mehreren Geräten? Die Browser-Synchronisierung nimmt deine Liste, angehefteten Einträge und Einstellungen überall mit — ohne Konto, ohne Server.",
     "qualityGroupHint": "Automatisiere kleine, wiederkehrende Aufgaben.",
     "autoClaimTitle": "Kanalpunkte automatisch abholen",
     "autoClaimDescription": "Twitch: Klickt für dich auf die Bonustruhe mit Kanalpunkten, sobald sie erscheint. Kick: Zeigt deinen Punktestand an.",

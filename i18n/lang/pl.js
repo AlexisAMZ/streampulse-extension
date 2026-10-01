@@ -66,6 +66,8 @@ export default {
     "playerGroupTitle": "Odtwarzacz Twitcha",
     "playerGroupHint": "Optymalizuje odtwarzacz, żeby nadrobić opóźnienie transmisji.",
     "qualityGroupTitle": "Automatyzacja",
+    "syncGroupTitle": "Kilka urządzeń?",
+    "syncGroupHint": "Korzystasz ze StreamPulse na kilku urządzeniach? Synchronizacja przeglądarki zabiera Twoją listę, przypięte i ustawienia wszędzie — bez konta i bez serwera.",
     "qualityGroupHint": "Automatyzuje drobne, powtarzalne czynności.",
     "autoClaimTitle": "Automatyczne odbieranie punktów",
     "autoClaimDescription": "Twitch: klika za ciebie skrzynkę z bonusem punktów kanału, gdy tylko się pojawi. Kick: pokazuje saldo punktów.",

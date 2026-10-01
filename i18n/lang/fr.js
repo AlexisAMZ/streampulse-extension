@@ -66,6 +66,8 @@ export default {
     "playerGroupTitle": "Lecteur Twitch",
     "playerGroupHint": "Optimise le lecteur pour rattraper le direct.",
     "qualityGroupTitle": "Automatisation",
+    "syncGroupTitle": "Plusieurs appareils ?",
+    "syncGroupHint": "Utilises-tu StreamPulse sur plusieurs appareils ? La synchro du navigateur emporte ta liste, tes épingles et tes réglages partout, sans compte ni serveur.",
     "qualityGroupHint": "Automatise les petites actions répétitives.",
     "autoClaimTitle": "Récupération auto des points",
     "autoClaimDescription": "Twitch : clique pour toi sur le coffre bonus de Points de chaîne dès qu'il apparaît. Kick : affiche ton solde de points.",

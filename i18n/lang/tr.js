@@ -66,6 +66,8 @@ export default {
     "playerGroupTitle": "Twitch oynatıcısı",
     "playerGroupHint": "Canlı yayına yetişmek için oynatıcıyı optimize et.",
     "qualityGroupTitle": "Otomasyon",
+    "syncGroupTitle": "Birden fazla cihaz?",
+    "syncGroupHint": "StreamPulse'u birden fazla cihazda kullanıyor musun? Tarayıcı eşitlemesi listeni, sabitlediklerini ve ayarlarını her yere taşır — hesap yok, sunucu yok.",
     "qualityGroupHint": "Tekrarlayan küçük işleri otomatikleştir.",
     "autoClaimTitle": "Puanları otomatik al",
     "autoClaimDescription": "Twitch: Kanal Puanı bonus sandığı belirir belirmez senin yerine tıklar. Kick: puan bakiyeni gösterir.",

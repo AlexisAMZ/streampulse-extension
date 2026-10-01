@@ -61,6 +61,7 @@ const preferenceToggleDefinitions = [
   { element: document.getElementById("onboarding-streamer-favicon"), key: "enableStreamerFavicon" },
   { element: document.getElementById("onboarding-tab-live-icon"), key: "enableTabLiveIcon" },
   { element: document.getElementById("onboarding-community-badge"), key: "communityBadge" },
+  { element: document.getElementById("onboarding-cross-device-sync"), key: "crossDeviceSync" },
 ];
 
 /**

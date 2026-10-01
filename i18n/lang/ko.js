@@ -66,6 +66,8 @@ export default {
     "playerGroupTitle": "Twitch 플레이어",
     "playerGroupHint": "라이브를 따라잡도록 플레이어를 최적화합니다.",
     "qualityGroupTitle": "자동화",
+    "syncGroupTitle": "여러 기기에서 사용하나요?",
+    "syncGroupHint": "StreamPulse를 여러 기기에서 사용하시나요? 브라우저 동기화가 목록, 고정, 설정을 어디든 가져다 줍니다. 계정도 서버도 없습니다.",
     "qualityGroupHint": "반복되는 작은 작업을 자동화합니다.",
     "autoClaimTitle": "채널 포인트 자동 수령",
     "autoClaimDescription": "Twitch: 채널 포인트 보너스 상자가 나타나면 대신 클릭합니다. Kick: 포인트 잔액을 표시합니다.",
