@@ -5,6 +5,7 @@
   "description": "__MSG_appDesc__",
   "version": "26.9.33",
   "permissions": [
+    "contextMenus",
     "storage",
     "alarms",
     "cookies",
@@ -161,6 +162,12 @@
     "32": "images/photos/32px.png",
     "48": "images/photos/48px.png",
     "128": "images/photos/128px.png"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": { "default": "Alt+Shift+S" },
+      "description": "__MSG_openPopupDesc__"
+    }
   },
   "web_accessible_resources": [
     {
