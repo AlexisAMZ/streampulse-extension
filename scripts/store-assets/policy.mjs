@@ -20,9 +20,8 @@
  * le mot doit être entier.
  *
  * Les deux bords sont contraints, sinon on récolte des faux positifs : « yeni »
- * (nouveau) dans « Yenile » (actualiser), « baru » dans « Pembaruan » (mise à
- * jour), « beste » dans « Bestelling » (commande), « #1 » dans « #1000 »
- * (code d'erreur Twitch).
+ * (nouveau) dans « Yenile » (actualiser), « nr 1 » dans « nr 1000 »,
+ * « #1 » dans « #1000 » (code d'erreur Twitch).
  */
 const BANNED = {
   fr: ["gratuit*", "gratos", "offert*", "nouveau*", "nouvelle*", "nouveauté*", "meilleur*", "n°1", "n° 1", "numéro 1", "premium", "recommandé*"],
@@ -36,10 +35,6 @@ const BANNED = {
   ru: ["бесплатн*", "даром", "новый", "новая", "новинк*", "лучш*", "№ 1", "премиум", "рекомендуем*"],
   ja: ["無料", "新機能", "新登場", "最高", "ナンバーワン", "プレミアム", "おすすめ"],
   ko: ["무료", "신규", "새로운", "최고", "1위", "프리미엄", "추천"],
-  id: ["gratis", "cuma-cuma", "baru", "terbaik", "nomor 1", "premium", "direkomendasikan"],
-  nl: ["gratis", "kosteloos", "nieuw", "nieuwe", "beste", "nr. 1", "premium", "aanbevolen"],
-  sv: ["gratis", "kostnadsfri*", "utan kostnad", "ny", "nytt", "bäst*", "nr 1", "premium", "rekommenderad*"],
-  cs: ["zdarma", "bezplatn*", "nový", "nové", "novink*", "nejlep*", "č. 1", "prémi*", "doporučen*"],
 };
 
 /** Scripts sans séparateur de mots : les limites de mot n'y ont pas de sens. */

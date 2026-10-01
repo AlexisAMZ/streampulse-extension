@@ -111,9 +111,8 @@ portait « 100% Free and Free forever ». Le règlement interdit sur les **asset
 tout badge ou texte du type « gratuit », « nouveau », « n° 1 », « premium »,
 « recommandé ».
 
-`scripts/store-assets/policy.mjs` tient la liste des termes interdits pour les
-15 langues du filtre (les 11 publiées, plus `id`, `nl`, `sv`, `cs` conservées
-au cas où). Sur les textes marketing, que l'on maîtrise, la génération **échoue**
+`scripts/store-assets/policy.mjs` tient la liste des termes interdits pour
+les 11 langues publiées. Sur les textes marketing, que l'on maîtrise, la génération **échoue**
 plutôt que de laisser repartir un asset fautif vers la validation. Sur les chaînes
 d'interface, elle se contente d'**avertir** : le règlement vise les badges
 promotionnels, pas le vocabulaire fonctionnel du produit (l'allemand

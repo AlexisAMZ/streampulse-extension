@@ -21,10 +21,6 @@ const HEADING_CODES = {
   RU: "ru",
   JA: "ja",
   KO: "ko",
-  ID: "id",
-  NL: "nl",
-  SV: "sv",
-  CS: "cs",
 };
 
 function readListing() {

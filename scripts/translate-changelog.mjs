@@ -1,14 +1,17 @@
 import { readFile, writeFile } from "node:fs/promises";
 
 const FILE = new URL("../js/changelog-data.js", import.meta.url);
-const DEEPL_API_KEY = "848d800e-c396-4a25-b26d-9e6c52a42446:fx";
+// La clé vit dans l'environnement, jamais dans le dépôt (une ancienne clé en
+// dur a fuité dans l'historique public : régénérée chez DeepL).
+const DEEPL_API_KEY = process.env.DEEPL_API_KEY || "";
 
 async function translateDeepl(texts, targetLang) {
+    if (!DEEPL_API_KEY) throw new Error("DEEPL_API_KEY manquant dans l'environnement");
     const url = "https://api-free.deepl.com/v2/translate";
     const langMap = {
         "pt-br": "PT-BR", "es": "ES", "de": "DE", "it": "IT",
         "pl": "PL", "tr": "TR", "ru": "RU", "ja": "JA",
-        "ko": "KO", "id": "ID", "nl": "NL", "sv": "SV", "cs": "CS"
+        "ko": "KO"
     };
     const target = langMap[targetLang.toLowerCase()] || targetLang.toUpperCase();
     
@@ -38,7 +41,7 @@ async function run() {
     const source = await readFile(FILE, "utf8");
     const { RELEASES } = await import(FILE.href);
     
-    const langs = ['de', 'it', 'pl', 'tr', 'ru', 'ja', 'ko', 'id', 'nl', 'sv', 'cs'];
+    const langs = ['de', 'it', 'pl', 'tr', 'ru', 'ja', 'ko'];
     
     // We only need to process the latest release (26.8.9) or all of them.
     // Actually the linter might complain about ALL releases missing translations if we just added langs.
