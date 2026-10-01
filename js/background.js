@@ -14,7 +14,6 @@ import { MESSAGE_HANDLERS } from "./sw/messages.js";
 import { keepChannelTabLoaded, onPreferencesChangedForTabDiscard } from "./sw/tab-discard.js";
 import { WatchTimeStore } from "./sw/watchtime.js";
 import { initSync } from "./sw/sync.js";
-import { initContextMenu } from "./sw/context-menu.js";
 
 // Diagnostic : exposé tôt, même si une erreur survient plus bas.
 installDebugTools();
@@ -64,9 +63,6 @@ scheduleWatchTimeFlushAlarm();
 // Synchro multi-appareils : listeners posés au top-level (voir l'en-tête du
 // fichier), la poussée/tirée ne part que si le réglage est activé.
 initSync();
-// Menu contextuel « Ajouter à StreamPulse » sur les liens de chaîne.
-initContextMenu();
-
 // Le SW peut s'arrêter entre deux vidages : reprendre le cumul laissé en
 // storage.session, et vider au moment où le navigateur suspend le SW.
 WatchTimeStore.restorePending().catch((error) => {

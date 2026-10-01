@@ -55,7 +55,6 @@ export function createFakeChrome({ local = {}, id = "test-extension-id" } = {}) 
     },
     storage: { local: createArea(local), session: createArea(), onChanged: createEvent() },
     alarms: { get: track("alarms.get", undefined), create: track("alarms.create"), clear: track("alarms.clear"), onAlarm: createEvent() },
-    contextMenus: { removeAll: track("contextMenus.removeAll"), create: track("contextMenus.create"), onClicked: createEvent() },
     tabs: {
       query: track("tabs.query", []),
       create: track("tabs.create", {}),

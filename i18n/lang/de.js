@@ -964,10 +964,6 @@ export default {
     }
   },
   "background": {
-      "contextMenu": {
-        "add": "Zu StreamPulse hinzufügen",
-        "added": "{{name}} wurde zu StreamPulse hinzugefügt"
-      },
     "badgeAuto": {
       "bannerTitle": "StreamPulse Auto-Modus",
       "bannerAll": "StreamPulse holt alle möglichen Abzeichen",

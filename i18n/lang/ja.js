@@ -964,10 +964,6 @@ export default {
     }
   },
   "background": {
-      "contextMenu": {
-        "add": "StreamPulseに追加",
-        "added": "{{name}}をStreamPulseに追加しました"
-      },
     "badgeAuto": {
       "bannerTitle": "StreamPulse 自動モード",
       "bannerAll": "StreamPulse が取得できるバッジをすべて取っています",

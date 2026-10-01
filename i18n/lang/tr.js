@@ -964,10 +964,6 @@ export default {
     }
   },
   "background": {
-      "contextMenu": {
-        "add": "StreamPulse'a ekle",
-        "added": "{{name}} StreamPulse'a eklendi"
-      },
     "badgeAuto": {
       "bannerTitle": "StreamPulse otomatik mod",
       "bannerAll": "StreamPulse alınabilecek tüm rozetleri alıyor",

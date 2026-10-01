@@ -964,10 +964,6 @@ export default {
     "htmlLang": "es"
   },
   "background": {
-      "contextMenu": {
-        "add": "Añadir a StreamPulse",
-        "added": "{{name}} añadido a StreamPulse"
-      },
     "badgeAuto": {
       "bannerTitle": "Modo auto de StreamPulse",
       "bannerAll": "StreamPulse consigue todas las insignias posibles",

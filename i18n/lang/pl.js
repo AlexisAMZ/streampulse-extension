@@ -964,10 +964,6 @@ export default {
     }
   },
   "background": {
-      "contextMenu": {
-        "add": "Dodaj do StreamPulse",
-        "added": "Dodano {{name}} do StreamPulse"
-      },
     "badgeAuto": {
       "bannerTitle": "Tryb auto StreamPulse",
       "bannerAll": "StreamPulse zdobywa wszystkie możliwe odznaki",

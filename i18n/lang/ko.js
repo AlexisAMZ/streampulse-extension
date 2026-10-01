@@ -964,10 +964,6 @@ export default {
     }
   },
   "background": {
-      "contextMenu": {
-        "add": "StreamPulse에 추가",
-        "added": "{{name}}을(를) StreamPulse에 추가했습니다"
-      },
     "badgeAuto": {
       "bannerTitle": "StreamPulse 자동 모드",
       "bannerAll": "StreamPulse가 받을 수 있는 배지를 모두 받는 중",

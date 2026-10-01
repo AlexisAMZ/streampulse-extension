@@ -964,10 +964,6 @@ export default {
     }
   },
   "background": {
-      "contextMenu": {
-        "add": "Добавить в StreamPulse",
-        "added": "{{name}} добавлен в StreamPulse"
-      },
     "badgeAuto": {
       "bannerTitle": "Авторежим StreamPulse",
       "bannerAll": "StreamPulse получает все доступные значки",
