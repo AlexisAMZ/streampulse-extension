@@ -51,6 +51,45 @@ export const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
   {
+    version: "26.9.32",
+    date: "2026-10-01",
+    title: { "fr": "Le bandeau reste où tu le laisses", "en": "The strip stays where you leave it", "es": "La tira se queda donde la dejas", "pt-BR": "A faixa fica onde você deixa", "de": "Die Leiste bleibt, wo du sie lässt", "it": "La barra resta dove la lasci", "pl": "Pasek zostaje tam, gdzie go zostawisz", "tr": "Şerit bıraktığın yerde kalıyor", "ru": "Лента остаётся там, где вы её оставили", "ja": "バーは動かした位置に留まります", "ko": "스트립은 놓은 자리에 그대로 있습니다" },
+    changes: [
+      {
+        type: "fix",
+        text: {
+          "fr": "Dans le popup, le bandeau des lives ne se recentre plus tout seul pendant que tu le fais défiler : il reste où tu le laisses.",
+          "en": "In the pop-up, the live strip no longer snaps back on its own while you scroll it: it stays where you leave it.",
+          "es": "En el popup, la tira de directos ya no se recentra sola mientras la desplazas: se queda donde la dejas.",
+          "pt-BR": "No pop-up, a faixa de lives não volta mais sozinha para o centro enquanto você rola: ela fica onde você deixa.",
+          "de": "Im Pop-up zentriert sich die Live-Leiste nicht mehr von selbst, während du sie scrollst: Sie bleibt, wo du sie lässt.",
+          "it": "Nel pop-up, la barra delle live non si ricentra più da sola mentre la scorri: resta dove la lasci.",
+          "pl": "W okienku pasek transmisji nie centruje się już sam podczas przewijania: zostaje tam, gdzie go zostawisz.",
+          "tr": "Pop-up'ta canlı yayın şeridi kaydırırken kendiliğinden yeniden ortalanmıyor: bıraktığın yerde kalıyor.",
+          "ru": "Во всплывающем окне лента трансляций больше не центрируется сама, пока вы её прокручиваете: она остаётся там, где вы её оставили.",
+          "ja": "ポップアップでライブのバーをスクロールしても勝手に位置が戻らなくなり、動かした場所に留まります。",
+          "ko": "팝업에서 라이브 스트립을 스크롤할 때 더 이상 스스로 위치가 되돌아가지 않고, 놓은 자리에 그대로 있습니다."
+        },
+      },
+      {
+        type: "fix",
+        text: {
+          "fr": "La liste des badges et des campagnes se met à jour dès que tu ouvres le popup, au lieu d'attendre la prochaine vérification automatique.",
+          "en": "The badges and campaigns list updates as soon as you open the pop-up, instead of waiting for the next automatic check.",
+          "es": "La lista de insignias y campañas se actualiza en cuanto abres el popup, en lugar de esperar la próxima comprobación automática.",
+          "pt-BR": "A lista de distintivos e campanhas é atualizada assim que você abre o pop-up, em vez de esperar a próxima verificação automática.",
+          "de": "Die Liste der Abzeichen und Kampagnen aktualisiert sich, sobald du das Pop-up öffnest, statt auf die nächste automatische Prüfung zu warten.",
+          "it": "L'elenco di badge e campagne si aggiorna non appena apri il pop-up, invece di aspettare il prossimo controllo automatico.",
+          "pl": "Lista odznak i kampanii aktualizuje się od razu po otwarciu okienka, zamiast czekać na następne automatyczne sprawdzenie.",
+          "tr": "Rozet ve kampanya listesi, otomatik denetimi beklemek yerine popup'ı açar açmaz güncelleniyor.",
+          "ru": "Список значков и кампаний обновляется, как только вы открываете всплывающее окно, а не ждёт следующей автоматической проверки.",
+          "ja": "バッジとキャンペーンのリストが、自動チェックを待たずにポップアップを開くとすぐ更新されます。",
+          "ko": "배지와 캠페인 목록이 자동 확인을 기다리지 않고 팝업을 여는 즉시 업데이트됩니다."
+        },
+      },
+    ],
+  },
+  {
     version: "26.9.31",
     date: "2026-09-30",
     title: { "fr": "Les boutons de Twitch répondent de nouveau", "en": "Twitch buttons respond again", "es": "Los botones de Twitch responden de nuevo", "pt-BR": "Os botões na Twitch voltaram a responder", "de": "Die Twitch-Schaltflächen reagieren wieder", "it": "I pulsanti su Twitch rispondono di nuovo", "pl": "Przyciski na Twitchu znowu działają", "tr": "Twitch düğmeleri yeniden çalışıyor", "ru": "Кнопки на Twitch снова работают", "ja": "Twitch上のボタンが再び動作します", "ko": "Twitch의 버튼이 다시 작동합니다" },
