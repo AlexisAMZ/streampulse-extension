@@ -123,7 +123,9 @@
       ],
       "all_frames": false,
       "js": [
-        "js/watchTimeTracker.js"
+        "js/inject/i18n-inline.js",
+        "js/watchTimeTracker.js",
+        "js/inject/quickFollowYoutube.js"
       ],
       "run_at": "document_idle"
     },
@@ -167,7 +169,8 @@
         "images/photos/logosp-128.png"
       ],
       "matches": [
-        "https://www.twitch.tv/*"
+        "https://www.twitch.tv/*",
+        "https://www.youtube.com/*"
       ]
     },
     {
