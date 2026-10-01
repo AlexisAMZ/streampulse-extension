@@ -48,16 +48,21 @@
   // ---- chaîne courante ------------------------------------------------------
 
   /**
-   * @handle ou /channel/ID depuis l'URL. Les vieilles URL /c/perso ne portent
-   * pas le handle : ignorées, l'ajout échouerait à la résolution.
+   * Chaîne de la page : @handle ou /channel/ID dans l'URL (pages de chaîne),
+   * sinon le lien de la chaîne propriétaire dans le DOM (pages watch : le
+   * bouton apparaît à côté de son bouton d'abonnement).
    */
   function currentChannel() {
     var parts = location.pathname.split("/").filter(Boolean);
-    if (!parts.length) return "";
-    var first = parts[0].toLowerCase();
-    if (first.charAt(0) === "@") return first.slice(1);
-    if ((first === "channel" || first === "c") && parts[1]) return parts[1].toLowerCase();
-    return "";
+    if (parts.length) {
+      var first = parts[0].toLowerCase();
+      if (first.charAt(0) === "@") return first.slice(1);
+      if (first === "channel" && parts[1]) return parts[1].toLowerCase();
+    }
+    var href =
+      document.querySelector("#owner #channel-name a[href], ytd-channel-name a[href], #channel-name a[href]")?.getAttribute("href") ||
+      "";
+    return (/\/@([\w.-]{1,60})/.exec(href)?.[1] || /\/channel\/(UC[\w-]{1,60})/.exec(href)?.[1] || "").toLowerCase();
   }
 
   function isTracked(handle) {
@@ -140,14 +145,19 @@
 
   // ---- bouton ---------------------------------------------------------------
 
+  // Même D.A. que les boutons de YouTube (chip sombre #272727, pilule radius 18,
+  // Roboto 500) : au repos il passe pour un natif. Une fois la chaîne suivie,
+  // le pill passe en violet StreamPulse pour marquer l'état.
   var STYLE = [
-    "#" + BTN_ID + " { display: inline-flex; align-items: center; gap: 6px; height: 36px;",
-    "  padding: 0 14px 0 12px; margin-left: 8px; border-radius: 18px; vertical-align: middle;",
-    "  border: 1px solid rgba(145, 70, 255, .6); background: rgba(145, 70, 255, .06);",
-    "  color: #9146FF; cursor: pointer; font-family: Roboto, Arial, sans-serif;",
-    "  font-size: 14px; font-weight: 500; white-space: nowrap; }",
-    "#" + BTN_ID + ":hover { background: rgba(145, 70, 255, .16); }",
-    "#" + BTN_ID + ".is-tracked { background: #9146FF; color: #fff; border-color: #9146FF; }",
+    "#" + BTN_ID + " { display: inline-flex; align-items: center; gap: 7px; height: 36px;",
+    "  padding: 0 16px 0 13px; margin-left: 8px; border-radius: 18px; vertical-align: middle;",
+    "  border: 0; background: #272727; color: #f1f1f1; cursor: pointer;",
+    "  font-family: Roboto, Arial, sans-serif; font-size: 14px; font-weight: 500;",
+    "  letter-spacing: 0; white-space: nowrap; }",
+    "#" + BTN_ID + ":hover { background: #3f3f3f; }",
+    "#" + BTN_ID + ":focus-visible { outline: 2px solid #f1f1f1; outline-offset: 1px; }",
+    "#" + BTN_ID + ".is-tracked { background: #9146FF; color: #fff; }",
+    "#" + BTN_ID + ".is-tracked:hover { background: #a25eff; }",
     "#" + BTN_ID + ".is-busy { opacity: .55; pointer-events: none; }",
     "#" + BTN_ID + " img { width: 16px; height: 16px; }",
   ].join("\n");
@@ -213,9 +223,9 @@
   }
 
   function findAnchor() {
-    // #subscribe-button existe sur les pages de chaîne et sur les pages watch ;
-    // on ne place le bouton que sur les pages de chaîne (handle dans l'URL).
-    return document.querySelector("#subscribe-button");
+    // Pages de chaîne comme pages watch : le conteneur #subscribe-button, ou
+    // le bouton d'abonnement lui-même selon la génération du DOM YouTube.
+    return document.querySelector("#subscribe-button, ytd-subscribe-button-renderer");
   }
 
   var renderQueued = false;
@@ -238,6 +248,7 @@
       }
       if (!existing) {
         existing = buildButton(handle);
+        existing.dataset.spHandle = handle;
         anchor.insertAdjacentElement("afterend", existing);
       } else if (existing.dataset.spHandle !== handle) {
         // Navigation SPA vers une autre chaîne : même bouton, autre cible.

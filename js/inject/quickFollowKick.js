@@ -137,14 +137,18 @@
 
   // ---- bouton ---------------------------------------------------------------
 
+  // Même D.A. que les boutons de Kick (façon « Gift Subs ») : gris anthracite,
+  // coins radius 9, texte 600. Une fois la chaîne suivie, le pill passe en
+  // violet StreamPulse pour marquer l'état.
   var STYLE = [
-    "#" + BTN_ID + " { display: inline-flex; align-items: center; gap: 6px; height: 34px;",
-    "  padding: 0 14px 0 12px; margin-left: 8px; border-radius: 8px; vertical-align: middle;",
-    "  border: 1px solid rgba(83, 252, 24, .0); background: rgba(145, 70, 255, .12);",
-    "  color: #b98bff; cursor: pointer; font-family: inherit;",
-    "  font-size: 14px; font-weight: 500; white-space: nowrap; }",
-    "#" + BTN_ID + ":hover { background: rgba(145, 70, 255, .24); }",
+    "#" + BTN_ID + " { display: inline-flex; align-items: center; gap: 7px; height: 36px;",
+    "  padding: 0 16px 0 13px; margin-left: 8px; border-radius: 9px; vertical-align: middle;",
+    "  border: 1px solid #2c2c35; background: #1f1f26; color: #fff; cursor: pointer;",
+    "  font-family: inherit; font-size: 14px; font-weight: 600; white-space: nowrap; }",
+    "#" + BTN_ID + ":hover { background: #26262f; }",
+    "#" + BTN_ID + ":focus-visible { outline: 2px solid rgba(83, 252, 24, .7); outline-offset: 1px; }",
     "#" + BTN_ID + ".is-tracked { background: #9146FF; border-color: #9146FF; color: #fff; }",
+    "#" + BTN_ID + ".is-tracked:hover { background: #a25eff; }",
     "#" + BTN_ID + ".is-busy { opacity: .55; pointer-events: none; }",
     "#" + BTN_ID + " img { width: 16px; height: 16px; }",
   ].join("\n");
@@ -235,6 +239,7 @@
       }
       if (!existing) {
         existing = buildButton(handle);
+        existing.dataset.spHandle = handle;
         anchor.insertAdjacentElement("afterend", existing);
       } else if (existing.dataset.spHandle !== handle) {
         // Navigation SPA vers une autre chaîne : même bouton, autre cible.
