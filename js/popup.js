@@ -147,6 +147,7 @@ let currentTab = "streamers";
 let lastAddedId = null;
 let previousLiveIds = new Set(); // track who was live last render
 let lastPointsValue = null; // for odometer bump
+let centeredId = null; // dernier streamer auto-centré dans le bandeau
 
 function markButtonSuccess(button) {
   if (!button) return;
@@ -829,12 +830,17 @@ function renderStreamers() {
   }
   streamerListEl.replaceChildren(fragment);
 
-  // Garde la carte du streamer affiché sur la scène visible dans la bande,
-  // sinon la carte sélectionnée reste coupée au bord du scroll.
-  const selectedCard = streamerListEl.querySelector(".mini.is-selected");
-  if (selectedCard) {
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    selectedCard.scrollIntoView({ block: "nearest", inline: "nearest", behavior: reducedMotion ? "auto" : "smooth" });
+  // Garde la carte du streamer affiché visible dans la bande, mais seulement
+  // quand la sélection change : les re-rendus du fond (statuts, points, temps
+  // de visionnage) ne doivent pas rappeler le bandeau à sa position pendant
+  // que l'utilisateur le fait défiler.
+  if (state.selectedId !== centeredId) {
+    const selectedCard = streamerListEl.querySelector(".mini.is-selected");
+    if (selectedCard) {
+      centeredId = state.selectedId;
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      selectedCard.scrollIntoView({ block: "nearest", inline: "nearest", behavior: reducedMotion ? "auto" : "smooth" });
+    }
   }
 
   const liveCountEl = document.getElementById("live-count");
