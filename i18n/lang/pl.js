@@ -712,6 +712,8 @@ export default {
       "otherNotificationsGroup": "Inne powiadomienia",
       "dropAlertsTitle": "Zdobyty Drop",
       "dropAlertsBody": "Powiadomienie, gdy Drop zostanie odebrany. Twitch. Ciche powiadomienie.",
+      "badgeAlertsTitle": "Nowa odznaka",
+      "badgeAlertsBody": "Powiadomienie, gdy odznaka czatu stanie się dostępna. Twitch. Powiadomienie ciche.",
       "raidCancelledTitle": "Anulowany rajd",
       "raidCancelledBody": "Powiadomienie, gdy rajd zostanie automatycznie anulowany. Twitch. Ciche powiadomienie.",
       "pointsGroupTitle": "Punkty kanału",

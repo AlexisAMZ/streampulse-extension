@@ -711,6 +711,8 @@ export default {
       "otherNotificationsGroup": "Otras notificaciones",
       "dropAlertsTitle": "Drop obtenido",
       "dropAlertsBody": "Una notificación cuando se reclama un Drop. Twitch. Notificación silenciosa.",
+      "badgeAlertsTitle": "Insignia nueva",
+      "badgeAlertsBody": "Una notificación cuando una insignia de chat esté disponible. Twitch. Notificación silenciosa.",
       "raidCancelledTitle": "Raid cancelado",
       "raidCancelledBody": "Una notificación cuando un raid se cancela automáticamente. Twitch. Notificación silenciosa.",
       "pointsGroupTitle": "Puntos de canal",

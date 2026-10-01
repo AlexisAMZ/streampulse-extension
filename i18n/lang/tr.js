@@ -712,6 +712,8 @@ export default {
       "otherNotificationsGroup": "Diğer bildirimler",
       "dropAlertsTitle": "Drop kazanıldı",
       "dropAlertsBody": "Bir Drop alındığında bildirim. Twitch. Sessiz bildirim.",
+      "badgeAlertsTitle": "Yeni rozet",
+      "badgeAlertsBody": "Bir sohbet rozeti kullanılabilir olduğunda bildirim. Twitch. Sessiz bildirim.",
       "raidCancelledTitle": "Baskın iptal edildi",
       "raidCancelledBody": "Bir baskın otomatik iptal edildiğinde bildirim. Twitch. Sessiz bildirim.",
       "pointsGroupTitle": "Kanal Puanları",

@@ -77,6 +77,7 @@ const quietHoursStartInput = document.getElementById("pref-quiet-hours-start");
 const quietHoursEndInput = document.getElementById("pref-quiet-hours-end");
 const quietHoursTimesRow = document.getElementById("quiet-hours-times");
 const dropAlertsToggle = document.getElementById("pref-drop-alerts");
+const badgeAlertsToggle = document.getElementById("pref-badge-alerts");
 const raidAlertsToggle = document.getElementById("pref-raid-alerts");
 const predictionsPopupToggle = document.getElementById("pref-predictions-popup");
 const volumeBoostInput = document.getElementById("pref-volume-boost");
@@ -1185,6 +1186,9 @@ function renderPreferences() {
   }
   if (dropAlertsToggle) {
     dropAlertsToggle.checked = prefs.dropAlerts !== false;
+  }
+  if (badgeAlertsToggle) {
+    badgeAlertsToggle.checked = prefs.badgeAlerts === true;
   }
   if (raidAlertsToggle) {
     raidAlertsToggle.checked = prefs.raidAlerts !== false;
@@ -2311,6 +2315,38 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (syncToggle) {
       syncToggle.addEventListener("change", (e) => {
         updatePreferences({ crossDeviceSync: e.target.checked });
+      });
+    }
+    // Les cinq toggles d'alertes n'avaient jamais été câblés : basculer ne
+    // changeait rien, le réglage reprenait sa valeur au prochain rendu.
+    if (liveNotificationsToggle) {
+      liveNotificationsToggle.addEventListener("change", (e) => {
+        updatePreferences({ liveNotifications: e.target.checked });
+      });
+    }
+    if (gameNotificationsToggle) {
+      gameNotificationsToggle.addEventListener("change", (e) => {
+        updatePreferences({ gameNotifications: e.target.checked });
+      });
+    }
+    if (titleNotificationsToggle) {
+      titleNotificationsToggle.addEventListener("change", (e) => {
+        updatePreferences({ titleNotifications: e.target.checked });
+      });
+    }
+    if (dropAlertsToggle) {
+      dropAlertsToggle.addEventListener("change", (e) => {
+        updatePreferences({ dropAlerts: e.target.checked });
+      });
+    }
+    if (badgeAlertsToggle) {
+      badgeAlertsToggle.addEventListener("change", (e) => {
+        updatePreferences({ badgeAlerts: e.target.checked });
+      });
+    }
+    if (raidAlertsToggle) {
+      raidAlertsToggle.addEventListener("change", (e) => {
+        updatePreferences({ raidAlerts: e.target.checked });
       });
     }
 

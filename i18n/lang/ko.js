@@ -712,6 +712,8 @@ export default {
       "otherNotificationsGroup": "기타 알림",
       "dropAlertsTitle": "드롭 획득",
       "dropAlertsBody": "드롭을 수령하면 알림을 보냅니다. Twitch. 무음 알림.",
+      "badgeAlertsTitle": "새 배지",
+      "badgeAlertsBody": "채팅 배지를 사용할 수 있게 되면 알림. Twitch. 무음 알림.",
       "raidCancelledTitle": "레이드 취소됨",
       "raidCancelledBody": "레이드가 자동으로 취소되면 알림을 보냅니다. Twitch. 무음 알림.",
       "pointsGroupTitle": "채널 포인트",

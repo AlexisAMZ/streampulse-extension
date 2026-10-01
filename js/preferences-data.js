@@ -18,6 +18,9 @@ export const DEFAULT_PREFERENCES = {
   gameNotifications: false,
   titleNotifications: false,
   dropAlerts: false,
+  // Notifications de nouveaux badges : découplée des alertes de Drops depuis
+  // la 26.9.33. Migration : qui avait les alertes de Drops actives les garde.
+  badgeAlerts: false,
   raidAlerts: false,
   // Bêta : détection des raids entrants en arrière-plan via IRC anonyme.
   // Opt-in explicite car elle maintient une connexion WebSocket permanente.
@@ -159,6 +162,9 @@ export function sanitizePreferences(preferences = {}) {
     // Opt-in : une sauvegarde ou un stockage plus ancien peut porter true,
     // ce choix reste ; une clé absente prend le défaut (false).
     dropAlerts: optIn(preferences, "dropAlerts"),
+    // Un réglage absent hérite des alertes de Drops (l'ancien couplage) ;
+    // une valeur explicite, même false, reste.
+    badgeAlerts: preferences.badgeAlerts === undefined ? preferences.dropAlerts === true : preferences.badgeAlerts === true,
     raidAlerts: optIn(preferences, "raidAlerts"),
     backgroundRaidAlerts: preferences.backgroundRaidAlerts === true,
     updateNotifications: optIn(preferences, "updateNotifications"),

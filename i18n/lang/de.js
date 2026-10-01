@@ -712,6 +712,8 @@ export default {
       "otherNotificationsGroup": "Weitere Benachrichtigungen",
       "dropAlertsTitle": "Drop erhalten",
       "dropAlertsBody": "Eine Benachrichtigung, wenn ein Drop abgeholt wurde. Twitch. Stumme Benachrichtigung.",
+      "badgeAlertsTitle": "Neues Abzeichen",
+      "badgeAlertsBody": "Eine Benachrichtigung, wenn ein Chat-Abzeichen verfügbar wird. Twitch. Stille Benachrichtigung.",
       "raidCancelledTitle": "Raid abgebrochen",
       "raidCancelledBody": "Eine Benachrichtigung, wenn ein Raid automatisch abgebrochen wurde. Twitch. Stumme Benachrichtigung.",
       "pointsGroupTitle": "Kanalpunkte",

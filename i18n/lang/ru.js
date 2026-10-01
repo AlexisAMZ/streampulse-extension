@@ -712,6 +712,8 @@ export default {
       "otherNotificationsGroup": "Другие уведомления",
       "dropAlertsTitle": "Drop получен",
       "dropAlertsBody": "Уведомление, когда Drop забран. Twitch. Без звука.",
+      "badgeAlertsTitle": "Новый значок",
+      "badgeAlertsBody": "Уведомление, когда значок чата становится доступен. Twitch. Тихое уведомление.",
       "raidCancelledTitle": "Рейд отменён",
       "raidCancelledBody": "Уведомление, когда рейд отменён автоматически. Twitch. Без звука.",
       "pointsGroupTitle": "Баллы канала",

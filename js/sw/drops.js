@@ -168,7 +168,7 @@ async function announceBadges(badges) {
   const free = badges.filter((badge) => !isPaidBadge(badge)).slice(0, 3);
   if (!free.length) return;
   const prefs = await PreferenceStore.get();
-  if (!prefs.dropAlerts) return;
+  if (!prefs.badgeAlerts) return;
   for (const badge of free) {
     await NotificationCenter.show({
       title: translateWithPrefs(prefs, "background.notifications.badgeTitle", { name: badge.title }),

@@ -712,6 +712,8 @@ export default {
       "otherNotificationsGroup": "その他の通知",
       "dropAlertsTitle": "ドロップ獲得",
       "dropAlertsBody": "ドロップを受け取ったときに通知します。Twitch。サイレント通知。",
+      "badgeAlertsTitle": "新バッジ",
+      "badgeAlertsBody": "チャットバッジが利用可能になったときに通知。Twitch。サイレント通知。",
       "raidCancelledTitle": "レイドのキャンセル",
       "raidCancelledBody": "レイドが自動でキャンセルされたときに通知します。Twitch。サイレント通知。",
       "pointsGroupTitle": "チャンネルポイント",
