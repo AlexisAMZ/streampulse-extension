@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/promo/marquee_1400x560_en.png" alt="StreamPulse: never miss a live again" width="100%">
+  <img src="images/promo/marquee_1400x560.png" alt="StreamPulse: never miss a live again" width="100%">
 </p>
 
 <h1 align="center">StreamPulse</h1>

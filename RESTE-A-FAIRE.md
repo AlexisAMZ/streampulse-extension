@@ -1,7 +1,7 @@
 # Reste à faire
 
-État au commit `eba6094` (26.8.11), sections 1 et 3 mises à jour au 2026-10-01
-(26.9.31). Chiffres mesurés sur le dépôt, pas estimés.
+État au commit `eba6094` (26.8.11), sections 1 à 5 mises à jour au 2026-10-01
+(26.9.32). Chiffres mesurés sur le dépôt, pas estimés.
 
 ---
 
@@ -22,7 +22,7 @@ l'importer dans `i18n/translations.js`, la déclarer (`ready: true`) dans
 ## 2. Page de notes de version : fait
 
 Le cadre (`js/changelog.js`, `html/changelog.html`) est en place, les textes
-sont des cartes par langue (4 langues publiées obligatoires), et `verify.mjs`
+sont des cartes par langue (les 11 langues publiées obligatoires), et `verify.mjs`
 refuse une release avec des textes incomplets.
 
 ---
@@ -37,20 +37,23 @@ description de la fiche Chrome Web Store), vérifié par `verify.mjs`
 
 ## 4. Vérifications non faites
 
-Ces choses sont codées et passent les contrôles automatiques, mais n'ont
-jamais été observées en fonctionnement :
+Les trois points de la liste d'origine sont clos :
 
-- **Page de notes de version** : jamais vue s'afficher. Pour la tester :
-  ouvrir `chrome-extension://<ID>/html/changelog.html`.
-- **Correctif des notifications** : `createWithIconFallback` dans
-  `js/background.js` doit supprimer l'erreur `Unable to download all specified
-  images` quand l'avatar distant est bloqué. Non confirmé.
-- **Rendu dans les langues non latines** : `ja`, `ko`, `ru` pas regardées
-  visuellement. Les libellés longs peuvent déborder dans le popup et la topbar.
+- la **page de notes de version** s'affiche à chaque release depuis la
+  26.8.11 et accompagne chaque publication (`chrome-extension://<ID>/html/changelog.html`) ;
+- les **langues non latines** (`ja`, `ko`, `ru`) sont rendues visuellement à
+  chaque génération des captures store, et repassées à fond à la 26.9.30 ;
+- le **correctif des notifications** (`createWithIconFallback`, aujourd'hui
+  dans `js/sw/notifications.js`) est passé dans chaque release sans erreur
+  signalée.
+
+Reste à observer un jour, sur un vrai blocage d'avatar distant, que
+`createWithIconFallback` supprime bien l'erreur « Unable to download all
+specified images » — aucun signalement depuis sa mise en place.
 
 ---
 
-## 5. Idées de features (analyse Claude, à valider)
+## 5. Idées de features (analyse Claude de la 26.8.11, à revalider)
 
 1. **Stats de session** (facile-moyen) : dashboard popup, points/heure, drops,
    temps par streamer. Données déjà collectées.
@@ -59,7 +62,10 @@ jamais été observées en fonctionnement :
 3. **Alertes Discord/webhook** (moyen) : URL webhook pour notifs live/drop
    hors ligne.
 4. **Multi-vues / mosaïque** (difficile) : plusieurs streams en grille.
-5. **Historique drops/points ratés** (facile) : journal filtrable + export CSV.
+
+L'idée « historique drops/points ratés » est réalisée depuis : onglet
+Historique des lives ratés (26.9.15), panneau Points par chaîne et journal
+des Drops (26.9.27).
 
 ---
 

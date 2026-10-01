@@ -77,7 +77,7 @@ StreamPulse requires no account and contains no ads or trackers. Your streamers,
 | Capture 2 (Notifications & automatisation) × 11 langues | 1280×800 PNG | ✅ Prêt | `images/cws_screenshots/<LANGUE>/02-automation.png` |
 | Capture 3 (Fonctionnalités) × 11 langues | 1280×800 PNG | ✅ Prêt | `images/cws_screenshots/<LANGUE>/03-features.png` |
 | Petite tuile promotionnelle | 440×280 PNG 24 bits | ✅ Prêt | `images/promo/small_tile.png` |
-| Grande tuile promotionnelle | 1400×560 PNG | 🟡 À générer | `images/promo/marquee.png` |
+| Grande tuile promotionnelle | 1400×560 PNG | ✅ Prêt | `images/promo/marquee_1400x560.png` |
 
 ### Régénérer les captures localisées
 
@@ -197,6 +197,15 @@ Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décoc
 | Version | Date | Description des changements | Statut CWS |
 |---------|------|-----------------------------|------------|
 | 26.9.32 | 2026-10-01 | Correctifs popup : le bandeau des lives ne se recentre plus tout seul pendant le défilement, et la liste des badges et campagnes se met à jour dès l'ouverture du popup (fenêtre de 2 minutes au lieu de 30). | Prêt pour publication |
+| 26.9.31 | 2026-09-30 | Correctif : sur Twitch, retirer un streamer avec le bouton « Ajouter à StreamPulse » marche de nouveau, les réglages du panneau et du tiroir StreamPulse s'enregistrent de nouveau, et le bouton retrouve son fond violet. | Publiée |
+| 26.9.30 | 2026-09-28 | Grand ménage : réglages rangés en 8 rubriques avec bouton « Réinitialiser les réglages », « Annuler » après suppression d'un streamer, temps de visionnage qui ne compte plus les onglets en arrière-plan ni les lives en pause, connexion Kick plus fiable, notifications qui rouvrent la bonne chaîne, popup plus rapide (seule la langue choisie est chargée) et traductions complètes dans les 11 langues. | Publiée |
+| 26.9.29 | 2026-09-27 | Parrainage visible dans les Réglages avec bouton « Copier mon code », badge d'ancienneté en jauge plus lisible dans le tchat, badges d'événements terminés (League of Legends Classic, Elden Ring) plus proposés comme disponibles, et retrait du badge du tchat sous 7 jours après désactivation. | Publiée |
+| 26.9.28 | 2026-09-27 | Badge d'ancienneté StreamPulse+ (jauge ou pager), pseudos et badges façon « paints » de 7TV (7 dégradés, 9 textures), badge communautaire proposé en un clic, écran final d'installation repensé, et mode auto des badges qui franchit seul les écrans bloquants. | Publiée |
+| 26.9.27 | 2026-09-27 | Grande mise à jour : panneau Drops avec progression et récupération automatique toutes les 10 minutes sans ouvrir Twitch, onglet Badges avec campagnes et mode auto (onglet épinglé et muet, basse qualité), panneau Points par chaîne, effets de pseudo et badge StreamPulse+, parrainage, 7 jours gratuits sur la formule mensuelle, notification de mise à jour par version, recherche de chaînes avec avatars. | Publiée |
+| 26.9.26 | 2026-09-26 | Correctif : la récupération automatique des points n'ouvrait plus la fenêtre d'offre d'abonnements pendant le SUBtember. | Publiée |
+| 26.9.21 | 2026-09-21 | YouTube rejoint Twitch et Kick : chaînes ajoutées par @handle ou lien, visibles dans le tableau de bord avec titre et statut en direct. Amplification du volume jusqu'à 200 % sur le lecteur Twitch, filtre YouTube du tableau de bord réparé, textes traduits, pages Twitch allégées de 354 Ko. | Publiée |
+| 26.9.20 | 2026-09-17 | Correctif : connexion rétablie après l'incident d'identification Twitch, réparation automatique si les identifiants changent à nouveau, et vérification des lives groupée en une seule requête pour tous les streamers Twitch suivis. | Publiée |
+| 26.9.19 | 2026-09-16 | Lecteur Twitch plus fiable : alertes réglées sur la carte de chaque streamer, raids annoncés 90 secondes plus tôt, points, Drops et temps de visionnage comptés au juste nombre, journal d'événements et bonus de points réparés, et Kick passe en vidéo sur la scène avec les vraies miniatures de l'API Kick. | Publiée |
 | 26.9.18 | 2026-09-15 | Permissions minimales : retrait de `tabs` (plus d'avertissement « Lire l'historique de navigation »), ressources exposées limitées aux logos sur Twitch, permissions Kick regroupées. Captures du store avec des chaînes fictives. | Prêt pour publication |
 | 26.9.17 | 2026-09-15 | Correctif : appels au serveur StreamPulse (badge, clé StreamPulse+, config Twitch) passés sur streampulse.fr sans www, remerciement à l'activation StreamPulse+, bandeau quand les notifications sont bloquées, avertissement quand une alerte intelligente coupe l'alerte classique, lien étoile GitHub dans les réglages. | Publiée |
 | 26.9.16 | 2026-09-14 | Correctif : badge, couleur, effets et pseudo spécial StreamPulse+ absents des messages déjà affichés au chargement de Twitch. | Prêt pour publication |
@@ -218,7 +227,7 @@ Les textes suivants sont formatés en texte brut pur, sans tiret cadratin ni mar
 
 **Detailed Description**:
 ```text
-StreamPulse reúne Twitch y Kick en una sola extensión ligera. Vigila a tus streamers favoritos, automatiza los clics repetitivos y mantiene tu navegador rápido.
+StreamPulse reúne Twitch, Kick y YouTube en una sola extensión ligera. Vigila a tus streamers favoritos, automatiza los clics repetitivos y mantiene tu navegador rápido.
 
 🌍 Totalmente traducida a 11 idiomas.
 
@@ -231,7 +240,7 @@ Características principales:
 • Filtro de chat: Oculta mensajes por palabra clave o de ciertos usuarios, en Twitch y Kick.
 • Tiempo de visualización y resumen: Controla el tiempo que pasas en cada canal y crea una imagen resumen para compartir de los últimos 7 o 30 días o de un mes, en formato PC (16:9) o móvil (9:16).
 • Insignia comunitaria: Distingue el icono de StreamPulse junto a otros usuarios de la extensión en el chat de Twitch. Se puede desactivar en cualquier momento.
-• Panel unificado: Una sola ventana para Twitch y Kick que muestra de un vistazo quién está en directo.
+• Panel unificado: Una sola ventana para Twitch, Kick y YouTube que muestra de un vistazo quién está en directo.
 
 Privacidad:
 StreamPulse no requiere cuenta y no contiene anuncios ni rastreadores. Tus streamers, ajustes y tiempo de visualización se guardan en tu dispositivo. Solo la insignia comunitaria envía un dato a nuestro servidor: un hash de tu nombre de usuario de Twitch (nunca el nombre en sí), como máximo una vez al día. Desactiva la insignia en los ajustes para detenerlo.
@@ -246,11 +255,11 @@ StreamPulse no requiere cuenta y no contiene anuncios ni rastreadores. Tus strea
 
 ### 🇧🇷 Portugais (PT-BR)
 **Short Description**:
-`Pontos do canal e Drops da Twitch automáticos, alertas ao vivo, prévias, filtros de chat e resumo do tempo assistido. Twitch e Kick.`
+`Pontos do canal e Drops da Twitch automáticos, alertas ao vivo, prévias, filtros de chat e resumo do tempo assistido. Twitch, Kick e YouTube.`
 
 **Detailed Description**:
 ```text
-O StreamPulse reúne Twitch e Kick em uma única extensão leve. Ele acompanha seus streamers favoritos, automatiza cliques repetitivos e mantém seu navegador rápido.
+O StreamPulse reúne Twitch, Kick e YouTube em uma única extensão leve. Ele acompanha seus streamers favoritos, automatiza cliques repetitivos e mantém seu navegador rápido.
 
 🌍 Totalmente traduzido para 11 idiomas.
 
@@ -263,7 +272,7 @@ Principais recursos:
 • Filtro de chat: Oculte mensagens por palavra-chave ou de usuários específicos, na Twitch e na Kick.
 • Tempo assistido e resumo: Acompanhe o tempo gasto em cada canal e crie uma imagem de resumo para compartilhar dos últimos 7 ou 30 dias ou de um mês, no formato PC (16:9) ou celular (9:16).
 • Distintivo comunitário: Identifique o ícone do StreamPulse ao lado de outros usuários da extensão no chat da Twitch. Pode ser desativado a qualquer momento.
-• Painel unificado: Uma única janela para Twitch e Kick que mostra rapidamente quem está ao vivo.
+• Painel unificado: Uma única janela para Twitch, Kick e YouTube que mostra rapidamente quem está ao vivo.
 
 Privacidade:
 O StreamPulse não exige conta e não tem anúncios nem rastreadores. Seus streamers, configurações e tempo assistido ficam salvos no seu dispositivo. Somente o distintivo comunitário envia um dado ao nosso servidor: um hash do seu nome de usuário da Twitch (nunca o nome em si), no máximo uma vez por dia. Desative o distintivo nas configurações para interromper o envio.
@@ -278,11 +287,11 @@ O StreamPulse não exige conta e não tem anúncios nem rastreadores. Seus strea
 
 ### 🇩🇪 Allemand (DE)
 **Short Description**:
-`Twitch-Kanalpunkte & Drops automatisch, Live-Alarme, Vorschauen, Chatfilter und Rückblick deiner Zuschauzeit für Twitch & Kick.`
+`Twitch-Kanalpunkte & Drops automatisch, Live-Alarme, Vorschauen, Chatfilter und Rückblick deiner Zuschauzeit für Twitch, Kick & YouTube.`
 
 **Detailed Description**:
 ```text
-StreamPulse vereint Twitch und Kick in einer schlanken Erweiterung. Sie behält deine Lieblingsstreamer im Blick, automatisiert wiederkehrende Klicks und hält deinen Browser schnell.
+StreamPulse vereint Twitch, Kick und YouTube in einer schlanken Erweiterung. Sie behält deine Lieblingsstreamer im Blick, automatisiert wiederkehrende Klicks und hält deinen Browser schnell.
 
 🌍 Vollständig in 11 Sprachen übersetzt.
 
@@ -295,7 +304,7 @@ Hauptfunktionen:
 • Chatfilter: Blende Nachrichten nach Stichwörtern oder von bestimmten Nutzern aus, auf Twitch und Kick.
 • Zuschauzeit und Rückblick: Verfolge deine Zeit pro Kanal und erstelle ein teilbares Rückblick-Bild für die letzten 7 oder 30 Tage oder einen Monat, im PC- (16:9) oder Mobilformat (9:16).
 • Community-Abzeichen: Erkenne das StreamPulse-Symbol neben anderen Nutzern der Erweiterung im Twitch-Chat. Jederzeit abschaltbar.
-• Einheitliches Dashboard: Ein Pop-up für Twitch und Kick, das auf einen Blick zeigt, wer live ist.
+• Einheitliches Dashboard: Ein Pop-up für Twitch, Kick und YouTube, das auf einen Blick zeigt, wer live ist.
 
 Datenschutz:
 StreamPulse braucht kein Konto und enthält weder Werbung noch Tracker. Deine Streamer, Einstellungen und Zuschauzeit bleiben auf deinem Gerät gespeichert. Nur das Community-Abzeichen sendet Daten an unseren Server: einen Hash deines Twitch-Namens (nie den Namen selbst), höchstens einmal pro Tag. Schalte das Abzeichen in den Einstellungen aus, um das zu beenden.
@@ -311,11 +320,11 @@ StreamPulse braucht kein Konto und enthält weder Werbung noch Tracker. Deine St
 
 ### 🇮🇹 Italien (IT)
 **Short Description**:
-`Punti canale e Drops di Twitch automatici, avvisi live, anteprime, filtri chat e riepilogo del tempo di visione. Twitch e Kick.`
+`Punti canale e Drops di Twitch automatici, avvisi live, anteprime, filtri chat e riepilogo del tempo di visione. Twitch, Kick e YouTube.`
 
 **Detailed Description**:
 ```text
-StreamPulse riunisce Twitch e Kick in un'unica estensione leggera. Tiene d'occhio i tuoi streamer preferiti, automatizza i clic ripetitivi e mantiene veloce il tuo browser.
+StreamPulse riunisce Twitch, Kick e YouTube in un'unica estensione leggera. Tiene d'occhio i tuoi streamer preferiti, automatizza i clic ripetitivi e mantiene veloce il tuo browser.
 
 🌍 Tradotta interamente in 11 lingue.
 
@@ -328,7 +337,7 @@ Funzionalità principali:
 • Filtro chat: Nascondi i messaggi per parola chiave o di determinati utenti, su Twitch e Kick.
 • Tempo di visione e riepilogo: Tieni traccia del tempo passato su ogni canale e crea un'immagine di riepilogo da condividere per gli ultimi 7 o 30 giorni o per un mese, in formato PC (16:9) o mobile (9:16).
 • Badge della comunità: Riconosci l'icona di StreamPulse accanto agli altri utenti dell'estensione nella chat di Twitch. Disattivabile in qualsiasi momento.
-• Dashboard unificata: Un unico pop-up per Twitch e Kick che mostra a colpo d'occhio chi è in diretta.
+• Dashboard unificata: Un unico pop-up per Twitch, Kick e YouTube che mostra a colpo d'occhio chi è in diretta.
 
 Privacy:
 StreamPulse non richiede alcun account e non contiene pubblicità né tracker. I tuoi streamer, le impostazioni e il tempo di visione restano salvati sul tuo dispositivo. Solo il badge della comunità invia un dato al nostro server: un hash del tuo nome utente Twitch (mai il nome stesso), al massimo una volta al giorno. Disattiva il badge nelle impostazioni per interromperlo.
@@ -343,11 +352,11 @@ StreamPulse non richiede alcun account e non contiene pubblicità né tracker. I
 
 ### 🇵🇱 Polonais (PL)
 **Short Description**:
-`Automatyczne punkty kanału i dropy na Twitchu, alerty live, podglądy, filtry czatu i podsumowanie czasu oglądania. Twitch i Kick.`
+`Automatyczne punkty kanału i dropy na Twitchu, alerty live, podglądy, filtry czatu i podsumowanie czasu oglądania. Twitch, Kick i YouTube.`
 
 **Detailed Description**:
 ```text
-StreamPulse łączy Twitcha i Kicka w jednym lekkim rozszerzeniu. Śledzi ulubionych streamerów, automatyzuje powtarzalne kliknięcia i nie spowalnia przeglądarki.
+StreamPulse łączy Twitcha, Kicka i YouTube w jednym lekkim rozszerzeniu. Śledzi ulubionych streamerów, automatyzuje powtarzalne kliknięcia i nie spowalnia przeglądarki.
 
 🌍 W pełni przetłumaczone na 11 języków.
 
@@ -360,7 +369,7 @@ Główne funkcje:
 • Filtr czatu: Ukrywaj wiadomości według słów kluczowych lub od wybranych użytkowników, na Twitchu i Kicku.
 • Czas oglądania i podsumowanie: Śledź czas spędzony na każdym kanale i twórz obraz podsumowania do udostępnienia za ostatnie 7 lub 30 dni albo za miesiąc, w formacie PC (16:9) lub telefonu (9:16).
 • Odznaka społeczności: Rozpoznawaj ikonę StreamPulse przy innych użytkownikach rozszerzenia na czacie Twitcha. Można ją wyłączyć w każdej chwili.
-• Wspólny panel: Jedno okienko dla Twitcha i Kicka, które od razu pokazuje, kto nadaje na żywo.
+• Wspólny panel: Jedno okienko dla Twitcha, Kicka i YouTube, które od razu pokazuje, kto nadaje na żywo.
 
 Prywatność:
 StreamPulse nie wymaga konta i nie zawiera reklam ani trackerów. Twoi streamerzy, ustawienia i czas oglądania są przechowywane na Twoim urządzeniu. Tylko odznaka społeczności wysyła dane na nasz serwer: skrót (hash) Twojej nazwy użytkownika na Twitchu (nigdy samą nazwę), najwyżej raz dziennie. Wyłącz odznakę w ustawieniach, aby to zatrzymać.
@@ -375,11 +384,11 @@ StreamPulse nie wymaga konta i nie zawiera reklam ani trackerów. Twoi streamerz
 
 ### 🇹🇷 Turc (TR)
 **Short Description**:
-`Twitch kanal puanları ve Drops otomatik, canlı yayın bildirimleri, önizlemeler, sohbet filtreleri ve izleme özeti. Twitch ve Kick.`
+`Twitch kanal puanları ve Drops otomatik, canlı yayın bildirimleri, önizlemeler, sohbet filtreleri ve izleme özeti. Twitch, Kick ve YouTube.`
 
 **Detailed Description**:
 ```text
-StreamPulse, Twitch ve Kick'i tek bir hafif eklentide birleştirir. Sevdiğin yayıncıları takip eder, tekrarlayan tıklamaları otomatikleştirir ve tarayıcını hızlı tutar.
+StreamPulse, Twitch, Kick ve YouTube'u tek bir hafif eklentide birleştirir. Sevdiğin yayıncıları takip eder, tekrarlayan tıklamaları otomatikleştirir ve tarayıcını hızlı tutar.
 
 🌍 11 dile tamamen çevrildi.
 
@@ -392,7 +401,7 @@ Başlıca özellikler:
 • Sohbet filtresi: Mesajları anahtar kelimeye göre ya da belirli kullanıcılardan gizle, Twitch ve Kick'te.
 • İzleme süresi ve özet: Her kanalda geçirdiğin süreyi takip et, ardından son 7 veya 30 gün ya da bir ay için PC (16:9) veya mobil (9:16) formatında paylaşılabilir bir özet görseli oluştur.
 • Topluluk rozeti: Twitch sohbetinde diğer StreamPulse kullanıcılarının yanındaki StreamPulse simgesini gör. İstediğin zaman kapatabilirsin.
-• Birleşik panel: Twitch ve Kick için tek bir açılır pencere, kimin yayında olduğunu bir bakışta gösterir.
+• Birleşik panel: Twitch, Kick ve YouTube için tek bir açılır pencere, kimin yayında olduğunu bir bakışta gösterir.
 
 Gizlilik:
 StreamPulse hesap gerektirmez, reklam veya izleyici içermez. Yayıncıların, ayarların ve izleme süren cihazında saklanır. Sunucumuza yalnızca topluluk rozeti veri gönderir: Twitch kullanıcı adının bir hash değeri (asla adın kendisi değil), günde en fazla bir kez. Bunu durdurmak için rozeti ayarlardan kapat.
@@ -407,11 +416,11 @@ StreamPulse hesap gerektirmez, reklam veya izleyici içermez. Yayıncıların, a
 
 ### 🇷🇺 Russe (RU)
 **Short Description**:
-`Автосбор баллов канала и дропсов Twitch, оповещения о стримах, превью, фильтры чата и итоги времени просмотра. Twitch и Kick.`
+`Автосбор баллов канала и дропсов Twitch, оповещения о стримах, превью, фильтры чата и итоги времени просмотра. Twitch, Kick и YouTube.`
 
 **Detailed Description**:
 ```text
-StreamPulse объединяет Twitch и Kick в одном лёгком расширении. Оно следит за любимыми стримерами, автоматизирует однообразные клики и не замедляет браузер.
+StreamPulse объединяет Twitch, Kick и YouTube в одном лёгком расширении. Оно следит за любимыми стримерами, автоматизирует однообразные клики и не замедляет браузер.
 
 🌍 Полностью переведено на 11 языков.
 
@@ -424,7 +433,7 @@ StreamPulse объединяет Twitch и Kick в одном лёгком ра�
 • Фильтр чата: Скрывайте сообщения по ключевым словам или от определённых пользователей на Twitch и Kick.
 • Время просмотра и итоги: Следите за временем на каждом канале и создавайте изображение с итогами за последние 7 или 30 дней или за месяц в формате ПК (16:9) или телефона (9:16).
 • Значок сообщества: Узнавайте значок StreamPulse рядом с другими пользователями расширения в чате Twitch. Его можно отключить в любой момент.
-• Единая панель: Одно всплывающее окно для Twitch и Kick, где сразу видно, кто в эфире.
+• Единая панель: Одно всплывающее окно для Twitch, Kick и YouTube, где сразу видно, кто в эфире.
 
 Конфиденциальность:
 StreamPulse не требует аккаунта и не содержит рекламы и трекеров. Ваши стримеры, настройки и время просмотра хранятся на вашем устройстве. На наш сервер данные отправляет только значок сообщества: хеш вашего имени пользователя Twitch (никогда само имя), не чаще раза в день. Чтобы прекратить отправку, отключите значок в настройках.
@@ -439,11 +448,11 @@ StreamPulse не требует аккаунта и не содержит рек
 
 ### 🇯🇵 Japonais (JA)
 **Short Description**:
-`Twitchのチャンネルポイントとドロップを自動取得。配信通知、ホバープレビュー、チャットフィルター、視聴時間のまとめ。Twitch・Kick対応。`
+`Twitchのチャンネルポイントとドロップを自動取得。配信通知、ホバープレビュー、チャットフィルター、視聴時間のまとめ。Twitch・Kick・YouTube対応。`
 
 **Detailed Description**:
 ```text
-StreamPulseは、TwitchとKickをひとつの軽量な拡張機能にまとめます。お気に入りの配信者を見守り、繰り返しのクリックを自動化し、ブラウザを快適に保ちます。
+StreamPulseは、Twitch、Kick、YouTubeをひとつの軽量な拡張機能にまとめます。お気に入りの配信者を見守り、繰り返しのクリックを自動化し、ブラウザを快適に保ちます。
 
 🌍 11言語に完全対応。
 
@@ -456,7 +465,7 @@ StreamPulseは、TwitchとKickをひとつの軽量な拡張機能にまとめ�
 • チャットフィルター：TwitchとKickで、キーワードや特定ユーザーのメッセージを非表示にできます。
 • 視聴時間とまとめ：チャンネルごとの視聴時間を記録し、過去7日間・30日間または月単位のまとめ画像をPC（16:9）かモバイル（9:16）形式で作成してシェアできます。
 • コミュニティバッジ：Twitchチャットで、ほかのStreamPulseユーザーの横にStreamPulseのアイコンが表示されます。いつでもオフにできます。
-• 統合ダッシュボード：TwitchとKickをひとつのポップアップにまとめ、誰が配信中かをひと目で確認できます。
+• 統合ダッシュボード：Twitch・Kick・YouTubeをひとつのポップアップにまとめ、誰が配信中かをひと目で確認できます。
 
 プライバシー：
 StreamPulseはアカウント不要で、広告もトラッカーも含みません。配信者リスト、設定、視聴時間はお使いの端末に保存されます。サーバーにデータを送るのはコミュニティバッジのみで、Twitchユーザー名をハッシュ化した値（ユーザー名そのものは送りません）を1日に最大1回送信します。停止するには設定でバッジをオフにしてください。
@@ -471,11 +480,11 @@ StreamPulseはアカウント不要で、広告もトラッカーも含みませ
 
 ### 🇰🇷 Coréen (KO)
 **Short Description**:
-`트위치 채널 포인트와 드롭 자동 수령, 방송 알림, 미리보기, 채팅 필터, 시청 시간 결산. 트위치와 Kick 지원.`
+`트위치 채널 포인트와 드롭 자동 수령, 방송 알림, 미리보기, 채팅 필터, 시청 시간 결산. 트위치, Kick, YouTube 지원.`
 
 **Detailed Description**:
 ```text
-StreamPulse는 트위치와 Kick을 하나의 가벼운 확장 프로그램으로 묶어 줍니다. 좋아하는 스트리머를 지켜보고, 반복적인 클릭을 자동화하며, 브라우저를 빠르게 유지합니다.
+StreamPulse는 트위치, Kick, YouTube를 하나의 가벼운 확장 프로그램으로 묶어 줍니다. 좋아하는 스트리머를 지켜보고, 반복적인 클릭을 자동화하며, 브라우저를 빠르게 유지합니다.
 
 🌍 11개 언어로 완전히 번역되었습니다.
 
@@ -488,7 +497,7 @@ StreamPulse는 트위치와 Kick을 하나의 가벼운 확장 프로그램으�
 • 채팅 필터: 트위치와 Kick에서 키워드나 특정 사용자의 메시지를 숨길 수 있습니다.
 • 시청 시간과 결산: 채널별 시청 시간을 기록하고, 최근 7일·30일 또는 한 달 단위의 결산 이미지를 PC(16:9)나 모바일(9:16) 형식으로 만들어 공유하세요.
 • 커뮤니티 배지: 트위치 채팅에서 다른 StreamPulse 사용자 옆에 StreamPulse 아이콘이 표시됩니다. 언제든지 끌 수 있습니다.
-• 통합 대시보드: 트위치와 Kick을 하나의 팝업에 모아 누가 방송 중인지 한눈에 보여 줍니다.
+• 통합 대시보드: 트위치, Kick, YouTube를 하나의 팝업에 모아 누가 방송 중인지 한눈에 보여 줍니다.
 
 개인정보:
 StreamPulse는 계정이 필요 없으며 광고나 추적기가 없습니다. 스트리머 목록, 설정, 시청 시간은 사용자의 기기에 저장됩니다. 서버로 데이터를 보내는 기능은 커뮤니티 배지뿐이며, 트위치 사용자 이름의 해시값(이름 자체는 보내지 않음)을 하루에 최대 한 번 전송합니다. 중단하려면 설정에서 배지를 끄세요.

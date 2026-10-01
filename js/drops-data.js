@@ -537,8 +537,8 @@ export function badgesFrom(stored = {}) {
 }
 
 /**
- * Twitch ne date pas ses badges : comme Stream Database, on retient le moment
- * où chacun apparaît. À la première synchronisation, tous sont déjà connus
+ * Twitch ne date pas ses badges : on retient le moment où chacun apparaît
+ * pour la première fois. À la première synchronisation, tous sont déjà connus
  * (firstSeen 0) ; seuls les suivants seront « nouveaux ». Un badge a
  * plusieurs versions : une seule ligne par set.
  *
