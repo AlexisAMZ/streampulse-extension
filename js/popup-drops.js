@@ -196,7 +196,7 @@ function renderChip(now) {
   let text;
   if (model?.kind === "progress") {
     const { drop } = model;
-    const left = isClaimable(drop) ? t("popup.drops.ready") : minutesLabel(remainingMinutes(drop));
+    const left = isClaimable(drop) ? t("popup.drops.ready") : t("popup.drops.timeLeft", { time: minutesLabel(remainingMinutes(drop)) });
     const more = model.others ? plural(model.others, "popup.drops.bandMoreOne", "popup.drops.bandMoreOther") : "";
     text = [drop.name, left, more].filter(Boolean).join(" · ");
     setFill(fill, percent(drop));
@@ -244,7 +244,7 @@ function progressRow(drop, now) {
     side = readySide(drop, now);
   } else {
     side = el("div", "drop-side");
-    side.append(el("b", null, minutesLabel(remainingMinutes(drop))), el("small", null, [t("popup.drops.progress", { minutes: drop.minutes, required: drop.required }), endsLabel(drop, now)].filter(Boolean).join(" · ")));
+    side.append(el("b", null, t("popup.drops.timeLeft", { time: minutesLabel(remainingMinutes(drop)) })), el("small", null, [t("popup.drops.progress", { minutes: drop.minutes, required: drop.required }), endsLabel(drop, now)].filter(Boolean).join(" · ")));
   }
   row.append(thumb(drop.image, "drop-img"), main, side);
   return row;
