@@ -7,9 +7,11 @@ import { translateWithPrefs } from "./i18n.js";
 import { openPatchNotes } from "./lifecycle.js";
 import { respond } from "./message-dispatch.js";
 import { NotificationCenter } from "./notifications.js";
-import { EventLogStore, PreferenceStore, StatsStore } from "./stores.js";
+import { DataStore, EventLogStore, PreferenceStore, StatsStore } from "./stores.js";
 import { WatchTimeStore, currentGameOf, resolveChannelAvatar, watchTimeTabClaims } from "./watchtime.js";
 import { warnWith } from "./log.js";
+import { PlatformChecker } from "./platform-checker.js";
+import { resolveKickAsset } from "./normalize.js";
 import { DROPS_HISTORY_KEY, historyFrom, isHistoryEntry, pruneHistory } from "../drops-data.js";
 import { POINTS_KEYS, addGain, stateFrom, toStorage } from "../points-data.js";
 
@@ -232,5 +234,32 @@ export function handleImportHistoryCsv(request, sender, sendResponse) {
     }
     return { success: true, count };
   }, sendResponse, "importHistoryCsv");
+  return true;
+}
+
+/**
+ * Avatar Kick manquant : le sondage le complète désormais, mais les streamers
+ * ajoutés avant peuvent attendre un cycle entier. La popup demande la
+ * résolution à l'ouverture — la vraie photo vient de l'API de Kick.
+ */
+export function handleResolveKickAvatar(request, sender, sendResponse) {
+  respond(async () => {
+    const handle = String(request.handle || "").toLowerCase().trim();
+    if (!handle) return { success: true, avatarUrl: "" };
+    const channel = await PlatformChecker.getKickChannel(handle);
+    const avatarUrl = resolveKickAsset(channel?.user?.profile_pic) || resolveKickAsset(channel?.profile_pic) || "";
+    if (!avatarUrl) return { success: true, avatarUrl: "" };
+    const streamers = await DataStore.getStreamers();
+    const entry = streamers.find(
+      (streamer) => (streamer.platform || "twitch") === "kick"
+        && String(streamer.handle || "").toLowerCase() === handle,
+    );
+    if (!entry) return { success: true, avatarUrl: "" };
+    if (entry.avatarUrl !== avatarUrl) {
+      entry.avatarUrl = avatarUrl;
+      await DataStore.saveStreamers(streamers);
+    }
+    return { success: true, avatarUrl };
+  }, sendResponse, "resolveKickAvatar");
   return true;
 }

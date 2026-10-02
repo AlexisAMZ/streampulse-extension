@@ -799,8 +799,23 @@ function stepFeatured(delta) {
   renderStreamers();
 }
 
+// Kick : les streamers ajoutés avant le suivi par API n'ont pas de photo (le
+// logo de la plateforme prenait le relais). Une demande de résolution par
+// handle et par ouverture du popup ; le fond écrit, storage.onChanged re-rend.
+const kickAvatarRequested = new Set();
+function sweepKickAvatars() {
+  for (const streamer of state.streamers) {
+    if ((streamer.platform || "twitch") !== "kick") continue;
+    const handle = String(streamer.handle || "").toLowerCase();
+    if (!handle || streamer.avatarUrl || kickAvatarRequested.has(handle)) continue;
+    kickAvatarRequested.add(handle);
+    chrome.runtime.sendMessage({ type: "resolveKickAvatar", handle }).catch(() => {});
+  }
+}
+
 function renderStreamers() {
   if (!streamerListEl) return;
+  sweepKickAvatars();
   const ordered = orderStreamers();
   const live = ordered.filter((s) => isLiveId(s.id));
   const offline = ordered.filter((s) => !isLiveId(s.id));
