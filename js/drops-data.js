@@ -690,6 +690,8 @@ const RETIRED_BADGES = new Set([
   "elden-ring-wylder", // sortie de Nightreign
   "raging-wolf-helm", // lancement de Shadow of the Erdtree
   "sorcerer-rogier-elden-ring",
+  "rematch-nations-cup", // Rematch Nations Cup terminée
+  "rematch-nations-cup-eng", // variante abonnés de la même coupe
 ]);
 
 export function badgeCampaignFor(badge, campaigns, now) {
@@ -745,7 +747,9 @@ export function newBadges(state, now, windowMs = NEW_BADGE_MS) {
   const owned = new Set(state.owned);
   // Nouveauté au sens large : set inédit, ou nouvelle version d'une série
   // connue (palier de sub en plus) — la plus récente des deux dates fait foi.
+  // Les badges d'événements terminés ne sont pas des nouveautés.
   return state.badges
+    .filter((badge) => !RETIRED_BADGES.has(badge.id))
     .map((badge) => ({ ...badge, lastNews: Math.max(badge.firstSeen || 0, badge.newVersionAt || 0) }))
     .filter((badge) => badge.lastNews > 0 && now - badge.lastNews <= windowMs)
     .map((badge) => ({ ...badge, owned: owned.has(badge.id), paid: isPaidBadge(badge) }))

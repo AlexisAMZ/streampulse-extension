@@ -123,3 +123,20 @@ test("un badge d'événement terminé (LoL Classic) n'est jamais proposé, même
   const all = catalogBadges({ ...state, badges: state.badges.map((b) => ({ ...b, firstSeen: now })) }, "all", "", { now, campaigns, names: new Set() });
   assert.equal(all[0].available, false);
 });
+
+test("la Rematch Nations Cup terminée n'est plus proposée ni comptée comme nouveauté", async () => {
+  const { newBadges } = await import("../js/drops-data.js");
+  const now = Date.parse("2026-10-02T12:00:00Z");
+  const campaigns = normalizeCampaigns([
+    { id: "rematch", name: "Rematch", status: "ACTIVE", startAt: "2026-09-25T00:00:00Z", endAt: "2026-10-30T00:00:00Z", game: { displayName: "Rematch" }, owner: { name: "Twitch Gaming" } },
+  ]);
+  const raw = { badges: [
+    { setID: "rematch-nations-cup", title: "Rematch Nations Cup", description: "This badge was earned by watching the Rematch Nations Cup!", version: "1" },
+  ], owned: [] };
+  const { state } = mergeBadges({ updatedAt: 0, syncedAt: 0, badges: [], owned: [] }, raw, now);
+  assert.equal(badgeCampaignFor(state.badges[0], campaigns, now), null);
+  const available = catalogBadges({ ...state, badges: state.badges.map((b) => ({ ...b, firstSeen: now })) }, "available", "", { now, campaigns, names: new Set() });
+  assert.equal(available.length, 0);
+  // Même fraîchement découvert, un badge retiré n'est pas une nouveauté.
+  assert.equal(newBadges({ ...state, badges: state.badges.map((b) => ({ ...b, firstSeen: now })) }, now).length, 0);
+});
