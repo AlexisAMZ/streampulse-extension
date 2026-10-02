@@ -159,8 +159,10 @@
     "  font-family: var(--sp-font, Roboto, Arial, sans-serif);",
     "  font-size: var(--sp-font-size, 14px); font-weight: var(--sp-weight, 500); }",
     "#" + BTN_ID + ":hover { filter: brightness(.94); }",
-    "#" + BTN_ID + ".is-tracked { background: #9146FF; color: #fff; }",
-    "#" + BTN_ID + ".is-tracked:hover { background: #a25eff; filter: none; }",
+    // État suivi : le gris neutre du bouton « Abonné » de YouTube, comme lui
+    // selon le thème — pas de violet StreamPulse, le pill reste chez YouTube.
+    "#" + BTN_ID + ".is-tracked { background: #272727; color: #f1f1f1; }",
+    "html:not([dark]) #" + BTN_ID + ".is-tracked { background: #f2f2f2; color: #0f0f0f; }",
     "#" + BTN_ID + ".is-busy { opacity: .55; pointer-events: none; }",
     "#" + BTN_ID + " img { width: 16px; height: 16px; }",
     "#sp-qf-yt-toast { position: fixed; left: 16px; bottom: 16px; z-index: 9999;",
@@ -189,8 +191,8 @@
 
   /**
    * Copie le style calculé du vrai bouton « S'abonner » dans les variables
-   * CSS du pill. L'état suivi (violet) reste géré par la classe : sa règle,
-   * plus spécifique, garde la priorité sur les variables.
+   * CSS du pill. L'état suivi reste géré par la classe : sa règle, plus
+   * spécifique, garde la priorité sur les variables.
    */
   function applyNativeStyle(btn, anchor) {
     var source = anchor.querySelector("button") || anchor;

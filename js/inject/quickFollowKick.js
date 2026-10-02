@@ -158,7 +158,8 @@
   // asphalt #090b0f, radius 4 (classe « rounded » de Kick), semibold —
   // valeurs relevées dans le CSS de kick.com (brand-bg-default =
   // kick-voltGreen-150, brand-fg-default = kick-asphaltBlack-950). Une fois
-  // la chaîne suivie, le pill passe en violet StreamPulse pour l'état.
+  // la chaîne suivie, le pill passe au gris sombre du bouton « Followed »
+  // de Kick, bordure comprise.
   var STYLE = [
     "#" + BTN_ID + " { display: inline-flex; align-items: center; gap: 7px;",
     "  padding: 8px 12px; margin-left: 8px; border-radius: 4px; vertical-align: middle;",

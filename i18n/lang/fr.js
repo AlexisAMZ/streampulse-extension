@@ -1195,7 +1195,7 @@ export default {
       "watchedHere": "Regardé ici",
       "quickSettings": "Réglages rapides",
       "follow": "Ajouter à StreamPulse",
-      "followed": "Dans StreamPulse",
+      "followed": "Suivi",
       "autoClaim": "Récupération auto des points",
       "fastForward": "Avance rapide",
       "more": "+{{count}} autres",
@@ -1211,7 +1211,7 @@ export default {
     },
     "quickFollow": {
       "add": "Ajouter à StreamPulse",
-      "tracked": "Dans StreamPulse",
+      "tracked": "Suivi",
       "remove": "Retirer de StreamPulse",
       "added": "{{name}} ajouté à StreamPulse",
       "removed": "{{name}} retiré de StreamPulse",
