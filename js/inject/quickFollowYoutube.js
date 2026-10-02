@@ -270,7 +270,9 @@
 
     btn.appendChild(logo);
     btn.appendChild(label);
-    btn.addEventListener("click", function (e) { onClick(e, btn); });
+    // Pas de listener ici : YouTube clone les conteneurs à chaque re-rendu et
+    // un clone perd ses listeners. Le clic est délégué au document en capture
+    // (voir plus bas), insensible aux clonages.
     return btn;
   }
 
@@ -313,6 +315,18 @@
       applyNativeStyle(existing, anchor);
     });
   }
+
+  // YouTube clone les conteneurs à chaque re-rendu : les listeners posés sur
+  // le bouton meurent avec le nœud d'origine. Délégation en capture sur le
+  // document — le clic marche quel que soit le clone affiché.
+  document.addEventListener(
+    "click",
+    function (e) {
+      var btn = e.target && e.target.closest && e.target.closest("#" + BTN_ID);
+      if (btn) onClick(e, btn);
+    },
+    true
+  );
 
   // ---- boucle de vie --------------------------------------------------------
 

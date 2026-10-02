@@ -26,15 +26,20 @@
   }
 
   /**
-   * Direct ? Infinity n'arrive que sur certains pipelines : le lecteur MSE de
-   * Kick expose une durée = fin de fenêtre glissante. À plus de 8 s de cette
-   * fin, on est sur un direct dont on a du retard (seul faux positif possible :
-   * un VOD écouté dans ses 8 dernières secondes, transitoire).
+   * Direct ? Infinity n'arrive que sur certains pipelines. Pour le lecteur MSE
+   * de Kick (durée = fin de fenêtre glissante, même en low-latency) : une
+   * durée qui GRANDIT d'un passage à l'autre trahit le direct — un VOD a une
+   * durée constante. Au premier passage, repli : fenêtre à plus de 8 s de la
+   * fin de la fenêtre.
    */
+  var durationSample = NaN;
   function isLive(video) {
     if (!video) return false;
     if (video.duration === Infinity) return true;
-    return Number.isFinite(video.duration) && video.duration - video.currentTime > 8;
+    if (!Number.isFinite(video.duration)) return false;
+    var grew = Number.isFinite(durationSample) && video.duration > durationSample + 0.01;
+    durationSample = video.duration;
+    return grew || video.duration - video.currentTime > 8;
   }
 
   /** Retard de la lecture sur l'arête de téléchargement (float, ou null). */
