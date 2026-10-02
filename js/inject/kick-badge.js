@@ -7,16 +7,35 @@
  * indépendante : le pseudo Kick est haché avec le même sel et enregistré
  * auprès du service de badges quand l'utilisateur active le réglage.
  *
- * Adapté au DOM de Kick : messages dans #chatroom-messages (classes
- * .message), pseudo en .username avec sa couleur en style inline, emplacement
- * des badges dans .badges. Limitation assumée : les tuiles d'ancienneté
- * (StreamPulse+ façon 7TV) restent propres à Twitch, faute de plus-rule sur
- * ce domaine.
+ * Adapté au DOM 2026 de Kick : messages en rangées [data-index] d'une liste
+ * virtualisée dans #chatroom-messages, pseudo en <button data-prevent-expand>
+ * avec sa couleur en style inline, badges dans le premier <div> du bloc
+ * identité (gap-1 entre images). Limitation assumée : les tuiles
+ * d'ancienneté (StreamPulse+ façon 7TV) restent propres à Twitch, faute de
+ * plus-rule sur ce domaine.
  */
 (function () {
   "use strict";
 
   if (window.top !== window) return;
+
+  // Journalisation de debogage, muette par defaut — comme twitch-badge.js :
+  // activer dans la console de l'onglet Kick avec localStorage.SP_DEBUG = "1".
+  var DEBUG = false;
+  try {
+    var flag = localStorage.getItem("SP_DEBUG");
+    DEBUG = flag === "1" || flag === "2" || flag === "trace";
+  } catch (_e) {
+    // localStorage refuse : on reste muet.
+  }
+  function log() {
+    if (!DEBUG) return;
+    try {
+      console.log.apply(console, ["[SP-Kick-Badge]"].concat(Array.prototype.slice.call(arguments)));
+    } catch (_e) {
+      // La journalisation ne doit jamais casser ce qu'elle observe.
+    }
+  }
 
   var PREFERENCES_KEY = "betaGeneralPreferences";
   var API_URL = "https://streampulse.fr/api/streampulse-badges";
@@ -84,21 +103,22 @@
             var hash = String(list[i] || "").toLowerCase().trim();
             if (/^[a-f0-9]{12}$/.test(hash)) next.add(hash);
           }
+          log(next.size, "empreintes chargees,", nextStyles.size, "styles");
           if (currentUsername) {
             hashLogin(currentUsername).then(function (own) {
               if (own) next.add(own);
               badgeHashes = next;
               chrome.storage.local.set({ [STORAGE_KEY]: Array.from(badgeHashes) });
-              refreshVisible();
+              rescanVisibleMessages();
             });
             return;
           }
           badgeHashes = next;
           chrome.storage.local.set({ [STORAGE_KEY]: Array.from(badgeHashes) });
-          refreshVisible();
+          rescanVisibleMessages();
         })
-        .catch(function () {
-          // Service de badges optionnel : son indisponibilité n'entrave pas le tchat.
+        .catch(function (error) {
+          log("service de badges indisponible :", error && error.message);
         });
     } catch (_e) {
       // Idem : fetch lui-même peut manquer (contexte invalidé).
@@ -107,10 +127,26 @@
 
   // ── Rendu ─────────────────────────────────────────────────────────────────
 
+  // DOM 2026 du tchat Kick : chaque message est une rangée [data-index] d'une
+  // liste virtualisee. Le pseudo est un <button data-prevent-expand> (sa
+  // couleur inline), precede eventuellement d'un <div> de badges — ni
+  // .username, ni .message, ni .badges, qui n'existent plus.
+  var MESSAGE_SELECTOR = "#chatroom-messages [data-index]";
+
+  /** Le bouton pseudo d'une rangée : data-prevent-expand, sinon le bouton du bloc identite. */
+  function usernameButton(messageEl) {
+    var btn = messageEl.querySelector('button[data-prevent-expand="true"]');
+    if (!btn || !(btn.textContent || "").trim()) {
+      var block = messageEl.querySelector("div[class*='items-baseline']");
+      btn = block ? block.querySelector("button") : null;
+    }
+    return btn;
+  }
+
   function kickColor(messageEl) {
     try {
-      var el = messageEl.querySelector(".username");
-      var inline = el && el.style && el.style.color;
+      var btn = usernameButton(messageEl);
+      var inline = btn && btn.style && btn.style.color;
       if (inline) return inline;
     } catch (_e) {
       // Kick reconstruit son DOM : le nœud peut disparaître entre-temps.
@@ -125,6 +161,9 @@
 
   function injectBadge(messageEl, hash) {
     if (messageEl.querySelector(".sp-chat-badge")) return;
+
+    var btn = usernameButton(messageEl);
+    if (!btn) return;
 
     var badge = document.createElement("span");
     badge.className = "sp-chat-badge";
@@ -141,15 +180,20 @@
 
     badge.appendChild(mark);
 
-    var slot = messageEl.querySelector(".badges");
-    var username = messageEl.querySelector(".username");
+    // Le conteneur de badges de Kick est le premier <div> du bloc identite
+    // (gap-1 entre images) ; absent quand l'auteur n'a aucun badge.
+    var holder = btn.parentElement;
+    var slot = null;
+    if (holder) {
+      for (var child = holder.firstElementChild; child; child = child.nextElementSibling) {
+        if (child.tagName === "DIV") { slot = child; break; }
+      }
+    }
     if (slot) {
-      if (!slot.children.length) badge.classList.add("sp-chat-badge--standalone");
       slot.appendChild(badge);
-    } else if (username) {
-      username.insertAdjacentElement("beforebegin", badge);
-    } else {
-      messageEl.prepend(badge);
+    } else if (holder) {
+      badge.classList.add("sp-chat-badge--standalone");
+      holder.insertBefore(badge, btn);
     }
   }
 
@@ -157,7 +201,7 @@
     var style = badgeStyles.get(hash);
     if (!style || !style.n) return;
     try {
-      var name = messageEl.querySelector(".username");
+      var name = usernameButton(messageEl);
       if (!name || name.classList.contains("sp-paint")) return;
       name.classList.add("sp-paint", "sp-paint--" + style.n);
       var glow = kickColor(messageEl);
@@ -168,30 +212,56 @@
   }
 
   function processMessageLine(messageEl) {
-    if (!messageEl || messageEl.classList.contains("sp-badge-processed")) return;
-    messageEl.classList.add("sp-badge-processed");
-
     var username = extractUsername(messageEl);
     if (!username) return;
+    // La liste est virtualisee : une rangée [data-index] est une case reutilisee
+    // pour le message suivant. On ne saute la rangée que si c'est toujours le
+    // meme pseudo — sinon on repare ce qui a été posé pour l'ancien.
+    if (messageEl.classList.contains("sp-badge-processed") && messageEl.getAttribute("data-sp-user") === username) return;
+    messageEl.classList.add("sp-badge-processed");
+    messageEl.setAttribute("data-sp-user", username);
 
     hashLogin(username).then(function (hash) {
-      if (hash && badgeHashes.has(hash)) {
-        injectBadge(messageEl, hash);
-        applyPaint(messageEl, hash);
+      var carrier = !!(hash && badgeHashes.has(hash));
+      // Restes d'un message précédent sur cette case : badge d'un autre hash,
+      // paint d'un autre pseudo — ils partiraient avec le mauvais auteur.
+      var existing = messageEl.querySelector(".sp-chat-badge");
+      if (existing && (!carrier || existing.getAttribute("data-sp-hash") !== hash)) existing.remove();
+      var painted = usernameButton(messageEl);
+      if (painted && painted.classList.contains("sp-paint") && (!carrier || !badgeStyles.get(hash))) {
+        painted.className = painted.className.replace(/\bsp-paint(--\S+)?/g, "").replace(/\s+/g, " ").trim();
+        painted.style.removeProperty("--sp-paint-glow");
       }
+      if (!carrier) return;
+      injectBadge(messageEl, hash);
+      applyPaint(messageEl, hash);
     });
   }
 
   function extractUsername(messageEl) {
-    for (var sel of [".username", "[data-username]"]) {
-      var node = messageEl.querySelector(sel);
-      var txt = node && (node.getAttribute("data-username") || node.textContent);
-      if (txt && txt.trim()) return txt.trim().toLowerCase().replace(/^@+/, "");
-    }
+    var node = usernameButton(messageEl);
+    var txt = node && node.textContent;
+    if (txt && txt.trim()) return txt.trim().toLowerCase().replace(/^@+/, "");
     return "";
   }
 
-  var MESSAGE_SELECTOR = "#chatroom-messages .message, [data-testid='chat-message'], .chat-entry, .chat-message";
+  /**
+   * Repasse sur les rangées deja affichees, une fois la liste distante connue :
+   * seules celles sans badge sont reprises (les autres sont deja a jour).
+   */
+  function rescanVisibleMessages() {
+    try {
+      var messages = document.querySelectorAll(MESSAGE_SELECTOR);
+      for (var i = 0; i < messages.length; i++) {
+        var el = messages[i];
+        if (el.querySelector(".sp-chat-badge")) continue;
+        el.classList.remove("sp-badge-processed");
+        processMessageLine(el);
+      }
+    } catch (_e) {
+      // Kick reconstruit son DOM : le noeud peut disparaitre entre la selection et l'usage.
+    }
+  }
 
   function refreshVisible() {
     try {
@@ -223,7 +293,8 @@
     hashLogin(username).then(function (hash) {
       if (!hash) return;
       badgeHashes.add(hash);
-      refreshVisible();
+      rescanVisibleMessages();
+      log("utilisateur detecte, empreinte enregistree");
       try {
         chrome.storage.local.get([STORAGE_KEY, "lastBadgeSync"], function (res) {
           ((res && res[STORAGE_KEY]) || []).forEach(function (h) {
@@ -254,6 +325,7 @@
   // ── Vie du script ─────────────────────────────────────────────────────────
 
   function start() {
+    log("demarrage");
     fetchRemoteBadges();
     refreshVisible();
     if (!observer) {
@@ -292,6 +364,7 @@
     chrome.storage.local.get([PREFERENCES_KEY], function (result) {
       var prefs = (result && result[PREFERENCES_KEY]) || {};
       enabled = prefs.communityBadge === true;
+      log("reglages :", enabled ? "actif" : "inactif (communityBadge !== true)");
       if (enabled) start();
       else stop();
     });
