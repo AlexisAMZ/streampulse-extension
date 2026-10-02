@@ -21,7 +21,7 @@
         <button id="tab-streamers" class="tab-button active" type="button" role="tab" aria-selected="true" aria-controls="streamers-view" data-tab="streamers" data-i18n="popup.tabs.streamers">Streamers</button>
         <button id="tab-history" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="history-view" data-tab="history" data-i18n="popup.tabs.history">Historique</button>
         <button id="tab-drops" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="settings-section" data-tab="drops" tabindex="-1"><span data-i18n="popup.osd.menuDrops">Drops</span><span class="new-dot" data-new="drops" hidden><span class="visually-hidden" data-i18n="popup.news.new">Nouveau</span></span></button>
-        <button id="tab-badges" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="settings-section" data-tab="badges" tabindex="-1"><span data-i18n="popup.osd.menuBadges">Badges</span><span class="new-dot" data-new="badges" hidden><span class="visually-hidden" data-i18n="popup.news.new">Nouveau</span></span></button>
+        <button id="tab-badges" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="settings-section" data-tab="badges" tabindex="-1"><span data-i18n="popup.osd.menuBadges">Badges</span><span class="pill-beta" data-i18n="popup.settings.betaLabel">bêta</span><span class="new-dot" data-new="badges" hidden><span class="visually-hidden" data-i18n="popup.news.new">Nouveau</span></span></button>
         <button id="tab-settings" class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="settings-section" data-tab="settings" data-i18n="popup.tabs.settings">Réglages</button>
       </nav>
       <div class="topbar-end">
@@ -879,7 +879,7 @@
 
         <section class="menu-panel drops-panel" id="menu-badges" role="tabpanel" aria-labelledby="menu-tab-badges" hidden>
           <div class="pts-head">
-            <h2 data-i18n="popup.osd.menuBadges">Badges</h2>
+            <h2><span data-i18n="popup.osd.menuBadges">Badges</span><span class="pill-beta" data-i18n="popup.settings.betaLabel">bêta</span></h2>
           </div>
           <div class="pts-lcd badges-lcd" id="badges-teaser" hidden>
             <p class="pts-lcd-total"><span id="badges-teaser-total">0</span><small data-i18n="popup.drops.badgesUnit">DISPONIBLES</small></p>

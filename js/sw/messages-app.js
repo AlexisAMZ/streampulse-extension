@@ -7,7 +7,7 @@ import { translateWithPrefs } from "./i18n.js";
 import { openPatchNotes } from "./lifecycle.js";
 import { respond } from "./message-dispatch.js";
 import { NotificationCenter } from "./notifications.js";
-import { DataStore, EventLogStore, PreferenceStore, StatsStore } from "./stores.js";
+import { EventLogStore, PreferenceStore, StatsStore } from "./stores.js";
 import { WatchTimeStore, currentGameOf, resolveChannelAvatar, watchTimeTabClaims } from "./watchtime.js";
 import { warnWith } from "./log.js";
 import { DROPS_HISTORY_KEY, historyFrom, isHistoryEntry, pruneHistory } from "../drops-data.js";

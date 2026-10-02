@@ -64,7 +64,6 @@
 
   let latencyPlacement = "viewers";
   let chatTitleEl = null;
-  let chatTitleText = "";
 
   function restoreChatTitle() {
     if (chatTitleEl && chatTitleEl.isConnected) chatTitleEl.style.display = "";
@@ -182,7 +181,7 @@
           }
         }
         if (video.paused) video.play().catch(() => {});
-        updateLatency(true);
+        updateLatency();
       });
     }
     return btn;
@@ -194,7 +193,6 @@
       if (chatTitleEl !== title) {
         if (chatTitleEl && chatTitleEl.isConnected) chatTitleEl.style.display = "";
         chatTitleEl = title;
-        chatTitleText = title.textContent || "";
       }
       title.style.display = "none";
       title.insertAdjacentElement("beforebegin", btn);
@@ -212,7 +210,7 @@
     return true;
   }
 
-  function updateLatency(force = false) {
+  function updateLatency() {
     if (!(chrome.runtime && chrome.runtime.id)) return;
     ensureStyles();
     const video = findVideo();
@@ -359,7 +357,7 @@
     // toutes les 3 s (même cadence que la LatencyFeature de Twitch).
     if (latencyTimer == null) latencyTimer = setInterval(updateLatency, 1000);
     if (headerTimer == null) headerTimer = setInterval(updateLatency, 3000);
-    updateLatency(true);
+    updateLatency();
   }
 
   function stopLoop() {

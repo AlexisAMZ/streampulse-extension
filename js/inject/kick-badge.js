@@ -25,19 +25,10 @@
   var HASH_LENGTH = 12;
 
   var badgeHashes = new Set();
-  var badgeColors = new Map();
   var badgeStyles = new Map();
-  var ownHash = null;
   var currentUsername = null;
   var enabled = false;
   var observer = null;
-
-  var USERNAME_SELECTORS = [
-    ".username",
-    "[data-username]",
-    ".chat-user-name",
-    "span[dir='auto']",
-  ].join(", ");
 
   // ── Empreintes ────────────────────────────────────────────────────────────
 
@@ -74,14 +65,8 @@
           return res.json();
         })
         .then(function (data) {
+          // v2 : { hashes, colors, styles } ; une ancienne reponse reste un tableau.
           var list = Array.isArray(data) ? data : (data && Array.isArray(data.hashes) ? data.hashes : []);
-          var colors = data && !Array.isArray(data) && data.colors && typeof data.colors === "object" ? data.colors : {};
-          var nextColors = new Map();
-          Object.keys(colors).forEach(function (h) {
-            var color = String(colors[h] || "").toLowerCase();
-            if (/^[a-f0-9]{12}$/.test(h) && /^#/.test(color)) nextColors.set(h, color);
-          });
-          badgeColors = nextColors;
           var styles = data && !Array.isArray(data) && data.styles && typeof data.styles === "object" ? data.styles : {};
           var nextStyles = new Map();
           Object.keys(styles).forEach(function (h) {
@@ -90,12 +75,34 @@
             if (/^[a-f0-9]{12}$/.test(h) && (style.b || n)) nextStyles.set(h, { b: String(style.b || ""), n: n });
           });
           badgeStyles = nextStyles;
+          // La liste du serveur fait foi (comme sur Twitch) : un badge
+          // disparaît quand l'extension de son porteur a été supprimée. Le
+          // pseudo courant reste admis : son enregistrement peut dater d'il
+          // y a moins d'un jour et ne pas être encore revenu dans la liste.
+          var next = new Set();
+          for (var i = 0; i < list.length; i++) {
+            var hash = String(list[i] || "").toLowerCase().trim();
+            if (/^[a-f0-9]{12}$/.test(hash)) next.add(hash);
+          }
+          if (currentUsername) {
+            hashLogin(currentUsername).then(function (own) {
+              if (own) next.add(own);
+              badgeHashes = next;
+              chrome.storage.local.set({ [STORAGE_KEY]: Array.from(badgeHashes) });
+              refreshVisible();
+            });
+            return;
+          }
+          badgeHashes = next;
+          chrome.storage.local.set({ [STORAGE_KEY]: Array.from(badgeHashes) });
           refreshVisible();
         })
         .catch(function () {
           // Service de badges optionnel : son indisponibilité n'entrave pas le tchat.
         });
-    } catch (_e) {}
+    } catch (_e) {
+      // Idem : fetch lui-même peut manquer (contexte invalidé).
+    }
   }
 
   // ── Rendu ─────────────────────────────────────────────────────────────────
@@ -105,7 +112,9 @@
       var el = messageEl.querySelector(".username");
       var inline = el && el.style && el.style.color;
       if (inline) return inline;
-    } catch (_e) {}
+    } catch (_e) {
+      // Kick reconstruit son DOM : le nœud peut disparaître entre-temps.
+    }
     return "#9146FF";
   }
 
@@ -214,7 +223,6 @@
     hashLogin(username).then(function (hash) {
       if (!hash) return;
       badgeHashes.add(hash);
-      ownHash = hash;
       refreshVisible();
       try {
         chrome.storage.local.get([STORAGE_KEY, "lastBadgeSync"], function (res) {
