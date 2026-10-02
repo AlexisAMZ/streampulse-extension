@@ -808,6 +808,7 @@ export default {
       "fastForwardTitle": "Pulsante di avanzamento veloce",
       "fastForwardDescription": "Aggiunge un pulsante al player di Twitch e Kick per tornare al live quando il video è rimasto indietro.",
       "communityBadgeTitle": "Badge della comunità",
+    "betaLabel": "beta",
       "saved": "Impostazione salvata",
       "communityBadgeDescription": "Mostra l'icona StreamPulse accanto al tuo nome utente e a quello degli altri utenti StreamPulse nella chat di Twitch. Un'impronta del tuo nome utente, calcolata nel browser, viene inviata a streampulse.fr; il nome utente non viene mai trasmesso.",
       "chatFilterDescription": "Nasconde nella chat di Twitch e Kick i messaggi che contengono queste parole (separate da virgole).",

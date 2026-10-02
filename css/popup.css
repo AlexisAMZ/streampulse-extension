@@ -856,6 +856,7 @@ button.pts-row:focus-visible { background: var(--surface-2); }
 .camp-bar-fill { display: block; height: 100%; border-radius: 2px; background: var(--violet); }
 .camp-side { display: grid; justify-items: end; gap: 4px; }
 .camp-badge { padding: 1px 6px; border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(255, 210, 63, 0.4); color: var(--star); font-size: 11px; font-weight: 800; }
+.pill-beta { margin-left: 6px; padding: 1px 7px; border-radius: 999px; background: rgba(255, 210, 63, .12); box-shadow: inset 0 0 0 1px rgba(255, 210, 63, .35); color: var(--star); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; vertical-align: 1px; }
 .camp-when { color: var(--text-2); font-size: 11px; white-space: nowrap; }
 .camp-when.is-soon { color: var(--danger); font-weight: 700; }
 .camp-when.is-new { color: var(--lcd-accent); font-weight: 700; }

@@ -808,6 +808,7 @@ export default {
       "fastForwardTitle": "Przycisk przewijania do przodu",
       "fastForwardDescription": "Dodaje przycisk do odtwarzacza Twitcha i Kicka, żeby nadrobić transmisję, gdy wideo ma opóźnienie.",
       "communityBadgeTitle": "Odznaka społeczności",
+    "betaLabel": "beta",
       "saved": "Ustawienie zapisane",
       "communityBadgeDescription": "Pokazuje ikonę StreamPulse obok twojej nazwy i nazw innych użytkowników StreamPulse na czacie Twitcha. Skrót twojej nazwy, obliczany w przeglądarce, jest wysyłany do streampulse.fr; sama nazwa nigdy nie jest przesyłana.",
       "chatFilterDescription": "Ukrywa na czacie Twitcha i Kicka wiadomości zawierające te słowa (oddzielone przecinkami).",

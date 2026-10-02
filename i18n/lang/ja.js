@@ -808,6 +808,7 @@ export default {
       "fastForwardTitle": "早送りボタン",
       "fastForwardDescription": "映像が遅れたときにライブに追いつくボタンを、Twitch と Kick のプレーヤーに追加します。",
       "communityBadgeTitle": "コミュニティバッジ",
+    "betaLabel": "ベータ",
       "saved": "設定を保存しました",
       "communityBadgeDescription": "Twitch チャットで、あなたと他の StreamPulse ユーザーの名前の横に StreamPulse アイコンを表示します。ブラウザ内で計算したユーザー名のハッシュが streampulse.fr に送信されます。ユーザー名そのものは送信されません。",
       "chatFilterDescription": "これらの単語（カンマ区切り）を含むメッセージを Twitch と Kick のチャットで非表示にします。",

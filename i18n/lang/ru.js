@@ -808,6 +808,7 @@ export default {
       "fastForwardTitle": "Кнопка перемотки",
       "fastForwardDescription": "Добавляет в плеер Twitch и Kick кнопку, чтобы догнать прямой эфир, когда видео отстаёт.",
       "communityBadgeTitle": "Значок сообщества",
+    "betaLabel": "бета",
       "saved": "Настройка сохранена",
       "communityBadgeDescription": "Показывает значок StreamPulse рядом с твоим ником и ником других пользователей StreamPulse в чате Twitch. На streampulse.fr отправляется отпечаток ника, вычисленный в твоём браузере; сам ник никогда не передаётся.",
       "chatFilterDescription": "Скрывает в чате Twitch и Kick сообщения с этими словами (через запятую).",

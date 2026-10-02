@@ -808,6 +808,7 @@ export default {
       "fastForwardTitle": "빨리 감기 버튼",
       "fastForwardDescription": "동영상이 지연되었을 때 라이브를 따라잡을 수 있도록 Twitch 및 Kick 플레이어에 버튼을 추가합니다.",
       "communityBadgeTitle": "커뮤니티 배지",
+    "betaLabel": "베타",
       "saved": "설정이 저장되었습니다",
       "communityBadgeDescription": "Twitch 채팅에서 내 이름과 다른 StreamPulse 사용자 이름 옆에 StreamPulse 아이콘을 표시합니다. 브라우저에서 계산한 사용자 이름의 지문만 streampulse.fr로 전송되며, 사용자 이름 자체는 전송되지 않습니다.",
       "chatFilterDescription": "Twitch 및 Kick 채팅에서 이 단어가 포함된 메시지를 숨깁니다(쉼표로 구분).",

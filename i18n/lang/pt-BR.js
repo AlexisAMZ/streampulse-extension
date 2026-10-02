@@ -759,6 +759,7 @@ export default {
       "fastForwardTitle": "Botão de avanço rápido",
       "fastForwardDescription": "Adiciona um botão ao player da Twitch e da Kick para alcançar a live quando o vídeo atrasa.",
       "communityBadgeTitle": "Emblema da comunidade",
+    "betaLabel": "beta",
       "saved": "Configuração salva",
       "communityBadgeDescription": "Mostra o ícone do StreamPulse ao lado do seu nome e do nome dos outros usuários do StreamPulse no chat da Twitch. Uma impressão do seu nome, calculada no seu navegador, é enviada para streampulse.fr; o nome em si nunca é transmitido.",
       "chatFilterDescription": "Esconde no chat da Twitch e da Kick as mensagens que contêm estas palavras (separadas por vírgulas).",

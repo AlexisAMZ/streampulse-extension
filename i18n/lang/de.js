@@ -808,6 +808,7 @@ export default {
       "fastForwardTitle": "Schnellvorlauf-Schaltfläche",
       "fastForwardDescription": "Fügt dem Twitch- und Kick-Player eine Schaltfläche hinzu, um wieder live zu sein, wenn das Video hinterherhängt.",
       "communityBadgeTitle": "Community-Abzeichen",
+    "betaLabel": "Beta",
       "saved": "Einstellung gespeichert",
       "communityBadgeDescription": "Zeigt das StreamPulse-Symbol im Twitch-Chat neben deinem Namen und dem anderer StreamPulse-Nutzer. Ein in deinem Browser berechneter Fingerabdruck deines Namens wird an streampulse.fr gesendet; der Name selbst wird nie übertragen.",
       "chatFilterDescription": "Blendet im Twitch- und Kick-Chat Nachrichten aus, die diese Wörter enthalten (durch Kommas getrennt).",

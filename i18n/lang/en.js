@@ -808,6 +808,7 @@ export default {
       "fastForwardTitle": "Fast-forward button",
       "fastForwardDescription": "Add a button to instantly catch up to live when the stream lags behind.",
       "communityBadgeTitle": "Community badge",
+    "betaLabel": "beta",
       "saved": "Setting saved",
       "communityBadgeDescription": "Shows the StreamPulse icon next to your username and those of other users in Twitch chat. A fingerprint of your username, computed in your browser, is sent to streampulse.fr; the username itself is never transmitted.",
       "chatFilterDescription": "Hide messages containing these words (comma separated).",

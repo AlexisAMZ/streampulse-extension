@@ -808,6 +808,7 @@ export default {
       "fastForwardTitle": "İleri sarma düğmesi",
       "fastForwardDescription": "Video geride kaldığında canlı yayına yetişmek için Twitch ve Kick oynatıcısına bir düğme ekler.",
       "communityBadgeTitle": "Topluluk rozeti",
+    "betaLabel": "beta",
       "saved": "Ayar kaydedildi",
       "communityBadgeDescription": "Twitch sohbetinde kullanıcı adının ve diğer StreamPulse kullanıcılarının adlarının yanında StreamPulse simgesini gösterir. Kullanıcı adının tarayıcında hesaplanan bir parmak izi streampulse.fr'ye gönderilir; adın kendisi asla iletilmez.",
       "chatFilterDescription": "Twitch ve Kick sohbetinde bu kelimeleri içeren mesajları gizler (virgülle ayır).",

@@ -808,6 +808,7 @@ export default {
       "fastForwardTitle": "Bouton d'avance rapide",
       "fastForwardDescription": "Ajoute un bouton au lecteur Twitch et Kick pour rattraper le direct quand la vidéo a pris du retard.",
       "communityBadgeTitle": "Badge communautaire",
+    "betaLabel": "bêta",
       "saved": "Réglage enregistré",
       "communityBadgeDescription": "Affiche l'icône StreamPulse à côté de ton pseudo et de celui des autres utilisateurs de StreamPulse dans le chat Twitch. Une empreinte de ton pseudo, calculée dans ton navigateur, est envoyée à streampulse.fr ; le pseudo lui-même n'est jamais transmis.",
       "chatFilterDescription": "Masque dans le chat Twitch et Kick les messages qui contiennent ces mots (séparés par des virgules).",
