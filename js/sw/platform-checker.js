@@ -3,7 +3,7 @@
 import { buildProfileUrl, isYoutubeChannelId, normalizePlatform, platformSupportsLiveStatus, sanitizeHandle } from "../platforms.js";
 import { ensureConfig, fetchJson, fetchTwitchJson, twitchHeaders } from "./config.js";
 import { NETWORK_TIMEOUT_MS } from "./constants.js";
-import { fetchKickOfficial, getKickAppToken } from "./kick-token.js";
+import { fetchKickChannelsOfficial, fetchKickLivestreamsOfficial, fetchKickOfficial, getKickAppToken } from "./kick-token.js";
 import { resolveKickAsset, sanitizeLogin } from "./normalize.js";
 import { pollStreamers } from "./polling.js";
 
@@ -235,13 +235,75 @@ export class PlatformChecker {
     };
   }
 
+  /**
+   * Sondage groupé Kick via l'API officielle (token d'app requis) : un appel
+   * channels (jusqu'à 50 slugs) + un appel livestreams (jusqu'à 100 user IDs)
+   * remplacent le v2 par chaîne, et apportent enfin la vraie photo de profil
+   * (broadcaster_user.profile_picture, absente du endpoint channels — seuls
+   * les lives actifs l'exposent). Retour : Map slug → statut ; null quand le
+   * token d'app est absent (repli par streamer).
+   */
+  static async getKickStatusBatch(streamers) {
+    const token = await getKickAppToken();
+    if (!token) return null;
+    const bySlug = new Map();
+    const slugs = [];
+    for (const streamer of streamers) {
+      const slug = sanitizeHandle("kick", streamer.handle || streamer.id || "");
+      if (!slug || bySlug.has(slug)) continue;
+      bySlug.set(slug, streamer);
+      slugs.push(slug);
+    }
+    const statusBySlug = new Map();
+    for (let i = 0; i < slugs.length; i += 50) {
+      const channels = await fetchKickChannelsOfficial(slugs.slice(i, i + 50), token);
+      for (const channel of channels) {
+        const slug = String(channel?.slug || "").toLowerCase();
+        if (!slug) continue;
+        const stream = channel.stream;
+        const isLive = Boolean(stream?.is_live);
+        statusBySlug.set(slug, {
+          isLive,
+          platform: "kick",
+          displayName: channel.slug,
+          title: channel.stream_title || "",
+          game: channel.category?.name || "",
+          viewers: isLive ? Number(stream?.viewer_count) || 0 : 0,
+          startedAt: stream?.start_time || null,
+          thumbnailUrl: stream?.thumbnail || "",
+          broadcasterUserId: Number(channel.broadcaster_user_id) || 0,
+          url: buildProfileUrl("kick", channel.slug),
+        });
+      }
+    }
+    // Photos de profil : exposées uniquement sur les lives actifs.
+    const liveIds = [...statusBySlug.values()]
+      .filter((status) => status.isLive && status.broadcasterUserId)
+      .map((status) => status.broadcasterUserId);
+    for (let i = 0; i < liveIds.length; i += 100) {
+      let livestreams;
+      try {
+        livestreams = await fetchKickLivestreamsOfficial(liveIds.slice(i, i + 100), token);
+      } catch (_error) {
+        break;
+      }
+      for (const livestream of livestreams) {
+        const status = statusBySlug.get(String(livestream.channel?.slug || "").toLowerCase());
+        if (status && livestream.broadcaster_user?.profile_picture) {
+          status.avatarUrl = livestream.broadcaster_user.profile_picture;
+        }
+      }
+    }
+    return statusBySlug;
+  }
+
   static async getKickStatus(handle) {
     const channel = await this.getKickChannel(handle);
     if (channel?._apiError) {
       return { isLive: false, platform: "kick", error: channel.status, isError: true };
     }
     if (channel?._source === "official") {
-      const status = this.extractKickStatusOfficial(channel, handle);
+      let status = this.extractKickStatusOfficial(channel, handle);
       // L'API officielle n'expose pas la photo de profil : elle vient du
       // repli v2, seule source de la vraie image du streamer.
       if (!status.avatarUrl) {

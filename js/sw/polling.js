@@ -1,6 +1,6 @@
 // Sondage des streamers suivis : statuts, état live, alertes, badge.
 
-import { buildProfileUrl, formatHandleForDisplay, getPlatformIcon, normalizePlatform } from "../platforms.js";
+import { buildProfileUrl, formatHandleForDisplay, getPlatformIcon, normalizePlatform, sanitizeHandle } from "../platforms.js";
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "../plus.js";
 import { normalizeLanguage } from "../preferences-data.js";
 import { isWithinQuietHours } from "../quiet-hours.js";
@@ -60,10 +60,13 @@ function lastSeenOf(streamerId) {
  * streamer. Un échec du batch marque tous les streamers Twitch en erreur
  * (la boucle de sondage préserve alors leur état live précédent).
  */
-async function buildStreamerStatus(streamer, twitchBatch = null) {
+async function buildStreamerStatus(streamer, twitchBatch = null, kickBatch = null) {
   const platform = streamer.platform || "twitch";
   let status;
-  if (twitchBatch && platform === "twitch") {
+  if (platform === "kick" && kickBatch) {
+    const slug = sanitizeHandle("kick", streamer.handle || streamer.id || "");
+    status = (slug && kickBatch.get(slug)) || (await PlatformChecker.getStatus(streamer));
+  } else if (twitchBatch && platform === "twitch") {
     const login = sanitizeLogin(streamer.twitch || streamer.handle);
     if (!login) {
       status = { isLive: false };
@@ -237,12 +240,12 @@ async function probeTwitchBatch(streamers) {
 }
 
 /** Kick et YouTube restent sondés par chaîne (pas d'API groupée) : concurrence bornée. */
-async function buildAllStatuses(streamers, twitchBatch) {
+async function buildAllStatuses(streamers, twitchBatch, kickBatch = null) {
   const statuses = [];
   const CONCURRENCY = 3;
   for (let i = 0; i < streamers.length; i += CONCURRENCY) {
     const batch = streamers.slice(i, i + CONCURRENCY);
-    statuses.push(...(await Promise.all(batch.map((streamer) => buildStreamerStatus(streamer, twitchBatch)))));
+    statuses.push(...(await Promise.all(batch.map((streamer) => buildStreamerStatus(streamer, twitchBatch, kickBatch)))));
   }
   return statuses;
 }
@@ -336,7 +339,11 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
   const smartRules = await loadSmartRules();
   const streamerById = new Map(streamers.map((streamer) => [streamer.id, streamer]));
   streamers.forEach((streamer) => streamerCache.set(streamer.id, streamer));
-  const statuses = await buildAllStatuses(streamers, await probeTwitchBatch(streamers));
+  const kickStreamers = streamers.filter((s) => (s.platform || "twitch") === "kick");
+  const kickBatch = kickStreamers.length
+    ? await PlatformChecker.getKickStatusBatch(kickStreamers).catch(() => null)
+    : null;
+  const statuses = await buildAllStatuses(streamers, await probeTwitchBatch(streamers), kickBatch);
 
   // Heures calmes : aucune alerte (live, catégorie, titre, rattrapage). L'état
   // live reste persisté, donc aucune session annoncée ne repart en doublon.

@@ -62,6 +62,38 @@ async function fetchKickAppToken() {
   }
 }
 
+/** Canaux officiels par slugs groupés (jusqu'à 50 par appel). */
+export async function fetchKickChannelsOfficial(slugs, token) {
+  const params = new URLSearchParams();
+  for (const slug of slugs) params.append("slug", slug);
+  const resp = await fetch(
+    `https://api.kick.com/public/v1/channels?${params.toString()}`,
+    {
+      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+      signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS),
+    }
+  );
+  if (!resp.ok) throw new Error(`${resp.status}`);
+  const json = await resp.json();
+  return Array.isArray(json?.data) ? json.data : [];
+}
+
+/** Lives actifs par broadcaster user IDs groupés (jusqu'à 100 par appel). */
+export async function fetchKickLivestreamsOfficial(userIds, token) {
+  const params = new URLSearchParams();
+  for (const id of userIds) params.append("user_id", id);
+  const resp = await fetch(
+    `https://api.kick.com/public/v1/users/livestreams?${params.toString()}`,
+    {
+      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+      signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS),
+    }
+  );
+  if (!resp.ok) throw new Error(`${resp.status}`);
+  const json = await resp.json();
+  return Array.isArray(json?.data) ? json.data : [];
+}
+
 export async function fetchKickOfficial(slug, token) {
   const resp = await fetch(
     `https://api.kick.com/public/v1/channels?slug=${encodeURIComponent(slug)}`,
