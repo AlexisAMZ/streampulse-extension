@@ -105,11 +105,54 @@
     }
   }
 
+  /**
+   * Données de chaîne Kick (même origine depuis kick.com : cookies et
+   * Cloudflare suivent la navigation). Retour : { isLive, title, game,
+   * viewers, avatarUrl, thumbnailUrl } ou null (chaîne inexistante).
+   */
+  async function kickChannelData(slug) {
+    try {
+      const cleaned = String(slug || "").trim().toLowerCase();
+      if (!cleaned) return null;
+      const res = await fetch("https://kick.com/api/v2/channels/" + encodeURIComponent(cleaned));
+      if (!res.ok) return null;
+      const channel = await res.json();
+      const stream = channel?.livestream || null;
+      return {
+        slug: channel.slug || cleaned,
+        isLive: Boolean(stream),
+        title: stream?.session_title || stream?.title || "",
+        game: stream?.category?.name || "",
+        viewers: stream?.viewer_count || 0,
+        avatarUrl: (channel?.user && channel.user.profile_pic) || "",
+        thumbnailUrl: (stream?.thumbnail && stream.thumbnail.url) || "",
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Lecteur embed officiel de Kick (iframe), comme la scène du popup.
+   * Le paramètre parent est obligatoire côté Kick.
+   */
+  function kickPlayerEmbedUrl(slug, opts) {
+    opts = opts || {};
+    const params = new URLSearchParams({
+      parent: opts.parent || "kick.com",
+      muted: opts.muted === false ? "false" : "true",
+      autoplay: opts.autoplay === false ? "false" : "true",
+    });
+    return "https://player.kick.com/" + encodeURIComponent(String(slug || "").toLowerCase()) + "?" + params.toString();
+  }
+
   store.sources = {
     SIZE_PRESETS,
     twitchPreviewImageUrl,
     twitchPlayerEmbedUrl,
     clipEmbedUrl,
     fetchStreamTitle,
+    kickChannelData,
+    kickPlayerEmbedUrl,
   };
 })();

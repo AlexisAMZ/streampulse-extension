@@ -342,11 +342,47 @@
       iframeEl.src = store.sources.clipEmbedUrl(descriptor.slug, { parent, muted: !opts.audio });
     }
 
+    /**
+     * Kick : lecteur embed officiel (player.kick.com, parent obligatoire) en
+     * mode vidéo ; vignette fraîche de l'API en mode image, avatar + catégorie
+     * en repli si le direct n'est pas actif.
+     */
+    function applyKickMedia(descriptor, opts) {
+      iframeEl.hidden = true;
+      iframeEl.src = "";
+      if (opts.mode === "video") {
+        imgEl.hidden = true;
+        imgEl.removeAttribute("src");
+        iframeEl.hidden = false;
+        iframeEl.src = store.sources.kickPlayerEmbedUrl(descriptor.login, {
+          parent: "kick.com",
+          muted: opts.audio !== true,
+          autoplay: true,
+        });
+        clearFallback();
+        return;
+      }
+      if (descriptor.thumbnailUrl) {
+        imgEl.hidden = false;
+        imgEl.src = descriptor.thumbnailUrl;
+        imgEl.onerror = function onThumbError() {
+          this.onerror = null;
+          imgEl.hidden = true;
+          showFallback(descriptor);
+        };
+        clearFallback();
+      } else {
+        imgEl.hidden = true;
+        showFallback(descriptor);
+      }
+    }
+
     function show(anchorEl, descriptor, opts) {
       if (!root) mount();
       opts = opts || {};
       const presets = store.sources.SIZE_PRESETS;
       const size = presets[opts.size] || presets.m;
+      root.setAttribute("data-platform", descriptor.platform || "twitch");
 
       root.style.width = size.width + "px";
       mediaEl.style.height = size.height + "px";
@@ -366,6 +402,11 @@
       if (descriptor.kind === "clip" && descriptor.slug) {
         teardownPlayback();
         applyClipEmbed(descriptor, opts);
+      } else if (descriptor.platform === "kick") {
+        // Kick : lecteur embed officiel en mode vidéo, vignette de l'API en
+        // mode image (les URLs de preview Twitch ne s'appliquent pas).
+        teardownPlayback();
+        applyKickMedia(descriptor, opts);
       } else if (wantsVideo) {
         teardownPlayback();
         applyVideoMode(descriptor, size, opts);

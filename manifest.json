@@ -138,11 +138,19 @@
       "js": [
         "js/inject/i18n-inline.js",
         "js/inject/quickFollowKick.js",
+        "js/previews/sources.js",
+        "js/previews/targets-kick.js",
+        "js/previews/card.js",
+        "js/previews/observer.js",
+        "js/kickPreviews.js",
         "js/kickPlayerEnhancer.js",
         "js/kickChannelPoints.js",
         "js/chatFilter.js",
         "js/watchTimeTracker.js",
         "js/tabEnhancer.js"
+      ],
+      "css": [
+        "css/previews.css"
       ],
       "run_at": "document_idle"
     }
