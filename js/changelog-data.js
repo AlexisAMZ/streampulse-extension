@@ -57,6 +57,38 @@ export const RELEASES = [
     title: { "fr": "Ta liste te suit, YouTube aussi", "en": "Your list follows you, YouTube too", "es": "Tu lista te sigue, YouTube también", "pt-BR": "Sua lista acompanha você, YouTube também", "de": "Deine Liste folgt dir, YouTube auch", "it": "La tua lista ti segue, YouTube incluso", "pl": "Twoja lista podąża za Tobą, YouTube też", "tr": "Listen seninle gelir, YouTube dahil", "ru": "Ваш список следует за вами, и YouTube тоже", "ja": "リストは同期、YouTubeも対応", "ko": "목록이 따라갑니다, YouTube도 지원" },
     changes: [
       {
+        type: "new",
+        text: {
+          "fr": "Le badge communautaire et les cosmétiques StreamPulse+ débarquent dans le tchat Kick : ton badge et ta paint de pseudo s'affichent comme sur Twitch, avec la couleur du tchat Kick. Réglage « Badge communautaire » inchangé.",
+          "en": "The community badge and StreamPulse+ cosmetics arrive in the Kick chat: your badge and name paint now show just like on Twitch, tinted with the Kick chat color. The “Community badge” setting is unchanged.",
+          "es": "El badge comunitario y los cosméticos de StreamPulse+ llegan al chat de Kick: tu badge y la pintura de tu pseudo se muestran como en Twitch, con el color del chat de Kick. El ajuste «Badge comunitario» no cambia.",
+          "pt-BR": "O selo comunitário e os cosméticos do StreamPulse+ chegam ao chat do Kick: seu selo e a pintura do seu nome aparecem como na Twitch, com a cor do chat do Kick. A configuração \"Selo comunitário\" permanece a mesma.",
+          "de": "Der Community-Badge und die StreamPulse+-Kosmetika kommen in den Kick-Chat: Dein Badge und dein Namens-Effekt erscheinen wie auf Twitch, getönt in der Kick-Chat-Farbe. Die Einstellung „Community-Badge“ bleibt unverändert.",
+          "it": "Il badge della community e i cosmetici StreamPulse+ arrivano nella chat di Kick: il tuo badge e la paint del tuo nome vengono mostrati come su Twitch, con il colore della chat di Kick. L'impostazione «Badge community» resta invariata.",
+          "pl": "Odznaka społecznościowa i kosmetyki StreamPulse+ trafiają na czat Kick: Twoja odznaka i efekt pseudonimu wyświetlają się jak na Twitchu, w kolorze czatu Kick. Ustawienie „Odznaka społecznościowa” bez zmian.",
+          "tr": "Topluluk rozeti ve StreamPulse+ kozmetikleri Kick sohbetine geliyor: rozetin ve isim efektin, Kick sohbet rengiyle Twitch'teki gibi görünüyor. \"Topluluk rozeti\" ayarı değişmedi.",
+          "ru": "Значок сообщества и косметика StreamPulse+ появляются в чате Kick: ваш значок и эффект ника отображаются как на Twitch, в цвете чата Kick. Настройка «Значок сообщества» не меняется.",
+          "ja": "コミュニティバッジとStreamPulse+コスメティックがKickのチャットに登場：バッジと名前のペイントがTwitchと同じように、Kickチャットの色付きで表示されます。「コミュニティバッジ」の設定は変わりません。",
+          "ko": "커뮤니티 배지와 StreamPulse+ 코스메틱이 Kick 채팅에 등장합니다: 배지와 이름 페인트가 Twitch에서처럼 Kick 채팅 색상으로 표시됩니다. \"커뮤니티 배지\" 설정은 그대로입니다.",
+        },
+      },
+      {
+        type: "improved",
+        text: {
+          "fr": "Le menu Badges est marqué « bêta », comme la fonctionnalité qu'il reste : l'étiquette est posée sur l'onglet et sur le panneau, pas seulement sur le badge communautaire.",
+          "en": "The Badges menu is now labeled “beta”, matching the feature it still is: the tag sits on the tab and the panel, no longer only on the community badge setting.",
+          "es": "El menú Badges ahora lleva la etiqueta «beta», acorde a lo que todavía es: la etiqueta está en la pestaña y en el panel, no solo en el ajuste del badge comunitario.",
+          "pt-BR": "O menu Badges agora recebe o rótulo \"beta\", coerente com o que ele ainda é: a etiqueta está na aba e no painel, não apenas na configuração do selo comunitário.",
+          "de": "Das Badges-Menü trägt jetzt das Label „Beta“, passend dazu, was es noch ist: Das Etikett sitzt auf dem Tab und im Panel, nicht mehr nur an der Community-Badge-Einstellung.",
+          "it": "Il menu Badge è contrassegnato «beta», coerente con ciò che è ancora: l'etichetta è sulla scheda e sul pannello, non solo sull'impostazione del badge community.",
+          "pl": "Menu Badges ma teraz etykietę „beta”, zgodnie z tym, czym wciąż jest: etykieta znajduje się na karcie i w panelu, a nie tylko przy ustawieniu odznaki społecznościowej.",
+          "tr": "Badges menüsü artık hâlâ olduğu şeyle tutarlı şekilde \"beta\" etiketi taşıyor: etiket sekmede ve panelde, yalnızca topluluk rozeti ayarında değil.",
+          "ru": "Меню Badges теперь помечено как «бета», в соответствии с тем, чем оно остаётся: метка стоит на вкладке и в панели, а не только у настройки значка сообщества.",
+          "ja": "Badgesメニューに「ベータ」ラベルが付きました。今の状態に合わせた表示です。ラベルはコミュニティバッジの設定だけでなく、タブとパネルにも付いています。",
+          "ko": "Badges 메뉴에 아직 개발 단계에 맞게 \"베타\" 라벨이 붙습니다. 라벨은 커뮤니티 배지 설정뿐 아니라 탭과 패널에도 표시됩니다.",
+        },
+      },
+      {
         type: "improved",
         text: {
           "fr": "Kick au niveau de Twitch : la favicon de l'onglet prend la photo du streamer suivi avec sa pastille de direct, un indicateur de latence rejoint les contrôles du lecteur, et les avatars manquants se rattrapent tout seuls au fil des sondages.",
