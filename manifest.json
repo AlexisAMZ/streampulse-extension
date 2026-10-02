@@ -146,11 +146,14 @@
         "js/kickPlayerEnhancer.js",
         "js/kickChannelPoints.js",
         "js/chatFilter.js",
+        "js/inject/kick-badge.js",
         "js/watchTimeTracker.js",
         "js/tabEnhancer.js"
       ],
       "css": [
-        "css/previews.css"
+        "css/previews.css",
+        "css/inject/twitch-badge.css",
+        "css/fx-effects.css"
       ],
       "run_at": "document_idle"
     }
