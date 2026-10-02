@@ -284,7 +284,10 @@ export class PlatformChecker {
       this.saveYoutubeCache();
       return entry;
     }
-    // Handle → ID : la page de la chaîne embarque "channelId"/"externalId".
+    // Handle → ID : la page de la chaîne embarque le lien canonique et
+    // "externalId". L'ordre compte : canonical d'abord (c'est LA chaîne de la
+    // page), externalId ensuite ; un "channelId" nu peut appartenir à une
+    // entité quelconque citée dans la page (mise en avant, commentaires).
     try {
       const resp = await fetch(
         `https://www.youtube.com/@${encodeURIComponent(sanitized)}`,
@@ -293,7 +296,10 @@ export class PlatformChecker {
       if (!resp.ok) return null;
       const html = await resp.text();
       const id =
-        /"?(?:channelId|externalId)"?\s*:\s*"(UC[A-Za-z0-9_-]{10,32})"/.exec(html)?.[1] || "";
+        /<link rel="canonical" href="[^"]*\/(UC[A-Za-z0-9_-]{10,32})"/.exec(html)?.[1]
+        || /"externalId"\s*:\s*"(UC[A-Za-z0-9_-]{10,32})"/.exec(html)?.[1]
+        || /"channelId"\s*:\s*"(UC[A-Za-z0-9_-]{10,32})"/.exec(html)?.[1]
+        || "";
       const name =
         /<meta property="og:title" content="([^"]+)"/.exec(html)?.[1] || sanitized;
       const avatar =

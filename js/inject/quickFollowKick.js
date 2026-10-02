@@ -137,20 +137,44 @@
 
   // ---- bouton ---------------------------------------------------------------
 
-  // Même D.A. que les boutons de Kick (façon « Gift Subs ») : gris anthracite,
-  // coins radius 9, texte 600. Une fois la chaîne suivie, le pill passe en
-  // violet StreamPulse pour marquer l'état.
+  var toastTimer = null;
+  function showToast(message, isError) {
+    try {
+      var existing = document.getElementById("sp-qf-kick-toast");
+      if (existing) existing.remove();
+      var toast = document.createElement("div");
+      toast.id = "sp-qf-kick-toast";
+      toast.textContent = message;
+      if (isError) toast.classList.add("is-error");
+      document.body.appendChild(toast);
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toast.remove(); }, 4000);
+    } catch (_e) {
+      // Le toast ne doit jamais casser l'action qu'il rapporte.
+    }
+  }
+
+  // Même D.A. que le bouton de suivi de Kick : vert volt #53fc18, texte
+  // asphalt #090b0f, radius 4 (classe « rounded » de Kick), semibold —
+  // valeurs relevées dans le CSS de kick.com (brand-bg-default =
+  // kick-voltGreen-150, brand-fg-default = kick-asphaltBlack-950). Une fois
+  // la chaîne suivie, le pill passe en violet StreamPulse pour l'état.
   var STYLE = [
-    "#" + BTN_ID + " { display: inline-flex; align-items: center; gap: 7px; height: 36px;",
-    "  padding: 0 16px 0 13px; margin-left: 8px; border-radius: 9px; vertical-align: middle;",
-    "  border: 1px solid #2c2c35; background: #1f1f26; color: #fff; cursor: pointer;",
-    "  font-family: inherit; font-size: 14px; font-weight: 600; white-space: nowrap; }",
-    "#" + BTN_ID + ":hover { background: #26262f; }",
-    "#" + BTN_ID + ":focus-visible { outline: 2px solid rgba(83, 252, 24, .7); outline-offset: 1px; }",
-    "#" + BTN_ID + ".is-tracked { background: #9146FF; border-color: #9146FF; color: #fff; }",
+    "#" + BTN_ID + " { display: inline-flex; align-items: center; gap: 7px;",
+    "  padding: 8px 12px; margin-left: 8px; border-radius: 4px; vertical-align: middle;",
+    "  border: 0; background: #53fc18; color: #090b0f; cursor: pointer;",
+    "  font-family: inherit; font-size: 15px; font-weight: 600; white-space: nowrap; }",
+    "#" + BTN_ID + ":hover { background: #47df15; }",
+    "#" + BTN_ID + ":focus-visible { outline: 2px solid rgba(9, 11, 15, .8); outline-offset: 1px; }",
+    "#" + BTN_ID + ".is-tracked { background: #9146FF; color: #fff; }",
     "#" + BTN_ID + ".is-tracked:hover { background: #a25eff; }",
     "#" + BTN_ID + ".is-busy { opacity: .55; pointer-events: none; }",
-    "#" + BTN_ID + " img { width: 16px; height: 16px; }",
+    "#" + BTN_ID + " img { width: 18px; height: 18px; }",
+    "#sp-qf-kick-toast { position: fixed; left: 16px; bottom: 16px; z-index: 9999;",
+    "  padding: 10px 14px; border-radius: 8px; background: #1f1f26; color: #f1f1f1;",
+    "  font-family: inherit; font-size: 13px;",
+    "  box-shadow: 0 4px 16px rgba(0,0,0,.5); }",
+    "#sp-qf-kick-toast.is-error { background: #b3261e; color: #fff; }",
   ].join("\n");
 
   function injectStyle() {
@@ -170,10 +194,14 @@
     btn.classList.toggle("is-tracked", tracked);
   }
 
-  function onClick(e, btn, handle) {
+  function onClick(e, btn) {
     e.preventDefault();
     e.stopPropagation();
     if (busy) return;
+    // Le handle vient du dataset, jamais de la closure : le bouton survit aux
+    // navigations SPA vers une autre chaîne, sa cible non.
+    var handle = btn.dataset.spHandle;
+    if (!handle) return;
     busy = true;
     btn.classList.add("is-busy");
     var action = isTracked(handle) ? removeStreamer(handle) : addStreamer(handle);
@@ -182,11 +210,11 @@
         // L'écriture du fond déclenche storage.onChanged, mais on relit tout
         // de suite : le service worker peut être endormi au moment de l'écoute.
         return refreshState().then(function () {
-          if (!ok) btn.title = t("error");
+          showToast(ok ? t("added", { name: handle }) : t("error"), !ok);
         });
       })
       .catch(function () {
-        btn.title = t("error");
+        showToast(t("error"), true);
       })
       .finally(function () {
         busy = false;
@@ -194,7 +222,7 @@
       });
   }
 
-  function buildButton(handle) {
+  function buildButton() {
     var btn = document.createElement("button");
     btn.id = BTN_ID;
     btn.type = "button";
@@ -209,7 +237,7 @@
 
     btn.appendChild(logo);
     btn.appendChild(label);
-    btn.addEventListener("click", function (e) { onClick(e, btn, handle); });
+    btn.addEventListener("click", function (e) { onClick(e, btn); });
     return btn;
   }
 
@@ -238,7 +266,7 @@
         return;
       }
       if (!existing) {
-        existing = buildButton(handle);
+        existing = buildButton();
         existing.dataset.spHandle = handle;
         anchor.insertAdjacentElement("afterend", existing);
       } else if (existing.dataset.spHandle !== handle) {

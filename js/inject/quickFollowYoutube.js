@@ -163,6 +163,11 @@
     "#" + BTN_ID + ".is-tracked:hover { background: #a25eff; filter: none; }",
     "#" + BTN_ID + ".is-busy { opacity: .55; pointer-events: none; }",
     "#" + BTN_ID + " img { width: 16px; height: 16px; }",
+    "#sp-qf-yt-toast { position: fixed; left: 16px; bottom: 16px; z-index: 9999;",
+    "  padding: 10px 14px; border-radius: 8px; background: #212121; color: #f1f1f1;",
+    "  font-family: Roboto, Arial, sans-serif; font-size: 13px;",
+    "  box-shadow: 0 4px 16px rgba(0,0,0,.4); }",
+    "#sp-qf-yt-toast.is-error { background: #b3261e; color: #fff; }",
   ].join("\n");
 
   function injectStyle() {
@@ -203,10 +208,14 @@
     btn.style.setProperty("--sp-weight", style.fontWeight);
   }
 
-  function onClick(e, btn, handle) {
+  function onClick(e, btn) {
     e.preventDefault();
     e.stopPropagation();
     if (busy) return;
+    // Le handle vient du dataset, jamais de la closure : le bouton survit aux
+    // navigations SPA vers une autre chaîne, sa cible non.
+    var handle = btn.dataset.spHandle;
+    if (!handle) return;
     busy = true;
     btn.classList.add("is-busy");
     var action = isTracked(handle) ? removeStreamer(handle) : addStreamer(handle);
@@ -215,11 +224,11 @@
         // L'écriture du fond déclenche storage.onChanged, mais on relit tout
         // de suite : le service worker peut être endormi au moment de l'écoute.
         return refreshState().then(function () {
-          if (!ok) btn.title = t("error");
+          showToast(ok ? t("added", { name: handle }) : t("error"), !ok);
         });
       })
       .catch(function () {
-        btn.title = t("error");
+        showToast(t("error"), true);
       })
       .finally(function () {
         busy = false;
@@ -227,7 +236,26 @@
       });
   }
 
-  function buildButton(handle) {
+  // ---- toast ----------------------------------------------------------------
+
+  var toastTimer = null;
+  function showToast(message, isError) {
+    try {
+      var existing = document.getElementById("sp-qf-yt-toast");
+      if (existing) existing.remove();
+      var toast = document.createElement("div");
+      toast.id = "sp-qf-yt-toast";
+      toast.textContent = message;
+      if (isError) toast.classList.add("is-error");
+      document.body.appendChild(toast);
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () { toast.remove(); }, 4000);
+    } catch (_e) {
+      // Le toast ne doit jamais casser l'action qu'il rapporte.
+    }
+  }
+
+  function buildButton() {
     var btn = document.createElement("button");
     btn.id = BTN_ID;
     btn.type = "button";
@@ -242,7 +270,7 @@
 
     btn.appendChild(logo);
     btn.appendChild(label);
-    btn.addEventListener("click", function (e) { onClick(e, btn, handle); });
+    btn.addEventListener("click", function (e) { onClick(e, btn); });
     return btn;
   }
 
@@ -271,7 +299,7 @@
         return;
       }
       if (!existing) {
-        existing = buildButton(handle);
+        existing = buildButton();
         existing.dataset.spHandle = handle;
         anchor.insertAdjacentElement("afterend", existing);
       } else if (existing.dataset.spHandle !== handle) {
