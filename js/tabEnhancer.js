@@ -60,9 +60,9 @@
   }
 
   function findStreamerAvatarUrl() {
-    // Kick : avatar suivi depuis le stockage (l'API de Kick renvoie la vraie
-    // photo du streamer, contrairement à la favicon du site), puis l'avatar du
-    // header de chaîne en repli.
+    // Kick : l'avatar suivi vient du stockage — l'API de Kick renvoie la vraie
+    // photo du streamer. Pas de repli DOM ici : le seul profil_image que le
+    // DOM garantit, c'est celui du visiteur (la navbar), pas du streamer.
     const kickChannel = kickChannelHandle();
     if (kickChannel) {
       const entry = followedStreamers.find(
@@ -71,8 +71,6 @@
           && s.avatarUrl,
       );
       if (entry) return entry.avatarUrl;
-      const kickAvatar = document.querySelector('img[src*="profile_image"]');
-      if (kickAvatar && kickAvatar.src) return kickAvatar.src;
     }
 
     const streamerSelectors = [

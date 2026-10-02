@@ -801,7 +801,10 @@ function stepFeatured(delta) {
 
 // Kick : les streamers ajoutés avant le suivi par API n'ont pas de photo (le
 // logo de la plateforme prenait le relais). Une demande de résolution par
-// handle et par ouverture du popup ; le fond écrit, storage.onChanged re-rend.
+// Kick : les streamers ajoutés avant le suivi par API n'ont pas de photo (le
+// logo de la plateforme prenait le relais). Une résolution par handle et par
+// ouverture du popup ; la popup a la permission hôte Kick, elle interroge
+// l'API elle-même et écrit direct — storage.onChanged re-rend la carte.
 const kickAvatarRequested = new Set();
 function sweepKickAvatars() {
   for (const streamer of state.streamers) {
@@ -809,7 +812,22 @@ function sweepKickAvatars() {
     const handle = String(streamer.handle || "").toLowerCase();
     if (!handle || streamer.avatarUrl || kickAvatarRequested.has(handle)) continue;
     kickAvatarRequested.add(handle);
-    chrome.runtime.sendMessage({ type: "resolveKickAvatar", handle }).catch(() => {});
+    fetch(`https://kick.com/api/v2/channels/${encodeURIComponent(handle)}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then(async (channel) => {
+        const pic = channel?.user?.profile_pic;
+        if (!pic) return;
+        const stored = await chrome.storage.local.get("betaGeneralStreamers");
+        const list = Array.isArray(stored.betaGeneralStreamers) ? stored.betaGeneralStreamers : [];
+        const entry = list.find(
+          (item) => (item.platform || "twitch") === "kick"
+            && String(item.handle || "").toLowerCase() === handle,
+        );
+        if (!entry || entry.avatarUrl === pic) return;
+        entry.avatarUrl = pic;
+        await chrome.storage.local.set({ betaGeneralStreamers: list });
+      })
+      .catch(() => {});
   }
 }
 

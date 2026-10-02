@@ -14,7 +14,6 @@ const SENSITIVE_MESSAGE_TYPES = new Set([
   "reorderStreamers",
   "setPinnedStreamers",
   "importHistoryCsv",
-  "resolveKickAvatar",
 ]);
 
 export function isExtensionPage(sender, extensionPrefix) {
