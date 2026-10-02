@@ -1,6 +1,6 @@
 (() => {
   // Kick Player Enhancer
-  // Features: Fast Forward to Live, Latency Monitor (Simplified)
+  // Features: Fast Forward to Live, Latency Monitor (placement Twitch)
 
   // Top-frame guard: avoid duplicating intervals in sub-frames (perf).
   if (window.top !== window) return;
@@ -11,6 +11,8 @@
 
   let fastForwardEnabled = true;
   let intervalId = null;
+  let latencyTimer = null;
+  let headerTimer = null;
 
   // Même logique que chatFilter.js : on lit la langue choisie dans StreamPulse
   // plutôt que navigator.language, via le bundle inline injecté avant ce script.
@@ -48,12 +50,98 @@
       : "";
   }
 
+  // ─── Placement, comme sur Twitch ─────────────────────────────────────────────
+  // « viewers » : badge fixé sur le lecteur. « chat » : le mot « Chat » de
+  // l'en-tête du tchat est remplacé par la latence, texte repris à la fin.
+
+  let latencyPlacement = "viewers";
+  let chatTitleEl = null;
+  let chatTitleText = "";
+
+  function restoreChatTitle() {
+    if (chatTitleEl && chatTitleEl.isConnected) chatTitleEl.textContent = chatTitleText;
+    chatTitleEl = null;
+    const badge = document.getElementById(LATENCY_ID);
+    if (badge) badge.remove();
+  }
+
+  /**
+   * Le titre « Chat » de l'en-tête du tchat : feuille de texte exacte, hors
+   * boutons, dans la moitié droite de la page (le tchat est la colonne de
+   * droite). Le scan complet reste borné : titres courts + feuilles seules.
+   */
+  function findChatTitle() {
+    const candidates = [];
+    for (const element of document.querySelectorAll("body *")) {
+      if (element.closest("button, a, [role='button']")) continue;
+      if (element.children.length) continue;
+      const text = (element.textContent || "").trim();
+      if (!/^(chat|tchat)$/i.test(text)) continue;
+      const rect = element.getBoundingClientRect();
+      if (rect.width > 0 && rect.left > window.innerWidth / 2) candidates.push(element);
+    }
+    return candidates.length ? candidates[candidates.length - 1] : null;
+  }
+
+  function updateLatency() {
+    if (!(chrome.runtime && chrome.runtime.id)) return;
+    const video = findVideo();
+    const live = isLive(video);
+    const delay = live ? latencySeconds(video) : 0;
+
+    if (latencyPlacement === "chat") {
+      hidePlayerBadge();
+      if (!chatTitleEl || !chatTitleEl.isConnected) {
+        chatTitleEl = findChatTitle();
+        chatTitleText = chatTitleEl ? chatTitleEl.textContent : "";
+      }
+      if (!chatTitleEl) return;
+      chatTitleEl.textContent = live ? latencyText(delay) : chatTitleText;
+      return;
+    }
+    restoreChatTitle();
+    ensurePlayerBadge(video, live, delay);
+  }
+
+  /** Badge « viewers » : fixé sur le conteneur du lecteur, coin haut-gauche. */
+  function ensurePlayerBadge(video, live, delay) {
+    if (!video || !video.parentElement) return;
+    const container = video.parentElement;
+    if (window.getComputedStyle(container).position === "static") container.style.position = "relative";
+    let badge = document.getElementById(LATENCY_ID);
+    if (!badge) {
+      badge = document.createElement("div");
+      badge.id = LATENCY_ID;
+      badge.className = "streampulse-kick-latency";
+      badge.style.cssText = [
+        "position: absolute; top: 12px; left: 12px; z-index: 60;",
+        "display: flex; align-items: center; padding: 4px 10px;",
+        "border-radius: 6px; background: rgba(9, 11, 15, .72); color: #fff;",
+        "font: 600 12px/1.4 Arial, sans-serif; pointer-events: none;",
+      ].join(" ");
+      container.appendChild(badge);
+    }
+    if (!container.contains(badge)) container.appendChild(badge);
+    if (!live) {
+      badge.style.display = "none";
+      return;
+    }
+    badge.style.display = "flex";
+    badge.textContent = latencyText(delay);
+  }
+
+  function hidePlayerBadge() {
+    const badge = document.getElementById(LATENCY_ID);
+    if (badge) badge.style.display = "none";
+  }
+
   function loadSettings() {
     chrome.storage.local.get([PREFERENCES_KEY], (result) => {
       const prefs = result[PREFERENCES_KEY] || {};
       const api = i18nApi();
       if (api && prefs.language) currentLang = api.resolve(prefs.language);
       fastForwardEnabled = prefs.enableFastForwardButton !== false; // Default true
+      latencyPlacement = prefs.latencyPlacement === "chat" ? "chat" : "viewers";
       // La boucle tourne toujours : elle porte aussi l'indicateur de latence,
       // qui ne dépend pas du bouton d'avance rapide.
       startLoop();
@@ -80,7 +168,7 @@
       // Traverse up to find the bar
       return playBtn.parentElement.parentElement || playBtn.parentElement;
     }
-    
+
     return null;
   }
 
@@ -109,7 +197,7 @@
       transition: opacity 0.2s;
     `;
     btn.title = jumpToLiveTitle();
-    
+
     btn.onmouseenter = () => btn.style.opacity = "1";
     btn.onmouseleave = () => btn.style.opacity = "0.8";
 
@@ -132,7 +220,6 @@
       stopLoop();
       return;
     }
-    ensureLatency();
     if (!fastForwardEnabled) return;
     const controls = findControls();
     if (!controls) return;
@@ -156,53 +243,26 @@
     if (intervalId) return;
     intervalId = setInterval(ensureButton, 2000);
     ensureButton();
+    // Latence : mise à jour à la seconde, re-accroche de l'en-tête du tchat
+    // toutes les 3 s (même cadence que la LatencyFeature de Twitch).
+    if (latencyTimer == null) latencyTimer = setInterval(updateLatency, 1000);
+    if (headerTimer == null) headerTimer = setInterval(updateLatency, 3000);
+    updateLatency();
   }
 
   function stopLoop() {
     if (intervalId) clearInterval(intervalId);
     intervalId = null;
+    if (latencyTimer) clearInterval(latencyTimer);
+    latencyTimer = null;
+    if (headerTimer) clearInterval(headerTimer);
+    headerTimer = null;
+    restoreChatTitle();
   }
 
   function removeButton() {
     const btn = document.getElementById(FAST_FORWARD_ID);
     if (btn) btn.remove();
-  }
-
-  /**
-   * Indicateur de latence : badge permanent sur le lecteur, hors de la barre
-   * de contrôles (qui se cache toute seule) et sans dépendre d'une tech
-   * précise — le conteneur de la vidéo sert de repère. Retard mesuré sur
-   * l'arête du direct ; le placement « tchat » de Twitch n'a pas d'équivalent
-   * fiable sur Kick.
-   */
-  function ensureLatency() {
-    if (!(chrome.runtime && chrome.runtime.id)) return;
-    const video = findVideo();
-    if (!video || !video.parentElement) return;
-    const container = video.parentElement;
-    const computed = window.getComputedStyle(container);
-    if (computed.position === "static") container.style.position = "relative";
-    let el = document.getElementById(LATENCY_ID);
-    if (!el) {
-      el = document.createElement("div");
-      el.id = LATENCY_ID;
-      el.className = "streampulse-kick-latency";
-      el.style.cssText = [
-        "position: absolute; top: 12px; left: 12px; z-index: 60;",
-        "display: flex; align-items: center; padding: 4px 10px;",
-        "border-radius: 6px; background: rgba(9, 11, 15, .72); color: #fff;",
-        "font: 600 12px/1.4 Arial, sans-serif; pointer-events: none;",
-      ].join(" ");
-      container.appendChild(el);
-    }
-    if (!container.contains(el)) container.appendChild(el);
-    if (!isLive(video)) {
-      el.style.display = "none";
-      return;
-    }
-    const delay = latencySeconds(video);
-    el.style.display = "flex";
-    el.textContent = latencyText(delay);
   }
 
   chrome.storage.onChanged.addListener((changes, area) => {
