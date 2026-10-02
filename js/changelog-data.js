@@ -57,6 +57,22 @@ export const RELEASES = [
     title: { "fr": "Ta liste te suit, YouTube aussi", "en": "Your list follows you, YouTube too", "es": "Tu lista te sigue, YouTube también", "pt-BR": "Sua lista acompanha você, YouTube também", "de": "Deine Liste folgt dir, YouTube auch", "it": "La tua lista ti segue, YouTube incluso", "pl": "Twoja lista podąża za Tobą, YouTube też", "tr": "Listen seninle gelir, YouTube dahil", "ru": "Ваш список следует за вами, и YouTube тоже", "ja": "リストは同期、YouTubeも対応", "ko": "목록이 따라갑니다, YouTube도 지원" },
     changes: [
       {
+        type: "improved",
+        text: {
+          "fr": "Kick au niveau de Twitch : la favicon de l'onglet prend la photo du streamer suivi avec sa pastille de direct, un indicateur de latence rejoint les contrôles du lecteur, et les avatars manquants se rattrapent tout seuls au fil des sondages.",
+          "en": "Kick caught up with Twitch: the tab favicon shows the followed streamer's photo with its live dot, a latency indicator joins the player controls, and missing avatars backfill themselves over successive polls.",
+          "es": "Kick al nivel de Twitch: la favicon de la pestaña muestra la foto del streamer seguido con su punto de directo, un indicador de latencia se une a los controles del reproductor, y los avatares que falten se rellenan solos con los sondeos.",
+          "pt-BR": "Kick no nível da Twitch: o favicon da aba mostra a foto do streamer seguido com seu ponto de live, um indicador de latência entra nos controles do player, e avatares ausentes se preenchem sozinhos nas verificações.",
+          "de": "Kick auf Twitch-Niveau: Der Tab-Favicon zeigt das Foto des gefolgten Streamers mit Live-Punkt, ein Latenzindikator hält in der Player-Leiste Einzug, und fehlende Avatare füllen sich mit den Abfragen von selbst auf.",
+          "it": "Kick al livello di Twitch: la favicon della scheda mostra la foto dello streamer seguito con il suo punto live, un indicatore di latenza si aggiunge ai controlli del player, e gli avatar mancanti si completano da soli nei sondaggi.",
+          "pl": "Kick na poziomie Twitcha: favicon karty pokazuje zdjęcie obserwowanego streamera z punktem live, wskaźnik opóźnienia dołącza do paska odtwarzacza, a brakujące awatary uzupełniają się same przy kolejnych odpytaniach.",
+          "tr": "Twitch seviyesinde Kick: sekme favicon'u takip edilen yayıncının fotoğrafını canlı noktasıyla gösteriyor, oynatıcı kontrollerine gecikme göstergesi ekleniyor ve eksik avatarlar yoklamalarla kendiliğinden tamamlanıyor.",
+          "ru": "Kick на уровне Twitch: фавикон вкладки показывает фото отслеживаемого стримера с точкой эфира, индикатор задержки появляется в панели плеера, а недостающие аватары сами дозаполняются при опросах.",
+          "ja": "Twitch並みのKick：タブのファビコンにフォロー中配信者の写真とライブの点が表示され、レイテンシ表示がプレーヤーのコントロールに加わり、不足するアバターもポーリングで自動補完されます。",
+          "ko": "Twitch 수준의 Kick: 탭 파비콘이 팔로우한 스트리머의 사진과 라이브 점을 표시하고, 지연 표시기가 플레이어 컨트롤에 추가되며, 누락된 아바타는 폴링 때 자동으로 채워집니다.",
+        },
+      },
+      {
         type: "new",
         text: {
           "fr": "Historique en CSV : exporte le détail de tes points et de tes Drops depuis Réglages → Sauvegarde, et réimporte-les sur un autre navigateur — la fusion ignore les doublons.",

@@ -7,7 +7,8 @@
 
   const PREFERENCES_KEY = "betaGeneralPreferences";
   const FAST_FORWARD_ID = "streampulse-kick-fast-forward";
-  
+  const LATENCY_ID = "streampulse-kick-latency";
+
   let fastForwardEnabled = true;
   let intervalId = null;
 
@@ -19,6 +20,19 @@
   function jumpToLiveTitle() {
     const api = i18nApi();
     return api ? api.get(currentLang, "enhancer.jumpToLive") : "Jump to Live (StreamPulse)";
+  }
+
+  function latencyText() {
+    const api = i18nApi();
+    const video = findVideo();
+    // Live only : sur un VOD le retard sur l'arête de téléchargement n'est pas
+    // une latence, et le NaN est l'état « métadonnées pas encore chargées ».
+    if (!video || video.duration !== Infinity || !video.buffered.length) {
+      return api ? api.get(currentLang, "player.latencyEmpty") : "";
+    }
+    const delay = Math.round(video.buffered.end(video.buffered.length - 1) - video.currentTime);
+    if (!(delay > 0)) return api ? api.get(currentLang, "player.latencyEmpty") : "";
+    return api ? api.get(currentLang, "player.latencyValue", { value: delay }) : "";
   }
 
   function loadSettings() {
@@ -105,6 +119,7 @@
       stopLoop();
       return;
     }
+    ensureLatency();
     if (!fastForwardEnabled) return;
     const controls = findControls();
     if (!controls) return;
@@ -138,6 +153,30 @@
   function removeButton() {
     const btn = document.getElementById(FAST_FORWARD_ID);
     if (btn) btn.remove();
+  }
+
+  /**
+   * Indicateur de latence dans la barre de contrôles : retard de la lecture
+   * sur l'arête du direct (buffered end − currentTime). Le placement « tchat »
+   * de Twitch n'a pas d'équivalent fiable sur Kick : l'indicateur reste dans
+   * les contrôles du lecteur.
+   */
+  function ensureLatency() {
+    const controls = findControls();
+    if (!controls) return;
+    let el = document.getElementById(LATENCY_ID);
+    if (!el) {
+      el = document.createElement("div");
+      el.id = LATENCY_ID;
+      el.className = "streampulse-kick-latency";
+      el.style.cssText = "display:flex;align-items:center;padding:0 10px;color:#fff;";
+      el.style.font = "600 12px/1.4 Arial, sans-serif";
+      el.style.opacity = "0.85";
+      el.style.whiteSpace = "nowrap";
+      controls.appendChild(el);
+    }
+    if (!controls.contains(el)) controls.appendChild(el);
+    el.textContent = latencyText();
   }
 
   chrome.storage.onChanged.addListener((changes, area) => {

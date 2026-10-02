@@ -75,6 +75,23 @@ async function buildStreamerStatus(streamer, twitchBatch = null) {
   } else {
     status = await PlatformChecker.getStatus(streamer);
   }
+  // Rattrapage d'avatar Kick : les streamers ajoutés avant le suivi par API
+  // n'ont pas de photo (le logo de la plateforme prenait le relais). Le sondage
+  // passe de toute façon par l'API de Kick — on en profite, écriture sur
+  // changement seulement.
+  if (platform === "kick" && status.avatarUrl && streamer.avatarUrl !== status.avatarUrl) {
+    DataStore.getStreamers()
+      .then((list) => {
+        const entry = list.find(
+          (item) => (item.platform || "twitch") === "kick"
+            && String(item.handle || "").toLowerCase() === String(streamer.handle || "").toLowerCase(),
+        );
+        if (!entry || entry.avatarUrl === status.avatarUrl) return;
+        entry.avatarUrl = status.avatarUrl;
+        return DataStore.saveStreamers(list);
+      })
+      .catch(() => {});
+  }
   const activeStatus = status.isLive
     ? { ...status, platform, supportsLiveStatus: status.supportsLiveStatus }
     : {

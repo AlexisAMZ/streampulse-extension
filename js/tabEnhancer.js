@@ -3,6 +3,11 @@
 
   if (window.top !== window) return;
 
+  const STREAMERS_KEY = "betaGeneralStreamers";
+  // Streamers suivis : sur Kick, l'avatar à peindre vient d'ici (l'API de Kick
+  // renvoie la vraie photo) ; le DOM ne sert qu'en repli.
+  let followedStreamers = [];
+
   const PREFERENCES_KEY = "betaGeneralPreferences";
   let isLiveIconActive = true;
   let isAvatarFaviconActive = true;
@@ -44,7 +49,32 @@
     }
   }
 
+  function kickChannelHandle() {
+    if (!location.hostname.endsWith("kick.com")) return "";
+    const first = (location.pathname.split("/").filter(Boolean)[0] || "").toLowerCase();
+    // Mêmes exclusions que watchTimeTracker : ces routes ne sont pas des chaînes.
+    if (!first || ["categories", "following", "search", "dashboard", "video", "browse", "community"].includes(first)) {
+      return "";
+    }
+    return first;
+  }
+
   function findStreamerAvatarUrl() {
+    // Kick : avatar suivi depuis le stockage (l'API de Kick renvoie la vraie
+    // photo du streamer, contrairement à la favicon du site), puis l'avatar du
+    // header de chaîne en repli.
+    const kickChannel = kickChannelHandle();
+    if (kickChannel) {
+      const entry = followedStreamers.find(
+        (s) => (s.platform || "twitch") === "kick"
+          && String(s.handle || "").toLowerCase() === kickChannel
+          && s.avatarUrl,
+      );
+      if (entry) return entry.avatarUrl;
+      const kickAvatar = document.querySelector('img[src*="profile_image"]');
+      if (kickAvatar && kickAvatar.src) return kickAvatar.src;
+    }
+
     const streamerSelectors = [
       '[data-a-target="stream-channel-avatar"] img',
       '.channel-info-content .tw-avatar img',
@@ -228,11 +258,16 @@
     }
   }
 
-  chrome.storage.local.get([PREFERENCES_KEY], (res) => {
+  chrome.storage.local.get([STREAMERS_KEY, PREFERENCES_KEY], (res) => {
+    followedStreamers = Array.isArray(res?.[STREAMERS_KEY]) ? res[STREAMERS_KEY] : [];
     loadPrefs(res?.[PREFERENCES_KEY] || {});
   });
 
   chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === "local" && changes[STREAMERS_KEY]) {
+      followedStreamers = Array.isArray(changes[STREAMERS_KEY].newValue) ? changes[STREAMERS_KEY].newValue : [];
+      updateTabFavicon();
+    }
     if (area === "local" && changes[PREFERENCES_KEY]) {
       loadPrefs(changes[PREFERENCES_KEY].newValue || {});
     }
