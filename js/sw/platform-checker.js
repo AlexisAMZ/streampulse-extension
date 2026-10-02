@@ -104,7 +104,7 @@ export class PlatformChecker {
     const sanitized = sanitizeHandle("kick", handle);
     if (!sanitized) return null;
 
-    // Try official API first (needs credentials)
+    // API officielle d'abord (si des credentials d'app sont configurés).
     try {
       const token = await getKickAppToken();
       if (token) {
@@ -116,7 +116,14 @@ export class PlatformChecker {
       console.warn("[SP] Kick API officielle :", error?.message || error);
     }
 
-    // Fallback: unofficial V2 API
+    return this.getKickChannelV2(sanitized);
+  }
+
+  /**
+   * Repli (et source de la photo de profil) : l'API v2 non officielle.
+   * L'API officielle n'expose pas la photo — seulement la bannière.
+   */
+  static async getKickChannelV2(sanitized) {
     try {
       const data = await fetchJson(
         `https://kick.com/api/v2/channels/${encodeURIComponent(sanitized)}`
@@ -138,7 +145,10 @@ export class PlatformChecker {
       platform: "kick",
       url: buildProfileUrl("kick", slug),
       displayName: slug,
-      avatarUrl: channel?.banner_picture || "",
+      // La photo de profil n'existe pas dans l'API officielle (seulement la
+      // bannière, qui n'a pas sa place dans un rond) : getKickStatus la
+      // complète depuis le repli v2.
+      avatarUrl: "",
     };
 
     if (!stream?.is_live) return { isLive: false, ...base };
@@ -231,7 +241,15 @@ export class PlatformChecker {
       return { isLive: false, platform: "kick", error: channel.status, isError: true };
     }
     if (channel?._source === "official") {
-      return this.extractKickStatusOfficial(channel, handle);
+      const status = this.extractKickStatusOfficial(channel, handle);
+      // L'API officielle n'expose pas la photo de profil : elle vient du
+      // repli v2, seule source de la vraie image du streamer.
+      if (!status.avatarUrl) {
+        const v2 = await this.getKickChannelV2(handle);
+        const pic = resolveKickAsset(v2?.user?.profile_pic) || "";
+        if (pic) status = { ...status, avatarUrl: pic };
+      }
+      return status;
     }
     return this.extractKickStatus(channel, handle);
   }
