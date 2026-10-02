@@ -22,17 +22,30 @@
     return api ? api.get(currentLang, "enhancer.jumpToLive") : "Jump to Live (StreamPulse)";
   }
 
-  function latencyText() {
-    const api = i18nApi();
-    const video = findVideo();
-    // Live only : sur un VOD le retard sur l'arête de téléchargement n'est pas
-    // une latence, et le NaN est l'état « métadonnées pas encore chargées ».
-    if (!video || video.duration !== Infinity || !video.buffered.length) {
-      return api ? api.get(currentLang, "player.latencyEmpty") : "";
-    }
+  /**
+   * Direct ? Infinity n'arrive que sur certains pipelines : le lecteur MSE de
+   * Kick expose une durée = fin de fenêtre glissante. À plus de 8 s de cette
+   * fin, on est sur un direct dont on a du retard (seul faux positif possible :
+   * un VOD écouté dans ses 8 dernières secondes, transitoire).
+   */
+  function isLive(video) {
+    if (!video) return false;
+    if (video.duration === Infinity) return true;
+    return Number.isFinite(video.duration) && video.duration - video.currentTime > 8;
+  }
+
+  /** Retard de la lecture sur l'arête de téléchargement, en secondes rondes. */
+  function latencySeconds(video) {
+    if (!video || !video.buffered.length) return 0;
     const delay = Math.round(video.buffered.end(video.buffered.length - 1) - video.currentTime);
-    if (!(delay > 0)) return api ? api.get(currentLang, "player.latencyEmpty") : "";
-    return api ? api.get(currentLang, "player.latencyValue", { value: delay }) : "";
+    return delay > 0 ? delay : 0;
+  }
+
+  function latencyText(delay) {
+    const api = i18nApi();
+    return api
+      ? api.get(currentLang, delay ? "player.latencyValue" : "player.latencyEmpty", { value: delay })
+      : "";
   }
 
   function loadSettings() {
@@ -41,10 +54,10 @@
       const api = i18nApi();
       if (api && prefs.language) currentLang = api.resolve(prefs.language);
       fastForwardEnabled = prefs.enableFastForwardButton !== false; // Default true
-      if (fastForwardEnabled) {
-        startLoop();
-      } else {
-        stopLoop();
+      // La boucle tourne toujours : elle porte aussi l'indicateur de latence,
+      // qui ne dépend pas du bouton d'avance rapide.
+      startLoop();
+      if (!fastForwardEnabled) {
         removeButton();
       }
     });
@@ -156,27 +169,40 @@
   }
 
   /**
-   * Indicateur de latence dans la barre de contrôles : retard de la lecture
-   * sur l'arête du direct (buffered end − currentTime). Le placement « tchat »
-   * de Twitch n'a pas d'équivalent fiable sur Kick : l'indicateur reste dans
-   * les contrôles du lecteur.
+   * Indicateur de latence : badge permanent sur le lecteur, hors de la barre
+   * de contrôles (qui se cache toute seule) et sans dépendre d'une tech
+   * précise — le conteneur de la vidéo sert de repère. Retard mesuré sur
+   * l'arête du direct ; le placement « tchat » de Twitch n'a pas d'équivalent
+   * fiable sur Kick.
    */
   function ensureLatency() {
-    const controls = findControls();
-    if (!controls) return;
+    if (!(chrome.runtime && chrome.runtime.id)) return;
+    const video = findVideo();
+    if (!video || !video.parentElement) return;
+    const container = video.parentElement;
+    const computed = window.getComputedStyle(container);
+    if (computed.position === "static") container.style.position = "relative";
     let el = document.getElementById(LATENCY_ID);
     if (!el) {
       el = document.createElement("div");
       el.id = LATENCY_ID;
       el.className = "streampulse-kick-latency";
-      el.style.cssText = "display:flex;align-items:center;padding:0 10px;color:#fff;";
-      el.style.font = "600 12px/1.4 Arial, sans-serif";
-      el.style.opacity = "0.85";
-      el.style.whiteSpace = "nowrap";
-      controls.appendChild(el);
+      el.style.cssText = [
+        "position: absolute; top: 12px; left: 12px; z-index: 60;",
+        "display: flex; align-items: center; padding: 4px 10px;",
+        "border-radius: 6px; background: rgba(9, 11, 15, .72); color: #fff;",
+        "font: 600 12px/1.4 Arial, sans-serif; pointer-events: none;",
+      ].join(" ");
+      container.appendChild(el);
     }
-    if (!controls.contains(el)) controls.appendChild(el);
-    el.textContent = latencyText();
+    if (!container.contains(el)) container.appendChild(el);
+    if (!isLive(video)) {
+      el.style.display = "none";
+      return;
+    }
+    const delay = latencySeconds(video);
+    el.style.display = "flex";
+    el.textContent = latencyText(delay);
   }
 
   chrome.storage.onChanged.addListener((changes, area) => {
