@@ -18,10 +18,6 @@ function lookupErrorKey(result) {
   return result?._apiError ? "background.errors.apiError" : "background.errors.streamerNotFound";
 }
 
-function alreadyFollowed(streamers, platform, handle) {
-  return findFollowed(streamers, platform, handle) !== undefined;
-}
-
 function findFollowed(streamers, platform, handle) {
   const incomingKey = getHandleComparisonKey(platform, handle);
   return streamers.find(
