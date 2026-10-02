@@ -19,8 +19,12 @@ function lookupErrorKey(result) {
 }
 
 function alreadyFollowed(streamers, platform, handle) {
+  return findFollowed(streamers, platform, handle) !== undefined;
+}
+
+function findFollowed(streamers, platform, handle) {
   const incomingKey = getHandleComparisonKey(platform, handle);
-  return streamers.some(
+  return streamers.find(
     (streamer) => getHandleComparisonKey(streamer.platform || "twitch", streamer.handle || streamer.twitch || streamer.id) === incomingKey
   );
 }
@@ -68,7 +72,13 @@ export async function addStreamer(request) {
   if (!handle) return platformError(preferences, "background.errors.invalidHandle", platform);
 
   const streamers = await DataStore.getStreamers();
-  if (alreadyFollowed(streamers, platform, handle)) {
+  const existing = findFollowed(streamers, platform, handle);
+  // Déjà suivie avec une photo saine : doublon, refus. Déjà suivie avec un
+  // avatar cassé (vide, ou chemin du logo de la plateforme stocké par un
+  // ancien ajout) : la ré-ajout répare l'entrée au lieu de la refuser —
+  // c'est exactement le flux « je vois la vraie photo dans les suggestions,
+  // je clique, et rien ne change ».
+  if (existing && /^https?:\/\//i.test(existing.avatarUrl || "")) {
     return platformError(preferences, "background.errors.streamerExistsPlatform", platform);
   }
 
@@ -86,6 +96,21 @@ export async function addStreamer(request) {
     socials: {},
     ...source.data,
   };
+
+  if (existing) {
+    // Réparation : photo et nom rafraîchis sur l'entrée existante, aucune
+    // duplication. Le sondage suivant recable statut et vignettes.
+    const index = streamers.indexOf(existing);
+    streamers[index] = normalizeStreamer({
+      ...existing,
+      avatarUrl: sourceData.avatarUrl || existing.avatarUrl,
+      displayName: sourceData.displayName || existing.displayName,
+    });
+    const updated = await DataStore.saveStreamers(streamers);
+    await pollStreamers({ forceNotification: false });
+    return { success: true, streamers: updated };
+  }
+
   const id = platform === "twitch" ? sourceData.twitch : `${platform}:${sanitizeHandle(platform, sourceData.handle)}`;
   const updated = await DataStore.saveStreamers([...streamers, normalizeStreamer({ ...sourceData, id })]);
   await pollStreamers({ forceNotification: false });
