@@ -810,7 +810,9 @@ function sweepKickAvatars() {
   for (const streamer of state.streamers) {
     if ((streamer.platform || "twitch") !== "kick") continue;
     const handle = String(streamer.handle || "").toLowerCase();
-    if (!handle || streamer.avatarUrl || kickAvatarRequested.has(handle)) continue;
+    // Un avatar qui n'est pas une URL web est un reliquat : certains anciens
+    // ajouts stockaient le chemin du logo de la plateforme comme avatar.
+    if (!handle || /^https?:\/\//i.test(streamer.avatarUrl || "") || kickAvatarRequested.has(handle)) continue;
     kickAvatarRequested.add(handle);
     fetch(`https://kick.com/api/v2/channels/${encodeURIComponent(handle)}`)
       .then((res) => (res.ok ? res.json() : null))
