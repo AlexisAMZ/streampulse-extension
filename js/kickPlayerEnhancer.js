@@ -8,6 +8,7 @@
   const PREFERENCES_KEY = "betaGeneralPreferences";
   const FAST_FORWARD_ID = "streampulse-kick-fast-forward";
   const LATENCY_ID = "streampulse-kick-latency";
+  const LATENCY_STYLE_ID = "streampulse-kick-latency-style";
 
   let fastForwardEnabled = true;
   let intervalId = null;
@@ -36,33 +37,40 @@
     return Number.isFinite(video.duration) && video.duration - video.currentTime > 8;
   }
 
-  /** Retard de la lecture sur l'arête de téléchargement, en secondes rondes. */
-  function latencySeconds(video) {
-    if (!video || !video.buffered.length) return 0;
-    const delay = Math.round(video.buffered.end(video.buffered.length - 1) - video.currentTime);
-    return delay > 0 ? delay : 0;
+  /** Retard de la lecture sur l'arête de téléchargement (float, ou null). */
+  function latencyDelay(video) {
+    if (!video || !video.buffered.length) return null;
+    const delay = video.buffered.end(video.buffered.length - 1) - video.currentTime;
+    return delay > 0 ? delay : null;
   }
 
   function latencyText(delay) {
     const api = i18nApi();
-    return api
-      ? api.get(currentLang, delay ? "player.latencyValue" : "player.latencyEmpty", { value: delay })
-      : "";
+    if (!api) return "";
+    return delay == null
+      ? api.get(currentLang, "player.latencyEmpty")
+      : api.get(currentLang, "player.latencyValue", { value: delay.toFixed(2) });
   }
 
   // ─── Placement, comme sur Twitch ─────────────────────────────────────────────
-  // « viewers » : badge fixé sur le lecteur. « chat » : le mot « Chat » de
-  // l'en-tête du tchat est remplacé par la latence, texte repris à la fin.
+  // « viewers » : bouton fixé sur le lecteur. « chat » : le mot « Chat » de
+  // l'en-tête du tchat est remplacé par le bouton de latence, texte repris à
+  // la fin.
 
   let latencyPlacement = "viewers";
   let chatTitleEl = null;
   let chatTitleText = "";
 
   function restoreChatTitle() {
-    if (chatTitleEl && chatTitleEl.isConnected) chatTitleEl.textContent = chatTitleText;
+    if (chatTitleEl && chatTitleEl.isConnected) chatTitleEl.style.display = "";
     chatTitleEl = null;
     const badge = document.getElementById(LATENCY_ID);
     if (badge) badge.remove();
+  }
+
+  function hidePlayerBadge() {
+    const badge = document.getElementById(LATENCY_ID);
+    if (badge) badge.style.display = "none";
   }
 
   /**
@@ -83,56 +91,155 @@
     return candidates.length ? candidates[candidates.length - 1] : null;
   }
 
-  function updateLatency() {
-    if (!(chrome.runtime && chrome.runtime.id)) return;
-    const video = findVideo();
-    const live = isLive(video);
-    const delay = live ? latencySeconds(video) : 0;
+  // ─── Bouton de latence (même D.A. et même clic que Twitch) ───────────────────
 
-    if (latencyPlacement === "chat") {
-      hidePlayerBadge();
-      if (!chatTitleEl || !chatTitleEl.isConnected) {
-        chatTitleEl = findChatTitle();
-        chatTitleText = chatTitleEl ? chatTitleEl.textContent : "";
-      }
-      if (!chatTitleEl) return;
-      chatTitleEl.textContent = live ? latencyText(delay) : chatTitleText;
-      return;
+  /** Feuille de style partagée : reprise du CSS du bouton Twitch. */
+  function ensureStyles() {
+    if (document.getElementById(LATENCY_STYLE_ID)) return;
+    const style = document.createElement("style");
+    style.id = LATENCY_STYLE_ID;
+    style.textContent = `
+    .streampulse-latency-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 12px;
+      color: #dedee3;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      user-select: none;
+      gap: 8px;
     }
-    restoreChatTitle();
-    ensurePlayerBadge(video, live, delay);
+    .streampulse-latency-button:hover {
+      color: #ffffff;
+      cursor: pointer;
+      transform: translateY(-1px);
+    }
+    .streampulse-latency-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #888;
+    }
+    .streampulse-latency-button.is-live .streampulse-latency-dot {
+      background-color: #ff4d4d;
+    }
+    .streampulse-latency-button.is-disabled {
+      opacity: 0.4;
+      cursor: default;
+      transform: none;
+      pointer-events: none;
+    }
+    .streampulse-latency-button.is-disabled:hover {
+      color: #dedee3;
+      transform: none;
+    }
+    .streampulse-latency-button.is-on-player {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 60;
+      background: rgba(9, 11, 15, .72);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+    }
+    `;
+    document.head.appendChild(style);
   }
 
-  /** Badge « viewers » : fixé sur le conteneur du lecteur, coin haut-gauche. */
-  function ensurePlayerBadge(video, live, delay) {
-    if (!video || !video.parentElement) return;
+  function latencyButton() {
+    let btn = document.getElementById(LATENCY_ID);
+    if (!btn) {
+      btn = document.createElement("button");
+      btn.type = "button";
+      btn.id = LATENCY_ID;
+      btn.className = "streampulse-latency-button";
+
+      const dot = document.createElement("span");
+      dot.className = "streampulse-latency-dot";
+
+      const text = document.createElement("span");
+      text.className = "streampulse-latency-text";
+      text.textContent = latencyText(null);
+
+      btn.append(dot, text);
+      // Cliquer = rattraper le direct, même comportement que sur Twitch.
+      btn.addEventListener("click", () => {
+        const video = findVideo();
+        if (!video) return;
+        const delay = latencyDelay(video);
+        if (delay != null && delay > 0.25) {
+          if (video.buffered.length) {
+            video.currentTime = video.buffered.end(video.buffered.length - 1) - 0.5;
+          }
+        }
+        if (video.paused) video.play().catch(() => {});
+        updateLatency(true);
+      });
+    }
+    return btn;
+  }
+
+  function attachChatButton(btn) {
+    const title = findChatTitle();
+    if (title) {
+      if (chatTitleEl !== title) {
+        if (chatTitleEl && chatTitleEl.isConnected) chatTitleEl.style.display = "";
+        chatTitleEl = title;
+        chatTitleText = title.textContent || "";
+      }
+      title.style.display = "none";
+      title.insertAdjacentElement("beforebegin", btn);
+      return true;
+    }
+    return false;
+  }
+
+  function attachPlayerButton(btn, video) {
+    if (!video || !video.parentElement) return false;
     const container = video.parentElement;
     if (window.getComputedStyle(container).position === "static") container.style.position = "relative";
-    let badge = document.getElementById(LATENCY_ID);
-    if (!badge) {
-      badge = document.createElement("div");
-      badge.id = LATENCY_ID;
-      badge.className = "streampulse-kick-latency";
-      badge.style.cssText = [
-        "position: absolute; top: 12px; left: 12px; z-index: 60;",
-        "display: flex; align-items: center; padding: 4px 10px;",
-        "border-radius: 6px; background: rgba(9, 11, 15, .72); color: #fff;",
-        "font: 600 12px/1.4 Arial, sans-serif; pointer-events: none;",
-      ].join(" ");
-      container.appendChild(badge);
-    }
-    if (!container.contains(badge)) container.appendChild(badge);
-    if (!live) {
-      badge.style.display = "none";
-      return;
-    }
-    badge.style.display = "flex";
-    badge.textContent = latencyText(delay);
+    btn.classList.add("is-on-player");
+    if (!container.contains(btn)) container.appendChild(btn);
+    return true;
   }
 
-  function hidePlayerBadge() {
-    const badge = document.getElementById(LATENCY_ID);
-    if (badge) badge.style.display = "none";
+  function updateLatency(force = false) {
+    if (!(chrome.runtime && chrome.runtime.id)) return;
+    ensureStyles();
+    const video = findVideo();
+    const btn = latencyButton();
+    const isChat = latencyPlacement === "chat";
+
+    if (isChat) {
+      btn.classList.remove("is-on-player");
+      hidePlayerBadge();
+      if (!attachChatButton(btn)) {
+        // Pas d'en-tête de tchat (tchat masqué) : pas d'indicateur du tout.
+        if (btn.isConnected) btn.remove();
+        return;
+      }
+    } else {
+      restoreChatTitle();
+      if (!attachPlayerButton(btn, video)) return;
+    }
+
+    if (!isLive(video)) {
+      btn.classList.remove("is-live");
+      btn.classList.add("is-disabled");
+      const text = btn.querySelector(".streampulse-latency-text");
+      if (text) text.textContent = latencyText(null);
+      return;
+    }
+    btn.classList.add("is-live");
+    const delay = latencyDelay(video);
+    const canRealign = delay != null && delay > 0.25 && video && !video.paused;
+    btn.classList.toggle("is-disabled", !canRealign);
+    const text = btn.querySelector(".streampulse-latency-text");
+    if (text) text.textContent = latencyText(delay == null ? null : delay);
   }
 
   function loadSettings() {
@@ -247,7 +354,7 @@
     // toutes les 3 s (même cadence que la LatencyFeature de Twitch).
     if (latencyTimer == null) latencyTimer = setInterval(updateLatency, 1000);
     if (headerTimer == null) headerTimer = setInterval(updateLatency, 3000);
-    updateLatency();
+    updateLatency(true);
   }
 
   function stopLoop() {
