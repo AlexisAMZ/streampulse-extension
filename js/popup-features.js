@@ -206,7 +206,13 @@ let plusOpener = null;
 
 function setBackgroundInert(view, inert) {
   Array.from(document.body.children).forEach((child) => {
-    if (child === view || child.id === "toast-container" || child.tagName === "SCRIPT") return;
+    if (
+      child === view ||
+      child.id === "toast-container" ||
+      child.tagName === "SCRIPT" ||
+      child.classList.contains("topbar") ||
+      child.tagName === "HEADER"
+    ) return;
     child.inert = inert;
   });
 }
@@ -231,10 +237,12 @@ function trapPlusFocus(event) {
 export function openPlus() {
   const view = $("plus-view");
   if (!view) return;
-  if (view.classList.contains("hidden")) {
-    const active = document.activeElement;
-    plusOpener = active && active !== document.body && !view.contains(active) ? active : null;
+  if (!view.classList.contains("hidden")) {
+    closePlus();
+    return;
   }
+  const active = document.activeElement;
+  plusOpener = active && active !== document.body && !view.contains(active) ? active : null;
   view.classList.remove("hidden");
   setBackgroundInert(view, true);
   view.tabIndex = -1;

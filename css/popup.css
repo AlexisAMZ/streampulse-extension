@@ -236,7 +236,8 @@ body.is-settings .topbar .icon-button:hover { background: var(--surface-2); colo
 .chip svg { color: var(--violet-text); }
 .chip-auto { background: var(--lcd-soft); box-shadow: inset 0 0 0 1px var(--lcd-line); color: var(--text); }
 .chip-auto svg { color: var(--lcd-accent); }
-.search-trigger { display: inline-flex; align-items: center; gap: 8px; width: 200px; height: 30px; margin-left: auto; padding: 0 10px; border: 0; border-radius: 9px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text-3); font-size: 12px; }
+.search-trigger { display: inline-flex; align-items: center; gap: 8px; width: 220px; height: 30px; margin-left: auto; padding: 0 12px; border: 0; border-radius: 9px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text-3); font-size: 12px; white-space: nowrap; flex-shrink: 0; }
+.search-trigger span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .search-trigger:hover { box-shadow: inset 0 0 0 1px var(--violet-line); color: var(--text); }
 
 /* Live strip */
@@ -856,7 +857,7 @@ button.pts-row:focus-visible { background: var(--surface-2); }
 .camp-bar-fill { display: block; height: 100%; border-radius: 2px; background: var(--violet); }
 .camp-side { display: grid; justify-items: end; gap: 4px; }
 .camp-badge { padding: 1px 6px; border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(255, 210, 63, 0.4); color: var(--star); font-size: 11px; font-weight: 800; }
-.pill-beta { margin-left: 6px; padding: 1px 7px; border-radius: 999px; background: rgba(255, 210, 63, .12); box-shadow: inset 0 0 0 1px rgba(255, 210, 63, .35); color: var(--star); font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; vertical-align: 1px; }
+.pill-beta { display: inline-flex; align-items: center; justify-content: center; height: 17px; margin-left: 6px; padding: 0 6px; border-radius: 999px; background: rgba(255, 210, 63, .12); box-shadow: inset 0 0 0 1px rgba(255, 210, 63, .35); color: var(--star); font-size: 10px; font-weight: 800; letter-spacing: .08em; line-height: 1; text-transform: uppercase; vertical-align: middle; }
 .camp-when { color: var(--text-2); font-size: 11px; white-space: nowrap; }
 .camp-when.is-soon { color: var(--danger); font-weight: 700; }
 .camp-when.is-new { color: var(--lcd-accent); font-weight: 700; }
