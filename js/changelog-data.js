@@ -136,6 +136,23 @@ export const RELEASES = [
           "ko": "배지 자동 모드: 고정된 탭은 계속 음소거되지만 Twitch 플레이어는 더 이상 음소거되거나 0%가 되지 않습니다(최소 2%). Twitch가 시청 시간을 제대로 집계합니다.",
         },
       },
+      {
+        type: "fix",
+        area: "interface",
+        text: {
+          "fr": "Réglages, rubrique Général : plus de grande bande vide en bas du popup, et la colonne « Rubriques des Réglages » de la disposition liste de nouveau toutes les rubriques.",
+          "en": "Settings, General section: no more large empty band at the bottom of the popup, and the \"Settings sections\" layout column lists every section again.",
+          "es": "Ajustes, sección General: ya no hay una gran franja vacía al final de la ventana, y la columna «Secciones de Ajustes» de la disposición vuelve a mostrar todas las secciones.",
+          "pt-BR": "Configurações, seção Geral: não há mais uma grande faixa vazia no fim do pop-up, e a coluna \"Seções das Configurações\" do layout volta a listar todas as seções.",
+          "de": "Einstellungen, Bereich Allgemein: kein großer leerer Streifen mehr unten im Popup, und die Layout-Spalte „Bereiche der Einstellungen“ listet wieder alle Bereiche auf.",
+          "it": "Impostazioni, sezione Generale: niente più grande fascia vuota in fondo al popup, e la colonna «Sezioni delle Impostazioni» del layout elenca di nuovo tutte le sezioni.",
+          "pl": "Ustawienia, sekcja Ogólne: koniec z dużym pustym pasem na dole okna, a kolumna „Sekcje Ustawień” w układzie znów pokazuje wszystkie sekcje.",
+          "tr": "Ayarlar, Genel bölümü: açılır pencerenin altındaki büyük boş şerit kalktı ve düzendeki \"Ayarlar bölümleri\" sütunu yeniden tüm bölümleri listeliyor.",
+          "ru": "Настройки, раздел «Общие»: внизу окна больше нет большой пустой полосы, а столбец «Разделы настроек» в макете снова показывает все разделы.",
+          "ja": "設定の「一般」：ポップアップ下部の大きな空白がなくなり、レイアウトの「設定の項目」列にすべての項目が再び表示されるようになりました。",
+          "ko": "설정의 일반 항목: 팝업 아래쪽의 큰 빈 공간이 사라졌고, 레이아웃의 \"설정 항목\" 열에 모든 항목이 다시 표시됩니다.",
+        },
+      },
     ],
   },
   {

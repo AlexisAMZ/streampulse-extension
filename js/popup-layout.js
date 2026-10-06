@@ -13,7 +13,9 @@ const $ = (id) => document.getElementById(id);
 /** Les deux listes réordonnables : conteneur, éléments et leur identifiant. */
 const LISTS = {
   tabs: { container: () => document.querySelector(".tabs"), items: () => [...document.querySelectorAll(".tabs > .tab-button")], id: (node) => node.dataset.tab },
-  menu: { container: () => document.querySelector(".menu-nav"), items: () => [...document.querySelectorAll(".menu-nav > .menu-tab")], id: (node) => node.dataset.panel },
+  // Les rubriques sont rangées en groupes (Réglages, puis Outils) : chacune se
+  // réordonne dans son groupe, jamais d'un groupe à l'autre.
+  menu: { container: () => document.querySelector(".menu-nav"), items: () => [...document.querySelectorAll(".menu-nav .menu-tab")], id: (node) => node.dataset.panel },
 };
 
 let layout = { tabs: { order: [], hidden: [] }, menu: { order: [], hidden: [] } };
@@ -47,15 +49,17 @@ export function fitTopbar() {
 /** Réordonne le DOM et masque ce qui doit l'être ; les éléments inconnus gardent leur place en fin. */
 function apply() {
   for (const [key, list] of Object.entries(LISTS)) {
-    const container = list.container();
-    if (!container) continue;
+    if (!list.container()) continue;
     const items = list.items();
     const rank = (node) => {
       const index = layout[key].order.indexOf(list.id(node));
       return index === -1 ? 1000 + items.indexOf(node) : index;
     };
-    const anchor = items[items.length - 1]?.nextSibling || null;
-    [...items].sort((a, b) => rank(a) - rank(b)).forEach((node) => container.insertBefore(node, anchor));
+    for (const parent of new Set(items.map((node) => node.parentNode))) {
+      const group = items.filter((node) => node.parentNode === parent);
+      const anchor = group[group.length - 1]?.nextSibling || null;
+      [...group].sort((a, b) => rank(a) - rank(b)).forEach((node) => parent.insertBefore(node, anchor));
+    }
     items.forEach((node) => { node.hidden = layout[key].hidden.includes(list.id(node)); });
   }
   // Rubrique active masquée : on bascule sur la première visible.
@@ -74,11 +78,17 @@ async function save() {
   await chrome.storage.local.set({ [LAYOUT_KEY]: layout });
 }
 
+/** Deux éléments voisins du même groupe : seuls ceux-là s'échangent. */
+function sameGroup(items, index, target) {
+  return target >= 0 && target < items.length && items[index].parentNode === items[target].parentNode;
+}
+
 function move(key, id, delta) {
-  const order = currentOrder(key);
+  const items = LISTS[key].items();
+  const order = items.map(LISTS[key].id);
   const index = order.indexOf(id);
   const target = index + delta;
-  if (index === -1 || target < 0 || target >= order.length) return;
+  if (index === -1 || !sameGroup(items, index, target)) return;
   [order[index], order[target]] = [order[target], order[index]];
   layout[key].order = order;
 }
@@ -123,8 +133,8 @@ function renderEditor(key, listId) {
     label.append(check, text);
     row.append(
       label,
-      iconButton(t("popup.layout.moveUp", { name }), "↑", () => update(() => move(key, id, -1), listId, id, -1), index === 0),
-      iconButton(t("popup.layout.moveDown", { name }), "↓", () => update(() => move(key, id, 1), listId, id, 1), index === items.length - 1),
+      iconButton(t("popup.layout.moveUp", { name }), "↑", () => update(() => move(key, id, -1), listId, id, -1), !sameGroup(items, index, index - 1)),
+      iconButton(t("popup.layout.moveDown", { name }), "↓", () => update(() => move(key, id, 1), listId, id, 1), !sameGroup(items, index, index + 1)),
     );
     return row;
   }));
@@ -177,5 +187,5 @@ export async function initLayout() {
 
 const DEFAULT_ORDER = {
   tabs: ["streamers", "history", "drops", "badges", "settings"],
-  menu: ["identity", "drops", "badges", "points", "alerts", "automation", "player", "previews", "chat", "data", "plus", "general"],
+  menu: ["notifications", "rewards", "player", "previews", "tabs", "chat", "identity", "general", "drops", "badges", "activity", "plus", "help"],
 };
