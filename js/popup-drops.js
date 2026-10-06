@@ -541,22 +541,6 @@ function badgeRow(badge) {
   });
 }
 
-/** Une récompense de campagne (Poké Ball…) présentée comme un badge. */
-function rewardCard(reward) {
-  const paid = reward.subsGoal > 0 && !reward.minutesGoal;
-  return badgeCard({
-    title: reward.rewards.map((item) => item.name).join(" + "),
-    image: reward.rewards[0]?.image,
-    condition: rewardRequirement(reward),
-    game: reward.game || reward.brand,
-    link: reward.url,
-    paid,
-    owned: false,
-    endsAt: reward.endsAt,
-    tooltip: reward.summary && reward.summary !== reward.name ? reward.summary : "",
-  });
-}
-
 /**
  * Twitch ne date pas ses badges : StreamPulse note leur première apparition.
  * Le message de synchronisation l'explique tant qu'aucun nouveau n'est apparu.
@@ -620,11 +604,9 @@ function renderCatalog() {
   const now = Date.now();
   const context = { now, events: badgeEvents.events, added: badgeAdded.added };
   const counts = countBadges(badges, context);
-  // Les récompenses de campagne en cours comptent avec les badges en cours.
-  const running = activeRewards(rewards.rewards, now);
-  const rewardPaid = (reward) => reward.subsGoal > 0 && !reward.minutesGoal;
-  const live = counts.live + running.length;
-  const liveFree = counts.liveFree + running.filter((reward) => !rewardPaid(reward)).length;
+  // Seuls les vrais badges : une récompense qui en donne un est déjà reliée au
+  // catalogue ; les autres (codes, objets en jeu) restent dans l'onglet Drops.
+  const { live, liveFree } = counts;
   const plus = deps.isPlus();
   $("badges-locked").hidden = plus;
   $("badges-content").hidden = !plus;
@@ -635,23 +617,13 @@ function renderCatalog() {
   });
   setPressed("#badges-cost [data-cost]", (button) => button.dataset.cost === badgeCost);
   const list = catalogBadges(badges, { ...context, status: badgeFilter, cost: badgeCost, query: badgeQuery });
-  const needle = badgeQuery.trim().toLowerCase();
-  const rewardCards = badgeFilter !== "live" ? [] : running
-    .filter((reward) => badgeCost === "all" || rewardPaid(reward) === (badgeCost === "paid"))
-    .filter((reward) => !needle || `${reward.name} ${reward.brand} ${reward.game} ${reward.rewards.map((item) => item.name).join(" ")}`.toLowerCase().includes(needle));
   const shown = list.slice(0, badgeLimit);
-  // Récompenses et badges en cours se mêlent, la fin la plus proche d'abord.
-  const items = [
-    ...rewardCards.map((reward) => ({ endsAt: reward.endsAt || Infinity, render: () => rewardCard(reward) })),
-    ...shown.map((badge) => ({ endsAt: badge.event?.endsAt || Infinity, render: () => badgeRow(badge) })),
-  ];
-  if (badgeFilter === "live") items.sort((a, b) => (a.endsAt === b.endsAt ? 0 : a.endsAt - b.endsAt));
-  $("badges-catalog").replaceChildren(...items.map((item) => item.render()));
+  $("badges-catalog").replaceChildren(...shown.map(badgeRow));
   translateBadges(shown.filter((badge) => !badgeCondition(badge.description)).map((badge) => badge.id));
-  const empty = list.length + rewardCards.length === 0;
+  const empty = list.length === 0;
   $("badges-catalog-empty").hidden = !empty;
   // Vide à cause d'une recherche ou du coût : « aucun ne correspond » ; sinon, rien dans ce statut.
-  $("badges-catalog-empty").textContent = needle || badgeCost !== "all" ? t("popup.drops.noBadgeMatch") : t(BADGE_EMPTY_KEYS[badgeFilter]);
+  $("badges-catalog-empty").textContent = badgeQuery.trim() || badgeCost !== "all" ? t("popup.drops.noBadgeMatch") : t(BADGE_EMPTY_KEYS[badgeFilter]);
   $("badges-sort").textContent = empty ? "" : t(BADGE_SORT_KEYS[badgeFilter]);
   $("badges-more").hidden = list.length <= badgeLimit;
   $("badges-total").textContent = String(live);
