@@ -1,7 +1,8 @@
 // Points de chaîne, Drops, badges et mode auto des badges.
 
 import { createBadgeAuto } from "../badge-auto-worker.js";
-import { BADGE_AUTO_KEY, CLAIM_OK_STATUSES, isPaidBadge } from "../drops-data.js";
+import { BADGE_ADDED_KEY, BADGE_AUTO_KEY, CLAIM_OK_STATUSES } from "../drops-data.js";
+import { addedFrom, isPaidBadge } from "../badges-data.js";
 import { createDropsClient } from "../drops-gql.js";
 import { createDropsStore } from "../drops-store.js";
 import { createPointsStore } from "../points-store.js";
@@ -101,6 +102,33 @@ export async function refreshDropsFromWorker({ minGapMs = DROPS_WORKER_MIN_GAP_M
 
 const REWARDS_EVERY_MS = 30 * 60_000;
 
+/** Dates d'ajout des badges notées par streampulse.fr (le CDN garde la réponse 10 min). */
+const BADGE_ADDED_URL = "https://streampulse.fr/api/twitch-badges?added=1";
+const BADGE_ADDED_EVERY_MS = 6 * 3_600_000;
+/** Après un échec, le site n'est pas redemandé avant ce délai. */
+const BADGE_ADDED_RETRY_MS = 30 * 60_000;
+const BADGE_ADDED_TIMEOUT_MS = 10_000;
+let badgeAddedRetryAt = 0;
+
+async function loadBadgeAdded(force) {
+  const { fetchedAt } = addedFrom(await chrome.storage.local.get(BADGE_ADDED_KEY));
+  if (!force && Date.now() - fetchedAt < BADGE_ADDED_EVERY_MS) return;
+  const response = await fetch(BADGE_ADDED_URL, { signal: AbortSignal.timeout(BADGE_ADDED_TIMEOUT_MS) });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  const json = await response.json();
+  const result = await dropsStore.recordBadgeAdded(json?.added);
+  if (!result.recorded) throw new Error("réponse illisible");
+}
+
+/** Relues toutes les 6 h, ou tout de suite quand un badge vient d'apparaître ; 30 min de pause après un échec. */
+function refreshBadgeAdded({ force = false } = {}) {
+  if (Date.now() < badgeAddedRetryAt) return Promise.resolve();
+  return loadBadgeAdded(force).catch((error) => {
+    badgeAddedRetryAt = Date.now() + BADGE_ADDED_RETRY_MS;
+    throw error;
+  });
+}
+
 /**
  * Campagnes de badges et récompenses, relues au plus toutes les 30 minutes.
  * `maxAgeMs` raccourcit la fenêtre (popup ouvert) : c'est le seul moyen pour
@@ -117,12 +145,17 @@ async function refreshRewardsFromWorker({ maxAgeMs = REWARDS_EVERY_MS } = {}) {
     await dropsClient.readRewards().then((list) => dropsStore.recordRewards(list), warn("campagnes de badges"));
   }
   // En mode auto, les badges obtenus se relisent à chaque passage pour fermer l'onglet au plus vite.
+  let freshBadge = false;
   if (stored[BADGE_AUTO_KEY] || now - (Number(stored.streamPulseDropsBadges?.updatedAt) || 0) >= maxAgeMs) {
-    await dropsClient.readBadges()
-      .then((raw) => dropsStore.recordBadges(raw))
-      .then(({ added }) => announceBadges(added), warn("badges globaux"));
+    const result = await dropsClient.readBadges().then((raw) => dropsStore.recordBadges(raw)).catch(warn("badges globaux"));
+    if (result) {
+      freshBadge = result.added.length > 0;
+      announceBadges(result.added).catch(warnWith("annonce des badges"));
+    }
   }
   await checkBadgeAuto();
+  // Après le mode auto, qui doit fermer son onglet au plus vite : le site peut être lent.
+  await refreshBadgeAdded({ force: freshBadge }).catch(warnWith("dates d'ajout des badges"));
 }
 
 

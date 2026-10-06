@@ -4,7 +4,7 @@ import { DEFAULT_PREFERENCES } from "../preferences-data.js";
 import { syncUpdateBadge } from "./action-badge.js";
 import { scheduleKeepAliveAlarm, scheduleWatcherAlarm, setupAutoOpenInventoryAlarm } from "./alarms.js";
 import { fetchRemoteConfig } from "./config.js";
-import { scheduleDropsAlarm } from "./drops.js";
+import { dropsStore, scheduleDropsAlarm } from "./drops.js";
 import { translateWithPrefs } from "./i18n.js";
 import { NotificationCenter } from "./notifications.js";
 import { pollStreamers } from "./polling.js";
@@ -113,6 +113,8 @@ export async function handleInstalled(details) {
   scheduleWatcherAlarm();
   scheduleKeepAliveAlarm();
   scheduleDropsAlarm();
+  // Mise à jour : le journal des badges se reconstruit depuis les données gardées, sans attendre Twitch.
+  dropsStore.relink().catch((error) => console.warn("[StreamPulse] journal des badges :", error?.message || error));
 
   await pollStreamers({ forceNotification: false });
   const installReason = details?.reason || "install";

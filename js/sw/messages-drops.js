@@ -82,6 +82,21 @@ export function handleRecordDropsCampaigns(request, sender, sendResponse) {
   return true;
 }
 
+export function handleRecordDropsCampaignDetails(request, sender, sendResponse) {
+  (async () => {
+    try {
+      const prefs = await PreferenceStore.get();
+      const result = prefs.dropsTracking === false || request.ok !== true
+        ? { recorded: false, details: [] }
+        : await dropsStore.recordCampaignDetails(request.data, request.ids);
+      sendResponse({ success: true, ...result });
+    } catch (error) {
+      sendResponse({ error: error?.message || String(error) });
+    }
+  })();
+  return true;
+}
+
 export function handleRecordDropClaim(request, sender, sendResponse) {
   (async () => {
     try {

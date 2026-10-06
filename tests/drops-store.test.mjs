@@ -124,9 +124,9 @@ test("recordEvent fait avancer un Drop, et relance l'inventaire pour un Drop inc
 
 test("recordCampaigns garde les campagnes lisibles et note la source", async () => {
   const { storage, store } = setup();
-  assert.deepEqual(await store.recordCampaigns([null], "gql"), { recorded: false });
+  assert.deepEqual(await store.recordCampaigns([null], "gql"), { recorded: false, details: [] });
   const result = await store.recordCampaigns([{ id: "c1", name: "HEAT", status: "ACTIVE", startAt: iso(NOW - DAY), endAt: iso(NOW + DAY), game: { displayName: "World of Tanks: HEAT" } }], "apollo");
-  assert.deepEqual(result, { recorded: true, count: 1 });
+  assert.deepEqual(result, { recorded: true, count: 1, details: [] }, "campagne d'éditeur : aucun détail demandé");
   assert.equal(storage.data[DROPS_CAMPAIGNS_KEY].source, "apollo");
   assert.equal(storage.data[DROPS_CAMPAIGNS_KEY].updatedAt, NOW);
   assert.equal((await store.readCampaigns()).campaigns.length, 1);
@@ -145,4 +145,78 @@ test("resolveNames nomme les chaînes des événements, et survit à une panne d
   assert.equal(await store.resolveNames(), 1);
   assert.deepEqual(storage.data[DROPS_PROGRESS_KEY].channels, { 123: "Terracid" });
   assert.equal(await store.resolveNames(), 0);
+});
+
+import { BADGE_ADDED_KEY, BADGE_EVENTS_KEY, DROPS_BADGES_KEY } from "../js/drops-data.js";
+import { mergeBadges } from "../js/badges-data.js";
+import { CAMPAIGNS_RAW, CATALOG_RAW, NOW as BADGES_NOW } from "./helpers/badges-fixtures.mjs";
+
+function badgeStorage() {
+  const catalog = mergeBadges({ updatedAt: 0, syncedAt: 0, badges: [], owned: [] }, CATALOG_RAW, BADGES_NOW).state;
+  return memoryStorage({ [DROPS_BADGES_KEY]: catalog });
+}
+
+test("recordCampaigns relie les badges et demande le détail des campagnes Twitch Gaming qui en manquent", async () => {
+  const storage = badgeStorage();
+  const store = createDropsStore({ storage, now: () => BADGES_NOW, log: silent });
+  const result = await store.recordCampaigns(CAMPAIGNS_RAW, "gql");
+  assert.deepEqual(result.details, ["c-p3", "c-ac"]);
+  const events = storage.data[BADGE_EVENTS_KEY].events;
+  assert.ok(events.some((event) => event.badgeId === "bloody-finger-elden-ring" && event.link === "reward"));
+  assert.ok(events.some((event) => event.badgeId === "koromaru" && event.link === "game"));
+});
+
+test("recordCampaignDetails range le détail, relie de nouveau et rend la suite", async () => {
+  const storage = badgeStorage();
+  const store = createDropsStore({ storage, now: () => BADGES_NOW, log: silent });
+  await store.recordCampaigns(CAMPAIGNS_RAW, "gql");
+  const details = [{ id: "c-p3", timeBasedDrops: [{ id: "d-k", name: "Koromaru", startAt: "2026-09-24T16:00:00Z", endAt: "2026-10-11T06:58:00Z", requiredSubs: 1, benefitEdges: [{ benefit: { id: "b-k", name: "Koromaru", distributionType: "BADGE" } }] }] }];
+  const result = await store.recordCampaignDetails(details, ["c-p3", "c-ac"]);
+  assert.deepEqual(result, { recorded: true, details: [] });
+  const koromaru = storage.data[BADGE_EVENTS_KEY].events.filter((event) => event.badgeId === "koromaru");
+  assert.deepEqual(koromaru.map((event) => event.link), ["reward"]);
+  // La liste relue sans Drops ne fait pas oublier le détail.
+  await store.recordCampaigns(CAMPAIGNS_RAW, "gql");
+  assert.equal(storage.data[DROPS_CAMPAIGNS_KEY].campaigns.find((c) => c.id === "c-p3").drops[0].badges[0], "Koromaru");
+});
+
+test("recordBadges relie un badge qui vient d'apparaître ; recordBadgeAdded range les dates du site", async () => {
+  const storage = memoryStorage();
+  const store = createDropsStore({ storage, now: () => BADGES_NOW, log: silent });
+  await store.recordCampaigns(CAMPAIGNS_RAW, "gql");
+  assert.equal(storage.data[BADGE_EVENTS_KEY], undefined, "sans catalogue, rien à relier");
+  await store.recordBadges(CATALOG_RAW);
+  assert.ok(storage.data[BADGE_EVENTS_KEY].events.some((event) => event.badgeId === "rematch-blue-lock"));
+  const added = await store.recordBadgeAdded({ vaultbreakers: 1759664355452, "pas bon!": 3 });
+  assert.deepEqual(added, { recorded: true, count: 1 });
+  assert.deepEqual(storage.data[BADGE_ADDED_KEY], { fetchedAt: BADGES_NOW, added: { vaultbreakers: 1759664355452 } });
+});
+
+test("recordBadgeAdded refuse une réponse illisible et ne vide pas une table connue", async () => {
+  const storage = memoryStorage({ [BADGE_ADDED_KEY]: { fetchedAt: 1, added: { d20: 5 } } });
+  const store = createDropsStore({ storage, now: () => BADGES_NOW, log: silent });
+  assert.deepEqual(await store.recordBadgeAdded(null), { recorded: false, count: 0 });
+  assert.deepEqual(storage.data[BADGE_ADDED_KEY], { fetchedAt: 1, added: { d20: 5 } });
+  await store.recordBadgeAdded({});
+  assert.deepEqual(storage.data[BADGE_ADDED_KEY], { fetchedAt: BADGES_NOW, added: { d20: 5 } }, "réponse vide : dates gardées, minuteur remis");
+});
+
+test("deux onglets qui relisent la liste à la suite ne demandent pas deux fois le même détail", async () => {
+  const storage = badgeStorage();
+  let clock = BADGES_NOW;
+  const store = createDropsStore({ storage, now: () => clock, log: silent });
+  assert.deepEqual((await store.recordCampaigns(CAMPAIGNS_RAW, "gql")).details, ["c-p3", "c-ac"]);
+  clock += 30_000;
+  assert.deepEqual((await store.recordCampaigns(CAMPAIGNS_RAW, "gql")).details, [], "déjà demandées il y a moins de 2 min");
+  clock += 3 * 60_000;
+  assert.deepEqual((await store.recordCampaigns(CAMPAIGNS_RAW, "gql")).details, ["c-p3", "c-ac"], "sans réponse, on redemande");
+});
+
+test("relink relie badges et campagnes déjà stockés, sans nouvelle lecture (mise à jour de l'extension)", async () => {
+  const storage = badgeStorage();
+  const store = createDropsStore({ storage, now: () => BADGES_NOW, log: silent });
+  await store.recordCampaigns(CAMPAIGNS_RAW, "gql");
+  delete storage.data[BADGE_EVENTS_KEY];
+  await store.relink();
+  assert.ok(storage.data[BADGE_EVENTS_KEY].events.some((event) => event.badgeId === "rematch-blue-lock"));
 });

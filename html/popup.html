@@ -882,7 +882,7 @@
             <h2><span data-i18n="popup.osd.menuBadges">Badges</span><span class="pill-beta" data-i18n="popup.settings.betaLabel">bêta</span></h2>
           </div>
           <div class="pts-lcd badges-lcd" id="badges-teaser" hidden>
-            <p class="pts-lcd-total"><span id="badges-teaser-total">0</span><small data-i18n="popup.drops.badgesUnit">DISPONIBLES</small></p>
+            <p class="pts-lcd-total"><span id="badges-teaser-total">0</span><small data-i18n="popup.drops.badgesUnit">EN COURS</small></p>
             <p class="pts-lcd-meta" id="badges-teaser-meta"></p>
           </div>
           <div class="smart-locked" id="badges-locked">
@@ -891,7 +891,7 @@
           </div>
           <div id="badges-content">
             <div class="pts-lcd badges-lcd">
-              <p class="pts-lcd-total"><span id="badges-total">0</span><small data-i18n="popup.drops.badgesUnit">DISPONIBLES</small></p>
+              <p class="pts-lcd-total"><span id="badges-total">0</span><small data-i18n="popup.drops.badgesUnit">EN COURS</small></p>
               <p class="pts-lcd-meta" id="badges-lcd-meta"></p>
             </div>
             <div class="badges-auto-bar">
@@ -900,12 +900,16 @@
               <p class="badges-note" data-i18n="popup.drops.badgeAutoAllHint">Un onglet épinglé et muet regarde un live à la fois (Twitch ne compte qu'un live à la fois). Les paliers d'un même jeu (30 min, 1 h, 90 min…) avancent ensemble, puis l'onglet passe au jeu suivant.</p>
             </div>
             <div class="badges-toolbar">
-              <div class="segmented" id="badges-filters" role="group" data-i18n-attr-ariaLabel="popup.drops.allBadges">
-                <button type="button" class="pf-btn active" aria-pressed="true" data-filter="all"><span data-i18n="popup.drops.filterAll">Toutes</span><em data-count="all"></em></button>
-                <button type="button" class="pf-btn" aria-pressed="false" data-filter="free"><span data-i18n="popup.drops.badgeFilterFree">Gratuits</span><em data-count="free"></em></button>
-                <button type="button" class="pf-btn" aria-pressed="false" data-filter="paid"><span data-i18n="popup.drops.badgeFilterPaid">Payants</span><em data-count="paid"></em></button>
-                <button type="button" class="pf-btn" aria-pressed="false" data-filter="missing"><span data-i18n="popup.drops.badgeFilterMissing">À obtenir</span><em data-count="missing"></em></button>
+              <div class="segmented" id="badges-filters" role="group" data-i18n-attr-ariaLabel="popup.drops.badgeStatusLabel">
+                <button type="button" class="pf-btn active" aria-pressed="true" data-filter="live"><span data-i18n="popup.drops.badgeFilterLive">En cours</span><em data-count="live"></em></button>
+                <button type="button" class="pf-btn" aria-pressed="false" data-filter="soon"><span data-i18n="popup.drops.badgeFilterSoon">À venir</span><em data-count="soon"></em></button>
+                <button type="button" class="pf-btn" aria-pressed="false" data-filter="ended"><span data-i18n="popup.drops.badgeFilterEnded">Terminés</span><em data-count="ended"></em></button>
                 <button type="button" class="pf-btn" aria-pressed="false" data-filter="owned"><span data-i18n="popup.drops.badgeFilterOwned">Obtenus</span><em data-count="owned"></em></button>
+              </div>
+              <div class="segmented" id="badges-cost" role="group" data-i18n-attr-ariaLabel="popup.drops.badgeCostLabel">
+                <button type="button" class="pf-btn active" aria-pressed="true" data-cost="all"><span data-i18n="popup.drops.badgeCostAll">Tous</span></button>
+                <button type="button" class="pf-btn" aria-pressed="false" data-cost="free"><span data-i18n="popup.drops.badgeFilterFree">Gratuits</span></button>
+                <button type="button" class="pf-btn" aria-pressed="false" data-cost="paid"><span data-i18n="popup.drops.badgeFilterPaid">Payants</span></button>
               </div>
               <label class="badges-search">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
@@ -913,10 +917,12 @@
                 <input id="badges-search" type="search" autocomplete="off" spellcheck="false" data-i18n-attr-placeholder="popup.drops.searchBadges" placeholder="Chercher un badge" />
               </label>
             </div>
+            <p class="badges-sort" id="badges-sort"></p>
             <ul class="badge-grid" id="badges-catalog"></ul>
-            <p class="drops-empty" id="badges-catalog-empty" data-i18n="popup.drops.noBadgeMatch" hidden>Aucun badge ne correspond.</p>
+            <p class="drops-empty" id="badges-catalog-empty" hidden></p>
             <button id="badges-more" class="button button-quiet" type="button" data-i18n="popup.drops.showMore" hidden>Voir plus</button>
-            <p class="badges-note" data-i18n="popup.drops.catalogNote">Seuls les badges obtenables en ce moment sont listés. Clique sur un badge pour ouvrir un live où le gagner.</p>
+            <p class="badges-note" data-i18n="popup.drops.catalogNote">Les dates viennent des campagnes Twitch, relues dès qu'un onglet Twitch est ouvert. Clique sur un badge en cours pour ouvrir un live où le gagner.</p>
+            <p class="badges-note" id="badges-campaigns-note" role="status"></p>
             <p class="badges-note" id="drops-badges-sync" role="status"></p>
             <div hidden>
               <ul id="drops-rewards"></ul><small id="drops-rewards-meta"></small><p id="drops-rewards-empty"></p>

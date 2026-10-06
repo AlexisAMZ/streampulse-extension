@@ -1,9 +1,11 @@
 // Écrivain unique du suivi des Drops, côté service worker. Tout ce que
 // dropsRecorder.js relaie (inventaire, événements temps réel, campagnes,
 // résultats de récupération) passe par une file : deux lectures simultanées
-// ne peuvent pas s'écraser. Les calculs vivent dans drops-data.js.
+// ne peuvent pas s'écraser. Les calculs vivent dans drops-data.js et badges-data.js.
 
 import {
+  BADGE_ADDED_KEY,
+  BADGE_EVENTS_KEY,
   CLAIM_OK_STATUSES,
   DROPS_CAMPAIGNS_KEY,
   DROPS_HISTORY_KEY,
@@ -11,28 +13,41 @@ import {
   DROPS_PROGRESS_KEY,
   DROPS_REWARDS_KEY,
   DROPS_BADGES_KEY,
-  badgesFrom,
-  mergeBadges,
   DROPS_SINCE_KEY,
+  applyCampaignDetails,
   applyClaim,
   applyEvent,
   applyInventory,
   campaignsFrom,
+  DETAILS_PER_READ,
+  campaignsNeedingDetails,
   historyFrom,
   isClaimable,
+  isPlainObject,
+  mergeCampaigns,
   normalizeCampaigns,
   normalizeInventory,
   normalizeRewards,
   progressFrom,
-  pruneCampaigns,
   pruneHistory,
+  rewardsFrom,
 } from "./drops-data.js";
+import {
+  addedFrom,
+  badgesFrom,
+  mergeBadges,
+  buildBadgeEvents,
+  eventsFrom,
+  normalizeAdded,
+} from "./badges-data.js";
 
 /** Un Drop réservé à un onglet n'est pas redemandé à un autre avant ce délai. */
 const CLAIM_LOCK_MS = 2 * 60_000;
 /** Un Drop inconnu relance la lecture de l'inventaire, au plus une fois par période. */
 const UNKNOWN_REFRESH_MS = 2 * 60_000;
 const RESOLVE_BATCH = 100;
+/** Un détail demandé n'est pas redemandé avant ce délai (plusieurs onglets Twitch lisent la liste). */
+const DETAIL_REQUEST_MS = 2 * 60_000;
 
 /**
  * @param {{
@@ -46,6 +61,15 @@ export function createDropsStore({ storage, resolveChannels = async () => [], no
   let queue = Promise.resolve();
   const claimLocks = new Map();
   let unknownRefreshAt = 0;
+  const detailRequests = new Map();
+
+  /** Prochaines campagnes à détailler, sans celles demandées il y a moins de 2 min. */
+  function nextDetails(campaigns, clock) {
+    for (const [id, at] of detailRequests) if (clock - at >= DETAIL_REQUEST_MS) detailRequests.delete(id);
+    const ids = campaignsNeedingDetails(campaigns, clock, Number.POSITIVE_INFINITY).filter((id) => !detailRequests.has(id)).slice(0, DETAILS_PER_READ);
+    ids.forEach((id) => detailRequests.set(id, clock));
+    return ids;
+  }
 
   function enqueue(task) {
     const run = queue.then(task, task);
@@ -69,6 +93,21 @@ export function createDropsStore({ storage, resolveChannels = async () => [], no
     const granted = [...new Set(instanceIds)].filter((id) => id && !claimLocks.has(id));
     granted.forEach((id) => claimLocks.set(id, clock + CLAIM_LOCK_MS));
     return granted;
+  }
+
+  /** Relie de nouveau badges et campagnes après toute lecture qui les touche. */
+  async function relinkBadges(clock) {
+    const stored = await storage.get([DROPS_CAMPAIGNS_KEY, DROPS_REWARDS_KEY, DROPS_BADGES_KEY, BADGE_EVENTS_KEY]);
+    const catalog = badgesFrom(stored).badges;
+    if (!catalog.length) return;
+    const events = buildBadgeEvents({
+      campaigns: campaignsFrom(stored).campaigns,
+      rewards: rewardsFrom(stored).rewards,
+      catalog,
+      previous: eventsFrom(stored).events,
+      now: clock,
+    });
+    await storage.set({ [BADGE_EVENTS_KEY]: { updatedAt: clock, events } });
   }
 
   function recordInventory(raw, { autoClaim = false } = {}) {
@@ -111,27 +150,65 @@ export function createDropsStore({ storage, resolveChannels = async () => [], no
   function recordCampaigns(rawList, source) {
     return enqueue(async () => {
       const clock = now();
-      const campaigns = pruneCampaigns(normalizeCampaigns(rawList), clock);
-      if (!campaigns.length) return { recorded: false };
+      const incoming = normalizeCampaigns(rawList);
+      if (!incoming.length) return { recorded: false, details: [] };
+      const previous = campaignsFrom(await storage.get([DROPS_CAMPAIGNS_KEY])).campaigns;
+      const campaigns = mergeCampaigns(previous, incoming, clock);
       await storage.set({ [DROPS_CAMPAIGNS_KEY]: { updatedAt: clock, source: String(source || ""), campaigns } });
-      return { recorded: true, count: campaigns.length };
+      await relinkBadges(clock);
+      return { recorded: true, count: campaigns.length, details: nextDetails(campaigns, clock) };
+    });
+  }
+
+  /** Détail des campagnes demandé par le relais ; renvoie les suivantes à lire. */
+  function recordCampaignDetails(rawList, ids) {
+    return enqueue(async () => {
+      const clock = now();
+      const stored = campaignsFrom(await storage.get([DROPS_CAMPAIGNS_KEY]));
+      const asked = (Array.isArray(ids) ? ids : []).map(String).filter(Boolean);
+      if (!stored.campaigns.length || !asked.length) return { recorded: false, details: [] };
+      const campaigns = applyCampaignDetails(stored.campaigns, rawList, asked, clock);
+      await storage.set({ [DROPS_CAMPAIGNS_KEY]: { ...stored, campaigns } });
+      await relinkBadges(clock);
+      return { recorded: true, details: nextDetails(campaigns, clock) };
     });
   }
 
   function recordRewards(rawList) {
     return enqueue(async () => {
+      const clock = now();
       const rewards = normalizeRewards(rawList);
-      await storage.set({ [DROPS_REWARDS_KEY]: { updatedAt: now(), rewards } });
+      await storage.set({ [DROPS_REWARDS_KEY]: { updatedAt: clock, rewards } });
+      await relinkBadges(clock);
       return { recorded: true, count: rewards.length };
     });
   }
 
   function recordBadges(raw) {
     return enqueue(async () => {
-      const result = mergeBadges(badgesFrom(await storage.get([DROPS_BADGES_KEY])), raw, now());
+      const clock = now();
+      const result = mergeBadges(badgesFrom(await storage.get([DROPS_BADGES_KEY])), raw, clock);
       if (result.state.updatedAt) await storage.set({ [DROPS_BADGES_KEY]: result.state });
+      await relinkBadges(clock);
       return { added: result.added };
     });
+  }
+
+  /** Dates d'ajout des badges notées par streampulse.fr. */
+  function recordBadgeAdded(raw) {
+    return enqueue(async () => {
+      if (!isPlainObject(raw)) return { recorded: false, count: 0 };
+      let added = normalizeAdded(raw);
+      // Une réponse vide ne fait pas oublier les dates déjà connues.
+      if (!Object.keys(added).length) added = addedFrom(await storage.get([BADGE_ADDED_KEY])).added;
+      await storage.set({ [BADGE_ADDED_KEY]: { fetchedAt: now(), added } });
+      return { recorded: true, count: Object.keys(added).length };
+    });
+  }
+
+  /** Relie de nouveau sans lecture : après une mise à jour, le journal vient des données déjà gardées. */
+  function relink() {
+    return enqueue(() => relinkBadges(now()));
   }
 
   /** Résultat de `claimDropRewards` renvoyé par la page Twitch. */
@@ -181,5 +258,5 @@ export function createDropsStore({ storage, resolveChannels = async () => [], no
     return campaignsFrom(await storage.get([DROPS_CAMPAIGNS_KEY]));
   }
 
-  return { recordInventory, recordEvent, recordCampaigns, recordRewards, recordBadges, recordClaim, resolveNames, readCampaigns };
+  return { recordInventory, recordEvent, recordCampaigns, recordCampaignDetails, recordRewards, recordBadges, recordBadgeAdded, relink, recordClaim, resolveNames, readCampaigns };
 }

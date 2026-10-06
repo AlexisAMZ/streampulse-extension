@@ -6,7 +6,7 @@
 
 /**
  * Exécuté dans la page Twitch (monde MAIN) : lecteur en 360p (ou la plus basse
- * offerte), volume à peine audible, et clic sur les écrans bloquants — porte de
+ * offerte), lecteur non muet à 2 % (l'onglet, lui, est muet), et clic sur les écrans bloquants — porte de
  * contenu averti, consentements du chat — qui laissent le live en pause et le
  * temps de regard à zéro, ce qui ressemblait à un mode auto en panne. Le
  * lecteur n'a pas d'API publique : on le trouve dans l'arbre React, comme le
@@ -15,6 +15,8 @@
  */
 export function lowPowerPlayer() {
   const TARGET_HEIGHT = 360;
+  // Volume du lecteur : bas mais jamais nul (l'onglet, lui, est muet).
+  const MIN_VOLUME = 0.02;
   // Les libellés varient avec la langue du compte : on filtre sur le début du
   // mot, tous les écrans bloquants de Twitch se résument à « continuer/accepter ».
   const ACCEPT_RE = /^(continue|start watching|accept|j'accepte|accepter|continuer|commencer|d'accord|reprendre|regarde)/i;
@@ -39,11 +41,17 @@ export function lowPowerPlayer() {
     const target = sorted.find((q) => Number(q.height) === TARGET_HEIGHT) || sorted[0];
     player.setAutoSwitchQuality?.(false);
     if (target) player.setQuality?.(target);
-    // 0.001 : inaudible même casque à fond. L'onglet est déjà muet côté API
-    // tabs ; ce volume interne n'existe que pour que le lecteur Twitch se
-    // comporte comme un lecteur non muet (il met en pause certains états muets).
-    player.setVolume?.(0.001);
-    player.setMuted?.(false);
+    // Le silence vient de l'onglet (muet côté API tabs), jamais du lecteur :
+    // Twitch ne compte pas le temps de regard d'un lecteur muet ou à 0 %, et
+    // arrondit un volume trop faible à 0. Le lecteur reste donc non muet et à
+    // 2 % au moins, revérifié à chaque passage (pubs, reprises de live).
+    if (!(Number(player.getVolume?.()) >= MIN_VOLUME / 2)) player.setVolume?.(MIN_VOLUME);
+    if (player.isMuted?.() !== false) player.setMuted?.(false);
+    const video = document.querySelector("video");
+    if (video) {
+      if (video.muted) video.muted = false;
+      if (video.volume < MIN_VOLUME / 2) video.volume = MIN_VOLUME;
+    }
     if (typeof player.paused === "function" && player.paused() === true && typeof player.play === "function") {
       player.play();
     }

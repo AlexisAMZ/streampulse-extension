@@ -3,7 +3,8 @@
 // suivant quand tous ses badges sont obtenus, et affiche une bannière sur la
 // page. Les Drops prêts sont récupérés par l'alarme habituelle des Drops.
 
-import { BADGE_AUTO_KEY, DROPS_BADGES_KEY, DROPS_CAMPAIGNS_KEY, DROPS_PROGRESS_KEY, badgesFrom, campaignsFrom, catalogBadges, progressFrom } from "./drops-data.js";
+import { BADGE_ADDED_KEY, BADGE_AUTO_KEY, BADGE_EVENTS_KEY, DROPS_BADGES_KEY, DROPS_PROGRESS_KEY, progressFrom } from "./drops-data.js";
+import { addedFrom, badgesFrom, catalogBadges, eventsFrom } from "./badges-data.js";
 import { addJobs, bannerModel, currentGroup, freeBadgeJobs, normalizeAuto, pruneJobs, removeJob } from "./badge-auto.js";
 import { PLUS_KEY, isPlusActive } from "./plus.js";
 
@@ -127,10 +128,10 @@ export function createBadgeAuto(deps) {
     await chrome.scripting.executeScript({ target: { tabId: state.tabId }, func: showAutoBanner, args: [view] }).catch((error) => console.warn("[StreamPulse] bandeau du mode auto :", error?.message || error));
   }
 
-  /** Badges du catalogue avec leur campagne en cours (pour « tous les badges »). */
+  /** Badges en cours avec le Drop qui les donne (pour « tous les badges »). */
   async function catalog() {
-    const stored = await chrome.storage.local.get([DROPS_BADGES_KEY, DROPS_CAMPAIGNS_KEY]);
-    return catalogBadges(badgesFrom(stored), "all", "", { now: Date.now(), campaigns: campaignsFrom(stored).campaigns });
+    const stored = await chrome.storage.local.get([DROPS_BADGES_KEY, BADGE_EVENTS_KEY, BADGE_ADDED_KEY]);
+    return catalogBadges(badgesFrom(stored), { status: "live", now: Date.now(), events: eventsFrom(stored).events, added: addedFrom(stored).added });
   }
 
   /**

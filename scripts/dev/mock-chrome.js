@@ -331,12 +331,27 @@
         { id: "payday-mask", title: "PAYDAY Mask", description: "This badge was earned by watching a streamer in the PAYDAY 3 category for 1 hour", image: reward(45, "P3"), firstSeen: now - 3 * 24 * H },
         { id: "ace-combat-8-nugget", title: "ACE COMBAT 8 Nugget", description: "This badge was earned by subscribing or gifting a sub to a streamer in the ACE COMBAT 8 category during the game's launch!", image: reward(210, "A"), firstSeen: now - 24 * H },
         { id: "rematch-blue-lock", title: "Rematch Blue Lock", description: "This badge was earned by watching a streamer in the Rematch category for 30 minutes", image: reward(200, "R"), firstSeen: now - 5 * 24 * H },
-        { id: "dont-eat-the-mold", title: "Don't Eat The Mold", description: "This badge was earned by watching a streamer in the CONTROL Resonant category for 1 hour", image: reward(100, "M"), firstSeen: now - 5 * 24 * H },
+        { id: "dont-eat-the-mold", title: "Don't Eat The Mold", description: "This badge was earned by watching a streamer in the CONTROL Resonant category for 1 hour", image: reward(100, "M"), firstSeen: 0 },
         { id: "d20", title: "d20", description: "This badge was earned by watching Dungeon Masters on Twitch.", image: reward(0, "20"), firstSeen: 0 },
         { id: "bulbasaur", title: "Bulbasaur", description: "This badge was earned during the Pokémon First Partners Collection campaign.", image: reward(120, "B"), firstSeen: 0 },
         { id: "big-walk", title: "Big Walk", description: "This badge was earned by subscribing or gifting a sub to a streamer in the Big Walk category.", image: reward(30, "W"), firstSeen: 0 },
+        { id: "vaultbreakers", title: "Vaultbreakers", description: "This badge was earned by watching a streamer in the Vaultbreakers category for 60 minutes", image: reward(260, "V"), firstSeen: now - 6 * H },
       ],
     },
+    // Journal des badges : en cours, terminé ; « Don't Eat The Mold » et « Vaultbreakers » sont à venir.
+    streamPulseBadgeEvents: dropsMode === "none" ? undefined : {
+      updatedAt: now - 5 * 60e3,
+      events: [
+        { badgeId: "tarnished-sigil", kind: "drops", campaignId: "c-eld", dropId: "d1", game: "ELDEN RING", gameId: "512953", owner: "Twitch Gaming", startsAt: now - 3 * 24 * H, endsAt: now + 40 * H, minutes: 30, subs: 0, link: "reward", seenAt: now },
+        { badgeId: "payday-mask", kind: "drops", campaignId: "c-pay", dropId: "d2", game: "PAYDAY 3", gameId: "1234567", owner: "Twitch Gaming", startsAt: now - 3 * 24 * H, endsAt: now + 14 * 24 * H, minutes: 60, subs: 0, link: "reward", seenAt: now },
+        { badgeId: "ace-combat-8-nugget", kind: "drops", campaignId: "c-ac", dropId: "d3", game: "ACE COMBAT 8", gameId: "404069058", owner: "Twitch Gaming", startsAt: now - 6 * 24 * H, endsAt: now + 20 * 24 * H, minutes: 0, subs: 1, link: "reward", seenAt: now },
+        { badgeId: "rematch-blue-lock", kind: "drops", campaignId: "c-rm", dropId: "d4", game: "REMATCH", gameId: "1362102608", owner: "Twitch Gaming", startsAt: now - 12 * 24 * H, endsAt: now + 16 * 24 * H, minutes: 30, subs: 0, link: "reward", seenAt: now },
+        { badgeId: "d20", kind: "drops", campaignId: "c-dd", dropId: "d5", game: "Dungeons & Dragons", gameId: "509577", owner: "Twitch Gaming", startsAt: now - 12 * 24 * H, endsAt: now + 15 * 24 * H, minutes: 30, subs: 0, link: "reward", seenAt: now },
+        { badgeId: "big-walk", kind: "drops", campaignId: "c-bw", dropId: "d6", game: "Big Walk", gameId: "1", owner: "Twitch Gaming", startsAt: now - 10 * 24 * H, endsAt: now - 30 * H, minutes: 0, subs: 1, link: "reward", seenAt: now },
+      ],
+    },
+    // Dates d'ajout notées par le site.
+    streamPulseBadgeAdded: { fetchedAt: now, added: { "dont-eat-the-mold": now - 2 * 24 * H, "ace-combat-8-nugget": now - 24 * H } },
     streamPulseDropsRewards: {
       updatedAt: now - 5 * 60e3,
       rewards: dropsMode === "none" ? [] : [

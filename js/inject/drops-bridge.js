@@ -4,7 +4,8 @@
 // les résultats sont transmis à dropsRecorder.js par window.postMessage.
 //
 // Commandes reçues : « inventory » (Drops en cours), « campaigns » (liste des
-// campagnes), « claim » (récupérer un Drop prêt).
+// campagnes avec leurs Drops), « details » (Drops de campagnes précises),
+// « claim » (récupérer un Drop prêt).
 (() => {
   "use strict";
 
@@ -73,6 +74,36 @@
   const CAMPAIGNS_QUERY_LITE = `query StreamPulseDropCampaignsLite {
   currentUser { id dropCampaigns { id name status startAt endAt game { id displayName } } }
 }`;
+
+  // Drops d'une campagne : dates, condition (minutes ou abonnements) et récompenses.
+  const DROP_FIELDS = `timeBasedDrops {
+        id name startAt endAt requiredMinutesWatched requiredSubs
+        benefitEdges { benefit { id name distributionType } }
+      }`;
+
+  // Repli si Twitch retire `requiredSubs` : le coût vient alors de la description du badge.
+  const DROP_FIELDS_LITE = `timeBasedDrops {
+        id name startAt endAt requiredMinutesWatched
+        benefitEdges { benefit { id name distributionType } }
+      }`;
+
+  // La liste avec les Drops de chaque campagne : de quoi relier les badges sans autre requête.
+  const campaignsQueryDrops = (fields) => `query StreamPulseDropCampaignsDrops {
+  currentUser {
+    id
+    dropCampaigns {
+      id name status startAt endAt accountLinkURL
+      self { isAccountConnected }
+      game { id displayName boxArtURL }
+      owner { id name }
+      ${fields}
+    }
+  }
+}`;
+
+  const SCHEMA_ERROR = /Cannot query field|Unknown (type|argument)/i;
+  const CAMPAIGN_ID = /^[\w-]{1,80}$/;
+  const DETAILS_MAX = 5;
 
   const seen = {};
   const nativeFetch = typeof window.fetch === "function" ? window.fetch : null;
@@ -150,7 +181,7 @@
   async function gqlWithFallback(full, lite) {
     try {
       const result = await gql(full);
-      if (!result.errors.some((message) => /Cannot query field|Unknown (type|argument)/i.test(message))) return { ...result, tier: "full" };
+      if (!result.errors.some((message) => SCHEMA_ERROR.test(message))) return { ...result, tier: "full" };
     } catch (error) {
       if (error.code !== "graphql") throw error;
     }
@@ -165,68 +196,52 @@
 
   // ─── Campagnes ───────────────────────────────────────────────────────────────
 
-  /** Champ Apollo, stocké tel quel ou sous « nom({"arg":…}) » quand il a des arguments. */
-  function field(object, name) {
-    if (!object || typeof object !== "object") return undefined;
-    if (name in object) return object[name];
-    const key = Object.keys(object).find((item) => item.startsWith(`${name}(`));
-    return key ? object[key] : undefined;
+  /** Requête avec les champs des Drops, puis sans `requiredSubs` ; null si Twitch refuse les deux. */
+  async function gqlWithDrops(build) {
+    for (const fields of [DROP_FIELDS, DROP_FIELDS_LITE]) {
+      try {
+        const result = await gql(build(fields));
+        if (!result.errors.some((message) => SCHEMA_ERROR.test(message))) return result;
+      } catch (error) {
+        if (error.code !== "graphql") throw error;
+      }
+    }
+    return null;
   }
 
-  /**
-   * Campagnes déjà chargées par la page (par exemple sur /drops/campaigns),
-   * lues dans le cache Apollo de Twitch : aucune requête supplémentaire.
-   */
-  function campaignsFromApollo() {
-    const cache = window.__APOLLO_CLIENT__?.cache;
-    const store = typeof cache?.extract === "function" ? cache.extract() : null;
-    if (!store || typeof store !== "object") return [];
-    const deref = (value, depth = 0) => (value && typeof value === "object" && typeof value.__ref === "string" && depth < 5 ? deref(store[value.__ref], depth + 1) : value);
-    const campaigns = [];
-    for (const value of Object.values(store)) {
-      if (!value || value.__typename !== "DropCampaign" || !value.id) continue;
-      const game = deref(field(value, "game")) || {};
-      const owner = deref(field(value, "owner")) || {};
-      const self = deref(field(value, "self")) || {};
-      const drops = field(value, "timeBasedDrops");
-      campaigns.push({
-        id: value.id,
-        name: value.name,
-        status: value.status,
-        startAt: value.startAt,
-        endAt: value.endAt,
-        accountLinkURL: value.accountLinkURL,
-        self: { isAccountConnected: self.isAccountConnected },
-        game: { id: game.id, displayName: game.displayName || game.name, boxArtURL: field(game, "boxArtURL") },
-        owner: { id: owner.id, name: owner.name },
-        timeBasedDrops: Array.isArray(drops)
-          ? drops.map((drop) => deref(drop)).filter(Boolean).map((drop) => ({
-            id: drop.id,
-            benefitEdges: (field(drop, "benefitEdges") || []).map((edge) => {
-              const benefit = deref(field(deref(edge) || {}, "benefit"));
-              return { benefit: benefit ? { id: benefit.id, name: benefit.name, distributionType: benefit.distributionType } : null };
-            }),
-          }))
-          : undefined,
-      });
-    }
-    return campaigns;
+  /** La liste avec les Drops de chaque campagne, sinon sans (repli complet, puis minimal). */
+  async function readCampaignList() {
+    return (await gqlWithDrops(campaignsQueryDrops)) || gqlWithFallback(CAMPAIGNS_QUERY, CAMPAIGNS_QUERY_LITE);
   }
 
   async function readCampaigns() {
     // Sans en-tête d'intégrité, Twitch refuse la liste : inutile d'essayer.
-    if (seen["client-integrity"]) {
-      try {
-        const { data } = await gqlWithFallback(CAMPAIGNS_QUERY, CAMPAIGNS_QUERY_LITE);
-        const list = data.currentUser?.dropCampaigns;
-        if (Array.isArray(list) && list.length) return { campaigns: list, source: "gql" };
-      } catch (error) {
-        if (error.code === "signed-out") throw error;
-      }
-    }
-    const cached = campaignsFromApollo();
-    if (cached.length) return { campaigns: cached, source: "apollo" };
-    throw failure("unavailable");
+    if (!seen["client-integrity"]) throw failure("unavailable");
+    const { data } = await readCampaignList();
+    if (!data.currentUser) throw failure("signed-out");
+    const list = data.currentUser.dropCampaigns;
+    if (!Array.isArray(list) || !list.length) throw failure("unavailable");
+    return { campaigns: list, source: "gql" };
+  }
+
+  /**
+   * Détail de campagnes précises (5 au plus), en une requête : quand la liste
+   * revient sans les Drops, c'est lui qui relie les badges à leur campagne.
+   */
+  async function readDetails(ids) {
+    const wanted = (Array.isArray(ids) ? ids : []).map(String).filter((id) => CAMPAIGN_ID.test(id)).slice(0, DETAILS_MAX);
+    if (!wanted.length) return { campaigns: [], ids: [] };
+    if (!seen["client-integrity"]) throw failure("integrity");
+    const query = (dropFields) => {
+      const fields = wanted.map((id, index) => `c${index}: dropCampaign(id: ${JSON.stringify(id)}) { id ${dropFields} }`).join("\n    ");
+      return `query StreamPulseDropCampaignDetails {\n  currentUser {\n    id\n    ${fields}\n  }\n}`;
+    };
+    const result = await gqlWithDrops(query);
+    if (!result) throw failure("graphql");
+    const { data } = result;
+    if (!data.currentUser) throw failure("signed-out");
+    const campaigns = wanted.map((id, index) => data.currentUser[`c${index}`]).filter((item) => item && typeof item === "object");
+    return { campaigns, ids: wanted };
   }
 
   // ─── Récupération ────────────────────────────────────────────────────────────
@@ -244,6 +259,7 @@
   const ACTIONS = {
     inventory: () => readInventory(),
     campaigns: () => readCampaigns(),
+    details: (message) => readDetails(message.ids),
     claim: (message) => claim(message.instanceId),
   };
 

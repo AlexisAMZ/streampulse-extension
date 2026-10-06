@@ -1,6 +1,6 @@
 /**
  * Le pont des Drops tourne dans la page Twitch : on le charge dans un bac à
- * sable avec un faux fetch et un faux cache Apollo, puis on lui envoie les
+ * sable avec un faux fetch, puis on lui envoie les
  * commandes telles que dropsRecorder.js les poste.
  */
 import test from "node:test";
@@ -11,7 +11,7 @@ const SOURCE = readFileSync(new URL("../js/inject/drops-bridge.js", import.meta.
 const ORIGIN = "https://www.twitch.tv";
 const GQL = "https://gql.twitch.tv/gql";
 
-function sandbox({ respond = () => ({ data: {} }), cookie = "", apollo = null } = {}) {
+function sandbox({ respond = () => ({ data: {} }), cookie = "" } = {}) {
   const requests = [];
   const posted = [];
   const listeners = [];
@@ -26,7 +26,6 @@ function sandbox({ respond = () => ({ data: {} }), cookie = "", apollo = null } 
     addEventListener: (type, listener) => {
       if (type === "message") listeners.push(listener);
     },
-    __APOLLO_CLIENT__: apollo ? { cache: { extract: () => apollo } } : undefined,
   };
   win.top = win;
   new Function("window", "location", "document", SOURCE)(win, { origin: ORIGIN }, { cookie });
@@ -87,43 +86,58 @@ test("si Twitch retire un champ, l'inventaire est relu avec la requête de repli
   assert.doesNotMatch(box.requests[1].body.query, /gameEventDrops/);
 });
 
-test("sans en-tête d'intégrité, les campagnes viennent du cache Apollo de la page", async () => {
-  const apollo = {
-    "DropCampaign:c1": {
-      __typename: "DropCampaign", id: "c1", name: "HEAT", status: "ACTIVE", startAt: "2026-09-20T00:00:00Z", endAt: "2026-09-27T00:00:00Z",
-      game: { __ref: "Game:1" }, owner: { __ref: "Organization:o" }, self: { __typename: "DropCampaignSelfEdge", isAccountConnected: true },
-    },
-    "Game:1": { __typename: "Game", id: "1", displayName: "World of Tanks: HEAT", 'boxArtURL({"height":72,"width":52})': "https://box/1.jpg" },
-    "Organization:o": { __typename: "Organization", id: "o", name: "Wargaming" },
-    ROOT_QUERY: { __typename: "Query" },
-  };
-  const box = sandbox({ cookie: "auth-token=t", apollo });
-  const result = await box.run("campaigns");
-  assert.equal(result.ok, true);
-  assert.equal(result.data.source, "apollo");
-  assert.equal(box.requests.length, 0, "aucune requête refusée d'avance");
-  assert.deepEqual(result.data.campaigns[0].game, { id: "1", displayName: "World of Tanks: HEAT", boxArtURL: "https://box/1.jpg" });
-  assert.equal(result.data.campaigns[0].owner.name, "Wargaming");
-  assert.equal(result.data.campaigns[0].self.isAccountConnected, true);
+const withIntegrity = async (box) => box.win.fetch(GQL, { headers: { Authorization: "OAuth t", "Client-Integrity": "v4" } });
 
-  const empty = await sandbox({ cookie: "auth-token=t" }).run("campaigns");
-  assert.deepEqual([empty.ok, empty.error], [false, "unavailable"]);
+test("sans en-tête d'intégrité, la liste des campagnes n'est pas demandée", async () => {
+  const box = sandbox({ cookie: "auth-token=t" });
+  const result = await box.run("campaigns");
+  assert.deepEqual([result.ok, result.error], [false, "unavailable"]);
+  assert.equal(box.requests.length, 0);
 });
 
-test("avec l'en-tête d'intégrité, les campagnes viennent de GraphQL ; un refus retombe sur le cache", async () => {
-  const campaigns = [{ id: "c1", name: "HEAT", game: { displayName: "World of Tanks: HEAT" } }];
+test("la liste des campagnes est demandée avec les Drops de chaque campagne", async () => {
+  const campaigns = [{ id: "c1", name: "ELDEN RING", game: { displayName: "ELDEN RING" }, timeBasedDrops: [] }];
   const box = sandbox({ respond: () => ({ data: { currentUser: { id: "1", dropCampaigns: campaigns } } }) });
-  await box.win.fetch(GQL, { headers: { Authorization: "OAuth t", "Client-Integrity": "v4" } });
+  await withIntegrity(box);
   const result = await box.run("campaigns");
   assert.deepEqual([result.ok, result.data.source, result.data.campaigns], [true, "gql", campaigns]);
+  assert.match(box.requests[1].body.query, /timeBasedDrops[\s\S]*requiredSubs[\s\S]*distributionType/);
+});
 
-  const refused = sandbox({
-    respond: () => ({ data: null, errors: [{ message: "failed integrity check" }] }),
-    apollo: { "DropCampaign:c2": { __typename: "DropCampaign", id: "c2", name: "X", game: null } },
+test("si Twitch refuse les Drops dans la liste, la liste est relue sans", async () => {
+  const campaigns = [{ id: "c1", name: "HEAT", game: { displayName: "World of Tanks: HEAT" } }];
+  const box = sandbox({
+    // Twitch refuse les Drops dans la liste, avec ou sans requiredSubs.
+    respond: (url, init) => (/timeBasedDrops/.test(init.body || "")
+      ? { data: null, errors: [{ message: "Cannot query field \"timeBasedDrops\" on type \"DropCampaign\"." }] }
+      : { data: { currentUser: { id: "1", dropCampaigns: campaigns } } }),
   });
-  await refused.win.fetch(GQL, { headers: { Authorization: "OAuth t", "Client-Integrity": "v4" } });
-  const fallback = await refused.run("campaigns");
-  assert.deepEqual([fallback.ok, fallback.data.source], [true, "apollo"]);
+  await withIntegrity(box);
+  const result = await box.run("campaigns");
+  assert.equal(result.ok, true);
+  assert.doesNotMatch(box.requests.at(-1).body.query, /timeBasedDrops/);
+});
+
+test("le détail de 5 campagnes au plus part en une seule requête, identifiants vérifiés", async () => {
+  const box = sandbox({
+    respond: () => ({ data: { currentUser: { id: "1", c0: { id: "a-1", timeBasedDrops: [{ id: "d" }] }, c1: null, c2: { id: "d", timeBasedDrops: [] } } } }),
+  });
+  await withIntegrity(box);
+  const result = await box.run("details", { ids: ["a-1", 'b"} evil', "c", "d", "e", "f", "g"] });
+  assert.equal(result.ok, true);
+  assert.equal(box.requests.length, 2, "une seule requête de détail");
+  const query = box.requests[1].body.query;
+  assert.match(query, /c0: dropCampaign\(id: "a-1"\)/);
+  assert.doesNotMatch(query, /evil/);
+  assert.deepEqual(result.data.ids, ["a-1", "c", "d", "e", "f"]);
+  assert.deepEqual(result.data.campaigns.map((c) => c.id), ["a-1", "d"]);
+});
+
+test("sans en-tête d'intégrité, aucun détail n'est demandé", async () => {
+  const box = sandbox({ cookie: "auth-token=t" });
+  const result = await box.run("details", { ids: ["a-1"] });
+  assert.deepEqual([result.ok, result.error], [false, "integrity"]);
+  assert.equal(box.requests.length, 0);
 });
 
 test("claim envoie claimDropRewards avec l'identifiant échappé et lit le statut", async () => {
@@ -142,4 +156,22 @@ test("les commandes inconnues ou venues d'ailleurs sont ignorées", async () => 
   const result = await box.run("delete-everything");
   assert.equal(result, undefined);
   assert.equal(box.requests.length, 0);
+});
+
+test("si Twitch retire requiredSubs, les Drops sont relus sans ce champ (liste et détail)", async () => {
+  const schema = { data: null, errors: [{ message: "Cannot query field \"requiredSubs\" on type \"TimeBasedDrop\"." }] };
+  const box = sandbox({
+    respond: (url, init) => {
+      const query = init.body ? JSON.parse(init.body).query : "";
+      if (/requiredSubs/.test(query)) return schema;
+      if (/dropCampaign\(id/.test(query)) return { data: { currentUser: { id: "1", c0: { id: "a-1", timeBasedDrops: [{ id: "d" }] } } } };
+      return { data: { currentUser: { id: "1", dropCampaigns: [{ id: "c1", name: "X", game: { displayName: "X" }, timeBasedDrops: [{ id: "d" }] }] } } };
+    },
+  });
+  await withIntegrity(box);
+  const list = await box.run("campaigns");
+  assert.equal(list.ok, true);
+  assert.match(box.requests.at(-1).body.query, /timeBasedDrops/);
+  const details = await box.run("details", { ids: ["a-1"] });
+  assert.deepEqual([details.ok, details.data.campaigns.map((c) => c.id)], [true, ["a-1"]]);
 });

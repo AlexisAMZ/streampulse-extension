@@ -16,13 +16,19 @@ export const DROPS_REWARDS_KEY = "streamPulseDropsRewards";
 export const DROPS_BADGES_KEY = "streamPulseDropsBadges";
 /** Badge en cours d'obtention automatique : { badgeId, title, image, game, gameId, tabId, startedAt }. */
 export const BADGE_AUTO_KEY = "streamPulseBadgeAuto";
-export const DROPS_KEYS = [DROPS_PROGRESS_KEY, DROPS_CAMPAIGNS_KEY, DROPS_HISTORY_KEY, DROPS_SINCE_KEY, DROPS_REWARDS_KEY, DROPS_BADGES_KEY];
-/** Un badge vu pour la première fois depuis moins longtemps est « nouveau ». */
-const NEW_BADGE_MS = 30 * 86_400_000;
+/** Journal des badges : chaque badge relié au Drop (ou à la récompense) qui le donne, avec ses dates. */
+export const BADGE_EVENTS_KEY = "streamPulseBadgeEvents";
+/** Dates d'ajout des badges notées par streampulse.fr : { fetchedAt, added: { setID: ms } }. */
+export const BADGE_ADDED_KEY = "streamPulseBadgeAdded";
+export const DROPS_KEYS = [DROPS_PROGRESS_KEY, DROPS_CAMPAIGNS_KEY, DROPS_HISTORY_KEY, DROPS_SINCE_KEY, DROPS_REWARDS_KEY, DROPS_BADGES_KEY, BADGE_EVENTS_KEY, BADGE_ADDED_KEY];
 
 const MINUTE_MS = 60_000;
 const HOUR_MS = 60 * MINUTE_MS;
 const DAY_MS = 24 * HOUR_MS;
+/** Le détail d'une campagne (ses Drops) est relu au bout de ce délai. */
+const DETAIL_MAX_AGE_MS = DAY_MS;
+/** Campagnes détaillées par lecture : discret auprès de Twitch (au plus 5 par minute). */
+export const DETAILS_PER_READ = 5;
 
 export const HISTORY_LIMIT = 2000;
 const HISTORY_RETENTION_DAYS = 400;
@@ -41,12 +47,12 @@ const CAMPAIGN_FILTERS = Object.freeze(["all", "new", "ending", "upcoming"]);
 /** Statuts renvoyés par Twitch quand la récompense est bien dans l'inventaire. */
 export const CLAIM_OK_STATUSES = Object.freeze(["ELIGIBLE_FOR_ALL", "DROP_INSTANCE_ALREADY_CLAIMED"]);
 
-const isPlainObject = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
-const text = (value, max = 160) => (typeof value === "string" ? value.trim().slice(0, max) : "");
+export const isPlainObject = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+export const text = (value, max = 160) => (typeof value === "string" ? value.trim().slice(0, max) : "");
 const idOf = (value) => (typeof value === "number" && Number.isFinite(value) ? String(value) : text(value, 200));
-const list = (value) => (Array.isArray(value) ? value : []);
+export const list = (value) => (Array.isArray(value) ? value : []);
 
-function timeOf(value) {
+export function timeOf(value) {
   const at = typeof value === "number" ? value : typeof value === "string" ? Date.parse(value) : NaN;
   return Number.isFinite(at) && at > 0 ? at : 0;
 }
@@ -56,7 +62,7 @@ function minutesOf(value) {
   return Number.isFinite(n) ? Math.min(MAX_MINUTES, Math.max(0, Math.floor(n))) : 0;
 }
 
-function httpsUrl(value) {
+export function httpsUrl(value) {
   const url = text(value, 600);
   return url.startsWith("https://") ? url : "";
 }
@@ -343,14 +349,39 @@ export function pruneHistory(history, now) {
 
 // ─── Campagnes ────────────────────────────────────────────────────────────────
 
-/** Une campagne lue par GraphQL ou dans le cache de la page Twitch. */
+/** Un Drop d'une campagne détaillée : dates, condition et noms des badges qu'il donne. */
+function normalizeCampaignDrop(raw) {
+  const id = idOf(raw.id);
+  if (!id) return null;
+  const benefits = list(raw.benefitEdges).map((edge) => edge?.benefit).filter(isPlainObject);
+  return {
+    id,
+    name: text(raw.name, 160),
+    startsAt: timeOf(raw.startAt),
+    endsAt: timeOf(raw.endAt),
+    minutes: minutesOf(raw.requiredMinutesWatched),
+    subs: minutesOf(raw.requiredSubs),
+    badges: benefits.filter((benefit) => benefit.distributionType === "BADGE").map((benefit) => text(benefit.name, 120)).filter(Boolean),
+  };
+}
+
+/** Ce que les Drops d'une campagne disent d'elle ; `drops` à null tant que Twitch ne les a pas envoyés. */
+function dropsSummary(rawDrops) {
+  const drops = Array.isArray(rawDrops) ? rawDrops.filter(isPlainObject) : null;
+  const benefits = drops ? drops.flatMap((drop) => list(drop.benefitEdges).map((edge) => edge?.benefit).filter(isPlainObject)) : [];
+  return {
+    rewardCount: drops ? benefits.length || drops.length : null,
+    badgeOnly: drops && benefits.length ? benefits.every((benefit) => benefit.distributionType === "BADGE") : null,
+    drops: drops && drops.length ? drops.map(normalizeCampaignDrop).filter(Boolean) : null,
+  };
+}
+
+/** Une campagne lue par GraphQL dans la page Twitch. */
 function normalizeCampaign(raw) {
   if (!isPlainObject(raw)) return null;
   const id = idOf(raw.id);
   const game = text(raw.game?.displayName || raw.game?.name, 120);
   if (!id || !(game || raw.name)) return null;
-  const drops = Array.isArray(raw.timeBasedDrops) ? raw.timeBasedDrops.filter(isPlainObject) : null;
-  const benefits = drops ? drops.flatMap((drop) => list(drop.benefitEdges).map((edge) => edge?.benefit).filter(isPlainObject)) : [];
   const connected = raw.self?.isAccountConnected;
   return {
     id,
@@ -362,8 +393,8 @@ function normalizeCampaign(raw) {
     startsAt: timeOf(raw.startAt),
     endsAt: timeOf(raw.endAt),
     status: text(raw.status, 20).toUpperCase(),
-    rewardCount: drops ? benefits.length || drops.length : null,
-    badgeOnly: drops && benefits.length ? benefits.every((benefit) => benefit.distributionType === "BADGE") : null,
+    ...dropsSummary(raw.timeBasedDrops),
+    detailedAt: 0,
     accountLinkUrl: httpsUrl(raw.accountLinkURL),
     connected: typeof connected === "boolean" ? connected : null,
   };
@@ -386,9 +417,41 @@ export function pruneCampaigns(campaigns, now) {
   return campaigns.filter((campaign) => !campaign.endsAt || campaign.endsAt > now - EXPIRED_KEEP_MS);
 }
 
+/**
+ * Nouvelle lecture de la liste : le détail déjà lu d'une campagne reste si la
+ * liste revient sans ses Drops, et une campagne finie sortie de la liste reste
+ * jusqu'à 7 jours après sa fin (pour dater « Terminé le … »).
+ */
+export function mergeCampaigns(previous, incoming, now) {
+  const before = new Map(list(previous).map((campaign) => [campaign.id, campaign]));
+  const merged = incoming.map((campaign) => {
+    if (campaign.drops) return { ...campaign, detailedAt: now };
+    const old = before.get(campaign.id);
+    if (!old) return campaign;
+    // Détail déjà lu (ou demandé sans réponse) : on garde sa date, pour ne pas le redemander avant 24 h.
+    return old.drops
+      ? { ...campaign, drops: old.drops, rewardCount: old.rewardCount, badgeOnly: old.badgeOnly, detailedAt: old.detailedAt || 0 }
+      : { ...campaign, detailedAt: old.detailedAt || 0 };
+  });
+  const seen = new Set(merged.map((campaign) => campaign.id));
+  const ended = list(previous).filter((campaign) => !seen.has(campaign.id) && campaign.endsAt && campaign.endsAt <= now);
+  return pruneCampaigns([...merged, ...ended], now);
+}
+
+/** Détail reçu pour les campagnes demandées ; une campagne restée sans réponse est datée quand même. */
+export function applyCampaignDetails(campaigns, details, ids, now) {
+  const byId = new Map(list(details).filter(isPlainObject).map((raw) => [idOf(raw.id), raw]));
+  const asked = new Set(list(ids).map(String));
+  return campaigns.map((campaign) => {
+    if (!asked.has(campaign.id)) return campaign;
+    const summary = dropsSummary(byId.get(campaign.id)?.timeBasedDrops);
+    return summary.drops ? { ...campaign, ...summary, detailedAt: now } : { ...campaign, detailedAt: now };
+  });
+}
+
 const isUpcoming = (campaign, now) => campaign.startsAt > now || campaign.status === "UPCOMING";
 
-function isActiveCampaign(campaign, now) {
+export function isActiveCampaign(campaign, now) {
   if (campaign.status && campaign.status !== "ACTIVE") return false;
   return (!campaign.startsAt || campaign.startsAt <= now) && (!campaign.endsAt || campaign.endsAt > now);
 }
@@ -523,155 +586,8 @@ export function watchedMinutesFor(watchDaily, reward, now) {
   return Math.floor(seconds / 60);
 }
 
-// ─── Badges globaux ───────────────────────────────────────────────────────────
+// ─── Organisateurs des campagnes de badges ────────────────────────────────────
 
-export function badgesFrom(stored = {}) {
-  const value = (stored || {})[DROPS_BADGES_KEY];
-  if (!isPlainObject(value)) return { updatedAt: 0, syncedAt: 0, badges: [], owned: [] };
-  return {
-    updatedAt: timeOf(value.updatedAt),
-    syncedAt: timeOf(value.syncedAt),
-    badges: list(value.badges).filter((badge) => isPlainObject(badge) && typeof badge.id === "string"),
-    owned: list(value.owned).filter((id) => typeof id === "string"),
-  };
-}
-
-/**
- * Twitch ne date pas ses badges : on retient le moment où chacun apparaît
- * pour la première fois. À la première synchronisation, tous sont déjà connus
- * (firstSeen 0) ; seuls les suivants seront « nouveaux ». Un badge a
- * plusieurs versions : une seule ligne par set.
- *
- * @returns {{ state: object, added: object[] }}
- */
-export function mergeBadges(state, raw, now) {
-  const first = !state.syncedAt;
-  const known = new Map(state.badges.map((badge) => [badge.id, badge]));
-
-  // Une réponse liste toutes les versions de chaque set (paliers de sub…). Le
-  // catalogue n'en montre qu'une — la première rencontrée, stable d'une lecture
-  // à l'autre — mais retient la plus haute : quand elle monte, une nouvelle
-  // version de la série est apparue et le badge est signalé comme nouveauté.
-  const sets = new Map();
-  for (const item of list(raw.badges)) {
-    const id = text(item?.setID, 120);
-    if (!id) continue;
-    const version = Number(item?.version);
-    const set = sets.get(id);
-    if (!set) {
-      sets.set(id, { base: item, top: Number.isFinite(version) ? version : undefined });
-      continue;
-    }
-    if (Number.isFinite(version) && (set.top === undefined || version > set.top)) set.top = version;
-  }
-
-  const badges = [];
-  const added = [];
-  for (const [id, set] of sets) {
-    const item = set.base;
-    const before = known.get(id);
-    const badge = {
-      id,
-      version: set.top !== undefined ? String(set.top) : (before?.version || ""),
-      title: text(item.title, 120) || id,
-      description: text(item.description, 400),
-      image: httpsUrl(item.imageURL),
-      url: httpsUrl(item.clickURL),
-      game: gameFromUrl(item.clickURL),
-      firstSeen: before ? before.firstSeen : first ? 0 : now,
-      newVersionAt: before?.newVersionAt || 0,
-    };
-    // Nouvelle version d'une série déjà connue (palier de sub en plus…) : la
-    // version du set a monté, on date la nouveauté sans toucher l'image de base.
-    if (before && set.top !== undefined && Number(before.version || 0) < set.top) {
-      badge.newVersionAt = now;
-    }
-    if (!before && !first) added.push(badge);
-    badges.push(badge);
-  }
-  if (!badges.length) return { state, added: [] };
-  return {
-    state: { updatedAt: now, syncedAt: state.syncedAt || now, badges, owned: list(raw.owned).map((id) => text(id, 120)).filter(Boolean) },
-    added,
-  };
-}
-
-/** Catégorie citée par le lien d'un badge : /directory/game/<nom>/… ou /directory/category/<slug>. */
-export function gameFromUrl(url) {
-  const match = /twitch\.tv\/directory\/(?:game|category)\/([^/?#]+)/i.exec(String(url || ""));
-  if (!match) return "";
-  try {
-    return decodeURIComponent(match[1]).replace(/-/g, " ").trim();
-  } catch {
-    return "";
-  }
-}
-
-/**
- * Jeu cité dans la description d'un badge gagné en regardant, sans lien de
- * catégorie : « … earned by watching X for 1 hour », « … watching 30 minutes
- * of X category ». Souvent le seul indice de Twitch quand clickURL est null.
- */
-export function gameFromDescription(description) {
-  const text = String(description || "");
-  const ofCategory = /watching (?:\d+|one|an?)?\s*(?:minutes?|hours?)?\s*of (.+?) category/i.exec(text);
-  const watchFor = /watch\w* (.+?) for (?:\d+|one|an?) (?:minutes?|hours?)/i.exec(text);
-  return (ofCategory?.[1] || watchFor?.[1] || "").trim().slice(0, 80);
-}
-
-/**
- * Payant = l'action demandée coûte : prendre un sub, en offrir un, acheter ou
- * poser des Bits. Les badges gagnés en regardant se gagnent gratuitement —
- * une description qui parle d'un abonnement sans le demander ne paie pas.
- */
-export const isPaidBadge = (badge) => /subscrib|gift|\bsubs?\b|\bbits?\b/i.test(badge.description || "");
-
-const BADGE_FILTERS = Object.freeze(["available", "all", "free", "paid", "missing", "owned"]);
-
-/** Minuscules sans accents : « Pokémon » et « Pokemon » doivent se reconnaître. */
-const fold = (value) => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-
-/**
- * Jeux et marques qui ont une campagne en cours (badges, Drops, progression).
- * Twitch ne date pas ses badges : un badge dont la description cite l'un
- * d'eux est très probablement encore obtenable.
- */
-export function activeNames({ rewards = [], campaigns = [], drops = [] } = {}, now = Date.now()) {
-  const names = new Set();
-  // Noms exacts des récompenses en cours : un badge qui porte ce nom est certain.
-  names.rewardTitles = new Set();
-  for (const reward of activeRewards(rewards, now)) reward.rewards.forEach((item) => names.rewardTitles.add(fold(item.name).trim()));
-  for (const drop of drops) if (drop.isBadge) String(drop.name || "").split(" + ").forEach((name) => names.rewardTitles.add(fold(name).trim()));
-  const add = (value) => {
-    const name = fold(value).trim();
-    // Trop court, un nom trouverait des correspondances partout (« d20 », « Go »).
-    if (name.length >= 4) names.add(name);
-  };
-  for (const reward of activeRewards(rewards, now)) [reward.game, reward.brand, reward.name].forEach(add);
-  for (const campaign of campaigns) if (isActiveCampaign(campaign, now)) add(campaign.game);
-  for (const drop of drops) add(drop.game);
-  return names;
-}
-
-const BADGE_TESTS = {
-  available: (badge) => badge.available,
-  all: () => true,
-  free: (badge) => !badge.paid,
-  paid: (badge) => badge.paid,
-  missing: (badge) => !badge.owned,
-  owned: (badge) => badge.owned,
-};
-
-/**
- * Catalogue complet : filtre, recherche dans le nom et la description, les
- * plus récemment apparus d'abord, puis par ordre alphabétique.
- */
-/**
- * Campagne de Drops en cours qui distribue un badge. Les badges d'événement de
- * Twitch sont des campagnes de Drops (souvent de « Twitch Gaming ») dont la
- * récompense est un badge : elles portent les vraies dates. On les relie par
- * le jeu du lien du badge, sinon par le jeu cité dans sa description.
- */
 /** Campagne qui distribue des badges de chat : celles-ci vivent dans l'onglet Badges (StreamPulse+). */
 // Organisations qui ne distribuent que des badges de chat (« Twitch Gaming », « BadgesLibrary »…),
 // utile quand la liste des récompenses n'est pas lue.
@@ -679,81 +595,20 @@ const BADGE_OWNER = /twitch gaming|badge/i;
 
 export const isBadgeCampaign = (campaign) => BADGE_OWNER.test(campaign.owner || "") || campaign.badgeOnly === true;
 
+export const isTwitchGaming = (campaign) => BADGE_OWNER.test(campaign.owner || "");
+
 /**
- * Badges d'événements terminés que rien dans le catalogue de Twitch ne date :
- * ils partagent le nom d'un jeu dont une campagne de badges est en cours, et
- * seraient proposés à tort. Identifiants Twitch (setID).
+ * Campagnes Twitch Gaming dont il faut lire le détail : sans Drops connus ou
+ * lus il y a plus de 24 h, en cours ou finies depuis moins de 7 jours. Les
+ * campagnes en cours passent d'abord, celle qui finit la première en tête.
  */
-const RETIRED_BADGES = new Set([
-  "league-of-legends-classic", // lancement de LoL Classic en Twitch Rivals
-  "elden-ring-recluse", // sortie de Nightreign
-  "elden-ring-wylder", // sortie de Nightreign
-  "raging-wolf-helm", // lancement de Shadow of the Erdtree
-  "sorcerer-rogier-elden-ring",
-  "rematch-nations-cup", // Rematch Nations Cup terminée
-  "rematch-nations-cup-eng", // variante abonnés de la même coupe
-]);
-
-export function badgeCampaignFor(badge, campaigns, now) {
-  if (RETIRED_BADGES.has(badge.id)) return null;
-  const game = fold(badge.game).trim();
-  const text = fold(`${badge.title} ${badge.description}`);
-  let best = null;
-  for (const campaign of campaigns) {
-    if (!isActiveCampaign(campaign, now)) continue;
-    // Seules les campagnes qui distribuent des badges comptent : celles de
-    // « Twitch Gaming », ou celles dont on sait que la récompense est un badge.
-    // Une campagne d'éditeur (Riot, Ubisoft…) donne des objets de jeu.
-    if (!isBadgeCampaign(campaign)) continue;
-    const name = fold(campaign.game).trim();
-    if (name.length < 4) continue;
-    const exact = campaign.badgeOnly !== false && game && game === name;
-    if (!exact && !text.includes(name)) continue;
-    const score = (exact ? 2 : 1) + (BADGE_OWNER.test(campaign.owner) ? 1 : 0);
-    if (!best || score > best.score) best = { campaign, score };
-  }
-  return best?.campaign || null;
-}
-
-export function catalogBadges(state, filterId = "all", query = "", context = {}) {
-  const owned = new Set(state.owned);
-  const now = context.now ?? Date.now();
-  const titles = context.names?.rewardTitles || new Set();
-  const year = new Date(now).getFullYear();
-  // Une année passée dans la description (« 2025 ») : l'événement est fini.
-  const pastYear = (badge) => (fold(badge.description).match(/\b20\d\d\b/g) || []).some((value) => Number(value) < year);
-  const campaigns = context.campaigns || [];
-  const isAvailable = (badge) =>
-    !RETIRED_BADGES.has(badge.id) && (
-    Boolean(badge.campaign) ||
-    titles.has(fold(badge.title).trim()) ||
-    (badge.firstSeen > 0 && now - badge.firstSeen <= NEW_BADGE_MS));
-  const needle = String(query || "").trim().toLowerCase();
-  const test = BADGE_TESTS[filterId] || BADGE_TESTS.all;
-  return state.badges
-    .map((badge) => ({ ...badge, owned: owned.has(badge.id), paid: isPaidBadge(badge) }))
-    .map((badge) => ({ ...badge, campaign: pastYear(badge) ? null : badgeCampaignFor(badge, campaigns, now) }))
-    .map((badge) => ({ ...badge, available: isAvailable(badge) }))
-    .filter((badge) => test(badge) && (!needle || `${badge.title} ${badge.description}`.toLowerCase().includes(needle)))
-    .sort((a, b) => Number(b.available) - Number(a.available) || (b.firstSeen || 0) - (a.firstSeen || 0) || a.title.localeCompare(b.title));
-}
-
-export function countBadges(state, context = {}) {
-  const all = catalogBadges(state, "all", "", context);
-  return Object.fromEntries(BADGE_FILTERS.map((id) => [id, all.filter(BADGE_TESTS[id]).length]));
-}
-
-export function newBadges(state, now, windowMs = NEW_BADGE_MS) {
-  const owned = new Set(state.owned);
-  // Nouveauté au sens large : set inédit, ou nouvelle version d'une série
-  // connue (palier de sub en plus) — la plus récente des deux dates fait foi.
-  // Les badges d'événements terminés ne sont pas des nouveautés.
-  return state.badges
-    .filter((badge) => !RETIRED_BADGES.has(badge.id))
-    .map((badge) => ({ ...badge, lastNews: Math.max(badge.firstSeen || 0, badge.newVersionAt || 0) }))
-    .filter((badge) => badge.lastNews > 0 && now - badge.lastNews <= windowMs)
-    .map((badge) => ({ ...badge, owned: owned.has(badge.id), paid: isPaidBadge(badge) }))
-    .sort((a, b) => b.lastNews - a.lastNews);
+export function campaignsNeedingDetails(campaigns, now, max = DETAILS_PER_READ) {
+  return list(campaigns)
+    .filter((campaign) => isTwitchGaming(campaign) && (!campaign.endsAt || campaign.endsAt > now - EXPIRED_KEEP_MS))
+    .filter((campaign) => now - (campaign.detailedAt || 0) >= DETAIL_MAX_AGE_MS)
+    .sort((a, b) => Number(isActiveCampaign(b, now)) - Number(isActiveCampaign(a, now)) || (a.endsAt || Infinity) - (b.endsAt || Infinity))
+    .slice(0, max)
+    .map((campaign) => campaign.id);
 }
 
 // ─── Affichage ────────────────────────────────────────────────────────────────

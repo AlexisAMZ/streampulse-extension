@@ -365,7 +365,7 @@ test("normalizeReward étiquette « Code » via le résumé de la campagne", asy
 });
 
 test("gameFromDescription lit le jeu des badges sans lien de catégorie", async () => {
-  const { gameFromDescription } = await import("../js/drops-data.js");
+  const { gameFromDescription } = await import("../js/badges-data.js");
   assert.equal(
     gameFromDescription("This badge was earned by watching Dragon's Dogma 2: Dark Arisen for 1 hour"),
     "Dragon's Dogma 2: Dark Arisen",
@@ -379,7 +379,7 @@ test("gameFromDescription lit le jeu des badges sans lien de catégorie", async 
 });
 
 test("mergeBadges date la nouveauté quand une série de badges monte de version", async () => {
-  const { mergeBadges, newBadges, badgesFrom } = await import("../js/drops-data.js");
+  const { mergeBadges, newBadges, badgesFrom } = await import("../js/badges-data.js");
   const DAY = 86_400_000;
   const now = 1_000_000_000;
   const v12 = { setID: "sub-badge", version: "12", title: "Sub badge", description: "12 mois", imageURL: "https://a/12.png", clickURL: null };

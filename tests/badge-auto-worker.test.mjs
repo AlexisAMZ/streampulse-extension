@@ -1,6 +1,7 @@
 // Déroulé complet du mode auto des badges, avec chrome.* simulé.
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { buildBadgeEvents } from "../js/badges-data.js";
 
 const HOUR = 3_600_000;
 const now = Date.now();
@@ -66,6 +67,7 @@ test("tous les badges : un jeu à la fois, paliers ensemble, puis fin", async ()
   store.streamPulsePlus = plusRecord();
   store.streamPulseDropsBadges = { updatedAt: now, syncedAt: now, badges, owned: [] };
   store.streamPulseDropsCampaigns = { updatedAt: now, campaigns };
+  store.streamPulseBadgeEvents = { updatedAt: now, events: buildBadgeEvents({ campaigns, catalog: badges, now }) };
   const notes = [];
   let liveGame = "21779";
   const { createBadgeAuto } = await import("../js/badge-auto-worker.js");
@@ -122,6 +124,7 @@ test("un badge à la main, retrait d'un badge, onglet fermé par l'utilisateur",
   store.streamPulsePlus = plusRecord();
   store.streamPulseDropsBadges = { updatedAt: now, syncedAt: now, badges, owned: [] };
   store.streamPulseDropsCampaigns = { updatedAt: now, campaigns };
+  store.streamPulseBadgeEvents = { updatedAt: now, events: buildBadgeEvents({ campaigns, catalog: badges, now }) };
   const { createBadgeAuto } = await import("../js/badge-auto-worker.js");
   const auto = createBadgeAuto({
     streamUrl: async ({ gameId }) => `https://www.twitch.tv/live${gameId}`,
@@ -151,6 +154,7 @@ test("sans StreamPulse+ actif, « tous les badges » est refusé", async () => {
   const { store, tabs } = fakeChrome();
   store.streamPulseDropsBadges = { updatedAt: now, syncedAt: now, badges, owned: [] };
   store.streamPulseDropsCampaigns = { updatedAt: now, campaigns };
+  store.streamPulseBadgeEvents = { updatedAt: now, events: buildBadgeEvents({ campaigns, catalog: badges, now }) };
   const { createBadgeAuto } = await import("../js/badge-auto-worker.js");
   const auto = createBadgeAuto({
     streamUrl: async ({ gameId }) => `https://www.twitch.tv/live${gameId}`,
@@ -171,6 +175,7 @@ test("la licence Plus qui expire arrête une récupération en cours", async () 
   store.streamPulsePlus = plusRecord();
   store.streamPulseDropsBadges = { updatedAt: now, syncedAt: now, badges, owned: [] };
   store.streamPulseDropsCampaigns = { updatedAt: now, campaigns };
+  store.streamPulseBadgeEvents = { updatedAt: now, events: buildBadgeEvents({ campaigns, catalog: badges, now }) };
   const notes = [];
   const { createBadgeAuto } = await import("../js/badge-auto-worker.js");
   const auto = createBadgeAuto({

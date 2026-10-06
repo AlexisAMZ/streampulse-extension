@@ -3,6 +3,8 @@
 // - demande à inject/drops-bridge.js de relire l'inventaire (toutes les 5 min)
 //   et les campagnes (toutes les 30 min), en évitant les lectures en double
 //   quand plusieurs onglets Twitch sont ouverts ;
+// - lui demande le détail des campagnes que le service worker réclame, au plus
+//   une fois par minute ;
 // - exécute les récupérations que le service worker lui confie.
 // Rien n'est relayé si le suivi des Drops est désactivé dans les réglages.
 (() => {
@@ -20,6 +22,8 @@
   const CAMPAIGNS_EVERY_MS = 30 * 60_000;
   // Une campagne illisible (pas d'en-tête d'intégrité ni de cache) est retentée plus tôt.
   const CAMPAIGNS_RETRY_MS = 5 * 60_000;
+  // Détail des campagnes demandé par le service worker : au plus une demande par minute.
+  const DETAILS_EVERY_MS = 60_000;
   const TICK_MS = 60_000;
   // Laisse la page envoyer ses propres requêtes GraphQL, dont on lit les en-têtes.
   const FIRST_TICK_MS = 6_000;
@@ -30,6 +34,8 @@
   let campaignsTriedAt = 0;
   let inventoryAskedAt = 0;
   let timer = null;
+  let pendingDetails = [];
+  let detailsAt = 0;
 
   // Jeton de session : les messages du pont doivent le porter. Le code du pont
   // est public, sans lui n'importe quel script de la page pouvait forger un
@@ -75,12 +81,30 @@
     for (const instanceId of Array.isArray(instanceIds) ? instanceIds : []) command("claim", { instanceId, auto });
   }
 
+  /** Campagnes dont le service worker veut le détail : tout de suite, puis au plus une demande par minute. */
+  function queueDetails(ids) {
+    pendingDetails = Array.isArray(ids) ? ids.filter((id) => typeof id === "string" && id).slice(0, 5) : [];
+    askDetails();
+  }
+
+  function askDetails() {
+    if (!enabled || !pendingDetails.length || Date.now() < detailsAt) return;
+    detailsAt = Date.now() + DETAILS_EVERY_MS;
+    const ids = pendingDetails;
+    pendingDetails = [];
+    command("details", { ids });
+  }
+
   async function onResult(message) {
     if (message.action === "inventory") {
       const response = await send({ type: "recordDropsInventory", ok: message.ok === true, data: message.data, error: message.error });
       claimAll(response?.claim, true);
     } else if (message.action === "campaigns" && message.ok) {
-      await send({ type: "recordDropsCampaigns", data: message.data?.campaigns, source: message.data?.source });
+      const response = await send({ type: "recordDropsCampaigns", data: message.data?.campaigns, source: message.data?.source });
+      queueDetails(response?.details);
+    } else if (message.action === "details") {
+      const response = await send({ type: "recordDropsCampaignDetails", ok: message.ok === true, data: message.data?.campaigns, ids: message.data?.ids, error: message.error });
+      queueDetails(response?.details);
     } else if (message.action === "claim") {
       await send({
         type: "recordDropClaim",
@@ -111,6 +135,7 @@
   /** Relit ce qui est périmé, sauf si un autre onglet vient de le faire. */
   function tick() {
     if (!enabled || !contextAlive()) return;
+    askDetails();
     chrome.storage.local.get([PROGRESS_KEY, CAMPAIGNS_KEY], (stored) => {
       if (chrome.runtime.lastError || !enabled) return;
       const now = Date.now();
