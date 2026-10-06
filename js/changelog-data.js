@@ -52,8 +52,8 @@ export const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
-    version: "26.10.3",
-    date: "2026-10-05",
+    version: "26.10.6",
+    date: "2026-10-06",
     title: {
       "fr": "Des badges aux vraies dates",
       "en": "Badges with real dates",
