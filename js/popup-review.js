@@ -1,7 +1,9 @@
 // Demande d'avis, sans aucune contrepartie : les règles du Chrome Web Store,
-// d'Edge et de Firefox interdisent de récompenser un avis. Le bandeau apparaît
-// après 14 jours d'utilisation, une seule fois ; « Plus tard » le repousse d'un
-// mois, « Non merci » et « Laisser un avis » le retirent pour de bon.
+// d'Edge et de Firefox interdisent de récompenser un avis. Déclencheur refait
+// à la 26.10.7 : le bandeau récompense l'habitude, il ne la provoque pas. Il
+// ne sort qu'après un succès récemment vécu, au plus trois fois ; « Plus
+// tard » le repousse de deux mois, « Non merci » et « Laisser un avis » le
+// retirent pour de bon.
 //
 // MESURE LOCALE (aucune donnée ne sort, aucun identifiant) : chaque affichage,
 // clic et fermeture incrémente un compteur dans streamPulseReviewMetrics. Pour
@@ -9,12 +11,14 @@
 //
 // VARIANTES DE DÉCLENCHEUR, choisies par la config distante
 // (streampulse:remoteConfig → data.reviewAsk.variant, modifiable sans republier
-// l'extension ; à défaut, comportement historique « calendar ») :
-//   calendar     14 jours après la première vue (comportement historique)
-//   momentum     7 jours ET un succès vécu (temps de visionnage ou points relevés)
-//   firstSuccess 3 jours ET un succès vécu
-// Le succès vécu reste local : c'est un booléen calculé sur des compteurs déjà
-// présents, jamais renvoyé nulle part.
+// l'extension ; à défaut, « momentum ») :
+//   calendar     14 jours, sans condition de succès (comportement historique,
+//                garde un recours de repli piloté à distance)
+//   momentum     7 jours ET un succès vécu dans les 2 derniers jours (défaut)
+//   firstSuccess 3 jours ET un succès vécu dans les 2 derniers jours
+// Le succès vécu reste local : ce sont les tables quotidiennes déjà écrites
+// par l'extension (temps de visionnage, points du jour), jamais renvoyées
+// nulle part. Fraîches par design : une activité ancienne ne suffit plus.
 //
 // EMPLACEMENT ET MOMENT : le bandeau prend la place de la ligne d'activité, sous
 // la scène, sans jamais recouvrir une carte de live. Il ne sort jamais à la
@@ -23,13 +27,17 @@
 // (popup-badge-ask.js), qui ne sort que si la demande d'avis ne veut pas la place.
 
 import { t } from "./i18n.js";
+import { rollingDayKeys } from "./recap-data.js";
 
 const KEY = "streamPulseReviewAsk";
 const METRICS_KEY = "streamPulseReviewMetrics";
 const REMOTE_CONFIG_CACHE_KEY = "streampulse:remoteConfig";
 const DAY_MS = 86_400_000;
 const FIRST_ASK_MS = 14 * DAY_MS;
-const LATER_MS = 30 * DAY_MS;
+const LATER_MS = 60 * DAY_MS;
+const MAX_ASKS = 3;
+const SUCCESS_WINDOW_DAYS = 2;
+const DEFAULT_VARIANT = "momentum";
 const VARIANTS = {
   calendar: { minDays: 14, needsSuccess: false },
   momentum: { minDays: 7, needsSuccess: true },
@@ -49,19 +57,30 @@ export function storeUrl(userAgent = navigator.userAgent) {
   return STORES.chrome;
 }
 
-/** Variante active, validée contre la liste connue (« calendar » sinon). */
+/** Variante active, validée contre la liste connue (« momentum » sinon). */
 export function resolveVariant(reviewAskConfig) {
   const wanted = reviewAskConfig?.variant;
-  return VARIANTS[wanted] ? wanted : "calendar";
+  return VARIANTS[wanted] ? wanted : DEFAULT_VARIANT;
+}
+
+/** Pur : un succès a-t-il été vécu dans les derniers jours ? Les tables
+ * quotidiennes sont indexées par clé de jour local (dayKey de recap-data). */
+export function hasRecentSuccess(dailyMaps, now = new Date(), { withinDays = SUCCESS_WINDOW_DAYS } = {}) {
+  const fresh = new Set(rollingDayKeys(withinDays, now));
+  return (dailyMaps || []).some((map) =>
+    Object.entries(map || {}).some(([day, entries]) => fresh.has(day) && Object.keys(entries || {}).length > 0),
+  );
 }
 
 /**
  * Faut-il afficher le bandeau ? Pur, testé.
- * signals.hasSuccess : un succès vécu a été constaté (voir initReviewAsk).
+ * signals.hasSuccess : un succès récent a été constaté (voir initReviewAsk).
+ * Le bandeau cesse aussi après MAX_ASKS affichages, même sans réponse.
  */
-export function shouldAsk(state, now, { variant = "calendar", hasSuccess = false } = {}) {
+export function shouldAsk(state, now, { variant = DEFAULT_VARIANT, hasSuccess = false } = {}) {
   if (!state?.firstSeen || state.done) return false;
-  const rule = VARIANTS[variant] || VARIANTS.calendar;
+  if ((state.askCount || 0) >= MAX_ASKS) return false;
+  const rule = VARIANTS[variant] || VARIANTS[DEFAULT_VARIANT];
   if (now - state.firstSeen < rule.minDays * DAY_MS) return false;
   if (rule.needsSuccess && !hasSuccess) return false;
   return !state.snoozedUntil || now >= state.snoozedUntil;
@@ -140,20 +159,21 @@ async function decide() {
     "betaGeneralStreamers",
     "streamPulseWatchTimeDaily",
     "streamPulsePointsDaily",
-    "streamPulsePointsChannels",
   ]);
   const variant = resolveVariant(stored[REMOTE_CONFIG_CACHE_KEY]?.data?.reviewAsk);
-  // Succès vécu : l'utilisateur a vraiment utilisé une fonction clé. Uniquement
-  // des compteurs déjà écrits par l'extension, jamais renvoyés nulle part.
-  const hasSuccess =
-    Object.keys(stored.streamPulseWatchTimeDaily || {}).length > 0
-    || Object.keys(stored.streamPulsePointsDaily || {}).length > 0
-    || Object.keys(stored.streamPulsePointsChannels || {}).length > 0;
+  // Succès récemment vécu : une activité dans les 2 derniers jours, lue dans
+  // les tables quotidiennes déjà écrites par l'extension, jamais renvoyées
+  // nulle part. Une vieille activité ne déclenche plus la demande.
+  const hasSuccess = hasRecentSuccess(
+    [stored.streamPulseWatchTimeDaily, stored.streamPulsePointsDaily],
+    new Date(now),
+  );
   let state = stored[KEY] || null;
   if (!state?.firstSeen) {
     // Installations existantes (streamers suivis ou visionnage déjà là) :
-    // on antidate pour ne pas les faire attendre 14 jours. Les variantes à
-    // succès vécu gardent leur condition propre, même dans ce cas.
+    // on antidate pour ne pas les faire attendre la fenêtre complète. Les
+    // variantes à succès récent gardent leur condition propre, même dans ce
+    // cas, et le plafond d'affichages borne l'ensemble.
     const existing = (Array.isArray(stored.betaGeneralStreamers) && stored.betaGeneralStreamers.length > 0)
       || Object.keys(stored.streamPulseWatchTimeDaily || {}).length > 0;
     state = { firstSeen: existing ? now - FIRST_ASK_MS : now };
@@ -201,7 +221,7 @@ export async function initReviewAsk() {
   const banner = $("review-ask");
   if (!banner) return;
   banner.hidden = false;
-  const shownState = { ...state, variant };
+  const shownState = { ...state, variant, askCount: (state.askCount || 0) + 1 };
   await save(shownState);
   recordMetric(variant, "shown");
   wireButtons(banner, variant, shownState);

@@ -52,6 +52,43 @@ export const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.10.7",
+    date: "2026-10-06",
+    title: {
+      "fr": "Une demande d'avis plus polie",
+      "en": "A gentler review ask",
+      "es": "Una petición de reseña más amable",
+      "pt-BR": "Um pedido de avaliação mais gentil",
+      "de": "Eine höflichere Bewertungsanfrage",
+      "it": "Una richiesta di recensione più gentile",
+      "pl": "Łagodniejsza prośba o ocenę",
+      "tr": "Daha nazik değerlendirme istemi",
+      "ru": "Более деликатная просьба об отзыве",
+      "ja": "レビュー依頼をより控えめに",
+      "ko": "더 정중해진 리뷰 요청",
+    },
+    changes: [
+      {
+        type: "improved",
+        area: "interface",
+        text: {
+          "fr": "La demande d'avis attend un moment utile récent (points gagnés ou temps de visionnage des deux derniers jours), s'affiche au plus trois fois, et « Plus tard » la repousse de deux mois au lieu d'un.",
+          "en": "The review ask now waits for a recent useful moment (points earned or watch time in the last two days), shows at most three times, and \"Later\" pushes it back two months instead of one.",
+          "es": "La petición de reseña espera un momento útil reciente (puntos ganados o tiempo de visión de los dos últimos días), aparece como máximo tres veces, y «Más tarde» la aplaza dos meses en lugar de uno.",
+          "pt-BR": "O pedido de avaliação espera um momento útil recente (pontos ganados ou tempo de assistência nos últimos dois dias), aparece no máximo três vezes, e \"Mais tarde\" o adia em dois meses em vez de um.",
+          "de": "Die Bewertungsanfrage wartet auf einen aktuellen nützlichen Moment (Punkte oder Sehzeit in den letzten zwei Tagen), erscheint höchstens dreimal, und \"Später\" verschiebt sie um zwei Monate statt einen.",
+          "it": "La richiesta di recensione attende un momento utile recente (punti guadagnati o tempo di visione negli ultimi due giorni), appare al massimo tre volte e \"Più tardi\" la rimanda di due mesi invece di uno.",
+          "pl": "Prośba o ocenę czeka na niedawny przydatny moment (punkty lub czas oglądania z ostatnich dwóch dni), pokazuje się maksymalnie trzy razy, a \"Później\" odsuwa ją o dwa miesiące zamiast jednego.",
+          "tr": "Değerlendirme istemi son iki günde kazanılan puanları veya izleme süresini bekler, en fazla üç kez görünür ve \"Daha sonra\" seçeneği bunu bir ay yerine iki ay erteler.",
+          "ru": "Просьба об отзыве ждёт недавнего полезного момента (очки или время просмотра за последние два дня), показывается не более трёх раз, а «Позже» откладывает её на два месяца вместо одного.",
+          "ja": "レビュー依頼は最近の有益な瞬間（2日以内に獲得したポイントまたは視聴時間）を待ち、表示は最大3回まで。「後で」を選ぶと1か月ではなく2か月延期されます。",
+          "ko": "리뷰 요청은 최근의 유용한 순간(지난 이틀 내 획득한 포인트 또는 시청 시간)을 기다리고, 최대 세 번만 표시되며, «나중에»를 누르면 한 달 대신 두 달 연기됩니다.",
+        },
+      },
+    ],
+  },
+
+  {
     version: "26.10.6",
     date: "2026-10-06",
     title: {
