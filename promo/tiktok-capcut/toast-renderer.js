@@ -14,7 +14,7 @@ class ToastRenderer {
     this.height = canvas.height;
 
     this.streamer = options.streamer || "anyme023";
-    this.url = options.url || "streampulse.fr";
+    this.url = options.url || "streampulse.tech";
     this.position = options.position || "pos-bottom";
 
     this.avatarImg = options.avatarImg || null;

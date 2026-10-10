@@ -106,7 +106,7 @@ export function auditTranslations(translations, referenceCode = "en") {
 
       // 5. Les URLs du site portent le segment de langue de leur bloc.
       for (const url of value.match(/streampulse\.fr\/[^\s"']*/g) ?? []) {
-        const path = url.replace("streampulse.fr", "");
+        const path = url.replace("streampulse.tech", "");
         const segment = expectedUrlSegment(code);
         if (!path.startsWith(segment + "/") && path !== segment) {
           error(`${code} ${key}: URL "${url}" ne porte pas le segment "${segment || "(aucun)"}"`);

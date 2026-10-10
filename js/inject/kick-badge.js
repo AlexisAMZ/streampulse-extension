@@ -2,7 +2,7 @@
  * StreamPulse : badge communautaire et pseudo StreamPulse+ dans le tchat Kick.
  *
  * Miroir Kick de js/inject/twitch-badge.js : mêmes empreintes, même API
- * (streampulse.fr), mêmes classes CSS (css/inject/twitch-badge.css +
+ * (streampulse.tech), mêmes classes CSS (css/inject/twitch-badge.css +
  * css/fx-effects.css, injectées sur Kick aussi). L'identité Kick est
  * indépendante : le pseudo Kick est haché avec le même sel et enregistré
  * auprès du service de badges quand l'utilisateur active le réglage.
@@ -38,7 +38,7 @@
   }
 
   var PREFERENCES_KEY = "betaGeneralPreferences";
-  var API_URL = "https://streampulse.fr/api/streampulse-badges";
+  var API_URL = "https://streampulse.tech/api/streampulse-badges";
   var STORAGE_KEY = "streampulseBadgeHashes";
   var HASH_SALT = "streampulse:badge:v1:";
   var HASH_LENGTH = 12;

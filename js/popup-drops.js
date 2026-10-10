@@ -42,7 +42,7 @@ import {
 
 const $ = (id) => document.getElementById(id);
 /** Descriptions de badges traduites par le site (DeepL), gardées par langue. */
-const BADGE_TEXT_URL = "https://streampulse.fr/api/twitch-badges";
+const BADGE_TEXT_URL = "https://streampulse.tech/api/twitch-badges";
 const BADGE_TEXT_KEY = "streamPulseBadgeText";
 const BADGE_TEXT_MAX_AGE_MS = 7 * 86_400_000;
 let badgeText = {};

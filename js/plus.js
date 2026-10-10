@@ -10,11 +10,11 @@ const PLUS_RULE = globalThis.StreamPulsePlusRule;
 export const PLUS_KEY = PLUS_RULE.PLUS_KEY;
 
 /**
- * Serveur de licences sur streampulse.fr, adossé à Stripe. Il répond avec un
+ * Serveur de licences sur streampulse.tech, adossé à Stripe. Il répond avec un
  * CORS ouvert : aucune permission d'hôte à ajouter au manifeste.
  * Il reçoit { key } et répond { valid, plan }.
  */
-export const LICENSE_VERIFY_URL = "https://streampulse.fr/api/streampulse-license";
+export const LICENSE_VERIFY_URL = "https://streampulse.tech/api/streampulse-license";
 
 /** Libère la place de cet appareil (best effort, sans attendre la réponse). */
 export function releaseDevice(licenseKey, device, fetchImpl) {
@@ -38,7 +38,7 @@ export async function portalUrl(licenseKey, fetchImpl) {
 }
 
 /** Page d'achat ouverte par le bouton « Débloquer StreamPulse+ ». */
-const PLUS_CHECKOUT_URL = "https://streampulse.fr/plus";
+const PLUS_CHECKOUT_URL = "https://streampulse.tech/plus";
 
 /** Dossier de langue du site (le français est à la racine). */
 const SITE_DIRS = { fr: "", "pt-BR": "pt-br" };
@@ -48,7 +48,7 @@ const SITE_LANGS = ["fr", "en", "es", "pt-BR", "de", "it", "pl", "tr", "ru", "ja
 export function plusPageUrl(lang, plan) {
   const code = SITE_LANGS.includes(lang) ? lang : "en";
   const dir = code in SITE_DIRS ? SITE_DIRS[code] : code;
-  const base = dir ? `https://streampulse.fr/${dir}/plus` : PLUS_CHECKOUT_URL;
+  const base = dir ? `https://streampulse.tech/${dir}/plus` : PLUS_CHECKOUT_URL;
   return plan ? `${base}?plan=${encodeURIComponent(plan)}` : base;
 }
 

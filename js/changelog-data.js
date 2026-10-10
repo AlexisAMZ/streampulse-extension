@@ -52,6 +52,43 @@ export const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.10.8",
+    date: "2026-10-10",
+    title: {
+      "fr": "Une nouvelle adresse",
+      "en": "A new address",
+      "es": "Una nueva dirección",
+      "pt-BR": "Um novo endereço",
+      "de": "Eine neue Adresse",
+      "it": "Un nuovo indirizzo",
+      "pl": "Nowy adres",
+      "tr": "Yeni bir adres",
+      "ru": "Новый адрес",
+      "ja": "新しいアドレス",
+      "ko": "새로운 주소",
+    },
+    changes: [
+      {
+        type: "improved",
+        area: "interface",
+        text: {
+          "fr": "StreamPulse a une nouvelle adresse : streampulse.tech. La clé StreamPulse+, le badge communautaire et les jetons passent désormais par ce domaine.",
+          "en": "StreamPulse has a new home: streampulse.tech. Your StreamPulse+ key, the community badge and tokens now go through this domain.",
+          "es": "StreamPulse tiene nueva dirección: streampulse.tech. Tu clave StreamPulse+, la insignia de la comunidad y los tokens pasan ahora por este dominio.",
+          "pt-BR": "O StreamPulse tem um novo endereço: streampulse.tech. Sua chave StreamPulse+, o emblema da comunidade e os tokens agora passam por este domínio.",
+          "de": "StreamPulse hat eine neue Adresse: streampulse.tech. Dein StreamPulse+-Schlüssel, das Community-Abzeichen und die Tokens laufen jetzt über diese Domain.",
+          "it": "StreamPulse ha un nuovo indirizzo: streampulse.tech. La tua chiave StreamPulse+, il badge della community e i token passano ora da questo dominio.",
+          "pl": "StreamPulse ma nowy adres: streampulse.tech. Twój klucz StreamPulse+, odznaka społeczności i tokeny działają teraz przez tę domenę.",
+          "tr": "StreamPulse'un yeni adresi: streampulse.tech. StreamPulse+ anahtarın, topluluk rozeti ve jetonlar artık bu alan adı üzerinden geçiyor.",
+          "ru": "У StreamPulse новый адрес: streampulse.tech. Ключ StreamPulse+, значок сообщества и токены теперь работают через этот домен.",
+          "ja": "StreamPulse の新しいアドレスは streampulse.tech です。StreamPulse+ キー、コミュニティバッジ、トークンはこのドメイン経由になりました。",
+          "ko": "StreamPulse의 새 주소는 streampulse.tech입니다. StreamPulse+ 키, 커뮤니티 배지, 토큰이 이제 이 도메인을 통해 연결됩니다.",
+        },
+      },
+    ],
+  },
+
+  {
     version: "26.10.7",
     date: "2026-10-06",
     title: {

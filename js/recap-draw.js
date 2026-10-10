@@ -6,7 +6,7 @@ export const INK = "#f4f2f7";
 export const MUTED = "#c0b9d2";
 export const FAINT = "#8f88a6";
 export const LCD = "#c6d4a0";
-// Fonts of streampulse.fr, bundled with the extension (css/tokens.css).
+// Fonts of streampulse.tech, bundled with the extension (css/tokens.css).
 const SANS = "Onest, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
 export const DISPLAY = "Unbounded, Onest, -apple-system, 'Segoe UI', sans-serif";
 export const MONO = SANS;
@@ -196,7 +196,7 @@ export function drawEyebrow(ctx, text, x, y, size) {
 /** Logo + nom de marque + url. Renvoie la largeur occupee. */
 export function drawBrand(ctx, logo, x, y, { size = 44, nameSize = 30, align = "left", width = 0 } = {}) {
   // Logo + adresse du site : le nom StreamPulse n'est ecrit qu'une fois sur la carte.
-  const name = "streampulse.fr";
+  const name = "streampulse.tech";
   setFont(ctx, 700, nameSize, DISPLAY);
   const nameWidth = ctx.measureText(name).width;
   const gap = 16;

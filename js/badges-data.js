@@ -1,7 +1,7 @@
 // Badges globaux de Twitch pour l'onglet Badges : catalogue (avec la date où
 // StreamPulse a vu chaque badge), journal qui relie chaque badge au Drop ou à
 // la récompense qui le donne, statuts (en cours, à venir, terminé) et dates
-// d'ajout notées par streampulse.fr. Module pur : aucun accès à chrome.* ni au
+// d'ajout notées par streampulse.tech. Module pur : aucun accès à chrome.* ni au
 // DOM. Testé par tests/badge-events.test.mjs, tests/badge-statuses.test.mjs et
 // tests/drops-rewards.test.mjs.
 
@@ -313,7 +313,7 @@ export function viewerEarnable(description) {
 
 const SET_ID = /^[a-z0-9][a-z0-9_-]{0,119}$/i;
 
-/** Dates d'ajout renvoyées par streampulse.fr : { setID: ms }, valeurs illisibles écartées. */
+/** Dates d'ajout renvoyées par streampulse.tech : { setID: ms }, valeurs illisibles écartées. */
 export function normalizeAdded(raw) {
   const out = {};
   if (!isPlainObject(raw)) return out;

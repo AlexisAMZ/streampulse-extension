@@ -164,8 +164,8 @@ locale ne la retire.
 Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décochés : le temps de visionnage, les streamers suivis et les points ne quittent jamais l'appareil (`chrome.storage.local`). Les pseudos des streamers ajoutés sont envoyés aux API publiques de Twitch et Kick uniquement pour obtenir leur statut en direct, ce qui relève du fonctionnement annoncé de l'extension.
 
 ### Détail à fournir si la console le demande
-**FR** : `Le badge communautaire, désactivé par défaut et activé seulement avec l'accord de l'utilisateur (écran d'installation ou Réglages → Chat), envoie au plus une fois par jour une empreinte SHA-256 salée et tronquée du pseudo Twitch de l'utilisateur à streampulse.fr. Le pseudo en clair n'est jamais transmis ni stocké. Cette empreinte sert uniquement à afficher le badge StreamPulse dans le chat Twitch des autres utilisateurs de l'extension.`
-**EN** : `The community badge, off by default and only turned on with the user's consent (install screen or Settings → Chat), sends a salted, truncated SHA-256 hash of the user's Twitch username to streampulse.fr at most once a day. The plain username is never sent or stored. The hash is only used to show the StreamPulse badge in Twitch chat for other extension users.`
+**FR** : `Le badge communautaire, désactivé par défaut et activé seulement avec l'accord de l'utilisateur (écran d'installation ou Réglages → Chat), envoie au plus une fois par jour une empreinte SHA-256 salée et tronquée du pseudo Twitch de l'utilisateur à streampulse.tech. Le pseudo en clair n'est jamais transmis ni stocké. Cette empreinte sert uniquement à afficher le badge StreamPulse dans le chat Twitch des autres utilisateurs de l'extension.`
+**EN** : `The community badge, off by default and only turned on with the user's consent (install screen or Settings → Chat), sends a salted, truncated SHA-256 hash of the user's Twitch username to streampulse.tech at most once a day. The plain username is never sent or stored. The hash is only used to show the StreamPulse badge in Twitch chat for other extension users.`
 
 ### Certifications (les trois à cocher)
 - ☑ Je ne vends ni ne transfère les données des utilisateurs à des tiers, en dehors des cas d'utilisation approuvés.
@@ -174,7 +174,7 @@ Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décoc
 
 ### Déclaration d'utilisation des données
 - Streamers suivis, préférences, filtres, points et temps de visionnage (mensuel et journalier) : stockés uniquement en local via `chrome.storage.local`.
-- Envoyé à `streampulse.fr` : l'empreinte du pseudo Twitch (badge communautaire) et, seulement quand l'utilisateur active StreamPulse+, sa clé de licence avec un identifiant d'appareil aléatoire (limite de 2 navigateurs par clé). Les requêtes de configuration et de liste des badges ne contiennent aucune donnée utilisateur.
+- Envoyé à `streampulse.tech` : l'empreinte du pseudo Twitch (badge communautaire) et, seulement quand l'utilisateur active StreamPulse+, sa clé de licence avec un identifiant d'appareil aléatoire (limite de 2 navigateurs par clé). Les requêtes de configuration et de liste des badges ne contiennent aucune donnée utilisateur.
 - Envoyé aux API publiques de Twitch et Kick : les pseudos des streamers ajoutés, pour vérifier leur statut en direct.
 - Aucun serveur d'analyse, de tracking, de télémétrie ou de publicité.
 
@@ -182,16 +182,16 @@ Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décoc
 
 ## 5. Politique de Confidentialité (Privacy Policy)
 
-**URL de la politique de confidentialité** : `https://streampulse.fr/privacy` (ou via la page support `https://streampulse.fr/support.html`)
+**URL de la politique de confidentialité** : `https://streampulse.tech/privacy` (ou via la page support `https://streampulse.tech/support.html`)
 
 ---
 
 ## 6. Informations Développeur & Support
 
 - **Editeur** : `AlexisAMZ`
-- **Email de contact** : `contact@streampulse.fr`
-- **Site web officiel** : `https://streampulse.fr`
-- **Support / Feedback** : `https://streampulse.fr/support.html`
+- **Email de contact** : `contact@streampulse.tech`
+- **Site web officiel** : `https://streampulse.tech`
+- **Support / Feedback** : `https://streampulse.tech/support.html`
 
 ---
 
@@ -211,9 +211,9 @@ Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décoc
 | 26.9.20 | 2026-09-17 | Correctif : connexion rétablie après l'incident d'identification Twitch, réparation automatique si les identifiants changent à nouveau, et vérification des lives groupée en une seule requête pour tous les streamers Twitch suivis. | Publiée |
 | 26.9.19 | 2026-09-16 | Lecteur Twitch plus fiable : alertes réglées sur la carte de chaque streamer, raids annoncés 90 secondes plus tôt, points, Drops et temps de visionnage comptés au juste nombre, journal d'événements et bonus de points réparés, et Kick passe en vidéo sur la scène avec les vraies miniatures de l'API Kick. | Publiée |
 | 26.9.18 | 2026-09-15 | Permissions minimales : retrait de `tabs` (plus d'avertissement « Lire l'historique de navigation »), ressources exposées limitées aux logos sur Twitch, permissions Kick regroupées. Captures du store avec des chaînes fictives. | Prêt pour publication |
-| 26.9.17 | 2026-09-15 | Correctif : appels au serveur StreamPulse (badge, clé StreamPulse+, config Twitch) passés sur streampulse.fr sans www, remerciement à l'activation StreamPulse+, bandeau quand les notifications sont bloquées, avertissement quand une alerte intelligente coupe l'alerte classique, lien étoile GitHub dans les réglages. | Publiée |
+| 26.9.17 | 2026-09-15 | Correctif : appels au serveur StreamPulse (badge, clé StreamPulse+, config Twitch) passés sur streampulse.tech sans www, remerciement à l'activation StreamPulse+, bandeau quand les notifications sont bloquées, avertissement quand une alerte intelligente coupe l'alerte classique, lien étoile GitHub dans les réglages. | Publiée |
 | 26.9.16 | 2026-09-14 | Correctif : badge, couleur, effets et pseudo spécial StreamPulse+ absents des messages déjà affichés au chargement de Twitch. | Prêt pour publication |
-| 26.9.15 | 2026-09-14 | Onglet Historique (lives ratés en vignettes avec rediffusion Twitch), StreamPulse+ (formule mensuelle ou à vie, clé de licence sur 2 navigateurs, gestion d'abonnement), alertes intelligentes par jeu, mot du titre ou seuil de viewers, menu StreamPulse+ (couleur d'accent, couleur et effets animés du badge, pseudos spéciaux visibles par tous et mis à jour en direct), récap avancé et Wrapped annuel, prédictions assistées, nom de chaîne entier dans le récap, onglet Nouveautés aligné, compteur de Drops du jour masqué, appels réseau migrés vers streampulse.fr et permission alexisamz.fr retirée. | Remplacée par 26.9.16 avant publication |
+| 26.9.15 | 2026-09-14 | Onglet Historique (lives ratés en vignettes avec rediffusion Twitch), StreamPulse+ (formule mensuelle ou à vie, clé de licence sur 2 navigateurs, gestion d'abonnement), alertes intelligentes par jeu, mot du titre ou seuil de viewers, menu StreamPulse+ (couleur d'accent, couleur et effets animés du badge, pseudos spéciaux visibles par tous et mis à jour en direct), récap avancé et Wrapped annuel, prédictions assistées, nom de chaîne entier dans le récap, onglet Nouveautés aligné, compteur de Drops du jour masqué, appels réseau migrés vers streampulse.tech et permission alexisamz.fr retirée. | Remplacée par 26.9.16 avant publication |
 | 26.9.14 | 2026-09-14 | Nouveau design du popup (streamer en vedette, bandeau de lives, points et Drops du jour), épingles et groupes de chaînes, restyle du récap, des notes de version, de l'onboarding et des éléments Twitch, import de sauvegarde qui fusionne au lieu de remplacer, bouton « Partir » reconnu pour annuler les raids, nouvelles captures et visuels promo. | Prêt pour publication |
 | 26.9.13 | 2026-09-13 | Alertes de changement de titre (réglage global et bouton par streamer), photo de profil Twitch en filigrane derrière les statistiques, infobulles au survol sur les boutons de carte, correction du nom de plateforme affiché deux fois, et grande passe de correction des traductions dans 12 langues, dernière catégorie et dernier titre conservés sur les cartes hors ligne, photo de profil qui suit le changement de pseudo, et disparition du bandeau « Aucune préférence à mettre à jour » injustifié. | Prêt pour publication |
 | 26.8.11 | 2026-08-11 | Bouton « Ajouter à StreamPulse » sur les pages de chaîne Twitch, page de notes de version localisée, traductions dans 15 langues ajoutées, ajustements d'interface (indicateur de latence). | Prêt pour publication |

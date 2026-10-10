@@ -39,7 +39,7 @@ const COPY = {
     favHook: ["Tes favoris", "en haut de Twitch."],
     favSub: "Une étoile sur une chaîne, et elle passe devant toutes les autres.",
     favNote: "Épinglée",
-    cta: "streampulse.fr",
+    cta: "streampulse.tech",
     browsers: "Gratuit sur tous les navigateurs",
   },
   en: {
@@ -52,7 +52,7 @@ const COPY = {
     favHook: ["Your favorites,", "on top of Twitch."],
     favSub: "Star a channel and it jumps ahead of everything else.",
     favNote: "Pinned",
-    cta: "streampulse.fr",
+    cta: "streampulse.tech",
     browsers: "Free on every browser",
   },
 };

@@ -147,7 +147,7 @@ li { display: flex; align-items: flex-start; gap: 9px; font-size: 15.5px; line-h
     <div class="foot">
       <div class="mark"><img src="${LOGO}" alt=""><span>StreamPulse</span></div>
       <div class="dot"></div>${browserRow(22)}<div class="dot"></div>
-      <div class="site">streampulse.fr</div>
+      <div class="site">streampulse.tech</div>
     </div>
   </div>
   <div class="stage"><div class="frame"><img src="${shot}" alt=""></div></div>
@@ -188,7 +188,7 @@ body { display: flex; flex-direction: column; align-items: center; justify-conte
     <span class="pill">Mon récap</span>
     <span class="pill">Filtre de tchat</span>
   </div>
-  <div class="foot">${browserRow(22)}<div class="dot"></div><div class="site">streampulse.fr</div></div>
+  <div class="foot">${browserRow(22)}<div class="dot"></div><div class="site">streampulse.tech</div></div>
 </body></html>`;
 }
 

@@ -426,7 +426,7 @@ function openShareComposer() {
     count: currentRecap.streamerCount,
     top: currentRecap.top[0]?.channel || "—",
   });
-  const url = `https://x.com/intent/post?text=${encodeURIComponent(`${text}\nstreampulse.fr`)}`;
+  const url = `https://x.com/intent/post?text=${encodeURIComponent(`${text}\nstreampulse.tech`)}`;
   window.open(url, "_blank", "noopener");
 }
 

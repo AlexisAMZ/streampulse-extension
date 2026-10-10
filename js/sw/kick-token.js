@@ -1,4 +1,4 @@
-// Jeton d'application Kick (proxy streampulse.fr) et API officielle Kick.
+// Jeton d'application Kick (proxy streampulse.tech) et API officielle Kick.
 
 import { NETWORK_TIMEOUT_MS } from "./constants.js";
 
@@ -38,12 +38,12 @@ async function readCachedKickToken() {
 }
 
 // Jeton d'application Kick : memoire, puis stockage, puis le proxy
-// streampulse.fr (le secret client ne quitte jamais le serveur).
+// streampulse.tech (le secret client ne quitte jamais le serveur).
 async function fetchKickAppToken() {
   const cached = await readCachedKickToken();
   if (cached) return cached;
   try {
-    const resp = await fetch(`https://streampulse.fr/api/kick-token?t=${Date.now()}`, {
+    const resp = await fetch(`https://streampulse.tech/api/kick-token?t=${Date.now()}`, {
       cache: "no-store",
       signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS),
     });

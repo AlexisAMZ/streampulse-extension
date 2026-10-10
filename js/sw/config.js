@@ -1,4 +1,4 @@
-// Configuration distante (jetons Twitch hébergés sur streampulse.fr, jamais
+// Configuration distante (jetons Twitch hébergés sur streampulse.tech, jamais
 // dans le zip), requêtes JSON et pause après un 429 Helix.
 
 import { CONFIG as LOCAL_CONFIG } from "../../config.js";
@@ -6,7 +6,7 @@ import { isRateLimitError, rateLimitResetAt } from "../twitch-rate-limit.js";
 import { NETWORK_TIMEOUT_MS } from "./constants.js";
 
 // ─── Remote config (credentials hosted on Vercel, never in the zip) ──────────
-const REMOTE_CONFIG_URL = "https://streampulse.fr/api/streampulse-config";
+const REMOTE_CONFIG_URL = "https://streampulse.tech/api/streampulse-config";
 export const REMOTE_CONFIG_CACHE_KEY = "streampulse:remoteConfig";
 const REMOTE_CONFIG_TTL_MS = 30 * 60 * 1000; // 30 min — plafond avant re-check ;
 // un token mort est de toute façon detecte au premier 401/403 (fetchTwitchJson
@@ -65,7 +65,7 @@ export function ensureConfig() {
 /**
  * Rotation de token : quand Twitch rejette le jeton en cache (401/403), on
  * re-fetch la config serveur en ignorant le cache de 6 h. Une rotation côté
- * streampulse.fr devient donc effective en quelques secondes chez tous les
+ * streampulse.tech devient donc effective en quelques secondes chez tous les
  * utilisateurs, au lieu d'attendre l'expiration du TTL.
  */
 async function refreshRemoteConfigForce() {

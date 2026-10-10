@@ -6,7 +6,7 @@
 // ou le raid est lance : ~90 secondes d'avance, le temps de rejoindre le
 // stream partant pour toucher les points.
 //
-// Pre-requis : un jeton d'application Twitch. Il est fabrique par streampulse.fr
+// Pre-requis : un jeton d'application Twitch. Il est fabrique par streampulse.tech
 // (client_credentials, le secret ne quitte jamais le serveur) et hydrate dans
 // CONFIG.accessToken par fetchRemoteConfig() — le meme que pour l'API Helix.
 //

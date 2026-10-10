@@ -18,7 +18,7 @@ export const DROPS_BADGES_KEY = "streamPulseDropsBadges";
 export const BADGE_AUTO_KEY = "streamPulseBadgeAuto";
 /** Journal des badges : chaque badge relié au Drop (ou à la récompense) qui le donne, avec ses dates. */
 export const BADGE_EVENTS_KEY = "streamPulseBadgeEvents";
-/** Dates d'ajout des badges notées par streampulse.fr : { fetchedAt, added: { setID: ms } }. */
+/** Dates d'ajout des badges notées par streampulse.tech : { fetchedAt, added: { setID: ms } }. */
 export const BADGE_ADDED_KEY = "streamPulseBadgeAdded";
 export const DROPS_KEYS = [DROPS_PROGRESS_KEY, DROPS_CAMPAIGNS_KEY, DROPS_HISTORY_KEY, DROPS_SINCE_KEY, DROPS_REWARDS_KEY, DROPS_BADGES_KEY, BADGE_EVENTS_KEY, BADGE_ADDED_KEY];
 

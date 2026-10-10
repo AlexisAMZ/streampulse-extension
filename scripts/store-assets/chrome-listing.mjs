@@ -9,7 +9,7 @@
  * Règles de la fiche (politique Chrome Web Store) :
  *   - aucune fonction payante sans le dire : StreamPulse+ est nommé comme optionnel ;
  *   - aucune promesse fausse : pas de blocage de pubs, pas de qualité forcée ;
- *   - la confidentialité décrit exactement ce qui part vers streampulse.fr.
+ *   - la confidentialité décrit exactement ce qui part vers streampulse.tech.
  */
 
 export const LISTING = {
@@ -69,7 +69,7 @@ Open source
 The full code is public on GitHub under the GPL v3 license: github.com/AlexisAMZ/streampulse-extension
 
 Privacy
-StreamPulse needs no account and has no ads, trackers or analytics. Your streamers, settings, points, Drops and watch time stay on your device. Your Drops and badges are read from Twitch with your own Twitch session, directly between your browser and Twitch. Only three things reach our server, streampulse.fr: the optional community badge, off by default, sends a hashed version of your Twitch username (never the username itself) at most once a day, with the effects you picked if you have StreamPulse+; a StreamPulse+ license key is checked there when you activate it; and your referral code is created there when you ask for it. Streamer names, and what you type to add a channel, are sent only to Twitch, Kick and YouTube to find channels and check who is live.`,
+StreamPulse needs no account and has no ads, trackers or analytics. Your streamers, settings, points, Drops and watch time stay on your device. Your Drops and badges are read from Twitch with your own Twitch session, directly between your browser and Twitch. Only three things reach our server, streampulse.tech: the optional community badge, off by default, sends a hashed version of your Twitch username (never the username itself) at most once a day, with the effects you picked if you have StreamPulse+; a StreamPulse+ license key is checked there when you activate it; and your referral code is created there when you ask for it. Streamer names, and what you type to add a channel, are sent only to Twitch, Kick and YouTube to find channels and check who is live.`,
 
   fr: `StreamPulse réunit Twitch, Kick et YouTube dans une seule extension légère. Voyez qui est en direct d'un coup d'œil, recevez une alerte dès qu'un live démarre, et laissez l'extension récupérer vos points de chaîne et vos Drops pendant que vous regardez, et repérer les badges de chat à gagner.
 
@@ -127,5 +127,5 @@ Open source
 Tout le code est public sur GitHub sous licence GPL v3 : github.com/AlexisAMZ/streampulse-extension
 
 Confidentialité
-StreamPulse ne demande aucun compte et ne contient ni publicité, ni traceur, ni outil de mesure d'audience. Vos streamers, réglages, points, Drops et temps de visionnage restent sur votre appareil. Vos Drops et vos badges sont lus sur Twitch avec votre propre session Twitch, directement entre votre navigateur et Twitch. Seules trois choses arrivent sur notre serveur, streampulse.fr : le badge communautaire, optionnel et désactivé par défaut, envoie une empreinte (hash) de votre pseudo Twitch, jamais le pseudo lui-même, au plus une fois par jour, avec les effets choisis si vous avez StreamPulse+ ; une clé de licence StreamPulse+ y est vérifiée quand vous l'activez ; et votre code de parrainage y est créé quand vous le demandez. Les noms des streamers, et ce que vous tapez pour ajouter une chaîne, sont envoyés uniquement à Twitch, Kick et YouTube pour trouver les chaînes et savoir qui est en direct.`,
+StreamPulse ne demande aucun compte et ne contient ni publicité, ni traceur, ni outil de mesure d'audience. Vos streamers, réglages, points, Drops et temps de visionnage restent sur votre appareil. Vos Drops et vos badges sont lus sur Twitch avec votre propre session Twitch, directement entre votre navigateur et Twitch. Seules trois choses arrivent sur notre serveur, streampulse.tech : le badge communautaire, optionnel et désactivé par défaut, envoie une empreinte (hash) de votre pseudo Twitch, jamais le pseudo lui-même, au plus une fois par jour, avec les effets choisis si vous avez StreamPulse+ ; une clé de licence StreamPulse+ y est vérifiée quand vous l'activez ; et votre code de parrainage y est créé quand vous le demandez. Les noms des streamers, et ce que vous tapez pour ajouter une chaîne, sont envoyés uniquement à Twitch, Kick et YouTube pour trouver les chaînes et savoir qui est en direct.`,
 };

@@ -20,7 +20,7 @@
 <p align="center">
   <a href="https://chromewebstore.google.com/detail/streampulse-multi-streame/ipfhbfabadbpkjimhdcjadopnahdpddh"><b>Chrome</b></a> ·
   <a href="https://addons.mozilla.org/firefox/addon/streampulse-twitch-kick/"><b>Firefox</b></a> ·
-  <a href="https://streampulse.fr/">Website</a> ·
+  <a href="https://streampulse.tech/">Website</a> ·
   <a href="#features">Features</a> ·
   <a href="#privacy">Privacy</a> ·
   <a href="#contributing">Contributing</a>
@@ -35,7 +35,7 @@
   <a href="https://alternativeto.net/software/streampulse/about/?utm_source=badge&utm_medium=referral"><picture><source media="(prefers-color-scheme: dark)" srcset="https://alternativeto.net/static/badges/badge-compact-dark.svg"><img src="https://alternativeto.net/static/badges/badge-compact-light.svg" alt="StreamPulse | AlternativeTo" height="44"></picture></a>
   <a href="https://www.betterlaunch.co/product/streampulse"><picture><source media="(prefers-color-scheme: dark)" srcset="https://www.betterlaunch.co/badge-find-dark.svg"><img src="https://www.betterlaunch.co/badge-find-light.svg" alt="StreamPulse on Better Launch" height="44"></picture></a>
   <a href="https://www.producthunt.com/products/streampulse?utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-streampulse"><picture><source media="(prefers-color-scheme: dark)" srcset="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1250953&theme=dark"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1250953&theme=light" alt="StreamPulse on Product Hunt" height="44"></picture></a>
-  <a href="https://fazier.com/launches/streampulse.fr"><picture><source media="(prefers-color-scheme: dark)" srcset="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=featured&theme=dark"><img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=featured&theme=neutral" alt="StreamPulse featured on Fazier" height="44"></picture></a>
+  <a href="https://fazier.com/launches/streampulse.tech"><picture><source media="(prefers-color-scheme: dark)" srcset="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=featured&theme=dark"><img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=featured&theme=neutral" alt="StreamPulse featured on Fazier" height="44"></picture></a>
 </p>
 
 ---
@@ -115,7 +115,7 @@ Then open `chrome://extensions`, turn on **Developer mode**, click **Load unpack
 - The **community badge** sends a hash of your Twitch username (never the name itself) to our server at most once a day. Turn it off in Settings.
 - **StreamPulse+** checks your license key with our server.
 
-Full policy: [streampulse.fr/privacy](https://streampulse.fr/privacy)
+Full policy: [streampulse.tech/privacy](https://streampulse.tech/privacy)
 
 ## Contributing
 
@@ -138,5 +138,5 @@ StreamPulse is free software under the [GNU General Public License v3.0](LICENSE
 ---
 
 <p align="center">
-  Made by <a href="https://github.com/AlexisAMZ">AlexisAMZ</a> · <a href="https://x.com/alexisamz_">X</a> · <a href="https://instagram.com/alexisamz">Instagram</a> · <a href="https://streampulse.fr/support">Support</a>
+  Made by <a href="https://github.com/AlexisAMZ">AlexisAMZ</a> · <a href="https://x.com/alexisamz_">X</a> · <a href="https://instagram.com/alexisamz">Instagram</a> · <a href="https://streampulse.tech/support">Support</a>
 </p>

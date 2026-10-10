@@ -17,7 +17,7 @@
   var PLUS_RULE = window.StreamPulsePlusRule; // js/inject/plus-rule.js, chargé avant (manifest)
   var PLUS_KEY = PLUS_RULE.PLUS_KEY;
   var COSMETICS_KEY = "streamPulseCosmetics";
-  var PLUS_URL = "https://streampulse.fr/plus";
+  var PLUS_URL = "https://streampulse.tech/plus";
   var BADGE_FX = ["tenure", "pager", "aurora", "sunset", "lcd", "gold", "rainbow", "fire", "frost", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean", "halo", "crown"];
   // Effets retires en 26.9.28 : Prisme devient Arc-en-ciel (copie de LEGACY_FX).
   var LEGACY_FX = { prism: "rainbow" };

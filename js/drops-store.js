@@ -194,7 +194,7 @@ export function createDropsStore({ storage, resolveChannels = async () => [], no
     });
   }
 
-  /** Dates d'ajout des badges notées par streampulse.fr. */
+  /** Dates d'ajout des badges notées par streampulse.tech. */
   function recordBadgeAdded(raw) {
     return enqueue(async () => {
       if (!isPlainObject(raw)) return { recorded: false, count: 0 };

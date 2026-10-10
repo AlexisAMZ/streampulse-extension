@@ -1,7 +1,7 @@
 /**
  * Cadres marketing 1280x800 (dimensions imposées par le Chrome Web Store).
  *
- * Charte de streampulse.fr et du popup (voir brand.mjs) : navy, halo violet,
+ * Charte de streampulse.tech et du popup (voir brand.mjs) : navy, halo violet,
  * titres en Unbounded, texte en Onest, logo blanc sans fond.
  */
 

@@ -67,7 +67,7 @@ export const CATALOG_RAW = {
   owned: ["hoxton"],
 };
 
-/** Dates d'ajout notées par streampulse.fr (relevé du 2026-10-05). */
+/** Dates d'ajout notées par streampulse.tech (relevé du 2026-10-05). */
 export const SITE_ADDED = {
   vaultbreakers: Date.parse("2026-10-05T11:39:15Z"),
   "clipped-that": Date.parse("2026-10-05T11:39:15Z"),

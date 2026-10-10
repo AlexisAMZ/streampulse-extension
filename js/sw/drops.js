@@ -102,8 +102,8 @@ export async function refreshDropsFromWorker({ minGapMs = DROPS_WORKER_MIN_GAP_M
 
 const REWARDS_EVERY_MS = 30 * 60_000;
 
-/** Dates d'ajout des badges notées par streampulse.fr (le CDN garde la réponse 10 min). */
-const BADGE_ADDED_URL = "https://streampulse.fr/api/twitch-badges?added=1";
+/** Dates d'ajout des badges notées par streampulse.tech (le CDN garde la réponse 10 min). */
+const BADGE_ADDED_URL = "https://streampulse.tech/api/twitch-badges?added=1";
 const BADGE_ADDED_EVERY_MS = 6 * 3_600_000;
 /** Après un échec, le site n'est pas redemandé avant ce délai. */
 const BADGE_ADDED_RETRY_MS = 30 * 60_000;

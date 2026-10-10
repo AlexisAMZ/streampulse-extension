@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const renderer = new ToastRenderer(liveCanvas, {
     streamer: inputStreamer.value.trim() || "anyme023",
-    url: inputUrl.value.trim() || "streampulse.fr",
+    url: inputUrl.value.trim() || "streampulse.tech",
     position: currentPos,
     avatarImg,
     logoImg,
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   inputUrl.addEventListener("input", (e) => {
-    const val = e.target.value.trim() || "streampulse.fr";
+    const val = e.target.value.trim() || "streampulse.tech";
     renderer.updateConfig({ url: val });
   });
 

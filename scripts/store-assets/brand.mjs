@@ -1,6 +1,6 @@
 /**
  * Charte partagée par tous les visuels promo (store, tuile, X) : la même que
- * streampulse.fr et que le popup. Navy profond, violet Twitch, vert LCD,
+ * streampulse.tech et que le popup. Navy profond, violet Twitch, vert LCD,
  * Unbounded pour les titres, Onest pour le texte, logo en blanc sans fond.
  *
  * Les polices sont celles embarquées dans font/, chargées en file:// par

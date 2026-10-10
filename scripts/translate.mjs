@@ -133,7 +133,7 @@ async function run() {
                 const segment = expectedUrlSegment(lang);
                 obj[k] = obj[k].replace(
                   /streampulse\.fr(\/[a-z-]{2,5})?\/support/g,
-                  `streampulse.fr${segment}/support`
+                  `streampulse.tech${segment}/support`
                 );
             } else if (typeof obj[k] === 'object') {
                 replacer(obj[k]);
