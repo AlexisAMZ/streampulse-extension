@@ -52,7 +52,7 @@ export const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
-    version: "26.10.8",
+    version: "26.10.10",
     date: "2026-10-10",
     title: {
       "fr": "Une nouvelle adresse",
