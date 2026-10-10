@@ -608,6 +608,8 @@
 
   function insertBoostStyles() {
     if (document.getElementById(BOOST_STYLE_ID)) return;
+    // Extension rechargée sans rafraîchir l'onglet : chrome.runtime a disparu.
+    if (!(chrome.runtime && chrome.runtime.id)) return;
     const style = document.createElement("style");
     style.id = BOOST_STYLE_ID;
     style.textContent = `

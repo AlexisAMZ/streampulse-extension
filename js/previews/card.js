@@ -271,6 +271,8 @@
     function ensureHls() {
       if (NS.Hls) return Promise.resolve(NS.Hls);
       if (hlsPromise) return hlsPromise;
+      // Extension rechargée sans rafraîchir l'onglet : pas de vendor, lecteur natif.
+      if (!(chrome.runtime && chrome.runtime.id)) return Promise.resolve(null);
       hlsPromise = import(chrome.runtime.getURL("js/vendor/hls.light.min.js"))
         .then(() => NS.Hls || globalThis.Hls || null)
         .catch((error) => {

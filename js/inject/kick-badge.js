@@ -160,6 +160,8 @@
   }
 
   function injectBadge(messageEl, hash) {
+    // Extension rechargée sans rafraîchir l'onglet : chrome.runtime a disparu.
+    if (!(chrome.runtime && chrome.runtime.id)) return;
     if (messageEl.querySelector(".sp-chat-badge")) return;
 
     var btn = usernameButton(messageEl);
