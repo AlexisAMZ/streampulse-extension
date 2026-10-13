@@ -1922,11 +1922,12 @@
   var DEFAULT_LANG = "en";
 
   /**
-   * Résout une préférence stockée ("pt_BR", "EN", "de-DE") vers une langue
-   * disponible. Exact d'abord, puis sous-étiquette de base.
+   * Résout une étiquette de langue ("pt_BR", "EN", "de-DE") vers une langue
+   * disponible. Exact d'abord, puis sous-étiquette de base. Chaîne vide si
+   * rien ne correspond : l'appelant décide du repli.
    */
-  function resolve(value) {
-    if (typeof value !== "string" || !value.trim()) return DEFAULT_LANG;
+  function resolveCode(value) {
+    if (typeof value !== "string" || !value.trim()) return "";
     var raw = value.trim().replace(/_/g, "-").toLowerCase();
     var codes = Object.keys(STRINGS);
     for (var i = 0; i < codes.length; i++) {
@@ -1937,7 +1938,28 @@
       if (codes[j].toLowerCase() === base) return codes[j];
       if (codes[j].toLowerCase().split("-")[0] === base) return codes[j];
     }
-    return DEFAULT_LANG;
+    return "";
+  }
+
+  /** Langue de l'interface Chrome, disponible dans les content scripts. */
+  function uiLanguage() {
+    try {
+      if (typeof chrome !== "undefined" && chrome.i18n && typeof chrome.i18n.getUILanguage === "function") {
+        return chrome.i18n.getUILanguage();
+      }
+    } catch (_e) {
+      // Pas d'API chrome (tests, hors extension) : le repli ci-dessous s'applique.
+    }
+    return "";
+  }
+
+  /**
+   * Résout une préférence stockée vers une langue disponible. Sans choix
+   * valide, même règle que le popup (js/i18n.js, readStoredLanguage) : suivre
+   * la langue de Chrome plutôt que tomber sur l'anglais.
+   */
+  function resolve(value) {
+    return resolveCode(value) || resolveCode(uiLanguage()) || DEFAULT_LANG;
   }
 
   /** Lit une clé "a.b.c", avec repli sur l'anglais puis sur la clé brute. */

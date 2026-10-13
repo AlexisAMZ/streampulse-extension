@@ -1,6 +1,6 @@
 // Stockage : streamers, préférences, statistiques et journal d'événements.
 
-import { DEFAULT_PREFERENCES, detectInstallLanguage, notificationFieldsFromUpdates, sanitizePreferences } from "../preferences-data.js";
+import { DEFAULT_PREFERENCES, detectInstallLanguage, normalizeLanguage, notificationFieldsFromUpdates, sanitizePreferences } from "../preferences-data.js";
 import { setupAutoOpenInventoryAlarm } from "./alarms.js";
 import { CONFIG } from "./config.js";
 import { PREFERENCES_KEY, STORAGE_KEYS } from "./constants.js";
@@ -149,9 +149,23 @@ export class PreferenceStore {
       await this.set({ ...DEFAULT_PREFERENCES, language });
       return { ...DEFAULT_PREFERENCES, language };
     }
+    const sanitized = this.sanitize(stored[PREFERENCES_KEY]);
+    // Objet existant sans langue valide (sauvegarde importée d'une version
+    // antérieure au réglage, fusion de données) : appliquer la même règle que
+    // la nouvelle installation et l'écrire, pour que l'UI injectée lise la
+    // même langue que le popup — sinon le popup suit Chrome (readStoredLanguage)
+    // et le tiroir retombe sur l'anglais.
+    if (normalizeLanguage(stored[PREFERENCES_KEY].language) !== stored[PREFERENCES_KEY].language) {
+      const language = detectInstallLanguage(
+        typeof chrome.i18n?.getUILanguage === "function" ? chrome.i18n.getUILanguage() : undefined
+      );
+      const healed = { ...DEFAULT_PREFERENCES, ...sanitized, language };
+      await this.set(healed);
+      return healed;
+    }
     return {
       ...DEFAULT_PREFERENCES,
-      ...this.sanitize(stored[PREFERENCES_KEY]),
+      ...sanitized,
     };
   }
 }
