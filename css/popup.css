@@ -110,13 +110,13 @@ svg { flex: none; width: 14px; height: 14px; }
 .ring-youtube { box-shadow: 0 0 0 2px #0b0c22, 0 0 0 4px var(--youtube); }
 
 /* ── Top bar: floats over the stage, solid in settings ── */
-.topbar { position: absolute; z-index: 20; top: 0; left: 0; right: 0; display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 16px; color: var(--paper); }
+.topbar { position: absolute; z-index: 20; top: 0; left: 0; right: 0; display: flex; align-items: center; gap: 8px; height: 54px; padding: 0 16px; color: var(--paper); }
 body.is-settings .topbar { background: var(--surface); box-shadow: inset 0 -1px 0 var(--line); color: var(--text); }
 .brand { display: flex; align-items: center; gap: 9px; }
 .brand-mark { width: 26px; height: 26px; object-fit: contain; filter: brightness(0) invert(1); }
 [data-theme="light"]:has(#settings-section:not(.hidden)) .brand-mark { filter: brightness(0); }
 .brand-name { font-family: var(--display); font-size: 14px; font-weight: 700; letter-spacing: -0.01em; }
-.tabs { display: flex; flex: none; align-items: center; gap: 12px; }
+.tabs { display: flex; flex: none; align-items: center; gap: 9px; }
 .tab-button,
 .topbar-link { position: relative; display: inline-flex; align-items: center; height: 32px; padding: 0; border: 0; background: transparent; color: rgba(255, 255, 255, 0.74); font: inherit; font-weight: 600; line-height: 1; }
 .tab-button:hover,
@@ -129,13 +129,15 @@ body.is-settings .topbar-link:hover,
 body.is-settings .tab-button.active { color: var(--text); }
 body.is-settings .tab-button.active { box-shadow: inset 0 -2px 0 var(--violet); }
 .unread-dot { position: absolute; top: 7px; right: -9px; width: 6px; height: 6px; border-radius: 50%; background: var(--lcd); }
-.topbar-end { display: flex; flex: none; align-items: center; gap: 6px; margin-left: auto; }
+.topbar-end { display: flex; flex: none; align-items: center; gap: 4px; margin-left: auto; }
 /* Hiérarchie de la barre : les onglets d'abord ; à droite, des relevés en
    texte (points, temps de visionnage), puis deux actions en icônes sans cadre. */
 .stat-pill { display: inline-flex; align-items: center; gap: 5px; height: 30px; padding: 0 4px; color: rgba(255, 255, 255, 0.78); font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* Valeur bornée : un total qui s'allonge se tronque, il ne pousse jamais les boutons d'action hors de la barre. */
+.stat-pill > span:last-child { min-width: 0; max-width: 72px; overflow: hidden; text-overflow: ellipsis; }
 .stat-pill svg { width: 12px; height: 12px; flex: none; }
 .stat-points svg { color: var(--lcd); }
-.stat-time { margin-right: 4px; }
+.stat-time { margin-right: 0; }
 .topbar .icon-button { width: 30px; height: 30px; background: transparent; box-shadow: none; color: rgba(255, 255, 255, 0.78); transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease; }
 .topbar .icon-button:hover { background: rgba(255, 255, 255, 0.12); color: var(--paper); }
 body.is-settings .stat-pill,
@@ -551,10 +553,19 @@ input[type="checkbox"][role="switch"]:checked::before { transform: translateX(16
 .history-empty-body { max-width: 44ch; color: var(--text-2); }
 
 /* ── StreamPulse+ ── */
-.plus-badge { height: 24px; margin-left: 2px; padding: 0 8px; border: 0; border-radius: 999px; background: rgba(255, 255, 255, 0.12); color: var(--paper); font-size: 12px; font-weight: 700; line-height: 24px; letter-spacing: 0.02em; }
-.plus-badge:hover,
+/* Le pill Plus de la barre : un bouton plein à l'accent de marque, avec son
+   étoile, pour qu'on comprenne d'un coup d'œil que c'est une offre qu'on peut
+   ouvrir. Abonné : vert LCD (le « actif » du produit) et une coche à la place
+   de l'étoile ; l'infobulle passe à « gérer mon abonnement ». */
+.plus-badge { display: inline-flex; align-items: center; gap: 4px; height: 24px; margin-left: 2px; padding: 0 8px; border: 0; border-radius: 999px; background: var(--violet); color: var(--paper); font-size: 12px; font-weight: 700; line-height: 1; letter-spacing: 0.02em; cursor: pointer; transition: background-color var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out); }
+.plus-badge svg { width: 11px; height: 11px; flex: none; }
+.plus-badge:hover { background: var(--violet-strong); }
+.plus-badge:active { transform: scale(0.96); }
 .plus-badge.is-active { background: var(--lcd); color: var(--lcd-ink); }
-body.is-settings .plus-badge:not(.is-active) { background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text); }
+.plus-badge.is-active:hover { background: var(--lcd); }
+.plus-badge-check { display: none; }
+.plus-badge.is-active .plus-badge-spark { display: none; }
+.plus-badge.is-active .plus-badge-check { display: block; }
 .plus-tag { margin-left: 8px; padding: 2px 7px; border-radius: 999px; background: var(--lcd); color: var(--lcd-ink); font-family: var(--body); font-size: 12px; font-weight: 700; vertical-align: 2px; }
 .plus-view { position: absolute; inset: 0; z-index: 19; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; padding: 74px 24px 24px; overflow: hidden; background: radial-gradient(90% 70% at 0% 0%, rgba(145, 70, 255, 0.28), transparent 60%), var(--bg); animation: fade-in var(--dur-base) ease; }
 .plus-view:focus { outline: none; }
@@ -1048,11 +1059,12 @@ body.is-settings .new-dot { background: var(--violet); }
 .plus-fx-badges .cosmetic-badge { width: 16px; height: 16px; }
 .plus-fx-names { display: flex; flex-wrap: wrap; gap: 12px; }
 .plus-fx-names .fx-sample-name { font-size: 12.5px; }
-/* Parrainage : colonne de droite, sous l'offre, visible sans défiler. */
-.plus-view { grid-template-rows: auto minmax(0, 1fr); row-gap: 12px; }
-.plus-main { grid-row: 1 / 3; }
-.plus-view > .plus-offer { grid-column: 2; grid-row: 1; }
-.plus-referral { grid-column: 2; grid-row: 2; align-self: start; min-height: 0; }
+/* Offre et parrainage : colonne de droite, un seul conteneur qui défile quand
+   il dépasse (l'écran ne coupe plus les récompenses ni le bas de l'offre). */
+.plus-view { grid-template-rows: minmax(0, 1fr); row-gap: 12px; }
+.plus-main { grid-row: 1; }
+.plus-side { grid-column: 2; grid-row: 1; display: grid; gap: 12px; align-content: start; min-height: 0; overflow-y: auto; scrollbar-width: none; overscroll-behavior: contain; }
+.plus-side::-webkit-scrollbar { display: none; }
 .plus-referral-title { font-family: var(--display); font-size: 14px; font-weight: 800; letter-spacing: -0.02em; }
 .plus-referral-body { margin: 3px 0 7px; color: var(--text-2); font-size: 11px; line-height: 1.4; }
 .plus-referral .referral-tiers { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin: 0; }

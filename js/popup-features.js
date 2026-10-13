@@ -191,6 +191,14 @@ function renderPlus() {
   const active = plusActive();
   const deviceLimited = plusRecord?.status === "device_limited";
   $("open-plus")?.classList.toggle("is-active", active);
+  // Le pill de la barre change d'infobulle avec l'état : l'abonnement se
+  // découvre ou se gère, et le lecteur d'écran entend la bonne action.
+  const openButton = $("open-plus");
+  if (openButton) {
+    const hint = t(active ? "popup.plus.openActive" : "popup.plus.open");
+    openButton.title = hint;
+    openButton.setAttribute("aria-label", hint);
+  }
   if ($("plus-offer")) $("plus-offer").hidden = active || deviceLimited;
   if ($("plus-device-limited")) $("plus-device-limited").hidden = !deviceLimited;
   if ($("plus-active")) $("plus-active").hidden = !active;

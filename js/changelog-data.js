@@ -69,6 +69,40 @@ export const RELEASES = [
     },
     changes: [
       {
+        type: "fix",
+        area: "plus",
+        text: {
+          "fr": "Écran StreamPulse+ : la colonne de droite défile jusqu'au bout, les récompenses de parrainage ne sont plus coupées.",
+          "en": "StreamPulse+ screen: the right column now scrolls to the end, referral rewards are no longer cut off.",
+          "es": "Pantalla StreamPulse+: la columna derecha se desplaza hasta el final, las recompensas de recomendación ya no se cortan.",
+          "pt-BR": "Tela StreamPulse+: a coluna direita rola até o fim, as recompensas de indicação não são mais cortadas.",
+          "de": "StreamPulse+-Bildschirm: Die rechte Spalte scrollt ganz nach unten, die Empfehlungsprämien werden nicht mehr abgeschnitten.",
+          "it": "Schermata StreamPulse+: la colonna di destra scorre fino in fondo, i premi degli inviti non sono più tagliati.",
+          "pl": "Ekran StreamPulse+: prawa kolumna przewija się do końca, nagrody za polecenia nie są już ucięte.",
+          "tr": "StreamPulse+ ekranı: sağ sütun sonuna kadar kayıyor, davet ödülleri artık kesilmiyor.",
+          "ru": "Экран StreamPulse+: правая колонка прокручивается до конца, награды за приглашения больше не обрезаются.",
+          "ja": "StreamPulse+画面：右列が最後までスクロールでき、紹介報酬が切れなくなりました。",
+          "ko": "StreamPulse+ 화면: 오른쪽 열이 끝까지 스크롤되어 추천 보상이 잘리지 않습니다.",
+        },
+      },
+      {
+        type: "improved",
+        area: "interface",
+        text: {
+          "fr": "La pastille StreamPulse+ de la barre ressemble désormais à un bouton : elle affiche l'étoile de la marque, et pour les abonnés, la coche verte avec « Gérer mon abonnement » au survol.",
+          "en": "The StreamPulse+ pill in the toolbar now looks like a button: it carries the brand star, and for subscribers a green check with “Manage my subscription” on hover.",
+          "es": "La etiqueta StreamPulse+ de la barra ahora parece un botón: muestra la estrella de la marca y, para los suscriptores, una marca verde con “Gestionar mi suscripción” al pasar el ratón.",
+          "pt-BR": "O selo StreamPulse+ da barra agora parece um botão: mostra a estrela da marca e, para assinantes, um visto verde com “Gerenciar minha assinatura” ao passar o mouse.",
+          "de": "Die StreamPulse+-Marke in der Leiste sieht jetzt wie eine Schaltfläche aus: mit dem Markenstern, und für Abonnenten mit grünem Häkchen und „Mein Abo verwalten“ beim Darüberfahren.",
+          "it": "La pillola StreamPulse+ della barra ora sembra un pulsante: mostra la stella del marchio e, per gli abbonati, un segno di spunta verde con “Gestisci il mio abbonamento” al passaggio del mouse.",
+          "pl": "Znacznik StreamPulse+ na pasku wygląda teraz jak przycisk: ma gwiazdkę marki, a dla subskrybentów zielony hash z „Zarządzaj moją subskrypcją” po najechaniu.",
+          "tr": "Çubuktaki StreamPulse+ simgesi artık bir düğme gibi görünüyor: marka yıldızını taşıyor, aboneler için üzerine gelince yeşil onay işareti ve “Aboneliğimi yönet” gösteriyor.",
+          "ru": "Значок StreamPulse+ на панели теперь выглядит как кнопка: со звездой бренда, а для подписчиков с зелёной галочкой и “Управление подпиской” при наведении.",
+          "ja": "バーのStreamPulse+バッジがボタンらしくなりました：ブランドの星を表示。購読者は緑のチェックと「サブスクリプションを管理」がホバーで表示されます。",
+          "ko": "상단 표시줄의 StreamPulse+ 배지가 이제 버튼처럼 보입니다: 브랜드 별을 표시하고, 구독자에게는 호버 시 초록 체크와 “구독 관리”를 보여줍니다.",
+        },
+      },
+      {
         type: "new",
         area: "drops",
         text: {
