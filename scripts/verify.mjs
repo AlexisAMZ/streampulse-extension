@@ -198,13 +198,14 @@ else {
     // résolues dynamiquement — nuancier popup.cosmetics.*, paliers
     // d'ancienneté, périodes du récap, resolveurs scopés inject.*, libellés du
     // tiroir pilotés par données, changelog.areas.* — les 3 clés du tooling
-    // store (onboarding.welcomeTagline, popup.platformFilter.*), et les clés
-    // copiées vers shared.* par scripts/build-inline-i18n.mjs (SHARED_SETTINGS,
-    // SHARED_OSD : vivantes par construction, sans littéral dans le code). Si
+    // store (onboarding.welcomeTagline, popup.platformFilter.*), et tout le
+    // sous-arbre popup.cosmetics.* : build-inline-i18n.mjs le copie en entier
+    // vers shared.cosmetics.*, consommé par l'éditeur d'effets du tiroir
+    // Twitch (settings-drawer.js : titres, noms d'effets, sampleName). Si
     // ce contrôle échoue : soit une clé morte vient d'être ajoutée (à
     // supprimer), soit un nouveau mécanisme dynamique demande d'ajuster
     // MAX_UNUSED_KEYS et de le documenter ici.
-    const MAX_UNUSED_KEYS = 319;
+    const MAX_UNUSED_KEYS = 336;
     const unusedKeys = referenceKeys.filter((k) => !usedKeys.has(k));
     if (unusedKeys.length > MAX_UNUSED_KEYS) {
       fail(`${unusedKeys.length} translation keys are never referenced by any literal call (max ${MAX_UNUSED_KEYS}) : une clé morte vient probablement d'être ajoutée, ou un nouveau mécanisme dynamique demande d'ajuster MAX_UNUSED_KEYS`);
