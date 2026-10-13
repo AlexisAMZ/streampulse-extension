@@ -6,8 +6,8 @@
  *   node scripts/make-store-assets.mjs fr en      # seulement celles listées
  *   KEEP_BUILD=1 node scripts/make-store-assets.mjs fr   # garde les intermédiaires
  *
- * Sortie : images/cws_screenshots/<LANGUE>/01-dashboard.png, 02-automation.png,
- * 03-features.png : trois PNG 1280x800 par langue.
+ * Sortie : images/cws_screenshots/<LANGUE>/01-dashboard, 02-drops, 03-plus,
+ * 04-twitch, 05-compat : cinq PNG 1280x800 par langue (le store en accepte 5).
  *
  * Le rendu part du vrai popup et des vraies traductions : rien n'est maquetté à
  * la main, donc une évolution de l'UI se répercute au prochain run.
@@ -30,14 +30,14 @@ import {
   applyTypography,
   resolveTagline,
 } from "./store-assets/copy.mjs";
-import { buildPopupPage } from "./store-assets/popup-page.mjs";
-import { buildProductFrame, buildFeaturesFrame, buildCompatibilityFrame } from "./store-assets/frames.mjs";
+import { buildProductFrame, buildCompatibilityFrame } from "./store-assets/frames.mjs";
 import { COLORS as BRAND_COLORS } from "./store-assets/brand.mjs";
 import { buildPromoTile, PROMO_TILE, buildPromoMarquee, PROMO_MARQUEE } from "./store-assets/promo.mjs";
 import { findBannedTerms, stripPromotionalSentences } from "./store-assets/policy.mjs";
 import {
   assertChromeAvailable,
   capture,
+  captureWhenReady,
   resizeExact,
   pixelSize,
   flattenToRgb,
@@ -168,6 +168,41 @@ async function captureHarness(name, pagePath, size = CANVAS) {
   return outPath;
 }
 
+/**
+ * Capture du popup par le banc, en temps réel : on attend que les vraies
+ * données du faux chrome.* soient à l'écran avant de photographier.
+ */
+const POPUP_READY = {
+  dashboard: "document.body.innerText.includes('Pixelkat')",
+  drops: "document.body.innerText.includes('Vehicle XP')",
+  plus: "(() => { const v = document.querySelector('.plus-view'); return !!v && getComputedStyle(v).display !== 'none' && v.innerText.length > 80; })()",
+};
+
+async function capturePopup(name, lang, view) {
+  const outPath = path.join(WORK_DIR, `popup-${lang}-${name}.png`);
+  const viewParam = view ? `&view=${view}` : "";
+  const options = {
+    url: `${HARNESS_URL}/scripts/dev/page-harness.html?page=popup&store=1&lang=${encodeURIComponent(lang)}${viewParam}`,
+    outPath,
+    width: POPUP_VIEWPORT.width,
+    height: POPUP_VIEWPORT.height,
+    readyExpr: POPUP_READY[name] || POPUP_READY.dashboard,
+  };
+  // Le serveur statique du banc (http.server) coupe parfois une connexion
+  // pendant le chargement en rafale des modules ES : la page reste alors
+  // squelettique. On retente plutôt que de photographier un popup vide.
+  const attempts = 8;
+  for (let attempt = 1; ; attempt += 1) {
+    try {
+      await captureWhenReady(options);
+      return outPath;
+    } catch (error) {
+      if (attempt === attempts) throw error;
+      console.warn(`  ↻ ${name} ${lang} : tentative ${attempt} sans données, nouvel essai`);
+    }
+  }
+}
+
 /** Langue de la tuile promotionnelle : celle déclarée comme principale au store. */
 /**
  * Le Chrome Web Store ne stocke qu'un seul jeu de tuiles promo pour toute la
@@ -211,12 +246,6 @@ function warnPolicySoft(entries, lang) {
     );
   }
 }
-
-/** Les deux vues du popup que l'on capture, avec leur point d'ancrage. */
-const POPUP_VARIANTS = [
-  { name: "dashboard", panel: null },
-  { name: "automation", panel: "automation" },
-];
 
 /**
  * Clés i18n effectivement rendues dans le popup. Elles apparaissent en clair
@@ -266,6 +295,78 @@ async function renderFrame({ name, html, outPath, size = CANVAS, flatten = false
   }
 }
 
+/**
+ * Vues du popup que l'on capture, par le banc (vrai popup + faux chrome.*).
+ * `view` ouvre l'onglet avant la capture ; l'accueil n'en a pas.
+ */
+const POPUP_VIEWS = [
+  { name: "dashboard", view: "" },
+  { name: "drops", view: "drops" },
+  { name: "plus", view: "plus" },
+];
+
+/**
+ * Textes des cadres Drops et Plus. Ils décrivent ce que la capture montre et
+ * rien de plus : pas de gratuité, pas de superlatif (policy.mjs). Le cadre Plus
+ * dit que l'offre est un abonnement optionnel, pour que la fiche reste
+ * cohérente avec l'offre payante visible dans le popup.
+ */
+const DROPS_TITLES = {
+  fr: "Tes Drops, de la campagne à l'inventaire",
+  en: "Your Drops, from campaign to inventory",
+  es: "Tus Drops, de la campaña al inventario",
+  "pt-BR": "Seus Drops, da campanha ao inventário",
+  de: "Deine Drops, von der Kampagne bis zum Inventar",
+  it: "I tuoi Drops, dalla campagna all'inventario",
+  pl: "Twoje Dropy, od kampanii po ekwipunek",
+  tr: "Drops'un, kampanyadan envantere",
+  ru: "Твои Drops: от кампании до инвентаря",
+  ja: "ドロップを、キャンペーンからインベントリまで",
+  ko: "드롭을 캠페인부터 인벤토리까지",
+};
+
+const DROPS_SUBTITLES = {
+  fr: "Les campagnes en cours, la progression de chaque récompense et ce qui arrive bientôt, au même endroit.",
+  en: "Active campaigns, the progress of each reward and what is coming next, all in one place.",
+  es: "Las campañas activas, el progreso de cada recompensa y lo que viene después, en un solo lugar.",
+  "pt-BR": "As campanhas ativas, o progresso de cada recompensa e o que vem a seguir, tudo num só lugar.",
+  de: "Laufende Kampagnen, der Fortschritt jeder Belohnung und was als Nächstes kommt, an einem Ort.",
+  it: "Le campagne attive, i progressi di ogni ricompensa e le prossime in arrivo, in un unico posto.",
+  pl: "Aktywne kampanie, postęp każdej nagrody i to, co nadchodzi, w jednym miejscu.",
+  tr: "Süren kampanyalar, her ödülün ilerlemesi ve sıradaki kampanyalar tek bir yerde.",
+  ru: "Текущие кампании, прогресс каждой награды и ближайшие кампании в одном месте.",
+  ja: "開催中のキャンペーン、報酬ごとの進捗、これから始まるキャンペーンを一か所で確認できます。",
+  ko: "진행 중인 캠페인, 보상별 진행 상황, 곧 시작될 캠페인을 한곳에서 확인합니다.",
+};
+
+const PLUS_TITLES = {
+  fr: "Une formule optionnelle : StreamPulse+",
+  en: "An optional plan: StreamPulse+",
+  es: "Un plan opcional: StreamPulse+",
+  "pt-BR": "Um plano opcional: StreamPulse+",
+  de: "Ein optionales Abo: StreamPulse+",
+  it: "Un piano facoltativo: StreamPulse+",
+  pl: "Opcjonalny plan: StreamPulse+",
+  tr: "İsteğe bağlı bir plan: StreamPulse+",
+  ru: "Необязательный план: StreamPulse+",
+  ja: "任意のプラン：StreamPulse+",
+  ko: "선택형 플랜: StreamPulse+",
+};
+
+const PLUS_SUBTITLES = {
+  fr: "Drops et badges récupérés tout seuls, alertes avancées, récap enrichi et prédictions automatiques.",
+  en: "Drops and badges claimed for you, advanced alerts, an enriched recap and automatic predictions.",
+  es: "Drops e insignias recogidos por ti, alertas avanzadas, resumen ampliado y predicciones automáticas.",
+  "pt-BR": "Drops e emblemas resgatados por você, alertas avançados, resumo completo e previsões automáticas.",
+  de: "Drops und Abzeichen werden für dich abgeholt, dazu erweiterte Hinweise, Rückblick und automatische Vorhersagen.",
+  it: "Drops e badge riscattati per te, avvisi avanzati, riepilogo esteso e previsioni automatiche.",
+  pl: "Dropy i odznaki odbierane za ciebie, zaawansowane powiadomienia, rozbudowane podsumowanie i automatyczne przewidywania.",
+  tr: "Drops ve rozetler senin yerine alınır; gelişmiş bildirimler, zengin özet ve otomatik tahminler.",
+  ru: "Drops и значки забираются за тебя, плюс расширенные уведомления, подробная сводка и автоматические прогнозы.",
+  ja: "ドロップとバッジの自動受け取り、高度な通知、充実したまとめ、自動予想を利用できます。",
+  ko: "드롭과 배지 자동 수령, 고급 알림, 확장된 리캡, 자동 예측을 이용할 수 있습니다.",
+};
+
 async function buildLanguage({ lang, translations, listing, uiKeys }) {
   const translate = makeTranslator(translations, lang);
   const t = (key, vars) => applyTypography(translate(key, vars), lang);
@@ -273,83 +374,40 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
   const outDir = path.join(OUT_DIR, dirName);
   fs.mkdirSync(outDir, { recursive: true });
 
-  // 1. Captures du popup réel, une par vue.
-  //    Une capture manuelle déposée dans le dossier de la langue sous le nom
-  //    `source-<vue>.png` remplace le rendu automatique. Utile quand on veut du
-  //    vrai contenu de stream plutôt que le jeu de démonstration : à condition
-  //    de fournir une image ~1640px de large, sinon elle sera floue une fois
-  //    intégrée au cadre 1280x800.
+  // 1. Captures du popup réel, une par vue. Le banc fait tourner le vrai popup
+  //    avec le faux chrome.* de mock-chrome.js : la capture suit le code au
+  //    lieu de figer une photo. Le mode store=1 retire le lecteur Kick en
+  //    direct, pour qu'aucune chaîne réelle n'entre dans un visuel public.
   const popupShots = {};
-  for (const spec of POPUP_VARIANTS) {
-    const override = path.join(outDir, `source-${spec.name}.png`);
-    if (fs.existsSync(override)) {
-      const { width } = await pixelSize(override);
-      if (width < 1200) {
-        console.warn(
-          `  ⚠︎ ${path.relative(ROOT, override)} fait ${width}px de large ; ` +
-            "elle sera agrandie et perdra en netteté (viser 1640px).",
-        );
-      }
-      popupShots[spec.name] = override;
-      continue;
-    }
-    if (!spec.panel) {
-      // Le tableau de bord ne se rend pas via buildPopupPage, qui masque la vue
-      // Streamers et n'a aucune couche de donnees. On passe par le banc, qui
-      // fait tourner le vrai popup avec le faux chrome.* de mock-chrome.js :
-      // la capture suit donc le code au lieu de figer une photo. Le mode
-      // store=1 du banc retire le lecteur Kick en direct, pour qu'aucune
-      // chaine reelle n'entre dans un visuel public.
-      popupShots[spec.name] = await captureHarness(
-        `popup-${lang}-dashboard`,
-        `/scripts/dev/page-harness.html?page=popup&store=1&lang=${encodeURIComponent(lang)}`,
-        { width: POPUP_VIEWPORT.width, height: POPUP_VIEWPORT.height },
-      );
-      continue;
-    }
-    const html = buildPopupPage({
-      lang,
-      locale: LOCALES[lang],
-      strings: translations[lang],
-      fallback: translations.en,
-      panel: spec.panel,
-    });
-    const htmlPath = writeWork(`popup-${lang}-${spec.name}.html`, html);
-    const shotPath = path.join(WORK_DIR, `popup-${lang}-${spec.name}.png`);
-    await capture({
-      htmlPath,
-      outPath: shotPath,
-      width: POPUP_VIEWPORT.width,
-      height: POPUP_VIEWPORT.height,
-    });
-    popupShots[spec.name] = shotPath;
+  for (const spec of POPUP_VIEWS) {
+    popupShots[spec.name] = await capturePopup(spec.name, lang, spec.view);
   }
 
   const tagline = resolveTagline(t("onboarding.welcomeTagline"), lang);
-
-  // La description courte du listing se termine sur une accroche du type
-  // « Dispo en 11 langues ! Gratuit. » : « gratuit » est un mot-clé interdit sur
-  // les assets, on retire la phrase et on garde l'énumération factuelle.
-  const featuresSubtitle = stripPromotionalSentences(listing[lang].short, lang);
   const bullets = listing[lang].bullets.map((bullet) => ({
     title: applyTypography(bullet.title, lang),
     body: applyTypography(bullet.body, lang),
   }));
 
+  const dashboardSubtitle = applyTypography(DASHBOARD_SUBTITLES[lang] || DASHBOARD_SUBTITLES.en, lang);
+  const dropsTitle = applyTypography(DROPS_TITLES[lang] || DROPS_TITLES.en, lang);
+  const dropsSubtitle = applyTypography(DROPS_SUBTITLES[lang] || DROPS_SUBTITLES.en, lang);
+  const plusTitle = applyTypography(PLUS_TITLES[lang] || PLUS_TITLES.en, lang);
+  const plusSubtitle = applyTypography(PLUS_SUBTITLES[lang] || PLUS_SUBTITLES.en, lang);
+  // Puce « Bouton Ajouter à StreamPulse » : la scène Twitch montre le panneau et le bouton.
+  const twitchBullet = bullets[2];
+
   assertPolicyClean(
     [
       { label: "tagline", text: tagline },
       { label: "titre 01", text: t("popup.greetingSub") },
-      { label: "sous-titre 01", text: t("popup.settings.liveNotificationsDescription") },
-      { label: "titre 02", text: t("onboarding.autoClaimTitle") },
-      { label: "sous-titre 02", text: t("onboarding.autoClaimDescription") },
-      { label: "titre 03", text: t("onboarding.welcomeTitle") },
-      { label: "sous-titre 01", text: DASHBOARD_SUBTITLES[lang] || DASHBOARD_SUBTITLES.en },
-      { label: "sous-titre 03", text: featuresSubtitle },
-      ...bullets.flatMap((bullet, index) => [
-        { label: `puce ${index + 1} titre`, text: bullet.title },
-        { label: `puce ${index + 1} corps`, text: bullet.body },
-      ]),
+      { label: "sous-titre 01", text: dashboardSubtitle },
+      { label: "titre 02", text: dropsTitle },
+      { label: "sous-titre 02", text: dropsSubtitle },
+      { label: "titre 03", text: plusTitle },
+      { label: "sous-titre 03", text: plusSubtitle },
+      { label: "titre 04", text: twitchBullet.title },
+      { label: "sous-titre 04", text: twitchBullet.body },
     ],
     lang,
   );
@@ -359,88 +417,38 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
     lang,
   );
 
-  // 2. Cadres marketing. Les titres viennent des traductions embarquées, les
-  //    puces de CHROMEWEBSTORE.md : aucun texte n'est produit à la volée.
-  await renderFrame({
-    name: `frame-${lang}-01`,
-    outPath: path.join(outDir, "01-dashboard.png"),
-    flatten: true,
-    html: buildProductFrame({
-      logoPath: LOGO,
-      tagline,
-      title: t("popup.greetingSub"),
-      subtitle: applyTypography(DASHBOARD_SUBTITLES[lang] || DASHBOARD_SUBTITLES.en, lang),
-      shotPath: popupShots.dashboard,
-    }),
-  });
+  // 2. Cadres marketing. Les titres viennent des traductions embarquées ou des
+  //    tables ci-dessus, les puces de CHROMEWEBSTORE.md : rien n'est produit
+  //    à la volée.
+  const frames = [
+    { file: "01-dashboard.png", title: t("popup.greetingSub"), subtitle: dashboardSubtitle, shot: popupShots.dashboard },
+    { file: "02-drops.png", title: dropsTitle, subtitle: dropsSubtitle, shot: popupShots.drops },
+    { file: "03-plus.png", title: plusTitle, subtitle: plusSubtitle, shot: popupShots.plus },
+  ];
+  for (const [index, frame] of frames.entries()) {
+    await renderFrame({
+      name: `frame-${lang}-0${index + 1}`,
+      outPath: path.join(outDir, frame.file),
+      flatten: true,
+      html: buildProductFrame({
+        logoPath: LOGO,
+        tagline,
+        title: frame.title,
+        subtitle: frame.subtitle,
+        shotPath: frame.shot,
+      }),
+    });
+  }
 
-  await renderFrame({
-    name: `frame-${lang}-02`,
-    outPath: path.join(outDir, "02-automation.png"),
-    flatten: true,
-    html: buildProductFrame({
-      logoPath: LOGO,
-      tagline,
-      title: t("onboarding.autoClaimTitle"),
-      subtitle: t("onboarding.autoClaimDescription"),
-      shotPath: popupShots.automation,
-    }),
-  });
-
-  await renderFrame({
-    name: `frame-${lang}-03`,
-    outPath: path.join(outDir, "03-features.png"),
-    flatten: true,
-    html: buildFeaturesFrame({
-      logoPath: LOGO,
-      tagline,
-      title: t("onboarding.welcomeTitle"),
-      subtitle: applyTypography(featuresSubtitle, lang),
-      features: bullets,
-    }),
-  });
-
-  // 3. Page « Mon récap » avec des données de démonstration.
-  const recapShot = await captureHarness(
-    `recap-${lang}`,
-    `/scripts/dev/page-harness.html?page=recap&shot=1&lang=${encodeURIComponent(lang)}`,
-    // 520 coupait en plein milieu du panneau « Recap avance » : mesure a 1280 de
-    // large, l'apercu se termine a 621 et la coque a 677. On cadre a 640, dans
-    // la marge basse, pour ne trancher aucun element.
-    { width: 1280, height: 640 },
-  );
-  const recapTitle = t("recap.title");
-  const recapSubtitle = t("recap.subtitle");
-
-  // 4. Éléments ajoutés sur Twitch : la scène n'existe qu'en français et anglais.
+  // 3. Éléments ajoutés sur Twitch : la scène n'existe qu'en français et anglais.
   const twitchShot = await captureHarness(
     `twitch-${lang}`,
     `/scripts/dev/twitch-harness.html?shot=1&lang=${lang === "fr" ? "fr" : "en"}`,
     { width: 1000, height: 820 },
   );
-  // Puce « Bouton Ajouter à StreamPulse » : la scène montre le panneau et le bouton.
-  const twitchBullet = bullets[2];
-
-  assertPolicyClean(
-    [
-      { label: "titre 04", text: recapTitle },
-      { label: "sous-titre 04", text: recapSubtitle },
-      { label: "titre 05", text: twitchBullet.title },
-      { label: "sous-titre 05", text: twitchBullet.body },
-    ],
-    lang,
-  );
-
   await renderFrame({
     name: `frame-${lang}-04`,
-    outPath: path.join(outDir, "04-recap.png"),
-    flatten: true,
-    html: buildProductFrame({ logoPath: LOGO, tagline, title: recapTitle, subtitle: recapSubtitle, shotPath: recapShot }),
-  });
-
-  await renderFrame({
-    name: `frame-${lang}-05`,
-    outPath: path.join(outDir, "05-twitch.png"),
+    outPath: path.join(outDir, "04-twitch.png"),
     flatten: true,
     html: buildProductFrame({
       logoPath: LOGO,
@@ -451,22 +459,22 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
     }),
   });
 
-  // 6. Cadre « compatibilite » : la marque en pivot, les trois plateformes
+  // 5. Cadre « compatibilite » : la marque en pivot, les trois plateformes
   //    reliees, et sous chacune ce qu'elle sait reellement y faire.
   const compatNote = COMPAT_NOTES[lang] || COMPAT_NOTES.en;
   const headline = COMPAT_HEADLINES[lang] || COMPAT_HEADLINES.en;
   const caps = COMPAT_CAPS[lang] || COMPAT_CAPS.en;
   assertPolicyClean(
     [
-      { label: "titre 06", text: headline },
-      { label: "note 06", text: compatNote },
-      ...Object.entries(caps).map(([key, text]) => ({ label: `capacite 06 ${key}`, text })),
+      { label: "titre 05", text: headline },
+      { label: "note 05", text: compatNote },
+      ...Object.entries(caps).map(([key, text]) => ({ label: `capacite 05 ${key}`, text })),
     ],
     lang,
   );
   await renderFrame({
-    name: `frame-${lang}-06`,
-    outPath: path.join(outDir, "06-compat.png"),
+    name: `frame-${lang}-05`,
+    outPath: path.join(outDir, "05-compat.png"),
     flatten: true,
     html: buildCompatibilityFrame({
       logoPath: LOGO,
@@ -511,11 +519,7 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
 async function buildPromo({ listing, lang = PROMO_LANG }) {
   // Capture du vrai popup, par le banc : les tuiles montraient un cadre vide
   // depuis que source-dashboard.png, la photo manuelle, a disparu.
-  const promoShot = await captureHarness(
-    `promo-popup-${lang}`,
-    `/scripts/dev/page-harness.html?page=popup&store=1&lang=${encodeURIComponent(lang)}`,
-    { width: POPUP_VIEWPORT.width, height: POPUP_VIEWPORT.height },
-  );
+  const promoShot = await capturePopup("dashboard", lang, "");
   const suffix = lang === PROMO_LANG ? "" : `_${lang}`;
   const outDir = path.join(ROOT, "images", "promo");
   fs.mkdirSync(outDir, { recursive: true });
@@ -625,7 +629,7 @@ async function main() {
     }
   }
 
-  console.log(`\n${targets.length} langue(s) · 6 captures 1280x800 chacune.`);
+  console.log(`\n${targets.length} langue(s) · 5 captures 1280x800 chacune.`);
 }
 
 main().catch((error) => {

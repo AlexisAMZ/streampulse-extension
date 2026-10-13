@@ -50,6 +50,15 @@
         new MutationObserver(dropKickPlayer).observe(document.body, { childList: true, subtree: true });
       }
 
+      // ?view=history|drops|badges|settings|plus : ouvre cet onglet du popup avant
+      // la capture (le mode headless ne clique pas). Les captures du store s'en servent.
+      const view = params.get("view");
+      if (page === "popup" && view) {
+        await new Promise((resolve) => setTimeout(resolve, 900));
+        document.getElementById(view === "plus" ? "open-plus" : `tab-${view}`)?.click();
+        await new Promise((resolve) => setTimeout(resolve, 600));
+      }
+
       const step = Number(params.get("step") || 0);
       if (page === "onboarding" && step > 0) {
         await new Promise((resolve) => setTimeout(resolve, 600));

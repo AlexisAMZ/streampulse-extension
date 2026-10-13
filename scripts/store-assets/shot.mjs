@@ -18,6 +18,8 @@ const run = promisify(execFile);
 /** Délai maximal accordé à Chrome pour écrire une capture. */
 const CAPTURE_TIMEOUT_MS = 45_000;
 const POLL_INTERVAL_MS = 120;
+/** Attente maximale des vraies données dans la page avant d'abandonner une tentative. */
+const READY_TIMEOUT_MS = 18_000;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -166,4 +168,114 @@ export async function pixelSize(filePath) {
   const width = Number(/pixelWidth:\s*(\d+)/.exec(stdout)?.[1]);
   const height = Number(/pixelHeight:\s*(\d+)/.exec(stdout)?.[1]);
   return { width, height };
+}
+
+/**
+ * Capture pilotée par le protocole DevTools, en temps réel.
+ *
+ * `--virtual-time-budget` fige l'horloge : le popup du banc, qui charge ses
+ * données par des chaînes de promesses et de minuteries, sortait parfois vide
+ * (squelette « Bonsoir. »). Ici on charge la page, on attend que `readyExpr`
+ * soit vrai (vraies données à l'écran), puis on photographie.
+ *
+ * @param {object} options
+ * @param {string} options.url        page servie en http
+ * @param {string} options.outPath    PNG produit (largeur x SCALE)
+ * @param {number} options.width      largeur CSS
+ * @param {number} options.height     hauteur CSS
+ * @param {string} options.readyExpr  expression JS qui vaut vrai quand la page est prête
+ */
+export async function captureWhenReady({ url, outPath, width, height, readyExpr }) {
+  fs.rmSync(outPath, { force: true });
+  const profile = fs.mkdtempSync(path.join(os.tmpdir(), "sp-shot-"));
+  const port = 9300 + Math.floor(Math.random() * 600);
+
+  const child = spawn(
+    CHROME_BIN,
+    [
+      "--headless=new",
+      "--disable-gpu",
+      "--hide-scrollbars",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--disable-extensions",
+      `--user-data-dir=${profile}`,
+      `--remote-debugging-port=${port}`,
+      `--window-size=${width},${height}`,
+      "about:blank",
+    ],
+    { stdio: "ignore" },
+  );
+
+  let socket;
+  try {
+    let target;
+    for (let attempt = 0; attempt < 100 && !target; attempt += 1) {
+      await sleep(150);
+      try {
+        const list = await (await fetch(`http://127.0.0.1:${port}/json/list`)).json();
+        target = list.find((entry) => entry.type === "page");
+      } catch {
+        // Chrome démarre encore
+      }
+    }
+    if (!target) throw new Error("Chrome n'a pas ouvert de page DevTools");
+
+    socket = new WebSocket(target.webSocketDebuggerUrl);
+    await new Promise((resolve, reject) => {
+      socket.addEventListener("open", resolve, { once: true });
+      socket.addEventListener("error", () => reject(new Error("WebSocket DevTools refusée")), { once: true });
+    });
+
+    let nextId = 0;
+    const pending = new Map();
+    socket.addEventListener("message", (event) => {
+      const message = JSON.parse(event.data);
+      const waiter = pending.get(message.id);
+      if (!waiter) return;
+      pending.delete(message.id);
+      if (message.error) waiter.reject(new Error(message.error.message));
+      else waiter.resolve(message.result);
+    });
+    const send = (method, params = {}) =>
+      new Promise((resolve, reject) => {
+        nextId += 1;
+        pending.set(nextId, { resolve, reject });
+        socket.send(JSON.stringify({ id: nextId, method, params }));
+      });
+
+    await send("Emulation.setDeviceMetricsOverride", {
+      width,
+      height,
+      deviceScaleFactor: SCALE,
+      mobile: false,
+    });
+    await send("Page.navigate", { url });
+
+    const deadline = Date.now() + READY_TIMEOUT_MS;
+    let ready = false;
+    while (Date.now() < deadline && !ready) {
+      await sleep(250);
+      try {
+        const result = await send("Runtime.evaluate", { expression: `Boolean(${readyExpr})`, returnByValue: true });
+        ready = result.result?.value === true;
+      } catch {
+        // la page navigue encore
+      }
+    }
+    if (!ready) throw new Error(`La page n'est jamais devenue prête : ${url} (${readyExpr})`);
+
+    // Les images (vignettes, avatars) et les transitions de 200 ms se posent.
+    await sleep(1200);
+    const shot = await send("Page.captureScreenshot", { format: "png", captureBeyondViewport: false });
+    fs.writeFileSync(outPath, Buffer.from(shot.data, "base64"));
+  } finally {
+    try {
+      socket?.close();
+    } catch {
+      // déjà fermée
+    }
+    child.kill("SIGKILL");
+    await removeProfile(profile);
+  }
 }

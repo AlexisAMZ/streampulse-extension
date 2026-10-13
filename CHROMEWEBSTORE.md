@@ -82,8 +82,10 @@ StreamPulse requires no account and contains no ads or trackers. Your streamers,
 |-------|-----------|--------|---------|
 | Icône du Store | 128×128 PNG | ✅ Prêt | `images/photos/128px.png` |
 | Capture 1 (Dashboard) × 11 langues | 1280×800 PNG | ✅ Prêt | `images/cws_screenshots/<LANGUE>/01-dashboard.png` |
-| Capture 2 (Notifications & automatisation) × 11 langues | 1280×800 PNG | ✅ Prêt | `images/cws_screenshots/<LANGUE>/02-automation.png` |
-| Capture 3 (Fonctionnalités) × 11 langues | 1280×800 PNG | ✅ Prêt | `images/cws_screenshots/<LANGUE>/03-features.png` |
+| Capture 2 (Drops) × 11 langues | 1280×800 PNG | ✅ Prêt | `images/cws_screenshots/<LANGUE>/02-drops.png` |
+| Capture 3 (StreamPulse+) × 11 langues | 1280×800 PNG | ✅ Prêt | `images/cws_screenshots/<LANGUE>/03-plus.png` |
+| Capture 4 (Éléments sur Twitch) × 11 langues | 1280×800 PNG | ✅ Prêt | `images/cws_screenshots/<LANGUE>/04-twitch.png` |
+| Capture 5 (Plateformes) × 11 langues | 1280×800 PNG | ✅ Prêt | `images/cws_screenshots/<LANGUE>/05-compat.png` |
 | Petite tuile promotionnelle | 440×280 PNG 24 bits | ✅ Prêt | `images/promo/small_tile.png` |
 | Grande tuile promotionnelle | 1400×560 PNG | ✅ Prêt | `images/promo/marquee_1400x560.png` |
 
