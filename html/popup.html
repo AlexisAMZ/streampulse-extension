@@ -204,26 +204,46 @@
       <div class="plus-main">
         <h2 class="plus-title" id="plus-title"><span data-i18n="popup.plus.title">Va plus loin</span><br /><em data-i18n="popup.plus.titleAccent">sur tes lives.</em></h2>
         <p class="plus-intro" data-i18n="popup.plus.intro">Notifications, points de chaîne et aperçus restent gratuits. StreamPulse+ ajoute des outils pour les viewers les plus assidus.</p>
-        <ul class="plus-perks">
-          <li class="plus-perk">
-            <span class="perk-glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></span>
-            <span class="perk-text"><b data-i18n="popup.plus.perkDrops">Drops et badges en automatique</b><span data-i18n="popup.plus.perkDropsBody">Récupération auto des Drops, inventaire ouvert pour toi, badges gratuits farmés tout seuls.</span></span>
+        <ul class="plus-compare" data-i18n-attr-ariaLabel="popup.plus.compareLabel" aria-label="Fonction par fonction : gratuit et StreamPulse+">
+          <li class="plus-compare-head" aria-hidden="true">
+            <span></span>
+            <span data-i18n="popup.plus.compareFree">Gratuit</span>
+            <span class="is-plus" data-i18n="popup.plus.comparePlus">StreamPulse+</span>
           </li>
-          <li class="plus-perk">
-            <span class="perk-glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
-            <span class="perk-text"><b data-i18n="popup.plus.perkAlerts">Alertes intelligentes</b><span data-i18n="popup.plus.perkAlertsBody">Seulement pour un jeu, un mot du titre ou un seuil de viewers.</span></span>
+          <li class="plus-compare-row">
+            <span class="compare-name" data-i18n="popup.plus.compareDrops">Drops</span>
+            <span class="compare-free" data-i18n="popup.plus.compareDropsFree">À récupérer à la main</span>
+            <span class="compare-plus" data-i18n="popup.plus.compareDropsPlus">Récupérés tout seuls</span>
           </li>
-          <li class="plus-perk">
-            <span class="perk-glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg></span>
-            <span class="perk-text"><b data-i18n="popup.plus.perkRecap">Récap avancé et récap de l'année</b><span data-i18n="popup.plus.perkRecapBody">Heures par catégorie, courbe de l'année, image à partager.</span></span>
+          <li class="plus-compare-row">
+            <span class="compare-name" data-i18n="popup.plus.compareBadges">Badges</span>
+            <span class="compare-free" data-i18n="popup.plus.compareBadgesFree">1 par jour</span>
+            <span class="compare-plus" data-i18n="popup.plus.compareBadgesPlus">Tous, sans limite</span>
           </li>
-          <li class="plus-perk">
-            <span class="perk-glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
-            <span class="perk-text"><b data-i18n="popup.plus.perkPredictions">Prédictions assistées</b><span data-i18n="popup.plus.perkPredictionsBody">Historique de tes paris, taux de réussite, mise auto selon ta règle.</span></span>
+          <li class="plus-compare-row">
+            <span class="compare-name" data-i18n="popup.plus.compareAlerts">Alertes</span>
+            <span class="compare-free" data-i18n="popup.plus.compareAlertsFree">Un streamer passe en direct</span>
+            <span class="compare-plus" data-i18n="popup.plus.compareAlertsPlus">Jeu, mot-clé, viewers, campagnes Drops</span>
           </li>
-          <li class="plus-perk plus-perk-fx">
-            <span class="perk-glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.94 15.5a2 2 0 0 0-1.44-1.44l-6.13-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.13a.5.5 0 0 1 .96 0l1.58 6.13a2 2 0 0 0 1.44 1.44l6.13 1.58a.5.5 0 0 1 0 .96l-6.13 1.58a2 2 0 0 0-1.44 1.44l-1.58 6.13a.5.5 0 0 1-.96 0z"/></svg></span>
-            <span class="perk-text"><b data-i18n="popup.plus.perkFx">Effets de pseudo et de badge</b><span id="plus-fx-count"></span><span class="plus-fx-strip" id="plus-fx-strip" aria-hidden="true"></span></span>
+          <li class="plus-compare-row">
+            <span class="compare-name" data-i18n="popup.plus.compareRecap">Récap</span>
+            <span class="compare-free" data-i18n="popup.plus.compareRecapFree">L'essentiel</span>
+            <span class="compare-plus" data-i18n="popup.plus.compareRecapPlus">Avancé, image à partager</span>
+          </li>
+          <li class="plus-compare-row">
+            <span class="compare-name" data-i18n="popup.plus.comparePredictions">Prédictions</span>
+            <span class="compare-free compare-none" data-i18n="popup.plus.compareNone">—</span>
+            <span class="compare-plus" data-i18n="popup.plus.comparePredictionsPlus">Mise auto et historique</span>
+          </li>
+          <li class="plus-compare-row">
+            <span class="compare-name" data-i18n="popup.plus.compareClips">Clips</span>
+            <span class="compare-free compare-none" data-i18n="popup.plus.compareNone">—</span>
+            <span class="compare-plus" data-i18n="popup.plus.compareClipsPlus">Téléchargement MP4</span>
+          </li>
+          <li class="plus-compare-row">
+            <span class="compare-name" data-i18n="popup.plus.compareFx">Effets</span>
+            <span class="compare-free compare-none" data-i18n="popup.plus.compareNone">—</span>
+            <span class="compare-plus"><span data-i18n="popup.plus.compareFxPlus">Badge et pseudo animés</span><span class="plus-fx-strip" id="plus-fx-strip" aria-hidden="true"></span></span>
           </li>
         </ul>
       </div>
@@ -260,6 +280,7 @@
         <span class="plus-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg></span>
         <p class="plus-active-title" data-i18n="popup.plus.activeTitle">StreamPulse+ est actif</p>
         <p class="plus-active-plan" id="plus-active-plan"></p>
+        <p class="plus-value" id="plus-value" role="status" hidden></p>
         <button class="button button-primary" id="plus-manage" type="button" data-i18n="popup.plus.manage">Gérer mon abonnement</button>
         <p class="plus-error" id="plus-manage-error" role="alert" hidden></p>
         <button class="button button-quiet" id="plus-deactivate" type="button" data-i18n="popup.plus.deactivate">Retirer la licence de ce navigateur</button>
@@ -850,6 +871,25 @@
           <h3 class="drops-section"><span data-i18n="popup.drops.inProgress">En cours</span><small id="drops-updated" role="status"></small></h3>
           <ul class="drops-list" id="drops-progress"></ul>
           <p class="drops-empty" id="drops-progress-empty" data-i18n="popup.drops.emptyProgress" hidden>Aucun Drop en cours. Regarde un live avec les Drops activés : ta progression s'affichera ici.</p>
+
+          <h3 class="drops-section"><span data-i18n="popup.dropAlerts.title">Alertes Drops</span><span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span></h3>
+          <div class="smart-locked" id="drop-alerts-locked">
+            <p class="settings-description" data-i18n="popup.dropAlerts.lockedBody">Une notification quand une campagne de Drops démarre sur un jeu que tu suis : Valorant, CS2… Réservé à StreamPulse+.</p>
+            <button class="button button-primary" id="drop-alerts-unlock" type="button" data-i18n="popup.smart.unlock">Débloquer</button>
+          </div>
+          <div class="drop-alerts" id="drop-alerts-editor" hidden>
+            <label class="settings-toggle">
+              <span class="settings-text">
+                <span class="settings-title" data-i18n="popup.dropAlerts.toggle">Prévenir aux nouvelles campagnes</span>
+                <span class="settings-description" data-i18n="popup.dropAlerts.toggleBody">La liste des campagnes est relue quand tu passes sur Twitch : l'alerte part à ce moment-là, une seule fois par campagne.</span>
+              </span>
+              <input id="pref-drop-campaign-alerts" type="checkbox" role="switch" />
+            </label>
+            <div class="smart-line drop-alerts-line">
+              <span data-i18n="popup.dropAlerts.gamesLabel">Jeux suivis</span>
+              <div class="smart-terms" id="drop-alerts-games"></div>
+            </div>
+          </div>
 
           <h3 class="drops-section"><span data-i18n="popup.drops.campaigns">Campagnes</span><small id="drops-campaigns-meta"></small></h3>
           <div class="drops-filters" id="drops-filters" role="group" data-i18n-attr-ariaLabel="popup.drops.filterLabel">

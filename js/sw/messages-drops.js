@@ -1,7 +1,7 @@
 // Handlers de messages runtime (voir messages.js pour la table).
 
 import { CLAIM_OK_STATUSES } from "../drops-data.js";
-import { DROPS_POPUP_REFRESH_MS, announceDrops, badgeAuto, checkBadgeAfterClaim, claimDropFromWorker, dropsStore, dropsStreamUrl, pointsStore, refreshDropsFromWorker, sendDropsCommand } from "./drops.js";
+import { DROPS_POPUP_REFRESH_MS, announceDrops, badgeAuto, checkBadgeAfterClaim, checkDropCampaignAlerts, claimDropFromWorker, dropsStore, dropsStreamUrl, pointsStore, refreshDropsFromWorker, sendDropsCommand } from "./drops.js";
 import { PreferenceStore } from "./stores.js";
 import { warnWith } from "./log.js";
 
@@ -75,6 +75,8 @@ export function handleRecordDropsCampaigns(request, sender, sendResponse) {
         ? { recorded: false }
         : await dropsStore.recordCampaigns(request.data, request.source);
       sendResponse({ success: true, ...result });
+      // Liste fraîche : le moment où une alerte de campagne (Plus) peut partir.
+      if (result.recorded) checkDropCampaignAlerts().catch(warnWith("alertes de campagnes Drops"));
     } catch (error) {
       sendResponse({ error: error?.message || String(error) });
     }

@@ -13,6 +13,7 @@ import { IDENTITY_STORAGE_KEYS, initIdentity, renderIdentity } from "./popup-ide
 import { HISTORY_KEY, formatClock, selectMissed, summarize } from "./history-data.js";
 import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalizePredictionRule, summarize as summarizePredictions } from "./predictions-data.js";
 import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
+import { PLUS_VALUE_KEY, plusValueFrom } from "./plus-value.js";
 import {
   SMART_ALERTS_KEY,
   MAX_RULES_PER_STREAMER,
@@ -202,7 +203,32 @@ function renderPlus() {
   }
   if ($("plus-menu-text")) $("plus-menu-text").textContent = t(active ? "popup.plusMenu.statusActive" : "popup.plusMenu.statusInactive");
   if ($("plus-menu-open")) $("plus-menu-open").textContent = t(active ? "popup.plusMenu.manage" : "popup.plusMenu.discover");
+  renderPlusValue().catch(() => {});
   plusListeners.forEach((listener) => listener(active));
+}
+
+/**
+ * Compteur de valeur : ce que les fonctions auto de Plus ont rapporté, badges
+ * farmés et Drops récupérés (js/sw/plus-value.js tient le compte). Masqué tant
+ * que rien n'a été gagné : un « 0 » n'encourage personne.
+ */
+async function renderPlusValue() {
+  const target = $("plus-value");
+  if (!target || !plusActive()) return;
+  const { badges, drops } = plusValueFrom(await chrome.storage.local.get(PLUS_VALUE_KEY));
+  if (badges + drops <= 0) {
+    target.hidden = true;
+    return;
+  }
+  const key = badges === 1 && drops === 1
+    ? "popup.plus.valueBothOne"
+    : badges === 1
+      ? "popup.plus.valueBadgeOne"
+      : drops === 1
+        ? "popup.plus.valueDropOne"
+        : "popup.plus.value";
+  target.textContent = t(key, { badges, drops });
+  target.hidden = false;
 }
 
 // Vue Plus = vraie modale : le reste du popup devient inerte, Tab boucle
@@ -811,6 +837,7 @@ export async function initFeatures() {
       plusRecord = changes[PLUS_KEY].newValue || null;
       renderPlus();
     }
+    if (changes[PLUS_VALUE_KEY]) renderPlusValue().catch(() => {});
     if (changes[PREDICTION_HISTORY_KEY]) {
       predictionHistory = changes[PREDICTION_HISTORY_KEY].newValue || [];
       renderPredictions();

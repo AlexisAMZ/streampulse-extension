@@ -563,15 +563,16 @@ body.is-settings .plus-badge:not(.is-active) { background: var(--surface-2); box
 .plus-title { font-family: var(--display); font-size: 30px; font-weight: 800; line-height: 1.04; letter-spacing: -0.04em; }
 .plus-title em { color: var(--violet-text); font-style: normal; }
 .plus-intro { max-width: 42ch; margin-top: 10px; color: var(--text-2); font-size: 14px; line-height: 1.5; }
-.plus-perks { display: grid; gap: 2px; margin: 18px 0 0; padding: 0; list-style: none; }
-.plus-perk { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 7px 0; box-shadow: inset 0 -1px 0 var(--line); }
-.perk-glyph { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--violet-soft); color: var(--violet-text); }
-.perk-glyph svg { width: 17px; height: 17px; }
-.perk-text { display: grid; gap: 2px; min-width: 0; }
-.perk-text b { font-size: 14px; }
-.perk-text span { color: var(--text-2); font-size: 12px; }
-.plus-perk:not(.is-soon) .perk-glyph { background: var(--lcd); color: var(--lcd-ink); }
-.perk-soon { padding: 3px 8px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text-2); font-size: 12px; font-weight: 600; }
+.plus-compare { display: grid; margin: 18px 0 0; padding: 0; list-style: none; }
+.plus-compare-head,
+.plus-compare-row { display: grid; grid-template-columns: 92px minmax(0, 1fr) minmax(0, 1.25fr); gap: 10px; align-items: baseline; padding: 7px 0; box-shadow: inset 0 -1px 0 var(--line); }
+.plus-compare-head { padding-bottom: 6px; box-shadow: inset 0 -1px 0 var(--line-2); color: var(--text-3); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.plus-compare-head .is-plus { color: var(--violet-text); }
+.compare-name { color: var(--text-2); font-size: 12px; font-weight: 700; }
+.compare-free { color: var(--text-3); font-size: 12px; }
+.compare-none { opacity: 0.6; }
+.compare-plus { color: var(--text); font-size: 12px; font-weight: 600; }
+.plus-value { margin-top: 2px; padding: 8px 12px; border-radius: 10px; background: var(--violet-soft); color: var(--text); font-size: 12px; font-weight: 600; line-height: 1.45; }
 .plus-offer { align-self: start; display: grid; gap: 12px; padding: 16px; border-radius: 18px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--violet-line); }
 .plus-plans { display: grid; }
 .plus-plan { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 4px 12px 30px; border: 0; background: transparent; box-shadow: inset 0 -1px 0 var(--line); position: relative; text-align: left; }
@@ -1041,7 +1042,7 @@ body.is-settings .new-dot { background: var(--violet); }
 /* ── Écran StreamPulse+ : aperçu des effets et parrainage ── */
 .plus-main { min-height: 0; overflow-y: auto; scrollbar-width: none; }
 .plus-main::-webkit-scrollbar { display: none; }
-.plus-perks { margin-top: 14px; }
+.plus-compare { margin-top: 14px; }
 .plus-fx-strip { display: grid; gap: 6px; margin-top: 6px; }
 .plus-fx-badges { display: flex; flex-wrap: wrap; gap: 5px; }
 .plus-fx-badges .cosmetic-badge { width: 16px; height: 16px; }

@@ -8,6 +8,7 @@ import { addedFrom, badgesFrom, catalogBadges, eventsFrom } from "./badges-data.
 import { addJobs, bannerModel, currentGroup, freeBadgeJobs, normalizeAuto, pruneJobs, removeJob } from "./badge-auto.js";
 import { PLUS_KEY, isPlusActive } from "./plus.js";
 import { BADGE_FREE_KEY, dayKey, freeAvailable, isFreeRun } from "./badge-free.js";
+import { recordPlusValue } from "./sw/plus-value.js";
 
 const channelOf = (url) => (String(url || "").match(/^https:\/\/www\.twitch\.tv\/([a-z0-9_]{2,25})\/?(?:[?#]|$)/i) || [])[1] || "";
 
@@ -160,6 +161,8 @@ export function createBadgeAuto(deps) {
     state = next;
 
     for (const job of obtained) await deps.notify("background.notifications.badgeAutoTitle", "background.badgeAuto.obtained", { name: job.title });
+    // Compteur de valeur : badges farmés par le mode auto, réservé à Plus.
+    if (plus && obtained.length) recordPlusValue({ badges: obtained.length }).catch(() => {});
     // Badge gratuit obtenu : on montre ce que Plus récupérerait encore.
     if (!plus && obtained.length) {
       const remaining = freeBadgeJobs(await catalog()).filter((job) => !owned.includes(job.badgeId) && !obtained.some((done) => done.badgeId === job.badgeId)).length;

@@ -6,6 +6,7 @@
 import { t, getCurrentLanguage } from "./i18n.js";
 import { currentGroup, normalizeAuto } from "./badge-auto.js";
 import { BADGE_FREE_KEY, freeAvailable, freeUsedToday } from "./badge-free.js";
+import { DROP_ALERTS_KEY, MAX_GAMES, normalizeDropAlerts } from "./drop-alerts.js";
 import {
   DROPS_KEYS,
   BADGE_AUTO_KEY,
@@ -67,6 +68,10 @@ const CAMPAIGNS_OLD_MS = 12 * 3_600_000;
 const BADGE_SORT_KEYS = Object.freeze({ live: "popup.drops.badgeSortLive", soon: "popup.drops.badgeSortSoon", ended: "popup.drops.badgeSortEnded", owned: "popup.drops.badgeSortOwned" });
 const BADGE_EMPTY_KEYS = Object.freeze({ live: "popup.drops.badgesEmptyLive", soon: "popup.drops.badgesEmptySoon", ended: "popup.drops.badgesEmptyEnded", owned: "popup.drops.badgesEmptyOwned" });
 const GIFT_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>';
+const CLOSE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+
+/** Alertes de campagnes Drops (Plus) : { enabled, games }, lu comme le reste. */
+let dropAlerts = normalizeDropAlerts(null);
 
 let deps = { isPlus: () => false, openPlus: () => {} };
 let progress = progressFrom({});
@@ -355,6 +360,61 @@ function renderCampaigns(now) {
   const key = !all.length ? "popup.drops.campaignsNone" : filter === "upcoming" ? "popup.drops.upcomingEmpty" : "popup.drops.filterEmpty";
   $("drops-campaigns-empty-text").textContent = t(key);
   $("drops-open-campaigns").hidden = all.length > 0;
+}
+
+// ─── Panneau : alertes de campagnes (StreamPulse+) ────────────────────────────
+
+function saveDropAlerts() {
+  dropAlerts = normalizeDropAlerts(dropAlerts);
+  chrome.storage.local.set({ [DROP_ALERTS_KEY]: dropAlerts });
+}
+
+/** Chips des jeux suivis : un clic sur la croix retire, Entrée ajoute. */
+function renderDropAlertsGames() {
+  const host = $("drop-alerts-games");
+  if (!host) return;
+  const chips = dropAlerts.games.map((game) => {
+    const chip = el("span", "smart-term", game);
+    const remove = el("button");
+    remove.type = "button";
+    remove.innerHTML = CLOSE_ICON;
+    remove.setAttribute("aria-label", t("popup.dropAlerts.removeGame", { game }));
+    remove.addEventListener("click", () => {
+      dropAlerts = { ...dropAlerts, games: dropAlerts.games.filter((item) => item !== game) };
+      saveDropAlerts();
+      renderDropAlertsGames();
+    });
+    chip.append(remove);
+    return chip;
+  });
+  if (dropAlerts.games.length < MAX_GAMES) {
+    const add = el("input", "smart-add");
+    add.type = "text";
+    add.placeholder = t("popup.dropAlerts.gamePlaceholder");
+    add.setAttribute("aria-label", t("popup.dropAlerts.gamesLabel"));
+    add.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter") return;
+      event.preventDefault();
+      const game = add.value.trim();
+      if (!game) return;
+      dropAlerts = { ...dropAlerts, games: [...dropAlerts.games, game] };
+      saveDropAlerts();
+      renderDropAlertsGames();
+      host.querySelector(".smart-add")?.focus();
+    });
+    chips.push(add);
+  }
+  host.replaceChildren(...chips);
+}
+
+function renderDropAlerts() {
+  const plus = deps.isPlus();
+  if ($("drop-alerts-locked")) $("drop-alerts-locked").hidden = plus;
+  if ($("drop-alerts-editor")) $("drop-alerts-editor").hidden = !plus;
+  if (!plus) return;
+  const toggle = $("pref-drop-campaign-alerts");
+  if (toggle && document.activeElement !== toggle) toggle.checked = dropAlerts.enabled;
+  renderDropAlertsGames();
 }
 
 // ─── Panneau : badges et récompenses ──────────────────────────────────────────
@@ -722,6 +782,7 @@ function renderPanel(now) {
   $("drops-auto").classList.toggle("is-on", auto);
   $("drops-auto-label").textContent = t(auto ? "popup.drops.autoOn" : "popup.drops.autoOff");
   renderProgress(now);
+  renderDropAlerts();
   renderCampaigns(now);
   renderRewards(now);
   renderBadges(now);
@@ -769,6 +830,11 @@ function bind() {
     if (event.key !== "Enter" && event.key !== " ") return;
     event.preventDefault();
     openPanel();
+  });
+  $("drop-alerts-unlock")?.addEventListener("click", () => deps.openPlus());
+  $("pref-drop-campaign-alerts")?.addEventListener("change", (event) => {
+    dropAlerts = { ...dropAlerts, enabled: event.target.checked };
+    saveDropAlerts();
   });
   $("drops-auto")?.addEventListener("click", () => $("menu-tab-automation")?.click());
   $("drops-filters")?.addEventListener("click", (event) => {
@@ -893,9 +959,10 @@ function toggleAuto(badgeId) {
 }
 
 async function reload() {
-  const stored = await chrome.storage.local.get([...DROPS_KEYS, PREFERENCES_KEY, BADGE_AUTO_KEY, BADGE_FREE_KEY]);
+  const stored = await chrome.storage.local.get([...DROPS_KEYS, PREFERENCES_KEY, BADGE_AUTO_KEY, BADGE_FREE_KEY, DROP_ALERTS_KEY]);
   badgeAuto = normalizeAuto(stored[BADGE_AUTO_KEY]);
   badgeFree = stored[BADGE_FREE_KEY] || null;
+  dropAlerts = normalizeDropAlerts(stored[DROP_ALERTS_KEY]);
   progress = progressFrom(stored);
   campaigns = campaignsFrom(stored);
   rewards = rewardsFrom(stored);
@@ -915,7 +982,7 @@ export async function initDrops({ isPlus, onPlusChange, openPlus }) {
   bind();
   onPlusChange(() => render());
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === "local" && (DROPS_KEYS.some((key) => key in changes) || PREFERENCES_KEY in changes || BADGE_AUTO_KEY in changes || BADGE_FREE_KEY in changes)) reload().catch(() => {});
+    if (area === "local" && (DROPS_KEYS.some((key) => key in changes) || PREFERENCES_KEY in changes || BADGE_AUTO_KEY in changes || BADGE_FREE_KEY in changes || DROP_ALERTS_KEY in changes)) reload().catch(() => {});
   });
   await reload();
   // Les jeux regardés ne changent pas pendant que le popup est ouvert : lus une fois.

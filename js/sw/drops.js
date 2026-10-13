@@ -2,11 +2,13 @@
 
 import { createBadgeAuto } from "../badge-auto-worker.js";
 import { PLUS_KEY, isPlusActive } from "../plus.js";
-import { BADGE_ADDED_KEY, BADGE_AUTO_KEY, CLAIM_OK_STATUSES } from "../drops-data.js";
+import { BADGE_ADDED_KEY, BADGE_AUTO_KEY, CLAIM_OK_STATUSES, DROPS_CAMPAIGNS_KEY, campaignsFrom } from "../drops-data.js";
 import { addedFrom, isPaidBadge } from "../badges-data.js";
+import { DROP_ALERTS_KEY, DROP_ALERTS_SEEN_KEY, campaignAlerts, normalizeDropAlerts, seenFrom } from "../drop-alerts.js";
 import { createDropsClient } from "../drops-gql.js";
 import { createDropsStore } from "../drops-store.js";
 import { createPointsStore } from "../points-store.js";
+import { recordPlusValue } from "./plus-value.js";
 import { ensureConfig, fetchTwitchJson, resolveTwitchChannels, twitchHeaders } from "./config.js";
 import { DROPS_ALARM } from "./constants.js";
 import { translateWithPrefs } from "./i18n.js";
@@ -36,6 +38,12 @@ export async function announceDrops(entries) {
   const prefs = await PreferenceStore.get();
   const now = Date.now();
   let alerts = 0;
+  // Compteur de valeur : seuls les Drops pris par la récupération auto (Plus).
+  const autoDrops = entries.filter((entry) => entry?.auto).length;
+  if (autoDrops) {
+    const plus = isPlusActive((await chrome.storage.local.get(PLUS_KEY))[PLUS_KEY]);
+    if (plus) recordPlusValue({ drops: autoDrops }).catch(() => {});
+  }
   for (const entry of entries) {
     const label = [entry.name, entry.game].filter(Boolean).join(" · ");
     await StatsStore.increment("dropsClaimed", 1);
@@ -47,6 +55,35 @@ export async function announceDrops(entries) {
       message: label
         ? translateWithPrefs(prefs, "background.notifications.dropClaimedMessage", { reward: label })
         : translateWithPrefs(prefs, "background.notifications.dropMessage"),
+    });
+  }
+}
+
+// ─── Alertes de campagnes Drops (StreamPulse+) ────────────────────────────────
+
+/** Au plus trois alertes d'un coup : une liste relue après une longue pause ne doit pas inonder. */
+const CAMPAIGN_ALERTS_PER_READ = 3;
+
+/**
+ * Compare les campagnes relues par les onglets Twitch aux jeux suivis
+ * (js/drop-alerts.js) et prévient quand une campagne démarre. Appelé à chaque
+ * liste enregistrée, donc aussi quand un onglet revient sur Twitch ; les
+ * campagnes déjà signalées ne le sont jamais deux fois.
+ */
+export async function checkDropCampaignAlerts() {
+  const stored = await chrome.storage.local.get([PLUS_KEY, DROP_ALERTS_KEY, DROP_ALERTS_SEEN_KEY, DROPS_CAMPAIGNS_KEY]);
+  const settings = normalizeDropAlerts(stored[DROP_ALERTS_KEY]);
+  if (!settings.enabled || !settings.games.length) return;
+  if (!isPlusActive(stored[PLUS_KEY])) return;
+  const { alerts, seen } = campaignAlerts(campaignsFrom(stored).campaigns, settings, seenFrom(stored[DROP_ALERTS_SEEN_KEY]), Date.now());
+  await chrome.storage.local.set({ [DROP_ALERTS_SEEN_KEY]: seen });
+  if (!alerts.length) return;
+  const prefs = await PreferenceStore.get();
+  for (const campaign of alerts.slice(0, CAMPAIGN_ALERTS_PER_READ)) {
+    await NotificationCenter.show({
+      title: translateWithPrefs(prefs, "background.dropAlerts.title", { game: campaign.game }),
+      message: campaign.name || translateWithPrefs(prefs, "background.dropAlerts.message", { game: campaign.game }),
+      url: `https://www.twitch.tv/directory/game/${encodeURIComponent(campaign.game)}?filter=drops`,
     });
   }
 }
