@@ -163,7 +163,7 @@ locale ne la retire.
 
 > À recopier tel quel dans l'onglet **Confidentialité** de la console. L'ancienne
 > déclaration (« aucune donnée transmise ») était fausse : le badge communautaire
-> envoie une empreinte du pseudo Twitch, et il est activé par défaut.
+> envoie une empreinte du pseudo Twitch. Il est désactivé par défaut (`communityBadge: false` dans `js/preferences-data.js`) et ne s'active qu'avec l'accord de l'utilisateur.
 
 ### Données collectées (cases à cocher)
 - ☑ **Informations permettant d'identifier personnellement l'utilisateur** (*Personally identifiable information*) : empreinte pseudonyme du pseudo Twitch, pour le badge communautaire.
