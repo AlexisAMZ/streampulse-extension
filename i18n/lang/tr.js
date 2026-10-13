@@ -622,6 +622,7 @@ export default {
       "menuHelp": "Yardım",
       "groupRewards": "Ödüller",
       "groupPlayer": "Oynatıcı",
+      "groupProfile": "Profil",
       "groupTabs": "Sekmeler",
       "themeTitle": "Tema",
       "themeDark": "Koyu",

@@ -622,6 +622,7 @@ export default {
       "menuHelp": "Ajuda",
       "groupRewards": "Recompensas",
       "groupPlayer": "Player",
+      "groupProfile": "Perfil",
       "groupTabs": "Abas",
       "themeTitle": "Tema",
       "themeDark": "Escuro",

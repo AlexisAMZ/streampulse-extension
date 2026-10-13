@@ -622,6 +622,7 @@ export default {
       "menuHelp": "Pomoc",
       "groupRewards": "Nagrody",
       "groupPlayer": "Odtwarzacz",
+      "groupProfile": "Profil",
       "groupTabs": "Karty",
       "themeTitle": "Motyw",
       "themeDark": "Ciemny",

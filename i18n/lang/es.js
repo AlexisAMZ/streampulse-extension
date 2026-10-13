@@ -622,6 +622,7 @@ export default {
       "menuHelp": "Ayuda",
       "groupRewards": "Recompensas",
       "groupPlayer": "Reproductor",
+      "groupProfile": "Perfil",
       "groupTabs": "Pestañas",
       "themeTitle": "Tema",
       "themeDark": "Oscuro",

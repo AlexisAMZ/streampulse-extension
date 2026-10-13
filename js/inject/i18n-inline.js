@@ -124,7 +124,8 @@
         "titleAlertsTitle": "Alertes changement de titre",
         "soundsTitle": "Son des notifications",
         "groupRewards": "Récompenses",
-        "groupPlayer": "Lecteur"
+        "groupPlayer": "Lecteur",
+        "groupProfile": "Profil"
       },
       "cosmetics": {
         "tabBadge": "Badge",
@@ -297,7 +298,8 @@
         "titleAlertsTitle": "Title change alerts",
         "soundsTitle": "Notification sound",
         "groupRewards": "Rewards",
-        "groupPlayer": "Player"
+        "groupPlayer": "Player",
+        "groupProfile": "Profile"
       },
       "cosmetics": {
         "tabBadge": "Badge",
@@ -470,7 +472,8 @@
         "titleAlertsTitle": "Alertas de cambio de título",
         "soundsTitle": "Sonido de las notificaciones",
         "groupRewards": "Recompensas",
-        "groupPlayer": "Reproductor"
+        "groupPlayer": "Reproductor",
+        "groupProfile": "Perfil"
       },
       "cosmetics": {
         "tabBadge": "Insignia",
@@ -643,7 +646,8 @@
         "titleAlertsTitle": "Alertas de mudança de título",
         "soundsTitle": "Som das notificações",
         "groupRewards": "Recompensas",
-        "groupPlayer": "Player"
+        "groupPlayer": "Player",
+        "groupProfile": "Perfil"
       },
       "cosmetics": {
         "tabBadge": "Selo",
@@ -816,7 +820,8 @@
         "titleAlertsTitle": "Benachrichtigung bei Titelwechsel",
         "soundsTitle": "Benachrichtigungston",
         "groupRewards": "Belohnungen",
-        "groupPlayer": "Player"
+        "groupPlayer": "Player",
+        "groupProfile": "Profil"
       },
       "cosmetics": {
         "tabBadge": "Abzeichen",
@@ -989,7 +994,8 @@
         "titleAlertsTitle": "Avvisi cambio titolo",
         "soundsTitle": "Suono delle notifiche",
         "groupRewards": "Ricompense",
-        "groupPlayer": "Player"
+        "groupPlayer": "Player",
+        "groupProfile": "Profilo"
       },
       "cosmetics": {
         "tabBadge": "Badge",
@@ -1162,7 +1168,8 @@
         "titleAlertsTitle": "Alerty o zmianie tytułu",
         "soundsTitle": "Dźwięk powiadomień",
         "groupRewards": "Nagrody",
-        "groupPlayer": "Odtwarzacz"
+        "groupPlayer": "Odtwarzacz",
+        "groupProfile": "Profil"
       },
       "cosmetics": {
         "tabBadge": "Odznaka",
@@ -1335,7 +1342,8 @@
         "titleAlertsTitle": "Başlık değişikliği uyarıları",
         "soundsTitle": "Bildirim sesi",
         "groupRewards": "Ödüller",
-        "groupPlayer": "Oynatıcı"
+        "groupPlayer": "Oynatıcı",
+        "groupProfile": "Profil"
       },
       "cosmetics": {
         "tabBadge": "Rozet",
@@ -1508,7 +1516,8 @@
         "titleAlertsTitle": "Оповещения о смене названия",
         "soundsTitle": "Звук уведомлений",
         "groupRewards": "Награды",
-        "groupPlayer": "Плеер"
+        "groupPlayer": "Плеер",
+        "groupProfile": "Профиль"
       },
       "cosmetics": {
         "tabBadge": "Значок",
@@ -1681,7 +1690,8 @@
         "titleAlertsTitle": "タイトル変更の通知",
         "soundsTitle": "通知音",
         "groupRewards": "報酬",
-        "groupPlayer": "プレーヤー"
+        "groupPlayer": "プレーヤー",
+        "groupProfile": "プロフィール"
       },
       "cosmetics": {
         "tabBadge": "バッジ",
@@ -1854,7 +1864,8 @@
         "titleAlertsTitle": "제목 변경 알림",
         "soundsTitle": "알림 소리",
         "groupRewards": "보상",
-        "groupPlayer": "플레이어"
+        "groupPlayer": "플레이어",
+        "groupProfile": "프로필"
       },
       "cosmetics": {
         "tabBadge": "배지",

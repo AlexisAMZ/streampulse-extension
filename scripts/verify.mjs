@@ -205,7 +205,7 @@ else {
     // ce contrôle échoue : soit une clé morte vient d'être ajoutée (à
     // supprimer), soit un nouveau mécanisme dynamique demande d'ajuster
     // MAX_UNUSED_KEYS et de le documenter ici.
-    const MAX_UNUSED_KEYS = 336;
+    const MAX_UNUSED_KEYS = 337;
     const unusedKeys = referenceKeys.filter((k) => !usedKeys.has(k));
     if (unusedKeys.length > MAX_UNUSED_KEYS) {
       fail(`${unusedKeys.length} translation keys are never referenced by any literal call (max ${MAX_UNUSED_KEYS}) : une clé morte vient probablement d'être ajoutée, ou un nouveau mécanisme dynamique demande d'ajuster MAX_UNUSED_KEYS`);

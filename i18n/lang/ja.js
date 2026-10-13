@@ -622,6 +622,7 @@ export default {
       "menuHelp": "ヘルプ",
       "groupRewards": "報酬",
       "groupPlayer": "プレーヤー",
+      "groupProfile": "プロフィール",
       "groupTabs": "タブ",
       "themeTitle": "テーマ",
       "themeDark": "ダーク",

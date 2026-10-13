@@ -622,6 +622,7 @@ export default {
       "menuHelp": "Hilfe",
       "groupRewards": "Belohnungen",
       "groupPlayer": "Player",
+      "groupProfile": "Profil",
       "groupTabs": "Tabs",
       "themeTitle": "Design",
       "themeDark": "Dunkel",

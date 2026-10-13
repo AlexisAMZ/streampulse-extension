@@ -622,6 +622,7 @@ export default {
       "menuHelp": "도움말",
       "groupRewards": "보상",
       "groupPlayer": "플레이어",
+      "groupProfile": "프로필",
       "groupTabs": "탭",
       "themeTitle": "테마",
       "themeDark": "다크",

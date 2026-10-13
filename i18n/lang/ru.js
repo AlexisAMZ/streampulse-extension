@@ -622,6 +622,7 @@ export default {
       "menuHelp": "Помощь",
       "groupRewards": "Награды",
       "groupPlayer": "Плеер",
+      "groupProfile": "Профиль",
       "groupTabs": "Вкладки",
       "themeTitle": "Тема",
       "themeDark": "Тёмная",
