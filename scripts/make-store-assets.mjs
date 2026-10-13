@@ -564,7 +564,7 @@ async function buildPromo({ lang = PROMO_LANG }) {
     outPath: marqueePath,
     size: PROMO_MARQUEE,
     flatten: true,
-    html: buildPromoMarquee({ logoPath: LOGO, platformIcons, ...copy, shotPath: promoShot }),
+    html: buildPromoMarquee({ logoPath: LOGO, platformIcons, ...copy, stickers, shotPath: promoShot }),
   });
   return [tilePath, marqueePath];
 }

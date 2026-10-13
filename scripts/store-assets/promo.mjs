@@ -77,6 +77,15 @@ const STICKERS = [
   ["eye", "stickers.previews", 322, 234, 3],
 ];
 
+/** Même jeu de vignettes sur la grande image, posées sur les bords du popup. */
+const MARQUEE_STICKERS = [
+  ["bell", "live", 790, 16, -3],
+  ["gem", "points", 1100, 20, 3],
+  ["gift", "drops", 790, 490, 2],
+  ["shield", "badges", 958, 494, -2],
+  ["eye", "previews", 1172, 488, 3],
+];
+
 const TILE_CSS = `
 ${FONT_CSS}
 ${RESET}
@@ -140,8 +149,10 @@ h1 { margin-top: 30px; font-family: ${DISPLAY}; font-size: 82px; line-height: 1.
 h1 span { display: block; white-space: nowrap; }
 .sub { margin-top: 26px; max-width: 560px; font-size: 26px; line-height: 1.35; font-weight: 500; color: rgba(255, 255, 255, 0.92); }
 .plats { margin-top: 34px; gap: 14px; }
-.stage { height: 560px; display: flex; align-items: center; justify-content: center; padding: 44px 60px 44px 0; }
-.stage img { max-width: 100%; max-height: 472px; display: block; border-radius: 18px; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22), 0 40px 90px rgba(10, 4, 40, 0.6); }
+.stage { height: 560px; display: flex; align-items: center; justify-content: center; padding: 84px 60px 84px 0; }
+.sticker { position: absolute; z-index: 2; display: inline-flex; align-items: center; gap: 12px; padding: 12px 22px 12px 16px; border-radius: 999px; background: rgba(255, 255, 255, 0.22); box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.45), 0 18px 36px -14px rgba(20, 8, 70, 0.6); color: #fff; font-size: 26px; font-weight: 700; white-space: nowrap; }
+.sticker svg { width: 30px; height: 30px; flex: none; }
+.stage img { max-width: 100%; max-height: 390px; display: block; border-radius: 18px; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22), 0 40px 90px rgba(10, 4, 40, 0.6); }
 `;
 
 /**
@@ -153,8 +164,13 @@ h1 span { display: block; white-space: nowrap; }
  * @param {string} options.highlight
  * @param {string} options.subtitle  une phrase : ce que fait l'extension
  * @param {string} options.shotPath  capture réelle du popup
+ * @param {{live:string,points:string,drops:string,badges:string,previews:string}} options.stickers
  */
-export function buildPromoMarquee({ logoPath, platformIcons, lineOne, lineLead, highlight, subtitle, shotPath }) {
+export function buildPromoMarquee({ logoPath, platformIcons, lineOne, lineLead, highlight, subtitle, shotPath, stickers }) {
+  const bubbles = MARQUEE_STICKERS.map(
+    ([icon, key, left, top, rotate]) =>
+      `<span class="sticker" style="left:${left}px;top:${top}px;transform:rotate(${rotate}deg)">${STICKER_ICONS[icon]}${escapeHtml(stickers[key])}</span>`,
+  ).join("");
   return `<!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"><style>${MARQUEE_CSS}</style></head>
@@ -166,6 +182,7 @@ export function buildPromoMarquee({ logoPath, platformIcons, lineOne, lineLead, 
     <div class="plats">${platformIcons.map((icon) => platformTile(icon, 64)).join("")}</div>
   </div>
   <div class="stage"><img src="${escapeHtml(shotPath)}" alt=""></div>
+  ${bubbles}
 </body>
 </html>`;
 }
