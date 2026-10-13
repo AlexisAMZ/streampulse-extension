@@ -80,13 +80,21 @@ StreamPulse requires no account and contains no trackers. Your streamers, settin
 
 | Asset | Dimensions | Statut | Fichier |
 |-------|-----------|--------|---------|
-| Icône du Store | 128×128 PNG | ✅ Prêt | `images/photos/128px.png` |
+| Icône du Store | 128×128 PNG | ✅ Prêt | à exporter de `images/photos/128px.png` (voir la note ci-dessous) |
 | Capture 1 (Dashboard) × 11 langues | 1280×800 PNG | ✅ Prêt | `images/cws_screenshots/<LANGUE>/01-dashboard.png` |
 | Capture 2 (Drops) × 11 langues | 1280×800 PNG | ✅ Prêt | `images/cws_screenshots/<LANGUE>/02-drops.png` |
 | Capture 3 (StreamPulse+) × 11 langues | 1280×800 PNG | ✅ Prêt | `images/cws_screenshots/<LANGUE>/03-plus.png` |
 | Capture 4 (Plateformes) × 11 langues | 1280×800 PNG | ✅ Prêt | `images/cws_screenshots/<LANGUE>/04-compat.png` |
+| Capture 5 (Tu gardes la main) × 11 langues | 1280×800 PNG | ✅ Prêt | `images/cws_screenshots/<LANGUE>/05-control.png` |
 | Petite tuile promotionnelle | 440×280 PNG 24 bits | ✅ Prêt | `images/promo/small_tile.png` |
 | Grande tuile promotionnelle | 1400×560 PNG | ✅ Prêt | `images/promo/marquee_1400x560.png` |
+
+> **Icône** : `images/photos/128px.png` est la marque haute résolution (1080×1080)
+> partagée par le manifest, l'UI injectée (badge de chat, masque de favoris) et les
+> favicons — elle est volontairement grande pour rester nette en rétine. Le champ
+> « Icône du store » de la console, lui, exige exactement 128×128 : exporter à la
+> main avec `sips -z 128 128 images/photos/128px.png --out icon-store-128.png`
+> (hors dépôt, pour ne pas écraser la maquette).
 
 ### Régénérer les captures localisées
 
@@ -243,7 +251,7 @@ Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décoc
 - **Editeur** : `AlexisAMZ`
 - **Email de contact** : `contact@streampulse.tech`
 - **Site web officiel** : `https://streampulse.tech`
-- **Support / Feedback** : `https://streampulse.tech/support.html`
+- **Support / Feedback** : `https://streampulse.tech/support` (l'ancienne URL `/support.html` répond 308 vers celle-ci)
 
 ---
 
@@ -603,3 +611,49 @@ StreamPulse는 트위치, Kick, YouTube를 하나의 가벼운 확장 프로그�
 개인정보:
 StreamPulse는 계정이 필요 없으며 추적기가 없습니다. 스트리머 목록, 설정, 시청 시간은 사용자의 기기에 저장됩니다. 서버(streampulse.tech)로 가는 것은 다음 세 가지뿐입니다. 기본적으로 꺼져 있는 커뮤니티 배지가 트위치 사용자 이름의 해시값(이름 자체는 보내지 않음)을 하루에 최대 한 번, StreamPulse+ 회원이라면 선택한 효과와 함께 전송하는 것. StreamPulse+ 라이선스 키는 활성화할 때 서버에서 확인되는 것. 추천 코드는 요청할 때 서버에서 생성되는 것. 중단하려면 설정에서 배지를 끄세요.
 ```
+
+---
+
+## 9. Notes au relecteur (champ « Notes for the reviewer » de la console)
+
+À recopier tel quel à chaque soumission, et pour la nomination au badge Featured :
+
+```text
+No account is required to test StreamPulse: it works out of the box. Adding a
+streamer, the live dashboard and desktop alerts can all be tested without any
+credentials. Claiming Twitch channel points, reading Drops campaigns and the
+on-page chat features require an open Twitch session; a test Twitch account can
+be provided on request (contact@streampulse.tech).
+
+All code is bundled with the extension and human-readable. The single minified
+file, js/vendor/hls.light.min.js, is the well-known open-source library hls.js
+(Apache-2.0), used locally to play muted low-latency previews; minification is
+allowed by the program policies. No code is fetched or evaluated from remote
+sources: network calls go only to the public Twitch, Kick and YouTube APIs for
+live status and thumbnails, and to streampulse.tech (our server) for the opt-in
+community badge, StreamPulse+ license-key checks and referral codes, exactly as
+disclosed in the privacy tab.
+
+Content scripts run only on twitch.tv, kick.com and youtube.com, as declared in
+the manifest. Nothing is injected into any other site, and the "scripting"
+permission only touches the pinned, muted Twitch tab that the extension itself
+opens for the optional badge auto mode.
+```
+
+### Nomination au badge Featured
+
+La nomination se fait via One Stop Support : « My item → I want to nominate my
+extension to receive a Featured badge ». La relecture est manuelle et il n'existe
+pas de checklist garantie ; garder sous la main :
+
+- l'URL de la fiche publiée (extension publique et visible) ;
+- les notes au relecteur ci-dessus ;
+- un compte Twitch de test avec quelques chaînes suivies, pour que le relecteur
+  puisse essayer points, Drops et aperçus (identifiants dans le formulaire
+  uniquement, jamais dans le dépôt).
+
+Critères d'éligibilité vérifiés le 2026-10-13 : type extension ✔ possession ✔
+anglais ✔ publication publique ✔ aucune violation active ✔ fonctions
+principales accessibles sans identifiants ni paiement ✔ (points, alertes,
+aperçus, filtres et tableau de bord gratuits ; StreamPulse+ ne couvre que des
+extras : Drops auto, mode auto des badges, cosmétiques).
