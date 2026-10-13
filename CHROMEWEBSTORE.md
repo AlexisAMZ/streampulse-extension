@@ -130,10 +130,8 @@ Corrections appliquées :
 - descriptions longues : superlatif retiré en PL, TR, RU, KO, ID
   (« najlepsze », « en iyi », « лучшее », « 최고의 », « terbaik »).
 
-**À faire côté console** : la capture portant « 100% Free and Free forever »
-n'existe que dans le Chrome Web Store, pas dans ce dépôt. Elle doit être
-supprimée à la main dans l'onglet Éléments graphiques : aucune régénération
-locale ne la retire.
+**Vérifié le 2026-10-13** : plus aucune capture ne porte « 100% Free and Free forever »
+dans la console (onglet Éléments graphiques). Rien à supprimer.
 
 ---
 
