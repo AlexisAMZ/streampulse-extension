@@ -76,7 +76,7 @@ export function formatNumber(value) {
   }
 }
 
-export function formatCompactNumber(value) {
+function formatCompactNumber(value) {
   try {
     return new Intl.NumberFormat(currentLocale(), { notation: "compact", maximumFractionDigits: 1 }).format(value);
   } catch {
@@ -99,12 +99,12 @@ function minutesSince(isoDate) {
   return minutes >= 0 ? minutes : null;
 }
 
-export function getDisplayLabel(streamer) {
+function getDisplayLabel(streamer) {
   const platformId = streamer.platform || DEFAULT_PLATFORM;
   return streamer.displayName || formatHandleForDisplay(platformId, streamer.handle || streamer.twitch);
 }
 
-export function getStreamerUrl(streamer) {
+function getStreamerUrl(streamer) {
   const platformId = streamer.platform || DEFAULT_PLATFORM;
   return buildProfileUrl(platformId, streamer.handle || streamer.twitch || streamer.id);
 }

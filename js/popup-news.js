@@ -4,7 +4,7 @@
 // Réglages (sa seule entrée). Chacun disparaît dès que sa rubrique est ouverte,
 // par l'onglet ou par le menu, et ce choix est gardé dans chrome.storage.
 
-export const NEWS_KEY = "streamPulseSeenNew";
+const NEWS_KEY = "streamPulseSeenNew";
 const NEW_FEATURES = ["drops", "badges", "identity"];
 
 // Tant que le storage n'est pas lu, rien ne s'affiche : pas de clignotement.

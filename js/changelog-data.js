@@ -47,7 +47,7 @@
  */
 
 /** Language used when a release has no text for the one the user picked. */
-export const FALLBACK_LANGUAGE = "en";
+const FALLBACK_LANGUAGE = "en";
 
 export const RELEASES = [
 

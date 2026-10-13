@@ -14,7 +14,7 @@ export const DROP_ALERTS_SEEN_KEY = "streamPulseDropAlertsSeen";
 export const MAX_GAMES = 12;
 export const MAX_SEEN = 400;
 /** Une campagne démarrée depuis plus longtemps n'est plus une actu : pas d'alerte. */
-export const FRESH_CAMPAIGN_MS = 7 * 86_400_000;
+const FRESH_CAMPAIGN_MS = 7 * 86_400_000;
 
 /** Réglages lus du storage : { enabled, games } nettoyé, dédupliqué. */
 export function normalizeDropAlerts(stored) {

@@ -63,7 +63,7 @@ async function setStatus(patch) {
  * tire d'abord — sinon un nouvel appareil écraserait la liste du premier avec
  * la sienne, vide.
  */
-export async function pushToSync() {
+async function pushToSync() {
   if (!(await syncEnabled())) return;
   const device = await ensureDevice();
   const metaStored = await chrome.storage.sync.get(SYNC_META_KEY);

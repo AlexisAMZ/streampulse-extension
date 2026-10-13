@@ -5,7 +5,7 @@
 
 import { t } from "./i18n.js";
 
-export const LAYOUT_KEY = "streamPulseLayout";
+const LAYOUT_KEY = "streamPulseLayout";
 const LOCKED = new Set(["settings", "general"]);
 
 const $ = (id) => document.getElementById(id);
@@ -32,7 +32,7 @@ function normalize(value) {
  * Libellés longs (allemand, russe…) ou onglets ajoutés : si la barre du haut
  * déborde, on retire d'abord la durée de visionnage, puis le compteur de points.
  */
-export function fitTopbar() {
+function fitTopbar() {
   const bar = document.querySelector(".topbar");
   if (!bar) return;
   // Déborde dès que la fin de la barre mord sur la marge droite.
