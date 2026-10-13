@@ -69,7 +69,7 @@ StreamPulse requires no account and contains no trackers. Your streamers, settin
 
 ### Objectif Unique (Single Purpose)
 **FR** : `Centraliser les alertes de direct, la collecte automatique de points de chaîne et le filtrage de chat pour Twitch, Kick et YouTube dans une interface unique.`  
-**EN** : `Provide live stream notifications, automatic channel points collection, and chat filtering for Twitch, Kick and YouTube in a single extension.`
+**EN** : voir « Textes exacts de l'onglet Confidentialité » plus bas (la console limite à 1 000 caractères et veut l'objectif unique, pas la liste des fonctions).
 
 ### Langue Principale
 `Français` (Primary), `Anglais` (Secondary)
@@ -144,8 +144,8 @@ dans la console (onglet Éléments graphiques). Rien à supprimer.
 | `alarms` | `permissions` | Permet d'exécuter des vérifications périodiques légères en arrière-plan pour détecter les prises de live Twitch/Kick, relire les Drops et mettre à jour le statut des streams. |
 | `notifications` | `permissions` | Permet d'afficher des notifications système natives à l'utilisateur lorsqu'un streamer suivi démarre son direct. |
 | `offscreen` | `permissions` | Permet de créer un document hors écran dédié à la lecture des sons d'alerte et à la gestion audio sans bloquer le service worker. |
-| `cookies` | `permissions` | Permet au service worker de réutiliser la session Twitch déjà ouverte dans le navigateur pour lire et réclamer les Drops via l'API GraphQL Twitch. Le contenu des cookies n'est jamais lu, stocké ni transmis ailleurs. |
-| `scripting` | `permissions` | Permet d'afficher le bandeau de progression et de lancer le lecteur basse consommation dans l'onglet Twitch épinglé et muet du mode auto des badges. |
+| `cookies` | `permissions` | Permet au service worker de réutiliser la session Twitch déjà ouverte dans le navigateur pour lire et réclamer les Drops via l'API GraphQL Twitch. Seul le cookie `auth-token` de twitch.tv est lu ; sa valeur n'est envoyée qu'à gql.twitch.tv, jamais stockée à distance ni transmise ailleurs. |
+| `scripting` | `permissions` | Permet d'afficher le bandeau de progression et de lancer le lecteur basse consommation (360p, volume minimal, et fermeture des écrans bloquants de Twitch) dans l'onglet Twitch épinglé et muet du mode auto des badges. |
 | `https://api.twitch.tv/*` | `host_permissions` | Permet d'interroger l'API officielle Twitch pour vérifier l'état en direct des chaînes et obtenir les métadonnées des streams. |
 | `https://gql.twitch.tv/*` | `host_permissions` | Permet d'interagir avec l'API GraphQL Twitch pour la récupération automatique des Channel Points et des Drops, et l'affichage des prévisualisations. |
 | `https://www.twitch.tv/*` | `host_permissions` | Permet d'injecter les scripts de prévisualisation au survol, l'anti-pause et le filtre de chat directement sur les pages Twitch. |
@@ -155,6 +155,51 @@ dans la console (onglet Éléments graphiques). Rien à supprimer.
 | `https://www.youtube.com/*` | `host_permissions` | Permet d'ajouter le bouton « Ajouter à StreamPulse » sur les pages de chaîne YouTube et de compter le temps de visionnage des directs YouTube. |
 
 > Table recalée sur le `manifest.json` 26.10.11 : chaque permission du manifest a sa ligne ici, et `tmi.twitch.tv` (retirée du manifest depuis la 26.9.18) n'y figure plus.
+
+### Textes exacts de l'onglet Confidentialité (à coller, ≤ 1 000 caractères chacun)
+
+> Recalés sur le code de la 26.10.11 le 2026-10-13. Écarts corrigés par rapport à l'ancien texte : l'objectif unique oubliait YouTube ; `scripting` annonçait 160p et « volume coupé » alors que le code vise 360p à 2 % de volume (l'onglet, lui, est muet) et ferme aussi les écrans bloquants de Twitch (contenu pour adultes, règles du chat) ; `cookies` ne disait pas que les badges passent aussi par la session ; l'autorisation d'hôte était générique.
+
+**Single purpose** (605 car.)
+```
+StreamPulse helps viewers follow their Twitch, Kick and YouTube streamers from one place. It shows who is live and sends a notification when a followed streamer starts streaming. On Twitch it improves the viewing experience: favorites pinned in the sidebar, a settings panel built into the page, automatic claiming of channel point bonuses, hover previews, uninterrupted playback in background tabs and chat filters. It also tracks Twitch Drops and chat badge campaigns, and watch time per channel to build a recap. Every feature serves the same purpose: following and watching live streamers more easily.
+```
+
+**storage** (185 car.)
+```
+Saves, on the user's device only, the list of followed streamers and their live status, favorites, chat filters, watch time statistics and preferences (language, sound, alert settings).
+```
+
+**alarms** (193 car.)
+```
+Runs light periodic checks in the background: whether followed streamers are live, and the progress of Twitch Drops and badge campaigns. It avoids keeping a background page permanently running.
+```
+
+**cookies** (560 car.)
+```
+Used solely to read the Twitch auth-token session cookie from twitch.tv. It authenticates the user's own requests to Twitch's GraphQL API (gql.twitch.tv) made from the extension's service worker, so Twitch Drops and chat badge campaigns can be read and, with the optional StreamPulse+ plan, claimed automatically without a Twitch tab open (for example while the user watches on a phone or TV). The cookie value is sent only to gql.twitch.tv. It is never stored remotely or sent to any other server, and the extension never creates, modifies or deletes cookies.
+```
+
+**notifications** (157 car.)
+```
+Shows Chrome notifications when a followed streamer goes live or changes game or title (each one optional), and when a new free chat badge becomes available.
+```
+
+**offscreen** (517 car.)
+```
+StreamPulse uses the offscreen permission only to play a short sound (sons/notification.mp3, bundled with the extension) when a followed streamer goes live. The Manifest V3 service worker cannot play audio, so the extension creates an offscreen document (html/audio-handler.html) with the AUDIO_PLAYBACK reason, and that document only plays this file. The sound plays only if the user turned on the "Sounds" option in the settings. The document shows no UI, loads no remote content and reads no page or browsing data.
+```
+
+**scripting** (687 car.)
+```
+Used only to inject two helper functions into the Twitch tab that the extension itself opens (pinned and muted) for its optional "badge auto mode", which earns free Twitch chat badges: (1) an on-page banner showing the badge campaign in progress and its watch minutes; (2) a function that sets that tab's Twitch player to 360p (or the lowest quality offered) at minimum volume, and dismisses Twitch's blocking screens (mature-content gate, chat-rules acceptance) that would otherwise leave the stream paused so the watch time would not count. Nothing is ever injected into pages the user browses on their own: injections target only the tab opened by this feature, and only on twitch.tv.
+```
+
+**Host permissions** (652 car.)
+```
+Each host has one purpose. api.twitch.tv and gql.twitch.tv: live status and categories, and, through the user's own session, Drops and badge campaigns. www.twitch.tv and clips.twitch.tv: the on-page features (sidebar favorites, settings panel, hover previews, chat filters, anti-pause, "Add to StreamPulse" button, channel point bonus claiming). kick.com and *.kick.com: live status through Kick's public API, avatars and thumbnails, previews, chat filters and channel points on Kick pages. www.youtube.com: the "Add to StreamPulse" button on channel pages and watch time of live streams. Content scripts run only on these hosts; no other site is read.
+```
+
 
 ---
 
