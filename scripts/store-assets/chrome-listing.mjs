@@ -13,7 +13,7 @@
  */
 
 export const LISTING = {
-  en: `StreamPulse brings Twitch, Kick and YouTube together in one lightweight extension. See who's live at a glance, get an alert the moment a stream starts, and let the extension claim your channel points and Drops while you watch, and spot the chat badges you can earn.
+  en: `StreamPulse brings Twitch, Kick and YouTube together in one lightweight extension. See who's live at a glance, get an alert the moment a stream starts, and let the extension claim your channel points while you watch, and spot the chat badges you can earn.
 
 🌍 Translated into 11 languages. No account, no ads.
 
@@ -26,8 +26,7 @@ Know who's live
 
 Drops, badges and points
 • Drops panel: your Twitch Drops in progress with their progress and time left, the ones ready to claim, and Twitch campaigns filtered by new, ending soon and upcoming, your games first.
-• Drops are claimed as soon as they're ready, even with no Twitch tab open: StreamPulse checks them every 10 minutes, so it works while you watch on your phone or TV.
-• Badges tab: chat badge campaigns and new Twitch global badges as soon as they appear, free or paid, with the ones you already own. A notification tells you about new free badges.
+• Badges tab: chat badge campaigns and new Twitch global badges as soon as they appear, free or paid, with the ones you already own. A notification tells you about new free badges. Without StreamPulse+, the auto mode still claims one free badge a day.
 • Points panel: every channel point you earn on Twitch, channel by channel.
 • Channel points bonuses claimed automatically, and points earned on Kick counted too.
 • Incoming raid alerts (beta, off by default): get notified when a channel you follow is raided, even with no tab open. Automatic raid cancel is available in settings.
@@ -55,7 +54,8 @@ Your watch time
 • Backup and restore: move your streamers, favorites, channel groups, settings, history, points, Drops and watch time to another browser.
 
 StreamPulse+ (optional, paid)
-Everything above is free and stays free. StreamPulse+ is a monthly plan (7 days free) or a lifetime plan that supports the project and adds:
+Everything above is free and stays free. StreamPulse+ is a monthly (7 days free) or yearly plan that supports the project and adds:
+• Automatic Drops: claimed as soon as they're ready, even with no Twitch tab open — StreamPulse checks them every 10 minutes, so it works while you watch on your phone or TV.
 • Smart alerts: only for a game, a word in the title or a viewer threshold.
 • Advanced recap with a yearly Wrapped.
 • Assisted predictions with a movable widget on the video.
@@ -71,7 +71,7 @@ The full code is public on GitHub under the GPL v3 license: github.com/AlexisAMZ
 Privacy
 StreamPulse needs no account and has no ads, trackers or analytics. Your streamers, settings, points, Drops and watch time stay on your device. Your Drops and badges are read from Twitch with your own Twitch session, directly between your browser and Twitch. Only three things reach our server, streampulse.tech: the optional community badge, off by default, sends a hashed version of your Twitch username (never the username itself) at most once a day, with the effects you picked if you have StreamPulse+; a StreamPulse+ license key is checked there when you activate it; and your referral code is created there when you ask for it. Streamer names, and what you type to add a channel, are sent only to Twitch, Kick and YouTube to find channels and check who is live.`,
 
-  fr: `StreamPulse réunit Twitch, Kick et YouTube dans une seule extension légère. Voyez qui est en direct d'un coup d'œil, recevez une alerte dès qu'un live démarre, et laissez l'extension récupérer vos points de chaîne et vos Drops pendant que vous regardez, et repérer les badges de chat à gagner.
+  fr: `StreamPulse réunit Twitch, Kick et YouTube dans une seule extension légère. Voyez qui est en direct d'un coup d'œil, recevez une alerte dès qu'un live démarre, et laissez l'extension récupérer vos points de chaîne pendant que vous regardez, et repérer les badges de chat à gagner.
 
 🌍 Traduite en 11 langues. Sans compte, sans publicité.
 
@@ -84,8 +84,7 @@ Savoir qui est en live
 
 Drops, badges et points
 • Panneau Drops : vos Drops Twitch en cours avec leur progression et le temps restant, ceux prêts à récupérer, et les campagnes de Twitch filtrées par nouvelles, finissent bientôt et à venir, celles de vos jeux en premier.
-• Les Drops sont récupérés dès qu'ils sont prêts, même sans onglet Twitch ouvert : StreamPulse les vérifie toutes les 10 minutes, ça marche aussi quand vous regardez sur votre téléphone ou votre télé.
-• Onglet Badges : les campagnes de badges de chat et les nouveaux badges globaux de Twitch dès leur apparition, gratuits ou payants, avec ceux que vous avez déjà. Une notification vous prévient d'un nouveau badge gratuit.
+• Onglet Badges : les campagnes de badges de chat et les nouveaux badges globaux de Twitch dès leur apparition, gratuits ou payants, avec ceux que vous avez déjà. Une notification vous prévient d'un nouveau badge gratuit. Sans StreamPulse+, le mode auto décroche quand même un badge gratuit par jour.
 • Panneau Points : chaque point de chaîne gagné sur Twitch, chaîne par chaîne.
 • Les bonus de points de chaîne récupérés automatiquement, et les points gagnés sur Kick comptabilisés aussi.
 • Alertes de raids entrants (bêta, désactivées par défaut) : soyez prévenu quand une chaîne suivie reçoit un raid, même sans onglet ouvert. L'annulation automatique des raids reste disponible dans les réglages.
@@ -113,7 +112,8 @@ Votre temps de visionnage
 • Sauvegarde et restauration : retrouvez vos streamers, favoris, groupes de chaînes, réglages, historique, points, Drops et temps de visionnage dans un autre navigateur.
 
 StreamPulse+ (optionnel, payant)
-Tout ce qui précède est gratuit et le reste. StreamPulse+ est une formule mensuelle (7 jours gratuits) ou à vie qui soutient le projet et ajoute :
+Tout ce qui précède est gratuit et le reste. StreamPulse+ est une formule mensuelle (7 jours gratuits) ou annuelle qui soutient le projet et ajoute :
+• Des Drops récupérés automatiquement dès qu'ils sont prêts, même sans onglet Twitch ouvert : StreamPulse les vérifie toutes les 10 minutes, ça marche aussi quand vous regardez sur votre téléphone ou votre télé.
 • Des alertes intelligentes : seulement pour un jeu, un mot dans le titre ou un seuil de spectateurs.
 • Un récap avancé avec un bilan annuel (Wrapped).
 • Des prédictions assistées avec un widget déplaçable sur la vidéo.
