@@ -7,7 +7,7 @@
  *   KEEP_BUILD=1 node scripts/make-store-assets.mjs fr   # garde les intermédiaires
  *
  * Sortie : images/cws_screenshots/<LANGUE>/01-dashboard, 02-drops, 03-plus,
- * 04-compat : quatre PNG 1280x800 par langue (le store en accepte 5 au plus).
+ * 04-compat, 05-control : cinq PNG 1280x800 par langue (le maximum du store).
  *
  * Le rendu part du vrai popup et des vraies traductions : rien n'est maquetté à
  * la main, donc une évolution de l'UI se répercute au prochain run.
@@ -31,6 +31,8 @@ import {
   resolveTagline,
 } from "./store-assets/copy.mjs";
 import { buildProductFrame, buildCompatibilityFrame } from "./store-assets/frames.mjs";
+import { buildControlFrame } from "./store-assets/control-frames.mjs";
+import { CONTROL_COPY } from "./store-assets/control-copy.mjs";
 import { COLORS as BRAND_COLORS } from "./store-assets/brand.mjs";
 import { buildPromoTile, PROMO_TILE, buildPromoMarquee, PROMO_MARQUEE } from "./store-assets/promo.mjs";
 import { findBannedTerms, stripPromotionalSentences } from "./store-assets/policy.mjs";
@@ -175,6 +177,8 @@ async function captureHarness(name, pagePath, size = CANVAS) {
 const POPUP_READY = {
   dashboard: "document.body.innerText.includes('Pixelkat')",
   drops: "document.body.innerText.includes('Vehicle XP')",
+  badges: "(() => { const p = document.querySelector('#menu-badges'); return !!p && !p.hidden && p.offsetParent !== null && p.innerText.length > 150; })()",
+  settings: "(() => { const p = document.querySelector('#menu-notifications'); return !!p && !p.hidden && p.offsetParent !== null && p.innerText.length > 150; })()",
   plus: "(() => { const v = document.querySelector('.plus-view'); return !!v && getComputedStyle(v).display !== 'none' && v.innerText.length > 80; })()",
 };
 
@@ -485,6 +489,37 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
     }),
   });
 
+  // 5. « Tu gardes la main » : badges suivis, réglages à portée, vie privée.
+  const control = CONTROL_COPY[lang] || CONTROL_COPY.en;
+  assertPolicyClean(
+    [
+      { label: "titre 05", text: control.title },
+      { label: "sous-titre 05", text: control.subtitle },
+      ...control.columns.flatMap((column, index) => [
+        { label: `colonne ${index + 1} titre`, text: column.title },
+        { label: `colonne ${index + 1} corps`, text: column.body },
+        ...(column.points || []).map((text, i) => ({ label: `colonne ${index + 1} point ${i + 1}`, text })),
+      ]),
+    ],
+    lang,
+  );
+  const badgesShot = await capturePopup("badges", lang, "badges");
+  const settingsShot = await capturePopup("settings", lang, "settings");
+  await renderFrame({
+    name: `frame-${lang}-05`,
+    outPath: path.join(outDir, "05-control.png"),
+    flatten: true,
+    html: buildControlFrame({
+      logoPath: LOGO,
+      tagline,
+      title: control.title,
+      subtitle: control.subtitle,
+      columns: control.columns,
+      badgesShot,
+      settingsShot,
+    }),
+  });
+
   return outDir;
 }
 
@@ -606,7 +641,7 @@ async function main() {
     }
   }
 
-  console.log(`\n${targets.length} langue(s) · 4 captures 1280x800 chacune.`);
+  console.log(`\n${targets.length} langue(s) · 5 captures 1280x800 chacune.`);
 }
 
 main().catch((error) => {

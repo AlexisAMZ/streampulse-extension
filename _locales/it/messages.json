@@ -1,9 +1,9 @@
 {
   "appName": {
-    "message": "StreamPulse: Avvisi, punti e drops Twitch, Kick e YouTube"
+    "message": "StreamPulse: Avvisi, punti, drops e badge Twitch, Kick e YouTube"
   },
   "appDesc": {
-    "message": "Punti Canale automatici, Drops con StreamPulse+, avvisi live, anteprime e filtri chat. Twitch, Kick e YouTube."
+    "message": "Punti Canale automatici · segui Drops e badge · avvisi live · anteprime e filtri chat. Twitch, Kick e YouTube."
   },
   "openPopupDesc": {
     "message": "Apri StreamPulse"

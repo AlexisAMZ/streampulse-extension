@@ -7,8 +7,8 @@
 ## 1. Informations Principales du Store (Store Listing)
 
 ### Nom de l'extension
-**FR** : `StreamPulse : Alertes, Points & Drops Twitch, Kick & YouTube` (60 / 75 caractères)  
-**EN** : `StreamPulse: Twitch, Kick & YouTube Alerts, Points & Drops` (58 / 75 caractères)
+**FR** : `StreamPulse : Alertes, Points, Drops & Badges Twitch, Kick & YouTube` (68 / 75 caractères)  
+**EN** : `StreamPulse: Twitch, Kick & YouTube Alerts, Points, Drops & Badges` (66 / 75 caractères)
 
 ### Description Courte (Short Description)
 **FR** : `Points de chaîne auto, Drops avec StreamPulse+, alertes live, aperçus, filtres de chat, récap. Twitch, Kick & YouTube.` (118 / 132 caractères)  

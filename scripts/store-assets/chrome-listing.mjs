@@ -13,22 +13,22 @@
  */
 
 export const LISTING = {
-  en: `StreamPulse brings Twitch, Kick and YouTube together in one lightweight extension. See who's live at a glance, get an alert the moment a stream starts, and let the extension claim your channel points while you watch, and spot the chat badges you can earn.
+  en: `StreamPulse is a live notifier for Twitch, Kick and YouTube: get an alert the moment a streamer you follow goes live, auto-claim your Twitch Channel Points, and keep track of your Twitch Drops and chat badges, all from one lightweight extension.
 
 🌍 Translated into 11 languages. No account.
 
-Know who's live
+Live notifications for Twitch, Kick and YouTube
 • One dashboard for Twitch, Kick and YouTube: live channels first, with viewers, category and uptime.
 • Desktop alerts when a streamer you follow goes live, and optionally when they change category or title.
 • Add a channel in a few letters: matching Twitch and Kick channels show up as you type, live ones first.
 • History tab: the lives you missed, with their length and a direct link to the Twitch replay.
 • Hover previews: preview a live stream by hovering a channel link on Twitch.
 
-Drops, badges and points
+Twitch Drops, badges and Channel Points
 • Drops panel: your Twitch Drops in progress with their progress and time left, the ones ready to claim, and Twitch campaigns filtered by new, ending soon and upcoming, your games first.
 • Badges tab: chat badge campaigns and new Twitch global badges as soon as they appear, free or paid, with the ones you already own. A notification tells you about new free badges. Without StreamPulse+, the auto mode still claims one free badge a day.
-• Points panel: every channel point you earn on Twitch, channel by channel.
-• Channel point bonuses claimed automatically, and points earned on Kick counted too.
+• Channel Points panel: every channel point you earn on Twitch, channel by channel.
+• Auto-claim for the Channel Points bonus chest, and points earned on Kick counted too.
 • Incoming raid alerts (beta, off by default): get notified when a channel you follow is raided, even with no tab open. Automatic raid cancel is available in settings.
 
 Right inside Twitch
@@ -71,22 +71,22 @@ The full code is public on GitHub under the GPL v3 license: github.com/AlexisAMZ
 Privacy
 StreamPulse needs no account and has no trackers or analytics. Your streamers, settings, points, Drops and watch time stay on your device. Your Drops and badges are read from Twitch with your own Twitch session, directly between your browser and Twitch. Only three things reach our server, streampulse.tech: the optional community badge, off by default, sends a hashed version of your Twitch username (never the username itself) at most once a day, with the effects you picked if you have StreamPulse+; a StreamPulse+ license key is checked there when you activate it; and your referral code is created there when you ask for it. Streamer names, and what you type to add a channel, are sent only to Twitch, Kick and YouTube to find channels and check who is live.`,
 
-  fr: `StreamPulse réunit Twitch, Kick et YouTube dans une seule extension légère. Voyez qui est en direct d'un coup d'œil, recevez une alerte dès qu'un live démarre, et laissez l'extension récupérer vos points de chaîne pendant que vous regardez, et repérer les badges de chat à gagner.
+  fr: `StreamPulse est un notificateur de live pour Twitch, Kick et YouTube : recevez une alerte dès qu'un streamer suivi lance son live, récupérez automatiquement vos points de chaîne Twitch et suivez vos Drops Twitch et vos badges de chat, dans une seule extension légère.
 
 🌍 Traduite en 11 langues. Sans compte.
 
-Savoir qui est en live
+Notifications de live pour Twitch, Kick et YouTube
 • Un tableau de bord unique pour Twitch, Kick et YouTube : les chaînes en direct d'abord, avec spectateurs, catégorie et durée.
 • Des alertes sur le bureau quand un streamer suivi lance son live, et au choix quand il change de catégorie ou de titre.
 • Ajoutez une chaîne en quelques lettres : les chaînes Twitch et Kick correspondantes s'affichent pendant la saisie, celles en direct d'abord.
 • Onglet Historique : les lives manqués, avec leur durée et un lien direct vers la rediffusion Twitch.
 • Aperçus au survol : prévisualisez un live en survolant le lien d'une chaîne sur Twitch.
 
-Drops, badges et points
+Drops Twitch, badges et points de chaîne
 • Panneau Drops : vos Drops Twitch en cours avec leur progression et le temps restant, ceux prêts à récupérer, et les campagnes de Twitch filtrées par nouvelles, finissent bientôt et à venir, celles de vos jeux en premier.
 • Onglet Badges : les campagnes de badges de chat et les nouveaux badges globaux de Twitch dès leur apparition, gratuits ou payants, avec ceux que vous avez déjà. Une notification vous prévient d'un nouveau badge gratuit. Sans StreamPulse+, le mode auto décroche quand même un badge gratuit par jour.
-• Panneau Points : chaque point de chaîne gagné sur Twitch, chaîne par chaîne.
-• Les bonus de points de chaîne récupérés automatiquement, et les points gagnés sur Kick comptabilisés aussi.
+• Panneau Points de chaîne : chaque point de chaîne gagné sur Twitch, chaîne par chaîne.
+• Récupération automatique du coffre bonus de points de chaîne, et points gagnés sur Kick comptabilisés aussi.
 • Alertes de raids entrants (bêta, désactivées par défaut) : soyez prévenu quand une chaîne suivie reçoit un raid, même sans onglet ouvert. L'annulation automatique des raids reste disponible dans les réglages.
 
 Directement dans Twitch

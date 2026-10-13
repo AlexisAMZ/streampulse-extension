@@ -1,9 +1,9 @@
 {
   "appName": {
-    "message": "StreamPulse: Twitch, Kick, YouTube 알림, 포인트 & 드롭"
+    "message": "StreamPulse: Twitch, Kick, YouTube 알림, 포인트, 드롭 & 배지"
   },
   "appDesc": {
-    "message": "Twitch·Kick·YouTube 채널 포인트 자동 획득, 드롭은 StreamPulse+, 라이브 알림, 놓친 방송 기록, 미리보기, 채팅 필터. 계정 없이 사용."
+    "message": "Twitch·Kick·YouTube 채널 포인트 자동 획득, 드롭과 배지 진행 확인, 라이브 알림, 놓친 방송 기록, 미리보기, 채팅 필터. 계정 없이 사용."
   },
   "openPopupDesc": {
     "message": "StreamPulse 열기"

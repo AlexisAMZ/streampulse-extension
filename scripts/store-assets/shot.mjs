@@ -19,7 +19,7 @@ const run = promisify(execFile);
 const CAPTURE_TIMEOUT_MS = 45_000;
 const POLL_INTERVAL_MS = 120;
 /** Attente maximale des vraies données dans la page avant d'abandonner une tentative. */
-const READY_TIMEOUT_MS = 18_000;
+const READY_TIMEOUT_MS = 12_000;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

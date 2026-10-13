@@ -8,6 +8,7 @@ export const SCREENSHOT_ORDER = [
   "04-compat.png",
   "02-drops.png",
   "03-plus.png",
+  "05-control.png",
 ];
 
 /**
