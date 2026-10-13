@@ -175,6 +175,8 @@ function initHistory() {
 
 let plusRecord = null;
 let selectedPlan = "yearly";
+const PLUS_BANNER_KEY = "streamPulsePlusBannerClosed";
+let plusBannerClosed = false;
 const PLAN_LABELS = { monthly: "popup.plus.planMonthly", yearly: "popup.plus.planYearly", lifetime: "popup.plus.planLifetime" };
 const plusListeners = new Set();
 
@@ -211,8 +213,17 @@ function renderPlus() {
   }
   if ($("plus-menu-text")) $("plus-menu-text").textContent = t(active ? "popup.plusMenu.statusActive" : "popup.plusMenu.statusInactive");
   if ($("plus-menu-open")) $("plus-menu-open").textContent = t(active ? "popup.plusMenu.manage" : "popup.plusMenu.discover");
+  renderPlusBanner(active);
   renderPlusValue().catch(() => {});
   plusListeners.forEach((listener) => listener(active));
+}
+
+/** Bandeau d'essai : visible hors abonnement, jusqu'à fermeture explicite. */
+function renderPlusBanner(active) {
+  const banner = $("plus-banner");
+  const show = Boolean(banner) && !active && !plusBannerClosed;
+  if (banner) banner.hidden = !show;
+  document.body.classList.toggle("has-plus-banner", show);
 }
 
 /**
@@ -818,8 +829,9 @@ export async function initFeatures() {
   initClipDownloadLock();
   initPredictions();
 
-  const stored = await chrome.storage.local.get([PLUS_KEY, SMART_ALERTS_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers", ...IDENTITY_STORAGE_KEYS]);
+  const stored = await chrome.storage.local.get([PLUS_KEY, PLUS_BANNER_KEY, SMART_ALERTS_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers", ...IDENTITY_STORAGE_KEYS]);
   plusRecord = stored[PLUS_KEY] || null;
+  plusBannerClosed = stored[PLUS_BANNER_KEY] === true;
   plusListeners.add(() => renderIdentity());
   initIdentity({ getRecord: () => plusRecord, isPlus: plusActive, openPlus, stored });
   predictionRule = normalizePredictionRule(stored[PREDICTION_RULE_KEY]);
@@ -828,6 +840,13 @@ export async function initFeatures() {
   smartRules = normalizeRules(stored[SMART_ALERTS_KEY]);
   smartStreamers = Array.isArray(stored.betaGeneralStreamers) ? stored.betaGeneralStreamers : [];
   renderPlus();
+  $("plus-banner-close")?.addEventListener("click", () => {
+    plusBannerClosed = true;
+    const banner = $("plus-banner");
+    if (banner) banner.hidden = true;
+    chrome.storage.local.set({ [PLUS_BANNER_KEY]: true }).catch((error) => console.warn("[popup] bandeau plus :", error?.message || error));
+  });
+  $("plus-banner-cta")?.addEventListener("click", openPlus);
   initPoints({ isPlus: plusActive, onPlusChange: (listener) => plusListeners.add(listener), openPlus })
     .catch((error) => console.warn("[popup] points init failed:", error));
   initReviewAsk().catch((error) => console.warn("[popup] review ask init failed:", error));
