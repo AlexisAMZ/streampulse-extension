@@ -510,6 +510,7 @@ export default {
       "badgeCondSubGift": "abone ol ya da abonelik hediye et",
       "badgeCondBits": "Bits kullan",
       "badgesLocked": "Günde 1 ücretsiz rozet: ▶ ile başlat, gerisini sekme halleder. StreamPulse+ ile tüm rozetler aynı anda, sınırsız.",
+      "badgeLockedHint": "Yalnızca StreamPulse+: tüm rozetlerin kilidini aç",
       "badgeFreeLeft": "Bugünün ücretsiz rozeti hazır: ▶ ile birini seç.",
       "badgeFreeUsed": "Bugünün ücretsiz rozeti kullanıldı. Yarın tekrar gel ya da StreamPulse+ ile hepsini al.",
       "badgeFilterAvailable": "Alınabilir",

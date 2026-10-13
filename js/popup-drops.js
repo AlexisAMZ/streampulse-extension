@@ -519,6 +519,42 @@ function badgeCard({ title, image, condition, fallback, game, gameId, link, clic
   return item;
 }
 
+/**
+ * Sans Plus, un seul badge reste lisible : celui du badge gratuit du jour (en
+ * cours ou déjà choisi), sinon le premier récupérable. Les autres deviennent des
+ * cartes floutées sans aucune donnée réelle dans la page.
+ */
+function visibleFreeId(list) {
+  if (badgeAuto?.jobs.length) return badgeAuto.jobs[0].badgeId;
+  if (freeUsedToday(badgeFree)) return badgeFree.badgeId;
+  return list.find((badge) => badge.status === "live" && badge.campaign && !badge.paid && !badge.owned)?.id || "";
+}
+
+function lockedRow() {
+  const item = el("li");
+  const card = el("button", "badge-card is-locked");
+  card.type = "button";
+  card.dataset.unlock = "1";
+  card.title = t("popup.drops.badgeLockedHint");
+  const art = el("span", "badge-card-art");
+  art.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+  const body = el("span", "badge-card-body");
+  body.append(el("span", "badge-blur badge-blur--title"), el("span", "badge-blur"));
+  const foot = el("span", "badge-card-foot");
+  foot.append(el("span", "badge-pill is-plus", t("popup.plus.badge")));
+  card.append(art, body, foot);
+  card.setAttribute("aria-label", t("popup.drops.badgeLockedHint"));
+  item.append(card);
+  return item;
+}
+
+/** Lignes du catalogue : tout pour Plus, un badge lisible (plus les siens) sinon. */
+function catalogRows(list) {
+  if (deps.isPlus()) return list.map(badgeRow);
+  const keep = visibleFreeId(list);
+  return list.map((badge) => (badge.owned || badge.id === keep ? badgeRow(badge) : lockedRow()));
+}
+
 function badgeRow(badge) {
   const text = badgeText[getCurrentLanguage()]?.[badge.id]?.text || badge.description;
   const event = badge.event;
@@ -551,7 +587,7 @@ function badgeRow(badge) {
 function renderBadges(now) {
   if (!$("drops-badges")) return;
   const shown = newBadges(badges, now);
-  $("drops-badges").replaceChildren(...shown.map(badgeRow));
+  $("drops-badges").replaceChildren(...catalogRows(shown));
   $("drops-badges-meta").textContent = badges.badges.length ? t("popup.drops.badgesKnown", { count: badges.badges.length }) : "";
   const sync = $("drops-badges-sync");
   sync.hidden = shown.length > 0;
@@ -614,6 +650,10 @@ function renderCatalog() {
   // Catalogue visible par tous : sans Plus, un badge auto gratuit par jour.
   $("badges-locked").hidden = plus;
   $("badges-content").hidden = false;
+  // La recherche trahirait les noms des badges floutés : réservée à Plus.
+  const search = $("badges-search")?.closest("label");
+  if (search) search.hidden = !plus;
+  if (!plus) badgeQuery = "";
   const filterCounts = { live, soon: counts.soon, ended: counts.ended, owned: counts.owned };
   setPressed("#badges-filters [data-filter]", (button) => button.dataset.filter === badgeFilter, (button) => {
     const count = button.querySelector("[data-count]");
@@ -622,7 +662,7 @@ function renderCatalog() {
   setPressed("#badges-cost [data-cost]", (button) => button.dataset.cost === badgeCost);
   const list = catalogBadges(badges, { ...context, status: badgeFilter, cost: badgeCost, query: badgeQuery });
   const shown = list.slice(0, badgeLimit);
-  $("badges-catalog").replaceChildren(...shown.map(badgeRow));
+  $("badges-catalog").replaceChildren(...catalogRows(shown));
   translateBadges(shown.filter((badge) => !badgeCondition(badge.description)).map((badge) => badge.id));
   const empty = list.length === 0;
   $("badges-catalog-empty").hidden = !empty;
@@ -777,6 +817,10 @@ function bind() {
   });
   for (const id of ["badges-catalog", "drops-badges"]) {
     $(id)?.addEventListener("click", (event) => {
+      if (event.target.closest("[data-unlock]")) {
+        deps.openPlus();
+        return;
+      }
       const auto = event.target.closest("[data-auto]");
       if (auto) toggleAuto(auto.dataset.auto);
       else openStream(event);

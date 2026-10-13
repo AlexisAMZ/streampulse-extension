@@ -934,6 +934,12 @@ button.badge-card:focus-visible { box-shadow: inset 0 0 0 1px var(--violet-line)
 .badge-card { position: relative; display: grid; grid-template-columns: 40px minmax(0, 1fr); grid-template-rows: auto auto; align-items: center; gap: 6px 10px; width: 100%; height: 100%; padding: 10px; border: 0; border-radius: 12px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text); text-align: left; transition: box-shadow var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out); }
 .badge-card-art { position: relative; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: var(--surface-2); }
 .badge-card-art img { width: 30px; height: 30px; object-fit: contain; }
+/* Badge réservé à StreamPulse+ : silhouette floutée, sans contenu réel. */
+.badge-card.is-locked .badge-card-art { color: var(--text-3, currentColor); }
+.badge-card.is-locked .badge-card-art svg { width: 18px; height: 18px; opacity: 0.7; }
+.badge-blur { display: block; width: 70%; height: 9px; margin-top: 6px; border-radius: 999px; background: var(--line-2); filter: blur(3px); }
+.badge-blur--title { width: 50%; height: 11px; margin-top: 0; background: var(--text-3, var(--line-2)); opacity: 0.45; }
+.badge-pill.is-plus { background: var(--violet, #9146ff); color: #fff; }
 .badge-card-body { display: grid; gap: 2px; min-width: 0; }
 .badge-card-foot { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; }
 #badges-catalog li, #drops-badges li { position: relative; }
@@ -1128,3 +1134,4 @@ body.is-settings .new-dot { background: var(--violet); }
 .fx-picker.is-list .cosmetic-tile.sp-tier .cosmetic-badge { width: 14px !important; height: 14px !important; }
 .fx-picker.is-list .cosmetic-tile.sp-tier--gauge .cosmetic-badge { width: 12.5px !important; height: 12.5px !important; }
 #cosmetic-tenure-block { margin-top: 10px; }
+.badges-search[hidden] { display: none; }

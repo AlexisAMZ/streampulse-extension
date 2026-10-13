@@ -510,6 +510,7 @@ export default {
       "badgeCondSubGift": "suscribirse o regalar una suscripción",
       "badgeCondBits": "usar Bits",
       "badgesLocked": "1 insignia gratis al día: iníciala con ▶ y la pestaña hace el resto. Con StreamPulse+, todas las insignias a la vez, sin límite.",
+      "badgeLockedHint": "Solo StreamPulse+: desbloquea todas las insignias",
       "badgeFreeLeft": "Insignia gratis de hoy disponible: elige una con ▶.",
       "badgeFreeUsed": "Insignia gratis de hoy usada. Vuelve mañana, o consíguelas todas con StreamPulse+.",
       "badgeFilterAvailable": "Disponibles",

@@ -510,6 +510,7 @@ export default {
       "badgeCondSubGift": "abonnieren oder ein Abo verschenken",
       "badgeCondBits": "Bits nutzen",
       "badgesLocked": "1 kostenloses Abzeichen pro Tag: starte es mit ▶, den Rest erledigt der Tab. Mit StreamPulse+ alle Abzeichen gleichzeitig, ohne Limit.",
+      "badgeLockedHint": "Nur mit StreamPulse+: alle Abzeichen freischalten",
       "badgeFreeLeft": "Das kostenlose Abzeichen von heute ist frei: wähle eins mit ▶.",
       "badgeFreeUsed": "Das kostenlose Abzeichen von heute ist verbraucht. Komm morgen wieder oder hol dir alle mit StreamPulse+.",
       "badgeFilterAvailable": "Verfügbar",

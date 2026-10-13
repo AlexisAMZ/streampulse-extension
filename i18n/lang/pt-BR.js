@@ -510,6 +510,7 @@ export default {
       "badgeCondSubGift": "se inscrever ou presentear um sub",
       "badgeCondBits": "usar Bits",
       "badgesLocked": "1 emblema grátis por dia: inicie com ▶ e a aba faz o resto. Com o StreamPulse+, todos os emblemas de uma vez, sem limite.",
+      "badgeLockedHint": "Só StreamPulse+: desbloqueie todos os emblemas",
       "badgeFreeLeft": "Emblema grátis de hoje disponível: escolha um com ▶.",
       "badgeFreeUsed": "Emblema grátis de hoje usado. Volte amanhã, ou pegue todos com o StreamPulse+.",
       "badgeFilterAvailable": "Disponíveis",

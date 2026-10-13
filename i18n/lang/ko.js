@@ -510,6 +510,7 @@ export default {
       "badgeCondSubGift": "구독하거나 구독 선물하기",
       "badgeCondBits": "Bits 사용",
       "badgesLocked": "하루 1개 무료 배지: ▶로 시작하면 나머지는 탭이 알아서 합니다. StreamPulse+로는 모든 배지를 한 번에, 제한 없이.",
+      "badgeLockedHint": "StreamPulse+ 전용: 모든 배지 잠금 해제",
       "badgeFreeLeft": "오늘의 무료 배지를 쓸 수 있어요: ▶로 하나를 고르세요.",
       "badgeFreeUsed": "오늘의 무료 배지를 사용했어요. 내일 다시 오거나 StreamPulse+로 모두 받으세요.",
       "badgeFilterAvailable": "획득 가능",

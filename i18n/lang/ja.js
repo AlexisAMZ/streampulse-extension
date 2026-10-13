@@ -510,6 +510,7 @@ export default {
       "badgeCondSubGift": "サブスク登録またはギフト",
       "badgeCondBits": "Bits を使う",
       "badgesLocked": "1日1つ無料でバッジを自動獲得：▶で開始すれば、あとはタブにお任せ。StreamPulse+ならすべてのバッジを同時に、無制限で。",
+      "badgeLockedHint": "StreamPulse+ 限定：すべてのバッジを解放",
       "badgeFreeLeft": "今日の無料バッジが使えます：▶で1つ選んでください。",
       "badgeFreeUsed": "今日の無料バッジは使用済みです。また明日、または StreamPulse+ ですべて獲得しましょう。",
       "badgeFilterAvailable": "入手可能",

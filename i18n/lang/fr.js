@@ -510,6 +510,7 @@ export default {
       "badgeCondSubGift": "s'abonner ou offrir un sub",
       "badgeCondBits": "utiliser des Bits",
       "badgesLocked": "1 badge gratuit par jour : lance-le avec ▶ et l'onglet s'occupe du reste. Avec StreamPulse+, tous les badges en même temps, sans limite.",
+      "badgeLockedHint": "Réservé à StreamPulse+ : débloque tous les badges",
       "badgeFreeLeft": "Badge gratuit du jour disponible : choisis-en un avec ▶.",
       "badgeFreeUsed": "Badge gratuit du jour utilisé. Reviens demain, ou récupère-les tous avec StreamPulse+.",
       "badgeFilterAvailable": "Disponibles",

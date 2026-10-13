@@ -510,6 +510,7 @@ export default {
       "badgeCondSubGift": "zasubskrybuj lub podaruj suba",
       "badgeCondBits": "użyj Bitsów",
       "badgesLocked": "1 darmowa odznaka dziennie: uruchom ją przyciskiem ▶, a karta zrobi resztę. Ze StreamPulse+ wszystkie odznaki naraz, bez limitu.",
+      "badgeLockedHint": "Tylko StreamPulse+: odblokuj wszystkie odznaki",
       "badgeFreeLeft": "Dzisiejsza darmowa odznaka czeka: wybierz jedną przyciskiem ▶.",
       "badgeFreeUsed": "Dzisiejsza darmowa odznaka wykorzystana. Wróć jutro albo zdobądź wszystkie ze StreamPulse+.",
       "badgeFilterAvailable": "Dostępne",
