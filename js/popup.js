@@ -32,7 +32,7 @@ import {
 import { createAllChannelsTile, createChannelRow, createMiniCard, formatNumber, renderStage, renderStageEmpty } from "./ui.js";
 import { openChannel } from "./open-channel.js";
 import { UNDO_WINDOW_MS, addMessageFor, restoreGroups, restoreMessages, snapshotStreamer } from "./streamer-undo.js";
-import { closePlus, initFeatures, plusActive, renderHistory } from "./popup-features.js";
+import { closePlus, initFeatures, onPlusChange, openPlus, plusActive, renderHistory } from "./popup-features.js";
 import { initNews, markSeen } from "./popup-news.js";
 import { initSuggest } from "./popup-suggest.js";
 
@@ -1159,6 +1159,26 @@ function syncClipDownloadLock() {
 }
 
 /**
+ * Drops automatiques réservés à StreamPulse+ : sans licence, cadenas visible
+ * et interrupteurs affichés éteints (la préférence enregistrée est gardée).
+ */
+function syncDropsPlusLock() {
+  const plus = plusActive();
+  document.querySelectorAll(".drops-plus-lock").forEach((lock) => { lock.hidden = plus; });
+  const prefs = state.preferences || {};
+  if (autoClaimDropsToggle) autoClaimDropsToggle.checked = plus && prefs.autoClaimDrops !== false;
+  if (autoOpenInventoryToggle) autoOpenInventoryToggle.checked = plus && Boolean(prefs.autoOpenInventory);
+}
+
+/** Sans licence, activer un réglage Drops ouvre l'offre au lieu d'enregistrer. */
+function guardDropsPlus(event) {
+  if (plusActive()) return false;
+  event.target.checked = false;
+  openPlus();
+  return true;
+}
+
+/**
  * Dépendance affichée : l'annulation auto des raids se coupe quand les raids
  * entrants sont surveillés (les points se gagnent en suivant le raid). Le
  * texte d'état est annoncé aux lecteurs d'écran (role="status").
@@ -1305,6 +1325,7 @@ function renderPreferences() {
     if (volumeBoostValue) volumeBoostValue.textContent = String(boost);
   }
   syncClipDownloadLock();
+  syncDropsPlusLock();
   if (latencyPlacementSelect) {
     latencyPlacementSelect.value = prefs.latencyPlacement === "chat" ? "chat" : "viewers";
   }
@@ -2199,6 +2220,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     initNews().catch((error) => console.warn("[popup] news init failed:", error));
     initSuggest({ input: streamerInput, form: document.getElementById("add-streamer-form"), getPlatform: () => state.selectedPlatform, getStreamers: () => state.streamers });
     initHomeInteractions();
+    onPlusChange(() => syncDropsPlusLock());
     initFeatures().catch((error) => console.warn("[popup] features init failed:", error));
 
     if (streamerInput) {
@@ -2303,12 +2325,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       updatePreferences({ autoClaimChannelPoints: e.target.checked });
     });
     autoClaimDropsToggle?.addEventListener("change", (e) => {
+      if (guardDropsPlus(e)) return;
       updatePreferences({ autoClaimDrops: e.target.checked });
     });
     autoClaimMomentsToggle?.addEventListener("change", (e) => {
       updatePreferences({ autoClaimMoments: e.target.checked });
     });
     autoOpenInventoryToggle?.addEventListener("change", (e) => {
+      if (guardDropsPlus(e)) return;
       updatePreferences({ autoOpenInventory: e.target.checked });
     });
     autoOpenInventoryIntervalSelect?.addEventListener("change", (e) => {

@@ -55,7 +55,7 @@ export function plusPageUrl(lang, plan) {
 /** Sans nouvelle vérification réussie, la licence reste active ce délai (hors ligne). */
 export const PLUS_GRACE_MS = PLUS_RULE.PLUS_GRACE_MS;
 
-const PLUS_PLANS = ["monthly", "lifetime"];
+const PLUS_PLANS = ["monthly", "yearly", "lifetime"];
 
 /** Identifiant de ce navigateur : une clé vaut pour 2 appareils. */
 const DEVICE_KEY = "streamPulseDeviceId";

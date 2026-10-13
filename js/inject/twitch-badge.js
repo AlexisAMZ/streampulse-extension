@@ -904,7 +904,7 @@
       if (!cosmeticsChange && !plusChange) return;
       if (plusChange) {
         viewerPlus = !!activePlusKey(plusChange.newValue);
-        ownPlan = viewerPlus ? (plusChange.newValue.plan === "monthly" ? "monthly" : "lifetime") : "";
+        ownPlan = viewerPlus ? (plusChange.newValue.plan === "lifetime" ? "lifetime" : "monthly") : "";
         ownRank = rankOfRecord(plusChange.newValue);
         ownSince = viewerPlus ? Number(plusChange.newValue.since) || 0 : 0;
       }
@@ -963,7 +963,7 @@
     chrome.storage.local.get(["betaGeneralPreferences", PLUS_KEY, COSMETICS_KEY], function (res) {
       var prefs = (res && res.betaGeneralPreferences) || {};
       viewerPlus = !!activePlusKey(res && res[PLUS_KEY]);
-      ownPlan = viewerPlus ? (res[PLUS_KEY].plan === "monthly" ? "monthly" : "lifetime") : "";
+      ownPlan = viewerPlus ? (res[PLUS_KEY].plan === "lifetime" ? "lifetime" : "monthly") : "";
       ownRank = rankOfRecord(res && res[PLUS_KEY]);
       ownSince = viewerPlus ? Number(res[PLUS_KEY].since) || 0 : 0;
       var i18n = typeof window !== "undefined" ? window.__SP_I18N__ : null;

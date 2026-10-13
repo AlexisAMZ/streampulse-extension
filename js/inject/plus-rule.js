@@ -12,7 +12,8 @@
 
   var PLUS_KEY = "streamPulsePlus";
   // Délai de grâce hors ligne : une licence mensuelle reste active 30 jours
-  // après sa dernière vérification réussie ; la licence à vie n'expire pas.
+  // (ou annuelle) après sa dernière vérification réussie ; la licence à vie
+  // (vendue jusqu'en octobre 2026, gardée par ses acheteurs) n'expire pas.
   var PLUS_GRACE_MS = 30 * 24 * 60 * 60 * 1000;
 
   function isPlusActive(record, now) {
@@ -41,7 +42,7 @@
   function tenureTier(plan, since, now, rank) {
     if (rank === "founder" && plan) return "founder";
     if (plan === "lifetime") return "life";
-    if (plan !== "monthly") return "";
+    if (plan !== "monthly" && plan !== "yearly") return "";
     var at = typeof now === "number" ? now : Date.now();
     var months = Number(since) > 0 ? Math.max(0, Math.floor((at - Number(since)) / MONTH_MS)) : 0;
     for (var i = 0; i < TENURE_TIERS.length; i++) if (months >= TENURE_TIERS[i][0]) return TENURE_TIERS[i][1];

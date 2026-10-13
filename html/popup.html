@@ -203,8 +203,12 @@
     <section id="plus-view" class="plus-view hidden" role="dialog" aria-modal="true" aria-labelledby="plus-title">
       <div class="plus-main">
         <h2 class="plus-title" id="plus-title"><span data-i18n="popup.plus.title">Va plus loin</span><br /><em data-i18n="popup.plus.titleAccent">sur tes lives.</em></h2>
-        <p class="plus-intro" data-i18n="popup.plus.intro">Tout ce que tu as déjà reste gratuit. StreamPulse+ ajoute des outils pour les viewers les plus assidus.</p>
+        <p class="plus-intro" data-i18n="popup.plus.intro">Notifications, points de chaîne et aperçus restent gratuits. StreamPulse+ ajoute des outils pour les viewers les plus assidus.</p>
         <ul class="plus-perks">
+          <li class="plus-perk">
+            <span class="perk-glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></span>
+            <span class="perk-text"><b data-i18n="popup.plus.perkDrops">Drops et badges en automatique</b><span data-i18n="popup.plus.perkDropsBody">Récupération auto des Drops, inventaire ouvert pour toi, badges gratuits farmés tout seuls.</span></span>
+          </li>
           <li class="plus-perk">
             <span class="perk-glyph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
             <span class="perk-text"><b data-i18n="popup.plus.perkAlerts">Alertes intelligentes</b><span data-i18n="popup.plus.perkAlertsBody">Seulement pour un jeu, un mot du titre ou un seuil de viewers.</span></span>
@@ -230,9 +234,9 @@
             <span class="plan-text"><b data-i18n="popup.plus.monthly">Mensuel</b><small data-i18n="popup.plus.monthlyNote">7 jours gratuits, sans engagement</small></span>
             <span class="plan-price"><span data-i18n="popup.plus.monthlyPrice">2,99 €</span><small data-i18n="popup.plus.perMonth">/mois</small></span>
           </button>
-          <button class="plus-plan active" type="button" role="radio" aria-checked="true" data-plan="lifetime">
-            <span class="plan-text"><b data-i18n="popup.plus.lifetime">À vie</b><small data-i18n="popup.plus.lifetimeNote">Un seul paiement</small></span>
-            <span class="plan-price"><span data-i18n="popup.plus.lifetimePrice">19 €</span></span>
+          <button class="plus-plan active" type="button" role="radio" aria-checked="true" data-plan="yearly">
+            <span class="plan-text"><b data-i18n="popup.plus.yearly">Annuel</b><small data-i18n="popup.plus.yearlyNote">Soit 1,58 € par mois</small></span>
+            <span class="plan-price"><span data-i18n="popup.plus.yearlyPrice">19 €</span><small data-i18n="popup.plus.perYear">/an</small></span>
           </button>
         </div>
         <button class="plus-checkout" id="plus-checkout" type="button" data-i18n="popup.plus.checkout">Débloquer StreamPulse+</button>
@@ -463,7 +467,7 @@
           <h3 class="settings-group-header" data-i18n="popup.osd.menuDrops">Drops</h3>
           <label class="settings-toggle">
             <span class="settings-text">
-              <span class="settings-title" data-i18n="popup.osd.autoClaimDrops">Récupération auto des Drops</span>
+              <span class="settings-title"><span data-i18n="popup.osd.autoClaimDrops">Récupération auto des Drops</span><span class="plus-tag drops-plus-lock" data-i18n="popup.plus.badge" hidden>PLUS</span></span>
               <span class="settings-description" data-i18n="popup.settings.autoClaimDropsDescription">Récupère tes Drops dès qu'ils sont prêts à être réclamés. Twitch uniquement.</span>
             </span>
             <input id="pref-auto-claim-drops" type="checkbox" role="switch" />
@@ -480,7 +484,7 @@
             <div class="settings-advanced-body">
               <label class="settings-toggle">
                 <span class="settings-text">
-                  <span class="settings-title" data-i18n="popup.settings.autoOpenInventoryTitle">Ouverture auto de l'inventaire Drops</span>
+                  <span class="settings-title"><span data-i18n="popup.settings.autoOpenInventoryTitle">Ouverture auto de l'inventaire Drops</span><span class="plus-tag drops-plus-lock" data-i18n="popup.plus.badge" hidden>PLUS</span></span>
                   <span class="settings-description" data-i18n="popup.settings.autoOpenInventoryDescription">Ouvre l'inventaire Twitch dans un onglet en arrière-plan, à la fréquence choisie, pour récupérer tes Drops terminés. Twitch uniquement ; nécessite une session Twitch ouverte.</span>
                 </span>
                 <input id="pref-auto-open-inventory" type="checkbox" role="switch" />

@@ -1,5 +1,6 @@
 // Alarmes périodiques (sondage, keep-alive, vidage du temps de visionnage, inventaire).
 
+import { PLUS_KEY, isPlusActive } from "../plus.js";
 import { RAID_WATCHER_ALARM } from "../raidWatcher.js";
 import { pollIntervalMinutes } from "./config.js";
 import { AUTO_OPEN_INVENTORY_ALARM, DROPS_ALARM, KEEP_ALIVE_ALARM, WATCHER_ALARM } from "./constants.js";
@@ -61,7 +62,7 @@ export function scheduleWatchTimeFlushAlarm() {
 }
 
 /** Listener chrome.alarms.onAlarm (posé au top-level par background.js). */
-export function handleAlarm(alarm) {
+export async function handleAlarm(alarm) {
   if (alarm.name === WATCH_TIME_FLUSH_ALARM) {
     WatchTimeStore.flush().catch((error) => console.warn("[WatchTime] vidage :", error?.message || error));
   } else if (alarm.name === RAID_WATCHER_ALARM) {
@@ -82,6 +83,9 @@ export function handleAlarm(alarm) {
   } else if (alarm.name === DROPS_ALARM) {
     refreshDropsFromWorker().catch((error) => console.warn("[StreamPulse] Drops :", error?.message || error));
   } else if (alarm.name === AUTO_OPEN_INVENTORY_ALARM) {
+    // Ouverture auto de l'inventaire : réservée à StreamPulse+.
+    const plus = isPlusActive((await chrome.storage.local.get(PLUS_KEY))[PLUS_KEY]);
+    if (!plus) return;
     chrome.tabs.query({ url: "*://www.twitch.tv/drops/inventory*" }, (tabs) => {
       if (tabs && tabs.length > 0) {
         chrome.tabs.reload(tabs[0].id);

@@ -1,6 +1,7 @@
 // Points de chaîne, Drops, badges et mode auto des badges.
 
 import { createBadgeAuto } from "../badge-auto-worker.js";
+import { PLUS_KEY, isPlusActive } from "../plus.js";
 import { BADGE_ADDED_KEY, BADGE_AUTO_KEY, CLAIM_OK_STATUSES } from "../drops-data.js";
 import { addedFrom, isPaidBadge } from "../badges-data.js";
 import { createDropsClient } from "../drops-gql.js";
@@ -93,7 +94,9 @@ export async function refreshDropsFromWorker({ minGapMs = DROPS_WORKER_MIN_GAP_M
     if (error.code !== "signed-out") console.warn("[StreamPulse] lecture des Drops impossible :", error.code || error.message, error.detail || "");
     return { read: false, reason: error.code || "error" };
   }
-  const autoClaim = prefs.autoClaimDrops !== false;
+  // Récupération auto des Drops : réservée à StreamPulse+.
+  const plus = isPlusActive((await chrome.storage.local.get(PLUS_KEY))[PLUS_KEY]);
+  const autoClaim = plus && prefs.autoClaimDrops !== false;
   const result = await dropsStore.recordInventory(inventory, { autoClaim });
   announceDrops(result.added).catch(warnWith("annonce des Drops"));
   for (const instanceId of result.claim) await claimDropFromWorker(instanceId, true);

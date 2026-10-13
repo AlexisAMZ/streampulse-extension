@@ -37,3 +37,10 @@ test("aucun content script ne réimplémente la règle", () => {
     assert.match(source, /StreamPulsePlusRule/, file);
   }
 });
+
+test("tenureTier : la formule annuelle suit l'ancienneté, comme le mensuel", () => {
+  const now = Date.UTC(2026, 9, 13);
+  const since = now - 13 * globalThis.StreamPulsePlusRule.MONTH_MS;
+  assert.equal(globalThis.StreamPulsePlusRule.tenureTier("yearly", since, now), "y1");
+  assert.equal(globalThis.StreamPulsePlusRule.tenureTier("lifetime", since, now), "life");
+});

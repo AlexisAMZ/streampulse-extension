@@ -243,9 +243,16 @@
     }
   }
 
-  function applyPref(prefs = {}) {
+  // Récupération auto des Drops : réservée à StreamPulse+.
+  const PLUS_RULE = globalThis.StreamPulsePlusRule;
+  let lastPrefs = {};
+  let plusOn = false;
+
+  function applyPref(prefs = lastPrefs) {
+    lastPrefs = prefs || {};
+    prefs = lastPrefs;
     isPointsActive = prefs.autoClaimChannelPoints !== false;
-    isDropsActive = prefs.autoClaimDrops !== false;
+    isDropsActive = plusOn && prefs.autoClaimDrops !== false;
     isMomentsActive = prefs.autoClaimMoments !== false;
 
     const anyActive = isPointsActive || isDropsActive || isMomentsActive;
@@ -261,17 +268,19 @@
       console.warn("[StreamPulse] règles de la caisse de bonus indisponibles", error);
     });
 
-  chrome.storage.local.get([PREFERENCES_KEY], (result) => {
+  chrome.storage.local.get([PREFERENCES_KEY, PLUS_RULE.PLUS_KEY], (result) => {
     if (chrome.runtime.lastError) {
       start();
       return;
     }
+    plusOn = PLUS_RULE.isPlusActive(result?.[PLUS_RULE.PLUS_KEY]);
     applyPref(result?.[PREFERENCES_KEY]);
   });
 
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === "local" && changes[PREFERENCES_KEY]) {
-      applyPref(changes[PREFERENCES_KEY].newValue);
-    }
+    if (area !== "local") return;
+    if (changes[PLUS_RULE.PLUS_KEY]) plusOn = PLUS_RULE.isPlusActive(changes[PLUS_RULE.PLUS_KEY].newValue);
+    if (changes[PREFERENCES_KEY]) applyPref(changes[PREFERENCES_KEY].newValue);
+    else if (changes[PLUS_RULE.PLUS_KEY]) applyPref();
   });
 })();

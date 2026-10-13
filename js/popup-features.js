@@ -173,8 +173,14 @@ function initHistory() {
 // ─── StreamPulse+ ──────────────────────────────────────────────────────────────
 
 let plusRecord = null;
-let selectedPlan = "lifetime";
+let selectedPlan = "yearly";
+const PLAN_LABELS = { monthly: "popup.plus.planMonthly", yearly: "popup.plus.planYearly", lifetime: "popup.plus.planLifetime" };
 const plusListeners = new Set();
+
+/** Rappelé à chaque changement d'état de la licence. */
+export function onPlusChange(listener) {
+  plusListeners.add(listener);
+}
 
 export function plusActive() {
   return isPlusActive(plusRecord);
@@ -190,7 +196,7 @@ function renderPlus() {
   if (active && $("plus-active-plan")) {
     const key = plusRecord.licenseKey.replace(/^(SP-[A-Z0-9]{4}).*(.{4})$/, "$1-…-$2");
     $("plus-active-plan").textContent = t(
-      plusRecord.plan === "lifetime" ? "popup.plus.planLifetime" : "popup.plus.planMonthly",
+      PLAN_LABELS[plusRecord.plan] || PLAN_LABELS.monthly,
       { key },
     );
   }

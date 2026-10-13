@@ -52,6 +52,77 @@ export const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.10.11",
+    date: "2026-10-13",
+    title: {
+      "fr": "StreamPulse+ passe à l'année",
+      "en": "StreamPulse+ goes yearly",
+      "es": "StreamPulse+ pasa a anual",
+      "pt-BR": "StreamPulse+ agora é anual",
+      "de": "StreamPulse+ jetzt jährlich",
+      "it": "StreamPulse+ diventa annuale",
+      "pl": "StreamPulse+ teraz rocznie",
+      "tr": "StreamPulse+ artık yıllık",
+      "ru": "StreamPulse+ теперь на год",
+      "ja": "StreamPulse+ に年間プラン",
+      "ko": "StreamPulse+ 연간 플랜 출시",
+    },
+    changes: [
+      {
+        type: "new",
+        area: "plus",
+        text: {
+          "fr": "StreamPulse+ : nouvelle formule annuelle à 19 € par an, soit 1,58 € par mois. Elle remplace la formule à vie, qui n'est plus vendue ; si tu l'as déjà, rien ne change pour toi, elle reste à vie.",
+          "en": "StreamPulse+: new yearly plan at €19 a year, that's €1.58 a month. It replaces the lifetime plan, which is no longer sold; if you already have it, nothing changes for you, it stays lifetime.",
+          "es": "StreamPulse+: nuevo plan anual a 19 € al año, solo 1,58 € al mes. Sustituye al plan de por vida, que ya no se vende; si ya lo tienes, nada cambia para ti, sigue siendo de por vida.",
+          "pt-BR": "StreamPulse+: novo plano anual por 19 € por ano, só 1,58 € por mês. Ele substitui o plano vitalício, que não é mais vendido; se você já tem, nada muda, ele continua vitalício.",
+          "de": "StreamPulse+: neues Jahresabo für 19 € im Jahr, also 1,58 € im Monat. Es ersetzt den lebenslangen Plan, der nicht mehr verkauft wird; wenn du ihn schon hast, ändert sich für dich nichts, er bleibt lebenslang.",
+          "it": "StreamPulse+: nuovo piano annuale a 19 € l'anno, solo 1,58 € al mese. Sostituisce il piano a vita, che non è più in vendita; se lo hai già, per te non cambia nulla, resta a vita.",
+          "pl": "StreamPulse+: nowy plan roczny za 19 € na rok, czyli 1,58 € miesięcznie. Zastępuje plan dożywotni, którego już nie sprzedajemy; jeśli go masz, nic się dla ciebie nie zmienia, zostaje dożywotni.",
+          "tr": "StreamPulse+: yılda 19 € olan yeni yıllık plan, ayda sadece 1,58 €. Artık satılmayan ömür boyu planın yerini alıyor; ona zaten sahipsen senin için hiçbir şey değişmiyor, ömür boyu kalıyor.",
+          "ru": "StreamPulse+: новый годовой план за 19 € в год, всего 1,58 € в месяц. Он заменяет план навсегда, который больше не продаётся; если он у тебя уже есть, для тебя ничего не меняется, он остаётся навсегда.",
+          "ja": "StreamPulse+：年19 €、月あたり1.58 €の年間プランが登場。販売終了となった買い切りプランに代わります。すでに買い切りをお持ちの方は何も変わらず、ずっとご利用いただけます。",
+          "ko": "StreamPulse+: 연 19 €, 월 1.58 €의 연간 플랜이 새로 나왔습니다. 더 이상 판매하지 않는 평생 플랜을 대신합니다. 이미 평생 플랜이 있다면 아무것도 바뀌지 않고 계속 평생 이용할 수 있습니다.",
+        },
+      },
+      {
+        type: "improved",
+        area: "plus",
+        text: {
+          "fr": "La récupération auto des Drops et l'ouverture auto de l'inventaire rejoignent StreamPulse+, avec le mode badge auto. Notifications, points de chaîne et aperçus restent gratuits.",
+          "en": "Automatic Drops claiming and automatic inventory opening join StreamPulse+, alongside badge auto mode. Notifications, channel points and previews stay free.",
+          "es": "La recogida automática de Drops y la apertura automática del inventario pasan a StreamPulse+, junto al modo automático de insignias. Notificaciones, puntos de canal y vistas previas siguen gratis.",
+          "pt-BR": "O resgate automático de Drops e a abertura automática do inventário passam para o StreamPulse+, junto com o modo automático de emblemas. Notificações, pontos do canal e prévias continuam grátis.",
+          "de": "Das automatische Einlösen von Drops und das automatische Öffnen des Inventars gehören jetzt zu StreamPulse+, wie der Abzeichen-Automodus. Benachrichtigungen, Kanalpunkte und Vorschauen bleiben kostenlos.",
+          "it": "Il riscatto automatico dei Drop e l'apertura automatica dell'inventario passano a StreamPulse+, insieme alla modalità badge automatica. Notifiche, punti canale e anteprime restano gratis.",
+          "pl": "Automatyczne odbieranie Dropów i automatyczne otwieranie ekwipunku trafiają do StreamPulse+, obok automatycznego trybu odznak. Powiadomienia, punkty kanału i podglądy zostają darmowe.",
+          "tr": "Otomatik Drop alma ve envanteri otomatik açma, otomatik rozet moduyla birlikte StreamPulse+'a geçiyor. Bildirimler, kanal puanları ve önizlemeler ücretsiz kalıyor.",
+          "ru": "Автосбор дропов и автооткрытие инвентаря переходят в StreamPulse+, вместе с автоматическим режимом значков. Уведомления, баллы канала и превью остаются бесплатными.",
+          "ja": "ドロップの自動受け取りとインベントリの自動オープンは、バッジ自動モードと同じく StreamPulse+ の機能になりました。通知、チャンネルポイント、プレビューは無料のままです。",
+          "ko": "드롭 자동 수령과 인벤토리 자동 열기가 배지 자동 모드와 함께 StreamPulse+로 옮겨집니다. 알림, 채널 포인트, 미리보기는 계속 무료입니다.",
+        },
+      },
+      {
+        type: "improved",
+        area: "plus",
+        text: {
+          "fr": "Parrainage : un ami qui prend l'annuel a sa première année à 16,01 €, et tu touches 5 € pour chaque année qu'il paie.",
+          "en": "Referrals: a friend who takes the yearly plan gets their first year for €16.01, and you earn €5 for every year they pay.",
+          "es": "Referidos: un amigo que elige el plan anual tiene su primer año por 16,01 €, y tú ganas 5 € por cada año que pague.",
+          "pt-BR": "Indicações: um amigo que escolhe o plano anual paga 16,01 € no primeiro ano, e você ganha 5 € por cada ano que ele pagar.",
+          "de": "Empfehlungen: Ein Freund mit Jahresabo zahlt im ersten Jahr 16,01 €, und du bekommst 5 € für jedes Jahr, das er zahlt.",
+          "it": "Inviti: un amico che sceglie l'annuale paga il primo anno 16,01 €, e tu guadagni 5 € per ogni anno che paga.",
+          "pl": "Polecenia: znajomy z planem rocznym płaci 16,01 € za pierwszy rok, a ty dostajesz 5 € za każdy opłacony przez niego rok.",
+          "tr": "Davetler: yıllık planı seçen bir arkadaş ilk yılı 16,01 €'ya alır, sen de onun ödediği her yıl için 5 € kazanırsın.",
+          "ru": "Рефералы: друг с годовым планом платит 16,01 € за первый год, а ты получаешь 5 € за каждый оплаченный им год.",
+          "ja": "紹介：年間プランを選んだ友達は最初の1年が16.01 €になり、あなたには友達が支払う毎年5 €が入ります。",
+          "ko": "추천: 연간 플랜을 고른 친구는 첫해를 16.01 €에 이용하고, 당신은 친구가 결제하는 해마다 5 €를 받습니다.",
+        },
+      },
+    ],
+  },
+
+  {
     version: "26.10.10",
     date: "2026-10-10",
     title: {
