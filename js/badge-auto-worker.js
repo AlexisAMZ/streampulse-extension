@@ -7,6 +7,7 @@ import { BADGE_ADDED_KEY, BADGE_AUTO_KEY, BADGE_EVENTS_KEY, DROPS_BADGES_KEY, DR
 import { addedFrom, badgesFrom, catalogBadges, eventsFrom } from "./badges-data.js";
 import { addJobs, bannerModel, currentGroup, freeBadgeJobs, normalizeAuto, pruneJobs, removeJob } from "./badge-auto.js";
 import { PLUS_KEY, isPlusActive } from "./plus.js";
+import { BADGE_FREE_KEY, dayKey, freeAvailable, isFreeRun } from "./badge-free.js";
 
 const channelOf = (url) => (String(url || "").match(/^https:\/\/www\.twitch\.tv\/([a-z0-9_]{2,25})\/?(?:[?#]|$)/i) || [])[1] || "";
 
@@ -79,6 +80,8 @@ export function createBadgeAuto(deps) {
   /** Le mode auto des badges est une fonctionnalité Plus : la licence peut
    * expirer (résiliation, remboursement, grâce dépassée) en cours de route. */
   const plusActive = async () => isPlusActive((await chrome.storage.local.get(PLUS_KEY))[PLUS_KEY]);
+  /** Sans Plus : un badge gratuit par jour (js/badge-free.js). */
+  const freeRecord = async () => (await chrome.storage.local.get(BADGE_FREE_KEY))[BADGE_FREE_KEY];
 
   async function tabExists(tabId) {
     if (!tabId) return false;
@@ -142,8 +145,10 @@ export function createBadgeAuto(deps) {
     let state = await read();
     if (!state) return;
     // Plus inactif : on arrête tout au passage suivant, comme si l'utilisateur
-    // avait arrêté lui-même (état retiré, onglet fermé), et on le dit.
-    if (!(await plusActive())) {
+    // avait arrêté lui-même (état retiré, onglet fermé), et on le dit ; sauf
+    // le badge gratuit du jour, qui va jusqu'au bout.
+    const plus = await plusActive();
+    if (!plus && !isFreeRun(state, await freeRecord())) {
       await chrome.storage.local.remove(BADGE_AUTO_KEY);
       await closeTab(state.tabId);
       await deps.notify("background.notifications.badgeAutoTitle", "background.badgeAuto.stoppedPlus");
@@ -155,6 +160,11 @@ export function createBadgeAuto(deps) {
     state = next;
 
     for (const job of obtained) await deps.notify("background.notifications.badgeAutoTitle", "background.badgeAuto.obtained", { name: job.title });
+    // Badge gratuit obtenu : on montre ce que Plus récupérerait encore.
+    if (!plus && obtained.length) {
+      const remaining = freeBadgeJobs(await catalog()).filter((job) => !owned.includes(job.badgeId) && !obtained.some((done) => done.badgeId === job.badgeId)).length;
+      if (remaining > 0) await deps.notify("background.badgeAuto.freeDoneTitle", "background.badgeAuto.freeDoneMessage", { count: remaining });
+    }
 
     const group = currentGroup(state);
     if (!group) {
@@ -183,8 +193,14 @@ export function createBadgeAuto(deps) {
   const start = ({ job = null, all = false } = {}) => serial(async () => {
     // Même garde que l'interface (le volet badges n'apparaît qu'aux abonnés) :
     // un démarrage direct par message ne doit pas contourner la licence.
-    if (!(await plusActive())) return { started: false, plusRequired: true };
     const previous = await read();
+    if (!(await plusActive())) {
+      // Sans Plus : un seul badge, choisi à la main, une fois par jour.
+      const badgeId = job?.badgeId || "";
+      const busy = previous?.jobs.some((item) => item.badgeId !== badgeId);
+      if (all || !badgeId || busy || !freeAvailable(await freeRecord(), badgeId)) return { started: false, plusRequired: true };
+      await chrome.storage.local.set({ [BADGE_FREE_KEY]: { day: dayKey(), badgeId } });
+    }
     let state = addJobs(previous, job ? [job] : [], all ? { mode: "all" } : {});
     if (all) state = addJobs(state, freeBadgeJobs(await catalog()));
     if (!state.jobs.length) return { started: false };

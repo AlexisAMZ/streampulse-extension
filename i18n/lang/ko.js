@@ -509,7 +509,9 @@ export default {
       "badgeCondSub": "구독하기",
       "badgeCondSubGift": "구독하거나 구독 선물하기",
       "badgeCondBits": "Bits 사용",
-      "badgesLocked": "지금 얻을 수 있는 채팅 배지를 획득 방법, 종료일, 한 번에 여는 방송과 함께 보여줍니다. StreamPulse+ 전용.",
+      "badgesLocked": "하루 1개 무료 배지: ▶로 시작하면 나머지는 탭이 알아서 합니다. StreamPulse+로는 모든 배지를 한 번에, 제한 없이.",
+      "badgeFreeLeft": "오늘의 무료 배지를 쓸 수 있어요: ▶로 하나를 고르세요.",
+      "badgeFreeUsed": "오늘의 무료 배지를 사용했어요. 내일 다시 오거나 StreamPulse+로 모두 받으세요.",
       "badgeFilterAvailable": "획득 가능",
       "badgeAvailable": "획득 가능",
       "catalogNote": "날짜는 Twitch 캠페인에서 가져오며, Twitch 탭이 열려 있을 때마다 다시 읽습니다. 진행 중인 배지를 클릭하면 얻을 수 있는 방송이 열립니다.",
@@ -1001,7 +1003,9 @@ export default {
       "obtained": "{{name}} 획득!",
       "doneTitle": "자동 모드 완료",
       "doneMessage": "지금은 받을 배지가 없습니다. 탭을 닫았습니다.",
-      "stoppedPlus": "StreamPulse+가 비활성 상태라 배지 자동 수령이 중지되었습니다."
+      "stoppedPlus": "StreamPulse+가 비활성 상태라 배지 자동 수령이 중지되었습니다.",
+      "freeDoneTitle": "배지 획득 ✓",
+      "freeDoneMessage": "오늘 받을 수 있는 배지가 {{count}}개 더 있어요. StreamPulse+로 모두 받으세요."
     },
     "errors": {
       "notificationsDisabled": "테스트를 실행하려면 Chrome 알림을 활성화하세요.",

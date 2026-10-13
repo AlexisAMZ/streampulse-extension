@@ -509,7 +509,9 @@ export default {
       "badgeCondSub": "abonnieren",
       "badgeCondSubGift": "abonnieren oder ein Abo verschenken",
       "badgeCondBits": "Bits nutzen",
-      "badgesLocked": "Chat-Abzeichen, die du gerade verdienen kannst, mit Anleitung, Enddatum und einem Livestream per Klick. Nur mit StreamPulse+.",
+      "badgesLocked": "1 kostenloses Abzeichen pro Tag: starte es mit ▶, den Rest erledigt der Tab. Mit StreamPulse+ alle Abzeichen gleichzeitig, ohne Limit.",
+      "badgeFreeLeft": "Das kostenlose Abzeichen von heute ist frei: wähle eins mit ▶.",
+      "badgeFreeUsed": "Das kostenlose Abzeichen von heute ist verbraucht. Komm morgen wieder oder hol dir alle mit StreamPulse+.",
       "badgeFilterAvailable": "Verfügbar",
       "badgeAvailable": "verfügbar",
       "catalogNote": "Die Daten stammen aus den Twitch-Kampagnen und werden neu gelesen, sobald ein Twitch-Tab offen ist. Klick auf ein aktives Abzeichen, um einen passenden Livestream zu öffnen.",
@@ -1001,7 +1003,9 @@ export default {
       "obtained": "{{name}} gehört dir.",
       "doneTitle": "Auto-Modus fertig",
       "doneMessage": "Gerade keine Abzeichen mehr zu holen: Der Tab wurde geschlossen.",
-      "stoppedPlus": "StreamPulse+ ist inaktiv: Das automatische Sammeln von Abzeichen wurde gestoppt."
+      "stoppedPlus": "StreamPulse+ ist inaktiv: Das automatische Sammeln von Abzeichen wurde gestoppt.",
+      "freeDoneTitle": "Abzeichen erhalten ✓",
+      "freeDoneMessage": "Heute sind noch {{count}} Abzeichen verfügbar. Hol dir alle mit StreamPulse+."
     },
     "errors": {
       "notificationsDisabled": "Aktiviere Chrome-Benachrichtigungen, um einen Test zu starten.",

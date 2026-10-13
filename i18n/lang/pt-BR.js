@@ -509,7 +509,9 @@ export default {
       "badgeCondSub": "se inscrever",
       "badgeCondSubGift": "se inscrever ou presentear um sub",
       "badgeCondBits": "usar Bits",
-      "badgesLocked": "Os emblemas de chat que podem ser obtidos agora, como ganhá-los, a data de término e uma live para obtê-los com um clique. Exclusivo do StreamPulse+.",
+      "badgesLocked": "1 emblema grátis por dia: inicie com ▶ e a aba faz o resto. Com o StreamPulse+, todos os emblemas de uma vez, sem limite.",
+      "badgeFreeLeft": "Emblema grátis de hoje disponível: escolha um com ▶.",
+      "badgeFreeUsed": "Emblema grátis de hoje usado. Volte amanhã, ou pegue todos com o StreamPulse+.",
       "badgeFilterAvailable": "Disponíveis",
       "badgeAvailable": "disponível",
       "catalogNote": "As datas vêm das campanhas da Twitch, relidas sempre que uma aba da Twitch está aberta. Clique em um emblema ativo para abrir uma live onde ganhá-lo.",
@@ -1001,7 +1003,9 @@ export default {
       "obtained": "{{name}} é seu.",
       "doneTitle": "Modo auto concluído",
       "doneMessage": "Nenhum emblema para pegar por enquanto: a aba foi fechada.",
-      "stoppedPlus": "O StreamPulse+ está inativo: a coleta automática de emblemas parou."
+      "stoppedPlus": "O StreamPulse+ está inativo: a coleta automática de emblemas parou.",
+      "freeDoneTitle": "Emblema conquistado ✓",
+      "freeDoneMessage": "Mais {{count}} emblemas disponíveis hoje. Pegue todos com o StreamPulse+."
     },
     "errors": {
       "notificationsDisabled": "Ative as notificações do Chrome para rodar um teste.",

@@ -119,6 +119,23 @@ export const RELEASES = [
           "ko": "추천: 연간 플랜을 고른 친구는 첫해를 16.01 €에 이용하고, 당신은 친구가 결제하는 해마다 5 €를 받습니다.",
         },
       },
+      {
+        type: "new",
+        area: "badges",
+        text: {
+          "fr": "Badges : sans StreamPulse+, le mode auto récupère maintenant 1 badge gratuit par jour. Choisis-le avec ▶ dans l'onglet Badges ; avec StreamPulse+, tous les badges en même temps.",
+          "en": "Badges: without StreamPulse+, auto mode now earns 1 free badge a day. Pick it with ▶ in the Badges tab; with StreamPulse+, every badge at once.",
+          "es": "Insignias: sin StreamPulse+, el modo automático ahora consigue 1 insignia gratis al día. Elígela con ▶ en la pestaña Insignias; con StreamPulse+, todas a la vez.",
+          "pt-BR": "Emblemas: sem o StreamPulse+, o modo automático agora pega 1 emblema grátis por dia. Escolha com ▶ na aba Emblemas; com o StreamPulse+, todos de uma vez.",
+          "de": "Abzeichen: Ohne StreamPulse+ holt der Automodus jetzt 1 kostenloses Abzeichen pro Tag. Wähle es mit ▶ im Tab Abzeichen; mit StreamPulse+ alle gleichzeitig.",
+          "it": "Badge: senza StreamPulse+, la modalità automatica ora ottiene 1 badge gratis al giorno. Sceglilo con ▶ nella scheda Badge; con StreamPulse+, tutti insieme.",
+          "pl": "Odznaki: bez StreamPulse+ tryb automatyczny zdobywa teraz 1 darmową odznakę dziennie. Wybierz ją przyciskiem ▶ w karcie Odznaki; ze StreamPulse+ wszystkie naraz.",
+          "tr": "Rozetler: StreamPulse+ olmadan otomatik mod artık günde 1 ücretsiz rozet kazanıyor. Rozetler sekmesinde ▶ ile seç; StreamPulse+ ile hepsi aynı anda.",
+          "ru": "Значки: без StreamPulse+ автоматический режим теперь получает 1 бесплатный значок в день. Выбери его кнопкой ▶ во вкладке «Значки»; со StreamPulse+ все сразу.",
+          "ja": "バッジ：StreamPulse+ がなくても、自動モードで1日1つ無料でバッジを獲得できるようになりました。バッジタブの▶で選択。StreamPulse+ ならすべて同時に。",
+          "ko": "배지: StreamPulse+ 없이도 이제 자동 모드로 하루 1개 무료 배지를 받을 수 있습니다. 배지 탭에서 ▶로 고르세요. StreamPulse+로는 모두 한 번에.",
+        },
+      },
     ],
   },
 

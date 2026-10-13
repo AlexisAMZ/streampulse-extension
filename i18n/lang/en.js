@@ -509,7 +509,9 @@ export default {
       "badgeCondSub": "subscribe",
       "badgeCondSubGift": "subscribe or gift a sub",
       "badgeCondBits": "use Bits",
-      "badgesLocked": "Chat badges you can earn right now, with how to get them, their end date and a live to earn them in one click. StreamPulse+ only.",
+      "badgesLocked": "1 free badge a day: start it with ▶ and the tab does the rest. With StreamPulse+, every badge at once, no limit.",
+      "badgeFreeLeft": "Today's free badge is available: pick one with ▶.",
+      "badgeFreeUsed": "Today's free badge is used. Come back tomorrow, or get them all with StreamPulse+.",
       "badgeFilterAvailable": "Available",
       "badgeAvailable": "available",
       "catalogNote": "Dates come from Twitch campaigns, re-read whenever a Twitch tab is open. Click an active badge to open a live where you can earn it.",
@@ -1001,7 +1003,9 @@ export default {
       "obtained": "{{name}} is yours.",
       "doneTitle": "Auto mode finished",
       "doneMessage": "No more badges to get for now: the tab was closed.",
-      "stoppedPlus": "StreamPulse+ is inactive: automatic badge collection has stopped."
+      "stoppedPlus": "StreamPulse+ is inactive: automatic badge collection has stopped.",
+      "freeDoneTitle": "Badge earned ✓",
+      "freeDoneMessage": "{{count}} more badges are available today. Get them all with StreamPulse+."
     },
     "errors": {
       "notificationsDisabled": "Enable Chrome notifications to run a test.",

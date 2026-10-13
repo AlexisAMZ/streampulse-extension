@@ -5,6 +5,7 @@
 
 import { t, getCurrentLanguage } from "./i18n.js";
 import { currentGroup, normalizeAuto } from "./badge-auto.js";
+import { BADGE_FREE_KEY, freeAvailable, freeUsedToday } from "./badge-free.js";
 import {
   DROPS_KEYS,
   BADGE_AUTO_KEY,
@@ -47,6 +48,8 @@ const BADGE_TEXT_KEY = "streamPulseBadgeText";
 const BADGE_TEXT_MAX_AGE_MS = 7 * 86_400_000;
 let badgeText = {};
 let badgeAuto = null;
+/** Badge gratuit du jour (sans StreamPulse+), voir js/badge-free.js. */
+let badgeFree = null;
 /** Une seule tentative par badge et par ouverture du popup : pas de boucle si le site ne traduit pas. */
 const badgeTextTried = new Set();
 const PREFERENCES_KEY = "betaGeneralPreferences";
@@ -608,8 +611,9 @@ function renderCatalog() {
   // catalogue ; les autres (codes, objets en jeu) restent dans l'onglet Drops.
   const { live, liveFree } = counts;
   const plus = deps.isPlus();
+  // Catalogue visible par tous : sans Plus, un badge auto gratuit par jour.
   $("badges-locked").hidden = plus;
-  $("badges-content").hidden = !plus;
+  $("badges-content").hidden = false;
   const filterCounts = { live, soon: counts.soon, ended: counts.ended, owned: counts.owned };
   setPressed("#badges-filters [data-filter]", (button) => button.dataset.filter === badgeFilter, (button) => {
     const count = button.querySelector("[data-count]");
@@ -627,7 +631,7 @@ function renderCatalog() {
   $("badges-sort").textContent = empty ? "" : t(BADGE_SORT_KEYS[badgeFilter]);
   $("badges-more").hidden = list.length <= badgeLimit;
   $("badges-total").textContent = String(live);
-  $("badges-teaser").hidden = plus || live === 0;
+  $("badges-teaser").hidden = true;
   $("badges-teaser-total").textContent = String(live);
   const soonLine = t("popup.drops.badgesLcdSoon", { count: counts.soon });
   const freeLine = t("popup.drops.badgesLcdFree", { count: liveFree });
@@ -806,12 +810,18 @@ function renderAutoBar() {
   button.classList.toggle("is-on", all);
   button.setAttribute("aria-pressed", all ? "true" : "false");
   const group = currentGroup(badgeAuto);
-  status.hidden = !group;
+  const free = !deps.isPlus();
+  status.hidden = !group && !free;
   if (group) status.textContent = t("popup.drops.badgeAutoStatus", { count: badgeAuto.jobs.length, game: group.game });
+  else if (free) status.textContent = t(freeUsedToday(badgeFree) ? "popup.drops.badgeFreeUsed" : "popup.drops.badgeFreeLeft");
 }
 
 /** Mode « tous les badges » : lance la file complète, ou arrête tout. */
 function toggleAutoAll() {
+  if (!deps.isPlus()) {
+    deps.openPlus();
+    return;
+  }
   if (badgeAuto?.mode === "all") sendAuto({ type: "badgeAutoStop" });
   else sendAuto({ type: "badgeAutoStart", all: true });
 }
@@ -825,15 +835,23 @@ function toggleAuto(badgeId) {
   const badge = badges.badges.find((item) => item.id === badgeId);
   const campaign = badge && catalogBadges({ ...badges, badges: [badge] }, { status: "live", now: Date.now(), events: badgeEvents.events, added: badgeAdded.added })[0]?.campaign;
   if (!campaign) return;
+  // Sans Plus, le badge gratuit du jour déjà pris : l'offre plutôt qu'un refus muet.
+  if (!deps.isPlus() && (badgeAuto?.jobs.length || !freeAvailable(badgeFree, badgeId))) {
+    deps.openPlus();
+    return;
+  }
   sendAuto({
     type: "badgeAutoStart",
     badge: { badgeId, title: badge.title, image: badge.image, game: campaign.game, gameId: campaign.gameId, campaignId: campaign.id, endsAt: campaign.endsAt },
+  }).then((result) => {
+    if (result?.plusRequired) deps.openPlus();
   });
 }
 
 async function reload() {
-  const stored = await chrome.storage.local.get([...DROPS_KEYS, PREFERENCES_KEY, BADGE_AUTO_KEY]);
+  const stored = await chrome.storage.local.get([...DROPS_KEYS, PREFERENCES_KEY, BADGE_AUTO_KEY, BADGE_FREE_KEY]);
   badgeAuto = normalizeAuto(stored[BADGE_AUTO_KEY]);
+  badgeFree = stored[BADGE_FREE_KEY] || null;
   progress = progressFrom(stored);
   campaigns = campaignsFrom(stored);
   rewards = rewardsFrom(stored);
@@ -853,7 +871,7 @@ export async function initDrops({ isPlus, onPlusChange, openPlus }) {
   bind();
   onPlusChange(() => render());
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === "local" && (DROPS_KEYS.some((key) => key in changes) || PREFERENCES_KEY in changes || BADGE_AUTO_KEY in changes)) reload().catch(() => {});
+    if (area === "local" && (DROPS_KEYS.some((key) => key in changes) || PREFERENCES_KEY in changes || BADGE_AUTO_KEY in changes || BADGE_FREE_KEY in changes)) reload().catch(() => {});
   });
   await reload();
   // Les jeux regardés ne changent pas pendant que le popup est ouvert : lus une fois.

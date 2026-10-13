@@ -509,7 +509,9 @@ export default {
       "badgeCondSub": "suscribirse",
       "badgeCondSubGift": "suscribirse o regalar una suscripción",
       "badgeCondBits": "usar Bits",
-      "badgesLocked": "Las insignias de chat que se pueden obtener ahora, cómo ganarlas, su fecha de fin y un directo para conseguirlas en un clic. Exclusivo de StreamPulse+.",
+      "badgesLocked": "1 insignia gratis al día: iníciala con ▶ y la pestaña hace el resto. Con StreamPulse+, todas las insignias a la vez, sin límite.",
+      "badgeFreeLeft": "Insignia gratis de hoy disponible: elige una con ▶.",
+      "badgeFreeUsed": "Insignia gratis de hoy usada. Vuelve mañana, o consíguelas todas con StreamPulse+.",
       "badgeFilterAvailable": "Disponibles",
       "badgeAvailable": "disponible",
       "catalogNote": "Las fechas vienen de las campañas de Twitch, que se vuelven a leer cada vez que hay una pestaña de Twitch abierta. Haz clic en una insignia activa para abrir un directo donde ganarla.",
@@ -1001,7 +1003,9 @@ export default {
       "obtained": "{{name}} es tuya.",
       "doneTitle": "Modo auto terminado",
       "doneMessage": "No quedan insignias por conseguir por ahora: se cerró la pestaña.",
-      "stoppedPlus": "StreamPulse+ está inactivo: el reclamo automático de insignias se ha detenido."
+      "stoppedPlus": "StreamPulse+ está inactivo: el reclamo automático de insignias se ha detenido.",
+      "freeDoneTitle": "Insignia conseguida ✓",
+      "freeDoneMessage": "Hay {{count}} insignias más disponibles hoy. Consíguelas todas con StreamPulse+."
     },
     "errors": {
       "notificationsDisabled": "Activa las notificaciones de Chrome para lanzar una prueba.",

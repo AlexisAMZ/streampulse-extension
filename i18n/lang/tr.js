@@ -509,7 +509,9 @@ export default {
       "badgeCondSub": "abone ol",
       "badgeCondSubGift": "abone ol ya da abonelik hediye et",
       "badgeCondBits": "Bits kullan",
-      "badgesLocked": "Şu anda alınabilen sohbet rozetleri: nasıl kazanılacağı, bitiş tarihi ve tek tıkla bir yayın. Yalnızca StreamPulse+ ile.",
+      "badgesLocked": "Günde 1 ücretsiz rozet: ▶ ile başlat, gerisini sekme halleder. StreamPulse+ ile tüm rozetler aynı anda, sınırsız.",
+      "badgeFreeLeft": "Bugünün ücretsiz rozeti hazır: ▶ ile birini seç.",
+      "badgeFreeUsed": "Bugünün ücretsiz rozeti kullanıldı. Yarın tekrar gel ya da StreamPulse+ ile hepsini al.",
       "badgeFilterAvailable": "Alınabilir",
       "badgeAvailable": "alınabilir",
       "catalogNote": "Tarihler Twitch kampanyalarından gelir ve bir Twitch sekmesi açık olduğunda yeniden okunur. Aktif bir rozete tıklayarak onu kazanabileceğin bir yayını aç.",
@@ -1001,7 +1003,9 @@ export default {
       "obtained": "{{name}} artık senin.",
       "doneTitle": "Otomatik mod bitti",
       "doneMessage": "Şimdilik alınacak rozet kalmadı: sekme kapatıldı.",
-      "stoppedPlus": "StreamPulse+ etkin değil: rozetlerin otomatik alınması durdu."
+      "stoppedPlus": "StreamPulse+ etkin değil: rozetlerin otomatik alınması durdu.",
+      "freeDoneTitle": "Rozet kazanıldı ✓",
+      "freeDoneMessage": "Bugün {{count}} rozet daha var. StreamPulse+ ile hepsini al."
     },
     "errors": {
       "notificationsDisabled": "Test yapmak için Chrome bildirimlerini aç.",

@@ -509,7 +509,9 @@ export default {
       "badgeCondSub": "zasubskrybuj",
       "badgeCondSubGift": "zasubskrybuj lub podaruj suba",
       "badgeCondBits": "użyj Bitsów",
-      "badgesLocked": "Odznaki czatu do zdobycia teraz: jak je zdobyć, data końca i transmisja jednym kliknięciem. Tylko w StreamPulse+.",
+      "badgesLocked": "1 darmowa odznaka dziennie: uruchom ją przyciskiem ▶, a karta zrobi resztę. Ze StreamPulse+ wszystkie odznaki naraz, bez limitu.",
+      "badgeFreeLeft": "Dzisiejsza darmowa odznaka czeka: wybierz jedną przyciskiem ▶.",
+      "badgeFreeUsed": "Dzisiejsza darmowa odznaka wykorzystana. Wróć jutro albo zdobądź wszystkie ze StreamPulse+.",
       "badgeFilterAvailable": "Dostępne",
       "badgeAvailable": "dostępna",
       "catalogNote": "Daty pochodzą z kampanii Twitcha, odczytywanych ponownie, gdy otwarta jest karta Twitcha. Kliknij aktywną odznakę, aby otworzyć transmisję, na której ją zdobędziesz.",
@@ -1001,7 +1003,9 @@ export default {
       "obtained": "{{name}} jest twoja.",
       "doneTitle": "Tryb auto zakończony",
       "doneMessage": "Na razie nie ma więcej odznak do zdobycia: karta została zamknięta.",
-      "stoppedPlus": "StreamPulse+ jest nieaktywny: automatyczne zdobywanie odznak zostało zatrzymane."
+      "stoppedPlus": "StreamPulse+ jest nieaktywny: automatyczne zdobywanie odznak zostało zatrzymane.",
+      "freeDoneTitle": "Odznaka zdobyta ✓",
+      "freeDoneMessage": "Dziś dostępnych jest jeszcze {{count}} odznak. Zdobądź wszystkie ze StreamPulse+."
     },
     "errors": {
       "notificationsDisabled": "Włącz powiadomienia Chrome, aby przeprowadzić test.",

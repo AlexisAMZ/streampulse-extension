@@ -509,7 +509,9 @@ export default {
       "badgeCondSub": "サブスク登録",
       "badgeCondSubGift": "サブスク登録またはギフト",
       "badgeCondBits": "Bits を使う",
-      "badgesLocked": "今入手できるチャットバッジを、入手方法、終了日、ワンクリックで開ける配信とあわせて表示。StreamPulse+ 限定。",
+      "badgesLocked": "1日1つ無料でバッジを自動獲得：▶で開始すれば、あとはタブにお任せ。StreamPulse+ならすべてのバッジを同時に、無制限で。",
+      "badgeFreeLeft": "今日の無料バッジが使えます：▶で1つ選んでください。",
+      "badgeFreeUsed": "今日の無料バッジは使用済みです。また明日、または StreamPulse+ ですべて獲得しましょう。",
       "badgeFilterAvailable": "入手可能",
       "badgeAvailable": "入手可能",
       "catalogNote": "日付はTwitchのキャンペーンから取得し、Twitchのタブを開くたびに読み直します。開催中のバッジをクリックすると、入手できる配信が開きます。",
@@ -1001,7 +1003,9 @@ export default {
       "obtained": "{{name}} を獲得しました。",
       "doneTitle": "自動モード完了",
       "doneMessage": "今は取得できるバッジがありません。タブを閉じました。",
-      "stoppedPlus": "StreamPulse+ が無効のため、バッジの自動受け取りを停止しました。"
+      "stoppedPlus": "StreamPulse+ が無効のため、バッジの自動受け取りを停止しました。",
+      "freeDoneTitle": "バッジ獲得 ✓",
+      "freeDoneMessage": "今日はあと{{count}}個のバッジが獲得できます。StreamPulse+ ですべて獲得しましょう。"
     },
     "errors": {
       "notificationsDisabled": "テストを実行するには、Chromeの通知を有効にしてください。",

@@ -509,7 +509,9 @@ export default {
       "badgeCondSub": "s'abonner",
       "badgeCondSubGift": "s'abonner ou offrir un sub",
       "badgeCondBits": "utiliser des Bits",
-      "badgesLocked": "Les badges de chat obtenables en ce moment, avec comment les gagner, leur date de fin et un live pour les obtenir en un clic. Réservé à StreamPulse+.",
+      "badgesLocked": "1 badge gratuit par jour : lance-le avec ▶ et l'onglet s'occupe du reste. Avec StreamPulse+, tous les badges en même temps, sans limite.",
+      "badgeFreeLeft": "Badge gratuit du jour disponible : choisis-en un avec ▶.",
+      "badgeFreeUsed": "Badge gratuit du jour utilisé. Reviens demain, ou récupère-les tous avec StreamPulse+.",
       "badgeFilterAvailable": "Disponibles",
       "badgeAvailable": "disponible",
       "catalogNote": "Les dates viennent des campagnes Twitch, relues dès qu'un onglet Twitch est ouvert. Clique sur un badge en cours pour ouvrir un live où le gagner.",
@@ -1001,7 +1003,9 @@ export default {
       "obtained": "{{name}} est à toi.",
       "doneTitle": "Mode auto terminé",
       "doneMessage": "Plus aucun badge à récupérer pour l'instant : l'onglet a été fermé.",
-      "stoppedPlus": "StreamPulse+ est inactif : la récupération automatique des badges s'est arrêtée."
+      "stoppedPlus": "StreamPulse+ est inactif : la récupération automatique des badges s'est arrêtée.",
+      "freeDoneTitle": "Badge récupéré ✓",
+      "freeDoneMessage": "Encore {{count}} badges disponibles aujourd'hui. Récupère-les tous avec StreamPulse+."
     },
     "errors": {
       "notificationsDisabled": "Active les notifications Chrome pour lancer un test.",

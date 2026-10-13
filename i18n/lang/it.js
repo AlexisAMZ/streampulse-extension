@@ -509,7 +509,9 @@ export default {
       "badgeCondSub": "abbonarsi",
       "badgeCondSubGift": "abbonarsi o regalare un abbonamento",
       "badgeCondBits": "usare i Bit",
-      "badgesLocked": "I badge della chat ottenibili ora, con come guadagnarli, la data di fine e una diretta per ottenerli in un clic. Riservato a StreamPulse+.",
+      "badgesLocked": "1 badge gratis al giorno: avvialo con ▶ e la scheda fa il resto. Con StreamPulse+, tutti i badge insieme, senza limiti.",
+      "badgeFreeLeft": "Badge gratis di oggi disponibile: scegline uno con ▶.",
+      "badgeFreeUsed": "Badge gratis di oggi già usato. Torna domani, o prendili tutti con StreamPulse+.",
       "badgeFilterAvailable": "Disponibili",
       "badgeAvailable": "disponibile",
       "catalogNote": "Le date vengono dalle campagne di Twitch, rilette ogni volta che una scheda di Twitch è aperta. Clicca su un badge attivo per aprire una diretta dove ottenerlo.",
@@ -1001,7 +1003,9 @@ export default {
       "obtained": "{{name}} è tuo.",
       "doneTitle": "Modalità auto finita",
       "doneMessage": "Nessun badge da ottenere per ora: la scheda è stata chiusa.",
-      "stoppedPlus": "StreamPulse+ non è attivo: il riscatto automatico dei badge si è fermato."
+      "stoppedPlus": "StreamPulse+ non è attivo: il riscatto automatico dei badge si è fermato.",
+      "freeDoneTitle": "Badge ottenuto ✓",
+      "freeDoneMessage": "Oggi ci sono altri {{count}} badge disponibili. Prendili tutti con StreamPulse+."
     },
     "errors": {
       "notificationsDisabled": "Abilita le notifiche di Chrome per eseguire un test.",
