@@ -25,7 +25,7 @@ StreamPulse réunit Twitch, Kick et YouTube dans une seule extension légère. E
 💎 StreamPulse+ (en option, abonnement mensuel ou annuel) : récupération automatique des Drops, mode auto des badges (1 badge gratuit par jour sans) et effets de pseudo et de badge dans le tchat.
 
 Fonctionnalités principales :
-• Points de chaîne et Drops Twitch : StreamPulse récupère automatiquement tes bonus de Points de chaîne et tes Moments pendant que tu regardes, et affiche ton solde de points sur Kick. Les Drops Twitch, c'est StreamPulse+ qui les récupère automatiquement.
+• Points de chaîne et Drops Twitch : StreamPulse récupère automatiquement tes bonus de Points de chaîne pendant que tu regardes, et affiche ton solde de points sur Kick. Les Drops Twitch, c'est StreamPulse+ qui les récupère automatiquement.
 • Notifications de live en temps réel : reçois une notification sur ton bureau dès qu'un de tes streamers lance son live et, si tu le souhaites, quand il change de titre ou de catégorie.
 • Bouton « Ajouter à StreamPulse » : ajoute un streamer en un clic depuis sa page de chaîne, sur Twitch, Kick ou YouTube.
 • Aperçus au survol : vois un live en survolant le lien d'une chaîne sur Twitch ou Kick, sans quitter l'onglet en cours.
@@ -50,7 +50,7 @@ StreamPulse brings Twitch, Kick and YouTube together in one lightweight extensio
 💎 StreamPulse+ (optional, monthly or yearly subscription): automatic Drops claiming, badge auto mode (1 free badge a day without it) and username and badge effects in chat.
 
 Key Features:
-• Twitch Channel Points & Drops: StreamPulse automatically claims your Twitch channel point bonuses and Moments while you watch, and counts the points you earn on Kick. Twitch Drops are claimed automatically with StreamPulse+.
+• Twitch Channel Points & Drops: StreamPulse automatically claims your Twitch channel point bonuses while you watch, and counts the points you earn on Kick. Twitch Drops are claimed automatically with StreamPulse+.
 • Real-Time Live Alerts: Get a desktop notification as soon as a streamer you follow goes live and, if you want, when they change their stream title or category.
 • "Add to StreamPulse" Button: Track a streamer in one click from their Twitch, Kick or YouTube channel page.
 • Live Hover Previews: Preview a live stream by hovering over a channel link on Twitch or Kick, without leaving your current tab.
@@ -145,10 +145,10 @@ locale ne la retire.
 | `alarms` | `permissions` | Permet d'exécuter des vérifications périodiques légères en arrière-plan pour détecter les prises de live Twitch/Kick, relire les Drops et mettre à jour le statut des streams. |
 | `notifications` | `permissions` | Permet d'afficher des notifications système natives à l'utilisateur lorsqu'un streamer suivi démarre son direct. |
 | `offscreen` | `permissions` | Permet de créer un document hors écran dédié à la lecture des sons d'alerte et à la gestion audio sans bloquer le service worker. |
-| `cookies` | `permissions` | Permet au service worker de réutiliser la session Twitch déjà ouverte dans le navigateur pour lire et réclamer les Drops et les Moments via l'API GraphQL Twitch. Le contenu des cookies n'est jamais lu, stocké ni transmis ailleurs. |
+| `cookies` | `permissions` | Permet au service worker de réutiliser la session Twitch déjà ouverte dans le navigateur pour lire et réclamer les Drops via l'API GraphQL Twitch. Le contenu des cookies n'est jamais lu, stocké ni transmis ailleurs. |
 | `scripting` | `permissions` | Permet d'afficher le bandeau de progression et de lancer le lecteur basse consommation dans l'onglet Twitch épinglé et muet du mode auto des badges. |
 | `https://api.twitch.tv/*` | `host_permissions` | Permet d'interroger l'API officielle Twitch pour vérifier l'état en direct des chaînes et obtenir les métadonnées des streams. |
-| `https://gql.twitch.tv/*` | `host_permissions` | Permet d'interagir avec l'API GraphQL Twitch pour la récupération automatique des Channel Points, des Drops et des Moments, et l'affichage des prévisualisations. |
+| `https://gql.twitch.tv/*` | `host_permissions` | Permet d'interagir avec l'API GraphQL Twitch pour la récupération automatique des Channel Points et des Drops, et l'affichage des prévisualisations. |
 | `https://www.twitch.tv/*` | `host_permissions` | Permet d'injecter les scripts de prévisualisation au survol, l'anti-pause et le filtre de chat directement sur les pages Twitch. |
 | `https://clips.twitch.tv/*` | `host_permissions` | Permet d'afficher les aperçus et lecteurs légers sur les clips Twitch. |
 | `https://kick.com/*` | `host_permissions` | Permet d'injecter les scripts d'amélioration de lecteur, la récolte des points et le filtre de chat sur Kick.com. |
@@ -257,7 +257,7 @@ StreamPulse reúne Twitch, Kick y YouTube en una sola extensión ligera. Vigila 
 💎 StreamPulse+ (opcional, suscripción mensual o anual): recuperación automática de Drops, modo automático de insignias (1 insignia gratis al día sin él) y efectos de nombre e insignia en el chat.
 
 Características principales:
-• Puntos de canal y Drops de Twitch: StreamPulse reclama automáticamente tus bonificaciones de puntos de canal y tus Momentos mientras miras, y cuenta los puntos que ganas en Kick. Los Drops de Twitch los reclama automáticamente StreamPulse+.
+• Puntos de canal y Drops de Twitch: StreamPulse reclama automáticamente tus bonificaciones de puntos de canal mientras miras, y cuenta los puntos que ganas en Kick. Los Drops de Twitch los reclama automáticamente StreamPulse+.
 • Alertas en directo: Recibe una notificación de escritorio en cuanto un streamer que sigues empieza a emitir y, si quieres, cuando cambia el título o la categoría de su stream.
 • Botón «Añadir a StreamPulse»: Sigue a un streamer con un clic desde su página de canal, en Twitch, Kick o YouTube.
 • Vistas previas al pasar el cursor: Previsualiza un stream en directo pasando el ratón por el enlace de un canal en Twitch o Kick, sin salir de la pestaña actual.
@@ -293,7 +293,7 @@ O StreamPulse reúne Twitch, Kick e YouTube em uma única extensão leve. Ele ac
 💎 StreamPulse+ (opcional, assinatura mensal ou anual): resgate automático de Drops, modo automático de distintivos (1 distintivo grátis por dia sem ele) e efeitos de nome e distintivo no chat.
 
 Principais recursos:
-• Pontos do canal e Drops da Twitch: O StreamPulse resgata automaticamente seus bônus de pontos do canal e seus Momentos enquanto você assiste, e contabiliza os pontos ganhos na Kick. Os Drops da Twitch são resgatados automaticamente pelo StreamPulse+.
+• Pontos do canal e Drops da Twitch: O StreamPulse resgata automaticamente seus bônus de pontos do canal enquanto você assiste, e contabiliza os pontos ganhos na Kick. Os Drops da Twitch são resgatados automaticamente pelo StreamPulse+.
 • Alertas ao vivo em tempo real: Receba uma notificação na área de trabalho assim que um streamer que você segue entrar ao vivo e, se quiser, quando ele mudar o título ou a categoria da transmissão.
 • Botão "Adicionar ao StreamPulse": Acompanhe um streamer com um clique na página do canal, na Twitch, Kick ou YouTube.
 • Prévias ao passar o mouse: Veja uma prévia de uma live passando o mouse sobre o link de um canal na Twitch ou na Kick, sem sair da aba atual.
@@ -329,7 +329,7 @@ StreamPulse vereint Twitch, Kick und YouTube in einer schlanken Erweiterung. Sie
 💎 StreamPulse+ (optional, Monats- oder Jahresabo): automatisches Abholen von Drops, automatischer Abzeichen-Modus (ohne Plus 1 Gratis-Abzeichen pro Tag) und Namen- und Abzeichen-Effekte im Chat.
 
 Hauptfunktionen:
-• Twitch-Kanalpunkte und Drops: StreamPulse holt deine Kanalpunkte-Boni und deine Momente automatisch ab, während du zuschaust, und zählt die auf Kick gesammelten Punkte. Twitch-Drops holt StreamPulse+ automatisch ab.
+• Twitch-Kanalpunkte und Drops: StreamPulse holt deine Kanalpunkte-Boni automatisch ab, während du zuschaust, und zählt die auf Kick gesammelten Punkte. Twitch-Drops holt StreamPulse+ automatisch ab.
 • Live-Benachrichtigungen in Echtzeit: Erhalte eine Desktop-Benachrichtigung, sobald ein gefolgter Streamer live geht, und auf Wunsch auch, wenn er den Titel oder die Kategorie seines Streams ändert.
 • Button „Zu StreamPulse hinzufügen“: Folge einem Streamer mit einem Klick direkt auf seiner Twitch-, Kick- oder YouTube-Kanalseite.
 • Vorschau beim Überfahren: Sieh dir einen Livestream an, indem du mit der Maus über einen Kanallink auf Twitch oder Kick fährst, ohne den aktuellen Tab zu verlassen.
@@ -366,7 +366,7 @@ StreamPulse riunisce Twitch, Kick e YouTube in un'unica estensione leggera. Tien
 💎 StreamPulse+ (opzionale, abbonamento mensile o annuale): riscatto automatico dei Drops, modalità automatica dei badge (senza, 1 badge gratis al giorno) ed effetti di nome e badge in chat.
 
 Funzionalità principali:
-• Punti canale e Drops di Twitch: StreamPulse riscatta automaticamente i bonus dei punti canale e i Momenti mentre guardi, e conteggia i punti guadagnati su Kick. I Drops di Twitch li riscatta automaticamente StreamPulse+.
+• Punti canale e Drops di Twitch: StreamPulse riscatta automaticamente i bonus dei punti canale mentre guardi, e conteggia i punti guadagnati su Kick. I Drops di Twitch li riscatta automaticamente StreamPulse+.
 • Avvisi live in tempo reale: Ricevi una notifica sul desktop appena uno streamer che segui va in diretta e, se vuoi, quando cambia il titolo o la categoria della sua live.
 • Pulsante "Aggiungi a StreamPulse": Segui uno streamer con un clic dalla sua pagina del canale, su Twitch, Kick o YouTube.
 • Anteprime al passaggio del mouse: Guarda l'anteprima di una live passando il mouse sul link di un canale su Twitch o Kick, senza lasciare la scheda attuale.
@@ -402,7 +402,7 @@ StreamPulse łączy Twitcha, Kicka i YouTube w jednym lekkim rozszerzeniu. Śled
 💎 StreamPulse+ (opcjonalne, abonament miesięczny lub roczny): automatyczne odbieranie dropów, tryb automatyczny odznak (bez niego 1 darmowa odznaka dziennie) oraz efekty nazwy i odznaki na czacie.
 
 Główne funkcje:
-• Punkty kanału i dropy na Twitchu: StreamPulse automatycznie odbiera bonusy punktów kanału i Momenty podczas oglądania oraz liczy punkty zdobyte na Kicku. Dropy na Twitchu automatycznie odbiera StreamPulse+.
+• Punkty kanału i dropy na Twitchu: StreamPulse automatycznie odbiera bonusy punktów kanału podczas oglądania oraz liczy punkty zdobyte na Kicku. Dropy na Twitchu automatycznie odbiera StreamPulse+.
 • Powiadomienia o transmisjach na żywo: Otrzymuj powiadomienie na pulpicie, gdy obserwowany streamer rozpocznie transmisję, a jeśli chcesz, także gdy zmieni jej tytuł lub kategorię.
 • Przycisk „Dodaj do StreamPulse”: Śledź streamera jednym kliknięciem na jego stronie kanału, na Twitchu, Kick lub YouTube.
 • Podgląd po najechaniu: Zobacz podgląd transmisji, najeżdżając kursorem na link kanału na Twitchu lub Kicku, bez opuszczania bieżącej karty.
@@ -438,7 +438,7 @@ StreamPulse, Twitch, Kick ve YouTube'u tek bir hafif eklentide birleştirir. Sev
 💎 StreamPulse+ (isteğe bağlı, aylık veya yıllık abonelik): Drops'ları otomatik alma, rozetlerin otomatik modu (olmadan günde 1 ücretsiz rozet) ve sohbette ad ve rozet efektleri.
 
 Başlıca özellikler:
-• Twitch kanal puanları ve Drops: StreamPulse, sen izlerken Twitch kanal puanı bonuslarını ve Momentleri otomatik olarak alır, Kick'te kazandığın puanları da sayar. Twitch Drops'larını otomatik olarak StreamPulse+ alır.
+• Twitch kanal puanları ve Drops: StreamPulse, sen izlerken Twitch kanal puanı bonuslarını otomatik olarak alır, Kick'te kazandığın puanları da sayar. Twitch Drops'larını otomatik olarak StreamPulse+ alır.
 • Anlık canlı yayın bildirimleri: Takip ettiğin bir yayıncı yayına başlar başlamaz masaüstü bildirimi al; istersen yayın başlığını veya kategorisini değiştirdiğinde de haberdar ol.
 • "StreamPulse'a ekle" düğmesi: Bir yayıncıyı Twitch, Kick veya YouTube kanal sayfasından tek tıkla takip et.
 • Üzerine gelince önizleme: Twitch'te veya Kick'te bir kanal bağlantısının üzerine gelerek canlı yayını önizle, bulunduğun sekmeden çıkmadan.
@@ -474,7 +474,7 @@ StreamPulse объединяет Twitch, Kick и YouTube в одном лёгк�
 💎 StreamPulse+ (необязательно, месячная или годовая подписка): автоматический сбор дропов, авто-режим значков (без него 1 бесплатный значок в день) и эффекты имени и значка в чате.
 
 Основные возможности:
-• Баллы канала и дропсы Twitch: StreamPulse автоматически забирает бонусы баллов канала и Моменты, пока вы смотрите, и считает баллы, заработанные на Kick. Дропсы Twitch автоматически забирает StreamPulse+.
+• Баллы канала и дропсы Twitch: StreamPulse автоматически забирает бонусы баллов канала, пока вы смотрите, и считает баллы, заработанные на Kick. Дропсы Twitch автоматически забирает StreamPulse+.
 • Оповещения о трансляциях: Получайте уведомление на рабочем столе, как только отслеживаемый стример выходит в эфир, а по желанию и когда он меняет название или категорию трансляции.
 • Кнопка «Добавить в StreamPulse»: Отслеживайте стримера в один клик прямо со страницы его канала, на Twitch, Kick или YouTube.
 • Превью при наведении: Смотрите превью трансляции, наведя курсор на ссылку канала на Twitch или Kick, не покидая текущую вкладку.
@@ -510,7 +510,7 @@ StreamPulseは、Twitch、Kick、YouTubeをひとつの軽量な拡張機能に�
 💎 StreamPulse+（任意のサブスクリプション）：ドロップの自動受け取り、バッジのオートモード（なしでも1日1個の無料バッジ）、チャットの名前・バッジエフェクト。
 
 主な機能：
-• Twitchのチャンネルポイントとドロップ：視聴中にTwitchのチャンネルポイントのボーナスとモーメントを自動で受け取り、Kickで獲得したポイントも集計します。TwitchのドロップはStreamPulse+が自動で受け取ります。
+• Twitchのチャンネルポイントとドロップ：視聴中にTwitchのチャンネルポイントのボーナスを自動で受け取り、Kickで獲得したポイントも集計します。TwitchのドロップはStreamPulse+が自動で受け取ります。
 • リアルタイム配信通知：フォロー中の配信者が配信を始めるとすぐにデスクトップ通知が届きます。配信タイトルやカテゴリの変更も通知できます。
 • 「StreamPulseに追加」ボタン：Twitch、Kick、YouTubeのチャンネルページからワンクリックで配信者を追加できます。
 • ホバープレビュー：TwitchやKickでチャンネルのリンクにカーソルを合わせるだけで、今のタブを離れずに配信をプレビューできます。
@@ -546,7 +546,7 @@ StreamPulse는 트위치, Kick, YouTube를 하나의 가벼운 확장 프로그�
 💎 StreamPulse+(선택 구독): 드롭 자동 수령, 배지 자동 모드(없어도 하루 1개 무료 배지), 채팅 이름·배지 효과.
 
 주요 기능:
-• 트위치 채널 포인트와 드롭: 시청하는 동안 트위치 채널 포인트 보너스와 모먼트를 자동으로 받고, Kick에서 얻은 포인트도 집계합니다. 트위치 드롭은 StreamPulse+가 자동으로 받습니다.
+• 트위치 채널 포인트와 드롭: 시청하는 동안 트위치 채널 포인트 보너스를 자동으로 받고, Kick에서 얻은 포인트도 집계합니다. 트위치 드롭은 StreamPulse+가 자동으로 받습니다.
 • 실시간 방송 알림: 팔로우한 스트리머가 방송을 시작하면 바로 데스크톱 알림을 받고, 원하면 방송 제목이나 카테고리가 바뀔 때도 알림을 받을 수 있습니다.
 • "StreamPulse에 추가" 버튼: 트위치, Kick, YouTube 채널 페이지에서 한 번의 클릭으로 스트리머를 추가하세요.
 • 마우스오버 미리보기: 트위치나 Kick에서 채널 링크에 마우스를 올려 현재 탭을 벗어나지 않고 방송을 미리 볼 수 있습니다.

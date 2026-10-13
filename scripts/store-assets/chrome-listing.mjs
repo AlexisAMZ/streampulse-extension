@@ -28,7 +28,7 @@ Drops, badges and points
 • Drops panel: your Twitch Drops in progress with their progress and time left, the ones ready to claim, and Twitch campaigns filtered by new, ending soon and upcoming, your games first.
 • Badges tab: chat badge campaigns and new Twitch global badges as soon as they appear, free or paid, with the ones you already own. A notification tells you about new free badges. Without StreamPulse+, the auto mode still claims one free badge a day.
 • Points panel: every channel point you earn on Twitch, channel by channel.
-• Channel points bonuses claimed automatically, and points earned on Kick counted too.
+• Channel point bonuses claimed automatically, and points earned on Kick counted too.
 • Incoming raid alerts (beta, off by default): get notified when a channel you follow is raided, even with no tab open. Automatic raid cancel is available in settings.
 
 Right inside Twitch
