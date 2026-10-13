@@ -72,6 +72,23 @@ export const RELEASES = [
         type: "fix",
         area: "plus",
         text: {
+          "fr": "Parrainage : la formule à vie, qui n'est plus en vente, ne figure plus parmi les récompenses proposées.",
+          "en": "Referrals: the lifetime plan, no longer sold, no longer appears in the offered rewards.",
+          "es": "Recomendaciones: el plan de por vida, ya no a la venta, ya no aparece entre las recompensas ofrecidas.",
+          "pt-BR": "Indicações: o plano vitalício, que não está mais à venda, não aparece mais entre as recompensas oferecidas.",
+          "de": "Weiterempfehlen: Der lebenslange Plan wird nicht mehr verkauft und taucht nicht mehr unter den Belohnungen auf.",
+          "it": "Inviti: il piano a vita, non più in vendita, non compare più tra i premi proposti.",
+          "pl": "Polecenia: plan dożywotni, już niedostępny, nie pojawia się już wśród proponowanych nagród.",
+          "tr": "Davetiyeler: artık satışta olmayan ömür boyu plan, sunulan ödüller arasında yer almıyor.",
+          "ru": "Приглашения: план навсегда, который больше не продаётся, не отображается в списке наград.",
+          "ja": "紹介：販売を終了した買い切りプランは、特典に表示されなくなりました。",
+          "ko": "추천: 판매가 종료된 평생 플랜은 보상 목록에 더 이상 표시되지 않습니다.",
+        },
+      },
+      {
+        type: "fix",
+        area: "plus",
+        text: {
           "fr": "Écran StreamPulse+ : la colonne de droite défile jusqu'au bout, les récompenses de parrainage ne sont plus coupées.",
           "en": "StreamPulse+ screen: the right column now scrolls to the end, referral rewards are no longer cut off.",
           "es": "Pantalla StreamPulse+: la columna derecha se desplaza hasta el final, las recompensas de recomendación ya no se cortan.",
