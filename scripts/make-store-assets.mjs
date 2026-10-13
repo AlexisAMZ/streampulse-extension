@@ -21,12 +21,10 @@ import {
   WORK_DIR,
   OUT_DIR,
   LANG_DIRS,
-  LOCALES,
   CANVAS,
   POPUP_VIEWPORT,
 } from "./store-assets/config.mjs";
 import {
-  loadListingCopy,
   makeTranslator,
   applyTypography,
   resolveTagline,
@@ -36,7 +34,7 @@ import { buildControlFrame } from "./store-assets/control-frames.mjs";
 import { CONTROL_COPY } from "./store-assets/control-copy.mjs";
 import { COLORS as BRAND_COLORS } from "./store-assets/brand.mjs";
 import { buildPromoTile, PROMO_TILE, buildPromoMarquee, PROMO_MARQUEE } from "./store-assets/promo.mjs";
-import { findBannedTerms, stripPromotionalSentences } from "./store-assets/policy.mjs";
+import { findBannedTerms } from "./store-assets/policy.mjs";
 import {
   assertChromeAvailable,
   capture,
@@ -156,19 +154,6 @@ async function assertHarnessUp() {
     `Harness injoignable sur ${HARNESS_URL} : lancer « portly start StreamPulseMain/harness » ` +
       "ou définir STORE_HARNESS_URL.",
   );
-}
-
-/** Capture une page du harness (taille CSS, rendue en 2x). */
-async function captureHarness(name, pagePath, size = CANVAS) {
-  const outPath = path.join(WORK_DIR, `${name}.png`);
-  await capture({
-    url: `${HARNESS_URL}${pagePath}`,
-    outPath,
-    width: size.width,
-    height: size.height,
-    budgetMs: 5000,
-  });
-  return outPath;
 }
 
 /**
@@ -372,7 +357,7 @@ const PLUS_SUBTITLES = {
   ko: "드롭과 배지 자동 수령, 고급 알림, 확장된 리캡, 자동 예측을 이용할 수 있습니다.",
 };
 
-async function buildLanguage({ lang, translations, listing, uiKeys }) {
+async function buildLanguage({ lang, translations, uiKeys }) {
   const translate = makeTranslator(translations, lang);
   const t = (key, vars) => applyTypography(translate(key, vars), lang);
   const dirName = LANG_DIRS[lang];
@@ -389,10 +374,6 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
   }
 
   const tagline = resolveTagline(t("onboarding.welcomeTagline"), lang);
-  const bullets = listing[lang].bullets.map((bullet) => ({
-    title: applyTypography(bullet.title, lang),
-    body: applyTypography(bullet.body, lang),
-  }));
 
   const dashboardSubtitle = applyTypography(DASHBOARD_SUBTITLES[lang] || DASHBOARD_SUBTITLES.en, lang);
   const dropsTitle = applyTypography(DROPS_TITLES[lang] || DROPS_TITLES.en, lang);
@@ -574,7 +555,6 @@ async function main() {
   await assertHarnessUp();
 
   const i18n = await import(path.join(ROOT, "i18n", "translations.js"));
-  const listing = loadListingCopy();
   const uiKeys = popupI18nKeys();
 
 
@@ -597,7 +577,6 @@ async function main() {
       const outDir = await buildLanguage({
         lang,
         translations: i18n.translations,
-        listing,
         uiKeys,
       });
       console.log(`✓ ${lang.padEnd(6)} → ${path.relative(ROOT, outDir)}`);
