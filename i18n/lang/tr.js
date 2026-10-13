@@ -1071,6 +1071,8 @@ export default {
     "clipsTitle": "StreamPulse Clips",
     "clipsLine": "Bir Twitch veya Kick klibinin bağlantısını yapıştır: TikTok için hazır dikey video — kamera algılanır, animasyonlu altyazı, kurgusuz.",
     "clipsCta": "StreamPulse Clips'i keşfet",
+    "clipsBanner": "StreamPulse Clips: Twitch klibinden TikTok'a, kurgusuz.",
+    "clipsCtaShort": "Keşfet",
     "tagNew": "YENİ",
     "tagFix": "DÜZELTİLDİ",
     "tagImproved": "GELİŞTİRİLMİŞ",

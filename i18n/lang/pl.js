@@ -1071,6 +1071,8 @@ export default {
     "clipsTitle": "StreamPulse Clips",
     "clipsLine": "Wklej link do klipu z Twitcha lub Kicka: pionowe wideo gotowe na TikToka, z wykrytą kamerą i animowanymi napisami — bez montażu.",
     "clipsCta": "Odkryj StreamPulse Clips",
+    "clipsBanner": "StreamPulse Clips: z klipu Twitcha na TikToka, bez montażu.",
+    "clipsCtaShort": "Odkryj",
     "tagNew": "NOWOŚĆ",
     "tagFix": "NAPRAWIONO",
     "tagImproved": "ULEPSZONO",

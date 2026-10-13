@@ -1153,12 +1153,12 @@ body.is-settings .new-dot { background: var(--violet); }
 /* Le padding de 1px bloque le margin-collapse du bandeau vers le body
    (premier enfant en flux, le topbar étant absolu) : sans lui, la marge de
    62px fait glisser toute la scène et le bandeau recouvre la barre. */
-body.has-plus-banner { padding-top: 1px; }
+body.has-banner { padding-top: 1px; }
 .plus-banner { display: flex; align-items: center; gap: 10px; margin: 62px 14px 0; padding: 9px 10px 9px 12px; border-radius: 12px; background: var(--violet); color: var(--paper); }
 .plus-banner[hidden] { display: none; }
 .plus-banner-star { width: 16px; height: 16px; flex: none; color: var(--lcd); }
 .plus-banner-line { flex: 1; margin: 0; font-size: 12px; font-weight: 600; line-height: 1.4; }
-.plus-banner-cta { flex: none; height: 28px; padding: 0 12px; border-radius: 9px; background: var(--paper); color: var(--paper-ink); font-size: 12px; font-weight: 700; white-space: nowrap; transition: background-color var(--dur-fast) ease; }
+.plus-banner-cta { flex: none; display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border: 0; border-radius: 9px; background: var(--paper); color: var(--paper-ink); font: inherit; font-size: 12px; font-weight: 700; text-decoration: none; white-space: nowrap; cursor: pointer; transition: background-color var(--dur-fast) ease; }
 .plus-banner-cta:hover { background: var(--lcd); }
 .plus-banner-close { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex: none; border-radius: 8px; color: var(--paper); opacity: 0.75; transition: opacity var(--dur-fast) ease; }
 .plus-banner-close:hover { opacity: 1; }

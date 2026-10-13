@@ -1071,6 +1071,8 @@ export default {
     "clipsTitle": "StreamPulse Clips",
     "clipsLine": "Twitch나 Kick 클립 링크를 붙여넣기만 하면 TikTok용 세로 영상이 완성. 카메라 자동 감지, 애니메이션 자막, 편집 불필요.",
     "clipsCta": "StreamPulse Clips 살펴보기",
+    "clipsBanner": "StreamPulse Clips: Twitch 클립을 TikTok으로, 편집 없이.",
+    "clipsCtaShort": "살펴보기",
     "tagNew": "신규",
     "tagFix": "수정됨",
     "tagImproved": "개선됨",

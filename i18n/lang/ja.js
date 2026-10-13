@@ -1071,6 +1071,8 @@ export default {
     "clipsTitle": "StreamPulse Clips",
     "clipsLine": "TwitchやKickのクリップのリンクを貼るだけ：TikTok向けの縦型動画が完成。カメラ自動検出、アニメ字幕、編集不要。",
     "clipsCta": "StreamPulse Clips を見てみる",
+    "clipsBanner": "StreamPulse Clips：TwitchクリップからTikTokへ、編集不要。",
+    "clipsCtaShort": "見てみる",
     "tagNew": "新着",
     "tagFix": "修正済み",
     "tagImproved": "改善",

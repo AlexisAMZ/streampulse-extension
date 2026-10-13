@@ -1071,6 +1071,8 @@ export default {
     "clipsTitle": "StreamPulse Clips",
     "clipsLine": "Paste a Twitch or Kick clip link: a vertical video ready for TikTok, with the webcam detected and animated subtitles — no editing.",
     "clipsCta": "Discover StreamPulse Clips",
+    "clipsBanner": "StreamPulse Clips: from Twitch clip to TikTok, no editing.",
+    "clipsCtaShort": "Discover",
     "tagNew": "NEW",
     "tagFix": "FIXED",
     "tagImproved": "IMPROVED",
