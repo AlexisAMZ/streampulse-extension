@@ -42,7 +42,7 @@
 
 ## Why StreamPulse
 
-You follow streamers on three platforms, Twitch buries your favorites under recommendations, and channel points only drop if you're there to click. StreamPulse fixes all three from one lightweight extension, with no account and no ads.
+You follow streamers on three platforms, Twitch buries your favorites under recommendations, and channel points only drop if you're there to click. StreamPulse fixes all three from one lightweight extension, with no account.
 
 It works **alongside** BetterTTV, FrankerFaceZ and 7TV: they customize chat, StreamPulse handles alerts, rewards and your streamer list.
 
@@ -110,7 +110,7 @@ Then open `chrome://extensions`, turn on **Developer mode**, click **Load unpack
 
 ## Privacy
 
-- No account, no ads, no trackers.
+- No account, no trackers.
 - Your streamers, settings and watch time stay in your browser's local storage.
 - The **community badge** sends a hash of your Twitch username (never the name itself) to our server at most once a day. Turn it off in Settings.
 - **StreamPulse+** checks your license key with our server.

@@ -36,7 +36,7 @@ Fonctionnalités principales :
 • Tableau de bord unifié : un popup unique pour Twitch, Kick et YouTube qui montre d'un coup d'œil qui est en direct.
 
 Confidentialité :
-StreamPulse ne demande aucun compte et ne contient ni publicité ni traceur. Tes streamers, tes réglages et ton temps de visionnage restent stockés sur ton appareil. Trois choses seulement arrivent sur notre serveur, streampulse.tech : le badge communautaire, désactivé par défaut, envoie au plus une fois par jour une empreinte (hash) de ton pseudo Twitch (jamais le pseudo lui-même), avec les effets choisis si tu as StreamPulse+ ; ta clé de licence StreamPulse+ y est vérifiée quand tu l'actives ; et ton code de parrainage y est créé quand tu le demandes. Désactive le badge dans les réglages pour arrêter son envoi.
+StreamPulse ne demande aucun compte et ne contient aucun traceur. Tes streamers, tes réglages et ton temps de visionnage restent stockés sur ton appareil. Trois choses seulement arrivent sur notre serveur, streampulse.tech : le badge communautaire, désactivé par défaut, envoie au plus une fois par jour une empreinte (hash) de ton pseudo Twitch (jamais le pseudo lui-même), avec les effets choisis si tu as StreamPulse+ ; ta clé de licence StreamPulse+ y est vérifiée quand tu l'actives ; et ton code de parrainage y est créé quand tu le demandes. Désactive le badge dans les réglages pour arrêter son envoi.
 ```
 
 ### Detailed Description (EN)
@@ -61,7 +61,7 @@ Key Features:
 • Unified Dashboard: One pop-up for Twitch, Kick and YouTube that shows who is live at a glance.
 
 Privacy:
-StreamPulse requires no account and contains no ads or trackers. Your streamers, settings and watch time are stored on your device. Only three things reach our server, streampulse.tech: the community badge, off by default, sends a hashed version of your Twitch username (never the username itself) at most once a day, with the effects you picked if you have StreamPulse+; your StreamPulse+ license key is checked there when you activate it; and your referral code is created there when you ask for it. Turn the badge off in Settings to stop it.
+StreamPulse requires no account and contains no trackers. Your streamers, settings and watch time are stored on your device. Only three things reach our server, streampulse.tech: the community badge, off by default, sends a hashed version of your Twitch username (never the username itself) at most once a day, with the effects you picked if you have StreamPulse+; your StreamPulse+ license key is checked there when you activate it; and your referral code is created there when you ask for it. Turn the badge off in Settings to stop it.
 ```
 
 ### Catégorie
@@ -183,7 +183,7 @@ Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décoc
 - Streamers suivis, préférences, filtres, points et temps de visionnage (mensuel et journalier) : stockés uniquement en local via `chrome.storage.local`.
 - Envoyé à `streampulse.tech` : l'empreinte du pseudo Twitch (badge communautaire) et, seulement quand l'utilisateur active StreamPulse+, sa clé de licence avec un identifiant d'appareil aléatoire (limite de 2 navigateurs par clé). Les requêtes de configuration et de liste des badges ne contiennent aucune donnée utilisateur.
 - Envoyé aux API publiques de Twitch et Kick : les pseudos des streamers ajoutés, pour vérifier leur statut en direct.
-- Aucun serveur d'analyse, de tracking, de télémétrie ou de publicité.
+- Aucun serveur d'analyse, de tracking ou de télémétrie.
 
 ---
 
@@ -267,7 +267,7 @@ Características principales:
 • Panel unificado: Una sola ventana para Twitch, Kick y YouTube que muestra de un vistazo quién está en directo.
 
 Privacidad:
-StreamPulse no requiere cuenta y no contiene anuncios ni rastreadores. Tus streamers, ajustes y tiempo de visualización se guardan en tu dispositivo. Solo tres cosas llegan a nuestro servidor, streampulse.tech: la insignia comunitaria, desactivada por defecto, envía como máximo una vez al día un hash de tu nombre de usuario de Twitch (nunca el nombre en sí), con los efectos elegidos si tienes StreamPulse+; tu clave de licencia de StreamPulse+ se verifica allí cuando la activas; y tu código de referidos se crea allí cuando lo pides. Desactiva la insignia en los ajustes para detener el envío.
+StreamPulse no requiere cuenta y no contiene rastreadores. Tus streamers, ajustes y tiempo de visualización se guardan en tu dispositivo. Solo tres cosas llegan a nuestro servidor, streampulse.tech: la insignia comunitaria, desactivada por defecto, envía como máximo una vez al día un hash de tu nombre de usuario de Twitch (nunca el nombre en sí), con los efectos elegidos si tienes StreamPulse+; tu clave de licencia de StreamPulse+ se verifica allí cuando la activas; y tu código de referidos se crea allí cuando lo pides. Desactiva la insignia en los ajustes para detener el envío.
 ```
 
 
@@ -303,7 +303,7 @@ Principais recursos:
 • Painel unificado: Uma única janela para Twitch, Kick e YouTube que mostra rapidamente quem está ao vivo.
 
 Privacidade:
-O StreamPulse não exige conta e não tem anúncios nem rastreadores. Seus streamers, configurações e tempo assistido ficam salvos no seu dispositivo. Somente três coisas chegam ao nosso servidor, streampulse.tech: o distintivo comunitário, desativado por padrão, envia no máximo uma vez por dia um hash do seu nome de usuário da Twitch (nunca o nome em si), com os efeitos escolhidos se você tem StreamPulse+; sua chave de licença do StreamPulse+ é verificada lá quando você a ativa; e seu código de indicação é criado lá quando você pede. Desative o distintivo nas configurações para interromper o envio.
+O StreamPulse não exige conta e não tem rastreadores. Seus streamers, configurações e tempo assistido ficam salvos no seu dispositivo. Somente três coisas chegam ao nosso servidor, streampulse.tech: o distintivo comunitário, desativado por padrão, envia no máximo uma vez por dia um hash do seu nome de usuário da Twitch (nunca o nome em si), com os efeitos escolhidos se você tem StreamPulse+; sua chave de licença do StreamPulse+ é verificada lá quando você a ativa; e seu código de indicação é criado lá quando você pede. Desative o distintivo nas configurações para interromper o envio.
 ```
 
 
@@ -339,7 +339,7 @@ Hauptfunktionen:
 • Einheitliches Dashboard: Ein Pop-up für Twitch, Kick und YouTube, das auf einen Blick zeigt, wer live ist.
 
 Datenschutz:
-StreamPulse braucht kein Konto und enthält weder Werbung noch Tracker. Deine Streamer, Einstellungen und Zuschauzeit bleiben auf deinem Gerät gespeichert. Nur drei Dinge erreichen unseren Server, streampulse.tech: das Community-Abzeichen, standardmäßig aus, sendet höchstens einmal pro Tag einen Hash deines Twitch-Namens (nie den Namen selbst), mit den gewählten Effekten, wenn du StreamPulse+ hast; dein StreamPulse+-Lizenzschlüssel wird dort geprüft, wenn du ihn aktivierst; und dein Empfehlungscode wird dort erstellt, wenn du ihn anforderst. Schalte das Abzeichen in den Einstellungen aus, um das Senden zu beenden.
+StreamPulse braucht kein Konto und enthält keine Tracker. Deine Streamer, Einstellungen und Zuschauzeit bleiben auf deinem Gerät gespeichert. Nur drei Dinge erreichen unseren Server, streampulse.tech: das Community-Abzeichen, standardmäßig aus, sendet höchstens einmal pro Tag einen Hash deines Twitch-Namens (nie den Namen selbst), mit den gewählten Effekten, wenn du StreamPulse+ hast; dein StreamPulse+-Lizenzschlüssel wird dort geprüft, wenn du ihn aktivierst; und dein Empfehlungscode wird dort erstellt, wenn du ihn anforderst. Schalte das Abzeichen in den Einstellungen aus, um das Senden zu beenden.
 ```
 
 
@@ -376,7 +376,7 @@ Funzionalità principali:
 • Dashboard unificata: Un unico pop-up per Twitch, Kick e YouTube che mostra a colpo d'occhio chi è in diretta.
 
 Privacy:
-StreamPulse non richiede alcun account e non contiene pubblicità né tracker. I tuoi streamer, le impostazioni e il tempo di visione restano salvati sul tuo dispositivo. Solo tre cose arrivano al nostro server, streampulse.tech: il badge della comunità, disattivato per impostazione predefinita, invia al massimo una volta al giorno un hash del tuo nome utente Twitch (mai il nome stesso), con gli effetti scelti se hai StreamPulse+; la tua chiave di licenza StreamPulse+ viene verificata lì quando la attivi; e il tuo codice invito viene creato lì quando lo richiedi. Disattiva il badge nelle impostazioni per interrompere l'invio.
+StreamPulse non richiede alcun account e non contiene tracker. I tuoi streamer, le impostazioni e il tempo di visione restano salvati sul tuo dispositivo. Solo tre cose arrivano al nostro server, streampulse.tech: il badge della comunità, disattivato per impostazione predefinita, invia al massimo una volta al giorno un hash del tuo nome utente Twitch (mai il nome stesso), con gli effetti scelti se hai StreamPulse+; la tua chiave di licenza StreamPulse+ viene verificata lì quando la attivi; e il tuo codice invito viene creato lì quando lo richiedi. Disattiva il badge nelle impostazioni per interrompere l'invio.
 ```
 
 
@@ -412,7 +412,7 @@ Główne funkcje:
 • Wspólny panel: Jedno okienko dla Twitcha, Kicka i YouTube, które od razu pokazuje, kto nadaje na żywo.
 
 Prywatność:
-StreamPulse nie wymaga konta i nie zawiera reklam ani trackerów. Twoi streamerzy, ustawienia i czas oglądania są przechowywane na Twoim urządzeniu. Tylko trzy rzeczy trafiają na nasz serwer, streampulse.tech: odznaka społeczności, domyślnie wyłączona, wysyła najwyżej raz dziennie skrót (hash) Twojej nazwy użytkownika na Twitchu (nigdy samej nazwy), z wybranymi efektami, jeśli masz StreamPulse+; Twój klucz licencji StreamPulse+ jest tam sprawdzany po jego aktywacji; a Twój kod polecający jest tam tworzony na Twoją prośbę. Wyłącz odznakę w ustawieniach, aby to zatrzymać.
+StreamPulse nie wymaga konta i nie zawiera trackerów. Twoi streamerzy, ustawienia i czas oglądania są przechowywane na Twoim urządzeniu. Tylko trzy rzeczy trafiają na nasz serwer, streampulse.tech: odznaka społeczności, domyślnie wyłączona, wysyła najwyżej raz dziennie skrót (hash) Twojej nazwy użytkownika na Twitchu (nigdy samej nazwy), z wybranymi efektami, jeśli masz StreamPulse+; Twój klucz licencji StreamPulse+ jest tam sprawdzany po jego aktywacji; a Twój kod polecający jest tam tworzony na Twoją prośbę. Wyłącz odznakę w ustawieniach, aby to zatrzymać.
 ```
 
 
@@ -448,7 +448,7 @@ Başlıca özellikler:
 • Birleşik panel: Twitch, Kick ve YouTube için tek bir açılır pencere, kimin yayında olduğunu bir bakışta gösterir.
 
 Gizlilik:
-StreamPulse hesap gerektirmez, reklam veya izleyici içermez. Yayıncıların, ayarların ve izleme süren cihazında saklanır. Sunucumuza, streampulse.tech, yalnızca üç şey ulaşır: varsayılan olarak kapalı olan topluluk rozeti, Twitch kullanıcı adının bir hash değerini (asla adın kendisi değil) günde en fazla bir kez, StreamPulse+ varsa seçtiğin efektlerle gönderir; StreamPulse+ lisans anahtarın etkinleştirdiğinde orada doğrulanır; ve davet kodun istediğinde orada oluşturulur. Bunu durdurmak için rozeti ayarlardan kapat.
+StreamPulse hesap gerektirmez, izleyici içermez. Yayıncıların, ayarların ve izleme süren cihazında saklanır. Sunucumuza, streampulse.tech, yalnızca üç şey ulaşır: varsayılan olarak kapalı olan topluluk rozeti, Twitch kullanıcı adının bir hash değerini (asla adın kendisi değil) günde en fazla bir kez, StreamPulse+ varsa seçtiğin efektlerle gönderir; StreamPulse+ lisans anahtarın etkinleştirdiğinde orada doğrulanır; ve davet kodun istediğinde orada oluşturulur. Bunu durdurmak için rozeti ayarlardan kapat.
 ```
 
 
@@ -484,7 +484,7 @@ StreamPulse объединяет Twitch, Kick и YouTube в одном лёгк�
 • Единая панель: Одно всплывающее окно для Twitch, Kick и YouTube, где сразу видно, кто в эфире.
 
 Конфиденциальность:
-StreamPulse не требует аккаунта и не содержит рекламы и трекеров. Ваши стримеры, настройки и время просмотра хранятся на вашем устройстве. На наш сервер, streampulse.tech, попадают только три вещи: значок сообщества, выключенный по умолчанию, не чаще раза в день отправляет хеш вашего имени пользователя Twitch (никогда само имя), с выбранными эффектами, если у вас есть StreamPulse+; ваш лицензионный ключ StreamPulse+ проверяется там при активации; а ваш реферальный код создаётся там по запросу. Чтобы прекратить отправку, отключите значок в настройках.
+StreamPulse не требует аккаунта и не содержит трекеров. Ваши стримеры, настройки и время просмотра хранятся на вашем устройстве. На наш сервер, streampulse.tech, попадают только три вещи: значок сообщества, выключенный по умолчанию, не чаще раза в день отправляет хеш вашего имени пользователя Twitch (никогда само имя), с выбранными эффектами, если у вас есть StreamPulse+; ваш лицензионный ключ StreamPulse+ проверяется там при активации; а ваш реферальный код создаётся там по запросу. Чтобы прекратить отправку, отключите значок в настройках.
 ```
 
 
@@ -520,7 +520,7 @@ StreamPulseは、Twitch、Kick、YouTubeをひとつの軽量な拡張機能に�
 • 統合ダッシュボード：Twitch・Kick・YouTubeをひとつのポップアップにまとめ、誰が配信中かをひと目で確認できます。
 
 プライバシー：
-StreamPulseはアカウント不要で、広告もトラッカーも含みません。配信者リスト、設定、視聴時間はお使いの端末に保存されます。サーバー（streampulse.tech）に送られるのは次の3つだけです。デフォルトでオフのコミュニティバッジが、Twitchユーザー名をハッシュ化した値（ユーザー名そのものは送りません）を1日に最大1回、StreamPulse+会員は選択したエフェクトとともに送信すること。StreamPulse+のライセンスキーは有効化したときにサーバー上で検証されること。紹介コードは作成を求めたときにサーバー上で生成されること。停止するには設定でバッジをオフにしてください。
+StreamPulseはアカウント不要で、トラッカーを含みません。配信者リスト、設定、視聴時間はお使いの端末に保存されます。サーバー（streampulse.tech）に送られるのは次の3つだけです。デフォルトでオフのコミュニティバッジが、Twitchユーザー名をハッシュ化した値（ユーザー名そのものは送りません）を1日に最大1回、StreamPulse+会員は選択したエフェクトとともに送信すること。StreamPulse+のライセンスキーは有効化したときにサーバー上で検証されること。紹介コードは作成を求めたときにサーバー上で生成されること。停止するには設定でバッジをオフにしてください。
 ```
 
 
@@ -556,5 +556,5 @@ StreamPulse는 트위치, Kick, YouTube를 하나의 가벼운 확장 프로그�
 • 통합 대시보드: 트위치, Kick, YouTube를 하나의 팝업에 모아 누가 방송 중인지 한눈에 보여 줍니다.
 
 개인정보:
-StreamPulse는 계정이 필요 없으며 광고나 추적기가 없습니다. 스트리머 목록, 설정, 시청 시간은 사용자의 기기에 저장됩니다. 서버(streampulse.tech)로 가는 것은 다음 세 가지뿐입니다. 기본적으로 꺼져 있는 커뮤니티 배지가 트위치 사용자 이름의 해시값(이름 자체는 보내지 않음)을 하루에 최대 한 번, StreamPulse+ 회원이라면 선택한 효과와 함께 전송하는 것. StreamPulse+ 라이선스 키는 활성화할 때 서버에서 확인되는 것. 추천 코드는 요청할 때 서버에서 생성되는 것. 중단하려면 설정에서 배지를 끄세요.
+StreamPulse는 계정이 필요 없으며 추적기가 없습니다. 스트리머 목록, 설정, 시청 시간은 사용자의 기기에 저장됩니다. 서버(streampulse.tech)로 가는 것은 다음 세 가지뿐입니다. 기본적으로 꺼져 있는 커뮤니티 배지가 트위치 사용자 이름의 해시값(이름 자체는 보내지 않음)을 하루에 최대 한 번, StreamPulse+ 회원이라면 선택한 효과와 함께 전송하는 것. StreamPulse+ 라이선스 키는 활성화할 때 서버에서 확인되는 것. 추천 코드는 요청할 때 서버에서 생성되는 것. 중단하려면 설정에서 배지를 끄세요.
 ```

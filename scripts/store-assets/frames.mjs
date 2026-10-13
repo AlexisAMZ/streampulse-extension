@@ -131,7 +131,7 @@ const FEATURES_CSS = `
 }
 `;
 
-function page({ css, body }) {
+export function page({ css, body }) {
   return `<!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"><style>${BASE_CSS}${css}</style></head>
@@ -139,7 +139,7 @@ function page({ css, body }) {
 </html>`;
 }
 
-function head({ logoPath, tagline, title, subtitle }) {
+export function head({ logoPath, tagline, title, subtitle }) {
   return `
 <div class="head">
   <div class="brand">

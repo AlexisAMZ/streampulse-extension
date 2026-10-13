@@ -25,7 +25,7 @@ Success means the viewer never misses a live they care about, and never has to c
 ## Positioning
 
 - One unified popup for Twitch, Kick and YouTube together. (YouTube is alerts + watch time only: no channel points, Drops or injected player features.)
-- No account, no ads, no trackers. Streamers, settings and watch time live on the device.
+- No account, no trackers. Streamers, settings and watch time live on the device.
 - It complements chat and emote extensions (BetterTTV, FrankerFaceZ, 7TV) and does not replace them.
 
 ## Operating Context
