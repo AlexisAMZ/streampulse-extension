@@ -4,6 +4,7 @@
  *
  *   node scripts/make-store-assets.mjs            # les 11 langues
  *   node scripts/make-store-assets.mjs fr en      # seulement celles listées
+ *   node scripts/make-store-assets.mjs promo      # seulement les deux tuiles promo
  *   KEEP_BUILD=1 node scripts/make-store-assets.mjs fr   # garde les intermédiaires
  *
  * Sortie : images/cws_screenshots/<LANGUE>/01-dashboard, 02-drops, 03-plus,
@@ -528,74 +529,43 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
  * langue. Rédigé dans la langue principale du store (français, cf.
  * CHROMEWEBSTORE.md § 1). Seul asset qui doit être sans canal alpha.
  */
-async function buildPromo({ listing, lang = PROMO_LANG }) {
-  // Capture du vrai popup, par le banc : les tuiles montraient un cadre vide
-  // depuis que source-dashboard.png, la photo manuelle, a disparu.
+async function buildPromo({ lang = PROMO_LANG }) {
+  // Capture du vrai popup, par le banc : seule la grande image la montre, la
+  // petite tuile reste typographique pour rester lisible à l'échelle d'une carte.
   const promoShot = await capturePopup("dashboard", lang, "");
   const suffix = lang === PROMO_LANG ? "" : `_${lang}`;
   const outDir = path.join(ROOT, "images", "promo");
   fs.mkdirSync(outDir, { recursive: true });
-  const outPath = path.join(outDir, `small_tile${suffix}.png`);
+  const tilePath = path.join(outDir, `small_tile${suffix}.png`);
+  const marqueePath = path.join(outDir, `marquee_1400x560${suffix}.png`);
 
-  // Accroche courte et vraies cartes live du popup : sur 440x280, une promesse
-  // lisible d'un coup d'oeil vaut mieux qu'une liste de fonctions.
-  const tile = {
-    title: "Never miss",
-    accent: "a live again.",
-    subtitle: "Your Twitch, Kick and YouTube streamers live, one click away.",
-    liveLabel: "Live now",
-    pointsLabel: "+250 pts",
+  const copy = {
+    lineOne: "Never miss",
+    lineLead: "a",
+    highlight: "live",
+    subtitle: "Alerts, Channel Points, Drops and badges for Twitch, Kick and YouTube.",
   };
   assertPolicyClean(
-    Object.entries(tile).map(([label, text]) => ({ label: `tuile ${label}`, text })),
+    Object.entries(copy).map(([label, text]) => ({ label: `promo ${label}`, text })),
     lang,
   );
+  const platformIcons = [TWITCH_ICON, KICK_ICON, YOUTUBE_ICON];
 
   await renderFrame({
     name: `promo-small${suffix}`,
-    outPath,
+    outPath: tilePath,
     size: PROMO_TILE,
     flatten: true,
-    html: buildPromoTile({
-      logoPath: LOGO,
-      ...tile,
-      shotPath: promoShot,
-    }),
+    html: buildPromoTile({ logoPath: LOGO, platformIcons, ...copy }),
   });
-
-  // Points de chaîne, alertes live, aperçus au survol : les trois arguments de
-  // la grande image, dans l'ordre des puces du listing.
-  const bullets = listing[lang].bullets;
-  const benefits = [bullets[0], bullets[1], bullets[3]].map((bullet) =>
-    applyTypography(bullet.title, lang),
-  );
-
-  // Grande image en haut de la fiche, avec la vraie capture du popup.
-  const marqueePath = path.join(outDir, `marquee_1400x560${suffix}.png`);
-  const title = lang === "fr" ? "Ne rate aucun live." : "Never miss a live.";
-  const accent = lang === "fr" ? "Et bien plus." : "And plenty more.";
-  assertPolicyClean(
-    [
-      { label: "marquee titre", text: title },
-      { label: "marquee accent", text: accent },
-    ],
-    lang,
-  );
   await renderFrame({
     name: `promo-marquee${suffix}`,
     outPath: marqueePath,
     size: PROMO_MARQUEE,
     flatten: true,
-    html: buildPromoMarquee({
-      logoPath: LOGO,
-      title,
-      accent,
-      benefits,
-      shotPath: promoShot,
-    }),
+    html: buildPromoMarquee({ logoPath: LOGO, platformIcons, ...copy, shotPath: promoShot }),
   });
-
-  return [outPath, marqueePath];
+  return [tilePath, marqueePath];
 }
 
 async function main() {
@@ -607,8 +577,9 @@ async function main() {
   const uiKeys = popupI18nKeys();
 
 
-  const requested = process.argv.slice(2);
-  const targets = requested.length ? requested : Object.keys(LANG_DIRS);
+  const promoOnly = process.argv[2] === "promo";
+  const requested = promoOnly ? [] : process.argv.slice(2);
+  const targets = promoOnly ? [] : requested.length ? requested : Object.keys(LANG_DIRS);
   for (const lang of targets) {
     if (!LANG_DIRS[lang]) {
       throw new Error(
@@ -631,7 +602,7 @@ async function main() {
       console.log(`✓ ${lang.padEnd(6)} → ${path.relative(ROOT, outDir)}`);
     }
 
-    const promoPaths = await buildPromo({ listing });
+    const promoPaths = await buildPromo({});
     for (const promoPath of promoPaths) console.log(`✓ promo  → ${path.relative(ROOT, promoPath)} (24 bits)`);
   } finally {
     if (!process.env.KEEP_BUILD) {

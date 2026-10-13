@@ -1,143 +1,137 @@
 /**
- * Petite tuile promotionnelle du Chrome Web Store : 440x280, PNG 24 bits.
+ * Tuiles promotionnelles du Chrome Web Store : petite (440x280) et grande
+ * (1400x560), PNG 24 bits sans alpha. Une seule langue (l'anglais) : le store
+ * ne stocke qu'un jeu pour toute la fiche.
  *
- * Surface minuscule : logo, nom, une accroche courte, trois bénéfices, deux
- * pastilles de plateforme. Charte de brand.mjs.
+ * Pensées pour la vitrine, pas pour la page de détail : dans une grille de
+ * résultats la petite tuile s'affiche à ~175 px de large (échelle 0,4). Le texte
+ * doit rester lisible à cette taille : un seul message de quatre mots, imprimé
+ * en très gros, sur un aplat violet qui se détache du gris sombre des cartes
+ * voisines, et les trois plateformes en logos plutôt qu'en phrases.
+ *
+ * Aucune mention de gratuité, de nouveauté ni de classement : le règlement du
+ * Chrome Web Store les interdit sur les assets (cf. policy.mjs).
  */
 
-import { COLORS, FONT_CSS, DISPLAY, RESET, backdrop, LOGO_CSS, escapeHtml } from "./brand.mjs";
+import { COLORS, FONT_CSS, DISPLAY, RESET, LOGO_CSS, escapeHtml } from "./brand.mjs";
 
 export const PROMO_TILE = { width: 440, height: 280 };
+export const PROMO_MARQUEE = { width: 1400, height: 560 };
 
-const CSS = `
-${FONT_CSS}
-${RESET}
-${backdrop(PROMO_TILE.width, PROMO_TILE.height)}
-body { padding: 22px 0 20px 24px; }
-
-.copy { position: absolute; inset: 22px auto 20px 24px; width: 232px; display: flex; flex-direction: column; z-index: 2; }
-.brand { display: flex; align-items: center; gap: 7px; }
-.brand img { width: 18px; height: 18px; ${LOGO_CSS} }
-.brand span { font-family: ${DISPLAY}; font-size: 13px; font-weight: 800; letter-spacing: -0.02em; }
-
-h1 { margin-top: 20px; font-family: ${DISPLAY}; font-size: 26px; line-height: 1.02; font-weight: 800; letter-spacing: -0.045em; text-wrap: balance; }
-h1 em { display: block; font-style: normal; color: ${COLORS.violetText}; }
-.sub { margin-top: 11px; max-width: 192px; font-size: 12px; line-height: 1.35; font-weight: 500; color: ${COLORS.text2}; }
-
-.chips { margin-top: auto; display: flex; gap: 6px; }
-.chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; background: ${COLORS.surface}; box-shadow: inset 0 0 0 1px ${COLORS.line2}; font-size: 10.5px; font-weight: 600; color: ${COLORS.text2}; }
-.chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; }
-.chip.twitch::before { background: ${COLORS.violet}; }
-.chip.kick::before { background: ${COLORS.kick}; }
-.chip.youtube::before { background: ${COLORS.youtube}; }
-
-/* Vraies cartes du popup, découpées dans la capture et posées en éventail. */
-.stage { position: absolute; top: 0; right: 0; width: 210px; height: 280px; z-index: 1; }
-.card { position: absolute; width: 176px; height: 114px; border-radius: 12px; background-repeat: no-repeat; background-size: 671px auto; box-shadow: 0 18px 34px -10px rgba(0, 0, 0, 0.75), 0 0 0 1px ${COLORS.line2}; }
-.card.back { top: 132px; right: -38px; background-position: -196px -331px; transform: rotate(7deg); opacity: 0.9; }
-.card.front { top: 58px; right: 26px; background-position: -12px -331px; transform: rotate(-5deg); }
-.live { position: absolute; top: 44px; right: 132px; z-index: 3; display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px 5px 9px; border-radius: 999px; background: ${COLORS.lcd}; color: ${COLORS.lcdInk}; font-size: 11px; font-weight: 700; transform: rotate(-5deg); box-shadow: 0 8px 18px -6px rgba(0, 0, 0, 0.6); white-space: nowrap; }
-.live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: ${COLORS.lcdInk}; }
-.pts { position: absolute; top: 186px; right: 118px; z-index: 3; display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 999px; background: ${COLORS.surface2}; box-shadow: inset 0 0 0 1px ${COLORS.line2}, 0 8px 18px -6px rgba(0, 0, 0, 0.6); color: ${COLORS.text}; font-size: 11px; font-weight: 700; transform: rotate(3deg); white-space: nowrap; }
-.pts svg { width: 11px; height: 11px; color: ${COLORS.violetText}; }
+/** Aplat violet de la marque, un peu plus profond vers le coin bas-droit. */
+const violetBackdrop = (width, height) => `
+html, body { width: ${width}px; height: ${height}px; }
+body {
+  overflow: hidden;
+  position: relative;
+  color: #fff;
+  font-family: "Onest", -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background:
+    radial-gradient(${Math.round(width * 0.7)}px ${Math.round(height * 1.1)}px at 12% 0%, rgba(200, 170, 255, 0.35), transparent 62%),
+    radial-gradient(${Math.round(width * 0.8)}px ${Math.round(height * 1.2)}px at 100% 110%, rgba(30, 14, 90, 0.7), transparent 60%),
+    ${COLORS.violet};
+}
+body > * { position: relative; z-index: 1; }
 `;
 
-const GEM = '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M4 2h8l3 4-7 8-7-8z"/></svg>';
+/** Pastille « live » : le mot du titre sur un aplat vert LCD, comme le badge du popup. */
+const HIGHLIGHT_CSS = `
+mark {
+  display: inline-block;
+  padding: 0 0.16em 0.04em;
+  margin: 0 0.02em;
+  border-radius: 0.2em;
+  background: ${COLORS.lcd};
+  color: ${COLORS.lcdInk};
+}
+`;
+
+/** Une plateforme : pastille navy, logo dans sa couleur de marque. */
+const platformTile = (iconPath, size) =>
+  `<span class="plat" style="width:${size}px;height:${size}px"><img src="${escapeHtml(iconPath)}" alt=""></span>`;
+
+const PLATFORM_CSS = `
+.plats { display: flex; gap: 10px; }
+.plat { display: grid; place-items: center; border-radius: 28%; background: ${COLORS.bg}; box-shadow: 0 8px 18px -6px rgba(10, 4, 40, 0.55); }
+.plat img { width: 58%; height: 58%; display: block; }
+`;
+
+const TILE_CSS = `
+${FONT_CSS}
+${RESET}
+${violetBackdrop(PROMO_TILE.width, PROMO_TILE.height)}
+${HIGHLIGHT_CSS}
+${PLATFORM_CSS}
+body { padding: 22px 24px 24px; display: flex; flex-direction: column; }
+.brand { display: flex; align-items: center; gap: 9px; }
+.brand img { width: 26px; height: 26px; ${LOGO_CSS} }
+.brand span { font-family: ${DISPLAY}; font-size: 20px; font-weight: 800; letter-spacing: -0.03em; }
+h1 { margin-top: 22px; font-family: ${DISPLAY}; font-size: 47px; line-height: 1.06; font-weight: 800; letter-spacing: -0.045em; }
+h1 span { display: block; white-space: nowrap; }
+.plats { margin-top: auto; }
+.mark { position: absolute; right: -34px; bottom: -40px; width: 190px; opacity: 0.16; ${LOGO_CSS} z-index: 0; }
+`;
 
 /**
- * Aucune mention de gratuité, de nouveauté ni de classement : le règlement du
- * Chrome Web Store les interdit sur les assets (cf. store-assets/policy.mjs).
- *
  * @param {object} options
- * @param {string} options.logoPath  chemin absolu du logo
- * @param {string} options.title     accroche, première ligne
- * @param {string} options.accent    accroche, seconde ligne en violet
- * @param {string} options.subtitle  phrase courte sous l'accroche
- * @param {string} options.liveLabel pastille « En direct »
- * @param {string} options.pointsLabel pastille des points récupérés
- * @param {string} options.shotPath  capture réelle du popup (source-dashboard.png)
+ * @param {string} options.logoPath    logo blanc de la marque
+ * @param {string[]} options.platformIcons  chemins des logos Twitch, Kick, YouTube
+ * @param {string} options.lineOne     « Never miss »
+ * @param {string} options.lineLead    début de la 2e ligne (« a »)
+ * @param {string} options.highlight   mot sur pastille verte (« live »)
  */
-export function buildPromoTile({ logoPath, title, accent, subtitle, liveLabel, pointsLabel, shotPath }) {
-  const shot = `background-image: url('${escapeHtml(shotPath)}')`;
+export function buildPromoTile({ logoPath, platformIcons, lineOne, lineLead, highlight }) {
   return `<!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"><style>${CSS}</style></head>
+<head><meta charset="UTF-8"><style>${TILE_CSS}</style></head>
 <body>
-  <div class="copy">
-    <div class="brand"><img src="${escapeHtml(logoPath)}" alt=""><span>StreamPulse</span></div>
-    <h1>${escapeHtml(title)}<em>${escapeHtml(accent)}</em></h1>
-    <p class="sub">${escapeHtml(subtitle)}</p>
-    <div class="chips"><span class="chip twitch">Twitch</span><span class="chip kick">Kick</span><span class="chip youtube">YouTube</span></div>
-  </div>
-  <div class="stage">
-    <div class="card back" style="${shot}"></div>
-    <div class="card front" style="${shot}"></div>
-    <span class="live">${escapeHtml(liveLabel)}</span>
-    <span class="pts">${GEM}${escapeHtml(pointsLabel)}</span>
-  </div>
+  <img class="mark" src="${escapeHtml(logoPath)}" alt="">
+  <div class="brand"><img src="${escapeHtml(logoPath)}" alt=""><span>StreamPulse</span></div>
+  <h1><span>${escapeHtml(lineOne)}</span><span>${escapeHtml(lineLead)} <mark>${escapeHtml(highlight)}</mark>.</span></h1>
+  <div class="plats">${platformIcons.map((icon) => platformTile(icon, 52)).join("")}</div>
 </body>
 </html>`;
 }
 
-/** Grande image promotionnelle (« marquee ») en haut de la fiche : 1400x560. */
-export const PROMO_MARQUEE = { width: 1400, height: 560 };
-
 const MARQUEE_CSS = `
 ${FONT_CSS}
 ${RESET}
-${backdrop(PROMO_MARQUEE.width, PROMO_MARQUEE.height)}
-body { display: grid; grid-template-columns: 560px 1fr; align-items: center; padding-left: 72px; }
-.brand { display: flex; align-items: center; gap: 12px; }
-.brand img { width: 34px; height: 34px; ${LOGO_CSS} }
-.brand span { font-family: ${DISPLAY}; font-size: 24px; font-weight: 800; letter-spacing: -0.03em; }
-h1 { margin-top: 26px; font-family: ${DISPLAY}; font-size: 50px; line-height: 1.04; font-weight: 800; letter-spacing: -0.04em; }
-h1 em { font-style: normal; color: ${COLORS.violetText}; }
-.benefits { display: flex; flex-direction: column; gap: 11px; margin-top: 28px; }
-.benefit { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 600; color: ${COLORS.text}; }
-.benefit::before {
-  content: "✓"; flex: none; display: grid; place-items: center;
-  width: 20px; height: 20px; border-radius: 50%;
-  background: ${COLORS.lcd}; color: ${COLORS.lcdInk}; font-size: 12px; font-weight: 700;
-}
-.chips { display: flex; gap: 8px; margin-top: 30px; }
-.chip {
-  display: inline-flex; align-items: center; gap: 7px; padding: 6px 14px; border-radius: 999px;
-  background: ${COLORS.surface}; box-shadow: inset 0 0 0 1px ${COLORS.line2};
-  font-size: 14px; font-weight: 600; color: ${COLORS.text2};
-}
-.chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; }
-.chip.twitch::before { background: ${COLORS.violet}; }
-.chip.kick::before { background: ${COLORS.kick}; }
-.chip.youtube::before { background: ${COLORS.youtube}; }
-.stage { height: 560px; display: flex; align-items: center; justify-content: center; padding: 44px 64px 44px 20px; }
-.stage img {
-  max-width: 100%; max-height: 472px; display: block; border-radius: 18px;
-  box-shadow: 0 0 0 1px ${COLORS.line2}, 0 40px 90px rgba(0,0,0,0.6), 0 0 120px rgba(145,70,255,0.3);
-}
+${violetBackdrop(PROMO_MARQUEE.width, PROMO_MARQUEE.height)}
+${HIGHLIGHT_CSS}
+${PLATFORM_CSS}
+body { display: grid; grid-template-columns: 700px 1fr; align-items: center; padding-left: 80px; }
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand img { width: 40px; height: 40px; ${LOGO_CSS} }
+.brand span { font-family: ${DISPLAY}; font-size: 28px; font-weight: 800; letter-spacing: -0.03em; }
+h1 { margin-top: 30px; font-family: ${DISPLAY}; font-size: 82px; line-height: 1.05; font-weight: 800; letter-spacing: -0.045em; }
+h1 span { display: block; white-space: nowrap; }
+.sub { margin-top: 26px; max-width: 560px; font-size: 26px; line-height: 1.35; font-weight: 500; color: rgba(255, 255, 255, 0.92); }
+.plats { margin-top: 34px; gap: 14px; }
+.stage { height: 560px; display: flex; align-items: center; justify-content: center; padding: 44px 60px 44px 0; }
+.stage img { max-width: 100%; max-height: 472px; display: block; border-radius: 18px; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22), 0 40px 90px rgba(10, 4, 40, 0.6); }
 `;
 
 /**
  * @param {object} options
  * @param {string} options.logoPath
- * @param {string} options.title      accroche (la dernière phrase passe en violet)
- * @param {string} options.accent     seconde ligne en violet
- * @param {string[]} options.benefits 3 bénéfices issus des puces du listing
- * @param {string} options.shotPath   capture réelle du popup
+ * @param {string[]} options.platformIcons
+ * @param {string} options.lineOne
+ * @param {string} options.lineLead
+ * @param {string} options.highlight
+ * @param {string} options.subtitle  une phrase : ce que fait l'extension
+ * @param {string} options.shotPath  capture réelle du popup
  */
-export function buildPromoMarquee({ logoPath, title, accent, benefits, shotPath }) {
-  const lines = benefits
-    .slice(0, 3)
-    .map((text) => `<div class="benefit">${escapeHtml(text)}</div>`)
-    .join("");
+export function buildPromoMarquee({ logoPath, platformIcons, lineOne, lineLead, highlight, subtitle, shotPath }) {
   return `<!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"><style>${MARQUEE_CSS}</style></head>
 <body>
   <div>
     <div class="brand"><img src="${escapeHtml(logoPath)}" alt=""><span>StreamPulse</span></div>
-    <h1>${escapeHtml(title)}<br><em>${escapeHtml(accent)}</em></h1>
-    <div class="benefits">${lines}</div>
-    <div class="chips"><span class="chip twitch">Twitch</span><span class="chip kick">Kick</span><span class="chip youtube">YouTube</span></div>
+    <h1><span>${escapeHtml(lineOne)}</span><span>${escapeHtml(lineLead)} <mark>${escapeHtml(highlight)}</mark>.</span></h1>
+    <p class="sub">${escapeHtml(subtitle)}</p>
+    <div class="plats">${platformIcons.map((icon) => platformTile(icon, 64)).join("")}</div>
   </div>
   <div class="stage"><img src="${escapeHtml(shotPath)}" alt=""></div>
 </body>
