@@ -5,10 +5,9 @@
 
 export const SCREENSHOT_ORDER = [
   "01-dashboard.png",
-  "05-compat.png",
+  "04-compat.png",
   "02-drops.png",
   "03-plus.png",
-  "04-twitch.png",
 ];
 
 /**

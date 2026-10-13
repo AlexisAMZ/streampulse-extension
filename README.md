@@ -80,7 +80,7 @@ It works **alongside** BetterTTV, FrankerFaceZ and 7TV: they customize chat, Str
 - Time watched per channel, and a **shareable recap image** for 7 days, 30 days or any month, in 16:9 or 9:16.
 
 <p align="center">
-  <img src="images/cws_screenshots/EN/04-twitch.png" alt="StreamPulse on a Twitch channel page" width="49%">
+  <img src="images/cws_screenshots/EN/01-dashboard.png" alt="StreamPulse dashboard" width="49%">
   <img src="images/cws_screenshots/EN/02-drops.png" alt="StreamPulse Drops tab" width="49%">
 </p>
 

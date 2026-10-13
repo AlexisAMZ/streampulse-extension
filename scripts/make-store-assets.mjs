@@ -7,7 +7,7 @@
  *   KEEP_BUILD=1 node scripts/make-store-assets.mjs fr   # garde les intermédiaires
  *
  * Sortie : images/cws_screenshots/<LANGUE>/01-dashboard, 02-drops, 03-plus,
- * 04-twitch, 05-compat : cinq PNG 1280x800 par langue (le store en accepte 5).
+ * 04-compat : quatre PNG 1280x800 par langue (le store en accepte 5 au plus).
  *
  * Le rendu part du vrai popup et des vraies traductions : rien n'est maquetté à
  * la main, donc une évolution de l'UI se répercute au prochain run.
@@ -394,8 +394,6 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
   const dropsSubtitle = applyTypography(DROPS_SUBTITLES[lang] || DROPS_SUBTITLES.en, lang);
   const plusTitle = applyTypography(PLUS_TITLES[lang] || PLUS_TITLES.en, lang);
   const plusSubtitle = applyTypography(PLUS_SUBTITLES[lang] || PLUS_SUBTITLES.en, lang);
-  // Puce « Bouton Ajouter à StreamPulse » : la scène Twitch montre le panneau et le bouton.
-  const twitchBullet = bullets[2];
 
   assertPolicyClean(
     [
@@ -406,8 +404,6 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
       { label: "sous-titre 02", text: dropsSubtitle },
       { label: "titre 03", text: plusTitle },
       { label: "sous-titre 03", text: plusSubtitle },
-      { label: "titre 04", text: twitchBullet.title },
-      { label: "sous-titre 04", text: twitchBullet.body },
     ],
     lang,
   );
@@ -440,41 +436,22 @@ async function buildLanguage({ lang, translations, listing, uiKeys }) {
     });
   }
 
-  // 3. Éléments ajoutés sur Twitch : la scène n'existe qu'en français et anglais.
-  const twitchShot = await captureHarness(
-    `twitch-${lang}`,
-    `/scripts/dev/twitch-harness.html?shot=1&lang=${lang === "fr" ? "fr" : "en"}`,
-    { width: 1000, height: 820 },
-  );
-  await renderFrame({
-    name: `frame-${lang}-04`,
-    outPath: path.join(outDir, "04-twitch.png"),
-    flatten: true,
-    html: buildProductFrame({
-      logoPath: LOGO,
-      tagline,
-      title: twitchBullet.title,
-      subtitle: twitchBullet.body,
-      shotPath: twitchShot,
-    }),
-  });
-
-  // 5. Cadre « compatibilite » : la marque en pivot, les trois plateformes
+  // 4. Cadre « compatibilite » : la marque en pivot, les trois plateformes
   //    reliees, et sous chacune ce qu'elle sait reellement y faire.
   const compatNote = COMPAT_NOTES[lang] || COMPAT_NOTES.en;
   const headline = COMPAT_HEADLINES[lang] || COMPAT_HEADLINES.en;
   const caps = COMPAT_CAPS[lang] || COMPAT_CAPS.en;
   assertPolicyClean(
     [
-      { label: "titre 05", text: headline },
-      { label: "note 05", text: compatNote },
-      ...Object.entries(caps).map(([key, text]) => ({ label: `capacite 05 ${key}`, text })),
+      { label: "titre 04", text: headline },
+      { label: "note 04", text: compatNote },
+      ...Object.entries(caps).map(([key, text]) => ({ label: `capacite 04 ${key}`, text })),
     ],
     lang,
   );
   await renderFrame({
-    name: `frame-${lang}-05`,
-    outPath: path.join(outDir, "05-compat.png"),
+    name: `frame-${lang}-04`,
+    outPath: path.join(outDir, "04-compat.png"),
     flatten: true,
     html: buildCompatibilityFrame({
       logoPath: LOGO,
@@ -629,7 +606,7 @@ async function main() {
     }
   }
 
-  console.log(`\n${targets.length} langue(s) · 5 captures 1280x800 chacune.`);
+  console.log(`\n${targets.length} langue(s) · 4 captures 1280x800 chacune.`);
 }
 
 main().catch((error) => {
