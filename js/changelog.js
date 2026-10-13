@@ -8,6 +8,7 @@
 
 import { RELEASES, getLatestRelease, pickLocalized } from "./changelog-data.js";
 import { initI18n, applyTranslations, t, resolveLocale, getCurrentLanguage } from "./i18n.js";
+import { PLUS_KEY, isPlusActive, plusPageUrl } from "./plus.js";
 
 /**
  * Texte d'une note de version dans la langue choisie par l'utilisateur.
@@ -398,6 +399,7 @@ async function init() {
   await initI18n();
   applyTranslations(document);
   document.documentElement.lang = getCurrentLanguage();
+  renderPromo();
 
   // Toujours afficher la dernière version publiée (notes de la mise à jour actuelle)
   const release = getLatestRelease();
@@ -410,6 +412,25 @@ async function init() {
   }
 
   render(release);
+}
+
+/**
+ * Cartes « Aller plus loin » : l'offre StreamPulse+ disparaît pour les
+ * abonnés, et le bouton mène à la page d'abonnement dans la langue lue.
+ */
+function renderPromo() {
+  const plusCta = document.getElementById("cl-plus-cta");
+  if (plusCta) plusCta.href = plusPageUrl(getCurrentLanguage(), "monthly");
+  try {
+    chrome.storage.local.get(PLUS_KEY, (stored) => {
+      if (chrome.runtime.lastError) return;
+      if (isPlusActive(stored?.[PLUS_KEY])) {
+        document.getElementById("cl-promo-plus")?.remove();
+      }
+    });
+  } catch {
+    // Sans storage (contexte de test), la carte reste affichée.
+  }
 }
 
 document.getElementById("cl-close").addEventListener("click", () => {
