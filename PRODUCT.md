@@ -18,7 +18,7 @@ web
 
 ## Product Purpose
 
-StreamPulse tells a viewer who is live right now among the streamers they follow, on Twitch, Kick and YouTube, from one toolbar popup. It also takes care of the repetitive chores of watching: claiming channel points, Drops and Moments, cancelling raids, keeping the player running.
+StreamPulse tells a viewer who is live right now among the streamers they follow, on Twitch, Kick and YouTube, from one toolbar popup. It also takes care of the repetitive chores of watching: claiming channel points and Drops, cancelling raids, keeping the player running.
 
 Success means the viewer never misses a live they care about, and never has to click a bonus chest again.
 
@@ -43,7 +43,7 @@ Success means the viewer never misses a live they care about, and never has to c
 - **Injected UI**: it lives inside Twitch's page, next to Twitch's own dark and light themes. It must not break or visually fight the host page.
 - **Performance**: content scripts run on every Twitch page. The popup opens often and must paint instantly.
 - **Data**: what reaches streampulse.tech: the license key with this browser's device id, verified at most once a day; the community badge, only after an explicit opt-in, sends a hashed Twitch username at most once a day; the badge list and the remote configuration are read from the same domain (reads, no user data); the Kick app token is fetched through streampulse.tech. Nothing else about the user leaves the browser. *(list corrected by the 2026-09-28 audit; previously described as "only the badge")*.
-- **Terminology**: Streamers, Live / En direct, Points de chaîne, Drops, Moments, Raids, Récap, Temps de visionnage.
+- **Terminology**: Streamers, Live / En direct, Points de chaîne, Drops, Raids, Récap, Temps de visionnage.
 - **Sibling projects**: a Firefox port (`../StreampulseFirefox`) and the website (`../StreampulseSite`) exist. Cross-project consistency is an open decision.
 - **French voice**: tutoiement everywhere, gender-neutral phrasing, fixed glossary (decided 2026-09-29, see the « Voix » section of `DESIGN.md`).
 

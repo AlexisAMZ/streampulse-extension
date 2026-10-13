@@ -91,7 +91,6 @@ const raidDependencyStatus = document.getElementById("raid-dependency-status");
 const backgroundRaidAlertsToggle = document.getElementById("pref-background-raid-alerts");
 const autoClaimToggle = document.getElementById("pref-auto-claim");
 const autoClaimDropsToggle = document.getElementById("pref-auto-claim-drops");
-const autoClaimMomentsToggle = document.getElementById("pref-auto-claim-moments");
 const autoOpenInventoryToggle = document.getElementById("pref-auto-open-inventory");
 const autoOpenInventoryIntervalSelect = document.getElementById("pref-auto-open-inventory-interval");
 const hideTwitchExtensionsToggle = document.getElementById("pref-hide-twitch-extensions");
@@ -1277,9 +1276,6 @@ function renderPreferences() {
   if (autoClaimDropsToggle) {
     autoClaimDropsToggle.checked = prefs.autoClaimDrops !== false;
   }
-  if (autoClaimMomentsToggle) {
-    autoClaimMomentsToggle.checked = prefs.autoClaimMoments !== false;
-  }
   if (autoOpenInventoryToggle) {
     autoOpenInventoryToggle.checked = Boolean(prefs.autoOpenInventory);
   }
@@ -1409,7 +1405,6 @@ let currentLogFilter = "all";
 const LOG_ICON_ATTRS = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
 const LOG_ICONS = {
   drop: `<svg ${LOG_ICON_ATTRS}><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>`,
-  moment: `<svg ${LOG_ICON_ATTRS}><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/></svg>`,
   raid: `<svg ${LOG_ICON_ATTRS}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
   points: `<svg ${LOG_ICON_ATTRS}><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20"/></svg>`,
   default: `<svg ${LOG_ICON_ATTRS}><circle cx="12" cy="12" r="4"/></svg>`,
@@ -2327,9 +2322,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     autoClaimDropsToggle?.addEventListener("change", (e) => {
       if (guardDropsPlus(e)) return;
       updatePreferences({ autoClaimDrops: e.target.checked });
-    });
-    autoClaimMomentsToggle?.addEventListener("change", (e) => {
-      updatePreferences({ autoClaimMoments: e.target.checked });
     });
     autoOpenInventoryToggle?.addEventListener("change", (e) => {
       if (guardDropsPlus(e)) return;

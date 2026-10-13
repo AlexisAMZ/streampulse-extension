@@ -45,7 +45,7 @@
   // s'affiche a l'envers et le premier clic ne fait rien de visible.
   // Doit rester aligne sur DEFAULT_PREFERENCES dans js/background.js.
   var DEFAULT_ON = [
-    "autoClaimChannelPoints", "autoClaimDrops", "autoClaimMoments",
+    "autoClaimChannelPoints", "autoClaimDrops",
     "liveNotifications", "soundsEnabled",
     "enableFastForwardButton", "enablePipButton", "autoRefreshPlayerErrors",
     "previewsEnabled", "previewsSurfaceDirectory", "previewsSurfaceSidebar",
@@ -71,7 +71,6 @@
         { title: "shared.settings.groupRewards", keys: [
           ["autoClaimChannelPoints", "autoClaimTitle"],
           ["autoClaimDrops", "autoClaimDropsTitle"],
-          ["autoClaimMoments", "autoClaimMomentsTitle"],
           ["autoCancelRaids", "autoCancelRaidsTitle", "autoCancelRaidsHint"],
         ] },
       ],

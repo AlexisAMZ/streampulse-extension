@@ -9,7 +9,6 @@ import { normalizeStreamer } from "./normalize.js";
 const DEFAULT_STATS = {
   channelPointsClaimed: 0,
   dropsClaimed: 0,
-  momentsClaimed: 0,
   raidsCancelled: 0,
 };
 
@@ -271,7 +270,7 @@ export class EventLogStore {
     const newLog = {
       id: `log_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
       timestamp: Date.now(),
-      type: entry.type || "info", // "drop", "moment", "raid", "prediction", "points"
+      type: entry.type || "info", // "drop", "raid", "prediction", "points"
       channel: entry.channel || "",
       text: entry.text || "",
       value: entry.value || 0,

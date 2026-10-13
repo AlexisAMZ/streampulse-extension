@@ -135,7 +135,6 @@ export function handleIncrementStat(request, sender, sendResponse) {
         await StatsStore.increment(stat, Number(value) || 1);
         let type = "info";
         if (stat === "dropsClaimed") type = "drop";
-        else if (stat === "momentsClaimed") type = "moment";
         else if (stat === "raidsCancelled") type = "raid";
         else if (stat === "channelPointsClaimed") type = "points";
 

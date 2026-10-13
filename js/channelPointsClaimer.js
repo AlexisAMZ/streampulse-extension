@@ -9,7 +9,6 @@
   let intervalId = null;
   let isPointsActive = true;
   let isDropsActive = true;
-  let isMomentsActive = true;
   let lastClaimTime = 0;
   /** Module js/points-bonus.js, chargé plus bas par import() dynamique. */
   let bonusRules = null;
@@ -186,39 +185,6 @@
     return false;
   }
 
-  function tryClaimMoments() {
-    // Selectors for Twitch Moment claim buttons
-    const selectors = [
-      '[data-a-target="claim-moment-button"]',
-      'button[aria-label*="Moment"]',
-      'button[aria-label*="Claim Moment"]',
-      'button[aria-label*="Réclamer le moment"]',
-    ];
-
-    for (const selector of selectors) {
-      const btn = document.querySelector(selector);
-      if (btn && btn instanceof HTMLElement && btn.offsetParent !== null) {
-        lastClaimTime = Date.now();
-        btn.click();
-        const channel = getCurrentChannel();
-        setTimeout(() => {
-          try {
-            chrome.runtime.sendMessage({
-              type: "incrementStat",
-              stat: "momentsClaimed",
-              value: 1,
-              channel,
-            }).catch(() => {}); // SW endormi ou contexte invalidé : échec attendu.
-          } catch (_) {
-            // Service worker endormi, ou contexte d'extension invalide par une mise a jour : le message est perdu sans consequence ici.
-          }
-        }, 300);
-        return true;
-      }
-    }
-    return false;
-  }
-
   function tryClaim() {
     if (Date.now() - lastClaimTime < 4000) return;
 
@@ -228,7 +194,6 @@
     // main. Seul l'onglet d'inventaire ouvert en arrière-plan clique encore.
     const watchingDropsPage = /^\/drops(\/|$)/.test(location.pathname) && document.visibilityState === "visible";
     if (isDropsActive && !watchingDropsPage && tryClaimDrops()) return;
-    if (isMomentsActive && tryClaimMoments()) return;
   }
 
   function start() {
@@ -253,9 +218,8 @@
     prefs = lastPrefs;
     isPointsActive = prefs.autoClaimChannelPoints !== false;
     isDropsActive = plusOn && prefs.autoClaimDrops !== false;
-    isMomentsActive = prefs.autoClaimMoments !== false;
 
-    const anyActive = isPointsActive || isDropsActive || isMomentsActive;
+    const anyActive = isPointsActive || isDropsActive;
     anyActive ? start() : stop();
   }
 
@@ -264,7 +228,7 @@
       bonusRules = module;
     })
     .catch((error) => {
-      // Sans ces règles, les points ne sont plus récupérés ; Drops et Moments continuent.
+      // Sans ces règles, les points ne sont plus récupérés ; les Drops continuent.
       console.warn("[StreamPulse] règles de la caisse de bonus indisponibles", error);
     });
 
