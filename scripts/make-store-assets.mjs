@@ -545,8 +545,9 @@ async function buildPromo({ lang = PROMO_LANG }) {
     highlight: "live",
     subtitle: "Alerts, Channel Points, Drops and badges for Twitch, Kick and YouTube.",
   };
+  const stickers = { live: "Live alerts", points: "+250 pts", drops: "Drops", badges: "Badges", previews: "Previews" };
   assertPolicyClean(
-    Object.entries(copy).map(([label, text]) => ({ label: `promo ${label}`, text })),
+    [...Object.entries(copy), ...Object.entries(stickers)].map(([label, text]) => ({ label: `promo ${label}`, text })),
     lang,
   );
   const platformIcons = [TWITCH_ICON, KICK_ICON, YOUTUBE_ICON];
@@ -556,7 +557,7 @@ async function buildPromo({ lang = PROMO_LANG }) {
     outPath: tilePath,
     size: PROMO_TILE,
     flatten: true,
-    html: buildPromoTile({ logoPath: LOGO, platformIcons, ...copy }),
+    html: buildPromoTile({ logoPath: LOGO, platformIcons, stickers, lineOne: copy.lineOne, lineLead: copy.lineLead, highlight: copy.highlight }),
   });
   await renderFrame({
     name: `promo-marquee${suffix}`,

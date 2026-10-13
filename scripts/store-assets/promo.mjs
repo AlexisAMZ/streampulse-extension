@@ -57,6 +57,26 @@ const PLATFORM_CSS = `
 .plat img { width: 58%; height: 58%; display: block; }
 `;
 
+
+const stroke = (body) =>
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
+const STICKER_ICONS = {
+  bell: stroke('<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>'),
+  gem: stroke('<path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20"/>'),
+  gift: stroke('<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M5 12v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/>'),
+  shield: stroke('<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/>'),
+  eye: stroke('<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/>'),
+};
+
+/** Vignettes d'arrière-plan : [icône, libellé, gauche, haut, rotation]. */
+const STICKERS = [
+  ["bell", "stickers.live", 250, 16, 4],
+  ["gem", "stickers.points", 246, 128, -5],
+  ["gift", "stickers.drops", 336, 166, 6],
+  ["shield", "stickers.badges", 214, 208, -3],
+  ["eye", "stickers.previews", 322, 234, 3],
+];
+
 const TILE_CSS = `
 ${FONT_CSS}
 ${RESET}
@@ -70,6 +90,12 @@ body { padding: 22px 24px 24px; display: flex; flex-direction: column; }
 h1 { margin-top: 22px; font-family: ${DISPLAY}; font-size: 47px; line-height: 1.06; font-weight: 800; letter-spacing: -0.045em; }
 h1 span { display: block; white-space: nowrap; }
 .plats { margin-top: auto; }
+
+/* Les autres fonctions, en vignettes semi-transparentes derrière le titre : la
+   tuile ne doit pas se lire comme une simple alerte de live. Des icônes d'abord,
+   le mot ensuite : à l'échelle d'une carte, c'est l'icône qui parle. */
+.sticker { position: absolute; z-index: 1; display: inline-flex; align-items: center; gap: 7px; padding: 7px 13px 7px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.2); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4), 0 10px 22px -10px rgba(20, 8, 70, 0.6); color: #fff; font-size: 15px; font-weight: 700; white-space: nowrap; }
+.sticker svg { width: 18px; height: 18px; flex: none; }
 .mark { position: absolute; right: -34px; bottom: -40px; width: 190px; opacity: 0.16; ${LOGO_CSS} z-index: 0; }
 `;
 
@@ -80,13 +106,19 @@ h1 span { display: block; white-space: nowrap; }
  * @param {string} options.lineOne     « Never miss »
  * @param {string} options.lineLead    début de la 2e ligne (« a »)
  * @param {string} options.highlight   mot sur pastille verte (« live »)
+ * @param {{live:string,points:string,drops:string,badges:string,previews:string}} options.stickers
  */
-export function buildPromoTile({ logoPath, platformIcons, lineOne, lineLead, highlight }) {
+export function buildPromoTile({ logoPath, platformIcons, lineOne, lineLead, highlight, stickers }) {
+  const bubbles = STICKERS.map(
+    ([icon, key, left, top, rotate]) =>
+      `<span class="sticker" style="left:${left}px;top:${top}px;transform:rotate(${rotate}deg)">${STICKER_ICONS[icon]}${escapeHtml(stickers[key.split('.')[1]])}</span>`,
+  ).join("");
   return `<!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"><style>${TILE_CSS}</style></head>
 <body>
   <img class="mark" src="${escapeHtml(logoPath)}" alt="">
+  ${bubbles}
   <div class="brand"><img src="${escapeHtml(logoPath)}" alt=""><span>StreamPulse</span></div>
   <h1><span>${escapeHtml(lineOne)}</span><span>${escapeHtml(lineLead)} <mark>${escapeHtml(highlight)}</mark>.</span></h1>
   <div class="plats">${platformIcons.map((icon) => platformTile(icon, 52)).join("")}</div>
