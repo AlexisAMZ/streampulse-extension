@@ -1176,3 +1176,30 @@ body.is-settings .new-dot { background: var(--violet); }
 /* Le métal noir du bouton Clips se détache du noir #050505 de sa barre par la
    hairline iOS de spclips. */
 .promo-clips .promo-metal { box-shadow: inset 0 0 0 1px rgba(84, 84, 88, 0.65); }
+
+/* Le logo « bande cam » joue le geste du produit : la bande violette (le
+   recadrage 9:16) balaie le cadre, le play pulse comme un départ de lecture.
+   Une boucle lente, transform-only, arrêtée sous prefers-reduced-motion. */
+.promo-clipsmark .clips-band {
+  animation: clips-band-sweep 4.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  transform-box: fill-box;
+}
+.promo-clipsmark .clips-play {
+  animation: clips-play-pulse 4.4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes clips-band-sweep {
+  0%, 52% { transform: translateY(0); }
+  72% { transform: translateY(126px); }
+  100% { transform: translateY(0); }
+}
+@keyframes clips-play-pulse {
+  0%, 52% { transform: scale(1); }
+  70% { transform: scale(1.14); }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .promo-clipsmark .clips-band,
+  .promo-clipsmark .clips-play { animation: none; }
+}
