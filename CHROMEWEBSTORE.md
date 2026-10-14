@@ -625,10 +625,13 @@ credentials. Claiming Twitch channel points, reading Drops campaigns and the
 on-page chat features require an open Twitch session; a test Twitch account can
 be provided on request (contact@streampulse.tech).
 
-All code is bundled with the extension and human-readable. The single minified
-file, js/vendor/hls.light.min.js, is the well-known open-source library hls.js
-(Apache-2.0), used locally to play muted low-latency previews; minification is
-allowed by the program policies. No code is fetched or evaluated from remote
+All code is bundled with the extension and human-readable. Two minified
+vendored libraries ship locally: js/vendor/hls.light.min.js is the well-known
+open-source library hls.js (Apache-2.0), used to play muted low-latency
+previews, and js/vendor/paper-shaders/ is @paper-design/shaders (Apache-2.0,
+license and notice included in the folder), which renders the animated
+metallic button on the StreamPulse+ offer card; minification is allowed by the
+program policies. No code is fetched or evaluated from remote
 sources: network calls go only to the public Twitch, Kick and YouTube APIs for
 live status and thumbnails, and to streampulse.tech (our server) for the opt-in
 community badge, StreamPulse+ license-key checks and referral codes, exactly as

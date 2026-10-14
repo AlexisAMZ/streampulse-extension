@@ -1174,3 +1174,6 @@ body.is-settings .new-dot { background: var(--violet); }
 .promo-cta svg { width: 14px; height: 14px; }
 .promo-cta-clips { background: #fff; color: #000; }
 .promo-cta-clips:hover { background: rgba(255, 255, 255, 0.9); }
+
+/* Slot du bouton métal liquide (carte Plus) : collé en bas de la carte. */
+.promo-metal-slot { margin-top: auto; align-self: flex-start; min-height: 46px; }

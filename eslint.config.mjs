@@ -24,6 +24,8 @@ const ES_MODULES = [
   "js/raidWatcher.js",
   "js/popup.js",
   "js/popup-features.js",
+  "js/promo-liquid-button.js",
+  "js/vendor/paper-shaders/**/*.js",
   "js/popup-points.js",
   "js/recap.js",
   "js/restore.js",

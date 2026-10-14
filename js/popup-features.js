@@ -13,6 +13,7 @@ import { IDENTITY_STORAGE_KEYS, initIdentity, renderIdentity } from "./popup-ide
 import { HISTORY_KEY, formatClock, selectMissed, summarize } from "./history-data.js";
 import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalizePredictionRule, summarize as summarizePredictions } from "./predictions-data.js";
 import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
+import { mountLiquidMetalButton } from "./promo-liquid-button.js";
 import { PLUS_VALUE_KEY, plusValueFrom } from "./plus-value.js";
 import {
   SMART_ALERTS_KEY,
@@ -232,6 +233,18 @@ function renderPromo() {
   if (clips) clips.hidden = !showClips;
   const container = $("promo-float");
   if (container) container.hidden = !showPlus && !showClips;
+  if (showPlus) ensurePlusMetal();
+}
+
+/** Le bouton métal ne se monte que lorsque la carte est montrée : un canvas
+ *  WebGL monté dans un conteneur masqué naît avec une taille nulle. */
+let promoMetalMounted = false;
+function ensurePlusMetal() {
+  if (promoMetalMounted) return;
+  const host = $("promo-plus-cta");
+  if (!host) return;
+  promoMetalMounted = true;
+  mountLiquidMetalButton(host, { label: t("changelog.plusCta"), onClick: openPlus });
 }
 
 /**
@@ -856,7 +869,6 @@ export async function initFeatures() {
     renderPromo();
     chrome.storage.local.set({ [PROMO_KEY]: promoState }).catch((error) => console.warn("[popup] carte plus :", error?.message || error));
   });
-  $("promo-plus-cta")?.addEventListener("click", openPlus);
   $("promo-clips-close")?.addEventListener("click", () => {
     promoState.clipsClosed = true;
     renderPromo();
