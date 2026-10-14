@@ -133,6 +133,14 @@ export function mountLiquidMetalButton(container, { label, onClick } = {}) {
   observer.observe(labelSpan);
   sizeToLabel();
 
+  // Mesure finale AVANT de construire le ShaderMount : il fige la taille de
+  // son canvas à la construction — mesuré pendant que la mise en page se
+  // stabilise, le métal sort étiré (c'était l'« effet bizarre »).
+  const metalW = Math.round(metal.clientWidth);
+  const metalH = Math.round(metal.clientHeight);
+  shader.style.width = `${metalW}px`;
+  shader.style.height = `${metalH}px`;
+
   let shaderMount = null;
   let webgl = false;
   if (!reducedMotion) {
