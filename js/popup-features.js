@@ -240,7 +240,6 @@ function renderPromo() {
   if (clips) clips.hidden = !showClips;
   const container = $("promo-float");
   if (container) container.hidden = !showPlus && !showClips;
-  if (showPlus) ensurePlusMetal();
   if (showClips) ensureClipsMetal();
 }
 
@@ -265,15 +264,6 @@ function decidePromoDue() {
 
 /** Le bouton métal ne se monte que lorsque la carte est montrée : un canvas
  *  WebGL monté dans un conteneur masqué naît avec une taille nulle. */
-let promoMetalMounted = false;
-function ensurePlusMetal() {
-  if (promoMetalMounted) return;
-  const host = $("promo-plus-cta");
-  if (!host) return;
-  promoMetalMounted = true;
-  mountLiquidMetalButton(host, { label: t("changelog.plusCta"), onClick: openPlus });
-}
-
 let clipsMetalMounted = false;
 function ensureClipsMetal() {
   const host = $("promo-clips-cta");
@@ -916,6 +906,7 @@ export async function initFeatures() {
     renderPromo();
     chrome.storage.local.set({ [PROMO_KEY]: promoState }).catch((error) => console.warn("[popup] carte plus :", error?.message || error));
   });
+  $("promo-plus-cta")?.addEventListener("click", openPlus);
   $("promo-clips-close")?.addEventListener("click", () => {
     promoState.clipsClosed = true;
     renderPromo();
