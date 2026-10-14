@@ -234,6 +234,7 @@ function renderPromo() {
   const container = $("promo-float");
   if (container) container.hidden = !showPlus && !showClips;
   if (showPlus) ensurePlusMetal();
+  if (showClips) ensureClipsMetal();
 }
 
 /** Le bouton métal ne se monte que lorsque la carte est montrée : un canvas
@@ -245,6 +246,18 @@ function ensurePlusMetal() {
   if (!host) return;
   promoMetalMounted = true;
   mountLiquidMetalButton(host, { label: t("changelog.plusCta"), onClick: openPlus });
+}
+
+let clipsMetalMounted = false;
+function ensureClipsMetal() {
+  if (clipsMetalMounted) return;
+  const host = $("promo-clips-cta");
+  if (!host) return;
+  clipsMetalMounted = true;
+  mountLiquidMetalButton(host, {
+    label: t("changelog.clipsCtaShort"),
+    onClick: () => window.open("https://spclips.com", "_blank", "noopener"),
+  });
 }
 
 /**
