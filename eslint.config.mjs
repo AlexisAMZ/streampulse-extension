@@ -25,6 +25,7 @@ const ES_MODULES = [
   "js/popup.js",
   "js/popup-features.js",
   "js/promo-liquid-button.js",
+  "js/promo-clips-morph.js",
   "js/vendor/paper-shaders/**/*.js",
   "js/popup-points.js",
   "js/recap.js",

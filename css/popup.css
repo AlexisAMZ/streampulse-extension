@@ -1161,7 +1161,7 @@ body.is-settings .new-dot { background: var(--violet); }
    hairline iOS, bouton pilule blanc à texte noir. */
 .promo-clips { background: #050505; color: #fff; box-shadow: 0 -10px 24px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(84, 84, 88, 0.65); }
 .promo-star { width: 18px; height: 18px; flex: none; color: var(--lcd); }
-.promo-clipsmark { height: 40px; width: 23px; flex: none; }
+.clips-morph { width: 51px; height: 44px; flex: none; position: relative; }
 .promo-line { flex: 1; min-width: 0; margin: 0; font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .promo-clips .promo-line { color: rgba(235, 235, 245, 0.65); font-weight: 500; }
 .promo-close { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex: none; border: 0; border-radius: 8px; background: transparent; color: inherit; opacity: 0.75; cursor: pointer; transition: opacity var(--dur-fast) ease; }
@@ -1177,29 +1177,14 @@ body.is-settings .new-dot { background: var(--violet); }
    hairline iOS de spclips. */
 .promo-clips .promo-metal { box-shadow: inset 0 0 0 1px rgba(84, 84, 88, 0.65); }
 
-/* Le logo « bande cam » joue le geste du produit : la bande violette (le
-   recadrage 9:16) balaie le cadre, le play pulse comme un départ de lecture.
-   Une boucle lente, transform-only, arrêtée sous prefers-reduced-motion. */
-.promo-clipsmark .clips-band {
-  animation: clips-band-sweep 4.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-  transform-box: fill-box;
-}
-.promo-clipsmark .clips-play {
-  animation: clips-play-pulse 4.4s ease-in-out infinite;
-  transform-box: fill-box;
-  transform-origin: center;
-}
-@keyframes clips-band-sweep {
-  0%, 52% { transform: translateY(0); }
-  72% { transform: translateY(126px); }
-  100% { transform: translateY(0); }
-}
-@keyframes clips-play-pulse {
-  0%, 52% { transform: scale(1); }
-  70% { transform: scale(1.14); }
-  100% { transform: scale(1); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .promo-clipsmark .clips-band,
-  .promo-clipsmark .clips-play { animation: none; }
-}
+
+/* Le geste du produit (ReframeMorph de l'app) : le clip 16:9 et sa cam
+   basse-droite ; la WAAPI anime gabarits et positions vers le 9:16. */
+.clips-frame { position: absolute; left: 0; right: 0; bottom: 0; top: 0; margin: auto; background: #2C2C2E; border: 1px solid rgba(84, 84, 88, 0.65); overflow: hidden; }
+.clips-game { position: absolute; left: 0; right: 0; bottom: 0; }
+.clips-hud { position: absolute; left: 1.5px; top: 1.5px; width: 6px; height: 1px; border-radius: 1px; background: rgba(84, 84, 88, 0.65); }
+.clips-target { position: absolute; left: 50%; top: 40%; width: 4px; height: 4px; border-radius: 50%; border: 0.5px solid #3A3A3C; transform: translate(-50%, -50%); }
+.clips-ground { position: absolute; left: 0; right: 0; bottom: 0; height: 22%; background: #1C1C1E; }
+.clips-cam { position: absolute; background: #9146FF; border-style: solid; border-color: #B794FF; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; }
+.clips-head { width: 22%; aspect-ratio: 1; border-radius: 999px; background: rgba(0, 0, 0, 0.3); margin-bottom: 1px; }
+.clips-shoulders { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 48%; height: 26%; border-top-left-radius: 999px; border-top-right-radius: 999px; background: rgba(0, 0, 0, 0.3); }

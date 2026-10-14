@@ -14,6 +14,7 @@ import { HISTORY_KEY, formatClock, selectMissed, summarize } from "./history-dat
 import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalizePredictionRule, summarize as summarizePredictions } from "./predictions-data.js";
 import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
 import { mountLiquidMetalButton } from "./promo-liquid-button.js";
+import { mountClipsMorph } from "./promo-clips-morph.js";
 import { PLUS_VALUE_KEY, plusValueFrom } from "./plus-value.js";
 import {
   SMART_ALERTS_KEY,
@@ -250,14 +251,15 @@ function ensurePlusMetal() {
 
 let clipsMetalMounted = false;
 function ensureClipsMetal() {
-  if (clipsMetalMounted) return;
   const host = $("promo-clips-cta");
-  if (!host) return;
-  clipsMetalMounted = true;
-  mountLiquidMetalButton(host, {
-    label: t("changelog.clipsCtaShort"),
-    onClick: () => window.open("https://spclips.com", "_blank", "noopener"),
-  });
+  if (host && !clipsMetalMounted) {
+    clipsMetalMounted = true;
+    mountLiquidMetalButton(host, {
+      label: t("changelog.clipsCtaShort"),
+      onClick: () => window.open("https://spclips.com", "_blank", "noopener"),
+    });
+  }
+  mountClipsMorph($("clips-morph"));
 }
 
 /**
