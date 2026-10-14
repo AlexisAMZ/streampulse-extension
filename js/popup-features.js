@@ -181,6 +181,7 @@ let selectedPlan = "yearly";
 const PROMO_KEY = "streamPulsePromo";
 const PROMO_FREQ_MS = 20 * 60 * 60 * 1000; // une fois par jour au plus
 const PROMO_MIN_OPENS = 3; // pas avant la 3e ouverture éligible
+let promoFreqMs = PROMO_FREQ_MS; // pilotable : config.promo.freqHours (distant)
 let promoState = { plusClosed: false, clipsClosed: false, opens: 0, lastShownAt: 0 };
 let promoDue = false;
 let promoSuccess = false;
@@ -268,7 +269,7 @@ function decidePromoDue() {
   if (!promoPlusOk && !promoClipsOk) return false;
   promoState.opens = (promoState.opens || 0) + 1;
   const seenEnough = promoState.opens >= PROMO_MIN_OPENS;
-  const cooled = Date.now() - (promoState.lastShownAt || 0) >= PROMO_FREQ_MS;
+  const cooled = Date.now() - (promoState.lastShownAt || 0) >= promoFreqMs;
   const due = seenEnough && cooled;
   if (due) promoState.lastShownAt = Date.now();
   chrome.storage.local.set({ [PROMO_KEY]: promoState }).catch((error) => console.warn("[popup] promo :", error?.message || error));
@@ -911,6 +912,10 @@ export async function initFeatures() {
   promoHasWatch = Object.keys(stored.streamPulseWatchTimeDaily || {}).length > 0;
   // Coupe-circuit distant : config.promo.enabled = false coupe tout, sans republier.
   promoRemoteOff = stored[REMOTE_CONFIG_CACHE_KEY]?.data?.promo?.enabled === false;
+  // Fréquence distante en heures (config.promo.freqHours) : l'ajustement est
+  // effectif au prochain réveil du service worker, sans republier.
+  const freqHours = Number(stored[REMOTE_CONFIG_CACHE_KEY]?.data?.promo?.freqHours);
+  promoFreqMs = freqHours > 0 ? freqHours * 60 * 60 * 1000 : PROMO_FREQ_MS;
   plusListeners.add(() => renderIdentity());
   initIdentity({ getRecord: () => plusRecord, isPlus: plusActive, openPlus, stored });
   predictionRule = normalizePredictionRule(stored[PREDICTION_RULE_KEY]);
