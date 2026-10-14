@@ -31,7 +31,7 @@ import { rollingDayKeys } from "./recap-data.js";
 
 const KEY = "streamPulseReviewAsk";
 const METRICS_KEY = "streamPulseReviewMetrics";
-const REMOTE_CONFIG_CACHE_KEY = "streampulse:remoteConfig";
+export const REMOTE_CONFIG_CACHE_KEY = "streampulse:remoteConfig";
 const DAY_MS = 86_400_000;
 const FIRST_ASK_MS = 14 * DAY_MS;
 const LATER_MS = 60 * DAY_MS;

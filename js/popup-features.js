@@ -15,7 +15,7 @@ import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalize
 import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
 import { mountLiquidMetalButton } from "./promo-liquid-button.js";
 import { mountClipsMorph } from "./promo-clips-morph.js";
-import { hasRecentSuccess } from "./popup-review.js";
+import { hasRecentSuccess, reviewAskDecision, REMOTE_CONFIG_CACHE_KEY } from "./popup-review.js";
 import { PLUS_VALUE_KEY, plusValueFrom } from "./plus-value.js";
 import {
   SMART_ALERTS_KEY,
@@ -184,6 +184,11 @@ const PROMO_MIN_OPENS = 3; // pas avant la 3e ouverture éligible
 let promoState = { plusClosed: false, clipsClosed: false, opens: 0, lastShownAt: 0 };
 let promoDue = false;
 let promoSuccess = false;
+let promoPlusOk = false;
+let promoClipsOk = false;
+let promoRemoteOff = false;
+let promoHasDrops = false;
+let promoHasWatch = false;
 const PLAN_LABELS = { monthly: "popup.plus.planMonthly", yearly: "popup.plus.planYearly", lifetime: "popup.plus.planLifetime" };
 const plusListeners = new Set();
 
@@ -232,8 +237,8 @@ function renderPlus() {
  * chaque fermeture est gardée en storage.
  */
 function renderPromo() {
-  const showPlus = promoDue && !plusActive() && !promoState.plusClosed;
-  const showClips = promoDue && !showPlus && !promoState.clipsClosed;
+  const showPlus = promoDue && promoPlusOk && !plusActive() && !promoState.plusClosed;
+  const showClips = promoDue && promoClipsOk && !showPlus && !promoState.clipsClosed;
   const plus = $("promo-plus");
   const clips = $("promo-clips");
   if (plus) plus.hidden = !showPlus;
@@ -248,11 +253,19 @@ function renderPromo() {
  * servi : au moins un streamer suivi ET une activité récente (visionnage ou
  * points des 2 derniers jours). Une installation toute fraîche n'est donc
  * jamais exposée à la promo. Puis : trois ouvertures éligibles avant la
- * première carte, et une seule par jour. Compteurs dans streamPulsePromo.
+ * première carte, une seule par jour, la demande d'avis passe devant elle,
+ * et l'interrupteur distant (config.promo.enabled) peut tout couper.
+ * Contextuel : Plus vise ceux qui ont de l'activité Drops, Clips ceux qui
+ * ont de l'historique de visionnage (les futurs clippeurs).
  */
 function decidePromoDue() {
   const activated = Array.isArray(smartStreamers) && smartStreamers.length > 0;
   if (!activated || !promoSuccess) return false;
+  if (reviewAskDecision().due) return false; // la demande d'avis gagne la place
+  if (promoRemoteOff) return false; // coupe-circuit piloté depuis streampulse.tech
+  promoPlusOk = promoHasDrops;   // Plus vise ceux qui vivent des Drops
+  promoClipsOk = promoHasWatch;  // Clips vise ceux qui regardent (futurs clippeurs)
+  if (!promoPlusOk && !promoClipsOk) return false;
   promoState.opens = (promoState.opens || 0) + 1;
   const seenEnough = promoState.opens >= PROMO_MIN_OPENS;
   const cooled = Date.now() - (promoState.lastShownAt || 0) >= PROMO_FREQ_MS;
@@ -880,7 +893,7 @@ export async function initFeatures() {
   initClipDownloadLock();
   initPredictions();
 
-  const stored = await chrome.storage.local.get([PLUS_KEY, PROMO_KEY, SMART_ALERTS_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers", "streamPulseWatchTimeDaily", "streamPulsePointsDaily", ...IDENTITY_STORAGE_KEYS]);
+  const stored = await chrome.storage.local.get([PLUS_KEY, PROMO_KEY, SMART_ALERTS_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers", "streamPulseWatchTimeDaily", "streamPulsePointsDaily", "streamPulseDropsProgress", REMOTE_CONFIG_CACHE_KEY, ...IDENTITY_STORAGE_KEYS]);
   plusRecord = stored[PLUS_KEY] || null;
   promoState = {
     plusClosed: stored[PROMO_KEY]?.plusClosed === true,
@@ -892,6 +905,12 @@ export async function initFeatures() {
   // qui l'extension a déjà rendu service — du visionnage ou des points dans
   // les 2 derniers jours (tables quotidiennes locales, jamais renvoyées).
   promoSuccess = hasRecentSuccess([stored.streamPulseWatchTimeDaily, stored.streamPulsePointsDaily]);
+  // Ciblage contextuel : Drops vécus → la carte Plus parle à la bonne personne ;
+  // de l'historique de visionnage → la carte Clips (les futurs clippeurs).
+  promoHasDrops = Object.keys(stored.streamPulseDropsProgress || {}).length > 0;
+  promoHasWatch = Object.keys(stored.streamPulseWatchTimeDaily || {}).length > 0;
+  // Coupe-circuit distant : config.promo.enabled = false coupe tout, sans republier.
+  promoRemoteOff = stored[REMOTE_CONFIG_CACHE_KEY]?.data?.promo?.enabled === false;
   plusListeners.add(() => renderIdentity());
   initIdentity({ getRecord: () => plusRecord, isPlus: plusActive, openPlus, stored });
   predictionRule = normalizePredictionRule(stored[PREDICTION_RULE_KEY]);
