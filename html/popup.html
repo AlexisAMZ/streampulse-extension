@@ -50,24 +50,6 @@
       <button id="notif-blocked-open" type="button" class="button button-quiet" data-i18n="popup.notifBlockedAction">Réglages</button>
     </div>
 
-    <div class="plus-banner" id="plus-banner" hidden>
-      <svg class="plus-banner-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.3 7.7L22 12l-7.7 2.3L12 22l-2.3-7.7L2 12l7.7-2.3z"/></svg>
-      <p class="plus-banner-line" data-i18n="changelog.plusLine">Les Drops et les badges se réclament tout seuls, pendant que tu regardes autre chose.</p>
-      <button class="plus-banner-cta" id="plus-banner-cta" type="button" data-i18n="changelog.plusCta">Essayer 7 jours gratuits</button>
-      <button class="plus-banner-close" id="plus-banner-close" type="button" data-i18n-attr-ariaLabel="popup.plus.close" data-i18n-attr-title="popup.plus.close" aria-label="Fermer" title="Fermer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-      </button>
-    </div>
-
-    <div class="plus-banner clips-banner" id="clips-banner" hidden>
-      <svg class="plus-banner-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="14" height="12" rx="2.5"/><path d="m16 10 5-3v10l-5-3"/><path d="M6 6V4.5A1.5 1.5 0 0 1 7.5 3h3A1.5 1.5 0 0 1 12 4.5V6"/></svg>
-      <p class="plus-banner-line" data-i18n="changelog.clipsBanner">StreamPulse Clips : de clip Twitch à TikTok, sans montage.</p>
-      <a class="plus-banner-cta" href="https://spclips.com" target="_blank" rel="noopener noreferrer" data-i18n="changelog.clipsCtaShort">Découvrir</a>
-      <button class="plus-banner-close" id="clips-banner-close" type="button" data-i18n-attr-ariaLabel="popup.plus.close" data-i18n-attr-title="popup.plus.close" aria-label="Fermer" title="Fermer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-      </button>
-    </div>
-
     <main id="streamers-view" class="home" data-roster="loading" role="tabpanel" aria-labelledby="tab-streamers">
       <section class="stage" id="stage" data-state="empty">
         <div class="stage-media" id="stage-media"></div>
@@ -154,6 +136,36 @@
         </div>
         <ul class="strip" id="streamer-list"></ul>
       </section>
+
+      <div class="promo-float" id="promo-float" hidden>
+        <div class="promo-card promo-plus" id="promo-plus" hidden>
+          <div class="promo-head">
+            <svg class="promo-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.3 7.7L22 12l-7.7 2.3L12 22l-2.3-7.7L2 12l7.7-2.3z"/></svg>
+            <h3 class="promo-title" data-i18n="changelog.plusTitle">StreamPulse+</h3>
+            <button class="promo-close" id="promo-plus-close" type="button" data-i18n-attr-ariaLabel="popup.plus.close" data-i18n-attr-title="popup.plus.close" aria-label="Fermer" title="Fermer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <p class="promo-line" data-i18n="changelog.plusLine">Les Drops et les badges se réclament tout seuls, pendant que tu regardes autre chose.</p>
+          <button class="promo-cta" id="promo-plus-cta" type="button" data-i18n="changelog.plusCta">
+            Essayer 7 jours gratuits
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+          </button>
+        </div>
+        <div class="promo-card promo-clips" id="promo-clips" hidden>
+          <div class="promo-head">
+            <svg class="promo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="14" height="12" rx="2.5"/><path d="m16 10 5-3v10l-5-3"/><path d="M6 6V4.5A1.5 1.5 0 0 1 7.5 3h3A1.5 1.5 0 0 1 12 4.5V6"/></svg>
+            <button class="promo-close" id="promo-clips-close" type="button" data-i18n-attr-ariaLabel="popup.plus.close" data-i18n-attr-title="popup.plus.close" aria-label="Fermer" title="Fermer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <p class="promo-line" data-i18n="changelog.clipsBanner">StreamPulse Clips : de clip Twitch à TikTok, sans montage.</p>
+          <a class="promo-cta promo-cta-quiet" href="https://spclips.com" target="_blank" rel="noopener noreferrer" data-i18n="changelog.clipsCtaShort">
+            Découvrir
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
 
       <footer class="dock" id="add-bar">
         <div class="platform-picker" id="platform-picker" role="group" data-i18n-attr-ariaLabel="popup.platformSelectorLabel"></div>
