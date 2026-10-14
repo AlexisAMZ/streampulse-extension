@@ -3,7 +3,7 @@
   "default_locale": "en",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "26.10.11",
+  "version": "26.10.15",
   "permissions": [
     "storage",
     "alarms",

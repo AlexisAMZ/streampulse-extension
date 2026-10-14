@@ -52,8 +52,8 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
-    version: "26.10.11",
-    date: "2026-10-13",
+    version: "26.10.15",
+    date: "2026-10-15",
     title: {
       "fr": "StreamPulse+ passe à l'année",
       "en": "StreamPulse+ goes yearly",
@@ -68,6 +68,23 @@ export const RELEASES = [
       "ko": "StreamPulse+ 연간 플랜 출시",
     },
     changes: [
+      {
+        type: "new",
+        area: "interface",
+        text: {
+          "fr": "Une carte découverte peut apparaître au-dessus de la barre d'ajout : l'essai StreamPulse+ et StreamPulse Clips, fermable à tout moment.",
+          "en": "A discovery card can now appear above the add bar: the StreamPulse+ trial and StreamPulse Clips — dismissible at any time.",
+          "es": "Una tarjeta de descubrimiento puede aparecer sobre la barra de añadir: la prueba de StreamPulse+ y StreamPulse Clips, se puede cerrar en cualquier momento.",
+          "pt-BR": "Um cartão de descoberta pode aparecer acima da barra de adição: o teste do StreamPulse+ e o StreamPulse Clips, fechável a qualquer momento.",
+          "de": "Eine Entdeckungskarte kann über der Hinzufügen-Leiste erscheinen: der StreamPulse+-Test und StreamPulse Clips — jederzeit schließbar.",
+          "it": "Una scheda di scoperta può apparire sopra la barra di aggiunta: la prova di StreamPulse+ e StreamPulse Clips — chiudibile in qualsiasi momento.",
+          "pl": "Karta odkrycia może pojawić się nad paskiem dodawania: próba StreamPulse+ i StreamPulse Clips — do zamknięcia w każdej chwili.",
+          "tr": "Keşif kartı ekleme çubuğunun üzerinde görünebilir: StreamPulse+ denemesi ve StreamPulse Clips — istediğin an kapatılabilir.",
+          "ru": "Карточка знакомства может появиться над панелью добавления: пробный StreamPulse+ и StreamPulse Clips — закрывается в любой момент.",
+          "ja": "追加バーの上に紹介カードが表示されることがあります：StreamPulse+のトライアルとStreamPulse Clips。いつでも閉じられます。",
+          "ko": "추가 바위 위에 소개 카드가 표시될 수 있습니다: StreamPulse+ 체험과 StreamPulse Clips — 언제든지 닫을 수 있습니다.",
+        },
+      },
       {
         type: "fix",
         area: "plus",

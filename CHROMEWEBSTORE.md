@@ -1,6 +1,6 @@
 # Chrome Web Store Listing : StreamPulse
 
-> Dernière mise à jour : 2026-10-13
+> Dernière mise à jour : 2026-10-15
 
 ---
 
@@ -162,11 +162,11 @@ dans la console (onglet Éléments graphiques). Rien à supprimer.
 | `https://*.kick.com/*` | `host_permissions` | Couvre les sous-domaines Kick utilisés par l'extension : API officielle (statuts en direct), images et avatars des streamers, vignettes et flux de prévisualisation, et session pour la récolte des récompenses. |
 | `https://www.youtube.com/*` | `host_permissions` | Permet d'ajouter le bouton « Ajouter à StreamPulse » sur les pages de chaîne YouTube et de compter le temps de visionnage des directs YouTube. |
 
-> Table recalée sur le `manifest.json` 26.10.11 : chaque permission du manifest a sa ligne ici, et `tmi.twitch.tv` (retirée du manifest depuis la 26.9.18) n'y figure plus.
+> Table recalée sur le `manifest.json` 26.10.15 : chaque permission du manifest a sa ligne ici, et `tmi.twitch.tv` (retirée du manifest depuis la 26.9.18) n'y figure plus.
 
 ### Textes exacts de l'onglet Confidentialité (à coller, ≤ 1 000 caractères chacun)
 
-> Recalés sur le code de la 26.10.11 le 2026-10-13. Écarts corrigés par rapport à l'ancien texte : l'objectif unique oubliait YouTube ; `scripting` annonçait 160p et « volume coupé » alors que le code vise 360p à 2 % de volume (l'onglet, lui, est muet) et ferme aussi les écrans bloquants de Twitch (contenu pour adultes, règles du chat) ; `cookies` ne disait pas que les badges passent aussi par la session ; l'autorisation d'hôte était générique.
+> Recalés sur le code de la 26.10.15 le 2026-10-15. Écarts corrigés par rapport à l'ancien texte : l'objectif unique oubliait YouTube ; `scripting` annonçait 160p et « volume coupé » alors que le code vise 360p à 2 % de volume (l'onglet, lui, est muet) et ferme aussi les écrans bloquants de Twitch (contenu pour adultes, règles du chat) ; `cookies` ne disait pas que les badges passent aussi par la session ; l'autorisation d'hôte était générique.
 
 **Single purpose** (605 car.)
 ```
@@ -259,7 +259,7 @@ Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décoc
 
 | Version | Date | Description des changements | Statut CWS |
 |---------|------|-----------------------------|------------|
-| 26.10.11 | 2026-10-13 | StreamPulse+ passe à l'année : 19 € par an, soit 1,58 € par mois (déjà à vie ? rien ne change pour toi). Nouveautés : alertes de campagnes Drops, compteur de valeur dans l'écran Plus, écran Plus repensé — et le mode auto décroche 1 badge gratuit par jour. Extension allégée de plus de 100 Ko. | Prête à publier |
+| 26.10.15 | 2026-10-15 | StreamPulse+ passe à l'année : 19 € par an, soit 1,58 € par mois (déjà à vie ? rien ne change pour toi). Nouveautés : alertes de campagnes Drops, compteur de valeur dans l'écran Plus, écran Plus repensé — et le mode auto décroche 1 badge gratuit par jour. Extension allégée de plus de 100 Ko. | Prête à publier |
 | 26.10.10 | 2026-10-10 | Correctif : plus d'erreur dans les onglets ouverts après une mise à jour de l'extension. | Publiée |
 | 26.10.8 | 2026-10-10 | L'extension déménage de streampulse.fr à streampulse.tech : la clé StreamPulse+, le badge communautaire et les jetons passent par le nouveau domaine. | Publiée |
 | 26.10.7 | 2026-10-06 | Déclencheur de demande d'avis refait : un succès récent est exigé, 3 affichages au maximum, et « Plus tard » repousse la demande à deux mois. | Publiée |
@@ -292,7 +292,7 @@ Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décoc
 
 Les textes suivants sont formatés en texte brut pur, sans tiret cadratin ni markdown incompatible avec le Chrome Web Store.
 
-> Source de vérité des descriptions détaillées FR et EN : `scripts/store-assets/chrome-listing.mjs` — le kit Chrome (`npm run store:chrome-kit`) les met en forme et traduit les autres langues via DeepL. Cette section reste la copie manuelle de secours, alignée sur la 26.10.11. La description courte réellement lue par le store vient de `_locales/<langue>/messages.json` (`appDesc`).
+> Source de vérité des descriptions détaillées FR et EN : `scripts/store-assets/chrome-listing.mjs` — le kit Chrome (`npm run store:chrome-kit`) les met en forme et traduit les autres langues via DeepL. Cette section reste la copie manuelle de secours, alignée sur la 26.10.15. La description courte réellement lue par le store vient de `_locales/<langue>/messages.json` (`appDesc`).
 
 ### 🇪🇸 Espagnol (ES)
 **Short Description**:
