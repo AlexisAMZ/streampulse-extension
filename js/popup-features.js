@@ -15,6 +15,7 @@ import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalize
 import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
 import { mountLiquidMetalButton } from "./promo-liquid-button.js";
 import { mountClipsMorph } from "./promo-clips-morph.js";
+import { hasRecentSuccess } from "./popup-review.js";
 import { PLUS_VALUE_KEY, plusValueFrom } from "./plus-value.js";
 import {
   SMART_ALERTS_KEY,
@@ -178,7 +179,11 @@ function initHistory() {
 let plusRecord = null;
 let selectedPlan = "yearly";
 const PROMO_KEY = "streamPulsePromo";
-let promoState = { plusClosed: false, clipsClosed: false };
+const PROMO_FREQ_MS = 20 * 60 * 60 * 1000; // une fois par jour au plus
+const PROMO_MIN_OPENS = 3; // pas avant la 3e ouverture éligible
+let promoState = { plusClosed: false, clipsClosed: false, opens: 0, lastShownAt: 0 };
+let promoDue = false;
+let promoSuccess = false;
 const PLAN_LABELS = { monthly: "popup.plus.planMonthly", yearly: "popup.plus.planYearly", lifetime: "popup.plus.planLifetime" };
 const plusListeners = new Set();
 
@@ -221,13 +226,14 @@ function renderPlus() {
 }
 
 /**
- * La carte flottante au-dessus de la barre d'ajout : l'essai StreamPulse+
- * d'abord (hors abonnement), puis StreamPulse Clips — produit séparé, pour
- * tous. Chaque fermeture est gardée en storage.
+ * La carte au-dessus de la barre d'ajout : l'essai StreamPulse+ d'abord (hors
+ * abonnement), puis StreamPulse Clips — produit séparé, pour tous. Elle se
+ * mérite : jamais aux nouvelles installations, au plus une fois par jour, et
+ * chaque fermeture est gardée en storage.
  */
 function renderPromo() {
-  const showPlus = !plusActive() && !promoState.plusClosed;
-  const showClips = !showPlus && !promoState.clipsClosed;
+  const showPlus = promoDue && !plusActive() && !promoState.plusClosed;
+  const showClips = promoDue && !showPlus && !promoState.clipsClosed;
   const plus = $("promo-plus");
   const clips = $("promo-clips");
   if (plus) plus.hidden = !showPlus;
@@ -236,6 +242,25 @@ function renderPromo() {
   if (container) container.hidden = !showPlus && !showClips;
   if (showPlus) ensurePlusMetal();
   if (showClips) ensureClipsMetal();
+}
+
+/**
+ * Décide (une fois par ouverture) si la carte est due. Il faut avoir été
+ * servi : au moins un streamer suivi ET une activité récente (visionnage ou
+ * points des 2 derniers jours). Une installation toute fraîche n'est donc
+ * jamais exposée à la promo. Puis : trois ouvertures éligibles avant la
+ * première carte, et une seule par jour. Compteurs dans streamPulsePromo.
+ */
+function decidePromoDue() {
+  const activated = Array.isArray(smartStreamers) && smartStreamers.length > 0;
+  if (!activated || !promoSuccess) return false;
+  promoState.opens = (promoState.opens || 0) + 1;
+  const seenEnough = promoState.opens >= PROMO_MIN_OPENS;
+  const cooled = Date.now() - (promoState.lastShownAt || 0) >= PROMO_FREQ_MS;
+  const due = seenEnough && cooled;
+  if (due) promoState.lastShownAt = Date.now();
+  chrome.storage.local.set({ [PROMO_KEY]: promoState }).catch((error) => console.warn("[popup] promo :", error?.message || error));
+  return due;
 }
 
 /** Le bouton métal ne se monte que lorsque la carte est montrée : un canvas
@@ -865,12 +890,18 @@ export async function initFeatures() {
   initClipDownloadLock();
   initPredictions();
 
-  const stored = await chrome.storage.local.get([PLUS_KEY, PROMO_KEY, SMART_ALERTS_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers", ...IDENTITY_STORAGE_KEYS]);
+  const stored = await chrome.storage.local.get([PLUS_KEY, PROMO_KEY, SMART_ALERTS_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers", "streamPulseWatchTimeDaily", "streamPulsePointsDaily", ...IDENTITY_STORAGE_KEYS]);
   plusRecord = stored[PLUS_KEY] || null;
   promoState = {
     plusClosed: stored[PROMO_KEY]?.plusClosed === true,
     clipsClosed: stored[PROMO_KEY]?.clipsClosed === true,
+    opens: stored[PROMO_KEY]?.opens || 0,
+    lastShownAt: stored[PROMO_KEY]?.lastShownAt || 0,
   };
+  // Même règle que la demande d'avis : la promo ne se montre qu'à quelqu'un à
+  // qui l'extension a déjà rendu service — du visionnage ou des points dans
+  // les 2 derniers jours (tables quotidiennes locales, jamais renvoyées).
+  promoSuccess = hasRecentSuccess([stored.streamPulseWatchTimeDaily, stored.streamPulsePointsDaily]);
   plusListeners.add(() => renderIdentity());
   initIdentity({ getRecord: () => plusRecord, isPlus: plusActive, openPlus, stored });
   predictionRule = normalizePredictionRule(stored[PREDICTION_RULE_KEY]);
@@ -878,6 +909,7 @@ export async function initFeatures() {
   recheckOnOpen().catch(() => {});
   smartRules = normalizeRules(stored[SMART_ALERTS_KEY]);
   smartStreamers = Array.isArray(stored.betaGeneralStreamers) ? stored.betaGeneralStreamers : [];
+  promoDue = decidePromoDue();
   renderPlus();
   $("promo-plus-close")?.addEventListener("click", () => {
     promoState.plusClosed = true;
