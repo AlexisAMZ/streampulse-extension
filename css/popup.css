@@ -1150,30 +1150,25 @@ body.is-settings .new-dot { background: var(--violet); }
 .badges-search[hidden] { display: none; }
 
 /* Bandeau d'essai StreamPulse+ : visible hors abonnement, fermable. */
-/* Carte flottante au-dessus de la barre d'ajout : essai StreamPulse+ puis
-   StreamPulse Clips. Fermable ; le choix vit dans streamPulsePromo. */
+/* La promo se pose sur la barre d'ajout : même emplacement, même hauteur.
+   Fermable ; le choix vit dans streamPulsePromo. */
 .home { position: relative; }
-.promo-float { position: absolute; left: 50%; bottom: 76px; transform: translateX(-50%); z-index: 12; width: min(560px, calc(100% - 28px)); }
+.promo-float { position: absolute; left: 0; right: 0; bottom: 0; z-index: 12; }
 .promo-float[hidden] { display: none; }
-.promo-card { display: flex; flex-direction: column; gap: 9px; padding: 16px 18px; border-radius: 18px; background: var(--violet); color: var(--paper); box-shadow: 0 14px 34px rgba(6, 7, 20, 0.5), 0 0 22px rgba(145, 70, 255, 0.22); }
+.promo-card { display: flex; align-items: center; gap: 12px; height: 60px; padding: 0 16px; background: var(--violet); color: var(--paper); box-shadow: 0 -10px 24px rgba(6, 7, 20, 0.4); }
 .promo-card[hidden] { display: none; }
 /* Carte Clips : DA propre à spclips-web (app/globals.css) — noir #050505,
    hairline iOS, bouton pilule blanc à texte noir. */
-.promo-clips { background: #050505; color: #fff; box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(84, 84, 88, 0.65); }
-.promo-head { display: flex; align-items: center; gap: 9px; }
+.promo-clips { background: #050505; color: #fff; box-shadow: 0 -10px 24px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(84, 84, 88, 0.65); }
 .promo-star { width: 18px; height: 18px; flex: none; color: var(--lcd); }
-.promo-clipsmark { width: 21px; height: 38px; flex: none; }
-.promo-title { margin: 0; font-family: var(--display); font-size: 15.5px; font-weight: 800; letter-spacing: -0.01em; }
-.promo-close { margin-left: auto; display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex: none; border: 0; border-radius: 8px; background: transparent; color: inherit; opacity: 0.75; cursor: pointer; transition: opacity var(--dur-fast) ease; }
+.promo-clipsmark { height: 40px; width: 23px; flex: none; }
+.promo-line { flex: 1; min-width: 0; margin: 0; font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.promo-clips .promo-line { color: rgba(235, 235, 245, 0.65); font-weight: 500; }
+.promo-close { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex: none; border: 0; border-radius: 8px; background: transparent; color: inherit; opacity: 0.75; cursor: pointer; transition: opacity var(--dur-fast) ease; }
 .promo-close:hover { opacity: 1; }
 .promo-close svg { width: 13px; height: 13px; }
-.promo-line { margin: 0; font-size: 12.5px; font-weight: 600; line-height: 1.45; }
-.promo-clips .promo-line { color: rgba(235, 235, 245, 0.65); font-weight: 500; }
-.promo-cta { display: inline-flex; align-items: center; gap: 7px; align-self: flex-start; height: 32px; padding: 0 14px; border: 0; border-radius: 10px; background: var(--paper); color: var(--paper-ink); font: inherit; font-size: 12.5px; font-weight: 700; text-decoration: none; white-space: nowrap; cursor: pointer; transition: background-color var(--dur-fast) ease; }
+.promo-cta { flex: none; display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; border: 0; border-radius: 100px; background: var(--paper); color: var(--paper-ink); font: inherit; font-size: 12.5px; font-weight: 700; text-decoration: none; white-space: nowrap; cursor: pointer; transition: background-color var(--dur-fast) ease; }
 .promo-cta:hover { background: var(--lcd); }
-.promo-cta svg { width: 14px; height: 14px; }
 .promo-cta-clips { background: #fff; color: #000; }
 .promo-cta-clips:hover { background: rgba(255, 255, 255, 0.9); }
-
-/* Slot du bouton métal liquide (carte Plus) : collé en bas de la carte. */
-.promo-metal-slot { margin-top: auto; align-self: flex-start; min-height: 46px; }
+.promo-metal-slot { flex: none; min-height: 46px; display: flex; align-items: center; }
