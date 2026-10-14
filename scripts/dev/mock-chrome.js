@@ -313,6 +313,11 @@
     betaGeneralStats: { channelPointsClaimed: scenario === "empty" ? 0 : 12480 },
     betaWatchTimeData: scenario === "empty" ? {} : watchTime,
     streamPulseWatchTimeDaily: scenario === "empty" ? {} : watchDaily,
+    // ?promo=due : la carte promo est due (opens >= seuil, plafond révolu) —
+    // pour la prévisualiser sans dérouler trois ouvertures à la main.
+    ...(params.get("promo") === "due" ? {
+      streamPulsePromo: { plusClosed: false, clipsClosed: false, opens: 9, lastShownAt: 0 },
+    } : {}),
     streamPulseHistory: scenario === "empty" ? { entries: [] } : history,
     streamPulsePointsDaily: scenario === "empty" ? {} : pointsDaily,
     streamPulsePointsJournal: scenario === "empty" ? [] : pointsJournal,
