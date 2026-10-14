@@ -26,16 +26,6 @@ const O2 = (HOLD + MORPH) / CYCLE;
 const O3 = (HOLD + MORPH + HOLD_BACK) / CYCLE;
 const EXP = "cubic-bezier(0.19, 1, 0.22, 1)";
 
-// Couleurs du thème spclips (apps/mobile/src/theme.ts)
-const C = {
-  frame: "#2C2C2E",
-  separator: "rgba(84, 84, 88, 0.65)",
-  active: "#9146FF",
-  activeText: "#B794FF",
-  surface: "#1C1C1E",
-  silhouette: "rgba(0, 0, 0, 0.3)",
-};
-
 function el(className, styles) {
   const node = document.createElement("div");
   node.className = className;
