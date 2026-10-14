@@ -94,7 +94,7 @@ export function mountLiquidMetalButton(container, { label, onClick } = {}) {
     transform: "translateZ(20px)", zIndex: "30", pointerEvents: "none",
   });
   const labelSpan = el("span", {
-    fontSize: "14px", color: "#8a8a8a", fontWeight: "600",
+    fontSize: "14px", color: "#ffffff", fontWeight: "600",
     textShadow: "0px 1px 2px rgba(0, 0, 0, 0.6)",
     transition: LAYER_TRANSITION, whiteSpace: "nowrap", padding: "0 4px",
   });
