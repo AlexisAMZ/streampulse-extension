@@ -13,7 +13,7 @@
  */
 
 export const LISTING = {
-  en: `StreamPulse is a live notifier for Twitch, Kick and YouTube: get an alert the moment a streamer you follow goes live, auto-claim your Twitch Channel Points, and keep track of your Twitch Drops and chat badges, all from one lightweight extension.
+  en: `StreamPulse is a live notifier for Twitch, Kick and YouTube: get an alert the moment a streamer you follow goes live, auto-claim your Twitch Channel Points to earn points while you watch, never miss a Twitch Drop, and track every chat badge, with a direct link to each live, all from one lightweight extension.
 
 🌍 Translated into 11 languages. No account.
 
@@ -71,7 +71,7 @@ The full code is public on GitHub under the GPL v3 license: github.com/AlexisAMZ
 Privacy
 StreamPulse needs no account and has no trackers or analytics. Your streamers, settings, points, Drops and watch time stay on your device. Your Drops and badges are read from Twitch with your own Twitch session, directly between your browser and Twitch. Only three things reach our server, streampulse.tech: the optional community badge, off by default, sends a hashed version of your Twitch username (never the username itself) at most once a day, with the effects you picked if you have StreamPulse+; a StreamPulse+ license key is checked there when you activate it; and your referral code is created there when you ask for it. Streamer names, and what you type to add a channel, are sent only to Twitch, Kick and YouTube to find channels and check who is live.`,
 
-  fr: `StreamPulse est un notificateur de live pour Twitch, Kick et YouTube : recevez une alerte dès qu'un streamer suivi lance son live, récupérez automatiquement vos points de chaîne Twitch et suivez vos Drops Twitch et vos badges de chat, dans une seule extension légère.
+  fr: `StreamPulse est un notificateur de live pour Twitch, Kick et YouTube : recevez une alerte dès qu'un streamer suivi lance son live, récupérez automatiquement vos points de chaîne Twitch pour gagner des points en regardant, ne ratez plus aucun Drop Twitch et suivez chaque badge de chat, avec un lien direct vers chaque live, dans une seule extension légère.
 
 🌍 Traduite en 11 langues. Sans compte.
 
