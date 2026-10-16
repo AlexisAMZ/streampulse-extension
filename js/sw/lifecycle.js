@@ -13,6 +13,19 @@ import { DataStore, PreferenceStore } from "./stores.js";
 
 let initDone = false;
 
+const UNINSTALL_SURVEY_URL = "https://streampulse.tech/bye";
+
+/** Page de sondage ouverte à la désinstallation : version et langue seulement, aucun identifiant. */
+export function uninstallSurveyUrl(version, uiLanguage) {
+  const lang = String(uiLanguage || "en").slice(0, 2).toLowerCase();
+  return `${UNINSTALL_SURVEY_URL}?${new URLSearchParams({ v: version, lang })}`;
+}
+
+function registerUninstallSurvey() {
+  const url = uninstallSurveyUrl(chrome.runtime.getManifest().version, chrome.i18n?.getUILanguage?.());
+  chrome.runtime.setUninstallURL(url).catch((error) => console.warn("Uninstall URL failed:", error?.message || error));
+}
+
 async function openOnboarding(mode = "") {
   const query = mode ? `?mode=${encodeURIComponent(mode)}` : "";
   const url = chrome.runtime.getURL(`html/onboarding.html${query}`);
@@ -104,6 +117,7 @@ async function notifyUpdateOnce(version) {
 /** Listener chrome.runtime.onInstalled. */
 export async function handleInstalled(details) {
   initDone = true;
+  registerUninstallSurvey();
   await fetchRemoteConfig(); // load credentials before first poll
   const streamers = await DataStore.ensureDefaults();
   await PreferenceStore.ensureDefaults();
@@ -159,6 +173,7 @@ export async function handleInstalled(details) {
 /** Listener chrome.runtime.onStartup. */
 export async function handleStartup() {
   initDone = true;
+  registerUninstallSurvey();
   await fetchRemoteConfig(); // refresh credentials on browser startup
   scheduleWatcherAlarm();
   scheduleKeepAliveAlarm();
