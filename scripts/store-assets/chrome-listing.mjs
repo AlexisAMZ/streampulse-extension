@@ -66,7 +66,7 @@ Everything above is free and stays free. StreamPulse+ is a monthly (7 days free)
 • Referrals: your friends get their first month free, and you unlock free months and exclusive effects.
 
 Open source
-The full code is public on GitHub under the GPL v3 license: github.com/AlexisAMZ/streampulse-extension
+The full code is public on GitHub so you can read and check it, but it is all rights reserved and may not be copied or reused: github.com/AlexisAMZ/streampulse-extension
 
 Privacy
 StreamPulse needs no account and has no trackers or analytics. Your streamers, settings, points, Drops and watch time stay on your device. Your Drops and badges are read from Twitch with your own Twitch session, directly between your browser and Twitch. Only three things reach our server, streampulse.tech: the optional community badge, off by default, sends a hashed version of your Twitch username (never the username itself) at most once a day, with the effects you picked if you have StreamPulse+; a StreamPulse+ license key is checked there when you activate it; and your referral code is created there when you ask for it. If you uninstall StreamPulse, an optional anonymous survey page opens on streampulse.tech with only the extension version and language. Streamer names, and what you type to add a channel, are sent only to Twitch, Kick and YouTube to find channels and check who is live.`,
@@ -124,7 +124,7 @@ Tout ce qui précède est gratuit et le reste. StreamPulse+ est une formule mens
 • Le parrainage : vos amis ont leur premier mois offert, et vous gagnez des mois gratuits et des effets exclusifs.
 
 Open source
-Tout le code est public sur GitHub sous licence GPL v3 : github.com/AlexisAMZ/streampulse-extension
+Tout le code est public sur GitHub pour que tu puisses le lire et le vérifier, mais il est sous tous droits réservés : interdit de le copier ou de le réutiliser : github.com/AlexisAMZ/streampulse-extension
 
 Confidentialité
 StreamPulse ne demande aucun compte et ne contient aucun traceur ni outil de mesure d'audience. Vos streamers, réglages, points, Drops et temps de visionnage restent sur votre appareil. Vos Drops et vos badges sont lus sur Twitch avec votre propre session Twitch, directement entre votre navigateur et Twitch. Seules trois choses arrivent sur notre serveur, streampulse.tech : le badge communautaire, optionnel et désactivé par défaut, envoie une empreinte (hash) de votre pseudo Twitch, jamais le pseudo lui-même, au plus une fois par jour, avec les effets choisis si vous avez StreamPulse+ ; une clé de licence StreamPulse+ y est vérifiée quand vous l'activez ; et votre code de parrainage y est créé quand vous le demandez. Si vous désinstallez StreamPulse, une page de sondage anonyme et facultative s'ouvre sur streampulse.tech, avec seulement la version et la langue de l'extension. Les noms des streamers, et ce que vous tapez pour ajouter une chaîne, sont envoyés uniquement à Twitch, Kick et YouTube pour trouver les chaînes et savoir qui est en direct.`,
