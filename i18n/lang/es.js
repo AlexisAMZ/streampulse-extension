@@ -97,6 +97,12 @@ export default {
     "htmlLang": "es"
   },
   "popup": {
+    "settingsFilter": {
+      "search": "Buscar un ajuste",
+      "all": "Todas",
+      "platforms": "Plataforma",
+      "empty": "Ningún ajuste coincide. Prueba con otra palabra u otra plataforma."
+    },
     "sounds": {
       "general": "Sonido general",
       "inherit": "Igual que el general",

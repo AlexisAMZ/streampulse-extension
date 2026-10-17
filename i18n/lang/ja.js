@@ -97,6 +97,12 @@ export default {
     },
   },
   "popup": {
+    "settingsFilter": {
+      "search": "設定を検索",
+      "all": "すべて",
+      "platforms": "プラットフォーム",
+      "empty": "一致する設定がありません。別の言葉やプラットフォームを試してください。"
+    },
     "sounds": {
       "general": "共通の音",
       "inherit": "共通の音と同じ",

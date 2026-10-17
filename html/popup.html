@@ -385,6 +385,15 @@
       </nav>
 
       <div class="menu-panels" id="menu-panels">
+        <div class="settings-filter" id="settings-filter" role="search">
+          <input id="settings-search" class="settings-search" type="search" autocomplete="off" />
+          <div class="settings-filter-chips" role="group" data-i18n-attr-ariaLabel="popup.settingsFilter.platforms" aria-label="Plateforme">
+            <button type="button" class="filter-chip" data-platform="all" aria-pressed="true" data-i18n="popup.settingsFilter.all">Toutes</button>
+            <button type="button" class="filter-chip" data-platform="twitch" aria-pressed="false" data-i18n="platforms.twitch">Twitch</button>
+            <button type="button" class="filter-chip" data-platform="kick" aria-pressed="false" data-i18n="platforms.kick">Kick</button>
+            <button type="button" class="filter-chip" data-platform="youtube" aria-pressed="false" data-i18n="platforms.youtube">YouTube</button>
+          </div>
+        </div>
         <!-- Notifications -->
         <section class="menu-panel" id="menu-notifications" role="tabpanel" aria-labelledby="menu-tab-notifications">
           <h2 data-i18n="popup.settings.groupNotifications">Notifications</h2>

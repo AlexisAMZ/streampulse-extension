@@ -97,6 +97,12 @@ export default {
     },
   },
   "popup": {
+    "settingsFilter": {
+      "search": "Einstellung suchen",
+      "all": "Alle",
+      "platforms": "Plattform",
+      "empty": "Keine Einstellung passt. Versuche ein anderes Wort oder eine andere Plattform."
+    },
     "sounds": {
       "general": "Allgemeiner Ton",
       "inherit": "Wie der allgemeine Ton",

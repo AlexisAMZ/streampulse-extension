@@ -97,6 +97,12 @@ export default {
     },
   },
   "popup": {
+    "settingsFilter": {
+      "search": "Ayar ara",
+      "all": "Tümü",
+      "platforms": "Platform",
+      "empty": "Eşleşen ayar yok. Başka bir kelime veya platform dene."
+    },
     "sounds": {
       "general": "Genel ses",
       "inherit": "Genel sesle aynı",

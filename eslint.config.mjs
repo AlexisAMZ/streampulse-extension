@@ -74,6 +74,8 @@ const ES_MODULES = [
   "js/notification-sound-player.js",
   "js/notification-sounds.js",
   "js/popup-sounds.js",
+  "js/popup-settings-filter.js",
+  "js/settings-filter.js",
   "eslint.config.mjs",
 ];
 

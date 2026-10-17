@@ -149,6 +149,7 @@ const toastContainer = document.getElementById("toast-container");
 const MAX_TOASTS = 5;
 const TOAST_DURATION = 4000;
 
+import { createSettingsFilter } from "./popup-settings-filter.js";
 import { createSoundSettings } from "./popup-sounds.js";
 
 let soundSettings = null;
@@ -2222,6 +2223,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     onPlusChange(() => syncDropsPlusLock());
     soundSettings = createSoundSettings({ getPreferences: () => state.preferences, updatePreferences, isPlus: plusActive, openPlus });
     onPlusChange(() => soundSettings?.render());
+    createSettingsFilter();
     soundSettings?.render();
     initFeatures().catch((error) => console.warn("[popup] features init failed:", error));
 

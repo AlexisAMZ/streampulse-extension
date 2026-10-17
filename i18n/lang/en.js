@@ -97,6 +97,12 @@ export default {
     },
   },
   "popup": {
+    "settingsFilter": {
+      "search": "Search settings",
+      "all": "All",
+      "platforms": "Platform",
+      "empty": "No setting matches. Try another word or platform."
+    },
     "sounds": {
       "general": "General sound",
       "inherit": "Same as general sound",

@@ -97,6 +97,12 @@ export default {
     "htmlLang": "pt-BR"
   },
   "popup": {
+    "settingsFilter": {
+      "search": "Buscar uma configuração",
+      "all": "Todas",
+      "platforms": "Plataforma",
+      "empty": "Nenhuma configuração corresponde. Tente outra palavra ou plataforma."
+    },
     "sounds": {
       "general": "Som geral",
       "inherit": "Igual ao som geral",

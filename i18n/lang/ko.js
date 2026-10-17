@@ -97,6 +97,12 @@ export default {
     },
   },
   "popup": {
+    "settingsFilter": {
+      "search": "설정 검색",
+      "all": "전체",
+      "platforms": "플랫폼",
+      "empty": "일치하는 설정이 없습니다. 다른 단어나 플랫폼을 시도해 보세요."
+    },
     "sounds": {
       "general": "공통 소리",
       "inherit": "공통 소리와 동일",
