@@ -52,6 +52,43 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.10.17",
+    date: "2026-10-17",
+    title: {
+      "fr": "Ton avis à la sortie",
+      "en": "Your say on the way out",
+      "es": "Tu opinión al salir",
+      "pt-BR": "Sua opinião na saída",
+      "de": "Dein Feedback zum Abschied",
+      "it": "La tua opinione all'uscita",
+      "pl": "Twoja opinia na do widzenia",
+      "tr": "Ayrılırken fikrin",
+      "ru": "Твой отзыв на прощание",
+      "ja": "お別れの前にひとこと",
+      "ko": "떠나기 전 한마디",
+    },
+    changes: [
+      {
+        type: "new",
+        area: "interface",
+        text: {
+          "fr": "Si tu désinstalles StreamPulse, un court sondage anonyme s'ouvre pour nous dire ce qui n'allait pas. Il ne transmet que la version et la langue, jamais d'identifiant.",
+          "en": "If you uninstall StreamPulse, a short anonymous survey opens so you can tell us what went wrong. It only sends the version and language, never an identifier.",
+          "es": "Si desinstalas StreamPulse, se abre una breve encuesta anónima para contarnos qué falló. Solo envía la versión y el idioma, nunca un identificador.",
+          "pt-BR": "Se você desinstalar o StreamPulse, uma pesquisa anônima rápida é aberta para nos contar o que deu errado. Ela envia só a versão e o idioma, nunca um identificador.",
+          "de": "Wenn du StreamPulse deinstallierst, öffnet sich eine kurze anonyme Umfrage, damit du uns sagen kannst, was nicht gepasst hat. Sie sendet nur Version und Sprache, nie eine Kennung.",
+          "it": "Se disinstalli StreamPulse si apre un breve sondaggio anonimo per dirci cosa non andava. Invia solo versione e lingua, mai un identificativo.",
+          "pl": "Jeśli odinstalujesz StreamPulse, otworzy się krótka anonimowa ankieta, w której możesz napisać, co nie działało. Wysyła tylko wersję i język, nigdy identyfikatora.",
+          "tr": "StreamPulse'u kaldırırsan, neyin yolunda gitmediğini söylemen için kısa bir anonim anket açılır. Yalnızca sürümü ve dili gönderir, asla bir kimlik göndermez.",
+          "ru": "Если удалить StreamPulse, откроется короткий анонимный опрос, где можно рассказать, что не устроило. Передаются только версия и язык, никаких идентификаторов.",
+          "ja": "StreamPulse をアンインストールすると、気になった点を教えてもらうための短い匿名アンケートが開きます。送信するのはバージョンと言語のみで、識別子は一切送りません。",
+          "ko": "StreamPulse를 삭제하면 아쉬웠던 점을 알려 줄 수 있는 짧은 익명 설문이 열립니다. 버전과 언어만 전송하며 식별자는 보내지 않습니다.",
+        },
+      },
+    ],
+  },
+
+  {
     version: "26.10.15",
     date: "2026-10-15",
     title: {
