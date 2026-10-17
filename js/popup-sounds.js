@@ -63,9 +63,8 @@ export function createSoundSettings({ root = document, getPreferences, updatePre
   }
 
   const detail = document.createElement("details");
-  detail.className = "sound-per-kind";
+  detail.className = "settings-advanced sound-per-kind";
   const summary = document.createElement("summary");
-  summary.className = "settings-title";
   summary.dataset.i18n = "popup.sounds.perKind";
   detail.append(summary, ...KIND_ROWS.map(row));
   mount.append(row(GENERAL_ROW), detail);
