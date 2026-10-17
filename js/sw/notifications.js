@@ -2,8 +2,8 @@
 
 import { DEFAULT_LANGUAGE } from "../../i18n/meta.js";
 import { DEFAULT_PLATFORM, buildProfileUrl, formatHandleForDisplay, getPlatformIcon, getPlatformLabelKey, normalizePlatform, platformSupportsLiveStatus, sanitizeHandle } from "../platforms.js";
+import { DEFAULT_SOUND, resolveSound } from "../notification-sounds.js";
 import { DEFAULT_PREFERENCES, normalizeLanguage } from "../preferences-data.js";
-import { CONFIG } from "./config.js";
 import { NOTIFICATION_NAMESPACE } from "./constants.js";
 import { formatNumberForLanguage, translate } from "./i18n.js";
 import { streamerCache, streamerStates } from "./state.js";
@@ -187,9 +187,10 @@ export class NotificationCenter {
           ? 2
           : 0,
     });
-    if (options.playSound) {
-      await SoundManager.play(CONFIG.notifications?.soundFile);
-    }
+    // `sound` = un son du catalogue (déjà résolu par l'appelant) ; `playSound`
+    // reste pour les anciennes notifications programmées : son d'origine.
+    const sound = options.sound || (options.playSound ? DEFAULT_SOUND : null);
+    if (sound) await SoundManager.play(sound);
     return id;
   }
 
@@ -281,7 +282,7 @@ export class NotificationSystem {
       iconUrl: this.resolveNotificationIcon(streamer, platform),
       requireInteraction: true,
       priority: 2,
-      playSound: preferences?.soundsEnabled !== false,
+      sound: resolveSound(preferences, "live"),
     });
   }
 
@@ -290,7 +291,7 @@ export class NotificationSystem {
   static async notifyChangeEvent(
     streamer,
     preferences,
-    { alertKey: _alertKey, titleKey, messageKey, messageParams, platform }
+    { alertKey, titleKey, messageKey, messageParams, platform }
   ) {
     const lang = normalizeLanguage(preferences?.language);
     const platformKey = platform || streamer.platform || "twitch";
@@ -313,7 +314,7 @@ export class NotificationSystem {
       iconUrl: this.resolveNotificationIcon(streamer, platformKey),
       requireInteraction: false,
       priority: 1,
-      playSound: preferences?.soundsEnabled !== false,
+      sound: resolveSound(preferences, alertKey === "titleNotifications" ? "title" : "game"),
     });
   }
 
@@ -377,7 +378,7 @@ export class NotificationSystem {
         message: translate(lang, "background.notifications.testSimpleMessage"),
         requireInteraction: true,
         priority: 2,
-        playSound: preferences?.soundsEnabled !== false,
+        sound: resolveSound(preferences, "live"),
       });
       return;
     }
@@ -418,8 +419,8 @@ export class NotificationSystem {
 }
 
 class SoundManager {
-  static async play(filePath = "sons/notification.mp3") {
-    if (!filePath) return;
+  static async play(preset = DEFAULT_SOUND) {
+    if (!preset) return;
     try {
       await chrome.offscreen.createDocument({
         url: "html/audio-handler.html",
@@ -439,7 +440,7 @@ class SoundManager {
       await chrome.runtime.sendMessage({
         audioCommand: {
           action: "play",
-          file: filePath,
+          preset,
           volume: 1.0,
         },
       });

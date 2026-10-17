@@ -97,6 +97,14 @@ export default {
     },
   },
   "popup": {
+    "sounds": {
+      "general": "공통 소리",
+      "inherit": "공통 소리와 동일",
+      "listen": "들어보기",
+      "perKind": "알림 종류별로 다른 소리",
+      "preset": { "classic": "클래식", "chime": "차임", "pulse": "펄스", "bubble": "버블", "arpeggio": "아르페지오", "drop": "물방울" },
+      "kind": { "live": "방송 시작", "game": "카테고리 변경", "title": "제목 변경", "raid": "레이드 수신" }
+    },
     "greetingSubNobody": "지금 라이브 중인 스트리머가 없습니다.",
     "greetingSubEmpty": "StreamPulse에 오신 것을 환영합니다.",
     "news": {

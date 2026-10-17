@@ -97,6 +97,14 @@ export default {
     },
   },
   "popup": {
+    "sounds": {
+      "general": "共通の音",
+      "inherit": "共通の音と同じ",
+      "listen": "試聴",
+      "perKind": "通知の種類ごとに別の音",
+      "preset": { "classic": "クラシック", "chime": "チャイム", "pulse": "パルス", "bubble": "バブル", "arpeggio": "アルペジオ", "drop": "しずく" },
+      "kind": { "live": "配信開始", "game": "カテゴリ変更", "title": "タイトル変更", "raid": "レイド受信" }
+    },
     "greetingSubNobody": "いま配信中のストリーマーはいません。",
     "greetingSubEmpty": "StreamPulse へようこそ。",
     "news": {

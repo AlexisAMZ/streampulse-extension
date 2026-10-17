@@ -70,6 +70,10 @@ const ES_MODULES = [
   "js/utils.js",
   "scripts/**/*.mjs",
   "tests/**/*.mjs",
+  "js/audio-handler.js",
+  "js/notification-sound-player.js",
+  "js/notification-sounds.js",
+  "js/popup-sounds.js",
   "eslint.config.mjs",
 ];
 

@@ -2,6 +2,7 @@
 
 import { stopEventSubRaid, syncEventSubRaid } from "../eventsubRaid.js";
 import { buildProfileUrl, formatHandleForDisplay, getHandleComparisonKey } from "../platforms.js";
+import { resolveSound } from "../notification-sounds.js";
 import { normalizeLanguage } from "../preferences-data.js";
 import { stopRaidWatcher, syncRaidWatcher } from "../raidWatcher.js";
 import { CONFIG, ensureConfig, twitchHeaders } from "./config.js";
@@ -73,7 +74,7 @@ export async function notifyIncomingRaid({ channel, raider, viewers }) {
     iconUrl,
     requireInteraction: false,
     priority: 1,
-    playSound: preferences?.soundsEnabled !== false,
+    sound: resolveSound(preferences, "raid"),
   });
 }
 

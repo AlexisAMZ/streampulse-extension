@@ -149,6 +149,9 @@ const toastContainer = document.getElementById("toast-container");
 const MAX_TOASTS = 5;
 const TOAST_DURATION = 4000;
 
+import { createSoundSettings } from "./popup-sounds.js";
+
+let soundSettings = null;
 let currentTab = "streamers";
 let lastAddedId = null;
 let previousLiveIds = new Set(); // track who was live last render
@@ -1267,6 +1270,7 @@ function renderPreferences() {
   if (soundsToggle) {
     soundsToggle.checked = prefs.soundsEnabled !== false;
   }
+  soundSettings?.render();
   if (backgroundRaidAlertsToggle) {
     backgroundRaidAlertsToggle.checked = prefs.backgroundRaidAlerts === true;
   }
@@ -2216,6 +2220,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     initSuggest({ input: streamerInput, form: document.getElementById("add-streamer-form"), getPlatform: () => state.selectedPlatform, getStreamers: () => state.streamers });
     initHomeInteractions();
     onPlusChange(() => syncDropsPlusLock());
+    soundSettings = createSoundSettings({ getPreferences: () => state.preferences, updatePreferences });
+    soundSettings?.render();
     initFeatures().catch((error) => console.warn("[popup] features init failed:", error));
 
     if (streamerInput) {

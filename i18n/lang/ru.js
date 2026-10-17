@@ -97,6 +97,14 @@ export default {
     },
   },
   "popup": {
+    "sounds": {
+      "general": "Общий звук",
+      "inherit": "Как общий звук",
+      "listen": "Прослушать",
+      "perKind": "Свой звук для каждого типа оповещения",
+      "preset": { "classic": "Классика", "chime": "Колокольчик", "pulse": "Пульс", "bubble": "Пузырь", "arpeggio": "Арпеджио", "drop": "Капля" },
+      "kind": { "live": "Начало трансляции", "game": "Смена категории", "title": "Смена названия", "raid": "Входящий рейд" }
+    },
     "greetingSubNobody": "Никого нет в эфире.",
     "greetingSubEmpty": "Добро пожаловать в StreamPulse.",
     "news": {

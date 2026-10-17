@@ -97,6 +97,14 @@ export default {
     },
   },
   "popup": {
+    "sounds": {
+      "general": "Suono generale",
+      "inherit": "Come il suono generale",
+      "listen": "Ascolta",
+      "perKind": "Un suono diverso per tipo di avviso",
+      "preset": { "classic": "Classico", "chime": "Campanello", "pulse": "Pulsazione", "bubble": "Bolla", "arpeggio": "Arpeggio", "drop": "Goccia" },
+      "kind": { "live": "Live iniziata", "game": "Cambio di categoria", "title": "Cambio di titolo", "raid": "Raid in arrivo" }
+    },
     "greetingSubNobody": "Nessuno in live.",
     "greetingSubEmpty": "Benvenuto su StreamPulse.",
     "news": {

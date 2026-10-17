@@ -2,6 +2,7 @@
 
 import { buildProfileUrl, formatHandleForDisplay, getPlatformIcon, normalizePlatform, sanitizeHandle } from "../platforms.js";
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "../plus.js";
+import { resolveSound } from "../notification-sounds.js";
 import { normalizeLanguage } from "../preferences-data.js";
 import { isWithinQuietHours } from "../quiet-hours.js";
 import { SMART_ALERTS_KEY, decideSmartAlert, normalizeRules } from "../smart-alerts.js";
@@ -321,7 +322,7 @@ async function notifyCatchUp(catchUpLive, preferences) {
     iconUrl: NotificationCenter.getDefaultIcon(),
     requireInteraction: false,
     priority: 1,
-    playSound: preferences?.soundsEnabled !== false,
+    sound: resolveSound(preferences, "live"),
   });
 }
 

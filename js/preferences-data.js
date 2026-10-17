@@ -9,6 +9,7 @@
  * sanitizePreferences exposent exactement les mêmes clés.
  */
 import { DEFAULT_LANGUAGE, matchLanguage } from "../i18n/meta.js";
+import { DEFAULT_SOUND, SOUND_INHERIT, normalizeGeneralSound, normalizeKindSound } from "./notification-sounds.js";
 
 /** Qualités proposées pour le lecteur Twitch. "auto" laisse Twitch décider. */
 export const PLAYER_QUALITIES = ["auto", "source", "1440", "1080", "720", "480", "360"];
@@ -29,6 +30,13 @@ export const DEFAULT_PREFERENCES = {
   // surprendre les nouvelles installations.
   updateNotifications: false,
   soundsEnabled: true,
+  // Son des notifications : un son général, et un son par type d'alerte qui
+  // peut s'en écarter ("inherit" = le son général).
+  notificationSound: DEFAULT_SOUND,
+  soundLive: SOUND_INHERIT,
+  soundGame: SOUND_INHERIT,
+  soundTitle: SOUND_INHERIT,
+  soundRaid: SOUND_INHERIT,
   theme: "dark",
   quietHoursEnabled: false,
   quietHoursStart: "23:00",
@@ -168,6 +176,11 @@ export function sanitizePreferences(preferences = {}) {
     backgroundRaidAlerts: preferences.backgroundRaidAlerts === true,
     updateNotifications: optIn(preferences, "updateNotifications"),
     soundsEnabled: preferences.soundsEnabled !== false,
+    notificationSound: normalizeGeneralSound(preferences.notificationSound),
+    soundLive: normalizeKindSound(preferences.soundLive),
+    soundGame: normalizeKindSound(preferences.soundGame),
+    soundTitle: normalizeKindSound(preferences.soundTitle),
+    soundRaid: normalizeKindSound(preferences.soundRaid),
     theme: preferences.theme === "light" ? "light" : "dark",
     quietHoursEnabled: preferences.quietHoursEnabled === true,
     quietHoursStart: normalizeQuietHour(preferences.quietHoursStart, DEFAULT_PREFERENCES.quietHoursStart),

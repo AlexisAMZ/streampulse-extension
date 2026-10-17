@@ -97,6 +97,14 @@ export default {
     },
   },
   "popup": {
+    "sounds": {
+      "general": "Allgemeiner Ton",
+      "inherit": "Wie der allgemeine Ton",
+      "listen": "Anhören",
+      "perKind": "Ein eigener Ton pro Benachrichtigungsart",
+      "preset": { "classic": "Klassisch", "chime": "Glocke", "pulse": "Puls", "bubble": "Blase", "arpeggio": "Arpeggio", "drop": "Tropfen" },
+      "kind": { "live": "Stream gestartet", "game": "Kategoriewechsel", "title": "Titelwechsel", "raid": "Eingehender Raid" }
+    },
     "greetingSubNobody": "Gerade ist niemand live.",
     "greetingSubEmpty": "Willkommen bei StreamPulse.",
     "news": {

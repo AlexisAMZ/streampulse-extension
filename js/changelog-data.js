@@ -72,6 +72,23 @@ export const RELEASES = [
         type: "new",
         area: "interface",
         text: {
+          "fr": "Sons de notification au choix : six sons à écouter avant de choisir, un son général et, si tu veux, un son différent pour les lives, les changements de catégorie, de titre et les raids (Réglages > Notifications).",
+          "en": "Choose your notification sounds: six sounds you can preview, one general sound and, if you like, a different one for lives, category changes, title changes and raids (Settings > Notifications).",
+          "es": "Sonidos de notificación a tu gusto: seis sonidos para escuchar antes de elegir, un sonido general y, si quieres, uno distinto para directos, cambios de categoría, de título y raids (Ajustes > Notificaciones).",
+          "pt-BR": "Sons de notificação à sua escolha: seis sons para ouvir antes de escolher, um som geral e, se quiser, um diferente para lives, mudanças de categoria, de título e raids (Configurações > Notificações).",
+          "de": "Benachrichtigungstöne zur Wahl: sechs Töne zum Vorhören, ein allgemeiner Ton und auf Wunsch je ein eigener für Lives, Kategorie- und Titelwechsel und Raids (Einstellungen > Benachrichtigungen).",
+          "it": "Suoni di notifica a scelta: sei suoni da ascoltare prima di scegliere, un suono generale e, se vuoi, uno diverso per live, cambi di categoria, di titolo e raid (Impostazioni > Notifiche).",
+          "pl": "Dźwięki powiadomień do wyboru: sześć dźwięków do odsłuchania, jeden ogólny i, jeśli chcesz, osobny dla transmisji, zmian kategorii, tytułu i raidów (Ustawienia > Powiadomienia).",
+          "tr": "Bildirim sesleri artık seçilebilir: önceden dinleyebileceğin altı ses, bir genel ses ve istersen yayınlar, kategori ve başlık değişiklikleri ile raid'ler için ayrı sesler (Ayarlar > Bildirimler).",
+          "ru": "Звуки уведомлений на выбор: шесть звуков с прослушиванием, общий звук и, по желанию, отдельный для трансляций, смены категории, названия и рейдов (Настройки > Уведомления).",
+          "ja": "通知音を選べるようになりました。試聴できる6種類の音から、共通の音を選べるほか、配信開始・カテゴリ変更・タイトル変更・レイドごとに別の音も設定できます(設定 > 通知)。",
+          "ko": "알림 소리를 고를 수 있습니다. 미리 들어볼 수 있는 6가지 소리 중 공통 소리를 정하고, 방송 시작·카테고리 변경·제목 변경·레이드마다 다른 소리도 지정할 수 있습니다(설정 > 알림).",
+        },
+      },
+      {
+        type: "new",
+        area: "interface",
+        text: {
           "fr": "Si tu désinstalles StreamPulse, un court sondage anonyme s'ouvre pour nous dire ce qui n'allait pas. Il ne transmet que la version et la langue, jamais d'identifiant.",
           "en": "If you uninstall StreamPulse, a short anonymous survey opens so you can tell us what went wrong. It only sends the version and language, never an identifier.",
           "es": "Si desinstalas StreamPulse, se abre una breve encuesta anónima para contarnos qué falló. Solo envía la versión y el idioma, nunca un identificador.",
