@@ -102,6 +102,7 @@ export default {
       "inherit": "공통 소리와 동일",
       "listen": "들어보기",
       "perKind": "알림 종류별로 다른 소리",
+      "plusNote": "알림 종류별 소리 설정은 StreamPulse+ 기능입니다.",
       "preset": { "classic": "클래식", "chime": "차임", "pulse": "펄스", "bubble": "버블", "arpeggio": "아르페지오", "drop": "물방울" },
       "kind": { "live": "방송 시작", "game": "카테고리 변경", "title": "제목 변경", "raid": "레이드 수신" }
     },

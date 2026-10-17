@@ -2,7 +2,6 @@
 
 import { buildProfileUrl, formatHandleForDisplay, getPlatformIcon, normalizePlatform, sanitizeHandle } from "../platforms.js";
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "../plus.js";
-import { resolveSound } from "../notification-sounds.js";
 import { normalizeLanguage } from "../preferences-data.js";
 import { isWithinQuietHours } from "../quiet-hours.js";
 import { SMART_ALERTS_KEY, decideSmartAlert, normalizeRules } from "../smart-alerts.js";
@@ -11,7 +10,7 @@ import { clearTwitchRateLimit, ensureConfig, twitchRateLimitUntil } from "./conf
 import { HistoryStore } from "./history-store.js";
 import { translate } from "./i18n.js";
 import { sanitizeLogin } from "./normalize.js";
-import { NotificationCenter, NotificationSystem } from "./notifications.js";
+import { NotificationCenter, NotificationSystem, soundFor } from "./notifications.js";
 import { PlatformChecker, fetchTwitchStreamsBatch, twitchStreamToStatus } from "./platform-checker.js";
 import { EMPTY_LIVE_STATE, catchUpNames, countLive, didStreamEnd, nextLiveStateFrom, planStreamerAlerts, restoreLiveStateEntry } from "./poll-logic.js";
 import { streamerCache, streamerLiveState, streamerStates } from "./state.js";
@@ -322,7 +321,7 @@ async function notifyCatchUp(catchUpLive, preferences) {
     iconUrl: NotificationCenter.getDefaultIcon(),
     requireInteraction: false,
     priority: 1,
-    sound: resolveSound(preferences, "live"),
+    sound: await soundFor(preferences, "live"),
   });
 }
 

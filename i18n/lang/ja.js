@@ -102,6 +102,7 @@ export default {
       "inherit": "共通の音と同じ",
       "listen": "試聴",
       "perKind": "通知の種類ごとに別の音",
+      "plusNote": "通知の種類ごとに別の音を設定する機能は StreamPulse+ 専用です。",
       "preset": { "classic": "クラシック", "chime": "チャイム", "pulse": "パルス", "bubble": "バブル", "arpeggio": "アルペジオ", "drop": "しずく" },
       "kind": { "live": "配信開始", "game": "カテゴリ変更", "title": "タイトル変更", "raid": "レイド受信" }
     },

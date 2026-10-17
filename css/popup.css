@@ -1207,3 +1207,8 @@ body.is-settings .new-dot { background: var(--violet); }
 .settings-advanced[open] > summary::after { content: "–"; }
 .settings-advanced > summary:hover { color: var(--text); }
 .sound-per-kind .settings-sub-row { padding-left: 12px; }
+.sound-plus-note { display: grid; gap: 8px; justify-items: start; padding: 12px 0; box-shadow: inset 0 -1px 0 var(--line); }
+.sound-plus-note[hidden], .sound-per-kind .plus-tag[hidden] { display: none; }
+.sound-per-kind select:disabled, .sound-per-kind button:disabled { opacity: 0.5; cursor: not-allowed; }
+.sound-per-kind > summary { justify-content: flex-start; }
+.sound-per-kind > summary::after { margin-left: auto; }

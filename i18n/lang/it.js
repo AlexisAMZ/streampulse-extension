@@ -102,6 +102,7 @@ export default {
       "inherit": "Come il suono generale",
       "listen": "Ascolta",
       "perKind": "Un suono diverso per tipo di avviso",
+      "plusNote": "Un suono diverso per tipo di avviso è una funzione di StreamPulse+.",
       "preset": { "classic": "Classico", "chime": "Campanello", "pulse": "Pulsazione", "bubble": "Bolla", "arpeggio": "Arpeggio", "drop": "Goccia" },
       "kind": { "live": "Live iniziata", "game": "Cambio di categoria", "title": "Cambio di titolo", "raid": "Raid in arrivo" }
     },

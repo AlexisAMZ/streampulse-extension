@@ -6,6 +6,7 @@ import { playNotificationSound } from "./notification-sound-player.js";
 import { SOUND_INHERIT, SOUND_KINDS, SOUND_KIND_PREFERENCE, SOUND_PRESETS, normalizeGeneralSound, normalizeKindSound } from "./notification-sounds.js";
 
 // Clés écrites en entier : le contrôle des clés mortes de verify les voit.
+// (popup.plus.badge et popup.smart.unlock existent déjà, popup.sounds.plusNote est nouvelle.)
 const LABELS = {
   inherit: "popup.sounds.inherit",
   kind: { live: "popup.sounds.kind.live", game: "popup.sounds.kind.game", title: "popup.sounds.kind.title", raid: "popup.sounds.kind.raid" },
@@ -18,7 +19,7 @@ const GENERAL_ROW = { id: "pref-sound-general", key: "notificationSound", label:
 const KIND_ROWS = SOUND_KINDS.map((kind) => ({ id: `pref-sound-${kind}`, key: SOUND_KIND_PREFERENCE[kind], label: LABELS.kind[kind], inherit: true }));
 
 /** Monte les réglages dans #sound-settings. Renvoie { render } ou null. */
-export function createSoundSettings({ root = document, getPreferences, updatePreferences, play = playNotificationSound }) {
+export function createSoundSettings({ root = document, getPreferences, updatePreferences, play = playNotificationSound, isPlus = () => false, openPlus = () => {} }) {
   const mount = root.getElementById("sound-settings");
   if (!mount) return null;
   const rows = [];
@@ -65,23 +66,54 @@ export function createSoundSettings({ root = document, getPreferences, updatePre
   const detail = document.createElement("details");
   detail.className = "settings-advanced sound-per-kind";
   const summary = document.createElement("summary");
-  summary.dataset.i18n = "popup.sounds.perKind";
-  detail.append(summary, ...KIND_ROWS.map(row));
+  const summaryLabel = document.createElement("span");
+  summaryLabel.dataset.i18n = "popup.sounds.perKind";
+  const plusTag = document.createElement("span");
+  plusTag.className = "plus-tag";
+  plusTag.dataset.i18n = "popup.plus.badge";
+  summary.append(summaryLabel, plusTag);
+  // Le son par type est réservé à StreamPulse+ : sans abonnement, une note et un
+  // bouton ouvrent l'offre, les menus restent visibles mais grisés.
+  const lockNote = document.createElement("div");
+  lockNote.className = "sound-plus-note";
+  const lockText = document.createElement("p");
+  lockText.className = "settings-description";
+  lockText.dataset.i18n = "popup.sounds.plusNote";
+  const unlock = document.createElement("button");
+  unlock.type = "button";
+  unlock.className = "button button-primary";
+  unlock.dataset.i18n = "popup.smart.unlock";
+  unlock.addEventListener("click", () => openPlus());
+  lockNote.append(lockText, unlock);
+  detail.append(summary, lockNote, ...KIND_ROWS.map(row));
   mount.append(row(GENERAL_ROW), detail);
 
+  // Idempotent : un menu déroulant ouvert se ferme dès qu'on touche à ses options,
+  // et render() tourne à chaque rafraîchissement des réglages de la popup.
   function translateAll() {
-    for (const element of mount.querySelectorAll("[data-i18n]")) element.textContent = t(element.dataset.i18n);
+    for (const element of mount.querySelectorAll("[data-i18n]")) {
+      const label = t(element.dataset.i18n);
+      if (element.textContent !== label) element.textContent = label;
+    }
   }
 
   function render() {
     const prefs = getPreferences() || {};
     const enabled = prefs.soundsEnabled !== false;
-    mount.hidden = !enabled;
-    for (const { key, select, inherit } of rows) {
-      select.value = inherit ? normalizeKindSound(prefs[key]) : normalizeGeneralSound(prefs[key]);
+    const plus = isPlus();
+    if (mount.hidden === enabled) mount.hidden = !enabled;
+    if (plusTag.hidden === !plus) plusTag.hidden = plus;
+    if (lockNote.hidden === !plus) lockNote.hidden = plus;
+    for (const { key, select, listen, inherit } of rows) {
+      const locked = inherit && !plus;
+      // Sans abonnement le menu affiche « comme le général » : le choix enregistré est gardé, pas appliqué.
+      const wanted = inherit ? (locked ? SOUND_INHERIT : normalizeKindSound(prefs[key])) : normalizeGeneralSound(prefs[key]);
+      if (select.value !== wanted) select.value = wanted;
+      if (select.disabled !== locked) select.disabled = locked;
+      if (listen.disabled !== locked) listen.disabled = locked;
     }
     // Un type qui s'écarte du général ouvre la liste : le réglage ne se cache pas.
-    if (KIND_ROWS.some(({ key }) => normalizeKindSound(prefs[key]) !== SOUND_INHERIT)) detail.open = true;
+    if (plus && KIND_ROWS.some(({ key }) => normalizeKindSound(prefs[key]) !== SOUND_INHERIT)) detail.open = true;
     translateAll();
   }
 

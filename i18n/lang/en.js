@@ -102,6 +102,7 @@ export default {
       "inherit": "Same as general sound",
       "listen": "Listen",
       "perKind": "A different sound per alert type",
+      "plusNote": "A different sound per alert type is a StreamPulse+ feature.",
       "preset": { "classic": "Classic", "chime": "Chime", "pulse": "Pulse", "bubble": "Bubble", "arpeggio": "Arpeggio", "drop": "Drop" },
       "kind": { "live": "Stream started", "game": "Category change", "title": "Title change", "raid": "Incoming raid" }
     },

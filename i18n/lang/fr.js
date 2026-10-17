@@ -102,6 +102,7 @@ export default {
       "inherit": "Comme le son général",
       "listen": "Écouter",
       "perKind": "Un son différent par type d'alerte",
+      "plusNote": "Un son différent par type d'alerte est réservé à StreamPulse+.",
       "preset": { "classic": "Classique", "chime": "Cloche", "pulse": "Pulse", "bubble": "Bulle", "arpeggio": "Arpège", "drop": "Goutte" },
       "kind": { "live": "Live démarré", "game": "Changement de catégorie", "title": "Changement de titre", "raid": "Raid entrant" }
     },

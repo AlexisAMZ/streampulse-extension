@@ -48,11 +48,14 @@ export function handleUpdatePreferences(request, sender, sendResponse) {
           "[SP] updatePreferences: aucune cle reconnue parmi",
           incomingKeys
         );
+        // Les clés reçues sont nommées jusque dans le message : si un réglage
+        // récent est refusé, c'est presque toujours un service worker resté sur
+        // l'ancien code (extension non rechargée), et ça se voit tout de suite.
         sendResponse({
-          error: translateWithPrefs(
+          error: `${translateWithPrefs(
             preferences,
             "background.errors.noPreferencesUpdate"
-          ),
+          )} (${incomingKeys.join(", ")})`,
         });
         return;
       }

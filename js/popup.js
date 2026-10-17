@@ -2220,7 +2220,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     initSuggest({ input: streamerInput, form: document.getElementById("add-streamer-form"), getPlatform: () => state.selectedPlatform, getStreamers: () => state.streamers });
     initHomeInteractions();
     onPlusChange(() => syncDropsPlusLock());
-    soundSettings = createSoundSettings({ getPreferences: () => state.preferences, updatePreferences });
+    soundSettings = createSoundSettings({ getPreferences: () => state.preferences, updatePreferences, isPlus: plusActive, openPlus });
+    onPlusChange(() => soundSettings?.render());
     soundSettings?.render();
     initFeatures().catch((error) => console.warn("[popup] features init failed:", error));
 

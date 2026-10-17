@@ -102,6 +102,7 @@ export default {
       "inherit": "Wie der allgemeine Ton",
       "listen": "Anhören",
       "perKind": "Ein eigener Ton pro Benachrichtigungsart",
+      "plusNote": "Ein eigener Ton pro Meldungsart ist eine StreamPulse+-Funktion.",
       "preset": { "classic": "Klassisch", "chime": "Glocke", "pulse": "Puls", "bubble": "Blase", "arpeggio": "Arpeggio", "drop": "Tropfen" },
       "kind": { "live": "Stream gestartet", "game": "Kategoriewechsel", "title": "Titelwechsel", "raid": "Eingehender Raid" }
     },

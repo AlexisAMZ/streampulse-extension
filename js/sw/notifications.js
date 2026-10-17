@@ -3,11 +3,23 @@
 import { DEFAULT_LANGUAGE } from "../../i18n/meta.js";
 import { DEFAULT_PLATFORM, buildProfileUrl, formatHandleForDisplay, getPlatformIcon, getPlatformLabelKey, normalizePlatform, platformSupportsLiveStatus, sanitizeHandle } from "../platforms.js";
 import { DEFAULT_SOUND, resolveSound } from "../notification-sounds.js";
+import { PLUS_KEY, isPlusActive } from "../plus.js";
 import { DEFAULT_PREFERENCES, normalizeLanguage } from "../preferences-data.js";
 import { NOTIFICATION_NAMESPACE } from "./constants.js";
 import { formatNumberForLanguage, translate } from "./i18n.js";
 import { streamerCache, streamerStates } from "./state.js";
 import { DataStore } from "./stores.js";
+
+/** Son d'une alerte : le son par type n'existe qu'avec StreamPulse+. */
+export async function soundFor(preferences, kind) {
+  let plus = false;
+  try {
+    plus = isPlusActive((await chrome.storage.local.get(PLUS_KEY))[PLUS_KEY]);
+  } catch (error) {
+    console.warn("[SP] licence illisible, son général utilisé :", error?.message || error);
+  }
+  return resolveSound(preferences, kind, { plus });
+}
 
 export class NotificationCenter {
   static storageKey = `${NOTIFICATION_NAMESPACE}:scheduled`;
@@ -282,7 +294,7 @@ export class NotificationSystem {
       iconUrl: this.resolveNotificationIcon(streamer, platform),
       requireInteraction: true,
       priority: 2,
-      sound: resolveSound(preferences, "live"),
+      sound: await soundFor(preferences, "live"),
     });
   }
 
@@ -314,7 +326,7 @@ export class NotificationSystem {
       iconUrl: this.resolveNotificationIcon(streamer, platformKey),
       requireInteraction: false,
       priority: 1,
-      sound: resolveSound(preferences, alertKey === "titleNotifications" ? "title" : "game"),
+      sound: await soundFor(preferences, alertKey === "titleNotifications" ? "title" : "game"),
     });
   }
 
@@ -378,7 +390,7 @@ export class NotificationSystem {
         message: translate(lang, "background.notifications.testSimpleMessage"),
         requireInteraction: true,
         priority: 2,
-        sound: resolveSound(preferences, "live"),
+        sound: await soundFor(preferences, "live"),
       });
       return;
     }

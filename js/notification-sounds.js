@@ -45,9 +45,13 @@ export function normalizeKindSound(value) {
   return isPreset(value) ? value : SOUND_INHERIT;
 }
 
-/** Son à jouer pour ce type d'alerte, ou null quand les sons sont coupés. */
-export function resolveSound(preferences, kind) {
+/**
+ * Son à jouer pour ce type d'alerte, ou null quand les sons sont coupés.
+ * Le son par type est réservé à StreamPulse+ : sans abonnement, le choix reste
+ * enregistré mais le son général s'applique partout.
+ */
+export function resolveSound(preferences, kind, { plus = false } = {}) {
   if (preferences?.soundsEnabled === false) return null;
-  const own = normalizeKindSound(preferences?.[SOUND_KIND_PREFERENCE[kind]]);
+  const own = plus ? normalizeKindSound(preferences?.[SOUND_KIND_PREFERENCE[kind]]) : SOUND_INHERIT;
   return own === SOUND_INHERIT ? normalizeGeneralSound(preferences?.notificationSound) : own;
 }

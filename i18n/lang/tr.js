@@ -102,6 +102,7 @@ export default {
       "inherit": "Genel sesle aynı",
       "listen": "Dinle",
       "perKind": "Uyarı türüne göre farklı ses",
+      "plusNote": "Uyarı türüne göre farklı ses, StreamPulse+ özelliğidir.",
       "preset": { "classic": "Klasik", "chime": "Çan", "pulse": "Nabız", "bubble": "Baloncuk", "arpeggio": "Arpej", "drop": "Damla" },
       "kind": { "live": "Yayın başladı", "game": "Kategori değişikliği", "title": "Başlık değişikliği", "raid": "Gelen raid" }
     },
