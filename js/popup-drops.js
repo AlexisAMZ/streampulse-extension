@@ -1083,6 +1083,7 @@ function bind() {
   });
   $("drops-open-campaigns")?.addEventListener("click", () => openTab(CAMPAIGNS_PAGE));
   $("drops-live")?.addEventListener("click", () => openTab(LIVE_247_PAGE));
+  $("badges-live")?.addEventListener("click", () => openTab(LIVE_247_PAGE));
   $("drops-unlock")?.addEventListener("click", () => deps.openPlus());
   $("badges-unlock")?.addEventListener("click", () => deps.openPlus());
 }

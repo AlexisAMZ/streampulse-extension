@@ -487,6 +487,8 @@ export default {
       "liveTitle": "Canal 24/7: emblemas e Drops",
       "liveBody": "Uma live da StreamPulse fica no ar dia e noite em um jogo com emblema ou Drop ativo. Assista para ganhar ou escolha o jogo com !game.",
       "liveOpen": "Abrir o canal 24/7",
+      "badgesLiveTitle": "Canal 24/7 para emblemas, aberto a todos",
+      "badgesLiveBody": "Uma live da StreamPulse roda dia e noite em um jogo com um emblema ativo, com ou sem StreamPulse+. Assista para conquistá-lo, ou escolha o jogo com !game.",
       "upcomingEmpty": "A Twitch ainda não anunciou nenhuma campanha futura.",
       "filterEmpty": "Nenhuma campanha neste filtro.",
       "filterLabel": "Filtrar as campanhas",

@@ -18,7 +18,10 @@ const LISTS = {
   menu: { container: () => document.querySelector(".menu-nav"), items: () => [...document.querySelectorAll(".menu-nav .menu-tab")], id: (node) => node.dataset.panel },
 };
 
-let layout = { tabs: { order: [], hidden: [] }, menu: { order: [], hidden: [] } };
+// Drops reste dans les Réglages : l'onglet du haut est masqué d'office, à réactiver dans Général › Disposition.
+const DEFAULT_HIDDEN = { tabs: ["drops"], menu: [] };
+
+let layout = { tabs: { order: [], hidden: [...DEFAULT_HIDDEN.tabs] }, menu: { order: [], hidden: [] } };
 let initialized = false;
 
 function normalize(value) {
@@ -205,11 +208,14 @@ export async function initLayout() {
   }
   const stored = await chrome.storage.local.get(LAYOUT_KEY);
   layout = normalize(stored[LAYOUT_KEY]);
+  // Jamais personnalisé : masquage par défaut. Une disposition déjà enregistrée garde le choix de la personne.
+  if (!stored[LAYOUT_KEY]) layout.tabs.hidden = [...DEFAULT_HIDDEN.tabs];
   apply();
   renderEditors();
   onLanguageChange(refreshLayoutTexts);
   $("layout-reset")?.addEventListener("click", () => {
     layout = normalize({});
+    layout.tabs.hidden = [...DEFAULT_HIDDEN.tabs];
     // Ordre d'origine : celui du HTML, relu depuis les identifiants de départ.
     for (const key of Object.keys(LISTS)) layout[key].order = DEFAULT_ORDER[key];
     apply();

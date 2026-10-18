@@ -487,6 +487,8 @@ export default {
       "liveTitle": "Canale 24/7: badge e Drop",
       "liveBody": "Una diretta StreamPulse è attiva giorno e notte su un gioco con badge o Drop attivo. Guardala per ottenerlo o scegli il gioco con !game.",
       "liveOpen": "Apri il canale 24/7",
+      "badgesLiveTitle": "Canale 24/7 per i badge, aperto a tutti",
+      "badgesLiveBody": "Una diretta StreamPulse va avanti giorno e notte su un gioco con un badge attivo, con o senza StreamPulse+. Guardala per ottenerlo, oppure scegli il gioco con !game.",
       "upcomingEmpty": "Twitch non annuncia ancora nessuna campagna in arrivo.",
       "filterEmpty": "Nessuna campagna in questo filtro.",
       "filterLabel": "Filtra le campagne",

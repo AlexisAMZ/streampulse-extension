@@ -487,6 +487,8 @@ export default {
       "liveTitle": "24時間チャンネル：バッジとDrops",
       "liveBody": "StreamPulseのライブが、バッジまたはDropが有効なゲームで昼夜配信中。視聴して獲得するか、!game でゲームを選べます。",
       "liveOpen": "24時間チャンネルを開く",
+      "badgesLiveTitle": "バッジ用の24時間365日チャンネル（誰でも利用可）",
+      "badgesLiveBody": "StreamPulse のライブが、有効なバッジのあるゲームで昼夜を問わず配信されています。StreamPulse+ の有無は問いません。視聴してバッジを獲得するか、!game でゲームを選べます。",
       "upcomingEmpty": "Twitch はまだ今後のキャンペーンを発表していません。",
       "filterEmpty": "このフィルターに該当するキャンペーンはありません。",
       "filterLabel": "キャンペーンを絞り込む",

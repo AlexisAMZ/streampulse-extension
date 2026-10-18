@@ -525,6 +525,8 @@ export default {
       "liveTitle": "24/7 channel: badges & Drops",
       "liveBody": "A StreamPulse live runs day and night on a game with an active badge or Drop. Watch it to earn it, or pick the game with !game.",
       "liveOpen": "Open the 24/7 channel",
+      "badgesLiveTitle": "24/7 channel for badges, open to everyone",
+      "badgesLiveBody": "A StreamPulse live runs day and night on a game with an active badge, with or without StreamPulse+. Watch it to earn the badge, or pick the game with !game.",
       "upcomingEmpty": "Twitch hasn't announced any upcoming campaign yet.",
       "filterEmpty": "No campaign in this filter.",
       "filterLabel": "Filter campaigns",

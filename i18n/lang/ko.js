@@ -487,6 +487,8 @@ export default {
       "liveTitle": "24시간 채널: 배지와 Drops",
       "liveBody": "StreamPulse 라이브가 활성 배지 또는 Drop이 있는 게임으로 밤낮 방송 중입니다. 시청해서 받거나 !game 으로 게임을 고르세요.",
       "liveOpen": "24시간 채널 열기",
+      "badgesLiveTitle": "배지용 24시간 채널, 누구나 이용 가능",
+      "badgesLiveBody": "StreamPulse 라이브가 활성 배지가 있는 게임으로 밤낮없이 방송됩니다. StreamPulse+ 여부와 관계없습니다. 시청해서 배지를 얻거나 !game으로 게임을 고르세요.",
       "upcomingEmpty": "Twitch가 아직 예정된 캠페인을 발표하지 않았습니다.",
       "filterEmpty": "이 필터에 해당하는 캠페인이 없습니다.",
       "filterLabel": "캠페인 필터",

@@ -487,6 +487,8 @@ export default {
       "liveTitle": "7/24 kanal: rozetler ve Drop'lar",
       "liveBody": "StreamPulse yayını gece gündüz, aktif rozeti veya Drop'u olan bir oyunda açık. Kazanmak için izle ya da !game ile oyunu seç.",
       "liveOpen": "7/24 kanalı aç",
+      "badgesLiveTitle": "Rozetler için 7/24 kanal, herkese açık",
+      "badgesLiveBody": "Bir StreamPulse yayını, etkin bir rozeti olan bir oyunda gece gündüz sürer; StreamPulse+ ile de olmadan da. Rozeti kazanmak için izle ya da oyunu !game ile seç.",
       "upcomingEmpty": "Twitch şimdilik yaklaşan bir kampanya duyurmuyor.",
       "filterEmpty": "Bu filtrede kampanya yok.",
       "filterLabel": "Kampanyaları filtrele",

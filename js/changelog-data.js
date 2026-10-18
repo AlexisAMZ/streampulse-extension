@@ -69,6 +69,23 @@ export const RELEASES = [
     },
     changes: [
       {
+        type: "improved",
+        area: "badges",
+        text: {
+          "fr": "L'onglet Badges rappelle la chaîne 24/7, ouverte à tous avec ou sans StreamPulse+. L'onglet Drops n'est plus dans la barre du haut par défaut : il reste dans les Réglages, et se réaffiche dans Général › Disposition.",
+          "en": "The Badges tab now points to the 24/7 channel, open to everyone with or without StreamPulse+. The Drops tab is no longer in the top bar by default: it stays in Settings and can be shown again in General > Layout.",
+          "es": "La pestaña Insignias ahora señala el canal 24/7, abierto a todos con o sin StreamPulse+. La pestaña Drops ya no está en la barra superior por defecto: sigue en Ajustes y se vuelve a mostrar en General > Disposición.",
+          "pt-BR": "A aba Emblemas agora indica o canal 24/7, aberto a todos com ou sem StreamPulse+. A aba Drops não fica mais na barra superior por padrão: continua nos Ajustes e pode voltar em Geral > Disposição.",
+          "de": "Der Tab Abzeichen verweist jetzt auf den 24/7-Kanal, offen für alle mit oder ohne StreamPulse+. Der Drops-Tab ist standardmäßig nicht mehr in der oberen Leiste: Er bleibt in den Einstellungen und lässt sich unter Allgemein > Anordnung wieder einblenden.",
+          "it": "La scheda Badge ora rimanda al canale 24/7, aperto a tutti con o senza StreamPulse+. La scheda Drops non è più nella barra in alto per impostazione predefinita: resta nelle Impostazioni e si può rimostrare in Generale > Disposizione.",
+          "pl": "Karta Odznaki wskazuje teraz kanał 24/7, otwarty dla wszystkich, z StreamPulse+ lub bez. Karty Drops nie ma już domyślnie na górnym pasku: zostaje w Ustawieniach i można ją znów pokazać w Ogólne > Układ.",
+          "tr": "Rozetler sekmesi artık 7/24 kanalı gösteriyor; StreamPulse+ olsun olmasın herkese açık. Drops sekmesi varsayılan olarak üst çubukta değil: Ayarlar'da duruyor ve Genel > Düzen'den yeniden gösterilebilir.",
+          "ru": "Вкладка «Значки» теперь указывает на круглосуточный канал, открытый для всех с StreamPulse+ и без. Вкладка Drops по умолчанию больше не в верхней панели: она остаётся в настройках и снова включается в «Общие» › «Расположение».",
+          "ja": "「バッジ」タブに24時間365日チャンネルへの案内を追加しました。StreamPulse+ の有無に関係なく誰でも使えます。Drops タブは初期設定ではトップバーに表示されなくなりました。設定には残り、「一般」›「レイアウト」で再表示できます。",
+          "ko": "배지 탭에서 24시간 채널을 안내합니다. StreamPulse+ 여부와 관계없이 누구나 이용할 수 있습니다. Drops 탭은 기본적으로 상단 바에서 숨겨지며, 설정에는 남아 있고 일반 › 레이아웃에서 다시 표시할 수 있습니다.",
+        },
+      },
+      {
         type: "fix",
         area: "drops",
         text: {

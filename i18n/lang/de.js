@@ -487,6 +487,8 @@ export default {
       "liveTitle": "24/7-Kanal: Abzeichen & Drops",
       "liveBody": "Ein StreamPulse-Live läuft Tag und Nacht mit einem Spiel, das ein aktives Abzeichen oder Drop bietet. Schau zu, um es zu bekommen, oder wähle das Spiel mit !game.",
       "liveOpen": "24/7-Kanal öffnen",
+      "badgesLiveTitle": "24/7-Kanal für Abzeichen, offen für alle",
+      "badgesLiveBody": "Ein StreamPulse-Live läuft Tag und Nacht auf einem Spiel mit aktivem Abzeichen, mit oder ohne StreamPulse+. Schau zu, um es zu bekommen, oder wähle das Spiel mit !game.",
       "upcomingEmpty": "Twitch kündigt derzeit keine kommende Kampagne an.",
       "filterEmpty": "Keine Kampagne in diesem Filter.",
       "filterLabel": "Kampagnen filtern",

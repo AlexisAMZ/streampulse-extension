@@ -487,6 +487,8 @@ export default {
       "liveTitle": "Canal 24/7: insignias y Drops",
       "liveBody": "Un directo de StreamPulse funciona día y noche en un juego con insignia o Drop activo. Míralo para conseguirlo o elige el juego con !game.",
       "liveOpen": "Abrir el canal 24/7",
+      "badgesLiveTitle": "Canal 24/7 para insignias, abierto a todos",
+      "badgesLiveBody": "Un directo de StreamPulse funciona día y noche en un juego con una insignia activa, con o sin StreamPulse+. Míralo para conseguirla, o elige el juego con !game.",
       "upcomingEmpty": "Twitch aún no anuncia ninguna campaña próxima.",
       "filterEmpty": "Ninguna campaña en este filtro.",
       "filterLabel": "Filtrar las campañas",

@@ -487,6 +487,8 @@ export default {
       "liveTitle": "Kanał 24/7: odznaki i Dropy",
       "liveBody": "Transmisja StreamPulse działa dzień i noc na grze z aktywną odznaką lub Dropem. Oglądaj, by je zdobyć, albo wybierz grę komendą !game.",
       "liveOpen": "Otwórz kanał 24/7",
+      "badgesLiveTitle": "Kanał 24/7 po odznaki, otwarty dla wszystkich",
+      "badgesLiveBody": "Transmisja StreamPulse trwa dzień i noc w grze z aktywną odznaką, z StreamPulse+ lub bez. Oglądaj ją, żeby zdobyć odznakę, albo wybierz grę przez !game.",
       "upcomingEmpty": "Twitch nie zapowiada jeszcze żadnej nadchodzącej kampanii.",
       "filterEmpty": "Brak kampanii w tym filtrze.",
       "filterLabel": "Filtruj kampanie",
