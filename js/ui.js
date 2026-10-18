@@ -27,6 +27,7 @@ const ICONS = {
   grip: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>',
   list: `<svg ${STROKE}><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg>`,
   plus: `<svg ${STROKE}><path d="M12 5v14M5 12h14"/></svg>`,
+  link: `<svg ${STROKE}><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>`,
 };
 
 const ALERTS = [
@@ -314,13 +315,19 @@ function alertToggle(className, streamer, alert, callbacks, withLabel) {
 // --- dès l'affichage du streamer. Kick ne fournit plus de capture
 // --- exploitable et YouTube ne rafraîchit pas sa vignette : l'iframe est le
 // --- seul aperçu réellement « en direct ».
+const STAGE_VIDEO_DELAY_MS = 350;
+
 function mountStageVideo(stage, media, frameSrc, frameLabel, onOpen) {
   const wrap = el("div", "hover-player-wrap");
   const frame = document.createElement("iframe");
   frame.allow = "autoplay; encrypted-media; picture-in-picture";
   frame.setAttribute("scrolling", "no");
-  // Muet : la popup ne doit jamais émettre de son.
-  frame.src = frameSrc;
+  // Muet : la popup ne doit jamais émettre de son. Le lecteur n'est branché
+  // qu'après le premier affichage : l'embed (processus séparé, flux vidéo)
+  // faisait saccader l'ouverture quand il démarrait en même temps que la popup.
+  requestAnimationFrame(() => setTimeout(() => {
+    if (frame.isConnected) frame.src = frameSrc;
+  }, STAGE_VIDEO_DELAY_MS));
   frame.title = t("popup.labels.previewAltLive", { name: frameLabel });
   // Les iframes avalent les clics : une couche transparente garde le clic
   // « Regarder » qui ouvre le stream.
@@ -416,8 +423,16 @@ export function renderStage(stage, media, feature, streamer, status, options, ca
   const watch = button("watch-button", { icon: "play", text: t("popup.osd.watch") });
   watch.addEventListener("click", open);
 
+  // Relier à son compte d'une autre plateforme : l'icône seule, nommée par son
+  // infobulle ; allumée quand le lien existe déjà.
+  const linked = Boolean(options?.linkedGroup);
+  const link = button("link-button", { icon: "link", label: t(linked ? "popup.linkPicker.buttonLinked" : "popup.linkPicker.button") });
+  link.setAttribute("aria-pressed", String(linked));
+  link.setAttribute("aria-haspopup", "dialog");
+  link.addEventListener("click", () => callbacks.onLink?.(streamer));
+
   feature.replaceChildren(el("div", "feature"));
-  feature.firstChild.append(avatarImage(`feature-avatar ring-${platformId}`, streamer, platformId), text, alerts, watch);
+  feature.firstChild.append(avatarImage(`feature-avatar ring-${platformId}`, streamer, platformId), text, alerts, ...(callbacks.onLink ? [link] : []), watch);
 }
 
 export function renderStageEmpty(stage, media, feature, { kind, offlineCount, avatarUrl, onOpenSheet, onAddStreamer }) {
@@ -466,6 +481,7 @@ export function createMiniCard(streamer, status, { selected, pinned }, callbacks
   const hit = button("mini-hit", { label: t("popup.osd.rowLive", { name: label, platform: getPlatformLabel(platformId), game: active.game || "" }) });
   hit.removeAttribute("title");
   hit.setAttribute("aria-pressed", String(selected));
+  hit.dataset.key = `mini:${streamer.id}`;
   const image = el("img", "mini-image");
   image.alt = "";
   image.hidden = true;
@@ -492,11 +508,13 @@ export function createMiniCard(streamer, status, { selected, pinned }, callbacks
   const pinLabel = t(pinned ? "popup.cplus.unpin" : "popup.cplus.pin", { name: label });
   const pin = button("mini-pin", { icon: "star", label: pinLabel });
   pin.setAttribute("aria-pressed", String(pinned));
+  pin.dataset.key = `pin:${streamer.id}`;
   pin.addEventListener("click", () => callbacks.onTogglePin(streamer.id));
 
   // Suppression directe depuis le tableau de bord, avec confirmation inline
   // (même libellé que la corbeille de la liste complète).
   const remove = button("mini-pin mini-remove", { icon: "trash", label: t("popup.cplus.remove", { name: label }) });
+  remove.dataset.key = `remove:${streamer.id}`;
   const confirmBox = el("span", "mini-confirm");
   confirmBox.setAttribute("role", "alertdialog");
   confirmBox.setAttribute("aria-label", t("popup.osd.confirmRemove", { name: label }));
@@ -627,6 +645,13 @@ export function createChannelRow(streamer, status, options, callbacks) {
   if (groups.length) actions.append(groupSelect(streamer, label, groups, groupId, callbacks.onSetGroup));
   const open = button("row-icon", { icon: "open", label: t("popup.cplus.open", { name: label }) });
   open.addEventListener("click", () => callbacks.onOpen(getStreamerUrl(streamer)));
+  if (callbacks.onLink) {
+    const link = button("row-icon link", { icon: "link", label: t(options.linked ? "popup.linkPicker.buttonLinked" : "popup.linkPicker.button") });
+    link.setAttribute("aria-pressed", String(Boolean(options.linked)));
+    link.setAttribute("aria-haspopup", "dialog");
+    link.addEventListener("click", () => callbacks.onLink(streamer));
+    actions.append(link);
+  }
   const remove = button("row-icon remove", { icon: "trash", label: t("popup.cplus.remove", { name: label }) });
   actions.append(open, remove);
 

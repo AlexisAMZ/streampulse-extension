@@ -26,9 +26,10 @@ export const DEFAULT_PREFERENCES = {
   // Bêta : détection des raids entrants en arrière-plan via IRC anonyme.
   // Opt-in explicite car elle maintient une connexion WebSocket permanente.
   backgroundRaidAlerts: false,
-  // Notification « StreamPulse a été mis à jour » : opt-in pour ne pas
-  // surprendre les nouvelles installations.
-  updateNotifications: false,
+  // Notification « StreamPulse a été mis à jour » : prévenu par défaut à
+  // chaque mise à jour installée (décision du propriétaire, 2026-10-17),
+  // désactivable dans les réglages. Un choix stocké n'est jamais écrasé.
+  updateNotifications: true,
   soundsEnabled: true,
   // Son des notifications : un son général, et un son par type d'alerte qui
   // peut s'en écarter ("inherit" = le son général).
@@ -43,6 +44,11 @@ export const DEFAULT_PREFERENCES = {
   quietHoursEnd: "08:00",
   autoClaimChannelPoints: true,
   autoClaimDrops: true,
+  // StreamPulse+ : dès qu'un nouveau badge gratuit apparaît au catalogue, le
+  // mode auto le récupère tout seul (l'effet réel reste réservé à Plus).
+  autoFarmNewBadges: true,
+  // StreamPulse+ : 160p au lieu de 360p dans l'onglet du mode auto des badges.
+  badgeFarmLowQuality: false,
   autoOpenInventory: false,
   autoOpenInventoryIntervalHours: 24,
   hideTwitchExtensions: false,
@@ -174,7 +180,7 @@ export function sanitizePreferences(preferences = {}) {
     badgeAlerts: preferences.badgeAlerts === undefined ? preferences.dropAlerts === true : preferences.badgeAlerts === true,
     raidAlerts: optIn(preferences, "raidAlerts"),
     backgroundRaidAlerts: preferences.backgroundRaidAlerts === true,
-    updateNotifications: optIn(preferences, "updateNotifications"),
+    updateNotifications: preferences.updateNotifications !== false,
     soundsEnabled: preferences.soundsEnabled !== false,
     notificationSound: normalizeGeneralSound(preferences.notificationSound),
     soundLive: normalizeKindSound(preferences.soundLive),
@@ -187,6 +193,8 @@ export function sanitizePreferences(preferences = {}) {
     quietHoursEnd: normalizeQuietHour(preferences.quietHoursEnd, DEFAULT_PREFERENCES.quietHoursEnd),
     autoClaimChannelPoints: preferences.autoClaimChannelPoints !== false,
     autoClaimDrops: preferences.autoClaimDrops !== false,
+    autoFarmNewBadges: preferences.autoFarmNewBadges !== false,
+    badgeFarmLowQuality: preferences.badgeFarmLowQuality === true,
     autoOpenInventory: Boolean(preferences.autoOpenInventory),
     autoOpenInventoryIntervalHours: clampInventoryIntervalHours(preferences.autoOpenInventoryIntervalHours),
     hideTwitchExtensions: Boolean(preferences.hideTwitchExtensions),

@@ -10,6 +10,9 @@ import "./inject/plus-rule.js";
 
 const PLUS_RULE = globalThis.StreamPulsePlusRule;
 
+/** Choix d'effets ({ badgeFx, nameFx }), partagé par le popup, le tiroir et l'onboarding Plus. */
+export const COSMETICS_KEY = "streamPulseCosmetics";
+
 /**
  * Nuancier commun au logo et au pseudo : dégradés puis textures, chacun avec sa
  * propre animation (css/fx-effects.css). Depuis 26.9.28, plus d'animation à

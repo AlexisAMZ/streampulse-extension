@@ -1,6 +1,6 @@
 // Points de chaîne, Drops, badges et mode auto des badges.
 
-import { createBadgeAuto } from "../badge-auto-worker.js";
+import { createBadgeAuto, watchProbe } from "../badge-auto-worker.js";
 import { PLUS_KEY, isPlusActive } from "../plus.js";
 import { BADGE_ADDED_KEY, BADGE_AUTO_KEY, CLAIM_OK_STATUSES, DROPS_CAMPAIGNS_KEY, campaignsFrom } from "../drops-data.js";
 import { addedFrom, isPaidBadge } from "../badges-data.js";
@@ -57,6 +57,30 @@ export async function announceDrops(entries) {
         : translateWithPrefs(prefs, "background.notifications.dropMessage"),
     });
   }
+}
+
+/**
+ * StreamPulse+ : un badge frais apparaît au catalogue → il part au farm tout
+ * seul, sans ouvrir l'extension (et sans rater une campagne à durée limitée).
+ * Sans file, « tous les badges possibles » démarre et rattrape tout ; avec une
+ * file, les nouveaux s'y ajoutent. Coupé par le réglage, et sans effet hors Plus.
+ */
+export async function farmNewBadgesForPlus(added = []) {
+  const prefs = await PreferenceStore.get();
+  if (prefs.dropsTracking === false || prefs.autoFarmNewBadges === false) return false;
+  if (!isPlusActive((await chrome.storage.local.get(PLUS_KEY))[PLUS_KEY])) return false;
+  const ids = (added || []).map((item) => item?.id).filter(Boolean);
+  if (!ids.length) return false;
+  const result = await badgeAuto.autoFarm(ids).catch((error) => {
+    console.warn("[StreamPulse] farm des nouveaux badges :", error?.message || error);
+    return null;
+  });
+  if (!result?.started) return false;
+  await NotificationCenter.show({
+    title: translateWithPrefs(prefs, "background.badgeAuto.autoFarmTitle"),
+    message: translateWithPrefs(prefs, "background.badgeAuto.autoFarmMessage", { count: result.count }),
+  });
+  return true;
 }
 
 // ─── Alertes de campagnes Drops (StreamPulse+) ────────────────────────────────
@@ -191,6 +215,8 @@ async function refreshRewardsFromWorker({ maxAgeMs = REWARDS_EVERY_MS } = {}) {
     if (result) {
       freshBadge = result.added.length > 0;
       announceBadges(result.added).catch(warnWith("annonce des badges"));
+      // StreamPulse+ : les nouveaux badges partent directement au farm.
+      farmNewBadgesForPlus(result.added).catch(warnWith("farm des nouveaux badges"));
     }
   }
   await checkBadgeAuto();
@@ -215,6 +241,22 @@ export const badgeAuto = createBadgeAuto({
   streamUrl: dropsStreamUrl,
   streamGameOf,
   lowPowerPlayer,
+  // 160p en économie de bande passante (réglage Plus), 360p sinon.
+  videoHeight: async () => ((await PreferenceStore.get()).badgeFarmLowQuality ? 160 : 360),
+  // Sonde de lecture de l'onglet (vigie) et signal « l'utilisateur regarde
+  // ailleurs », tous deux tolérants aux échecs.
+  probeTab: async (tabId) => {
+    const [frame] = await chrome.scripting.executeScript({ target: { tabId }, func: watchProbe }).catch(() => []);
+    return frame?.result ?? null;
+  },
+  audibleElsewhere: async (tabId) => {
+    try {
+      const tabs = await chrome.tabs.query({ url: "https://www.twitch.tv/*", audible: true });
+      return tabs.some((tab) => tab.id !== tabId);
+    } catch (_) {
+      return false;
+    }
+  },
   translate: async (key, params) => translateWithPrefs(await PreferenceStore.get(), key, params),
   notify: async (titleKey, messageKey, params = {}) => {
     const prefs = await PreferenceStore.get();
@@ -276,10 +318,18 @@ export async function claimDropFromWorker(instanceId, auto) {
  * sur n'importe quelle chaîne du jeu qui a les Drops activés.
  */
 export async function dropsStreamUrl({ gameId, game }) {
+  // Chaîne 24/7 StreamPulse, par ID : le lien suit les renommages (ex-streampulsebot).
+  const officialChannelId = "1382531074";
   const directory = `https://www.twitch.tv/directory/game/${encodeURIComponent(game || "")}?filter=drops`;
-  if (!/^\d{1,20}$/.test(String(gameId || ""))) return directory;
   try {
     await ensureConfig();
+    const botStream = await fetchTwitchJson(`https://api.twitch.tv/helix/streams?user_id=${officialChannelId}`, { headers: twitchHeaders() }).catch(() => null);
+    const official = botStream?.data?.[0];
+    if (official?.type === "live" && official.user_login) {
+      return `https://www.twitch.tv/${encodeURIComponent(official.user_login)}`;
+    }
+
+    if (!/^\d{1,20}$/.test(String(gameId || ""))) return directory;
     const data = await fetchTwitchJson(`https://api.twitch.tv/helix/streams?game_id=${gameId}&type=live&first=20`, { headers: twitchHeaders() });
     // Un live avec le tag Drops fait progresser la campagne ; à défaut, le premier live du jeu.
     const live = (data?.data || []).filter((item) => item.user_login);

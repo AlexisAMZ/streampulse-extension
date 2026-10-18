@@ -259,7 +259,7 @@ Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décoc
 
 | Version | Date | Description des changements | Statut CWS |
 |---------|------|-----------------------------|------------|
-| 26.10.17 | 2026-10-17 | Un court sondage anonyme s'ouvre quand tu désinstalles StreamPulse (version et langue seulement, aucun identifiant). | Prête à publier |
+| 26.10.17 | 2026-10-17 | Nouveautés : onglet « À voir », ajout de streamers par lot, comptes liés, pause et diagnostic des alertes, planificateur de Drops, écran de bienvenue StreamPulse+ et sauvegarde élargie. Un court sondage anonyme s'ouvre aussi à la désinstallation (version et langue seulement, aucun identifiant). | Prête à publier |
 | 26.10.15 | 2026-10-15 | StreamPulse+ passe à l'année : 19 € par an, soit 1,58 € par mois (déjà à vie ? rien ne change pour toi). Nouveautés : alertes de campagnes Drops, compteur de valeur dans l'écran Plus, écran Plus repensé — et le mode auto décroche 1 badge gratuit par jour. Extension allégée de plus de 100 Ko. | Prête à publier |
 | 26.10.10 | 2026-10-10 | Correctif : plus d'erreur dans les onglets ouverts après une mise à jour de l'extension. | Publiée |
 | 26.10.8 | 2026-10-10 | L'extension déménage de streampulse.fr à streampulse.tech : la clé StreamPulse+, le badge communautaire et les jetons passent par le nouveau domaine. | Publiée |

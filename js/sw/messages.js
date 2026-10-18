@@ -3,7 +3,7 @@
 import { handleAddStreamer, handleGetStreamers, handleLookupTwitchUser, handleRefreshStatuses, handleRemoveStreamer, handleReorderStreamers, handleSearchChannels, handleSetPinnedStreamers, handleToggleNotificationFlag } from "./messages-streamers.js";
 import { handleBadgeAutoStart, handleBadgeAutoStop, handleClaimDrop, handleDropClaimedByClick, handleDropsRefresh, handleOpenDropsStream, handleRecordDropClaim, handleRecordDropsCampaignDetails, handleRecordDropsCampaigns, handleRecordDropsEvent, handleRecordDropsInventory, handleRecordPointsGain, handleResetPoints } from "./messages-drops.js";
 import { handleResetPreferences, handleTestNotification, handleUpdatePreferences, handleUpdateUserProfile } from "./messages-preferences.js";
-import { handleClearEventLogs, handleGetConfig, handleGetEventLogs, handleImportHistoryCsv, handleIncrementStat, handleMarkHistorySeen, handleOpenPatchNotes, handleOpenSettings, handleRemoveHistoryEntry, handleTrackWatchTime } from "./messages-app.js";
+import { handleClearEventLogs, handleGetConfig, handleGetEventLogs, handleImportHistoryCsv, handleIncrementStat, handleMarkHistorySeen, handleOpenPatchNotes, handleOpenPlusOnboarding, handleOpenSettings, handleRemoveHistoryEntry, handleTrackWatchTime } from "./messages-app.js";
 
 export const MESSAGE_HANDLERS = Object.freeze({
   getStreamers: handleGetStreamers,
@@ -36,6 +36,7 @@ export const MESSAGE_HANDLERS = Object.freeze({
   testNotification: handleTestNotification,
   openPatchNotes: handleOpenPatchNotes,
   openSettings: handleOpenSettings,
+  openPlusOnboarding: handleOpenPlusOnboarding,
   getConfig: handleGetConfig,
   trackWatchTime: handleTrackWatchTime,
   markHistorySeen: handleMarkHistorySeen,

@@ -9,8 +9,9 @@ import { initDrops } from "./popup-drops.js";
 import { initLayout } from "./popup-layout.js";
 import { initReviewAsk } from "./popup-review.js";
 import { initBadgeAsk } from "./popup-badge-ask.js";
+import { createWatchLaterButton } from "./popup-watch-later.js";
 import { IDENTITY_STORAGE_KEYS, initIdentity, renderIdentity } from "./popup-identity.js";
-import { HISTORY_KEY, formatClock, selectMissed, summarize } from "./history-data.js";
+import { HISTORY_KEY, formatClock, missedView, summarize } from "./history-data.js";
 import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalizePredictionRule, summarize as summarizePredictions } from "./predictions-data.js";
 import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
 import { mountLiquidMetalButton } from "./promo-liquid-button.js";
@@ -115,6 +116,7 @@ function createVodCard(entry) {
   info.append(avatar, text);
 
   card.append(thumb, info);
+  if (entry.vodUrl) item.append(createWatchLaterButton(entry));
   card.addEventListener("click", () => {
     openTab(entry.vodUrl);
     if (!entry.seen) chrome.runtime.sendMessage({ type: "markHistorySeen", id: entry.id }).catch?.(() => {});
@@ -145,7 +147,8 @@ export async function renderHistory() {
   const grid = $("history-grid");
   if (!grid) return;
   const stored = await chrome.storage.local.get(HISTORY_KEY);
-  const missed = selectMissed(stored[HISTORY_KEY], { platform: historyPlatform });
+  const view = missedView(stored[HISTORY_KEY], { platform: historyPlatform });
+  const missed = view.entries;
   const stats = summarize(missed);
 
   $("history-count").textContent =
@@ -157,6 +160,12 @@ export async function renderHistory() {
   grid.replaceChildren(...missed.map(createVodCard));
   grid.hidden = missed.length === 0;
   $("history-empty").hidden = missed.length !== 0;
+  const emptyTitle = $("history-empty")?.querySelector(".history-empty-title");
+  const emptyBody = $("history-empty")?.querySelector(".history-empty-body");
+  if (emptyTitle && emptyBody && view.emptyReason) {
+    emptyTitle.textContent = t(view.emptyReason === "filter" ? "popup.history.emptyFilterTitle" : "popup.history.emptyTitle");
+    emptyBody.textContent = t(view.emptyReason === "filter" ? "popup.history.emptyFilterBody" : "popup.history.emptyBody");
+  }
 }
 
 function initHistory() {
@@ -451,6 +460,9 @@ function initPlus() {
         renderPlus();
         thankPlusSubscriber(result.record.licenseKey, t).catch(() => {});
         chrome.runtime.sendMessage({ type: "refreshStatuses" }).catch?.(() => {});
+        // Première activation : onboarding StreamPulse+ (fonctions et réglages
+        // dédiés). Le service worker ne l'ouvre qu'une seule fois.
+        chrome.runtime.sendMessage({ type: "openPlusOnboarding" }).catch?.(() => {});
       } else {
         const errors = {
           format: "popup.plus.errorFormat",

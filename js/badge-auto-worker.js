@@ -1,9 +1,12 @@
 // Mode auto des badges, côté service worker : un onglet épinglé et muet
 // regarde un live du jeu en tête de file (js/badge-auto.js), passe au jeu
 // suivant quand tous ses badges sont obtenus, et affiche une bannière sur la
-// page. Les Drops prêts sont récupérés par l'alarme habituelle des Drops.
+// page. Une alarme dédiée passe toutes les 2 minutes tant que le mode tourne :
+// live terminé, badge gagné ou onglet figé sont repris sans attendre l'alarme
+// des Drops. Les Drops prêts sont récupérés par l'alarme habituelle.
 
 import { BADGE_ADDED_KEY, BADGE_AUTO_KEY, BADGE_EVENTS_KEY, DROPS_BADGES_KEY, DROPS_PROGRESS_KEY, progressFrom } from "./drops-data.js";
+import { BADGE_AUTO_ALARM } from "./sw/constants.js";
 import { addedFrom, badgesFrom, catalogBadges, eventsFrom } from "./badges-data.js";
 import { addJobs, bannerModel, currentGroup, freeBadgeJobs, normalizeAuto, pruneJobs, removeJob } from "./badge-auto.js";
 import { PLUS_KEY, isPlusActive } from "./plus.js";
@@ -11,6 +14,16 @@ import { BADGE_FREE_KEY, dayKey, freeAvailable, isFreeRun } from "./badge-free.j
 import { recordPlusValue } from "./sw/plus-value.js";
 
 const channelOf = (url) => (String(url || "").match(/^https:\/\/www\.twitch\.tv\/([a-z0-9_]{2,25})\/?(?:[?#]|$)/i) || [])[1] || "";
+
+/**
+ * Exécuté dans la page Twitch (monde isolé, le DOM est partagé) : sonde de
+ * lecture — l'élément <video> reste stable là où l'API du lecteur de Twitch
+ * change à chaque refonte.
+ */
+export function watchProbe() {
+  const video = document.querySelector("video");
+  return video ? { paused: Boolean(video.paused), t: Number(video.currentTime) || 0 } : null;
+}
 
 /**
  * Exécuté dans la page Twitch (monde isolé) : bannière du mode auto, posée en
@@ -64,6 +77,9 @@ function showAutoBanner(view) {
  *   translate: (key: string, params?: object) => Promise<string>,
  *   onStart: () => void,
  *   lowPowerPlayer: Function,
+ *   videoHeight?: () => Promise<number>,                     // hauteur cible du lecteur (360, ou 160 en économie)
+ *   probeTab?: (tabId: number) => Promise<{paused: boolean, t: number}|null>,
+ *   audibleElsewhere?: (tabId: number) => Promise<boolean>,  // un autre onglet Twitch sonore (l'utilisateur regarde ailleurs)
  * }} deps
  */
 export function createBadgeAuto(deps) {
@@ -84,6 +100,16 @@ export function createBadgeAuto(deps) {
   /** Sans Plus : un badge gratuit par jour (js/badge-free.js). */
   const freeRecord = async () => (await chrome.storage.local.get(BADGE_FREE_KEY))[BADGE_FREE_KEY];
 
+  /** Hauteur cible du lecteur : 160p en économie de bande passante, 360p sinon. */
+  const height = async () => {
+    try {
+      const value = deps.videoHeight ? Number(await deps.videoHeight()) : 360;
+      return Number.isFinite(value) && value > 0 ? value : 360;
+    } catch (_) {
+      return 360;
+    }
+  };
+
   async function tabExists(tabId) {
     if (!tabId) return false;
     try {
@@ -99,8 +125,11 @@ export function createBadgeAuto(deps) {
       await chrome.tabs.update(tabId, { url, pinned: true, muted: true });
       return tabId;
     }
-    const tab = await chrome.tabs.create({ url, active: false, pinned: true });
+    // Mute avant la première navigation : un onglet créé directement sur
+    // l'URL peut émettre un son entre sa création et sa mise en sourdine.
+    const tab = await chrome.tabs.create({ active: false, pinned: true });
     await chrome.tabs.update(tab.id, { muted: true });
+    await chrome.tabs.update(tab.id, { url });
     return tab.id;
   }
 
@@ -108,16 +137,41 @@ export function createBadgeAuto(deps) {
     if (await tabExists(tabId)) await chrome.tabs.remove(tabId).catch(() => {}); // Onglet fermé entre-temps : attendu.
   }
 
+  /** L'alarme dédiée ne tourne que pendant le mode auto : créée à l'activation,
+   * effacée dès que l'état disparaît — quel que soit le chemin d'arrêt. */
+  const syncAlarm = (active) => {
+    if (!chrome.alarms) return;
+    if (!active) {
+      try {
+        chrome.alarms.clear(BADGE_AUTO_ALARM, () => void chrome.runtime.lastError);
+      } catch (_) {
+        // Pas d'API alarms (vieux navigateur) : le mode tourne sans alarme dédiée.
+      }
+      return;
+    }
+    try {
+      chrome.alarms.get(BADGE_AUTO_ALARM, (existing) => {
+        if (chrome.runtime.lastError) return;
+        if (!existing) chrome.alarms.create(BADGE_AUTO_ALARM, { periodInMinutes: 2, delayInMinutes: 1 });
+      });
+    } catch (_) {
+      // Idem : sans API alarms, les passages suivent les alarmes des Drops.
+    }
+  };
+
   /** Texte de la bannière, dans la langue de l'utilisateur. */
   async function bannerView(state) {
     const stored = await chrome.storage.local.get(DROPS_PROGRESS_KEY);
     const model = bannerModel(state, progressFrom(stored).drops);
     if (!model) return null;
+    const elsewhere = deps.audibleElsewhere ? await deps.audibleElsewhere(state.tabId) : false;
     const lines = [
       await deps.translate("background.badgeAuto.bannerBadges", { game: model.game, badges: model.badges.join(", ") }),
     ];
     if (model.minutes) lines.push(await deps.translate("background.badgeAuto.bannerMinutes", model.minutes));
     if (model.nextBadges) lines.push(await deps.translate("background.badgeAuto.bannerNext", { badges: model.nextBadges, games: model.nextGames }));
+    // Twitch ne fait progresser qu'un live à la fois : le dire plutôt que laisser croire au farm.
+    if (elsewhere) lines.push(await deps.translate("background.badgeAuto.bannerElsewhere"));
     lines.push(await deps.translate("background.badgeAuto.bannerHint"));
     return {
       title: await deps.translate(model.mode === "all" ? "background.badgeAuto.bannerAll" : "background.badgeAuto.bannerTitle"),
@@ -138,13 +192,38 @@ export function createBadgeAuto(deps) {
     return catalogBadges(badgesFrom(stored), { status: "live", now: Date.now(), events: eventsFrom(stored).events, added: addedFrom(stored).added });
   }
 
+  /** Sonde de lecture de l'onglet ; null quand rien n'est mesurable (page de
+   * répertoire, onglet en cours de chargement, script impossible). */
+  const watchTab = async (tabId, login) => {
+    if (!login || !deps.probeTab) return null;
+    const result = await deps.probeTab(tabId).catch(() => null);
+    return result && Number.isFinite(Number(result.t))
+      ? { t: Number(result.t), at: Date.now(), paused: result.paused === true }
+      : null;
+  };
+
+  /** Réinjection du script lecteur (reprise de lecture, qualité, volume). */
+  const reinjectPlayer = async (tabId) => {
+    try {
+      await chrome.scripting.executeScript({ target: { tabId }, world: "MAIN", func: deps.lowPowerPlayer, args: [await height()] });
+    } catch (error) {
+      console.warn("[StreamPulse] réinjection du lecteur :", error?.message || error);
+    }
+  };
+
   /**
    * Un passage : retire les badges obtenus ou expirés, complète la file en
    * mode « tous », puis garde l'onglet sur un live du jeu en tête de file.
+   * La vigie de santé reprend un onglet déchargé par le navigateur, relance
+   * une lecture en pause, et repart d'une page neuve si le temps de lecture
+   * n'a pas bougé depuis le passage précédent.
    */
   const check = () => serial(async () => {
     let state = await read();
-    if (!state) return;
+    if (!state) {
+      syncAlarm(false);
+      return;
+    }
     // Plus inactif : on arrête tout au passage suivant, comme si l'utilisateur
     // avait arrêté lui-même (état retiré, onglet fermé), et on le dit ; sauf
     // le badge gratuit du jour, qui va jusqu'au bout.
@@ -152,6 +231,7 @@ export function createBadgeAuto(deps) {
     if (!plus && !isFreeRun(state, await freeRecord())) {
       await chrome.storage.local.remove(BADGE_AUTO_KEY);
       await closeTab(state.tabId);
+      syncAlarm(false);
       await deps.notify("background.notifications.badgeAutoTitle", "background.badgeAuto.stoppedPlus");
       return;
     }
@@ -173,22 +253,43 @@ export function createBadgeAuto(deps) {
     if (!group) {
       await chrome.storage.local.remove(BADGE_AUTO_KEY);
       await closeTab(state.tabId);
+      syncAlarm(false);
       if (state.mode === "all" || obtained.length) await deps.notify("background.badgeAuto.doneTitle", "background.badgeAuto.doneMessage");
       return;
     }
 
-    // Autre jeu en tête, onglet fermé, live terminé ou passé sur un autre jeu : nouveau live.
-    const tabAlive = await tabExists(state.tabId);
-    let move = !tabAlive || state.gameKey !== group.key;
+    // Onglet vivant ET réellement en train de lire. Un onglet déchargé par le
+    // navigateur existe toujours côté API tabs : il faut repartir d'une page
+    // neuve, pas le croire en train de regarder.
+    const tab = (await tabExists(state.tabId)) ? await chrome.tabs.get(state.tabId).catch(() => null) : null;
+    let move = !tab || tab.discarded === true || state.gameKey !== group.key;
     if (!move) {
-      const tab = await chrome.tabs.get(state.tabId);
       const login = channelOf(tab.url);
       const gameId = login ? await deps.streamGameOf(login) : "";
       // null : Helix ne répond pas, on garde l'onglet plutôt que de changer à l'aveugle.
       move = gameId !== null && (!gameId || (group.gameId && gameId !== group.gameId));
+      if (!move) {
+        const watched = await watchTab(state.tabId, login);
+        if (!watched) {
+          state = { ...state, video: null };
+        } else if (watched.paused) {
+          // En pause : le script injecté relance la lecture. Encore en pause au
+          // passage suivant, on repart d'une page neuve plutôt que de stagner.
+          if (state.video?.paused) move = true;
+          else await reinjectPlayer(state.tabId);
+          state = { ...state, video: watched };
+        } else if (state.video && !state.video.paused && state.video.t === watched.t) {
+          // Temps de lecture inchangé entre deux passages : onglet figé.
+          move = true;
+          state = { ...state, video: watched };
+        } else {
+          state = { ...state, video: watched };
+        }
+      }
     }
-    if (move) state = { ...state, tabId: await openTab(group, tabAlive ? state.tabId : 0), gameKey: group.key };
+    if (move) state = { ...state, tabId: await openTab(group, tab ? state.tabId : 0), gameKey: group.key, video: null };
     await write(state);
+    syncAlarm(true);
     await paintBanner(state);
   });
 
@@ -209,7 +310,7 @@ export function createBadgeAuto(deps) {
     if (!state.jobs.length) return { started: false };
     if (!previous || !(await tabExists(state.tabId))) {
       const group = currentGroup(state);
-      state = { ...state, tabId: await openTab(group, 0), gameKey: group.key, startedAt: Date.now() };
+      state = { ...state, tabId: await openTab(group, 0), gameKey: group.key, startedAt: Date.now(), video: null };
     }
     await write(state);
     deps.onStart();
@@ -219,6 +320,34 @@ export function createBadgeAuto(deps) {
     await check();
     return result;
   });
+
+  /** Ajoute des tâches à une file déjà lancée (nouveaux badges apparus). */
+  const enqueueJobs = (jobs) => serial(async () => {
+    const state = await read();
+    if (!state || !(jobs || []).length) return null;
+    await write(addJobs(state, jobs));
+    return true;
+  }).then(() => check());
+
+  const isActive = async () => Boolean(await read());
+
+  /**
+   * Nouveaux badges apparus au catalogue (StreamPulse+) : sans file, « tous les
+   * badges possibles » démarre et rattrape tout ; avec une file, ils s'y
+   * ajoutent sans toucher au mode choisi.
+   */
+  const autoFarm = async (badgeIds = []) => {
+    const wanted = new Set(badgeIds || []);
+    if (!wanted.size) return { started: false };
+    const owned = badgesFrom(await chrome.storage.local.get(DROPS_BADGES_KEY)).owned;
+    const jobs = freeBadgeJobs(await catalog()).filter((job) => wanted.has(job.badgeId) && !owned.includes(job.badgeId));
+    if (!jobs.length) return { started: false };
+    if (await isActive()) {
+      await enqueueJobs(jobs);
+      return { started: true, count: jobs.length };
+    }
+    return start({ all: true });
+  };
 
   /** Retire un badge de la file ; sans badge, arrête tout et ferme l'onglet. */
   const stop = (badgeId = "") => serial(async () => {
@@ -235,11 +364,11 @@ export function createBadgeAuto(deps) {
   }).then(() => check());
 
   function onTabUpdated(tabId, changeInfo) {
-    if (changeInfo.status !== "complete") return;
-    read()
+    if (changeInfo.status !== "complete") return Promise.resolve();
+    return read()
       .then(async (state) => {
         if (state?.tabId !== tabId) return;
-        await chrome.scripting.executeScript({ target: { tabId }, world: "MAIN", func: deps.lowPowerPlayer });
+        await chrome.scripting.executeScript({ target: { tabId }, world: "MAIN", func: deps.lowPowerPlayer, args: [await height()] });
         await paintBanner(state);
       })
       .catch((error) => console.warn("[StreamPulse] mode auto badges, onglet :", error?.message || error));
@@ -253,5 +382,5 @@ export function createBadgeAuto(deps) {
     });
   }
 
-  return { check, start, stop, onTabUpdated, onTabRemoved, isActive: async () => Boolean(await read()) };
+  return { check, start, stop, enqueueJobs, autoFarm, onTabUpdated, onTabRemoved, isActive };
 }

@@ -16,6 +16,9 @@ export const MAX_BACKUP_BYTES = 5 * 1024 * 1024;
 
 import { JOURNAL_LIMIT, POINTS_CHANNELS_KEY, POINTS_DAILY_KEY, POINTS_JOURNAL_KEY } from "./points-data.js";
 import { DROPS_HISTORY_KEY, HISTORY_LIMIT as DROPS_HISTORY_LIMIT, isHistoryEntry as isDropEntry } from "./drops-data.js";
+import { DROP_ALERTS_KEY, normalizeDropAlerts } from "./drop-alerts.js";
+import { WATCH_LATER_KEY, normalizeWatchLater } from "./watch-later.js";
+import { LINKED_ACCOUNTS_KEY, normalizeLinkedAccounts } from "./linked-accounts.js";
 
 const STREAMERS = "betaGeneralStreamers";
 const PREFERENCES = "betaGeneralPreferences";
@@ -25,11 +28,11 @@ const WATCH_DAILY = "streamPulseWatchTimeDaily";
 const PROFILE = "userProfile";
 const PINNED = "betaPinnedIds";
 const GROUPS = "betaChannelGroups";
-const HISTORY = "streamPulseHistory";
 const SMART_ALERTS = "streamPulseSmartAlerts";
 const COSMETICS = "streamPulseCosmetics";
 const LAYOUT = "streamPulseLayout";
 const PREDICTION_RULE = "streamPulsePredictionRule";
+const HISTORY = "streamPulseHistory";
 
 // La licence StreamPulse+, l'identifiant d'appareil et les alarmes restent
 // dehors : ils sont lies a CETTE installation et n'ont pas de sens ailleurs.
@@ -37,13 +40,14 @@ export const BACKUP_KEYS = [
   STREAMERS, PREFERENCES, STATS, WATCH_MONTHLY, WATCH_DAILY, PROFILE,
   PINNED, GROUPS, HISTORY, SMART_ALERTS, COSMETICS, LAYOUT, PREDICTION_RULE,
   POINTS_DAILY_KEY, POINTS_JOURNAL_KEY, POINTS_CHANNELS_KEY, DROPS_HISTORY_KEY,
+  DROP_ALERTS_KEY, WATCH_LATER_KEY, LINKED_ACCOUNTS_KEY,
 ];
 
 /**
  * Reglages proprement dits : par defaut ceux de l'installation courante gagnent ;
  * avec l'option replaceSettings, ceux de la sauvegarde les remplacent.
  */
-const SETTINGS_KEYS = [PREFERENCES, LAYOUT, COSMETICS, PREDICTION_RULE];
+const SETTINGS_KEYS = [PREFERENCES, LAYOUT, COSMETICS, PREDICTION_RULE, SMART_ALERTS, DROP_ALERTS_KEY];
 
 /** La sauvegarde validee contient-elle des reglages a proposer de restaurer ? */
 export function hasSettings(data) {
@@ -67,7 +71,11 @@ const pad = (n) => String(n).padStart(2, "0");
 export function buildBackup(storage, { version, now = new Date() }) {
   const data = {};
   for (const key of BACKUP_KEYS) {
-    if (storage && storage[key] !== undefined) data[key] = storage[key];
+    if (!storage || storage[key] === undefined) continue;
+    if (key === DROP_ALERTS_KEY) data[key] = normalizeDropAlerts(storage[key]);
+    else if (key === WATCH_LATER_KEY) data[key] = normalizeWatchLater(storage[key]);
+    else if (key === LINKED_ACCOUNTS_KEY) data[key] = normalizeLinkedAccounts(storage[key]);
+    else data[key] = storage[key];
   }
   return {
     app: BACKUP_APP,
@@ -219,6 +227,12 @@ function cleanValue(key, value) {
       return Array.isArray(value) ? value.filter(isPlainObject) : undefined;
     case SMART_ALERTS:
       return Array.isArray(value) || isPlainObject(value) ? value : undefined;
+    case DROP_ALERTS_KEY:
+      return isPlainObject(value) ? normalizeDropAlerts(value) : undefined;
+    case WATCH_LATER_KEY:
+      return Array.isArray(value) ? normalizeWatchLater(value) : undefined;
+    case LINKED_ACCOUNTS_KEY:
+      return Array.isArray(value) ? normalizeLinkedAccounts(value) : undefined;
     case POINTS_DAILY_KEY:
       return isPlainObject(value) ? cleanPointsDaily(value) : undefined;
     case POINTS_JOURNAL_KEY:
@@ -391,15 +405,22 @@ export function mergeBackup(current, incoming, { replaceSettings = false } = {})
         break;
       }
       case HISTORY:
-        // Les entrees deja presentes gagnent : on n'ecrase pas l'existant.
-        data[key] = { ...value, ...(isPlainObject(now[key]) ? now[key] : {}) };
+        // Fusion par identifiant, pas d'un contenant : les sessions des deux
+        // installations doivent survivre. Une session locale connue gagne.
+        data[key] = mergeHistory(now[key], value);
         break;
-      case SMART_ALERTS:
       case COSMETICS:
       case LAYOUT:
       case PREDICTION_RULE:
         // Reglages simples : ceux de l'installation courante restent prioritaires.
         data[key] = now[key] !== undefined ? now[key] : value;
+        break;
+      case SMART_ALERTS:
+        if (replaceSettings) {
+          data[key] = isPlainObject(value) ? value : {};
+          break;
+        }
+        data[key] = mergeSmartAlerts(now[key], value, replaceSettings);
         break;
       case POINTS_DAILY_KEY:
         data[key] = mergePointsDaily(isPlainObject(now[key]) ? now[key] : {}, value);
@@ -413,9 +434,55 @@ export function mergeBackup(current, incoming, { replaceSettings = false } = {})
       case DROPS_HISTORY_KEY:
         data[key] = mergeDropsHistory(Array.isArray(now[key]) ? now[key] : [], value);
         break;
+      case DROP_ALERTS_KEY:
+        data[key] = mergeDropAlerts(now[key], value, replaceSettings);
+        break;
+      case WATCH_LATER_KEY:
+        data[key] = mergeById(normalizeWatchLater(now[key]), normalizeWatchLater(value));
+        break;
+      case LINKED_ACCOUNTS_KEY:
+        data[key] = mergeLinkedAccounts(normalizeLinkedAccounts(now[key]), normalizeLinkedAccounts(value));
+        break;
       default:
         break;
     }
   }
   return { data, addedStreamers };
+}
+
+function mergeHistory(local, incoming) {
+  const a = isPlainObject(local) ? local : {};
+  const b = isPlainObject(incoming) ? incoming : {};
+  const entries = new Map();
+  for (const entry of Array.isArray(b.entries) ? b.entries : []) {
+    if (entry && typeof entry.id === "string") entries.set(entry.id, entry);
+  }
+  for (const entry of Array.isArray(a.entries) ? a.entries : []) {
+    if (entry && typeof entry.id === "string") entries.set(entry.id, entry);
+  }
+  return { ...b, ...a, entries: [...entries.values()].sort((x, y) => (y.endedAt || 0) - (x.endedAt || 0)).slice(0, 60) };
+}
+
+function mergeDropAlerts(local, incoming, replace) {
+  const before = normalizeDropAlerts(local);
+  const after = normalizeDropAlerts(incoming);
+  return { enabled: replace ? after.enabled : before.enabled || after.enabled, games: [...new Set([...before.games, ...after.games])].slice(0, 12) };
+}
+
+function mergeSmartAlerts(local, incoming, replace) {
+  const a = isPlainObject(local) ? local : {};
+  const b = isPlainObject(incoming) ? incoming : {};
+  if (replace) return { ...a, ...b };
+  // Une liste de règles locale gagne ; un streamer absent du local est complété.
+  return { ...b, ...a };
+}
+
+function mergeById(local, incoming) {
+  const seen = new Set(local.map((entry) => entry.id));
+  return [...local, ...incoming.filter((entry) => !seen.has(entry.id))];
+}
+
+function mergeLinkedAccounts(local, incoming) {
+  const ids = new Set(local.flatMap((group) => group.streamerIds));
+  return [...local, ...incoming.filter((group) => group.streamerIds.every((id) => !ids.has(id)))];
 }

@@ -28,7 +28,8 @@
   // Routes système de Kick. Sur Twitch, la liste partagée de js/inject/dom.js
   // fait foi (popout compris) ; Kick garde sa propre liste, plus courte : un
   // login légitime homonyme d'une route Twitch ne doit pas être filtré.
-  const KICK_IGNORED_ROUTES = new Set(["categories", "following", "search", "dashboard"]);
+  // « video » : les pages de VOD (/video/<id>), qui ne sont pas des lives.
+  const KICK_IGNORED_ROUTES = new Set(["categories", "following", "search", "dashboard", "video"]);
 
   function extractChannel() {
     const platform = detectPlatform();
@@ -50,19 +51,30 @@
   }
 
   /**
+   * La lecture en cours est-elle un direct YouTube ? Le lecteur porte la
+   * classe ytp-live tant qu'il joue un direct (DVR compris) et jamais sur une
+   * vidéo normale ni un VOD. Les autres pistes sont des pièges : le badge « En
+   * direct » existe, caché, dans toutes les pages watch, la durée d'un direct
+   * avec DVR vaut sa fenêtre (pas Infinity), et le chat peut être absent
+   * (commentaires coupés, rendu tardif).
+   */
+  function youtubeIsLive() {
+    return Boolean(document.querySelector(".ytp-live"));
+  }
+
+  /**
    * Chaîne YouTube : @handle ou /channel/ID dans l'URL ; sinon (page watch d'un
-   * direct) le lien de la chaîne dans le DOM. Seuls les directs comptent, repérés
-   * par le chat en direct ou le badge du lecteur : une vidéo normale ou un VOD
-   * ne doit rien ajouter au temps de visionnage.
+   * direct) le lien de la chaîne dans le DOM. Seuls les directs comptent : une
+   * vidéo normale ou un VOD ne doit rien ajouter au temps de visionnage.
    */
   function youtubeChannel(path) {
+    if (!youtubeIsLive()) return null;
     const first = (path[0] || "").toLowerCase();
     const fromUrl = first.startsWith("@")
       ? first.slice(1)
       : first === "channel"
         ? (path[1] || "").toLowerCase()
         : "";
-    if (!document.querySelector("ytd-live-chat-frame, .ytp-live-badge")) return null;
     if (fromUrl) return { platform: "youtube", channel: fromUrl };
     const href = document.querySelector("#channel-name a[href], ytd-channel-name a[href]")?.getAttribute("href") || "";
     const handle = /\/@([\w.-]{1,60})/.exec(href)?.[1] || /\/channel\/(UC[\w-]{1,60})/.exec(href)?.[1] || "";
@@ -122,6 +134,12 @@
       lastHeartbeatTime = Date.now();
       return;
     }
+    // YouTube : seul un direct compte, revérifié à chaque pulsation — la
+    // navigation interne passe du direct à la vidéo sous le même onglet.
+    if (currentPlatform === "youtube" && !youtubeIsLive()) {
+      lastHeartbeatTime = Date.now();
+      return;
+    }
     lastHeartbeatTime = Date.now();
     safeSend({
       type: "trackWatchTime",
@@ -174,8 +192,14 @@
 
   function checkUrlChange() {
     const url = window.location.href;
-    if (url === lastUrl) return;
-    lastUrl = url;
+    if (url === lastUrl) {
+      // Même page : on ne refait la détection que si rien n'est suivi. Le
+      // lecteur YouTube apparaît après l'URL : sans cette relance, un direct
+      // ouvert directement resterait jamais compté.
+      if (currentChannel) return;
+    } else {
+      lastUrl = url;
+    }
 
     const info = extractChannel();
     if (info) {
@@ -206,6 +230,9 @@
   // la page dans le cache precedent/suivant (retour arriere instantane).
   window.addEventListener("pagehide", () => {
     if (!currentChannel || !currentPlatform || !lastHeartbeatTime) return;
+    // YouTube : ne jamais solder la fenêtre partielle sur une vidéo ou un VOD,
+    // même si le direct était suivi un instant plus tôt.
+    if (currentPlatform === "youtube" && !youtubeIsLive()) return;
     // Seconds elapsed since the last heartbeat (partial interval)
     const elapsed = Math.round((Date.now() - lastHeartbeatTime) / 1000);
     if (elapsed >= 5) {

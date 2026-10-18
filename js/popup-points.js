@@ -3,7 +3,7 @@
 // chaque streamer et journal des gains. Lit le storage, que le service worker
 // alimente ; tous les calculs viennent de points-data.js.
 
-import { t, getCurrentLanguage } from "./i18n.js";
+import { t, getCurrentLanguage, onLanguageChange } from "./i18n.js";
 import {
   POINTS_KEYS,
   REASONS,
@@ -28,6 +28,8 @@ let state = stateFrom({});
 let period = "7d";
 let selected = null;
 let resetTimer = null;
+let resetStatusKey = null;
+let initialized = false;
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
@@ -308,7 +310,7 @@ function syncPeriodButtons() {
 }
 
 function render() {
-  if (!$("menu-points")) return;
+  if (!$("menu-activity")) return;
   const now = Date.now();
   const plus = deps.isPlus();
   if (!plus || (selected && !state.channels[selected])) selected = null;
@@ -320,33 +322,57 @@ function render() {
   syncPeriodButtons();
 }
 
+// Bouton armé : sans data-i18n, la passe statique du parent ne remet pas « Remettre à zéro ».
+function setResetArmed(button, armed) {
+  if (armed) {
+    button.dataset.armed = "1";
+    button.removeAttribute("data-i18n");
+    button.textContent = t("popup.points.resetConfirm");
+  } else {
+    delete button.dataset.armed;
+    button.setAttribute("data-i18n", "popup.points.reset");
+    button.textContent = t("popup.points.reset");
+  }
+}
+
+function showResetStatus(key, fallback = "") {
+  resetStatusKey = key;
+  const status = $("points-reset-status");
+  if (status) status.textContent = key ? t(key) : fallback;
+}
+
 async function resetPoints(button) {
+  if (button.disabled) return;
   // Double clic volontaire : le premier arme le bouton, le second efface.
   if (!button.dataset.armed) {
-    button.dataset.armed = "1";
-    button.textContent = t("popup.points.resetConfirm");
-    resetTimer = setTimeout(() => {
-      delete button.dataset.armed;
-      button.textContent = t("popup.points.reset");
-    }, RESET_ARM_MS);
+    setResetArmed(button, true);
+    resetTimer = setTimeout(() => setResetArmed(button, false), RESET_ARM_MS);
     return;
   }
   clearTimeout(resetTimer);
-  delete button.dataset.armed;
-  button.textContent = t("popup.points.reset");
+  setResetArmed(button, false);
   button.disabled = true;
-  let status;
+  let key = "popup.feedback.saveFailed";
+  let fallback = "";
   try {
     const result = await chrome.runtime.sendMessage({ type: "resetPoints" });
-    if (result?.error) throw new Error(result.error);
-    status = t("popup.points.resetDone");
+    if (result?.success === true && !result.error) key = "popup.points.resetDone";
+    else if (result?.error) [key, fallback] = [null, String(result.error)];
   } catch (error) {
-    status = error?.message || String(error);
+    [key, fallback] = [null, error?.message || String(error)];
   }
   // Relu après l'attente : le popup a pu être redessiné entre-temps.
   const current = $("btn-reset-points");
   if (current) current.disabled = false;
-  $("points-reset-status").textContent = status;
+  showResetStatus(key, fallback);
+}
+
+/** Langue changée : nombres, raisons, santé, bouton armé et statut suivent. */
+function refreshLanguage() {
+  render();
+  const button = $("btn-reset-points");
+  if (button?.dataset.armed) button.textContent = t("popup.points.resetConfirm");
+  if (resetStatusKey) showResetStatus(resetStatusKey);
 }
 
 function bind() {
@@ -378,10 +404,12 @@ async function reload() {
 }
 
 export async function initPoints({ isPlus, onPlusChange, openPlus }) {
-  if (!$("menu-points")) return;
+  if (!$("menu-activity") || initialized) return;
+  initialized = true;
   deps = { isPlus, openPlus };
   bind();
   onPlusChange(() => render());
+  onLanguageChange(refreshLanguage);
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area === "local" && POINTS_KEYS.some((key) => key in changes)) reload().catch(() => {});
   });

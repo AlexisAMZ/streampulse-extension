@@ -91,6 +91,16 @@ export function selectMissed(history, { platform = "all" } = {}) {
   );
 }
 
+/**
+ * Filtre et sélectionnent les lives ratés : le filtre vide n'est jamais
+ * présenté comme « tout le monde est hors ligne ».
+ */
+export function missedView(history, { platform = "all" } = {}) {
+  const all = selectMissed(history, { platform: "all" });
+  const entries = selectMissed(history, { platform });
+  return { entries, total: all.length, filtered: platform !== "all", emptyReason: !entries.length ? (all.length ? "filter" : "none") : null };
+}
+
 export function summarize(entries) {
   return {
     count: entries.length,

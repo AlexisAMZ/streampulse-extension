@@ -1,10 +1,12 @@
 // Notifications système : affichage, cibles de clic, alertes de live / catégorie / titre, son.
 
 import { DEFAULT_LANGUAGE } from "../../i18n/meta.js";
-import { DEFAULT_PLATFORM, buildProfileUrl, formatHandleForDisplay, getPlatformIcon, getPlatformLabelKey, normalizePlatform, platformSupportsLiveStatus, sanitizeHandle } from "../platforms.js";
+import { readNotificationControls } from "../notification-controls.js";
 import { DEFAULT_SOUND, resolveSound } from "../notification-sounds.js";
 import { PLUS_KEY, isPlusActive } from "../plus.js";
+import { DEFAULT_PLATFORM, buildProfileUrl, formatHandleForDisplay, getPlatformIcon, getPlatformLabelKey, normalizePlatform, platformSupportsLiveStatus, sanitizeHandle } from "../platforms.js";
 import { DEFAULT_PREFERENCES, normalizeLanguage } from "../preferences-data.js";
+import { getNotificationSilence } from "../quiet-hours.js";
 import { NOTIFICATION_NAMESPACE } from "./constants.js";
 import { formatNumberForLanguage, translate } from "./i18n.js";
 import { streamerCache, streamerStates } from "./state.js";
@@ -177,6 +179,18 @@ export class NotificationCenter {
   }
 
   static async show(options = {}) {
+    if (options.isTest !== true) {
+      try {
+        const controls = await readNotificationControls();
+        // Un lot n'est exempte que si chacun de ses streamers l'est.
+        const ids = Array.isArray(options.streamerIds) && options.streamerIds.length ? options.streamerIds : [options.streamerId];
+        const now = Date.now();
+        if (ids.some((streamerId) => getNotificationSilence({ ...controls, streamerId, now }).blocked)) return null;
+      } catch (error) {
+        console.warn("[SP] regles de silence illisibles, notification retenue :", error?.message || error);
+        return null;
+      }
+    }
     await this.init();
     const id = `${NOTIFICATION_NAMESPACE}-${Date.now()}-${Math.random()
       .toString(36)
@@ -303,7 +317,7 @@ export class NotificationSystem {
   static async notifyChangeEvent(
     streamer,
     preferences,
-    { alertKey, titleKey, messageKey, messageParams, platform }
+    { alertKey, titleKey, messageKey, messageParams, platform, isTest = false }
   ) {
     const lang = normalizeLanguage(preferences?.language);
     const platformKey = platform || streamer.platform || "twitch";
@@ -315,6 +329,7 @@ export class NotificationSystem {
       formatHandleForDisplay(platformKey, streamer.handle || streamer.twitch);
 
     await NotificationCenter.show({
+      isTest,
       title: translate(lang, titleKey, { name }),
       message: translate(lang, messageKey, messageParams(lang)),
       streamerId: streamer.id,
@@ -335,7 +350,8 @@ export class NotificationSystem {
     fromGame,
     toGame,
     preferences = DEFAULT_PREFERENCES,
-    platform = null
+    platform = null,
+    isTest = false
   ) {
     await this.notifyChangeEvent(streamer, preferences, {
       alertKey: "gameNotifications",
@@ -348,6 +364,7 @@ export class NotificationSystem {
         to: toGame || translate(lang, "background.notifications.newCategory"),
       }),
       platform,
+      isTest,
     });
   }
 
@@ -356,7 +373,8 @@ export class NotificationSystem {
     fromTitle,
     toTitle,
     preferences = DEFAULT_PREFERENCES,
-    platform = null
+    platform = null,
+    isTest = false
   ) {
     await this.notifyChangeEvent(streamer, preferences, {
       alertKey: "titleNotifications",
@@ -370,6 +388,7 @@ export class NotificationSystem {
           translate(lang, "background.notifications.unknownTitle"),
       }),
       platform,
+      isTest,
     });
   }
 
@@ -386,6 +405,7 @@ export class NotificationSystem {
 
     if (step === 0) {
       await NotificationCenter.show({
+        isTest: true,
         title: translate(lang, "common.appName"),
         message: translate(lang, "background.notifications.testSimpleMessage"),
         requireInteraction: true,
@@ -417,14 +437,18 @@ export class NotificationSystem {
         fakeStreamer,
         translate(lang, "background.notifications.unknownCategory"),
         translate(lang, "background.notifications.newCategory"),
-        forcedPrefs
+        forcedPrefs,
+        null,
+        true
       );
     } else {
       await this.notifyTitleChange(
         fakeStreamer,
         "",
         translate(lang, "background.notifications.testTitleMessage"),
-        forcedPrefs
+        forcedPrefs,
+        null,
+        true
       );
     }
   }

@@ -6,6 +6,7 @@ import {
   catchUpNames,
   countLive,
   didStreamEnd,
+  explainStreamerAlerts,
   isCatchUp,
   nextLiveStateFrom,
   planStreamerAlerts,
@@ -125,4 +126,35 @@ test("catchUpNames et countLive", () => {
   assert.equal(catchUpNames(["a", "b"]), "a, b");
   assert.equal(catchUpNames(["a", "b", "c", "d", "e"]), "a, b, c +2");
   assert.equal(countLive([{ active: { isLive: true } }, { active: {} }, {}]), 1);
+});
+
+test("planStreamerAlerts: une erreur ou une plateforme non prise en charge ne notifie jamais, meme forcee", () => {
+  for (const next of [{ isLive: true, isError: true }, { isLive: true, supportsLiveStatus: false }]) {
+    assert.deepEqual(plan({ next, forceNotification: true }), []);
+    assert.deepEqual(plan({ next, smartDecision: { notifyRule: true } }), []);
+  }
+});
+
+test("l'explication et le plan partagent chaque branche de decision", () => {
+  const baseline = { isLive: true, sessionId: "v1", game: "Chess", title: "Hello", updatedAt: NOW };
+  const cases = [
+    [{ next: { isLive: true, isError: true } }, "apiError"],
+    [{ next: { isLive: true, supportsLiveStatus: false } }, "unsupported"],
+    [{ streamer: { notificationsEnabled: false } }, "streamerDisabled"],
+    [{ next: { isLive: false } }, "offline"],
+    [{}, "catchUp"],
+    [{ previous: { isLive: false, updatedAt: NOW } }, "live"],
+    [{ previous: baseline, next: baseline }, "noChange"],
+    [{ previous: baseline, next: { ...baseline, title: "New" } }, "changes"],
+    [{ previous: baseline, next: { ...baseline, title: "New" }, streamer: { titleNotificationsEnabled: false } }, "noChange"],
+    [{ smartDecision: { notifyRule: { id: "r" }, matchedIds: ["r"] } }, "smartMatch"],
+    [{ smartDecision: { notifyRule: null, matchedIds: ["r"] } }, "smartUnchanged"],
+    [{ smartDecision: { notifyRule: null, matchedIds: [] } }, "smartNoMatch"],
+  ];
+  for (const [overrides, reason] of cases) {
+    const input = { streamer: {}, previous: EMPTY_LIVE_STATE, next: { isLive: true }, now: NOW, ...overrides };
+    const explained = explainStreamerAlerts(input);
+    assert.equal(explained.reason, reason);
+    assert.deepEqual(explained.alerts, planStreamerAlerts(input));
+  }
 });

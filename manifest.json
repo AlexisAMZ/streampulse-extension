@@ -144,6 +144,8 @@
         "js/previews/observer.js",
         "js/kickPreviews.js",
         "js/kickPlayerEnhancer.js",
+        "js/inject/plus-rule.js",
+        "js/inject/kick-claim-rules.js",
         "js/kickChannelPoints.js",
         "js/chatFilter.js",
         "js/inject/kick-badge.js",

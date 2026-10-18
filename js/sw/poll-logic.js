@@ -117,15 +117,30 @@ function changeAlerts(streamer, previous, next) {
  * classique. Renvoie une liste d'actions : { type: "live" | "catchUp" | "game" | "title" }.
  */
 export function planStreamerAlerts({ streamer, previous, next, smartDecision, forceNotification, now }) {
+  return explainStreamerAlerts({ streamer, previous, next, smartDecision, forceNotification, now }).alerts;
+}
+
+/** Meme decision pour le sondage et sa lecture seule dans le popup, jamais un journal d'envoi. */
+export function explainStreamerAlerts({ streamer, previous, next, smartDecision, forceNotification, now }) {
+  if (next.isError) return { alerts: [], reason: "apiError" };
+  if (next.supportsLiveStatus === false) return { alerts: [], reason: "unsupported" };
   const enabled = streamer.notificationsEnabled !== false;
-  if (smartDecision) return enabled && smartDecision.notifyRule ? [{ type: "live" }] : [];
-  if (!enabled || !next.isLive) return [];
-  if (forceNotification) return [{ type: "live" }];
+  if (!enabled) return { alerts: [], reason: "streamerDisabled" };
+  if (!next.isLive) return { alerts: [], reason: "offline" };
+  if (smartDecision) {
+    return {
+      alerts: smartDecision.notifyRule ? [{ type: "live" }] : [],
+      reason: smartDecision.notifyRule ? "smartMatch" : smartDecision.matchedIds?.length ? "smartUnchanged" : "smartNoMatch",
+    };
+  }
+  if (forceNotification) return { alerts: [{ type: "live" }], reason: "live" };
   const sessionChanged = previous.sessionId && next.sessionId && previous.sessionId !== next.sessionId;
   if (!previous.isLive || sessionChanged) {
-    return [{ type: isCatchUp(previous, next, now) ? "catchUp" : "live" }];
+    const type = isCatchUp(previous, next, now) ? "catchUp" : "live";
+    return { alerts: [{ type }], reason: type };
   }
-  return changeAlerts(streamer, previous, next);
+  const alerts = changeAlerts(streamer, previous, next);
+  return { alerts, reason: alerts.length ? "changes" : "noChange" };
 }
 
 /** « A, B, C +2 » pour la notification groupée de rattrapage. */

@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="../css/tokens.css" />
     <link rel="stylesheet" href="../css/pages.css" />
     <link rel="stylesheet" href="../css/onboarding.css" />
+    <!-- Effets Plus réels (partagés avec le popup et le tchat Twitch) : l'aperçu
+         du style porte les vraies classes, pas une imitation. -->
+    <link rel="stylesheet" href="../css/fx-effects.css" />
   </head>
   <body>
     <div class="page-shell">
@@ -43,6 +46,29 @@
         <span class="step-counter" aria-hidden="true">
           <span id="step-counter-current">01</span><span class="step-counter-divider">/</span><span>05</span>
         </span>
+
+        <nav class="stepper" id="plus-stepper" aria-label="StreamPulse+">
+          <button type="button" class="step-pill" data-step="5">
+            <span class="step-num">1</span>
+            <span class="step-label" data-i18n="onboarding.plusStepWelcome">Bienvenue</span>
+          </button>
+          <button type="button" class="step-pill" data-step="6">
+            <span class="step-num">2</span>
+            <span class="step-label" data-i18n="onboarding.plusStepBadges">Badges</span>
+          </button>
+          <button type="button" class="step-pill" data-step="7">
+            <span class="step-num">3</span>
+            <span class="step-label" data-i18n="onboarding.plusStepDrops">Drops</span>
+          </button>
+          <button type="button" class="step-pill" data-step="8">
+            <span class="step-num">4</span>
+            <span class="step-label" data-i18n="onboarding.plusStepAlerts">Alertes</span>
+          </button>
+          <button type="button" class="step-pill" data-step="9">
+            <span class="step-num">5</span>
+            <span class="step-label" data-i18n="onboarding.plusStepStyle">Badge</span>
+          </button>
+        </nav>
       </header>
 
       <main class="stage">
@@ -193,12 +219,12 @@
                   <input id="onboarding-auto-claim" type="checkbox" role="switch" checked />
                 </label>
                 <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="popup.osd.autoClaimDrops">Récupération auto des Drops</span><span class="settings-description" data-i18n="popup.settings.autoClaimDropsDescription">Récupère tes Drops dès qu'ils sont prêts à être réclamés. Twitch uniquement.</span></span>
-                  <input id="onboarding-auto-claim-drops" type="checkbox" role="switch" checked />
+                  <span class="settings-text"><span class="settings-title"><span data-i18n="popup.osd.autoClaimDrops">Récupération auto des Drops</span> <span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span></span><span class="settings-description" data-i18n="popup.settings.autoClaimDropsDescription">Récupère tes Drops dès qu'ils sont prêts à être réclamés. Twitch uniquement.</span></span>
+                  <input id="onboarding-auto-claim-drops" type="checkbox" role="switch" disabled />
                 </label>
                 <label class="settings-toggle">
-                  <span class="settings-text"><span class="settings-title" data-i18n="onboarding.autoOpenInventoryTitle">Ouverture auto de l'inventaire Drops</span><span class="settings-description" data-i18n="onboarding.autoOpenInventoryDescription">Ouvre l'inventaire Twitch dans un onglet en arrière-plan, à la fréquence choisie, pour récupérer tes Drops terminés. Twitch uniquement ; nécessite une session Twitch ouverte.</span></span>
-                  <input id="onboarding-auto-open-inventory" type="checkbox" role="switch" />
+                  <span class="settings-text"><span class="settings-title"><span data-i18n="onboarding.autoOpenInventoryTitle">Ouverture auto de l'inventaire Drops</span> <span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span></span><span class="settings-description" data-i18n="onboarding.autoOpenInventoryDescription">Ouvre l'inventaire Twitch dans un onglet en arrière-plan, à la fréquence choisie, pour récupérer tes Drops terminés. Twitch uniquement ; nécessite une session Twitch ouverte.</span></span>
+                  <input id="onboarding-auto-open-inventory" type="checkbox" role="switch" disabled />
                 </label>
                 <label class="settings-toggle">
                   <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.autoCancelRaidsTitle">Annulation automatique des Raids</span><span class="settings-description" data-i18n="popup.settings.autoCancelRaidsDescription">Reste sur la chaîne quand un Raid Twitch veut t'emmener ailleurs. Se coupe quand les alertes de raids entrants sont actives : les points se gagnent en suivant le raid.</span></span>
@@ -322,6 +348,185 @@
                   <li data-i18n="onboarding.pinStep2" data-i18n-mode="html"><strong>Cherche</strong> <span class="highlight">StreamPulse</span></li>
                   <li data-i18n="onboarding.pinStep3" data-i18n-mode="html"><strong>Épingle</strong> l'extension pour l'avoir toujours sous la main</li>
                 </ol>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- StreamPulse+ : parcours d'accueil après activation de la licence (?mode=plus).
+             Cinq étapes courtes, un domaine par étape : les libellés des réglages
+             réutilisent ceux du popup (une même clé = un même réglage partout). -->
+        <section class="wizard-step" data-step="5">
+          <div class="step-frame">
+            <div class="step-header">
+              <h2 class="headline step-title" data-i18n="onboarding.plusTitle" data-i18n-mode="html">Bienvenue dans <span class="accent">StreamPulse+</span></h2>
+              <p class="step-desc" id="plus-welcome-desc" data-i18n="popup.plusMenu.statusInactive">Débloque ces outils avec StreamPulse+.</p>
+            </div>
+            <div class="step-content">
+              <div class="glass plus-panel">
+                <ul class="plus-features">
+                  <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.4 2.4 4.6-5.3"/></svg>
+                    <span data-i18n="onboarding.plusMapBadges">Le farm des badges Twitch, y compris les nouveaux dès qu'ils paraissent.</span>
+                  </li>
+                  <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.4 2.4 4.6-5.3"/></svg>
+                    <span data-i18n="onboarding.plusMapDrops">La récupération des Drops et l'inventaire, sans clic.</span>
+                  </li>
+                  <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.4 2.4 4.6-5.3"/></svg>
+                    <span data-i18n="onboarding.plusMapAlerts">Les alertes avancées : catégorie, titre, campagnes Drops.</span>
+                  </li>
+                  <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.4 2.4 4.6-5.3"/></svg>
+                    <span data-i18n="onboarding.plusMapStyle">Ton badge de chat avec ses effets, et les clips en MP4.</span>
+                  </li>
+                </ul>
+                <div class="step-nav step-nav-center">
+                  <button class="btn btn-primary" id="btn-next-5" type="button">
+                    <span data-i18n="onboarding.continueBtn">Continuer</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="wizard-step" data-step="6">
+          <div class="step-frame">
+            <div class="step-header">
+              <h2 class="headline step-title" data-i18n="onboarding.plusBadgesTitle" data-i18n-mode="html">Des <span class="accent">badges</span> qui tombent tout seuls.</h2>
+              <p class="step-desc" data-i18n="onboarding.plusBadgesDesc">Un onglet épinglé et muet regarde les lives qu'il faut, jeu par jeu, et se ferme quand c'est fini. Twitch ne compte qu'un live à la fois : laisse l'onglet travailler pendant que tu fais autre chose.</p>
+            </div>
+            <div class="step-content">
+              <div class="glass plus-panel">
+                <div class="settings-group plus-settings">
+                  <label class="settings-toggle">
+                    <span class="settings-text"><span class="settings-title"><span data-i18n="onboarding.plusAutoFarmTitle">Nouveaux badges en automatique</span> <span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span></span><span class="settings-description" data-i18n="onboarding.plusAutoFarmDesc">Dès qu'un nouveau badge gratuit apparaît sur Twitch, un onglet épinglé et muet part le récupérer, puis se ferme. Sans ce réglage, les nouveaux badges n'arrivent que si tu lances le mode auto toi-même.</span></span>
+                    <input id="onboarding-plus-auto-farm" type="checkbox" role="switch" disabled />
+                  </label>
+                  <label class="settings-toggle">
+                    <span class="settings-text"><span class="settings-title"><span data-i18n="onboarding.plusLowQualityTitle">Farm en 160p</span> <span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span></span><span class="settings-description" data-i18n="onboarding.plusLowQualityDesc">L'onglet du mode auto regarde en 160p au lieu de 360p : moins de bande passante, les Drops tombent pareil.</span></span>
+                    <input id="onboarding-plus-low-quality" type="checkbox" role="switch" disabled />
+                  </label>
+                </div>
+                <div class="step-nav">
+                  <button class="btn btn-ghost" id="btn-back-6" type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>
+                    <span data-i18n="onboarding.backBtn">Retour</span>
+                  </button>
+                  <button class="btn btn-primary" id="btn-next-6" type="button">
+                    <span data-i18n="onboarding.continueBtn">Continuer</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="wizard-step" data-step="7">
+          <div class="step-frame">
+            <div class="step-header">
+              <h2 class="headline step-title" data-i18n="onboarding.plusDropsTitle" data-i18n-mode="html">Tes <span class="accent">Drops</span>, sans y penser.</h2>
+              <p class="step-desc" data-i18n="onboarding.plusDropsDesc">Les récompenses prêtes sont réclamées à ta place, et l'inventaire s'ouvre en arrière-plan pour récupérer ce qui est terminé. Nécessite une session Twitch ouverte.</p>
+            </div>
+            <div class="step-content">
+              <div class="glass plus-panel">
+                <div class="settings-group plus-settings">
+                  <label class="settings-toggle">
+                    <span class="settings-text"><span class="settings-title"><span data-i18n="popup.osd.autoClaimDrops">Récupération auto des Drops</span> <span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span></span><span class="settings-description" data-i18n="popup.settings.autoClaimDropsDescription">Récupère tes Drops dès qu'ils sont prêts à être réclamés. Twitch uniquement.</span></span>
+                    <input id="onboarding-plus-auto-claim-drops" type="checkbox" role="switch" disabled />
+                  </label>
+                  <label class="settings-toggle">
+                    <span class="settings-text"><span class="settings-title"><span data-i18n="onboarding.autoOpenInventoryTitle">Ouverture auto de l'inventaire Drops</span> <span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span></span><span class="settings-description" data-i18n="onboarding.autoOpenInventoryDescription">Ouvre l'inventaire Twitch dans un onglet en arrière-plan, à la fréquence choisie, pour récupérer tes Drops terminés. Twitch uniquement ; nécessite une session Twitch ouverte.</span></span>
+                    <input id="onboarding-plus-auto-open-inventory" type="checkbox" role="switch" disabled />
+                  </label>
+                </div>
+                <div class="step-nav">
+                  <button class="btn btn-ghost" id="btn-back-7" type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>
+                    <span data-i18n="onboarding.backBtn">Retour</span>
+                  </button>
+                  <button class="btn btn-primary" id="btn-next-7" type="button">
+                    <span data-i18n="onboarding.continueBtn">Continuer</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="wizard-step" data-step="8">
+          <div class="step-frame">
+            <div class="step-header">
+              <h2 class="headline step-title" data-i18n="onboarding.plusAlertsTitle" data-i18n-mode="html">Prévenu de ce qui <span class="accent">compte</span>.</h2>
+              <p class="step-desc" data-i18n="onboarding.plusAlertsDesc">Au-delà du live, suis les changements de catégorie et de titre de tes streamers. Les alertes de campagnes Drops se règlent jeu par jeu depuis le popup.</p>
+            </div>
+            <div class="step-content">
+              <div class="glass plus-panel">
+                <div class="settings-group plus-settings">
+                  <label class="settings-toggle">
+                    <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.gameAlertsTitle">Alertes changement de catégorie</span><span class="settings-description" data-i18n="popup.settings.gameAlertsDescription">Appliqué à tous tes streamers suivis : tu peux ensuite l'ajuster par streamer.</span></span>
+                    <input id="onboarding-plus-game-alerts" type="checkbox" role="switch" />
+                  </label>
+                  <label class="settings-toggle">
+                    <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.titleAlertsTitle">Alertes changement de titre</span><span class="settings-description" data-i18n="popup.settings.titleAlertsDescription">Appliqué à tous tes streamers suivis : tu peux ensuite l'ajuster par streamer.</span></span>
+                    <input id="onboarding-plus-title-alerts" type="checkbox" role="switch" />
+                  </label>
+                </div>
+                <div class="step-nav">
+                  <button class="btn btn-ghost" id="btn-back-8" type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>
+                    <span data-i18n="onboarding.backBtn">Retour</span>
+                  </button>
+                  <button class="btn btn-primary" id="btn-next-8" type="button">
+                    <span data-i18n="onboarding.continueBtn">Continuer</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="wizard-step" data-step="9">
+          <div class="step-frame">
+            <div class="step-header">
+              <h2 class="headline step-title" data-i18n="onboarding.plusStyleTitle" data-i18n-mode="html">Ton <span class="accent">style</span>, tes effets.</h2>
+              <p class="step-desc" data-i18n="onboarding.plusStyleDesc">Ton pseudo et ton badge de chat portent les effets de ton abonnement — dégradés, textures, animations. Tout se choisit dans le popup, volet Badge. Et les clips Twitch se téléchargent en MP4 depuis leur page.</p>
+            </div>
+            <div class="step-content">
+              <div class="glass plus-panel">
+                <!-- Aperçu avec les vraies classes d'effets (css/fx-effects.css) :
+                     ce qui bouge ici est exactement ce qui apparaîtra dans le chat. -->
+                <div class="plus-style-preview" aria-hidden="true">
+                  <span class="plus-chat-line"><span class="cosmetic-badge" id="plus-style-badge"></span><span class="cosmetic-name plus-style-name" id="plus-style-name">@toi</span></span>
+                </div>
+                <div class="plus-picker">
+                  <h3 class="group-title" data-i18n="onboarding.plusStyleNameTitle">Ton pseudo</h3>
+                  <div class="fx-grid" id="plus-name-fx" role="radiogroup"></div>
+                  <h3 class="group-title" data-i18n="onboarding.plusStyleBadgeTitle">Ton badge</h3>
+                  <div class="fx-grid" id="plus-badge-fx" role="radiogroup"></div>
+                </div>
+                <div class="settings-group plus-settings">
+                  <label class="settings-toggle">
+                    <span class="settings-text"><span class="settings-title" data-i18n="popup.settings.communityBadgeTitle">Badge communautaire</span><span class="settings-description" data-i18n="popup.settings.communityBadgeDescription">Affiche l'icône StreamPulse à côté de ton pseudo et de celui des autres utilisateurs de StreamPulse dans le chat Twitch. Une empreinte de ton pseudo, calculée dans ton navigateur, est envoyée à streampulse.tech ; le pseudo lui-même n'est jamais transmis.</span></span>
+                    <input id="onboarding-plus-community-badge" type="checkbox" role="switch" />
+                  </label>
+                  <label class="settings-toggle">
+                    <span class="settings-text"><span class="settings-title"><span data-i18n="popup.settings.clipDownloadTitle">Téléchargement des clips</span> <span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span></span><span class="settings-description" data-i18n="popup.settings.clipDownloadDescription">Ajoute un bouton sur les pages de clips Twitch pour les enregistrer en MP4. Réservé à StreamPulse+.</span></span>
+                    <input id="onboarding-plus-clip-download" type="checkbox" role="switch" disabled />
+                  </label>
+                </div>
+                <div class="step-nav">
+                  <button class="btn btn-ghost" id="btn-back-9" type="button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>
+                    <span data-i18n="onboarding.backBtn">Retour</span>
+                  </button>
+                  <button class="btn btn-primary" id="plus-finish" type="button" data-i18n="onboarding.plusFinish">Profiter de StreamPulse+</button>
+                </div>
               </div>
             </div>
           </div>

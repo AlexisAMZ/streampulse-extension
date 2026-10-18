@@ -161,6 +161,7 @@
 
       <footer class="dock" id="add-bar">
         <div class="platform-picker" id="platform-picker" role="group" data-i18n-attr-ariaLabel="popup.platformSelectorLabel"></div>
+        <button id="open-bulk-add" type="button" class="button button-quiet" data-i18n="popup.bulkAdd.open">Ajouter plusieurs streamers</button>
         <form id="add-streamer-form" autocomplete="off" class="add-form">
           <label for="streamer-input" class="visually-hidden" data-i18n="popup.addStreamerTitleBase">Ajouter un streamer</label>
           <div class="add-field">
@@ -220,6 +221,7 @@
         <p class="history-empty-title" data-i18n="popup.history.emptyTitle">Aucun live raté</p>
         <p class="history-empty-body" data-i18n="popup.history.emptyBody">Quand un de tes streamers termine un live sans que tu l'aies regardé, il apparaît ici avec sa rediffusion.</p>
       </div>
+      <section id="watch-later" class="watch-later" aria-labelledby="watch-later-heading"></section>
     </section>
 
     <section id="plus-view" class="plus-view hidden" role="dialog" aria-modal="true" aria-labelledby="plus-title">
@@ -338,20 +340,12 @@
             <span data-i18n="popup.osd.menuPlayer">Lecteur</span>
           </button>
           <button id="menu-tab-previews" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-previews" data-panel="previews" tabindex="-1">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="m10 8 5 3-5 3z"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
-            <span data-i18n="popup.osd.menuPreviews">Aperçus</span>
-          </button>
-          <button id="menu-tab-tabs" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-tabs" data-panel="tabs" tabindex="-1">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8h20"/><path d="M6 4v4"/></svg>
-            <span data-i18n="popup.osd.groupTabs">Onglets</span>
-          </button>
-          <button id="menu-tab-chat" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-chat" data-panel="chat" tabindex="-1">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <span data-i18n="popup.osd.menuChat">Chat</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span data-i18n="popup.osd.menuPreviewsChat">Aperçus et chat</span>
           </button>
           <button id="menu-tab-identity" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-identity" data-panel="identity" tabindex="-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
-            <span data-i18n="popup.osd.menuIdentity">Profil et badge</span>
+            <span data-i18n="popup.osd.menuIdentityLinked">Profil et comptes</span>
             <span class="new-dot new-dot-inline" data-new="identity" hidden><span class="visually-hidden" data-i18n="popup.news.new">Nouveau</span></span>
           </button>
           <button id="menu-tab-general" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-general" data-panel="general" tabindex="-1">
@@ -397,13 +391,14 @@
         <!-- Notifications -->
         <section class="menu-panel" id="menu-notifications" role="tabpanel" aria-labelledby="menu-tab-notifications">
           <h2 data-i18n="popup.settings.groupNotifications">Notifications</h2>
-
+          <h3 class="settings-group-header" data-i18n="popup.settings.alertsGroup">Alertes</h3>
           <p class="settings-note" data-i18n="popup.settings.alertsPerStreamerNote">Ces alertes se règlent sur chaque streamer, depuis sa carte : notifications, changement de catégorie et de titre.</p>
 
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.liveAlertsTitle">Alertes de live</span>
               <span class="settings-description" data-i18n="popup.settings.liveAlertsBody">Une notification quand un streamer démarre un live. S'applique à tous tes streamers, ajustable sur chaque carte.</span>
+              <span class="settings-description alert-mixed" id="alert-mixed-live" role="status" hidden></span>
             </span>
             <input id="pref-live-notifications" type="checkbox" role="switch" />
           </label>
@@ -411,6 +406,7 @@
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.gameAlertsTitle">Alertes changement de catégorie</span>
               <span class="settings-description" data-i18n="popup.settings.gameAlertsDescription">Appliqué à tous tes streamers suivis : tu peux ensuite l'ajuster par streamer.</span>
+              <span class="settings-description alert-mixed" id="alert-mixed-game" role="status" hidden></span>
             </span>
             <input id="pref-game-notifications" type="checkbox" role="switch" />
           </label>
@@ -418,9 +414,15 @@
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.titleAlertsTitle">Alertes changement de titre</span>
               <span class="settings-description" data-i18n="popup.settings.titleAlertsDescription">Appliqué à tous tes streamers suivis : tu peux ensuite l'ajuster par streamer.</span>
+              <span class="settings-description alert-mixed" id="alert-mixed-title" role="status" hidden></span>
             </span>
             <input id="pref-title-notifications" type="checkbox" role="switch" />
           </label>
+          <div class="panel-actions">
+            <button id="test-notification" type="button" class="button button-quiet" data-i18n="popup.testNotification">Tester une notification</button>
+          </div>
+
+          <h3 class="settings-group-header" data-i18n="popup.settings.soundSilenceGroup">Son et silence</h3>
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title" data-i18n="popup.settings.soundsTitle">Son des notifications</span>
@@ -442,19 +444,6 @@
             <input id="pref-quiet-hours-start" type="time" value="23:00" class="settings-time" />
             <label class="settings-title" for="pref-quiet-hours-end" data-i18n="popup.settings.quietHoursEndLabel">Fin</label>
             <input id="pref-quiet-hours-end" type="time" value="08:00" class="settings-time" />
-          </div>
-
-          <h3 class="settings-group-header smart-head"><span data-i18n="popup.smart.title">Alertes intelligentes</span><span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span></h3>
-          <div class="smart-locked" id="smart-locked">
-            <p class="settings-description" data-i18n="popup.smart.lockedBody">Choisis quand recevoir une notification : un jeu précis, un mot dans le titre, un nombre de viewers. Réservé à StreamPulse+.</p>
-            <button class="button button-primary" id="smart-unlock" type="button" data-i18n="popup.smart.unlock">Débloquer</button>
-          </div>
-          <div class="smart-editor" id="smart-editor" hidden>
-            <p class="settings-description" data-i18n="popup.smart.replacesNote">Tant qu'un streamer a une règle active, elle remplace son alerte classique.</p>
-            <div class="smart-layout">
-              <ul class="smart-streamers" id="smart-streamers" data-i18n-attr-ariaLabel="popup.smart.streamersLabel" aria-label="Streamers"></ul>
-              <div class="smart-rules" id="smart-rules"></div>
-            </div>
           </div>
 
           <h3 class="settings-group-header" data-i18n="popup.settings.otherNotificationsGroup">Autres notifications</h3>
@@ -486,16 +475,24 @@
             </span>
             <input id="pref-background-raid-alerts" type="checkbox" role="switch" />
           </label>
-          <label class="settings-toggle">
-            <span class="settings-text">
-              <span class="settings-title" data-i18n="popup.settings.updateNotificationsTitle">Notification de mise à jour</span>
-              <span class="settings-description" data-i18n="popup.settings.updateNotificationsDescription">Prévenir quand StreamPulse est mis à jour (une seule fois par version), avec un clic vers les nouveautés.</span>
-            </span>
-            <input id="pref-update-notifications" type="checkbox" role="switch" />
-          </label>
 
-          <div class="panel-actions">
-            <button id="test-notification" type="button" class="button button-quiet" data-i18n="popup.testNotification">Tester une notification</button>
+          <p class="settings-note" data-i18n="popup.settings.raidsWhereNote">L'annulation automatique des Raids se règle dans Récompenses ; elle se coupe quand les alertes de raids entrants sont actives.</p>
+
+          <div class="notification-tools-block">
+            <div id="notification-tools"></div>
+          </div>
+
+          <h3 class="settings-group-header smart-head"><span data-i18n="popup.smart.title">Alertes intelligentes</span><span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span></h3>
+          <div class="smart-locked" id="smart-locked">
+            <p class="settings-description" data-i18n="popup.smart.lockedBody">Choisis quand recevoir une notification : un jeu précis, un mot dans le titre, un nombre de viewers. Réservé à StreamPulse+.</p>
+            <button class="button button-primary" id="smart-unlock" type="button" data-i18n="popup.smart.unlock">Débloquer</button>
+          </div>
+          <div class="smart-editor" id="smart-editor" hidden>
+            <p class="settings-description" data-i18n="popup.smart.replacesNote">Tant qu'un streamer a une règle active, elle remplace son alerte classique.</p>
+            <div class="smart-layout">
+              <ul class="smart-streamers" id="smart-streamers" data-i18n-attr-ariaLabel="popup.smart.streamersLabel" aria-label="Streamers"></ul>
+              <div class="smart-rules" id="smart-rules"></div>
+            </div>
           </div>
         </section>
 
@@ -520,6 +517,7 @@
           </label>
 
           <h3 class="settings-group-header" data-i18n="popup.osd.menuDrops">Drops</h3>
+          <p class="settings-note" data-i18n="popup.settings.dropsWhereNote">Les alertes de Drops se règlent dans Notifications (Drop obtenu) et dans la rubrique Drops (nouvelles campagnes).</p>
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title"><span data-i18n="popup.osd.autoClaimDrops">Récupération auto des Drops</span><span class="plus-tag drops-plus-lock" data-i18n="popup.plus.badge" hidden>PLUS</span></span>
@@ -532,11 +530,8 @@
               <span class="settings-title" data-i18n="popup.drops.trackingTitle">Historique des Drops</span>
               <span class="settings-description" data-i18n="popup.drops.trackingBody">Progression et récupération même sans onglet Twitch ouvert. La Récupération auto des Drops s'appuie sur cet historique ; la liste des campagnes se met à jour quand tu passes sur Twitch.</span>
             </span>
-            <input id="pref-drops-tracking" type="checkbox" role="switch" />
+            <input id="pref-drops-tracking-panel" type="checkbox" role="switch" />
           </label>
-          <details class="settings-advanced">
-            <summary data-i18n="popup.settings.advancedGroup">Avancé</summary>
-            <div class="settings-advanced-body">
               <label class="settings-toggle">
                 <span class="settings-text">
                   <span class="settings-title"><span data-i18n="popup.settings.autoOpenInventoryTitle">Ouverture auto de l'inventaire Drops</span><span class="plus-tag drops-plus-lock" data-i18n="popup.plus.badge" hidden>PLUS</span></span>
@@ -555,8 +550,6 @@
                   <option value="24" selected data-i18n="popup.settings.inventoryEvery24h">Toutes les 24h</option>
                 </select>
               </div>
-            </div>
-          </details>
 
           <h3 class="settings-group-header" data-i18n="popup.osd.logRaids">Raids</h3>
           <label class="settings-toggle">
@@ -689,11 +682,36 @@
             </span>
             <input id="pref-auto-refresh" type="checkbox" role="switch" />
           </label>
+
+          <h3 class="settings-group-header" data-i18n="popup.osd.groupTabs">Onglets</h3>
+
+          <label class="settings-toggle">
+            <span class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.streamerFaviconTitle">Avatar du streamer sur l'onglet</span>
+              <span class="settings-description" data-i18n="popup.settings.streamerFaviconDescription">Remplacer l'icône de l'onglet par la photo de profil du streamer en direct.</span>
+            </span>
+            <input id="pref-enable-streamer-favicon" type="checkbox" role="switch" />
+          </label>
+          <label class="settings-toggle">
+            <span class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.tabLiveIconTitle">Pastille rouge LIVE sur l'onglet</span>
+              <span class="settings-description" data-i18n="popup.settings.tabLiveIconDescription">Afficher un point rouge LIVE sur l'icône de l'onglet quand le flux est en direct.</span>
+            </span>
+            <input id="pref-enable-tab-live-icon" type="checkbox" role="switch" />
+          </label>
+          <label class="settings-toggle">
+            <span class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.preventTabDiscardTitle">Empêcher la mise en veille de l'onglet</span>
+              <span class="settings-description" data-i18n="popup.settings.preventTabDiscardDescription">Empêche Chrome de mettre en veille les pages de chaîne Twitch et Kick, pour que les points et les Drops continuent de tomber. Désactivé, les onglets déjà protégés retrouvent leur comportement normal.</span>
+            </span>
+            <input id="pref-prevent-tab-discard" type="checkbox" role="switch" />
+          </label>
         </section>
 
-        <!-- Aperçus -->
         <section class="menu-panel" id="menu-previews" role="tabpanel" aria-labelledby="menu-tab-previews" hidden>
-          <h2 data-i18n="popup.osd.previewsTitle">Aperçus au survol</h2>
+          <h2 data-i18n="popup.osd.menuPreviewsChat">Aperçus et chat</h2>
+
+          <h3 class="settings-group-header" data-i18n="popup.osd.previewsTitle">Aperçus au survol</h3>
 
           <label class="settings-toggle">
             <span class="settings-text">
@@ -730,9 +748,6 @@
               </div>
             </div>
 
-            <details class="settings-advanced">
-              <summary data-i18n="popup.settings.advancedGroup">Avancé</summary>
-              <div class="settings-advanced-body">
                 <div class="settings-row">
                   <span class="settings-title" id="previews-size-label" data-i18n="popup.settings.previewsSizeTitle">Taille</span>
                   <div class="segmented seg-group" id="previews-size-group" role="group" aria-labelledby="previews-size-label">
@@ -757,14 +772,9 @@
                   </span>
                   <input id="pref-previews-animations" type="checkbox" role="switch" />
                 </label>
-              </div>
-            </details>
           </div>
-        </section>
 
-        <!-- Chat -->
-        <section class="menu-panel" id="menu-chat" role="tabpanel" aria-labelledby="menu-tab-chat" hidden>
-          <h2 data-i18n="popup.osd.menuChat">Chat</h2>
+          <h3 class="settings-group-header" data-i18n="popup.osd.menuChat">Chat</h3>
 
           <p class="settings-note" data-i18n="popup.settings.chatAutoSaveNote">C'est enregistré dès que tu quittes le champ.</p>
           <div class="field-stack">
@@ -781,33 +791,9 @@
           <p class="settings-description dependency-status" id="chat-save-status" role="status"></p>
         </section>
 
+        <!-- Aperçus -->
+        <!-- Chat -->
         <!-- Onglets -->
-        <section class="menu-panel" id="menu-tabs" role="tabpanel" aria-labelledby="menu-tab-tabs" hidden>
-          <h2 data-i18n="popup.osd.groupTabs">Onglets</h2>
-
-          <label class="settings-toggle">
-            <span class="settings-text">
-              <span class="settings-title" data-i18n="popup.settings.streamerFaviconTitle">Avatar du streamer sur l'onglet</span>
-              <span class="settings-description" data-i18n="popup.settings.streamerFaviconDescription">Remplacer l'icône de l'onglet par la photo de profil du streamer en direct.</span>
-            </span>
-            <input id="pref-enable-streamer-favicon" type="checkbox" role="switch" />
-          </label>
-          <label class="settings-toggle">
-            <span class="settings-text">
-              <span class="settings-title" data-i18n="popup.settings.tabLiveIconTitle">Pastille rouge LIVE sur l'onglet</span>
-              <span class="settings-description" data-i18n="popup.settings.tabLiveIconDescription">Afficher un point rouge LIVE sur l'icône de l'onglet quand le flux est en direct.</span>
-            </span>
-            <input id="pref-enable-tab-live-icon" type="checkbox" role="switch" />
-          </label>
-          <label class="settings-toggle">
-            <span class="settings-text">
-              <span class="settings-title" data-i18n="popup.settings.preventTabDiscardTitle">Empêcher la mise en veille de l'onglet</span>
-              <span class="settings-description" data-i18n="popup.settings.preventTabDiscardDescription">Empêche Chrome de mettre en veille les pages de chaîne Twitch et Kick, pour que les points et les Drops continuent de tomber. Désactivé, les onglets déjà protégés retrouvent leur comportement normal.</span>
-            </span>
-            <input id="pref-prevent-tab-discard" type="checkbox" role="switch" />
-          </label>
-        </section>
-
         <!-- Activité : points, temps de visionnage et journal -->
         <section class="menu-panel points-panel" id="menu-activity" role="tabpanel" aria-labelledby="menu-tab-activity" hidden>
           <h2 data-i18n="popup.osd.menuActivity">Activité</h2>
@@ -886,11 +872,17 @@
         <section class="menu-panel drops-panel" id="menu-drops" role="tabpanel" aria-labelledby="menu-tab-drops" hidden>
           <div class="pts-head">
             <h2 data-i18n="popup.drops.title">Drops</h2>
-            <button type="button" class="chip drops-auto" id="drops-auto" data-i18n-attr-title="popup.drops.autoHint" title="Régler dans Automatisation">
+            <button type="button" class="chip drops-auto" id="drops-auto" data-i18n-attr-title="popup.drops.autoHint" title="Régler dans Récompenses">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg>
               <span id="drops-auto-label" data-i18n="popup.drops.autoOn">Récupération auto</span>
             </button>
           </div>
+
+          <button type="button" class="drops-live" id="drops-live" data-i18n-attr-ariaLabel="popup.drops.liveOpen" aria-label="Ouvrir la chaîne 24/7">
+            <i class="drops-live-dot" aria-hidden="true"></i>
+            <span class="drops-live-text"><b data-i18n="popup.drops.liveTitle">Chaîne 24/7 : badges et Drops</b><small data-i18n="popup.drops.liveBody">Un live StreamPulse tourne jour et nuit sur un jeu avec badge ou Drop actif. Regarde-le pour le gagner, ou choisis le jeu avec !game.</small></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </button>
 
           <h3 class="drops-section"><span data-i18n="popup.drops.inProgress">En cours</span><small id="drops-updated" role="status"></small></h3>
           <ul class="drops-list" id="drops-progress"></ul>
@@ -915,6 +907,8 @@
             </div>
           </div>
 
+          <section class="reward-plan" id="reward-plan" aria-live="polite"></section>
+
           <h3 class="drops-section"><span data-i18n="popup.drops.campaigns">Campagnes</span><small id="drops-campaigns-meta"></small></h3>
           <div class="drops-filters" id="drops-filters" role="group" data-i18n-attr-ariaLabel="popup.drops.filterLabel">
             <button type="button" class="drops-filter active" aria-pressed="true" data-filter="all"><span data-i18n="popup.drops.filterAll">Toutes</span><em data-count="all"></em></button>
@@ -935,14 +929,6 @@
             <p class="settings-description" data-i18n="popup.drops.lockedBody">L'historique de tous tes Drops obtenus, mois par mois, avec le jeu et la chaîne. Réservé à StreamPulse+.</p>
             <button class="button button-primary" id="drops-unlock" type="button" data-i18n="popup.smart.unlock">Débloquer</button>
           </div>
-
-          <label class="settings-toggle">
-            <span class="settings-text">
-              <span class="settings-title" data-i18n="popup.drops.trackingTitle">Historique des Drops</span>
-              <span class="settings-description" data-i18n="popup.drops.trackingBody">Progression et récupération même sans onglet Twitch ouvert. La Récupération auto des Drops s'appuie sur cet historique ; la liste des campagnes se met à jour quand tu passes sur Twitch.</span>
-            </span>
-            <input id="pref-drops-tracking" type="checkbox" role="switch" />
-          </label>
         </section>
 
         <section class="menu-panel drops-panel" id="menu-badges" role="tabpanel" aria-labelledby="menu-tab-badges" hidden>
@@ -1000,7 +986,7 @@
         </section>
 
         <section class="menu-panel" id="menu-identity" role="tabpanel" aria-labelledby="menu-tab-identity" hidden>
-          <h2 data-i18n="popup.osd.menuIdentity">Profil et badge</h2>
+          <h2 data-i18n="popup.osd.menuIdentityLinked">Profil et comptes</h2>
           <p class="settings-description" data-i18n="popup.identity.intro">L'apparence de ton badge StreamPulse et de ton pseudo dans le chat Twitch, visible par les autres utilisateurs de StreamPulse.</p>
           <p class="identity-rank" id="identity-rank" role="status" hidden></p>
           <div class="field-stack pseudo-field">
@@ -1038,6 +1024,8 @@
             </div>
           </div>
           <div class="fx-picker is-list" id="cosmetic-name-fx" role="radiogroup" data-i18n-attr-ariaLabel="popup.cosmetics.tabName"></div>
+
+          <div id="linked-accounts-mount"></div>
         </section>
 
         <!-- StreamPulse+ : compte et licence -->
@@ -1095,6 +1083,14 @@
             <span class="settings-title" data-i18n="popup.settings.languageTitle">Langue de l'extension</span>
             <div class="language-options" id="language-options-popup" role="group" data-i18n-attr-ariaLabel="meta.languageSwitcherLabel"></div>
           </div>
+
+          <label class="settings-toggle">
+            <span class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.updateNotificationsTitle">Notification de mise à jour</span>
+              <span class="settings-description" data-i18n="popup.settings.updateNotificationsDescription">Prévenir quand StreamPulse est mis à jour (une seule fois par version), avec un clic vers les nouveautés.</span>
+            </span>
+            <input id="pref-update-notifications" type="checkbox" role="switch" />
+          </label>
 
           <div class="field-stack">
             <span class="settings-title" data-i18n="popup.referral.title">Parrainage</span>
@@ -1181,6 +1177,8 @@
               <p class="faq-body" data-i18n="popup.settings.faqPredictionsBody">Un widget déplaçable s'affiche sur la vidéo pour voter rapidement. Les redirections de raid sont annulées si l'option est active.</p>
             </details>
           </div>
+
+          <div id="notification-diagnostic" class="notification-diagnostic"></div>
 
           <h3 class="settings-group-header" data-i18n="popup.settings.groupContact">Contact</h3>
           <p class="settings-description" data-i18n="popup.settings.contactDescription">Un bug, une idée ? Contacte-moi :</p>

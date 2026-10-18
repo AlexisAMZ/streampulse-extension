@@ -1,9 +1,11 @@
 // Sondage des streamers suivis : statuts, état live, alertes, badge.
 
 import { buildProfileUrl, formatHandleForDisplay, getPlatformIcon, normalizePlatform, sanitizeHandle } from "../platforms.js";
+import { LINKED_ACCOUNTS_KEY, shouldNotifyLinked } from "../linked-accounts.js";
+import { readNotificationControls } from "../notification-controls.js";
 import { PLUS_KEY, getDeviceId, isPlusActive, needsRecheck, verifyLicense } from "../plus.js";
 import { normalizeLanguage } from "../preferences-data.js";
-import { isWithinQuietHours } from "../quiet-hours.js";
+import { getNotificationSilence } from "../quiet-hours.js";
 import { SMART_ALERTS_KEY, decideSmartAlert, normalizeRules } from "../smart-alerts.js";
 import { ActionBadge } from "./action-badge.js";
 import { clearTwitchRateLimit, ensureConfig, twitchRateLimitUntil } from "./config.js";
@@ -254,9 +256,9 @@ async function buildAllStatuses(streamers, twitchBatch, kickBatch = null) {
 function dispatchAlert(alert, { streamer, status, next, preferences, queueAlert, catchUpLive }) {
   if (alert.type === "catchUp") {
     const platform = status.platform || streamer.platform || "twitch";
-    catchUpLive.push(streamer.displayName || formatHandleForDisplay(platform, streamer.handle || streamer.twitch));
+    catchUpLive.push({ id: streamer.id, name: streamer.displayName || formatHandleForDisplay(platform, streamer.handle || streamer.twitch) });
   } else if (alert.type === "live") {
-    queueAlert(() => NotificationSystem.notifyLive(streamer, status.active, preferences));
+    queueAlert(() => NotificationSystem.notifyLive(streamer, status.active, preferences), { liveId: streamer.id, streamer });
   } else if (alert.type === "game") {
     queueAlert(() => NotificationSystem.notifyGameChange(streamer, alert.from, alert.to, preferences, next.platform));
   } else if (alert.type === "title") {
@@ -300,6 +302,20 @@ async function persistPollState(statuses) {
   }
 }
 
+/** Comptes liés : une seule alerte « en direct » par personne dans un même sondage. */
+async function dedupeLinkedLiveAlerts(queuedAlerts, liveCandidates) {
+  if (liveCandidates.size < 2) return queuedAlerts.map(({ send }) => send);
+  let groups = [];
+  try {
+    groups = (await chrome.storage.local.get(LINKED_ACCOUNTS_KEY))[LINKED_ACCOUNTS_KEY];
+  } catch (error) {
+    console.warn("[SP] comptes liés illisibles, alertes non regroupées :", error?.message || error);
+  }
+  return queuedAlerts
+    .filter(({ liveId }) => !liveId || shouldNotifyLinked(liveId, liveCandidates, groups))
+    .map(({ send }) => send);
+}
+
 /** L'état est persisté : les alertes partent une à une. Un SW tué ici perd une alerte, jamais un doublon. */
 async function sendQueuedAlerts(queuedAlerts) {
   for (const send of queuedAlerts) {
@@ -314,10 +330,15 @@ async function sendQueuedAlerts(queuedAlerts) {
 /** Rattrapage au démarrage : une seule notification récapitulative. */
 async function notifyCatchUp(catchUpLive, preferences) {
   if (catchUpLive.length === 0) return;
+  const controls = await readNotificationControls();
+  const now = Date.now();
+  const allowed = catchUpLive.filter(({ id }) => !getNotificationSilence({ ...controls, streamerId: id, now }).blocked);
+  if (allowed.length === 0) return;
   const lang = normalizeLanguage(preferences?.language);
   await NotificationCenter.show({
+    streamerIds: allowed.map(({ id }) => id),
     title: translate(lang, "background.notifications.startupBatchTitle"),
-    message: translate(lang, "background.notifications.startupBatchBody", { names: catchUpNames(catchUpLive) }),
+    message: translate(lang, "background.notifications.startupBatchBody", { names: catchUpNames(allowed.map(({ name }) => name)) }),
     iconUrl: NotificationCenter.getDefaultIcon(),
     requireInteraction: false,
     priority: 1,
@@ -345,21 +366,21 @@ async function _pollStreamersImpl({ forceNotification = false } = {}) {
     : null;
   const statuses = await buildAllStatuses(streamers, await probeTwitchBatch(streamers), kickBatch);
 
-  // Heures calmes : aucune alerte (live, catégorie, titre, rattrapage). L'état
-  // live reste persisté, donc aucune session annoncée ne repart en doublon.
-  // Les envois partent APRÈS la persistance de l'état (voir sendQueuedAlerts).
-  const quietNow = isWithinQuietHours(Date.now(), preferences);
+  // L'etat reste persiste meme pendant le silence. Le gate commun est relu
+  // au moment de l'envoi, apres la persistance, pas au debut du sondage.
   const queuedAlerts = [];
   const catchUpLive = [];
-  const queueAlert = (send) => {
-    if (!quietNow) queuedAlerts.push(send);
+  const liveCandidates = new Map();
+  const queueAlert = (send, { liveId, streamer } = {}) => {
+    queuedAlerts.push({ send, liveId });
+    if (liveId) liveCandidates.set(liveId, { active: { isLive: true }, notificationsEnabled: streamer?.notificationsEnabled });
   };
   for (const status of statuses) {
     processStatus(status, { streamer: streamerById.get(status.id), preferences, smartRules, forceNotification, queueAlert, catchUpLive });
   }
   await persistPollState(statuses);
-  await sendQueuedAlerts(queuedAlerts);
-  if (!quietNow) await notifyCatchUp(catchUpLive, preferences);
+  await sendQueuedAlerts(await dedupeLinkedLiveAlerts(queuedAlerts, liveCandidates));
+  await notifyCatchUp(catchUpLive, preferences);
   await ActionBadge.update(countLive(statuses), preferences);
   precacheThumbnails(statuses).catch((error) => console.warn("[SP] cache des vignettes :", error?.message || error));
   return statuses;

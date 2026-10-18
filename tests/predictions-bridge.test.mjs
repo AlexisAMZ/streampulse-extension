@@ -107,7 +107,6 @@ async function withFakeClock(offsetMs, run) {
   try {
     return await run();
   } finally {
-    // eslint-disable-next-line require-atomic-updates -- remise en place de l'horloge sauvegardée avant l'essai, sans concurrence dans le test.
     Date.now = realDateNow;
   }
 }

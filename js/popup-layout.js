@@ -3,7 +3,7 @@
 // « Général et aide » restent toujours visibles : c'est là qu'on revient en
 // arrière. Rangé dans chrome.storage, relu à chaque ouverture.
 
-import { t } from "./i18n.js";
+import { onLanguageChange, t } from "./i18n.js";
 
 const LAYOUT_KEY = "streamPulseLayout";
 const LOCKED = new Set(["settings", "general"]);
@@ -19,6 +19,7 @@ const LISTS = {
 };
 
 let layout = { tabs: { order: [], hidden: [] }, menu: { order: [], hidden: [] } };
+let initialized = false;
 
 function normalize(value) {
   const part = (item) => ({
@@ -60,7 +61,13 @@ function apply() {
       const anchor = group[group.length - 1]?.nextSibling || null;
       [...group].sort((a, b) => rank(a) - rank(b)).forEach((node) => parent.insertBefore(node, anchor));
     }
-    items.forEach((node) => { node.hidden = layout[key].hidden.includes(list.id(node)); });
+    items.forEach((node) => {
+      const wasFocused = node.contains(document.activeElement);
+      node.hidden = layout[key].hidden.includes(list.id(node));
+      if (wasFocused && node.hidden) {
+        list.items().find((item) => !item.hidden)?.focus();
+      }
+    });
   }
   // Rubrique active masquée : on bascule sur la première visible.
   const active = document.querySelector('.menu-nav > .menu-tab[aria-selected="true"]');
@@ -118,9 +125,11 @@ function renderEditor(key, listId) {
   const items = LISTS[key].items();
   target.replaceChildren(...items.map((node, index) => {
     const id = LISTS[key].id(node);
-    const name = (node.querySelector("span[data-i18n]") || node).textContent.trim();
+    const source = node.querySelector("span[data-i18n]") || node;
+    const name = source.dataset.i18n ? t(source.dataset.i18n) : source.textContent.trim();
     const row = document.createElement("li");
     row.className = "layout-row";
+    row.dataset.id = id;
     const label = document.createElement("label");
     label.className = "layout-label";
     const check = document.createElement("input");
@@ -145,6 +154,27 @@ function renderEditors() {
   renderEditor("menu", "layout-menu");
 }
 
+function refreshLayoutTexts() {
+  for (const [key, listId] of [["tabs", "layout-tabs"], ["menu", "layout-menu"]]) {
+    const rows = [...($(listId)?.children || [])];
+    for (const node of LISTS[key].items()) {
+      const row = rows.find((item) => item.dataset.id === LISTS[key].id(node));
+      if (!row) continue;
+      // Read the translation directly, regardless of the parent's i18n order.
+      const source = node.querySelector("span[data-i18n]") || node;
+      const name = source.dataset.i18n ? t(source.dataset.i18n) : source.textContent.trim();
+      row.querySelector(".layout-label span").textContent = name;
+      row.querySelectorAll(".layout-move").forEach((button, index) => {
+        const label = t(index ? "popup.layout.moveDown" : "popup.layout.moveUp", { name });
+        button.title = label;
+        button.setAttribute("aria-label", label);
+      });
+    }
+  }
+  // Parent translation listeners may update the topbar later in this turn.
+  queueMicrotask(fitTopbar);
+}
+
 /** Applique un changement, l'enregistre, redessine, et garde le focus sur le bouton utilisé. */
 function update(change, listId, id, delta) {
   change();
@@ -160,6 +190,8 @@ function update(change, listId, id, delta) {
 }
 
 export async function initLayout() {
+  if (initialized) return;
+  initialized = true;
   // Les libellés changent avec la langue et les compteurs : on réajuste à chaque changement de taille.
   if (typeof ResizeObserver === "function") {
     // Ajuster à l'image suivante, hors du rappel : changer la barre pendant que
@@ -175,6 +207,7 @@ export async function initLayout() {
   layout = normalize(stored[LAYOUT_KEY]);
   apply();
   renderEditors();
+  onLanguageChange(refreshLayoutTexts);
   $("layout-reset")?.addEventListener("click", () => {
     layout = normalize({});
     // Ordre d'origine : celui du HTML, relu depuis les identifiants de départ.
@@ -187,5 +220,5 @@ export async function initLayout() {
 
 const DEFAULT_ORDER = {
   tabs: ["streamers", "history", "drops", "badges", "settings"],
-  menu: ["notifications", "rewards", "player", "previews", "tabs", "chat", "identity", "general", "drops", "badges", "activity", "plus", "help"],
+  menu: ["notifications", "rewards", "player", "previews", "tabs", "chat", "identity", "general", "linked", "drops", "badges", "activity", "plus", "help"],
 };

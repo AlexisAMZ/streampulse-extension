@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="bulk.documentTitle">Add streamers in bulk | StreamPulse</title>
+    <link rel="icon" href="../images/photos/128px.png" />
+    <link rel="stylesheet" href="../css/tokens.css" />
+    <link rel="stylesheet" href="../css/pages.css" />
+    <link rel="stylesheet" href="../css/bulk-add.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-head">
+        <span class="brand">
+          <img class="brand-mark" src="../images/photos/logosp-128.png" alt="" width="36" height="36" />
+          <span>StreamPulse</span>
+        </span>
+      </header>
+      <main class="bulk-page">
+        <header class="bulk-intro">
+          <h1 id="bulk-title" data-i18n="bulk.title">Add streamers in bulk</h1>
+          <p class="lede" data-i18n="bulk.intro">Paste up to 50 handles or channel links, then choose which ones to add to StreamPulse.</p>
+        </header>
+        <form id="bulk-form" aria-busy="true">
+          <fieldset id="bulk-controls" aria-labelledby="bulk-title" disabled>
+            <div class="bulk-workspace">
+              <section class="bulk-editor" aria-labelledby="bulk-input-label">
+                <label id="bulk-input-label" for="bulk-input" data-i18n="bulk.listLabel">Your list</label>
+                <p class="bulk-hint" id="bulk-input-hint" data-i18n="bulk.listHint">One handle or link per line. Commas, semicolons and tabs also work.</p>
+                <textarea id="bulk-input" rows="8" spellcheck="false" autocapitalize="none" autocomplete="off" aria-describedby="bulk-input-hint"></textarea>
+                <div class="bulk-field">
+                  <label for="bulk-platform" data-i18n="bulk.platformLabel">Platform for handles without a link</label>
+                  <select id="bulk-platform">
+                    <option value="twitch" data-i18n="platforms.twitch">Twitch</option>
+                    <option value="kick" data-i18n="platforms.kick">Kick</option>
+                    <option value="youtube" data-i18n="platforms.youtube">YouTube</option>
+                  </select>
+                </div>
+                <div class="bulk-field">
+                  <label for="bulk-group" data-i18n="bulk.groupLabel">Group (optional)</label>
+                  <select id="bulk-group" aria-describedby="bulk-group-hint">
+                    <option value="" data-i18n="bulk.noGroup">No group</option>
+                  </select>
+                  <p class="bulk-hint" id="bulk-group-hint" data-i18n="bulk.groupHint">Add the new streamers to an existing group without changing your other groups.</p>
+                </div>
+                <button id="bulk-preview" class="btn btn-ghost" type="button" data-i18n="bulk.preview" disabled>Review the list</button>
+              </section>
+              <section class="bulk-review" aria-labelledby="bulk-review-title">
+                <h2 id="bulk-review-title" data-i18n="bulk.previewTitle">Review before adding</h2>
+                <p class="bulk-hint" data-i18n="bulk.previewHint">This checks the format and duplicates. Each account is verified when you add it.</p>
+                <p id="bulk-summary" class="bulk-summary"></p>
+                <label class="bulk-select-all">
+                  <input id="bulk-select-all" type="checkbox" disabled />
+                  <span data-i18n="bulk.selectAll">Select all candidates</span>
+                </label>
+                <p id="bulk-empty" class="bulk-empty" data-i18n="bulk.emptyPreview">Paste your list, then review it to see the candidates, duplicates and invalid entries.</p>
+                <ul id="bulk-list" class="bulk-list" hidden></ul>
+              </section>
+            </div>
+            <footer class="bulk-actions">
+              <p class="bulk-hint" data-i18n="bulk.keepOpen">Your input stays here when the StreamPulse popup closes. Keep this tab open while adding.</p>
+              <button id="bulk-add" class="btn btn-primary" type="submit" disabled></button>
+            </footer>
+          </fieldset>
+        </form>
+        <p id="bulk-status" class="bulk-status" role="status" aria-live="polite" aria-atomic="true" tabindex="-1"></p>
+        <p id="bulk-error" class="bulk-error" role="alert" tabindex="-1" hidden></p>
+      </main>
+    </div>
+    <script type="module" src="../js/bulk-add-page.js"></script>
+  </body>
+</html>

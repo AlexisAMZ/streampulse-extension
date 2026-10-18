@@ -74,3 +74,37 @@ test("le service worker applique le son par type seulement avec StreamPulse+", a
   assert.deepEqual(await played(plus), ["chime", "drop"]);
   assert.deepEqual(await played({}), ["chime", "chime"]);
 });
+
+test("popup : choisir un son l'enregistre et le garde, sans toucher au menu quand rien ne change", async () => {
+  const { extensionPage } = await import("./helpers/extension-page.mjs");
+  const result = await extensionPage("popup", async ({ module, tick }) => {
+    const { createSoundSettings } = await module("popup-sounds.js");
+    const prefs = { soundsEnabled: true };
+    const writes = [];
+    const ui = createSoundSettings({
+      getPreferences: () => prefs,
+      updatePreferences: async (patch) => { writes.push(patch); Object.assign(prefs, patch); return true; },
+      play: () => Promise.resolve(),
+    });
+    ui.render();
+    const mount = document.getElementById("sound-settings");
+    const general = document.getElementById("pref-sound-general");
+    const options = [...general.options].map((option) => option.value);
+    general.value = "pulse";
+    general.dispatchEvent(new Event("change", { bubbles: true }));
+    await tick();
+    await tick();
+    let mutations = 0;
+    const observer = new MutationObserver((records) => { mutations += records.length; });
+    observer.observe(mount, { subtree: true, childList: true, characterData: true, attributes: true });
+    ui.render();
+    ui.render();
+    await tick();
+    observer.disconnect();
+    return { options, writes, value: general.value, stored: prefs.notificationSound, mutations };
+  });
+  assert.deepEqual(result.options, ["classic", "chime", "pulse", "bubble", "arpeggio", "drop"]);
+  assert.deepEqual(result.writes, [{ notificationSound: "pulse" }]);
+  assert.equal(result.value, "pulse");
+  assert.equal(result.mutations, 0, "render() ne doit rien modifier quand les réglages n'ont pas changé");
+});

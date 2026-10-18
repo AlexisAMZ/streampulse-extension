@@ -46,6 +46,28 @@ export function handleOpenSettings(request, sender, sendResponse) {
   return true;
 }
 
+// Onboarding StreamPulse+ : ouvert une seule fois, à l'activation de la
+// licence — pas à chaque retour dans le popup ni à chaque mise à jour.
+const PLUS_ONBOARDING_SEEN_KEY = "streamPulsePlusOnboardingSeen";
+
+export function handleOpenPlusOnboarding(request, sender, sendResponse) {
+  (async () => {
+    try {
+      const stored = await chrome.storage.local.get(PLUS_ONBOARDING_SEEN_KEY);
+      if (stored[PLUS_ONBOARDING_SEEN_KEY]) {
+        sendResponse({ success: true, opened: false });
+        return;
+      }
+      await chrome.storage.local.set({ [PLUS_ONBOARDING_SEEN_KEY]: true });
+      await chrome.tabs.create({ url: chrome.runtime.getURL("html/onboarding.html?mode=plus") });
+      sendResponse({ success: true, opened: true });
+    } catch (error) {
+      sendResponse({ success: false, error: error?.message || String(error) });
+    }
+  })();
+  return true;
+}
+
 export function handleGetConfig(request, sender, sendResponse) {
   // Content scripts can no longer import config.js directly (it was removed
   // from web_accessible_resources for CWS compliance). They request the

@@ -24,3 +24,5 @@ export const WATCHER_ALARM = "streampulseWatcher";
 export const KEEP_ALIVE_ALARM = "streampulseKeepAlive";
 export const AUTO_OPEN_INVENTORY_ALARM = "streamPulseAutoOpenInventoryAlarm";
 export const DROPS_ALARM = "streampulse-drops";
+/** Mode auto des badges actif : passage de contrôle toutes les 2 minutes. */
+export const BADGE_AUTO_ALARM = "streampulse-badge-auto";

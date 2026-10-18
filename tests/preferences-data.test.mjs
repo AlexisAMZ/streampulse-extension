@@ -36,15 +36,19 @@ test("heures calmes : défauts, format HH:MM validé, plage pouvant passer minui
   assert.equal(dirty.quietHoursEnd, "08:00");
 });
 
-test("les alertes de drops, raids, clips et mises à jour deviennent opt-in", () => {
+test("drops, raids et clips restent opt-in ; une mise à jour installée se signale d'elle-même", () => {
   assert.equal(DEFAULT_PREFERENCES.dropAlerts, false);
   assert.equal(DEFAULT_PREFERENCES.raidAlerts, false);
   assert.equal(DEFAULT_PREFERENCES.enableClipDownload, false);
-  assert.equal(DEFAULT_PREFERENCES.updateNotifications, false);
+  // Décision du propriétaire (2026-10-17) : la notification de mise à jour
+  // part par défaut, sans que personne n'ait à l'activer.
+  assert.equal(DEFAULT_PREFERENCES.updateNotifications, true);
   // Un choix stocké, même ancien, n'est jamais écrasé.
   assert.equal(sanitizePreferences({ dropAlerts: true }).dropAlerts, true);
   assert.equal(sanitizePreferences({ updateNotifications: true }).updateNotifications, true);
+  assert.equal(sanitizePreferences({ updateNotifications: false }).updateNotifications, false);
   assert.equal(sanitizePreferences({}).dropAlerts, false);
+  assert.equal(sanitizePreferences({}).updateNotifications, true);
 });
 
 test("le délai des aperçus vaut 350 ms par défaut", () => {

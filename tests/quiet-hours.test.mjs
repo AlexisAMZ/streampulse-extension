@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { isWithinQuietHours, parseHhMm } from "../js/quiet-hours.js";
-import { DEFAULT_QUIET_END, DEFAULT_QUIET_START, isQuietNow, normalizeQuietTime } from "../js/quiet-hours.js";
+import { DEFAULT_QUIET_END, DEFAULT_QUIET_START, getNotificationSilence, isQuietNow, normalizeNotificationPause, normalizeQuietTime, notificationPauseUntil } from "../js/quiet-hours.js";
 
 const at = (h, m) => new Date(2026, 8, 28, h, m, 0, 0);
 
@@ -101,4 +101,48 @@ test("plage nulle (début = fin) : jamais silencieux", () => {
 test("entrées sales : retombe sur les défauts sans lever d'erreur", () => {
   const midnight = new Date(2026, 8, 28, 0, 30).getTime();
   assert.equal(isQuietNow(midnight, "n'importe quoi", null), true);
+});
+
+test("silence temporaire : 1 h exacte, demain a 08 h locales meme avant 08 h", () => {
+  for (const date of [new Date(2026, 2, 28, 22, 15), new Date(2026, 9, 24, 22, 15), new Date(2026, 11, 31, 3, 0)]) {
+    assert.equal(notificationPauseUntil("hour", date.getTime()), date.getTime() + 3_600_000);
+    const tomorrow = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 8);
+    assert.equal(notificationPauseUntil("tomorrow", date.getTime()), tomorrow.getTime());
+  }
+  assert.throws(() => notificationPauseUntil("forever", at(12, 0).getTime()), RangeError);
+  assert.throws(() => notificationPauseUntil("hour", NaN), RangeError);
+});
+
+test("silence temporaire : stockage invalide inactif, exception strictement booleenne", () => {
+  for (const value of [undefined, null, [], "bad", {}, { until: "123" }, { until: Infinity }, { until: -1 }, { until: 1e17 }]) {
+    assert.deepEqual(normalizeNotificationPause(value), { until: 0, exceptPinned: false });
+  }
+  assert.deepEqual(normalizeNotificationPause({ until: 123, exceptPinned: "true", extra: 1 }), { until: 123, exceptPinned: false });
+});
+
+test("silence temporaire : expiration sans ecriture ni minuterie, et favoris opt-in", () => {
+  const now = at(12, 0).getTime();
+  const pause = Object.freeze({ until: now + 3_600_000, exceptPinned: true });
+  const input = { now, pause, preferences: {}, pinnedIds: ["fav"], streamerId: "other" };
+  assert.equal(getNotificationSilence(input).blocked, true);
+  assert.equal(getNotificationSilence({ ...input, streamerId: "fav" }).pinnedException, true);
+  assert.equal(getNotificationSilence({ ...input, streamerId: "fav" }).blocked, false);
+  assert.equal(getNotificationSilence({ ...input, streamerId: undefined }).blocked, true);
+  assert.equal(getNotificationSilence({ ...input, pinnedIds: "other" }).blocked, true);
+  assert.equal(getNotificationSilence({ ...input, pause: { ...pause, exceptPinned: false }, streamerId: "fav" }).blocked, true);
+  assert.equal(getNotificationSilence({ ...input, now: pause.until - 1 }).blocked, true);
+  assert.equal(getNotificationSilence({ ...input, now: pause.until }).blocked, false);
+  assert.equal(getNotificationSilence({ ...input, now: pause.until + 1 }).until, 0);
+});
+
+test("les favoris ne contournent pas les heures calmes", () => {
+  const now = at(23, 30).getTime();
+  const silence = getNotificationSilence({
+    now, pause: { until: now + 3_600_000, exceptPinned: true }, pinnedIds: ["fav"], streamerId: "fav",
+    preferences: { quietHoursEnabled: true, quietHoursStart: "23:00", quietHoursEnd: "08:00" },
+  });
+  assert.equal(silence.pinnedException, true);
+  assert.equal(silence.paused, false);
+  assert.equal(silence.quiet, true);
+  assert.equal(silence.blocked, true);
 });

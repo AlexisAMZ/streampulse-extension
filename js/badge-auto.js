@@ -31,6 +31,18 @@ function normalizeJob(raw) {
   };
 }
 
+/**
+ * Dernière lecture de la vidéo de l'onglet (vigie de santé) : temps de lecture
+ * et état de pause au passage précédent. null = rien de mesurable (page sans
+ * vidéo, sonde impossible).
+ */
+function normalizeVideo(raw) {
+  if (!isPlainObject(raw)) return null;
+  const t = Number(raw.t);
+  if (!Number.isFinite(t) || t < 0) return null;
+  return { t, at: time(raw.at), paused: raw.paused === true };
+}
+
 /** État stocké → état propre ; reprend l'ancien format d'un seul badge. */
 export function normalizeAuto(raw) {
   if (!isPlainObject(raw)) return null;
@@ -42,6 +54,7 @@ export function normalizeAuto(raw) {
     // Jeu (clé de groupe) sur lequel l'onglet regarde un live.
     gameKey: text(raw.gameKey),
     startedAt: time(raw.startedAt),
+    video: normalizeVideo(raw.video),
   };
 }
 

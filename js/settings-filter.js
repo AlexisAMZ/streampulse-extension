@@ -20,6 +20,7 @@ export const PLATFORM_BY_CONTROL = {
   "pref-points-tracking": TWITCH,
   "pref-auto-claim": TWITCH_KICK,
   "pref-auto-claim-drops": TWITCH,
+  "pref-drops-tracking-panel": TWITCH,
   "pref-auto-cancel-raids": TWITCH,
   "pref-predictions-popup": TWITCH,
   "pred-locked": TWITCH,

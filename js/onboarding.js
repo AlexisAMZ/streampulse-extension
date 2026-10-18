@@ -19,13 +19,14 @@ import {
   sanitizeHandle,
 } from "./platforms.js";
 import { DEFAULT_PREFERENCES } from "./preferences-data.js";
+import { BADGE_FX, COSMETICS_KEY, NAME_FX, REFERRAL_FX, TENURE_STYLES, fxLock, normalizeCosmetics, visibleFx } from "./cosmetics-data.js";
+import { PLUS_KEY, isPlusActive } from "./plus.js";
 
 /* ── DOM refs ── */
 const form = document.getElementById("onboarding-form");
 const input = document.getElementById("streamer-input");
 const platformPicker = document.getElementById("onboarding-platform-picker");
 const handlePrefix = document.getElementById("onboarding-handle-prefix");
-const submitButton = document.getElementById("submit-button");
 const feedback = document.getElementById("feedback");
 const currentStreamersSection = document.getElementById("current-streamers");
 const streamerList = document.getElementById("streamer-list");
@@ -62,7 +63,18 @@ const preferenceToggleDefinitions = [
   { element: document.getElementById("onboarding-tab-live-icon"), key: "enableTabLiveIcon" },
   { element: document.getElementById("onboarding-community-badge"), key: "communityBadge" },
   { element: document.getElementById("onboarding-cross-device-sync"), key: "crossDeviceSync" },
+  // Réglages dédiés StreamPulse+ (parcours ?mode=plus).
+  { element: document.getElementById("onboarding-plus-auto-farm"), key: "autoFarmNewBadges" },
+  { element: document.getElementById("onboarding-plus-auto-claim-drops"), key: "autoClaimDrops" },
+  { element: document.getElementById("onboarding-plus-low-quality"), key: "badgeFarmLowQuality" },
+  { element: document.getElementById("onboarding-plus-auto-open-inventory"), key: "autoOpenInventory" },
+  { element: document.getElementById("onboarding-plus-game-alerts"), key: "gameNotifications" },
+  { element: document.getElementById("onboarding-plus-title-alerts"), key: "titleNotifications" },
+  { element: document.getElementById("onboarding-plus-community-badge"), key: "communityBadge" },
+  { element: document.getElementById("onboarding-plus-clip-download"), key: "enableClipDownload" },
 ];
+
+const PLUS_PREFERENCES = new Set(["autoClaimDrops", "autoOpenInventory", "autoFarmNewBadges", "badgeFarmLowQuality", "enableClipDownload"]);
 
 /**
  * Réglages désactivés tant que l'utilisateur ne les active pas : une valeur
@@ -85,7 +97,14 @@ let unsubscribeLanguage = null;
 let currentPreferences = null;
 let selectedPlatform = DEFAULT_PLATFORM;
 let currentStep = 0;
-const TOTAL_STEPS = 5;
+const PLUS_MODE = new URLSearchParams(window.location.search).get("mode") === "plus";
+const FIRST_STEP = PLUS_MODE ? 5 : 0;
+const LAST_STEP = FIRST_STEP + 4;
+let navigating = false;
+let saving = false;
+let preferencesLoaded = false;
+let pendingPreference = null;
+let plusRecord = null;
 
 let userProfile = { handle: "", displayName: "", avatarUrl: "" };
 let profileLookupTimer = null;
@@ -95,38 +114,117 @@ let profileLookupSeq = 0;
    WIZARD NAVIGATION
    ════════════════════════════════ */
 function goToStep(targetStep, direction = "forward") {
-  if (targetStep < 0 || targetStep >= TOTAL_STEPS || targetStep === currentStep) return;
+  if (saving || navigating || !Number.isInteger(targetStep) || targetStep < FIRST_STEP || targetStep > LAST_STEP || targetStep === currentStep || targetStep > currentStep + 1) return;
 
   const currentEl = document.querySelector(`.wizard-step[data-step="${currentStep}"]`);
   const targetEl = document.querySelector(`.wizard-step[data-step="${targetStep}"]`);
   if (!currentEl || !targetEl) return;
 
   const outClass = direction === "forward" ? "slide-out-left" : "slide-out-right";
+  navigating = true;
+  syncControls();
+  let timer;
+  let finished = false;
+  const complete = (event) => {
+    // Child/entrance animations must not complete the outgoing step.
+    if (event && (event.target !== currentEl || event.animationName !== outClass)) return;
+    if (finished) return;
+    finished = true;
+    clearTimeout(timer);
+    currentEl.removeEventListener("animationend", complete);
+    currentEl.removeEventListener("animationcancel", complete);
+    currentEl.classList.remove(outClass);
+    navigating = false;
+    showFeedback();
+    activateStep(targetStep);
+  };
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    complete();
+    return;
+  }
+  currentEl.addEventListener("animationend", complete);
+  currentEl.addEventListener("animationcancel", complete);
+  // Also works when CSS animations are removed or their events are lost.
+  timer = setTimeout(complete, 320);
   currentEl.classList.add(outClass);
+}
 
-  currentEl.addEventListener("animationend", () => {
-    currentEl.classList.remove("active", outClass);
-    targetEl.classList.add("active");
-    currentStep = targetStep;
-    updateStepper();
-    if (targetStep === 4) renderFinishPanel();
-  }, { once: true });
+function activateStep(step) {
+  currentStep = step;
+  document.querySelectorAll(".wizard-step").forEach((element) => element.classList.toggle("active", Number(element.dataset.step) === step));
+  syncControls();
+  if (step === 4) renderFinishPanel();
+  const heading = document.querySelector(`.wizard-step[data-step="${step}"] h1, .wizard-step[data-step="${step}"] h2`);
+  if (heading) {
+    heading.tabIndex = -1;
+    heading.focus({ preventScroll: true });
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
 }
 
 function updateStepper() {
+  // Piloté par data-step : le wizard normal et le parcours Plus ont chacun
+  // leur stepper, seul celui du mode actif est visible.
   const pills = document.querySelectorAll(".step-pill");
-  pills.forEach((pill, i) => {
-    pill.classList.toggle("active", i === currentStep);
-    pill.classList.toggle("completed", i < currentStep);
+  pills.forEach((pill) => {
+    const step = Number(pill.dataset.step);
+    const active = step === currentStep;
+    pill.classList.toggle("active", active);
+    pill.classList.toggle("completed", step < currentStep);
     // Seules les étapes déjà traversées sont cliquables : les futures restent
     // dans le flux (le wizard est linéaire) mais jamais atteignables au clavier.
-    pill.disabled = i > currentStep;
-    if (i === currentStep) pill.setAttribute("aria-current", "step");
+    pill.disabled = saving || navigating || step < FIRST_STEP || step > LAST_STEP || step > currentStep;
+    if (active) pill.setAttribute("aria-current", "step");
     else pill.removeAttribute("aria-current");
   });
   if (stepCounterCurrent) {
-    stepCounterCurrent.textContent = String(currentStep + 1).padStart(2, "0");
+    stepCounterCurrent.textContent = String(currentStep - FIRST_STEP + 1).padStart(2, "0");
   }
+}
+
+function syncControls() {
+  const busy = saving || navigating;
+  document.querySelectorAll(".wizard-step button").forEach((button) => {
+    button.disabled = busy || Boolean(button.dataset.lock);
+  });
+  if (input) input.disabled = busy;
+  if (profileInput) profileInput.disabled = busy;
+  if (btnNext1) btnNext1.disabled = busy || !userProfile.handle;
+  updateNextButton();
+  updateStepper();
+  renderPreferenceToggles(currentPreferences || {});
+}
+
+async function runSave(action) {
+  if (saving || navigating) return false;
+  saving = true;
+  syncControls();
+  showFeedback();
+  try {
+    await action();
+    return true;
+  } catch (error) {
+    console.warn("[onboarding] save failed:", error);
+    showFeedback(error?.message || t("popup.feedback.saveFailed"), "error");
+    return false;
+  } finally {
+    saving = false;
+    pendingPreference = null;
+    syncControls();
+  }
+}
+
+async function sendSaveMessage(message) {
+  let response;
+  try {
+    response = await chrome.runtime.sendMessage(message);
+  } catch {
+    throw new Error(t("onboarding.errors.extensionUnavailable"));
+  }
+  if (response?.success !== true || response.error) {
+    throw new Error(response?.error || t("popup.feedback.saveFailed"));
+  }
+  return response;
 }
 
 /* ════════════════════════════════
@@ -174,10 +272,14 @@ function renderProfileFromState() {
   // L'aperçu du badge reflète le pseudo saisi en temps réel.
   const badgePreviewName = document.getElementById("badge-preview-name");
   if (badgePreviewName) badgePreviewName.textContent = display ? `@${display}` : "@toi";
+  // Aperçu du style Plus (étape ?mode=plus) : le pseudo choisi porte les effets.
+  document.querySelectorAll(".plus-style-name").forEach((el) => {
+    el.textContent = display ? `@${display}` : "@toi";
+  });
 
   if (profileInputCount) profileInputCount.textContent = String((profileInput?.value || "").length);
 
-  if (btnNext1) btnNext1.disabled = !handle;
+  if (btnNext1) btnNext1.disabled = saving || navigating || !handle;
 }
 
 async function lookupTwitchProfile(handle) {
@@ -199,6 +301,7 @@ async function lookupTwitchProfile(handle) {
 
 function scheduleProfileLookup(rawValue) {
   if (profileLookupTimer) clearTimeout(profileLookupTimer);
+  const seq = ++profileLookupSeq;
   const handle = (rawValue || "").trim().replace(/^@/, "");
 
   if (!handle) {
@@ -219,7 +322,6 @@ function scheduleProfileLookup(rawValue) {
   setHintState("searching", t("onboarding.profileHintSearching"));
   if (profileAvatarSpinner) profileAvatarSpinner.hidden = false;
 
-  const seq = ++profileLookupSeq;
   profileLookupTimer = setTimeout(async () => {
     const user = await lookupTwitchProfile(handle);
     if (seq !== profileLookupSeq) return; /* superseded */
@@ -248,14 +350,7 @@ function scheduleProfileLookup(rawValue) {
 }
 
 async function saveUserProfile() {
-  try {
-    await chrome.runtime.sendMessage({
-      type: "updateUserProfile",
-      profile: userProfile,
-    });
-  } catch (err) {
-    console.warn("Save profile failed:", err);
-  }
+  return runSave(() => sendSaveMessage({ type: "updateUserProfile", profile: userProfile }));
 }
 
 /**
@@ -325,16 +420,19 @@ function sanitizeInput(value = "", platform = selectedPlatform) {
   return sanitizeHandle(platform, value);
 }
 
-function setLoading(isLoading) {
-  if (submitButton) submitButton.disabled = isLoading;
-}
-
 function showFeedback(message = "", type = "success") {
   if (!feedback) return;
+  if (message) {
+    const active = document.querySelector(".wizard-step.active");
+    const container = active?.querySelector("#finish-button")?.parentElement || active?.querySelector(".step-content") || active?.querySelector(".welcome-frame");
+    container?.prepend(feedback);
+  }
   feedback.hidden = !message;
   feedback.textContent = message || "";
   feedback.classList.remove("success", "error");
+  feedback.setAttribute("role", type === "error" ? "alert" : "status");
   if (message) feedback.classList.add(type === "error" ? "error" : "success");
+  if (message && type === "error") feedback.scrollIntoView({ block: "nearest", behavior: "instant" });
 }
 
 function getPlatformDefinition(platform) {
@@ -414,32 +512,9 @@ function setSelectedPlatform(platform) {
 /* ════════════════════════════════
    STREAMER CRUD
    ════════════════════════════════ */
-async function addStreamer(rawValue, platform = selectedPlatform) {
-  try {
-    return await chrome.runtime.sendMessage({
-      type: "addStreamer",
-      platform,
-      handle: rawValue,
-      displayName: rawValue,
-    });
-  } catch (error) {
-    console.error("Onboarding add streamer error:", error);
-    return { error: t("onboarding.errors.extensionUnavailable") };
-  }
-}
-
-async function removeStreamer(streamerId) {
-  try {
-    return await chrome.runtime.sendMessage({ type: "removeStreamer", id: streamerId });
-  } catch (error) {
-    console.error("Onboarding remove streamer error:", error);
-    return { error: t("onboarding.errors.removeFailed") };
-  }
-}
-
 function updateNextButton() {
   const btn = document.getElementById("btn-next-2");
-  if (btn) btn.disabled = currentStreamers.length === 0;
+  if (btn) btn.disabled = saving || navigating || currentStreamers.length === 0;
   if (streamerCount) {
     streamerCount.textContent = String(currentStreamers.length).padStart(2, "0");
   }
@@ -554,32 +629,33 @@ function renderStreamers(streamers = []) {
 }
 
 function renderPreferenceToggles(preferences = {}) {
+  const plus = isPlusActive(plusRecord);
   preferenceToggleDefinitions.forEach(({ element, key }) => {
     if (!element) return;
-    element.checked = isEnabled(preferences, key);
+    const locked = PLUS_PREFERENCES.has(key) && !plus;
+    element.checked = !locked && (pendingPreference?.key === key ? pendingPreference.enabled : isEnabled(preferences, key));
+    element.disabled = locked || !preferencesLoaded || saving || navigating;
+    element.closest(".settings-toggle")?.classList.toggle("is-locked", locked);
+    element.title = locked ? t("popup.plusMenu.statusInactive") : "";
   });
 }
 
-async function updatePreferenceToggle({ element, key }, enabled) {
-  const previous = isEnabled(currentPreferences, key);
-  try {
-    const response = await chrome.runtime.sendMessage({
+async function updatePreferenceToggle({ key }, enabled) {
+  if (!preferencesLoaded || saving || navigating || (PLUS_PREFERENCES.has(key) && !isPlusActive(plusRecord))) {
+    renderPreferenceToggles(currentPreferences || {});
+    return;
+  }
+  pendingPreference = { key, enabled };
+  await runSave(async () => {
+    const response = await sendSaveMessage({
       type: "updatePreferences",
       updates: { [key]: enabled },
     });
-    if (response?.error) {
-      showFeedback(response.error, "error");
-      if (element) element.checked = previous;
-      return;
+    if (!response.preferences || typeof response.preferences[key] !== "boolean") {
+      throw new Error(t("popup.feedback.saveFailed"));
     }
-    // eslint-disable-next-line require-atomic-updates -- une bascule suit un clic unique, la reponse du fond fait foi.
-    currentPreferences = response?.preferences || { ...(currentPreferences || {}), [key]: enabled };
-    renderPreferenceToggles(currentPreferences);
-  } catch (error) {
-    console.error("Onboarding preference update error:", error);
-    showFeedback(t("onboarding.errors.extensionUnavailable"), "error");
-    if (element) element.checked = previous;
-  }
+    currentPreferences = response.preferences;
+  });
 }
 
 async function loadStreamers() {
@@ -589,11 +665,16 @@ async function loadStreamers() {
   } catch (error) {
     console.error("Onboarding load streamers error:", error);
   }
-  currentStreamers = response?.streamers || [];
-  currentPreferences = response?.preferences || currentPreferences || {};
+  if (response?.error || !Array.isArray(response?.streamers) || !response?.preferences || typeof response.preferences !== "object") {
+    showFeedback(response?.error || t("onboarding.errors.extensionUnavailable"), "error");
+    return;
+  }
+  currentStreamers = response.streamers;
+  currentPreferences = response.preferences;
+  preferencesLoaded = true;
   renderStreamers(currentStreamers);
   renderPreferenceToggles(currentPreferences);
-  if (response?.userProfile) {
+  if (response.userProfile && !profileInput?.value) {
     userProfile = { ...userProfile, ...response.userProfile };
     if (profileInput && userProfile.handle) profileInput.value = userProfile.handle;
     setProfileAvatarImage(userProfile.avatarUrl);
@@ -610,7 +691,7 @@ async function loadStreamers() {
    ════════════════════════════════ */
 function refreshTranslations() {
   applyTranslations(document);
-  document.title = t("onboarding.documentTitle");
+  document.title = PLUS_MODE ? t("onboarding.plusDocumentTitle") : t("onboarding.documentTitle");
   syncDocumentLanguage("onboarding.htmlLang");
   updateLanguageButtonsState();
   renderStreamers(currentStreamers);
@@ -618,6 +699,11 @@ function refreshTranslations() {
   renderPlatformPicker();
   setSelectedPlatform(selectedPlatform);
   if (!profileInput?.value) setHintState("idle", t("onboarding.profileHintIdle"));
+  else if (profileHint?.dataset.state === "searching") setHintState("searching", t("onboarding.profileHintSearching"));
+  else if (profileHint?.dataset.state === "found") setHintState("found", t("onboarding.profileHintFound", { handle: userProfile.displayName || userProfile.handle }));
+  else setHintState("idle", t("onboarding.profileHintKept"));
+  renderPlusAccess();
+  syncControls();
 }
 
 /* ════════════════════════════════
@@ -627,8 +713,8 @@ function registerEventListeners() {
   /* Wizard nav */
   document.getElementById("btn-next-0")?.addEventListener("click", () => goToStep(1, "forward"));
   document.getElementById("btn-next-1")?.addEventListener("click", async () => {
-    await saveUserProfile();
-    goToStep(2, "forward");
+    if (currentStep !== 1 || !userProfile.handle) return;
+    if (await saveUserProfile()) goToStep(2, "forward");
   });
   document.getElementById("btn-next-2")?.addEventListener("click", () => goToStep(3, "forward"));
   document.getElementById("btn-next-3")?.addEventListener("click", () => goToStep(4, "forward"));
@@ -637,6 +723,16 @@ function registerEventListeners() {
   document.getElementById("btn-back-3")?.addEventListener("click", () => goToStep(2, "back"));
   document.getElementById("btn-skip-1")?.addEventListener("click", () => goToStep(2, "forward"));
   document.getElementById("btn-skip-2")?.addEventListener("click", () => goToStep(3, "forward"));
+
+  /* Parcours StreamPulse+ (?mode=plus) : un domaine par étape. */
+  document.getElementById("btn-next-5")?.addEventListener("click", () => goToStep(6, "forward"));
+  document.getElementById("btn-next-6")?.addEventListener("click", () => goToStep(7, "forward"));
+  document.getElementById("btn-next-7")?.addEventListener("click", () => goToStep(8, "forward"));
+  document.getElementById("btn-next-8")?.addEventListener("click", () => goToStep(9, "forward"));
+  document.getElementById("btn-back-6")?.addEventListener("click", () => goToStep(5, "back"));
+  document.getElementById("btn-back-7")?.addEventListener("click", () => goToStep(6, "back"));
+  document.getElementById("btn-back-8")?.addEventListener("click", () => goToStep(7, "back"));
+  document.getElementById("btn-back-9")?.addEventListener("click", () => goToStep(8, "back"));
 
   /* Stepper pill clicks */
   document.querySelectorAll(".step-pill").forEach((pill) => {
@@ -654,6 +750,7 @@ function registerEventListeners() {
   /* Streamer form */
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (saving || navigating || currentStep !== 2) return;
     const rawValue = input?.value ?? "";
     const sanitized = sanitizeInput(rawValue);
     if (!sanitized) {
@@ -664,30 +761,24 @@ function registerEventListeners() {
       return;
     }
 
-    setLoading(true);
-    showFeedback(t("onboarding.feedback.adding"), "success");
-
-    const result = await addStreamer(rawValue.trim(), selectedPlatform);
-    setLoading(false);
-
-    if (result?.error) {
-      showFeedback(result.error, "error");
-      return;
-    }
-
-    showFeedback(
-      t("onboarding.feedback.addSuccessPlatform", {
-        handle: formatHandleForDisplay(selectedPlatform, sanitized),
-        platform: getPlatformLabel(selectedPlatform),
-      }),
-      "success"
-    );
-    form.reset();
-    updatePlatformTexts();
-    await loadStreamers();
+    const platform = selectedPlatform;
+    await runSave(async () => {
+      showFeedback(t("onboarding.feedback.adding"));
+      const result = await sendSaveMessage({ type: "addStreamer", platform, handle: rawValue.trim(), displayName: rawValue.trim() });
+      if (!Array.isArray(result.streamers)) throw new Error(t("popup.feedback.saveFailed"));
+      currentStreamers = result.streamers;
+      renderStreamers(currentStreamers);
+      showFeedback(t("onboarding.feedback.addSuccessPlatform", {
+        handle: formatHandleForDisplay(platform, sanitized),
+        platform: getPlatformLabel(platform),
+      }));
+      form.reset();
+      updatePlatformTexts();
+    });
   });
 
   platformPicker?.addEventListener("click", (event) => {
+    if (saving || navigating) return;
     const button = event.target.closest(".platform-button");
     if (!button?.dataset.platform) return;
     setSelectedPlatform(button.dataset.platform);
@@ -696,15 +787,13 @@ function registerEventListeners() {
   streamerList?.addEventListener("click", async (event) => {
     const button = event.target.closest(".remove-streamer");
     if (!button?.dataset.streamerId) return;
-    button.disabled = true;
-    const result = await removeStreamer(button.dataset.streamerId);
-    button.disabled = false;
-    if (result?.error) {
-      showFeedback(result.error, "error");
-      return;
-    }
-    showFeedback(t("onboarding.feedback.removeSuccess"), "success");
-    await loadStreamers();
+    await runSave(async () => {
+      const result = await sendSaveMessage({ type: "removeStreamer", id: button.dataset.streamerId });
+      if (!Array.isArray(result.streamers)) throw new Error(t("onboarding.errors.removeFailed"));
+      currentStreamers = result.streamers;
+      renderStreamers(currentStreamers);
+      showFeedback(t("onboarding.feedback.removeSuccess"));
+    });
   });
 
   preferenceToggleDefinitions.forEach((definition) => {
@@ -715,14 +804,14 @@ function registerEventListeners() {
 
   languageOptions?.addEventListener("click", async (event) => {
     const button = event.target.closest(".language-button");
-    if (!button?.dataset.lang) return;
+    if (!button?.dataset.lang || saving || navigating) return;
     await setLanguage(button.dataset.lang);
   });
 
-  finishButton?.addEventListener("click", () => {
+  finishButton?.addEventListener("click", async () => {
     // L'étape d'après a déjà dit quoi faire (épingler l'extension) : ce
     // bouton n'a plus qu'à sauver le profil et fermer l'onglet.
-    saveUserProfile().finally(closeOnboardingTab);
+    if (currentStep === 4 && await saveUserProfile()) closeOnboardingTab();
   });
 }
 
@@ -795,13 +884,147 @@ function setupUpdateModeUI() {
   });
 
   // Jump straight to Step 3 (Réglages)
-  const currentEl = document.querySelector('.wizard-step[data-step="0"]');
-  const targetEl = document.querySelector('.wizard-step[data-step="3"]');
-  if (currentEl && targetEl) {
-    currentEl.classList.remove("active");
-    targetEl.classList.add("active");
-    currentStep = 3;
-    updateStepper();
+  activateStep(3);
+}
+
+/**
+ * Mode StreamPulse+ (?mode=plus, ouvert à l'activation de la licence) : le
+ * wizard normal laisse place à un parcours dédié — un domaine par étape
+ * (badges, Drops, alertes, badge & clips), avec son propre stepper.
+ */
+function setupPlusModeUI() {
+  if (!PLUS_MODE) return;
+  document.body.classList.add("plus-mode");
+  document.getElementById("plus-finish")?.addEventListener("click", async () => {
+    if (currentStep === 9 && await saveUserProfile()) closeOnboardingTab();
+  });
+  // Le style de pseudo et de badge se choisit ici, pas dans le popup :
+  // mêmes listes, même clé de stockage que le volet Badge du popup.
+  initPlusStyle();
+  activateStep(5);
+}
+
+/* ════════════════════════════════
+   STREAMPULSE+ : NUANCIER DU STYLE (étape Badge)
+   ════════════════════════════════ */
+
+let plusCosmetics = { badgeFx: "", nameFx: "" };
+
+function plusAccess() {
+  return {
+    plus: isPlusActive(plusRecord),
+    referrals: Math.max(0, Number(plusRecord?.referrals) || 0),
+    role: plusRecord?.role === "admin" ? "admin" : "",
+  };
+}
+
+function renderPlusAccess() {
+  const plus = isPlusActive(plusRecord);
+  const welcome = document.getElementById("plus-welcome-desc");
+  if (welcome) {
+    welcome.dataset.i18n = plus ? "onboarding.plusWelcomeDesc" : "popup.plusMenu.statusInactive";
+    welcome.textContent = t(welcome.dataset.i18n);
+  }
+  const finish = document.getElementById("plus-finish");
+  if (finish) {
+    finish.dataset.i18n = plus ? "onboarding.plusFinish" : "onboarding.finish";
+    finish.textContent = t(finish.dataset.i18n);
+  }
+  renderPreferenceToggles(currentPreferences || {});
+  if (PLUS_MODE) renderPlusStyle();
+}
+
+function onStorageChange(changes, area) {
+  if (area !== "local") return;
+  if (changes[PLUS_KEY]) plusRecord = changes[PLUS_KEY].newValue || null;
+  if (changes[COSMETICS_KEY]) plusCosmetics = normalizeCosmetics(changes[COSMETICS_KEY].newValue);
+  if (changes[PLUS_KEY] || changes[COSMETICS_KEY]) renderPlusAccess();
+}
+
+async function loadPlusAccess() {
+  try {
+    const stored = await chrome.storage.local.get([PLUS_KEY, COSMETICS_KEY]);
+    if (!stored || typeof stored !== "object") throw new Error("Missing local state");
+    plusRecord = stored[PLUS_KEY] || null;
+    plusCosmetics = normalizeCosmetics(stored[COSMETICS_KEY]);
+    renderPlusAccess();
+  } catch (error) {
+    console.warn("[onboarding] Plus state unavailable:", error);
+    showFeedback(t("onboarding.errors.extensionUnavailable"), "error");
+  }
+}
+
+/** L'étiquette d'un effet, écrite avec l'effet lui-même (pseudo) ou portée par le logo (badge). */
+function plusFxChip(kind, value) {
+  const access = plusAccess();
+  const lock = fxLock(value, access);
+  const selected = (access.plus ? (kind === "name" ? plusCosmetics.nameFx : plusCosmetics.badgeFx) : "") === value;
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "fx-option";
+  button.dataset.kind = kind;
+  button.dataset.value = value;
+  button.dataset.lock = lock;
+  button.disabled = saving || navigating || Boolean(lock);
+  button.setAttribute("role", "radio");
+  button.setAttribute("aria-checked", String(selected));
+  if (lock) button.setAttribute("aria-disabled", "true");
+  const label = t(`popup.cosmetics.${value || "none"}`);
+  // Effet d'ambassadeur verrouillé : l'infobulle dit combien de filleuls il manque.
+  button.title = lock === "referrals" ? t("popup.referral.needed", { count: REFERRAL_FX[value] || 1 }) : label;
+  button.append(Object.assign(document.createElement("span"), { className: "fx-radio" }));
+  if (kind === "name") {
+    button.append(Object.assign(document.createElement("b"), {
+      className: `fx-sample-name${value ? " sp-paint sp-paint--" + value : ""}`,
+      textContent: label,
+    }));
+  } else {
+    button.append(Object.assign(document.createElement("span"), {
+      className: `cosmetic-badge${value ? " sp-fx-" + value : ""}`,
+    }));
+    button.append(Object.assign(document.createElement("span"), { className: "fx-label", textContent: label }));
+  }
+  if (lock) {
+    button.append(Object.assign(document.createElement("span"), { className: "fx-lock", textContent: "★" }));
+  }
+  return button;
+}
+
+function renderPlusStyle() {
+  const nameFx = document.getElementById("plus-name-fx");
+  const badgeFx = document.getElementById("plus-badge-fx");
+  if (!nameFx || !badgeFx) return;
+  // L'ancienneté (Jauge, Pager) dépend des mois d'abonnement : elle reste au
+  // popup, volet Badge, qui sait calculer le palier.
+  const access = plusAccess();
+  const shown = access.plus ? plusCosmetics : { badgeFx: "", nameFx: "" };
+  const badgeList = visibleFx(BADGE_FX, access).filter((value) => !TENURE_STYLES[value]);
+  nameFx.replaceChildren(...["", ...visibleFx(NAME_FX, access)].map((value) => plusFxChip("name", value)));
+  badgeFx.replaceChildren(...["", ...badgeList].map((value) => plusFxChip("badge", value)));
+  const badge = document.getElementById("plus-style-badge");
+  const name = document.getElementById("plus-style-name");
+  if (badge) badge.className = `cosmetic-badge${shown.badgeFx ? ` sp-fx-${shown.badgeFx}` : ""}`;
+  if (name) name.className = `cosmetic-name plus-style-name${shown.nameFx ? ` sp-paint sp-paint--${shown.nameFx}` : ""}`;
+}
+
+function initPlusStyle() {
+  renderPlusStyle();
+  const previewName = document.getElementById("plus-style-name");
+  if (previewName) previewName.textContent = userProfile.displayName || userProfile.handle ? `@${userProfile.displayName || userProfile.handle}` : "@toi";
+  for (const id of ["plus-name-fx", "plus-badge-fx"]) {
+    document.getElementById(id)?.addEventListener("click", async (event) => {
+      const button = event.target.closest(".fx-option");
+      if (!button || fxLock(button.dataset.value, plusAccess())) return;
+      const next = normalizeCosmetics({
+        ...plusCosmetics,
+        [button.dataset.kind === "name" ? "nameFx" : "badgeFx"]: button.dataset.value,
+      });
+      await runSave(async () => {
+        await chrome.storage.local.set({ [COSMETICS_KEY]: next }).catch(() => { throw new Error(t("popup.feedback.saveFailed")); });
+        plusCosmetics = next;
+        renderPlusStyle();
+      });
+    });
   }
 }
 
@@ -819,14 +1042,16 @@ async function initialize() {
   buildLanguageButtons();
   refreshTranslations();
   registerEventListeners();
-  updateStepper();
+  syncControls();
   setHintState("idle", t("onboarding.profileHintIdle"));
   renderProfileFromState();
 
   unsubscribeLanguage = onLanguageChange(() => refreshTranslations());
 
-  await loadStreamers();
   setupUpdateModeUI();
+  setupPlusModeUI();
+  chrome.storage.onChanged.addListener(onStorageChange);
+  await Promise.all([loadStreamers(), loadPlusAccess()]);
 }
 
 initialize().catch((error) => {
@@ -835,4 +1060,7 @@ initialize().catch((error) => {
 
 window.addEventListener("pagehide", () => {
   if (typeof unsubscribeLanguage === "function") unsubscribeLanguage();
+  chrome.storage.onChanged.removeListener(onStorageChange);
+  clearTimeout(profileLookupTimer);
+  profileLookupSeq += 1;
 });

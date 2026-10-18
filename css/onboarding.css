@@ -27,15 +27,15 @@
      porte sur la ligne entière, pas sur des mots positionnés par nth-child. */
   .welcome-display .welcome-line { display: inline-block; animation: word-in 700ms var(--ease-out) both; }
 }
-/* onboarding.js switches steps on animationend of these two classes: they must
-   always animate, even with reduced motion (1ms there, see below). */
-.wizard-step.slide-out-left { animation: slide-out-left 220ms ease-in both; }
-.wizard-step.slide-out-right { animation: slide-out-right 220ms ease-in both; }
+@media (prefers-reduced-motion: no-preference) {
+  .wizard-step.slide-out-left { animation: slide-out-left 220ms var(--ease-out) both; }
+  .wizard-step.slide-out-right { animation: slide-out-right 220ms var(--ease-out) both; }
+}
 @keyframes slide-out-left { to { opacity: 0; transform: translateX(-28px); } }
 @keyframes slide-out-right { to { opacity: 0; transform: translateX(28px); } }
 @media (prefers-reduced-motion: reduce) {
   .wizard-step.slide-out-left,
-  .wizard-step.slide-out-right { animation-duration: 1ms; }
+  .wizard-step.slide-out-right { animation: none; }
 }
 .step-frame { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 64px; align-items: start; }
 .step-frame-single { grid-template-columns: 1fr; justify-items: center; text-align: center; }
@@ -113,7 +113,7 @@
 .platform-button img { width: 18px; height: 18px; }
 .platform-button:hover { color: var(--text); }
 .platform-button.is-active { background: var(--violet-soft); box-shadow: inset 0 0 0 1.5px var(--violet); color: var(--text); }
-.feedback { color: var(--text-2); font-size: 14px; }
+.feedback { color: var(--text-2); font-size: 14px; overflow-wrap: anywhere; }
 .feedback.success { color: var(--lcd-accent); }
 .feedback.error { color: var(--danger); }
 .current-streamers { display: grid; gap: 10px; }
@@ -160,6 +160,10 @@
 .settings-text { display: grid; gap: 2px; min-width: 0; }
 .settings-title { font-weight: 600; }
 .settings-description { color: var(--text-2); font-size: 13px; line-height: 1.45; }
+.plus-tag { display: inline-block; padding: 1px 6px; border-radius: 999px; background: var(--violet-soft); color: var(--violet-text); font-size: 11px; font-weight: 800; vertical-align: 1px; }
+.settings-toggle.is-locked,
+.settings-toggle input:disabled { cursor: not-allowed; }
+.settings-toggle input:disabled { opacity: 0.55; }
 
 /* Finish */
 .finish-title { font-size: clamp(36px, 4.6vw, 58px); }
@@ -219,6 +223,81 @@
 @media (prefers-reduced-motion: reduce) {
   .step-pill,
   .language-button,
-  .input-row { transition: none; }
+  .input-row,
   .profile-avatar-spinner { animation-duration: 2400ms; }
+}
+
+/* ── StreamPulse+ : parcours d'accueil (?mode=plus) ───────────────────────
+   Le wizard normal et le parcours Plus ont chacun leur stepper : seul celui
+   du mode actif est visible. Les libellés de réglages réutilisent ceux du
+   popup — une même clé partout pour un même réglage. */
+body.plus-mode #stepper,
+body.plus-mode .step-counter { display: none; }
+body:not(.plus-mode) #plus-stepper { display: none; }
+
+.plus-panel { display: grid; gap: 22px; padding: 26px; }
+.plus-features { display: grid; gap: 13px; margin: 0; padding: 0; list-style: none; }
+.plus-features li { display: flex; align-items: baseline; gap: 12px; color: var(--text-2); }
+.plus-features svg { flex: none; width: 19px; height: 19px; translate: 0 3px; color: var(--violet-text); }
+.plus-features span { color: var(--text); }
+
+.plus-settings { box-shadow: none; border: 1px solid var(--line); border-radius: 16px; padding: 4px 18px; display: grid; }
+.plus-settings .settings-toggle:first-child { box-shadow: none; }
+
+/* ── StreamPulse+ : aperçu du style (étape Badge) ─────────────────────────
+   Les vraies classes d'effets, partagées avec le tchat via css/fx-effects.css.
+   La base du badge et les nuances du pseudo sont copiées de css/popup.css :
+   duplication assumée par DESIGN.md (« garder les deux en synchro »). */
+.plus-style-preview {
+  display: grid;
+  gap: 10px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: #0e0e10;
+}
+.plus-chat-line { display: flex; align-items: center; gap: 9px; font-size: 14px; font-weight: 600; }
+.plus-chat-line .cosmetic-badge { --sp-badge-color: var(--violet); width: 18px; height: 18px; flex: none; background-color: var(--violet); -webkit-mask: url("../images/photos/badge-mark.svg") center / contain no-repeat; mask: url("../images/photos/badge-mark.svg") center / contain no-repeat; }
+
+.plus-picker { display: grid; gap: 10px; }
+.plus-picker .group-title { margin-top: 6px; }
+.fx-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 8px; }
+
+/* Puces du nuancier : mêmes classes et gabarit que le volet Badge du popup
+   (css/popup.css) — l'aperçu est le vrai rendu, partagé via fx-effects.css. */
+.fx-option { position: relative; display: grid; justify-items: center; gap: 6px; padding: 12px 6px 8px; border: 0; border-radius: 12px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); color: var(--text); cursor: pointer; transition: box-shadow 160ms ease, transform 160ms ease; }
+.fx-option:hover { transform: translateY(-1px); box-shadow: inset 0 0 0 1px var(--violet-line); }
+.fx-option[aria-checked="true"] { box-shadow: inset 0 0 0 2px var(--violet), 0 8px 18px -12px var(--violet); }
+.fx-option[aria-disabled="true"] { cursor: not-allowed; opacity: 0.55; }
+.fx-option[aria-disabled="true"]:hover { transform: none; box-shadow: inset 0 0 0 1px var(--line); }
+.fx-radio { position: absolute; top: 6px; left: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--line-2); }
+.fx-option[aria-checked="true"] .fx-radio { background: var(--violet); }
+.fx-sample-name { max-width: 100%; overflow: hidden; color: #bf94ff; font-size: 13px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+.fx-option .cosmetic-badge { --sp-badge-color: var(--violet); width: 26px; height: 26px; background-color: var(--violet); -webkit-mask: url("../images/photos/badge-mark.svg") center / contain no-repeat; mask: url("../images/photos/badge-mark.svg") center / contain no-repeat; }
+.fx-label { color: var(--text-2); font-size: 10.5px; font-weight: 600; text-align: center; }
+.fx-lock { position: absolute; top: 5px; right: 6px; color: #ffd23f; font-size: 11px; font-weight: 800; }
+
+/* Bases du rendu des effets, copiées de css/popup.css (duplication assumée par
+   DESIGN.md pour les cosmétiques Plus) : les variantes sp-paint/sp-fx viennent
+   de fx-effects.css, déjà lié — sauf ambassador et halo, qui n'existent que
+   dans popup.css et twitch-badge.css : elles sont copiées ici, à garder en
+   synchro avec elles. */
+.cosmetic-name { color: #bf94ff; font-weight: 700; }
+.sp-paint { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; background-size: 200% 100%; }
+.sp-paint--ambassador { background-image: linear-gradient(90deg, #ffd23f, #b58bff, #9146ff, #ffd23f); background-size: 260% 100%; animation: sp-paint-slide 4.5s linear infinite; }
+.cosmetic-badge.sp-fx-halo { background-color: #ffd23f; filter: drop-shadow(0 0 2px #ffd23f) drop-shadow(0 0 6px #ffd23f); animation: sp-badge-pulse 2.8s ease-in-out infinite; }
+@keyframes sp-paint-slide { to { background-position: -200% 0; } }
+@keyframes sp-badge-pulse { 0%, 100% { filter: drop-shadow(0 0 0 transparent); transform: scale(1); } 50% { filter: drop-shadow(0 0 5px var(--violet)); transform: scale(1.12); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .plus-style-preview .cosmetic-badge,
+  .plus-style-preview .cosmetic-name,
+  .fx-option .cosmetic-badge,
+  .fx-option .fx-sample-name { animation: none; }
+  .fx-option { transition: none; }
+  .fx-option:hover { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plus-style-preview .cosmetic-badge,
+  .plus-style-preview .sp-paint { animation: none; }
 }

@@ -17,6 +17,7 @@ const ES_MODULES = [
   "js/preferences-data.js",
   "js/i18n.js",
   "js/onboarding.js",
+  "js/popup-navigation.js",
   "js/platforms.js",
   "js/plus.js",
   "js/plus-thanks.js",
@@ -62,6 +63,17 @@ const ES_MODULES = [
   "js/popup-identity.js",
   "js/popup-news.js",
   "js/popup-suggest.js",
+  "js/popup-preference-controls.js",
+  "js/runtime-message.js",
+  "js/notification-controls.js",
+  "js/popup-notifications.js",
+  "js/bulk-add.js",
+  "js/bulk-add-page.js",
+  "js/watch-later.js",
+  "js/popup-watch-later.js",
+  "js/linked-accounts.js",
+  "js/popup-linked-accounts.js",
+  "js/reward-plan.js",
   "js/cosmetics-data.js",
   "js/channel-search.js",
   "js/recap-draw.js",
@@ -75,13 +87,16 @@ const ES_MODULES = [
   "js/notification-sounds.js",
   "js/popup-sounds.js",
   "js/popup-settings-filter.js",
+  "js/popup-panel-jumps.js",
+  "js/alert-coverage.js",
+  "js/popup-link-picker.js",
   "js/settings-filter.js",
   "eslint.config.mjs",
 ];
 
 export default [
   {
-    ignores: ["js/vendor/**", "node_modules/**", "coverage/**"],
+    ignores: ["js/vendor/**", "node_modules/**", "coverage/**", "stream-247/**"],
   },
   js.configs.recommended,
   {
@@ -120,6 +135,13 @@ export default [
   {
     files: ES_MODULES,
     languageOptions: { sourceType: "module" },
+  },
+  {
+    // Ces écrans protègent déjà chaque écriture asynchrone par un drapeau
+    // (busy, writing, saving) testé en entrée : la règle y voit une course
+    // qui n'existe pas. Dans les tests, ce sont des doublures qu'on réassigne.
+    files: ["js/bulk-add-page.js", "js/onboarding.js", "js/popup-linked-accounts.js", "tests/**/*.mjs"],
+    rules: { "require-atomic-updates": "off" },
   },
   {
     files: ["scripts/**/*.mjs"],

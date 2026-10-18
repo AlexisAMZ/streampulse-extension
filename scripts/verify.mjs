@@ -176,6 +176,12 @@ else {
         for (const re of keyPatterns) {
           for (const m of text.matchAll(re)) usedKeys.add(m[1]);
         }
+        // Clé écrite en entier comme littéral (table de clés, code d'erreur
+        // traduit plus loin) : elle est référencée même hors d'un appel t().
+        // Seules les clés existantes comptent, pour ne pas polluer « unknown ».
+        for (const m of text.matchAll(/"([a-zA-Z][a-zA-Z0-9]*(?:\.[a-zA-Z0-9-]+)+)"/g)) {
+          if (referenceKeySet.has(m[1])) usedKeys.add(m[1]);
+        }
         if (full.endsWith(".html")) {
           // pas de DOM en node : grep sur les attributs suffit
           for (const m of text.matchAll(/data-i18n="([^"]+)"/g)) usedKeys.add(m[1]);
@@ -205,7 +211,13 @@ else {
     // ce contrôle échoue : soit une clé morte vient d'être ajoutée (à
     // supprimer), soit un nouveau mécanisme dynamique demande d'ajuster
     // MAX_UNUSED_KEYS et de le documenter ici.
-    const MAX_UNUSED_KEYS = 337;
+    // 338 : les textes de la bannière du mode auto passent par
+    // deps.translate(cle, ...) — clé en premier argument, invisible du scanner
+    // littéral ci-dessous. Ajouter une clé banner* l'augmente d'un.
+    // 168 (2026-10-17) : les clés écrites en entier comme littéral comptent
+    // désormais ; le reste est dynamique (reason.${…}, statuts bulk.*,
+    // popup.notificationTools.state.*) ou attend l'interface du planificateur.
+    const MAX_UNUSED_KEYS = 168;
     const unusedKeys = referenceKeys.filter((k) => !usedKeys.has(k));
     if (unusedKeys.length > MAX_UNUSED_KEYS) {
       fail(`${unusedKeys.length} translation keys are never referenced by any literal call (max ${MAX_UNUSED_KEYS}) : une clé morte vient probablement d'être ajoutée, ou un nouveau mécanisme dynamique demande d'ajuster MAX_UNUSED_KEYS`);

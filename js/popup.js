@@ -35,8 +35,24 @@ import { UNDO_WINDOW_MS, addMessageFor, restoreGroups, restoreMessages, snapshot
 import { closePlus, initFeatures, onPlusChange, openPlus, plusActive, renderHistory } from "./popup-features.js";
 import { initNews, markSeen } from "./popup-news.js";
 import { initSuggest } from "./popup-suggest.js";
+import { sendAppMessage } from "./runtime-message.js";
+import { createPreferenceControls } from "./popup-preference-controls.js";
+import { createSettingsFilter } from "./popup-settings-filter.js";
+import { createPanelJumps } from "./popup-panel-jumps.js";
+import { createSoundSettings } from "./popup-sounds.js";
+import { LINKED_ACCOUNTS_KEY, getLinkedGroup, normalizeLinkedAccounts } from "./linked-accounts.js";
+import { alertCoverage } from "./alert-coverage.js";
+import { createLinkPicker } from "./popup-link-picker.js";
+import { initNotificationControls } from "./popup-notifications.js";
+import { initWatchLater } from "./popup-watch-later.js";
+import { initLinkedAccounts } from "./popup-linked-accounts.js";
 
 const defaultPreferences = DEFAULT_PREFERENCES;
+let preferenceControls = null;
+let soundSettings = null;
+let linkPicker = null;
+let sheetLinkPicker = null;
+let flushDeferredInit = () => {};
 
 const state = {
   streamers: [],
@@ -48,6 +64,7 @@ const state = {
   platformFilter: "all",
   pinnedIds: [],
   groups: [],
+  linkedAccounts: [],
   groupFilter: "all",
   sheetQuery: "",
 };
@@ -139,7 +156,6 @@ const watchTimeToggle = document.getElementById("pref-watch-time");
 const syncToggle = document.getElementById("pref-cross-device-sync");
 const syncStatusEl = document.getElementById("sync-status");
 const pointsTrackingToggle = document.getElementById("pref-points-tracking");
-const dropsTrackingToggle = document.getElementById("pref-drops-tracking");
 const communityBadgeToggle = document.getElementById("pref-community-badge");
 
 const pseudoInput = document.getElementById("pref-pseudo-input");
@@ -149,10 +165,6 @@ const toastContainer = document.getElementById("toast-container");
 const MAX_TOASTS = 5;
 const TOAST_DURATION = 4000;
 
-import { createSettingsFilter } from "./popup-settings-filter.js";
-import { createSoundSettings } from "./popup-sounds.js";
-
-let soundSettings = null;
 let currentTab = "streamers";
 let lastAddedId = null;
 let previousLiveIds = new Set(); // track who was live last render
@@ -366,13 +378,7 @@ function renderPlatformPicker() {
 }
 
 async function sendMessage(payload) {
-  try {
-    return await chrome.runtime.sendMessage(payload);
-  } catch (error) {
-    console.error("Popup message error:", error);
-    showFeedback(t("popup.errors.generic"), "error");
-    return null;
-  }
+  return sendAppMessage(payload, chrome.runtime, t("popup.errors.generic"));
 }
 
 // --- Drag & drop in the "all channels" sheet (custom order only) ---
@@ -615,6 +621,7 @@ const streamerCallbacks = {
     onKey: "popup.toast.titleNotifyEnabled",
     offKey: "popup.toast.titleNotifyDisabled",
   }),
+  onLink: (streamer) => linkPicker?.toggle(streamer),
   onOpen: async (url) => {
     try {
       await openChannel(chrome, url);
@@ -711,6 +718,7 @@ const rowCallbacks = {
   ...streamerCallbacks,
   onTogglePin: togglePin,
   onSetGroup: setStreamerGroup,
+  onLink: (streamer) => sheetLinkPicker?.toggle(streamer),
   onFeature: (id) => {
     state.selectedId = id;
     closeSheet({ restoreFocus: false });
@@ -728,6 +736,16 @@ function passesPlatformFilter(streamer) {
   if (state.platformFilter === "all") return true;
   if (state.platformFilter === "pinned") return isPinned(streamer.id);
   return (streamer.platform || DEFAULT_PLATFORM) === state.platformFilter;
+}
+
+/** A streamer may be live on several linked platforms: show only one tile. */
+function visibleLive(streamer) {
+  const group = state.linkedAccounts.find((item) => item.streamerIds.includes(streamer.id));
+  if (!group) return true;
+  const candidates = group.streamerIds
+    .map((id) => state.streamers.find((item) => item.id === id))
+    .filter((item) => item && isLiveId(item.id));
+  return (candidates.find((item) => item.id === group.preferredId) || candidates[0])?.id === streamer.id;
 }
 
 /** Returns the URL if it is https, otherwise an empty string. */
@@ -773,6 +791,7 @@ function renderGreeting(live = state.streamers.filter((s) => isLiveId(s.id))) {
 function renderFeatured() {
   if (!stageEl || !stageMediaEl || !stageFeatureEl) return;
   const index = liveOrder.indexOf(state.selectedId);
+  if (linkPicker && !linkPicker.isOpenFor(state.selectedId)) linkPicker.close();
   if (stagePagerEl) stagePagerEl.hidden = liveOrder.length < 2;
   if (stageCountEl) stageCountEl.textContent = `${index + 1} / ${liveOrder.length}`;
 
@@ -792,12 +811,14 @@ function renderFeatured() {
     return;
   }
   renderStage(stageEl, stageMediaEl, stageFeatureEl, streamer, state.statuses[streamer.id], {
+    linkedGroup: getLinkedGroup(state.linkedAccounts, streamer.id),
   }, streamerCallbacks);
 }
 
 function stepFeatured(delta) {
   if (liveOrder.length < 2) return;
   const index = liveOrder.indexOf(state.selectedId);
+  linkPicker?.close();
   state.selectedId = liveOrder[(index + delta + liveOrder.length) % liveOrder.length];
   renderStreamers();
 }
@@ -837,10 +858,11 @@ function sweepKickAvatars() {
 }
 
 function renderStreamers() {
+  syncGlobalAlerts();
   if (!streamerListEl) return;
   sweepKickAvatars();
   const ordered = orderStreamers();
-  const live = ordered.filter((s) => isLiveId(s.id));
+  const live = ordered.filter((s) => isLiveId(s.id) && visibleLive(s));
   const offline = ordered.filter((s) => !isLiveId(s.id));
   const shownLive = live.filter(passesPlatformFilter);
 
@@ -873,7 +895,14 @@ function renderStreamers() {
   if (state.streamers.length) {
     fragment.appendChild(createAllChannelsTile(offline.slice(0, 3), offline.length, openSheet));
   }
+  const focusedKey = document.activeElement?.closest?.("#streamer-list [data-key]")?.dataset.key;
   streamerListEl.replaceChildren(fragment);
+  // Background status refreshes must not throw a keyboard user out of the strip.
+  if (focusedKey) {
+    [...streamerListEl.querySelectorAll("[data-key]")]
+      .find((element) => element.dataset.key === focusedKey)
+      ?.focus({ preventScroll: true });
+  }
 
   // Garde la carte du streamer affiché visible dans la bande, mais seulement
   // quand la sélection change : les re-rendus du fond (statuts, points, temps
@@ -889,7 +918,12 @@ function renderStreamers() {
   }
 
   const liveCountEl = document.getElementById("live-count");
-  if (liveCountEl) liveCountEl.textContent = t("popup.cplus.liveOf", { live: live.length, total: state.streamers.length });
+  const filteredOut = live.length === 0 && state.streamers.some((streamer) => isLiveId(streamer.id)) && state.platformFilter !== "all";
+  if (liveCountEl) {
+    liveCountEl.textContent = filteredOut
+      ? t("popup.cplus.noLiveInFilter", { platform: state.platformFilter === "pinned" ? t("popup.cplus.pinnedFilter") : t(getPlatformLabelKey(state.platformFilter)) })
+      : t("popup.cplus.liveOf", { live: live.length, total: state.streamers.length });
+  }
 
   const homeEl = document.getElementById("streamers-view");
   if (homeEl) homeEl.dataset.roster = state.streamers.length ? "some" : "none";
@@ -955,6 +989,7 @@ function openSheet() {
 
 function closeSheet({ restoreFocus = true } = {}) {
   if (!sheetEl || sheetEl.hidden) return;
+  sheetLinkPicker?.close();
   sheetEl.hidden = true;
   sheetEl.removeEventListener("keydown", trapSheetFocus);
   if (sheetScrimEl) sheetScrimEl.hidden = true;
@@ -1065,6 +1100,7 @@ function renderSheet() {
     .filter(inFilter)
     .filter((s) => !query || nameFor(s.id).toLowerCase().includes(query) || String(s.handle || "").toLowerCase().includes(query));
   const rows = [...matches.filter((s) => isLiveId(s.id)), ...matches.filter((s) => !isLiveId(s.id))];
+  const focusedId = document.activeElement?.closest?.("#sheet-list [data-id]")?.dataset.id;
 
   if (sheetTotalEl) sheetTotalEl.textContent = String(rows.length);
   renderGroupChips();
@@ -1084,11 +1120,13 @@ function renderSheet() {
       pinned: isPinned(streamer.id),
       groups: state.groups,
       groupId: groupOf(streamer.id)?.id || "",
+      linked: Boolean(getLinkedGroup(state.linkedAccounts, streamer.id)),
       index: state.streamers.findIndex((s) => s.id === streamer.id),
       draggable: getSortMode() === "custom" && !query,
     }, rowCallbacks));
   });
   sheetListEl.replaceChildren(fragment);
+  if (focusedId) [...sheetListEl.querySelectorAll("[data-id]")].find((element) => element.dataset.id === focusedId)?.focus({ preventScroll: true });
 }
 
 async function handleSavePseudo() {
@@ -1235,16 +1273,31 @@ function renderSyncStatus() {
   }).catch(() => {});
 }
 
+/**
+ * Les alertes globales montrent ce que les streamers ont vraiment : tous, aucun,
+ * ou un mélange (interrupteur « mixte » et nombre de streamers concernés).
+ */
+function syncGlobalAlerts() {
+  const prefs = state.preferences || defaultPreferences;
+  const fallback = { live: prefs.liveNotifications !== false, game: prefs.gameNotifications === true, title: prefs.titleNotifications === true };
+  [["live", liveNotificationsToggle], ["game", gameNotificationsToggle], ["title", titleNotificationsToggle]].forEach(([kind, toggle]) => {
+    if (!toggle) return;
+    const coverage = alertCoverage(state.streamers, kind);
+    const mixed = coverage.state === "mixed";
+    toggle.checked = coverage.state === "empty" ? fallback[kind] : coverage.state === "on";
+    toggle.indeterminate = mixed;
+    toggle.setAttribute("aria-checked", mixed ? "mixed" : String(toggle.checked));
+    const note = document.getElementById(`alert-mixed-${kind}`);
+    if (note) {
+      note.hidden = !mixed;
+      note.textContent = mixed ? t("popup.settings.alertsMixed", { on: coverage.on, total: coverage.total }) : "";
+    }
+  });
+}
+
 function renderPreferences() {
-  const prefs = state.preferences || defaultPreferences;  if (liveNotificationsToggle) {
-    liveNotificationsToggle.checked = prefs.liveNotifications !== false;
-  }
-  if (gameNotificationsToggle) {
-    gameNotificationsToggle.checked = prefs.gameNotifications === true;
-  }
-  if (titleNotificationsToggle) {
-    titleNotificationsToggle.checked = prefs.titleNotifications === true;
-  }
+  const prefs = state.preferences || defaultPreferences;
+  syncGlobalAlerts();
   if (dropAlertsToggle) {
     dropAlertsToggle.checked = prefs.dropAlerts !== false;
   }
@@ -1340,9 +1393,6 @@ function renderPreferences() {
     syncToggle.checked = prefs.crossDeviceSync === true;
   }
   renderSyncStatus();
-  if (dropsTrackingToggle) {
-    dropsTrackingToggle.checked = prefs.dropsTracking !== false;
-  }
   if (pointsTrackingToggle) {
     pointsTrackingToggle.checked = prefs.pointsTracking !== false;
   }
@@ -1401,6 +1451,7 @@ function renderPreferences() {
     sortSelect.value = prefs.sortOrder;
   }
   updateLanguageButtonsState();
+  preferenceControls?.render();
 }
 
 
@@ -1478,6 +1529,7 @@ function highlightTab(tabName) {
 }
 
 function setActiveTab(tabName) {
+  if (tabName !== "streamers") flushDeferredInit();
   if (PANEL_TABS.has(tabName)) {
     showMenuPanel(tabName);
   } else if (tabName === "settings") {
@@ -1489,6 +1541,8 @@ function setActiveTab(tabName) {
   }
   currentTab = tabName;
   highlightTab(tabName);
+  // Seul « watch-later » est géré ici : la visibilité des autres onglets appartient à popup-layout.
+  for (const tab of document.querySelectorAll('.tab-button[data-tab="watch-later"]')) tab.hidden = true;
 
   document.body.classList.toggle("is-settings", tabName !== "streamers");
   if (tabName !== "streamers") closeSheet({ restoreFocus: false });
@@ -1496,8 +1550,10 @@ function setActiveTab(tabName) {
   const streamersView = document.getElementById("streamers-view");
   const settingsSection = document.getElementById("settings-section");
   const historyView = document.getElementById("history-view");
+  const watchLaterView = document.getElementById("watch-later-view");
   closePlus({ restoreFocus: false });
   historyView?.classList.toggle("hidden", tabName !== "history");
+  watchLaterView?.classList.toggle("hidden", tabName !== "watch-later");
 
   if (tabName === "streamers") {
     streamersView?.classList.remove("hidden");
@@ -1506,6 +1562,9 @@ function setActiveTab(tabName) {
     streamersView?.classList.add("hidden");
     settingsSection?.classList.add("hidden");
     renderHistory().catch(() => {});
+  } else if (tabName === "watch-later") {
+    streamersView?.classList.add("hidden");
+    settingsSection?.classList.add("hidden");
   } else {
     streamersView?.classList.add("hidden");
     settingsSection?.classList.remove("hidden");
@@ -1515,6 +1574,7 @@ function setActiveTab(tabName) {
       renderWatchTimeSummary().catch(() => {});
     }
   }
+  settingsSection?.classList.toggle("hidden", tabName === "streamers" || tabName === "history" || tabName === "watch-later");
 }
 
 async function loadStreamers() {
@@ -1917,8 +1977,8 @@ async function handleAddStreamer(event) {
     submitButton.disabled = false;
   }
 
-  if (result?.error) {
-    showFeedback(result.error, "error");
+  if (result?.success !== true) {
+    showFeedback(result?.error || t("popup.feedback.saveFailed"), "error");
     return;
   }
 
@@ -1956,8 +2016,8 @@ async function updatePreferences(updates, { silent = false } = {}) {
     updates: payload,
   });
 
-  if (result?.error) {
-    showFeedback(result.error, "error");
+  if (result?.success !== true) {
+    showFeedback(result?.error || t("popup.feedback.saveFailed"), "error");
     renderPreferences();
     return false;
   }
@@ -1993,6 +2053,7 @@ async function updatePreferences(updates, { silent = false } = {}) {
 }
 
 function showMenuPanel(panelName, { focus = false } = {}) {
+  flushDeferredInit();
   document.querySelectorAll(".menu-tab").forEach((tab) => {
     const isActive = tab.dataset.panel === panelName;
     tab.setAttribute("aria-selected", isActive ? "true" : "false");
@@ -2093,6 +2154,34 @@ function initHomeInteractions() {
   initDragAndDrop();
 }
 
+/**
+ * Lance des initialisations non critiques après le premier affichage, une par
+ * tâche : le navigateur peint et traite les clics entre deux, au lieu de bloquer
+ * la popup sur un long bloc synchrone. Une tâche qui échoue n'arrête pas les suivantes.
+ */
+function runAfterFirstPaint(tasks) {
+  const queue = [...tasks];
+  const runOne = () => {
+    const task = queue.shift();
+    if (!task) return false;
+    try {
+      task();
+    } catch (error) {
+      console.warn("[popup] initialisation différée :", error);
+    }
+    return true;
+  };
+  const next = () => {
+    if (runOne()) setTimeout(next, 0);
+  };
+  // Ouvrir les réglages avant la fin de la file : tout le reste se monte d'un coup,
+  // pour qu'aucun réglage n'arrive après l'affichage de la rubrique.
+  flushDeferredInit = () => {
+    while (runOne());
+  };
+  requestAnimationFrame(() => setTimeout(next, 0));
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     // Show skeleton placeholders immediately. The platform picker waits for
@@ -2111,6 +2200,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       "userProfile",
       "betaPinnedIds",
       "betaChannelGroups",
+      LINKED_ACCOUNTS_KEY,
     ]);
     const _storageMs = performance.now() - _t0;
     if (_storageMs > 200) {
@@ -2142,6 +2232,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (Array.isArray(data.betaPinnedIds)) state.pinnedIds = data.betaPinnedIds;
     if (Array.isArray(data.betaChannelGroups)) state.groups = data.betaChannelGroups;
     state.preferences = { ...defaultPreferences, ...prefs };
+    state.linkedAccounts = normalizeLinkedAccounts(data[LINKED_ACCOUNTS_KEY], state.streamers);
 
     removeSkeletons();
     renderStreamers();
@@ -2166,6 +2257,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (changes.betaGeneralStatuses) {
         state.statuses = changes.betaGeneralStatuses.newValue || {};
         renderStreamers();
+      }
+      if (changes[LINKED_ACCOUNTS_KEY]) {
+        state.linkedAccounts = normalizeLinkedAccounts(changes[LINKED_ACCOUNTS_KEY].newValue, state.streamers);
+        renderStreamers();
+        linkPicker?.refresh();
+        sheetLinkPicker?.refresh();
       }
       // Only re-render watch time if the user is actually looking at it.
       // Otherwise we'd reload a potentially-large blob every 60s for nothing.
@@ -2213,19 +2310,68 @@ document.addEventListener("DOMContentLoaded", async () => {
     initMenuNav();
     // « Page complète » du tiroir Twitch : ?menu=<panneau> ouvre les réglages
     // directement sur la rubrique demandée.
-    const requestedPanel = new URLSearchParams(location.search).get("menu");
+    // Rubriques fusionnées : les anciens liens (?menu=previews…) arrivent au bon panneau.
+    const MERGED_PANELS = { chat: "previews", tabs: "player", linked: "identity" };
+    const menuParam = new URLSearchParams(location.search).get("menu");
+    const requestedPanel = MERGED_PANELS[menuParam] || menuParam;
     if (requestedPanel && document.querySelector(`.menu-tab[data-panel="${CSS.escape(requestedPanel)}"]`)) {
       showMenuPanel(requestedPanel);
     }
-    initNews().catch((error) => console.warn("[popup] news init failed:", error));
-    initSuggest({ input: streamerInput, form: document.getElementById("add-streamer-form"), getPlatform: () => state.selectedPlatform, getStreamers: () => state.streamers });
     initHomeInteractions();
-    onPlusChange(() => syncDropsPlusLock());
-    soundSettings = createSoundSettings({ getPreferences: () => state.preferences, updatePreferences, isPlus: plusActive, openPlus });
-    onPlusChange(() => soundSettings?.render());
-    createSettingsFilter();
-    soundSettings?.render();
-    initFeatures().catch((error) => console.warn("[popup] features init failed:", error));
+    linkPicker = createLinkPicker({
+      mount: stageEl,
+      getStreamers: () => state.streamers,
+      getGroups: () => state.linkedAccounts,
+      notify: showFeedback,
+    });
+    sheetLinkPicker = createLinkPicker({
+      mount: sheetEl,
+      getStreamers: () => state.streamers,
+      getGroups: () => state.linkedAccounts,
+      notify: showFeedback,
+    });
+    // Tout le reste (réglages, Plus, alertes intelligentes, comptes liés…) attend
+    // le premier affichage et passe tâche par tâche : monté d'un seul bloc, il
+    // gelait la popup une fraction de seconde à l'ouverture.
+    runAfterFirstPaint([
+      () => initNews().catch((error) => console.warn("[popup] news init failed:", error)),
+      () => initSuggest({ input: streamerInput, form: document.getElementById("add-streamer-form"), getPlatform: () => state.selectedPlatform, getStreamers: () => state.streamers }),
+      () => {
+        preferenceControls = createPreferenceControls({ getPreferences: () => state.preferences, updatePreferences });
+        preferenceControls.render();
+      },
+      () => {
+        soundSettings = createSoundSettings({ getPreferences: () => state.preferences, updatePreferences, isPlus: plusActive, openPlus });
+        onPlusChange(() => soundSettings?.render());
+        soundSettings?.render();
+      },
+      () => createSettingsFilter(),
+      () => createPanelJumps(),
+      () => {
+        onPlusChange(() => syncDropsPlusLock());
+        initFeatures().catch((error) => console.warn("[popup] features init failed:", error));
+      },
+      () => initNotificationControls({
+        diagnosticRoot: document.getElementById("notification-diagnostic"),
+        isPlus: plusActive,
+        getStreamers: () => state.streamers,
+        getPreferences: () => state.preferences,
+      }).catch((error) => console.warn("[popup] notification tools init failed:", error)),
+      () => initWatchLater().catch((error) => console.warn("[popup] watch later init failed:", error)),
+      () => {
+        const linkedMount = document.getElementById("linked-accounts-mount");
+        if (linkedMount && !document.getElementById("linked-accounts")) {
+          const linkedRoot = document.createElement("section");
+          linkedRoot.id = "linked-accounts";
+          linkedRoot.className = "linked-accounts";
+          linkedMount.replaceWith(linkedRoot);
+        }
+        initLinkedAccounts({ getStreamers: () => state.streamers }).catch((error) => console.warn("[popup] linked accounts init failed:", error));
+      },
+    ]);
+    document.getElementById("open-bulk-add")?.addEventListener("click", () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL("html/bulk-add.html") });
+    });
 
     if (streamerInput) {
       streamerInput.addEventListener("input", (e) => {
@@ -2473,12 +2619,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (pointsTrackingToggle) {
       pointsTrackingToggle.addEventListener("change", (e) => {
         updatePreferences({ pointsTracking: e.target.checked });
-      });
-    }
-
-    if (dropsTrackingToggle) {
-      dropsTrackingToggle.addEventListener("change", (e) => {
-        updatePreferences({ dropsTracking: e.target.checked });
       });
     }
 

@@ -73,3 +73,34 @@ export function isQuietNow(now, start = DEFAULT_QUIET_START, end = DEFAULT_QUIET
     quietHoursEnd: normalizeQuietTime(end, DEFAULT_QUIET_END),
   });
 }
+
+/** La pause ne modifie aucune preference et expire par comparaison d'horodatage. */
+export function normalizeNotificationPause(value) {
+  if (!Number.isFinite(value?.until) || value.until <= 0 || Number.isNaN(new Date(value.until).getTime())) {
+    return { until: 0, exceptPinned: false };
+  }
+  return { until: value.until, exceptPinned: value.exceptPinned === true };
+}
+
+export function notificationPauseUntil(duration, now = Date.now()) {
+  const date = new Date(now);
+  if (Number.isNaN(date.getTime())) throw new RangeError("Invalid pause date");
+  if (duration === "hour") date.setTime(date.getTime() + 3_600_000);
+  else if (duration === "tomorrow") {
+    // Jour civil local, pas +24 h : respecte les changements d'heure.
+    date.setDate(date.getDate() + 1);
+    date.setHours(8, 0, 0, 0);
+  } else throw new RangeError("Invalid pause duration");
+  if (Number.isNaN(date.getTime())) throw new RangeError("Invalid pause date");
+  return date.getTime();
+}
+
+/** Gate partage par les envois et le diagnostic. Les heures calmes restent prioritaires. */
+export function getNotificationSilence({ now = Date.now(), pause, preferences, pinnedIds, streamerId } = {}) {
+  const normalized = normalizeNotificationPause(pause);
+  const until = now < normalized.until ? normalized.until : 0;
+  const pinnedException = Boolean(until && normalized.exceptPinned && streamerId && Array.isArray(pinnedIds) && pinnedIds.includes(streamerId));
+  const paused = Boolean(until && !pinnedException);
+  const quiet = isWithinQuietHours(now, preferences);
+  return { blocked: paused || quiet, paused, quiet, pinnedException, until };
+}
