@@ -20,15 +20,21 @@ export const LISTING = {
 Live notifications for Twitch, Kick and YouTube
 • One dashboard for Twitch, Kick and YouTube: live channels first, with viewers, category and uptime.
 • Desktop alerts when a streamer you follow goes live, and optionally when they change category or title.
+• Notification sounds: six sounds you can preview, plus quiet hours.
+• Alert pause: silence notifications for 1 hour or until tomorrow morning, and a “Why no alert?” check that shows what is blocking one.
 • Add a channel in a few letters: matching Twitch and Kick channels show up as you type, live ones first.
+• Bulk add: paste up to 50 usernames or channel links, check the list, and add them all at once.
+• Linked accounts: link a streamer's Twitch, Kick and YouTube accounts to get one tile and one notification when both are live.
 • History tab: the lives you missed, with their length and a direct link to the Twitch replay.
 • Hover previews: preview a live stream by hovering a channel link on Twitch.
+• Watch later tab: keep Twitch, Kick and YouTube links with a personal note.
 
 Twitch Drops, badges and Channel Points
 • Drops panel: your Twitch Drops in progress with their progress and time left, the ones ready to claim, and Twitch campaigns filtered by new, ending soon and upcoming, your games first.
+• Drops planner: pick Drops, say how much time you have and see what can finish before the deadline. It's an estimate: Twitch decides what counts.
 • Badges tab: chat badge campaigns and new Twitch global badges as soon as they appear, free or paid, with the ones you already own. A notification tells you about new free badges. Without StreamPulse+, the auto mode still claims one free badge a day.
 • Channel Points panel: every channel point you earn on Twitch, channel by channel.
-• Auto-claim for the Channel Points bonus chest, and points earned on Kick counted too.
+• Auto-claim for the Channel Points bonus chest on Twitch and the daily reward on Kick, and points earned on Kick counted too.
 • Incoming raid alerts (beta, off by default): get notified when a channel you follow is raided, even with no tab open. Automatic raid cancel is available in settings.
 
 Right inside Twitch
@@ -47,16 +53,23 @@ Your tabs, your way
 • The streamer's avatar as the tab icon, and a red LIVE dot while they are on air.
 • Keep Twitch, Kick and YouTube tabs from being put to sleep by Chrome.
 • Layout: reorder the top bar tabs and the settings sections, and hide the ones you don't use.
+• Search your settings and filter them by platform.
+• Alt+Shift+S opens the pop-up, editable in chrome://extensions/shortcuts.
 • Extension language: 11 languages, chosen independently from your browser language.
 
 Your watch time
 • Time watched per channel and a shareable recap image for the last 7 or 30 days or any month, in 16:9 or 9:16.
+• Time spent watching YouTube lives is counted too.
 • Backup and restore: move your streamers, favorites, channel groups, settings, history, points, Drops and watch time to another browser.
+• CSV export of your points and Drops history.
+• Optional sync of your streamers and settings across your devices through your browser profile, no account.
 
 StreamPulse+ (optional, paid)
 Everything above is free and stays free. StreamPulse+ is a monthly (7 days free) or yearly plan that supports the project and adds:
 • Automatic Drops: claimed as soon as they're ready, even with no Twitch tab open — StreamPulse checks them every 10 minutes, so it works while you watch on your phone or TV.
 • Smart alerts: only for a game, a word in the title or a viewer threshold.
+• Drops campaign alerts: a notification when a campaign starts on a game you follow.
+• A different notification sound for lives, category changes, title changes and raids.
 • Advanced recap with a yearly Wrapped.
 • Assisted predictions with a movable widget on the video.
 • Where your points come from (watching, bonuses, raids, streaks…) with a sheet per streamer, and the history of every Drop you earned.
@@ -78,15 +91,21 @@ StreamPulse needs no account and has no trackers or analytics. Your streamers, s
 Notifications de live pour Twitch, Kick et YouTube
 • Un tableau de bord unique pour Twitch, Kick et YouTube : les chaînes en direct d'abord, avec spectateurs, catégorie et durée.
 • Des alertes sur le bureau quand un streamer suivi lance son live, et au choix quand il change de catégorie ou de titre.
+• Sons de notification : six sons à écouter avant de choisir, et des heures calmes.
+• Pause des alertes : couper les notifications une heure ou jusqu'à demain matin, et un diagnostic « Pourquoi aucune alerte ? » qui montre ce qui en bloque une.
 • Ajoutez une chaîne en quelques lettres : les chaînes Twitch et Kick correspondantes s'affichent pendant la saisie, celles en direct d'abord.
+• Ajout en lot : coller jusqu'à 50 pseudos ou liens de chaînes, vérifier la liste, puis tout ajouter d'un coup.
+• Comptes liés : relier les comptes Twitch, Kick et YouTube d'un même streamer pour n'avoir qu'une tuile et qu'une notification quand les deux sont en direct.
 • Onglet Historique : les lives manqués, avec leur durée et un lien direct vers la rediffusion Twitch.
 • Aperçus au survol : prévisualisez un live en survolant le lien d'une chaîne sur Twitch.
+• Onglet À regarder plus tard : garder des liens Twitch, Kick et YouTube avec une note personnelle.
 
 Drops Twitch, badges et points de chaîne
 • Panneau Drops : vos Drops Twitch en cours avec leur progression et le temps restant, ceux prêts à récupérer, et les campagnes de Twitch filtrées par nouvelles, finissent bientôt et à venir, celles de vos jeux en premier.
+• Planificateur de Drops : choisir des Drops, indiquer le temps disponible et voir ce qui peut se terminer avant la date limite. C'est une estimation : c'est Twitch qui décide de ce qui compte.
 • Onglet Badges : les campagnes de badges de chat et les nouveaux badges globaux de Twitch dès leur apparition, gratuits ou payants, avec ceux que vous avez déjà. Une notification vous prévient d'un nouveau badge gratuit. Sans StreamPulse+, le mode auto décroche quand même un badge gratuit par jour.
 • Panneau Points de chaîne : chaque point de chaîne gagné sur Twitch, chaîne par chaîne.
-• Récupération automatique du coffre bonus de points de chaîne, et points gagnés sur Kick comptabilisés aussi.
+• Récupération automatique du coffre bonus de points de chaîne sur Twitch et de la récompense quotidienne sur Kick, et points gagnés sur Kick comptabilisés aussi.
 • Alertes de raids entrants (bêta, désactivées par défaut) : soyez prévenu quand une chaîne suivie reçoit un raid, même sans onglet ouvert. L'annulation automatique des raids reste disponible dans les réglages.
 
 Directement dans Twitch
@@ -105,16 +124,23 @@ Vos onglets, à votre façon
 • L'avatar du streamer comme icône de l'onglet, et un point rouge LIVE quand il est en direct.
 • Empêcher Chrome de mettre en veille vos onglets Twitch, Kick et YouTube.
 • Disposition : changez l'ordre des onglets du haut et des rubriques des réglages, et masquez ceux dont vous ne vous servez pas.
+• Recherche dans les réglages, avec un filtre par plateforme.
+• Alt+Shift+S ouvre la popup, modifiable dans chrome://extensions/shortcuts.
 • Langue de l'extension : 11 langues, choisie indépendamment de celle du navigateur.
 
 Votre temps de visionnage
 • Le temps passé sur chaque chaîne et une image récap à partager sur les 7 ou 30 derniers jours ou sur un mois, en 16:9 ou 9:16.
+• Le temps regardé sur les lives YouTube est aussi comptabilisé.
 • Sauvegarde et restauration : retrouvez vos streamers, favoris, groupes de chaînes, réglages, historique, points, Drops et temps de visionnage dans un autre navigateur.
+• Export de l'historique des points et des Drops en CSV.
+• Synchronisation facultative des streamers et des réglages entre appareils via le profil du navigateur, sans compte.
 
 StreamPulse+ (optionnel, payant)
 Tout ce qui précède est gratuit et le reste. StreamPulse+ est une formule mensuelle (7 jours gratuits) ou annuelle qui soutient le projet et ajoute :
 • Des Drops récupérés automatiquement dès qu'ils sont prêts, même sans onglet Twitch ouvert : StreamPulse les vérifie toutes les 10 minutes, ça marche aussi quand vous regardez sur votre téléphone ou votre télé.
 • Des alertes intelligentes : seulement pour un jeu, un mot dans le titre ou un seuil de spectateurs.
+• Alertes de campagnes de Drops : une notification quand une campagne démarre sur un jeu suivi.
+• Un son de notification différent pour les lives, les changements de catégorie, de titre et les raids.
 • Un récap avancé avec un bilan annuel (Wrapped).
 • Des prédictions assistées avec un widget déplaçable sur la vidéo.
 • D'où viennent vos points (regarder, bonus, raids, séries…) avec une fiche par streamer, et l'historique de tous vos Drops obtenus.
