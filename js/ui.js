@@ -220,6 +220,9 @@ loadThumbCache();
 
 let activeThumbLoads = 0;
 const thumbQueue = [];
+// Aperçus déjà chargés pendant cette ouverture : la scène les réutilise tout de suite
+// au lieu d'attendre derrière la file des cartes, puis passe à la grande version.
+const readyThumbs = new Map();
 
 function drainThumbQueue() {
   while (activeThumbLoads < MAX_THUMB_CONCURRENCY && thumbQueue.length > 0) {
@@ -240,7 +243,15 @@ function drainThumbQueue() {
   }
 }
 
-function probeImage(url, onOk, onFail) {
+function probeImage(url, onOk, onFail, { priority = false } = {}) {
+  // La scène ne fait jamais la queue : elle passe devant les cartes de la bande.
+  if (priority) {
+    const probe = new Image();
+    probe.onload = () => (probe.naturalWidth < 100 ? onFail() : onOk());
+    probe.onerror = onFail;
+    probe.src = url;
+    return;
+  }
   thumbQueue.push((release) => {
     const probe = new Image();
     probe.onload = () => {
@@ -257,7 +268,7 @@ function probeImage(url, onOk, onFail) {
   drainThumbQueue();
 }
 
-function loadThumbnail(streamer, active, image, width, height, onFail) {
+function loadThumbnail(streamer, active, image, width, height, onFail, { priority = false } = {}) {
   const candidates = (active.thumbnailCandidates || [active.thumbnailUrl])
     .filter(Boolean)
     .map((url) => url.replace("{width}", String(width)).replace("{height}", String(height)));
@@ -267,6 +278,7 @@ function loadThumbnail(streamer, active, image, width, height, onFail) {
   }
 
   const apply = (url) => {
+    readyThumbs.set(streamer.id, url);
     if (!image.isConnected) return;
     image.src = url;
     image.hidden = false;
@@ -282,7 +294,7 @@ function loadThumbnail(streamer, active, image, width, height, onFail) {
     probeImage(url, () => {
       apply(url);
       setCachedThumb(streamer.id, url);
-    }, tryNext);
+    }, tryNext, { priority });
   };
 
   const cached = thumbCache.get(streamer.id);
@@ -290,7 +302,7 @@ function loadThumbnail(streamer, active, image, width, height, onFail) {
     probeImage(cached, () => apply(cached), () => {
       setCachedThumb(streamer.id, null);
       tryNext();
-    });
+    }, { priority });
   } else {
     tryNext();
   }
@@ -370,13 +382,22 @@ export function renderStage(stage, media, feature, streamer, status, options, ca
     media.replaceChildren(image);
     // Kick n'expose pas toujours de thumbnail : en cas d'échec, on retombe sur
     // l'avatar pré-flouté (même fond que les écrans vides) au lieu d'un aplat noir.
+    // Un aperçu déjà chargé par la bande (ou gardé de la dernière ouverture) s'affiche
+    // aussitôt ; la version 960×540 le remplace quand elle est prête.
+    const instant = readyThumbs.get(streamer.id) || thumbCache.get(streamer.id);
+    if (instant) {
+      // Adresse périmée : on recache l'image le temps que la vérification propose la suivante.
+      image.addEventListener("error", () => { image.hidden = true; }, { once: true });
+      image.src = instant;
+      image.hidden = false;
+    }
     loadThumbnail(streamer, active, image, 960, 540, () => {
       if (!image.isConnected || !streamer.avatarUrl) return;
       image.classList.add("is-avatar");
       image.alt = "";
       preblurAvatar(streamer.avatarUrl, image);
       image.hidden = false;
-    });
+    }, { priority: true });
     // Kick n'expose plus de thumbnail exploitable : lecteur live muet monté
     // directement, plein cadre, sans attendre de survol. Twitch garde sa
     // capture (disponible publiquement). YouTube reste sur vignette : son
