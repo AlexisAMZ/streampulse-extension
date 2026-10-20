@@ -25,10 +25,18 @@
     }
   }
 
+  // Une lecture toutes les 2 s, et l'attribut n'est réécrit que si la valeur (au dixième de seconde) a
+  // changé : une écriture identique réveillerait quand même les observateurs de la page.
+  var POLL_MS = 2000;
+  var last = "";
+
   setInterval(function () {
     var root = document.documentElement;
     var latency = readLatency();
-    if (latency === null) root.removeAttribute(ATTRIBUTE);
-    else root.setAttribute(ATTRIBUTE, String(latency));
-  }, 1000);
+    var next = latency === null ? "" : String(Math.round(latency / 100) * 100);
+    if (next === last) return;
+    last = next;
+    if (next === "") root.removeAttribute(ATTRIBUTE);
+    else root.setAttribute(ATTRIBUTE, next);
+  }, POLL_MS);
 })();

@@ -17,6 +17,7 @@
   const LATE_SECONDS = 6;
   const SEEK_MARGIN_SECONDS = 0.5;
   const TITLE_SEARCH_GAP_MS = 3000;
+  const UPDATE_MS = 2000;
   const CHAT_TITLE = /^(chat|tchat|채팅)$/i;
 
   let currentLang = "en";
@@ -59,7 +60,7 @@
     const style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent = `
-    .streampulse-chzzk-latency { display: inline-flex; align-items: center; gap: 6px; height: 24px; margin: 0; padding: 0 6px;
+    .streampulse-chzzk-latency { display: inline-flex; align-items: center; gap: 6px; height: 24px; min-width: 112px; margin: 0; padding: 0 6px; contain: layout paint style; font-variant-numeric: tabular-nums;
       border: 0; background: none; color: #dedee3; font-weight: 600; font-size: 13px; line-height: 1; white-space: nowrap;
       vertical-align: middle; user-select: none; transition: color .2s ease; }
     .streampulse-chzzk-latency:hover { color: #fff; cursor: pointer; }
@@ -175,7 +176,7 @@
   // ─── Cycle de vie ────────────────────────────────────────────────────────────
 
   function start() {
-    if (timer == null) timer = setInterval(update, 1000);
+    if (timer == null) timer = setInterval(update, UPDATE_MS);
     update();
   }
 
