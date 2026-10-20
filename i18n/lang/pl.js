@@ -926,7 +926,10 @@ export default {
     "errors": {
       "generic": "Coś poszło nie tak. Spróbuj ponownie za chwilę; jeśli to się powtórzy, zamknij i otwórz StreamPulse ponownie.",
       "invalidHandle": "Ta nazwa na {{platform}} jest nieprawidłowa. Sprawdź pisownię albo wklej link do kanału.",
-      "chzzkPermission": "CHZZK potrzebuje Twojej zgody, aby sprawdzać transmisje. Zaakceptuj, aby dodać ten kanał."
+      "chzzkPermission": "CHZZK potrzebuje Twojej zgody, aby sprawdzać transmisje. Zaakceptuj, aby dodać ten kanał.",
+      "chzzkPagesTitle": "Włącz StreamPulse na CHZZK",
+      "chzzkPagesBody": "Dodaje przycisk «Dodaj do StreamPulse» i wskaźnik opóźnienia na stronach kanałów CHZZK.",
+      "chzzkPagesAction": "Włącz"
     },
     "feedback": {
       "undoDone": "{{name}} wraca na twoją listę.",

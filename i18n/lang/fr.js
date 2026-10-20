@@ -926,7 +926,10 @@ export default {
     "errors": {
       "generic": "Une erreur est survenue. Réessaie dans un instant ; si ça recommence, ferme et rouvre StreamPulse.",
       "invalidHandle": "Ce pseudo {{platform}} n'est pas valide. Vérifie l'orthographe ou colle le lien de la chaîne.",
-      "chzzkPermission": "CHZZK a besoin de ton accord pour vérifier les lives. Accepte pour ajouter cette chaîne."
+      "chzzkPermission": "CHZZK a besoin de ton accord pour vérifier les lives. Accepte pour ajouter cette chaîne.",
+      "chzzkPagesTitle": "Active StreamPulse sur CHZZK",
+      "chzzkPagesBody": "Ajoute le bouton « Ajouter à StreamPulse » et l'indicateur de latence sur les pages de chaîne de CHZZK.",
+      "chzzkPagesAction": "Activer"
     },
     "feedback": {
       "undoDone": "{{name}} est de retour dans ta liste.",

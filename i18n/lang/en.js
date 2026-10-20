@@ -964,7 +964,10 @@ export default {
     "errors": {
       "generic": "Something went wrong. Please try again.",
       "invalidHandle": "Please enter a valid {{platform}} identifier.",
-      "chzzkPermission": "CHZZK needs your permission to check the lives. Accept it to add this channel."
+      "chzzkPermission": "CHZZK needs your permission to check the lives. Accept it to add this channel.",
+      "chzzkPagesTitle": "Turn on StreamPulse on CHZZK",
+      "chzzkPagesBody": "Adds the “Add to StreamPulse” button and the latency indicator on CHZZK channel pages.",
+      "chzzkPagesAction": "Turn on"
     },
     "feedback": {
       "undoDone": "{{name}} is back in your list.",

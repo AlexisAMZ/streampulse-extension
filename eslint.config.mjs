@@ -63,6 +63,7 @@ const ES_MODULES = [
   "js/open-channel.js",
   "js/streamer-undo.js",
   "js/popup-badge-ask.js",
+  "js/popup-chzzk-ask.js",
   "js/popup-identity.js",
   "js/popup-news.js",
   "js/popup-suggest.js",
@@ -99,7 +100,7 @@ const ES_MODULES = [
 
 export default [
   {
-    ignores: ["js/vendor/**", "node_modules/**", "coverage/**", "stream-247/**"],
+    ignores: ["js/vendor/**", "node_modules/**", "coverage/**", "stream-247/**", "DevKit/**"],
   },
   js.configs.recommended,
   {

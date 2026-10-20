@@ -976,7 +976,10 @@ export default {
     "errors": {
       "generic": "حدث خطأ ما. يرجى المحاولة مجددًا.",
       "invalidHandle": "يرجى إدخال معرّف {{platform}} صالح.",
-      "chzzkPermission": "يحتاج CHZZK إلى إذنك للتحقق من البثوث. اقبل لإضافة هذه القناة."
+      "chzzkPermission": "يحتاج CHZZK إلى إذنك للتحقق من البثوث. اقبل لإضافة هذه القناة.",
+      "chzzkPagesTitle": "فعّل StreamPulse على CHZZK",
+      "chzzkPagesBody": "يضيف زر «أضف إلى StreamPulse» ومؤشر زمن الاستجابة في صفحات قنوات CHZZK.",
+      "chzzkPagesAction": "تفعيل"
     },
     "feedback": {
       "undoDone": "عاد {{name}} إلى قائمتك.",

@@ -926,7 +926,10 @@ export default {
     "errors": {
       "generic": "문제가 발생했습니다. 잠시 후 다시 시도하고, 계속되면 StreamPulse를 닫았다가 다시 여세요.",
       "invalidHandle": "유효하지 않은 {{platform}} 사용자 이름입니다. 철자를 확인하거나 채널 링크를 붙여 넣으세요.",
-      "chzzkPermission": "치지직 라이브를 확인하려면 권한이 필요해요. 이 채널을 추가하려면 허용해 주세요."
+      "chzzkPermission": "치지직 라이브를 확인하려면 권한이 필요해요. 이 채널을 추가하려면 허용해 주세요.",
+      "chzzkPagesTitle": "치지직에서 StreamPulse 켜기",
+      "chzzkPagesBody": "치지직 채널 페이지에 'StreamPulse에 추가' 버튼과 지연 시간 표시를 추가합니다.",
+      "chzzkPagesAction": "켜기"
     },
     "feedback": {
       "undoDone": "{{name}}이(가) 목록에 다시 추가되었습니다.",

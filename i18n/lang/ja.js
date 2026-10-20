@@ -926,7 +926,10 @@ export default {
     "errors": {
       "generic": "エラーが発生しました。少し待ってからもう一度お試しください。繰り返す場合は、StreamPulse を閉じて開き直してください。",
       "invalidHandle": "この {{platform}} のユーザー名は無効です。スペルを確認するか、チャンネルのリンクを貼り付けてください。",
-      "chzzkPermission": "CHZZK のライブを確認するには許可が必要です。このチャンネルを追加するには許可してください。"
+      "chzzkPermission": "CHZZK のライブを確認するには許可が必要です。このチャンネルを追加するには許可してください。",
+      "chzzkPagesTitle": "CHZZK で StreamPulse を有効にする",
+      "chzzkPagesBody": "CHZZK のチャンネルページに「StreamPulse に追加」ボタンと遅延表示を追加します。",
+      "chzzkPagesAction": "有効にする"
     },
     "feedback": {
       "undoDone": "{{name}} をリストに戻しました。",

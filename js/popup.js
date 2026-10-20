@@ -31,6 +31,7 @@ import {
   sanitizeHandle,
 } from "./platforms.js";
 import { requestChzzkAccess } from "./chzzk-permission.js";
+import { initChzzkAsk } from "./popup-chzzk-ask.js";
 import { createAllChannelsTile, createChannelRow, createMiniCard, formatNumber, renderStage, renderStageEmpty } from "./ui.js";
 import { openChannel } from "./open-channel.js";
 import { UNDO_WINDOW_MS, addMessageFor, restoreGroups, restoreMessages, snapshotStreamer } from "./streamer-undo.js";
@@ -2363,6 +2364,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       showMenuPanel(requestedPanel);
     }
     initHomeInteractions();
+    initChzzkAsk(() => state.streamers);
     linkPicker = createLinkPicker({
       mount: stageEl,
       getStreamers: () => state.streamers,

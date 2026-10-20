@@ -926,7 +926,10 @@ export default {
     "errors": {
       "generic": "Ein Fehler ist aufgetreten. Versuch es gleich noch mal; wenn es wieder passiert, schließ StreamPulse und öffne es erneut.",
       "invalidHandle": "Dieser {{platform}}-Name ist ungültig. Prüf die Schreibweise oder füge den Kanallink ein.",
-      "chzzkPermission": "CHZZK braucht deine Erlaubnis, um Livestreams zu prüfen. Stimme zu, um diesen Kanal hinzuzufügen."
+      "chzzkPermission": "CHZZK braucht deine Erlaubnis, um Livestreams zu prüfen. Stimme zu, um diesen Kanal hinzuzufügen.",
+      "chzzkPagesTitle": "StreamPulse auf CHZZK aktivieren",
+      "chzzkPagesBody": "Fügt auf CHZZK-Kanalseiten den Button «Zu StreamPulse hinzufügen» und die Latenzanzeige hinzu.",
+      "chzzkPagesAction": "Aktivieren"
     },
     "feedback": {
       "undoDone": "{{name}} ist wieder in deiner Liste.",

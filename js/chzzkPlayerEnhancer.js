@@ -19,7 +19,6 @@
   const CHAT_TITLE = /^(chat|tchat|채팅)$/i;
 
   let currentLang = "en";
-  let latencyPlacement = "viewers";
   let chatTitleEl = null;
   let timer = null;
   let headerTimer = null;
@@ -142,14 +141,14 @@
     ensureStyles();
     const video = findVideo();
     const button = latencyButton();
-    if (latencyPlacement === "chat") {
-      if (!attachToChat(button)) {
+    // Sur CHZZK l'indicateur prend la place du mot « 채팅 » ; sans titre de tchat (tchat masqué ou
+    // pas encore peint), il se pose sur le lecteur plutôt que de disparaître.
+    if (!attachToChat(button)) {
+      restoreChatTitle();
+      if (!attachToPlayer(button, video)) {
         button.remove();
         return;
       }
-    } else {
-      restoreChatTitle();
-      if (!attachToPlayer(button, video)) return;
     }
     const measured = video ? measure(video) : null;
     const text = button.querySelector(".sp-text");
@@ -183,7 +182,6 @@
       const prefs = result[PREFERENCES_KEY] || {};
       const api = i18nApi();
       if (api && prefs.language) currentLang = api.resolve(prefs.language);
-      latencyPlacement = prefs.latencyPlacement === "chat" ? "chat" : "viewers";
       start();
     });
   }

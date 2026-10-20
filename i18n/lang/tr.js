@@ -926,7 +926,10 @@ export default {
     "errors": {
       "generic": "Bir hata oluştu. Birazdan tekrar dene; yine olursa StreamPulse'u kapatıp yeniden aç.",
       "invalidHandle": "Bu {{platform}} kullanıcı adı geçerli değil. Yazımı kontrol et ya da kanal bağlantısını yapıştır.",
-      "chzzkPermission": "CHZZK, yayınları kontrol etmek için iznine ihtiyaç duyar. Bu kanalı eklemek için izin ver."
+      "chzzkPermission": "CHZZK, yayınları kontrol etmek için iznine ihtiyaç duyar. Bu kanalı eklemek için izin ver.",
+      "chzzkPagesTitle": "StreamPulse'ı CHZZK'da etkinleştir",
+      "chzzkPagesBody": "CHZZK kanal sayfalarına «StreamPulse'a ekle» düğmesini ve gecikme göstergesini ekler.",
+      "chzzkPagesAction": "Etkinleştir"
     },
     "feedback": {
       "undoDone": "{{name}} listene geri döndü.",
