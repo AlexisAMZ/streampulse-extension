@@ -158,3 +158,16 @@ test("règle de réécriture : l'API n'accepte que l'origine de son site", () =>
 test("règle de réécriture : sans identifiant d'extension valide, aucune règle", () => {
   for (const bad of ["", null, undefined, "pas un id", 42]) assert.equal(chzzkOriginRule(bad), null);
 });
+
+test("scripts des pages CHZZK : posés sur le site seulement, le pont dans le monde de la page", async () => {
+  const { chzzkPageScripts, CHZZK_PERMISSIONS, CHZZK_SITE_PERMISSION } = await import("../js/chzzk.js");
+  const scripts = chzzkPageScripts();
+  assert.deepEqual(CHZZK_PERMISSIONS, [CHZZK_HOST_PERMISSION, CHZZK_SITE_PERMISSION]);
+  for (const script of scripts) assert.deepEqual(script.matches, ["https://chzzk.naver.com/*"]);
+  assert.equal(new Set(scripts.map((script) => script.id)).size, scripts.length);
+  const bridge = scripts.find((script) => script.world === "MAIN");
+  assert.deepEqual(bridge.js, ["js/inject/chzzk-latency-bridge.js"]);
+  assert.equal(bridge.runAt, "document_start");
+  const isolated = scripts.find((script) => script.world !== "MAIN");
+  assert.equal(isolated.js[0], "js/inject/i18n-inline.js");
+});

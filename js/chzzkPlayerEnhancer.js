@@ -1,0 +1,196 @@
+(() => {
+  // CHZZK Player Enhancer : indicateur de latence, même emplacement et même clic que sur Twitch et Kick.
+  //
+  // Source de la mesure : la latence réelle du lecteur (pont dans le monde de la page,
+  // js/inject/chzzk-latency-bridge.js), à laquelle on ajoute le délai d'encodage estimé. Sans elle
+  // (lecteur pas encore prêt), repli sur l'avance de la mémoire tampon, comme sur Kick.
+
+  if (window.top !== window) return;
+
+  const PREFERENCES_KEY = "betaGeneralPreferences";
+  const LATENCY_ID = "streampulse-chzzk-latency";
+  const STYLE_ID = "streampulse-chzzk-latency-style";
+  const BRIDGE_ATTRIBUTE = "data-sp-chzzk-latency";
+  // Délai d'encodage et de transmission que le lecteur ne compte pas (estimation).
+  const ENCODING_SECONDS = 1.5;
+  // Au-delà, le direct est en retard : l'indicateur passe au rouge.
+  const LATE_SECONDS = 6;
+  const SEEK_MARGIN_SECONDS = 0.5;
+  const CHAT_TITLE = /^(chat|tchat|채팅)$/i;
+
+  let currentLang = "en";
+  let latencyPlacement = "viewers";
+  let chatTitleEl = null;
+  let timer = null;
+  let headerTimer = null;
+
+  const i18nApi = () => window.__SP_I18N__ || null;
+
+  function latencyText(seconds) {
+    const api = i18nApi();
+    if (!api) return "";
+    return seconds == null
+      ? api.get(currentLang, "player.latencyEmpty")
+      : api.get(currentLang, "player.latencyValue", { value: seconds.toFixed(2) });
+  }
+
+  const findVideo = () => document.querySelector("video");
+
+  function bufferDelay(video) {
+    if (!video || !video.buffered.length) return null;
+    const delay = video.buffered.end(video.buffered.length - 1) - video.currentTime;
+    return delay > 0 ? delay : null;
+  }
+
+  /** Latence en secondes et sa source, ou null quand rien n'est mesurable. */
+  function measure(video) {
+    const raw = Number(document.documentElement.getAttribute(BRIDGE_ATTRIBUTE));
+    if (document.documentElement.hasAttribute(BRIDGE_ATTRIBUTE) && Number.isFinite(raw)) {
+      return { seconds: raw / 1000 + ENCODING_SECONDS, live: true };
+    }
+    const buffer = bufferDelay(video);
+    return buffer == null ? null : { seconds: buffer, live: video.duration === Infinity };
+  }
+
+  // ─── Bouton ──────────────────────────────────────────────────────────────────
+
+  function ensureStyles() {
+    if (document.getElementById(STYLE_ID)) return;
+    const style = document.createElement("style");
+    style.id = STYLE_ID;
+    style.textContent = `
+    .streampulse-chzzk-latency { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px;
+      color: #dedee3; font-weight: 600; font-size: 14px; user-select: none; transition: all .2s ease; }
+    .streampulse-chzzk-latency:hover { color: #fff; cursor: pointer; transform: translateY(-1px); }
+    .streampulse-chzzk-latency .sp-dot { width: 8px; height: 8px; border-radius: 50%; background: #888; }
+    .streampulse-chzzk-latency.is-live .sp-dot { background: #00ffa3; }
+    .streampulse-chzzk-latency.is-late .sp-dot { background: #ff4d4d; }
+    .streampulse-chzzk-latency.is-late { color: #ff8a8a; }
+    .streampulse-chzzk-latency.is-disabled { opacity: .4; cursor: default; transform: none; pointer-events: none; }
+    .streampulse-chzzk-latency.is-on-player { position: absolute; top: 12px; left: 12px; z-index: 60;
+      background: rgba(9, 11, 15, .72); border-radius: 6px; padding: 4px 10px; font-size: 12px; }`;
+    (document.head || document.documentElement).appendChild(style);
+  }
+
+  function catchUpToLive() {
+    const video = findVideo();
+    if (!video || !video.buffered.length) return;
+    video.currentTime = video.buffered.end(video.buffered.length - 1) - SEEK_MARGIN_SECONDS;
+    if (video.paused) video.play().catch(() => {}); // Lecture refusée (autoplay) : attendu.
+  }
+
+  function latencyButton() {
+    let button = document.getElementById(LATENCY_ID);
+    if (button) return button;
+    button = document.createElement("button");
+    button.type = "button";
+    button.id = LATENCY_ID;
+    button.className = "streampulse-chzzk-latency";
+    const dot = document.createElement("span");
+    dot.className = "sp-dot";
+    const text = document.createElement("span");
+    text.className = "sp-text";
+    text.textContent = latencyText(null);
+    button.append(dot, text);
+    button.addEventListener("click", () => {
+      catchUpToLive();
+      update();
+    });
+    return button;
+  }
+
+  // ─── Placement : sur le lecteur, ou à la place du titre « Chat » ─────────────
+
+  function findChatTitle() {
+    const candidates = [];
+    for (const element of document.querySelectorAll("body *")) {
+      if (element.children.length || element.closest("button, a, [role='button']")) continue;
+      if (!CHAT_TITLE.test((element.textContent || "").trim())) continue;
+      const rect = element.getBoundingClientRect();
+      if (rect.width > 0 && rect.left > window.innerWidth / 2) candidates.push(element);
+    }
+    return candidates.length ? candidates[candidates.length - 1] : null;
+  }
+
+  function restoreChatTitle() {
+    if (chatTitleEl && chatTitleEl.isConnected) chatTitleEl.style.display = "";
+    chatTitleEl = null;
+  }
+
+  function attachToChat(button) {
+    const title = findChatTitle();
+    if (!title) return false;
+    if (chatTitleEl !== title) restoreChatTitle();
+    chatTitleEl = title;
+    title.style.display = "none";
+    button.classList.remove("is-on-player");
+    title.insertAdjacentElement("beforebegin", button);
+    return true;
+  }
+
+  function attachToPlayer(button, video) {
+    const container = video && video.parentElement;
+    if (!container) return false;
+    if (getComputedStyle(container).position === "static") container.style.position = "relative";
+    button.classList.add("is-on-player");
+    if (!container.contains(button)) container.appendChild(button);
+    return true;
+  }
+
+  function update() {
+    if (!(chrome.runtime && chrome.runtime.id)) return stop();
+    ensureStyles();
+    const video = findVideo();
+    const button = latencyButton();
+    if (latencyPlacement === "chat") {
+      if (!attachToChat(button)) {
+        button.remove();
+        return;
+      }
+    } else {
+      restoreChatTitle();
+      if (!attachToPlayer(button, video)) return;
+    }
+    const measured = video ? measure(video) : null;
+    const text = button.querySelector(".sp-text");
+    if (text) text.textContent = latencyText(measured ? measured.seconds : null);
+    button.classList.toggle("is-live", Boolean(measured && measured.live));
+    button.classList.toggle("is-late", Boolean(measured && measured.seconds >= LATE_SECONDS));
+    button.classList.toggle("is-disabled", !measured || !measured.live || video.paused);
+  }
+
+  // ─── Cycle de vie ────────────────────────────────────────────────────────────
+
+  function start() {
+    if (timer == null) timer = setInterval(update, 1000);
+    // Re-accroche de l'en-tête du tchat, que CHZZK repeint en navigation, moins souvent.
+    if (headerTimer == null) headerTimer = setInterval(update, 3000);
+    update();
+  }
+
+  function stop() {
+    clearInterval(timer);
+    clearInterval(headerTimer);
+    timer = null;
+    headerTimer = null;
+    restoreChatTitle();
+    const button = document.getElementById(LATENCY_ID);
+    if (button) button.remove();
+  }
+
+  function loadSettings() {
+    chrome.storage.local.get([PREFERENCES_KEY], (result) => {
+      const prefs = result[PREFERENCES_KEY] || {};
+      const api = i18nApi();
+      if (api && prefs.language) currentLang = api.resolve(prefs.language);
+      latencyPlacement = prefs.latencyPlacement === "chat" ? "chat" : "viewers";
+      start();
+    });
+  }
+
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === "local" && changes[PREFERENCES_KEY]) loadSettings();
+  });
+
+  loadSettings();
+})();

@@ -14,7 +14,8 @@
     "declarativeNetRequestWithHostAccess"
   ],
   "optional_host_permissions": [
-    "https://api.chzzk.naver.com/*"
+    "https://api.chzzk.naver.com/*",
+    "https://chzzk.naver.com/*"
   ],
   "host_permissions": [
     "https://api.twitch.tv/*",
@@ -195,7 +196,8 @@
       "matches": [
         "https://www.twitch.tv/*",
         "https://www.youtube.com/*",
-        "https://kick.com/*"
+        "https://kick.com/*",
+        "https://chzzk.naver.com/*"
       ]
     },
     {

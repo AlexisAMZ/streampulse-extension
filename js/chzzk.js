@@ -120,6 +120,35 @@ export async function fetchChzzkLive(channelId, getJson) {
 
 export const CHZZK_HOST_PERMISSION = `${CHZZK_API}/*`;
 export const CHZZK_RULE_ID = 4401;
+/** Le site lui-même : pages de chaîne, lecteur. Demandé avec l'API, dans la même fenêtre d'acceptation. */
+export const CHZZK_SITE_PERMISSION = `${CHZZK_SITE}/*`;
+export const CHZZK_PERMISSIONS = [CHZZK_HOST_PERMISSION, CHZZK_SITE_PERMISSION];
+
+/**
+ * Scripts posés sur chzzk.naver.com, enregistrés seulement quand l'utilisateur a accordé le site
+ * (un script déclaré dans le manifeste imposerait un nouvel avertissement à tous les utilisateurs
+ * existants). Le pont tourne dans le monde de la page : lui seul voit la latence du lecteur.
+ */
+export function chzzkPageScripts() {
+  const matches = [CHZZK_SITE_PERMISSION];
+  return [
+    {
+      id: "sp-chzzk-pages",
+      matches,
+      js: ["js/inject/i18n-inline.js", "js/inject/quickFollowChzzk.js", "js/chzzkPlayerEnhancer.js"],
+      runAt: "document_idle",
+      persistAcrossSessions: true,
+    },
+    {
+      id: "sp-chzzk-bridge",
+      matches,
+      js: ["js/inject/chzzk-latency-bridge.js"],
+      runAt: "document_start",
+      world: "MAIN",
+      persistAcrossSessions: true,
+    },
+  ];
+}
 
 /**
  * L'API de CHZZK répond 403 à toute origine qui n'est pas son site : on lui présente celle du

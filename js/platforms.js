@@ -133,7 +133,7 @@ export const PLATFORM_DEFINITIONS = {
     id: "chzzk",
     labelKey: "platforms.chzzk",
     shortLabelKey: "platformsShort.chzzk",
-    icon: "images/social/chzzk.svg",
+    icon: "images/social/chzzk.png",
     color: "#00FFA3",
     inputPrefix: "",
     // Proposée seulement dans les langues où elle a un public (coréen, et anglais pour
