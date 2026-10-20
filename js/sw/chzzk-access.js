@@ -2,7 +2,7 @@
 // imposer aux autres utilisateurs), la règle qui présente l'origine du site à l'API, et les scripts
 // des pages de chaîne (bouton d'ajout, latence).
 
-import { CHZZK_HOST_PERMISSION, CHZZK_RULE_ID, CHZZK_SITE_PERMISSION, chzzkOriginRule, chzzkPageScripts } from "../chzzk.js";
+import { CHZZK_HOST_PERMISSION, CHZZK_RULE_ID, chzzkOriginRule, chzzkPageScripts } from "../chzzk.js";
 
 async function granted(origin) {
   try {
@@ -28,7 +28,7 @@ async function syncPageScripts() {
   const scripts = chzzkPageScripts();
   try {
     const registered = new Set((await chrome.scripting.getRegisteredContentScripts({ ids: scripts.map((script) => script.id) })).map((script) => script.id));
-    if (await granted(CHZZK_SITE_PERMISSION)) {
+    if (await hasChzzkAccess()) {
       const missing = scripts.filter((script) => !registered.has(script.id));
       if (missing.length) await chrome.scripting.registerContentScripts(missing);
     } else if (registered.size) {

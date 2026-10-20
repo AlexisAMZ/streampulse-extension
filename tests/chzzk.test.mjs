@@ -152,7 +152,7 @@ test("règle de réécriture : l'API n'accepte que l'origine de son site", () =>
   assert.equal(rule.condition.urlFilter, "||api.chzzk.naver.com/");
   assert.deepEqual(rule.condition.resourceTypes, ["xmlhttprequest"]);
   assert.deepEqual(rule.condition.initiatorDomains, ["abcdefghijklmnopabcdefghijklmnop"]);
-  assert.equal(CHZZK_HOST_PERMISSION, "https://api.chzzk.naver.com/*");
+  assert.equal(CHZZK_HOST_PERMISSION, "https://*.chzzk.naver.com/*");
 });
 
 test("règle de réécriture : sans identifiant d'extension valide, aucune règle", () => {
@@ -160,9 +160,9 @@ test("règle de réécriture : sans identifiant d'extension valide, aucune règl
 });
 
 test("scripts des pages CHZZK : posés sur le site seulement, le pont dans le monde de la page", async () => {
-  const { chzzkPageScripts, CHZZK_PERMISSIONS, CHZZK_SITE_PERMISSION } = await import("../js/chzzk.js");
+  const { chzzkPageScripts, CHZZK_PERMISSIONS } = await import("../js/chzzk.js");
   const scripts = chzzkPageScripts();
-  assert.deepEqual(CHZZK_PERMISSIONS, [CHZZK_HOST_PERMISSION, CHZZK_SITE_PERMISSION]);
+  assert.deepEqual(CHZZK_PERMISSIONS, [CHZZK_HOST_PERMISSION]);
   for (const script of scripts) assert.deepEqual(script.matches, ["https://chzzk.naver.com/*"]);
   assert.equal(new Set(scripts.map((script) => script.id)).size, scripts.length);
   const bridge = scripts.find((script) => script.world === "MAIN");

@@ -14,8 +14,7 @@
     "declarativeNetRequestWithHostAccess"
   ],
   "optional_host_permissions": [
-    "https://api.chzzk.naver.com/*",
-    "https://chzzk.naver.com/*"
+    "https://*.chzzk.naver.com/*"
   ],
   "host_permissions": [
     "https://api.twitch.tv/*",

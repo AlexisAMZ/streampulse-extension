@@ -118,11 +118,11 @@ export async function fetchChzzkLive(channelId, getJson) {
   }
 }
 
-export const CHZZK_HOST_PERMISSION = `${CHZZK_API}/*`;
+// Une seule permission pour tout CHZZK : « *. » couvre le site (chzzk.naver.com) et son API
+// (api.chzzk.naver.com). Demandée à l'ajout d'une chaîne, pas à l'installation.
+export const CHZZK_HOST_PERMISSION = "https://*.chzzk.naver.com/*";
 export const CHZZK_RULE_ID = 4401;
-/** Le site lui-même : pages de chaîne, lecteur. Demandé avec l'API, dans la même fenêtre d'acceptation. */
-export const CHZZK_SITE_PERMISSION = `${CHZZK_SITE}/*`;
-export const CHZZK_PERMISSIONS = [CHZZK_HOST_PERMISSION, CHZZK_SITE_PERMISSION];
+export const CHZZK_PERMISSIONS = [CHZZK_HOST_PERMISSION];
 
 /**
  * Scripts posés sur chzzk.naver.com, enregistrés seulement quand l'utilisateur a accordé le site
@@ -130,7 +130,7 @@ export const CHZZK_PERMISSIONS = [CHZZK_HOST_PERMISSION, CHZZK_SITE_PERMISSION];
  * existants). Le pont tourne dans le monde de la page : lui seul voit la latence du lecteur.
  */
 export function chzzkPageScripts() {
-  const matches = [CHZZK_SITE_PERMISSION];
+  const matches = [`${CHZZK_SITE}/*`];
   return [
     {
       id: "sp-chzzk-pages",
