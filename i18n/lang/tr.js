@@ -929,7 +929,8 @@ export default {
       "chzzkPermission": "CHZZK, yayınları kontrol etmek için iznine ihtiyaç duyar. Bu kanalı eklemek için izin ver.",
       "chzzkPagesTitle": "StreamPulse'ı CHZZK'da etkinleştir",
       "chzzkPagesBody": "CHZZK kanal sayfalarına «StreamPulse'a ekle» düğmesini ve gecikme göstergesini ekler.",
-      "chzzkPagesAction": "Etkinleştir"
+      "chzzkPagesAction": "Etkinleştir",
+      "chzzkHint": "Chrome chzzk.naver.com için erişim isteyecek. Bu yalnızca bu kanalın canlı olup olmadığını görmek içindir."
     },
     "feedback": {
       "undoDone": "{{name}} listene geri döndü.",

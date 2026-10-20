@@ -928,7 +928,8 @@ export default {
       "chzzkPermission": "O CHZZK precisa da sua permissão para verificar as lives. Aceite para adicionar este canal.",
       "chzzkPagesTitle": "Ative o StreamPulse no CHZZK",
       "chzzkPagesBody": "Adiciona o botão «Adicionar ao StreamPulse» e o indicador de latência nas páginas de canal do CHZZK.",
-      "chzzkPagesAction": "Ativar"
+      "chzzkPagesAction": "Ativar",
+      "chzzkHint": "O Chrome vai pedir acesso a chzzk.naver.com. É só para ver se este canal está ao vivo."
     },
     "feedback": {
       "undoDone": "{{name}} voltou para a sua lista.",

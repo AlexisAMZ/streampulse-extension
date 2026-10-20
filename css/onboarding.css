@@ -301,3 +301,5 @@ body:not(.plus-mode) #plus-stepper { display: none; }
   .plus-style-preview .cosmetic-badge,
   .plus-style-preview .sp-paint { animation: none; }
 }
+
+.platform-hint { margin: 8px 0 0; color: var(--text-2); font-size: 13px; line-height: 1.45; }

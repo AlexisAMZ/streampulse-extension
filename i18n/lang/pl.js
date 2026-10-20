@@ -929,7 +929,8 @@ export default {
       "chzzkPermission": "CHZZK potrzebuje Twojej zgody, aby sprawdzać transmisje. Zaakceptuj, aby dodać ten kanał.",
       "chzzkPagesTitle": "Włącz StreamPulse na CHZZK",
       "chzzkPagesBody": "Dodaje przycisk «Dodaj do StreamPulse» i wskaźnik opóźnienia na stronach kanałów CHZZK.",
-      "chzzkPagesAction": "Włącz"
+      "chzzkPagesAction": "Włącz",
+      "chzzkHint": "Chrome poprosi o dostęp do chzzk.naver.com. Służy to tylko do sprawdzania, czy ten kanał jest na żywo."
     },
     "feedback": {
       "undoDone": "{{name}} wraca na twoją listę.",

@@ -929,7 +929,8 @@ export default {
       "chzzkPermission": "CHZZK нужно ваше разрешение, чтобы проверять эфиры. Разрешите, чтобы добавить этот канал.",
       "chzzkPagesTitle": "Включите StreamPulse на CHZZK",
       "chzzkPagesBody": "Добавляет кнопку «Добавить в StreamPulse» и индикатор задержки на страницы каналов CHZZK.",
-      "chzzkPagesAction": "Включить"
+      "chzzkPagesAction": "Включить",
+      "chzzkHint": "Chrome запросит доступ к chzzk.naver.com. Он нужен только для проверки, идёт ли эфир на этом канале."
     },
     "feedback": {
       "undoDone": "{{name}} снова в твоём списке.",

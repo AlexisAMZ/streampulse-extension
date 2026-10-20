@@ -929,7 +929,8 @@ export default {
       "chzzkPermission": "CHZZK のライブを確認するには許可が必要です。このチャンネルを追加するには許可してください。",
       "chzzkPagesTitle": "CHZZK で StreamPulse を有効にする",
       "chzzkPagesBody": "CHZZK のチャンネルページに「StreamPulse に追加」ボタンと遅延表示を追加します。",
-      "chzzkPagesAction": "有効にする"
+      "chzzkPagesAction": "有効にする",
+      "chzzkHint": "Chrome が chzzk.naver.com へのアクセスを求めます。このチャンネルがライブ中か確認するためだけに使います。"
     },
     "feedback": {
       "undoDone": "{{name}} をリストに戻しました。",

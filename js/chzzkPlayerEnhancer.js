@@ -59,10 +59,12 @@
     const style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent = `
-    .streampulse-chzzk-latency { display: inline-flex; align-items: center; gap: 8px; padding: 4px 8px;
-      color: #dedee3; font-weight: 600; font-size: 13px; line-height: 1.2; white-space: nowrap; user-select: none; transition: all .2s ease; }
-    .streampulse-chzzk-latency:hover { color: #fff; cursor: pointer; transform: translateY(-1px); }
-    .streampulse-chzzk-latency .sp-dot { width: 8px; height: 8px; border-radius: 50%; background: #888; }
+    .streampulse-chzzk-latency { display: inline-flex; align-items: center; gap: 6px; height: 24px; margin: 0; padding: 0 6px;
+      border: 0; background: none; color: #dedee3; font-weight: 600; font-size: 13px; line-height: 1; white-space: nowrap;
+      vertical-align: middle; user-select: none; transition: color .2s ease; }
+    .streampulse-chzzk-latency:hover { color: #fff; cursor: pointer; }
+    .streampulse-chzzk-latency .sp-dot { display: block; flex: none; width: 8px; height: 8px; border-radius: 50%; background: #888; }
+    .streampulse-chzzk-latency .sp-text { display: block; line-height: 1; }
     .streampulse-chzzk-latency.is-live .sp-dot { background: #00ffa3; }
     .streampulse-chzzk-latency.is-late .sp-dot { background: #ff4d4d; }
     .streampulse-chzzk-latency.is-late { color: #ff8a8a; }
@@ -131,9 +133,10 @@
     if (!title) return false;
     if (chatTitleEl !== title) restoreChatTitle();
     chatTitleEl = title;
-    title.style.display = "none";
+    // Aucune écriture si rien ne change : CHZZK surveille son DOM, inutile de le réveiller chaque seconde.
+    if (title.style.display !== "none") title.style.display = "none";
     button.classList.remove("is-on-player");
-    title.insertAdjacentElement("beforebegin", button);
+    if (button.nextElementSibling !== title) title.insertAdjacentElement("beforebegin", button);
     return true;
   }
 
@@ -162,7 +165,8 @@
     }
     const measured = video ? measure(video) : null;
     const text = button.querySelector(".sp-text");
-    if (text) text.textContent = latencyText(measured ? measured.seconds : null);
+    const label = latencyText(measured ? measured.seconds : null);
+    if (text && text.textContent !== label) text.textContent = label;
     button.classList.toggle("is-live", Boolean(measured && measured.live));
     button.classList.toggle("is-late", Boolean(measured && measured.seconds >= LATE_SECONDS));
     button.classList.toggle("is-disabled", !measured || !measured.live || video.paused);

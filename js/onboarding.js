@@ -510,6 +510,8 @@ function setSelectedPlatform(platform) {
   selectedPlatform = normalizePlatform(platform);
   updatePlatformPickerUI();
   updatePlatformTexts();
+  const hint = document.getElementById("chzzk-hint");
+  if (hint) hint.hidden = selectedPlatform !== "chzzk";
 }
 
 /* ════════════════════════════════

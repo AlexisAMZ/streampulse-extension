@@ -354,6 +354,8 @@ function setSelectedPlatform(platform) {
   state.selectedPlatform = normalized;
   updatePlatformPickerUI();
   updateAddStreamerTexts();
+  const hint = document.getElementById("chzzk-hint");
+  if (hint) hint.hidden = normalized !== "chzzk";
 }
 
 /** Plateformes déjà suivies : elles restent visibles même si la langue ne les propose plus. */
@@ -2004,7 +2006,7 @@ async function handleAddStreamer(event) {
   if (submitButton) {
     submitButton.disabled = true;
   }
-  // CHZZK : l'accès à son API se demande ici, au clic, et pas à l'installation de l'extension.
+  // CHZZK : l'accès à CHZZK se demande ici, à l'ajout, et pas à l'installation de l'extension.
   if (state.selectedPlatform === "chzzk" && !(await requestChzzkAccess())) {
     if (submitButton) submitButton.disabled = false;
     showFeedback(t("popup.errors.chzzkPermission"), "error");
@@ -2441,13 +2443,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     platformPicker?.addEventListener("click", (e) => {
       const btn = e.target.closest(".platform-button");
       if (btn) {
+        // CHZZK : une phrase explique la demande du navigateur, qui n'arrive qu'à l'ajout (voir le submit).
         setSelectedPlatform(btn.dataset.platform);
-        // CHZZK : l'accès à son API se demande dès le choix de la plateforme (un clic), pas au moment d'ajouter.
-        if (btn.dataset.platform === "chzzk") {
-          requestChzzkAccess().then((granted) => {
-            if (!granted) showFeedback(t("popup.errors.chzzkPermission"), "error");
-          });
-        }
       }
     });
 

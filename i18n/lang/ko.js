@@ -929,7 +929,8 @@ export default {
       "chzzkPermission": "치지직 라이브를 확인하려면 권한이 필요해요. 이 채널을 추가하려면 허용해 주세요.",
       "chzzkPagesTitle": "치지직에서 StreamPulse 켜기",
       "chzzkPagesBody": "치지직 채널 페이지에 'StreamPulse에 추가' 버튼과 지연 시간 표시를 추가합니다.",
-      "chzzkPagesAction": "켜기"
+      "chzzkPagesAction": "켜기",
+      "chzzkHint": "Chrome이 chzzk.naver.com 접근 권한을 요청합니다. 이 채널이 라이브 중인지 확인하는 용도로만 쓰여요."
     },
     "feedback": {
       "undoDone": "{{name}}이(가) 목록에 다시 추가되었습니다.",

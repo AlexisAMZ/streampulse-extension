@@ -967,7 +967,8 @@ export default {
       "chzzkPermission": "CHZZK needs your permission to check the lives. Accept it to add this channel.",
       "chzzkPagesTitle": "Turn on StreamPulse on CHZZK",
       "chzzkPagesBody": "Adds the “Add to StreamPulse” button and the latency indicator on CHZZK channel pages.",
-      "chzzkPagesAction": "Turn on"
+      "chzzkPagesAction": "Turn on",
+      "chzzkHint": "Chrome will ask for access to chzzk.naver.com. It is only used to see whether this channel is live."
     },
     "feedback": {
       "undoDone": "{{name}} is back in your list.",

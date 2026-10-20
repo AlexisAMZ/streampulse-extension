@@ -929,7 +929,8 @@ export default {
       "chzzkPermission": "CHZZK braucht deine Erlaubnis, um Livestreams zu prüfen. Stimme zu, um diesen Kanal hinzuzufügen.",
       "chzzkPagesTitle": "StreamPulse auf CHZZK aktivieren",
       "chzzkPagesBody": "Fügt auf CHZZK-Kanalseiten den Button «Zu StreamPulse hinzufügen» und die Latenzanzeige hinzu.",
-      "chzzkPagesAction": "Aktivieren"
+      "chzzkPagesAction": "Aktivieren",
+      "chzzkHint": "Chrome fragt nach Zugriff auf chzzk.naver.com. Das dient nur dazu, zu sehen, ob dieser Kanal live ist."
     },
     "feedback": {
       "undoDone": "{{name}} ist wieder in deiner Liste.",

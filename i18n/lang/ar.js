@@ -979,7 +979,8 @@ export default {
       "chzzkPermission": "يحتاج CHZZK إلى إذنك للتحقق من البثوث. اقبل لإضافة هذه القناة.",
       "chzzkPagesTitle": "فعّل StreamPulse على CHZZK",
       "chzzkPagesBody": "يضيف زر «أضف إلى StreamPulse» ومؤشر زمن الاستجابة في صفحات قنوات CHZZK.",
-      "chzzkPagesAction": "تفعيل"
+      "chzzkPagesAction": "تفعيل",
+      "chzzkHint": "سيطلب Chrome الإذن بالوصول إلى chzzk.naver.com. يُستخدم فقط لمعرفة ما إذا كانت هذه القناة تبث مباشرة."
     },
     "feedback": {
       "undoDone": "عاد {{name}} إلى قائمتك.",
