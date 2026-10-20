@@ -1155,6 +1155,8 @@ export default {
     }
   },
   "recap": {
+    "platformsLabel": "Piattaforme conteggiate",
+    "platformsHint": "YouTube è deselezionato per ora, mentre la sua misurazione viene verificata. Puoi aggiungerlo se vuoi.",
     "referral": {
       "body": "Invita un amico: un mese gratis per ogni amico che attiva StreamPulse+ con il tuo codice.",
       "copy": "Copia il mio codice"

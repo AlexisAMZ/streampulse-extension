@@ -1205,6 +1205,8 @@ export default {
     }
   },
   "recap": {
+    "platformsLabel": "المنصات المحتسبة",
+    "platformsHint": "YouTube غير محدّد حاليًا إلى أن يُتحقق من قياسه. يمكنك إضافته إن شئت.",
     "referral": {
       "body": "الإحالات: شهر مجاني لكل صديق يشترك في StreamPulse+ بكودك.",
       "copy": "نسخ كودي"

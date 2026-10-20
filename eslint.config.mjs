@@ -41,6 +41,7 @@ const ES_MODULES = [
   "js/inline-confirm.js",
   "js/recap-card.js",
   "js/recap-data.js",
+  "js/recap-platforms.js",
   "js/sync-data.js",
   "js/history-csv.js",
   "js/referral-data.js",

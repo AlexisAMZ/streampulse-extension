@@ -2,6 +2,7 @@
 
 import { initI18n, applyTranslations, t, getCurrentLanguage, resolveLocale } from "./i18n.js";
 import { listPeriods, collectEntries, buildRecap, buildTimeline, formatDuration, rollingDayKeys } from "./recap-data.js";
+import { RECAP_PLATFORMS, normalizeRecapPlatforms } from "./recap-platforms.js";
 import { PLUS_KEY, isPlusActive, plusPageUrl } from "./plus.js";
 import { drawRecapCard, CARD_WIDTH, CARD_HEIGHT } from "./recap-card.js";
 import { drawRecapStory, STORY_WIDTH, STORY_HEIGHT } from "./recap-story.js";
@@ -36,7 +37,7 @@ const dailyHintEl = document.getElementById("daily-hint");
 const insightsEl = document.getElementById("insights");
 const insightsLockedEl = document.getElementById("insights-locked");
 
-let stored = { monthly: {}, daily: {}, pseudo: "", plus: false, points: stateFrom({}) };
+let stored = { monthly: {}, daily: {}, platforms: [], pseudo: "", plus: false, points: stateFrom({}) };
 let currentFormat = "desktop";
 let currentPeriod = "7d";
 let currentRecap = null;
@@ -233,7 +234,7 @@ function draw() {
 async function renderPeriod() {
   const token = ++renderToken;
   const period = findPeriod(currentPeriod) || findPeriod("7d");
-  const entries = collectEntries(stored.monthly, stored.daily, period.id);
+  const entries = collectEntries(stored.monthly, stored.daily, period.id, new Date(), stored.platforms);
   const recap = buildRecap(entries, { limit: TOP_LIMIT });
 
   show(stateEl, false);
@@ -386,7 +387,7 @@ function renderInsights(period, recap, points) {
   show(insightsEl, stored.plus && !recap.isEmpty);
   if (!stored.plus || recap.isEmpty) return;
   renderCategories(recap.categories);
-  renderTimeline(buildTimeline(stored.monthly, stored.daily, period.id), period);
+  renderTimeline(buildTimeline(stored.monthly, stored.daily, period.id, new Date(), stored.platforms), period);
   renderPointsInsights(period, points);
 }
 
@@ -436,6 +437,7 @@ async function readStorage() {
   return {
     monthly: data[WATCH_TIME_KEY] || {},
     daily: data[WATCH_TIME_DAILY_KEY] || {},
+    platforms: normalizeRecapPlatforms(prefs.recapPlatforms),
     pseudo: typeof prefs.pseudo === "string" ? prefs.pseudo.trim().slice(0, 40) : "",
     plus: isPlusActive(data[PLUS_KEY]),
     referralCode: typeof data[REFERRAL_CODE_KEY] === "string" ? data[REFERRAL_CODE_KEY] : "",
@@ -444,6 +446,55 @@ async function readStorage() {
     lifetimePoints: Math.max(0, Number(data[STATS_KEY]?.channelPointsClaimed) || 0),
     eventLogs: Array.isArray(data[EVENT_LOGS_KEY]) ? data[EVENT_LOGS_KEY] : [],
   };
+}
+
+// ─── Plateformes comptées (gratuit) ─────────────────────────────────────────────
+
+/** Plateformes proposées : les trois principales, CHZZK seulement si on a du temps dessus. */
+function offeredRecapPlatforms() {
+  const hasChzzk = [...Object.values(stored.daily), ...Object.values(stored.monthly)].some((bucket) =>
+    Object.values(bucket || {}).some((entry) => entry?.platform === "chzzk"),
+  );
+  return RECAP_PLATFORMS.filter((platform) => platform !== "chzzk" || hasChzzk || stored.platforms.includes("chzzk"));
+}
+
+async function saveRecapPlatforms(platforms) {
+  const data = await chrome.storage.local.get([PREFERENCES_KEY]);
+  await chrome.storage.local.set({ [PREFERENCES_KEY]: { ...(data[PREFERENCES_KEY] || {}), recapPlatforms: platforms } });
+}
+
+function renderPlatformChips() {
+  const host = document.getElementById("recap-platforms");
+  if (!host) return;
+  host.replaceChildren(
+    ...offeredRecapPlatforms().map((platform) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "seg-btn";
+      chip.dataset.platform = platform;
+      chip.textContent = t(`platforms.${platform}`);
+      const active = stored.platforms.includes(platform);
+      chip.classList.toggle("active", active);
+      chip.setAttribute("aria-pressed", String(active));
+      return chip;
+    }),
+  );
+}
+
+function wirePlatformChips() {
+  const host = document.getElementById("recap-platforms");
+  host?.addEventListener("click", (event) => {
+    const chip = event.target.closest(".seg-btn");
+    if (!chip) return;
+    const platform = chip.dataset.platform;
+    const next = stored.platforms.includes(platform)
+      ? stored.platforms.filter((id) => id !== platform)
+      : [...stored.platforms, platform];
+    stored = { ...stored, platforms: normalizeRecapPlatforms(next) };
+    renderPlatformChips();
+    saveRecapPlatforms(stored.platforms).catch((error) => console.warn("[recap] plateformes non enregistrées :", error?.message || error));
+    renderPeriod().catch(onError);
+  });
 }
 
 async function init() {
@@ -471,6 +522,8 @@ async function init() {
   ]).catch((error) => console.warn("[recap] polices non chargées :", error?.message || error));
   currentAssets = { avatars: new Map(), logo: await loadImage("../images/photos/logosp.png") };
   populatePeriods();
+  renderPlatformChips();
+  wirePlatformChips();
 
   periodSelect.addEventListener("change", () => {
     currentPeriod = periodSelect.value;

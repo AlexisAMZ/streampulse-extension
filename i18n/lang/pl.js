@@ -1155,6 +1155,8 @@ export default {
     }
   },
   "recap": {
+    "platformsLabel": "Liczone platformy",
+    "platformsHint": "YouTube jest na razie odznaczony, bo jego pomiar jest sprawdzany. Możesz go dodać, jeśli chcesz.",
     "referral": {
       "body": "Polecaj StreamPulse: miesiąc gratis za każdego znajomego, który wykupi go z twoim kodem.",
       "copy": "Skopiuj mój kod"

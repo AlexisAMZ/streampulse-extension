@@ -1155,6 +1155,8 @@ export default {
     }
   },
   "recap": {
+    "platformsLabel": "Plataformas contadas",
+    "platformsHint": "O YouTube está desmarcado por enquanto, enquanto sua medição é verificada. Você pode adicioná-lo se quiser.",
     "referral": {
       "body": "Indique o StreamPulse: um mês grátis para cada amigo que assinar com o seu código.",
       "copy": "Copiar meu código"

@@ -1155,6 +1155,8 @@ export default {
     }
   },
   "recap": {
+    "platformsLabel": "Plateformes comptées",
+    "platformsHint": "YouTube est décoché pour l'instant : sa mesure est en cours de vérification. Tu peux l'ajouter si tu le souhaites.",
     "referral": {
       "body": "Parrainage : un mois offert pour chaque ami qui prend StreamPulse+ avec ton code.",
       "copy": "Copier mon code"

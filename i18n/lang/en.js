@@ -1193,6 +1193,8 @@ export default {
     }
   },
   "recap": {
+    "platformsLabel": "Platforms counted",
+    "platformsHint": "YouTube is unchecked for now while its measurement is being verified. You can add it if you like.",
     "referral": {
       "body": "Referrals: one free month for every friend who takes StreamPulse+ with your code.",
       "copy": "Copy my code"

@@ -1155,6 +1155,8 @@ export default {
     }
   },
   "recap": {
+    "platformsLabel": "集計するプラットフォーム",
+    "platformsHint": "YouTube は計測の確認中のため、今のところオフになっています。必要ならオンにできます。",
     "referral": {
       "body": "紹介プログラム：あなたのコードで利用した友だち 1 人につき、1 か月分の特典。",
       "copy": "コードをコピー"

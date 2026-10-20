@@ -1155,6 +1155,8 @@ export default {
     }
   },
   "recap": {
+    "platformsLabel": "Gezählte Plattformen",
+    "platformsHint": "YouTube ist vorerst abgewählt, solange die Messung geprüft wird. Du kannst es bei Bedarf hinzufügen.",
     "referral": {
       "body": "Weiterempfehlen: ein Gratismonat für jeden Freund, der mit deinem Code abonniert.",
       "copy": "Code kopieren"

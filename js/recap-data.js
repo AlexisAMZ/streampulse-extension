@@ -7,6 +7,8 @@
 // Les mois gardent l'historique d'avant le decoupage par jour ; les periodes
 // glissantes (7 et 30 jours) ne peuvent venir que du stockage journalier.
 
+import { filterByPlatforms } from "./recap-platforms.js";
+
 const DEFAULT_LIMIT = 8;
 
 const ROLLING_PERIODS = [
@@ -106,7 +108,11 @@ function mergeBuckets(buckets) {
 }
 
 /** Entrees agregees d'une periode ("7d", "30d" ou "month:AAAA-MM"). */
-export function collectEntries(monthly, daily, periodId, now = new Date()) {
+export function collectEntries(monthly, daily, periodId, now = new Date(), platforms) {
+  return filterByPlatforms(collectAllEntries(monthly, daily, periodId, now), platforms);
+}
+
+function collectAllEntries(monthly, daily, periodId, now) {
   const rolling = ROLLING_PERIODS.find((p) => p.id === periodId);
   if (rolling) {
     const days = rollingDayKeys(rolling.days, now);
@@ -146,24 +152,25 @@ function yearBuckets(monthly, daily, year) {
  * Courbe d'activite d'une periode : un point par jour (7 et 30 jours, mois) ou
  * par mois (annee). Chaque point : { key, seconds }.
  */
-export function buildTimeline(monthly, daily, periodId, now = new Date()) {
+export function buildTimeline(monthly, daily, periodId, now = new Date(), platforms) {
+  const total = (entries) => sumSeconds(filterByPlatforms(entries, platforms));
   const rolling = ROLLING_PERIODS.find((p) => p.id === periodId);
   if (rolling) {
     return rollingDayKeys(rolling.days, now)
       .reverse()
-      .map((key) => ({ key, seconds: sumSeconds(Object.values((daily || {})[key] || {})) }));
+      .map((key) => ({ key, seconds: total(Object.values((daily || {})[key] || {})) }));
   }
   const month = /^month:(\d{4})-(\d{2})$/.exec(periodId || "");
   if (month) {
     const count = new Date(Number(month[1]), Number(month[2]), 0).getDate();
     return Array.from({ length: count }, (_, i) => {
       const key = `${month[1]}-${month[2]}-${pad(i + 1)}`;
-      return { key, seconds: sumSeconds(Object.values((daily || {})[key] || {})) };
+      return { key, seconds: total(Object.values((daily || {})[key] || {})) };
     });
   }
   const year = /^year:(\d{4})$/.exec(periodId || "");
   if (year) {
-    return yearBuckets(monthly, daily, year[1]).map(({ month: key, bucket }) => ({ key, seconds: sumSeconds(bucket) }));
+    return yearBuckets(monthly, daily, year[1]).map(({ month: key, bucket }) => ({ key, seconds: total(bucket) }));
   }
   return [];
 }

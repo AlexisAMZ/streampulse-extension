@@ -9,6 +9,7 @@
  * sanitizePreferences exposent exactement les mêmes clés.
  */
 import { DEFAULT_LANGUAGE, matchLanguage } from "../i18n/meta.js";
+import { DEFAULT_RECAP_PLATFORMS, normalizeRecapPlatforms } from "./recap-platforms.js";
 import { DEFAULT_SOUND, SOUND_INHERIT, normalizeGeneralSound, normalizeKindSound } from "./notification-sounds.js";
 
 /** Qualités proposées pour le lecteur Twitch. "auto" laisse Twitch décider. */
@@ -63,6 +64,8 @@ export const DEFAULT_PREFERENCES = {
   // côté du nombre de spectateurs ; "chat" = dans l'en-tête du chat, à la
   // place du titre « Chat du stream ».
   latencyPlacement: "viewers",
+  // Plateformes comptées dans le récap (gratuit) : YouTube décoché pour l'instant, voir recap-platforms.js.
+  recapPlatforms: DEFAULT_RECAP_PLATFORMS,
   autoCancelRaids: false,
   preventTabDiscard: true,
   enablePredictionsPopup: true,
@@ -207,6 +210,7 @@ export function sanitizePreferences(preferences = {}) {
     latencyPlacement: LATENCY_PLACEMENTS.includes(preferences.latencyPlacement)
       ? preferences.latencyPlacement
       : "viewers",
+    recapPlatforms: normalizeRecapPlatforms(preferences.recapPlatforms),
     // Les alertes de raid rapportent des points en suivant le raid : garder
     // l'annulation automatique active rendrait les deux fonctionnalités
     // contradictoires (le raid est annulé avant qu'on puisse le suivre).

@@ -1155,6 +1155,8 @@ export default {
     }
   },
   "recap": {
+    "platformsLabel": "집계할 플랫폼",
+    "platformsHint": "YouTube는 측정을 확인하는 동안 일단 꺼져 있어요. 원하면 켤 수 있습니다.",
     "referral": {
       "body": "추천 프로그램: 내 코드로 구독하는 친구마다 한 달 무료.",
       "copy": "내 코드 복사"

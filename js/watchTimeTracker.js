@@ -59,7 +59,11 @@
    * (commentaires coupés, rendu tardif).
    */
   function youtubeIsLive() {
-    return Boolean(document.querySelector(".ytp-live"));
+    if (!document.querySelector(".ytp-live")) return false;
+    // Garde-fou : le badge « En direct » reste dans le DOM mais masqué sur une vidéo normale. S'il existe
+    // et n'est pas affiché, ce n'est pas un direct.
+    const badge = document.querySelector(".ytp-live-badge");
+    return !badge || badge.offsetParent !== null;
   }
 
   /**

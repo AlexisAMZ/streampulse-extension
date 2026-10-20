@@ -1155,6 +1155,8 @@ export default {
     }
   },
   "recap": {
+    "platformsLabel": "Sayılan platformlar",
+    "platformsHint": "YouTube şimdilik işaretsiz, ölçümü doğrulanıyor. İstersen ekleyebilirsin.",
     "referral": {
       "body": "StreamPulse'ı öner: kodunla alan her arkadaş için bir ay ücretsiz.",
       "copy": "Kodumu kopyala"
