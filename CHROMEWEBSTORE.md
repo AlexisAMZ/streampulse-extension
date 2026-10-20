@@ -18,7 +18,7 @@
 ```text
 StreamPulse réunit Twitch, Kick et YouTube dans une seule extension légère. Elle surveille tes streamers préférés, automatise les clics répétitifs et garde ton navigateur rapide.
 
-🌍 Entièrement traduite en 11 langues.
+🌍 Entièrement traduite en 12 langues.
 
 🔄 Synchro optionnelle entre tes appareils : tes streamers, tes épingles et tes réglages suivent ton navigateur, sans compte ni serveur.
 
@@ -43,7 +43,7 @@ StreamPulse ne demande aucun compte et ne contient aucun traceur. Tes streamers,
 ```text
 StreamPulse brings Twitch, Kick and YouTube together in one lightweight extension. It keeps an eye on your favorite streamers, automates repetitive clicks and keeps your browser fast.
 
-🌍 Fully translated into 11 languages.
+🌍 Fully translated into 12 languages.
 
 🔄 Optional sync across your devices: your streamers, pins and settings follow your browser — no account, no server.
 
@@ -59,6 +59,7 @@ Key Features:
 • Watch Time & Recap: Track the time you spend on each channel, then create a shareable recap image for the last 7 or 30 days or any month, in desktop (16:9) or mobile (9:16) format.
 • Community Badge: Spot the StreamPulse icon next to other StreamPulse users in Twitch chat. You can turn it off at any time.
 • Unified Dashboard: One pop-up for Twitch, Kick and YouTube that shows who is live at a glance.
+• CHZZK (Korean platform): Live alerts, title, category and viewer count for CHZZK channels. Offered when the extension language is Korean or English.
 
 Privacy:
 StreamPulse requires no account and contains no trackers. Your streamers, settings and watch time are stored on your device. Only three things reach our server, streampulse.tech: the community badge, off by default, sends a hashed version of your Twitch username (never the username itself) at most once a day, with the effects you picked if you have StreamPulse+; your StreamPulse+ license key is checked there when you activate it; and your referral code is created there when you ask for it. Turn the badge off in Settings to stop it.
@@ -154,6 +155,8 @@ dans la console (onglet Éléments graphiques). Rien à supprimer.
 | `offscreen` | `permissions` | Permet de créer un document hors écran dédié à la lecture des sons d'alerte et à la gestion audio sans bloquer le service worker. |
 | `cookies` | `permissions` | Permet au service worker de réutiliser la session Twitch déjà ouverte dans le navigateur pour lire et réclamer les Drops via l'API GraphQL Twitch. Seul le cookie `auth-token` de twitch.tv est lu ; sa valeur n'est envoyée qu'à gql.twitch.tv, jamais stockée à distance ni transmise ailleurs. |
 | `scripting` | `permissions` | Permet d'afficher le bandeau de progression et de lancer le lecteur basse consommation (360p, volume minimal, et fermeture des écrans bloquants de Twitch) dans l'onglet Twitch épinglé et muet du mode auto des badges. |
+| `declarativeNetRequestWithHostAccess` | `permissions` | Permet de poser une seule règle, limitée à l'API de CHZZK (`api.chzzk.naver.com`) et aux requêtes de l'extension elle-même, qui présente l'en-tête `Origin` du site CHZZK. Sans elle, l'API répond 403 à toute origine d'extension. Elle ne modifie aucune autre requête et ne bloque rien. |
+| `https://api.chzzk.naver.com/*` | `optional_host_permissions` | Permission facultative, demandée seulement quand l'utilisateur ajoute une chaîne CHZZK (plateforme coréenne). Permet de lire les réponses publiques de l'API de CHZZK pour savoir si la chaîne est en direct, son titre, sa catégorie et ses spectateurs. Aucune donnée personnelle n'est envoyée. |
 | `https://api.twitch.tv/*` | `host_permissions` | Permet d'interroger l'API officielle Twitch pour vérifier l'état en direct des chaînes et obtenir les métadonnées des streams. |
 | `https://gql.twitch.tv/*` | `host_permissions` | Permet d'interagir avec l'API GraphQL Twitch pour la récupération automatique des Channel Points et des Drops, et l'affichage des prévisualisations. |
 | `https://www.twitch.tv/*` | `host_permissions` | Permet d'injecter les scripts de prévisualisation au survol, l'anti-pause et le filtre de chat directement sur les pages Twitch. |
@@ -186,6 +189,16 @@ Runs light periodic checks in the background: whether followed streamers are liv
 **cookies** (560 car.)
 ```
 Used solely to read the Twitch auth-token session cookie from twitch.tv. It authenticates the user's own requests to Twitch's GraphQL API (gql.twitch.tv) made from the extension's service worker, so Twitch Drops and chat badge campaigns can be read and, with the optional StreamPulse+ plan, claimed automatically without a Twitch tab open (for example while the user watches on a phone or TV). The cookie value is sent only to gql.twitch.tv. It is never stored remotely or sent to any other server, and the extension never creates, modifies or deletes cookies.
+```
+
+**declarativeNetRequestWithHostAccess**
+```
+Used for a single rule that sets the Origin header to https://chzzk.naver.com on the extension's own requests to api.chzzk.naver.com. CHZZK's public API rejects any other origin with a 403, so live status could not be read without it. The rule is limited to that host and to this extension's requests, and the extension never blocks or alters any other traffic.
+```
+
+**api.chzzk.naver.com (optional host permission)**
+```
+Optional. Requested only when the user adds a CHZZK channel (CHZZK is a Korean live-streaming platform). Used to read CHZZK's public channel and live-status responses: whether the channel is live, its title, category and viewer count. No account, token or personal data is sent.
 ```
 
 **notifications** (157 car.)
@@ -303,7 +316,7 @@ Les textes suivants sont formatés en texte brut pur, sans tiret cadratin ni mar
 ```text
 StreamPulse reúne Twitch, Kick y YouTube en una sola extensión ligera. Vigila a tus streamers favoritos, automatiza los clics repetitivos y mantiene tu navegador rápido.
 
-🌍 Totalmente traducida a 11 idiomas.
+🌍 Totalmente traducida a 12 idiomas.
 
 🔄 Sincronización opcional entre tus dispositivos: tus streamers, fijados y ajustes siguen tu navegador, sin cuenta ni servidor.
 
@@ -339,7 +352,7 @@ StreamPulse no requiere cuenta y no contiene rastreadores. Tus streamers, ajuste
 ```text
 O StreamPulse reúne Twitch, Kick e YouTube em uma única extensão leve. Ele acompanha seus streamers favoritos, automatiza cliques repetitivos e mantém seu navegador rápido.
 
-🌍 Totalmente traduzido para 11 idiomas.
+🌍 Totalmente traduzido para 12 idiomas.
 
 🔄 Sincronização opcional entre seus dispositivos: seus streamers, fixados e configurações seguem seu navegador, sem conta nem servidor.
 
@@ -375,7 +388,7 @@ O StreamPulse não exige conta e não tem rastreadores. Seus streamers, configur
 ```text
 StreamPulse vereint Twitch, Kick und YouTube in einer schlanken Erweiterung. Sie behält deine Lieblingsstreamer im Blick, automatisiert wiederkehrende Klicks und hält deinen Browser schnell.
 
-🌍 Vollständig in 11 Sprachen übersetzt.
+🌍 Vollständig in 12 Sprachen übersetzt.
 
 🔄 Optionale Synchronisierung zwischen deinen Geräten: Deine Streamer, Angehefteten und Einstellungen folgen deinem Browser — ohne Konto, ohne Server.
 
@@ -412,7 +425,7 @@ StreamPulse braucht kein Konto und enthält keine Tracker. Deine Streamer, Einst
 ```text
 StreamPulse riunisce Twitch, Kick e YouTube in un'unica estensione leggera. Tiene d'occhio i tuoi streamer preferiti, automatizza i clic ripetitivi e mantiene veloce il tuo browser.
 
-🌍 Tradotta interamente in 11 lingue.
+🌍 Tradotta interamente in 12 lingue.
 
 🔄 Sincronizzazione opzionale tra i tuoi dispositivi: i tuoi streamer, i fissati e le impostazioni seguono il tuo browser, senza account né server.
 
@@ -448,7 +461,7 @@ StreamPulse non richiede alcun account e non contiene tracker. I tuoi streamer, 
 ```text
 StreamPulse łączy Twitcha, Kicka i YouTube w jednym lekkim rozszerzeniu. Śledzi ulubionych streamerów, automatyzuje powtarzalne kliknięcia i nie spowalnia przeglądarki.
 
-🌍 W pełni przetłumaczone na 11 języków.
+🌍 W pełni przetłumaczone na 12 języków.
 
 🔄 Opcjonalna synchronizacja między urządzeniami: Twoi streamerzy, przypięte i ustawienia podążają za Twoją przeglądarką — bez konta i bez serwera.
 
@@ -484,7 +497,7 @@ StreamPulse nie wymaga konta i nie zawiera trackerów. Twoi streamerzy, ustawien
 ```text
 StreamPulse, Twitch, Kick ve YouTube'u tek bir hafif eklentide birleştirir. Sevdiğin yayıncıları takip eder, tekrarlayan tıklamaları otomatikleştirir ve tarayıcını hızlı tutar.
 
-🌍 11 dile tamamen çevrildi.
+🌍 12 dile tamamen çevrildi.
 
 🔄 Cihazların arasında isteğe bağlı eşitleme: yayıncıların, sabitlediklerin ve ayarların tarayıcını takip eder — hesap yok, sunucu yok.
 
@@ -520,7 +533,7 @@ StreamPulse hesap gerektirmez, izleyici içermez. Yayıncıların, ayarların ve
 ```text
 StreamPulse объединяет Twitch, Kick и YouTube в одном лёгком расширении. Оно следит за любимыми стримерами, автоматизирует однообразные клики и не замедляет браузер.
 
-🌍 Полностью переведено на 11 языков.
+🌍 Полностью переведено на 12 языков.
 
 🔄 Необязательная синхронизация между устройствами: ваши стримеры, закрепления и настройки следуют за вашим браузером — без аккаунта и без сервера.
 
@@ -556,7 +569,7 @@ StreamPulse не требует аккаунта и не содержит тре
 ```text
 StreamPulseは、Twitch、Kick、YouTubeをひとつの軽量な拡張機能にまとめます。お気に入りの配信者を見守り、繰り返しのクリックを自動化し、ブラウザを快適に保ちます。
 
-🌍 11言語に完全対応。
+🌍 12言語に完全対応。
 
 🔄 デバイス間のオプション同期：配信者・ピン留め・設定がブラウザに追随。アカウントもサーバーも不要。
 
@@ -592,7 +605,7 @@ StreamPulseはアカウント不要で、トラッカーを含みません。配
 ```text
 StreamPulse는 트위치, Kick, YouTube를 하나의 가벼운 확장 프로그램으로 묶어 줍니다. 좋아하는 스트리머를 지켜보고, 반복적인 클릭을 자동화하며, 브라우저를 빠르게 유지합니다.
 
-🌍 11개 언어로 완전히 번역되었습니다.
+🌍 12개 언어로 완전히 번역되었습니다.
 
 🔄 기기 간 선택 동기화: 스트리머, 고정, 설정이 브라우저를 따라갑니다. 계정도 서버도 없습니다.
 
@@ -608,9 +621,39 @@ StreamPulse는 트위치, Kick, YouTube를 하나의 가벼운 확장 프로그�
 • 시청 시간과 결산: 채널별 시청 시간을 기록하고, 최근 7일·30일 또는 한 달 단위의 결산 이미지를 PC(16:9)나 모바일(9:16) 형식으로 만들어 공유하세요.
 • 커뮤니티 배지: 트위치 채팅에서 다른 StreamPulse 사용자 옆에 StreamPulse 아이콘이 표시됩니다. 언제든지 끌 수 있습니다.
 • 통합 대시보드: 트위치, Kick, YouTube를 하나의 팝업에 모아 누가 방송 중인지 한눈에 보여 줍니다.
+• 치지직(CHZZK): 치지직 채널의 방송 알림, 제목, 카테고리, 시청자 수를 지원합니다. 확장 프로그램 언어가 한국어 또는 영어일 때 제공됩니다.
 
 개인정보:
 StreamPulse는 계정이 필요 없으며 추적기가 없습니다. 스트리머 목록, 설정, 시청 시간은 사용자의 기기에 저장됩니다. 서버(streampulse.tech)로 가는 것은 다음 세 가지뿐입니다. 기본적으로 꺼져 있는 커뮤니티 배지가 트위치 사용자 이름의 해시값(이름 자체는 보내지 않음)을 하루에 최대 한 번, StreamPulse+ 회원이라면 선택한 효과와 함께 전송하는 것. StreamPulse+ 라이선스 키는 활성화할 때 서버에서 확인되는 것. 추천 코드는 요청할 때 서버에서 생성되는 것. 중단하려면 설정에서 배지를 끄세요.
+```
+
+### 🇸🇦 Arabe (AR)
+**Short Description**:
+`نقاط قناة Twitch تلقائيًا، Drops مع StreamPulse+، تنبيهات البث، معاينات، تصفية الدردشة، ملخصات. Twitch وKick وYouTube.`
+
+**Detailed Description**:
+```text
+StreamPulse يجمع Twitch وKick وYouTube في إضافة واحدة خفيفة. يراقب بثّاثيك المفضلين، ويؤتمت النقرات المتكررة، ويُبقي متصفحك سريعًا.
+
+🌍 مترجم بالكامل إلى 12 لغة.
+
+🔄 مزامنة اختيارية بين أجهزتك: يتبعك بثّاثوك وتثبيتاتك وإعداداتك في متصفحك — بلا حساب وبلا خادم.
+
+💎 StreamPulse+ (اشتراك اختياري، شهري أو سنوي): استلام Drops تلقائيًا، ووضع الشارات التلقائي (شارة مجانية واحدة يوميًا بدونه)، وتأثيرات لاسم المستخدم والشارة في الدردشة.
+
+الميزات الرئيسية:
+• نقاط قناة Twitch وDrops: يستلم StreamPulse مكافآت نقاط قناة Twitch تلقائيًا أثناء المشاهدة، ويحتسب النقاط التي تكسبها على Kick. وتُستلَم Twitch Drops تلقائيًا مع StreamPulse+.
+• تنبيهات بث فورية: احصل على إشعار على سطح المكتب فور بدء بثّاث تتابعه البث، وعند تغييره عنوان بثه أو فئته إن شئت.
+• زر «أضف إلى StreamPulse»: تابع بثّاثًا بنقرة واحدة من صفحة قناته على Twitch أو Kick أو YouTube.
+• معاينات مباشرة عند التمرير: عاين بثًّا بالتمرير فوق رابط قناة على Twitch أو Kick دون مغادرة تبويبك الحالي.
+• منع الإيقاف المؤقت واستعادة المشغّل: تستمر البثوث في العمل عند تبديل التبويبات، ويُعاد تشغيل المشغّل تلقائيًا بعد أخطاء مثل Twitch #2000.
+• تصفية الدردشة: أخفِ الرسائل بالكلمة المفتاحية أو من مستخدمين محددين، على Twitch وKick.
+• وقت المشاهدة والملخص: تتبّع الوقت الذي تقضيه على كل قناة، ثم أنشئ صورة ملخص قابلة للمشاركة لآخر 7 أو 30 يومًا أو أي شهر، بصيغة سطح المكتب (16:9) أو الجوال (9:16).
+• شارة المجتمع: لاحظ أيقونة StreamPulse بجانب مستخدمي StreamPulse الآخرين في دردشة Twitch. يمكنك إيقافها في أي وقت.
+• لوحة موحّدة: نافذة منبثقة واحدة لـTwitch وKick وYouTube تُظهر من يبث بنظرة واحدة.
+
+الخصوصية:
+لا يتطلب StreamPulse حسابًا ولا يحتوي على أي متتبّعات. تُخزَّن قائمة بثّاثيك وإعداداتك ووقت مشاهدتك على جهازك. ثلاثة أشياء فقط تصل إلى خادمنا streampulse.tech: شارة المجتمع، المعطَّلة افتراضيًا، ترسل نسخة مشفَّرة (Hash) من اسم مستخدمك في Twitch (لا الاسم نفسه أبدًا) مرة واحدة في اليوم على الأكثر، مع التأثيرات التي اخترتها إن كان لديك StreamPulse+؛ ويُتحقَّق من مفتاح ترخيص StreamPulse+ هناك عند تفعيله؛ ويُنشأ كود الإحالة هناك عند طلبه. أوقف الشارة من الإعدادات لإيقاف ذلك.
 ```
 
 ---
