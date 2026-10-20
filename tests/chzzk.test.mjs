@@ -159,7 +159,7 @@ test("règle de réécriture : sans identifiant d'extension valide, aucune règl
   for (const bad of ["", null, undefined, "pas un id", 42]) assert.equal(chzzkOriginRule(bad), null);
 });
 
-test("scripts des pages CHZZK : posés sur le site seulement, latence coupée tant que l'interrupteur l'est", async () => {
+test("scripts des pages CHZZK : posés sur le site seulement, latence selon l'interrupteur", async () => {
   const { chzzkPageScripts, CHZZK_PERMISSIONS, CHZZK_LATENCY_ENABLED, CHZZK_PAGE_SCRIPT_IDS } = await import("../js/chzzk.js");
   const scripts = chzzkPageScripts();
   assert.deepEqual(CHZZK_PERMISSIONS, [CHZZK_HOST_PERMISSION]);

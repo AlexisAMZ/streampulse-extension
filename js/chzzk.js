@@ -125,11 +125,11 @@ export const CHZZK_RULE_ID = 4401;
 export const CHZZK_PERMISSIONS = [CHZZK_HOST_PERMISSION];
 
 /**
- * Indicateur de latence sur les pages CHZZK (js/chzzkPlayerEnhancer.js + pont de la page). COUPÉ le
- * 20/10/2026 : sur le vrai site, le flux du lecteur coupait chaque seconde avec lui. À remettre à true
- * seulement une fois la cause trouvée.
+ * Indicateur de latence sur les pages CHZZK (js/chzzkPlayerEnhancer.js + pont de la page). Coupé un
+ * moment le 20/10/2026 par précaution, puis remis : les coupures du flux persistaient extension
+ * désactivée, elles ne venaient donc pas d'elle. Interrupteur gardé pour le couper d'un mot.
  */
-export const CHZZK_LATENCY_ENABLED = false;
+export const CHZZK_LATENCY_ENABLED = true;
 /** Tous les identifiants de scripts que l'extension a pu enregistrer, pour retirer les anciens. */
 export const CHZZK_PAGE_SCRIPT_IDS = ["sp-chzzk-pages", "sp-chzzk-bridge"];
 
