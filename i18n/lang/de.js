@@ -11,7 +11,8 @@ export default {
   "platforms": {
     "twitch": "Twitch",
     "kick": "Kick",
-    "youtube": "YouTube"
+    "youtube": "YouTube",
+    "chzzk": "CHZZK"
   },
   "onboarding": {
     "newBadge": "Neu",
@@ -67,7 +68,8 @@ export default {
     "placeholders": {
       "twitch": "z.B. Minos",
       "kick": "z.B. trainwreckstv",
-      "youtube": "@Name oder YouTube-Kanal-Link"
+      "youtube": "@Name oder YouTube-Kanal-Link",
+      "chzzk": "Kanalname oder Link"
     },
     "submit": "Hinzufügen",
     "currentHeader": "Deine Streamer",
@@ -710,7 +712,8 @@ export default {
     "placeholders": {
       "twitch": "z.B. Minos",
       "kick": "z.B. trainwreckstv",
-      "youtube": "@Name oder YouTube-Kanal-Link"
+      "youtube": "@Name oder YouTube-Kanal-Link",
+      "chzzk": "Kanalname oder Link"
     },
     "emptyState": "Noch keine Streamer. Füge einen hinzu, um loszulegen.",
     "sort": {
@@ -919,7 +922,8 @@ export default {
     },
     "errors": {
       "generic": "Ein Fehler ist aufgetreten. Versuch es gleich noch mal; wenn es wieder passiert, schließ StreamPulse und öffne es erneut.",
-      "invalidHandle": "Dieser {{platform}}-Name ist ungültig. Prüf die Schreibweise oder füge den Kanallink ein."
+      "invalidHandle": "Dieser {{platform}}-Name ist ungültig. Prüf die Schreibweise oder füge den Kanallink ein.",
+      "chzzkPermission": "CHZZK braucht deine Erlaubnis, um Livestreams zu prüfen. Stimme zu, um diesen Kanal hinzuzufügen."
     },
     "feedback": {
       "undoDone": "{{name}} ist wieder in deiner Liste.",

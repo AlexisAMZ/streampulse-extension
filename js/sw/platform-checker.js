@@ -1,6 +1,8 @@
 // Statut des chaînes par plateforme : Twitch (Helix, par lots), Kick, YouTube.
 
+import { CHZZK_API, fetchChzzkLive, resolveChzzkChannel } from "../chzzk.js";
 import { buildProfileUrl, isYoutubeChannelId, normalizePlatform, platformSupportsLiveStatus, sanitizeHandle } from "../platforms.js";
+import { hasChzzkAccess } from "./chzzk-access.js";
 import { ensureConfig, fetchJson, fetchTwitchJson, twitchHeaders } from "./config.js";
 import { NETWORK_TIMEOUT_MS } from "./constants.js";
 import { fetchKickChannelsOfficial, fetchKickLivestreamsOfficial, fetchKickOfficial, getKickAppToken } from "./kick-token.js";
@@ -8,6 +10,13 @@ import { resolveKickAsset, sanitizeLogin } from "./normalize.js";
 import { pollStreamers } from "./polling.js";
 
 const TWITCH_STREAMS_BATCH_SIZE = 100;
+
+/** Corps JSON de l'API publique de CHZZK, y compris les réponses 404 (code 404 dans le corps). */
+async function chzzkJson(path) {
+  if (!(await hasChzzkAccess())) throw new Error("chzzk_permission");
+  const response = await fetch(`${CHZZK_API}${path}`, { credentials: "omit", signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS) });
+  return response.json();
+}
 
 export function twitchStreamToStatus(stream) {
   if (!stream) return { isLive: false };
@@ -500,6 +509,39 @@ export class PlatformChecker {
     };
   }
 
+  /** Chaîne CHZZK depuis un nom, un lien ou un identifiant : { id, name, avatar } ou null. */
+  static resolveChzzkChannel(input) {
+    return resolveChzzkChannel(input, chzzkJson);
+  }
+
+  static async getChzzkStatus(handle) {
+    const id = sanitizeHandle("chzzk", handle);
+    const base = { platform: "chzzk", url: buildProfileUrl("chzzk", id) };
+    const result = await fetchChzzkLive(id, chzzkJson);
+    if (result.error) return { isLive: false, ...base, error: result.error, isError: true };
+    if (result.notFound) return { isLive: false, ...base };
+    const live = result.status;
+    const identity = {
+      ...(live.displayName ? { displayName: live.displayName } : {}),
+      ...(live.avatarUrl ? { avatarUrl: live.avatarUrl } : {}),
+    };
+    if (!live.isLive) return { isLive: false, ...base, ...identity };
+    const cb = Math.floor(Date.now() / 60000);
+    return {
+      isLive: true,
+      ...base,
+      ...identity,
+      title: live.title,
+      game: live.game,
+      viewers: live.viewers,
+      startedAt: live.startedAt,
+      sessionId: live.sessionId,
+      thumbnailUrl: live.thumbnailUrl,
+      thumbnailCandidates: live.thumbnailUrl ? [`${live.thumbnailUrl}?cb=${cb}`] : [],
+      supportsLiveStatus: true,
+    };
+  }
+
   static async getStatus(streamer) {
     const platform = normalizePlatform(streamer?.platform);
     const supportsLive = platformSupportsLiveStatus(platform);
@@ -523,6 +565,14 @@ export class PlatformChecker {
     }
     if (platform === "youtube") {
       const status = await this.getYoutubeStatus(streamer.handle || streamer.id);
+      return {
+        ...status,
+        platform,
+        supportsLiveStatus: supportsLive,
+      };
+    }
+    if (platform === "chzzk") {
+      const status = await this.getChzzkStatus(streamer.handle || streamer.id);
       return {
         ...status,
         platform,

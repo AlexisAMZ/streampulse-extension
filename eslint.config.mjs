@@ -19,6 +19,8 @@ const ES_MODULES = [
   "js/onboarding.js",
   "js/popup-navigation.js",
   "js/platforms.js",
+  "js/chzzk.js",
+  "js/chzzk-permission.js",
   "js/plus.js",
   "js/plus-thanks.js",
   "js/eventsubRaid.js",

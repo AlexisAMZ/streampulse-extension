@@ -1,3 +1,5 @@
+import { chzzkChannelUrl, parseChzzkInput } from "./chzzk.js";
+
 export const DEFAULT_PLATFORM = "twitch";
 
 const SIMPLE_HANDLE_CHARS = /[^a-z0-9_.-]/gi;
@@ -40,6 +42,13 @@ function sanitizeKickHandle(value) {
 
 function sanitizeTwitchHandle(value) {
   return sanitizeSimpleHandle(value);
+}
+
+/* CHZZK : une chaîne se reconnaît à un identifiant de 32 caractères. Un nom (souvent en
+   hangul) traverse tel quel : le service worker le résout en identifiant à l'ajout. */
+function sanitizeChzzkHandle(value) {
+  const parsed = parseChzzkInput(value);
+  return parsed?.id || parsed?.name || "";
 }
 
 function sanitizeSimpleForComparison(handle) {
@@ -120,9 +129,49 @@ export const PLATFORM_DEFINITIONS = {
         : `https://www.youtube.com/@${cleaned}`;
     },
   },
+  chzzk: {
+    id: "chzzk",
+    labelKey: "platforms.chzzk",
+    shortLabelKey: "platformsShort.chzzk",
+    icon: "images/social/chzzk.svg",
+    color: "#00FFA3",
+    inputPrefix: "",
+    // Proposée seulement dans les langues où elle a un public (coréen, et anglais pour
+    // les diasporas) ; une chaîne déjà suivie reste visible quelle que soit la langue.
+    offeredLocales: ["ko", "en"],
+    placeholderKey: {
+      popup: "popup.placeholders.chzzk",
+      onboarding: "onboarding.placeholders.chzzk",
+    },
+    supportsLiveStatus: true,
+    sanitizeHandle: sanitizeChzzkHandle,
+    sanitizeForComparison: sanitizeChzzkHandle,
+    formatHandle(handle) {
+      const cleaned = sanitizeChzzkHandle(handle);
+      return cleaned.length === 32 ? cleaned.slice(0, 8) : cleaned;
+    },
+    buildUrl(handle) {
+      return chzzkChannelUrl(sanitizeChzzkHandle(handle));
+    },
+  },
 };
 
 export const AVAILABLE_PLATFORMS = Object.values(PLATFORM_DEFINITIONS);
+
+/** Plateformes sans restriction de langue partout, les autres selon `offeredLocales`. */
+export function isPlatformOffered(platform, language, followedPlatforms = []) {
+  const key = trimValue(platform).toLowerCase();
+  const definition = PLATFORM_DEFINITIONS[key];
+  if (!definition) return false;
+  if (!definition.offeredLocales) return true;
+  if (followedPlatforms.includes(key)) return true;
+  const base = trimValue(language).toLowerCase().split(/[-_]/)[0];
+  return definition.offeredLocales.includes(base);
+}
+
+export function getOfferedPlatforms(language, followedPlatforms = []) {
+  return AVAILABLE_PLATFORMS.filter((definition) => isPlatformOffered(definition.id, language, followedPlatforms));
+}
 
 export function normalizePlatform(platform) {
   const key = trimValue(platform).toLowerCase();

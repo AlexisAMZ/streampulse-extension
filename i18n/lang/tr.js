@@ -11,7 +11,8 @@ export default {
   "platforms": {
     "twitch": "Twitch",
     "kick": "Kick",
-    "youtube": "YouTube"
+    "youtube": "YouTube",
+    "chzzk": "CHZZK"
   },
   "onboarding": {
     "newBadge": "Yeni",
@@ -67,7 +68,8 @@ export default {
     "placeholders": {
       "twitch": "örn. AlexisAMZ",
       "kick": "örn. Teuf",
-      "youtube": "@kullanıcıadı veya YouTube kanal bağlantısı"
+      "youtube": "@kullanıcıadı veya YouTube kanal bağlantısı",
+      "chzzk": "Kanal adı veya bağlantısı"
     },
     "submit": "Ekle",
     "currentHeader": "Yayıncıların",
@@ -710,7 +712,8 @@ export default {
     "placeholders": {
       "twitch": "örn. minos",
       "kick": "örn. trainwreckstv",
-      "youtube": "@kullanıcı adı veya YouTube kanal bağlantısı"
+      "youtube": "@kullanıcı adı veya YouTube kanal bağlantısı",
+      "chzzk": "Kanal adı veya bağlantısı"
     },
     "emptyState": "Henüz yayıncı yok. Başlamak için bir tane ekle.",
     "sort": {
@@ -919,7 +922,8 @@ export default {
     },
     "errors": {
       "generic": "Bir hata oluştu. Birazdan tekrar dene; yine olursa StreamPulse'u kapatıp yeniden aç.",
-      "invalidHandle": "Bu {{platform}} kullanıcı adı geçerli değil. Yazımı kontrol et ya da kanal bağlantısını yapıştır."
+      "invalidHandle": "Bu {{platform}} kullanıcı adı geçerli değil. Yazımı kontrol et ya da kanal bağlantısını yapıştır.",
+      "chzzkPermission": "CHZZK, yayınları kontrol etmek için iznine ihtiyaç duyar. Bu kanalı eklemek için izin ver."
     },
     "feedback": {
       "undoDone": "{{name}} listene geri döndü.",

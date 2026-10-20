@@ -11,7 +11,8 @@ export default {
   "platforms": {
     "twitch": "Twitch",
     "kick": "Kick",
-    "youtube": "YouTube"
+    "youtube": "YouTube",
+    "chzzk": "CHZZK"
   },
   "onboarding": {
     "newBadge": "Novo",
@@ -66,7 +67,8 @@ export default {
     "placeholders": {
       "twitch": "ex.: AlexisAMZ",
       "kick": "ex.: Teuf",
-      "youtube": "@usuário ou link de canal do YouTube"
+      "youtube": "@usuário ou link de canal do YouTube",
+      "chzzk": "Nome ou link do canal"
     },
     "submit": "Adicionar",
     "currentHeader": "Seus streamers",
@@ -709,7 +711,8 @@ export default {
     "placeholders": {
       "twitch": "ex.: AlexisAMZ",
       "kick": "ex.: Teuf",
-      "youtube": "@usuário ou link de canal do YouTube"
+      "youtube": "@usuário ou link de canal do YouTube",
+      "chzzk": "Nome ou link do canal"
     },
     "emptyState": "Nenhum streamer por enquanto. Adicione um para começar.",
     "sort": {
@@ -918,7 +921,8 @@ export default {
     },
     "errors": {
       "generic": "Algo deu errado. Tente de novo em instantes; se continuar, feche e abra o StreamPulse outra vez.",
-      "invalidHandle": "Este nome da {{platform}} não é válido. Confira a grafia ou cole o link do canal."
+      "invalidHandle": "Este nome da {{platform}} não é válido. Confira a grafia ou cole o link do canal.",
+      "chzzkPermission": "O CHZZK precisa da sua permissão para verificar as lives. Aceite para adicionar este canal."
     },
     "feedback": {
       "undoDone": "{{name}} voltou para a sua lista.",

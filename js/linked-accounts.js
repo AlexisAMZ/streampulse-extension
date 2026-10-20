@@ -3,7 +3,7 @@ export const LINKED_ACCOUNTS_LIMIT = 100;
 
 const isObject = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 
-const KNOWN_PLATFORMS = new Set(["twitch", "kick", "youtube"]);
+const KNOWN_PLATFORMS = new Set(["twitch", "kick", "youtube", "chzzk"]);
 const MAX_ID_LENGTH = 60;
 const MAX_NAME_LENGTH = 80;
 

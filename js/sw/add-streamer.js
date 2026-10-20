@@ -52,11 +52,19 @@ async function youtubeSource(handle) {
   return { data: { displayName: channel.name || formatHandleForDisplay("youtube", handle), avatarUrl: channel.avatar || "" } };
 }
 
+/** CHZZK : le nom (ou le lien) est résolu en identifiant de chaîne, seul vrai pseudo stable. */
+async function chzzkSource(handle) {
+  const channel = await PlatformChecker.resolveChzzkChannel(handle);
+  if (!channel) return { errorKey: "background.errors.streamerNotFound" };
+  return { data: { handle: channel.id, displayName: channel.name || formatHandleForDisplay("chzzk", channel.id), avatarUrl: channel.avatar } };
+}
+
 /** Données propres à la plateforme : { data } ou { errorKey }. */
 function platformSource(platform, handle, request) {
   if (platform === "twitch") return twitchSource(handle);
   if (platform === "kick") return kickSource(handle);
   if (platform === "youtube") return youtubeSource(handle);
+  if (platform === "chzzk") return chzzkSource(handle);
   return { data: { displayName: request.displayName || formatHandleForDisplay(platform, handle), avatarUrl: request.avatarUrl || "" } };
 }
 
@@ -68,7 +76,7 @@ export async function addStreamer(request) {
   if (!handle) return platformError(preferences, "background.errors.invalidHandle", platform);
 
   const streamers = await DataStore.getStreamers();
-  const existing = findFollowed(streamers, platform, handle);
+  let existing = findFollowed(streamers, platform, handle);
   // Déjà suivie avec une photo saine : doublon, refus. Déjà suivie avec un
   // avatar cassé (vide, ou chemin du logo de la plateforme stocké par un
   // ancien ajout) : la ré-ajout répare l'entrée au lieu de la refuser —
@@ -80,6 +88,13 @@ export async function addStreamer(request) {
 
   const source = await platformSource(platform, handle, request);
   if (source.errorKey) return platformError(preferences, source.errorKey, platform);
+  // Le nom saisi peut se résoudre en identifiant déjà suivi (CHZZK) : même règle de doublon.
+  if (!existing && source.data?.handle) {
+    existing = findFollowed(streamers, platform, source.data.handle);
+    if (existing && /^https?:\/\//i.test(existing.avatarUrl || "")) {
+      return platformError(preferences, "background.errors.streamerExistsPlatform", platform);
+    }
+  }
 
   const sourceData = {
     platform,

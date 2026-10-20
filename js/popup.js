@@ -18,17 +18,19 @@ import {
   resolveLocale,
 } from "./i18n.js";
 import {
-  AVAILABLE_PLATFORMS,
   DEFAULT_PLATFORM,
   PLATFORM_DEFINITIONS,
   formatHandleForDisplay,
   getHandleComparisonKey,
   getPlatformIcon,
   getPlatformLabelKey,
+  getOfferedPlatforms,
   getPlatformPlaceholderKey,
+  isPlatformOffered,
   normalizePlatform,
   sanitizeHandle,
 } from "./platforms.js";
+import { requestChzzkAccess } from "./chzzk-permission.js";
 import { createAllChannelsTile, createChannelRow, createMiniCard, formatNumber, renderStage, renderStageEmpty } from "./ui.js";
 import { openChannel } from "./open-channel.js";
 import { UNDO_WINDOW_MS, addMessageFor, restoreGroups, restoreMessages, snapshotStreamer } from "./streamer-undo.js";
@@ -353,10 +355,29 @@ function setSelectedPlatform(platform) {
   updateAddStreamerTexts();
 }
 
+/** Plateformes déjà suivies : elles restent visibles même si la langue ne les propose plus. */
+function followedPlatformIds() {
+  return [...new Set((state.streamers || []).map((streamer) => streamer.platform || "twitch"))];
+}
+
+/** Boutons de filtre propres à une plateforme à audience locale (data-offered-platform). */
+function updateOfferedPlatformControls() {
+  const language = getCurrentLanguage();
+  const followed = followedPlatformIds();
+  document.querySelectorAll("[data-offered-platform]").forEach((element) => {
+    element.hidden = !isPlatformOffered(element.dataset.offeredPlatform, language, followed);
+  });
+}
+
 function renderPlatformPicker() {
   if (!platformPicker) return;
   platformPicker.innerHTML = "";
-  AVAILABLE_PLATFORMS.forEach((definition) => {
+  const offered = getOfferedPlatforms(getCurrentLanguage(), followedPlatformIds());
+  if (!offered.some((definition) => definition.id === state.selectedPlatform)) {
+    state.selectedPlatform = DEFAULT_PLATFORM;
+  }
+  updateOfferedPlatformControls();
+  offered.forEach((definition) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "platform-button";
@@ -1963,6 +1984,12 @@ async function handleAddStreamer(event) {
   const submitButton = addStreamerForm.querySelector("button[type=submit]");
   if (submitButton) {
     submitButton.disabled = true;
+  }
+  // CHZZK : l'accès à son API se demande ici, au clic, et pas à l'installation de l'extension.
+  if (state.selectedPlatform === "chzzk" && !(await requestChzzkAccess())) {
+    if (submitButton) submitButton.disabled = false;
+    showFeedback(t("popup.errors.chzzkPermission"), "error");
+    return;
   }
   showFeedback(t("popup.feedback.adding"), "success");
 

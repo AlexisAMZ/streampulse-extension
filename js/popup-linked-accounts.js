@@ -5,7 +5,7 @@ import { onLanguageChange, t } from "./i18n.js";
 import { LINKED_ACCOUNTS_KEY, normalizeLinkedAccounts } from "./linked-accounts.js";
 
 const ROSTER_KEY = "betaGeneralStreamers";
-const PLATFORM_NAMES = { twitch: "Twitch", kick: "Kick", youtube: "YouTube" };
+const PLATFORM_NAMES = { twitch: "Twitch", kick: "Kick", youtube: "YouTube", chzzk: "CHZZK" };
 // Literal keys only: the i18n handoff test reads them from this file.
 const TEXT = {
   title: "popup.linkedAccounts.title",

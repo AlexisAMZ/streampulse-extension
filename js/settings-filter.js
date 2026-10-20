@@ -6,7 +6,7 @@
  * quel que soit le filtre.
  */
 
-export const PLATFORM_FILTERS = ["all", "twitch", "kick", "youtube"];
+export const PLATFORM_FILTERS = ["all", "twitch", "kick", "youtube", "chzzk"];
 
 const TWITCH = ["twitch"];
 const TWITCH_KICK = ["twitch", "kick"];

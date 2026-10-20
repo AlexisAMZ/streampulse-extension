@@ -4,6 +4,7 @@
 // listeners chrome.* sont posés ici, au top-level et de façon synchrone :
 // MV3 peut livrer un événement dès l'évaluation du module, un listener posé
 // après un await le raterait.
+import { syncChzzkAccess } from "./sw/chzzk-access.js";
 import { installDebugTools } from "./sw/debug.js";
 import { badgeAuto, scheduleDropsAlarm } from "./sw/drops.js";
 import { NotificationCenter } from "./sw/notifications.js";
@@ -46,6 +47,9 @@ chrome.notifications.onClosed.addListener((notificationId) => {
 chrome.runtime.onInstalled.addListener(handleInstalled);
 chrome.runtime.onStartup.addListener(handleStartup);
 chrome.alarms.onAlarm.addListener(handleAlarm);
+// La permission CHZZK s'accorde ou se retire depuis les réglages du navigateur comme depuis la popup.
+chrome.permissions?.onAdded?.addListener(syncChzzkAccess);
+chrome.permissions?.onRemoved?.addListener(syncChzzkAccess);
 
 // Un handler par type de message (js/sw/messages.js), après contrôle de
 // l'expéditeur (js/sw/message-dispatch.js).

@@ -9,15 +9,16 @@ import {
   syncDocumentLanguage,
 } from "./i18n.js";
 import {
-  AVAILABLE_PLATFORMS,
   DEFAULT_PLATFORM,
   PLATFORM_DEFINITIONS,
   formatHandleForDisplay,
+  getOfferedPlatforms,
   getPlatformLabelKey,
   getPlatformPlaceholderKey,
   normalizePlatform,
   sanitizeHandle,
 } from "./platforms.js";
+import { requestChzzkAccess } from "./chzzk-permission.js";
 import { DEFAULT_PREFERENCES } from "./preferences-data.js";
 import { BADGE_FX, COSMETICS_KEY, NAME_FX, REFERRAL_FX, TENURE_STYLES, fxLock, normalizeCosmetics, visibleFx } from "./cosmetics-data.js";
 import { PLUS_KEY, isPlusActive } from "./plus.js";
@@ -89,7 +90,7 @@ const OFF_BY_DEFAULT = new Set(
 );
 const isEnabled = (preferences, key) => (OFF_BY_DEFAULT.has(key) ? preferences?.[key] === true : preferences?.[key] !== false);
 
-const LANGUAGE_FLAGS = { fr: "🇫🇷", en: "🇬🇧", es: "🇪🇸", "pt-BR": "🇧🇷", de: "🇩🇪", it: "🇮🇹", pl: "🇵🇱", tr: "🇹🇷", ru: "🇷🇺", ja: "🇯🇵", ko: "🇰🇷" };
+const LANGUAGE_FLAGS = { fr: "🇫🇷", en: "🇬🇧", es: "🇪🇸", "pt-BR": "🇧🇷", de: "🇩🇪", it: "🇮🇹", pl: "🇵🇱", tr: "🇹🇷", ru: "🇷🇺", ja: "🇯🇵", ko: "🇰🇷", ar: "🇸🇦" };
 
 /* ── State ── */
 let currentStreamers = [];
@@ -481,7 +482,9 @@ function updatePlatformTexts() {
 function renderPlatformPicker() {
   if (!platformPicker) return;
   platformPicker.innerHTML = "";
-  AVAILABLE_PLATFORMS.forEach((definition) => {
+  const offered = getOfferedPlatforms(getCurrentLanguage(), [...new Set(currentStreamers.map((streamer) => streamer.platform || "twitch"))]);
+  if (!offered.some((definition) => definition.id === selectedPlatform)) selectedPlatform = DEFAULT_PLATFORM;
+  offered.forEach((definition) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "platform-button";
@@ -762,6 +765,10 @@ function registerEventListeners() {
     }
 
     const platform = selectedPlatform;
+    if (platform === "chzzk" && !(await requestChzzkAccess())) {
+      showFeedback(t("popup.errors.chzzkPermission"), "error");
+      return;
+    }
     await runSave(async () => {
       showFeedback(t("onboarding.feedback.adding"));
       const result = await sendSaveMessage({ type: "addStreamer", platform, handle: rawValue.trim(), displayName: rawValue.trim() });

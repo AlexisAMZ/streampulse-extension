@@ -11,7 +11,8 @@ export default {
   "platforms": {
     "twitch": "Twitch",
     "kick": "Kick",
-    "youtube": "YouTube"
+    "youtube": "YouTube",
+    "chzzk": "치지직"
   },
   "onboarding": {
     "newBadge": "새 기능",
@@ -67,7 +68,8 @@ export default {
     "placeholders": {
       "twitch": "예: AlexisAMZ",
       "kick": "예: Teuf",
-      "youtube": "@핸들 또는 YouTube 채널 링크"
+      "youtube": "@핸들 또는 YouTube 채널 링크",
+      "chzzk": "채널 이름 또는 링크"
     },
     "submit": "추가",
     "currentHeader": "내 스트리머",
@@ -710,7 +712,8 @@ export default {
     "placeholders": {
       "twitch": "예: 미노스",
       "kick": "예: trainwreckstv",
-      "youtube": "@핸들 또는 YouTube 채널 링크"
+      "youtube": "@핸들 또는 YouTube 채널 링크",
+      "chzzk": "채널 이름 또는 링크"
     },
     "emptyState": "아직 스트리머가 없습니다. 한 명을 추가해 시작하세요.",
     "sort": {
@@ -919,7 +922,8 @@ export default {
     },
     "errors": {
       "generic": "문제가 발생했습니다. 잠시 후 다시 시도하고, 계속되면 StreamPulse를 닫았다가 다시 여세요.",
-      "invalidHandle": "유효하지 않은 {{platform}} 사용자 이름입니다. 철자를 확인하거나 채널 링크를 붙여 넣으세요."
+      "invalidHandle": "유효하지 않은 {{platform}} 사용자 이름입니다. 철자를 확인하거나 채널 링크를 붙여 넣으세요.",
+      "chzzkPermission": "치지직 라이브를 확인하려면 권한이 필요해요. 이 채널을 추가하려면 허용해 주세요."
     },
     "feedback": {
       "undoDone": "{{name}}이(가) 목록에 다시 추가되었습니다.",

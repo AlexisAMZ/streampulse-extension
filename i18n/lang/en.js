@@ -49,7 +49,8 @@ export default {
   "platforms": {
     "twitch": "Twitch",
     "kick": "Kick",
-    "youtube": "YouTube"
+    "youtube": "YouTube",
+    "chzzk": "CHZZK"
   },
   "onboarding": {
     "newBadge": "New",
@@ -105,7 +106,8 @@ export default {
     "placeholders": {
       "twitch": "e.g. minos",
       "kick": "e.g. trainwreckstv",
-      "youtube": "@handle or YouTube channel URL"
+      "youtube": "@handle or YouTube channel URL",
+      "chzzk": "Channel name or link"
     },
     "submit": "Add",
     "currentHeader": "Followed streamers",
@@ -748,7 +750,8 @@ export default {
     "placeholders": {
       "twitch": "e.g. minos",
       "kick": "e.g. trainwreckstv",
-      "youtube": "@handle or YouTube channel URL"
+      "youtube": "@handle or YouTube channel URL",
+      "chzzk": "Channel name or link"
     },
     "emptyState": "No streamers yet. Add one to get started.",
     "sort": {
@@ -957,7 +960,8 @@ export default {
     },
     "errors": {
       "generic": "Something went wrong. Please try again.",
-      "invalidHandle": "Please enter a valid {{platform}} identifier."
+      "invalidHandle": "Please enter a valid {{platform}} identifier.",
+      "chzzkPermission": "CHZZK needs your permission to check the lives. Accept it to add this channel."
     },
     "feedback": {
       "undoDone": "{{name}} is back in your list.",

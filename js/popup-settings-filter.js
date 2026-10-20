@@ -8,7 +8,7 @@ const FILTERABLE_PANELS = ["notifications", "rewards", "player", "previews", "ge
 const FOLLOWERS = "P"; // une note ou un statut suit la décision de la ligne qu'il commente
 
 // Clés écrites en entier : le contrôle des clés mortes de verify les voit.
-const PLATFORM_LABEL = { twitch: "platforms.twitch", kick: "platforms.kick", youtube: "platforms.youtube" };
+const PLATFORM_LABEL = { twitch: "platforms.twitch", kick: "platforms.kick", youtube: "platforms.youtube", chzzk: "platforms.chzzk" };
 
 export function createSettingsFilter({ root = document } = {}) {
   const bar = root.getElementById("settings-filter");

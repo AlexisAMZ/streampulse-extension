@@ -11,7 +11,8 @@ export default {
   "platforms": {
     "twitch": "Twitch",
     "kick": "Kick",
-    "youtube": "YouTube"
+    "youtube": "YouTube",
+    "chzzk": "CHZZK"
   },
   "onboarding": {
     "newBadge": "Новое",
@@ -67,7 +68,8 @@ export default {
     "placeholders": {
       "twitch": "напр.: AlexisAMZ",
       "kick": "напр.: Teuf",
-      "youtube": "@ник или ссылка на канал YouTube"
+      "youtube": "@ник или ссылка на канал YouTube",
+      "chzzk": "Название или ссылка на канал"
     },
     "submit": "Добавить",
     "currentHeader": "Твои стримеры",
@@ -710,7 +712,8 @@ export default {
     "placeholders": {
       "twitch": "напр.: AlexisAMZ",
       "kick": "напр.: Teuf",
-      "youtube": "@ник или ссылка на канал YouTube"
+      "youtube": "@ник или ссылка на канал YouTube",
+      "chzzk": "Название или ссылка на канал"
     },
     "emptyState": "Стримеров пока нет. Добавь первого, чтобы начать.",
     "sort": {
@@ -919,7 +922,8 @@ export default {
     },
     "errors": {
       "generic": "Что-то пошло не так. Попробуй ещё раз через минуту; если ошибка повторится, закрой и снова открой StreamPulse.",
-      "invalidHandle": "Такой ник на {{platform}} недействителен. Проверь написание или вставь ссылку на канал."
+      "invalidHandle": "Такой ник на {{platform}} недействителен. Проверь написание или вставь ссылку на канал.",
+      "chzzkPermission": "CHZZK нужно ваше разрешение, чтобы проверять эфиры. Разрешите, чтобы добавить этот канал."
     },
     "feedback": {
       "undoDone": "{{name}} снова в твоём списке.",

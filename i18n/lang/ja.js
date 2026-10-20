@@ -11,7 +11,8 @@ export default {
   "platforms": {
     "twitch": "Twitch",
     "kick": "Kick",
-    "youtube": "YouTube"
+    "youtube": "YouTube",
+    "chzzk": "CHZZK"
   },
   "onboarding": {
     "newBadge": "新着",
@@ -67,7 +68,8 @@ export default {
     "placeholders": {
       "twitch": "例：AlexisAMZ",
       "kick": "例：Teuf",
-      "youtube": "@ハンドルまたはYouTubeチャンネルのURL"
+      "youtube": "@ハンドルまたはYouTubeチャンネルのURL",
+      "chzzk": "チャンネル名またはリンク"
     },
     "submit": "追加",
     "currentHeader": "あなたのストリーマー",
@@ -710,7 +712,8 @@ export default {
     "placeholders": {
       "twitch": "例：AlexisAMZ",
       "kick": "例：Teuf",
-      "youtube": "@ハンドルまたはYouTubeチャンネルのURL"
+      "youtube": "@ハンドルまたはYouTubeチャンネルのURL",
+      "chzzk": "チャンネル名またはリンク"
     },
     "emptyState": "まだストリーマーがいません。1人追加して始めましょう。",
     "sort": {
@@ -919,7 +922,8 @@ export default {
     },
     "errors": {
       "generic": "エラーが発生しました。少し待ってからもう一度お試しください。繰り返す場合は、StreamPulse を閉じて開き直してください。",
-      "invalidHandle": "この {{platform}} のユーザー名は無効です。スペルを確認するか、チャンネルのリンクを貼り付けてください。"
+      "invalidHandle": "この {{platform}} のユーザー名は無効です。スペルを確認するか、チャンネルのリンクを貼り付けてください。",
+      "chzzkPermission": "CHZZK のライブを確認するには許可が必要です。このチャンネルを追加するには許可してください。"
     },
     "feedback": {
       "undoDone": "{{name}} をリストに戻しました。",
