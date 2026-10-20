@@ -3,7 +3,7 @@
     "message": "StreamPulse: Twitch & Kick & YouTube 通知・ポイント・ドロップ・バッジ"
   },
   "appDesc": {
-    "message": "Twitch・Kick・YouTubeのチャンネルポイント自動獲得、ドロップとバッジの進捗確認。ライブ通知、見逃し配信の履歴、ホバープレビュー、チャットフィルター。アカウント不要。"
+    "message": "Twitch・Kick・YouTube・CHZZKのライブ通知。チャンネルポイント自動獲得、ドロップとバッジの確認、ホバープレビュー、チャットフィルター。アカウント不要。"
   },
   "openPopupDesc": {
     "message": "StreamPulseを開く"

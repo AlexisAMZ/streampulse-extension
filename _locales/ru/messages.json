@@ -3,7 +3,7 @@
     "message": "StreamPulse: Уведомления, баллы, drops и значки Twitch, Kick и YouTube"
   },
   "appDesc": {
-    "message": "Автосбор Баллов канала · учёт Drops и значков · уведомления о live, превью и фильтры чата. Twitch, Kick и YouTube."
+    "message": "Уведомления о live для Twitch, Kick, YouTube и CHZZK. Автосбор Баллов канала, Drops и значки, превью, фильтры чата."
   },
   "openPopupDesc": {
     "message": "Открыть StreamPulse"
