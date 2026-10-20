@@ -301,7 +301,7 @@ body.is-settings .topbar .icon-button:hover { background: var(--surface-2); colo
 .skeleton-card > * { display: none; }
 
 /* Dock */
-.dock { display: flex; align-items: center; gap: 10px; padding: 0 16px; background: var(--surface); box-shadow: inset 0 1px 0 var(--line); }
+.dock { position: relative; display: flex; align-items: center; gap: 10px; padding: 0 16px; background: var(--surface); box-shadow: inset 0 1px 0 var(--line); }
 .platform-picker { display: flex; gap: 2px; padding: 3px; border-radius: 11px; background: var(--bg); box-shadow: inset 0 0 0 1px var(--line); }
 .platform-button { position: relative; display: grid; place-items: center; width: 34px; height: 30px; border: 0; border-radius: 8px; background: transparent; }
 .platform-button img { width: 15px; height: 15px; }
@@ -1340,4 +1340,6 @@ input[type="checkbox"][role="switch"]:indeterminate::before { background: var(--
 .channel-row:has(.row-platforms) .row-confirm { flex-wrap: wrap; justify-content: flex-end; }
 .channel-row:has(.row-platforms) .row-confirm p { white-space: normal; flex-basis: 100%; }
 
-.platform-hint { margin: 6px 2px 0; color: var(--text-2); font-size: 11.5px; line-height: 1.4; }
+/* Note posée au-dessus de la barre d'ajout : dans la barre, elle écrasait le champ et le bouton. */
+.platform-hint { position: absolute; inset-inline: 16px; bottom: calc(100% + 6px); z-index: 5; margin: 0; padding: 8px 12px; border-radius: 10px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line), 0 8px 20px -10px rgba(0, 0, 0, .6); color: var(--text-2); font-size: 11.5px; line-height: 1.4; }
+.platform-hint[hidden] { display: none; }
