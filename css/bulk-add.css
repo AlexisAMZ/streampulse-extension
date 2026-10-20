@@ -32,7 +32,7 @@ body { min-height: 100svh; }
   caret-color: var(--violet-text);
 }
 .bulk-editor textarea { min-height: 200px; resize: vertical; line-height: 1.6; }
-.bulk-editor select { padding-right: 32px; }
+.bulk-editor select { padding-inline-end: 32px; }
 .bulk-editor :is(textarea, select):focus-visible { border-color: var(--focus); }
 .bulk-editor :is(textarea, select):disabled { color: var(--text-3); cursor: wait; }
 .bulk-page .btn { height: auto; min-height: 48px; padding: 12px 20px; white-space: normal; text-align: center; }
@@ -76,7 +76,7 @@ body { min-height: 100svh; }
 }
 @media (max-width: 420px) {
   .bulk-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
-  .bulk-row-result { padding-left: 30px; }
+  .bulk-row-result { padding-inline-start: 30px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .bulk-page *, .bulk-page *::before, .bulk-page *::after { animation: none; transition: none; }

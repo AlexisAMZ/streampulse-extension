@@ -1,0 +1,11 @@
+{
+  "appName": {
+    "message": "StreamPulse: تنبيهات ونقاط وDrops وشارات Twitch وKick وYouTube"
+  },
+  "appDesc": {
+    "message": "استلام نقاط القناة تلقائيًا · تتبّع Drops والشارات · تنبيهات البث · معاينات · تصفية الدردشة لـ Twitch وKick وYouTube."
+  },
+  "openPopupDesc": {
+    "message": "فتح StreamPulse"
+  }
+}

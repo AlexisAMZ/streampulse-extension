@@ -2,6 +2,7 @@ import {
   AVAILABLE_LANGUAGES,
   DEFAULT_LANGUAGE,
   formatTemplate,
+  isRtlLanguage,
   matchLanguage,
 } from "../i18n/meta.js";
 import { detectInstallLanguage } from "./preferences-data.js";
@@ -266,6 +267,8 @@ export async function syncDocumentLanguage(htmlLangKey) {
   const lang = t(htmlLangKey);
   if (lang && typeof lang === "string") {
     document.documentElement.lang = lang;
+    // Une langue qui s'écrit de droite à gauche retourne toute la page (flex, grille, texte).
+    document.documentElement.dir = isRtlLanguage(lang) ? "rtl" : "ltr";
   }
 }
 

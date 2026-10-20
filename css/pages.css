@@ -46,8 +46,8 @@ svg { flex: none; }
 .brand { display: flex; align-items: center; gap: 11px; color: var(--text); font-family: var(--display); font-size: 16px; font-weight: 700; letter-spacing: -0.01em; text-decoration: none; }
 .brand-mark { width: 36px; height: 36px; object-fit: contain; filter: brightness(0) invert(1); }
 .brand-sub { color: var(--text-3); font-family: var(--body); font-size: 14px; font-weight: 500; letter-spacing: 0; }
-.brand-sub::before { content: ""; display: inline-block; width: 1px; height: 16px; margin-right: 12px; vertical-align: -3px; background: var(--line-2); }
-.head-end { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.brand-sub::before { content: ""; display: inline-block; width: 1px; height: 16px; margin-inline-end: 12px; vertical-align: -3px; background: var(--line-2); }
+.head-end { display: flex; align-items: center; gap: 10px; margin-inline-start: auto; }
 
 /* Type */
 .display { font-family: var(--display); font-size: clamp(44px, 6.4vw, 84px); font-weight: 800; line-height: 0.98; letter-spacing: -0.045em; text-wrap: balance; }
@@ -124,7 +124,7 @@ input[type="checkbox"][role="switch"]::before {
   content: "";
   position: absolute;
   top: 3px;
-  left: 3px;
+  inset-inline-start: 3px;
   width: 18px;
   height: 18px;
   border-radius: 50%;

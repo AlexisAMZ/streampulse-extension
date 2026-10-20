@@ -32,6 +32,7 @@ export const ALL_LANGUAGES = [
   { code: "ru", label: "Русский", ready: true },
   { code: "ja", label: "日本語", ready: true },
   { code: "ko", label: "한국어", ready: true },
+  { code: "ar", label: "العربية", ready: true },
 ];
 
 /** Langues réellement proposées à l'utilisateur (celles qui sont traduites). */
@@ -78,7 +79,19 @@ export function matchLanguage(value) {
  * formatting always follows the language chosen in StreamPulse.
  */
 export function resolveLocale(value) {
-  return matchLanguage(value) || DEFAULT_LANGUAGE;
+  const code = matchLanguage(value) || DEFAULT_LANGUAGE;
+  return INTL_LOCALES[code] || code;
+}
+
+/** Codes dont la région par défaut d'Intl donnerait des chiffres arabo-indiens (٣) au milieu de textes en chiffres latins. */
+const INTL_LOCALES = { ar: "ar-AE" };
+
+/** Langues qui s'écrivent de droite à gauche : la page passe en dir="rtl". */
+export const RTL_LANGUAGES = new Set(["ar"]);
+
+export function isRtlLanguage(value) {
+  const code = matchLanguage(value);
+  return code !== null && RTL_LANGUAGES.has(code);
 }
 
 export function formatTemplate(template, params = {}) {

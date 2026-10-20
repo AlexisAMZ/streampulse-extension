@@ -20,6 +20,7 @@ import tr from "./lang/tr.js";
 import ru from "./lang/ru.js";
 import ja from "./lang/ja.js";
 import ko from "./lang/ko.js";
+import ar from "./lang/ar.js";
 
 export {
   ALL_LANGUAGES,
@@ -27,6 +28,7 @@ export {
   DEFAULT_LANGUAGE,
   LANGUAGE_CODES,
   formatTemplate,
+  isRtlLanguage,
   matchLanguage,
   resolveLocale,
 } from "./meta.js";
@@ -43,4 +45,5 @@ export const translations = {
   ru,
   ja,
   ko,
+  ar,
 };

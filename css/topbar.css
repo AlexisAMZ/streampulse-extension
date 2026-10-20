@@ -90,21 +90,21 @@
 .sp-tb-row,
 .sp-tb-badge-row,
 .sp-tb-empty { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; padding: 10px 12px; border-radius: 12px; background: var(--sp-surface); box-shadow: inset 0 0 0 1px var(--sp-line); }
-.sp-tb-channel { padding: 10px 10px 10px 12px; }
+.sp-tb-channel { padding-block: 10px; padding-inline: 12px 10px; }
 .sp-tb-channel-name { overflow: hidden; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
 .sp-tb-channel-time { color: var(--sp-text-3); font-size: 12px; font-variant-numeric: tabular-nums; }
-.sp-tb-follow { flex-shrink: 0; margin-left: auto; padding: 0 12px; height: 30px; border: 0; border-radius: 999px; background: var(--sp-violet); color: #ffffff; font: 700 12px/1 var(--sp-body); cursor: pointer; transition: background 0.15s ease; }
+.sp-tb-follow { flex-shrink: 0; margin-inline-start: auto; padding: 0 12px; height: 30px; border: 0; border-radius: 999px; background: var(--sp-violet); color: #ffffff; font: 700 12px/1 var(--sp-body); cursor: pointer; transition: background 0.15s ease; }
 .sp-tb-follow:hover:not(:disabled) { background: var(--sp-violet-strong); }
 .sp-tb-follow.tracked,
 .sp-tb-follow:disabled { background: var(--sp-surface-2); color: var(--sp-text-3); cursor: default; }
 
-.sp-tb-row { justify-content: space-between; width: 100%; border: 0; color: var(--sp-text); font: 500 13px/1.3 var(--sp-body); text-align: left; cursor: pointer; transition: background 0.15s ease; }
+.sp-tb-row { justify-content: space-between; width: 100%; border: 0; color: var(--sp-text); font: 500 13px/1.3 var(--sp-body); text-align: start; cursor: pointer; transition: background 0.15s ease; }
 .sp-tb-row:hover { background: var(--sp-surface-2); }
 /* Libellé + indice empilés à gauche, interrupteur à droite. */
-.sp-tb-row-text { display: grid; gap: 2px; min-width: 0; padding-right: 12px; }
+.sp-tb-row-text { display: grid; gap: 2px; min-width: 0; padding-inline-end: 12px; }
 .sp-tb-hint { color: var(--sp-text-2); font-size: 11px; font-weight: 400; line-height: 1.35; }
 .sp-tb-sw { position: relative; flex-shrink: 0; width: 36px; height: 20px; border-radius: 999px; background: var(--sp-line-2); transition: background 0.18s ease; }
-.sp-tb-sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #ffffff; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35); transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1); }
+.sp-tb-sw::after { content: ""; position: absolute; top: 2px; inset-inline-start: 2px; width: 16px; height: 16px; border-radius: 50%; background: #ffffff; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35); transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1); }
 .sp-tb-sw.on { background: var(--sp-violet); }
 .sp-tb-sw.on::after { transform: translateX(16px); }
 
@@ -115,17 +115,17 @@
 .sp-tb-badge-mode:hover { color: var(--sp-text); }
 .sp-tb-badge-mode.on { background: var(--sp-violet); color: #ffffff; }
 
-.sp-tb-live { display: flex; align-items: center; gap: 10px; width: 100%; margin-bottom: 2px; padding: 7px 8px; border: 0; border-radius: 12px; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; transition: background 0.15s ease; }
+.sp-tb-live { display: flex; align-items: center; gap: 10px; width: 100%; margin-bottom: 2px; padding: 7px 8px; border: 0; border-radius: 12px; background: transparent; color: inherit; font: inherit; text-align: start; cursor: pointer; transition: background 0.15s ease; }
 .sp-tb-live:hover { background: var(--sp-surface); }
 .sp-tb-live-av { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 30px; height: 30px; overflow: hidden; border-radius: 50%; background: var(--sp-violet-soft); box-shadow: 0 0 0 2px var(--sp-bg), 0 0 0 3.5px var(--sp-violet); color: var(--sp-text); font: 800 12px/1 var(--sp-display); }
 .sp-tb-live-av img { width: 100%; height: 100%; object-fit: cover; }
-.sp-tb-live-meta { display: flex; flex-direction: column; min-width: 0; margin-left: 2px; line-height: 1.3; }
+.sp-tb-live-meta { display: flex; flex-direction: column; min-width: 0; margin-inline-start: 2px; line-height: 1.3; }
 .sp-tb-live-name,
 .sp-tb-live-cat { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sp-tb-live-name { font-weight: 700; }
 .sp-tb-live-cat { color: var(--sp-text-3); font-size: 12px; }
 .sp-tb-empty { color: var(--sp-text-3); }
-.sp-tb-more { width: 100%; padding: 8px 10px; border: 0; background: transparent; color: var(--sp-violet-text); font: 600 12px/1.3 var(--sp-body); text-align: left; cursor: pointer; }
+.sp-tb-more { width: 100%; padding: 8px 10px; border: 0; background: transparent; color: var(--sp-violet-text); font: 600 12px/1.3 var(--sp-body); text-align: start; cursor: pointer; }
 .sp-tb-more:hover { color: var(--sp-text); }
 
 .sp-tb-tip-block { margin-bottom: 8px; padding: 14px; border-radius: 14px; background: var(--sp-surface); box-shadow: inset 0 0 0 1px var(--sp-line); color: var(--sp-text); }
@@ -142,7 +142,7 @@
 .sp-qf-wrap {
   /* Hors du panneau : le bouton n'hérite pas de ses variables, sans ça son fond est vide. */
   --sp-violet: #9146ff;
-  display: inline-flex; flex-shrink: 0; align-items: center; margin-right: 8px;
+  display: inline-flex; flex-shrink: 0; align-items: center; margin-inline-end: 8px;
 }
 .sp-qf-btn {
   display: inline-flex;
@@ -183,7 +183,7 @@
   align-items: center;
   gap: 10px;
   max-width: 360px;
-  padding: 10px 16px 10px 10px;
+  padding-block: 10px; padding-inline: 10px 16px;
   border-radius: 14px;
   background: #0b0c22;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15), 0 18px 40px -12px rgba(0, 0, 0, 0.7);
