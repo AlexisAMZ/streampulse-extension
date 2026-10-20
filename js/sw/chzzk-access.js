@@ -2,7 +2,7 @@
 // imposer aux autres utilisateurs), la règle qui présente l'origine du site à l'API, et les scripts
 // des pages de chaîne (bouton d'ajout, latence).
 
-import { CHZZK_HOST_PERMISSION, CHZZK_RULE_ID, chzzkOriginRule, chzzkPageScripts } from "../chzzk.js";
+import { CHZZK_HOST_PERMISSION, CHZZK_PAGE_SCRIPT_IDS, CHZZK_RULE_ID, chzzkOriginRule, chzzkPageScripts } from "../chzzk.js";
 
 async function granted(origin) {
   try {
@@ -25,15 +25,18 @@ async function syncHeaderRule() {
 }
 
 async function syncPageScripts() {
-  const scripts = chzzkPageScripts();
+  const desired = chzzkPageScripts();
+  const wanted = new Set(desired.map((script) => script.id));
   try {
-    const registered = new Set((await chrome.scripting.getRegisteredContentScripts({ ids: scripts.map((script) => script.id) })).map((script) => script.id));
-    if (await hasChzzkAccess()) {
-      const missing = scripts.filter((script) => !registered.has(script.id));
-      if (missing.length) await chrome.scripting.registerContentScripts(missing);
-    } else if (registered.size) {
-      await chrome.scripting.unregisterContentScripts({ ids: [...registered] });
-    }
+    const registered = new Set((await chrome.scripting.getRegisteredContentScripts({ ids: CHZZK_PAGE_SCRIPT_IDS })).map((script) => script.id));
+    const allowed = await hasChzzkAccess();
+    const stale = [...registered].filter((id) => !allowed || !wanted.has(id));
+    if (stale.length) await chrome.scripting.unregisterContentScripts({ ids: stale });
+    if (!allowed) return;
+    const toUpdate = desired.filter((script) => registered.has(script.id));
+    const toAdd = desired.filter((script) => !registered.has(script.id));
+    if (toUpdate.length) await chrome.scripting.updateContentScripts(toUpdate);
+    if (toAdd.length) await chrome.scripting.registerContentScripts(toAdd);
   } catch (error) {
     console.warn("[chzzk] scripts des pages :", error?.message || error);
   }

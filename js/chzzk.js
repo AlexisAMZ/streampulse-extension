@@ -125,29 +125,28 @@ export const CHZZK_RULE_ID = 4401;
 export const CHZZK_PERMISSIONS = [CHZZK_HOST_PERMISSION];
 
 /**
+ * Indicateur de latence sur les pages CHZZK (js/chzzkPlayerEnhancer.js + pont de la page). COUPÉ le
+ * 20/10/2026 : sur le vrai site, le flux du lecteur coupait chaque seconde avec lui. À remettre à true
+ * seulement une fois la cause trouvée.
+ */
+export const CHZZK_LATENCY_ENABLED = false;
+/** Tous les identifiants de scripts que l'extension a pu enregistrer, pour retirer les anciens. */
+export const CHZZK_PAGE_SCRIPT_IDS = ["sp-chzzk-pages", "sp-chzzk-bridge"];
+
+/**
  * Scripts posés sur chzzk.naver.com, enregistrés seulement quand l'utilisateur a accordé le site
  * (un script déclaré dans le manifeste imposerait un nouvel avertissement à tous les utilisateurs
  * existants). Le pont tourne dans le monde de la page : lui seul voit la latence du lecteur.
  */
 export function chzzkPageScripts() {
   const matches = [`${CHZZK_SITE}/*`];
-  return [
-    {
-      id: "sp-chzzk-pages",
-      matches,
-      js: ["js/inject/i18n-inline.js", "js/inject/quickFollowChzzk.js", "js/chzzkPlayerEnhancer.js"],
-      runAt: "document_idle",
-      persistAcrossSessions: true,
-    },
-    {
-      id: "sp-chzzk-bridge",
-      matches,
-      js: ["js/inject/chzzk-latency-bridge.js"],
-      runAt: "document_start",
-      world: "MAIN",
-      persistAcrossSessions: true,
-    },
-  ];
+  const pageScripts = ["js/inject/i18n-inline.js", "js/inject/quickFollowChzzk.js"];
+  const scripts = [{ id: "sp-chzzk-pages", matches, js: pageScripts, runAt: "document_idle", persistAcrossSessions: true }];
+  if (CHZZK_LATENCY_ENABLED) {
+    scripts[0].js = [...pageScripts, "js/chzzkPlayerEnhancer.js"];
+    scripts.push({ id: "sp-chzzk-bridge", matches, js: ["js/inject/chzzk-latency-bridge.js"], runAt: "document_start", world: "MAIN", persistAcrossSessions: true });
+  }
+  return scripts;
 }
 
 /**

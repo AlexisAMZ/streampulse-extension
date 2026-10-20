@@ -159,15 +159,16 @@ test("règle de réécriture : sans identifiant d'extension valide, aucune règl
   for (const bad of ["", null, undefined, "pas un id", 42]) assert.equal(chzzkOriginRule(bad), null);
 });
 
-test("scripts des pages CHZZK : posés sur le site seulement, le pont dans le monde de la page", async () => {
-  const { chzzkPageScripts, CHZZK_PERMISSIONS } = await import("../js/chzzk.js");
+test("scripts des pages CHZZK : posés sur le site seulement, latence coupée tant que l'interrupteur l'est", async () => {
+  const { chzzkPageScripts, CHZZK_PERMISSIONS, CHZZK_LATENCY_ENABLED, CHZZK_PAGE_SCRIPT_IDS } = await import("../js/chzzk.js");
   const scripts = chzzkPageScripts();
   assert.deepEqual(CHZZK_PERMISSIONS, [CHZZK_HOST_PERMISSION]);
   for (const script of scripts) assert.deepEqual(script.matches, ["https://chzzk.naver.com/*"]);
   assert.equal(new Set(scripts.map((script) => script.id)).size, scripts.length);
-  const bridge = scripts.find((script) => script.world === "MAIN");
-  assert.deepEqual(bridge.js, ["js/inject/chzzk-latency-bridge.js"]);
-  assert.equal(bridge.runAt, "document_start");
+  for (const script of scripts) assert.ok(CHZZK_PAGE_SCRIPT_IDS.includes(script.id));
   const isolated = scripts.find((script) => script.world !== "MAIN");
   assert.equal(isolated.js[0], "js/inject/i18n-inline.js");
+  assert.ok(isolated.js.includes("js/inject/quickFollowChzzk.js"));
+  assert.equal(isolated.js.includes("js/chzzkPlayerEnhancer.js"), CHZZK_LATENCY_ENABLED);
+  assert.equal(scripts.some((script) => script.world === "MAIN"), CHZZK_LATENCY_ENABLED);
 });
