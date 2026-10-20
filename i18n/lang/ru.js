@@ -86,7 +86,7 @@ export default {
     "finishTitle": "Всё готово!",
     "finishDescription": "StreamPulse настроен. Закрепи расширение, чтобы быстро его открывать.",
     "finish": "Готово",
-    "footerText": "Автор: <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
+    "footerText": "Автор: <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@streampulse.tech\">contact@streampulse.tech</a>",
     "feedback": {
       "invalidHandle": "Такой ник на {{platform}} недействителен. Проверь написание или вставь ссылку на канал.",
       "adding": "Добавляем…",

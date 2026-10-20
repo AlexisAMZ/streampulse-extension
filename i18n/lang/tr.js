@@ -86,7 +86,7 @@ export default {
     "finishTitle": "Her şey hazır!",
     "finishDescription": "StreamPulse hazır. Kolayca ulaşmak için uzantıyı sabitle.",
     "finish": "Bitir",
-    "footerText": "Oluşturan: <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
+    "footerText": "Oluşturan: <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@streampulse.tech\">contact@streampulse.tech</a>",
     "feedback": {
       "invalidHandle": "Bu {{platform}} kullanıcı adı geçerli değil. Yazımı kontrol et ya da kanal bağlantısını yapıştır.",
       "adding": "Ekleniyor…",

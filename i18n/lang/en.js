@@ -124,7 +124,7 @@ export default {
     "finishTitle": "You're all set!",
     "finishDescription": "StreamPulse is ready. Pin the extension for quick access.",
     "finish": "Finish",
-    "footerText": "Created by <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
+    "footerText": "Created by <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@streampulse.tech\">contact@streampulse.tech</a>",
     "feedback": {
       "invalidHandle": "Please enter a valid {{platform}} identifier.",
       "adding": "Adding streamer…",

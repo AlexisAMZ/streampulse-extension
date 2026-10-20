@@ -86,7 +86,7 @@ export default {
     "finishTitle": "준비 완료!",
     "finishDescription": "StreamPulse 설정이 끝났습니다. 쉽게 열 수 있도록 확장 프로그램을 고정하세요.",
     "finish": "완료",
-    "footerText": "제작: <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
+    "footerText": "제작: <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@streampulse.tech\">contact@streampulse.tech</a>",
     "feedback": {
       "invalidHandle": "유효하지 않은 {{platform}} 사용자 이름입니다. 철자를 확인하거나 채널 링크를 붙여 넣으세요.",
       "adding": "스트리머 추가 중…",

@@ -86,7 +86,7 @@ export default {
     "finishTitle": "Alles bereit!",
     "finishDescription": "StreamPulse ist eingerichtet. Hefte die Erweiterung an, um schnell darauf zuzugreifen.",
     "finish": "Fertig",
-    "footerText": "Erstellt von <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
+    "footerText": "Erstellt von <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@streampulse.tech\">contact@streampulse.tech</a>",
     "feedback": {
       "invalidHandle": "Dieser {{platform}}-Name ist ungültig. Prüf die Schreibweise oder füge den Kanallink ein.",
       "adding": "Wird hinzugefügt…",

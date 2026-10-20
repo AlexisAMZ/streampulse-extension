@@ -86,7 +86,7 @@ export default {
     "finishTitle": "È tutto pronto!",
     "finishDescription": "StreamPulse è configurato. Fissa l'estensione per raggiungerla facilmente.",
     "finish": "Fine",
-    "footerText": "Creato da <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
+    "footerText": "Creato da <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@streampulse.tech\">contact@streampulse.tech</a>",
     "feedback": {
       "invalidHandle": "Questo nome {{platform}} non è valido. Controlla come l'hai scritto o incolla il link del canale.",
       "adding": "Aggiunta in corso…",

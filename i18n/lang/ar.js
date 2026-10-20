@@ -124,7 +124,7 @@ export default {
     "finishTitle": "كل شيء جاهز!",
     "finishDescription": "StreamPulse جاهز. ثبّت الإضافة للوصول السريع.",
     "finish": "إنهاء",
-    "footerText": "من تطوير <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
+    "footerText": "من تطوير <a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@streampulse.tech\">contact@streampulse.tech</a>",
     "feedback": {
       "invalidHandle": "يرجى إدخال معرّف {{platform}} صالح.",
       "adding": "جارٍ إضافة البثّاث…",

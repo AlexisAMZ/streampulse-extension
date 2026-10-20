@@ -86,7 +86,7 @@ export default {
     "finishTitle": "これで準備完了です！",
     "finishDescription": "StreamPulseの準備が整いました。拡張機能をピン留めして、すぐにアクセスできるようにしましょう。",
     "finish": "完了",
-    "footerText": "作成者：<a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@alexisamz.fr\">contact@alexisamz.fr</a>",
+    "footerText": "作成者：<a href=\"https://www.instagram.com/alexisamz\" target=\"_blank\" rel=\"noopener noreferrer\">@AlexisAMZ</a> • <a href=\"mailto:contact@streampulse.tech\">contact@streampulse.tech</a>",
     "feedback": {
       "invalidHandle": "この {{platform}} のユーザー名は無効です。スペルを確認するか、チャンネルのリンクを貼り付けてください。",
       "adding": "追加中…",
