@@ -123,6 +123,10 @@ export async function fetchChzzkLive(channelId, getJson) {
 export const CHZZK_HOST_PERMISSION = "https://*.chzzk.naver.com/*";
 export const CHZZK_RULE_ID = 4401;
 export const CHZZK_PERMISSIONS = [CHZZK_HOST_PERMISSION];
+/** Autorisation d'API facultative elle aussi : une obligatoire pourrait désactiver l'extension à la mise à jour. */
+export const CHZZK_API_PERMISSIONS = ["declarativeNetRequestWithHostAccess"];
+/** La demande complète, en une seule fenêtre d'acceptation : l'hôte CHZZK et la règle d'en-tête. */
+export const CHZZK_ACCESS = { origins: CHZZK_PERMISSIONS, permissions: CHZZK_API_PERMISSIONS };
 
 /**
  * Indicateur de latence sur les pages CHZZK (js/chzzkPlayerEnhancer.js + pont de la page). Coupé un

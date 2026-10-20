@@ -3,14 +3,14 @@
 // n'est posé sur chzzk.naver.com. La permission ne peut se demander que sur un clic dans une page
 // de l'extension : d'où ce bandeau, qui disparaît dès que l'accès est accordé.
 
-import { CHZZK_PERMISSIONS } from "./chzzk.js";
+import { CHZZK_ACCESS } from "./chzzk.js";
 import { requestChzzkAccess } from "./chzzk-permission.js";
 
 const $ = (id) => document.getElementById(id);
 
 async function pagesAccessMissing() {
   try {
-    return !(await chrome.permissions.contains({ origins: CHZZK_PERMISSIONS }));
+    return !(await chrome.permissions.contains(CHZZK_ACCESS));
   } catch {
     return false;
   }

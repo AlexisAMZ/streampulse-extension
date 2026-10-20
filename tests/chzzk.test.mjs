@@ -160,9 +160,10 @@ test("règle de réécriture : sans identifiant d'extension valide, aucune règl
 });
 
 test("scripts des pages CHZZK : posés sur le site seulement, latence selon l'interrupteur", async () => {
-  const { chzzkPageScripts, CHZZK_PERMISSIONS, CHZZK_LATENCY_ENABLED, CHZZK_PAGE_SCRIPT_IDS } = await import("../js/chzzk.js");
+  const { chzzkPageScripts, CHZZK_PERMISSIONS, CHZZK_ACCESS, CHZZK_LATENCY_ENABLED, CHZZK_PAGE_SCRIPT_IDS } = await import("../js/chzzk.js");
   const scripts = chzzkPageScripts();
   assert.deepEqual(CHZZK_PERMISSIONS, [CHZZK_HOST_PERMISSION]);
+  assert.deepEqual(CHZZK_ACCESS, { origins: [CHZZK_HOST_PERMISSION], permissions: ["declarativeNetRequestWithHostAccess"] });
   for (const script of scripts) assert.deepEqual(script.matches, ["https://chzzk.naver.com/*"]);
   assert.equal(new Set(scripts.map((script) => script.id)).size, scripts.length);
   for (const script of scripts) assert.ok(CHZZK_PAGE_SCRIPT_IDS.includes(script.id));
@@ -171,4 +172,12 @@ test("scripts des pages CHZZK : posés sur le site seulement, latence selon l'in
   assert.ok(isolated.js.includes("js/inject/quickFollowChzzk.js"));
   assert.equal(isolated.js.includes("js/chzzkPlayerEnhancer.js"), CHZZK_LATENCY_ENABLED);
   assert.equal(scripts.some((script) => script.world === "MAIN"), CHZZK_LATENCY_ENABLED);
+});
+
+test("manifeste : la règle d'en-tête est une permission facultative, jamais obligatoire", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const manifest = JSON.parse(await readFile(new URL("../manifest.json", import.meta.url), "utf8"));
+  assert.ok(!manifest.permissions.includes("declarativeNetRequestWithHostAccess"));
+  assert.deepEqual(manifest.optional_permissions, ["declarativeNetRequestWithHostAccess"]);
+  assert.deepEqual(manifest.optional_host_permissions, [CHZZK_HOST_PERMISSION]);
 });

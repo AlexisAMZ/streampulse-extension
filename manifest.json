@@ -10,7 +10,9 @@
     "cookies",
     "notifications",
     "offscreen",
-    "scripting",
+    "scripting"
+  ],
+  "optional_permissions": [
     "declarativeNetRequestWithHostAccess"
   ],
   "optional_host_permissions": [

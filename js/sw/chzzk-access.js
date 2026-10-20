@@ -2,22 +2,22 @@
 // imposer aux autres utilisateurs), la règle qui présente l'origine du site à l'API, et les scripts
 // des pages de chaîne (bouton d'ajout, latence).
 
-import { CHZZK_HOST_PERMISSION, CHZZK_PAGE_SCRIPT_IDS, CHZZK_RULE_ID, chzzkOriginRule, chzzkPageScripts } from "../chzzk.js";
+import { CHZZK_ACCESS, CHZZK_PAGE_SCRIPT_IDS, CHZZK_RULE_ID, chzzkOriginRule, chzzkPageScripts } from "../chzzk.js";
 
-async function granted(origin) {
+export async function hasChzzkAccess() {
   try {
-    return await chrome.permissions.contains({ origins: [origin] });
+    return await chrome.permissions.contains(CHZZK_ACCESS);
   } catch {
     return false;
   }
 }
 
-export const hasChzzkAccess = () => granted(CHZZK_HOST_PERMISSION);
-
 async function syncHeaderRule() {
   const rule = chzzkOriginRule(chrome.runtime?.id);
   const allowed = rule !== null && (await hasChzzkAccess());
   try {
+    // L'API n'existe que si la permission facultative est accordée.
+    if (!chrome.declarativeNetRequest) return;
     await chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: [CHZZK_RULE_ID], addRules: allowed ? [rule] : [] });
   } catch (error) {
     console.warn("[chzzk] règle d'en-tête :", error?.message || error);
