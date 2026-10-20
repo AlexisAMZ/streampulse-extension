@@ -129,6 +129,7 @@
       "js": [
         "js/inject/i18n-inline.js",
         "js/watchTimeTracker.js",
+        "js/inject/quickFollowCore.js",
         "js/inject/quickFollowYoutube.js"
       ],
       "run_at": "document_idle"
@@ -141,6 +142,7 @@
       "all_frames": false,
       "js": [
         "js/inject/i18n-inline.js",
+        "js/inject/quickFollowCore.js",
         "js/inject/quickFollowKick.js",
         "js/previews/sources.js",
         "js/previews/targets-kick.js",

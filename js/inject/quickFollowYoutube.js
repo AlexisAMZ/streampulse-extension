@@ -1,7 +1,7 @@
 /**
  * StreamPulse : bouton « Ajouter à StreamPulse » sur les pages de chaîne YouTube.
  *
- * Équivalent léger du quickFollow de Twitch (js/inject/quickFollow.js) : un
+ * Équivalent léger du quickFollow de Twitch (noyau commun : quickFollowCore.js) : un
  * pill logo + libellé inséré à côté du bouton d'abonnement de YouTube. États :
  * « Ajouter à StreamPulse » puis « Suivi » une fois la chaîne suivie ; cliquer
  * quand c'est suivi la retire. Le temps de visionnage YouTube est géré par
@@ -18,34 +18,9 @@
 (function () {
   "use strict";
 
-  if (window.top !== window) return; // iframes : hors jeu.
+  if (window.top !== window || !window.__SP_QF__) return;
 
-  var STREAMERS_KEY = "betaGeneralStreamers";
-  var PREFS_KEY = "betaGeneralPreferences";
   var BTN_ID = "sp-qf-yt";
-  var LOGO_URL = chrome.runtime.getURL("images/photos/logosp-128.png");
-  var POLL_MS = 2000;
-
-  var currentLang = "en";
-  var trackedSet = new Set();
-  var busy = false;
-  // Tant que la liste suivie n'a pas été lue, l'état du bouton est inconnu :
-  // peindre « Ajouter » pendant cet intervalle mentirait sur une chaîne
-  // déjà suivie (même raisonnement que quickFollow sur Twitch).
-  var trackedReady = false;
-
-  function langKey(value) {
-    var api = typeof window !== "undefined" ? window.__SP_I18N__ : null;
-    return api ? api.resolve(value) : "en";
-  }
-
-  function t(key, params) {
-    var api = typeof window !== "undefined" ? window.__SP_I18N__ : null;
-    if (!api) return key;
-    return api.get(currentLang, "quickFollow." + key, params);
-  }
-
-  // ---- chaîne courante ------------------------------------------------------
 
   /**
    * Chaîne de la page : @handle ou /channel/ID dans l'URL (pages de chaîne),
@@ -64,86 +39,6 @@
       "";
     return (/\/@([\w.-]{1,60})/.exec(href)?.[1] || /\/channel\/(UC[\w-]{1,60})/.exec(href)?.[1] || "").toLowerCase();
   }
-
-  function isTracked(handle) {
-    return trackedSet.has(handle);
-  }
-
-  function setTrackedFromList(streamers) {
-    var next = new Set();
-    (streamers || []).forEach(function (s) {
-      var platform = s.platform || "twitch";
-      var handle = String(s.handle || "").toLowerCase();
-      if (platform === "youtube" && handle) next.add(handle);
-    });
-    trackedSet = next;
-  }
-
-  // ---- storage & messaging --------------------------------------------------
-
-  function readLocal(keys) {
-    return new Promise(function (resolve) {
-      try {
-        chrome.storage.local.get(keys, function (res) {
-          if (chrome.runtime.lastError) resolve(null);
-          else resolve(res || null);
-        });
-      } catch (_e) {
-        resolve(null);
-      }
-    });
-  }
-
-  function send(message) {
-    return new Promise(function (resolve) {
-      try {
-        chrome.runtime.sendMessage(message, function (res) {
-          if (chrome.runtime.lastError) resolve(null);
-          else resolve(res || null);
-        });
-      } catch (_e) {
-        resolve(null);
-      }
-    });
-  }
-
-  function refreshState() {
-    return readLocal([PREFS_KEY, STREAMERS_KEY]).then(function (data) {
-      if (data) {
-        currentLang = langKey((data[PREFS_KEY] || {}).language);
-        setTrackedFromList(data[STREAMERS_KEY]);
-      }
-      // Lecture impossible ou pas : on débloque quoi qu'il arrive, un bouton
-      // figé indéfiniment serait pire qu'un état à corriger.
-      trackedReady = true;
-      render();
-    });
-  }
-
-  function addStreamer(handle) {
-    return send({ type: "addStreamer", platform: "youtube", handle }).then(function (res) {
-      return Boolean(res && !res.error);
-    });
-  }
-
-  function removeStreamer(handle) {
-    return readLocal([STREAMERS_KEY]).then(function (data) {
-      var streamers = (data && data[STREAMERS_KEY]) || [];
-      var match = null;
-      for (var i = 0; i < streamers.length; i++) {
-        if (String(streamers[i].handle || "").toLowerCase() === handle && (streamers[i].platform || "twitch") === "youtube") {
-          match = streamers[i];
-          break;
-        }
-      }
-      if (!match || !match.id) return false;
-      return send({ type: "removeStreamer", id: match.id }).then(function (res) {
-        return Boolean(res && !res.error);
-      });
-    });
-  }
-
-  // ---- bouton ---------------------------------------------------------------
 
   // La D.A. vient du bouton « S'abonner » lui-même : fond, texte, rayon,
   // hauteur, padding et police sont recopiés de son style calculé via des
@@ -165,29 +60,12 @@
     "html:not([dark]) #" + BTN_ID + ".is-tracked { background: #f2f2f2; color: #0f0f0f; }",
     "#" + BTN_ID + ".is-busy { opacity: .55; pointer-events: none; }",
     "#" + BTN_ID + " img { width: 16px; height: 16px; }",
-    "#sp-qf-yt-toast { position: fixed; left: 16px; bottom: 16px; z-index: 9999;",
+    "#" + BTN_ID + "-toast { position: fixed; left: 16px; bottom: 16px; z-index: 9999;",
     "  padding: 10px 14px; border-radius: 8px; background: #212121; color: #f1f1f1;",
     "  font-family: Roboto, Arial, sans-serif; font-size: 13px;",
     "  box-shadow: 0 4px 16px rgba(0,0,0,.4); }",
-    "#sp-qf-yt-toast.is-error { background: #b3261e; color: #fff; }",
+    "#" + BTN_ID + "-toast.is-error { background: #b3261e; color: #fff; }",
   ].join("\n");
-
-  function injectStyle() {
-    if (document.getElementById(BTN_ID + "-style")) return;
-    var style = document.createElement("style");
-    style.id = BTN_ID + "-style";
-    style.textContent = STYLE;
-    (document.head || document.documentElement).appendChild(style);
-  }
-
-  function renderState(btn, handle) {
-    var tracked = trackedReady && isTracked(handle);
-    var label = btn.querySelector(".sp-qf-label");
-    if (label) label.textContent = tracked ? t("tracked") : t("add");
-    btn.title = tracked ? t("remove") : t("add");
-    btn.setAttribute("aria-pressed", tracked ? "true" : "false");
-    btn.classList.toggle("is-tracked", tracked);
-  }
 
   /**
    * Copie le style calculé du vrai bouton « S'abonner » dans les variables
@@ -210,142 +88,20 @@
     btn.style.setProperty("--sp-weight", style.fontWeight);
   }
 
-  function onClick(e, btn) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (busy) return;
-    // Le handle vient du dataset, jamais de la closure : le bouton survit aux
-    // navigations SPA vers une autre chaîne, sa cible non.
-    var handle = btn.dataset.spHandle;
-    if (!handle) return;
-    busy = true;
-    btn.classList.add("is-busy");
-    var action = isTracked(handle) ? removeStreamer(handle) : addStreamer(handle);
-    action
-      .then(function (ok) {
-        // L'écriture du fond déclenche storage.onChanged, mais on relit tout
-        // de suite : le service worker peut être endormi au moment de l'écoute.
-        return refreshState().then(function () {
-          showToast(ok ? t("added", { name: handle }) : t("error"), !ok);
-        });
-      })
-      .catch(function () {
-        showToast(t("error"), true);
-      })
-      .finally(function () {
-        busy = false;
-        btn.classList.remove("is-busy");
-      });
-  }
-
-  // ---- toast ----------------------------------------------------------------
-
-  var toastTimer = null;
-  function showToast(message, isError) {
-    try {
-      var existing = document.getElementById("sp-qf-yt-toast");
-      if (existing) existing.remove();
-      var toast = document.createElement("div");
-      toast.id = "sp-qf-yt-toast";
-      toast.textContent = message;
-      if (isError) toast.classList.add("is-error");
-      document.body.appendChild(toast);
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(function () { toast.remove(); }, 4000);
-    } catch (_e) {
-      // Le toast ne doit jamais casser l'action qu'il rapporte.
-    }
-  }
-
-  function buildButton() {
-    var btn = document.createElement("button");
-    btn.id = BTN_ID;
-    btn.type = "button";
-    btn.className = "sp-qf-yt";
-
-    var logo = document.createElement("img");
-    logo.src = LOGO_URL;
-    logo.alt = "";
-
-    var label = document.createElement("span");
-    label.className = "sp-qf-label";
-
-    btn.appendChild(logo);
-    btn.appendChild(label);
-    // Pas de listener ici : YouTube clone les conteneurs à chaque re-rendu et
-    // un clone perd ses listeners. Le clic est délégué au document en capture
-    // (voir plus bas), insensible aux clonages.
-    return btn;
-  }
-
-  function findAnchor() {
-    // Pages de chaîne comme pages watch : le conteneur #subscribe-button, ou
-    // le bouton d'abonnement lui-même selon la génération du DOM YouTube.
-    return document.querySelector("#subscribe-button, ytd-subscribe-button-renderer");
-  }
-
-  var renderQueued = false;
-  function render() {
-    if (renderQueued) return;
-    renderQueued = true;
-    requestAnimationFrame(function () {
-      renderQueued = false;
-      injectStyle();
-      var handle = currentChannel();
-      var existing = document.getElementById(BTN_ID);
-      if (!handle) {
-        if (existing) existing.remove();
-        return;
-      }
-      var anchor = findAnchor();
-      if (!anchor) {
-        if (existing) existing.remove();
-        return;
-      }
-      if (!existing) {
-        existing = buildButton();
-        existing.dataset.spHandle = handle;
-        anchor.insertAdjacentElement("afterend", existing);
-      } else if (existing.dataset.spHandle !== handle) {
-        // Navigation SPA vers une autre chaîne : même bouton, autre cible.
-        existing.dataset.spHandle = handle;
-        anchor.insertAdjacentElement("afterend", existing);
-      }
-      renderState(existing, handle);
-      // Recopié à chaque passage : le thème ou le bouton de YouTube peuvent
-      // changer sans navigation.
-      applyNativeStyle(existing, anchor);
-    });
-  }
-
-  // YouTube clone les conteneurs à chaque re-rendu : les listeners posés sur
-  // le bouton meurent avec le nœud d'origine. Délégation en capture sur le
-  // document — le clic marche quel que soit le clone affiché.
-  document.addEventListener(
-    "click",
-    function (e) {
-      var btn = e.target && e.target.closest && e.target.closest("#" + BTN_ID);
-      if (btn) onClick(e, btn);
-    },
-    true
-  );
-
-  // ---- boucle de vie --------------------------------------------------------
-
-  chrome.storage.onChanged.addListener(function (changes, area) {
-    if (area === "local" && (changes[STREAMERS_KEY] || changes[PREFS_KEY])) {
-      refreshState();
-    }
-  });
-
-  // YouTube navigate en SPA : yt-navigate-finish couvre les changements de page,
-  // l'observateur rattrape l'apparition tardive du bouton d'abonnement, et le
-  // sondage couvre les cas où ni l'un ni l'autre ne se déclenchent.
-  document.addEventListener("yt-navigate-finish", render);
-  var observer = new MutationObserver(render);
-  observer.observe(document.documentElement, { childList: true, subtree: true });
-  setInterval(render, POLL_MS);
-
-  refreshState();
-  render();
+  window.__SP_QF__
+    .create({
+      platform: "youtube",
+      id: BTN_ID,
+      style: STYLE,
+      currentChannel: currentChannel,
+      // Pages de chaîne comme pages watch : le conteneur #subscribe-button, ou le bouton d'abonnement
+      // lui-même selon la génération du DOM YouTube.
+      findAnchor: function () { return document.querySelector("#subscribe-button, ytd-subscribe-button-renderer"); },
+      // Recopié à chaque rendu : le thème ou le bouton de YouTube peuvent changer sans navigation.
+      afterRender: applyNativeStyle,
+      // YouTube clone les conteneurs à chaque re-rendu : le clic est délégué au document.
+      delegateClick: true,
+      navigateEvents: ["yt-navigate-finish"],
+    })
+    .start();
 })();

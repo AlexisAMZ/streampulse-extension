@@ -140,7 +140,7 @@ export const CHZZK_PAGE_SCRIPT_IDS = ["sp-chzzk-pages", "sp-chzzk-bridge"];
  */
 export function chzzkPageScripts() {
   const matches = [`${CHZZK_SITE}/*`];
-  const pageScripts = ["js/inject/i18n-inline.js", "js/inject/quickFollowChzzk.js"];
+  const pageScripts = ["js/inject/i18n-inline.js", "js/inject/quickFollowCore.js", "js/inject/quickFollowChzzk.js"];
   const scripts = [{ id: "sp-chzzk-pages", matches, js: pageScripts, runAt: "document_idle", persistAcrossSessions: true }];
   if (CHZZK_LATENCY_ENABLED) {
     scripts[0].js = [...pageScripts, "js/chzzkPlayerEnhancer.js"];
