@@ -22,6 +22,7 @@
   var BTN_ID = "sp-qf-chzzk";
   var LOGO_URL = chrome.runtime.getURL("images/photos/logosp-128.png");
   var POLL_MS = 2000;
+  var MIN_RENDER_GAP_MS = 1000;
   var CHANNEL_ID = /^[0-9a-f]{32}$/i;
   var FOLLOW_LABEL = /^(팔로우|팔로잉|follow(ing)?)$/i;
   var SECTIONS_BEFORE_ID = { live: true, video: true, channel: true };
@@ -129,9 +130,9 @@
 
   // Vert CHZZK #00ffa3, texte sombre ; suivi : gris sombre à bordure, comme les autres plateformes.
   var STYLE = [
-    "#" + BTN_ID + " { display: inline-flex; align-items: center; gap: 7px; padding: 8px 12px; margin-left: 8px;",
-    "  border-radius: 6px; vertical-align: middle; border: 0; background: #00ffa3; color: #0b0d12;",
-    "  cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 700; white-space: nowrap; }",
+    "#" + BTN_ID + " { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px 6px 12px; margin-left: 8px;",
+    "  border-radius: 999px; vertical-align: middle; border: 0; background: #00ffa3; color: #0b0d12;",
+    "  cursor: pointer; font-family: inherit; font-size: 13px; line-height: 1.2; font-weight: 700; white-space: nowrap; }",
     "#" + BTN_ID + ":hover { background: #00e693; }",
     "#" + BTN_ID + ":focus-visible { outline: 2px solid rgba(11, 13, 18, .8); outline-offset: 1px; }",
     "#" + BTN_ID + ".is-tracked { background: #1f1f26; border: 1px solid #3f3f3f; color: #fff; }",
@@ -139,7 +140,7 @@
     "#" + BTN_ID + ".is-busy { opacity: .55; pointer-events: none; }",
     "#" + BTN_ID + ".is-floating { position: fixed; left: 16px; bottom: 16px; z-index: 9998; margin: 0;",
     "  box-shadow: 0 4px 16px rgba(0,0,0,.5); }",
-    "#" + BTN_ID + " img { width: 18px; height: 18px; }",
+    "#" + BTN_ID + " img { width: 16px; height: 16px; border-radius: 50%; }",
     "#" + BTN_ID + "-toast { position: fixed; left: 16px; bottom: 64px; z-index: 9999; padding: 10px 14px;",
     "  border-radius: 8px; background: #1f1f26; color: #f1f1f1; font-family: inherit; font-size: 13px;",
     "  box-shadow: 0 4px 16px rgba(0,0,0,.5); }",
@@ -241,8 +242,20 @@
   });
 
   // CHZZK navigue en SPA : l'observateur rattrape les re-rendus, le sondage la navigation muette.
-  new MutationObserver(render).observe(document.documentElement, { childList: true, subtree: true });
-  setInterval(render, POLL_MS);
+  // Le tchat de CHZZK repeint des centaines de nœuds par seconde : le rendu (qui parcourt les boutons de
+  // la page) est limité à une fois par seconde environ, sinon il gèle le lecteur.
+  var renderTimer = null;
+  var lastRender = 0;
+  function scheduleRender() {
+    if (renderTimer) return;
+    renderTimer = setTimeout(function () {
+      renderTimer = null;
+      lastRender = Date.now();
+      render();
+    }, Math.max(0, MIN_RENDER_GAP_MS - (Date.now() - lastRender)));
+  }
+  new MutationObserver(scheduleRender).observe(document.documentElement, { childList: true, subtree: true });
+  setInterval(scheduleRender, POLL_MS);
 
   refreshState();
   render();

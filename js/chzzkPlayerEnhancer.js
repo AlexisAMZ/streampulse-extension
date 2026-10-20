@@ -16,12 +16,13 @@
   // Au-delà, le direct est en retard : l'indicateur passe au rouge.
   const LATE_SECONDS = 6;
   const SEEK_MARGIN_SECONDS = 0.5;
+  const TITLE_SEARCH_GAP_MS = 3000;
   const CHAT_TITLE = /^(chat|tchat|채팅)$/i;
 
   let currentLang = "en";
   let chatTitleEl = null;
   let timer = null;
-  let headerTimer = null;
+  let titleSearchedAt = 0;
 
   const i18nApi = () => window.__SP_I18N__ || null;
 
@@ -58,8 +59,8 @@
     const style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent = `
-    .streampulse-chzzk-latency { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px;
-      color: #dedee3; font-weight: 600; font-size: 14px; user-select: none; transition: all .2s ease; }
+    .streampulse-chzzk-latency { display: inline-flex; align-items: center; gap: 8px; padding: 4px 8px;
+      color: #dedee3; font-weight: 600; font-size: 13px; line-height: 1.2; white-space: nowrap; user-select: none; transition: all .2s ease; }
     .streampulse-chzzk-latency:hover { color: #fff; cursor: pointer; transform: translateY(-1px); }
     .streampulse-chzzk-latency .sp-dot { width: 8px; height: 8px; border-radius: 50%; background: #888; }
     .streampulse-chzzk-latency.is-live .sp-dot { background: #00ffa3; }
@@ -116,8 +117,17 @@
     chatTitleEl = null;
   }
 
+  // Le titre est mémorisé : le chercher parcourt toute la page, ce qu'on ne refait que s'il a disparu,
+  // et au plus toutes les 3 s.
+  function cachedChatTitle() {
+    if (chatTitleEl && chatTitleEl.isConnected) return chatTitleEl;
+    if (Date.now() - titleSearchedAt < TITLE_SEARCH_GAP_MS) return null;
+    titleSearchedAt = Date.now();
+    return findChatTitle();
+  }
+
   function attachToChat(button) {
-    const title = findChatTitle();
+    const title = cachedChatTitle();
     if (!title) return false;
     if (chatTitleEl !== title) restoreChatTitle();
     chatTitleEl = title;
@@ -162,16 +172,12 @@
 
   function start() {
     if (timer == null) timer = setInterval(update, 1000);
-    // Re-accroche de l'en-tête du tchat, que CHZZK repeint en navigation, moins souvent.
-    if (headerTimer == null) headerTimer = setInterval(update, 3000);
     update();
   }
 
   function stop() {
     clearInterval(timer);
-    clearInterval(headerTimer);
     timer = null;
-    headerTimer = null;
     restoreChatTitle();
     const button = document.getElementById(LATENCY_ID);
     if (button) button.remove();
