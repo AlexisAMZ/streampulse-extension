@@ -2,6 +2,7 @@ import { t, getCurrentLanguage, resolveLocale } from "./i18n.js";
 import {
   DEFAULT_PLATFORM,
   getPlatformDefinition,
+  getPlatformIcon,
   getPlatformLabelKey,
   platformSupportsLiveStatus,
   formatHandleForDisplay,
@@ -625,7 +626,8 @@ function groupSelect(streamer, label, groups, groupId, onSetGroup) {
 export function createChannelRow(streamer, status, options, callbacks) {
   const { query, pinned, groups, groupId, index, draggable } = options;
   const { active, platformId, supported, isLive, viewers } = getLiveState(streamer, status);
-  const label = getDisplayLabel(streamer);
+  const members = Array.isArray(options.members) && options.members.length > 1 ? options.members : [];
+  const label = members.length && options.linkedName ? options.linkedName : getDisplayLabel(streamer);
   const platformLabel = getPlatformLabel(platformId);
 
   const row = el("li", `channel-row ${isLive ? "live" : "offline"}`);
@@ -679,10 +681,28 @@ export function createChannelRow(streamer, status, options, callbacks) {
   const confirm = el("span", "row-confirm");
   confirm.hidden = true;
   confirm.setAttribute("role", "alertdialog");
-  confirm.setAttribute("aria-label", t("popup.osd.confirmRemove", { name: label }));
+  const confirmText = members.length ? t("popup.osd.confirmRemoveLinked", { name: label }) : t("popup.osd.confirmRemove", { name: label });
+  confirm.setAttribute("aria-label", confirmText);
   const cancel = button("button button-ghost", { text: t("popup.osd.cancel") });
-  const confirmRemove = button("button button-danger", { text: t("popup.osd.remove") });
-  confirm.append(el("p", "", t("popup.osd.confirmRemove", { name: label })), cancel, confirmRemove);
+  confirm.append(el("p", "", confirmText), cancel);
+  // Compte relié : on choisit la plateforme à retirer (ou les deux) ; l'autre reste en place.
+  const removals = members.length
+    ? [
+      ...members.map((member) => ({
+        text: t("popup.osd.removeAccount", { platform: getPlatformLabel(member.platform || DEFAULT_PLATFORM) }),
+        ids: [member.id],
+      })),
+      { text: t("popup.osd.removeBoth"), ids: members.map((member) => member.id) },
+    ]
+    : [{ text: t("popup.osd.remove"), ids: [streamer.id] }];
+  const removeButtons = removals.map(({ text, ids }) => {
+    const choice = button("button button-danger", { text });
+    choice.addEventListener("click", async () => {
+      for (const id of ids) await callbacks.onRemove(id, label);
+    });
+    return choice;
+  });
+  confirm.append(...removeButtons);
 
   remove.addEventListener("click", () => {
     actions.hidden = true;
@@ -703,7 +723,26 @@ export function createChannelRow(streamer, status, options, callbacks) {
       closeConfirm();
     }
   });
-  confirmRemove.addEventListener("click", () => callbacks.onRemove(streamer.id, label));
+
+  if (members.length) {
+    const platforms = el("span", "row-platforms");
+    members.forEach((member) => {
+      const memberLive = member.id === streamer.id ? isLive : Boolean(options.liveIds?.has(member.id));
+      const platformName = getPlatformLabel(member.platform || DEFAULT_PLATFORM);
+      const chip = el("button", `row-platform plat-${member.platform || DEFAULT_PLATFORM}${memberLive ? " is-live" : ""}`);
+      chip.type = "button";
+      const logo = el("img");
+      logo.alt = "";
+      logo.src = chrome.runtime.getURL(getPlatformIcon(member.platform || DEFAULT_PLATFORM));
+      chip.append(logo);
+      chip.title = t("popup.cplus.open", { name: `${label} · ${platformName}` });
+      chip.setAttribute("aria-label", chip.title);
+      chip.addEventListener("click", () => callbacks.onOpen(getStreamerUrl(member)));
+      platforms.append(chip);
+    });
+    row.append(avatarImage(`row-avatar${isLive ? ` ring-${platformId}` : ""}`, streamer, platformId), main, platforms, state, actions, confirm);
+    return row;
+  }
 
   row.append(avatarImage(`row-avatar${isLive ? ` ring-${platformId}` : ""}`, streamer, platformId), main, state, actions, confirm);
   return row;

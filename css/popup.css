@@ -1325,3 +1325,17 @@ input[type="checkbox"][role="switch"]:indeterminate::before { background: var(--
 .reward-plan-row-left { color: var(--text-2); font-variant-numeric: tabular-nums; }
 .reward-plan-rows li.is-late { box-shadow: inset 0 0 0 1px var(--danger); }
 .reward-plan-row-late { flex-basis: 100%; color: var(--danger); font-weight: 600; }
+/* Historique : un lien par plateforme quand un compte relié a streamé des deux côtés. */
+.vod-platforms { position: absolute; top: 96px; inset-inline-end: 8px; z-index: 2; display: inline-flex; gap: 4px; }
+.vod-platform { display: inline-flex; align-items: center; justify-content: center; height: 24px; width: 28px; padding: 0; border: 0; border-radius: 7px; background: rgba(11, 12, 34, 0.86); color: var(--paper); font-size: 11px; font-weight: 700; cursor: pointer; }
+.vod-platform:hover, .vod-platform:focus-visible { background: rgba(145, 70, 255, 0.9); }
+/* Liste des chaînes : un compte relié = une ligne, une pastille par plateforme. */
+.row-platforms { display: inline-flex; flex: none; gap: 4px; }
+.row-platform img, .vod-platform img { display: block; width: 14px; height: 14px; object-fit: contain; }
+.row-platform { display: inline-flex; align-items: center; justify-content: center; height: 24px; width: 28px; padding: 0; border: 0; border-radius: 7px; background: var(--surface-2, rgba(255, 255, 255, 0.08)); color: var(--text-2); font-size: 11px; font-weight: 700; cursor: pointer; box-shadow: inset 0 0 0 1px var(--line); }
+.row-platform.is-live.plat-twitch { box-shadow: inset 0 0 0 2px #9146ff; }
+.row-platform.is-live.plat-kick { box-shadow: inset 0 0 0 2px var(--kick); }
+.row-platform:not(.is-live) img { opacity: 0.55; }
+.row-platform:hover, .row-platform:focus-visible { box-shadow: inset 0 0 0 1px var(--text-2); }
+.channel-row:has(.row-platforms) .row-confirm { flex-wrap: wrap; justify-content: flex-end; }
+.channel-row:has(.row-platforms) .row-confirm p { white-space: normal; flex-basis: 100%; }

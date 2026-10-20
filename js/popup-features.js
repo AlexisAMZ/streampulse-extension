@@ -12,6 +12,9 @@ import { initBadgeAsk } from "./popup-badge-ask.js";
 import { createWatchLaterButton } from "./popup-watch-later.js";
 import { IDENTITY_STORAGE_KEYS, initIdentity, renderIdentity } from "./popup-identity.js";
 import { HISTORY_KEY, formatClock, missedView, summarize } from "./history-data.js";
+import { groupMissedEntries } from "./history-grouping.js";
+import { LINKED_ACCOUNTS_KEY, normalizeLinkedAccounts } from "./linked-accounts.js";
+import { getPlatformIcon, getPlatformLabelKey } from "./platforms.js";
 import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalizePredictionRule, summarize as summarizePredictions } from "./predictions-data.js";
 import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
 import { mountLiquidMetalButton } from "./promo-liquid-button.js";
@@ -117,11 +120,35 @@ function createVodCard(entry) {
 
   card.append(thumb, info);
   if (entry.vodUrl) item.append(createWatchLaterButton(entry));
+  const markSeen = (variants) => variants
+    .filter((variant) => !variant.seen)
+    .forEach((variant) => chrome.runtime.sendMessage({ type: "markHistorySeen", id: variant.id }).catch?.(() => {}));
   card.addEventListener("click", () => {
     openTab(entry.vodUrl);
-    if (!entry.seen) chrome.runtime.sendMessage({ type: "markHistorySeen", id: entry.id }).catch?.(() => {});
+    markSeen(entry.variants);
   });
   item.append(card);
+
+  // Compte relié sur deux plateformes : une seule carte, un lien par rediffusion.
+  if (entry.variants.length > 1) {
+    const platforms = node("span", "vod-platforms");
+    entry.variants.forEach((variant) => {
+      const chip = node("button", `vod-platform plat-${variant.platform}`);
+      chip.type = "button";
+      const logo = node("img");
+      logo.alt = "";
+      logo.src = chrome.runtime.getURL(getPlatformIcon(variant.platform));
+      chip.append(logo);
+      chip.title = t(getPlatformLabelKey(variant.platform));
+      chip.setAttribute("aria-label", t("popup.history.watchVod", { name: `${name} · ${chip.title}` }));
+      chip.addEventListener("click", () => {
+        openTab(variant.vodUrl);
+        markSeen([variant]);
+      });
+      platforms.append(chip);
+    });
+    item.append(platforms);
+  }
 
   // Suppression directe : un « X » discret sur la carte, sans ouvrir le VOD.
   const dismiss = node("button", "vod-dismiss");
@@ -135,6 +162,7 @@ function createVodCard(entry) {
     chrome.runtime
       .sendMessage({ type: "removeHistoryEntry", id: entry.id })
       .catch?.(() => {});
+    entry.ids.slice(1).forEach((id) => chrome.runtime.sendMessage({ type: "removeHistoryEntry", id }).catch?.(() => {}));
     item.remove();
     // Le compteur et l'état vide doivent se recalculer sans la carte retirée.
     renderHistory().catch(() => {});
@@ -146,9 +174,11 @@ function createVodCard(entry) {
 export async function renderHistory() {
   const grid = $("history-grid");
   if (!grid) return;
-  const stored = await chrome.storage.local.get(HISTORY_KEY);
+  const stored = await chrome.storage.local.get([HISTORY_KEY, LINKED_ACCOUNTS_KEY, "betaGeneralStreamers"]);
   const view = missedView(stored[HISTORY_KEY], { platform: historyPlatform });
-  const missed = view.entries;
+  const roster = Array.isArray(stored.betaGeneralStreamers) ? stored.betaGeneralStreamers : [];
+  const linked = normalizeLinkedAccounts(stored[LINKED_ACCOUNTS_KEY], roster);
+  const missed = groupMissedEntries(view.entries, linked, roster);
   const stats = summarize(missed);
 
   $("history-count").textContent =

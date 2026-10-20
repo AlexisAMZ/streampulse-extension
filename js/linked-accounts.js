@@ -134,3 +134,41 @@ export function linkPair(groups, streamers, firstId, secondId, name) {
 export function unlinkStreamer(groups, streamers, streamerId) {
   return normalizeLinkedAccounts(groups, streamers).filter((group) => !group.streamerIds.includes(streamerId));
 }
+
+/** Retire UN compte de son groupe ; le groupe se dissout sous deux comptes, rien d'autre ne bouge. */
+export function unlinkAccount(groups, streamers, streamerId) {
+  return normalizeLinkedAccounts(
+    normalizeLinkedAccounts(groups, streamers).map((group) => (
+      group.streamerIds.includes(streamerId)
+        ? { ...group, streamerIds: group.streamerIds.filter((id) => id !== streamerId) }
+        : group
+    )),
+    streamers,
+  );
+}
+
+/**
+ * Liste des chaînes : un groupe lié devient une seule ligne, à la place de son premier membre.
+ * Le compte qui porte la ligne est un membre en direct, sinon le préféré, sinon le premier.
+ * `members` suit le même ordre (porteur, préféré, reste du groupe).
+ */
+export function collapseLinkedRows(rows, groups, isLive = () => false) {
+  const normalized = normalizeLinkedAccounts(groups, rows);
+  const groupOf = (id) => normalized.find((group) => group.streamerIds.includes(id)) ?? null;
+  const seen = new Set();
+  const out = [];
+  for (const streamer of rows) {
+    const group = groupOf(streamer.id);
+    if (!group) {
+      out.push({ streamer, members: [streamer], group: null });
+      continue;
+    }
+    if (seen.has(group.id)) continue;
+    seen.add(group.id);
+    const members = rows.filter((row) => group.streamerIds.includes(row.id));
+    const rank = (row) => (isLive(row) ? 0 : 2) + (row.id === group.preferredId ? 0 : 1);
+    const ordered = [...members].sort((a, b) => rank(a) - rank(b) || members.indexOf(a) - members.indexOf(b));
+    out.push({ streamer: ordered[0], members: ordered, group: members.length > 1 ? group : null });
+  }
+  return out.map((row) => (row.members.length > 1 ? row : { ...row, group: null }));
+}

@@ -42,7 +42,7 @@ import { createPreferenceControls } from "./popup-preference-controls.js";
 import { createSettingsFilter } from "./popup-settings-filter.js";
 import { createPanelJumps } from "./popup-panel-jumps.js";
 import { createSoundSettings } from "./popup-sounds.js";
-import { LINKED_ACCOUNTS_KEY, getLinkedGroup, normalizeLinkedAccounts } from "./linked-accounts.js";
+import { LINKED_ACCOUNTS_KEY, collapseLinkedRows, getLinkedGroup, normalizeLinkedAccounts, unlinkAccount } from "./linked-accounts.js";
 import { alertCoverage } from "./alert-coverage.js";
 import { createLinkPicker } from "./popup-link-picker.js";
 import { initNotificationControls } from "./popup-notifications.js";
@@ -654,8 +654,10 @@ const streamerCallbacks = {
   },
   onRemove: async (id, name) => {
     const snapshot = snapshotStreamer(state, id);
+    const rosterBefore = state.streamers;
     const result = await sendMessage({ type: "removeStreamer", id });
     if (result?.success) {
+      await dropFromLinkedGroup(id, rosterBefore);
       showFeedback(t("popup.feedback.removeSuccess", { name }), "success", snapshot && {
         label: t("popup.feedback.undo"),
         duration: UNDO_WINDOW_MS,
@@ -667,6 +669,18 @@ const streamerCallbacks = {
     }
   },
 };
+
+/** Retirer un compte relié le sort de son groupe (dissous sous deux comptes) ; les autres comptes ne bougent pas. */
+async function dropFromLinkedGroup(id, roster) {
+  try {
+    const stored = await chrome.storage.local.get(LINKED_ACCOUNTS_KEY);
+    const before = normalizeLinkedAccounts(stored[LINKED_ACCOUNTS_KEY], roster);
+    const next = unlinkAccount(before, roster, id);
+    if (JSON.stringify(next) !== JSON.stringify(stored[LINKED_ACCOUNTS_KEY])) await chrome.storage.local.set({ [LINKED_ACCOUNTS_KEY]: next });
+  } catch (error) {
+    console.warn("[popup] groupe lié non mis à jour", error);
+  }
+}
 
 // --- Pins and groups: popup-only data, stored beside the streamer list ---
 async function togglePin(id) {
@@ -1123,7 +1137,7 @@ function renderSheet() {
   const rows = [...matches.filter((s) => isLiveId(s.id)), ...matches.filter((s) => !isLiveId(s.id))];
   const focusedId = document.activeElement?.closest?.("#sheet-list [data-id]")?.dataset.id;
 
-  if (sheetTotalEl) sheetTotalEl.textContent = String(rows.length);
+  if (sheetTotalEl) sheetTotalEl.textContent = String(collapseLinkedRows(rows, state.linkedAccounts).length);
   renderGroupChips();
 
   const fragment = document.createDocumentFragment();
@@ -1135,8 +1149,12 @@ function renderSheet() {
     if (typed) empty.appendChild(createAddFromSearchButton(typed));
     fragment.appendChild(empty);
   }
-  rows.forEach((streamer) => {
+  const collapsed = collapseLinkedRows(rows, state.linkedAccounts, (s) => isLiveId(s.id));
+  collapsed.forEach(({ streamer, members, group }) => {
     fragment.appendChild(createChannelRow(streamer, state.statuses[streamer.id], {
+      members: group ? members : [],
+      linkedName: group?.name,
+      liveIds: new Set(members.filter((member) => isLiveId(member.id)).map((member) => member.id)),
       query,
       pinned: isPinned(streamer.id),
       groups: state.groups,
@@ -2422,6 +2440,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       const btn = e.target.closest(".platform-button");
       if (btn) {
         setSelectedPlatform(btn.dataset.platform);
+        // CHZZK : l'accès à son API se demande dès le choix de la plateforme (un clic), pas au moment d'ajouter.
+        if (btn.dataset.platform === "chzzk") {
+          requestChzzkAccess().then((granted) => {
+            if (!granted) showFeedback(t("popup.errors.chzzkPermission"), "error");
+          });
+        }
       }
     });
 

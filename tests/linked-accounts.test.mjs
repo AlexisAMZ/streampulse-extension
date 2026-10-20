@@ -258,3 +258,34 @@ test("the FR/EN handoff covers every literal UI key with matching interpolation 
     assert.deepEqual(params(messages.en[key]), params(messages.fr[key]), key);
   }
 });
+
+test("retirer un compte d'un groupe à trois garde les deux autres, le préféré retombe sur le premier", async () => {
+  const { unlinkAccount } = await import("../js/linked-accounts.js");
+  const next = unlinkAccount([group], streamers, "youtube:UCada");
+  assert.deepEqual(next, [{ ...group, streamerIds: ["ada", "kick:ada"], preferredId: "ada" }]);
+  assert.deepEqual(group.streamerIds, ["ada", "kick:ada", "youtube:UCada"], "entrée non modifiée");
+});
+
+test("retirer un compte d'un groupe à deux dissout le groupe sans toucher les autres", async () => {
+  const { unlinkAccount } = await import("../js/linked-accounts.js");
+  assert.deepEqual(unlinkAccount([group, otherGroup], streamers, "kick:bea"), [group]);
+  assert.deepEqual(unlinkAccount([group], streamers, "inconnu"), [group]);
+});
+
+test("la liste des chaînes replie un groupe lié en une ligne portée par le compte en direct, puis le préféré", async () => {
+  const { collapseLinkedRows } = await import("../js/linked-accounts.js");
+  const rows = [streamers[3], streamers[0], streamers[4], streamers[1], streamers[2]];
+  const collapsed = collapseLinkedRows(rows, [group, otherGroup], (s) => s.id === "kick:bea" || s.id === "youtube:UCada");
+  assert.deepEqual(collapsed.map((row) => row.streamer.id), ["kick:bea", "youtube:UCada"]);
+  assert.deepEqual(collapsed[0].members.map((m) => m.id), ["kick:bea", "bea"], "préféré d'abord quand rien ne distingue");
+  assert.deepEqual(collapsed[1].members.map((m) => m.id), ["youtube:UCada", "ada", "kick:ada"]);
+  assert.equal(collapsed[0].group.id, "bea-group");
+});
+
+test("les comptes sans lien ou dont le partenaire est filtré restent seuls", async () => {
+  const { collapseLinkedRows } = await import("../js/linked-accounts.js");
+  const only = collapseLinkedRows([streamers[0], streamers[3]], [group, otherGroup], () => false);
+  assert.deepEqual(only.map((row) => [row.streamer.id, row.members.length]), [["ada", 1], ["bea", 1]]);
+  assert.equal(only[0].group, null);
+  assert.deepEqual(collapseLinkedRows([], [group], () => false), []);
+});
