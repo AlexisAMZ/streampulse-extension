@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="images/promo/marquee_1400x560.png" alt="StreamPulse: never miss a live again" width="100%">
-</p>
-
 <h1 align="center">StreamPulse</h1>
 
 <p align="center">
@@ -46,14 +42,6 @@ You follow streamers on three platforms, Twitch buries your favorites under reco
 
 It works **alongside** BetterTTV, FrankerFaceZ and 7TV: they customize chat, StreamPulse handles alerts, rewards and your streamer list.
 
-<p align="center">
-  <img src="images/promo/demo.gif" alt="Pinning a streamer to StreamPulse favorites in the Twitch sidebar, then opening StreamPulse settings on Twitch" width="100%">
-</p>
-
-<p align="center">
-  <img src="images/cws_screenshots/EN/01-dashboard.png" alt="StreamPulse dashboard showing who's live" width="100%">
-</p>
-
 ## Features
 
 ### 🔔 Know who's live
@@ -78,11 +66,6 @@ It works **alongside** BetterTTV, FrankerFaceZ and 7TV: they customize chat, Str
 
 ### 📊 Your watch time
 - Time watched per channel, and a **shareable recap image** for 7 days, 30 days or any month, in 16:9 or 9:16.
-
-<p align="center">
-  <img src="images/cws_screenshots/EN/01-dashboard.png" alt="StreamPulse dashboard" width="49%">
-  <img src="images/cws_screenshots/EN/02-drops.png" alt="StreamPulse Drops tab" width="49%">
-</p>
 
 ### ✨ StreamPulse+ (optional)
 Animated name and badge effects in Twitch chat, visible to other StreamPulse users. Everything above stays free; StreamPulse+ is how the project pays for itself.

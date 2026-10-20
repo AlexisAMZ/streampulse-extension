@@ -22,3 +22,10 @@ memory.md
 # Intermediaires des captures du store (supprimes en fin de run, sauf KEEP_BUILD
 # ou interruption).
 .store-assets-build/
+
+# Kits store, assets promo et outreach : jamais versionnes
+DevKit/
+
+# Visuels promotionnels : uniquement dans DevKit/store-images, jamais dans images/ (ni commit, ni zip)
+images/promo/
+images/cws_screenshots/
