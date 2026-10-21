@@ -434,6 +434,17 @@ function initPlus() {
   });
 
   const plans = document.querySelectorAll(".plus-plan");
+  const updateOfferUi = () => {
+    const checkout = $("plus-checkout");
+    const trustMain = $("plus-trust-main-text");
+    if (selectedPlan === "monthly") {
+      if (checkout) checkout.textContent = t("popup.plus.checkoutTrial");
+      if (trustMain) trustMain.textContent = t("popup.plus.trustTrial");
+    } else {
+      if (checkout) checkout.textContent = t("popup.plus.checkoutYearly");
+      if (trustMain) trustMain.textContent = t("popup.plus.trustYearly");
+    }
+  };
   const selectPlan = (plan) => {
     selectedPlan = plan.dataset.plan;
     plans.forEach((other) => {
@@ -441,8 +452,10 @@ function initPlus() {
       other.classList.toggle("active", on);
       other.setAttribute("aria-checked", String(on));
     });
+    updateOfferUi();
   };
   plans.forEach((plan) => plan.addEventListener("click", () => selectPlan(plan)));
+  updateOfferUi();
   // Motif radiogroup ARIA : les flèches déplacent la sélection (et le focus),
   // les deux boutons ne restent pas tous deux dans l'ordre de tabulation.
   document.querySelector(".plus-plans")?.addEventListener("keydown", (event) => {
@@ -465,7 +478,10 @@ function initPlus() {
     plan.tabIndex = plan.classList.contains("active") ? 0 : -1;
   });
 
-  $("plus-checkout")?.addEventListener("click", () => openTab(plusPageUrl(getCurrentLanguage(), selectedPlan)));
+  $("plus-checkout")?.addEventListener("click", () => {
+    const creator = $("plus-creator-input")?.value?.trim() || "";
+    openTab(plusPageUrl(getCurrentLanguage(), selectedPlan, creator));
+  });
 
   $("plus-key-form")?.addEventListener("submit", async (event) => {
     event.preventDefault();

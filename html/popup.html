@@ -294,10 +294,18 @@
           </button>
           <button class="plus-plan active" type="button" role="radio" aria-checked="true" data-plan="yearly">
             <span class="plan-text"><b data-i18n="popup.plus.yearly">Annuel</b><small data-i18n="popup.plus.yearlyNote">Soit 1,58 € par mois</small></span>
-            <span class="plan-price"><span data-i18n="popup.plus.yearlyPrice">19 €</span><small data-i18n="popup.plus.perYear">/an</small></span>
+            <span class="plan-price"><span class="plus-badge-save" data-i18n="popup.plus.savePercent">-47 %</span><span data-i18n="popup.plus.yearlyPrice">19 €</span><small data-i18n="popup.plus.perYear">/an</small></span>
           </button>
         </div>
-        <button class="plus-checkout" id="plus-checkout" type="button" data-i18n="popup.plus.checkout">Débloquer StreamPulse+</button>
+        <button class="plus-checkout" id="plus-checkout" type="button" data-i18n="popup.plus.checkoutYearly">S'abonner un an (19 €)</button>
+        <ul class="plus-trust-list" id="plus-trust-list">
+          <li id="plus-trust-main"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span id="plus-trust-main-text" data-i18n="popup.plus.trustYearly">Économise 16,88 € par an face au mensuel</span></li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="popup.plus.trustCancel">Résiliation en 1 clic dans l'extension</span></li>
+          <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="popup.plus.trustDevices">Clé active sur 2 navigateurs</span></li>
+        </ul>
+        <div class="plus-creator-row">
+          <input id="plus-creator-input" class="text-input" type="text" autocomplete="off" spellcheck="false" data-i18n-attr-placeholder="popup.plus.creatorPlaceholder" placeholder="Code créateur ou promo (facultatif)" aria-label="Code créateur ou promo" />
+        </div>
         <p class="plus-secure" data-i18n="popup.plus.secure">Paiement sécurisé sur streampulse.tech</p>
         <form class="plus-key" id="plus-key-form" novalidate>
           <label class="visually-hidden" for="plus-key-input" data-i18n="popup.plus.keyPlaceholder">J'ai déjà une clé de licence</label>
@@ -646,7 +654,7 @@
           </div>
           <label class="settings-toggle">
             <span class="settings-text">
-              <span class="settings-title" data-i18n="popup.settings.clipDownloadTitle">Téléchargement des clips<span class="plus-tag" id="clip-download-lock" data-i18n="popup.plus.badge" hidden>PLUS</span></span>
+              <span class="settings-title"><span data-i18n="popup.settings.clipDownloadTitle">Téléchargement des clips</span><span class="plus-tag" id="clip-download-lock" data-i18n="popup.plus.badge" hidden>PLUS</span></span>
               <span class="settings-description" data-i18n="popup.settings.clipDownloadDescription">Ajoute un bouton sur les pages de clips Twitch pour les enregistrer en MP4. Réservé à StreamPulse+.</span>
             </span>
             <input id="pref-clip-download" type="checkbox" role="switch" />
@@ -902,6 +910,20 @@
           <ul class="drops-list" id="drops-progress"></ul>
           <p class="drops-empty" id="drops-progress-empty" data-i18n="popup.drops.emptyProgress" hidden>Aucun Drop en cours. Regarde un live avec les Drops activés : ta progression s'affichera ici.</p>
 
+          <h3 class="drops-section"><span data-i18n="popup.drops.campaigns">Campagnes</span><small id="drops-campaigns-meta"></small></h3>
+          <div class="drops-filters" id="drops-filters" role="group" data-i18n-attr-ariaLabel="popup.drops.filterLabel">
+            <button type="button" class="drops-filter active" aria-pressed="true" data-filter="all"><span data-i18n="popup.drops.filterAll">Toutes</span><em data-count="all"></em></button>
+            <button type="button" class="drops-filter" aria-pressed="false" data-filter="new"><span data-i18n="popup.drops.filterNew">Nouvelles</span><em data-count="new"></em></button>
+            <button type="button" class="drops-filter" aria-pressed="false" data-filter="ending"><span data-i18n="popup.drops.filterEnding">Finissent bientôt</span><em data-count="ending"></em></button>
+            <button type="button" class="drops-filter" aria-pressed="false" data-filter="upcoming"><span data-i18n="popup.drops.filterUpcoming">À venir</span><em data-count="upcoming"></em></button>
+          </div>
+          <ul class="drops-campaigns" id="drops-campaigns"></ul>
+          <button id="drops-campaigns-more" class="button button-quiet" type="button" data-i18n="popup.drops.showMore" hidden>Voir plus</button>
+          <div class="drops-empty drops-empty-action" id="drops-campaigns-empty" hidden>
+            <p id="drops-campaigns-empty-text"></p>
+            <button type="button" class="button button-quiet" id="drops-open-campaigns" data-i18n="popup.drops.openCampaigns">Ouvrir les campagnes</button>
+          </div>
+
           <h3 class="drops-section"><span data-i18n="popup.dropAlerts.title">Alertes Drops</span><span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span></h3>
           <div class="smart-locked" id="drop-alerts-locked">
             <p class="settings-description" data-i18n="popup.dropAlerts.lockedBody">Une notification quand une campagne de Drops démarre sur un jeu que tu suis : Valorant, CS2… Réservé à StreamPulse+.</p>
@@ -922,20 +944,6 @@
           </div>
 
           <section class="reward-plan" id="reward-plan" aria-live="polite"></section>
-
-          <h3 class="drops-section"><span data-i18n="popup.drops.campaigns">Campagnes</span><small id="drops-campaigns-meta"></small></h3>
-          <div class="drops-filters" id="drops-filters" role="group" data-i18n-attr-ariaLabel="popup.drops.filterLabel">
-            <button type="button" class="drops-filter active" aria-pressed="true" data-filter="all"><span data-i18n="popup.drops.filterAll">Toutes</span><em data-count="all"></em></button>
-            <button type="button" class="drops-filter" aria-pressed="false" data-filter="new"><span data-i18n="popup.drops.filterNew">Nouvelles</span><em data-count="new"></em></button>
-            <button type="button" class="drops-filter" aria-pressed="false" data-filter="ending"><span data-i18n="popup.drops.filterEnding">Finissent bientôt</span><em data-count="ending"></em></button>
-            <button type="button" class="drops-filter" aria-pressed="false" data-filter="upcoming"><span data-i18n="popup.drops.filterUpcoming">À venir</span><em data-count="upcoming"></em></button>
-          </div>
-          <ul class="drops-campaigns" id="drops-campaigns"></ul>
-          <div class="drops-empty drops-empty-action" id="drops-campaigns-empty" hidden>
-            <p id="drops-campaigns-empty-text"></p>
-            <button type="button" class="button button-quiet" id="drops-open-campaigns" data-i18n="popup.drops.openCampaigns">Ouvrir les campagnes</button>
-          </div>
-
 
           <h3 class="drops-section"><span data-i18n="popup.drops.history">Historique</span><span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span><small id="drops-history-meta"></small></h3>
           <div class="drops-history" id="drops-history"></div>
@@ -970,6 +978,13 @@
             </div>
             <div class="badges-auto-bar">
               <button class="button button-primary badges-auto-all" id="badges-auto-all" type="button" aria-pressed="false" data-i18n="popup.drops.badgeAutoAll">Récupérer tous les badges possibles</button>
+              <label class="settings-toggle badges-limited">
+                <span class="settings-text">
+                  <span class="settings-title"><span data-i18n="popup.drops.badgeLimited">Alertes badges temporaires</span><span class="plus-tag" id="badges-limited-lock" data-i18n="popup.plus.badge" hidden>PLUS</span></span>
+                  <span class="settings-description" data-i18n="popup.drops.badgeLimitedHint">StreamPulse+ · Reçois une notification Chrome dès qu'un badge disponible une journée ou moins devient accessible.</span>
+                </span>
+                <input id="badges-limited" type="checkbox" role="switch" />
+              </label>
               <p class="badges-auto-status" id="badges-auto-status" role="status" hidden></p>
               <p class="badges-note" data-i18n="popup.drops.badgeAutoAllHint">Un onglet épinglé et muet regarde un live à la fois (Twitch ne compte qu'un live à la fois). Les paliers d'un même jeu (30 min, 1 h, 90 min…) avancent ensemble, puis l'onglet passe au jeu suivant.</p>
             </div>

@@ -45,11 +45,15 @@ const SITE_DIRS = { fr: "", "pt-BR": "pt-br" };
 const SITE_LANGS = ["fr", "en", "es", "pt-BR", "de", "it", "pl", "tr", "ru", "ja", "ko", "id", "nl", "sv", "cs"];
 
 /** Page StreamPulse+ dans la langue de l'extension (anglais par défaut). */
-export function plusPageUrl(lang, plan) {
+export function plusPageUrl(lang, plan, creator) {
   const code = SITE_LANGS.includes(lang) ? lang : "en";
   const dir = code in SITE_DIRS ? SITE_DIRS[code] : code;
   const base = dir ? `https://streampulse.tech/${dir}/plus` : PLUS_CHECKOUT_URL;
-  return plan ? `${base}?plan=${encodeURIComponent(plan)}` : base;
+  const params = new URLSearchParams();
+  if (plan) params.set("plan", plan);
+  if (creator) params.set("creator", creator);
+  const qs = params.toString();
+  return qs ? `${base}?${qs}` : base;
 }
 
 /** Sans nouvelle vérification réussie, la licence reste active ce délai (hors ligne). */
