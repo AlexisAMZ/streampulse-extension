@@ -230,6 +230,17 @@ let promoRemoteOff = false;
 let promoHasDrops = false;
 let promoHasWatch = false;
 const PLAN_LABELS = { monthly: "popup.plus.planMonthly", yearly: "popup.plus.planYearly", lifetime: "popup.plus.planLifetime" };
+const PLUS_ATTENTION_KEY = "plusBadgeSeenVersion";
+let plusAttentionSeen = false;
+
+function markPlusAttentionSeen() {
+  if (plusAttentionSeen) return;
+  plusAttentionSeen = true;
+  $("open-plus")?.classList.remove("has-attention");
+  const version = chrome.runtime?.getManifest?.()?.version || "1";
+  chrome.storage?.local?.set({ [PLUS_ATTENTION_KEY]: version }).catch(() => {});
+}
+
 const plusListeners = new Set();
 
 /** Rappelé à chaque changement d'état de la licence. */
@@ -244,10 +255,11 @@ export function plusActive() {
 function renderPlus() {
   const active = plusActive();
   const deviceLimited = plusRecord?.status === "device_limited";
-  $("open-plus")?.classList.toggle("is-active", active);
+  const openButton = $("open-plus");
+  openButton?.classList.toggle("is-active", active);
+  openButton?.classList.toggle("has-attention", !active && !plusAttentionSeen);
   // Le pill de la barre change d'infobulle avec l'état : l'abonnement se
   // découvre ou se gère, et le lecteur d'écran entend la bonne action.
-  const openButton = $("open-plus");
   if (openButton) {
     const hint = t(active ? "popup.plus.openActive" : "popup.plus.open");
     openButton.title = hint;
@@ -390,6 +402,7 @@ function trapPlusFocus(event) {
 }
 
 export function openPlus() {
+  markPlusAttentionSeen();
   const view = $("plus-view");
   if (!view) return;
   if (!view.classList.contains("hidden")) {
@@ -952,8 +965,10 @@ export async function initFeatures() {
   initClipDownloadLock();
   initPredictions();
 
-  const stored = await chrome.storage.local.get([PLUS_KEY, PROMO_KEY, SMART_ALERTS_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers", "streamPulseWatchTimeDaily", "streamPulsePointsDaily", "streamPulseDropsProgress", REMOTE_CONFIG_CACHE_KEY, ...IDENTITY_STORAGE_KEYS]);
+  const stored = await chrome.storage.local.get([PLUS_KEY, PROMO_KEY, PLUS_ATTENTION_KEY, SMART_ALERTS_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers", "streamPulseWatchTimeDaily", "streamPulsePointsDaily", "streamPulseDropsProgress", REMOTE_CONFIG_CACHE_KEY, ...IDENTITY_STORAGE_KEYS]);
   plusRecord = stored[PLUS_KEY] || null;
+  const currentVersion = chrome.runtime?.getManifest?.()?.version || "1";
+  plusAttentionSeen = stored[PLUS_ATTENTION_KEY] === currentVersion;
   promoState = {
     plusClosed: stored[PROMO_KEY]?.plusClosed === true,
     clipsClosed: stored[PROMO_KEY]?.clipsClosed === true,
