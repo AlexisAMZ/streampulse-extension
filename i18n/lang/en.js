@@ -71,7 +71,7 @@ export default {
     "profileHintKept": "Twitch profile not found: no worries, we'll keep this username as is. You can also skip this step.",
     "documentTitle": "First-time setup",
     "welcomeTagline": "CHROME EXTENSION · TWITCH · KICK · YOUTUBE",
-    "welcomeDescription": "Add your first streamer to start receiving their notifications. You can add more later directly from StreamPulse.",
+    "welcomeDescription": "Welcome to StreamPulse: live notifications, auto-collection of points and Drops. Start by choosing your interface language.",
     "preferencesTitle": "Recommended settings",
     "preferencesDescription": "Toggle anything you need now. You can always revise these in StreamPulse.",
     "tabsGroupLabel": "TABS & BACKGROUND",

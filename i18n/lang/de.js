@@ -396,7 +396,7 @@ export default {
       "deleteGroup": "Gruppe {{name}} löschen",
       "noGroup": "Ohne Gruppe",
       "groupLabel": "Gruppe von {{name}}",
-      "noMatch": "No channel matches.",
+      "noMatch": "Kein Streamer entspricht der Suche.",
       "close": "Schließen",
       "recap": "Mein Rückblick",
       "watchTimeLabel": "Wiedergabezeit diesen Monat",

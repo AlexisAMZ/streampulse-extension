@@ -32,7 +32,7 @@ export default {
     "profileHintKept": "Perfil de Twitch no encontrado: no pasa nada, guardamos este usuario tal cual. También puedes saltarte este paso.",
     "documentTitle": "Configuración inicial",
     "welcomeTagline": "EXTENSIÓN CHROME · TWITCH · KICK · YOUTUBE",
-    "welcomeDescription": "Añade tu primer streamer para recibir sus notificaciones. Después podrás añadir más directamente desde StreamPulse.",
+    "welcomeDescription": "Bienvenido a StreamPulse: notificaciones de directos, recogida automática de puntos y Drops. Empieza eligiendo el idioma de la interfaz.",
     "preferencesTitle": "Ajustes recomendados",
     "preferencesDescription": "Activa las opciones que te interesen. Podrás modificarlas más tarde en los ajustes.",
     "tabsGroupLabel": "PESTAÑAS Y SEGUNDO PLANO",
@@ -50,7 +50,7 @@ export default {
     "notificationsGroupTitle": "Notificaciones",
     "notificationsGroupHint": "Personaliza cómo te avisa StreamPulse.",
     "playerGroupTitle": "Reproductor de Twitch",
-    "playerGroupHint": "Optimiza el reproductor para no quedarte atrás del live.",
+    "playerGroupHint": "Optimiza el reproductor para no quedarte atrás del directo.",
     "qualityGroupTitle": "Automatización",
     "syncGroupTitle": "¿Varios dispositivos?",
     "syncGroupHint": "¿Usas StreamPulse en varios dispositivos? La sincronización del navegador lleva tu lista, fijados y ajustes a todas partes, sin cuenta ni servidor.",
@@ -185,7 +185,7 @@ export default {
       "compareBadgesPlus": "Todos, sin límite",
       "compareAlerts": "Alertas",
       "compareAlertsFree": "Un streamer empieza directo",
-      "compareAlertsPlus": "Juego, palabra, viewers, campañas de Drops",
+      "compareAlertsPlus": "Juego, palabra, espectadores, campañas de Drops",
       "compareRecap": "Resumen",
       "compareRecapFree": "Lo esencial",
       "compareRecapPlus": "Avanzado, imagen para compartir",
@@ -396,7 +396,7 @@ export default {
       "deleteGroup": "Eliminar el grupo {{name}}",
       "noGroup": "Sin grupo",
       "groupLabel": "Grupo de {{name}}",
-      "noMatch": "No channel matches.",
+      "noMatch": "Ningún streamer coincide.",
       "close": "Cerrar",
       "recap": "Mi resumen",
       "watchTimeLabel": "Tiempo de visualización este mes",
@@ -517,7 +517,7 @@ export default {
       "badgeWatchLeft": "quedan {{left}}",
       "rewardTypeCode": "Código",
       "rewardTypeBadge": "Insignia",
-      "rewardTypeEmote": "Emotivo",
+      "rewardTypeEmote": "Emoticono",
       "rewardTypeItem": "Objeto",
       "badgeSubOne": "1 suscripción",
       "badgeSubOther": "{{count}} suscripciones",
@@ -715,8 +715,8 @@ export default {
       "settings": "Ajustes"
     },
     "refresh": "Actualizar",
-    "greetingLiveCountSingular": "{{count}} streamer en live",
-    "greetingLiveCountPlural": "{{count}} streamers en live",
+    "greetingLiveCountSingular": "{{count}} streamer en directo",
+    "greetingLiveCountPlural": "{{count}} streamers en directo",
     "platformFilter": {
       "twitch": "twitch",
       "kick": "kick"
@@ -735,7 +735,7 @@ export default {
     },
     "emptyState": "Aún no hay streamers. Añade uno para empezar.",
     "sort": {
-      "live": "En live primero",
+      "live": "En directo primero",
       "nameAsc": "Nombre A → Z",
       "nameDesc": "Nombre Z → A",
       "custom": "Orden personalizado"
@@ -904,7 +904,7 @@ export default {
       "notificationsToggle": "Notificaciones",
       "gameNotificationsToggle": "Alertas de categoría",
       "titleNotificationsToggle": "Alertas de título",
-      "defaultLiveTitle": "En live",
+      "defaultLiveTitle": "En directo",
       "statusUnsupported": "Estado no disponible en {{platform}}"
     },
     "toast": {
@@ -961,7 +961,7 @@ export default {
     },
     "labels": {
       "viewers": "{{count}} espectadores",
-      "previewAltLive": "Vista previa del live de {{name}}"
+      "previewAltLive": "Vista previa del directo de {{name}}"
     },
     "htmlLang": "es",
     "watchLater": {
@@ -1135,7 +1135,7 @@ export default {
       "testNotificationFailed": "No se puede enviar la notificación de prueba ahora mismo."
     },
     "notifications": {
-      "liveTitle": "{{name}} está en live",
+      "liveTitle": "{{name}} está en directo",
       "startupBatchTitle": "En directo ahora",
       "startupBatchBody": "Ya en directo: {{names}}",
       "liveMessage": "{{game}} • {{viewers}} espectadores",

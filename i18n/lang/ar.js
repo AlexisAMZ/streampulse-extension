@@ -71,7 +71,7 @@ export default {
     "profileHintKept": "لم يُعثر على ملف Twitch: لا بأس، سنُبقي اسم المستخدم كما هو. يمكنك أيضًا تخطّي هذه الخطوة.",
     "documentTitle": "الإعداد لأول مرة",
     "welcomeTagline": "إضافة CHROME · TWITCH · KICK · YOUTUBE",
-    "welcomeDescription": "أضف أول بثّاث لتبدأ باستلام إشعاراته. يمكنك إضافة المزيد لاحقًا مباشرة من StreamPulse.",
+    "welcomeDescription": "مرحبًا بك في StreamPulse: إشعارات البث المباشر، وجمع النقاط وDrops تلقائيًا. ابدأ باختيار لغة الواجهة.",
     "preferencesTitle": "الإعدادات الموصى بها",
     "preferencesDescription": "فعّل ما تحتاجه الآن. يمكنك دائمًا تعديلها من StreamPulse.",
     "tabsGroupLabel": "التبويبات والخلفية",
