@@ -4,7 +4,7 @@
 // StreamPulse+ (badge PLUS), avec un aperçu animé de chaque récompense.
 
 import { getCurrentLanguage, onLanguageChange, t } from "./i18n.js";
-import { LICENSE_VERIFY_URL, PLUS_KEY } from "./plus.js";
+import { LICENSE_VERIFY_URL, PLUS_KEY, getDeviceId } from "./plus.js";
 import { BADGE_FX, COSMETICS_KEY, NAME_FX, TENURE_STYLES, TENURE_TIERS, fxLock, normalizeCosmetics, rankOf, tenureTier, visibleFx } from "./cosmetics-data.js";
 import { isPaypalAddress, normalizeEarnings, shouldRefreshEarnings } from "./referral-data.js";
 
@@ -39,6 +39,7 @@ let referralCode = "";
 let earnings = null;
 let initialized = false;
 let paypalDirty = false;
+let freeFormOpen = false;
 
 function setStatus(id, key, params = {}) {
   const status = $(id);
@@ -248,7 +249,18 @@ function renderReferral() {
   $("referral-copy").hidden = !referralCode;
   $("referral-get").hidden = Boolean(referralCode);
   $("referral-get").removeAttribute("data-i18n");
-  $("referral-get").textContent = t(current.plus ? "popup.referral.get" : "popup.plusMenu.discover");
+  $("referral-get").textContent = t("popup.referral.get");
+  // Sans StreamPulse+ : code par e-mail, récompensé en mois offerts (pas d'argent).
+  const body = $("referral-body");
+  if (body) {
+    body.removeAttribute("data-i18n");
+    body.textContent = t(current.plus ? "popup.referral.body" : "popup.referral.freeBody");
+  }
+  const freeForm = $("referral-free-form");
+  if (freeForm) {
+    freeForm.hidden = current.plus || Boolean(referralCode) || !freeFormOpen;
+    if (!freeForm.hidden) $("referral-get").hidden = true;
+  }
   const status = $("referral-status");
   if (current.plus && count && !status.dataset.busy && (!status.dataset.statusKey || status.dataset.statusKey === "popup.referral.count")) setStatus("referral-status", "popup.referral.count", { count });
   renderEarnings();
@@ -285,6 +297,36 @@ async function fetchReferral({ quiet = false } = {}) {
   } catch (error) {
     console.warn("[popup] code de parrainage indisponible :", error?.message || error);
     if (!quiet) setStatus("referral-status", "popup.referral.error");
+  } finally {
+    delete status.dataset.busy;
+    renderReferral();
+  }
+}
+
+/** Code de parrainage d'un utilisateur gratuit, créé avec son e-mail. */
+async function fetchFreeReferral(email) {
+  const status = $("referral-status");
+  status.dataset.busy = "1";
+  setStatus("referral-status", "popup.referral.loading");
+  try {
+    const response = await fetch(LICENSE_VERIFY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "referral_free", email, device: await getDeviceId(chrome.storage.local), lang: getCurrentLanguage() }),
+    });
+    const payload = await response.json().catch(() => ({}));
+    const errors = { 503: "popup.referral.soon", 409: "popup.referral.freeTaken", 400: "popup.referral.paypalInvalid", 429: "popup.referral.error" };
+    if (errors[response.status]) {
+      setStatus("referral-status", errors[response.status]);
+      return;
+    }
+    if (!response.ok || !payload.code) throw new Error(payload.error || `HTTP ${response.status}`);
+    referralCode = payload.code;
+    await chrome.storage.local.set({ [REFERRAL_CODE_KEY]: referralCode });
+    setStatus("referral-status", "popup.referral.freeReady");
+  } catch (error) {
+    console.warn("[popup] code de parrainage gratuit indisponible :", error?.message || error);
+    setStatus("referral-status", "popup.referral.error");
   } finally {
     delete status.dataset.busy;
     renderReferral();
@@ -332,7 +374,24 @@ function initReferralActions() {
     event.preventDefault();
     savePaypal();
   });
-  $("referral-get")?.addEventListener("click", () => (deps.isPlus() ? fetchReferral() : deps.openPlus()));
+  $("referral-get")?.addEventListener("click", () => {
+    if (deps.isPlus()) {
+      fetchReferral();
+      return;
+    }
+    freeFormOpen = true;
+    renderReferral();
+    $("referral-free-email")?.focus();
+  });
+  $("referral-free-form")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const email = $("referral-free-email").value.trim().toLowerCase();
+    if (!isPaypalAddress(email)) {
+      setStatus("referral-status", "popup.referral.paypalInvalid");
+      return;
+    }
+    fetchFreeReferral(email);
+  });
   $("referral-copy")?.addEventListener("click", async () => {
     await navigator.clipboard.writeText(referralCode).catch(() => {});
     setStatus("referral-status", "popup.referral.copied");

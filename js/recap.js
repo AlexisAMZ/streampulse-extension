@@ -161,9 +161,13 @@ function rangeLabel(days) {
   return typeof fmt.formatRange === "function" ? fmt.formatRange(start, end) : `${fmt.format(start)} – ${fmt.format(end)}`;
 }
 
-/** Periodes proposees ; le Wrapped annuel est reserve a StreamPulse+. */
+/**
+ * Periodes proposees, Wrapped annuel compris pour tout le monde : l'image
+ * partagee porte la signature streampulse.tech. Les analyses detaillees
+ * (renderInsights) restent reservees a StreamPulse+.
+ */
 function periodsFor(data) {
-  return listPeriods(data.monthly, data.daily, new Date(), { years: data.plus });
+  return listPeriods(data.monthly, data.daily, new Date(), { years: true });
 }
 
 function periodTitle(period) {

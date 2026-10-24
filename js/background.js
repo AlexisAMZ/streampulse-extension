@@ -12,6 +12,8 @@ import { handleAlarm, scheduleKeepAliveAlarm, scheduleWatchTimeFlushAlarm, sched
 import { handleInstalled, handleStartup, initOnWake } from "./sw/lifecycle.js";
 import { createMessageDispatcher } from "./sw/message-dispatch.js";
 import { MESSAGE_HANDLERS } from "./sw/messages.js";
+import { handleOpenPlusOnboarding } from "./sw/messages-app.js";
+import { createPlusExternalListener } from "./sw/plus-external.js";
 import { keepChannelTabLoaded, onPreferencesChangedForTabDiscard } from "./sw/tab-discard.js";
 import { WatchTimeStore } from "./sw/watchtime.js";
 import { initSync } from "./sw/sync.js";
@@ -58,6 +60,17 @@ chrome.runtime.onMessage.addListener(
     runtimeId: chrome.runtime.id,
     extensionPrefix: chrome.runtime.getURL(""),
   }))
+);
+
+// Page /plus/merci du site : activation de la clé sans copier-coller.
+chrome.runtime.onMessageExternal?.addListener(
+  createPlusExternalListener({
+    storage: chrome.storage.local,
+    fetch: (...args) => fetch(...args),
+    onActivated: () => {
+      handleOpenPlusOnboarding({}, null, () => {});
+    },
+  })
 );
 
 scheduleWatcherAlarm();

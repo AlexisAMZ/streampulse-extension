@@ -644,7 +644,12 @@ export default {
       "paypalSave": "保存",
       "paypalSaved": "PayPal のアドレスを保存しました。",
       "paypalInvalid": "このメールアドレスは無効です。",
-      "paypalMissing": "報酬を受け取るには PayPal のアドレスを追加してください。"
+      "paypalMissing": "報酬を受け取るには PayPal のアドレスを追加してください。",
+      "freeBody": "コードをシェアしよう：友だちは 2.99 € 割引（初月無料）。友だちが登録するたびに、あなたは StreamPulse+ を 1 か月もらえ、キーはメールで届きます。",
+      "freeLabel": "無料月を受け取るメールアドレス",
+      "freeSubmit": "コードを作成",
+      "freeTaken": "このアドレスは別のブラウザで使用されています。",
+      "freeReady": "コードの準備ができました。友だちが登録すると、キーがメールで届きます。"
     },
     "layout": {
       "title": "レイアウト",
@@ -1198,8 +1203,8 @@ export default {
       "pointsPeakMonth": "最も稼いだ月：{{label}} · {{points}} ポイント",
       "pointsBest": "トップチャンネル：{{name}} · {{points}} ポイント",
       "pointsSubBonus": "サブスクボーナス：+{{points}} ポイント",
-      "lockedTitle": "詳細な振り返りと年間まとめ",
-      "lockedBody": "カテゴリ別の時間、アクティビティの推移、1年分をひとつの振り返りに。",
+      "lockedTitle": "詳細な振り返り",
+      "lockedBody": "カテゴリ別の視聴時間と、毎日のアクティビティの推移。",
       "unlock": "アンロック"
     },
     "documentTitle": "マイまとめ · StreamPulse",

@@ -644,7 +644,12 @@ export default {
       "paypalSave": "Zapisz",
       "paypalSaved": "Adres PayPal zapisany.",
       "paypalInvalid": "Ten adres e-mail jest nieprawidłowy.",
-      "paypalMissing": "Dodaj adres PayPal, aby otrzymywać zarobki."
+      "paypalMissing": "Dodaj adres PayPal, aby otrzymywać zarobki.",
+      "freeBody": "Udostępnij swój kod: twój znajomy dostaje 2,99 € zniżki (pierwszy miesiąc gratis). Ty dostajesz miesiąc StreamPulse+ za każdego znajomego, który wykupi subskrypcję, a klucz przyjdzie e-mailem.",
+      "freeLabel": "Twój e-mail, aby otrzymać darmowe miesiące",
+      "freeSubmit": "Utwórz mój kod",
+      "freeTaken": "Ten adres jest już używany w innej przeglądarce.",
+      "freeReady": "Twój kod jest gotowy. Gdy tylko znajomy wykupi subskrypcję, klucz przyjdzie e-mailem."
     },
     "layout": {
       "title": "Układ",
@@ -1198,8 +1203,8 @@ export default {
       "pointsPeakMonth": "Najlepszy miesiąc: {{label}} · {{points}} pkt",
       "pointsBest": "Najlepszy kanał: {{name}} · {{points}} pkt",
       "pointsSubBonus": "Bonus subskrybenta: +{{points}} pkt",
-      "lockedTitle": "Rozszerzone podsumowanie i podsumowanie roku",
-      "lockedBody": "Twoje godziny według kategorii, krzywa aktywności i cały twój rok na jednym obrazku.",
+      "lockedTitle": "Rozszerzone podsumowanie",
+      "lockedBody": "Twoje godziny według kategorii i krzywa aktywności, dzień po dniu.",
       "unlock": "Odblokuj"
     },
     "documentTitle": "Moje podsumowanie · StreamPulse",

@@ -644,7 +644,12 @@ export default {
       "paypalSave": "저장",
       "paypalSaved": "PayPal 주소를 저장했습니다.",
       "paypalInvalid": "유효한 이메일 주소가 아닙니다.",
-      "paypalMissing": "수익을 받으려면 PayPal 주소를 추가하세요."
+      "paypalMissing": "수익을 받으려면 PayPal 주소를 추가하세요.",
+      "freeBody": "코드를 공유하세요: 친구는 2.99 € 할인(첫 달 무료). 친구가 구독할 때마다 StreamPulse+ 한 달을 받고, 키는 이메일로 보내 드립니다.",
+      "freeLabel": "무료 개월을 받을 이메일",
+      "freeSubmit": "내 코드 만들기",
+      "freeTaken": "이 주소는 이미 다른 브라우저에서 사용 중입니다.",
+      "freeReady": "코드가 준비되었습니다. 친구가 구독하면 키가 이메일로 도착합니다."
     },
     "layout": {
       "title": "배치",
@@ -1198,8 +1203,8 @@ export default {
       "pointsPeakMonth": "가장 많이 번 달: {{label}} · {{points}} 포인트",
       "pointsBest": "최고 채널: {{name}} · {{points}} 포인트",
       "pointsSubBonus": "구독 보너스: +{{points}} 포인트",
-      "lockedTitle": "고급 요약 및 연간 요약",
-      "lockedBody": "카테고리별 시간, 활동 곡선, 한 해 전체를 하나의 요약으로.",
+      "lockedTitle": "고급 요약",
+      "lockedBody": "카테고리별 시청 시간과 매일의 활동 그래프.",
       "unlock": "잠금 해제"
     },
     "documentTitle": "나의 결산 · StreamPulse",

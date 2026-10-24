@@ -644,7 +644,12 @@ export default {
       "paypalSave": "Enregistrer",
       "paypalSaved": "Adresse PayPal enregistrée.",
       "paypalInvalid": "Cette adresse e-mail n'est pas valide.",
-      "paypalMissing": "Ajoute ton adresse PayPal pour recevoir tes gains."
+      "paypalMissing": "Ajoute ton adresse PayPal pour recevoir tes gains.",
+      "freeBody": "Partage ton code : ton ami a 2,99 € offerts (1er mois gratuit). Toi, tu gagnes un mois de StreamPulse+ pour chaque ami qui s'abonne, avec ta clé envoyée par e-mail.",
+      "freeLabel": "Ton e-mail, pour recevoir tes mois offerts",
+      "freeSubmit": "Créer mon code",
+      "freeTaken": "Cette adresse est déjà utilisée sur un autre navigateur.",
+      "freeReady": "Ton code est prêt. Dès qu'un ami s'abonne, ta clé arrive par e-mail."
     },
     "layout": {
       "title": "Disposition",
@@ -1198,8 +1203,8 @@ export default {
       "pointsPeakMonth": "Mois le plus rentable : {{label}} · {{points}} points",
       "pointsBest": "Meilleure chaîne : {{name}} · {{points}} points",
       "pointsSubBonus": "Bonus d'abonné : +{{points}} points",
-      "lockedTitle": "Récap avancé et récap de l'année",
-      "lockedBody": "Tes heures par catégorie, la courbe de ton activité et ton année entière en une image.",
+      "lockedTitle": "Récap avancé",
+      "lockedBody": "Tes heures par catégorie et la courbe de ton activité, jour après jour.",
       "unlock": "Débloquer"
     },
     "documentTitle": "Mon récap · StreamPulse",

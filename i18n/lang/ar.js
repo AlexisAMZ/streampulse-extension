@@ -694,7 +694,12 @@ export default {
       "paypalSave": "حفظ",
       "paypalSaved": "تم حفظ عنوان PayPal.",
       "paypalInvalid": "عنوان البريد الإلكتروني هذا غير صالح.",
-      "paypalMissing": "أضف عنوان PayPal لاستلام أرباحك."
+      "paypalMissing": "أضف عنوان PayPal لاستلام أرباحك.",
+      "freeBody": "شارك رمزك: يحصل صديقك على خصم 2.99 € (الشهر الأول مجانًا). وتحصل أنت على شهر من StreamPulse+ عن كل صديق يشترك، ويصلك مفتاحك بالبريد.",
+      "freeLabel": "بريدك الإلكتروني لاستلام أشهرك المجانية",
+      "freeSubmit": "إنشاء رمزي",
+      "freeTaken": "هذا العنوان مستخدم بالفعل في متصفح آخر.",
+      "freeReady": "رمزك جاهز. بمجرد أن يشترك صديق، يصلك مفتاحك بالبريد."
     },
     "layout": {
       "title": "التخطيط",
@@ -1248,8 +1253,8 @@ export default {
       "pointsPeakMonth": "أفضل شهر: {{label}} · {{points}} نقطة",
       "pointsBest": "أفضل قناة: {{name}} · {{points}} نقطة",
       "pointsSubBonus": "مكافأة الاشتراك: +{{points}} نقطة",
-      "lockedTitle": "الملخص المتقدم وحصاد العام",
-      "lockedBody": "ساعاتك حسب الفئة ومنحنى نشاطك وعامك كاملًا في ملخص واحد.",
+      "lockedTitle": "الملخص المتقدم",
+      "lockedBody": "ساعاتك حسب الفئة ومنحنى نشاطك يومًا بعد يوم.",
       "unlock": "فتح"
     },
     "documentTitle": "ملخصي · StreamPulse",

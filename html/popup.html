@@ -1075,12 +1075,19 @@
 
           <h3 class="settings-group-header" data-i18n="popup.referral.title">Parrainage</h3>
           <div class="referral" id="referral-block">
-            <p class="settings-description" data-i18n="popup.referral.body">Partage ton code : ton ami a 2,99 € offerts (1er mois gratuit). Toi, tu touches 1 € par mois tant qu'il reste abonné, versés sur PayPal.</p>
+            <p class="settings-description" id="referral-body" data-i18n="popup.referral.body">Partage ton code : ton ami a 2,99 € offerts (1er mois gratuit). Toi, tu touches 1 € par mois tant qu'il reste abonné, versés sur PayPal.</p>
             <div class="referral-row">
               <span class="referral-code" id="referral-code" hidden></span>
               <button class="button button-quiet" id="referral-copy" type="button" data-i18n="popup.referral.copy" hidden>Copier</button>
               <button class="button button-primary" id="referral-get" type="button" data-i18n="popup.referral.get">Obtenir mon code</button>
             </div>
+            <form class="referral-paypal" id="referral-free-form" hidden>
+              <label class="referral-paypal-label" for="referral-free-email" data-i18n="popup.referral.freeLabel">Ton e-mail, pour recevoir tes mois offerts</label>
+              <div class="referral-row">
+                <input class="text-input" id="referral-free-email" type="email" autocomplete="email" spellcheck="false" maxlength="200" required data-i18n-attr-placeholder="popup.referral.paypalPlaceholder" placeholder="toi@exemple.fr" />
+                <button class="button button-primary" type="submit" data-i18n="popup.referral.freeSubmit">Créer mon code</button>
+              </div>
+            </form>
             <p class="settings-description" id="referral-status" role="status"></p>
             <div class="referral-earnings" id="referral-earnings" hidden>
               <div class="referral-balance-row">

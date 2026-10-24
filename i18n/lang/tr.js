@@ -644,7 +644,12 @@ export default {
       "paypalSave": "Kaydet",
       "paypalSaved": "PayPal adresi kaydedildi.",
       "paypalInvalid": "Bu e-posta adresi geçerli değil.",
-      "paypalMissing": "Kazançlarını almak için PayPal adresini ekle."
+      "paypalMissing": "Kazançlarını almak için PayPal adresini ekle.",
+      "freeBody": "Kodunu paylaş: arkadaşın 2,99 € indirim alır (ilk ay ücretsiz). Abone olan her arkadaş için sen bir ay StreamPulse+ kazanırsın, anahtarın e-postayla gelir.",
+      "freeLabel": "Ücretsiz aylarını almak için e-postan",
+      "freeSubmit": "Kodumu oluştur",
+      "freeTaken": "Bu adres başka bir tarayıcıda zaten kullanılıyor.",
+      "freeReady": "Kodun hazır. Bir arkadaşın abone olur olmaz anahtarın e-postayla gelir."
     },
     "layout": {
       "title": "Düzen",
@@ -1198,8 +1203,8 @@ export default {
       "pointsPeakMonth": "En iyi ay: {{label}} · {{points}} puan",
       "pointsBest": "En iyi kanal: {{name}} · {{points}} puan",
       "pointsSubBonus": "Abone bonusu: +{{points}} puan",
-      "lockedTitle": "Gelişmiş özet ve yıllık özet",
-      "lockedBody": "Kategoriye göre saatlerin, etkinlik eğrin ve tüm yılın tek bir özette.",
+      "lockedTitle": "Gelişmiş özet",
+      "lockedBody": "Kategoriye göre saatlerin ve gün gün etkinlik eğrin.",
       "unlock": "Kilidi aç"
     },
     "documentTitle": "Özetim · StreamPulse",

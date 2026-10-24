@@ -189,6 +189,12 @@
       "description": "__MSG_openPopupDesc__"
     }
   },
+  "externally_connectable": {
+    "matches": [
+      "https://streampulse.tech/*",
+      "https://www.streampulse.tech/*"
+    ]
+  },
   "web_accessible_resources": [
     {
       "resources": [

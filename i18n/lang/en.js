@@ -682,7 +682,12 @@ export default {
       "paypalSave": "Save",
       "paypalSaved": "PayPal address saved.",
       "paypalInvalid": "This email address isn't valid.",
-      "paypalMissing": "Add your PayPal address to receive your earnings."
+      "paypalMissing": "Add your PayPal address to receive your earnings.",
+      "freeBody": "Share your code: your friend gets €2.99 off (first month free). You get a month of StreamPulse+ for every friend who subscribes, with your key sent by email.",
+      "freeLabel": "Your email, to receive your free months",
+      "freeSubmit": "Create my code",
+      "freeTaken": "This address is already used on another browser.",
+      "freeReady": "Your code is ready. As soon as a friend subscribes, your key arrives by email."
     },
     "layout": {
       "title": "Layout",
@@ -1236,8 +1241,8 @@ export default {
       "pointsPeakMonth": "Best month: {{label}} · {{points}} points",
       "pointsBest": "Top channel: {{name}} · {{points}} points",
       "pointsSubBonus": "Sub bonus: +{{points}} points",
-      "lockedTitle": "Advanced recap and yearly Wrapped",
-      "lockedBody": "Your hours by category, your activity curve and your whole year in one recap.",
+      "lockedTitle": "Advanced recap",
+      "lockedBody": "Your hours by category and your activity curve, day after day.",
       "unlock": "Unlock"
     },
     "documentTitle": "My recap · StreamPulse",

@@ -644,7 +644,12 @@ export default {
       "paypalSave": "Salva",
       "paypalSaved": "Indirizzo PayPal salvato.",
       "paypalInvalid": "Questo indirizzo e-mail non è valido.",
-      "paypalMissing": "Aggiungi il tuo indirizzo PayPal per ricevere i guadagni."
+      "paypalMissing": "Aggiungi il tuo indirizzo PayPal per ricevere i guadagni.",
+      "freeBody": "Condividi il tuo codice: il tuo amico ha 2,99 € di sconto (primo mese gratis). Tu ricevi un mese di StreamPulse+ per ogni amico che si abbona, con la chiave inviata via e-mail.",
+      "freeLabel": "La tua e-mail, per ricevere i mesi gratis",
+      "freeSubmit": "Crea il mio codice",
+      "freeTaken": "Questo indirizzo è già usato su un altro browser.",
+      "freeReady": "Il tuo codice è pronto. Appena un amico si abbona, la chiave arriva via e-mail."
     },
     "layout": {
       "title": "Disposizione",
@@ -1198,8 +1203,8 @@ export default {
       "pointsPeakMonth": "Mese migliore: {{label}} · {{points}} punti",
       "pointsBest": "Canale migliore: {{name}} · {{points}} punti",
       "pointsSubBonus": "Bonus abbonato: +{{points}} punti",
-      "lockedTitle": "Riepilogo avanzato e dell'anno",
-      "lockedBody": "Le tue ore per categoria, la curva della tua attività e il tuo anno intero in un'immagine.",
+      "lockedTitle": "Riepilogo avanzato",
+      "lockedBody": "Le tue ore per categoria e la curva della tua attività, giorno per giorno.",
       "unlock": "Sblocca"
     },
     "documentTitle": "Il mio riepilogo · StreamPulse",
