@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { PLUS_GRACE_MS, PLUS_KEY, isPlusActive } from "../js/plus.js";
+import { PLUS_GRACE_MS, PLUS_KEY, isPlusActive, needsRecheck } from "../js/plus.js";
 
 const NOW = Date.parse("2026-09-29T12:00:00Z");
 const monthly = (verifiedAt) => ({ status: "active", licenseKey: "K", plan: "monthly", verifiedAt });
@@ -43,4 +43,18 @@ test("tenureTier : la formule annuelle suit l'ancienneté, comme le mensuel", ()
   const since = now - 13 * globalThis.StreamPulsePlusRule.MONTH_MS;
   assert.equal(globalThis.StreamPulsePlusRule.tenureTier("yearly", since, now), "y1");
   assert.equal(globalThis.StreamPulsePlusRule.tenureTier("lifetime", since, now), "life");
+});
+
+test("licence forgée : des dates dans le futur ne donnent ni Plus actif ni report de la revérification", () => {
+  const future = NOW + 10 * 365 * 24 * 60 * 60 * 1000;
+  const forgedLifetime = { status: "active", licenseKey: "K", plan: "lifetime", verifiedAt: future, checkedAt: future };
+  assert.equal(isPlusActive(forgedLifetime, NOW), false);
+  assert.equal(isPlusActive(monthly(future), NOW), false);
+  assert.equal(needsRecheck(forgedLifetime, NOW), true);
+  assert.equal(needsRecheck({ ...monthly(NOW), checkedAt: future }, NOW), true);
+});
+
+test("licence valide : un léger décalage d'horloge est toléré", () => {
+  assert.equal(isPlusActive(monthly(NOW + 60 * 1000), NOW), true);
+  assert.equal(needsRecheck({ ...monthly(NOW), checkedAt: NOW + 60 * 1000 }, NOW), false);
 });

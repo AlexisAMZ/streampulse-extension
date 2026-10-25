@@ -16,10 +16,19 @@
   // (vendue jusqu'en octobre 2026, gardée par ses acheteurs) n'expire pas.
   var PLUS_GRACE_MS = 30 * 24 * 60 * 60 * 1000;
 
+  // Tolérance d'horloge : au-delà, une date « vérifiée » dans le futur est une licence forgée.
+  var CLOCK_SKEW_MS = 5 * 60 * 1000;
+
+  /** Vrai si une date de vérification est postérieure à maintenant (horloge ou stockage trafiqué). */
+  function isFuture(stamp, at) {
+    return Number(stamp) > at + CLOCK_SKEW_MS;
+  }
+
   function isPlusActive(record, now) {
     if (!record || record.status !== "active" || !record.licenseKey) return false;
-    if (record.plan === "lifetime") return true;
     var at = typeof now === "number" ? now : Date.now();
+    if (isFuture(record.verifiedAt, at) || isFuture(record.checkedAt, at)) return false;
+    if (record.plan === "lifetime") return true;
     return at - (Number(record.verifiedAt) || 0) <= PLUS_GRACE_MS;
   }
 
@@ -55,6 +64,8 @@
     MONTH_MS: MONTH_MS,
     TENURE_TIERS: TENURE_TIERS,
     TENURE_STYLES: TENURE_STYLES,
+    CLOCK_SKEW_MS: CLOCK_SKEW_MS,
+    isFuture: isFuture,
     isPlusActive: isPlusActive,
     tenureTier: tenureTier,
   });

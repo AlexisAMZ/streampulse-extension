@@ -91,6 +91,8 @@ export const PLUS_RECHECK_MS = 24 * 60 * 60 * 1000;
 
 export function needsRecheck(record, now = Date.now()) {
   if (!record || record.status !== "active" || !record.licenseKey) return false;
+  // Une date dans le futur ne doit jamais repousser la revérification (licence forgée).
+  if (PLUS_RULE.isFuture(record.checkedAt, now) || PLUS_RULE.isFuture(record.verifiedAt, now)) return true;
   return now - (Number(record.checkedAt || record.verifiedAt) || 0) >= PLUS_RECHECK_MS;
 }
 
