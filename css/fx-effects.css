@@ -341,3 +341,19 @@
   .sp-paint--aurora, .sp-paint--sunset, .sp-paint--lcd, .sp-paint--gold, .sp-paint--rainbow,
   .sp-tier, .sp-tier::after, .sp-tier .sp-chat-badge-img, .sp-tier .cosmetic-badge { animation: none !important; }
 }
+
+/* ── Matrix : effet des chasseurs de bugs (rôle « bughunter »). Pluie de
+   caractères verts sur fond noir, qui descend en continu. ── */
+.cosmetic-badge.sp-fx-matrix,
+.sp-chat-badge--fx-matrix .sp-chat-badge-img,
+.sp-paint--matrix {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='24'%3E%3Cg font-family='monospace' font-size='7' font-weight='700'%3E%3Ctext x='1' y='7' fill='%23004d1a'%3E1%3C/text%3E%3Ctext x='9' y='12' fill='%23eaffef'%3E0%3C/text%3E%3Ctext x='1' y='17' fill='%23006b24'%3E0%3C/text%3E%3Ctext x='9' y='22' fill='%23ffffff'%3E1%3C/text%3E%3C/g%3E%3C/svg%3E"), linear-gradient(180deg, #8affb0, #22e86a 55%, #00b347) !important;
+  background-size: 16px 24px, 100% 100% !important;
+  background-repeat: repeat !important;
+  filter: drop-shadow(0 0 1px rgba(57, 255, 122, 0.6));
+  animation: sp-tx-matrix 1.8s linear infinite;
+}
+@keyframes sp-tx-matrix { from { background-position: 0 0, 0 0; } to { background-position: 0 24px, 0 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .cosmetic-badge.sp-fx-matrix, .sp-chat-badge--fx-matrix .sp-chat-badge-img, .sp-paint--matrix { animation: none !important; }
+}

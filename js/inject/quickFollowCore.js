@@ -101,7 +101,9 @@
 
     function addStreamer(handle) {
       return send({ type: "addStreamer", platform: config.platform, handle: handle }).then(function (res) {
-        return Boolean(res && !res.error);
+        // Le service worker renvoie un message traduit et précis (chaîne
+        // introuvable, déjà ajoutée…) : on l'affiche plutôt que l'erreur générique.
+        return res && !res.error ? true : (res && typeof res.error === "string" ? res.error : false);
       });
     }
 
@@ -109,13 +111,22 @@
       return readLocal([STREAMERS_KEY]).then(function (data) {
         var streamers = (data && data[STREAMERS_KEY]) || [];
         var match = streamers.find(function (s) {
-          return isOurs(s) && String(s.handle || "").toLowerCase() === handle;
+          return isOurs(s) && String(s.handle || "").toLowerCase() === handle.toLowerCase();
         });
         if (!match || !match.id) return false;
         return send({ type: "removeStreamer", id: match.id }).then(function (res) {
           return Boolean(res && !res.error);
         });
       });
+    }
+
+    /** La page affiche-t-elle un direct en cours ? Par défaut non (message d'attente). */
+    function isLiveNow() {
+      try {
+        return Boolean(config.isLive && config.isLive());
+      } catch (_e) {
+        return false;
+      }
     }
 
     var toastTimer = null;
@@ -129,7 +140,7 @@
         if (isError) toast.classList.add("is-error");
         document.body.appendChild(toast);
         clearTimeout(toastTimer);
-        toastTimer = setTimeout(function () { toast.remove(); }, 4000);
+        toastTimer = setTimeout(function () { toast.remove(); }, isError ? 4000 : 6000);
       } catch (_e) {
         // La notification ne doit jamais casser l'action qu'elle rapporte.
       }
@@ -144,7 +155,8 @@
     }
 
     function renderState(btn, handle) {
-      var tracked = trackedReady && trackedSet.has(handle);
+      // Comparaison sans casse : un ID de chaîne YouTube (UC…) garde la sienne.
+      var tracked = trackedReady && trackedSet.has(handle.toLowerCase());
       var label = btn.querySelector(".sp-qf-label");
       if (label) label.textContent = tracked ? t("tracked") : t("add");
       btn.title = tracked ? t("remove") : t("add");
@@ -162,12 +174,15 @@
       if (!handle) return;
       busy = true;
       btn.classList.add("is-busy");
-      var action = trackedSet.has(handle) ? removeStreamer(handle) : addStreamer(handle);
+      var action = trackedSet.has(handle.toLowerCase()) ? removeStreamer(handle) : addStreamer(handle);
       action
-        .then(function (ok) {
+        .then(function (result) {
+          var ok = result === true;
           // On relit tout de suite : le service worker peut dormir au moment du storage.onChanged.
           return refreshState().then(function () {
-            showToast(ok ? t("added", { name: handle }) : t("error"), !ok);
+            // Chaîne hors live (YouTube surtout) : on dit qu'elle est bien suivie et qu'on préviendra.
+            var addedKey = ok && config.addedWaitingKey && !isLiveNow() ? config.addedWaitingKey : "added";
+            showToast(ok ? t(addedKey, { name: handle }) : (typeof result === "string" && result) || t("error"), !ok);
           });
         })
         .catch(function () { showToast(t("error"), true); })

@@ -351,6 +351,8 @@ export default {
       "glitter": "بريق",
       "candy": "عصا الحلوى",
       "toxic": "سام",
+      "matrix": "ماتريكس",
+      "bughunterOnly": "لمن عثر على خطأ",
       "ocean": "محيط",
       "tenure": "الولاء · مقياس",
       "pager": "الولاء · جهاز نداء",
@@ -662,6 +664,7 @@ export default {
     },
     "identity": {
       "rankFounder": "مؤسس StreamPulse",
+      "rankBughunter": "صائد الأخطاء",
       "rankAmbassador": "سفير · الأصدقاء المُحالون: {{count}}",
       "intro": "كيف تبدو شارة StreamPulse واسمك في دردشة Twitch، ظاهرة لمستخدمي StreamPulse الآخرين."
     },

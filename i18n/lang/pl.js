@@ -301,6 +301,8 @@ export default {
       "glitter": "Brokat",
       "candy": "Laska cukrowa",
       "toxic": "Toksyczny",
+      "matrix": "Matrix",
+      "bughunterOnly": "Dla tych, którzy znaleźli błąd",
       "ocean": "Ocean",
       "tenure": "Staż · Wskaźnik",
       "pager": "Staż · Pager",
@@ -612,6 +614,7 @@ export default {
     },
     "identity": {
       "rankFounder": "Założyciel StreamPulse",
+      "rankBughunter": "Łowca bugów",
       "rankAmbassador": "Ambasador · poleceni znajomi: {{count}}",
       "intro": "Wygląd twojej odznaki StreamPulse i nicku na czacie Twitcha, widoczny dla innych użytkowników StreamPulse."
     },

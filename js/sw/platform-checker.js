@@ -1,7 +1,7 @@
 // Statut des chaînes par plateforme : Twitch (Helix, par lots), Kick, YouTube.
 
 import { CHZZK_API, fetchChzzkLive, resolveChzzkChannel } from "../chzzk.js";
-import { buildProfileUrl, isYoutubeChannelId, normalizePlatform, platformSupportsLiveStatus, sanitizeHandle } from "../platforms.js";
+import { buildProfileUrl, isYoutubeChannelId, isYoutubeUpcoming, normalizePlatform, platformSupportsLiveStatus, sanitizeHandle } from "../platforms.js";
 import { hasChzzkAccess } from "./chzzk-access.js";
 import { ensureConfig, fetchJson, fetchTwitchJson, twitchHeaders } from "./config.js";
 import { NETWORK_TIMEOUT_MS } from "./constants.js";
@@ -455,6 +455,11 @@ export class PlatformChecker {
           /<link rel="canonical" href="https:\/\/www\.youtube\.com\/watch\?v=([A-Za-z0-9_-]{6,20})"/.exec(
             html
           )?.[1] || "";
+        // Live programmé ou Première pas encore lancée : /live pointe déjà
+        // vers la vidéo, mais avec "isUpcoming":true. On attend qu'elle
+        // démarre, sinon l'alerte partirait des heures trop tôt. Une Première
+        // en cours de diffusion n'a plus ce drapeau : elle compte comme live.
+        if (videoId && isYoutubeUpcoming(html)) videoId = "";
         if (videoId) {
           // Sur un live, viewCount du lecteur = viewers simultanés.
           viewers = Number(/"viewCount":"(\d+)"/.exec(html)?.[1]) || 0;

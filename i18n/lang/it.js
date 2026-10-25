@@ -301,6 +301,8 @@ export default {
       "glitter": "Brillantini",
       "candy": "Bastoncino di zucchero",
       "toxic": "Tossico",
+      "matrix": "Matrix",
+      "bughunterOnly": "Per chi ha trovato un bug",
       "ocean": "Oceano",
       "tenure": "Anzianità · Indicatore",
       "pager": "Anzianità · Pager",
@@ -612,6 +614,7 @@ export default {
     },
     "identity": {
       "rankFounder": "Fondatore di StreamPulse",
+      "rankBughunter": "Cacciatore di bug",
       "rankAmbassador": "Ambasciatore · amici invitati: {{count}}",
       "intro": "L'aspetto del tuo badge StreamPulse e del tuo nome nella chat di Twitch, visibile agli altri utenti di StreamPulse."
     },

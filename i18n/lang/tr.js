@@ -301,6 +301,8 @@ export default {
       "glitter": "Simli",
       "candy": "Şeker kamışı",
       "toxic": "Toksik",
+      "matrix": "Matrix",
+      "bughunterOnly": "Hata bulanlara özel",
       "ocean": "Okyanus",
       "tenure": "Kıdem · Gösterge",
       "pager": "Kıdem · Çağrı cihazı",
@@ -612,6 +614,7 @@ export default {
     },
     "identity": {
       "rankFounder": "StreamPulse kurucusu",
+      "rankBughunter": "Hata avcısı",
       "rankAmbassador": "Elçi · davet edilen arkadaş: {{count}}",
       "intro": "StreamPulse rozetinin ve adının Twitch sohbetindeki görünümü, diğer StreamPulse kullanıcılarına görünür."
     },

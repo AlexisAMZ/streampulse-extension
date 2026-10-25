@@ -125,6 +125,10 @@ function fxOption(kind, value, selected, current) {
     button.setAttribute("aria-disabled", "true");
     button.title = t("popup.referral.needed", { count: needed });
     button.append(node("span", "fx-lock", t("popup.referral.needed", { count: needed })));
+  } else if (lock === "bughunter") {
+    button.setAttribute("aria-disabled", "true");
+    button.title = t("popup.cosmetics.bughunterOnly");
+    button.append(node("span", "fx-lock", "🔒"));
   } else if (lock === "plus" && value) {
     button.append(node("span", "fx-plus", t("popup.plus.badge")));
   } else if (value === "crown" || value === "founder") {
@@ -140,6 +144,7 @@ function renderRank(current) {
   target.hidden = !rank;
   target.className = `identity-rank${rank ? ` is-${rank}` : ""}`;
   if (rank === "founder") target.textContent = t("popup.identity.rankFounder");
+  else if (rank === "bughunter") target.textContent = t("popup.identity.rankBughunter");
   else if (rank === "ambassador") target.textContent = t("popup.identity.rankAmbassador", { count: current.referrals });
 }
 

@@ -290,3 +290,8 @@ export function isChannelPageUrl(url) {
 // we need 't'.
 // For now, I will add getPlatformDefinition.
 // And I will refactor UI.js to use getPlatformLabelKey and t().
+
+/** Page /live YouTube d'un live programmé ou d'une Première pas encore lancée. */
+export function isYoutubeUpcoming(html) {
+  return /"isUpcoming"\s*:\s*true/.test(String(html || ""));
+}

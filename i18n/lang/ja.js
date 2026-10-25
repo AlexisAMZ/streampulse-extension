@@ -301,6 +301,8 @@ export default {
       "glitter": "グリッター",
       "candy": "キャンディケイン",
       "toxic": "トキシック",
+      "matrix": "マトリックス",
+      "bughunterOnly": "バグを見つけた人だけ",
       "ocean": "オーシャン",
       "tenure": "継続・ゲージ",
       "pager": "継続・ポケベル",
@@ -612,6 +614,7 @@ export default {
     },
     "identity": {
       "rankFounder": "StreamPulse 創設者",
+      "rankBughunter": "バグハンター",
       "rankAmbassador": "アンバサダー · 紹介した友達：{{count}}",
       "intro": "Twitch チャットでの StreamPulse バッジと名前の見た目。他の StreamPulse ユーザーにも表示されます。"
     },

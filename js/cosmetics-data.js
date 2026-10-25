@@ -27,11 +27,11 @@ export const COLOR_FX = Object.freeze([
 export const TEXTURE_FX = Object.freeze(["galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean"]);
 
 // « tenure » (Jauge) et « pager » : badge d'ancienneté à la place du logo coloré.
-// « halo » et « crown » : récompenses (parrainage, fondateur).
-export const BADGE_FX = Object.freeze(["tenure", "pager", ...COLOR_FX, "halo", "crown"]);
+// « halo », « crown » et « matrix » : récompenses (parrainage, fondateur, chasseur de bugs).
+export const BADGE_FX = Object.freeze(["tenure", "pager", ...COLOR_FX, "halo", "crown", "matrix"]);
 
-// « ambassador » et « founder » : récompenses (parrainage, fondateur).
-export const NAME_FX = Object.freeze([...COLOR_FX, "ambassador", "founder"]);
+// « ambassador », « founder » et « matrix » : récompenses (parrainage, fondateur, chasseur de bugs).
+export const NAME_FX = Object.freeze([...COLOR_FX, "ambassador", "founder", "matrix"]);
 
 /** Effets retirés en 26.9.28 : repris par leur équivalent, les autres redeviennent classiques. */
 export const LEGACY_FX = Object.freeze({ prism: "rainbow" });
@@ -53,17 +53,25 @@ export const REFERRAL_FX = Object.freeze({ ambassador: 1, halo: 3 });
 /** Effets réservés au fondateur de StreamPulse (rôle « admin » posé sur sa licence). */
 export const FOUNDER_FX = Object.freeze(["crown", "founder"]);
 
+/**
+ * Effets des chasseurs de bugs (rôle « bughunter » posé à la main sur la
+ * licence). Visibles par tous, cadenassés pour les autres.
+ */
+export const BUGHUNTER_FX = Object.freeze(["matrix"]);
+
 const isFounder = (access) => access?.role === "admin";
 
-/** Rang affiché : fondateur, ambassadeur (au moins un filleul) ou aucun. */
+/** Rang affiché : fondateur, chasseur de bugs, ambassadeur (au moins un filleul) ou aucun. */
 export function rankOf(access) {
   if (isFounder(access)) return "founder";
+  if (access?.role === "bughunter") return "bughunter";
   return Math.max(0, Number(access?.referrals) || 0) >= 1 ? "ambassador" : "";
 }
 
 /**
  * Pourquoi un effet est verrouillé : "" (libre), "plus" (StreamPulse+ requis),
- * "referrals" (pas assez de filleuls) ou "founder" (réservé au fondateur).
+ * "referrals" (pas assez de filleuls), "founder" (réservé au fondateur) ou
+ * "bughunter" (réservé aux chasseurs de bugs).
  * Le fondateur a tout.
  */
 export function fxLock(value, access = {}) {
@@ -71,6 +79,7 @@ export function fxLock(value, access = {}) {
   if (!access.plus) return "plus";
   if (isFounder(access)) return "";
   if (FOUNDER_FX.includes(value)) return "founder";
+  if (BUGHUNTER_FX.includes(value)) return access.role === "bughunter" ? "" : "bughunter";
   const needed = REFERRAL_FX[value] || 0;
   return needed > Math.max(0, Number(access.referrals) || 0) ? "referrals" : "";
 }

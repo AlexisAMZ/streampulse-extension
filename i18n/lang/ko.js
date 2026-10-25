@@ -301,6 +301,8 @@ export default {
       "glitter": "글리터",
       "candy": "캔디 케인",
       "toxic": "독성",
+      "matrix": "매트릭스",
+      "bughunterOnly": "버그를 찾은 사람 전용",
       "ocean": "바다",
       "tenure": "구독 기간 · 게이지",
       "pager": "구독 기간 · 삐삐",
@@ -612,6 +614,7 @@ export default {
     },
     "identity": {
       "rankFounder": "StreamPulse 창립자",
+      "rankBughunter": "버그 헌터",
       "rankAmbassador": "앰배서더 · 추천한 친구: {{count}}",
       "intro": "Twitch 채팅에서 StreamPulse 배지와 닉네임이 보이는 모습으로, 다른 StreamPulse 사용자에게도 보입니다."
     },

@@ -301,6 +301,8 @@ export default {
       "glitter": "Блёстки",
       "candy": "Леденец",
       "toxic": "Токсичный",
+      "matrix": "Матрица",
+      "bughunterOnly": "Для тех, кто нашёл баг",
       "ocean": "Океан",
       "tenure": "Стаж · Шкала",
       "pager": "Стаж · Пейджер",
@@ -612,6 +614,7 @@ export default {
     },
     "identity": {
       "rankFounder": "Основатель StreamPulse",
+      "rankBughunter": "Охотник за багами",
       "rankAmbassador": "Посол · приглашено друзей: {{count}}",
       "intro": "Как выглядят твой значок StreamPulse и ник в чате Twitch для других пользователей StreamPulse."
     },

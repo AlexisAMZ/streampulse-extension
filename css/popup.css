@@ -1130,6 +1130,8 @@ li.has-bell.has-auto .badge-auto { inset-inline-end: 48px; }
 .identity-rank::before { content: "★"; color: var(--violet); }
 .identity-rank.is-founder { background: rgba(255, 210, 63, 0.12); box-shadow: inset 0 0 0 1px rgba(255, 210, 63, 0.5); color: var(--star); }
 .identity-rank.is-founder::before { color: var(--star); }
+.identity-rank.is-bughunter { background: rgba(57, 255, 122, 0.1); box-shadow: inset 0 0 0 1px rgba(57, 255, 122, 0.5); color: #39ff7a; }
+.identity-rank.is-bughunter::before { content: "⌁"; color: #39ff7a; }
 .fx-founder { position: absolute; top: 4px; inset-inline-end: 6px; color: var(--star); font-size: 11px; }
 
 /* ── Suggestions de chaînes (champ d'ajout) : la liste s'ouvre vers le haut, le champ est en bas. ── */

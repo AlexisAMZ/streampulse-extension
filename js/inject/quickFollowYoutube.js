@@ -28,16 +28,30 @@
    * bouton apparaît à côté de son bouton d'abonnement).
    */
   function currentChannel() {
-    var parts = location.pathname.split("/").filter(Boolean);
+    var parts = location.pathname.split("/").filter(Boolean).map(decodePart);
     if (parts.length) {
-      var first = parts[0].toLowerCase();
-      if (first.charAt(0) === "@") return first.slice(1);
-      if (first === "channel" && parts[1]) return parts[1].toLowerCase();
+      var first = parts[0];
+      if (first.charAt(0) === "@") return first.slice(1).toLowerCase();
+      // L'ID de chaîne (UC…) est sensible à la casse : le mettre en minuscules
+      // le rendait introuvable (« Action impossible »).
+      if (first.toLowerCase() === "channel" && parts[1]) return parts[1];
     }
-    var href =
+    var href = decodePart(
       document.querySelector("#owner #channel-name a[href], ytd-channel-name a[href], #channel-name a[href]")?.getAttribute("href") ||
-      "";
-    return (/\/@([\w.-]{1,60})/.exec(href)?.[1] || /\/channel\/(UC[\w-]{1,60})/.exec(href)?.[1] || "").toLowerCase();
+      ""
+    );
+    var handle = /\/@([\w.-]{1,60})/.exec(href)?.[1];
+    if (handle) return handle.toLowerCase();
+    return /\/channel\/(UC[\w-]{1,60})/.exec(href)?.[1] || "";
+  }
+
+  /** Segment d'URL décodé (handles accentués : /@caf%C3%A9). */
+  function decodePart(value) {
+    try {
+      return decodeURIComponent(value);
+    } catch (_e) {
+      return value;
+    }
   }
 
   // La D.A. vient du bouton « S'abonner » lui-même : fond, texte, rayon,
@@ -102,6 +116,11 @@
       // YouTube clone les conteneurs à chaque re-rendu : le clic est délégué au document.
       delegateClick: true,
       navigateEvents: ["yt-navigate-finish"],
+      // Ajout d'une chaîne qui ne diffuse pas : le toast dit qu'on préviendra au prochain live.
+      addedWaitingKey: "addedWaiting",
+      isLive: function () {
+        return Boolean(document.querySelector("ytd-watch-flexy[is-live-content] .ytp-live, .ytp-live-badge:not([disabled])"));
+      },
     })
     .start();
 })();

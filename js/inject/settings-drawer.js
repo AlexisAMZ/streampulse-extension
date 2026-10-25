@@ -18,13 +18,15 @@
   var PLUS_KEY = PLUS_RULE.PLUS_KEY;
   var COSMETICS_KEY = "streamPulseCosmetics";
   var PLUS_URL = "https://streampulse.tech/plus";
-  var BADGE_FX = ["tenure", "pager", "aurora", "sunset", "lcd", "gold", "rainbow", "fire", "frost", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean", "halo", "crown"];
+  var BADGE_FX = ["tenure", "pager", "aurora", "sunset", "lcd", "gold", "rainbow", "fire", "frost", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean", "halo", "crown", "matrix"];
   // Effets retires en 26.9.28 : Prisme devient Arc-en-ciel (copie de LEGACY_FX).
   var LEGACY_FX = { prism: "rainbow" };
-  var NAME_FX = ["aurora", "sunset", "lcd", "gold", "rainbow", "fire", "frost", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean", "ambassador", "founder"];
+  var NAME_FX = ["aurora", "sunset", "lcd", "gold", "rainbow", "fire", "frost", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean", "ambassador", "founder", "matrix"];
   // Même règles que js/cosmetics-data.js : filleuls requis, et effets du fondateur.
   var REFERRAL_FX = { ambassador: 1, halo: 3 };
   var FOUNDER_FX = ["crown", "founder"];
+  // Effets des chasseurs de bugs (rôle « bughunter ») : visibles, cadenassés pour les autres.
+  var BUGHUNTER_FX = ["matrix"];
   // Paliers et styles d'ancienneté : js/inject/plus-rule.js.
   var TENURE_STYLES = PLUS_RULE.TENURE_STYLES;
 
@@ -32,6 +34,7 @@
   function tenureTier(record) {
     if (!record) return "";
     if (record.role === "admin") return "founder";
+    if (record.role === "bughunter") return "bughunter";
     if (record.plan === "lifetime") return "life";
     return PLUS_RULE.tenureTier("monthly", record.since);
   }
@@ -167,7 +170,7 @@
       ctx.prefs = r[PREFERENCES_KEY] || {};
       ctx.lang = api ? api.resolve(ctx.prefs.language || navigator.language) : "en";
       ctx.plus = plusActive(r[PLUS_KEY]);
-      ctx.role = ctx.plus && r[PLUS_KEY].role === "admin" ? "admin" : "";
+      ctx.role = ctx.plus && ["admin", "bughunter"].indexOf(r[PLUS_KEY].role) !== -1 ? r[PLUS_KEY].role : "";
       ctx.referrals = ctx.plus ? Math.max(0, Number(r[PLUS_KEY].referrals) || 0) : 0;
       ctx.tier = ctx.plus ? tenureTier(r[PLUS_KEY]) : "";
       ctx.cosmetics = normalizeCosmetics(r[COSMETICS_KEY]);
@@ -191,6 +194,7 @@
   function fxLocked(value) {
     if (!value || ctx.role === "admin") return false;
     if (FOUNDER_FX.indexOf(value) !== -1) return true;
+    if (BUGHUNTER_FX.indexOf(value) !== -1) return ctx.role !== "bughunter";
     return (REFERRAL_FX[value] || 0) > (ctx.referrals || 0);
   }
 

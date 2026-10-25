@@ -923,7 +923,7 @@ function plusAccess() {
   return {
     plus: isPlusActive(plusRecord),
     referrals: Math.max(0, Number(plusRecord?.referrals) || 0),
-    role: plusRecord?.role === "admin" ? "admin" : "",
+    role: ["admin", "bughunter"].includes(plusRecord?.role) ? plusRecord.role : "",
   };
 }
 

@@ -50,10 +50,10 @@
   // Effets publics des abonnes : empreinte -> { b: effet du badge, n: pseudo special }.
   var badgeStyles = new Map();
   var COSMETICS_KEY = "streamPulseCosmetics";
-  var BADGE_FX = ["tenure", "pager", "aurora", "sunset", "lcd", "gold", "rainbow", "fire", "frost", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean", "halo", "crown"];
+  var BADGE_FX = ["tenure", "pager", "aurora", "sunset", "lcd", "gold", "rainbow", "fire", "frost", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean", "halo", "crown", "matrix"];
   // Effets retires en 26.9.28 : Prisme devient Arc-en-ciel (copie de LEGACY_FX).
   var LEGACY_FX = { prism: "rainbow" };
-  var NAME_FX = ["aurora", "sunset", "lcd", "gold", "rainbow", "fire", "frost", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean", "ambassador", "founder"];
+  var NAME_FX = ["aurora", "sunset", "lcd", "gold", "rainbow", "fire", "frost", "galaxy", "holo", "lava", "marble", "chrome", "glitter", "candy", "toxic", "ocean", "ambassador", "founder", "matrix"];
   var REFRESH_MS = 5 * 60 * 1000;
   // Empreinte du compte Twitch connecte et licence de ce navigateur.
   var ownHash = "";
@@ -65,7 +65,7 @@
   var ownLocal = { b: "", n: "" };
   // Rang de ce navigateur (fondateur, ambassadeur), d'apres la licence locale.
   var ownRank = "";
-  var RANKS = ["founder", "ambassador"];
+  var RANKS = ["founder", "bughunter", "ambassador"];
   // Debut de son propre abonnement (licence locale), pour sa tuile avant la reponse du serveur.
   var ownSince = 0;
   /** Effet du badge connu, Prisme repris en Arc-en-ciel ; sinon logo classique. */
@@ -114,6 +114,7 @@
   function rankOfRecord(record) {
     if (!activePlusKey(record)) return "";
     if (record.role === "admin") return "founder";
+    if (record.role === "bughunter") return "bughunter";
     return (Number(record.referrals) || 0) >= 1 ? "ambassador" : "";
   }
 
@@ -496,6 +497,12 @@
     if (hash) badge.setAttribute("data-sp-hash", hash);
     // La carte au survol remplace l'infobulle du navigateur ; le libelle reste pour les lecteurs d'ecran.
     badge.setAttribute("aria-label", "StreamPulse");
+    try {
+      var author = messageEl.querySelector(NAME_SELECTOR);
+      if (author) badge.setAttribute("data-sp-name", (author.textContent || "").trim().slice(0, 40));
+    } catch (_e) {
+      // Pseudo introuvable : la carte le recherchera au survol.
+    }
 
     // Le logo est un PNG monochrome applique en masque : il prend donc la
     // couleur de fond, ce qu'une balise <img> ne permettrait pas.
@@ -647,23 +654,117 @@
   }
 
   /** Une seule carte pour tout le tchat, creee au premier survol. */
+  var NAME_SELECTOR = '[data-a-target="chat-message-username"], .chat-author__display-name, .seventv-chat-user-username';
+
+  /** Badge rendu comme dans le tchat (masque + look), pour les cases de la carte. */
+  function cardBadge() {
+    var badge = document.createElement("span");
+    badge.className = "sp-chat-badge";
+    var mark = document.createElement("span");
+    mark.className = "sp-chat-badge-img";
+    var mask = "url(" + badgeIconUrl + ")";
+    mark.style.setProperty("-webkit-mask-image", mask);
+    mark.style.setProperty("mask-image", mask);
+    badge.appendChild(mark);
+    return badge;
+  }
+
+  function cardSlot(kind) {
+    var slot = document.createElement("span");
+    slot.className = "sp-badge-card__slot sp-badge-card__slot--" + kind;
+    var face = document.createElement("span");
+    face.className = "sp-badge-card__face";
+    if (kind === "name") {
+      var sample = document.createElement("span");
+      sample.className = "sp-badge-card__sample";
+      sample.textContent = "Aa";
+      face.appendChild(sample);
+    } else {
+      face.appendChild(cardBadge());
+    }
+    var label = document.createElement("span");
+    label.className = "sp-badge-card__label";
+    slot.append(face, label);
+    return slot;
+  }
+
+  /**
+   * Carte « pager » au survol du badge ou du pseudo : écran LCD (pseudo, rang,
+   * ancienneté) puis les cases des cosmétiques possédés — le badge porté en
+   * premier, le badge d'ancienneté et le style du pseudo.
+   */
   function getBadgeCard() {
     if (badgeCard && badgeCard.isConnected) return badgeCard;
     badgeCard = document.createElement("div");
     badgeCard.className = "sp-badge-card";
     badgeCard.setAttribute("role", "tooltip");
-    var logo = document.createElement("span");
-    logo.className = "sp-badge-card__logo";
-    var mask = "url(" + badgeIconUrl + ")";
-    logo.style.setProperty("-webkit-mask-image", mask);
-    logo.style.setProperty("mask-image", mask);
-    var title = document.createElement("span");
-    title.className = "sp-badge-card__title";
-    var line = document.createElement("span");
+    var screen = document.createElement("div");
+    screen.className = "sp-badge-card__screen";
+    var top = document.createElement("div");
+    top.className = "sp-badge-card__top";
+    var brand = document.createElement("span");
+    brand.className = "sp-badge-card__title";
+    var since = document.createElement("span");
+    since.className = "sp-badge-card__since";
+    top.append(brand, since);
+    var name = document.createElement("div");
+    name.className = "sp-badge-card__name";
+    var line = document.createElement("div");
     line.className = "sp-badge-card__line";
-    badgeCard.append(logo, title, line);
+    screen.append(top, name, line);
+    var row = document.createElement("div");
+    row.className = "sp-badge-card__row";
+    row.append(cardSlot("worn"), cardSlot("tenure"), cardSlot("name"));
+    badgeCard.append(screen, row);
     document.body.appendChild(badgeCard);
     return badgeCard;
+  }
+
+  /** Pseudo affiché du message qui porte ce badge. */
+  function displayNameOf(badge) {
+    var stored = badge.getAttribute("data-sp-name");
+    if (stored) return stored;
+    var node = badge;
+    for (var i = 0; i < 6 && node; i++) {
+      var name = node.querySelector && node.querySelector(NAME_SELECTOR);
+      if (name) return (name.textContent || "").trim();
+      node = node.parentElement;
+    }
+    return "";
+  }
+
+  /** Remplit la carte : cases masquées quand l'abonné n'a pas le cosmétique. */
+  function fillBadgeCard(card, badge, style, plus) {
+    var title = card.querySelector(".sp-badge-card__title");
+    title.textContent = "StreamPulse";
+    if (plus) {
+      var mark = document.createElement("b");
+      mark.textContent = "+";
+      title.appendChild(mark);
+    }
+    var tier = plus ? tenureTier(style.p, style.s, style.r) : "";
+    card.querySelector(".sp-badge-card__since").textContent = plus && style.p === "lifetime" ? "∞" : "";
+    card.querySelector(".sp-badge-card__name").textContent = displayNameOf(badge) || "StreamPulse";
+    card.querySelector(".sp-badge-card__line").textContent = rankLine(style, plus);
+
+    var worn = card.querySelector(".sp-badge-card__slot--worn");
+    var tenure = card.querySelector(".sp-badge-card__slot--tenure");
+    var named = card.querySelector(".sp-badge-card__slot--name");
+    applyLook(worn.querySelector(".sp-chat-badge"), plus ? style : null);
+    worn.querySelector(".sp-badge-card__label").textContent = tr("worn");
+    // Le badge porté est déjà celui d'ancienneté : pas de case en double.
+    var wornIsTenure = plus && !!TENURE_STYLES[style.b];
+    tenure.hidden = !tier || wornIsTenure;
+    if (!tenure.hidden) {
+      var tile = tenure.querySelector(".sp-chat-badge");
+      tile.className = "sp-chat-badge sp-tier sp-tier--pager sp-tier-" + tier;
+      tenure.querySelector(".sp-badge-card__label").textContent = tr("tenure");
+    }
+    var sample = named.querySelector(".sp-badge-card__sample");
+    named.hidden = !(plus && style.n);
+    sample.className = "sp-badge-card__sample" + (style && style.n ? " sp-paint sp-paint--" + style.n : "");
+    named.querySelector(".sp-badge-card__label").textContent = tr("nameStyle");
+    card.querySelector(".sp-badge-card__row").hidden = !plus;
   }
 
   function memberLine(style) {
@@ -677,11 +778,12 @@
   function rankLine(style, plus) {
     if (!plus) return tr("freeLine");
     if (style.r === "founder") return tr("founder");
+    if (style.r === "bughunter") return tr("bughunter") + " · " + memberLine(style);
     if (style.r === "ambassador") return tr("ambassador") + " · " + memberLine(style);
     return memberLine(style);
   }
 
-  function showBadgeCard(badge) {
+  function showBadgeCard(badge, anchor) {
     try {
       var hash = badge.getAttribute("data-sp-hash");
       var style = hash && badgeStyles.get(hash);
@@ -690,15 +792,9 @@
       var card = getBadgeCard();
       card.classList.toggle("is-plus", plus);
       card.classList.toggle("is-founder", rank === "founder");
-      var title = card.querySelector(".sp-badge-card__title");
-      title.textContent = "StreamPulse";
-      if (plus) {
-        var mark = document.createElement("b");
-        mark.textContent = "+";
-        title.appendChild(mark);
-      }
-      card.querySelector(".sp-badge-card__line").textContent = rankLine(style, plus);
-      var rect = badge.getBoundingClientRect();
+      card.classList.toggle("is-bughunter", rank === "bughunter");
+      fillBadgeCard(card, badge, style || {}, plus);
+      var rect = (anchor || badge).getBoundingClientRect();
       card.classList.add("is-visible");
       var width = card.offsetWidth;
       var height = card.offsetHeight;
@@ -716,15 +812,32 @@
     if (badgeCard) badgeCard.classList.remove("is-visible");
   }
 
+  /**
+   * Badge StreamPulse survolé, ou pseudo d'un message qui en porte un : la
+   * carte s'ouvre aussi sur le pseudo, ancrée sur lui.
+   */
+  function hoverTarget(el) {
+    if (!el || !el.closest) return null;
+    var badge = el.closest(".sp-chat-badge");
+    if (badge && !badge.closest(".sp-badge-card")) return { badge: badge, anchor: badge };
+    var name = el.closest(NAME_SELECTOR);
+    if (!name) return null;
+    // Badge cherché dans la ligne du message seulement : remonter plus haut
+    // tomberait sur le badge d'un autre message (pseudo sans badge).
+    var line = name.closest(MESSAGE_SELECTORS);
+    var found = line && line.querySelector(".sp-chat-badge[data-sp-hash]");
+    return found ? { badge: found, anchor: name } : null;
+  }
+
   function setupBadgeCard() {
     // Delegation : deux ecouteurs pour tout le tchat, aucun par badge.
     document.addEventListener("mouseover", function (event) {
-      var badge = event.target && event.target.closest ? event.target.closest(".sp-chat-badge") : null;
-      if (badge) showBadgeCard(badge);
+      var target = hoverTarget(event.target);
+      if (target) showBadgeCard(target.badge, target.anchor);
     }, true);
     document.addEventListener("mouseout", function (event) {
-      var badge = event.target && event.target.closest ? event.target.closest(".sp-chat-badge") : null;
-      if (badge && !badge.contains(event.relatedTarget)) hideBadgeCard();
+      var target = hoverTarget(event.target);
+      if (target && !target.anchor.contains(event.relatedTarget)) hideBadgeCard();
     }, true);
     window.addEventListener("scroll", hideBadgeCard, true);
   }
