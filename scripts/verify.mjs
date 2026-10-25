@@ -460,6 +460,37 @@ if (!syntaxFails) pass(`${jsFiles.length} JS files parse cleanly`);
   }
 }
 
+// ── 3ter. Imports de modules : tout spécificateur relatif doit exister ──────
+// 26.10.22 est partie avec js/sw/drops.js important ../badge-watch.js, fichier
+// jamais versionné : le service worker ES module refusait alors de charger
+// (« Status code: 3 », popup vide). build-zip.mjs construit sa liste depuis
+// `git ls-files` mais zipe le contenu de travail des fichiers suivis, donc un
+// fichier non versionné reste hors de l'archive pendant que les imports qui
+// le réclament partent bien. Ce contrôle relie les deux : chaque import JS
+// relatif doit exister sur le disque, y compris dans l'archive décompressée
+// que build-zip.mjs vérifie après coup (c'est ce second passage qui attrape
+// le fichier oublié dans `git add`).
+{
+  const SPECIFIER = /(?:^|[^\w$.])(?:from|import)\s*\(?\s*["'](\.[^"']*\.js)["']/g;
+  // Les lignes de commentaire sont ignorées : la prose peut citer un import
+  // depuis le point de vue d'un autre fichier (cf. js/inject/plus-rule.js,
+  // dont l'en-tête documente le `import "./inject/plus-rule.js"` de js/plus.js).
+  const isCommentLine = (line) => /^\s*(?:\/\/|\/\*|\*)/.test(line);
+  let importIssues = 0;
+  for (const f of jsFiles) {
+    if (!exists(f)) continue;
+    const code = fs.readFileSync(abs(f), "utf8").split("\n").filter((l) => !isCommentLine(l)).join("\n");
+    for (const m of code.matchAll(SPECIFIER)) {
+      const resolved = path.normalize(path.join(path.dirname(f), m[1]));
+      if (!exists(resolved)) {
+        importIssues++;
+        fail(`${f} imports "${m[1]}" but ${resolved} does not exist: an untracked file never reaches the zip (git add it)`);
+      }
+    }
+  }
+  if (!importIssues) pass(`every relative JS import across ${jsFiles.length} files resolves to an existing file`);
+}
+
 // ── 4. HTML assets + MV3 CSP ────────────────────────────────────────────────
 const htmlFiles = walk("html").filter((f) => f.endsWith(".html"));
 let htmlIssues = 0;

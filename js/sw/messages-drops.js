@@ -134,7 +134,7 @@ export function handleDropsRefresh(request, sender, sendResponse) {
       const readAt = Number(stored.streamPulseDropsProgress?.updatedAt) || 0;
       const campaignsAt = Number(stored.streamPulseDropsCampaigns?.updatedAt) || 0;
       // Badges et récompenses : fenêtre courte à chaque ouverture du popup, sinon
-      // la liste ne suit qu'à l'alarme (10 min), elle-même bridée à 30 min.
+      // la liste ne suit qu'à l'alarme (5 min), le catalogue étant relu toutes les 5 min et les campagnes toutes les 30 min.
       // minGapMs infini : inventaire réputé frais, seuls badges et récompenses partent.
       const inventoryGap = request.force || now - readAt >= DROPS_POPUP_REFRESH_MS ? 0 : Number.POSITIVE_INFINITY;
       const result = await refreshDropsFromWorker({ minGapMs: inventoryGap, rewardsMaxAgeMs: DROPS_POPUP_REFRESH_MS });

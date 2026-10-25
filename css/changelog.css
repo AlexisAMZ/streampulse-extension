@@ -53,7 +53,9 @@ html { scrollbar-color: color-mix(in srgb, var(--text-3) 55%, transparent) trans
 .cl-history { margin-top: 40px; padding-top: 32px; box-shadow: inset 0 1px 0 var(--line-2); scroll-margin-top: 20px; }
 .cl-section-rule { display: none; }
 .cl-thanks-intro { max-width: 56ch; margin: 10px 0 18px; color: var(--text-2); }
-.cl-thanks-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin: 18px 0 0; padding: 0; list-style: none; }
+/* auto-fit : une carte seule s'étire sur toute la largeur (comme la carte
+   support) au lieu de rester coincée dans une colonne étroite du rail. */
+.cl-thanks-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin: 18px 0 0; padding: 0; list-style: none; }
 .cl-thanks-intro:not([hidden]) + .cl-thanks-list { margin-top: 0; }
 .cl-thanks-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 18px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
 .cl-thanks-avatar { display: grid; flex: none; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: var(--lcd); color: var(--lcd-ink); font-family: var(--display); font-weight: 800; }

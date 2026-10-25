@@ -86,7 +86,8 @@ export function createDropsClient({ fetch, cookies }) {
     if (!token) throw failure("signed-out");
     const response = await fetch(GQL_URL, {
       method: "POST",
-      headers: { "Client-Id": WEB_CLIENT_ID, Authorization: `OAuth ${token}`, "Content-Type": "text/plain;charset=UTF-8" },
+      // Twitch traduit les descriptions de badges selon Accept-Language ; les motifs de badges-data.js lisent l'anglais.
+      headers: { "Client-Id": WEB_CLIENT_ID, Authorization: `OAuth ${token}`, "Accept-Language": "en", "Content-Type": "text/plain;charset=UTF-8" },
       body: JSON.stringify({ query }),
     });
     if (response.status === 401) throw failure("signed-out");

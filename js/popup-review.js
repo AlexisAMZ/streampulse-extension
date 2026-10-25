@@ -11,10 +11,13 @@
 //
 // VARIANTES DE DÉCLENCHEUR, choisies par la config distante
 // (streampulse:remoteConfig → data.reviewAsk.variant, modifiable sans republier
-// l'extension ; à défaut, « momentum ») :
+// l'extension ; à défaut, « everyone ») :
+//   everyone     2 jours, sans condition de succès : tout le monde finit par le
+//                voir (défaut). « Plus tard », « Non merci » et le plafond
+//                d'affichages restent respectés : on demande, on ne harcèle pas
 //   calendar     14 jours, sans condition de succès (comportement historique,
 //                garde un recours de repli piloté à distance)
-//   momentum     7 jours ET un succès vécu dans les 2 derniers jours (défaut)
+//   momentum     7 jours ET un succès vécu dans les 2 derniers jours
 //   firstSuccess 3 jours ET un succès vécu dans les 2 derniers jours
 // Le succès vécu reste local : ce sont les tables quotidiennes déjà écrites
 // par l'extension (temps de visionnage, points du jour), jamais renvoyées
@@ -37,8 +40,9 @@ const FIRST_ASK_MS = 14 * DAY_MS;
 const LATER_MS = 60 * DAY_MS;
 const MAX_ASKS = 3;
 const SUCCESS_WINDOW_DAYS = 2;
-const DEFAULT_VARIANT = "momentum";
+const DEFAULT_VARIANT = "everyone";
 const VARIANTS = {
+  everyone: { minDays: 2, needsSuccess: false },
   calendar: { minDays: 14, needsSuccess: false },
   momentum: { minDays: 7, needsSuccess: true },
   firstSuccess: { minDays: 3, needsSuccess: true },

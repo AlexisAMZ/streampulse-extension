@@ -57,7 +57,7 @@ Success means the viewer never misses a live they care about, and never has to c
 
 - Store listing copy in 4 languages: `CHROMEWEBSTORE.md`.
 - Chrome Web Store screenshots: `images/cws_screenshots/`.
-- Synthetic demo data for screenshots: `scripts/store-assets/demo-data.mjs`. It must stay labeled as demo data.
+- Synthetic demo data for screenshots: `DevKit/scripts/store-assets/demo-data.mjs`. It must stay labeled as demo data.
 - No user counts, ratings or testimonials are recorded in the repo. Never invent them.
 
 ## Product Principles

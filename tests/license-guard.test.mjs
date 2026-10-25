@@ -119,3 +119,19 @@ test("guard : après la transition, sans signature obtenue, la licence passe en 
 test("guard : aucune licence, rien à faire", async () => {
   assert.equal(await guardPlusRecord({ storage: memoryStorage(), fetch: offline, now: NOW, crypto }), "ok");
 });
+
+test("verifyLicense annonce la version de l'extension au serveur", async () => {
+  globalThis.chrome = { runtime: { getManifest: () => ({ version: "26.10.25" }) } };
+  let body;
+  const spy = async (_url, options) => {
+    body = JSON.parse(options.body);
+    return { ok: true, status: 200, json: async () => ({ valid: false }) };
+  };
+  try {
+    await verifyLicense(KEY, spy, NOW, DEVICE);
+  } finally {
+    delete globalThis.chrome;
+  }
+  assert.equal(body.version, "26.10.25");
+  assert.equal(body.device, DEVICE);
+});

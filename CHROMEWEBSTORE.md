@@ -125,7 +125,7 @@ portait « 100% Free and Free forever ». Le règlement interdit sur les **asset
 tout badge ou texte du type « gratuit », « nouveau », « n° 1 », « premium »,
 « recommandé ».
 
-`scripts/store-assets/policy.mjs` tient la liste des termes interdits pour
+`DevKit/scripts/store-assets/policy.mjs` tient la liste des termes interdits pour
 les 11 langues publiées. Sur les textes marketing, que l'on maîtrise, la génération **échoue**
 plutôt que de laisser repartir un asset fautif vers la validation. Sur les chaînes
 d'interface, elle se contente d'**avertir** : le règlement vise les badges
@@ -306,7 +306,7 @@ Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décoc
 
 Les textes suivants sont formatés en texte brut pur, sans tiret cadratin ni markdown incompatible avec le Chrome Web Store.
 
-> Source de vérité des descriptions détaillées FR et EN : `scripts/store-assets/chrome-listing.mjs` — le kit Chrome (`npm run store:chrome-kit`) les met en forme et traduit les autres langues via DeepL. Cette section reste la copie manuelle de secours, alignée sur la 26.10.15. La description courte réellement lue par le store vient de `_locales/<langue>/messages.json` (`appDesc`).
+> Source de vérité des descriptions détaillées FR et EN : `DevKit/scripts/store-assets/chrome-listing.mjs` — le kit Chrome (`npm run store:chrome-kit`) les met en forme et traduit les autres langues via DeepL. Cette section reste la copie manuelle de secours, alignée sur la 26.10.15. La description courte réellement lue par le store vient de `_locales/<langue>/messages.json` (`appDesc`).
 
 ### 🇪🇸 Espagnol (ES)
 **Short Description**:

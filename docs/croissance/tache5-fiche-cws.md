@@ -51,7 +51,7 @@ déjà les mots recherchés : Twitch, Drops, Points, Alerts).
    toujours signalée « à générer » dans CHROMEWEBSTORE.md — à produire ou à
    retirer de la console si elle y est absente.
 4. Vérifier qu'aucune capture ne porte de badge « gratuit / nouveau / n°1 »
-   (liste interdite : `scripts/store-assets/policy.mjs`).
+   (liste interdite : `DevKit/scripts/store-assets/policy.mjs`).
 
 ## 3. Langues de la fiche — checklist console
 

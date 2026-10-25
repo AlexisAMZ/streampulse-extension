@@ -107,7 +107,7 @@ const COMMAND_RESPONSES = {
       { name: '📂 Code GitHub', value: '[github.com/AlexisAMZ/streampulse-extension](https://github.com/AlexisAMZ/streampulse-extension)', inline: false },
       { name: '🌐 Site Web', value: '[streampulse.tech](https://streampulse.tech)', inline: false },
     ],
-    footer: { text: 'StreamPulse · 100% Gratuit & Open Source' },
+    footer: { text: 'StreamPulse · Extension gratuite & Open Source' },
   },
 };
 

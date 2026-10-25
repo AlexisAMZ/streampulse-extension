@@ -6,6 +6,7 @@
 import { t, getCurrentLanguage } from "./i18n.js";
 import { currentGroup, normalizeAuto } from "./badge-auto.js";
 import { BADGE_FREE_KEY, freeAvailable, freeUsedToday } from "./badge-free.js";
+import { BADGE_LIMITED_KEY, BADGE_WATCH_KEY, ENDING_SOON_MS, limitedFrom, toggleWatch, watchFrom } from "./badge-watch.js";
 import { DROP_ALERTS_KEY, MAX_GAMES, normalizeDropAlerts } from "./drop-alerts.js";
 import {
   DROPS_KEYS,
@@ -53,6 +54,10 @@ let badgeText = {};
 let badgeAuto = null;
 /** Badge gratuit du jour (sans StreamPulse+), voir js/badge-free.js. */
 let badgeFree = null;
+/** Badges suivis avec la cloche : { [badgeId]: { at, live } }. */
+let badgeWatch = {};
+/** StreamPulse+ : alerte pour tout badge temporaire (une journée ou moins). */
+let badgeLimited = false;
 /** Une seule tentative par badge et par ouverture du popup : pas de boucle si le site ne traduit pas. */
 const badgeTextTried = new Set();
 const PREFERENCES_KEY = "betaGeneralPreferences";
@@ -94,6 +99,8 @@ let badgeFilter = "live";
 let badgeCost = "all";
 let badgeQuery = "";
 let badgeLimit = 40;
+/** Campagnes affichées : la liste en compte une centaine, le reste se déplie avec « Voir plus ». */
+let campaignLimit = CAMPAIGN_ROWS;
 let rewardPlan = normalizePlanSelection(null);
 /** Récupérations demandées depuis ce popup : instanceId → heure de la demande. */
 const claiming = new Map();
@@ -356,8 +363,10 @@ function renderCampaigns(now) {
     ? t("popup.drops.campaignsMeta", { count: counts.all, ago: agoLabel(campaigns.updatedAt, now) })
     : "";
 
-  const shown = filterCampaigns(all, filter, now, myGames).slice(0, CAMPAIGN_ROWS);
+  const matching = filterCampaigns(all, filter, now, myGames);
+  const shown = matching.slice(0, campaignLimit);
   $("drops-campaigns").replaceChildren(...shown.map((campaign) => campaignRow(campaign, now)));
+  $("drops-campaigns-more").hidden = matching.length <= campaignLimit;
   const empty = shown.length === 0;
   $("drops-campaigns-empty").hidden = !empty;
   if (!empty) return;
@@ -703,7 +712,7 @@ function statusNodes(status, startsAt, endsAt, now) {
  * date d'ajout, coût et statut. Un clic ouvre un live où la gagner, seulement
  * si le badge est en cours.
  */
-function badgeCard({ title, image, condition, fallback, game, gameId, link, clickable = true, paid, owned, status = "live", startsAt = 0, endsAt = 0, addedAt = 0, tooltip, autoId }) {
+function badgeCard({ title, image, condition, fallback, game, gameId, link, clickable = true, paid, owned, status = "live", startsAt = 0, endsAt = 0, addedAt = 0, tooltip, autoId, watchId = "", watchKind = "start" }) {
   const now = Date.now();
   const item = el("li");
   const target = clickable && (game || link);
@@ -757,6 +766,20 @@ function badgeCard({ title, image, condition, fallback, game, gameId, link, clic
     auto.setAttribute("aria-pressed", on ? "true" : "false");
     item.classList.add("has-auto");
     item.append(auto);
+  }
+  if (watchId && !owned) {
+    // Cloche : « me prévenir » pour un badge à venir, « rappel de fin » pour un badge déjà en cours.
+    const on = Boolean(badgeWatch[watchId]);
+    const bell = el("button", on ? "badge-bell is-on" : "badge-bell");
+    bell.type = "button";
+    bell.dataset.watch = watchId;
+    bell.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6.5 2 6.5H4S6 14 6 9z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>';
+    const label = on ? "popup.drops.badgeBellOn" : watchKind === "end" ? "popup.drops.badgeBellEnd" : "popup.drops.badgeBell";
+    bell.append(el("span", null, t(label)));
+    bell.title = t(on ? "popup.drops.badgeBellRemove" : watchKind === "end" ? "popup.drops.badgeBellEndHint" : "popup.drops.badgeBellHint");
+    bell.setAttribute("aria-pressed", on ? "true" : "false");
+    item.classList.add("has-bell");
+    item.append(bell);
   }
   return item;
 }
@@ -819,6 +842,9 @@ function badgeRow(badge) {
     tooltip: text,
     // Le mode auto a besoin d'un Drop en cours : c'est lui qui dit où regarder.
     autoId: badge.campaign && !badge.paid ? badge.id : "",
+    // Un badge en cours n'a rien à « annoncer » : la cloche ne sert que si sa fin est connue et pas déjà imminente.
+    watchId: badge.status === "soon" || (badge.status === "live" && (event?.endsAt || 0) - Date.now() > ENDING_SOON_MS) ? badge.id : "",
+    watchKind: badge.status === "live" ? "end" : "start",
   });
 }
 
@@ -1025,6 +1051,7 @@ function bind() {
     const button = event.target.closest("[data-filter]");
     if (!button) return;
     filter = button.dataset.filter;
+    campaignLimit = CAMPAIGN_ROWS;
     renderCampaigns(Date.now());
   });
   $("drops-rewards")?.addEventListener("click", (event) => {
@@ -1071,12 +1098,22 @@ function bind() {
         deps.openPlus();
         return;
       }
+      const bell = event.target.closest("[data-watch]");
+      if (bell) {
+        toggleBell(bell.dataset.watch);
+        return;
+      }
       const auto = event.target.closest("[data-auto]");
       if (auto) toggleAuto(auto.dataset.auto);
       else openStream(event);
     });
   }
   $("badges-auto-all")?.addEventListener("click", toggleAutoAll);
+  $("badges-limited")?.addEventListener("change", toggleLimited);
+  $("drops-campaigns-more")?.addEventListener("click", () => {
+    campaignLimit += CAMPAIGN_ROWS;
+    renderCampaigns(Date.now());
+  });
   $("badges-more")?.addEventListener("click", () => {
     badgeLimit += 40;
     renderCatalog();
@@ -1086,6 +1123,20 @@ function bind() {
   $("badges-live")?.addEventListener("click", () => openTab(LIVE_247_PAGE));
   $("drops-unlock")?.addEventListener("click", () => deps.openPlus());
   $("badges-unlock")?.addEventListener("click", () => deps.openPlus());
+}
+
+/** Suit ou ne suit plus un badge : l'arrière-plan prévient au départ et avant la fin. */
+async function toggleBell(badgeId) {
+  const now = Date.now();
+  const badge = badges.badges.find((item) => item.id === badgeId);
+  const live = Boolean(badge) && catalogBadges({ ...badges, badges: [badge] }, { status: "live", now, events: badgeEvents.events, added: badgeAdded.added }).length > 0;
+  badgeWatch = toggleWatch(badgeWatch, badgeId, { live, now });
+  renderCatalog();
+  try {
+    await chrome.storage.local.set({ [BADGE_WATCH_KEY]: badgeWatch });
+  } catch (error) {
+    console.warn("[popup] alerte de badge non enregistrée :", error?.message || error);
+  }
 }
 
 /** « running » : badge du jeu regardé ; « queued » : en file ; « off » : pas dans le mode auto. */
@@ -1101,6 +1152,12 @@ function renderAutoBar() {
   const button = $("badges-auto-all");
   const status = $("badges-auto-status");
   if (!button || !status) return;
+  const limited = $("badges-limited");
+  if (limited) {
+    limited.checked = badgeLimited && deps.isPlus();
+    limited.setAttribute("aria-checked", String(limited.checked));
+    $("badges-limited-lock").hidden = deps.isPlus();
+  }
   const all = badgeAuto?.mode === "all";
   button.textContent = t(all ? "popup.drops.badgeAutoAllStop" : "popup.drops.badgeAutoAll");
   button.classList.toggle("is-on", all);
@@ -1110,6 +1167,23 @@ function renderAutoBar() {
   status.hidden = !group && !free;
   if (group) status.textContent = t("popup.drops.badgeAutoStatus", { count: badgeAuto.jobs.length, game: group.game });
   else if (free) status.textContent = t(freeUsedToday(badgeFree) ? "popup.drops.badgeFreeUsed" : "popup.drops.badgeFreeLeft");
+}
+
+/** Notification Chrome pour les badges temporaires : réservée à StreamPulse+. */
+async function toggleLimited(event) {
+  if (!deps.isPlus()) {
+    // Sans Plus l'interrupteur reste éteint : on montre l'offre.
+    event.target.checked = false;
+    deps.openPlus();
+    return;
+  }
+  badgeLimited = event.target.checked;
+  renderAutoBar();
+  try {
+    await chrome.storage.local.set({ [BADGE_LIMITED_KEY]: badgeLimited });
+  } catch (error) {
+    console.warn("[popup] option des badges temporaires non enregistrée :", error?.message || error);
+  }
 }
 
 /** Mode « tous les badges » : lance la file complète, ou arrête tout. */
@@ -1145,9 +1219,11 @@ function toggleAuto(badgeId) {
 }
 
 async function reload() {
-  const stored = await chrome.storage.local.get([...DROPS_KEYS, PREFERENCES_KEY, BADGE_AUTO_KEY, BADGE_FREE_KEY, DROP_ALERTS_KEY, REWARD_PLAN_KEY]);
+  const stored = await chrome.storage.local.get([...DROPS_KEYS, PREFERENCES_KEY, BADGE_AUTO_KEY, BADGE_FREE_KEY, BADGE_WATCH_KEY, BADGE_LIMITED_KEY, DROP_ALERTS_KEY, REWARD_PLAN_KEY]);
   badgeAuto = normalizeAuto(stored[BADGE_AUTO_KEY]);
   badgeFree = stored[BADGE_FREE_KEY] || null;
+  badgeWatch = watchFrom(stored);
+  badgeLimited = limitedFrom(stored);
   dropAlerts = normalizeDropAlerts(stored[DROP_ALERTS_KEY]);
   progress = progressFrom(stored);
   campaigns = campaignsFrom(stored);

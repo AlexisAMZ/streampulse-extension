@@ -50,6 +50,7 @@ const ES_MODULES = [
   "js/badge-auto.js",
   "js/badge-auto-worker.js",
   "js/badge-free.js",
+  "js/badge-watch.js",
   "js/predictions-data.js",
   "js/points-bonus.js",
   "js/points-data.js",
@@ -103,7 +104,7 @@ const ES_MODULES = [
 
 export default [
   {
-    ignores: ["js/vendor/**", "node_modules/**", "coverage/**", "stream-247/**", "DevKit/**"],
+    ignores: ["js/vendor/**", "node_modules/**", "coverage/**", "stream-247/**", "DevKit/**", "promo/**"],
   },
   js.configs.recommended,
   {

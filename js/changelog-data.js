@@ -52,8 +52,8 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
-    version: "26.10.24",
-    date: "2026-10-24",
+    version: "26.10.25",
+    date: "2026-10-25",
     title: {
       "fr": "Parrainage pour tous",
       "en": "Referrals for everyone",

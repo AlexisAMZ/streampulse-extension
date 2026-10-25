@@ -129,7 +129,7 @@ export function gameFromDescription(description) {
  * poser des Bits. Les badges gagnés en regardant se gagnent gratuitement —
  * une description qui parle d'un abonnement sans le demander ne paie pas.
  */
-export const isPaidBadge = (badge) => /subscrib|gift|\bsubs?\b|\bbits?\b/i.test(badge.description || "");
+export const isPaidBadge = (badge) => /subscrib|subbed|gift|\bsubs?\b|\bbits?\b/i.test(badge.description || "");
 
 /** Minuscules sans accents : « Pokémon » et « Pokemon » doivent se reconnaître. */
 const fold = (value) => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -195,6 +195,12 @@ function badgeGames(badge) {
 function mentionsPastYear(badge, now) {
   const year = new Date(now).getFullYear();
   return (fold(badge.description).match(/\b20\d\d\b/g) || []).some((value) => Number(value) < year);
+}
+
+/** Clé de titre sans le mot « badge » final, tant qu'il reste de quoi comparer. */
+function withoutBadgeSuffix(key) {
+  const stripped = key.replace(/(chat)?badge$/, "");
+  return stripped.length >= 4 ? stripped : key;
 }
 
 /** Titre comparable : replié, sans ponctuation ni espaces (« Don’t  Eat » = « Don't Eat »). */
@@ -263,12 +269,34 @@ export function buildBadgeEvents({ campaigns = [], rewards = [], catalog = [], p
     const key = titleKey(badge.title);
     if (key && !byTitle.has(key)) byTitle.set(key, badge);
   }
-  const named = (name) => byTitle.get(titleKey(name));
+  // Twitch ajoute souvent « Badge » au nom de la récompense (« BeAGoldfish Badge » pour « BeAGoldfish ») :
+  // le titre exact gagne, sinon on compare sans ce suffixe.
+  const named = (name) => {
+    const key = titleKey(name);
+    return byTitle.get(key) || byTitle.get(withoutBadgeSuffix(key));
+  };
+  /**
+   * Twitch nomme parfois le badge sans le jeu (« Belmont's Curse » pour
+   * « Castlevania Belmont's Curse ») ou l'inverse (« … badge »). Le nom doit
+   * être contenu dans le titre, ou le contenir, ET le jeu doit correspondre ;
+   * s'il y a plusieurs candidats, le titre le plus proche (le plus court) gagne.
+   */
+  const namedInGame = (name, campaign) => {
+    const key = titleKey(name);
+    if (key.length < 6 || !campaign.game) return undefined;
+    const close = (badge) => {
+      const title = titleKey(badge.title);
+      return title.length >= 6 && (title.includes(key) || key.includes(title));
+    };
+    return catalog
+      .filter((badge) => close(badge) && badgeGames(badge).some((game) => sameGame(game, campaign.game)))
+      .sort((a, b) => titleKey(a.title).length - titleKey(b.title).length)[0];
+  };
   const fresh = [];
   for (const campaign of campaigns) {
     for (const drop of campaign.drops || []) {
       for (const name of drop.badges || []) {
-        const badge = named(name);
+        const badge = named(name) || namedInGame(name, campaign);
         if (badge) fresh.push(dropEvent(badge.id, campaign, drop, "reward", now));
       }
     }
@@ -302,7 +330,7 @@ export function buildBadgeEvents({ campaigns = [], rewards = [], catalog = [], p
 
 // ─── Statuts de l'onglet Badges ───────────────────────────────────────────────
 
-const VIEWER_ACTION = /\b(watch\w*|view\w*|subscrib\w*|gift\w*|cheer\w*|bits?)\b/i;
+const VIEWER_ACTION = /\b(watch\w*|view\w*|subscrib\w*|subbed|gift\w*|cheer\w*|bits?)\b/i;
 const NOT_VIEWER = /\b(creators?|streamers? who|tickets?|attend\w*|DJ Program|partners?|affiliates?)\b/i;
 
 /** Badge qu'un spectateur peut gagner (regarder, s'abonner, offrir, Bits), pas un badge de créateur, de billet ou de salon. */

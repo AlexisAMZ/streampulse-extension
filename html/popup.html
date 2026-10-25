@@ -900,7 +900,8 @@
             </button>
           </div>
 
-          <button type="button" class="drops-live" id="drops-live" data-i18n-attr-ariaLabel="popup.drops.liveOpen" aria-label="Ouvrir la chaîne 24/7">
+          <!-- Chaîne 24/7 bannie : masquée temporairement (réactiver LIVE_247_PAGE dans js/popup-drops.js à son retour) -->
+          <button type="button" class="drops-live" id="drops-live" hidden style="display:none" data-i18n-attr-ariaLabel="popup.drops.liveOpen" aria-label="Ouvrir la chaîne 24/7">
             <i class="drops-live-dot" aria-hidden="true"></i>
             <span class="drops-live-text"><b data-i18n="popup.drops.liveTitle">Chaîne 24/7 : badges et Drops</b><small data-i18n="popup.drops.liveBody">Un live StreamPulse tourne jour et nuit sur un jeu avec badge ou Drop actif. Regarde-le pour le gagner, ou choisis le jeu avec !game.</small></span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
@@ -957,7 +958,7 @@
           <div class="pts-head">
             <h2><span data-i18n="popup.osd.menuBadges">Badges</span><span class="pill-beta" data-i18n="popup.settings.betaLabel">bêta</span></h2>
           </div>
-          <button type="button" class="drops-live" id="badges-live" data-i18n-attr-ariaLabel="popup.drops.liveOpen" aria-label="Ouvrir la chaîne 24/7">
+          <button type="button" class="drops-live" id="badges-live" hidden style="display:none" data-i18n-attr-ariaLabel="popup.drops.liveOpen" aria-label="Ouvrir la chaîne 24/7">
             <i class="drops-live-dot" aria-hidden="true"></i>
             <span class="drops-live-text"><b data-i18n="popup.drops.badgesLiveTitle">Chaîne 24/7 pour les badges, ouverte à tous</b><small data-i18n="popup.drops.badgesLiveBody">Un live StreamPulse tourne jour et nuit sur un jeu avec un badge actif, avec ou sans StreamPulse+. Regarde-le pour le gagner, ou choisis le jeu avec !game.</small></span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>

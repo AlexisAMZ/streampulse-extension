@@ -28,6 +28,12 @@ test("l'inventaire part avec la session de l'utilisateur, sans onglet Twitch", a
   assert.match(requests[0].body.query, /gameEventDrops/);
 });
 
+test("les requêtes demandent l'anglais : les descriptions de badges sont lues en anglais par le code", async () => {
+  const { api, requests } = client();
+  await api.readBadges();
+  assert.equal(requests[0].init.headers["Accept-Language"], "en");
+});
+
 test("déconnecté de Twitch : aucune requête", async () => {
   const { api, requests } = client({ token: "" });
   await assert.rejects(api.readInventory(), { code: "signed-out" });

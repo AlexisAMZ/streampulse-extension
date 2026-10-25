@@ -30,11 +30,13 @@ const DEV_ONLY = [/\.md$/i, /^\.gitignore$/, /^package(-lock)?\.json$/, /^eslint
   // dans le paquet livre.
   /^promo\//,
   // Tests unitaires : outillage de developpement.
-  /^tests\//];
+  /^tests\//,
+  // DevKit interne des stores
+  /^DevKit\//];
 // Necessaire a l'extension mais gitignore.
 const EXTRA = ["config.js"];
 // Filet de securite : si l'une de ces entrees apparait, on refuse de packager.
-const NEVER_SHIP = [/(^|\/)\.env$/, /(^|\/)\.git(\/|$)/, /(^|\/)\.claude(\/|$)/, /(^|\/)\.agents(\/|$)/, /(^|\/)node_modules(\/|$)/, /(^|\/)\.DS_Store$/, /\.zip$/, /(^|\/)backups(\/|$)/];
+const NEVER_SHIP = [/(^|\/)\.env$/, /(^|\/)\.git(\/|$)/, /(^|\/)\.claude(\/|$)/, /(^|\/)\.agents(\/|$)/, /(^|\/)DevKit(\/|$)/, /(^|\/)node_modules(\/|$)/, /(^|\/)\.DS_Store$/, /\.zip$/, /(^|\/)backups(\/|$)/];
 
 const run = (cmd, args, opts = {}) => execFileSync(cmd, args, { cwd: REPO, encoding: "utf8", ...opts });
 
@@ -45,6 +47,20 @@ const files = [
   ...run("git", ["ls-files"]).split("\n").filter(Boolean).filter((f) => !DEV_ONLY.some((re) => re.test(f))),
   ...EXTRA,
 ].sort();
+
+// Fichier oublié dans `git add` (badge-watch.js en 26.10.22) : il resterait
+// hors du zip sans bruit. verify.mjs n'attrape que les imports JS ; un fichier
+// chargé par getURL, executeScript ou url() CSS passerait. Dans les dossiers
+// que l'extension charge, tout fichier non versionné bloque donc le paquet.
+const RUNTIME_DIRS = ["_locales", "css", "font", "html", "i18n", "images", "js", "sons"];
+const untracked = run("git", ["ls-files", "--others", "--exclude-standard", "--", ...RUNTIME_DIRS])
+  .split("\n")
+  .filter(Boolean)
+  .filter((f) => !DEV_ONLY.some((re) => re.test(f)));
+if (untracked.length) {
+  untracked.forEach((f) => console.error(`REFUS : ${f} n'est pas versionné, il manquerait dans le zip (git add).`));
+  process.exit(1);
+}
 
 for (const f of files) {
   if (NEVER_SHIP.some((re) => re.test(f))) {

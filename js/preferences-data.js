@@ -154,6 +154,17 @@ export function notificationFieldsFromUpdates(updates = {}) {
 }
 
 /**
+ * Copie de la liste de streamers avec les alertes globales appliquées, comme le
+ * fait le service worker : la popup s'en sert pour que l'interrupteur reflète
+ * tout de suite le réglage, sans attendre de relire le stockage.
+ */
+export function withNotificationFields(streamers, updates = {}) {
+  const fields = notificationFieldsFromUpdates(updates);
+  if (fields.length === 0 || !Array.isArray(streamers)) return streamers;
+  return streamers.map((streamer) => ({ ...streamer, ...Object.fromEntries(fields) }));
+}
+
+/**
  * Préférences d'après remise à zéro : tout revient au défaut, sauf la langue
  * et le thème choisis.
  */

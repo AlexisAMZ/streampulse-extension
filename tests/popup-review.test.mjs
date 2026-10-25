@@ -8,10 +8,10 @@ const DAY = 86_400_000;
 
 test("la demande d'avis attend la fenêtre de la variante, respecte « Plus tard » et « Non merci »", () => {
   const now = 100 * DAY;
-  assert.equal(shouldAsk({ firstSeen: now - 6 * DAY }, now, { hasSuccess: true }), false);
-  assert.equal(shouldAsk({ firstSeen: now - 8 * DAY }, now, { hasSuccess: true }), true);
-  assert.equal(shouldAsk({ firstSeen: now - 8 * DAY, snoozedUntil: now + DAY }, now, { hasSuccess: true }), false);
-  assert.equal(shouldAsk({ firstSeen: now - 8 * DAY, done: true }, now, { hasSuccess: true }), false);
+  assert.equal(shouldAsk({ firstSeen: now - 1 * DAY }, now, { hasSuccess: true }), false);
+  assert.equal(shouldAsk({ firstSeen: now - 3 * DAY }, now, { hasSuccess: true }), true);
+  assert.equal(shouldAsk({ firstSeen: now - 3 * DAY, snoozedUntil: now + DAY }, now, { hasSuccess: true }), false);
+  assert.equal(shouldAsk({ firstSeen: now - 3 * DAY, done: true }, now, { hasSuccess: true }), false);
   assert.equal(shouldAsk(null, now), false);
 });
 
@@ -21,20 +21,31 @@ test("le bon store selon le navigateur", () => {
   assert.match(storeUrl("Mozilla/5.0 Chrome/130 Safari"), /chromewebstore/);
 });
 
-test("resolveVariant : défaut et drapeau inconnu → momentum, calendar reste choisi à distance", () => {
-  assert.equal(resolveVariant(undefined), "momentum");
-  assert.equal(resolveVariant({}), "momentum");
-  assert.equal(resolveVariant({ variant: "nimportequoi" }), "momentum");
+test("resolveVariant : défaut et drapeau inconnu → everyone, les autres restent choisis à distance", () => {
+  assert.equal(resolveVariant(undefined), "everyone");
+  assert.equal(resolveVariant({}), "everyone");
+  assert.equal(resolveVariant({ variant: "nimportequoi" }), "everyone");
+  assert.equal(resolveVariant({ variant: "everyone" }), "everyone");
   assert.equal(resolveVariant({ variant: "calendar" }), "calendar");
   assert.equal(resolveVariant({ variant: "momentum" }), "momentum");
   assert.equal(resolveVariant({ variant: "firstSuccess" }), "firstSuccess");
 });
 
-test("défaut momentum : 7 jours et un succès récent exigé", () => {
+test("défaut everyone : 2 jours, sans condition de succès", () => {
   const now = 100 * DAY;
-  assert.equal(shouldAsk({ firstSeen: now - 6 * DAY }, now), false);
-  assert.equal(shouldAsk({ firstSeen: now - 8 * DAY }, now), false);
-  assert.equal(shouldAsk({ firstSeen: now - 8 * DAY }, now, { hasSuccess: true }), true);
+  assert.equal(shouldAsk({ firstSeen: now - 1 * DAY }, now), false);
+  assert.equal(shouldAsk({ firstSeen: now - 3 * DAY }, now), true);
+  assert.equal(shouldAsk({ firstSeen: now - 3 * DAY }, now, { hasSuccess: false }), true);
+});
+
+test("variante everyone : tout le monde, dès 2 jours, mais « Plus tard », « Non merci » et le plafond restent respectés", () => {
+  const now = 100 * DAY;
+  const v = { variant: "everyone" };
+  assert.equal(shouldAsk({ firstSeen: now - 1 * DAY }, now, v), false);
+  assert.equal(shouldAsk({ firstSeen: now - 3 * DAY }, now, v), true);
+  assert.equal(shouldAsk({ firstSeen: now - 3 * DAY, snoozedUntil: now + DAY }, now, v), false);
+  assert.equal(shouldAsk({ firstSeen: now - 3 * DAY, done: true }, now, v), false);
+  assert.equal(shouldAsk({ firstSeen: now - 3 * DAY, askCount: 3 }, now, v), false);
 });
 
 test("variante calendar : comportement historique intact, sans condition de succès", () => {
@@ -65,8 +76,8 @@ test("les variantes respectent toujours « Plus tard » et « Non merci »", () 
 
 test("plafond : au plus trois affichages, même éligible", () => {
   const now = 100 * DAY;
-  assert.equal(shouldAsk({ firstSeen: now - 8 * DAY, askCount: 2 }, now, { hasSuccess: true }), true);
-  assert.equal(shouldAsk({ firstSeen: now - 8 * DAY, askCount: 3 }, now, { hasSuccess: true }), false);
+  assert.equal(shouldAsk({ firstSeen: now - 8 * DAY, askCount: 2 }, now), true);
+  assert.equal(shouldAsk({ firstSeen: now - 8 * DAY, askCount: 3 }, now), false);
   assert.equal(shouldAsk({ firstSeen: now - 15 * DAY, askCount: 3 }, now, { variant: "calendar" }), false);
 });
 

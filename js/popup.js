@@ -1,5 +1,5 @@
 import { BACKUP_KEYS, buildBackup, backupFileName } from "./backup.js";
-import { DEFAULT_PREFERENCES } from "./preferences-data.js";
+import { DEFAULT_PREFERENCES, withNotificationFields } from "./preferences-data.js";
 import { SYNC_STATUS_KEY } from "./sync-data.js";
 import { dropsHistoryCsv, importFromCsv, pointsJournalCsv } from "./history-csv.js";
 import { DROPS_HISTORY_KEY, historyFrom } from "./drops-data.js";
@@ -2074,6 +2074,10 @@ async function updatePreferences(updates, { silent = false } = {}) {
     ...state.preferences,
     ...(result?.preferences || payload),
   };
+  // Les alertes globales s'appliquent à tous les streamers côté service worker :
+  // la liste locale suit tout de suite, sinon l'interrupteur relit d'anciennes
+  // valeurs et reste bloqué (couper marchait, réactiver non).
+  state.streamers = withNotificationFields(state.streamers, payload);
   renderPreferences();
 
   // Un seul toast par reglage : le message specifique quand la cle en a un,
@@ -2301,6 +2305,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (changes[SYNC_STATUS_KEY]) {
         renderSyncStatus();
       }
+      // Streamers modifiés ailleurs (alertes globales, synchro, autre fenêtre) :
+      // la liste locale et l'état des interrupteurs d'alertes suivent.
+      if (changes.betaGeneralStreamers && Array.isArray(changes.betaGeneralStreamers.newValue)) {
+        state.streamers = changes.betaGeneralStreamers.newValue;
+        syncGlobalAlerts();
+      }
       // Statuses refreshed by the background while the popup is open.
       if (changes.betaGeneralStatuses) {
         state.statuses = changes.betaGeneralStatuses.newValue || {};
@@ -2397,7 +2407,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       () => createSettingsFilter(),
       () => createPanelJumps(),
       () => {
-        onPlusChange(() => syncDropsPlusLock());
+        onPlusChange(() => {
+          syncDropsPlusLock();
+          syncClipDownloadLock();
+        });
         initFeatures().catch((error) => console.warn("[popup] features init failed:", error));
       },
       () => initNotificationControls({

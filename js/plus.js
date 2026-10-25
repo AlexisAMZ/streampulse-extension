@@ -111,7 +111,8 @@ export async function verifyLicense(input, fetchImpl, now = Date.now(), device =
     const response = await fetchImpl(LICENSE_VERIFY_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ key: licenseKey, device }),
+      // `version` : le serveur refuse les versions périmées (STREAMPULSE_MIN_VERSION).
+      body: JSON.stringify({ key: licenseKey, device, version: globalThis.chrome?.runtime?.getManifest?.().version }),
     });
     if (!response.ok && ![403, 404, 422].includes(response.status)) {
       return { ok: false, error: "network" };

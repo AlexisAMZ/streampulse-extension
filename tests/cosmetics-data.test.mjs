@@ -131,3 +131,15 @@ test("effets retirés : Prisme devient Arc-en-ciel, les animations redeviennent 
   assert.deepEqual(normalizeCosmetics({ badgeFx: "prism", nameFx: "neon" }), { badgeFx: "rainbow", nameFx: "" });
   assert.deepEqual(normalizeCosmetics({ badgeFx: "pulse", nameFx: "gold" }), { badgeFx: "", nameFx: "gold" });
 });
+
+test("Matrix : réservé aux chasseurs de bugs, visible mais cadenassé pour les autres", async () => {
+  const { BADGE_FX, NAME_FX, fxLock, rankOf, visibleFx } = await import("../js/cosmetics-data.js");
+  assert.ok(BADGE_FX.includes("matrix") && NAME_FX.includes("matrix"));
+  assert.equal(fxLock("matrix", { plus: true }), "bughunter");
+  assert.equal(fxLock("matrix", { plus: true, role: "bughunter" }), "");
+  assert.equal(fxLock("matrix", { plus: true, role: "admin" }), "");
+  assert.equal(fxLock("matrix", {}), "plus");
+  assert.ok(visibleFx(BADGE_FX, { plus: true }).includes("matrix"));
+  assert.equal(rankOf({ role: "bughunter", referrals: 4 }), "bughunter");
+  assert.equal(rankOf({ role: "admin" }), "founder");
+});

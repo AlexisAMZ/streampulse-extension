@@ -147,3 +147,63 @@ test("le secours par le jeu ignore les campagnes closes ou pas encore ouvertes",
   const events = buildBadgeEvents({ campaigns: mergeCampaigns([], normalizeCampaigns([closed, future]), NOW), catalog: [shrimp], now: NOW });
   assert.deepEqual(events, []);
 });
+
+test("un Drop dont le nom est contenu dans le titre du badge s'y relie quand le jeu correspond", () => {
+  const badge = {
+    id: "castlevania-belmonts-curse",
+    title: "Castlevania Belmont's Curse",
+    description: "This badge was earned by subscribing or gifting a sub to a streamer in the Castlevania: Belmont's Curse category during the game launch!",
+    game: "",
+  };
+  const campaign = {
+    id: "c-cv",
+    game: "Castlevania: Belmont's Curse",
+    gameId: "1736572793",
+    owner: "Twitch Gaming",
+    status: "ACTIVE",
+    startsAt: NOW - DAY,
+    endsAt: NOW + 10 * DAY,
+    drops: [{ id: "d-cv", name: "Belmont's Curse badge", badges: ["Belmont's Curse"], subs: 1, minutes: 0, startsAt: NOW - DAY, endsAt: NOW + 10 * DAY }],
+  };
+  const [event] = eventOf(buildBadgeEvents({ campaigns: [campaign], catalog: [badge], now: NOW }), badge.id);
+  assert.deepEqual([event.campaignId, event.link, event.subs], ["c-cv", "reward", 1]);
+  // Un autre jeu ne profite pas du nom partiel.
+  const other = { ...campaign, id: "c-x", game: "Hades II", drops: campaign.drops };
+  assert.deepEqual(eventOf(buildBadgeEvents({ campaigns: [other], catalog: [badge], now: NOW }), badge.id), []);
+});
+
+test("liaison par nom partiel : le titre le plus proche gagne, jamais un autre jeu ni un nom trop court", () => {
+  const make = (id, title, game) => ({ id, title, description: `earned by subscribing to a streamer in the ${game} category`, game: "" });
+  const catalogue = [
+    make("cv-gold", "Castlevania Belmont's Curse Golden Edition", "Castlevania: Belmont's Curse"),
+    make("cv", "Castlevania Belmont's Curse", "Castlevania: Belmont's Curse"),
+    make("short", "Hades Helm", "Hades II"),
+  ];
+  const campaign = (game, badge) => ({
+    id: "c", game, gameId: "1", owner: "Twitch Gaming", status: "ACTIVE", startsAt: NOW - DAY, endsAt: NOW + DAY,
+    drops: [{ id: "d", name: "x", badges: [badge], subs: 1, minutes: 0, startsAt: NOW - DAY, endsAt: NOW + DAY }],
+  });
+  const ids = (events) => events.map((event) => event.badgeId);
+  assert.deepEqual(ids(buildBadgeEvents({ campaigns: [campaign("Castlevania: Belmont's Curse", "Belmont's Curse")], catalog: catalogue, now: NOW })), ["cv"]);
+  assert.deepEqual(ids(buildBadgeEvents({ campaigns: [campaign("Hades II", "Hades")], catalog: catalogue, now: NOW })), [], "nom de 5 lettres : liaison exacte seulement");
+});
+
+test("le suffixe « Badge » du nom de la récompense ne bloque pas la liaison (campagne Apple)", () => {
+  const catalogue = [
+    { id: "beagoldfish", title: "BeAGoldfish", description: "Subbed to a streamer and got 1 month of Apple TV!", game: "" },
+    { id: "believeinrichmond", title: "BelieveInRichmond", description: "Subbed to a streamer and got 1 month of Apple TV!", game: "" },
+    { id: "sajam-slam-badge", title: "Sajam Slam Badge", description: "earned by subscribing", game: "" },
+  ];
+  const campaign = (id, name, badges) => ({
+    id, game: "", gameId: "", owner: "Apple", status: "ACTIVE", startsAt: NOW - DAY, endsAt: NOW + 10 * DAY,
+    drops: [{ id: `${id}-d`, name, badges, subs: 1, minutes: 0, startsAt: NOW - DAY, endsAt: NOW + 10 * DAY }],
+  });
+  const events = buildBadgeEvents({
+    campaigns: [campaign("c1", "BeAGoldfish Badge", ["BeAGoldfish Badge"]), campaign("c2", "BelieveInRichmond Badge", ["BelieveInRichmond Badge"]), campaign("c3", "Sajam Slam Badge", ["Sajam Slam Badge"])],
+    catalog: catalogue,
+    now: NOW,
+  });
+  assert.deepEqual(eventOf(events, "beagoldfish").map((e) => [e.campaignId, e.link]), [["c1", "reward"]]);
+  assert.deepEqual(eventOf(events, "believeinrichmond").map((e) => [e.campaignId, e.link]), [["c2", "reward"]]);
+  assert.deepEqual(eventOf(events, "sajam-slam-badge").map((e) => e.campaignId), ["c3"], "un titre qui finit déjà par Badge reste lié exactement");
+});

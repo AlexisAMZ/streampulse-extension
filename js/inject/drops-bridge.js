@@ -162,7 +162,7 @@
     const auth = authorization();
     if (!auth) throw failure("signed-out");
     if (!nativeFetch) throw failure("no-fetch");
-    const headers = { "Client-Id": seen["client-id"] || WEB_CLIENT_ID, Authorization: auth, "Content-Type": "text/plain;charset=UTF-8" };
+    const headers = { "Client-Id": seen["client-id"] || WEB_CLIENT_ID, Authorization: auth, "Accept-Language": "en", "Content-Type": "text/plain;charset=UTF-8" };
     if (seen["client-integrity"]) headers["Client-Integrity"] = seen["client-integrity"];
     if (seen["x-device-id"]) headers["X-Device-Id"] = seen["x-device-id"];
     if (seen["client-version"]) headers["Client-Version"] = seen["client-version"];

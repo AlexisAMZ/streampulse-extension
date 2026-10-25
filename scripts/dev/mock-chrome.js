@@ -12,6 +12,21 @@
  * service worker (js/streamers-data.js, js/preferences-data.js) et passent par
  * storage.local.set : la popup reçoit ses onChanged comme en vrai.
  */
+// Démo : jamais de vrai lecteur dans le banc. Le lecteur de la scène chargerait la vraie chaîne portant ce
+// nom (avec sa vraie bannière) : toute iframe http(s) est remplacée par une image neutre.
+(function blockRealPlayers() {
+  const native = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, "src");
+  if (!native) return;
+  const neutral = '<html style="height:100%;background:#0b0c12"><body style="margin:0;height:100%;background:radial-gradient(circle at 28% 38%,#2c2150,#0b0c12 68%)"></body></html>';
+  Object.defineProperty(HTMLIFrameElement.prototype, "src", {
+    get() { return native.get.call(this); },
+    set(value) {
+      if (/^https?:/i.test(String(value))) this.srcdoc = neutral;
+      else native.set.call(this, value);
+    },
+  });
+})();
+
 (function installMockChrome() {
   const params = new URLSearchParams(location.search);
   const scenario = params.get("state") || "live";
@@ -42,7 +57,7 @@
 <rect x="40" y="276" width="120" height="10" rx="3" fill="#fff" fill-opacity=".12"/></svg>`);
   }
 
-  const NAMES = ["novastream", "pixelkat", "lunaplays", "rivertv", "echoduo", "kitsunebi", "marlowe", "sablefox",
+  const NAMES = ["astraloop", "tarnwick", "brumeplay", "fennmoor", "echoduo", "kitsunebi", "marlowe", "sablefox",
     "orbitale", "tinycrown", "velvetzone", "mistralgg", "papercrane", "quartzlive", "neonpaon", "brisefer",
     "cobaltcat", "dunewalker", "emberlight", "frostbyte", "glasshouse", "harborlights", "ironmoth", "junipero",
     "kalimba", "lanterne", "mosaique", "nightowlfr", "opaline", "pistache", "quiveroak", "rouletabille",
@@ -63,13 +78,17 @@
   ];
   // store=1 : toutes les alertes actives, pour les captures du Chrome Web Store.
   const STORE_SHOT = params.get("store") === "1";
+  const CHZZK_DEMO = ["en", "ko"].includes(params.get("lang") || "fr");
 
   function makeChannels(count, liveCount) {
     const streamers = [];
     const statuses = {};
     for (let i = 0; i < count; i++) {
-      const handle = NAMES[i % NAMES.length] + (i >= NAMES.length ? String(i) : "");
-      const platform = i % 3 === 2 ? "youtube" : i % 3 === 1 ? "kick" : "twitch";
+      const name = NAMES[i % NAMES.length] + (i >= NAMES.length ? String(i) : "");
+      // CHZZK (plateforme coréenne) n'apparaît que là où elle est proposée : coréen et anglais.
+      const isChzzk = CHZZK_DEMO && i === 3;
+      const platform = isChzzk ? "chzzk" : i % 3 === 2 ? "youtube" : i % 3 === 1 ? "kick" : "twitch";
+      const handle = isChzzk ? "a1b2c3d4e5f60718293a4b5c6d7e8f90" : name;
       const id = `${platform}:${handle}`;
       const isTwitch = platform === "twitch";
       const isYoutube = platform === "youtube";
@@ -77,13 +96,15 @@
         ? ["#7c4dff", "#2a1a55"]
         : isYoutube
           ? ["#ff5a5a", "#4d0f0f"]
-          : ["#2e9e3a", "#113d17"];
+          : isChzzk
+            ? ["#00ffa3", "#0b3b2a"]
+            : ["#2e9e3a", "#113d17"];
       streamers.push({
         id,
         platform,
         handle,
-        displayName: handle.charAt(0).toUpperCase() + handle.slice(1),
-        avatarUrl: avatar(handle[0].toUpperCase(), avatarColors[0], avatarColors[1]),
+        displayName: name.charAt(0).toUpperCase() + name.slice(1),
+        avatarUrl: avatar(name[0].toUpperCase(), avatarColors[0], avatarColors[1]),
         notificationsEnabled: true,
         gameNotificationsEnabled: STORE_SHOT || i % 2 === 0,
         titleNotificationsEnabled: STORE_SHOT,
@@ -255,14 +276,14 @@
       ? [
           { id: "d-wot", campaignId: "c-wot", instanceId: "", name: "Vehicle XP Booster", game: "World of Tanks: HEAT", image: reward(95, "XP"), benefitIds: ["b-wot"], minutes: 32, required: 60, endsAt: now + 26 * H, channel: "Terracid", anyChannel: false },
           { id: "d-gob", campaignId: "c-gob", instanceId: "", name: "Goblin Cleanup · Épée rouillée", game: "Goblin Cleanup", image: reward(20, "⚔"), benefitIds: ["b-gob"], minutes: 22, required: 120, endsAt: now + 50 * H, channel: "", anyChannel: true },
-          ...(dropsMode === "manual" ? [{ id: "d-pay", campaignId: "c-pay", instanceId: "999#c-pay#d-pay", name: "Badge Chains", game: "PAYDAY 3", image: reward(45, "P3"), benefitIds: ["b-pay"], minutes: 60, required: 60, endsAt: now + 9 * 24 * H, channel: "Novastream", anyChannel: false }] : []),
+          ...(dropsMode === "manual" ? [{ id: "d-pay", campaignId: "c-pay", instanceId: "999#c-pay#d-pay", name: "Badge Chains", game: "PAYDAY 3", image: reward(45, "P3"), benefitIds: ["b-pay"], minutes: 60, required: 60, endsAt: now + 9 * 24 * H, channel: "Astraloop", anyChannel: false }] : []),
         ]
       : [],
   };
   const dropsHistory = dropsMode === "none" ? [] : [
     { key: "drop:gob-skin", name: "Skin Goblin doré", game: "Goblin Cleanup", channel: "Crisalu", image: reward(48, "G"), at: now - 36 * 60e3, auto: true },
-    { key: "drop:pay", name: "Badge Chains", game: "PAYDAY 3", channel: "Novastream", image: reward(45, "P3"), at: now - 27 * H, auto: true },
-    { key: "drop:eld", name: "Badge Tarnished", game: "ELDEN RING", channel: "Rivertv", image: reward(140, "ER"), at: now - 4 * 24 * H, auto: true },
+    { key: "drop:pay", name: "Badge Chains", game: "PAYDAY 3", channel: "Astraloop", image: reward(45, "P3"), at: now - 27 * H, auto: true },
+    { key: "drop:eld", name: "Badge Tarnished", game: "ELDEN RING", channel: "Fennmoor", image: reward(140, "ER"), at: now - 4 * 24 * H, auto: true },
     { key: "drop:lol", name: "Capsule Hextech", game: "League of Legends", channel: "Solenne", image: reward(0, "LoL"), at: now - 14 * 24 * H, auto: false },
     { key: "drop:zzz", name: "Pack de polychromes", game: "Zenless Zone Zero", channel: "Maxcraft", image: reward(215, "Z"), at: now - 31 * 24 * H, auto: true },
     { key: "drop:wot1", name: "Vehicle XP Booster", game: "World of Tanks", channel: "Terracid", image: reward(95, "XP"), at: now - 33 * 24 * H, auto: true },
@@ -376,10 +397,10 @@
           streamPulseReferralEarnings: { earnedCents: 700, paidCents: 500, balanceCents: 200, paypal: params.get("paypal") === "0" ? "" : "demo@exemple.fr", payoutMinCents: 1000, fetchedAt: now },
           streamPulsePredictionRule: { enabled: true, strategy: "majority", percent: 5, maxPoints: 2000, reserve: 1000, secondsBeforeEnd: 20 },
           streamPulsePredictionHistory: [
-            { eventId: "p1", channel: "novastream", title: "Top 1 sur cette game ?", outcomeTitle: "Oui", points: 850, payout: 1540, status: "won", placedAt: now - 3600e3 },
-            { eventId: "p2", channel: "pixelkat", title: "Boss battu en moins de 3 essais ?", outcomeTitle: "Non", points: 600, payout: 0, status: "lost", placedAt: now - 7200e3 },
-            { eventId: "p3", channel: "novastream", title: "Plus de 15 kills ?", outcomeTitle: "Oui", points: 900, payout: 0, status: "pending", placedAt: now - 60e3 },
-            { eventId: "p4", channel: "lunaplays", title: "Victoire en ranked ?", outcomeTitle: "Oui", points: 400, payout: 400, status: "refunded", placedAt: now - 86400e3 },
+            { eventId: "p1", channel: "astraloop", title: "Top 1 sur cette game ?", outcomeTitle: "Oui", points: 850, payout: 1540, status: "won", placedAt: now - 3600e3 },
+            { eventId: "p2", channel: "tarnwick", title: "Boss battu en moins de 3 essais ?", outcomeTitle: "Non", points: 600, payout: 0, status: "lost", placedAt: now - 7200e3 },
+            { eventId: "p3", channel: "astraloop", title: "Plus de 15 kills ?", outcomeTitle: "Oui", points: 900, payout: 0, status: "pending", placedAt: now - 60e3 },
+            { eventId: "p4", channel: "brumeplay", title: "Victoire en ranked ?", outcomeTitle: "Oui", points: 400, payout: 400, status: "refunded", placedAt: now - 86400e3 },
           ],
           streamPulseSmartAlerts: channels.streamers[0]
             ? {
@@ -400,12 +421,73 @@
       : [],
   };
 
+  // ?backup=/scripts/dev/.local/backup.json : la vraie configuration exportée (vrais streamers, vraies stats,
+  // historique, Drops), pour des visuels promo fidèles. ?live=/scripts/dev/.local/live.json : vrai état des
+  // chaînes en direct au moment de la capture (format /api/streamer-live, tableau de { login, live, stream }).
+  if (params.get("backup")) {
+    const readJson = (url) => {
+      const request = new XMLHttpRequest();
+      request.open("GET", url, false);
+      request.send();
+      return JSON.parse(request.responseText);
+    };
+    const backup = readJson(params.get("backup")).data;
+    const lang = params.get("lang") || "fr";
+    Object.assign(store, backup, {
+      betaGeneralPreferences: { ...backup.betaGeneralPreferences, language: lang, theme: params.get("theme") || "dark" },
+      streamPulseReviewAsk: { firstSeen: now, done: true },
+      streamPulseBadgeAsk: { firstSeen: now, done: true },
+    });
+    const lives = params.get("live") ? readJson(params.get("live")) : [];
+    const statuses = {};
+    for (const streamer of backup.betaGeneralStreamers) {
+      const real = lives.find((item) => streamer.platform === (item.platform || "twitch") && item.login === streamer.handle && item.live && item.stream);
+      const lastEntry = (backup.streamPulseHistory?.entries || []).find((entry) => entry.id.startsWith(`${streamer.handle}@`));
+      statuses[streamer.id] = {
+        updatedAt: now - 30 * 1000,
+        viewers: real ? real.stream.viewers : undefined,
+        active: {
+          isLive: Boolean(real),
+          supportsLiveStatus: true,
+          title: real ? real.stream.title : "",
+          game: real ? real.stream.game : "",
+          lastGame: lastEntry?.game || "",
+          lastTitle: lastEntry?.title || "",
+          viewers: real ? real.stream.viewers : undefined,
+          startedAt: real ? real.stream.startedAt : null,
+          thumbnailUrl: real ? String(real.stream.thumbnail || "").replace("{width}", "1280").replace("{height}", "720") : "",
+        },
+      };
+    }
+    // Images réelles : les Drops en cours et les badges prennent l'image de l'historique réel exporté.
+    {
+      const history = backup.streamPulseDropsHistory || [];
+      const imageOf = (name) => history.find((d) => d.name === name || name.startsWith(d.name))?.image;
+      const progress = store.streamPulseDropsProgress;
+      if (progress?.drops) progress.drops = progress.drops.map((d) => ({ ...d, image: imageOf(d.name) || d.image }));
+      const realBadges = history.filter((d) => /rematch|mold|wolf|hoxton|chains|dnd|sigil|accolades|cyber/i.test(`${d.name}`) && d.image);
+      if (store.streamPulseDropsBadges?.badges && realBadges.length) {
+        // On garde les ids (liens avec les campagnes) mais titre, description et image deviennent ceux de vrais badges obtenus.
+        store.streamPulseDropsBadges = {
+          ...store.streamPulseDropsBadges,
+          badges: store.streamPulseDropsBadges.badges.map((badge, i) => {
+            const real = realBadges[i % realBadges.length];
+            return { ...badge, title: real.name, image: real.image, description: real.game ? `Obtenu en regardant ${real.game}` : badge.description };
+          }),
+        };
+      }
+    }
+    store.betaGeneralStatuses = statuses;
+    if (params.get("tabs") === "all") store.streamPulseLayout = { ...store.streamPulseLayout, tabs: { hidden: [], order: [] } };
+    store.streamPulsePlus = { licenseKey: "SP-DEMO-2026-PLUS-0001", plan: "lifetime", since: now, status: "active", verifiedAt: now, referrals: 0, role: "" };
+  }
+
   const logs = scenario === "empty" ? [] : [
-    { type: "drop", text: "Drop récupéré : Caisse du convoi", channel: "novastream", value: 1, timestamp: now - 12 * 60000 },
-    { type: "drop", text: "Drop récupéré : Skin exclusif", channel: "pixelkat", value: 1, timestamp: now - 30 * 60000 },
-    { type: "points", text: "Bonus de points récupéré", channel: "pixelkat", value: 320, timestamp: now - 48 * 60000 },
-    { type: "raid", text: "Raid annulé", channel: "lunaplays", timestamp: now - 130 * 60000 },
-    { type: "moment", text: "Moment récupéré : Premier du mois", channel: "rivertv", timestamp: now - 260 * 60000 },
+    { type: "drop", text: "Drop récupéré : Caisse du convoi", channel: "astraloop", value: 1, timestamp: now - 12 * 60000 },
+    { type: "drop", text: "Drop récupéré : Skin exclusif", channel: "tarnwick", value: 1, timestamp: now - 30 * 60000 },
+    { type: "points", text: "Bonus de points récupéré", channel: "tarnwick", value: 320, timestamp: now - 48 * 60000 },
+    { type: "raid", text: "Raid annulé", channel: "brumeplay", timestamp: now - 130 * 60000 },
+    { type: "moment", text: "Moment récupéré : Premier du mois", channel: "fennmoor", timestamp: now - 260 * 60000 },
   ];
 
   const listeners = new Set();
@@ -480,9 +562,14 @@
       case "deactivatePlus":
         await local.remove("streamPulsePlus");
         return { success: true };
-      case "updatePreferences":
+      case "updatePreferences": {
         store.betaGeneralPreferences = { ...store.betaGeneralPreferences, ...message.updates };
+        // Comme le service worker : les alertes globales s'appliquent à tous les streamers.
+        const { withNotificationFields } = await import("/js/preferences-data.js");
+        const streamers = withNotificationFields(store.betaGeneralStreamers, message.updates);
+        if (streamers !== store.betaGeneralStreamers) await local.set({ betaGeneralStreamers: streamers });
         return { success: true, preferences: store.betaGeneralPreferences };
+      }
       case "resetPreferences": {
         // Comme le service worker : tout au défaut, sauf la langue et le thème.
         const { resetPreferencesFrom } = await import("/js/preferences-data.js");
@@ -511,7 +598,7 @@
         const pool = [
           { login: `${q}`, displayName: `${q[0].toUpperCase()}${q.slice(1)}`, live: true, game: "Just Chatting", followers: 0 },
           { login: `${q}_tv`, displayName: `${q.toUpperCase()}_TV`, live: false, game: "", followers: 482000 },
-          { login: "pixelkat", displayName: "Pixelkat", live: true, game: "Grand Theft Auto V", followers: 0 },
+          { login: "tarnwick", displayName: "Tarnwick", live: true, game: "Grand Theft Auto V", followers: 0 },
           { login: `${q}live`, displayName: `${q}Live`, live: false, game: "", followers: 12400 },
         ];
         return { items: pool.map((item) => ({ platform: message.platform, avatar: "", ...item })) };
@@ -522,6 +609,8 @@
   }
 
   window.chrome = {
+    // Le banc n'a pas de navigateur derrière : toute permission facultative est accordée d'office.
+    permissions: { contains: async () => true, request: async () => true },
     storage: { local, onChanged: { addListener: (fn) => listeners.add(fn) } },
     runtime: {
       sendMessage,

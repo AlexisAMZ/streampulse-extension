@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Banc des intégrations Twitch : tiroir de réglages, effets dans les paramètres
+         du chat, favoris de la barre latérale. ?plus=0 pour l'état verrouillé. -->
+    <title>twitch-sidebar-promo</title>
+    <link rel="stylesheet" href="/css/topbar.css" />
+    <link rel="stylesheet" href="/css/previews.css" />
+    <link rel="stylesheet" href="/css/inject/twitch-badge.css" />
+    <link rel="stylesheet" href="/css/inject/twitch-ui.css" />
+    <style>
+      @font-face { font-family: "SP Unbounded"; font-weight: 400 900; src: url("/font/unbounded-latin-10.woff2") format("woff2"); }
+      @font-face { font-family: "SP Onest"; font-weight: 400 700; src: url("/font/onest-latin-6.woff2") format("woff2"); }
+      body { margin: 0; background: #0e0e10; color: #efeff1; font: 14px/1.5 Inter, sans-serif; }
+      .layout { display: flex; min-height: 100vh; padding-top: 50px; }
+      .nav { position: fixed; inset: 0 0 auto 0; height: 50px; background: #18181b; box-shadow: 0 1px 0 rgba(0,0,0,.5); }
+      .side-nav { width: 240px; background: #1f1f23; flex-shrink: 0; }
+      .followed-side-nav-header { padding: 10px; font-size: 13px; font-weight: 600; }
+      .side-nav-card a { display: flex; gap: 10px; align-items: center; padding: 5px 10px; color: #efeff1; text-decoration: none; }
+      .side-nav-card img { width: 30px; height: 30px; border-radius: 50%; background: #444; }
+      .side-nav-card p { margin: 0; }
+      .meta { flex: 1; font-size: 14px; font-weight: 600; } .meta small { display: block; color: #adadb8; font-weight: 400; font-size: 13px; }
+      .chat { margin-left: auto; width: 340px; background: #18181b; position: relative; }
+      [data-a-target="chat-settings-balloon"] { position: absolute; bottom: 60px; right: 10px; width: 320px; padding: 10px; border-radius: 6px; background: rgb(50, 50, 57); }
+      [data-a-target="chat-settings-balloon"] button.native { display: flex; width: 100%; min-height: 32px; padding: 5px 10px; border: 0; background: transparent; color: #efeff1; font: 14px Inter, sans-serif; text-align: left; border-radius: 4px; }
+    </style>
+    <script>
+      const params = new URLSearchParams(location.search);
+      document.cookie = "login=AlexisAMZ; path=/";
+      const readJson = (url) => { const r = new XMLHttpRequest(); r.open("GET", url, false); r.send(); return JSON.parse(r.responseText); };
+      const backup = readJson("/scripts/dev/.local/backup.json").data;
+      const lives = readJson("/scripts/dev/.local/live.json");
+      const statuses = {};
+      for (const st of backup.betaGeneralStreamers) {
+        const real = lives.find((x) => st.platform === "twitch" && x.login === st.handle && x.live && x.stream);
+        statuses[st.id] = { id: st.id, active: { isLive: Boolean(real), game: real ? real.stream.game : "", viewers: real ? real.stream.viewers : 0, title: real ? real.stream.title : "" } };
+      }
+      const store = {
+        betaGeneralPreferences: { ...backup.betaGeneralPreferences, language: "fr" },
+        betaPinnedIds: backup.betaPinnedIds,
+        betaGeneralStreamers: backup.betaGeneralStreamers,
+        betaGeneralStatuses: statuses,
+        streamPulseCosmetics: backup.streamPulseCosmetics,
+        streamPulsePlus: { licenseKey: "SP-DEMO", plan: "lifetime", status: "active", verifiedAt: Date.now() },
+      };
+      const listeners = [];
+      const pick = (keys) => {
+        const list = Array.isArray(keys) ? keys : typeof keys === "string" ? [keys] : Object.keys(store);
+        return Object.fromEntries(list.filter((k) => k in store).map((k) => [k, structuredClone(store[k])]));
+      };
+      window.chrome = {
+        runtime: {
+          id: "harness",
+          getURL: (p) => `/${p}`,
+          lastError: null,
+          sendMessage: (msg, cb) => {
+            if (msg.type === "updatePreferences") {
+              const next = { ...store.betaGeneralPreferences, ...msg.updates };
+              window.chrome.storage.local.set({ betaGeneralPreferences: next });
+            }
+            if (msg.type === "addStreamer") {
+              const s = { id: msg.handle, platform: "twitch", handle: msg.handle, displayName: msg.handle };
+              store.betaGeneralStreamers = [...store.betaGeneralStreamers, s];
+              cb && setTimeout(() => cb({ success: true, streamers: store.betaGeneralStreamers }));
+            }
+          },
+        },
+        storage: {
+          local: {
+            get: (keys, cb) => { const r = pick(keys); if (cb) setTimeout(() => cb(r)); return Promise.resolve(r); },
+            set: (obj, cb) => {
+              const changes = Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, { newValue: v }]));
+              Object.assign(store, obj);
+              setTimeout(() => listeners.forEach((fn) => fn(changes, "local")));
+              if (cb) setTimeout(cb);
+              return Promise.resolve();
+            },
+          },
+          onChanged: { addListener: (fn) => listeners.push(fn) },
+        },
+      };
+      window.__store = store;
+    </script>
+  </head>
+  <body>
+    <div class="nav"></div>
+    <div class="layout">
+      <nav class="side-nav">
+        <div class="side-nav-section" style="width:240px" id="sidebar">
+          <div class="followed-side-nav-header">Chaînes suivies</div>
+        </div>
+      </nav>
+      <main style="flex:1;background:#0e0e10"></main>
+    </div>
+    <script>
+      const sidebar = document.getElementById("sidebar");
+      for (const st of backup.betaGeneralStreamers.filter((x) => x.platform === "twitch")) {
+        const live = statuses[st.id].active.isLive;
+        const card = document.createElement("div");
+        card.className = "side-nav-card";
+        card.innerHTML = `<a href="/${st.handle}"><img alt="" src="${st.avatarUrl}" /><p class="meta">${st.displayName}<small>${live ? statuses[st.id].active.game : "Hors ligne"}</small></p>${live ? `<span style="color:#fff;font-size:12px"><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#eb0400;margin-right:6px"></i>${Math.round(statuses[st.id].active.viewers / 100) / 10} k</span>` : ""}</a>`;
+        sidebar.append(card);
+      }
+    </script>
+    <script src="/js/inject/i18n-inline.js"></script>
+    <script src="/js/inject/dom.js"></script>
+    <script src="/js/inject/topbar-panel.js"></script>
+    <script src="/js/inject/sidebar-favorites.js"></script>
+    <script>
+      // ?view=panel : le panneau StreamPulse de la barre du haut de Twitch, avec les vraies valeurs.
+      // ?view=preview : l'aperçu au survol d'une chaîne de la barre latérale, avec la vraie vignette du live.
+      const view = new URLSearchParams(location.search).get("view");
+      const live = lives.filter((x) => x.live && x.stream);
+      if (view === "panel") {
+        const icon = (d) => `<svg class="sp-tb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+        const i18nApi = self.__SP_I18N__;
+        const lang = i18nApi.resolve("fr");
+        const months = Object.keys(backup.betaWatchTimeData).sort();
+        const watch = Object.values(backup.betaWatchTimeData[months[months.length - 1]]).reduce((a, c) => a + (c.watchSeconds || 0), 0);
+        const panel = self.__SP_TOPBAR_PANEL__.build(
+          { points: backup.betaGeneralStats.channelPointsClaimed, watchSeconds: watch, prefs: { previewsEnabled: true, autoClaimChannelPoints: true, enableFastForwardButton: false }, channel: "anyme023", channelTracked: true, channelWatchSeconds: 5400,
+            live: live.map((x) => ({ login: x.login, name: x.name, category: x.stream.game })) },
+          { tr: (k) => i18nApi.get(lang, "topbar." + k), fmtNum: (n) => new Intl.NumberFormat("fr").format(n),
+            fmtDur: (sec) => `${Math.floor(sec / 3600)}h${String(Math.floor((sec % 3600) / 60)).padStart(2, "0")}`,
+            logoUrl: "/images/photos/logosp-128.png", tipLinks: [],
+            icon: { gem: icon('<path d="M6 3h12l4 6-10 12L2 9z"/>'), clock: icon('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'), coffee: icon(""), gear: icon('<circle cx="12" cy="12" r="3"/>') },
+            addStreamer: () => {}, openChannel: () => {}, openSettings: () => {}, onToggle: () => {} },
+        );
+        document.querySelector(".side-nav").style.visibility = "hidden"; panel.style.position = "absolute"; panel.style.top = "56px"; panel.style.left = "20px";
+        document.body.append(panel);
+      }
+      if (view === "preview") {
+        const target = document.querySelector('.side-nav-card a[href="/anyme023"]');
+        const rect = target.getBoundingClientRect();
+        const real = live.find((x) => x.login === "anyme023");
+        const card = document.createElement("div");
+        card.className = "sp-preview";
+        card.style.cssText = `position:absolute;left:${rect.right + 12}px;top:${rect.top - 10}px;opacity:1;transform:none;width:340px;`;
+        card.innerHTML = `<div class="sp-preview__media"><img class="sp-preview__img" alt="" src="${new URLSearchParams(location.search).get("thumb") || real.stream.thumbnail}" /><span class="sp-preview__badge">Live</span><div class="sp-preview__overlay"><p class="sp-preview__title">${real.stream.title}</p><p class="sp-preview__category">${real.stream.game}</p></div></div>`;
+        document.body.append(card);
+        // la ligne survolée et le pointeur : on comprend que l'aperçu vient du survol de la barre latérale
+        target.style.background = "rgba(255,255,255,0.1)";
+        const cursor = document.createElement("div");
+        cursor.innerHTML = '<svg width="34" height="34" viewBox="0 0 24 24"><path d="M5 3l14 8-6.2 1.7L10 19z" fill="#fff" stroke="#111" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+        cursor.style.cssText = `position:absolute;left:${rect.left + 150}px;top:${rect.top + 20}px;filter:drop-shadow(0 3px 5px rgba(0,0,0,.6));z-index:9`;
+        document.body.append(cursor);
+      }
+    </script>
+  </body>
+</html>

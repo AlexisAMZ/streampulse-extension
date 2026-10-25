@@ -13,6 +13,7 @@ import {
   countBadges,
   mergeBadges,
   normalizeAdded,
+  isPaidBadge,
   viewerEarnable,
 } from "../js/badges-data.js";
 import { CAMPAIGNS_RAW, CATALOG_RAW, DAY, NOW, SITE_ADDED } from "./helpers/badges-fixtures.mjs";
@@ -89,4 +90,11 @@ test("« Obtenus » se range par statut, puis par titre", () => {
   // Par fin : Ampersand, Rematch, Bloody Finger ; par titre : Ampersand, Bloody Finger, Rematch.
   const owned = { ...state, owned: ["rematch-blue-lock", "bloody-finger-elden-ring", "ampersand", "yellow-party-hat", "vaultbreakers"] };
   assert.deepEqual(ids(catalogBadges(owned, { ...context, status: "owned" })), ["ampersand", "bloody-finger-elden-ring", "rematch-blue-lock", "vaultbreakers", "yellow-party-hat"]);
+});
+
+test("« Subbed to a streamer » compte comme un abonnement : gagnable et payant", () => {
+  const description = "Subbed to a streamer and got 1 month of Apple TV!";
+  assert.ok(viewerEarnable(description));
+  assert.equal(isPaidBadge({ description }), true);
+  assert.equal(isPaidBadge({ description: "earned by watching a streamer for 30 minutes" }), false);
 });

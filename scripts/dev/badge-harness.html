@@ -13,7 +13,7 @@
     </style>
     <script>
       const params = new URLSearchParams(location.search);
-      document.cookie = "login=spdemo; path=/";
+      document.cookie = "login=" + (params.get("login") || "spdemo") + "; path=/";
       const store = {
         betaGeneralPreferences: { communityBadge: true, communityBadgeColor: "author" },
         streamPulseCosmetics: { badgeFx: params.get("badge") || "glow", nameFx: params.get("name") || "neon" },
@@ -47,6 +47,20 @@
       <div class="chat-line__message"><span></span><span class="chat-line__username"><span class="chat-author__display-name" data-a-target="chat-message-username" data-a-user="spdemo" style="color:#ff4d8d">SpDemo</span></span><span>: test du badge</span></div>
       <div class="chat-line__message"><span></span><span class="chat-line__username"><span class="chat-author__display-name" data-a-target="chat-message-username" data-a-user="quelquun" style="color:#1e90ff">Quelquun</span></span><span>: sans StreamPulse</span></div>
     </div>
+    <script>
+      // ?login=AlexisAMZ : la première ligne du faux chat est celle de ce compte (pour les visuels promo).
+      const asLogin = params.get("login");
+      if (asLogin) {
+        const first = document.querySelector(".chat-line__message");
+        const who = first.querySelector("[data-a-user]");
+        who.dataset.aUser = asLogin.toLowerCase();
+        who.textContent = asLogin;
+        first.lastElementChild.textContent = ": ce live est incroyable";
+        const second = document.querySelectorAll(".chat-line__message")[1];
+        second.querySelector("[data-a-user]").textContent = "Marlowe";
+        second.lastElementChild.textContent = ": on est trop nombreux ce soir";
+      }
+    </script>
     <script src="/js/inject/i18n-inline.js"></script>
     <script src="/js/inject/plus-rule.js"></script>
     <script src="/js/inject/twitch-badge.js"></script>
@@ -58,7 +72,7 @@
         line.querySelectorAll(".sp-chat-badge, .sp-tenure-badge").forEach((badge) => badge.remove());
         const name = line.querySelector(".chat-author__display-name");
         name.className = "chat-author__display-name";
-        line.lastElementChild.textContent = ": nouveau message";
+        line.lastElementChild.textContent = asLogin ? ": GG tout le monde" : ": nouveau message";
         document.querySelector(".chat-scrollable-area__message-container").appendChild(line);
       }, 3000);
       setTimeout(() => {
