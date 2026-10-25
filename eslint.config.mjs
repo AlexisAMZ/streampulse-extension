@@ -24,6 +24,7 @@ const ES_MODULES = [
   "js/chzzk-permission.js",
   "js/chzzk-sync.js",
   "js/plus.js",
+  "js/license-sign.js",
   "js/plus-thanks.js",
   "js/eventsubRaid.js",
   "js/raidWatcher.js",

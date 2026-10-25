@@ -90,7 +90,7 @@ export function normalizeLicenseKey(input) {
 export const PLUS_RECHECK_MS = 24 * 60 * 60 * 1000;
 
 export function needsRecheck(record, now = Date.now()) {
-  if (!record || record.status !== "active" || !record.licenseKey) return false;
+  if (!record || !["active", "unverified"].includes(record.status) || !record.licenseKey) return false;
   // Une date dans le futur ne doit jamais repousser la revérification (licence forgée).
   if (PLUS_RULE.isFuture(record.checkedAt, now) || PLUS_RULE.isFuture(record.verifiedAt, now)) return true;
   return now - (Number(record.checkedAt || record.verifiedAt) || 0) >= PLUS_RECHECK_MS;
@@ -129,5 +129,7 @@ export async function verifyLicense(input, fetchImpl, now = Date.now(), device =
   const role = ["admin", "bughunter"].includes(payload.role) ? payload.role : "";
   // Début de l'abonnement : tuile d'ancienneté de son propre badge.
   const since = Math.max(0, Number(payload.since) || 0);
-  return { ok: true, record: { licenseKey, plan, status: "active", verifiedAt: now, referrals, role, since } };
+  // Signature du serveur : `iat` (date serveur) et `sig`, vérifiées par js/sw/license-guard.js.
+  const signature = payload.sig && payload.iat ? { iat: Math.floor(Number(payload.iat)), sig: String(payload.sig) } : {};
+  return { ok: true, record: { licenseKey, plan, status: "active", verifiedAt: now, referrals, role, since, ...signature } };
 }

@@ -4,7 +4,7 @@
 // StreamPulse+ (badge PLUS), avec un aperçu animé de chaque récompense.
 
 import { getCurrentLanguage, onLanguageChange, t } from "./i18n.js";
-import { LICENSE_VERIFY_URL, PLUS_KEY, getDeviceId } from "./plus.js";
+import { LICENSE_VERIFY_URL, PLUS_KEY, getDeviceId, verifyLicense } from "./plus.js";
 import { BADGE_FX, COSMETICS_KEY, NAME_FX, TENURE_STYLES, TENURE_TIERS, fxLock, normalizeCosmetics, rankOf, tenureTier, visibleFx } from "./cosmetics-data.js";
 import { isPaypalAddress, normalizeEarnings, shouldRefreshEarnings } from "./referral-data.js";
 
@@ -292,9 +292,12 @@ async function fetchReferral({ quiet = false } = {}) {
     referralCode = payload.code;
     earnings = normalizeEarnings(payload);
     const referrals = Math.max(0, Number(payload.referrals) || 0);
+    // Le nombre de filleuls fait partie de la licence signée : on ne l'écrit pas
+    // à la main, on redemande au serveur une licence signée à jour.
+    const refreshed = await verifyLicense(record.licenseKey, fetch, Date.now(), await getDeviceId(chrome.storage.local));
     // La mise à jour de la licence redessine tout par chrome.storage.onChanged.
     await chrome.storage.local.set({
-      [PLUS_KEY]: { ...deps.getRecord(), referrals },
+      ...(refreshed.ok ? { [PLUS_KEY]: { ...refreshed.record, checkedAt: Date.now() } } : {}),
       [REFERRAL_CODE_KEY]: referralCode,
       [REFERRAL_EARNINGS_KEY]: earnings,
     });

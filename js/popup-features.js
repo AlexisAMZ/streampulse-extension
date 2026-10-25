@@ -916,7 +916,7 @@ const OPEN_RECHECK_MS = 5 * 60 * 1000;
 async function recheckOnOpen() {
   // device_limited reste contrôlé à chaque ouverture : dès qu'une place est
   // libérée dans le portail, ce navigateur se réactive tout seul.
-  if (!plusRecord?.licenseKey || !["active", "device_limited"].includes(plusRecord.status)) return;
+  if (!plusRecord?.licenseKey || !["active", "device_limited", "unverified"].includes(plusRecord.status)) return;
   const now = Date.now();
   if (now - (Number(plusRecord.checkedAt || plusRecord.verifiedAt) || 0) < OPEN_RECHECK_MS) return;
   const result = await verifyLicense(plusRecord.licenseKey, fetch, now, await getDeviceId(chrome.storage.local));

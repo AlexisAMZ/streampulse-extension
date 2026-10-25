@@ -10,6 +10,7 @@ import { badgeAuto, scheduleDropsAlarm } from "./sw/drops.js";
 import { NotificationCenter } from "./sw/notifications.js";
 import { handleAlarm, scheduleKeepAliveAlarm, scheduleWatchTimeFlushAlarm, scheduleWatcherAlarm } from "./sw/alarms.js";
 import { handleInstalled, handleStartup, initOnWake } from "./sw/lifecycle.js";
+import { onPlusRecordChanged, runPlusGuard } from "./sw/license-guard.js";
 import { createMessageDispatcher } from "./sw/message-dispatch.js";
 import { MESSAGE_HANDLERS } from "./sw/messages.js";
 import { handleOpenPlusOnboarding } from "./sw/messages-app.js";
@@ -92,6 +93,12 @@ if (chrome.runtime.onSuspend?.addListener) {
 }
 
 initOnWake().catch((error) => console.warn("[SP] initialisation au réveil :", error?.message || error));
+
+// Licence StreamPulse+ : toute écriture du storage est vérifiée (signature du
+// serveur, js/sw/license-guard.js) ; un enregistrement forgé est supprimé.
+const plusGuardDeps = { storage: chrome.storage.local, fetch: (...args) => fetch(...args) };
+chrome.storage.onChanged.addListener((changes, area) => onPlusRecordChanged(changes, area, plusGuardDeps));
+runPlusGuard(plusGuardDeps);
 
 // preventTabDiscard : pages de chaîne Twitch et Kick gardées chargées.
 chrome.storage.onChanged.addListener(onPreferencesChangedForTabDiscard);

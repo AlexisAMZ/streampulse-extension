@@ -12,6 +12,12 @@ const REMOTE_CONFIG_TTL_MS = 30 * 60 * 1000; // 30 min — plafond avant re-chec
 // un token mort est de toute façon detecte au premier 401/403 (fetchTwitchJson
 // recharge alors la config immédiatement), ce TTL ne borne que le pire cas.
 
+/** Adresse de la config : `v` annonce une version à jour (plus de secret Kick servi). */
+export function remoteConfigUrl() {
+  const version = encodeURIComponent(chrome.runtime.getManifest().version);
+  return `${REMOTE_CONFIG_URL}?v=${version}&t=${Date.now()}`;
+}
+
 export let CONFIG = { ...LOCAL_CONFIG };
 let _configReady = null;
 
@@ -32,8 +38,7 @@ export async function fetchRemoteConfig() {
     // Cache missing or stale → refresh from the network. Le paramètre
     // aléatoire contourne le cache Edge (Vercel a deja servi des reponses
     // perimees contenant un token mort apres une rotation de credentials).
-    const url = `${REMOTE_CONFIG_URL}?t=${Date.now()}`;
-    const res = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS) });
+    const res = await fetch(remoteConfigUrl(), { cache: "no-store", signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS) });
     if (!res.ok) return;
     const data = await res.json();
     if (data?.clientId) {
@@ -70,7 +75,7 @@ export function ensureConfig() {
  */
 async function refreshRemoteConfigForce() {
   try {
-    const res = await fetch(`${REMOTE_CONFIG_URL}?t=${Date.now()}`, {
+    const res = await fetch(remoteConfigUrl(), {
       cache: "no-store",
       signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS),
     });
