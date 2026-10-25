@@ -361,18 +361,20 @@ export class PlatformChecker {
     }
   }
 
+  /** Texte d'une balise meta : les entités HTML d'un titre (« A &amp; B ») sont décodées. */
+  static _metaContent(html, property) {
+    const raw = new RegExp(`<meta property="${property}" content="([^"]+)"`).exec(html)?.[1] || "";
+    return raw.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+  }
+
   static async resolveYoutubeChannel(handle) {
     const sanitized = sanitizeHandle("youtube", handle);
     if (!sanitized) return null;
     await this.loadYoutubeCache();
     const cached = this._youtubeCache.get(sanitized);
-    if (cached?.id) return cached;
-    if (isYoutubeChannelId(sanitized)) {
-      const entry = { id: sanitized, avatar: "", name: sanitized };
-      this._youtubeCache.set(sanitized, entry);
-      this.saveYoutubeCache();
-      return entry;
-    }
+    // Une entrée qui n'a que l'identifiant pour nom (ancien ajout) est complétée.
+    if (cached?.id && !(isYoutubeChannelId(sanitized) && (!cached.name || cached.name === cached.id))) return cached;
+    if (isYoutubeChannelId(sanitized)) return this._resolveYoutubeChannelId(sanitized);
     // Handle → ID : la page de la chaîne embarque le lien canonique et
     // "externalId". L'ordre compte : canonical d'abord (c'est LA chaîne de la
     // page), externalId ensuite ; un "channelId" nu peut appartenir à une
@@ -389,17 +391,42 @@ export class PlatformChecker {
         || /"externalId"\s*:\s*"(UC[A-Za-z0-9_-]{10,32})"/.exec(html)?.[1]
         || /"channelId"\s*:\s*"(UC[A-Za-z0-9_-]{10,32})"/.exec(html)?.[1]
         || "";
-      const name =
-        /<meta property="og:title" content="([^"]+)"/.exec(html)?.[1] || sanitized;
-      const avatar =
-        /<meta property="og:image" content="([^"]+)"/.exec(html)?.[1] || "";
       if (!id) return null;
-      const entry = { id, avatar, name };
+      const entry = {
+        id,
+        avatar: this._metaContent(html, "og:image"),
+        name: this._metaContent(html, "og:title") || sanitized,
+      };
       this._youtubeCache.set(sanitized, entry);
       this.saveYoutubeCache();
       return entry;
     } catch {
       return null;
+    }
+  }
+
+  /**
+   * Chaîne connue par son identifiant (page vidéo qui n'expose pas le @handle) :
+   * l'identifiant est déjà bon, la page de la chaîne ne sert qu'à lire le nom et la
+   * photo. Injoignable : repli sur l'identifiant, sans mémoriser ce faux nom.
+   */
+  static async _resolveYoutubeChannelId(channelId) {
+    try {
+      const resp = await fetch(
+        `https://www.youtube.com/channel/${encodeURIComponent(channelId)}`,
+        { redirect: "follow", signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS) }
+      );
+      if (!resp.ok) return { id: channelId, avatar: "", name: channelId };
+      const html = await resp.text();
+      const name = this._metaContent(html, "og:title");
+      const entry = { id: channelId, avatar: this._metaContent(html, "og:image"), name: name || channelId };
+      if (name) {
+        this._youtubeCache.set(channelId, entry);
+        this.saveYoutubeCache();
+      }
+      return entry;
+    } catch {
+      return { id: channelId, avatar: "", name: channelId };
     }
   }
 

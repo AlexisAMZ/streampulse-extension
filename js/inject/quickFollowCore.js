@@ -30,13 +30,27 @@
     });
   }
 
-  function send(message) {
+  // Le service worker MV3 peut dormir ou démarrer à peine : « Receiving end does not exist »
+  // veut dire que le message n'est jamais arrivé, donc le renvoyer ne double rien.
+  var NOT_DELIVERED = /receiving end does not exist/i;
+  var MAX_RETRIES = 2;
+
+  function send(message, attempt) {
+    attempt = attempt || 0;
     return new Promise(function (resolve) {
       try {
         chrome.runtime.sendMessage(message, function (res) {
-          resolve(chrome.runtime.lastError ? null : res || null);
+          var error = chrome.runtime.lastError;
+          if (!error) return resolve(res || null);
+          console.warn("[StreamPulse] message " + message.type + " sans réponse :", error.message);
+          if (attempt < MAX_RETRIES && NOT_DELIVERED.test(error.message || "")) {
+            setTimeout(function () { resolve(send(message, attempt + 1)); }, 400 * (attempt + 1));
+            return;
+          }
+          resolve(null);
         });
-      } catch (_e) {
+      } catch (e) {
+        console.warn("[StreamPulse] message " + message.type + " impossible :", e && e.message);
         resolve(null);
       }
     });
@@ -281,5 +295,6 @@
     return { start: start };
   }
 
-  window.__SP_QF__ = { create: create };
+  // `send` est exposé pour les tests (tests/quick-follow-send.test.mjs).
+  window.__SP_QF__ = { create: create, send: send };
 })();

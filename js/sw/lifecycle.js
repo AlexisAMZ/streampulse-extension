@@ -8,10 +8,12 @@ import { fetchRemoteConfig } from "./config.js";
 import { dropsStore, scheduleDropsAlarm } from "./drops.js";
 import { translateWithPrefs } from "./i18n.js";
 import { NotificationCenter } from "./notifications.js";
+import { PlatformChecker } from "./platform-checker.js";
 import { pollStreamers } from "./polling.js";
 import { refreshRaidWatcher } from "./raids.js";
 import { DataStore, PreferenceStore } from "./stores.js";
 import { uninstallSurveyUrl } from "./uninstall-survey.js";
+import { repairYoutubeNames } from "./youtube-repair.js";
 
 export { uninstallSurveyUrl };
 
@@ -214,4 +216,11 @@ export async function initOnWake() {
   } catch (err) {
     console.warn("Init staleness check failed:", err?.message || err);
   }
+
+  // Chaînes YouTube ajoutées avec leur identifiant « UC… » pour nom : on retrouve le vrai nom.
+  repairYoutubeNames({
+    getStreamers: () => DataStore.getStreamers(),
+    saveStreamers: (streamers) => DataStore.saveStreamers(streamers),
+    resolve: (handle) => PlatformChecker.resolveYoutubeChannel(handle),
+  }).catch((err) => console.warn("Réparation des noms YouTube :", err?.message || err));
 }
