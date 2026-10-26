@@ -4,6 +4,7 @@ import { initI18n, applyTranslations, t, getCurrentLanguage, resolveLocale } fro
 import { listPeriods, collectEntries, buildRecap, buildTimeline, formatDuration, rollingDayKeys } from "./recap-data.js";
 import { RECAP_PLATFORMS, normalizeRecapPlatforms } from "./recap-platforms.js";
 import { PLUS_KEY, isPlusActive, plusPageUrl } from "./plus.js";
+import { referralLink } from "./referral-data.js";
 import { drawRecapCard, CARD_WIDTH, CARD_HEIGHT } from "./recap-card.js";
 import { drawRecapStory, STORY_WIDTH, STORY_HEIGHT } from "./recap-story.js";
 import { POINTS_KEYS, REASON_LABEL_KEYS, channelName, dayKeysForPeriod, daySeries, pointsFromLogs, stateFrom, summarizeDays } from "./points-data.js";
@@ -563,11 +564,12 @@ function wireReferral(code) {
   row.hidden = false;
   const button = document.getElementById("recap-referral-copy");
   button?.addEventListener("click", async () => {
-    await navigator.clipboard.writeText(code).catch((error) => console.warn("[recap] copie du code impossible :", error?.message || error));
+    const link = referralLink(code, getCurrentLanguage());
+    await navigator.clipboard.writeText(link ? t("popup.referral.shareMessage", { link }) : code).catch((error) => console.warn("[recap] copie du lien impossible :", error?.message || error));
     if (!button || button.dataset.busy) return;
     button.dataset.busy = "1";
     const label = button.textContent;
-    button.textContent = t("popup.referral.copied");
+    button.textContent = t(link ? "popup.referral.linkCopiedShort" : "popup.referral.copied");
     setTimeout(() => {
       button.textContent = label;
       delete button.dataset.busy;

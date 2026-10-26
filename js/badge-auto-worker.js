@@ -251,14 +251,16 @@ export function createBadgeAuto(deps) {
 
   async function openTab(group, tabId) {
     const url = await deps.streamUrl({ gameId: group.gameId, game: group.game });
+    // autoDiscardable:false : le mode « Memory Saver » ou économie d'énergie du navigateur ne doit
+    // jamais décharger l'onglet, que le réglage preventTabDiscard soit actif ou non.
     if (await tabExists(tabId)) {
-      await chrome.tabs.update(tabId, { url, pinned: true, muted: true });
+      await chrome.tabs.update(tabId, { url, pinned: true, muted: true, autoDiscardable: false });
       return tabId;
     }
     // Mute avant la première navigation : un onglet créé directement sur
     // l'URL peut émettre un son entre sa création et sa mise en sourdine.
     const tab = await chrome.tabs.create({ active: false, pinned: true });
-    await chrome.tabs.update(tab.id, { muted: true });
+    await chrome.tabs.update(tab.id, { muted: true, autoDiscardable: false });
     await chrome.tabs.update(tab.id, { url });
     return tab.id;
   }

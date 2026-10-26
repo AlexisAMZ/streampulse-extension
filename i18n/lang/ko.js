@@ -240,6 +240,7 @@ export default {
       "planYearly": "연간 플랜 · {{key}}",
       "manage": "구독 관리",
       "manageError": "지금은 계정 페이지를 열 수 없습니다. 몇 분 후 다시 시도하세요.",
+      "manageEmailed": "계정 보호를 위해 결제 이메일 주소로 링크를 보냈습니다.",
       "deactivate": "이 브라우저에서 라이선스 제거",
       "close": "닫기"
     },
@@ -618,16 +619,25 @@ export default {
       "rankAmbassador": "앰배서더 · 추천한 친구: {{count}}",
       "intro": "Twitch 채팅에서 StreamPulse 배지와 닉네임이 보이는 모습으로, 다른 StreamPulse 사용자에게도 보입니다."
     },
+    "referralAsk": {
+      "title": "친구 추천하기",
+      "body": "StreamPulse+ 2.99 € 할인. 당신은 돈 또는 무료 개월을 받습니다.",
+      "open": "내 링크 받기"
+    },
     "referral": {
-      "generalBody": "내 코드로 StreamPulse+를 구독하는 친구마다 한 달 무료.",
-      "generalOpen": "내 코드 보기",
+      "generalBody": "친구는 2.99 € 할인, 당신은 돈 또는 무료 개월을 받습니다.",
+      "generalOpen": "내 링크 받기",
       "plusTitle": "친구를 추천하세요",
-      "plusBody": "친구는 2.99 € 할인(첫 달 무료). 당신은 돈과 다음 보상을 받습니다:",
+      "plusBody": "친구는 2.99 € 할인: 첫 달 무료 또는 첫 해 19 € 대신 16.01 €. 당신은 돈과 다음 보상을 받습니다:",
       "title": "추천",
-      "body": "코드를 공유하세요: 친구는 2.99 € 할인(첫 달 무료). 친구가 구독하는 동안 매달 1 €를 PayPal로 받습니다.",
-      "get": "내 코드 받기",
-      "copy": "복사",
+      "body": "링크를 공유하세요: 친구는 2.99 € 할인(첫 달 무료 또는 첫 해 16.01 €). 월 구독 친구가 결제한 달마다 1 €, 연 구독 친구가 결제한 해마다 5 €를 PayPal로 받습니다.",
+      "get": "내 링크 받기",
+      "copy": "코드 복사",
       "copied": "코드를 복사했습니다!",
+      "copyLink": "내 링크 복사",
+      "linkCopied": "짧은 메시지와 함께 링크를 복사했습니다. 친구에게 붙여넣으세요. 할인이 이미 적용되어 있습니다.",
+      "linkCopiedShort": "링크를 복사했습니다!",
+      "shareMessage": "StreamPulse를 추천합니다. Twitch, Kick, YouTube 스트리머가 방송을 시작하면 알려 주는 확장 프로그램입니다. 이 링크로 StreamPulse+ 2.99 € 할인을 받으세요: {{link}}",
       "loading": "불러오는 중…",
       "soon": "추천 프로그램이 곧 열립니다.",
       "error": "지금은 코드를 받을 수 없습니다. 나중에 다시 시도하세요.",
@@ -638,7 +648,7 @@ export default {
       "tierBadge": "배지 효과",
       "tierDevice": "기기 1대 추가",
       "each": "친구마다",
-      "tierMoney": "구독 중 매달 1 €",
+      "tierMoney": "결제된 달마다 1 €, 결제된 해마다 5 €",
       "balance": "지급 예정",
       "earned": "획득: {{earned}} · 지급 완료: {{paid}}",
       "payoutRule": "{{min}}부터 PayPal로 지급됩니다. 성인만 가능합니다.",
@@ -646,13 +656,15 @@ export default {
       "paypalPlaceholder": "you@example.com",
       "paypalSave": "저장",
       "paypalSaved": "PayPal 주소를 저장했습니다.",
+      "paypalPending": "결제 이메일로 보낸 링크로 이 주소를 확인하세요.",
       "paypalInvalid": "유효한 이메일 주소가 아닙니다.",
       "paypalMissing": "수익을 받으려면 PayPal 주소를 추가하세요.",
-      "freeBody": "코드를 공유하세요: 친구는 2.99 € 할인(첫 달 무료). 친구가 구독할 때마다 StreamPulse+ 한 달을 받고, 키는 이메일로 보내 드립니다.",
+      "freeBody": "링크를 공유하세요: 친구는 2.99 € 할인(첫 달 무료 또는 첫 해 16.01 €). 친구가 구독할 때마다 StreamPulse+ 한 달을 받고, 키는 이메일로 전송됩니다.",
       "freeLabel": "무료 개월을 받을 이메일",
       "freeSubmit": "내 코드 만들기",
       "freeTaken": "이 주소는 이미 다른 브라우저에서 사용 중입니다.",
-      "freeReady": "코드가 준비되었습니다. 친구가 구독하면 키가 이메일로 도착합니다."
+      "freeReady": "링크가 준비되었습니다. 친구가 구독하면 키가 이메일로 도착합니다.",
+      "freeCheckEmail": "이메일로 받은 링크를 열어 주소를 확인한 뒤 돌아와 코드를 만드세요."
     },
     "layout": {
       "title": "배치",
@@ -1192,8 +1204,8 @@ export default {
     "platformsLabel": "집계할 플랫폼",
     "platformsHint": "YouTube는 측정을 확인하는 동안 일단 꺼져 있어요. 원하면 켤 수 있습니다.",
     "referral": {
-      "body": "추천 프로그램: 내 코드로 구독하는 친구마다 한 달 무료.",
-      "copy": "내 코드 복사"
+      "body": "추천: 친구는 2.99 € 할인, 당신은 돈 또는 무료 개월을 받습니다.",
+      "copy": "내 링크 복사"
     },
     "periodYear": "{{year}} 요약",
     "plus": {
@@ -1398,6 +1410,7 @@ export default {
       "clipDownload": "클립 다운로드 (MP4)",
       "clipDownloading": "클립 다운로드 중…",
       "clipDownloadFailed": "다운로드할 수 없습니다. 클립 페이지를 새로고침한 뒤 다시 시도하세요.",
+      "clipOpenEditor": "StreamPulse Clips로 편집",
       "latencyEmpty": "지연 시간: --",
       "latencyValue": "지연 시간: {{value}}초",
       "offline": "오프라인"

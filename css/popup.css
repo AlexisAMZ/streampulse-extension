@@ -1087,6 +1087,7 @@ li.has-bell.has-auto .badge-auto { inset-inline-end: 48px; }
 .ask-mark { width: 16px; height: 16px; flex: none; }
 .review-ask-mark { color: var(--star); }
 .badge-ask-mark { background-color: var(--violet-text); -webkit-mask: url("../images/photos/badge-mark.svg") center / contain no-repeat; mask: url("../images/photos/badge-mark.svg") center / contain no-repeat; }
+.referral-ask-mark { color: var(--lcd); }
 .ask-text { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; color: var(--text-2); font-size: 11.5px; line-height: 1.3; text-wrap: pretty; }
 .ask-text b { color: var(--text); font-weight: 700; }
 .ask-actions { display: grid; justify-items: stretch; gap: 1px; }

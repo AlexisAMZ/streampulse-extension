@@ -26,15 +26,22 @@ export function releaseDevice(licenseKey, device, fetchImpl) {
   }).catch((error) => console.warn("[StreamPulse+] libération de l'appareil :", error?.message || error));
 }
 
-/** Lien vers le portail client Stripe pour la clé de ce navigateur. */
-export async function portalUrl(licenseKey, fetchImpl) {
+/**
+ * Portail client Stripe pour la clé de ce navigateur.
+ * `device` : un navigateur enregistré sur la clé ouvre le portail tout de suite ;
+ * sinon le serveur envoie le lien à l'adresse de paiement (202 { emailed }).
+ * @returns {Promise<{url: string} | {emailed: true} | null>}
+ */
+export async function portalUrl(licenseKey, fetchImpl, device = "") {
   const response = await fetchImpl(LICENSE_VERIFY_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action: "portal", key: licenseKey }),
+    body: JSON.stringify({ action: "portal", key: licenseKey, ...(device ? { device } : {}) }),
   });
   const payload = await response.json().catch(() => ({}));
-  return response.ok && payload?.url ? payload.url : null;
+  if (!response.ok) return null;
+  if (payload?.url) return { url: payload.url };
+  return payload?.emailed ? { emailed: true } : null;
 }
 
 /** Page d'achat ouverte par le bouton « Débloquer StreamPulse+ ». */

@@ -67,6 +67,7 @@ const ES_MODULES = [
   "js/open-channel.js",
   "js/streamer-undo.js",
   "js/popup-badge-ask.js",
+  "js/popup-referral-ask.js",
   "js/popup-chzzk-ask.js",
   "js/popup-identity.js",
   "js/popup-news.js",

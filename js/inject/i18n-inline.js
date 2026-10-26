@@ -45,15 +45,11 @@
     "badge": {
       "founder": "Fondateur de StreamPulse",
       "ambassador": "Ambassadeur",
-      "bughunter": "Chasseur de bugs",
       "lifetime": "Membre à vie",
       "months": "Abonné depuis {{count}} mois",
       "monthOne": "Abonné depuis 1 mois",
       "newMember": "Nouvel abonné",
-      "freeLine": "Utilisateur de l'extension",
-      "worn": "Porté",
-      "tenure": "Ancienneté",
-      "nameStyle": "Pseudo"
+      "freeLine": "Utilisateur de l'extension"
     },
     "topbar": {
       "previews": "Aperçus au survol",
@@ -82,7 +78,6 @@
       "tracked": "Suivi",
       "remove": "Retirer de StreamPulse",
       "added": "{{name}} ajouté à StreamPulse",
-      "addedWaiting": "{{name}} est dans StreamPulse. Pas en direct pour l'instant : on te prévient dès qu'un live ou une Première commence.",
       "removed": "{{name}} retiré de StreamPulse",
       "error": "Action impossible. Réessaie."
     },
@@ -95,6 +90,7 @@
       "clipDownload": "Télécharger le clip (MP4)",
       "clipDownloading": "Téléchargement du clip…",
       "clipDownloadFailed": "Téléchargement impossible. Recharge la page du clip et réessaie.",
+      "clipOpenEditor": "Monter avec StreamPulse Clips",
       "latencyEmpty": "Latence : --",
       "latencyValue": "Latence : {{value}}s",
       "offline": "HORS LIGNE"
@@ -154,6 +150,7 @@
         "candy": "Sucre d'orge",
         "toxic": "Toxique",
         "matrix": "Matrix",
+        "bughunterOnly": "Réservé à qui a trouvé un bug",
         "ocean": "Océan",
         "tenure": "Ancienneté · Jauge",
         "pager": "Ancienneté · Pager",
@@ -225,15 +222,11 @@
     "badge": {
       "founder": "StreamPulse founder",
       "ambassador": "Ambassador",
-      "bughunter": "Bug hunter",
       "lifetime": "Lifetime member",
       "months": "Subscribed for {{count}} months",
       "monthOne": "Subscribed for 1 month",
       "newMember": "New subscriber",
-      "freeLine": "Extension user",
-      "worn": "Worn",
-      "tenure": "Tenure",
-      "nameStyle": "Name"
+      "freeLine": "Extension user"
     },
     "topbar": {
       "previews": "Hover previews",
@@ -262,7 +255,6 @@
       "tracked": "In StreamPulse",
       "remove": "Remove from StreamPulse",
       "added": "{{name}} added to StreamPulse",
-      "addedWaiting": "{{name}} is in StreamPulse. Not live right now: we'll let you know as soon as a stream or Premiere starts.",
       "removed": "{{name}} removed from StreamPulse",
       "error": "Action failed. Try again."
     },
@@ -275,6 +267,7 @@
       "clipDownload": "Download clip (MP4)",
       "clipDownloading": "Downloading clip…",
       "clipDownloadFailed": "Download failed. Reload the clip page and try again.",
+      "clipOpenEditor": "Edit with StreamPulse Clips",
       "latencyEmpty": "Latency: --",
       "latencyValue": "Latency: {{value}}s",
       "offline": "OFFLINE"
@@ -334,6 +327,7 @@
         "candy": "Candy cane",
         "toxic": "Toxic",
         "matrix": "Matrix",
+        "bughunterOnly": "For those who found a bug",
         "ocean": "Ocean",
         "tenure": "Loyalty · Gauge",
         "pager": "Loyalty · Pager",
@@ -405,15 +399,11 @@
     "badge": {
       "founder": "Fundador de StreamPulse",
       "ambassador": "Embajador",
-      "bughunter": "Cazador de bugs",
       "lifetime": "Miembro de por vida",
       "months": "Suscrito desde hace {{count}} meses",
       "monthOne": "Suscrito desde hace 1 mes",
       "newMember": "Nuevo suscriptor",
-      "freeLine": "Usuario de la extensión",
-      "worn": "Puesto",
-      "tenure": "Antigüedad",
-      "nameStyle": "Nombre"
+      "freeLine": "Usuario de la extensión"
     },
     "topbar": {
       "previews": "Vistas previas al pasar",
@@ -442,7 +432,6 @@
       "tracked": "Siguiendo",
       "remove": "Quitar de StreamPulse",
       "added": "{{name}} añadido a StreamPulse",
-      "addedWaiting": "{{name}} está en StreamPulse. Ahora no está en directo: te avisaremos en cuanto empiece un directo o un estreno.",
       "removed": "{{name}} eliminado de StreamPulse",
       "error": "Acción fallida. Inténtalo de nuevo."
     },
@@ -455,6 +444,7 @@
       "clipDownload": "Descargar clip (MP4)",
       "clipDownloading": "Descargando clip…",
       "clipDownloadFailed": "No se ha podido descargar. Recarga la página del clip y vuelve a intentarlo.",
+      "clipOpenEditor": "Editar con StreamPulse Clips",
       "latencyEmpty": "Latencia: --",
       "latencyValue": "Latencia: {{value}}s",
       "offline": "DESCONECTADO"
@@ -514,6 +504,7 @@
         "candy": "Bastón de caramelo",
         "toxic": "Tóxico",
         "matrix": "Matrix",
+        "bughunterOnly": "Para quien encontró un bug",
         "ocean": "Océano",
         "tenure": "Antigüedad · Indicador",
         "pager": "Antigüedad · Pager",
@@ -585,15 +576,11 @@
     "badge": {
       "founder": "Fundador do StreamPulse",
       "ambassador": "Embaixador",
-      "bughunter": "Caçador de bugs",
       "lifetime": "Membro vitalício",
       "months": "Assinante há {{count}} meses",
       "monthOne": "Assinante há 1 mês",
       "newMember": "Novo assinante",
-      "freeLine": "Usuário da extensão",
-      "worn": "Usando",
-      "tenure": "Tempo",
-      "nameStyle": "Nome"
+      "freeLine": "Usuário da extensão"
     },
     "topbar": {
       "previews": "Prévias ao passar o mouse",
@@ -622,7 +609,6 @@
       "tracked": "Seguindo",
       "remove": "Remover do StreamPulse",
       "added": "{{name}} adicionado ao StreamPulse",
-      "addedWaiting": "{{name}} está no StreamPulse. Não está ao vivo agora: avisamos você assim que uma live ou estreia começar.",
       "removed": "{{name}} removido do StreamPulse",
       "error": "Falha na ação. Tente novamente."
     },
@@ -635,6 +621,7 @@
       "clipDownload": "Baixar clipe (MP4)",
       "clipDownloading": "Baixando clipe…",
       "clipDownloadFailed": "Não foi possível baixar. Recarregue a página do clipe e tente de novo.",
+      "clipOpenEditor": "Editar com o StreamPulse Clips",
       "latencyEmpty": "Latência: --",
       "latencyValue": "Latência: {{value}}s",
       "offline": "OFFLINE"
@@ -694,6 +681,7 @@
         "candy": "Bengala doce",
         "toxic": "Tóxico",
         "matrix": "Matrix",
+        "bughunterOnly": "Para quem encontrou um bug",
         "ocean": "Oceano",
         "tenure": "Fidelidade · Medidor",
         "pager": "Fidelidade · Pager",
@@ -765,15 +753,11 @@
     "badge": {
       "founder": "Gründer von StreamPulse",
       "ambassador": "Botschafter",
-      "bughunter": "Bugjäger",
       "lifetime": "Mitglied auf Lebenszeit",
       "months": "Seit {{count}} Monaten dabei",
       "monthOne": "Seit 1 Monat dabei",
       "newMember": "Neues Mitglied",
-      "freeLine": "Nutzt die Erweiterung",
-      "worn": "Getragen",
-      "tenure": "Treue",
-      "nameStyle": "Name"
+      "freeLine": "Nutzt die Erweiterung"
     },
     "topbar": {
       "previews": "Hover-Vorschau",
@@ -802,7 +786,6 @@
       "tracked": "Verfolgt",
       "remove": "Aus StreamPulse entfernen",
       "added": "{{name}} zu StreamPulse hinzugefügt",
-      "addedWaiting": "{{name}} ist in StreamPulse. Gerade nicht live: Wir sagen dir Bescheid, sobald ein Stream oder eine Premiere startet.",
       "removed": "{{name}} aus StreamPulse entfernt",
       "error": "Aktion nicht möglich. Versuch es noch mal."
     },
@@ -815,6 +798,7 @@
       "clipDownload": "Clip herunterladen (MP4)",
       "clipDownloading": "Clip wird heruntergeladen…",
       "clipDownloadFailed": "Download nicht möglich. Lade die Clipseite neu und versuch es noch mal.",
+      "clipOpenEditor": "Mit StreamPulse Clips bearbeiten",
       "latencyEmpty": "vorzuspulen Latenz: --",
       "latencyValue": "Latenz: {{value}}s",
       "offline": "OFFLINE"
@@ -874,6 +858,7 @@
         "candy": "Zuckerstange",
         "toxic": "Toxisch",
         "matrix": "Matrix",
+        "bughunterOnly": "Für alle, die einen Bug gefunden haben",
         "ocean": "Ozean",
         "tenure": "Treue · Anzeige",
         "pager": "Treue · Pager",
@@ -945,15 +930,11 @@
     "badge": {
       "founder": "Fondatore di StreamPulse",
       "ambassador": "Ambasciatore",
-      "bughunter": "Cacciatore di bug",
       "lifetime": "Membro a vita",
       "months": "Abbonato da {{count}} mesi",
       "monthOne": "Abbonato da 1 mese",
       "newMember": "Nuovo abbonato",
-      "freeLine": "Utente dell'estensione",
-      "worn": "Indossato",
-      "tenure": "Anzianità",
-      "nameStyle": "Nome"
+      "freeLine": "Utente dell'estensione"
     },
     "topbar": {
       "previews": "Anteprime al passaggio",
@@ -982,7 +963,6 @@
       "tracked": "In StreamPulse",
       "remove": "Rimuovi da StreamPulse",
       "added": "{{name}} aggiunto a StreamPulse",
-      "addedWaiting": "{{name}} è in StreamPulse. Ora non è in diretta: ti avvisiamo appena inizia una diretta o una Première.",
       "removed": "{{name}} rimosso da StreamPulse",
       "error": "Azione fallita. Riprova."
     },
@@ -995,6 +975,7 @@
       "clipDownload": "Scarica clip (MP4)",
       "clipDownloading": "Download della clip…",
       "clipDownloadFailed": "Download non riuscito. Ricarica la pagina della clip e riprova.",
+      "clipOpenEditor": "Modifica con StreamPulse Clips",
       "latencyEmpty": "Latenza: --",
       "latencyValue": "Latenza: {{value}}s",
       "offline": "OFFLINE"
@@ -1054,6 +1035,7 @@
         "candy": "Bastoncino di zucchero",
         "toxic": "Tossico",
         "matrix": "Matrix",
+        "bughunterOnly": "Per chi ha trovato un bug",
         "ocean": "Oceano",
         "tenure": "Anzianità · Indicatore",
         "pager": "Anzianità · Pager",
@@ -1125,15 +1107,11 @@
     "badge": {
       "founder": "Założyciel StreamPulse",
       "ambassador": "Ambasador",
-      "bughunter": "Łowca bugów",
       "lifetime": "Członek dożywotni",
       "months": "Subskrybuje od {{count}} mies.",
       "monthOne": "Subskrybuje od 1 miesiąca",
       "newMember": "Nowy subskrybent",
-      "freeLine": "Użytkownik rozszerzenia",
-      "worn": "Noszona",
-      "tenure": "Staż",
-      "nameStyle": "Nick"
+      "freeLine": "Użytkownik rozszerzenia"
     },
     "topbar": {
       "previews": "Podgląd po najechaniu",
@@ -1162,7 +1140,6 @@
       "tracked": "W StreamPulse",
       "remove": "Usuń ze StreamPulse",
       "added": "Dodano {{name}} do StreamPulse",
-      "addedWaiting": "{{name}} jest w StreamPulse. Teraz nie nadaje: damy ci znać, gdy tylko zacznie się transmisja lub premiera.",
       "removed": "Usunięto {{name}} ze StreamPulse",
       "error": "Akcja nie powiodła się. Spróbuj ponownie."
     },
@@ -1175,6 +1152,7 @@
       "clipDownload": "Pobierz klip (MP4)",
       "clipDownloading": "Pobieranie klipu…",
       "clipDownloadFailed": "Nie udało się pobrać. Odśwież stronę klipu i spróbuj ponownie.",
+      "clipOpenEditor": "Edytuj w StreamPulse Clips",
       "latencyEmpty": "Opóźnienie: --",
       "latencyValue": "Opóźnienie: {{value}} s",
       "offline": "OFFLINE"
@@ -1234,6 +1212,7 @@
         "candy": "Laska cukrowa",
         "toxic": "Toksyczny",
         "matrix": "Matrix",
+        "bughunterOnly": "Dla tych, którzy znaleźli błąd",
         "ocean": "Ocean",
         "tenure": "Staż · Wskaźnik",
         "pager": "Staż · Pager",
@@ -1305,15 +1284,11 @@
     "badge": {
       "founder": "StreamPulse kurucusu",
       "ambassador": "Elçi",
-      "bughunter": "Hata avcısı",
       "lifetime": "Ömür boyu üye",
       "months": "{{count}} aydır abone",
       "monthOne": "1 aydır abone",
       "newMember": "Yeni abone",
-      "freeLine": "Eklenti kullanıcısı",
-      "worn": "Takılı",
-      "tenure": "Kıdem",
-      "nameStyle": "Ad"
+      "freeLine": "Eklenti kullanıcısı"
     },
     "topbar": {
       "previews": "Üzerine gelince önizleme",
@@ -1342,7 +1317,6 @@
       "tracked": "StreamPulse'ta",
       "remove": "StreamPulse'tan kaldır",
       "added": "{{name}}, StreamPulse'a eklendi",
-      "addedWaiting": "{{name}} StreamPulse'ta. Şu an yayında değil: bir yayın veya prömiyer başlar başlamaz haber vereceğiz.",
       "removed": "{{name}}, StreamPulse'tan kaldırıldı",
       "error": "İşlem başarısız oldu. Tekrar dene."
     },
@@ -1355,6 +1329,7 @@
       "clipDownload": "Klibi indir (MP4)",
       "clipDownloading": "Klip indiriliyor…",
       "clipDownloadFailed": "İndirilemedi. Klip sayfasını yenileyip tekrar dene.",
+      "clipOpenEditor": "StreamPulse Clips ile düzenle",
       "latencyEmpty": "Gecikme: --",
       "latencyValue": "Gecikme süresi: {{value}} saniye",
       "offline": "ÇEVRİMDIŞI"
@@ -1414,6 +1389,7 @@
         "candy": "Şeker kamışı",
         "toxic": "Toksik",
         "matrix": "Matrix",
+        "bughunterOnly": "Hata bulanlara özel",
         "ocean": "Okyanus",
         "tenure": "Kıdem · Gösterge",
         "pager": "Kıdem · Çağrı cihazı",
@@ -1485,15 +1461,11 @@
     "badge": {
       "founder": "Основатель StreamPulse",
       "ambassador": "Посол",
-      "bughunter": "Охотник за багами",
       "lifetime": "Участник навсегда",
       "months": "Подписчик {{count}} мес.",
       "monthOne": "Подписчик 1 месяц",
       "newMember": "Новый подписчик",
-      "freeLine": "Пользователь расширения",
-      "worn": "Надет",
-      "tenure": "Стаж",
-      "nameStyle": "Ник"
+      "freeLine": "Пользователь расширения"
     },
     "topbar": {
       "previews": "Превью при наведении",
@@ -1522,7 +1494,6 @@
       "tracked": "В StreamPulse",
       "remove": "Убрать из StreamPulse",
       "added": "{{name}} добавлен в StreamPulse",
-      "addedWaiting": "{{name}} в StreamPulse. Сейчас не в эфире: сообщим, как только начнётся трансляция или премьера.",
       "removed": "{{name}} убран из StreamPulse",
       "error": "Не получилось. Попробуй снова."
     },
@@ -1535,6 +1506,7 @@
       "clipDownload": "Скачать клип (MP4)",
       "clipDownloading": "Скачивание клипа…",
       "clipDownloadFailed": "Не удалось скачать. Перезагрузи страницу клипа и попробуй снова.",
+      "clipOpenEditor": "Монтировать в StreamPulse Clips",
       "latencyEmpty": "Задержка: --",
       "latencyValue": "Задержка: {{value}} с",
       "offline": "ОФЛАЙН"
@@ -1594,6 +1566,7 @@
         "candy": "Леденец",
         "toxic": "Токсичный",
         "matrix": "Матрица",
+        "bughunterOnly": "Для тех, кто нашёл баг",
         "ocean": "Океан",
         "tenure": "Стаж · Шкала",
         "pager": "Стаж · Пейджер",
@@ -1665,15 +1638,11 @@
     "badge": {
       "founder": "StreamPulse 創設者",
       "ambassador": "アンバサダー",
-      "bughunter": "バグハンター",
       "lifetime": "永久メンバー",
       "months": "{{count}}か月利用中",
       "monthOne": "1か月利用中",
       "newMember": "新規メンバー",
-      "freeLine": "拡張機能ユーザー",
-      "worn": "着用中",
-      "tenure": "継続",
-      "nameStyle": "名前"
+      "freeLine": "拡張機能ユーザー"
     },
     "topbar": {
       "previews": "ホバープレビュー",
@@ -1702,7 +1671,6 @@
       "tracked": "登録済み",
       "remove": "StreamPulse から削除",
       "added": "{{name}} が StreamPulse に追加されました",
-      "addedWaiting": "{{name}} を StreamPulse に追加しました。いまは配信していません。配信かプレミア公開が始まったらお知らせします。",
       "removed": "{{name}} が StreamPulse から削除されました",
       "error": "操作に失敗しました。もう一度お試しください。"
     },
@@ -1715,6 +1683,7 @@
       "clipDownload": "クリップをダウンロード (MP4)",
       "clipDownloading": "クリップをダウンロード中…",
       "clipDownloadFailed": "ダウンロードできませんでした。クリップのページを再読み込みして、もう一度お試しください。",
+      "clipOpenEditor": "StreamPulse Clips で編集",
       "latencyEmpty": "遅延：--",
       "latencyValue": "遅延：{{value}}秒",
       "offline": "オフライン"
@@ -1774,6 +1743,7 @@
         "candy": "キャンディケイン",
         "toxic": "トキシック",
         "matrix": "マトリックス",
+        "bughunterOnly": "バグを見つけた人だけ",
         "ocean": "オーシャン",
         "tenure": "継続・ゲージ",
         "pager": "継続・ポケベル",
@@ -1845,15 +1815,11 @@
     "badge": {
       "founder": "StreamPulse 창립자",
       "ambassador": "앰배서더",
-      "bughunter": "버그 헌터",
       "lifetime": "평생 멤버",
       "months": "{{count}}개월째 구독 중",
       "monthOne": "1개월째 구독 중",
       "newMember": "새 구독자",
-      "freeLine": "확장 프로그램 사용자",
-      "worn": "착용 중",
-      "tenure": "기간",
-      "nameStyle": "닉네임"
+      "freeLine": "확장 프로그램 사용자"
     },
     "topbar": {
       "previews": "마우스 오버 미리보기",
@@ -1882,7 +1848,6 @@
       "tracked": "추적됨",
       "remove": "StreamPulse에서 제거",
       "added": "{{name}}이(가) StreamPulse에 추가되었습니다.",
-      "addedWaiting": "{{name}}을(를) StreamPulse에 추가했어요. 지금은 방송 중이 아니에요. 방송이나 최초 공개가 시작되면 바로 알려 드릴게요.",
       "removed": "{{name}}이(가) StreamPulse에서 삭제되었습니다.",
       "error": "작업이 실패했습니다. 다시 시도해 주세요."
     },
@@ -1895,6 +1860,7 @@
       "clipDownload": "클립 다운로드 (MP4)",
       "clipDownloading": "클립 다운로드 중…",
       "clipDownloadFailed": "다운로드할 수 없습니다. 클립 페이지를 새로고침한 뒤 다시 시도하세요.",
+      "clipOpenEditor": "StreamPulse Clips로 편집",
       "latencyEmpty": "지연 시간: --",
       "latencyValue": "지연 시간: {{value}}초",
       "offline": "오프라인"
@@ -1954,6 +1920,7 @@
         "candy": "캔디 케인",
         "toxic": "독성",
         "matrix": "매트릭스",
+        "bughunterOnly": "버그를 찾은 사람 전용",
         "ocean": "바다",
         "tenure": "구독 기간 · 게이지",
         "pager": "구독 기간 · 삐삐",
@@ -2025,15 +1992,11 @@
     "badge": {
       "founder": "مؤسس StreamPulse",
       "ambassador": "سفير",
-      "bughunter": "صائد الأخطاء",
       "lifetime": "عضو مدى الحياة",
       "months": "مشترك منذ {{count}} أشهر",
       "monthOne": "مشترك منذ شهر واحد",
       "newMember": "مشترك جديد",
-      "freeLine": "مستخدم الإضافة",
-      "worn": "المرتدى",
-      "tenure": "الأقدمية",
-      "nameStyle": "الاسم"
+      "freeLine": "مستخدم الإضافة"
     },
     "topbar": {
       "previews": "معاينات التمرير",
@@ -2062,7 +2025,6 @@
       "tracked": "في StreamPulse",
       "remove": "أزل من StreamPulse",
       "added": "أُضيف {{name}} إلى StreamPulse",
-      "addedWaiting": "{{name}} في StreamPulse. ليس في بث مباشر الآن: سننبهك فور بدء بث أو عرض أول.",
       "removed": "أُزيل {{name}} من StreamPulse",
       "error": "فشل الإجراء. حاول مجددًا."
     },
@@ -2075,6 +2037,7 @@
       "clipDownload": "تنزيل المقطع (MP4)",
       "clipDownloading": "جارٍ تنزيل المقطع…",
       "clipDownloadFailed": "فشل التنزيل. أعد تحميل صفحة المقطع وحاول مجددًا.",
+      "clipOpenEditor": "تعديل باستخدام StreamPulse Clips",
       "latencyEmpty": "زمن الاستجابة: --",
       "latencyValue": "زمن الاستجابة: {{value}} ث",
       "offline": "غير متصل"
@@ -2134,6 +2097,7 @@
         "candy": "عصا الحلوى",
         "toxic": "سام",
         "matrix": "ماتريكس",
+        "bughunterOnly": "لمن عثر على خطأ",
         "ocean": "محيط",
         "tenure": "الولاء · مقياس",
         "pager": "الولاء · جهاز نداء",

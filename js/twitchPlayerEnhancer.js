@@ -902,7 +902,8 @@
   }
 
   // preventPause.js runs in the MAIN world and cannot read chrome.storage,
-  // so the opt-in is mirrored into page localStorage. Applies on next load.
+  // so the opt-in is mirrored into page localStorage, then announced by an event:
+  // the setting applies at once, without reloading the page.
   const PLAYER_QUALITY_KEY = "streampulse:playerQuality";
   const PLAYER_QUALITIES = ["auto", "source", "1440", "1080", "720", "480", "360"];
 
@@ -926,6 +927,7 @@
       } else {
         window.localStorage.removeItem(KEEP_QUALITY_FLAG_KEY);
       }
+      window.dispatchEvent(new Event("streampulse:keep-playing-changed"));
     } catch (_error) {
       // Storage can be blocked (privacy mode): the feature simply stays off.
     }

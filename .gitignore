@@ -26,6 +26,10 @@ memory.md
 # Kits store, assets promo et outreach : jamais versionnes
 DevKit/
 
+# Audits de sécurité : décrivent des failles parfois encore ouvertes, jamais versionnés
+docs/securite/
+SECURITY_*.md
+
 # Visuels promotionnels : uniquement dans DevKit/store-images, jamais commités. Seules les quatre images
 # du README restent suivies (le zip de l'extension exclut déjà ces deux dossiers : scripts/build-zip.mjs).
 images/promo/*

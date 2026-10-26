@@ -240,6 +240,7 @@ export default {
       "planYearly": "Plano anual · {{key}}",
       "manage": "Gerenciar minha assinatura",
       "manageError": "Não dá para abrir sua conta agora. Tente de novo em alguns minutos.",
+      "manageEmailed": "Para proteger sua conta, o link do seu espaço foi enviado ao seu e-mail de pagamento.",
       "deactivate": "Remover a licença deste navegador",
       "close": "Fechar"
     },
@@ -618,16 +619,25 @@ export default {
       "rankAmbassador": "Embaixador · amigos indicados: {{count}}",
       "intro": "A aparência do seu emblema StreamPulse e do seu nome no chat da Twitch, visível para outros usuários do StreamPulse."
     },
+    "referralAsk": {
+      "title": "Indique um amigo",
+      "body": "Ele ganha 2,99 € de desconto no StreamPulse+. Você ganha dinheiro ou meses grátis.",
+      "open": "Obter meu link"
+    },
     "referral": {
-      "generalBody": "Um mês grátis para cada amigo que assinar o StreamPulse+ com o seu código.",
-      "generalOpen": "Ver meu código",
+      "generalBody": "Seu amigo ganha 2,99 € de desconto; você ganha dinheiro ou meses grátis.",
+      "generalOpen": "Obter meu link",
       "plusTitle": "Indique seus amigos",
-      "plusBody": "Seu amigo ganha 2,99 € de desconto (1º mês grátis). Você ganha dinheiro e estas recompensas:",
+      "plusBody": "Seu amigo ganha 2,99 € de desconto: 1º mês grátis, ou 1º ano por 16,01 € em vez de 19 €. Você ganha dinheiro e estas recompensas:",
       "title": "Indicação",
-      "body": "Compartilhe seu código: seu amigo ganha 2,99 € de desconto (1º mês grátis). Você recebe 1 € por mês enquanto ele continuar assinante, pagos no PayPal.",
-      "get": "Obter meu código",
-      "copy": "Copiar",
+      "body": "Compartilhe seu link: seu amigo ganha 2,99 € de desconto (1º mês grátis, ou 1º ano por 16,01 €). Você recebe 1 € por mês pago por um amigo mensal, ou 5 € por ano pago por um amigo anual, via PayPal.",
+      "get": "Obter meu link",
+      "copy": "Copiar o código",
       "copied": "Código copiado!",
+      "copyLink": "Copiar meu link",
+      "linkCopied": "Link copiado, com uma mensagem curta. Cole para o seu amigo: o desconto dele já está aplicado.",
+      "linkCopiedShort": "Link copiado!",
+      "shareMessage": "Recomendo o StreamPulse, a extensão que avisa quando um streamer da Twitch, Kick ou YouTube está ao vivo. Com o meu link você tem 2,99 € de desconto no StreamPulse+: {{link}}",
       "loading": "Carregando…",
       "soon": "As indicações abrem muito em breve.",
       "error": "Código indisponível no momento. Tente mais tarde.",
@@ -638,7 +648,7 @@ export default {
       "tierBadge": "Efeito de emblema",
       "tierDevice": "Mais um dispositivo",
       "each": "Cada amigo",
-      "tierMoney": "1 €/mês enquanto ele continuar assinante",
+      "tierMoney": "1 € por mês pago, 5 € por ano pago",
       "balance": "A receber",
       "earned": "Ganho: {{earned}} · já pago: {{paid}}",
       "payoutRule": "Pago no seu PayPal a partir de {{min}}. Só para maiores de idade.",
@@ -646,13 +656,15 @@ export default {
       "paypalPlaceholder": "voce@exemplo.com",
       "paypalSave": "Salvar",
       "paypalSaved": "Endereço do PayPal salvo.",
+      "paypalPending": "Confirme este endereço pelo link enviado ao seu e-mail de pagamento.",
       "paypalInvalid": "Este endereço de e-mail não é válido.",
       "paypalMissing": "Adicione seu endereço do PayPal para receber seus ganhos.",
-      "freeBody": "Compartilhe seu código: seu amigo ganha 2,99 € de desconto (1º mês grátis). Você ganha um mês de StreamPulse+ para cada amigo que assinar, com a chave enviada por e-mail.",
+      "freeBody": "Compartilhe seu link: seu amigo ganha 2,99 € de desconto (1º mês grátis, ou 1º ano por 16,01 €). Você ganha um mês de StreamPulse+ para cada amigo que assinar, com sua chave enviada por e-mail.",
       "freeLabel": "Seu e-mail, para receber seus meses grátis",
       "freeSubmit": "Criar meu código",
       "freeTaken": "Este endereço já está em uso em outro navegador.",
-      "freeReady": "Seu código está pronto. Assim que um amigo assinar, sua chave chega por e-mail."
+      "freeReady": "Seu link está pronto. Assim que um amigo assinar, sua chave chega por e-mail.",
+      "freeCheckEmail": "Abra o link enviado por e-mail para confirmar seu endereço e volte para criar seu código."
     },
     "layout": {
       "title": "Disposição",
@@ -1192,8 +1204,8 @@ export default {
     "platformsLabel": "Plataformas contadas",
     "platformsHint": "O YouTube está desmarcado por enquanto, enquanto sua medição é verificada. Você pode adicioná-lo se quiser.",
     "referral": {
-      "body": "Indique o StreamPulse: um mês grátis para cada amigo que assinar com o seu código.",
-      "copy": "Copiar meu código"
+      "body": "Indicações: seu amigo ganha 2,99 € de desconto; você ganha dinheiro ou meses grátis.",
+      "copy": "Copiar meu link"
     },
     "periodYear": "Resumo de {{year}}",
     "plus": {
@@ -1398,6 +1410,7 @@ export default {
       "clipDownload": "Baixar clipe (MP4)",
       "clipDownloading": "Baixando clipe…",
       "clipDownloadFailed": "Não foi possível baixar. Recarregue a página do clipe e tente de novo.",
+      "clipOpenEditor": "Editar com o StreamPulse Clips",
       "latencyEmpty": "Latência: --",
       "latencyValue": "Latência: {{value}}s",
       "offline": "OFFLINE"

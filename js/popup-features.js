@@ -9,6 +9,7 @@ import { initDrops } from "./popup-drops.js";
 import { initLayout } from "./popup-layout.js";
 import { initReviewAsk } from "./popup-review.js";
 import { initBadgeAsk } from "./popup-badge-ask.js";
+import { initReferralAsk } from "./popup-referral-ask.js";
 import { createWatchLaterButton } from "./popup-watch-later.js";
 import { IDENTITY_STORAGE_KEYS, initIdentity, renderIdentity } from "./popup-identity.js";
 import { HISTORY_KEY, formatClock, missedView, summarize } from "./history-data.js";
@@ -336,7 +337,7 @@ function ensureClipsMetal() {
     clipsMetalMounted = true;
     mountLiquidMetalButton(host, {
       label: t("changelog.clipsCtaShort"),
-      onClick: () => window.open("https://spclips.com", "_blank", "noopener"),
+      onClick: () => window.open("https://spclips.com/app?utm_source=streampulse&utm_medium=extension&utm_campaign=popup", "_blank", "noopener"),
     });
   }
   mountClipsMorph($("clips-morph"));
@@ -545,9 +546,16 @@ function initPlus() {
     button.disabled = true;
     if (error) error.hidden = true;
     try {
-      const url = await portalUrl(plusRecord.licenseKey, fetch);
-      if (url) {
-        openTab(url);
+      const portal = await portalUrl(plusRecord.licenseKey, fetch, await getDeviceId(chrome.storage.local));
+      if (portal?.url) {
+        openTab(portal.url);
+        return;
+      }
+      if (portal?.emailed) {
+        if (error) {
+          error.textContent = t("popup.plus.manageEmailed");
+          error.hidden = false;
+        }
         return;
       }
       throw new Error("no_portal");
@@ -569,9 +577,16 @@ function initPlus() {
     button.disabled = true;
     if (error) error.hidden = true;
     try {
-      const url = await portalUrl(plusRecord.licenseKey, fetch);
-      if (url) {
-        openTab(url);
+      const portal = await portalUrl(plusRecord.licenseKey, fetch, await getDeviceId(chrome.storage.local));
+      if (portal?.url) {
+        openTab(portal.url);
+        return;
+      }
+      if (portal?.emailed) {
+        if (error) {
+          error.textContent = t("popup.plus.manageEmailed");
+          error.hidden = false;
+        }
         return;
       }
       throw new Error("no_portal");
@@ -1011,8 +1026,11 @@ export async function initFeatures() {
   });
   initPoints({ isPlus: plusActive, onPlusChange: (listener) => plusListeners.add(listener), openPlus })
     .catch((error) => console.warn("[popup] points init failed:", error));
-  initReviewAsk().catch((error) => console.warn("[popup] review ask init failed:", error));
-  initBadgeAsk().catch((error) => console.warn("[popup] badge ask init failed:", error));
+  // La carte parrainage passe après l'avis et le badge : une seule carte à la fois.
+  Promise.all([initReviewAsk(), initBadgeAsk()])
+    .catch((error) => console.warn("[popup] review/badge ask init failed:", error))
+    .then(() => initReferralAsk())
+    .catch((error) => console.warn("[popup] referral ask init failed:", error));
   initLayout().catch((error) => console.warn("[popup] layout init failed:", error));
   initDrops({ isPlus: plusActive, onPlusChange: (listener) => plusListeners.add(listener), openPlus })
     .catch((error) => console.warn("[popup] drops init failed:", error));

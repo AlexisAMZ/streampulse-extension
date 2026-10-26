@@ -31,7 +31,9 @@ export async function signatureState(record, device, { subtle = globalThis.crypt
   if (!record?.sig || !record?.iat) return "missing";
   try {
     const publicKey = await subtle.importKey("jwk", { ...jwk }, { name: "ECDSA", namedCurve: "P-256" }, false, ["verify"]);
-    const message = licenseMessage({ key: record.licenseKey, device, ...record });
+    // Clé et appareil posés après l'enregistrement : un champ « key » ou
+    // « device » ajouté au stockage ne doit pas remplacer ceux de ce navigateur.
+    const message = licenseMessage({ ...record, key: record.licenseKey, device });
     const ok = await subtle.verify(
       { name: "ECDSA", hash: "SHA-256" },
       publicKey,

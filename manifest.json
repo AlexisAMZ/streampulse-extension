@@ -3,7 +3,7 @@
   "default_locale": "en",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "26.10.25",
+  "version": "26.10.26",
   "permissions": [
     "storage",
     "alarms",
@@ -78,6 +78,7 @@
         "js/inject/i18n-inline.js",
         "js/inject/dom.js",
         "js/inject/plus-rule.js",
+        "js/inject/clips-handoff.js",
         "js/inject/topbar-panel.js",
         "js/inject/settings-drawer.js",
         "js/inject/topbar.js",

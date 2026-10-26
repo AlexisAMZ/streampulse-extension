@@ -278,6 +278,7 @@ export default {
       "planYearly": "Yearly plan · {{key}}",
       "manage": "Manage my subscription",
       "manageError": "Can't open your account right now. Try again in a few minutes.",
+      "manageEmailed": "To protect your account, the link to your space was just sent to your payment email.",
       "deactivate": "Remove the license from this browser",
       "close": "Close"
     },
@@ -656,16 +657,25 @@ export default {
       "rankAmbassador": "Ambassador · friends referred: {{count}}",
       "intro": "How your StreamPulse badge and your name look in Twitch chat, visible to other StreamPulse users."
     },
+    "referralAsk": {
+      "title": "Refer a friend",
+      "body": "They get €2.99 off StreamPulse+. You earn money or free months.",
+      "open": "Get my link"
+    },
     "referral": {
-      "generalBody": "One free month for every friend who takes StreamPulse+ with your code.",
-      "generalOpen": "See my code",
+      "generalBody": "Your friend gets €2.99 off. You earn money or free months.",
+      "generalOpen": "Get my link",
       "plusTitle": "Refer your friends",
-      "plusBody": "Your friend gets €2.99 off (first month free). You earn money and these rewards:",
+      "plusBody": "Your friend gets €2.99 off: first month free, or first year for €16.01 instead of €19. You earn money and these rewards:",
       "title": "Referral",
-      "body": "Share your code: your friend gets €2.99 off (first month free). You get €1 a month while they stay subscribed, paid to PayPal.",
-      "get": "Get my code",
-      "copy": "Copy",
+      "body": "Share your link: your friend gets €2.99 off (first month free, or first year for €16.01). You get €1 for each month a monthly friend pays, or €5 for each year a yearly friend pays, paid to PayPal.",
+      "get": "Get my link",
+      "copy": "Copy the code",
       "copied": "Code copied!",
+      "copyLink": "Copy my link",
+      "linkCopied": "Link copied, with a short message. Paste it to your friend: their discount is already applied.",
+      "linkCopiedShort": "Link copied!",
+      "shareMessage": "I recommend StreamPulse, the extension that tells you when a Twitch, Kick or YouTube streamer goes live. With my link you get €2.99 off StreamPulse+: {{link}}",
       "loading": "Loading…",
       "soon": "Referrals open very soon.",
       "error": "Code unavailable right now. Try again later.",
@@ -676,7 +686,7 @@ export default {
       "tierBadge": "Badge effect",
       "tierDevice": "One more device",
       "each": "Every friend",
-      "tierMoney": "€1/month while they stay subscribed",
+      "tierMoney": "€1 per month paid, €5 per year paid",
       "balance": "To be paid",
       "earned": "Earned: {{earned}} · already paid: {{paid}}",
       "payoutRule": "Paid to your PayPal from {{min}}. Adults only.",
@@ -684,13 +694,15 @@ export default {
       "paypalPlaceholder": "you@example.com",
       "paypalSave": "Save",
       "paypalSaved": "PayPal address saved.",
+      "paypalPending": "Confirm this address with the link sent to your payment email.",
       "paypalInvalid": "This email address isn't valid.",
       "paypalMissing": "Add your PayPal address to receive your earnings.",
-      "freeBody": "Share your code: your friend gets €2.99 off (first month free). You get a month of StreamPulse+ for every friend who subscribes, with your key sent by email.",
+      "freeBody": "Share your link: your friend gets €2.99 off (first month free, or first year for €16.01). You earn one free month of StreamPulse+ for every friend who subscribes, with your key sent by email.",
       "freeLabel": "Your email, to receive your free months",
       "freeSubmit": "Create my code",
       "freeTaken": "This address is already used on another browser.",
-      "freeReady": "Your code is ready. As soon as a friend subscribes, your key arrives by email."
+      "freeReady": "Your link is ready. As soon as a friend subscribes, your key arrives by email.",
+      "freeCheckEmail": "Open the link we emailed you to confirm your address, then come back to create your code."
     },
     "layout": {
       "title": "Layout",
@@ -1230,8 +1242,8 @@ export default {
     "platformsLabel": "Platforms counted",
     "platformsHint": "YouTube is unchecked for now while its measurement is being verified. You can add it if you like.",
     "referral": {
-      "body": "Referrals: one free month for every friend who takes StreamPulse+ with your code.",
-      "copy": "Copy my code"
+      "body": "Referrals: your friend gets €2.99 off, you earn money or free months.",
+      "copy": "Copy my link"
     },
     "periodYear": "Wrapped {{year}}",
     "plus": {
@@ -1436,6 +1448,7 @@ export default {
       "clipDownload": "Download clip (MP4)",
       "clipDownloading": "Downloading clip…",
       "clipDownloadFailed": "Download failed. Reload the clip page and try again.",
+      "clipOpenEditor": "Edit with StreamPulse Clips",
       "latencyEmpty": "Latency: --",
       "latencyValue": "Latency: {{value}}s",
       "offline": "OFFLINE"

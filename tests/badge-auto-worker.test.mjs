@@ -12,7 +12,7 @@ function fakeChrome() {
   const tabs = new Map();
   const alarms = new Map();
   let nextTab = 100;
-  const log = { created: [], updated: [], removed: [], scripts: [] };
+  const log = { created: [], updated: [], removed: [], scripts: [], patches: [] };
   globalThis.chrome = {
     storage: {
       local: {
@@ -44,6 +44,7 @@ function fakeChrome() {
         return tab;
       },
       update: async (id, patch) => {
+        log.patches.push({ id, ...patch });
         if (patch.url) {
           tabs.get(id).url = patch.url;
           log.updated.push(patch.url);
@@ -332,4 +333,27 @@ test("autoFarm : sans file, « tous » démarre ; avec une file, les nouveaux s'
   assert.deepEqual(await auto.autoFarm(["t90"]), { started: true, count: 1 });
   assert.deepEqual(store.streamPulseBadgeAuto.jobs.map((item) => item.badgeId), ["t60", "t90"]);
   assert.equal(store.streamPulseBadgeAuto.mode, "manual");
+});
+
+test("l'onglet du mode auto n'est jamais déchargé par le navigateur, quel que soit le réglage", async () => {
+  const { store, log } = fakeChrome();
+  store.streamPulsePlus = plusRecord();
+  store.streamPulseDropsBadges = { updatedAt: now, syncedAt: now, badges, owned: [] };
+  store.streamPulseDropsCampaigns = { updatedAt: now, campaigns };
+  store.streamPulseBadgeEvents = { updatedAt: now, events: buildBadgeEvents({ campaigns, catalog: badges, now }) };
+  const { createBadgeAuto } = await import("../js/badge-auto-worker.js");
+  const auto = createBadgeAuto({
+    streamUrl: async ({ gameId }) => `https://www.twitch.tv/live${gameId}`,
+    streamGameOf: async () => "21779",
+    notify: async () => {},
+    translate: async (key) => key,
+    onStart: () => {},
+    lowPowerPlayer: () => {},
+  });
+  await auto.start({ all: true });
+  const tabId = store.streamPulseBadgeAuto.tabId;
+  const mine = log.patches.filter((patch) => patch.id === tabId);
+  assert.ok(mine.length > 0);
+  assert.ok(mine.some((patch) => patch.autoDiscardable === false), "autoDiscardable:false posé sur l'onglet");
+  assert.ok(mine.every((patch) => patch.autoDiscardable !== true));
 });

@@ -27,6 +27,40 @@ export function lowPowerPlayer(targetHeight = 360) {
   // mot, tous les écrans bloquants de Twitch se résument à « continuer/accepter ».
   const ACCEPT_RE = /^(continue|start watching|accept|j'accepte|accepter|continuer|commencer|d'accord|reprendre|regarde)/i;
   const handled = new WeakSet();
+
+  /**
+   * L'onglet du mode auto est épinglé et en arrière-plan : sans cette correction Twitch voit
+   * document.hidden, suspend la lecture ou baisse la qualité, quel que soit le réglage « ne pas
+   * mettre en pause ». Même correction que js/inject/preventPause.js (le script injecté ne peut
+   * rien importer) ; elle ne se pose qu'une fois, ou jamais si le réglage l'a déjà posée.
+   */
+  const keepPageVisible = () => {
+    if (typeof Document === "undefined" || typeof window === "undefined") return;
+    if (window.__streampulsePreventPause || window.__streampulseAutoVisible) return;
+    const win = window;
+    win.__streampulseAutoVisible = true;
+    const alwaysVisible = (value) => ({ get: () => value, configurable: true });
+    try {
+      Object.defineProperties(Document.prototype, {
+        hidden: alwaysVisible(false),
+        webkitHidden: alwaysVisible(false),
+        visibilityState: alwaysVisible("visible"),
+        webkitVisibilityState: alwaysVisible("visible"),
+      });
+      Document.prototype.hasFocus = () => true;
+    } catch (_) {
+      // Prototype verrouillé : le passage suivant réessaiera la lecture, sans la correction.
+    }
+    const swallow = (event) => event.stopImmediatePropagation();
+    for (const type of ["visibilitychange", "webkitvisibilitychange"]) {
+      document.addEventListener(type, swallow, true);
+      win.addEventListener(type, swallow, true);
+    }
+    win.addEventListener("blur", (event) => {
+      if (event.target === win) event.stopImmediatePropagation();
+    }, true);
+  };
+  keepPageVisible();
   /** L'ancienne API n'a pas de sonde isAutoQualityMode : on ne tente le verrou qu'une fois. */
   let abrLocked = false;
 

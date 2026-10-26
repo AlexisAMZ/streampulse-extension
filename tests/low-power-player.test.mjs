@@ -121,3 +121,79 @@ test("un lecteur figé repart par player.play() — Twitch a retiré paused() de
   assert.equal(video.muted, false);
   assert.equal(video.volume, 0.02);
 });
+
+/** Page « cachée » : Twitch lit document.hidden / visibilityState sur le prototype de Document. */
+function hiddenPage() {
+  class FakeDocument {}
+  Object.defineProperties(FakeDocument.prototype, {
+    hidden: { get: () => true, configurable: true },
+    webkitHidden: { get: () => true, configurable: true },
+    visibilityState: { get: () => "hidden", configurable: true },
+    webkitVisibilityState: { get: () => "hidden", configurable: true },
+  });
+  FakeDocument.prototype.hasFocus = () => false;
+  const page = fakePage();
+  const listeners = [];
+  page.document.addEventListener = (type, fn, capture) => listeners.push(["document", type, fn, capture]);
+  const window = { addEventListener: (type, fn, capture) => listeners.push(["window", type, fn, capture]) };
+  const doc = Object.create(FakeDocument.prototype);
+  return { page, FakeDocument, window, listeners, doc };
+}
+
+function runHidden(env, { ticks = 1 } = {}) {
+  const saved = { Document: globalThis.Document, window: globalThis.window };
+  globalThis.Document = env.FakeDocument;
+  globalThis.window = env.window;
+  try {
+    run(env.page, { ticks });
+  } finally {
+    Object.assign(globalThis, saved);
+    if (saved.Document === undefined) delete globalThis.Document;
+    if (saved.window === undefined) delete globalThis.window;
+  }
+}
+
+test("onglet épinglé en arrière-plan : Twitch voit toujours une page visible et active, sans le réglage", () => {
+  const env = hiddenPage();
+  assert.equal(env.doc.hidden, true);
+  runHidden(env);
+  assert.equal(env.doc.hidden, false);
+  assert.equal(env.doc.webkitHidden, false);
+  assert.equal(env.doc.visibilityState, "visible");
+  assert.equal(env.doc.webkitVisibilityState, "visible");
+  assert.equal(env.doc.hasFocus(), true);
+});
+
+test("les signaux visibilitychange et blur sont avalés avant que Twitch les voie", () => {
+  const env = hiddenPage();
+  runHidden(env);
+  const kinds = env.listeners.map(([, type]) => type);
+  assert.ok(kinds.includes("visibilitychange"));
+  assert.ok(kinds.includes("webkitvisibilitychange"));
+  assert.ok(kinds.includes("blur"));
+  let stopped = 0;
+  const [, , swallow] = env.listeners.find(([, type]) => type === "visibilitychange");
+  swallow({ stopImmediatePropagation: () => { stopped += 1; } });
+  assert.equal(stopped, 1);
+  const [, , onBlur] = env.listeners.find(([, type]) => type === "blur");
+  onBlur({ target: {}, stopImmediatePropagation: () => { stopped += 1; } });
+  assert.equal(stopped, 1, "un blur d'un autre élément que la fenêtre n'est pas avalé");
+  onBlur({ target: env.window, stopImmediatePropagation: () => { stopped += 1; } });
+  assert.equal(stopped, 2, "le blur de la fenêtre est avalé");
+});
+
+test("la correction de visibilité ne se pose qu'une fois, même réinjectée à chaque passage", () => {
+  const env = hiddenPage();
+  runHidden(env);
+  const count = env.listeners.length;
+  runHidden(env);
+  assert.equal(env.listeners.length, count);
+  assert.equal(env.doc.visibilityState, "visible");
+});
+
+test("réglage « ne pas mettre en pause » déjà actif : rien n'est posé en double", () => {
+  const env = hiddenPage();
+  env.window.__streampulsePreventPause = true;
+  runHidden(env);
+  assert.equal(env.listeners.length, 0);
+});

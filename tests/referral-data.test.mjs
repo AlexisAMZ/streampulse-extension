@@ -26,3 +26,30 @@ test("adresse PayPal : forme d'un e-mail", () => {
   assert.equal(isPaypalAddress("lea@"), false);
   assert.equal(isPaypalAddress(""), false);
 });
+
+test("lien de parrainage : page Plus de la langue, code appliqué d'office", async () => {
+  const { isReferralCode, referralLink } = await import("../js/referral-data.js");
+  assert.equal(isReferralCode("AMI-AB12CD"), true);
+  for (const bad of ["", "ami-ab12cd", "AMI-AB12C", "AMI-AB12CDE", "AMI-AB 2CD", "AMI-AB12CD&x=1", null, undefined]) assert.equal(isReferralCode(bad), false, String(bad));
+  assert.equal(referralLink("AMI-AB12CD", "fr"), "https://streampulse.tech/plus?code=AMI-AB12CD");
+  assert.equal(referralLink("AMI-AB12CD", "pt-BR"), "https://streampulse.tech/pt-br/plus?code=AMI-AB12CD");
+  assert.equal(referralLink("AMI-AB12CD", "de"), "https://streampulse.tech/de/plus?code=AMI-AB12CD");
+  assert.equal(referralLink("AMI-AB12CD", "zz"), "https://streampulse.tech/en/plus?code=AMI-AB12CD");
+  // Un code qui n'a pas la forme attendue ne finit jamais dans une URL.
+  assert.equal(referralLink("AMI-AB12CD&evil=1", "fr"), "");
+  assert.equal(referralLink("", "fr"), "");
+});
+
+test("carte parrainage de l'onglet Streamers : sobre et jamais insistante", async () => {
+  const { shouldAskReferral, REFERRAL_ASK_FIRST_MS, REFERRAL_ASK_LATER_MS } = await import("../js/referral-data.js");
+  const now = 100 * 86_400_000;
+  const fresh = { firstSeen: now - REFERRAL_ASK_FIRST_MS };
+  assert.equal(shouldAskReferral(fresh, { hasCode: false }, now), true);
+  assert.equal(shouldAskReferral({ firstSeen: now - REFERRAL_ASK_FIRST_MS + 1 }, { hasCode: false }, now), false, "trop tôt après l'installation");
+  assert.equal(shouldAskReferral(null, { hasCode: false }, now), false);
+  assert.equal(shouldAskReferral({ ...fresh, done: true }, { hasCode: false }, now), false, "« Non merci » est définitif");
+  assert.equal(shouldAskReferral(fresh, { hasCode: true }, now), false, "déjà un code : plus besoin de la carte");
+  assert.equal(shouldAskReferral({ ...fresh, snoozedUntil: now + 1 }, { hasCode: false }, now), false);
+  assert.equal(shouldAskReferral({ ...fresh, snoozedUntil: now }, { hasCode: false }, now), true);
+  assert.equal(REFERRAL_ASK_LATER_MS, 30 * 86_400_000);
+});

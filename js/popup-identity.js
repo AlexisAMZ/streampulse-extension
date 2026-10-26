@@ -6,7 +6,7 @@
 import { getCurrentLanguage, onLanguageChange, t } from "./i18n.js";
 import { LICENSE_VERIFY_URL, PLUS_KEY, getDeviceId, verifyLicense } from "./plus.js";
 import { BADGE_FX, COSMETICS_KEY, NAME_FX, TENURE_STYLES, TENURE_TIERS, fxLock, normalizeCosmetics, rankOf, tenureTier, visibleFx } from "./cosmetics-data.js";
-import { isPaypalAddress, normalizeEarnings, shouldRefreshEarnings } from "./referral-data.js";
+import { isPaypalAddress, normalizeEarnings, referralLink, shouldRefreshEarnings } from "./referral-data.js";
 
 export { COSMETICS_KEY };
 // La clé vit dans cosmetics-data.js (source unique, partagée avec l'onboarding Plus).
@@ -252,6 +252,7 @@ function renderReferral() {
   $("referral-code").hidden = !referralCode;
   $("referral-code").textContent = referralCode;
   $("referral-copy").hidden = !referralCode;
+  $("referral-copy-link").hidden = !referralCode;
   $("referral-get").hidden = Boolean(referralCode);
   $("referral-get").removeAttribute("data-i18n");
   $("referral-get").textContent = t("popup.referral.get");
@@ -328,6 +329,11 @@ async function fetchFreeReferral(email) {
       setStatus("referral-status", errors[response.status]);
       return;
     }
+    // Adresse pas encore confirmée : le lien part par e-mail, le code viendra au prochain essai.
+    if (response.status === 202 && payload.pending) {
+      setStatus("referral-status", "popup.referral.freeCheckEmail");
+      return;
+    }
     if (!response.ok || !payload.code) throw new Error(payload.error || `HTTP ${response.status}`);
     referralCode = payload.code;
     await chrome.storage.local.set({ [REFERRAL_CODE_KEY]: referralCode });
@@ -361,6 +367,11 @@ async function savePaypal() {
     const payload = await response.json().catch(() => ({}));
     if (response.status === 422) {
       setStatus("referral-paypal-status", "popup.referral.paypalInvalid");
+      return;
+    }
+    // Nouvelle adresse en attente : elle ne s'applique qu'après le lien reçu par le titulaire.
+    if (response.status === 202 && payload.pending) {
+      setStatus("referral-paypal-status", "popup.referral.paypalPending");
       return;
     }
     if (!response.ok || !payload.ok) throw new Error(payload.error || `HTTP ${response.status}`);
@@ -403,6 +414,13 @@ function initReferralActions() {
   $("referral-copy")?.addEventListener("click", async () => {
     await navigator.clipboard.writeText(referralCode).catch(() => {});
     setStatus("referral-status", "popup.referral.copied");
+  });
+  // Le lien applique le code d'office : l'ami n'a rien à taper sur la page de paiement.
+  $("referral-copy-link")?.addEventListener("click", async () => {
+    const link = referralLink(referralCode, getCurrentLanguage());
+    if (!link) return;
+    await navigator.clipboard.writeText(t("popup.referral.shareMessage", { link })).catch(() => {});
+    setStatus("referral-status", "popup.referral.linkCopied");
   });
 }
 

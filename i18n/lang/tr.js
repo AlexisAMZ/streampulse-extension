@@ -240,6 +240,7 @@ export default {
       "planYearly": "Yıllık plan · {{key}}",
       "manage": "Aboneliğimi yönet",
       "manageError": "Hesabın şu an açılamıyor. Birkaç dakika sonra tekrar dene.",
+      "manageEmailed": "Hesabını korumak için bağlantı ödeme e-posta adresine gönderildi.",
       "deactivate": "Lisansı bu tarayıcıdan kaldır",
       "close": "Kapat"
     },
@@ -618,16 +619,25 @@ export default {
       "rankAmbassador": "Elçi · davet edilen arkadaş: {{count}}",
       "intro": "StreamPulse rozetinin ve adının Twitch sohbetindeki görünümü, diğer StreamPulse kullanıcılarına görünür."
     },
+    "referralAsk": {
+      "title": "Bir arkadaşını davet et",
+      "body": "StreamPulse+ için 2,99 € indirim alır. Sen para ya da ücretsiz aylar kazanırsın.",
+      "open": "Bağlantımı al"
+    },
     "referral": {
-      "generalBody": "Kodunla StreamPulse+ alan her arkadaş için bir ay ücretsiz.",
-      "generalOpen": "Kodumu gör",
+      "generalBody": "Arkadaşın 2,99 € indirim alır; sen para ya da ücretsiz aylar kazanırsın.",
+      "generalOpen": "Bağlantımı al",
       "plusTitle": "Arkadaşlarını davet et",
-      "plusBody": "Arkadaşın 2,99 € indirim alır (ilk ay ücretsiz). Sen de para ve şu ödülleri kazanırsın:",
+      "plusBody": "Arkadaşın 2,99 € indirim alır: ilk ay ücretsiz ya da ilk yıl 19 € yerine 16,01 €. Sen de para ve şu ödülleri kazanırsın:",
       "title": "Davet",
-      "body": "Kodunu paylaş: arkadaşın 2,99 € indirim alır (ilk ay ücretsiz). Abone kaldığı sürece ayda 1 € kazanırsın; PayPal'a ödenir.",
-      "get": "Kodumu al",
-      "copy": "Kopyala",
+      "body": "Bağlantını paylaş: arkadaşın 2,99 € indirim alır (ilk ay ücretsiz ya da ilk yıl 16,01 €). Aylık abone arkadaşının ödediği her ay için 1 €, yıllık abone arkadaşının ödediği her yıl için 5 € alırsın, PayPal'a yatırılır.",
+      "get": "Bağlantımı al",
+      "copy": "Kodu kopyala",
       "copied": "Kod kopyalandı!",
+      "copyLink": "Bağlantımı kopyala",
+      "linkCopied": "Bağlantı kısa bir mesajla kopyalandı. Arkadaşına yapıştır: indirimi zaten uygulanmış olacak.",
+      "linkCopiedShort": "Bağlantı kopyalandı!",
+      "shareMessage": "StreamPulse'ı öneririm: Twitch, Kick veya YouTube yayıncısı canlıya girince haber veren uzantı. Bağlantımla StreamPulse+ için 2,99 € indirimin olur: {{link}}",
       "loading": "Yükleniyor…",
       "soon": "Davet sistemi çok yakında açılıyor.",
       "error": "Kod şu anda kullanılamıyor. Daha sonra tekrar dene.",
@@ -638,7 +648,7 @@ export default {
       "tierBadge": "Rozet efekti",
       "tierDevice": "Bir cihaz daha",
       "each": "Her arkadaş",
-      "tierMoney": "Abone kaldığı sürece ayda 1 €",
+      "tierMoney": "Ödenen her ay için 1 €, her yıl için 5 €",
       "balance": "Ödenecek",
       "earned": "Kazanılan: {{earned}} · ödenen: {{paid}}",
       "payoutRule": "{{min}} tutarından itibaren PayPal'ına ödenir. Yalnızca reşit olanlar için.",
@@ -646,13 +656,15 @@ export default {
       "paypalPlaceholder": "sen@ornek.com",
       "paypalSave": "Kaydet",
       "paypalSaved": "PayPal adresi kaydedildi.",
+      "paypalPending": "Bu adresi ödeme e-postana gönderilen bağlantıyla onayla.",
       "paypalInvalid": "Bu e-posta adresi geçerli değil.",
       "paypalMissing": "Kazançlarını almak için PayPal adresini ekle.",
-      "freeBody": "Kodunu paylaş: arkadaşın 2,99 € indirim alır (ilk ay ücretsiz). Abone olan her arkadaş için sen bir ay StreamPulse+ kazanırsın, anahtarın e-postayla gelir.",
+      "freeBody": "Bağlantını paylaş: arkadaşın 2,99 € indirim alır (ilk ay ücretsiz ya da ilk yıl 16,01 €). Abone olan her arkadaşın için bir ay StreamPulse+ kazanırsın, anahtarın e-postayla gelir.",
       "freeLabel": "Ücretsiz aylarını almak için e-postan",
       "freeSubmit": "Kodumu oluştur",
       "freeTaken": "Bu adres başka bir tarayıcıda zaten kullanılıyor.",
-      "freeReady": "Kodun hazır. Bir arkadaşın abone olur olmaz anahtarın e-postayla gelir."
+      "freeReady": "Bağlantın hazır. Bir arkadaşın abone olur olmaz anahtarın e-postayla gelir.",
+      "freeCheckEmail": "Adresini onaylamak için e-postadaki bağlantıyı aç, sonra kodunu oluşturmak için geri dön."
     },
     "layout": {
       "title": "Düzen",
@@ -1192,8 +1204,8 @@ export default {
     "platformsLabel": "Sayılan platformlar",
     "platformsHint": "YouTube şimdilik işaretsiz, ölçümü doğrulanıyor. İstersen ekleyebilirsin.",
     "referral": {
-      "body": "StreamPulse'ı öner: kodunla alan her arkadaş için bir ay ücretsiz.",
-      "copy": "Kodumu kopyala"
+      "body": "Davet: arkadaşın 2,99 € indirim alır; sen para ya da ücretsiz aylar kazanırsın.",
+      "copy": "Bağlantımı kopyala"
     },
     "periodYear": "{{year}} Özeti",
     "plus": {
@@ -1398,6 +1410,7 @@ export default {
       "clipDownload": "Klibi indir (MP4)",
       "clipDownloading": "Klip indiriliyor…",
       "clipDownloadFailed": "İndirilemedi. Klip sayfasını yenileyip tekrar dene.",
+      "clipOpenEditor": "StreamPulse Clips ile düzenle",
       "latencyEmpty": "Gecikme: --",
       "latencyValue": "Gecikme süresi: {{value}} saniye",
       "offline": "ÇEVRİMDIŞI"

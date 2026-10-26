@@ -15,6 +15,8 @@
   const PLUS_KEY = PLUS_RULE.PLUS_KEY;
   const PIP_ID = "streampulse-pip-btn";
   const CLIP_ID = "streampulse-clip-dl-btn";
+  const EDITOR_ID = "streampulse-clip-editor-btn";
+  const HANDOFF = window.StreamPulseClipsHandoff; // js/inject/clips-handoff.js, chargé avant (manifest)
   const STYLE_ID = "streampulse-player-buttons-style";
   const ENSURE_INTERVAL_MS = 2000;
   const GQL_URL = "https://gql.twitch.tv/gql";
@@ -28,6 +30,8 @@
   // Grille 24 et formes pleines, comme les icones natives du lecteur Twitch.
   const ICON_PIP =
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 4h20v9h-2V6H4v10h6v2H2V4Z"></path><path d="M12 14h10v6H12v-6Z"></path></svg>';
+  const ICON_EDITOR =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2h8a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm0 2v16h8V4H8Z"></path><path d="m10.5 9.2 4 2.8-4 2.8V9.2Z"></path></svg>';
   const ICON_DOWNLOAD =
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v9.17l3.59-3.59L18 10l-6 6-6-6 1.41-1.42L11 12.17V3Z"></path><path d="M5 18h14v2H5v-2Z"></path></svg>';
 
@@ -179,6 +183,11 @@
       });
   }
 
+  function openInEditor() {
+    const url = HANDOFF?.editorUrlForClipPath(window.location.pathname);
+    if (url) window.open(url, "_blank", "noopener");
+  }
+
   function placeButton(controls, id, wanted, create) {
     const existing = document.getElementById(id);
     if (!wanted) {
@@ -202,6 +211,10 @@
     placeButton(controls, PIP_ID, pipWanted, () =>
       makeButton(PIP_ID, ICON_PIP, i18n("pictureInPicture"), togglePictureInPicture)
     );
+    const editorWanted = HANDOFF?.editorUrlForClipPath(window.location.pathname) != null;
+    placeButton(controls, EDITOR_ID, editorWanted, () =>
+      makeButton(EDITOR_ID, ICON_EDITOR, i18n("clipOpenEditor"), openInEditor)
+    );
     placeButton(controls, CLIP_ID, clipWanted, () =>
       makeButton(CLIP_ID, ICON_DOWNLOAD, i18n("clipDownload"), downloadClip)
     );
@@ -213,7 +226,7 @@
     state.lang = prefs?.language;
     state.plus = plusActive(plusRecord);
     ensureButtons();
-    const wanted = state.pip || (state.clip && state.plus);
+    const wanted = state.pip || Boolean(HANDOFF) || (state.clip && state.plus);
     if (wanted && ensureTimer == null) {
       ensureTimer = window.setInterval(ensureButtons, ENSURE_INTERVAL_MS);
     } else if (!wanted && ensureTimer != null) {

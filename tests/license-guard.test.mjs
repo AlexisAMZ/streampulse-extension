@@ -56,6 +56,14 @@ test("signatureState : valide, falsifiée ou absente", async () => {
   assert.equal(await signatureState({ ...record, sig: "%%%" }, DEVICE, crypto), "invalid");
 });
 
+test("signatureState : un champ device ou key glissé dans l'enregistrement ne remplace pas ceux du navigateur", async () => {
+  const record = signed();
+  // Enregistrement recopié sur un autre navigateur, avec l'identifiant d'origine ajouté à la main.
+  assert.equal(await signatureState({ ...record, device: DEVICE }, "b".repeat(32), crypto), "invalid");
+  // Clé affichée remplacée, clé signée gardée dans un champ « key ».
+  assert.equal(await signatureState({ ...record, licenseKey: "SP-ZZZZ-ZZZZ-ZZZZ-ZZZZ", key: KEY }, DEVICE, crypto), "invalid");
+});
+
 test("verifyLicense conserve iat et sig de la réponse signée", async () => {
   const payload = { valid: true, plan: "monthly", since: 1700000000000, referrals: 2, role: "", iat: NOW, sig: "abc" };
   const result = await verifyLicense(KEY, fetchReturning(200, payload), NOW, DEVICE);
