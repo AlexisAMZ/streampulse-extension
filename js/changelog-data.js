@@ -160,6 +160,24 @@ export const RELEASES = [
         },
       },
       {
+        type: "improved",
+        area: "badges",
+        text: {
+          "fr": "Mode auto des badges : nouvelle bannière avec le logo, une barre de progression du Drop et le temps restant, les badges visés, un avertissement quand un autre live Twitch joue, et un bouton pour la replier.",
+          "en": "Badge auto mode: new banner with the logo, a Drop progress bar and time left, the targeted badges, a warning when another Twitch live is playing, and a button to collapse it.",
+          "es": "Modo auto de insignias: nuevo banner con el logo, una barra de progreso del Drop y el tiempo restante, las insignias buscadas, un aviso cuando otro directo de Twitch se reproduce y un botón para contraerlo.",
+          "pt-BR": "Modo auto de emblemas: novo banner com o logo, uma barra de progresso do Drop e o tempo restante, os emblemas buscados, um aviso quando outra live da Twitch está tocando e um botão para recolhê-lo.",
+          "de": "Auto-Modus für Abzeichen: neues Banner mit Logo, Fortschrittsbalken des Drops und Restzeit, den angestrebten Abzeichen, einem Hinweis, wenn ein anderes Twitch-Live läuft, und einer Taste zum Einklappen.",
+          "it": "Modalità auto dei badge: nuovo banner con il logo, una barra di avanzamento del Drop e il tempo rimanente, i badge puntati, un avviso quando è in riproduzione un'altra live Twitch e un pulsante per comprimerlo.",
+          "pl": "Tryb auto odznak: nowy baner z logo, paskiem postępu Dropa i pozostałym czasem, docelowymi odznakami, ostrzeżeniem, gdy leci inny live na Twitchu, oraz przyciskiem do zwinięcia.",
+          "tr": "Rozet otomatik modu: logolu yeni afiş, Drop ilerleme çubuğu ve kalan süre, hedeflenen rozetler, başka bir Twitch yayını oynarken uyarı ve daraltma düğmesi.",
+          "ru": "Авторежим значков: новый баннер с логотипом, полосой прогресса дропа и оставшимся временем, целевыми значками, предупреждением, когда играет другая трансляция Twitch, и кнопкой, чтобы его свернуть.",
+          "ja": "バッジ自動モード：ロゴ、ドロップの進捗バーと残り時間、対象バッジ、別の Twitch 配信が再生中のときの警告、折りたたみボタンを備えた新しいバナー。",
+          "ko": "배지 자동 모드: 로고, 드롭 진행 막대와 남은 시간, 목표 배지, 다른 Twitch 방송이 재생 중일 때의 경고, 접기 버튼이 있는 새 배너.",
+          "ar": "الوضع التلقائي للشارات: لافتة جديدة مع الشعار وشريط تقدّم الـDrop والوقت المتبقي والشارات المستهدفة وتنبيه عند تشغيل بثّ Twitch آخر وزر لطيّها.",
+        },
+      },
+      {
         type: "fix",
         area: "fixes",
         text: {
