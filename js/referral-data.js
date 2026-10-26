@@ -39,9 +39,9 @@ const REFERRAL_CODE_RE = /^AMI-[A-Z0-9]{6}$/;
 /** Forme exacte des codes émis par le serveur : rien d'autre n'entre dans une URL. */
 export const isReferralCode = (value) => typeof value === "string" && REFERRAL_CODE_RE.test(value);
 
-/** Page Plus du site, dans la langue du parrain, avec le code déjà appliqué : l'ami n'a rien à saisir. */
+/** Page Plus du site, dans la langue du parrain : l'ami n'a rien à saisir, le lien désigne le parrain (aucune remise). */
 export function referralLink(code, lang) {
-  return isReferralCode(code) ? `${plusPageUrl(lang)}?code=${code}` : "";
+  return isReferralCode(code) ? `${plusPageUrl(lang)}?ref=${code}` : "";
 }
 
 /** La carte attend quelques jours après l'installation, et « Plus tard » la repousse d'un mois. */

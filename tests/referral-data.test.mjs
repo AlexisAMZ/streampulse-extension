@@ -27,14 +27,14 @@ test("adresse PayPal : forme d'un e-mail", () => {
   assert.equal(isPaypalAddress(""), false);
 });
 
-test("lien de parrainage : page Plus de la langue, code appliqué d'office", async () => {
+test("lien de parrainage : page Plus de la langue, le lien désigne le parrain", async () => {
   const { isReferralCode, referralLink } = await import("../js/referral-data.js");
   assert.equal(isReferralCode("AMI-AB12CD"), true);
   for (const bad of ["", "ami-ab12cd", "AMI-AB12C", "AMI-AB12CDE", "AMI-AB 2CD", "AMI-AB12CD&x=1", null, undefined]) assert.equal(isReferralCode(bad), false, String(bad));
-  assert.equal(referralLink("AMI-AB12CD", "fr"), "https://streampulse.tech/plus?code=AMI-AB12CD");
-  assert.equal(referralLink("AMI-AB12CD", "pt-BR"), "https://streampulse.tech/pt-br/plus?code=AMI-AB12CD");
-  assert.equal(referralLink("AMI-AB12CD", "de"), "https://streampulse.tech/de/plus?code=AMI-AB12CD");
-  assert.equal(referralLink("AMI-AB12CD", "zz"), "https://streampulse.tech/en/plus?code=AMI-AB12CD");
+  assert.equal(referralLink("AMI-AB12CD", "fr"), "https://streampulse.tech/plus?ref=AMI-AB12CD");
+  assert.equal(referralLink("AMI-AB12CD", "pt-BR"), "https://streampulse.tech/pt-br/plus?ref=AMI-AB12CD");
+  assert.equal(referralLink("AMI-AB12CD", "de"), "https://streampulse.tech/de/plus?ref=AMI-AB12CD");
+  assert.equal(referralLink("AMI-AB12CD", "zz"), "https://streampulse.tech/en/plus?ref=AMI-AB12CD");
   // Un code qui n'a pas la forme attendue ne finit jamais dans une URL.
   assert.equal(referralLink("AMI-AB12CD&evil=1", "fr"), "");
   assert.equal(referralLink("", "fr"), "");
