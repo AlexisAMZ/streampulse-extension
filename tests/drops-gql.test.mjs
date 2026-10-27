@@ -52,3 +52,12 @@ test("claim envoie l'identifiant échappé et refuse un identifiant suspect", as
   assert.match(requests[0].body.query, /dropInstanceID: "999#c1#d1"/);
   await assert.rejects(api.claim('"} x'), { code: "invalid" });
 });
+
+test("liveGameOf lit la catégorie actuelle d'un live, \"\" hors ligne, et refuse un login suspect", async () => {
+  const { api, requests } = client({ respond: () => ({ data: { user: { stream: { id: "1" }, broadcastSettings: { game: { id: "1234" } } } } }) });
+  assert.equal(await api.liveGameOf("StreamPulse247"), "1234");
+  assert.match(requests[0].body.query, /user\(login: "streampulse247"\)/);
+  const offline = client({ respond: () => ({ data: { user: { stream: null, broadcastSettings: { game: { id: "1234" } } } } }) });
+  assert.equal(await offline.api.liveGameOf("streampulse247"), "");
+  await assert.rejects(offline.api.liveGameOf('x") { id } #'), { code: "invalid" });
+});

@@ -273,8 +273,17 @@ export async function checkBadgeWatch() {
   }
 }
 
-/** Jeu du live d'une chaîne : "" hors ligne, null si Helix ne répond pas. */
+/**
+ * Jeu du live d'une chaîne : "" hors ligne, null si inconnu. Lu en direct par
+ * la session Twitch (une chaîne qui change de jeu se voit tout de suite), Helix
+ * à défaut (déconnecté de Twitch).
+ */
 export async function streamGameOf(login) {
+  try {
+    return await dropsClient.liveGameOf(login);
+  } catch (_) {
+    // Pas de session Twitch ou GQL indisponible : Helix, parfois en retard.
+  }
   try {
     await ensureConfig();
     const data = await fetchTwitchJson(`https://api.twitch.tv/helix/streams?user_login=${encodeURIComponent(login)}&type=live`, { headers: twitchHeaders() });
@@ -365,6 +374,19 @@ export async function claimDropFromWorker(instanceId, auto) {
  * la catégorie filtrée sur les Drops. Les badges de « Twitch Gaming » se gagnent
  * sur n'importe quelle chaîne du jeu qui a les Drops activés.
  */
+/** Chaîne StreamPulse 24/7 (badges et Drops), voir js/popup-drops.js. */
+const OFFICIAL_LOGIN = "streampulse247";
+const isOfficialLive = (item) => String(item.user_login).toLowerCase() === OFFICIAL_LOGIN;
+
+/** Vrai si la chaîne 24/7 diffuse ce jeu en ce moment ; faux si on ne peut pas le vérifier. */
+async function officialOnGame(gameId) {
+  try {
+    return (await dropsClient.liveGameOf(OFFICIAL_LOGIN)) === String(gameId);
+  } catch (_) {
+    return false;
+  }
+}
+
 export async function dropsStreamUrl({ gameId, game }) {
   const directory = `https://www.twitch.tv/directory/game/${encodeURIComponent(game || "")}?filter=drops`;
   try {
@@ -372,7 +394,10 @@ export async function dropsStreamUrl({ gameId, game }) {
     if (!/^\d{1,20}$/.test(String(gameId || ""))) return directory;
     const data = await fetchTwitchJson(`https://api.twitch.tv/helix/streams?game_id=${gameId}&type=live&first=20`, { headers: twitchHeaders() });
     // Un live avec le tag Drops fait progresser la campagne ; à défaut, le premier live du jeu.
-    const live = (data?.data || []).filter((item) => item.user_login);
+    let live = (data?.data || []).filter((item) => item.user_login);
+    // La chaîne 24/7 change souvent de jeu et Helix la garde dans l'ancien
+    // plusieurs minutes : elle n'est choisie que si elle est vraiment sur ce jeu.
+    if (live.some(isOfficialLive) && !(await officialOnGame(gameId))) live = live.filter((item) => !isOfficialLive(item));
     const stream = live.find((item) => (item.tags || []).some((tag) => /drops/i.test(String(tag)))) || live[0];
     return stream ? `https://www.twitch.tv/${encodeURIComponent(stream.user_login)}` : directory;
   } catch (error) {

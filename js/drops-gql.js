@@ -9,6 +9,8 @@
 const WEB_CLIENT_ID = "kimne78kx3ncx6brgo4mv6wki5h1ko";
 const GQL_URL = "https://gql.twitch.tv/gql";
 const INSTANCE_ID = /^[\w#:.-]{1,300}$/;
+/** Login Twitch : lettres, chiffres et _ (jamais injecté tel quel dans une requête). */
+const LOGIN = /^[a-z0-9_]{1,25}$/;
 
 export const INVENTORY_QUERY = `query StreamPulseDropsInventory {
   currentUser {
@@ -131,5 +133,16 @@ export function createDropsClient({ fetch, cookies }) {
     };
   }
 
-  return { readInventory, readRewards, readBadges, claim };
+  /**
+   * Catégorie actuelle d'un live, lue en direct : Helix garde l'ancienne
+   * plusieurs minutes après un changement de jeu. "" si la chaîne est hors ligne.
+   */
+  async function liveGameOf(login) {
+    const name = String(login || "").toLowerCase();
+    if (!LOGIN.test(name)) throw failure("invalid");
+    const { data } = await gql(`query StreamPulseLiveGame { user(login: ${JSON.stringify(name)}) { stream { id } broadcastSettings { game { id } } } }`);
+    return data.user?.stream ? String(data.user.broadcastSettings?.game?.id || "") : "";
+  }
+
+  return { readInventory, readRewards, readBadges, claim, liveGameOf };
 }
