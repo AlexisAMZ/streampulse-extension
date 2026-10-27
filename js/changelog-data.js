@@ -52,7 +52,7 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
-    version: "26.10.28",
+    version: "26.10.27",
     date: "2026-10-27",
     title: {
       "fr": "Les prix dans ta devise",
@@ -87,27 +87,6 @@ export const RELEASES = [
           "ar": "StreamPulse+: تحت كل سعر باليورو ترى الآن قيمته بعملتك (≈) بحسب لغتك ومنطقتك. السعر المعتمد هو سعر الصرف اليوم مقرَّبًا للأعلى: لا يختلف السعر من بلد إلى آخر ويبقى الدفع باليورو.",
         },
       },
-    ],
-  },
-
-  {
-    version: "26.10.27",
-    date: "2026-10-27",
-    title: {
-      "fr": "Sécurité et corrections",
-      "en": "Security and fixes",
-      "es": "Seguridad y correcciones",
-      "pt-BR": "Segurança e correções",
-      "de": "Sicherheit und Korrekturen",
-      "it": "Sicurezza e correzioni",
-      "pl": "Bezpieczeństwo i poprawki",
-      "tr": "Güvenlik ve düzeltmeler",
-      "ru": "Безопасность и исправления",
-      "ja": "セキュリティと修正",
-      "ko": "보안 및 수정",
-      "ar": "الأمان والإصلاحات",
-    },
-    changes: [
       {
         type: "fix",
         area: "fixes",

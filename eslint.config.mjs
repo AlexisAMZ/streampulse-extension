@@ -26,6 +26,8 @@ const ES_MODULES = [
   "js/plus.js",
   "js/license-sign.js",
   "js/plus-thanks.js",
+  "js/currency.js",
+  "js/plus-local-price.js",
   "js/eventsubRaid.js",
   "js/raidWatcher.js",
   "js/popup.js",
