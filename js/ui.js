@@ -13,7 +13,8 @@ import {
 // rows of the "all channels" sheet. popup.js owns state and storage.
 
 const THUMB_CACHE_MAX = 50;
-const MAX_THUMB_CONCURRENCY = 3;
+// Le CDN de Twitch sert en HTTP/2 : 6 aperçus en parallèle restent légers.
+const MAX_THUMB_CONCURRENCY = 6;
 const FALLBACK_ICON = "images/photos/48px.png";
 
 const STROKE = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
@@ -281,9 +282,22 @@ function loadThumbnail(streamer, active, image, width, height, onFail, { priorit
   const apply = (url) => {
     readyThumbs.set(streamer.id, url);
     if (!image.isConnected) return;
-    image.src = url;
+    if (image.getAttribute("src") !== url) image.src = url;
     image.hidden = false;
   };
+  // Aperçu déjà chargé pendant cette ouverture (ou gardé de la dernière) :
+  // affiché aussitôt, sans attendre la file ; la vérification le remplace
+  // ensuite par la bonne taille, ou le retire s'il est périmé.
+  const showInstant = () => {
+    const instant = readyThumbs.get(streamer.id) || thumbCache.get(streamer.id);
+    if (!instant || !image.hidden) return;
+    image.addEventListener("error", () => { image.hidden = true; }, { once: true });
+    image.src = instant;
+    image.hidden = false;
+  };
+  showInstant();
+  // Premier rendu plus rapide que la lecture du cache : on réessaie dès qu'il est lu.
+  if (!thumbCacheLoaded) loadThumbCache().then(showInstant);
   let index = 0;
   const tryNext = () => {
     if (index >= candidates.length) {
@@ -383,15 +397,8 @@ export function renderStage(stage, media, feature, streamer, status, options, ca
     media.replaceChildren(image);
     // Kick n'expose pas toujours de thumbnail : en cas d'échec, on retombe sur
     // l'avatar pré-flouté (même fond que les écrans vides) au lieu d'un aplat noir.
-    // Un aperçu déjà chargé par la bande (ou gardé de la dernière ouverture) s'affiche
-    // aussitôt ; la version 960×540 le remplace quand elle est prête.
-    const instant = readyThumbs.get(streamer.id) || thumbCache.get(streamer.id);
-    if (instant) {
-      // Adresse périmée : on recache l'image le temps que la vérification propose la suivante.
-      image.addEventListener("error", () => { image.hidden = true; }, { once: true });
-      image.src = instant;
-      image.hidden = false;
-    }
+    // Un aperçu déjà chargé s'affiche aussitôt (loadThumbnail) ; la version
+    // 960×540 le remplace quand elle est prête.
     loadThumbnail(streamer, active, image, 960, 540, () => {
       if (!image.isConnected || !streamer.avatarUrl) return;
       image.classList.add("is-avatar");
