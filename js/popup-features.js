@@ -10,6 +10,7 @@ import { initLayout } from "./popup-layout.js";
 import { initReviewAsk } from "./popup-review.js";
 import { initBadgeAsk } from "./popup-badge-ask.js";
 import { initReferralAsk } from "./popup-referral-ask.js";
+import { initLocalPrices } from "./plus-local-price.js";
 import { createWatchLaterButton } from "./popup-watch-later.js";
 import { IDENTITY_STORAGE_KEYS, initIdentity, renderIdentity } from "./popup-identity.js";
 import { HISTORY_KEY, formatClock, missedView, summarize } from "./history-data.js";
@@ -425,6 +426,7 @@ function showKeyError(key) {
 }
 
 function initPlus() {
+  initLocalPrices().catch((error) => console.warn("[plus] prix locaux indisponibles :", error));
   $("open-plus")?.addEventListener("click", openPlus);
   $("plus-close")?.addEventListener("click", () => closePlus());
   $("plus-menu-open")?.addEventListener("click", openPlus);

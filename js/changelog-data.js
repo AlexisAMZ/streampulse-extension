@@ -52,6 +52,45 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.10.28",
+    date: "2026-10-27",
+    title: {
+      "fr": "Les prix dans ta devise",
+      "en": "Prices in your currency",
+      "es": "Los precios en tu moneda",
+      "pt-BR": "Os preços na sua moeda",
+      "de": "Preise in deiner Währung",
+      "it": "I prezzi nella tua valuta",
+      "pl": "Ceny w twojej walucie",
+      "tr": "Fiyatlar kendi para biriminde",
+      "ru": "Цены в твоей валюте",
+      "ja": "あなたの通貨で価格表示",
+      "ko": "내 통화로 보는 가격",
+      "ar": "الأسعار بعملتك",
+    },
+    changes: [
+      {
+        type: "new",
+        area: "plus",
+        text: {
+          "fr": "StreamPulse+ : sous chaque prix en euros, tu vois maintenant sa valeur dans ta devise (≈), selon ta langue et ta région. Le taux est celui du jour, arrondi vers le haut : le prix ne change jamais d'un pays à l'autre, et le paiement reste en euros.",
+          "en": "StreamPulse+: under each euro price you now see its value in your currency (≈), based on your language and region. The rate is today's, rounded up: the price never changes from one country to another, and payment stays in euros.",
+          "es": "StreamPulse+: bajo cada precio en euros ves ahora su valor en tu moneda (≈), según tu idioma y tu región. Se usa el tipo de cambio del día, redondeado al alza: el precio no cambia de un país a otro y el pago sigue siendo en euros.",
+          "pt-BR": "StreamPulse+: abaixo de cada preço em euros você vê agora o valor na sua moeda (≈), conforme seu idioma e sua região. A cotação é a do dia, arredondada para cima: o preço não muda de um país para outro e o pagamento continua em euros.",
+          "de": "StreamPulse+: Unter jedem Euro-Preis siehst du jetzt den Wert in deiner Währung (≈), passend zu Sprache und Region. Es gilt der Tageskurs, aufgerundet: Der Preis ist in jedem Land derselbe, bezahlt wird weiterhin in Euro.",
+          "it": "StreamPulse+: sotto ogni prezzo in euro vedi ora il suo valore nella tua valuta (≈), in base a lingua e regione. Il cambio è quello del giorno, arrotondato per eccesso: il prezzo non cambia da un paese all'altro e il pagamento resta in euro.",
+          "pl": "StreamPulse+: pod każdą ceną w euro widzisz teraz jej wartość w twojej walucie (≈), zależnie od języka i regionu. Kurs jest dzisiejszy, zaokrąglony w górę: cena nie zmienia się między krajami, a płatność nadal jest w euro.",
+          "tr": "StreamPulse+: Euro cinsinden her fiyatın altında artık dilin ve bölgene göre kendi para birimindeki karşılığını (≈) görürsün. Kur günün kuru, yukarı yuvarlanır: fiyat ülkeden ülkeye değişmez, ödeme euro ile yapılmaya devam eder.",
+          "ru": "StreamPulse+: под каждой ценой в евро теперь видна её стоимость в твоей валюте (≈) — по языку и региону. Курс берётся на сегодня и округляется вверх: цена не отличается от страны к стране, а оплата по-прежнему в евро.",
+          "ja": "StreamPulse+：ユーロ価格の下に、言語と地域に合わせた自分の通貨での目安（≈）が表示されます。レートは当日のもので切り上げ。価格は国によって変わらず、お支払いは引き続きユーロです。",
+          "ko": "StreamPulse+: 유로 가격 아래에 언어와 지역에 맞춘 내 통화 환산액(≈)이 표시됩니다. 환율은 당일 기준이며 올림 처리합니다. 가격은 나라마다 달라지지 않고, 결제는 계속 유로로 이루어집니다.",
+          "ar": "StreamPulse+: تحت كل سعر باليورو ترى الآن قيمته بعملتك (≈) بحسب لغتك ومنطقتك. السعر المعتمد هو سعر الصرف اليوم مقرَّبًا للأعلى: لا يختلف السعر من بلد إلى آخر ويبقى الدفع باليورو.",
+        },
+      },
+    ],
+  },
+
+  {
     version: "26.10.27",
     date: "2026-10-27",
     title: {
