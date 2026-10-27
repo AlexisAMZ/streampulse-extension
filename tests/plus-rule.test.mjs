@@ -4,7 +4,7 @@ import fs from "node:fs";
 import { PLUS_GRACE_MS, PLUS_KEY, isPlusActive, needsRecheck } from "../js/plus.js";
 
 const NOW = Date.parse("2026-09-29T12:00:00Z");
-const monthly = (verifiedAt) => ({ status: "active", licenseKey: "K", plan: "monthly", verifiedAt });
+const monthly = (iat) => ({ status: "active", licenseKey: "K", plan: "monthly", verifiedAt: iat, iat, sig: "sig" });
 
 test("js/plus.js délègue à la règle partagée js/inject/plus-rule.js", () => {
   assert.equal(typeof globalThis.StreamPulsePlusRule.isPlusActive, "function");
@@ -18,8 +18,15 @@ test("isPlusActive : licence absente, inactive ou sans clé", () => {
   assert.equal(isPlusActive({ status: "active" }, NOW), false);
 });
 
-test("isPlusActive : à vie toujours, mensuelle pendant le délai de grâce", () => {
-  assert.equal(isPlusActive({ status: "active", licenseKey: "K", plan: "lifetime", verifiedAt: 0 }, NOW), true);
+test("isPlusActive : sans signature du serveur, aucune licence n'ouvre rien", () => {
+  const { sig: _sig, ...unsigned } = monthly(NOW);
+  assert.equal(isPlusActive(unsigned, NOW), false);
+  assert.equal(isPlusActive({ ...unsigned, plan: "lifetime" }, NOW), false);
+  assert.equal(isPlusActive({ ...monthly(NOW), iat: 0 }, NOW), false);
+});
+
+test("isPlusActive : à vie sans expiration, mensuelle pendant le délai de grâce", () => {
+  assert.equal(isPlusActive({ ...monthly(1), plan: "lifetime" }, NOW), true);
   assert.equal(isPlusActive(monthly(NOW - PLUS_GRACE_MS), NOW), true);
   assert.equal(isPlusActive(monthly(NOW - PLUS_GRACE_MS - 1), NOW), false);
 });

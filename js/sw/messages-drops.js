@@ -3,7 +3,14 @@
 import { CLAIM_OK_STATUSES } from "../drops-data.js";
 import { DROPS_POPUP_REFRESH_MS, announceDrops, badgeAuto, checkBadgeAfterClaim, checkDropCampaignAlerts, claimDropFromWorker, dropsStore, dropsStreamUrl, pointsStore, refreshDropsFromWorker, sendDropsCommand } from "./drops.js";
 import { PreferenceStore } from "./stores.js";
+import { PLUS_KEY, isPlusActive } from "../plus.js";
 import { warnWith } from "./log.js";
+
+/** Récupération auto des Drops : réservée à StreamPulse+, comme dans sw/drops.js. */
+async function autoClaimAllowed(prefs) {
+  if (prefs.autoClaimDrops === false) return false;
+  return isPlusActive((await chrome.storage.local.get(PLUS_KEY))[PLUS_KEY]);
+}
 
 export function handleRecordPointsGain(request, sender, sendResponse) {
   (async () => {
@@ -39,7 +46,7 @@ export function handleRecordDropsInventory(request, sender, sendResponse) {
         sendResponse({ success: true, recorded: false, claim: [] });
         return;
       }
-      const result = await dropsStore.recordInventory(request.data, { autoClaim: prefs.autoClaimDrops !== false });
+      const result = await dropsStore.recordInventory(request.data, { autoClaim: await autoClaimAllowed(prefs) });
       sendResponse({ success: true, recorded: result.recorded, claim: result.claim });
       announceDrops(result.added).catch(warnWith("annonce des Drops"));
     } catch (error) {
@@ -57,7 +64,7 @@ export function handleRecordDropsEvent(request, sender, sendResponse) {
         sendResponse({ success: true, recorded: false, refresh: false, claim: [] });
         return;
       }
-      const result = await dropsStore.recordEvent(request.data, { autoClaim: prefs.autoClaimDrops !== false });
+      const result = await dropsStore.recordEvent(request.data, { autoClaim: await autoClaimAllowed(prefs) });
       sendResponse({ success: true, ...result });
       if (result.channelId) dropsStore.resolveNames().catch(warnWith("noms des chaînes (Drops)"));
     } catch (error) {

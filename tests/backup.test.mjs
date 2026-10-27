@@ -41,7 +41,7 @@ const storage = {
   streamPulseWatchLater: [{ id: "later:1", url: "https://www.twitch.tv/gotaga", title: "Replay", note: "", createdAt: 1, platform: "twitch" }],
   streamPulseLinkedAccounts: [{ id: "person:1", name: "Gotaga", streamerIds: ["twitch:gotaga", "kick:amine"], preferredId: "twitch:gotaga" }],
   // Lie a cette installation : jamais dans une sauvegarde.
-  streamPulsePlus: { status: "active", licenseKey: "SP-XXXX", plan: "lifetime" },
+  streamPulsePlus: { status: "active", licenseKey: "SP-XXXX", plan: "lifetime", iat: Date.now(), sig: "sig" },
   streamPulseDeviceId: "device-123",
   // Caches et secrets : jamais dans une sauvegarde.
   betaGeneralStatuses: { "twitch:gotaga": { isLive: true } },

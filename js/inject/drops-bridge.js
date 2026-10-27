@@ -273,7 +273,9 @@
     const message = event.data;
     if (!message || typeof message.source !== "string") return;
     if (message.source === "streampulse:drops:ready") {
-      sessionToken = typeof message.token === "string" ? message.token : "";
+      // Premier « ready » seulement : un script de la page ne doit pas
+      // remplacer le jeton du content script.
+      if (!sessionToken && typeof message.token === "string") sessionToken = message.token;
       return;
     }
     if (message.source !== COMMAND || message.v !== 1) return;

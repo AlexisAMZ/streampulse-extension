@@ -26,11 +26,15 @@
 
   function isPlusActive(record, now) {
     if (!record || record.status !== "active" || !record.licenseKey) return false;
+    // Sans signature du serveur, rien n'ouvre : une licence écrite à la main
+    // (serveur bloqué, faux serveur) reste inactive même avant le passage du
+    // garde (js/sw/license-guard.js), qui vérifie la signature elle-même.
+    if (typeof record.sig !== "string" || !record.sig || !(Number(record.iat) > 0)) return false;
     var at = typeof now === "number" ? now : Date.now();
     if (isFuture(record.verifiedAt, at) || isFuture(record.checkedAt, at) || isFuture(record.iat, at)) return false;
     if (record.plan === "lifetime") return true;
-    // `iat` est la date signée par le serveur : elle prime sur la date locale.
-    return at - (Number(record.iat) || Number(record.verifiedAt) || 0) <= PLUS_GRACE_MS;
+    // `iat` est la date signée par le serveur : elle seule compte.
+    return at - Number(record.iat) <= PLUS_GRACE_MS;
   }
 
   var MONTH_MS = 30.44 * 24 * 60 * 60 * 1000;

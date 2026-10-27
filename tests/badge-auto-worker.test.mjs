@@ -79,7 +79,7 @@ const badge = (id, game) => ({ id, title: `Badge ${id}`, description: `Watch ${g
 const badges = [badge("t30", "VALORANT"), badge("t60", "VALORANT"), badge("t90", "VALORANT"), badge("l1", "League of Legends"), { ...badge("sub", "VALORANT"), description: "Subscribe to a VALORANT streamer" }];
 
 // Licence Plus active : le mode auto des badges est une fonctionnalité Plus.
-const plusRecord = () => ({ status: "active", licenseKey: "SP-AAAA-BBBB-CCCC-DDDD", plan: "monthly", verifiedAt: now, checkedAt: now });
+const plusRecord = () => ({ status: "active", licenseKey: "SP-AAAA-BBBB-CCCC-DDDD", plan: "monthly", verifiedAt: now, checkedAt: now, iat: now, sig: "sig" });
 
 test("tous les badges : un jeu à la fois, paliers ensemble, puis fin", async () => {
   const { store, tabs, alarms, log } = fakeChrome();
@@ -213,9 +213,9 @@ test("la licence Plus qui expire arrête une récupération en cours", async () 
   await auto.start({ all: true });
   assert.equal(tabs.size, 1);
 
-  // Résiliation puis délai de grâce dépassé (verifiedAt ancien) : le passage
+  // Résiliation puis délai de grâce dépassé (iat signé ancien) : le passage
   // suivant du mode auto doit tout arrêter et prévenir.
-  store.streamPulsePlus = { ...plusRecord(), verifiedAt: now - 40 * 24 * HOUR, checkedAt: now - 40 * 24 * HOUR };
+  store.streamPulsePlus = { ...plusRecord(), verifiedAt: now - 40 * 24 * HOUR, checkedAt: now - 40 * 24 * HOUR, iat: now - 40 * 24 * HOUR };
   await auto.check();
   assert.equal(store.streamPulseBadgeAuto, undefined);
   assert.equal(tabs.size, 0);

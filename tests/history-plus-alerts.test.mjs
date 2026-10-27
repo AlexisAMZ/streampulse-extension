@@ -113,7 +113,7 @@ test("normalizeLicenseKey accepte les saisies approximatives", () => {
 });
 
 test("isPlusActive : à vie toujours actif, mensuel tant que la vérification est récente", () => {
-  const base = { licenseKey: "SP-ABCD-1234-EFGH-5678", status: "active", verifiedAt: NOW };
+  const base = { licenseKey: "SP-ABCD-1234-EFGH-5678", status: "active", verifiedAt: NOW, iat: NOW, sig: "sig" };
   assert.equal(isPlusActive({ ...base, plan: "lifetime", verifiedAt: 0 }, NOW), true);
   assert.equal(isPlusActive({ ...base, plan: "monthly" }, NOW + PLUS_GRACE_MS - 1), true);
   assert.equal(isPlusActive({ ...base, plan: "monthly" }, NOW + PLUS_GRACE_MS + 1), false);

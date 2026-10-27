@@ -45,19 +45,7 @@
     return api.get(lang, "player." + key);
   }
 
-  // Une extension chargee non empaquetee n'a pas d'update_url : c'est une
-  // installation de developpement, jamais celle des utilisateurs du store.
-  // Les avantages StreamPulse+ y sont ouverts pour pouvoir les tester.
-  function isDevInstall() {
-    try {
-      return !chrome.runtime.getManifest().update_url;
-    } catch (_error) {
-      return false;
-    }
-  }
-
   function plusActive(record) {
-    if (isDevInstall()) return true;
     return PLUS_RULE.isPlusActive(record);
   }
 

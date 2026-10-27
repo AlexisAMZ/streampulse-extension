@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { extensionPage } from "./helpers/extension-page.mjs";
 
-const activeLicense = { status: "active", plan: "lifetime", licenseKey: "test-only" };
+const activeLicense = { status: "active", plan: "lifetime", licenseKey: "test-only", iat: Date.now(), sig: "sig" };
 const preferences = { language: "en", autoClaimDrops: true, autoOpenInventory: true, autoFarmNewBadges: true, badgeFarmLowQuality: true, enableClipDownload: true, gameNotifications: true, titleNotifications: true };
 
 for (const search of ["", "?mode=plus"]) {
@@ -17,7 +17,7 @@ for (const search of ["", "?mode=plus"]) {
       $("onboarding-auto-claim-drops").checked = true;
       $("onboarding-auto-claim-drops").dispatchEvent(new Event("change", { bubbles: true }));
       const guarded = calls.filter((call) => call.type === "updatePreferences").length;
-      change({ streamPulsePlus: { status: "active", plan: "lifetime", licenseKey: "test-only" } });
+      change({ streamPulsePlus: { status: "active", plan: "lifetime", licenseKey: "test-only", iat: Date.now(), sig: "sig" } });
       const active = snapshot();
       change({ streamPulsePlus: { status: "active", plan: "monthly", licenseKey: "test-only", verifiedAt: 1 } });
       const expired = snapshot();

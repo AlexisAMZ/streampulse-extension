@@ -110,6 +110,8 @@ export function isPlusActive(record, now = Date.now()) {
 /**
  * @returns {Promise<{ok: true, record: object} | {ok: false, error: "format"|"invalid"|"device_limit"|"network"}>}
  */
+const LICENSE_VERIFY_TIMEOUT_MS = 15_000;
+
 export async function verifyLicense(input, fetchImpl, now = Date.now(), device = "") {
   const licenseKey = normalizeLicenseKey(input);
   if (!licenseKey) return { ok: false, error: "format" };
@@ -120,6 +122,8 @@ export async function verifyLicense(input, fetchImpl, now = Date.now(), device =
       headers: { "Content-Type": "application/json" },
       // `version` : le serveur refuse les versions périmées (STREAMPULSE_MIN_VERSION).
       body: JSON.stringify({ key: licenseKey, device, version: globalThis.chrome?.runtime?.getManifest?.().version }),
+      // Un serveur qui ne répond jamais (paquets jetés) ne doit pas bloquer le garde.
+      signal: AbortSignal.timeout(LICENSE_VERIFY_TIMEOUT_MS),
     });
     if (!response.ok && ![403, 404, 422].includes(response.status)) {
       return { ok: false, error: "network" };
