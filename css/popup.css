@@ -589,7 +589,7 @@ input[type="checkbox"][role="switch"]:checked::before { background: var(--paper)
 .plus-badge-check { display: none; }
 .plus-badge.is-active .plus-badge-spark { display: none; }
 .plus-badge.is-active .plus-badge-check { display: block; }
-/* Animation d'incitation pour le bouton Plus (non abonnés n'ayant pas encore cliqué) */
+/* Animation d'incitation du bouton Plus : en continu pour les non-abonnés */
 .plus-badge.has-attention {
   position: relative;
   overflow: hidden;

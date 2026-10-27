@@ -1369,7 +1369,11 @@ export default {
       "months": "Abonné depuis {{count}} mois",
       "monthOne": "Abonné depuis 1 mois",
       "newMember": "Nouvel abonné",
-      "freeLine": "Utilisateur de l'extension"
+      "freeLine": "Utilisateur de l'extension",
+      "worn": "Porté",
+      "tenure": "Ancienneté",
+      "nameStyle": "Style du pseudo",
+      "bughunter": "Chasseur de bugs"
     },
     "topbar": {
       "previews": "Aperçus au survol",

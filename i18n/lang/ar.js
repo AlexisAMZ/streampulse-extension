@@ -1419,7 +1419,11 @@ export default {
       "months": "مشترك منذ {{count}} أشهر",
       "monthOne": "مشترك منذ شهر واحد",
       "newMember": "مشترك جديد",
-      "freeLine": "مستخدم الإضافة"
+      "freeLine": "مستخدم الإضافة",
+      "worn": "مُجهَّز",
+      "tenure": "الأقدمية",
+      "nameStyle": "ستايل الاسم",
+      "bughunter": "صائد الأخطاء"
     },
     "topbar": {
       "previews": "معاينات التمرير",

@@ -1369,7 +1369,11 @@ export default {
       "months": "Seit {{count}} Monaten dabei",
       "monthOne": "Seit 1 Monat dabei",
       "newMember": "Neues Mitglied",
-      "freeLine": "Nutzt die Erweiterung"
+      "freeLine": "Nutzt die Erweiterung",
+      "worn": "Getragen",
+      "tenure": "Mitgliedsdauer",
+      "nameStyle": "Namensstil",
+      "bughunter": "Fehlerjäger"
     },
     "topbar": {
       "previews": "Hover-Vorschau",

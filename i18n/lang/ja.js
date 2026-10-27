@@ -1369,7 +1369,11 @@ export default {
       "months": "{{count}}か月利用中",
       "monthOne": "1か月利用中",
       "newMember": "新規メンバー",
-      "freeLine": "拡張機能ユーザー"
+      "freeLine": "拡張機能ユーザー",
+      "worn": "装着中",
+      "tenure": "加入歴",
+      "nameStyle": "名前のスタイル",
+      "bughunter": "バグハンター"
     },
     "topbar": {
       "previews": "ホバープレビュー",

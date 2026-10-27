@@ -1369,7 +1369,11 @@ export default {
       "months": "{{count}} aydır abone",
       "monthOne": "1 aydır abone",
       "newMember": "Yeni abone",
-      "freeLine": "Eklenti kullanıcısı"
+      "freeLine": "Eklenti kullanıcısı",
+      "worn": "Takılı",
+      "tenure": "Kıdem",
+      "nameStyle": "İsim stili",
+      "bughunter": "Hata avcısı"
     },
     "topbar": {
       "previews": "Üzerine gelince önizleme",

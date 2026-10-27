@@ -49,7 +49,11 @@
       "months": "Abonné depuis {{count}} mois",
       "monthOne": "Abonné depuis 1 mois",
       "newMember": "Nouvel abonné",
-      "freeLine": "Utilisateur de l'extension"
+      "freeLine": "Utilisateur de l'extension",
+      "worn": "Porté",
+      "tenure": "Ancienneté",
+      "nameStyle": "Style du pseudo",
+      "bughunter": "Chasseur de bugs"
     },
     "topbar": {
       "previews": "Aperçus au survol",
@@ -226,7 +230,11 @@
       "months": "Subscribed for {{count}} months",
       "monthOne": "Subscribed for 1 month",
       "newMember": "New subscriber",
-      "freeLine": "Extension user"
+      "freeLine": "Extension user",
+      "worn": "Worn",
+      "tenure": "Tenure",
+      "nameStyle": "Name style",
+      "bughunter": "Bug hunter"
     },
     "topbar": {
       "previews": "Hover previews",
@@ -403,7 +411,11 @@
       "months": "Suscrito desde hace {{count}} meses",
       "monthOne": "Suscrito desde hace 1 mes",
       "newMember": "Nuevo suscriptor",
-      "freeLine": "Usuario de la extensión"
+      "freeLine": "Usuario de la extensión",
+      "worn": "Equipado",
+      "tenure": "Antigüedad",
+      "nameStyle": "Estilo del nombre",
+      "bughunter": "Cazador de errores"
     },
     "topbar": {
       "previews": "Vistas previas al pasar",
@@ -580,7 +592,11 @@
       "months": "Assinante há {{count}} meses",
       "monthOne": "Assinante há 1 mês",
       "newMember": "Novo assinante",
-      "freeLine": "Usuário da extensão"
+      "freeLine": "Usuário da extensão",
+      "worn": "Equipado",
+      "tenure": "Antiguidade",
+      "nameStyle": "Estilo do nome",
+      "bughunter": "Caçador de bugs"
     },
     "topbar": {
       "previews": "Prévias ao passar o mouse",
@@ -757,7 +773,11 @@
       "months": "Seit {{count}} Monaten dabei",
       "monthOne": "Seit 1 Monat dabei",
       "newMember": "Neues Mitglied",
-      "freeLine": "Nutzt die Erweiterung"
+      "freeLine": "Nutzt die Erweiterung",
+      "worn": "Getragen",
+      "tenure": "Mitgliedsdauer",
+      "nameStyle": "Namensstil",
+      "bughunter": "Fehlerjäger"
     },
     "topbar": {
       "previews": "Hover-Vorschau",
@@ -934,7 +954,11 @@
       "months": "Abbonato da {{count}} mesi",
       "monthOne": "Abbonato da 1 mese",
       "newMember": "Nuovo abbonato",
-      "freeLine": "Utente dell'estensione"
+      "freeLine": "Utente dell'estensione",
+      "worn": "Indossato",
+      "tenure": "Anzianità",
+      "nameStyle": "Stile del nome",
+      "bughunter": "Cacciatore di bug"
     },
     "topbar": {
       "previews": "Anteprime al passaggio",
@@ -1111,7 +1135,11 @@
       "months": "Subskrybuje od {{count}} mies.",
       "monthOne": "Subskrybuje od 1 miesiąca",
       "newMember": "Nowy subskrybent",
-      "freeLine": "Użytkownik rozszerzenia"
+      "freeLine": "Użytkownik rozszerzenia",
+      "worn": "Noszony",
+      "tenure": "Staż",
+      "nameStyle": "Styl pseudonimu",
+      "bughunter": "Łowca błędów"
     },
     "topbar": {
       "previews": "Podgląd po najechaniu",
@@ -1288,7 +1316,11 @@
       "months": "{{count}} aydır abone",
       "monthOne": "1 aydır abone",
       "newMember": "Yeni abone",
-      "freeLine": "Eklenti kullanıcısı"
+      "freeLine": "Eklenti kullanıcısı",
+      "worn": "Takılı",
+      "tenure": "Kıdem",
+      "nameStyle": "İsim stili",
+      "bughunter": "Hata avcısı"
     },
     "topbar": {
       "previews": "Üzerine gelince önizleme",
@@ -1465,7 +1497,11 @@
       "months": "Подписчик {{count}} мес.",
       "monthOne": "Подписчик 1 месяц",
       "newMember": "Новый подписчик",
-      "freeLine": "Пользователь расширения"
+      "freeLine": "Пользователь расширения",
+      "worn": "Надет",
+      "tenure": "Стаж",
+      "nameStyle": "Стиль ника",
+      "bughunter": "Охотник за багами"
     },
     "topbar": {
       "previews": "Превью при наведении",
@@ -1642,7 +1678,11 @@
       "months": "{{count}}か月利用中",
       "monthOne": "1か月利用中",
       "newMember": "新規メンバー",
-      "freeLine": "拡張機能ユーザー"
+      "freeLine": "拡張機能ユーザー",
+      "worn": "装着中",
+      "tenure": "加入歴",
+      "nameStyle": "名前のスタイル",
+      "bughunter": "バグハンター"
     },
     "topbar": {
       "previews": "ホバープレビュー",
@@ -1819,7 +1859,11 @@
       "months": "{{count}}개월째 구독 중",
       "monthOne": "1개월째 구독 중",
       "newMember": "새 구독자",
-      "freeLine": "확장 프로그램 사용자"
+      "freeLine": "확장 프로그램 사용자",
+      "worn": "장착 중",
+      "tenure": "구독 기간",
+      "nameStyle": "닉네임 스타일",
+      "bughunter": "버그 헌터"
     },
     "topbar": {
       "previews": "마우스 오버 미리보기",
@@ -1996,7 +2040,11 @@
       "months": "مشترك منذ {{count}} أشهر",
       "monthOne": "مشترك منذ شهر واحد",
       "newMember": "مشترك جديد",
-      "freeLine": "مستخدم الإضافة"
+      "freeLine": "مستخدم الإضافة",
+      "worn": "مُجهَّز",
+      "tenure": "الأقدمية",
+      "nameStyle": "ستايل الاسم",
+      "bughunter": "صائد الأخطاء"
     },
     "topbar": {
       "previews": "معاينات التمرير",

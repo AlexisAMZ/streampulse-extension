@@ -1369,7 +1369,11 @@ export default {
       "months": "{{count}}개월째 구독 중",
       "monthOne": "1개월째 구독 중",
       "newMember": "새 구독자",
-      "freeLine": "확장 프로그램 사용자"
+      "freeLine": "확장 프로그램 사용자",
+      "worn": "장착 중",
+      "tenure": "구독 기간",
+      "nameStyle": "닉네임 스타일",
+      "bughunter": "버그 헌터"
     },
     "topbar": {
       "previews": "마우스 오버 미리보기",

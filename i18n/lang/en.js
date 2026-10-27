@@ -1407,7 +1407,11 @@ export default {
       "months": "Subscribed for {{count}} months",
       "monthOne": "Subscribed for 1 month",
       "newMember": "New subscriber",
-      "freeLine": "Extension user"
+      "freeLine": "Extension user",
+      "worn": "Worn",
+      "tenure": "Tenure",
+      "nameStyle": "Name style",
+      "bughunter": "Bug hunter"
     },
     "topbar": {
       "previews": "Hover previews",

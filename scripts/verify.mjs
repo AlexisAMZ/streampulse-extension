@@ -217,7 +217,9 @@ else {
     // 168 (2026-10-17) : les clés écrites en entier comme littéral comptent
     // désormais ; le reste est dynamique (reason.${…}, statuts bulk.*,
     // popup.notificationTools.state.*) ou attend l'interface du planificateur.
-    const MAX_UNUSED_KEYS = 168;
+    // 172 (2026-10-27) : carte du badge dans le chat (inject.badge.worn,
+    // tenure, nameStyle, bughunter), lue par tr("clé courte") dans twitch-badge.js.
+    const MAX_UNUSED_KEYS = 172;
     const unusedKeys = referenceKeys.filter((k) => !usedKeys.has(k));
     if (unusedKeys.length > MAX_UNUSED_KEYS) {
       fail(`${unusedKeys.length} translation keys are never referenced by any literal call (max ${MAX_UNUSED_KEYS}) : une clé morte vient probablement d'être ajoutée, ou un nouveau mécanisme dynamique demande d'ajuster MAX_UNUSED_KEYS`);
