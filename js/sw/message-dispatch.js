@@ -14,6 +14,7 @@ const SENSITIVE_MESSAGE_TYPES = new Set([
   "reorderStreamers",
   "setPinnedStreamers",
   "importHistoryCsv",
+  "getTwitchLogin",
 ]);
 
 export function isExtensionPage(sender, extensionPrefix) {

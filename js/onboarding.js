@@ -284,8 +284,8 @@ function renderProfileFromState() {
 }
 
 async function lookupTwitchProfile(handle) {
-  /* Ask the background to resolve the Twitch user. background.js exposes a
-     "lookupTwitchUser" handler (added alongside this redesign).  Falls back
+  /* Ask the background to resolve the user: Twitch first, then Kick and
+     YouTube ("lookupTwitchUser" keeps its historical name).  Falls back
      gracefully to initials-only if the runtime isn't available. */
   try {
     const response = await chrome.runtime.sendMessage({
@@ -1046,6 +1046,16 @@ function initPlusStyle() {
  * Il était écrit V1.0 en dur dans le HTML : tous les utilisateurs voyaient cette
  * valeur quelle que soit leur version installée.
  */
+/** Pseudo du compte Twitch connecté, écrit d'office si le champ est encore vide. */
+async function prefillProfileFromTwitch() {
+  if (!profileInput || profileInput.value.trim()) return;
+  const response = await chrome.runtime.sendMessage({ type: "getTwitchLogin" }).catch(() => null);
+  const login = typeof response?.login === "string" ? response.login : "";
+  if (!login || profileInput.value.trim()) return;
+  profileInput.value = login;
+  scheduleProfileLookup(login);
+}
+
 async function initialize() {
   await initI18n();
   buildLanguageButtons();
@@ -1054,6 +1064,7 @@ async function initialize() {
   syncControls();
   setHintState("idle", t("onboarding.profileHintIdle"));
   renderProfileFromState();
+  prefillProfileFromTwitch();
 
   unsubscribeLanguage = onLanguageChange(() => refreshTranslations());
 

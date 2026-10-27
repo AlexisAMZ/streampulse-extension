@@ -88,6 +88,24 @@ export const RELEASES = [
         },
       },
       {
+        type: "improved",
+        area: "interface",
+        text: {
+          "fr": "Premier lancement : si tu es connecté à Twitch, ton pseudo est déjà rempli. Ta photo de profil est aussi retrouvée sur Kick et YouTube, plus seulement sur Twitch.",
+          "en": "First launch: if you're signed in to Twitch, your username is already filled in. Your profile picture is now found on Kick and YouTube too, not just Twitch.",
+          "es": "Primer inicio: si tienes sesión en Twitch, tu usuario ya aparece escrito. Tu foto de perfil ahora también se encuentra en Kick y YouTube, no solo en Twitch.",
+          "pt-BR": "Primeira abertura: se você estiver conectado à Twitch, seu nome de usuário já vem preenchido. Sua foto de perfil agora também é encontrada na Kick e no YouTube, não só na Twitch.",
+          "de": "Erster Start: Bist du bei Twitch angemeldet, ist dein Benutzername schon ausgefüllt. Dein Profilbild wird jetzt auch auf Kick und YouTube gefunden, nicht nur auf Twitch.",
+          "it": "Primo avvio: se hai effettuato l'accesso a Twitch, il tuo nome utente è già compilato. La tua foto profilo ora viene trovata anche su Kick e YouTube, non solo su Twitch.",
+          "pl": "Pierwsze uruchomienie: jeśli jesteś zalogowany na Twitchu, twoja nazwa jest już wpisana. Zdjęcie profilowe znajdziemy teraz także na Kicku i YouTube, nie tylko na Twitchu.",
+          "tr": "İlk açılış: Twitch'te oturum açtıysan kullanıcı adın zaten yazılı. Profil fotoğrafın artık sadece Twitch'te değil, Kick ve YouTube'da da bulunuyor.",
+          "ru": "Первый запуск: если ты вошёл в Twitch, ник уже подставлен. Аватар теперь ищется и на Kick и YouTube, а не только на Twitch.",
+          "ja": "初回起動：Twitch にログインしていれば、ユーザー名が自動で入力されます。プロフィール画像は Twitch だけでなく Kick や YouTube からも見つかるようになりました。",
+          "ko": "첫 실행: Twitch에 로그인되어 있으면 사용자 이름이 미리 입력됩니다. 프로필 사진도 이제 Twitch뿐 아니라 Kick과 YouTube에서 찾습니다.",
+          "ar": "التشغيل الأول: إذا كنت مسجّلًا في Twitch فسيُكتب اسم المستخدم تلقائيًا. وصار البحث عن صورتك الشخصية يشمل Kick وYouTube أيضًا، لا Twitch وحده.",
+        },
+      },
+      {
         type: "fix",
         area: "fixes",
         text: {
