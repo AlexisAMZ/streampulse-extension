@@ -7,7 +7,7 @@ import { reply, respond } from "./message-dispatch.js";
 import { addStreamer } from "./add-streamer.js";
 import { PlatformChecker } from "./platform-checker.js";
 import { pollStreamers } from "./polling.js";
-import { lookupUserProfile, readTwitchLogin } from "./profile-lookup.js";
+import { PROFILE_PLATFORMS, lookupUserProfile, readTwitchLogin } from "./profile-lookup.js";
 import { streamerCache, streamerLiveState, streamerStates } from "./state.js";
 import { DataStore, PreferenceStore } from "./stores.js";
 import { suggestChannels } from "./suggest.js";
@@ -32,7 +32,8 @@ export function handleGetStreamers(request, sender, sendResponse) {
 export function handleLookupTwitchUser(request, sender, sendResponse) {
   const raw = String(request.handle || "").trim().replace(/^@/, "");
   if (!sanitizeHandle("twitch", raw) && !sanitizeHandle("youtube", raw)) { sendResponse({ error: "invalid" }); return true; }
-  lookupUserProfile(raw)
+  const platform = PROFILE_PLATFORMS.includes(request.platform) ? request.platform : "";
+  lookupUserProfile(raw, platform)
     .then((user) => sendResponse({ user }))
     .catch(() => sendResponse({ user: null }));
   return true;

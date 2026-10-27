@@ -1185,7 +1185,7 @@ async function handleSavePseudo() {
   // L'avatar doit suivre le pseudo. Sans ce lookup, le spread de l'ancien
   // profil conservait la photo posee a l'onboarding : apres un changement de
   // pseudo, le filigrane des statistiques montrait encore l'ancien compte.
-  const lookup = await sendMessage({ type: "lookupTwitchUser", handle: raw });
+  const lookup = await sendMessage({ type: "lookupTwitchUser", handle: raw, platform: previous.platform });
   const user = lookup?.user || null;
   const next = {
     ...previous,

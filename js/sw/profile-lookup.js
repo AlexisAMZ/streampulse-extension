@@ -30,8 +30,17 @@ async function youtubeProfile(raw) {
   return { platform: "youtube", display_name: channel.name || handle, profile_image_url: channel.avatar };
 }
 
-/** Premier profil trouvé (Twitch d'abord : c'est la plateforme la plus courante), ou null. */
-export async function lookupUserProfile(raw) {
+const LOOKUPS = { twitch: twitchProfile, kick: kickProfile, youtube: youtubeProfile };
+
+/** Plateformes où l'onboarding peut chercher le profil de l'utilisateur. */
+export const PROFILE_PLATFORMS = Object.keys(LOOKUPS);
+
+/**
+ * Profil sur la plateforme choisie ; sans plateforme, le premier trouvé
+ * (Twitch d'abord : c'est la plateforme la plus courante), ou null.
+ */
+export async function lookupUserProfile(raw, platform = "") {
+  if (LOOKUPS[platform]) return LOOKUPS[platform](raw);
   const twitch = await twitchProfile(raw);
   if (twitch) return twitch;
   const [kick, youtube] = await Promise.all([kickProfile(raw), youtubeProfile(raw)]);

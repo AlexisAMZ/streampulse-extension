@@ -39,6 +39,7 @@ const stepCounterCurrent = document.getElementById("step-counter-current");
 /* Profile (NEW) */
 const profileInput = document.getElementById("profile-input");
 const profileInputCount = document.getElementById("profile-input-count");
+const profilePlatformPicker = document.getElementById("profile-platform-picker");
 const profileAvatar = document.getElementById("profile-avatar");
 const profileAvatarInitials = document.getElementById("profile-avatar-initials");
 const profileAvatarImg = document.getElementById("profile-avatar-img");
@@ -107,7 +108,11 @@ let preferencesLoaded = false;
 let pendingPreference = null;
 let plusRecord = null;
 
-let userProfile = { handle: "", displayName: "", avatarUrl: "" };
+/** Plateformes où le service worker sait retrouver la photo de l'utilisateur. */
+const PROFILE_PLATFORMS = ["twitch", "kick", "youtube"];
+
+let profilePlatform = "twitch";
+let userProfile = { handle: "", displayName: "", avatarUrl: "", platform: profilePlatform };
 let profileLookupTimer = null;
 let profileLookupSeq = 0;
 
@@ -291,6 +296,7 @@ async function lookupTwitchProfile(handle) {
     const response = await chrome.runtime.sendMessage({
       type: "lookupTwitchUser",
       handle,
+      platform: profilePlatform,
     });
     if (response?.error) return null;
     return response?.user || null;
@@ -306,7 +312,7 @@ function scheduleProfileLookup(rawValue) {
   const handle = (rawValue || "").trim().replace(/^@/, "");
 
   if (!handle) {
-    userProfile = { handle: "", displayName: "", avatarUrl: "" };
+    userProfile = { handle: "", displayName: "", avatarUrl: "", platform: profilePlatform };
     setProfileAvatarImage("");
     setAvatarStatus("idle");
     setHintState("idle", t("onboarding.profileHintIdle"));
@@ -316,7 +322,7 @@ function scheduleProfileLookup(rawValue) {
   }
 
   /* Optimistic local state: show initials + enable Continue immediately */
-  userProfile = { handle, displayName: handle, avatarUrl: "" };
+  userProfile = { handle, displayName: handle, avatarUrl: "", platform: profilePlatform };
   setProfileAvatarImage("");
   renderProfileFromState();
   setAvatarStatus("searching");
@@ -334,12 +340,13 @@ function scheduleProfileLookup(rawValue) {
         handle,
         displayName: user.display_name || user.displayName || handle,
         avatarUrl: user.profile_image_url || user.avatarUrl || "",
+        platform: profilePlatform,
       };
       setProfileAvatarImage(userProfile.avatarUrl);
       setAvatarStatus("found");
       setHintState("found", t("onboarding.profileHintFound", { handle: userProfile.displayName }));
     } else {
-      userProfile = { handle, displayName: handle, avatarUrl: "" };
+      userProfile = { handle, displayName: handle, avatarUrl: "", platform: profilePlatform };
       setProfileAvatarImage("");
       /* Pas de compte Twitch (ou pseudo inconnu) : ce n'est pas une erreur.
          On garde le pseudo saisi tel quel, en état neutre. */
@@ -348,6 +355,36 @@ function scheduleProfileLookup(rawValue) {
     }
     renderProfileFromState();
   }, 450);
+}
+
+/** Sélecteur Twitch / Kick / YouTube de l'étape pseudo. */
+function renderProfilePlatformPicker() {
+  if (!profilePlatformPicker) return;
+  profilePlatformPicker.replaceChildren(...PROFILE_PLATFORMS.map((platform) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "platform-button";
+    button.dataset.platform = platform;
+    const isActive = platform === profilePlatform;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", isActive ? "true" : "false");
+    const icon = document.createElement("img");
+    icon.src = `../${getPlatformDefinition(platform).icon}`;
+    icon.alt = "";
+    const label = document.createElement("span");
+    label.className = "platform-button-label";
+    label.textContent = getPlatformLabel(platform);
+    button.append(icon, label);
+    return button;
+  }));
+}
+
+function setProfilePlatform(platform) {
+  if (!PROFILE_PLATFORMS.includes(platform) || platform === profilePlatform) return;
+  profilePlatform = platform;
+  renderProfilePlatformPicker();
+  // Même pseudo, autre plateforme : la photo affichée n'est plus la bonne.
+  scheduleProfileLookup(profileInput?.value || "");
 }
 
 async function saveUserProfile() {
@@ -681,6 +718,8 @@ async function loadStreamers() {
   renderPreferenceToggles(currentPreferences);
   if (response.userProfile && !profileInput?.value) {
     userProfile = { ...userProfile, ...response.userProfile };
+    if (PROFILE_PLATFORMS.includes(userProfile.platform)) profilePlatform = userProfile.platform;
+    renderProfilePlatformPicker();
     if (profileInput && userProfile.handle) profileInput.value = userProfile.handle;
     setProfileAvatarImage(userProfile.avatarUrl);
     if (userProfile.handle) {
@@ -702,6 +741,7 @@ function refreshTranslations() {
   renderStreamers(currentStreamers);
   renderPreferenceToggles(currentPreferences || {});
   renderPlatformPicker();
+  renderProfilePlatformPicker();
   setSelectedPlatform(selectedPlatform);
   if (!profileInput?.value) setHintState("idle", t("onboarding.profileHintIdle"));
   else if (profileHint?.dataset.state === "searching") setHintState("searching", t("onboarding.profileHintSearching"));
@@ -745,6 +785,12 @@ function registerEventListeners() {
       const target = parseInt(pill.dataset.step, 10);
       if (target < currentStep) goToStep(target, "back");
     });
+  });
+
+  profilePlatformPicker?.addEventListener("click", (event) => {
+    if (saving || navigating) return;
+    const button = event.target.closest(".platform-button");
+    if (button?.dataset.platform) setProfilePlatform(button.dataset.platform);
   });
 
   /* Profile input */
@@ -1048,10 +1094,10 @@ function initPlusStyle() {
  */
 /** Pseudo du compte Twitch connecté, écrit d'office si le champ est encore vide. */
 async function prefillProfileFromTwitch() {
-  if (!profileInput || profileInput.value.trim()) return;
+  if (!profileInput || profileInput.value.trim() || profilePlatform !== "twitch") return;
   const response = await chrome.runtime.sendMessage({ type: "getTwitchLogin" }).catch(() => null);
   const login = typeof response?.login === "string" ? response.login : "";
-  if (!login || profileInput.value.trim()) return;
+  if (!login || profileInput.value.trim() || profilePlatform !== "twitch") return;
   profileInput.value = login;
   scheduleProfileLookup(login);
 }
@@ -1064,6 +1110,7 @@ async function initialize() {
   syncControls();
   setHintState("idle", t("onboarding.profileHintIdle"));
   renderProfileFromState();
+  renderProfilePlatformPicker();
   prefillProfileFromTwitch();
 
   unsubscribeLanguage = onLanguageChange(() => refreshTranslations());

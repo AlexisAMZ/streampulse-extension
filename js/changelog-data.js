@@ -91,8 +91,8 @@ export const RELEASES = [
         type: "improved",
         area: "interface",
         text: {
-          "fr": "Premier lancement : si tu es connecté à Twitch, ton pseudo est déjà rempli. Ta photo de profil est aussi retrouvée sur Kick et YouTube, plus seulement sur Twitch.",
-          "en": "First launch: if you're signed in to Twitch, your username is already filled in. Your profile picture is now found on Kick and YouTube too, not just Twitch.",
+          "fr": "Premier lancement : si tu es connecté à Twitch, ton pseudo est déjà rempli. Tu choisis ta plateforme (Twitch, Kick ou YouTube) et ta photo de profil y est retrouvée.",
+          "en": "First launch: if you're signed in to Twitch, your username is already filled in. Pick your platform (Twitch, Kick or YouTube) and your profile picture is found there.",
           "es": "Primer inicio: si tienes sesión en Twitch, tu usuario ya aparece escrito. Tu foto de perfil ahora también se encuentra en Kick y YouTube, no solo en Twitch.",
           "pt-BR": "Primeira abertura: se você estiver conectado à Twitch, seu nome de usuário já vem preenchido. Sua foto de perfil agora também é encontrada na Kick e no YouTube, não só na Twitch.",
           "de": "Erster Start: Bist du bei Twitch angemeldet, ist dein Benutzername schon ausgefüllt. Dein Profilbild wird jetzt auch auf Kick und YouTube gefunden, nicht nur auf Twitch.",
