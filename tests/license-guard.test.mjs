@@ -4,7 +4,7 @@ import { Buffer } from "node:buffer";
 import { generateKeyPairSync, sign, webcrypto } from "node:crypto";
 import { licenseMessage, signatureState, LICENSE_PUBLIC_JWK } from "../js/license-sign.js";
 import { PLUS_KEY, verifyLicense } from "../js/plus.js";
-import { PLUS_UNSIGNED_UNTIL, guardPlusRecord } from "../js/sw/license-guard.js";
+import { guardPlusRecord } from "../js/sw/license-guard.js";
 
 const NOW = Date.parse("2026-11-01T12:00:00Z");
 const KEY = "SP-ABCD-EFGH-JKLM-NPQR";
@@ -99,11 +99,27 @@ test("guard : sans signature, une clé bidon refusée par le serveur est supprim
   assert.equal(PLUS_KEY in storage.data, false);
 });
 
-test("guard : hors ligne pendant la transition, l'enregistrement est gardé", async () => {
+test("guard : hors ligne, une licence non signée garde sa clé mais n'ouvre plus rien", async () => {
   const unsigned = { status: "active", licenseKey: KEY, plan: "monthly", verifiedAt: NOW };
   const storage = memoryStorage({ [PLUS_KEY]: unsigned });
+  assert.equal(await guardPlusRecord({ storage, fetch: offline, now: NOW, crypto }), "unverified");
+  assert.equal(storage.data[PLUS_KEY].status, "unverified");
+  assert.equal(storage.data[PLUS_KEY].licenseKey, KEY);
+  assert.equal(globalThis.StreamPulsePlusRule.isPlusActive(storage.data[PLUS_KEY], NOW), false);
+});
+
+test("guard : un serveur saturé (429) ne valide pas une clé bidon non signée", async () => {
+  const forged = { status: "active", licenseKey: KEY, plan: "lifetime", role: "admin", verifiedAt: NOW };
+  const storage = memoryStorage({ [PLUS_KEY]: forged });
+  assert.equal(await guardPlusRecord({ storage, fetch: fetchReturning(429, { error: "rate_limited" }), now: NOW, crypto }), "unverified");
+  assert.equal(globalThis.StreamPulsePlusRule.isPlusActive(storage.data[PLUS_KEY], NOW), false);
+});
+
+test("guard : déjà « unverified », pas de réécriture en boucle", async () => {
+  const pending = { status: "unverified", licenseKey: KEY, plan: "monthly", verifiedAt: NOW };
+  const storage = memoryStorage({ [PLUS_KEY]: pending });
   assert.equal(await guardPlusRecord({ storage, fetch: offline, now: NOW, crypto }), "kept");
-  assert.deepEqual(storage.data[PLUS_KEY], unsigned);
+  assert.deepEqual(storage.data[PLUS_KEY], pending);
 });
 
 test("guard : serveur qui ne signe pas encore, aucune réécriture en boucle", async () => {
@@ -112,16 +128,6 @@ test("guard : serveur qui ne signe pas encore, aucune réécriture en boucle", a
   const payload = { valid: true, plan: "monthly", since: 0, referrals: 0, role: "" };
   assert.equal(await guardPlusRecord({ storage, fetch: fetchReturning(200, payload), now: NOW, crypto }), "kept");
   assert.deepEqual(storage.data[PLUS_KEY], unsigned);
-});
-
-test("guard : après la transition, sans signature obtenue, la licence passe en « unverified » sans perdre la clé", async () => {
-  const unsigned = { status: "active", licenseKey: KEY, plan: "lifetime", verifiedAt: NOW };
-  const storage = memoryStorage({ [PLUS_KEY]: unsigned });
-  const late = PLUS_UNSIGNED_UNTIL + 1000;
-  assert.equal(await guardPlusRecord({ storage, fetch: offline, now: late, crypto }), "unverified");
-  assert.equal(storage.data[PLUS_KEY].status, "unverified");
-  assert.equal(storage.data[PLUS_KEY].licenseKey, KEY);
-  assert.equal(globalThis.StreamPulsePlusRule.isPlusActive(storage.data[PLUS_KEY], late), false);
 });
 
 test("guard : aucune licence, rien à faire", async () => {

@@ -1,17 +1,11 @@
 // Garde de la licence StreamPulse+ : toute écriture de chrome.storage (devtools,
 // autre extension, script) est vérifiée ici. Un enregistrement dont la
-// signature est fausse est supprimé ; un enregistrement d'avant la signature
-// repasse par le serveur, qui le signe ou le refuse.
+// signature est fausse est supprimé ; un enregistrement sans signature
+// repasse par le serveur, qui le signe ou le refuse. Tant qu'il n'est pas
+// signé, il garde sa clé mais n'ouvre rien (statut « unverified »).
 
 import { signatureState } from "../license-sign.js";
 import { PLUS_KEY, getDeviceId, verifyLicense } from "../plus.js";
-
-/**
- * Fin de la transition : les installations mises à jour avant cette date
- * gardent leur licence non signée (le temps de joindre le serveur) ; après, une
- * licence sans signature n'ouvre plus rien.
- */
-export const PLUS_UNSIGNED_UNTIL = Date.parse("2026-12-15T00:00:00Z");
 
 const REFUSED = ["invalid", "format", "device_limit"];
 
@@ -41,9 +35,10 @@ export async function guardPlusRecord(deps) {
     await deps.storage.remove(PLUS_KEY);
     return "removed";
   }
-  // Serveur injoignable ou qui ne signe pas encore : on ne réécrit rien (pas de
-  // boucle avec storage.onChanged), la clé reste pendant la transition.
-  if (now < PLUS_UNSIGNED_UNTIL || record.status !== "active") return "kept";
+  // Serveur injoignable, saturé (429) ou qui ne signe pas encore : jamais de
+  // licence active sans signature, sinon couper le réseau suffirait à garder
+  // une clé inventée. La clé reste ; la revérification la signera.
+  if (result.ok || record.status !== "active") return "kept";
   await deps.storage.set({ [PLUS_KEY]: { ...record, status: "unverified" } });
   return "unverified";
 }
