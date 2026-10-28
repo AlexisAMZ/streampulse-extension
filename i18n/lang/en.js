@@ -318,7 +318,8 @@ export default {
     "trial": {
       "days": "{{days}}d left",
       "body": "StreamPulse+ trial · everything unlocked",
-      "subscribe": "Subscribe"
+      "subscribe": "Subscribe",
+      "start": "Try 7 days free"
     },
     "missed": {
       "unit": "MISSED",

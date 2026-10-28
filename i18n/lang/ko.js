@@ -280,7 +280,8 @@ export default {
     "trial": {
       "days": "{{days}}일 남음",
       "body": "StreamPulse+ 체험 · 모두 열림",
-      "subscribe": "구독하기"
+      "subscribe": "구독하기",
+      "start": "7일 무료 체험"
     },
     "missed": {
       "unit": "놓침",

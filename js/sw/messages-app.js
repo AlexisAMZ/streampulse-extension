@@ -10,6 +10,7 @@ import { NotificationCenter } from "./notifications.js";
 import { EventLogStore, PreferenceStore, StatsStore } from "./stores.js";
 import { WatchTimeStore, currentGameOf, resolveChannelAvatar, watchTimeTabClaims } from "./watchtime.js";
 import { warnWith } from "./log.js";
+import { requestTrial } from "./trial.js";
 import { DROPS_HISTORY_KEY, historyFrom, isHistoryEntry, pruneHistory } from "../drops-data.js";
 import { POINTS_KEYS, addGain, stateFrom, toStorage } from "../points-data.js";
 
@@ -253,5 +254,11 @@ export function handleImportHistoryCsv(request, sender, sendResponse) {
     }
     return { success: true, count };
   }, sendResponse, "importHistoryCsv");
+  return true;
+}
+
+/** Bouton « Essayer 7 jours gratuitement » : le serveur accorde l'essai s'il n'a jamais servi sur cet appareil. */
+export function handleStartTrial(request, sender, sendResponse) {
+  respond(async () => ({ result: await requestTrial({ storage: chrome.storage.local, fetch: (...args) => fetch(...args) }) }), sendResponse, "startTrial");
   return true;
 }

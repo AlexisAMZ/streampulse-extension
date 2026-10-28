@@ -330,7 +330,8 @@ export default {
     "trial": {
       "days": "{{days}} يوم",
       "body": "تجربة StreamPulse+ · كل شيء مفتوح",
-      "subscribe": "اشترك"
+      "subscribe": "اشترك",
+      "start": "جرّب 7 أيام مجانًا"
     },
     "missed": {
       "unit": "فائتة",

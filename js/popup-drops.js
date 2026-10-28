@@ -1099,7 +1099,7 @@ function bind() {
   $("drop-alerts-unlock")?.addEventListener("click", () => deps.openPlus());
   dropScope.bind();
   badgeScope.bind();
-  for (const cta of document.querySelectorAll(".missed-lcd-cta")) cta.addEventListener("click", () => deps.openPlus());
+  for (const cta of document.querySelectorAll(".missed-lcd-buy")) cta.addEventListener("click", () => deps.openPlus());
   for (const id of ["tab-badges", "tab-drops"]) $(id)?.addEventListener("click", () => seeMissed());
   for (const select of document.querySelectorAll(".drops-refresh-select")) select.addEventListener("change", changeRefresh);
   $("drops-filters")?.addEventListener("click", (event) => {

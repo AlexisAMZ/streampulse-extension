@@ -280,7 +280,8 @@ export default {
     "trial": {
       "days": "{{days}} gg",
       "body": "Prova di StreamPulse+ · tutto sbloccato",
-      "subscribe": "Abbonati"
+      "subscribe": "Abbonati",
+      "start": "Prova 7 giorni gratis"
     },
     "missed": {
       "unit": "PERSI",

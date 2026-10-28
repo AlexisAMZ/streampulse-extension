@@ -280,7 +280,8 @@ export default {
     "trial": {
       "days": "J-{{days}}",
       "body": "Essai StreamPulse+ · tout est débloqué",
-      "subscribe": "S'abonner"
+      "subscribe": "S'abonner",
+      "start": "Essayer 7 jours gratuitement"
     },
     "missed": {
       "unit": "RATÉS",

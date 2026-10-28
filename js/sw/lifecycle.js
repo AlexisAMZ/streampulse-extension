@@ -14,7 +14,7 @@ import { refreshRaidWatcher } from "./raids.js";
 import { DataStore, PreferenceStore } from "./stores.js";
 import { uninstallSurveyUrl } from "./uninstall-survey.js";
 import { repairYoutubeNames } from "./youtube-repair.js";
-import { beginTrialOnInstall, requestPendingTrial } from "./trial.js";
+import { beginTrialOnce, requestPendingTrial } from "./trial.js";
 
 export { uninstallSurveyUrl };
 
@@ -120,10 +120,13 @@ const trialDeps = () => ({ storage: chrome.storage.local, fetch: (...args) => fe
 /** Listener chrome.runtime.onInstalled. */
 export async function handleInstalled(details) {
   initDone = true;
-  if ((details?.reason || "install") === "install") {
-    await chrome.storage.local.set({ installedAt: Date.now() });
-    // Essai StreamPulse+ de 7 jours : sans attendre le serveur, le reste de l'installation continue.
-    beginTrialOnInstall(trialDeps()).catch((error) => console.warn("[StreamPulse+] essai :", error?.message || error));
+  const reason = details?.reason || "install";
+  if (reason === "install") await chrome.storage.local.set({ installedAt: Date.now() });
+  // Essai StreamPulse+ de 7 jours, une fois par navigateur : nouveaux utilisateurs
+  // et utilisateurs déjà installés (première mise à jour qui l'apporte). Sans
+  // attendre le serveur, le reste de l'installation continue.
+  if (reason === "install" || reason === "update") {
+    beginTrialOnce(trialDeps()).catch((error) => console.warn("[StreamPulse+] essai :", error?.message || error));
   }
   await registerUninstallSurvey();
   await syncChzzkAccess();

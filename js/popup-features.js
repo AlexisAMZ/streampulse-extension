@@ -18,6 +18,7 @@ import { groupMissedEntries } from "./history-grouping.js";
 import { LINKED_ACCOUNTS_KEY, normalizeLinkedAccounts } from "./linked-accounts.js";
 import { getPlatformIcon, getPlatformLabelKey } from "./platforms.js";
 import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalizePredictionRule, summarize as summarizePredictions } from "./predictions-data.js";
+import { TRIAL_STATE_KEY, trialStateFrom } from "./sw/trial.js";
 import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, trialEndsAt, verifyLicense } from "./plus.js";
 import { mountLiquidMetalButton } from "./promo-liquid-button.js";
 import { mountClipsMorph } from "./promo-clips-morph.js";
@@ -244,6 +245,29 @@ export function plusActive() {
 }
 
 const DAY_MS = 86_400_000;
+let trialState = trialStateFrom(null);
+
+/** Boutons « Essayer 7 jours gratuitement » : sans licence, tant que l'essai n'a jamais servi ici. */
+function renderTrialOffer() {
+  const eligible = !plusActive() && !trialState.used && !trialState.pending;
+  for (const button of document.querySelectorAll(".trial-start")) button.hidden = !eligible;
+  // Avec l'essai proposé, l'écran des alertes manquées garde un seul bouton.
+  for (const buy of document.querySelectorAll(".missed-lcd-buy")) buy.hidden = eligible;
+}
+
+async function startTrialFromButton(event) {
+  const button = event.currentTarget;
+  button.disabled = true;
+  try {
+    const response = await chrome.runtime.sendMessage({ type: "startTrial" });
+    // « started » : la licence d'essai arrive par le stockage et rafraîchit tout le popup.
+    if (response?.result === "refused") openPlus();
+  } catch (error) {
+    console.warn("[plus] essai indisponible :", error?.message || error);
+  } finally {
+    button.disabled = false;
+  }
+}
 
 /** Bandeau LCD de l'essai StreamPulse+ : jours restants et bouton S'abonner. */
 function renderTrialStrip(trial) {
@@ -288,6 +312,7 @@ function renderPlus() {
   if ($("plus-menu-text")) $("plus-menu-text").textContent = t(active ? "popup.plusMenu.statusActive" : "popup.plusMenu.statusInactive");
   if ($("plus-menu-open")) $("plus-menu-open").textContent = t(active ? "popup.plusMenu.manage" : "popup.plusMenu.discover");
   renderTrialStrip(trial);
+  renderTrialOffer();
   renderPromo();
   renderPlusValue().catch(() => {});
   plusListeners.forEach((listener) => listener(active));
@@ -448,6 +473,11 @@ function initPlus() {
   initLocalPrices().catch((error) => console.warn("[plus] prix locaux indisponibles :", error));
   $("open-plus")?.addEventListener("click", openPlus);
   $("trial-subscribe")?.addEventListener("click", openPlus);
+  for (const button of document.querySelectorAll(".trial-start")) button.addEventListener("click", startTrialFromButton);
+  chrome.storage.local.get(TRIAL_STATE_KEY).then((stored) => {
+    trialState = trialStateFrom(stored[TRIAL_STATE_KEY]);
+    renderTrialOffer();
+  }).catch(() => {});
   $("plus-close")?.addEventListener("click", () => closePlus());
   $("plus-menu-open")?.addEventListener("click", openPlus);
   $("plus-menu-recap")?.addEventListener("click", () => {
@@ -1052,6 +1082,10 @@ export async function initFeatures() {
     if (changes[PLUS_KEY]) {
       plusRecord = changes[PLUS_KEY].newValue || null;
       renderPlus();
+    }
+    if (changes[TRIAL_STATE_KEY]) {
+      trialState = trialStateFrom(changes[TRIAL_STATE_KEY].newValue);
+      renderTrialOffer();
     }
     if (changes[PLUS_VALUE_KEY]) renderPlusValue().catch(() => {});
     if (changes[PREDICTION_HISTORY_KEY]) {

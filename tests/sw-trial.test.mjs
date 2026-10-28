@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { PLUS_KEY } from "../js/plus.js";
-import { TRIAL_STATE_KEY, beginTrialOnInstall, requestPendingTrial } from "../js/sw/trial.js";
+import { TRIAL_STATE_KEY, beginTrialOnce, requestPendingTrial, requestTrial } from "../js/sw/trial.js";
 
 const NOW = Date.parse("2026-10-28T12:00:00Z");
 const DEVICE = "abcdef0123456789abcdef0123456789";
@@ -25,22 +25,22 @@ const granted = reply(200, { valid: true, plan: "trial", key: `TRIAL-${DEVICE}`,
 
 test("installation : l'essai est demandé et la licence d'essai enregistrée", async () => {
   const storage = memoryStorage();
-  assert.equal(await beginTrialOnInstall({ storage, fetch: granted, now: NOW }), "started");
+  assert.equal(await beginTrialOnce({ storage, fetch: granted, now: NOW }), "started");
   assert.equal(storage.data[PLUS_KEY].plan, "trial");
   assert.equal(storage.data[PLUS_KEY].checkedAt, NOW);
-  assert.deepEqual(storage.data[TRIAL_STATE_KEY], { pending: false, at: NOW });
+  assert.deepEqual(storage.data[TRIAL_STATE_KEY], { pending: false, used: true, at: NOW });
 });
 
 test("panne réseau : la demande reste en attente, puis repart au réveil suivant", async () => {
   const storage = memoryStorage();
-  assert.equal(await beginTrialOnInstall({ storage, fetch: reply(503, {}), now: NOW }), "retry");
+  assert.equal(await beginTrialOnce({ storage, fetch: reply(503, {}), now: NOW }), "retry");
   assert.equal(storage.data[TRIAL_STATE_KEY].pending, true);
   assert.equal(await requestPendingTrial({ storage, fetch: granted, now: NOW + 1 }), "started");
 });
 
 test("essai déjà utilisé sur cet appareil : plus de demande", async () => {
   const storage = memoryStorage();
-  assert.equal(await beginTrialOnInstall({ storage, fetch: reply(404, { valid: false, error: "trial_ended" }), now: NOW }), "refused");
+  assert.equal(await beginTrialOnce({ storage, fetch: reply(404, { valid: false, error: "trial_ended" }), now: NOW }), "refused");
   assert.equal(storage.data[PLUS_KEY], undefined);
   assert.equal(await requestPendingTrial({ storage, fetch: granted, now: NOW }), "none");
 });
@@ -48,6 +48,21 @@ test("essai déjà utilisé sur cet appareil : plus de demande", async () => {
 test("licence déjà présente : jamais remplacée par un essai", async () => {
   const bought = { licenseKey: "SP-AAAA-BBBB-CCCC-DDDD", plan: "monthly", status: "active" };
   const storage = memoryStorage({ [PLUS_KEY]: bought });
-  assert.equal(await beginTrialOnInstall({ storage, fetch: granted, now: NOW }), "licensed");
+  assert.equal(await beginTrialOnce({ storage, fetch: granted, now: NOW }), "licensed");
   assert.equal(storage.data[PLUS_KEY], bought);
+});
+
+test("mise à jour : un essai déjà noté n'est jamais redemandé automatiquement", async () => {
+  const storage = memoryStorage({ [TRIAL_STATE_KEY]: { pending: false, used: true, at: NOW - 1 } });
+  let calls = 0;
+  const counting = async (...args) => { calls += 1; return granted(...args); };
+  assert.equal(await beginTrialOnce({ storage, fetch: counting, now: NOW }), "none");
+  assert.equal(calls, 0);
+});
+
+test("bouton : demande l'essai même si l'état dit déjà utilisé, le serveur tranche", async () => {
+  const storage = memoryStorage({ [TRIAL_STATE_KEY]: { pending: false, used: true, at: NOW - 1 } });
+  assert.equal(await requestTrial({ storage, fetch: reply(404, { valid: false, error: "trial_ended" }), now: NOW }), "refused");
+  assert.equal(await requestTrial({ storage, fetch: granted, now: NOW }), "started");
+  assert.equal(storage.data[PLUS_KEY].plan, "trial");
 });

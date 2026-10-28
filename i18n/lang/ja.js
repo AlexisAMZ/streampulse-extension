@@ -280,7 +280,8 @@ export default {
     "trial": {
       "days": "残り{{days}}日",
       "body": "StreamPulse+ お試し中 · すべて解放",
-      "subscribe": "購読する"
+      "subscribe": "購読する",
+      "start": "7 日間無料で試す"
     },
     "missed": {
       "unit": "見逃し",

@@ -280,7 +280,8 @@ export default {
     "trial": {
       "days": "{{days}} T.",
       "body": "StreamPulse+-Test · alles freigeschaltet",
-      "subscribe": "Abonnieren"
+      "subscribe": "Abonnieren",
+      "start": "7 Tage gratis testen"
     },
     "missed": {
       "unit": "VERPASST",

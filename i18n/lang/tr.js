@@ -280,7 +280,8 @@ export default {
     "trial": {
       "days": "{{days}} gün",
       "body": "StreamPulse+ denemesi · her şey açık",
-      "subscribe": "Abone ol"
+      "subscribe": "Abone ol",
+      "start": "7 gün ücretsiz dene"
     },
     "missed": {
       "unit": "KAÇIRILDI",
