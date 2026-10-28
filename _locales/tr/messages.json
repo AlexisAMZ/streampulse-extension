@@ -3,7 +3,7 @@
     "message": "StreamPulse: Twitch, Kick, YouTube Bildirimi, Puan, Drops ve Rozet"
   },
   "appDesc": {
-    "message": "Twitch, Kick, YouTube ve CHZZK için canlı bildirimler. Otomatik Kanal Puanı, Drops ve rozet takibi, önizlemeler, sohbet filtreleri."
+    "message": "Otomatik Twitch kanal puanları, Drops ve rozet uyarıları. Twitch, Kick ve YouTube canlı bildirimleri, önizlemeler, sohbet filtresi."
   },
   "openPopupDesc": {
     "message": "StreamPulse'u aç"

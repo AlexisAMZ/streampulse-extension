@@ -3,7 +3,7 @@
     "message": "StreamPulse: Twitch, Kick & YouTube Alerts, Points, Drops & Badges"
   },
   "appDesc": {
-    "message": "Live alerts for Twitch, Kick, YouTube & CHZZK. Auto-claim Channel Points, track Drops & badges, hover previews, chat filters."
+    "message": "Auto-claim Twitch channel points, Drops & badge alerts. Live notifications for Twitch, Kick & YouTube, hover previews, chat filters."
   },
   "openPopupDesc": {
     "message": "Open StreamPulse"

@@ -3,7 +3,7 @@
     "message": "StreamPulse: تنبيهات ونقاط وDrops وشارات Twitch وKick وYouTube"
   },
   "appDesc": {
-    "message": "تنبيهات البث لـ Twitch وKick وYouTube وCHZZK. استلام نقاط القناة تلقائيًا، تتبّع Drops والشارات، معاينات، تصفية الدردشة."
+    "message": "جمع نقاط قنوات Twitch تلقائيًا، وتنبيهات Drops والشارات. إشعارات البث على Twitch وKick وYouTube، معاينات، فلاتر الدردشة."
   },
   "openPopupDesc": {
     "message": "فتح StreamPulse"

@@ -11,8 +11,10 @@
 **EN** : `StreamPulse: Twitch, Kick & YouTube Alerts, Points, Drops & Badges` (66 / 75 caractères)
 
 ### Description Courte (Short Description)
-**FR** : `Points de chaîne auto, Drops avec StreamPulse+, alertes live, aperçus, filtres de chat, récap. Twitch, Kick & YouTube.` (118 / 132 caractères)  
-**EN** : `Auto-claim Twitch channel points, Drops with StreamPulse+, live alerts, previews, chat filters, recaps. Twitch, Kick & YouTube.` (127 / 132 caractères)
+**FR** : `Points de chaîne Twitch auto, alertes Drops et badges. Notifs live Twitch, Kick & YouTube, aperçus au survol, filtres de chat.` (126 / 132 caractères)  
+**EN** : `Auto-claim Twitch channel points, Drops & badge alerts. Live notifications for Twitch, Kick & YouTube, hover previews, chat filters.` (132 / 132 caractères)
+
+> Source à jour de la description détaillée (12 langues) : `DevKit/scripts/store-assets/chrome-listing.mjs`, kit généré par `npm run store:chrome-kit`.
 
 ### Description Détaillée (Detailed Description - FR)
 ```text
@@ -275,7 +277,7 @@ Pourquoi « Activité de l'utilisateur » et « Historique Web » restent décoc
 | 26.10.17 | 2026-10-17 | Nouveautés : onglet « À voir », ajout de streamers par lot, comptes liés, pause et diagnostic des alertes, planificateur de Drops, écran de bienvenue StreamPulse+ et sauvegarde élargie. Un court sondage anonyme s'ouvre aussi à la désinstallation (version et langue seulement, aucun identifiant). | Prête à publier |
 | 26.10.15 | 2026-10-15 | StreamPulse+ passe à l'année : 19 € par an, soit 1,58 € par mois (déjà à vie ? rien ne change pour toi). Nouveautés : alertes de campagnes Drops, compteur de valeur dans l'écran Plus, écran Plus repensé — et le mode auto décroche 1 badge gratuit par jour. Extension allégée de plus de 100 Ko. | Prête à publier |
 | 26.10.10 | 2026-10-10 | Correctif : plus d'erreur dans les onglets ouverts après une mise à jour de l'extension. | Publiée |
-| 26.10.8 | 2026-10-10 | L'extension déménage de streampulse.fr à streampulse.tech : la clé StreamPulse+, le badge communautaire et les jetons passent par le nouveau domaine. | Publiée |
+| 26.10.8 | 2026-10-10 | L'extension déménage de streampulse.tech à streampulse.tech : la clé StreamPulse+, le badge communautaire et les jetons passent par le nouveau domaine. | Publiée |
 | 26.10.7 | 2026-10-06 | Déclencheur de demande d'avis refait : un succès récent est exigé, 3 affichages au maximum, et « Plus tard » repousse la demande à deux mois. | Publiée |
 | 26.10.6 | 2026-10-06 | Rubrique Général sans bande vide en bas du popup ; l'onglet Badges n'affiche plus les récompenses à code ni les objets en jeu. | Publiée |
 | 26.10.3 | 2026-10-06 | Onglet Badges : statuts et vraies dates des campagnes, badges cliquables. | Publiée |

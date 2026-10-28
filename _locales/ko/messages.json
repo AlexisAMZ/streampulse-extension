@@ -3,7 +3,7 @@
     "message": "StreamPulse: Twitch, Kick, YouTube, 치지직 알림, 포인트, 드롭 & 배지"
   },
   "appDesc": {
-    "message": "Twitch·Kick·YouTube·치지직 라이브 알림. 채널 포인트 자동 획득, 드롭과 배지 확인, 미리보기, 채팅 필터. 계정 없이 사용."
+    "message": "Twitch 채널 포인트 자동 수령, 드롭·배지 알림. Twitch, Kick, YouTube 방송 알림, 미리보기, 채팅 필터."
   },
   "openPopupDesc": {
     "message": "StreamPulse 열기"

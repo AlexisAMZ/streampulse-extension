@@ -3,7 +3,7 @@
     "message": "StreamPulse: Alertas, puntos, drops e insignias de Twitch, Kick y YouTube"
   },
   "appDesc": {
-    "message": "Alertas de directo para Twitch, Kick, YouTube y CHZZK. Puntos de canal automáticos, Drops e insignias, vistas previas, chat."
+    "message": "Puntos de canal de Twitch automáticos, alertas de Drops e insignias. Avisos en directo de Twitch, Kick y YouTube, vistas previas."
   },
   "openPopupDesc": {
     "message": "Abrir StreamPulse"
