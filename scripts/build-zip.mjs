@@ -31,12 +31,14 @@ const DEV_ONLY = [/\.md$/i, /^\.gitignore$/, /^package(-lock)?\.json$/, /^eslint
   /^promo\//,
   // Tests unitaires : outillage de developpement.
   /^tests\//,
+  // Documentation interne (mails de parrainage nominatifs, plans) : jamais livree.
+  /^docs\//,
   // DevKit interne des stores
   /^DevKit\//];
 // Necessaire a l'extension mais gitignore.
 const EXTRA = ["config.js"];
 // Filet de securite : si l'une de ces entrees apparait, on refuse de packager.
-const NEVER_SHIP = [/(^|\/)\.env$/, /(^|\/)\.git(\/|$)/, /(^|\/)\.claude(\/|$)/, /(^|\/)\.agents(\/|$)/, /(^|\/)DevKit(\/|$)/, /(^|\/)node_modules(\/|$)/, /(^|\/)\.DS_Store$/, /\.zip$/, /(^|\/)backups(\/|$)/];
+const NEVER_SHIP = [/(^|\/)\.env$/, /(^|\/)\.git(\/|$)/, /(^|\/)\.claude(\/|$)/, /(^|\/)\.agents(\/|$)/, /(^|\/)DevKit(\/|$)/, /(^|\/)node_modules(\/|$)/, /(^|\/)\.DS_Store$/, /\.zip$/, /(^|\/)backups(\/|$)/, /^docs\//];
 
 const run = (cmd, args, opts = {}) => execFileSync(cmd, args, { cwd: REPO, encoding: "utf8", ...opts });
 
