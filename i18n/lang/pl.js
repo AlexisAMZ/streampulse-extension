@@ -272,6 +272,10 @@ export default {
       "someGames": "Wybrane gry",
       "allBadges": "Wszystkie odznaki"
     },
+    "dropsRefresh": {
+      "title": "Odświeżanie odznak i Drops",
+      "body": "Jak często StreamPulse sprawdza odznaki i Drops. Niektóre trwają tylko kilka minut: wybierz 1 lub 2 min, by niczego nie przegapić. Tylko w StreamPulse+."
+    },
     "badgeScope": {
       "title": "Alerty o nowych odznakach",
       "body": "StreamPulse+ · Powiadomienie Chrome o każdej nowej odznace albo tylko z wybranych gier, gdy tylko stanie się dostępna."

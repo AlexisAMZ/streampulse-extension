@@ -10,6 +10,7 @@
  */
 import { DEFAULT_LANGUAGE, matchLanguage } from "../i18n/meta.js";
 import { DEFAULT_RECAP_PLATFORMS, normalizeRecapPlatforms } from "./recap-platforms.js";
+import { DEFAULT_REFRESH_MINUTES, normalizeRefreshMinutes } from "./refresh-interval.js";
 import { DEFAULT_SOUND, SOUND_INHERIT, normalizeGeneralSound, normalizeKindSound } from "./notification-sounds.js";
 
 /** Qualités proposées pour le lecteur Twitch. "auto" laisse Twitch décider. */
@@ -50,6 +51,8 @@ export const DEFAULT_PREFERENCES = {
   autoFarmNewBadges: true,
   // StreamPulse+ : 160p au lieu de 360p dans l'onglet du mode auto des badges.
   badgeFarmLowQuality: false,
+  // StreamPulse+ : délai d'actualisation des badges et des Drops, en minutes.
+  dropsRefreshMinutes: DEFAULT_REFRESH_MINUTES,
   autoOpenInventory: false,
   autoOpenInventoryIntervalHours: 24,
   hideTwitchExtensions: false,
@@ -209,6 +212,7 @@ export function sanitizePreferences(preferences = {}) {
     autoClaimDrops: preferences.autoClaimDrops !== false,
     autoFarmNewBadges: preferences.autoFarmNewBadges !== false,
     badgeFarmLowQuality: preferences.badgeFarmLowQuality === true,
+    dropsRefreshMinutes: normalizeRefreshMinutes(preferences.dropsRefreshMinutes),
     autoOpenInventory: Boolean(preferences.autoOpenInventory),
     autoOpenInventoryIntervalHours: clampInventoryIntervalHours(preferences.autoOpenInventoryIntervalHours),
     hideTwitchExtensions: Boolean(preferences.hideTwitchExtensions),

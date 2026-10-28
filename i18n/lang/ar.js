@@ -322,6 +322,10 @@ export default {
       "someGames": "ألعاب مختارة",
       "allBadges": "كل الشارات"
     },
+    "dropsRefresh": {
+      "title": "تحديث الشارات وDrops",
+      "body": "كم مرة يتحقق StreamPulse من الشارات وDrops. بعضها لا يدوم إلا بضع دقائق: اختر 1 أو 2 دقيقة حتى لا يفوتك شيء. حصريًا مع StreamPulse+."
+    },
     "badgeScope": {
       "title": "تنبيهات الشارات الجديدة",
       "body": "StreamPulse+ · إشعار Chrome لكل شارة جديدة، أو فقط لشارات الألعاب التي تختارها، فور توفرها."

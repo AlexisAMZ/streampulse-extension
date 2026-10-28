@@ -272,6 +272,10 @@ export default {
       "someGames": "Jogos escolhidos",
       "allBadges": "Todas as insígnias"
     },
+    "dropsRefresh": {
+      "title": "Atualização de insígnias e Drops",
+      "body": "De quanto em quanto tempo o StreamPulse verifica insígnias e Drops. Alguns duram só alguns minutos: escolha 1 ou 2 min para não perder nada. Exclusivo do StreamPulse+."
+    },
     "badgeScope": {
       "title": "Alertas de novas insígnias",
       "body": "StreamPulse+ · Uma notificação do Chrome para cada nova insígnia, ou só as dos jogos que você escolher, assim que ficar disponível."

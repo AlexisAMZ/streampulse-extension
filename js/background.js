@@ -7,6 +7,8 @@
 import { syncChzzkAccess } from "./sw/chzzk-access.js";
 import { installDebugTools } from "./sw/debug.js";
 import { badgeAuto, scheduleDropsAlarm } from "./sw/drops.js";
+import { PREFERENCES_KEY } from "./sw/constants.js";
+import { PLUS_KEY } from "./plus.js";
 import { NotificationCenter } from "./sw/notifications.js";
 import { handleAlarm, scheduleKeepAliveAlarm, scheduleWatchTimeFlushAlarm, scheduleWatcherAlarm } from "./sw/alarms.js";
 import { handleInstalled, handleStartup, initOnWake } from "./sw/lifecycle.js";
@@ -76,7 +78,7 @@ chrome.runtime.onMessageExternal?.addListener(
 
 scheduleWatcherAlarm();
 scheduleKeepAliveAlarm();
-scheduleDropsAlarm();
+scheduleDropsAlarm().catch((error) => console.warn("[StreamPulse] alarme des Drops :", error?.message || error));
 scheduleWatchTimeFlushAlarm();
 // Synchro multi-appareils : listeners posés au top-level (voir l'en-tête du
 // fichier), la poussée/tirée ne part que si le réglage est activé.
@@ -102,6 +104,11 @@ runPlusGuard(plusGuardDeps);
 
 // preventTabDiscard : pages de chaîne Twitch et Kick gardées chargées.
 chrome.storage.onChanged.addListener(onPreferencesChangedForTabDiscard);
+// Délai d'actualisation des badges et Drops : suit le réglage et la licence.
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area !== "local" || !(changes[PREFERENCES_KEY] || changes[PLUS_KEY])) return;
+  scheduleDropsAlarm().catch((error) => console.warn("[StreamPulse] alarme des Drops :", error?.message || error));
+});
 if (chrome.tabs?.onUpdated?.addListener) {
   chrome.tabs.onUpdated.addListener(keepChannelTabLoaded);
 }

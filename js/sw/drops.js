@@ -7,6 +7,7 @@ import { addedFrom, badgesFrom, catalogBadges, eventsFrom, isPaidBadge } from ".
 import { BADGE_ALERT_SEEN_KEY, BADGE_LIMITED_KEY, BADGE_SCOPE_KEY, BADGE_WATCH_KEY, LIMITED_EVENT_MS, SHORT_EVENT_MS, formatTimeLeft, isShortEvent, limitedFrom, newBadgeAlerts, planBadgeAlerts, seenFrom as alertsSeenFrom, watchFrom } from "../badge-watch.js";
 import { DROP_ALERTS_KEY, DROP_ALERTS_SEEN_KEY, campaignAlerts, normalizeDropAlerts, seenFrom } from "../drop-alerts.js";
 import { scopeActive } from "../alert-scope.js";
+import { DEFAULT_REFRESH_MINUTES, effectiveRefreshMinutes, refreshGapMs } from "../refresh-interval.js";
 import { createDropsClient } from "../drops-gql.js";
 import { createDropsStore } from "../drops-store.js";
 import { createPointsStore } from "../points-store.js";
@@ -124,16 +125,18 @@ async function twitchTabs(preferredId) {
 
 const dropsClient = createDropsClient({ fetch: (...args) => fetch(...args), cookies: chrome.cookies });
 
-/** 5 min : un événement de badge de 30 minutes ne doit pas passer entre deux lectures. */
-const DROPS_ALARM_MINUTES = 5;
-/** Un onglet Twitch qui vient de relire l'inventaire dispense le service worker de le faire. */
-const DROPS_WORKER_MIN_GAP_MS = 4 * 60_000;
+/** Délai d'actualisation en vigueur : choisi par l'abonné, 5 min sinon (js/refresh-interval.js). */
+async function refreshMinutes() {
+  const [prefs, stored] = await Promise.all([PreferenceStore.get(), chrome.storage.local.get(PLUS_KEY)]);
+  return effectiveRefreshMinutes(prefs, isPlusActive(stored[PLUS_KEY]));
+}
 
-export function scheduleDropsAlarm() {
-  chrome.alarms.get(DROPS_ALARM, (existing) => {
-    // Une alarme créée avec l'ancienne période (10 min) est recréée.
-    if (!existing || existing.periodInMinutes !== DROPS_ALARM_MINUTES) chrome.alarms.create(DROPS_ALARM, { periodInMinutes: DROPS_ALARM_MINUTES, delayInMinutes: 1 });
-  });
+/** Alarme des Drops et des badges, recréée quand le délai change. */
+export async function scheduleDropsAlarm() {
+  const minutes = await refreshMinutes().catch(() => DEFAULT_REFRESH_MINUTES);
+  const existing = await chrome.alarms.get(DROPS_ALARM);
+  if (existing?.periodInMinutes === minutes) return;
+  await chrome.alarms.create(DROPS_ALARM, { periodInMinutes: minutes, delayInMinutes: Math.min(1, minutes) });
 }
 
 /**
@@ -143,14 +146,16 @@ export function scheduleDropsAlarm() {
  * `rewardsMaxAgeMs` resserre la fenêtre de relecture des badges et récompenses
  * (le popup la raccourcit, sinon sa liste ne suit qu'à l'alarme des 30 min).
  */
-export async function refreshDropsFromWorker({ minGapMs = DROPS_WORKER_MIN_GAP_MS, rewardsMaxAgeMs = REWARDS_EVERY_MS } = {}) {
+export async function refreshDropsFromWorker({ minGapMs, rewardsMaxAgeMs = REWARDS_EVERY_MS } = {}) {
   const prefs = await PreferenceStore.get();
+  // Un onglet Twitch qui vient de relire l'inventaire dispense le service worker de le faire.
+  const gapMs = minGapMs ?? refreshGapMs(await refreshMinutes());
   if (prefs.dropsTracking === false) return { read: false, reason: "disabled" };
-  refreshRewardsFromWorker({ maxAgeMs: rewardsMaxAgeMs }).catch((error) => {
+  refreshRewardsFromWorker({ maxAgeMs: rewardsMaxAgeMs, badgesGapMs: gapMs }).catch((error) => {
     if (error.code !== "signed-out") console.warn("[StreamPulse] badges :", error.code || error.message);
   });
   const stored = await chrome.storage.local.get("streamPulseDropsProgress");
-  if (Date.now() - (Number(stored.streamPulseDropsProgress?.updatedAt) || 0) < minGapMs) return { read: false, reason: "fresh" };
+  if (Date.now() - (Number(stored.streamPulseDropsProgress?.updatedAt) || 0) < gapMs) return { read: false, reason: "fresh" };
   let inventory;
   try {
     inventory = await dropsClient.readInventory();
@@ -169,8 +174,6 @@ export async function refreshDropsFromWorker({ minGapMs = DROPS_WORKER_MIN_GAP_M
 }
 
 const REWARDS_EVERY_MS = 30 * 60_000;
-/** Le catalogue des badges est relu plus souvent que les campagnes : un nouveau badge est le premier signe d'un événement court. */
-const BADGES_EVERY_MS = 5 * 60_000;
 
 /** Dates d'ajout des badges notées par streampulse.tech (le CDN garde la réponse 10 min). */
 const BADGE_ADDED_URL = "https://streampulse.tech/api/twitch-badges?added=1";
@@ -204,7 +207,7 @@ function refreshBadgeAdded({ force = false } = {}) {
  * `maxAgeMs` raccourcit la fenêtre (popup ouvert) : c'est le seul moyen pour
  * l'utilisateur de voir la liste à jour sans attendre la prochaine alarme.
  */
-async function refreshRewardsFromWorker({ maxAgeMs = REWARDS_EVERY_MS } = {}) {
+async function refreshRewardsFromWorker({ maxAgeMs = REWARDS_EVERY_MS, badgesGapMs = refreshGapMs(DEFAULT_REFRESH_MINUTES) } = {}) {
   const stored = await chrome.storage.local.get(["streamPulseDropsRewards", "streamPulseDropsBadges", BADGE_AUTO_KEY]);
   const now = Date.now();
   // Deux délais séparés : une lecture réussie de l'un ne doit jamais bloquer l'autre.
@@ -216,7 +219,7 @@ async function refreshRewardsFromWorker({ maxAgeMs = REWARDS_EVERY_MS } = {}) {
   }
   // En mode auto, les badges obtenus se relisent à chaque passage pour fermer l'onglet au plus vite.
   let freshBadge = false;
-  if (stored[BADGE_AUTO_KEY] || now - (Number(stored.streamPulseDropsBadges?.updatedAt) || 0) >= Math.min(maxAgeMs, BADGES_EVERY_MS)) {
+  if (stored[BADGE_AUTO_KEY] || now - (Number(stored.streamPulseDropsBadges?.updatedAt) || 0) >= Math.min(maxAgeMs, badgesGapMs)) {
     const result = await dropsClient.readBadges().then((raw) => dropsStore.recordBadges(raw)).catch(warn("badges globaux"));
     if (result) {
       freshBadge = result.added.length > 0;
@@ -324,7 +327,7 @@ export const badgeAuto = createBadgeAuto({
     await NotificationCenter.show({ title: translateWithPrefs(prefs, titleKey), message: translateWithPrefs(prefs, messageKey, params) });
   },
   // Les Drops du live doivent être suivis pour que la récupération auto passe.
-  onStart: () => scheduleDropsAlarm(),
+  onStart: () => scheduleDropsAlarm().catch(warnWith("alarme des Drops")),
 });
 
 function checkBadgeAuto() {

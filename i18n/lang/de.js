@@ -272,6 +272,10 @@ export default {
       "someGames": "Ausgewählte Spiele",
       "allBadges": "Alle Abzeichen"
     },
+    "dropsRefresh": {
+      "title": "Aktualisierung von Abzeichen und Drops",
+      "body": "Wie oft StreamPulse Abzeichen und Drops prüft. Manche gibt es nur wenige Minuten: Wähle 1 oder 2 Min., um nichts zu verpassen. Nur mit StreamPulse+."
+    },
     "badgeScope": {
       "title": "Benachrichtigungen für neue Abzeichen",
       "body": "StreamPulse+ · Eine Chrome-Benachrichtigung für jedes neue Abzeichen oder nur für die deiner gewählten Spiele, sobald es verfügbar ist."

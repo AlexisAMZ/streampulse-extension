@@ -272,6 +272,10 @@ export default {
       "someGames": "Seçilen oyunlar",
       "allBadges": "Tüm rozetler"
     },
+    "dropsRefresh": {
+      "title": "Rozet ve Drops yenileme",
+      "body": "StreamPulse'ın rozetleri ve Drops'ları ne sıklıkla kontrol ettiği. Bazıları yalnızca birkaç dakika sürer: hiçbirini kaçırmamak için 1 veya 2 dk seç. Yalnızca StreamPulse+ ile."
+    },
     "badgeScope": {
       "title": "Yeni rozet uyarıları",
       "body": "StreamPulse+ · Her yeni rozet için ya da yalnızca seçtiğin oyunlarınkiler için, kullanılabilir olduğu anda bir Chrome bildirimi."

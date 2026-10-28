@@ -46,8 +46,8 @@ test("les listeners MV3 sont posés au chargement", { skip }, () => {
   assert.equal(fake.alarms.onAlarm.listeners.length, 1);
   assert.equal(fake.notifications.onClicked.listeners.length, 1);
   assert.equal(fake.notifications.onClosed.listeners.length, 1);
-  // Trois listeners storage.onChanged : garde de la licence Plus, anti-discard des onglets et synchro multi-appareils.
-  assert.equal(fake.storage.onChanged.listeners.length, 3);
+  // Quatre listeners storage.onChanged : garde de la licence Plus, anti-discard des onglets, délai des badges et Drops, synchro multi-appareils.
+  assert.equal(fake.storage.onChanged.listeners.length, 4);
   assert.equal(fake.tabs.onUpdated.listeners.length, 2);
   assert.equal(typeof globalThis.__SP_DEBUG__?.fakeRaid, "function");
 });

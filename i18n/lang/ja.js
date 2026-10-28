@@ -272,6 +272,10 @@ export default {
       "someGames": "選んだゲーム",
       "allBadges": "すべてのバッジ"
     },
+    "dropsRefresh": {
+      "title": "バッジとドロップの更新間隔",
+      "body": "StreamPulse がバッジとドロップを確認する間隔。数分しかないものもあるので、見逃さないよう 1〜2 分を選んでください。StreamPulse+ 限定。"
+    },
     "badgeScope": {
       "title": "新しいバッジの通知",
       "body": "StreamPulse+ · 新しいバッジが入手可能になった瞬間に Chrome 通知。すべて、または選んだゲームのものだけ。"

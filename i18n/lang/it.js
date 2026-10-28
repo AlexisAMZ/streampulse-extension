@@ -272,6 +272,10 @@ export default {
       "someGames": "Giochi scelti",
       "allBadges": "Tutti i badge"
     },
+    "dropsRefresh": {
+      "title": "Aggiornamento di badge e Drops",
+      "body": "Ogni quanto StreamPulse controlla badge e Drops. Alcuni durano solo pochi minuti: scegli 1 o 2 min per non perderli. Solo con StreamPulse+."
+    },
     "badgeScope": {
       "title": "Avvisi nuovi badge",
       "body": "StreamPulse+ · Una notifica di Chrome per ogni nuovo badge, o solo per quelli dei giochi che scegli, appena diventa disponibile."

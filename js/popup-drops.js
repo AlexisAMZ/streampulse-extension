@@ -9,6 +9,7 @@ import { BADGE_FREE_KEY, freeAvailable, freeUsedToday } from "./badge-free.js";
 import { BADGE_LIMITED_KEY, BADGE_SCOPE_KEY, BADGE_WATCH_KEY, ENDING_SOON_MS, limitedFrom, toggleWatch, watchFrom } from "./badge-watch.js";
 import { DROP_ALERTS_KEY } from "./drop-alerts.js";
 import { createScopeEditor } from "./popup-alert-scope.js";
+import { REFRESH_CHOICES, effectiveRefreshMinutes } from "./refresh-interval.js";
 import {
   DROPS_KEYS,
   BADGE_AUTO_KEY,
@@ -574,6 +575,38 @@ const badgeScope = createScopeEditor({
   openPlus: () => deps.openPlus(),
 });
 
+// ─── Délai d'actualisation des badges et Drops (StreamPulse+) ─────────────────
+
+/** Les deux listes (onglets Badges et Drops) montrent le délai en vigueur. */
+function renderRefresh() {
+  const plus = deps.isPlus();
+  const current = String(effectiveRefreshMinutes(prefs, plus));
+  for (const select of document.querySelectorAll(".drops-refresh-select")) {
+    if (!select.options.length) {
+      select.append(...REFRESH_CHOICES.map((minutes) => new Option(t("popup.rewardPlan.minutes", { count: minutes }), String(minutes))));
+    }
+    if (document.activeElement !== select) select.value = current;
+  }
+  for (const lock of document.querySelectorAll(".drops-refresh-lock")) lock.hidden = plus;
+}
+
+async function changeRefresh(event) {
+  if (!deps.isPlus()) {
+    renderRefresh();
+    deps.openPlus();
+    return;
+  }
+  const minutes = Number(event.target.value);
+  try {
+    const result = await chrome.runtime.sendMessage({ type: "updatePreferences", updates: { dropsRefreshMinutes: minutes } });
+    if (result?.success !== true) throw new Error(result?.error || "refus");
+    prefs = { ...prefs, dropsRefreshMinutes: minutes };
+  } catch (error) {
+    console.warn("[popup] délai d'actualisation non enregistré :", error?.message || error);
+  }
+  renderRefresh();
+}
+
 function renderDropAlerts() {
   const plus = deps.isPlus();
   if ($("drop-alerts-locked")) $("drop-alerts-locked").hidden = plus;
@@ -581,6 +614,7 @@ function renderDropAlerts() {
   if ($("badges-scope-lock")) $("badges-scope-lock").hidden = plus;
   dropScope.render();
   badgeScope.render();
+  renderRefresh();
 }
 
 // ─── Panneau : badges et récompenses ──────────────────────────────────────────
@@ -1020,6 +1054,7 @@ function bind() {
   $("drop-alerts-unlock")?.addEventListener("click", () => deps.openPlus());
   dropScope.bind();
   badgeScope.bind();
+  for (const select of document.querySelectorAll(".drops-refresh-select")) select.addEventListener("change", changeRefresh);
   $("drops-filters")?.addEventListener("click", (event) => {
     const button = event.target.closest("[data-filter]");
     if (!button) return;

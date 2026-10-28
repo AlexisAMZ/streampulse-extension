@@ -272,6 +272,10 @@ export default {
       "someGames": "Juegos elegidos",
       "allBadges": "Todas las insignias"
     },
+    "dropsRefresh": {
+      "title": "Actualización de insignias y Drops",
+      "body": "Cada cuánto StreamPulse revisa las insignias y los Drops. Algunos solo duran unos minutos: elige 1 o 2 min para no perderte nada. Solo con StreamPulse+."
+    },
     "badgeScope": {
       "title": "Alertas de insignias nuevas",
       "body": "StreamPulse+ · Una notificación de Chrome por cada insignia nueva, o solo las de los juegos que elijas, en cuanto esté disponible."

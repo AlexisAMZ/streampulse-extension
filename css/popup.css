@@ -1431,3 +1431,5 @@ input[type="checkbox"][role="switch"]:indeterminate::before { background: var(--
 .alert-scope-modes { margin-block: 8px; }
 .alert-scope-modes .pf-btn:disabled { opacity: .5; cursor: default; }
 .badges-scope { margin-top: 10px; }
+.drops-refresh { margin-top: 10px; }
+.drops-refresh-select { flex: none; }

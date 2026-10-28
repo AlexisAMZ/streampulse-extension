@@ -272,6 +272,10 @@ export default {
       "someGames": "선택한 게임",
       "allBadges": "모든 배지"
     },
+    "dropsRefresh": {
+      "title": "배지 및 드롭 새로 고침",
+      "body": "StreamPulse가 배지와 드롭을 확인하는 간격입니다. 몇 분만 열리는 것도 있으니 놓치지 않으려면 1~2분을 고르세요. StreamPulse+ 전용."
+    },
     "badgeScope": {
       "title": "새 배지 알림",
       "body": "StreamPulse+ · 새 배지가 생기는 즉시 Chrome 알림. 모든 배지 또는 선택한 게임의 배지만."

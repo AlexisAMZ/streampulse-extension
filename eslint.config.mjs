@@ -55,6 +55,7 @@ const ES_MODULES = [
   "js/alert-scope.js",
   "js/badge-watch.js",
   "js/popup-alert-scope.js",
+  "js/refresh-interval.js",
   "js/predictions-data.js",
   "js/points-bonus.js",
   "js/points-data.js",
