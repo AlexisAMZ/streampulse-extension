@@ -283,8 +283,8 @@ export default {
       "subscribe": "Abonnieren",
       "start": "7 Tage freischalten",
       "offerBadge": "7 T",
-      "offerBody": "7 Tage StreamPulse+ gratis · an dein Twitch-Konto gebunden",
-      "consent": "Ohne Karte. Der Test ist an das in diesem Browser angemeldete Twitch-Konto gebunden: Drops und Abzeichen werden auf diesem Konto eingesammelt.",
+      "offerBody": "StreamPulse+ gratis · ohne Kreditkarte · an dein Twitch-Konto gebunden",
+      "consent": "Ohne Kreditkarte, nichts zu zahlen. Der Test ist an das in diesem Browser angemeldete Twitch-Konto gebunden: Drops und Abzeichen werden auf diesem Konto eingesammelt.",
       "otherAccount": "Test an ein anderes Twitch-Konto gebunden: StreamPulse+ pausiert"
     },
     "missed": {
@@ -1158,6 +1158,10 @@ export default {
     }
   },
   "background": {
+    "trialReminder": {
+      "title": "7 Tage StreamPulse+ gratis",
+      "message": "Ohne Kreditkarte. Öffne StreamPulse und klicke auf „7 Tage freischalten“: Drops und Abzeichen automatisch, Alarme nach Wunsch."
+    },
     "dropAlerts": {
       "title": "Drops-Kampagne: {{game}}",
       "message": "Eine Drops-Kampagne für ein Spiel von dir hat gestartet."

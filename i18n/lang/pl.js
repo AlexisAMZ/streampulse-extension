@@ -283,8 +283,8 @@ export default {
       "subscribe": "Subskrybuj",
       "start": "Odblokuj 7 dni",
       "offerBadge": "7 D",
-      "offerBody": "7 dni StreamPulse+ za darmo · przypisane do twojego konta Twitch",
-      "consent": "Bez karty. Okres próbny jest przypisany do konta Twitch zalogowanego w tej przeglądarce: Drops i odznaki trafiają na to konto.",
+      "offerBody": "StreamPulse+ za darmo · bez karty · przypisany do twojego konta Twitch",
+      "consent": "Bez karty, nic nie płacisz. Okres próbny jest przypisany do konta Twitch zalogowanego w tej przeglądarce: Drops i odznaki trafiają na to konto.",
       "otherAccount": "Okres próbny przypisany do innego konta Twitch: StreamPulse+ wstrzymany"
     },
     "missed": {
@@ -1158,6 +1158,10 @@ export default {
     }
   },
   "background": {
+    "trialReminder": {
+      "title": "7 dni StreamPulse+ za darmo",
+      "message": "Bez karty. Otwórz StreamPulse i kliknij „Odblokuj 7 dni”: Drops i odznaki odbierane same, alerty na miarę."
+    },
     "dropAlerts": {
       "title": "Kampania Drops: {{game}}",
       "message": "Kampania Drops wystartowała w grze, którą śledzisz."

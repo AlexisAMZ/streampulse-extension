@@ -52,7 +52,8 @@ export async function requestPendingTrial(deps) {
   const twitch = deps.viewerId ? await deps.viewerId().catch(() => "") : "";
   const kick = deps.kickId ? await deps.kickId().catch(() => "") : "";
   const synced = await trialTakenOnAccount(deps.syncStorage);
-  const result = await startTrial(deps.fetch, device, now, twitch, { kick, synced });
+  const lang = deps.lang ? await deps.lang().catch(() => "") : "";
+  const result = await startTrial(deps.fetch, device, now, twitch, { kick, synced, lang });
   if (!result.ok && result.error === "network") return "retry";
   await deps.storage.set({
     [TRIAL_STATE_KEY]: { pending: false, used: true, at: now },

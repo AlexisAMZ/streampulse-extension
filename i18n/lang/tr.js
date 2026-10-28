@@ -283,8 +283,8 @@ export default {
       "subscribe": "Abone ol",
       "start": "7 günün kilidini aç",
       "offerBadge": "7 G",
-      "offerBody": "7 gün ücretsiz StreamPulse+ · Twitch hesabına bağlı",
-      "consent": "Kart gerekmez. Deneme bu tarayıcıda açık olan Twitch hesabına bağlanır: Drops ve rozetler bu hesapta toplanır.",
+      "offerBody": "StreamPulse+ ücretsiz · kart gerekmez · Twitch hesabına bağlı",
+      "consent": "Kart gerekmez, ödeme yok. Deneme bu tarayıcıda açık olan Twitch hesabına bağlanır: Drops ve rozetler bu hesapta toplanır.",
       "otherAccount": "Deneme başka bir Twitch hesabına bağlı: StreamPulse+ duraklatıldı"
     },
     "missed": {
@@ -1158,6 +1158,10 @@ export default {
     }
   },
   "background": {
+    "trialReminder": {
+      "title": "7 gün ücretsiz StreamPulse+",
+      "message": "Kart gerekmez. StreamPulse'ı aç ve \"7 günün kilidini aç\"a tıkla: Drops ve rozetler kendiliğinden, uyarılar sana göre."
+    },
     "dropAlerts": {
       "title": "Drops kampanyası: {{game}}",
       "message": "Takip ettiğin bir oyunda Drops kampanyası başladı."

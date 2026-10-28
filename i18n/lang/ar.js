@@ -333,8 +333,8 @@ export default {
       "subscribe": "اشترك",
       "start": "افتح 7 أيام",
       "offerBadge": "7 أيام",
-      "offerBody": "7 أيام من StreamPulse+ مجانًا · مرتبطة بحسابك على Twitch",
-      "consent": "دون بطاقة. ترتبط التجربة بحساب Twitch المسجّل في هذا المتصفح: تُستلم Drops والشارات على هذا الحساب.",
+      "offerBody": "StreamPulse+ مجانًا · دون بطاقة · مرتبط بحسابك على Twitch",
+      "consent": "دون بطاقة، لا شيء تدفعه. ترتبط التجربة بحساب Twitch المسجّل في هذا المتصفح: تُستلم Drops والشارات على هذا الحساب.",
       "otherAccount": "التجربة مرتبطة بحساب Twitch آخر: StreamPulse+ متوقف مؤقتًا"
     },
     "missed": {
@@ -1208,6 +1208,10 @@ export default {
     }
   },
   "background": {
+    "trialReminder": {
+      "title": "7 أيام من StreamPulse+ مجانًا",
+      "message": "دون بطاقة. افتح StreamPulse وانقر «افتح 7 أيام»: تُستلم Drops والشارات تلقائيًا، وتنبيهات كما تريد."
+    },
     "dropAlerts": {
       "title": "حملة Drops: {{game}}",
       "message": "بدأت حملة Drops للتو على لعبة تتابعها."

@@ -261,6 +261,6 @@ export function handleImportHistoryCsv(request, sender, sendResponse) {
 
 /** Bouton « Essayer 7 jours gratuitement » : le serveur accorde l'essai s'il n'a jamais servi sur cet appareil. */
 export function handleStartTrial(request, sender, sendResponse) {
-  respond(async () => ({ result: await requestTrial({ storage: chrome.storage.local, fetch: (...args) => fetch(...args), viewerId: currentTwitchId, kickId: kickViewerId, syncStorage: chrome.storage.sync }) }), sendResponse, "startTrial");
+  respond(async () => ({ result: await requestTrial({ storage: chrome.storage.local, fetch: (...args) => fetch(...args), viewerId: currentTwitchId, kickId: kickViewerId, syncStorage: chrome.storage.sync, lang: async () => String((await PreferenceStore.get()).language || "") }) }), sendResponse, "startTrial");
   return true;
 }

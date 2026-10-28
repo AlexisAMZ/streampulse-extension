@@ -19,6 +19,8 @@ import { LINKED_ACCOUNTS_KEY, normalizeLinkedAccounts } from "./linked-accounts.
 import { getPlatformIcon, getPlatformLabelKey } from "./platforms.js";
 import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalizePredictionRule, summarize as summarizePredictions } from "./predictions-data.js";
 import { TRIAL_STATE_KEY, trialStateFrom, trialTakenOnAccount } from "./sw/trial.js";
+import { burstConfetti } from "./confetti.js";
+import { POPUP_SEEN_KEY } from "./trial-reminder.js";
 import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, trialEndsAt, trialPaused, verifyLicense } from "./plus.js";
 import { mountLiquidMetalButton } from "./promo-liquid-button.js";
 import { mountClipsMorph } from "./promo-clips-morph.js";
@@ -262,15 +264,23 @@ function renderTrialOffer() {
 
 async function startTrialFromButton(event) {
   const button = event.currentTarget;
+  // Position prise avant l'appel : le bouton disparaît dès que l'essai démarre.
+  const rect = button.getBoundingClientRect();
   button.disabled = true;
+  button.setAttribute("aria-busy", "true");
   try {
     const response = await chrome.runtime.sendMessage({ type: "startTrial" });
     // « started » : la licence d'essai arrive par le stockage et rafraîchit tout le popup.
+    if (response?.result === "started") {
+      burstConfetti({ getBoundingClientRect: () => rect });
+      $("trial-strip")?.classList.add("is-fresh");
+    }
     if (response?.result === "refused") openPlus();
   } catch (error) {
     console.warn("[plus] essai indisponible :", error?.message || error);
   } finally {
     button.disabled = false;
+    button.removeAttribute("aria-busy");
   }
 }
 
@@ -487,6 +497,8 @@ function initPlus() {
   $("open-plus")?.addEventListener("click", openPlus);
   $("trial-subscribe")?.addEventListener("click", openPlus);
   for (const button of document.querySelectorAll(".trial-start")) button.addEventListener("click", startTrialFromButton);
+  // Popup ouvert : le rappel de l'essai par notification n'a pas lieu d'être.
+  chrome.storage.local.set({ [POPUP_SEEN_KEY]: Date.now() }).catch(() => {});
   Promise.all([chrome.storage.local.get(TRIAL_STATE_KEY), trialTakenOnAccount(chrome.storage.sync)]).then(([stored, takenOnAccount]) => {
     // Essai déjà pris sur ce compte Google (autre ordinateur, réinstallation) : pas de bouton.
     const state = trialStateFrom(stored[TRIAL_STATE_KEY]);

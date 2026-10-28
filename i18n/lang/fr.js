@@ -283,8 +283,8 @@ export default {
       "subscribe": "S'abonner",
       "start": "Débloquer les 7 jours",
       "offerBadge": "7 J",
-      "offerBody": "7 jours de StreamPulse+ offerts · liés à ton compte Twitch",
-      "consent": "Sans carte. L'essai est lié au compte Twitch connecté sur ce navigateur : les Drops et badges se récupèrent sur ce compte.",
+      "offerBody": "StreamPulse+ offert · sans carte bancaire · lié à ton compte Twitch",
+      "consent": "Sans carte bancaire, rien à payer. L'essai est lié au compte Twitch connecté sur ce navigateur : les Drops et badges se récupèrent sur ce compte.",
       "otherAccount": "Essai lié à un autre compte Twitch : StreamPulse+ en pause"
     },
     "missed": {
@@ -1158,6 +1158,10 @@ export default {
     }
   },
   "background": {
+    "trialReminder": {
+      "title": "7 jours de StreamPulse+ offerts",
+      "message": "Sans carte bancaire. Ouvre StreamPulse et clique sur « Débloquer les 7 jours » : Drops et badges récupérés tout seuls, alertes sur mesure."
+    },
     "dropAlerts": {
       "title": "Campagne Drops : {{game}}",
       "message": "Une campagne de Drops démarre sur un jeu que tu suis."

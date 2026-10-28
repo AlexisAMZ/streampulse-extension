@@ -1463,3 +1463,9 @@ body.has-trial .stage-pager { top: 100px; }
 .missed-lcd-list li { display: flex; justify-content: space-between; gap: 10px; padding-top: 4px; border-top: 1px dashed rgba(28, 38, 21, 0.25); }
 .missed-lcd-list li span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .missed-lcd-list li span:last-child { flex: none; }
+
+/* Essai tout juste débloqué : le bandeau J-7 arrive avec la salve de confettis. */
+.trial-strip.is-fresh { animation: trial-arrive 520ms cubic-bezier(0.16, 1, 0.3, 1); }
+@keyframes trial-arrive { from { opacity: 0; transform: translateY(-6px) scale(0.98); } }
+@media (prefers-reduced-motion: reduce) { .trial-strip.is-fresh { animation: none; } }
+.trial-start[aria-busy="true"] { opacity: 0.7; cursor: progress; }

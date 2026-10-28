@@ -283,8 +283,8 @@ export default {
       "subscribe": "구독하기",
       "start": "7일 잠금 해제",
       "offerBadge": "7일",
-      "offerBody": "StreamPulse+ 7일 무료 · 내 Twitch 계정에 연결",
-      "consent": "카드 불필요. 체험은 이 브라우저에 로그인된 Twitch 계정에 연결되며, 드롭과 배지는 그 계정으로 받습니다.",
+      "offerBody": "StreamPulse+ 무료 · 카드 불필요 · 내 Twitch 계정에 연결",
+      "consent": "카드 불필요, 결제 없음. 체험은 이 브라우저에 로그인된 Twitch 계정에 연결되며, 드롭과 배지는 그 계정으로 받습니다.",
       "otherAccount": "체험이 다른 Twitch 계정에 연결됨: StreamPulse+ 일시 중지"
     },
     "missed": {
@@ -1158,6 +1158,10 @@ export default {
     }
   },
   "background": {
+    "trialReminder": {
+      "title": "StreamPulse+ 7일 무료",
+      "message": "카드 불필요. StreamPulse를 열고 «7일 잠금 해제»를 누르세요. 드롭과 배지는 자동으로, 알림은 원하는 대로."
+    },
     "dropAlerts": {
       "title": "Drops 캠페인: {{game}}",
       "message": "팔로우한 게임에서 Drops 캠페인이 시작되었습니다."

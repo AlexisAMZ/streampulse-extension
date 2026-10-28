@@ -321,8 +321,8 @@ export default {
       "subscribe": "Subscribe",
       "start": "Unlock 7 days",
       "offerBadge": "7 D",
-      "offerBody": "7 days of StreamPulse+ free · linked to your Twitch account",
-      "consent": "No card. The trial is linked to the Twitch account signed in on this browser: Drops and badges are claimed on that account.",
+      "offerBody": "StreamPulse+ free · no credit card · linked to your Twitch account",
+      "consent": "No credit card, nothing to pay. The trial is linked to the Twitch account signed in on this browser: Drops and badges are claimed on that account.",
       "otherAccount": "Trial linked to another Twitch account: StreamPulse+ paused"
     },
     "missed": {
@@ -1196,6 +1196,10 @@ export default {
     }
   },
   "background": {
+    "trialReminder": {
+      "title": "7 days of StreamPulse+ free",
+      "message": "No credit card. Open StreamPulse and click \"Unlock 7 days\": Drops and badges claimed for you, alerts your way."
+    },
     "dropAlerts": {
       "title": "Drops campaign: {{game}}",
       "message": "A Drops campaign just started on a game you follow."

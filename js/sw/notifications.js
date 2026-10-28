@@ -23,6 +23,19 @@ export async function soundFor(preferences, kind) {
   return resolveSound(preferences, kind, { plus });
 }
 
+/** Cible de notification qui ouvre le popup de l'extension (rappel de l'essai). */
+export const OPEN_POPUP_URL = "streampulse:popup";
+
+/** Ouvre le popup ; sans chrome.action.openPopup (ancien navigateur, refus), le popup s'ouvre dans un onglet. */
+function openPopupFromNotification() {
+  const fallback = () => chrome.tabs.create({ url: chrome.runtime.getURL("html/popup.html") });
+  if (typeof chrome.action?.openPopup !== "function") {
+    fallback();
+    return;
+  }
+  chrome.action.openPopup().catch(fallback);
+}
+
 export class NotificationCenter {
   static storageKey = `${NOTIFICATION_NAMESPACE}:scheduled`;
   static alarmPrefix = `${NOTIFICATION_NAMESPACE}:alarm:`;
@@ -135,6 +148,8 @@ export class NotificationCenter {
     }
     if (info.streamerId) {
       openStreamerFromNotification(info.streamerId);
+    } else if (info.url === OPEN_POPUP_URL) {
+      openPopupFromNotification();
     } else if (info.url) {
       chrome.tabs.create({ url: info.url });
     }

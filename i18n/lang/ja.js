@@ -283,8 +283,8 @@ export default {
       "subscribe": "購読する",
       "start": "7 日間を解放",
       "offerBadge": "7日",
-      "offerBody": "StreamPulse+ 7 日間無料 · Twitch アカウントに紐付け",
-      "consent": "カード不要。お試しはこのブラウザでログイン中の Twitch アカウントに紐付き、ドロップとバッジはそのアカウントで受け取ります。",
+      "offerBody": "StreamPulse+ 無料 · カード不要 · Twitch アカウントに紐付け",
+      "consent": "カード不要、支払いはありません。お試しはこのブラウザでログイン中の Twitch アカウントに紐付き、ドロップとバッジはそのアカウントで受け取ります。",
       "otherAccount": "お試しは別の Twitch アカウントに紐付いています：StreamPulse+ は一時停止中"
     },
     "missed": {
@@ -1158,6 +1158,10 @@ export default {
     }
   },
   "background": {
+    "trialReminder": {
+      "title": "StreamPulse+ 7日間無料",
+      "message": "カード不要。StreamPulse を開いて「7 日間を解放」をクリック：ドロップとバッジを自動で受け取り、通知も自由に。"
+    },
     "dropAlerts": {
       "title": "Dropsキャンペーン：{{game}}",
       "message": "フォロー中のゲームでDropsキャンペーンが始まりました。"
