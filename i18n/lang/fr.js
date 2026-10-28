@@ -281,6 +281,7 @@ export default {
       "days": "J-{{days}}",
       "body": "Essai StreamPulse+ · tout est débloqué",
       "subscribe": "S'abonner",
+      "devReset": "Réinitialiser (dev)",
       "start": "Débloquer les 7 jours",
       "offerBadge": "7 J",
       "offerBody": "StreamPulse+ offert · sans carte bancaire · lié à ton compte Twitch",

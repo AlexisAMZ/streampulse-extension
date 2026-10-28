@@ -319,6 +319,7 @@ export default {
       "days": "{{days}}d left",
       "body": "StreamPulse+ trial · everything unlocked",
       "subscribe": "Subscribe",
+      "devReset": "Reset (dev)",
       "start": "Unlock 7 days",
       "offerBadge": "7 D",
       "offerBody": "StreamPulse+ free · no credit card · linked to your Twitch account",

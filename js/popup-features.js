@@ -496,6 +496,22 @@ function initPlus() {
   initLocalPrices().catch((error) => console.warn("[plus] prix locaux indisponibles :", error));
   $("open-plus")?.addEventListener("click", openPlus);
   $("trial-subscribe")?.addEventListener("click", openPlus);
+  // Mode développeur (extension non empaquetée) : remettre l'essai à zéro pour le retester.
+  const devReset = $("trial-dev-reset");
+  if (devReset && !chrome.runtime.getManifest().update_url) {
+    devReset.hidden = false;
+    devReset.addEventListener("click", async () => {
+      devReset.disabled = true;
+      try {
+        const response = await chrome.runtime.sendMessage({ type: "devResetTrial" });
+        if (response?.reset) location.reload();
+      } catch (error) {
+        console.warn("[plus] réinitialisation de l'essai :", error?.message || error);
+      } finally {
+        devReset.disabled = false;
+      }
+    });
+  }
   for (const button of document.querySelectorAll(".trial-start")) button.addEventListener("click", startTrialFromButton);
   // Popup ouvert : le rappel de l'essai par notification n'a pas lieu d'être.
   chrome.storage.local.set({ [POPUP_SEEN_KEY]: Date.now() }).catch(() => {});

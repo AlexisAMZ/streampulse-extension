@@ -281,6 +281,7 @@ export default {
       "days": "{{days}} дн.",
       "body": "Пробный StreamPulse+ · всё открыто",
       "subscribe": "Подписаться",
+      "devReset": "Reset (dev)",
       "start": "Открыть 7 дней",
       "offerBadge": "7 Д",
       "offerBody": "StreamPulse+ бесплатно · без карты · привязано к твоему Twitch",

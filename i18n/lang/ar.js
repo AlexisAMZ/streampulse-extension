@@ -331,6 +331,7 @@ export default {
       "days": "{{days}} يوم",
       "body": "تجربة StreamPulse+ · كل شيء مفتوح",
       "subscribe": "اشترك",
+      "devReset": "Reset (dev)",
       "start": "افتح 7 أيام",
       "offerBadge": "7 أيام",
       "offerBody": "StreamPulse+ مجانًا · دون بطاقة · مرتبط بحسابك على Twitch",

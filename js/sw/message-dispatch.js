@@ -16,6 +16,7 @@ const SENSITIVE_MESSAGE_TYPES = new Set([
   "importHistoryCsv",
   "getTwitchLogin",
   "startTrial",
+  "devResetTrial",
 ]);
 
 export function isExtensionPage(sender, extensionPrefix) {

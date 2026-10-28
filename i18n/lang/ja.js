@@ -281,6 +281,7 @@ export default {
       "days": "残り{{days}}日",
       "body": "StreamPulse+ お試し中 · すべて解放",
       "subscribe": "購読する",
+      "devReset": "Reset (dev)",
       "start": "7 日間を解放",
       "offerBadge": "7日",
       "offerBody": "StreamPulse+ 無料 · カード不要 · Twitch アカウントに紐付け",

@@ -281,6 +281,7 @@ export default {
       "days": "{{days}} gg",
       "body": "Prova di StreamPulse+ · tutto sbloccato",
       "subscribe": "Abbonati",
+      "devReset": "Reset (dev)",
       "start": "Sblocca 7 giorni",
       "offerBadge": "7 G",
       "offerBody": "StreamPulse+ gratis · senza carta · legato al tuo account Twitch",
