@@ -9,6 +9,21 @@ import { PLUS_KEY, getDeviceId, startTrial } from "../plus.js";
 
 /** État de l'essai : { pending, used, at }. `used` : essai déjà pris ou refusé par le serveur. */
 export const TRIAL_STATE_KEY = "streamPulseTrial";
+/**
+ * Marque « essai pris » dans chrome.storage.sync : elle suit le compte Google
+ * du navigateur (autres ordinateurs, réinstallation), sans permission en plus.
+ */
+export const TRIAL_SYNC_KEY = "streamPulseTrialTaken";
+
+/** Essai déjà pris sur ce compte Google ? Sans synchronisation : non. */
+export async function trialTakenOnAccount(syncStorage) {
+  if (!syncStorage) return false;
+  try {
+    return (await syncStorage.get(TRIAL_SYNC_KEY))[TRIAL_SYNC_KEY] === true;
+  } catch {
+    return false;
+  }
+}
 
 /** État lu du stockage, valeurs sûres par défaut. */
 export function trialStateFrom(stored) {
@@ -19,6 +34,7 @@ export function trialStateFrom(stored) {
 /**
  * @param {{ storage: object, fetch: Function, viewerId?: () => Promise<string>, now?: number }} deps
  *   `viewerId` : compte Twitch connecté, inscrit dans l'essai (absent : lié plus tard).
+ *   `kickId` : compte Kick connecté ; `syncStorage` : chrome.storage.sync (compte Google).
  * @returns {Promise<"none"|"licensed"|"started"|"refused"|"retry">}
  */
 export async function requestPendingTrial(deps) {
@@ -32,13 +48,19 @@ export async function requestPendingTrial(deps) {
     return "licensed";
   }
   const device = await getDeviceId(deps.storage);
+  // Triangulation : compte Twitch, compte Kick, compte Google, appareil et connexion (côté serveur).
   const twitch = deps.viewerId ? await deps.viewerId().catch(() => "") : "";
-  const result = await startTrial(deps.fetch, device, now, twitch);
+  const kick = deps.kickId ? await deps.kickId().catch(() => "") : "";
+  const synced = await trialTakenOnAccount(deps.syncStorage);
+  const result = await startTrial(deps.fetch, device, now, twitch, { kick, synced });
   if (!result.ok && result.error === "network") return "retry";
   await deps.storage.set({
     [TRIAL_STATE_KEY]: { pending: false, used: true, at: now },
     ...(result.ok ? { [PLUS_KEY]: { ...result.record, checkedAt: now } } : {}),
   });
+  if (result.ok || result.error === "trial_ended") {
+    await deps.syncStorage?.set({ [TRIAL_SYNC_KEY]: true }).catch(() => {});
+  }
   return result.ok ? "started" : "refused";
 }
 

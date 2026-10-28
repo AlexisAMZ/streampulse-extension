@@ -58,3 +58,17 @@ test("bouton : demande l'essai même si l'état dit déjà utilisé, le serveur 
   assert.equal(await requestTrial({ storage, fetch: granted, now: NOW }), "started");
   assert.equal(storage.data[PLUS_KEY].plan, "trial");
 });
+
+test("triangulation : compte Kick et marque Google envoyés, marque posée après l'essai", async () => {
+  const storage = memoryStorage();
+  const sync = memoryStorage({});
+  let sent = null;
+  const fetch = async (url, init) => { sent = JSON.parse(init.body); return granted(); };
+  const deps = { storage, fetch, now: NOW, viewerId: async () => "42", kickId: async () => "777", syncStorage: sync };
+  assert.equal(await requestTrial(deps), "started");
+  assert.deepEqual({ twitch: sent.twitch, kick: sent.kick, synced: sent.synced }, { twitch: "42", kick: "777", synced: undefined });
+  assert.equal(sync.data.streamPulseTrialTaken, true);
+  // Réinstallation (stockage local vide) sur le même compte Google : la marque part au serveur.
+  await requestTrial({ ...deps, storage: memoryStorage(), fetch: async (url, init) => { sent = JSON.parse(init.body); return reply(404, { valid: false, error: "trial_ended" })(); } });
+  assert.equal(sent.synced, true);
+});

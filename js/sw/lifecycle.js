@@ -15,6 +15,7 @@ import { DataStore, PreferenceStore } from "./stores.js";
 import { uninstallSurveyUrl } from "./uninstall-survey.js";
 import { repairYoutubeNames } from "./youtube-repair.js";
 import { requestPendingTrial } from "./trial.js";
+import { kickViewerId } from "./kick-account.js";
 
 export { uninstallSurveyUrl };
 
@@ -115,7 +116,7 @@ async function notifyUpdateOnce(version) {
   }
 }
 
-const trialDeps = () => ({ storage: chrome.storage.local, fetch: (...args) => fetch(...args), viewerId: currentTwitchId });
+const trialDeps = () => ({ storage: chrome.storage.local, fetch: (...args) => fetch(...args), viewerId: currentTwitchId, kickId: kickViewerId, syncStorage: chrome.storage.sync });
 
 /** Listener chrome.runtime.onInstalled. */
 export async function handleInstalled(details) {

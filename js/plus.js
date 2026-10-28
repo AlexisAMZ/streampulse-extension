@@ -177,8 +177,9 @@ export async function verifyLicense(input, fetchImpl, now = Date.now(), device =
  * même essai pour un appareil donné, jamais un nouveau.
  * @returns {Promise<{ok: true, record: object} | {ok: false, error: "trial_ended"|"invalid"|"network"}>}
  */
-export async function startTrial(fetchImpl, device, now = Date.now(), twitch = "") {
-  const payload = await postLicense({ action: "trial", device, ...(twitch ? { twitch } : {}) }, fetchImpl);
+export async function startTrial(fetchImpl, device, now = Date.now(), twitch = "", { kick = "", synced = false } = {}) {
+  const signals = { ...(twitch ? { twitch } : {}), ...(kick ? { kick } : {}), ...(synced ? { synced: true } : {}) };
+  const payload = await postLicense({ action: "trial", device, ...signals }, fetchImpl);
   if (!payload) return { ok: false, error: "network" };
   if (payload.error === "trial_ended") return { ok: false, error: "trial_ended" };
   const licenseKey = normalizeLicenseKey(payload.key);

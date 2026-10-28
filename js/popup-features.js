@@ -18,7 +18,7 @@ import { groupMissedEntries } from "./history-grouping.js";
 import { LINKED_ACCOUNTS_KEY, normalizeLinkedAccounts } from "./linked-accounts.js";
 import { getPlatformIcon, getPlatformLabelKey } from "./platforms.js";
 import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalizePredictionRule, summarize as summarizePredictions } from "./predictions-data.js";
-import { TRIAL_STATE_KEY, trialStateFrom } from "./sw/trial.js";
+import { TRIAL_STATE_KEY, trialStateFrom, trialTakenOnAccount } from "./sw/trial.js";
 import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, trialEndsAt, trialPaused, verifyLicense } from "./plus.js";
 import { mountLiquidMetalButton } from "./promo-liquid-button.js";
 import { mountClipsMorph } from "./promo-clips-morph.js";
@@ -487,8 +487,10 @@ function initPlus() {
   $("open-plus")?.addEventListener("click", openPlus);
   $("trial-subscribe")?.addEventListener("click", openPlus);
   for (const button of document.querySelectorAll(".trial-start")) button.addEventListener("click", startTrialFromButton);
-  chrome.storage.local.get(TRIAL_STATE_KEY).then((stored) => {
-    trialState = trialStateFrom(stored[TRIAL_STATE_KEY]);
+  Promise.all([chrome.storage.local.get(TRIAL_STATE_KEY), trialTakenOnAccount(chrome.storage.sync)]).then(([stored, takenOnAccount]) => {
+    // Essai déjà pris sur ce compte Google (autre ordinateur, réinstallation) : pas de bouton.
+    const state = trialStateFrom(stored[TRIAL_STATE_KEY]);
+    trialState = takenOnAccount ? { ...state, used: true } : state;
     renderPlus();
   }).catch(() => {});
   $("plus-close")?.addEventListener("click", () => closePlus());
