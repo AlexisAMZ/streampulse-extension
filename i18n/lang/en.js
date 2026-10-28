@@ -319,7 +319,8 @@ export default {
       "days": "{{days}}d left",
       "body": "StreamPulse+ trial · everything unlocked",
       "subscribe": "Subscribe",
-      "start": "Try 7 days free"
+      "start": "Try 7 days free",
+      "otherAccount": "Trial linked to another Twitch account: Drops and badges paused"
     },
     "missed": {
       "unit": "MISSED",

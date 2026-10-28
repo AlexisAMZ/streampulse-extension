@@ -281,7 +281,8 @@ export default {
       "days": "{{days}} dni",
       "body": "Próbny StreamPulse+ · wszystko odblokowane",
       "subscribe": "Subskrybuj",
-      "start": "Wypróbuj 7 dni za darmo"
+      "start": "Wypróbuj 7 dni za darmo",
+      "otherAccount": "Okres próbny przypisany do innego konta Twitch: Drops i odznaki wstrzymane"
     },
     "missed": {
       "unit": "PRZEGAPIONE",

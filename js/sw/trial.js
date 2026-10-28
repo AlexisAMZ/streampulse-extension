@@ -17,7 +17,8 @@ export function trialStateFrom(stored) {
 }
 
 /**
- * @param {{ storage: object, fetch: Function, now?: number }} deps
+ * @param {{ storage: object, fetch: Function, viewerId?: () => Promise<string>, now?: number }} deps
+ *   `viewerId` : compte Twitch connecté, inscrit dans l'essai (absent : lié plus tard).
  * @returns {Promise<"none"|"licensed"|"started"|"refused"|"retry">}
  */
 export async function requestPendingTrial(deps) {
@@ -31,7 +32,8 @@ export async function requestPendingTrial(deps) {
     return "licensed";
   }
   const device = await getDeviceId(deps.storage);
-  const result = await startTrial(deps.fetch, device, now);
+  const twitch = deps.viewerId ? await deps.viewerId().catch(() => "") : "";
+  const result = await startTrial(deps.fetch, device, now, twitch);
   if (!result.ok && result.error === "network") return "retry";
   await deps.storage.set({
     [TRIAL_STATE_KEY]: { pending: false, used: true, at: now },

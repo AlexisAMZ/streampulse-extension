@@ -3,13 +3,13 @@
 import { CLAIM_OK_STATUSES } from "../drops-data.js";
 import { DROPS_POPUP_REFRESH_MS, announceDrops, badgeAuto, checkBadgeAfterClaim, checkDropCampaignAlerts, claimDropFromWorker, dropsStore, dropsStreamUrl, pointsStore, refreshDropsFromWorker, sendDropsCommand } from "./drops.js";
 import { PreferenceStore } from "./stores.js";
-import { PLUS_KEY, isPlusActive } from "../plus.js";
+import { plusForAccountFrom } from "../plus.js";
 import { warnWith } from "./log.js";
 
 /** Récupération auto des Drops : réservée à StreamPulse+, comme dans sw/drops.js. */
 async function autoClaimAllowed(prefs) {
   if (prefs.autoClaimDrops === false) return false;
-  return isPlusActive((await chrome.storage.local.get(PLUS_KEY))[PLUS_KEY]);
+  return plusForAccountFrom(chrome.storage.local);
 }
 
 export function handleRecordPointsGain(request, sender, sendResponse) {

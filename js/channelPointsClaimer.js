@@ -232,19 +232,28 @@
       console.warn("[StreamPulse] règles de la caisse de bonus indisponibles", error);
     });
 
-  chrome.storage.local.get([PREFERENCES_KEY, PLUS_RULE.PLUS_KEY], (result) => {
+  // Essai StreamPulse+ : les Drops ne se récupèrent que sur le compte Twitch de l'essai.
+  let plusRecord = null;
+  let trialAccount = null;
+  const syncPlus = () => { plusOn = PLUS_RULE.plusForAccount(plusRecord, trialAccount); };
+  chrome.storage.local.get([PREFERENCES_KEY, PLUS_RULE.PLUS_KEY, PLUS_RULE.TRIAL_ACCOUNT_KEY], (result) => {
     if (chrome.runtime.lastError) {
       start();
       return;
     }
-    plusOn = PLUS_RULE.isPlusActive(result?.[PLUS_RULE.PLUS_KEY]);
+    plusRecord = result?.[PLUS_RULE.PLUS_KEY] || null;
+    trialAccount = result?.[PLUS_RULE.TRIAL_ACCOUNT_KEY] || null;
+    syncPlus();
     applyPref(result?.[PREFERENCES_KEY]);
   });
 
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== "local") return;
-    if (changes[PLUS_RULE.PLUS_KEY]) plusOn = PLUS_RULE.isPlusActive(changes[PLUS_RULE.PLUS_KEY].newValue);
+    const plusChanged = Boolean(changes[PLUS_RULE.PLUS_KEY] || changes[PLUS_RULE.TRIAL_ACCOUNT_KEY]);
+    if (changes[PLUS_RULE.PLUS_KEY]) plusRecord = changes[PLUS_RULE.PLUS_KEY].newValue || null;
+    if (changes[PLUS_RULE.TRIAL_ACCOUNT_KEY]) trialAccount = changes[PLUS_RULE.TRIAL_ACCOUNT_KEY].newValue || null;
+    if (plusChanged) syncPlus();
     if (changes[PREFERENCES_KEY]) applyPref(changes[PREFERENCES_KEY].newValue);
-    else if (changes[PLUS_RULE.PLUS_KEY]) applyPref();
+    else if (plusChanged) applyPref();
   });
 })();

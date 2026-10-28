@@ -13,8 +13,11 @@ export const LICENSE_PUBLIC_JWK = Object.freeze({
 
 const whole = (value) => Math.max(0, Math.floor(Number(value) || 0));
 
-export function licenseMessage({ key, device, plan, role, since, referrals, iat }) {
-  return ["sp-license-v1", key, device, plan || "", role || "", whole(since), whole(referrals), whole(iat)].join("\n");
+export function licenseMessage({ key, device, plan, role, since, referrals, iat, twitch }) {
+  const lines = ["sp-license-v1", key, device, plan || "", role || "", whole(since), whole(referrals), whole(iat)];
+  // Compte Twitch de l'essai : seulement quand il existe (même message qu'avant sinon).
+  if (twitch) lines.push(`twitch:${twitch}`);
+  return lines.join("\n");
 }
 
 function fromBase64Url(text) {

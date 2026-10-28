@@ -63,3 +63,30 @@ test("verifyLicense : la revérification d'un essai garde le plan trial", async 
   assert.equal(result.ok, true);
   assert.equal(result.record.plan, "trial");
 });
+
+test("trialAccountAllows : un essai ne sert que le compte Twitch lié", async () => {
+  const { trialAccountAllows } = await import("../js/plus.js");
+  assert.equal(trialAccountAllows({ plan: "monthly" }, ""), true);
+  assert.equal(trialAccountAllows(trialRecord(NOW, { twitch: "42" }), "42"), true);
+  assert.equal(trialAccountAllows(trialRecord(NOW, { twitch: "42" }), "43"), false);
+  assert.equal(trialAccountAllows(trialRecord(NOW), "42"), false);
+});
+
+test("startTrial : envoie le compte Twitch, garde le compte signé, refuse la connexion pleine", async () => {
+  let sent = null;
+  const fetchImpl = async (url, init) => {
+    sent = JSON.parse(init.body);
+    return reply(200, { valid: true, plan: "trial", key: `TRIAL-${DEVICE}`, since: NOW, twitch: "42", iat: NOW, sig: "s" })();
+  };
+  const result = await startTrial(fetchImpl, DEVICE, NOW, "42");
+  assert.equal(sent.twitch, "42");
+  assert.equal(result.record.twitch, "42");
+  assert.deepEqual(await startTrial(reply(403, { valid: false, error: "trial_limit" }), DEVICE, NOW), { ok: false, error: "trial_limit" });
+});
+
+test("licenseMessage : la ligne twitch n'apparaît que pour un essai lié", async () => {
+  const { licenseMessage } = await import("../js/license-sign.js");
+  const base = { key: "K", device: "D", plan: "trial", since: 1, iat: 2 };
+  assert.equal(licenseMessage(base).includes("twitch"), false);
+  assert.equal(licenseMessage({ ...base, twitch: "42" }).endsWith("\ntwitch:42"), true);
+});

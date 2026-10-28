@@ -281,7 +281,8 @@ export default {
       "days": "{{days}} T.",
       "body": "StreamPulse+-Test · alles freigeschaltet",
       "subscribe": "Abonnieren",
-      "start": "7 Tage gratis testen"
+      "start": "7 Tage gratis testen",
+      "otherAccount": "Test an ein anderes Twitch-Konto gebunden: Drops und Abzeichen pausiert"
     },
     "missed": {
       "unit": "VERPASST",

@@ -281,7 +281,8 @@ export default {
       "days": "{{days}} gün",
       "body": "StreamPulse+ denemesi · her şey açık",
       "subscribe": "Abone ol",
-      "start": "7 gün ücretsiz dene"
+      "start": "7 gün ücretsiz dene",
+      "otherAccount": "Deneme başka bir Twitch hesabına bağlı: Drops ve rozetler duraklatıldı"
     },
     "missed": {
       "unit": "KAÇIRILDI",

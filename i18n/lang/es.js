@@ -281,7 +281,8 @@ export default {
       "days": "{{days}} d",
       "body": "Prueba de StreamPulse+ · todo desbloqueado",
       "subscribe": "Suscribirme",
-      "start": "Probar 7 días gratis"
+      "start": "Probar 7 días gratis",
+      "otherAccount": "Prueba vinculada a otra cuenta de Twitch: Drops e insignias en pausa"
     },
     "missed": {
       "unit": "PERDIDOS",

@@ -69,6 +69,19 @@
     return "m1";
   }
 
+  // Essai lié à un compte Twitch : le service worker note ici si le compte
+  // connecté est bien le bon (js/sw/trial-account.js).
+  var TRIAL_ACCOUNT_KEY = "streamPulseTrialAccount";
+
+  /**
+   * Fonctions qui récupèrent sur le compte Twitch (Drops, badges) : une licence
+   * payante suffit ; un essai exige que le compte connecté soit le sien.
+   */
+  function plusForAccount(record, account, now) {
+    if (!isPlusActive(record, now)) return false;
+    return record.plan !== "trial" || Boolean(account && account.allowed === true);
+  }
+
   /** Fin de l'essai (ms), 0 si la licence n'est pas un essai. */
   function trialEndsAt(record) {
     if (!record || record.plan !== "trial" || !(Number(record.since) > 0)) return 0;
@@ -79,6 +92,8 @@
     PLUS_KEY: PLUS_KEY,
     PLUS_GRACE_MS: PLUS_GRACE_MS,
     TRIAL_MS: TRIAL_MS,
+    TRIAL_ACCOUNT_KEY: TRIAL_ACCOUNT_KEY,
+    plusForAccount: plusForAccount,
     trialEndsAt: trialEndsAt,
     MONTH_MS: MONTH_MS,
     TENURE_TIERS: TENURE_TIERS,

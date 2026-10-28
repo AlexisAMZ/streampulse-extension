@@ -281,7 +281,8 @@ export default {
       "days": "{{days}} gg",
       "body": "Prova di StreamPulse+ · tutto sbloccato",
       "subscribe": "Abbonati",
-      "start": "Prova 7 giorni gratis"
+      "start": "Prova 7 giorni gratis",
+      "otherAccount": "Prova collegata a un altro account Twitch: Drops e badge in pausa"
     },
     "missed": {
       "unit": "PERSI",

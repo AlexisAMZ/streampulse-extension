@@ -19,7 +19,7 @@ import { LINKED_ACCOUNTS_KEY, normalizeLinkedAccounts } from "./linked-accounts.
 import { getPlatformIcon, getPlatformLabelKey } from "./platforms.js";
 import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalizePredictionRule, summarize as summarizePredictions } from "./predictions-data.js";
 import { TRIAL_STATE_KEY, trialStateFrom } from "./sw/trial.js";
-import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, trialEndsAt, verifyLicense } from "./plus.js";
+import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, TRIAL_ACCOUNT_KEY, trialEndsAt, verifyLicense } from "./plus.js";
 import { mountLiquidMetalButton } from "./promo-liquid-button.js";
 import { mountClipsMorph } from "./promo-clips-morph.js";
 import { hasRecentSuccess, reviewAskDecision, REMOTE_CONFIG_CACHE_KEY } from "./popup-review.js";
@@ -246,6 +246,7 @@ export function plusActive() {
 
 const DAY_MS = 86_400_000;
 let trialState = trialStateFrom(null);
+let trialAccount = null;
 
 /** Boutons « Essayer 7 jours gratuitement » : sans licence, tant que l'essai n'a jamais servi ici. */
 function renderTrialOffer() {
@@ -278,6 +279,14 @@ function renderTrialStrip(trial) {
   if (!trial) return;
   const days = Math.max(1, Math.ceil((trialEndsAt(plusRecord) - Date.now()) / DAY_MS));
   $("trial-days").textContent = t("popup.trial.days", { days });
+  // Essai lié à un autre compte Twitch : les récupérations sont en pause, on le dit.
+  const otherAccount = trialAccount?.allowed === false;
+  const body = strip.querySelector(".trial-body");
+  // La clé data-i18n suit le texte : un changement de langue garde le bon message.
+  if (body) {
+    body.dataset.i18n = otherAccount ? "popup.trial.otherAccount" : "popup.trial.body";
+    body.textContent = t(body.dataset.i18n);
+  }
   // Les deux derniers jours, l'écran passe en alerte.
   strip.classList.toggle("is-ending", days <= 2);
 }
@@ -474,9 +483,10 @@ function initPlus() {
   $("open-plus")?.addEventListener("click", openPlus);
   $("trial-subscribe")?.addEventListener("click", openPlus);
   for (const button of document.querySelectorAll(".trial-start")) button.addEventListener("click", startTrialFromButton);
-  chrome.storage.local.get(TRIAL_STATE_KEY).then((stored) => {
+  chrome.storage.local.get([TRIAL_STATE_KEY, TRIAL_ACCOUNT_KEY]).then((stored) => {
     trialState = trialStateFrom(stored[TRIAL_STATE_KEY]);
-    renderTrialOffer();
+    trialAccount = stored[TRIAL_ACCOUNT_KEY] || null;
+    renderPlus();
   }).catch(() => {});
   $("plus-close")?.addEventListener("click", () => closePlus());
   $("plus-menu-open")?.addEventListener("click", openPlus);
@@ -1081,6 +1091,10 @@ export async function initFeatures() {
     }
     if (changes[PLUS_KEY]) {
       plusRecord = changes[PLUS_KEY].newValue || null;
+      renderPlus();
+    }
+    if (changes[TRIAL_ACCOUNT_KEY]) {
+      trialAccount = changes[TRIAL_ACCOUNT_KEY].newValue || null;
       renderPlus();
     }
     if (changes[TRIAL_STATE_KEY]) {

@@ -5,7 +5,7 @@ import { syncUpdateBadge } from "./action-badge.js";
 import { scheduleKeepAliveAlarm, scheduleWatcherAlarm, setupAutoOpenInventoryAlarm } from "./alarms.js";
 import { syncChzzkAccess } from "./chzzk-access.js";
 import { fetchRemoteConfig } from "./config.js";
-import { dropsStore, scheduleDropsAlarm } from "./drops.js";
+import { currentTwitchId, dropsStore, scheduleDropsAlarm } from "./drops.js";
 import { translateWithPrefs } from "./i18n.js";
 import { NotificationCenter } from "./notifications.js";
 import { PlatformChecker } from "./platform-checker.js";
@@ -115,7 +115,7 @@ async function notifyUpdateOnce(version) {
   }
 }
 
-const trialDeps = () => ({ storage: chrome.storage.local, fetch: (...args) => fetch(...args) });
+const trialDeps = () => ({ storage: chrome.storage.local, fetch: (...args) => fetch(...args), viewerId: currentTwitchId });
 
 /** Listener chrome.runtime.onInstalled. */
 export async function handleInstalled(details) {

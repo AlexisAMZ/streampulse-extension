@@ -331,7 +331,8 @@ export default {
       "days": "{{days}} يوم",
       "body": "تجربة StreamPulse+ · كل شيء مفتوح",
       "subscribe": "اشترك",
-      "start": "جرّب 7 أيام مجانًا"
+      "start": "جرّب 7 أيام مجانًا",
+      "otherAccount": "التجربة مرتبطة بحساب Twitch آخر: Drops والشارات متوقفة مؤقتًا"
     },
     "missed": {
       "unit": "فائتة",

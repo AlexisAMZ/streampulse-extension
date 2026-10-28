@@ -84,6 +84,24 @@ export const RELEASES = [
     },
     changes: [
       {
+        type: "improved",
+        area: "plus",
+        text: {
+          "fr": "L'essai StreamPulse+ est lié à ton compte Twitch : les Drops, badges et points se récupèrent sur ce compte pendant 7 jours.",
+          "en": "The StreamPulse+ trial is linked to your Twitch account: Drops, badges and points are claimed on that account for 7 days.",
+          "es": "La prueba de StreamPulse+ está vinculada a tu cuenta de Twitch: los Drops, insignias y puntos se reclaman en esa cuenta durante 7 días.",
+          "pt-BR": "O teste do StreamPulse+ fica vinculado à sua conta da Twitch: Drops, insígnias e pontos são resgatados nessa conta por 7 dias.",
+          "de": "Der StreamPulse+-Test ist an dein Twitch-Konto gebunden: Drops, Abzeichen und Punkte werden 7 Tage lang auf diesem Konto eingesammelt.",
+          "it": "La prova di StreamPulse+ è collegata al tuo account Twitch: Drops, badge e punti vengono riscattati su quell'account per 7 giorni.",
+          "pl": "Okres próbny StreamPulse+ jest przypisany do twojego konta Twitch: Drops, odznaki i punkty są odbierane na tym koncie przez 7 dni.",
+          "tr": "StreamPulse+ denemesi Twitch hesabına bağlıdır: Drops, rozetler ve puanlar 7 gün boyunca bu hesapta toplanır.",
+          "ru": "Пробный StreamPulse+ привязан к твоему аккаунту Twitch: Drops, значки и баллы собираются на нём 7 дней.",
+          "ja": "StreamPulse+ のお試しは Twitch アカウントに紐付きます。7 日間、ドロップ・バッジ・ポイントはそのアカウントで受け取ります。",
+          "ko": "StreamPulse+ 체험은 내 Twitch 계정에 연결됩니다. 7일 동안 드롭, 배지, 포인트를 그 계정으로 받습니다.",
+          "ar": "تجربة StreamPulse+ مرتبطة بحسابك على Twitch: تُستلم Drops والشارات والنقاط على هذا الحساب لمدة 7 أيام.",
+        },
+      },
+      {
         type: "new",
         area: "plus",
         text: {

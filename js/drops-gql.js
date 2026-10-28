@@ -144,5 +144,16 @@ export function createDropsClient({ fetch, cookies }) {
     return data.user?.stream ? String(data.user.broadcastSettings?.game?.id || "") : "";
   }
 
-  return { readInventory, readRewards, readBadges, claim, liveGameOf };
+  /** Identifiant du compte Twitch connecté (essai StreamPulse+ lié au compte). "" : déconnecté. */
+  async function viewerId() {
+    try {
+      const { data } = await gql("query StreamPulseViewer { currentUser { id } }");
+      return /^\d{1,20}$/.test(String(data.currentUser?.id || "")) ? String(data.currentUser.id) : "";
+    } catch (error) {
+      if (error.code === "signed-out") return "";
+      throw error;
+    }
+  }
+
+  return { readInventory, readRewards, readBadges, claim, liveGameOf, viewerId };
 }

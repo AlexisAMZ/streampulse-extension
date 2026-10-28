@@ -1,7 +1,8 @@
 // Points de chaîne, Drops, badges et mode auto des badges.
 
 import { createBadgeAuto, watchProbe } from "../badge-auto-worker.js";
-import { PLUS_KEY, isPlusActive } from "../plus.js";
+import { PLUS_KEY, isPlusActive, plusForAccountFrom } from "../plus.js";
+import { refreshTrialAccount } from "./trial-account.js";
 import { BADGE_ADDED_KEY, BADGE_AUTO_KEY, BADGE_EVENTS_KEY, CLAIM_OK_STATUSES, DROPS_BADGES_KEY, DROPS_CAMPAIGNS_KEY, campaignsFrom } from "../drops-data.js";
 import { addedFrom, badgesFrom, catalogBadges, eventsFrom, isPaidBadge } from "../badges-data.js";
 import { BADGE_ALERT_SEEN_KEY, BADGE_LIMITED_KEY, BADGE_SCOPE_KEY, BADGE_WATCH_KEY, LIMITED_EVENT_MS, SHORT_EVENT_MS, formatTimeLeft, isShortEvent, limitedFrom, newBadgeAlerts, planBadgeAlerts, seenFrom as alertsSeenFrom, watchFrom } from "../badge-watch.js";
@@ -72,7 +73,7 @@ export async function announceDrops(entries) {
 export async function farmNewBadgesForPlus(added = []) {
   const prefs = await PreferenceStore.get();
   if (prefs.dropsTracking === false || prefs.autoFarmNewBadges === false) return false;
-  if (!isPlusActive((await chrome.storage.local.get(PLUS_KEY))[PLUS_KEY])) return false;
+  if (!(await plusForAccountFrom(chrome.storage.local))) return false;
   const ids = (added || []).map((item) => item?.id).filter(Boolean);
   if (!ids.length) return false;
   const result = await badgeAuto.autoFarm(ids).catch((error) => {
@@ -137,6 +138,9 @@ async function refreshMinutes() {
 }
 
 /** Alarme des Drops et des badges, recréée quand le délai change. */
+/** Compte Twitch connecté ("" si déconnecté) : sert à lier l'essai StreamPulse+. */
+export const currentTwitchId = () => dropsClient.viewerId();
+
 export async function scheduleDropsAlarm() {
   const minutes = await refreshMinutes().catch(() => DEFAULT_REFRESH_MINUTES);
   const existing = await chrome.alarms.get(DROPS_ALARM);
@@ -156,6 +160,9 @@ export async function refreshDropsFromWorker({ minGapMs, rewardsMaxAgeMs = REWAR
   // Un onglet Twitch qui vient de relire l'inventaire dispense le service worker de le faire.
   const gapMs = minGapMs ?? refreshGapMs(await refreshMinutes());
   if (prefs.dropsTracking === false) return { read: false, reason: "disabled" };
+  // Essai StreamPulse+ : compte Twitch connecté = compte de l'essai ? (et liaison au premier compte)
+  await refreshTrialAccount({ storage: chrome.storage.local, fetch: (...args) => fetch(...args), viewerId: () => dropsClient.viewerId() })
+    .catch(warnWith("compte de l'essai"));
   refreshRewardsFromWorker({ maxAgeMs: rewardsMaxAgeMs, badgesGapMs: gapMs }).catch((error) => {
     if (error.code !== "signed-out") console.warn("[StreamPulse] badges :", error.code || error.message);
   });
@@ -169,9 +176,8 @@ export async function refreshDropsFromWorker({ minGapMs, rewardsMaxAgeMs = REWAR
     if (error.code !== "signed-out") console.warn("[StreamPulse] lecture des Drops impossible :", error.code || error.message, error.detail || "");
     return { read: false, reason: error.code || "error" };
   }
-  // Récupération auto des Drops : réservée à StreamPulse+.
-  const plus = isPlusActive((await chrome.storage.local.get(PLUS_KEY))[PLUS_KEY]);
-  const autoClaim = plus && prefs.autoClaimDrops !== false;
+  // Récupération auto des Drops : réservée à StreamPulse+ (essai : sur son compte Twitch seulement).
+  const autoClaim = (await plusForAccountFrom(chrome.storage.local)) && prefs.autoClaimDrops !== false;
   const result = await dropsStore.recordInventory(inventory, { autoClaim });
   announceDrops(result.added).catch(warnWith("annonce des Drops"));
   for (const instanceId of result.claim) await claimDropFromWorker(instanceId, true);

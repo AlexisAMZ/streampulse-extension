@@ -281,7 +281,8 @@ export default {
       "days": "J-{{days}}",
       "body": "Essai StreamPulse+ · tout est débloqué",
       "subscribe": "S'abonner",
-      "start": "Essayer 7 jours gratuitement"
+      "start": "Essayer 7 jours gratuitement",
+      "otherAccount": "Essai lié à un autre compte Twitch : Drops et badges en pause"
     },
     "missed": {
       "unit": "RATÉS",

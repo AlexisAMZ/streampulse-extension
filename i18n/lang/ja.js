@@ -281,7 +281,8 @@ export default {
       "days": "残り{{days}}日",
       "body": "StreamPulse+ お試し中 · すべて解放",
       "subscribe": "購読する",
-      "start": "7 日間無料で試す"
+      "start": "7 日間無料で試す",
+      "otherAccount": "お試しは別の Twitch アカウントに紐付いています：ドロップとバッジは一時停止中"
     },
     "missed": {
       "unit": "見逃し",

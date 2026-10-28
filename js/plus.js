@@ -71,6 +71,15 @@ const PLUS_PLANS = ["monthly", "yearly", "lifetime", "trial"];
 /** Essai StreamPulse+ de 7 jours (une fois par appareil, accordé par le serveur). */
 export const TRIAL_MS = PLUS_RULE.TRIAL_MS;
 export const trialEndsAt = (record) => PLUS_RULE.trialEndsAt(record);
+export const TRIAL_ACCOUNT_KEY = PLUS_RULE.TRIAL_ACCOUNT_KEY;
+/** Plus pour les récupérations sur le compte Twitch (voir js/inject/plus-rule.js). */
+export const plusForAccount = (record, account, now = Date.now()) => PLUS_RULE.plusForAccount(record, account, now);
+
+/** Lit la licence et l'état du compte, puis applique plusForAccount. */
+export async function plusForAccountFrom(storage) {
+  const stored = await storage.get([PLUS_KEY, TRIAL_ACCOUNT_KEY]);
+  return plusForAccount(stored[PLUS_KEY], stored[TRIAL_ACCOUNT_KEY]);
+}
 const TRIAL_KEY_PATTERN = /^TRIAL-[a-f0-9]{16,40}$/;
 
 /** Identifiant de ce navigateur : une clé vaut pour 2 appareils. */
@@ -151,7 +160,9 @@ function licenseRecord(payload, licenseKey, now) {
   const since = Math.max(0, Number(payload.since) || 0);
   // Signature du serveur : `iat` (date serveur) et `sig`, vérifiées par js/sw/license-guard.js.
   const signature = payload.sig && payload.iat ? { iat: Math.floor(Number(payload.iat)), sig: String(payload.sig) } : {};
-  return { licenseKey, plan, status: "active", verifiedAt: now, referrals, role, since, ...signature };
+  // Essai : compte Twitch auquel il est lié (Drops, badges et points seulement sur ce compte).
+  const twitch = /^\d{1,20}$/.test(String(payload.twitch ?? "")) ? String(payload.twitch) : "";
+  return { licenseKey, plan, status: "active", verifiedAt: now, referrals, role, since, ...(twitch ? { twitch } : {}), ...signature };
 }
 
 export async function verifyLicense(input, fetchImpl, now = Date.now(), device = "") {
@@ -169,11 +180,22 @@ export async function verifyLicense(input, fetchImpl, now = Date.now(), device =
  * même essai pour un appareil donné, jamais un nouveau.
  * @returns {Promise<{ok: true, record: object} | {ok: false, error: "trial_ended"|"invalid"|"network"}>}
  */
-export async function startTrial(fetchImpl, device, now = Date.now()) {
-  const payload = await postLicense({ action: "trial", device }, fetchImpl);
+export async function startTrial(fetchImpl, device, now = Date.now(), twitch = "") {
+  const payload = await postLicense({ action: "trial", device, ...(twitch ? { twitch } : {}) }, fetchImpl);
   if (!payload) return { ok: false, error: "network" };
   if (payload.error === "trial_ended") return { ok: false, error: "trial_ended" };
   const licenseKey = normalizeLicenseKey(payload.key);
+  if (payload.error === "trial_limit") return { ok: false, error: "trial_limit" };
   if (!payload.valid || payload.plan !== "trial" || licenseKey !== `TRIAL-${device}`) return { ok: false, error: "invalid" };
   return { ok: true, record: licenseRecord(payload, licenseKey, now) };
+}
+
+/**
+ * Fonctions liées au compte Twitch (Drops, badges, points) : une licence
+ * payante vaut pour tous les comptes ; un essai, seulement pour le compte
+ * auquel il est lié. Essai pas encore lié ou compte inconnu : non.
+ */
+export function trialAccountAllows(record, twitchId) {
+  if (record?.plan !== "trial") return true;
+  return Boolean(record.twitch) && String(twitchId || "") === record.twitch;
 }
