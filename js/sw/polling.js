@@ -30,7 +30,9 @@ async function recheckPlusLicense(record) {
   const device = await getDeviceId(chrome.storage.local);
   const result = await verifyLicense(record.licenseKey, fetch, now, device);
   if (result.ok) {
-    await chrome.storage.local.set({ [PLUS_KEY]: { ...result.record, checkedAt: now } });
+    // La pause « autre compte Twitch » de l'essai survit à la revérification.
+    const otherAccount = record.otherAccount === true ? { otherAccount: true } : {};
+    await chrome.storage.local.set({ [PLUS_KEY]: { ...result.record, checkedAt: now, ...otherAccount } });
   } else if (["invalid", "format", "device_limit"].includes(result.error)) {
     await chrome.storage.local.remove(PLUS_KEY);
   } else {

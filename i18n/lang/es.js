@@ -285,7 +285,7 @@ export default {
       "offerBadge": "7 D",
       "offerBody": "7 días de StreamPulse+ gratis · vinculados a tu cuenta de Twitch",
       "consent": "Sin tarjeta. La prueba se vincula a la cuenta de Twitch conectada en este navegador: los Drops e insignias se reclaman en esa cuenta.",
-      "otherAccount": "Prueba vinculada a otra cuenta de Twitch: Drops e insignias en pausa"
+      "otherAccount": "Prueba vinculada a otra cuenta de Twitch: StreamPulse+ en pausa"
     },
     "missed": {
       "unit": "PERDIDOS",

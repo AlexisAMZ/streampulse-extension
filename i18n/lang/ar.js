@@ -335,7 +335,7 @@ export default {
       "offerBadge": "7 أيام",
       "offerBody": "7 أيام من StreamPulse+ مجانًا · مرتبطة بحسابك على Twitch",
       "consent": "دون بطاقة. ترتبط التجربة بحساب Twitch المسجّل في هذا المتصفح: تُستلم Drops والشارات على هذا الحساب.",
-      "otherAccount": "التجربة مرتبطة بحساب Twitch آخر: Drops والشارات متوقفة مؤقتًا"
+      "otherAccount": "التجربة مرتبطة بحساب Twitch آخر: StreamPulse+ متوقف مؤقتًا"
     },
     "missed": {
       "unit": "فائتة",

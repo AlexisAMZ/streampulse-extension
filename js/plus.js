@@ -71,14 +71,11 @@ const PLUS_PLANS = ["monthly", "yearly", "lifetime", "trial"];
 /** Essai StreamPulse+ de 7 jours (une fois par appareil, accordé par le serveur). */
 export const TRIAL_MS = PLUS_RULE.TRIAL_MS;
 export const trialEndsAt = (record) => PLUS_RULE.trialEndsAt(record);
-export const TRIAL_ACCOUNT_KEY = PLUS_RULE.TRIAL_ACCOUNT_KEY;
-/** Plus pour les récupérations sur le compte Twitch (voir js/inject/plus-rule.js). */
-export const plusForAccount = (record, account, now = Date.now()) => PLUS_RULE.plusForAccount(record, account, now);
+export const trialPaused = (record, now = Date.now()) => PLUS_RULE.trialPaused(record, now);
 
-/** Lit la licence et l'état du compte, puis applique plusForAccount. */
-export async function plusForAccountFrom(storage) {
-  const stored = await storage.get([PLUS_KEY, TRIAL_ACCOUNT_KEY]);
-  return plusForAccount(stored[PLUS_KEY], stored[TRIAL_ACCOUNT_KEY]);
+/** Licence lue dans le stockage, puis isPlusActive. */
+export async function plusActiveFrom(storage) {
+  return isPlusActive((await storage.get(PLUS_KEY))[PLUS_KEY]);
 }
 const TRIAL_KEY_PATTERN = /^TRIAL-[a-f0-9]{16,40}$/;
 
@@ -190,12 +187,7 @@ export async function startTrial(fetchImpl, device, now = Date.now(), twitch = "
   return { ok: true, record: licenseRecord(payload, licenseKey, now) };
 }
 
-/**
- * Fonctions liées au compte Twitch (Drops, badges, points) : une licence
- * payante vaut pour tous les comptes ; un essai, seulement pour le compte
- * auquel il est lié. Essai pas encore lié ou compte inconnu : non.
- */
-export function trialAccountAllows(record, twitchId) {
-  if (record?.plan !== "trial") return true;
-  return Boolean(record.twitch) && String(twitchId || "") === record.twitch;
+/** Essai lié à un compte Twitch, et un autre compte est connecté. Déconnecté ou essai pas encore lié : non. */
+export function trialOnOtherAccount(record, viewerId) {
+  return record?.plan === "trial" && Boolean(record.twitch) && Boolean(viewerId) && String(viewerId) !== record.twitch;
 }

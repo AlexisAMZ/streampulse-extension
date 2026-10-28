@@ -64,12 +64,13 @@ test("verifyLicense : la revérification d'un essai garde le plan trial", async 
   assert.equal(result.record.plan, "trial");
 });
 
-test("trialAccountAllows : un essai ne sert que le compte Twitch lié", async () => {
-  const { trialAccountAllows } = await import("../js/plus.js");
-  assert.equal(trialAccountAllows({ plan: "monthly" }, ""), true);
-  assert.equal(trialAccountAllows(trialRecord(NOW, { twitch: "42" }), "42"), true);
-  assert.equal(trialAccountAllows(trialRecord(NOW, { twitch: "42" }), "43"), false);
-  assert.equal(trialAccountAllows(trialRecord(NOW), "42"), false);
+test("trialOnOtherAccount : seulement un essai lié, avec un autre compte connecté", async () => {
+  const { trialOnOtherAccount } = await import("../js/plus.js");
+  assert.equal(trialOnOtherAccount({ plan: "monthly", twitch: "42" }, "7"), false);
+  assert.equal(trialOnOtherAccount(trialRecord(NOW, { twitch: "42" }), "42"), false);
+  assert.equal(trialOnOtherAccount(trialRecord(NOW, { twitch: "42" }), "7"), true);
+  assert.equal(trialOnOtherAccount(trialRecord(NOW, { twitch: "42" }), ""), false);
+  assert.equal(trialOnOtherAccount(trialRecord(NOW), "7"), false);
 });
 
 test("startTrial : envoie le compte Twitch, garde le compte signé, refuse la connexion pleine", async () => {

@@ -9,7 +9,7 @@ import { BADGE_ADDED_KEY, BADGE_AUTO_KEY, BADGE_EVENTS_KEY, DROPS_BADGES_KEY, DR
 import { BADGE_AUTO_ALARM } from "./sw/constants.js";
 import { addedFrom, badgesFrom, catalogBadges, eventsFrom } from "./badges-data.js";
 import { addJobs, bannerModel, currentGroup, freeBadgeJobs, normalizeAuto, pruneJobs, removeJob } from "./badge-auto.js";
-import { plusForAccountFrom } from "./plus.js";
+import { plusActiveFrom } from "./plus.js";
 import { BADGE_FREE_KEY, dayKey, freeAvailable, isFreeRun } from "./badge-free.js";
 import { recordPlusValue } from "./sw/plus-value.js";
 
@@ -227,7 +227,7 @@ export function createBadgeAuto(deps) {
   /** Le mode auto des badges est une fonctionnalité Plus : la licence peut
    * expirer (résiliation, remboursement, grâce dépassée) en cours de route. */
   // Essai : seulement sur le compte Twitch de l'essai (js/inject/plus-rule.js).
-  const plusActive = () => plusForAccountFrom(chrome.storage.local);
+  const plusActive = () => plusActiveFrom(chrome.storage.local);
   /** Sans Plus : un badge gratuit par jour (js/badge-free.js). */
   const freeRecord = async () => (await chrome.storage.local.get(BADGE_FREE_KEY))[BADGE_FREE_KEY];
 

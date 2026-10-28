@@ -285,7 +285,7 @@ export default {
       "offerBadge": "7 G",
       "offerBody": "7 gün ücretsiz StreamPulse+ · Twitch hesabına bağlı",
       "consent": "Kart gerekmez. Deneme bu tarayıcıda açık olan Twitch hesabına bağlanır: Drops ve rozetler bu hesapta toplanır.",
-      "otherAccount": "Deneme başka bir Twitch hesabına bağlı: Drops ve rozetler duraklatıldı"
+      "otherAccount": "Deneme başka bir Twitch hesabına bağlı: StreamPulse+ duraklatıldı"
     },
     "missed": {
       "unit": "KAÇIRILDI",

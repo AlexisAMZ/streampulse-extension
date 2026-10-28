@@ -285,7 +285,7 @@ export default {
       "offerBadge": "7 Д",
       "offerBody": "7 дней StreamPulse+ бесплатно · привязаны к твоему аккаунту Twitch",
       "consent": "Без карты. Пробный период привязывается к аккаунту Twitch, открытому в этом браузере: Drops и значки собираются на нём.",
-      "otherAccount": "Пробный период привязан к другому аккаунту Twitch: Drops и значки на паузе"
+      "otherAccount": "Пробный период привязан к другому аккаунту Twitch: StreamPulse+ на паузе"
     },
     "missed": {
       "unit": "ПРОПУЩЕНО",

@@ -1,7 +1,7 @@
 // Points de chaîne, Drops, badges et mode auto des badges.
 
 import { createBadgeAuto, watchProbe } from "../badge-auto-worker.js";
-import { PLUS_KEY, isPlusActive, plusForAccountFrom } from "../plus.js";
+import { PLUS_KEY, isPlusActive, plusActiveFrom } from "../plus.js";
 import { refreshTrialAccount } from "./trial-account.js";
 import { BADGE_ADDED_KEY, BADGE_AUTO_KEY, BADGE_EVENTS_KEY, CLAIM_OK_STATUSES, DROPS_BADGES_KEY, DROPS_CAMPAIGNS_KEY, campaignsFrom } from "../drops-data.js";
 import { addedFrom, badgesFrom, catalogBadges, eventsFrom, isPaidBadge } from "../badges-data.js";
@@ -73,7 +73,7 @@ export async function announceDrops(entries) {
 export async function farmNewBadgesForPlus(added = []) {
   const prefs = await PreferenceStore.get();
   if (prefs.dropsTracking === false || prefs.autoFarmNewBadges === false) return false;
-  if (!(await plusForAccountFrom(chrome.storage.local))) return false;
+  if (!(await plusActiveFrom(chrome.storage.local))) return false;
   const ids = (added || []).map((item) => item?.id).filter(Boolean);
   if (!ids.length) return false;
   const result = await badgeAuto.autoFarm(ids).catch((error) => {
@@ -177,7 +177,7 @@ export async function refreshDropsFromWorker({ minGapMs, rewardsMaxAgeMs = REWAR
     return { read: false, reason: error.code || "error" };
   }
   // Récupération auto des Drops : réservée à StreamPulse+ (essai : sur son compte Twitch seulement).
-  const autoClaim = (await plusForAccountFrom(chrome.storage.local)) && prefs.autoClaimDrops !== false;
+  const autoClaim = (await plusActiveFrom(chrome.storage.local)) && prefs.autoClaimDrops !== false;
   const result = await dropsStore.recordInventory(inventory, { autoClaim });
   announceDrops(result.added).catch(warnWith("annonce des Drops"));
   for (const instanceId of result.claim) await claimDropFromWorker(instanceId, true);

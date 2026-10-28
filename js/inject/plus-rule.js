@@ -36,6 +36,8 @@
     if (isFuture(record.verifiedAt, at) || isFuture(record.checkedAt, at) || isFuture(record.iat, at)) return false;
     if (record.plan === "lifetime") return true;
     if (record.plan === "trial") {
+      // Un autre compte Twitch que celui de l'essai : tout StreamPulse+ se met en pause.
+      if (record.otherAccount === true) return false;
       var start = Number(record.since);
       return start > 0 && !isFuture(start, at) && at - start <= TRIAL_MS && at - Number(record.iat) <= PLUS_GRACE_MS;
     }
@@ -69,17 +71,15 @@
     return "m1";
   }
 
-  // Essai lié à un compte Twitch : le service worker note ici si le compte
-  // connecté est bien le bon (js/sw/trial-account.js).
-  var TRIAL_ACCOUNT_KEY = "streamPulseTrialAccount";
-
   /**
-   * Fonctions qui récupèrent sur le compte Twitch (Drops, badges) : une licence
-   * payante suffit ; un essai exige que le compte connecté soit le sien.
+   * Essai actif mais mis en pause : un autre compte Twitch que celui de l'essai
+   * est connecté (js/sw/trial-account.js pose `otherAccount` sur la licence).
    */
-  function plusForAccount(record, account, now) {
-    if (!isPlusActive(record, now)) return false;
-    return record.plan !== "trial" || Boolean(account && account.allowed === true);
+  function trialPaused(record, now) {
+    if (!record || record.plan !== "trial" || record.otherAccount !== true) return false;
+    var copy = {};
+    for (var key in record) if (key !== "otherAccount") copy[key] = record[key];
+    return isPlusActive(copy, now);
   }
 
   /** Fin de l'essai (ms), 0 si la licence n'est pas un essai. */
@@ -92,8 +92,7 @@
     PLUS_KEY: PLUS_KEY,
     PLUS_GRACE_MS: PLUS_GRACE_MS,
     TRIAL_MS: TRIAL_MS,
-    TRIAL_ACCOUNT_KEY: TRIAL_ACCOUNT_KEY,
-    plusForAccount: plusForAccount,
+    trialPaused: trialPaused,
     trialEndsAt: trialEndsAt,
     MONTH_MS: MONTH_MS,
     TENURE_TIERS: TENURE_TIERS,

@@ -19,7 +19,7 @@ import { LINKED_ACCOUNTS_KEY, normalizeLinkedAccounts } from "./linked-accounts.
 import { getPlatformIcon, getPlatformLabelKey } from "./platforms.js";
 import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalizePredictionRule, summarize as summarizePredictions } from "./predictions-data.js";
 import { TRIAL_STATE_KEY, trialStateFrom } from "./sw/trial.js";
-import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, TRIAL_ACCOUNT_KEY, trialEndsAt, verifyLicense } from "./plus.js";
+import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, trialEndsAt, trialPaused, verifyLicense } from "./plus.js";
 import { mountLiquidMetalButton } from "./promo-liquid-button.js";
 import { mountClipsMorph } from "./promo-clips-morph.js";
 import { hasRecentSuccess, reviewAskDecision, REMOTE_CONFIG_CACHE_KEY } from "./popup-review.js";
@@ -247,7 +247,6 @@ export function plusActive() {
 const DAY_MS = 86_400_000;
 // En attente tant que le stockage n'est pas lu : le bandeau d'offre ne clignote pas.
 let trialState = { ...trialStateFrom(null), pending: true };
-let trialAccount = null;
 
 /** Boutons « Essayer 7 jours gratuitement » : sans licence, tant que l'essai n'a jamais servi ici. */
 function renderTrialOffer() {
@@ -256,7 +255,7 @@ function renderTrialOffer() {
   // Bandeau du haut : l'essai se propose, il ne démarre jamais sans ce clic.
   const strip = $("trial-offer-strip");
   if (strip) strip.hidden = !eligible;
-  document.body.classList.toggle("has-trial", eligible || (plusActive() && plusRecord?.plan === "trial"));
+  document.body.classList.toggle("has-trial", eligible || (plusRecord?.plan === "trial" && (plusActive() || trialPaused(plusRecord))));
   // Avec l'essai proposé, l'écran des alertes manquées garde un seul bouton.
   for (const buy of document.querySelectorAll(".missed-lcd-buy")) buy.hidden = eligible;
 }
@@ -284,7 +283,7 @@ function renderTrialStrip(trial) {
   const days = Math.max(1, Math.ceil((trialEndsAt(plusRecord) - Date.now()) / DAY_MS));
   $("trial-days").textContent = t("popup.trial.days", { days });
   // Essai lié à un autre compte Twitch : les récupérations sont en pause, on le dit.
-  const otherAccount = trialAccount?.allowed === false;
+  const otherAccount = trialPaused(plusRecord);
   const body = strip.querySelector(".trial-body");
   // La clé data-i18n suit le texte : un changement de langue garde le bon message.
   if (body) {
@@ -310,7 +309,8 @@ function renderPlus() {
     openButton.setAttribute("aria-label", hint);
   }
   // Pendant l'essai, l'offre reste visible : c'est le moment de s'abonner.
-  const trial = active && plusRecord?.plan === "trial";
+  // Essai en cours, même en pause sur un autre compte Twitch : le bandeau reste.
+  const trial = plusRecord?.plan === "trial" && (active || trialPaused(plusRecord));
   if ($("plus-offer")) $("plus-offer").hidden = (active && !trial) || deviceLimited;
   if ($("plus-device-limited")) $("plus-device-limited").hidden = !deviceLimited;
   if ($("plus-active")) $("plus-active").hidden = !active;
@@ -487,9 +487,8 @@ function initPlus() {
   $("open-plus")?.addEventListener("click", openPlus);
   $("trial-subscribe")?.addEventListener("click", openPlus);
   for (const button of document.querySelectorAll(".trial-start")) button.addEventListener("click", startTrialFromButton);
-  chrome.storage.local.get([TRIAL_STATE_KEY, TRIAL_ACCOUNT_KEY]).then((stored) => {
+  chrome.storage.local.get(TRIAL_STATE_KEY).then((stored) => {
     trialState = trialStateFrom(stored[TRIAL_STATE_KEY]);
-    trialAccount = stored[TRIAL_ACCOUNT_KEY] || null;
     renderPlus();
   }).catch(() => {});
   $("plus-close")?.addEventListener("click", () => closePlus());
@@ -1095,10 +1094,6 @@ export async function initFeatures() {
     }
     if (changes[PLUS_KEY]) {
       plusRecord = changes[PLUS_KEY].newValue || null;
-      renderPlus();
-    }
-    if (changes[TRIAL_ACCOUNT_KEY]) {
-      trialAccount = changes[TRIAL_ACCOUNT_KEY].newValue || null;
       renderPlus();
     }
     if (changes[TRIAL_STATE_KEY]) {

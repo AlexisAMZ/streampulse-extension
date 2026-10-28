@@ -285,7 +285,7 @@ export default {
       "offerBadge": "7 J",
       "offerBody": "7 jours de StreamPulse+ offerts · liés à ton compte Twitch",
       "consent": "Sans carte. L'essai est lié au compte Twitch connecté sur ce navigateur : les Drops et badges se récupèrent sur ce compte.",
-      "otherAccount": "Essai lié à un autre compte Twitch : Drops et badges en pause"
+      "otherAccount": "Essai lié à un autre compte Twitch : StreamPulse+ en pause"
     },
     "missed": {
       "unit": "RATÉS",

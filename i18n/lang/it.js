@@ -285,7 +285,7 @@ export default {
       "offerBadge": "7 G",
       "offerBody": "7 giorni di StreamPulse+ gratis · legati al tuo account Twitch",
       "consent": "Senza carta. La prova è legata all'account Twitch connesso su questo browser: Drops e badge vengono riscattati su quell'account.",
-      "otherAccount": "Prova collegata a un altro account Twitch: Drops e badge in pausa"
+      "otherAccount": "Prova collegata a un altro account Twitch: StreamPulse+ in pausa"
     },
     "missed": {
       "unit": "PERSI",

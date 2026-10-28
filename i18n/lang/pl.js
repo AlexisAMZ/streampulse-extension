@@ -285,7 +285,7 @@ export default {
       "offerBadge": "7 D",
       "offerBody": "7 dni StreamPulse+ za darmo · przypisane do twojego konta Twitch",
       "consent": "Bez karty. Okres próbny jest przypisany do konta Twitch zalogowanego w tej przeglądarce: Drops i odznaki trafiają na to konto.",
-      "otherAccount": "Okres próbny przypisany do innego konta Twitch: Drops i odznaki wstrzymane"
+      "otherAccount": "Okres próbny przypisany do innego konta Twitch: StreamPulse+ wstrzymany"
     },
     "missed": {
       "unit": "PRZEGAPIONE",
