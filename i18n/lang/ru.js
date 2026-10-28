@@ -1161,6 +1161,12 @@ export default {
     }
   },
   "background": {
+    "trialEnd": {
+      "soonTitle": "Пробный StreamPulse+ заканчивается завтра",
+      "soonMessage": "Автосбор Drops, значков и свои уведомления отключатся меньше чем через 24 ч. Оформи подписку, чтобы ничего не потерять.",
+      "endedTitle": "Пробный StreamPulse+ закончился",
+      "endedMessage": "Drops и значки больше не собираются сами. Верни StreamPulse+, чтобы снова их получать."
+    },
     "trialReminder": {
       "title": "7 дней StreamPulse+ бесплатно",
       "message": "Без карты. Открой StreamPulse и нажми «Открыть 7 дней»: Drops и значки собираются сами, оповещения под тебя."

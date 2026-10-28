@@ -1199,6 +1199,12 @@ export default {
     }
   },
   "background": {
+    "trialEnd": {
+      "soonTitle": "Your StreamPulse+ trial ends tomorrow",
+      "soonMessage": "Auto-claimed Drops, badges and custom alerts stop in less than 24 hours. Subscribe to keep them.",
+      "endedTitle": "Your StreamPulse+ trial has ended",
+      "endedMessage": "Drops and badges are no longer claimed for you. Get StreamPulse+ back to keep them coming."
+    },
     "trialReminder": {
       "title": "7 days of StreamPulse+ free",
       "message": "No credit card. Open StreamPulse and click \"Unlock 7 days\": Drops and badges claimed for you, alerts your way."

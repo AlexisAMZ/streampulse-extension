@@ -1211,6 +1211,12 @@ export default {
     }
   },
   "background": {
+    "trialEnd": {
+      "soonTitle": "تنتهي تجربة StreamPulse+ غدًا",
+      "soonMessage": "يتوقف الاستلام التلقائي لـ Drops والشارات والتنبيهات المخصصة خلال أقل من 24 ساعة. اشترك كي لا تفقدها.",
+      "endedTitle": "انتهت تجربة StreamPulse+",
+      "endedMessage": "لم تعد Drops والشارات تُستلم تلقائيًا. عُد إلى StreamPulse+ لاستعادتها."
+    },
     "trialReminder": {
       "title": "7 أيام من StreamPulse+ مجانًا",
       "message": "دون بطاقة. افتح StreamPulse وانقر «افتح 7 أيام»: تُستلم Drops والشارات تلقائيًا، وتنبيهات كما تريد."

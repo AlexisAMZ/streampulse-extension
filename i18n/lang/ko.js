@@ -1161,6 +1161,12 @@ export default {
     }
   },
   "background": {
+    "trialEnd": {
+      "soonTitle": "StreamPulse+ 체험이 내일 끝나요",
+      "soonMessage": "드롭·배지 자동 수령과 맞춤 알림이 24시간 안에 멈춥니다. 구독하고 계속 이용하세요.",
+      "endedTitle": "StreamPulse+ 체험이 끝났어요",
+      "endedMessage": "드롭과 배지를 더 이상 자동으로 받지 않습니다. StreamPulse+로 다시 받으세요."
+    },
     "trialReminder": {
       "title": "StreamPulse+ 7일 무료",
       "message": "카드 불필요. StreamPulse를 열고 «7일 잠금 해제»를 누르세요. 드롭과 배지는 자동으로, 알림은 원하는 대로."

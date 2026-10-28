@@ -1161,6 +1161,12 @@ export default {
     }
   },
   "background": {
+    "trialEnd": {
+      "soonTitle": "Twój okres próbny StreamPulse+ kończy się jutro",
+      "soonMessage": "Automatyczne Drops, odznaki i własne powiadomienia wyłączą się za mniej niż 24 h. Subskrybuj, by nic nie stracić.",
+      "endedTitle": "Twój okres próbny StreamPulse+ się zakończył",
+      "endedMessage": "Drops i odznaki nie są już odbierane automatycznie. Wróć do StreamPulse+, by je odzyskać."
+    },
     "trialReminder": {
       "title": "7 dni StreamPulse+ za darmo",
       "message": "Bez karty. Otwórz StreamPulse i kliknij „Odblokuj 7 dni”: Drops i odznaki odbierane same, alerty na miarę."

@@ -1161,6 +1161,12 @@ export default {
     }
   },
   "background": {
+    "trialEnd": {
+      "soonTitle": "Tu prueba de StreamPulse+ termina mañana",
+      "soonMessage": "Los Drops, insignias y alertas a medida se detienen en menos de 24 h. Suscríbete para no perderlos.",
+      "endedTitle": "Tu prueba de StreamPulse+ ha terminado",
+      "endedMessage": "Los Drops y las insignias ya no se reclaman solos. Vuelve a StreamPulse+ para recuperarlos."
+    },
     "trialReminder": {
       "title": "7 días de StreamPulse+ gratis",
       "message": "Sin tarjeta. Abre StreamPulse y pulsa «Desbloquear 7 días»: Drops e insignias reclamados solos, alertas a tu medida."

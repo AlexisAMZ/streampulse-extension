@@ -1161,6 +1161,12 @@ export default {
     }
   },
   "background": {
+    "trialEnd": {
+      "soonTitle": "StreamPulse+ denemen yarın bitiyor",
+      "soonMessage": "Otomatik Drops, rozetler ve özel uyarılar 24 saatten kısa sürede duruyor. Hiçbir şey kaybetmemek için abone ol.",
+      "endedTitle": "StreamPulse+ denemen bitti",
+      "endedMessage": "Drops ve rozetler artık otomatik toplanmıyor. Geri almak için StreamPulse+'a dön."
+    },
     "trialReminder": {
       "title": "7 gün ücretsiz StreamPulse+",
       "message": "Kart gerekmez. StreamPulse'ı aç ve \"7 günün kilidini aç\"a tıkla: Drops ve rozetler kendiliğinden, uyarılar sana göre."

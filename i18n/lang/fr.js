@@ -1161,6 +1161,12 @@ export default {
     }
   },
   "background": {
+    "trialEnd": {
+      "soonTitle": "Ton essai StreamPulse+ se termine demain",
+      "soonMessage": "Drops, badges et alertes sur mesure s'arrêtent dans moins de 24 h. Abonne-toi pour ne rien perdre.",
+      "endedTitle": "Ton essai StreamPulse+ est terminé",
+      "endedMessage": "Les Drops et badges ne se récupèrent plus tout seuls. Reprends StreamPulse+ pour les retrouver."
+    },
     "trialReminder": {
       "title": "7 jours de StreamPulse+ offerts",
       "message": "Sans carte bancaire. Ouvre StreamPulse et clique sur « Débloquer les 7 jours » : Drops et badges récupérés tout seuls, alertes sur mesure."

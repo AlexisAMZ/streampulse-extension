@@ -1161,6 +1161,12 @@ export default {
     }
   },
   "background": {
+    "trialEnd": {
+      "soonTitle": "StreamPulse+ のお試しは明日で終了します",
+      "soonMessage": "ドロップ・バッジの自動受け取りとカスタム通知は 24 時間以内に止まります。購読して続けましょう。",
+      "endedTitle": "StreamPulse+ のお試しが終了しました",
+      "endedMessage": "ドロップとバッジは自動で受け取られなくなりました。StreamPulse+ で再開できます。"
+    },
     "trialReminder": {
       "title": "StreamPulse+ 7日間無料",
       "message": "カード不要。StreamPulse を開いて「7 日間を解放」をクリック：ドロップとバッジを自動で受け取り、通知も自由に。"

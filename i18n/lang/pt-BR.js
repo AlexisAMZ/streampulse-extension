@@ -1161,6 +1161,12 @@ export default {
     }
   },
   "background": {
+    "trialEnd": {
+      "soonTitle": "Seu teste do StreamPulse+ termina amanhã",
+      "soonMessage": "Drops, insígnias e alertas sob medida param em menos de 24 h. Assine para não perder nada.",
+      "endedTitle": "Seu teste do StreamPulse+ terminou",
+      "endedMessage": "Drops e insígnias não são mais resgatados sozinhos. Volte ao StreamPulse+ para recuperá-los."
+    },
     "trialReminder": {
       "title": "7 dias de StreamPulse+ grátis",
       "message": "Sem cartão. Abra o StreamPulse e clique em «Liberar 7 dias»: Drops e insígnias resgatados sozinhos, alertas do seu jeito."

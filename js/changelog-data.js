@@ -84,6 +84,24 @@ export const RELEASES = [
     },
     changes: [
       {
+        type: "new",
+        area: "plus",
+        text: {
+          "fr": "Une notification te prévient la veille de la fin de l'essai, puis à la fin.",
+          "en": "A notification warns you the day before the trial ends, then when it ends.",
+          "es": "Una notificación te avisa el día antes del fin de la prueba y luego al terminar.",
+          "pt-BR": "Uma notificação avisa na véspera do fim do teste e depois quando ele termina.",
+          "de": "Eine Benachrichtigung warnt dich am Tag vor dem Testende und dann zum Ende.",
+          "it": "Una notifica ti avvisa il giorno prima della fine della prova, poi alla fine.",
+          "pl": "Powiadomienie ostrzega dzień przed końcem okresu próbnego, a potem w chwili końca.",
+          "tr": "Deneme bitmeden bir gün önce ve bittiğinde bir bildirim seni uyarır.",
+          "ru": "Уведомление предупреждает за день до конца пробного периода и в момент окончания.",
+          "ja": "お試し終了の前日と終了時に通知でお知らせします。",
+          "ko": "체험 종료 전날과 종료 시점에 알림으로 알려 줍니다.",
+          "ar": "يصلك إشعار قبل يوم من نهاية التجربة، ثم عند انتهائها.",
+        },
+      },
+      {
         type: "improved",
         area: "plus",
         text: {

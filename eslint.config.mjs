@@ -59,6 +59,7 @@ const ES_MODULES = [
   "js/missed-alerts.js",
   "js/confetti.js",
   "js/trial-reminder.js",
+  "js/trial-end.js",
   "js/predictions-data.js",
   "js/points-bonus.js",
   "js/points-data.js",

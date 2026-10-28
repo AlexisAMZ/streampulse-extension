@@ -1161,6 +1161,12 @@ export default {
     }
   },
   "background": {
+    "trialEnd": {
+      "soonTitle": "Dein StreamPulse+-Test endet morgen",
+      "soonMessage": "Automatische Drops, Abzeichen und eigene Benachrichtigungen enden in weniger als 24 Std. Abonniere, um nichts zu verlieren.",
+      "endedTitle": "Dein StreamPulse+-Test ist beendet",
+      "endedMessage": "Drops und Abzeichen werden nicht mehr automatisch eingesammelt. Hol dir StreamPulse+ zurück."
+    },
     "trialReminder": {
       "title": "7 Tage StreamPulse+ gratis",
       "message": "Ohne Kreditkarte. Öffne StreamPulse und klicke auf „7 Tage freischalten“: Drops und Abzeichen automatisch, Alarme nach Wunsch."

@@ -2,6 +2,7 @@
 
 import { PLUS_KEY, isPlusActive } from "../plus.js";
 import { maybeRemindTrial } from "./trial-reminder.js";
+import { maybeNotifyTrialEnd } from "./trial-end.js";
 import { RAID_WATCHER_ALARM } from "../raidWatcher.js";
 import { pollIntervalMinutes } from "./config.js";
 import { AUTO_OPEN_INVENTORY_ALARM, BADGE_AUTO_ALARM, DROPS_ALARM, KEEP_ALIVE_ALARM, WATCHER_ALARM } from "./constants.js";
@@ -74,6 +75,8 @@ export async function handleAlarm(alarm) {
     });
     // Rappel de l'essai StreamPulse+ pour qui n'ouvre pas le popup (deux au plus).
     maybeRemindTrial().catch((error) => console.warn("[StreamPulse+] rappel de l'essai :", error?.message || error));
+    // Veille et fin de l'essai : une notification chacune.
+    maybeNotifyTrialEnd().catch((error) => console.warn("[StreamPulse+] fin de l'essai :", error?.message || error));
   } else if (alarm.name === KEEP_ALIVE_ALARM) {
     chrome.runtime.getPlatformInfo(() => {
       if (chrome.runtime.lastError) {

@@ -7,6 +7,7 @@
 import { MISSED_KEY } from "../missed-alerts.js";
 import { PLUS_KEY } from "../plus.js";
 import { POPUP_SEEN_KEY, TRIAL_REMINDER_KEY } from "../trial-reminder.js";
+import { TRIAL_END_KEY } from "../trial-end.js";
 import { TRIAL_STATE_KEY, TRIAL_SYNC_KEY } from "./trial.js";
 
 /** Extension chargée depuis un dossier (mode développeur) : pas d'update_url. */
@@ -16,7 +17,7 @@ export async function resetTrialForDev() {
   if (!isDevInstall()) return { reset: false, reason: "not-dev" };
   const record = (await chrome.storage.local.get(PLUS_KEY))[PLUS_KEY];
   // Une vraie licence (achetée, à vie) n'est jamais effacée par cet outil.
-  const keys = [TRIAL_STATE_KEY, TRIAL_REMINDER_KEY, POPUP_SEEN_KEY, MISSED_KEY, ...(record?.plan === "trial" ? [PLUS_KEY] : [])];
+  const keys = [TRIAL_STATE_KEY, TRIAL_REMINDER_KEY, TRIAL_END_KEY, POPUP_SEEN_KEY, MISSED_KEY, ...(record?.plan === "trial" ? [PLUS_KEY] : [])];
   await chrome.storage.local.remove(keys);
   await chrome.storage.sync.remove(TRIAL_SYNC_KEY).catch(() => {});
   return { reset: true, removedLicense: record?.plan === "trial" };
