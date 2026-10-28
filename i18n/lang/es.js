@@ -282,6 +282,8 @@ export default {
       "body": "Prueba de StreamPulse+ · todo desbloqueado",
       "subscribe": "Suscribirme",
       "devReset": "Reset (dev)",
+      "unlockedLine": "> StreamPulse+ activado",
+      "unlockedCaption": "Todo desbloqueado durante 7 días. Sin tarjeta.",
       "start": "Desbloquear 7 días",
       "offerBadge": "7 D",
       "offerBody": "StreamPulse+ gratis · sin tarjeta · vinculado a tu cuenta de Twitch",

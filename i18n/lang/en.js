@@ -320,6 +320,8 @@ export default {
       "body": "StreamPulse+ trial · everything unlocked",
       "subscribe": "Subscribe",
       "devReset": "Reset (dev)",
+      "unlockedLine": "> StreamPulse+ activated",
+      "unlockedCaption": "Everything is unlocked for 7 days. No credit card.",
       "start": "Unlock 7 days",
       "offerBadge": "7 D",
       "offerBody": "StreamPulse+ free · no credit card · linked to your Twitch account",

@@ -19,7 +19,7 @@ import { LINKED_ACCOUNTS_KEY, normalizeLinkedAccounts } from "./linked-accounts.
 import { getPlatformIcon, getPlatformLabelKey } from "./platforms.js";
 import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalizePredictionRule, summarize as summarizePredictions } from "./predictions-data.js";
 import { TRIAL_STATE_KEY, trialStateFrom, trialTakenOnAccount } from "./sw/trial.js";
-import { burstConfetti } from "./confetti.js";
+import { celebrateTrial } from "./confetti.js";
 import { POPUP_SEEN_KEY } from "./trial-reminder.js";
 import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, trialEndsAt, trialPaused, verifyLicense } from "./plus.js";
 import { mountLiquidMetalButton } from "./promo-liquid-button.js";
@@ -264,16 +264,14 @@ function renderTrialOffer() {
 
 async function startTrialFromButton(event) {
   const button = event.currentTarget;
-  // Position prise avant l'appel : le bouton disparaît dès que l'essai démarre.
-  const rect = button.getBoundingClientRect();
   button.disabled = true;
   button.setAttribute("aria-busy", "true");
   try {
     const response = await chrome.runtime.sendMessage({ type: "startTrial" });
     // « started » : la licence d'essai arrive par le stockage et rafraîchit tout le popup.
     if (response?.result === "started") {
-      burstConfetti({ getBoundingClientRect: () => rect });
-      $("trial-strip")?.classList.add("is-fresh");
+      celebrateTrial({ line: t("popup.trial.unlockedLine"), big: t("popup.trial.offerBadge"), caption: t("popup.trial.unlockedCaption") })
+        .then(() => $("trial-strip")?.classList.add("is-fresh"));
     }
     if (response?.result === "refused") openPlus();
   } catch (error) {

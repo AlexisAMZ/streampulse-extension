@@ -282,6 +282,8 @@ export default {
       "body": "StreamPulse+ denemesi · her şey açık",
       "subscribe": "Abone ol",
       "devReset": "Reset (dev)",
+      "unlockedLine": "> StreamPulse+ etkin",
+      "unlockedCaption": "7 gün boyunca her şey açık. Kart gerekmez.",
       "start": "7 günün kilidini aç",
       "offerBadge": "7 G",
       "offerBody": "StreamPulse+ ücretsiz · kart gerekmez · Twitch hesabına bağlı",

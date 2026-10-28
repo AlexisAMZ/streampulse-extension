@@ -282,6 +282,8 @@ export default {
       "body": "StreamPulse+ 체험 · 모두 열림",
       "subscribe": "구독하기",
       "devReset": "Reset (dev)",
+      "unlockedLine": "> StreamPulse+ 활성화",
+      "unlockedCaption": "7일 동안 모두 열림. 카드 불필요.",
       "start": "7일 잠금 해제",
       "offerBadge": "7일",
       "offerBody": "StreamPulse+ 무료 · 카드 불필요 · 내 Twitch 계정에 연결",

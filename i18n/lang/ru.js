@@ -282,6 +282,8 @@ export default {
       "body": "Пробный StreamPulse+ · всё открыто",
       "subscribe": "Подписаться",
       "devReset": "Reset (dev)",
+      "unlockedLine": "> StreamPulse+ включён",
+      "unlockedCaption": "Всё открыто на 7 дней. Без карты.",
       "start": "Открыть 7 дней",
       "offerBadge": "7 Д",
       "offerBody": "StreamPulse+ бесплатно · без карты · привязано к твоему Twitch",

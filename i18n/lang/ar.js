@@ -332,6 +332,8 @@ export default {
       "body": "تجربة StreamPulse+ · كل شيء مفتوح",
       "subscribe": "اشترك",
       "devReset": "Reset (dev)",
+      "unlockedLine": "> تم تفعيل StreamPulse+",
+      "unlockedCaption": "كل شيء مفتوح لمدة 7 أيام. دون بطاقة.",
       "start": "افتح 7 أيام",
       "offerBadge": "7 أيام",
       "offerBody": "StreamPulse+ مجانًا · دون بطاقة · مرتبط بحسابك على Twitch",
