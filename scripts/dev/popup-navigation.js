@@ -1,4 +1,5 @@
-import { normalizeLinkedAccounts } from "./linked-accounts.js";
+// Mis à part : plus utilisé par le popup, gardé avec son test.
+import { normalizeLinkedAccounts } from "../../js/linked-accounts.js";
 
 export function filterByPlatform(streamers, platform) {
   const filtered = platform === "all" ? streamers : streamers.filter((streamer) => streamer.platform === platform);

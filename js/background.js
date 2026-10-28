@@ -5,7 +5,6 @@
 // MV3 peut livrer un événement dès l'évaluation du module, un listener posé
 // après un await le raterait.
 import { syncChzzkAccess } from "./sw/chzzk-access.js";
-import { installDebugTools } from "./sw/debug.js";
 import { badgeAuto, scheduleDropsAlarm } from "./sw/drops.js";
 import { PREFERENCES_KEY } from "./sw/constants.js";
 import { PLUS_KEY, isPlusActive } from "./plus.js";
@@ -23,8 +22,6 @@ import { keepChannelTabLoaded, onPreferencesChangedForTabDiscard } from "./sw/ta
 import { WatchTimeStore } from "./sw/watchtime.js";
 import { initSync } from "./sw/sync.js";
 
-// Diagnostic : exposé tôt, même si une erreur survient plus bas.
-installDebugTools();
 
 // Le repli OAuth côté client a été supprimé (le secret client ne doit jamais
 // vivre dans le navigateur) : on efface les credentials Kick que les versions

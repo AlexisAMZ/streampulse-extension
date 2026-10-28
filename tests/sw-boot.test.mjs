@@ -49,7 +49,7 @@ test("les listeners MV3 sont posés au chargement", { skip }, () => {
   // Quatre listeners storage.onChanged : garde de la licence Plus, anti-discard des onglets, délai des badges et Drops, synchro multi-appareils.
   assert.equal(fake.storage.onChanged.listeners.length, 4);
   assert.equal(fake.tabs.onUpdated.listeners.length, 2);
-  assert.equal(typeof globalThis.__SP_DEBUG__?.fakeRaid, "function");
+  assert.equal(globalThis.__SP_DEBUG__, undefined, "aucun outil de debug dans la version livrée");
 });
 
 test("expéditeur étranger refusé", { skip }, async () => {

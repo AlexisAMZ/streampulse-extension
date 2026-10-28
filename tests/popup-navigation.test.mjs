@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { filterByPlatform, selectLiveWithLinks } from "../js/popup-navigation.js";
+import { filterByPlatform, selectLiveWithLinks } from "../scripts/dev/popup-navigation.js";
 
 const streamers = [
   { id: "t", platform: "twitch", displayName: "Twitch live", status: { active: { isLive: true } } },

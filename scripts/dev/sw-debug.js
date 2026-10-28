@@ -1,9 +1,12 @@
-// Diagnostic : self.__SP_DEBUG__ dans la console du service worker.
+// Outil de développement, jamais livré (scripts/ est exclu du zip).
+// Extension chargée depuis le dossier, dans la console du service worker :
+//   (await import(chrome.runtime.getURL("scripts/dev/sw-debug.js"))).installDebugTools()
+// puis self.__SP_DEBUG__.fakeTitleChange("handle"), fakeGameChange, fakeRaid.
 
-import { pollStreamers } from "./polling.js";
-import { notifyIncomingRaid } from "./raids.js";
-import { streamerLiveState } from "./state.js";
-import { DataStore } from "./stores.js";
+import { pollStreamers } from "../../js/sw/polling.js";
+import { notifyIncomingRaid } from "../../js/sw/raids.js";
+import { streamerLiveState } from "../../js/sw/state.js";
+import { DataStore } from "../../js/sw/stores.js";
 
 // ─── Diagnostic : expose tot, meme si une erreur survient plus bas ───────────
 // Console du service worker (chrome://extensions → inspect du worker).
