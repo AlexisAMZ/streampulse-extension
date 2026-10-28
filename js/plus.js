@@ -66,7 +66,12 @@ export function plusPageUrl(lang, plan, creator) {
 /** Sans nouvelle vérification réussie, la licence reste active ce délai (hors ligne). */
 export const PLUS_GRACE_MS = PLUS_RULE.PLUS_GRACE_MS;
 
-const PLUS_PLANS = ["monthly", "yearly", "lifetime"];
+const PLUS_PLANS = ["monthly", "yearly", "lifetime", "trial"];
+
+/** Essai StreamPulse+ de 7 jours (une fois par appareil, accordé par le serveur). */
+export const TRIAL_MS = PLUS_RULE.TRIAL_MS;
+export const trialEndsAt = (record) => PLUS_RULE.trialEndsAt(record);
+const TRIAL_KEY_PATTERN = /^TRIAL-[a-f0-9]{16,40}$/;
 
 /** Identifiant de ce navigateur : une clé vaut pour 2 appareils. */
 const DEVICE_KEY = "streamPulseDeviceId";
@@ -84,6 +89,11 @@ export async function getDeviceId(storage) {
 const KEY_PATTERN = /^SP-[A-Z0-9]{4}(?:-[A-Z0-9]{4}){3}$/;
 
 export function normalizeLicenseKey(input) {
+  const trial = String(input ?? "").trim();
+  if (/^trial-/i.test(trial)) {
+    const key = `TRIAL-${trial.slice(6).toLowerCase()}`;
+    return TRIAL_KEY_PATTERN.test(key) ? key : null;
+  }
   const compact = String(input ?? "")
     .toUpperCase()
     .replace(/[^A-Z0-9]/g, "");
@@ -112,36 +122,58 @@ export function isPlusActive(record, now = Date.now()) {
  */
 const LICENSE_VERIFY_TIMEOUT_MS = 15_000;
 
-export async function verifyLicense(input, fetchImpl, now = Date.now(), device = "") {
-  const licenseKey = normalizeLicenseKey(input);
-  if (!licenseKey) return { ok: false, error: "format" };
-  let payload;
+/** POST au serveur de licences : la réponse JSON, ou null (réseau, serveur en panne). */
+async function postLicense(body, fetchImpl) {
   try {
     const response = await fetchImpl(LICENSE_VERIFY_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       // `version` : le serveur refuse les versions périmées (STREAMPULSE_MIN_VERSION).
-      body: JSON.stringify({ key: licenseKey, device, version: globalThis.chrome?.runtime?.getManifest?.().version }),
+      body: JSON.stringify({ ...body, version: globalThis.chrome?.runtime?.getManifest?.().version }),
       // Un serveur qui ne répond jamais (paquets jetés) ne doit pas bloquer le garde.
       signal: AbortSignal.timeout(LICENSE_VERIFY_TIMEOUT_MS),
     });
-    if (!response.ok && ![403, 404, 422].includes(response.status)) {
-      return { ok: false, error: "network" };
-    }
-    payload = await response.json();
+    if (!response.ok && ![403, 404, 422].includes(response.status)) return null;
+    return await response.json();
   } catch {
-    return { ok: false, error: "network" };
+    return null;
   }
-  if (payload?.error === "device_limit") return { ok: false, error: "device_limit" };
-  if (!payload?.valid) return { ok: false, error: "invalid" };
+}
+
+/** Réponse valide du serveur → enregistrement de licence (signature comprise). */
+function licenseRecord(payload, licenseKey, now) {
   const plan = PLUS_PLANS.includes(payload.plan) ? payload.plan : "monthly";
   const referrals = Math.max(0, Math.floor(Number(payload.referrals) || 0));
   // Rôle posé à la main sur la licence (métadonnée Stripe sp_role) : « admin » pour le fondateur,
   // « bughunter » pour qui a trouvé un bug.
   const role = ["admin", "bughunter"].includes(payload.role) ? payload.role : "";
-  // Début de l'abonnement : tuile d'ancienneté de son propre badge.
+  // Début de l'abonnement (tuile d'ancienneté), ou de l'essai.
   const since = Math.max(0, Number(payload.since) || 0);
   // Signature du serveur : `iat` (date serveur) et `sig`, vérifiées par js/sw/license-guard.js.
   const signature = payload.sig && payload.iat ? { iat: Math.floor(Number(payload.iat)), sig: String(payload.sig) } : {};
-  return { ok: true, record: { licenseKey, plan, status: "active", verifiedAt: now, referrals, role, since, ...signature } };
+  return { licenseKey, plan, status: "active", verifiedAt: now, referrals, role, since, ...signature };
+}
+
+export async function verifyLicense(input, fetchImpl, now = Date.now(), device = "") {
+  const licenseKey = normalizeLicenseKey(input);
+  if (!licenseKey) return { ok: false, error: "format" };
+  const payload = await postLicense({ key: licenseKey, device }, fetchImpl);
+  if (!payload) return { ok: false, error: "network" };
+  if (payload.error === "device_limit") return { ok: false, error: "device_limit" };
+  if (!payload.valid) return { ok: false, error: "invalid" };
+  return { ok: true, record: licenseRecord(payload, licenseKey, now) };
+}
+
+/**
+ * Demande l'essai de 7 jours pour cet appareil. Le serveur renvoie toujours le
+ * même essai pour un appareil donné, jamais un nouveau.
+ * @returns {Promise<{ok: true, record: object} | {ok: false, error: "trial_ended"|"invalid"|"network"}>}
+ */
+export async function startTrial(fetchImpl, device, now = Date.now()) {
+  const payload = await postLicense({ action: "trial", device }, fetchImpl);
+  if (!payload) return { ok: false, error: "network" };
+  if (payload.error === "trial_ended") return { ok: false, error: "trial_ended" };
+  const licenseKey = normalizeLicenseKey(payload.key);
+  if (!payload.valid || payload.plan !== "trial" || licenseKey !== `TRIAL-${device}`) return { ok: false, error: "invalid" };
+  return { ok: true, record: licenseRecord(payload, licenseKey, now) };
 }
