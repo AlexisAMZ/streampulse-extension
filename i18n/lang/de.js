@@ -281,7 +281,10 @@ export default {
       "days": "{{days}} T.",
       "body": "StreamPulse+-Test · alles freigeschaltet",
       "subscribe": "Abonnieren",
-      "start": "7 Tage gratis testen",
+      "start": "7 Tage freischalten",
+      "offerBadge": "7 T",
+      "offerBody": "7 Tage StreamPulse+ gratis · an dein Twitch-Konto gebunden",
+      "consent": "Ohne Karte. Der Test ist an das in diesem Browser angemeldete Twitch-Konto gebunden: Drops und Abzeichen werden auf diesem Konto eingesammelt.",
       "otherAccount": "Test an ein anderes Twitch-Konto gebunden: Drops und Abzeichen pausiert"
     },
     "missed": {

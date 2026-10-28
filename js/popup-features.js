@@ -245,13 +245,18 @@ export function plusActive() {
 }
 
 const DAY_MS = 86_400_000;
-let trialState = trialStateFrom(null);
+// En attente tant que le stockage n'est pas lu : le bandeau d'offre ne clignote pas.
+let trialState = { ...trialStateFrom(null), pending: true };
 let trialAccount = null;
 
 /** Boutons « Essayer 7 jours gratuitement » : sans licence, tant que l'essai n'a jamais servi ici. */
 function renderTrialOffer() {
   const eligible = !plusActive() && !trialState.used && !trialState.pending;
-  for (const button of document.querySelectorAll(".trial-start")) button.hidden = !eligible;
+  for (const button of document.querySelectorAll(".trial-start, .trial-note")) button.hidden = !eligible;
+  // Bandeau du haut : l'essai se propose, il ne démarre jamais sans ce clic.
+  const strip = $("trial-offer-strip");
+  if (strip) strip.hidden = !eligible;
+  document.body.classList.toggle("has-trial", eligible || (plusActive() && plusRecord?.plan === "trial"));
   // Avec l'essai proposé, l'écran des alertes manquées garde un seul bouton.
   for (const buy of document.querySelectorAll(".missed-lcd-buy")) buy.hidden = eligible;
 }
@@ -275,7 +280,6 @@ function renderTrialStrip(trial) {
   const strip = $("trial-strip");
   if (!strip) return;
   strip.hidden = !trial;
-  document.body.classList.toggle("has-trial", trial);
   if (!trial) return;
   const days = Math.max(1, Math.ceil((trialEndsAt(plusRecord) - Date.now()) / DAY_MS));
   $("trial-days").textContent = t("popup.trial.days", { days });

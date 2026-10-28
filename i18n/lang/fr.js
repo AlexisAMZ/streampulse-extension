@@ -281,7 +281,10 @@ export default {
       "days": "J-{{days}}",
       "body": "Essai StreamPulse+ · tout est débloqué",
       "subscribe": "S'abonner",
-      "start": "Essayer 7 jours gratuitement",
+      "start": "Débloquer les 7 jours",
+      "offerBadge": "7 J",
+      "offerBody": "7 jours de StreamPulse+ offerts · liés à ton compte Twitch",
+      "consent": "Sans carte. L'essai est lié au compte Twitch connecté sur ce navigateur : les Drops et badges se récupèrent sur ce compte.",
       "otherAccount": "Essai lié à un autre compte Twitch : Drops et badges en pause"
     },
     "missed": {

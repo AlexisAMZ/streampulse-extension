@@ -281,7 +281,10 @@ export default {
       "days": "{{days}}일 남음",
       "body": "StreamPulse+ 체험 · 모두 열림",
       "subscribe": "구독하기",
-      "start": "7일 무료 체험",
+      "start": "7일 잠금 해제",
+      "offerBadge": "7일",
+      "offerBody": "StreamPulse+ 7일 무료 · 내 Twitch 계정에 연결",
+      "consent": "카드 불필요. 체험은 이 브라우저에 로그인된 Twitch 계정에 연결되며, 드롭과 배지는 그 계정으로 받습니다.",
       "otherAccount": "체험이 다른 Twitch 계정에 연결됨: 드롭과 배지 일시 중지"
     },
     "missed": {

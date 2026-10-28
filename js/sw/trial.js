@@ -1,7 +1,7 @@
-// Essai StreamPulse+ de 7 jours : demandé une fois par appareil, à la première
-// installation, à la première mise à jour qui l'apporte (utilisateurs déjà
-// installés), ou par le bouton « Essayer 7 jours gratuitement ». Le serveur
-// tranche : il ne donne qu'un essai par appareil. Une panne réseau laisse la
+// Essai StreamPulse+ de 7 jours : jamais automatique. Il démarre seulement quand
+// l'utilisateur clique sur « Débloquer les 7 jours », car il envoie son compte
+// Twitch au serveur (l'essai y est lié). Le serveur tranche : un essai par
+// compte Twitch et par appareil. Une panne réseau laisse la
 // demande en attente ; elle repart au prochain réveil du service worker. Le
 // garde de la licence (license-guard.js) vérifie ensuite la signature.
 
@@ -46,17 +46,5 @@ export async function requestPendingTrial(deps) {
 export async function requestTrial(deps) {
   const stored = await deps.storage.get(TRIAL_STATE_KEY);
   await deps.storage.set({ [TRIAL_STATE_KEY]: { ...trialStateFrom(stored[TRIAL_STATE_KEY]), pending: true } });
-  return requestPendingTrial(deps);
-}
-
-/**
- * Installation ou mise à jour : l'essai est demandé une seule fois par
- * navigateur. Un état déjà noté (essai pris, refusé ou en attente) n'est
- * jamais redemandé ici, seulement repris s'il attendait le réseau.
- */
-export async function beginTrialOnce(deps) {
-  const stored = await deps.storage.get(TRIAL_STATE_KEY);
-  if (stored[TRIAL_STATE_KEY] !== undefined) return requestPendingTrial(deps);
-  await deps.storage.set({ [TRIAL_STATE_KEY]: { pending: true, used: false, at: deps.now ?? Date.now() } });
   return requestPendingTrial(deps);
 }

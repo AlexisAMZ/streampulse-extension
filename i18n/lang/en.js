@@ -319,7 +319,10 @@ export default {
       "days": "{{days}}d left",
       "body": "StreamPulse+ trial · everything unlocked",
       "subscribe": "Subscribe",
-      "start": "Try 7 days free",
+      "start": "Unlock 7 days",
+      "offerBadge": "7 D",
+      "offerBody": "7 days of StreamPulse+ free · linked to your Twitch account",
+      "consent": "No card. The trial is linked to the Twitch account signed in on this browser: Drops and badges are claimed on that account.",
       "otherAccount": "Trial linked to another Twitch account: Drops and badges paused"
     },
     "missed": {

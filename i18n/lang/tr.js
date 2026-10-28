@@ -281,7 +281,10 @@ export default {
       "days": "{{days}} gün",
       "body": "StreamPulse+ denemesi · her şey açık",
       "subscribe": "Abone ol",
-      "start": "7 gün ücretsiz dene",
+      "start": "7 günün kilidini aç",
+      "offerBadge": "7 G",
+      "offerBody": "7 gün ücretsiz StreamPulse+ · Twitch hesabına bağlı",
+      "consent": "Kart gerekmez. Deneme bu tarayıcıda açık olan Twitch hesabına bağlanır: Drops ve rozetler bu hesapta toplanır.",
       "otherAccount": "Deneme başka bir Twitch hesabına bağlı: Drops ve rozetler duraklatıldı"
     },
     "missed": {
