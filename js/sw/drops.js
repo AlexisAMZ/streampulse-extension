@@ -371,13 +371,27 @@ async function announceBadges(added) {
   }
 }
 
+/** Twitch exige Client-Integrity pour récupérer : après un refus, le worker passe la main aux onglets un moment. */
+const INTEGRITY_PAUSE_MS = 30 * 60_000;
+let integrityBlockedUntil = 0;
+
 export async function claimDropFromWorker(instanceId, auto) {
   let status = "";
   let ok = false;
+  if (Date.now() < integrityBlockedUntil) {
+    if (auto) await sendDropsCommand({ action: "claim", instanceId });
+    return false;
+  }
   try {
     ({ status } = await dropsClient.claim(instanceId));
     ok = true;
   } catch (error) {
+    if (error.code === "integrity") {
+      // Refus attendu hors de twitch.tv : l'onglet Twitch (qui a l'en-tête) récupère à la place.
+      integrityBlockedUntil = Date.now() + INTEGRITY_PAUSE_MS;
+      if (auto) await sendDropsCommand({ action: "claim", instanceId });
+      return false;
+    }
     console.warn("[StreamPulse] récupération du Drop impossible :", error.code || error.message);
   }
   const result = await dropsStore.recordClaim({ instanceId, ok, status, auto });

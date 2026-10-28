@@ -83,15 +83,17 @@ async function loadBaseIcons() {
 export async function syncMissedDot(state) {
   if (typeof OffscreenCanvas !== "function" || typeof createImageBitmap !== "function") return;
   try {
-    if (!unseenCount(state)) {
-      await chrome.action.setIcon({ path: Object.fromEntries(ICON_SIZES.map((size) => [size, `images/photos/${size}px.png`])) });
-      return;
-    }
+    // Icône dessinée même sans point : setIcon({ path }) échoue parfois dans le worker (« Failed to fetch »).
+    const withDot = unseenCount(state) > 0;
     const imageData = {};
     for (const [size, bitmap] of await loadBaseIcons()) {
       const canvas = new OffscreenCanvas(size, size);
       const ctx = canvas.getContext("2d");
       ctx.drawImage(bitmap, 0, 0, size, size);
+      if (!withDot) {
+        imageData[size] = ctx.getImageData(0, 0, size, size);
+        continue;
+      }
       const radius = size * 0.2;
       ctx.beginPath();
       ctx.arc(radius + 1, radius + 1, radius, 0, Math.PI * 2);
@@ -104,6 +106,7 @@ export async function syncMissedDot(state) {
     }
     await chrome.action.setIcon({ imageData });
   } catch (error) {
+    baseIcons = null; // Une lecture ratée ne doit pas rester en cache.
     console.warn("[StreamPulse] point des alertes manquées :", error?.message || error);
   }
 }

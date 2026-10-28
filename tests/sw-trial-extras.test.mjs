@@ -201,8 +201,11 @@ test("point : dessiné sur l'icône 16 et 32 px quand des alertes ne sont pas vu
     assert.ok(drawn.some(([kind, , r]) => kind === "dot" && r > 0));
     assert.ok(drawn.some(([kind, v]) => kind === "fill" && v === "#c6d4a0"), "point vert LCD");
     await syncMissedDot({ items: [{ id: "x", at: NOW }], seenAt: NOW });
+    const dots = drawn.filter(([kind]) => kind === "dot").length;
+    await syncMissedDot({ items: [{ id: "x", at: NOW }], seenAt: NOW + 1 });
     const plain = fake.calls.filter(([name]) => name === "action.setIcon").at(-1)[1];
-    assert.deepEqual(plain.path, { 16: "images/photos/16px.png", 32: "images/photos/32px.png" });
+    assert.deepEqual(Object.keys(plain.imageData), ["16", "32"], "icône redessinée sans passer par path");
+    assert.equal(drawn.filter(([kind]) => kind === "dot").length, dots, "aucun point ajouté");
   } finally {
     delete globalThis.OffscreenCanvas;
     delete globalThis.createImageBitmap;

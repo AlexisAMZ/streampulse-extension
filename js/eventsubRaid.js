@@ -314,7 +314,7 @@ async function createSubscription(userId) {
     if (resp.status === 400) {
       // Refus persistant (transport/auth incompatibles) : inutile de retenter.
       fatalAuthRejected = true;
-      console.warn("EventSub: souscriptions refusees par Twitch (400), repli IRC");
+      console.info("EventSub: souscriptions refusees par Twitch (400), repli IRC");
       stopEventSubRaid();
       return false;
     }

@@ -275,6 +275,11 @@ function renderReferral() {
 /** Code, filleuls et gains. `quiet` : rafraîchissement en arrière-plan, sans message d'attente. */
 async function fetchReferral({ quiet = false } = {}) {
   const status = $("referral-status");
+  // Essai StreamPulse+ : pas de clé de licence, le serveur répondrait 422.
+  if (!deps.getRecord()?.licenseKey) {
+    if (!quiet) setStatus("referral-status", "popup.referral.error");
+    return;
+  }
   status.dataset.busy = "1";
   if (!quiet) setStatus("referral-status", "popup.referral.loading");
   try {
