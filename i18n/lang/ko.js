@@ -281,7 +281,6 @@ export default {
       "days": "{{days}}일 남음",
       "body": "StreamPulse+ 체험 · 모두 열림",
       "subscribe": "구독하기",
-      "devReset": "Reset (dev)",
       "unlockedLine": "> StreamPulse+ 활성화",
       "unlockedCaption": "7일 동안 모두 열림. 카드 불필요.",
       "start": "7일 잠금 해제",

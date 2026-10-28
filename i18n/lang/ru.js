@@ -281,7 +281,6 @@ export default {
       "days": "{{days}} дн.",
       "body": "Пробный StreamPulse+ · всё открыто",
       "subscribe": "Подписаться",
-      "devReset": "Reset (dev)",
       "unlockedLine": "> StreamPulse+ включён",
       "unlockedCaption": "Всё открыто на 7 дней. Без карты.",
       "start": "Открыть 7 дней",

@@ -281,7 +281,6 @@ export default {
       "days": "{{days}} T.",
       "body": "StreamPulse+-Test · alles freigeschaltet",
       "subscribe": "Abonnieren",
-      "devReset": "Reset (dev)",
       "unlockedLine": "> StreamPulse+ aktiviert",
       "unlockedCaption": "7 Tage lang alles freigeschaltet. Ohne Kreditkarte.",
       "start": "7 Tage freischalten",

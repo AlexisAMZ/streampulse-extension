@@ -281,7 +281,6 @@ export default {
       "days": "{{days}} gg",
       "body": "Prova di StreamPulse+ · tutto sbloccato",
       "subscribe": "Abbonati",
-      "devReset": "Reset (dev)",
       "unlockedLine": "> StreamPulse+ attivato",
       "unlockedCaption": "Tutto sbloccato per 7 giorni. Senza carta.",
       "start": "Sblocca 7 giorni",

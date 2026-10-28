@@ -34,7 +34,6 @@ beforeEach(() => {
 
 const mods = {
   kick: () => import("../js/sw/kick-account.js"),
-  dev: () => import("../js/sw/dev-trial.js"),
   missed: () => import("../js/sw/missed.js"),
   reminder: () => import("../js/sw/trial-reminder.js"),
   notifications: () => import("../js/sw/notifications.js"),
@@ -71,41 +70,6 @@ test("kick : réponse refusée, identifiant illisible ou panne : chaîne vide", 
   assert.equal(await kickViewerId(), "");
   globalThis.fetch = async () => { throw new Error("offline"); };
   assert.equal(await kickViewerId(), "");
-});
-
-// ─── Réinitialisation de développement ───────────────────────────────────────
-
-test("dev : refusé pour une version des stores (update_url présent)", async () => {
-  const { resetTrialForDev, isDevInstall } = await mods.dev();
-  fake.runtime.getManifest = () => ({ version: "1", update_url: "https://clients2.google.com/service/update2/crx" });
-  await fake.storage.local.set({ streamPulsePlus: { plan: "trial" }, streamPulseTrial: { used: true } });
-  assert.equal(isDevInstall(), false);
-  assert.deepEqual(await resetTrialForDev(), { reset: false, reason: "not-dev" });
-  assert.ok(fake.storage.local.dump().streamPulsePlus, "rien n'est effacé");
-});
-
-test("dev : efface l'essai, son état, la marque Google, les rappels et les alertes manquées", async () => {
-  const { resetTrialForDev } = await mods.dev();
-  await fake.storage.local.set({
-    streamPulsePlus: { plan: "trial" },
-    streamPulseTrial: { used: true },
-    streamPulseTrialReminder: { count: 1 },
-    streamPulsePopupSeenAt: NOW,
-    streamPulseMissedAlerts: { items: [] },
-    betaGeneralPreferences: { theme: "dark" },
-  });
-  await fake.storage.sync.set({ streamPulseTrialTaken: true });
-  assert.deepEqual(await resetTrialForDev(), { reset: true, removedLicense: true });
-  assert.deepEqual(Object.keys(fake.storage.local.dump()), ["betaGeneralPreferences"]);
-  assert.deepEqual(fake.storage.sync.dump(), {});
-});
-
-test("dev : une vraie licence n'est jamais effacée", async () => {
-  const { resetTrialForDev } = await mods.dev();
-  const paid = { plan: "lifetime", licenseKey: "SP-AAAA-BBBB-CCCC-DDDD" };
-  await fake.storage.local.set({ streamPulsePlus: paid, streamPulseTrial: { used: true } });
-  assert.deepEqual(await resetTrialForDev(), { reset: true, removedLicense: false });
-  assert.deepEqual(fake.storage.local.dump().streamPulsePlus, paid);
 });
 
 // ─── Alertes manquées ─────────────────────────────────────────────────────────

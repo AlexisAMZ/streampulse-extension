@@ -11,7 +11,6 @@ import { EventLogStore, PreferenceStore, StatsStore } from "./stores.js";
 import { WatchTimeStore, currentGameOf, resolveChannelAvatar, watchTimeTabClaims } from "./watchtime.js";
 import { warnWith } from "./log.js";
 import { requestTrial } from "./trial.js";
-import { resetTrialForDev } from "./dev-trial.js";
 import { currentTwitchId } from "./drops.js";
 import { kickViewerId } from "./kick-account.js";
 import { DROPS_HISTORY_KEY, historyFrom, isHistoryEntry, pruneHistory } from "../drops-data.js";
@@ -263,11 +262,5 @@ export function handleImportHistoryCsv(request, sender, sendResponse) {
 /** Bouton « Essayer 7 jours gratuitement » : le serveur accorde l'essai s'il n'a jamais servi sur cet appareil. */
 export function handleStartTrial(request, sender, sendResponse) {
   respond(async () => ({ result: await requestTrial({ storage: chrome.storage.local, fetch: (...args) => fetch(...args), viewerId: currentTwitchId, kickId: kickViewerId, syncStorage: chrome.storage.sync, lang: async () => String((await PreferenceStore.get()).language || "") }) }), sendResponse, "startTrial");
-  return true;
-}
-
-/** Bouton « Dev · Réinitialiser l'essai » (extension non empaquetée seulement). */
-export function handleDevResetTrial(request, sender, sendResponse) {
-  respond(() => resetTrialForDev(), sendResponse, "devResetTrial");
   return true;
 }

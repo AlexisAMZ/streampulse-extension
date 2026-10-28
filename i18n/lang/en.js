@@ -319,7 +319,6 @@ export default {
       "days": "{{days}}d left",
       "body": "StreamPulse+ trial · everything unlocked",
       "subscribe": "Subscribe",
-      "devReset": "Reset (dev)",
       "unlockedLine": "> StreamPulse+ activated",
       "unlockedCaption": "Everything is unlocked for 7 days. No credit card.",
       "start": "Unlock 7 days",

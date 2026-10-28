@@ -4,14 +4,11 @@ import { pollStreamers } from "./polling.js";
 import { notifyIncomingRaid } from "./raids.js";
 import { streamerLiveState } from "./state.js";
 import { DataStore } from "./stores.js";
-import { resetTrialForDev } from "./dev-trial.js";
 
 // ─── Diagnostic : expose tot, meme si une erreur survient plus bas ───────────
 // Console du service worker (chrome://extensions → inspect du worker).
 export function installDebugTools() {
   self.__SP_DEBUG__ = {
-    /** Mode développeur : remet l'essai StreamPulse+ à zéro sur ce navigateur. */
-    resetTrial: resetTrialForDev,
     async fakeTitleChange(handle) {
       return this._fake(handle, "title", " [test StreamPulse]");
     },
