@@ -1135,6 +1135,11 @@ function bind() {
 
 /** Suit ou ne suit plus un badge : l'arrière-plan prévient au départ et avant la fin. */
 async function toggleBell(badgeId) {
+  // Alertes de badges : réservées à StreamPulse+.
+  if (!deps.isPlus()) {
+    deps.openPlus();
+    return;
+  }
   const now = Date.now();
   const badge = badges.badges.find((item) => item.id === badgeId);
   const live = Boolean(badge) && catalogBadges({ ...badges, badges: [badge] }, { status: "live", now, events: badgeEvents.events, added: badgeAdded.added }).length > 0;

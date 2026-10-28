@@ -255,10 +255,11 @@ export async function checkBadgeWatch() {
   const badges = catalogBadges(badgesFrom(stored), { status: "live", now, events: eventsFrom(stored).events, added: addedFrom(stored).added });
   // StreamPulse+ avec l'option : tout badge d'une journée ou moins prévient ; sinon, les événements de 2 h ou moins si les alertes de badges sont actives.
   const plus = isPlusActive(stored[PLUS_KEY]);
-  const shortMs = plus && limitedFrom(stored) ? LIMITED_EVENT_MS : prefs.badgeAlerts === true ? SHORT_EVENT_MS : 0;
+  // Toutes les alertes de badges sont réservées à StreamPulse+ : sans licence, rien ne part.
+  const shortMs = !plus ? 0 : limitedFrom(stored) ? LIMITED_EVENT_MS : prefs.badgeAlerts === true ? SHORT_EVENT_MS : 0;
   // Portée « tous les badges / jeux choisis » : jamais sans licence active.
   const scope = plus ? stored[BADGE_SCOPE_KEY] : null;
-  const { alerts, seen } = planBadgeAlerts({ badges, watch, seen: alertsSeenFrom(stored), shortMs, now, scope, baseline: stored[BADGE_ALERT_SEEN_KEY] === undefined });
+  const { alerts, seen } = planBadgeAlerts({ badges, watch: plus ? watch : {}, seen: alertsSeenFrom(stored), shortMs, now, scope, baseline: stored[BADGE_ALERT_SEEN_KEY] === undefined });
   // Un badge suivi dont plus rien ne se joue (obtenu, terminé) quitte la liste.
   const live = new Set(badges.map((badge) => badge.id));
   const all = catalogBadges(badgesFrom(stored), { now, events: eventsFrom(stored).events, added: addedFrom(stored).added });
@@ -342,13 +343,13 @@ export function checkBadgeAfterClaim() {
 
 
 
-/** Alerte pour les nouveaux badges : gratuits (réglage gratuit) ou tous (portée StreamPulse+). */
+/** Alerte pour les nouveaux badges (StreamPulse+) : gratuits (réglage « Nouveau badge ») ou tous (portée). */
 async function announceBadges(added) {
   if (!added?.length) return;
   const prefs = await PreferenceStore.get();
   const stored = await chrome.storage.local.get([PLUS_KEY, BADGE_SCOPE_KEY]);
   const scope = isPlusActive(stored[PLUS_KEY]) ? stored[BADGE_SCOPE_KEY] : null;
-  for (const badge of newBadgeAlerts(added, { scope, freeAlerts: prefs.badgeAlerts === true, isPaid: isPaidBadge })) {
+  for (const badge of newBadgeAlerts(added, { scope, freeAlerts: scope !== null && prefs.badgeAlerts === true, isPaid: isPaidBadge })) {
     await NotificationCenter.show({
       title: translateWithPrefs(prefs, "background.notifications.badgeTitle", { name: badge.title }),
       message: badge.description || badge.title,

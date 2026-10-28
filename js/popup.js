@@ -1251,6 +1251,7 @@ function syncDropsPlusLock() {
   const prefs = state.preferences || {};
   if (autoClaimDropsToggle) autoClaimDropsToggle.checked = plus && prefs.autoClaimDrops !== false;
   if (autoOpenInventoryToggle) autoOpenInventoryToggle.checked = plus && Boolean(prefs.autoOpenInventory);
+  if (badgeAlertsToggle) badgeAlertsToggle.checked = plus && prefs.badgeAlerts === true;
 }
 
 /** Sans licence, activer un réglage Drops ouvre l'offre au lieu d'enregistrer. */
@@ -1344,7 +1345,7 @@ function renderPreferences() {
     dropAlertsToggle.checked = prefs.dropAlerts !== false;
   }
   if (badgeAlertsToggle) {
-    badgeAlertsToggle.checked = prefs.badgeAlerts === true;
+    badgeAlertsToggle.checked = plusActive() && prefs.badgeAlerts === true;
   }
   if (raidAlertsToggle) {
     raidAlertsToggle.checked = prefs.raidAlerts !== false;
@@ -2670,6 +2671,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     if (badgeAlertsToggle) {
       badgeAlertsToggle.addEventListener("change", (e) => {
+        if (guardDropsPlus(e)) return;
         updatePreferences({ badgeAlerts: e.target.checked });
       });
     }
