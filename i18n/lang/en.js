@@ -304,11 +304,21 @@ export default {
       "failed": "Rejected",
       "note": "Results are estimated from how your points balance changes."
     },
+    "alertScope": {
+      "label": "Alert scope",
+      "allGames": "All games",
+      "someGames": "Chosen games",
+      "allBadges": "All badges"
+    },
+    "badgeScope": {
+      "title": "New badge alerts",
+      "body": "StreamPulse+ · A Chrome notification for every new badge, or only those from games you pick, as soon as it becomes available."
+    },
     "dropAlerts": {
       "title": "Drops alerts",
-      "lockedBody": "Get a notification when a Drops campaign starts on a game you follow: Valorant, CS2… StreamPulse+ only.",
+      "lockedBody": "A notification when a Drops campaign starts, on every game or only the ones you pick. StreamPulse+ only.",
       "toggle": "Notify on new campaigns",
-      "toggleBody": "The campaign list is refreshed when you visit Twitch: the alert goes out then, once per campaign.",
+      "toggleBody": "A Chrome notification for each new campaign, on every game or only the ones you pick. The list is refreshed whenever a Twitch tab is open.",
       "gamesLabel": "Followed games",
       "gamePlaceholder": "Add a game (Enter)",
       "removeGame": "Remove {{game}}"

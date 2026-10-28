@@ -266,11 +266,21 @@ export default {
       "failed": "拒否",
       "note": "結果はポイント残高の変化から推定しています。"
     },
+    "alertScope": {
+      "label": "通知の対象",
+      "allGames": "すべてのゲーム",
+      "someGames": "選んだゲーム",
+      "allBadges": "すべてのバッジ"
+    },
+    "badgeScope": {
+      "title": "新しいバッジの通知",
+      "body": "StreamPulse+ · 新しいバッジが入手可能になった瞬間に Chrome 通知。すべて、または選んだゲームのものだけ。"
+    },
     "dropAlerts": {
       "title": "Drops通知",
-      "lockedBody": "フォロー中のゲームでDropsキャンペーンが始まったら通知：Valorant、CS2など。StreamPulse+限定。",
+      "lockedBody": "ドロップのキャンペーンが始まったら通知。すべてのゲーム、または選んだゲームだけ。StreamPulse+ 限定。",
       "toggle": "新しいキャンペーンを通知",
-      "toggleBody": "キャンペーン一覧はTwitchを開いたときに更新されます：その時点で、キャンペーンごとに1回通知します。",
+      "toggleBody": "新しいキャンペーンごとに Chrome 通知。すべてのゲーム、または選んだゲームだけ。Twitch のタブが開いているときにリストを更新します。",
       "gamesLabel": "フォロー中のゲーム",
       "gamePlaceholder": "ゲームを追加（Enter）",
       "removeGame": "{{game}}を削除"

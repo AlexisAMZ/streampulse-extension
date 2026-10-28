@@ -266,11 +266,21 @@ export default {
       "failed": "Reddedildi",
       "note": "Sonuçlar puan bakiyendeki değişime göre tahmin edilir."
     },
+    "alertScope": {
+      "label": "Uyarı kapsamı",
+      "allGames": "Tüm oyunlar",
+      "someGames": "Seçilen oyunlar",
+      "allBadges": "Tüm rozetler"
+    },
+    "badgeScope": {
+      "title": "Yeni rozet uyarıları",
+      "body": "StreamPulse+ · Her yeni rozet için ya da yalnızca seçtiğin oyunlarınkiler için, kullanılabilir olduğu anda bir Chrome bildirimi."
+    },
     "dropAlerts": {
       "title": "Drops uyarıları",
-      "lockedBody": "Takip ettiğin bir oyunda Drops kampanyası başladığında bildirim: Valorant, CS2… Yalnızca StreamPulse+.",
+      "lockedBody": "Bir Drops kampanyası başladığında bildirim, tüm oyunlarda ya da yalnızca seçtiklerinde. Yalnızca StreamPulse+ ile.",
       "toggle": "Yeni kampanyalarda bildir",
-      "toggleBody": "Kampanya listesi Twitch'i ziyaret ettiğinde yenilenir: bildirim o anda, kampanya başına bir kez gelir.",
+      "toggleBody": "Her yeni kampanya için bir Chrome bildirimi, tüm oyunlarda ya da yalnızca seçtiklerinde. Liste bir Twitch sekmesi açıkken yenilenir.",
       "gamesLabel": "Takip edilen oyunlar",
       "gamePlaceholder": "Oyun ekle (Enter)",
       "removeGame": "{{game}} çıkar"

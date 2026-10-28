@@ -266,11 +266,21 @@ export default {
       "failed": "Recusada",
       "note": "Resultados estimados pela variação do seu saldo de pontos."
     },
+    "alertScope": {
+      "label": "Alcance do alerta",
+      "allGames": "Todos os jogos",
+      "someGames": "Jogos escolhidos",
+      "allBadges": "Todas as insígnias"
+    },
+    "badgeScope": {
+      "title": "Alertas de novas insígnias",
+      "body": "StreamPulse+ · Uma notificação do Chrome para cada nova insígnia, ou só as dos jogos que você escolher, assim que ficar disponível."
+    },
     "dropAlerts": {
       "title": "Alertas de Drops",
-      "lockedBody": "Uma notificação quando uma campanha de Drops começa num jogo que você segue: Valorant, CS2… Só StreamPulse+.",
+      "lockedBody": "Uma notificação quando uma campanha de Drops começa, em todos os jogos ou só nos que você escolher. Exclusivo do StreamPulse+.",
       "toggle": "Avisar sobre novas campanhas",
-      "toggleBody": "A lista de campanhas é atualizada quando você entra na Twitch: o aviso chega nesse momento, uma vez por campanha.",
+      "toggleBody": "Uma notificação do Chrome para cada nova campanha, em todos os jogos ou só nos que você escolher. A lista é atualizada quando uma aba da Twitch está aberta.",
       "gamesLabel": "Jogos seguidos",
       "gamePlaceholder": "Adicionar um jogo (Enter)",
       "removeGame": "Remover {{game}}"

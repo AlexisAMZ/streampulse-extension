@@ -266,11 +266,21 @@ export default {
       "failed": "Odrzucony",
       "note": "Wyniki szacowane na podstawie zmian salda punktów."
     },
+    "alertScope": {
+      "label": "Zakres alertu",
+      "allGames": "Wszystkie gry",
+      "someGames": "Wybrane gry",
+      "allBadges": "Wszystkie odznaki"
+    },
+    "badgeScope": {
+      "title": "Alerty o nowych odznakach",
+      "body": "StreamPulse+ · Powiadomienie Chrome o każdej nowej odznace albo tylko z wybranych gier, gdy tylko stanie się dostępna."
+    },
     "dropAlerts": {
       "title": "Alerty Drops",
-      "lockedBody": "Powiadomienie, gdy kampania Drops startuje w grze, którą śledzisz: Valorant, CS2… Tylko StreamPulse+.",
+      "lockedBody": "Powiadomienie, gdy startuje kampania Drops, we wszystkich grach lub tylko w wybranych. Tylko w StreamPulse+.",
       "toggle": "Powiadamiaj o nowych kampaniach",
-      "toggleBody": "Lista kampanii jest odświeżana, gdy wchodzisz na Twitcha: alert przychodzi wtedy, raz na kampanię.",
+      "toggleBody": "Powiadomienie Chrome o każdej nowej kampanii, we wszystkich grach lub tylko w wybranych. Lista odświeża się, gdy otwarta jest karta Twitcha.",
       "gamesLabel": "Śledzone gry",
       "gamePlaceholder": "Dodaj grę (Enter)",
       "removeGame": "Usuń {{game}}"

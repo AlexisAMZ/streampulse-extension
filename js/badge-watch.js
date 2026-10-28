@@ -4,7 +4,11 @@
 //   si les alertes de badges sont actives ;
 // - cloche : un badge suivi prévient à son démarrage (s'il n'était pas encore
 //   en cours quand on l'a suivi), puis avant sa fin.
+// - portée StreamPulse+ : tous les badges, ou ceux des jeux choisis
+//   (js/alert-scope.js), préviennent dès qu'ils deviennent disponibles.
 // Module pur : aucun accès à chrome.* ni au DOM. Testé par tests/badge-watch.test.mjs.
+
+import { SCOPE_ALL, normalizeScope, scopeMatches } from "./alert-scope.js";
 
 /** Badges suivis avec la cloche : { [badgeId]: { at, live } }. */
 export const BADGE_WATCH_KEY = "streamPulseBadgeWatch";
@@ -13,6 +17,9 @@ export const BADGE_ALERT_SEEN_KEY = "streamPulseBadgeAlertSeen";
 
 /** Bouton « badges temporaires » de l'onglet Badges (StreamPulse+) : booléen. */
 export const BADGE_LIMITED_KEY = "streamPulseBadgeLimited";
+
+/** Alertes badges StreamPulse+ : { enabled, mode, games, since } (js/alert-scope.js). */
+export const BADGE_SCOPE_KEY = "streamPulseBadgeAlertsScope";
 
 /** Un événement de cette durée ou moins est « court » (alerte gratuite). */
 export const SHORT_EVENT_MS = 2 * 3_600_000;
@@ -76,13 +83,16 @@ export function isShortEvent(event, maxMs = SHORT_EVENT_MS) {
 }
 
 /**
- * @param {{ badges: object[], watch: object, seen: object, shortMs: number, now: number, baseline?: boolean }} input
+ * @param {{ badges: object[], watch: object, seen: object, shortMs: number, now: number, baseline?: boolean, scope?: object }} input
+ *   `scope` : portée StreamPulse+ (déjà vérifiée côté licence) ; un badge de la
+ *   portée prévient à son démarrage, s'il a démarré après le réglage.
  *   `baseline` : premier passage, les départs déjà en cours sont notés comme vus sans prévenir.
  *   `shortMs` : durée en dessous de laquelle un badge prévient seul (0 = jamais).
  *   `badges` : sortie de catalogBadges (status, owned, event).
  * @returns {{ alerts: { badge: object, kind: "start" | "ending", endsAt: number }[], seen: object }}
  */
-export function planBadgeAlerts({ badges, watch, seen, shortMs, now, baseline = false }) {
+export function planBadgeAlerts({ badges, watch, seen, shortMs, now, baseline = false, scope = null }) {
+  const plusScope = normalizeScope(scope);
   const next = {};
   for (const [key, at] of Object.entries(seen)) if (now - at < SEEN_KEEP_MS) next[key] = at;
 
@@ -92,7 +102,8 @@ export function planBadgeAlerts({ badges, watch, seen, shortMs, now, baseline = 
     if (badge.status !== "live" || badge.owned || !event) continue;
     const base = `${badge.id}|${event.campaignId}|${event.dropId}`;
     const followed = watch[badge.id];
-    const wantsStart = isShortEvent(event, shortMs) || (followed && !followed.live);
+    const inScope = scopeMatches(plusScope, event.game) && !(event.startsAt > 0 && event.startsAt < plusScope.since);
+    const wantsStart = isShortEvent(event, shortMs) || (followed && !followed.live) || inScope;
     if (wantsStart && !next[`${base}|start`] && alerts.length < MAX_ALERTS_PER_PASS) {
       next[`${base}|start`] = now;
       if (!baseline) alerts.push({ badge, kind: "start", endsAt: event.endsAt });
@@ -105,4 +116,20 @@ export function planBadgeAlerts({ badges, watch, seen, shortMs, now, baseline = 
     }
   }
   return { alerts, seen: next };
+}
+
+/**
+ * Badges tout juste apparus au catalogue à annoncer. Avec la portée Plus
+ * « tous les badges », chacun (payant compris) ; sinon, les gratuits si
+ * l'alerte gratuite est active. Les badges d'un jeu choisi préviennent plus
+ * tard, à leur démarrage (planBadgeAlerts), quand leur jeu est connu.
+ * @param {object[]} added @param {{ scope?: object, freeAlerts: boolean, isPaid: (badge: object) => boolean }} options
+ * @returns {object[]} trois au plus
+ */
+export function newBadgeAlerts(added, { scope = null, freeAlerts, isPaid }) {
+  const plusScope = normalizeScope(scope);
+  const all = plusScope.enabled && plusScope.mode === SCOPE_ALL;
+  const list = Array.isArray(added) ? added : [];
+  const wanted = all ? list : freeAlerts ? list.filter((badge) => !isPaid(badge)) : [];
+  return wanted.slice(0, MAX_ALERTS_PER_PASS);
 }

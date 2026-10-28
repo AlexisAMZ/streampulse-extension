@@ -6,8 +6,9 @@
 import { t, getCurrentLanguage } from "./i18n.js";
 import { currentGroup, normalizeAuto } from "./badge-auto.js";
 import { BADGE_FREE_KEY, freeAvailable, freeUsedToday } from "./badge-free.js";
-import { BADGE_LIMITED_KEY, BADGE_WATCH_KEY, ENDING_SOON_MS, limitedFrom, toggleWatch, watchFrom } from "./badge-watch.js";
-import { DROP_ALERTS_KEY, MAX_GAMES, normalizeDropAlerts } from "./drop-alerts.js";
+import { BADGE_LIMITED_KEY, BADGE_SCOPE_KEY, BADGE_WATCH_KEY, ENDING_SOON_MS, limitedFrom, toggleWatch, watchFrom } from "./badge-watch.js";
+import { DROP_ALERTS_KEY } from "./drop-alerts.js";
+import { createScopeEditor } from "./popup-alert-scope.js";
 import {
   DROPS_KEYS,
   BADGE_AUTO_KEY,
@@ -76,10 +77,8 @@ const CAMPAIGNS_OLD_MS = 12 * 3_600_000;
 const BADGE_SORT_KEYS = Object.freeze({ live: "popup.drops.badgeSortLive", soon: "popup.drops.badgeSortSoon", ended: "popup.drops.badgeSortEnded", owned: "popup.drops.badgeSortOwned" });
 const BADGE_EMPTY_KEYS = Object.freeze({ live: "popup.drops.badgesEmptyLive", soon: "popup.drops.badgesEmptySoon", ended: "popup.drops.badgesEmptyEnded", owned: "popup.drops.badgesEmptyOwned" });
 const GIFT_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>';
-const CLOSE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
 
 /** Alertes de campagnes Drops (Plus) : { enabled, games }, lu comme le reste. */
-let dropAlerts = normalizeDropAlerts(null);
 
 let deps = { isPlus: () => false, openPlus: () => {} };
 let progress = progressFrom({});
@@ -555,57 +554,33 @@ function formatPlanDuration(minutes) {
 
 // ─── Panneau : alertes de campagnes (StreamPulse+) ────────────────────────────
 
-function saveDropAlerts() {
-  dropAlerts = normalizeDropAlerts(dropAlerts);
-  chrome.storage.local.set({ [DROP_ALERTS_KEY]: dropAlerts });
-}
+const dropScope = createScopeEditor({
+  key: DROP_ALERTS_KEY,
+  toggleId: "pref-drop-campaign-alerts",
+  modesId: "drop-alerts-modes",
+  gamesId: "drop-alerts-games",
+  lineId: "drop-alerts-line",
+  isPlus: () => deps.isPlus(),
+  openPlus: () => deps.openPlus(),
+});
 
-/** Chips des jeux suivis : un clic sur la croix retire, Entrée ajoute. */
-function renderDropAlertsGames() {
-  const host = $("drop-alerts-games");
-  if (!host) return;
-  const chips = dropAlerts.games.map((game) => {
-    const chip = el("span", "smart-term", game);
-    const remove = el("button");
-    remove.type = "button";
-    remove.innerHTML = CLOSE_ICON;
-    remove.setAttribute("aria-label", t("popup.dropAlerts.removeGame", { game }));
-    remove.addEventListener("click", () => {
-      dropAlerts = { ...dropAlerts, games: dropAlerts.games.filter((item) => item !== game) };
-      saveDropAlerts();
-      renderDropAlertsGames();
-    });
-    chip.append(remove);
-    return chip;
-  });
-  if (dropAlerts.games.length < MAX_GAMES) {
-    const add = el("input", "smart-add");
-    add.type = "text";
-    add.placeholder = t("popup.dropAlerts.gamePlaceholder");
-    add.setAttribute("aria-label", t("popup.dropAlerts.gamesLabel"));
-    add.addEventListener("keydown", (event) => {
-      if (event.key !== "Enter") return;
-      event.preventDefault();
-      const game = add.value.trim();
-      if (!game) return;
-      dropAlerts = { ...dropAlerts, games: [...dropAlerts.games, game] };
-      saveDropAlerts();
-      renderDropAlertsGames();
-      host.querySelector(".smart-add")?.focus();
-    });
-    chips.push(add);
-  }
-  host.replaceChildren(...chips);
-}
+const badgeScope = createScopeEditor({
+  key: BADGE_SCOPE_KEY,
+  toggleId: "badges-scope-toggle",
+  modesId: "badges-scope-modes",
+  gamesId: "badges-scope-games",
+  lineId: "badges-scope-line",
+  isPlus: () => deps.isPlus(),
+  openPlus: () => deps.openPlus(),
+});
 
 function renderDropAlerts() {
   const plus = deps.isPlus();
   if ($("drop-alerts-locked")) $("drop-alerts-locked").hidden = plus;
   if ($("drop-alerts-editor")) $("drop-alerts-editor").hidden = !plus;
-  if (!plus) return;
-  const toggle = $("pref-drop-campaign-alerts");
-  if (toggle && document.activeElement !== toggle) toggle.checked = dropAlerts.enabled;
-  renderDropAlertsGames();
+  if ($("badges-scope-lock")) $("badges-scope-lock").hidden = plus;
+  dropScope.render();
+  badgeScope.render();
 }
 
 // ─── Panneau : badges et récompenses ──────────────────────────────────────────
@@ -1043,10 +1018,8 @@ function bind() {
     openPanel();
   });
   $("drop-alerts-unlock")?.addEventListener("click", () => deps.openPlus());
-  $("pref-drop-campaign-alerts")?.addEventListener("change", (event) => {
-    dropAlerts = { ...dropAlerts, enabled: event.target.checked };
-    saveDropAlerts();
-  });
+  dropScope.bind();
+  badgeScope.bind();
   $("drops-filters")?.addEventListener("click", (event) => {
     const button = event.target.closest("[data-filter]");
     if (!button) return;
@@ -1219,12 +1192,13 @@ function toggleAuto(badgeId) {
 }
 
 async function reload() {
-  const stored = await chrome.storage.local.get([...DROPS_KEYS, PREFERENCES_KEY, BADGE_AUTO_KEY, BADGE_FREE_KEY, BADGE_WATCH_KEY, BADGE_LIMITED_KEY, DROP_ALERTS_KEY, REWARD_PLAN_KEY]);
+  const stored = await chrome.storage.local.get([...DROPS_KEYS, PREFERENCES_KEY, BADGE_AUTO_KEY, BADGE_FREE_KEY, BADGE_WATCH_KEY, BADGE_LIMITED_KEY, BADGE_SCOPE_KEY, DROP_ALERTS_KEY, REWARD_PLAN_KEY]);
   badgeAuto = normalizeAuto(stored[BADGE_AUTO_KEY]);
   badgeFree = stored[BADGE_FREE_KEY] || null;
   badgeWatch = watchFrom(stored);
   badgeLimited = limitedFrom(stored);
-  dropAlerts = normalizeDropAlerts(stored[DROP_ALERTS_KEY]);
+  dropScope.load(stored);
+  badgeScope.load(stored);
   progress = progressFrom(stored);
   campaigns = campaignsFrom(stored);
   rewards = rewardsFrom(stored);

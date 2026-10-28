@@ -316,11 +316,21 @@ export default {
       "failed": "مرفوض",
       "note": "النتائج تقديرية، تُستنتج من تغيّر رصيد نقاطك."
     },
+    "alertScope": {
+      "label": "نطاق التنبيه",
+      "allGames": "كل الألعاب",
+      "someGames": "ألعاب مختارة",
+      "allBadges": "كل الشارات"
+    },
+    "badgeScope": {
+      "title": "تنبيهات الشارات الجديدة",
+      "body": "StreamPulse+ · إشعار Chrome لكل شارة جديدة، أو فقط لشارات الألعاب التي تختارها، فور توفرها."
+    },
     "dropAlerts": {
       "title": "تنبيهات Drops",
-      "lockedBody": "احصل على إشعار عند بدء حملة Drops على لعبة تتابعها: Valorant وCS2… حصريًا في StreamPulse+.",
+      "lockedBody": "إشعار عند بدء حملة Drops، على كل الألعاب أو فقط التي تختارها. حصريًا مع StreamPulse+.",
       "toggle": "إشعار عند الحملات الجديدة",
-      "toggleBody": "تُحدَّث قائمة الحملات عند زيارتك Twitch: يصدر التنبيه حينها، مرة واحدة لكل حملة.",
+      "toggleBody": "إشعار Chrome لكل حملة جديدة، على كل الألعاب أو فقط التي تختارها. تُحدَّث القائمة عند فتح علامة تبويب Twitch.",
       "gamesLabel": "الألعاب المتابَعة",
       "gamePlaceholder": "أضف لعبة (Enter)",
       "removeGame": "إزالة {{game}}"

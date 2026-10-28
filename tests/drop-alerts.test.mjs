@@ -8,8 +8,8 @@ const HOUR = 3_600_000;
 const campaign = (id, game, extra = {}) => ({ id, game, startsAt: NOW - HOUR, endsAt: NOW + 10 * 24 * HOUR, status: "ACTIVE", name: `Campagne ${game}`, ...extra });
 
 test("normalizeDropAlerts : réglages nettoyés, dédupliqués, plafonnés", () => {
-  assert.deepEqual(normalizeDropAlerts(null), { enabled: false, games: [] });
-  assert.deepEqual(normalizeDropAlerts({ enabled: true, games: [" Valorant ", "valorant", "", "CS2"] }), { enabled: true, games: ["Valorant", "CS2"] });
+  assert.deepEqual(normalizeDropAlerts(null), { enabled: false, mode: "games", games: [], since: 0 });
+  assert.deepEqual(normalizeDropAlerts({ enabled: true, games: [" Valorant ", "valorant", "", "CS2"] }), { enabled: true, mode: "games", games: ["Valorant", "CS2"], since: 0 });
   const many = normalizeDropAlerts({ enabled: true, games: Array.from({ length: 30 }, (_, i) => `Jeu ${i}`) });
   assert.equal(many.games.length, 12);
 });
@@ -73,4 +73,21 @@ test("campaignAlerts : purge des déjà-vues sorties de la liste, plafonnées", 
 
 test("DROP_ALERTS_KEY : la clé de stockage ne bouge pas", () => {
   assert.equal(DROP_ALERTS_KEY, "streamPulseDropAlerts");
+});
+
+test("campaignAlerts : mode tous les jeux, sans liste de jeux", () => {
+  const settings = { enabled: true, mode: "all", games: [] };
+  const seed = campaignAlerts([campaign("c1", "Valorant")], settings, seenFrom(null), NOW);
+  assert.deepEqual(seed.alerts, []);
+  const next = campaignAlerts([campaign("c1", "Valorant"), campaign("c2", "Rust")], settings, seenFrom(seed.seen), NOW + HOUR);
+  assert.deepEqual(next.alerts.map((c) => c.id), ["c2"]);
+});
+
+test("campaignAlerts : une campagne déjà en course quand la portée change ne prévient pas", () => {
+  const settings = { enabled: true, mode: "all", since: NOW };
+  const seen = { at: NOW - 30 * 24 * HOUR, ids: [] };
+  const list = [campaign("before", "Valorant", { startsAt: NOW - HOUR }), campaign("after", "Rust", { startsAt: NOW + 60_000 })];
+  const result = campaignAlerts(list, settings, seen, NOW + 2 * 60_000);
+  assert.deepEqual(result.alerts.map((c) => c.id), ["after"]);
+  assert.deepEqual([...result.seen.ids].sort(), ["after", "before"]);
 });

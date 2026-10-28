@@ -4,8 +4,9 @@ import { createBadgeAuto, watchProbe } from "../badge-auto-worker.js";
 import { PLUS_KEY, isPlusActive } from "../plus.js";
 import { BADGE_ADDED_KEY, BADGE_AUTO_KEY, BADGE_EVENTS_KEY, CLAIM_OK_STATUSES, DROPS_BADGES_KEY, DROPS_CAMPAIGNS_KEY, campaignsFrom } from "../drops-data.js";
 import { addedFrom, badgesFrom, catalogBadges, eventsFrom, isPaidBadge } from "../badges-data.js";
-import { BADGE_ALERT_SEEN_KEY, BADGE_LIMITED_KEY, BADGE_WATCH_KEY, LIMITED_EVENT_MS, SHORT_EVENT_MS, formatTimeLeft, isShortEvent, limitedFrom, planBadgeAlerts, seenFrom as alertsSeenFrom, watchFrom } from "../badge-watch.js";
+import { BADGE_ALERT_SEEN_KEY, BADGE_LIMITED_KEY, BADGE_SCOPE_KEY, BADGE_WATCH_KEY, LIMITED_EVENT_MS, SHORT_EVENT_MS, formatTimeLeft, isShortEvent, limitedFrom, newBadgeAlerts, planBadgeAlerts, seenFrom as alertsSeenFrom, watchFrom } from "../badge-watch.js";
 import { DROP_ALERTS_KEY, DROP_ALERTS_SEEN_KEY, campaignAlerts, normalizeDropAlerts, seenFrom } from "../drop-alerts.js";
+import { scopeActive } from "../alert-scope.js";
 import { createDropsClient } from "../drops-gql.js";
 import { createDropsStore } from "../drops-store.js";
 import { createPointsStore } from "../points-store.js";
@@ -98,7 +99,7 @@ const CAMPAIGN_ALERTS_PER_READ = 3;
 export async function checkDropCampaignAlerts() {
   const stored = await chrome.storage.local.get([PLUS_KEY, DROP_ALERTS_KEY, DROP_ALERTS_SEEN_KEY, DROPS_CAMPAIGNS_KEY]);
   const settings = normalizeDropAlerts(stored[DROP_ALERTS_KEY]);
-  if (!settings.enabled || !settings.games.length) return;
+  if (!scopeActive(settings)) return;
   if (!isPlusActive(stored[PLUS_KEY])) return;
   const { alerts, seen } = campaignAlerts(campaignsFrom(stored).campaigns, settings, seenFrom(stored[DROP_ALERTS_SEEN_KEY]), Date.now());
   await chrome.storage.local.set({ [DROP_ALERTS_SEEN_KEY]: seen });
@@ -244,14 +245,17 @@ const BADGE_ALERT_KEYS = Object.freeze({
  * lecture du catalogue ; chaque alerte part une seule fois.
  */
 export async function checkBadgeWatch() {
-  const stored = await chrome.storage.local.get([DROPS_BADGES_KEY, BADGE_EVENTS_KEY, BADGE_ADDED_KEY, BADGE_WATCH_KEY, BADGE_ALERT_SEEN_KEY, BADGE_LIMITED_KEY, PLUS_KEY]);
+  const stored = await chrome.storage.local.get([DROPS_BADGES_KEY, BADGE_EVENTS_KEY, BADGE_ADDED_KEY, BADGE_WATCH_KEY, BADGE_ALERT_SEEN_KEY, BADGE_LIMITED_KEY, BADGE_SCOPE_KEY, PLUS_KEY]);
   const prefs = await PreferenceStore.get();
   const now = Date.now();
   const watch = watchFrom(stored);
   const badges = catalogBadges(badgesFrom(stored), { status: "live", now, events: eventsFrom(stored).events, added: addedFrom(stored).added });
   // StreamPulse+ avec l'option : tout badge d'une journée ou moins prévient ; sinon, les événements de 2 h ou moins si les alertes de badges sont actives.
-  const shortMs = isPlusActive(stored[PLUS_KEY]) && limitedFrom(stored) ? LIMITED_EVENT_MS : prefs.badgeAlerts === true ? SHORT_EVENT_MS : 0;
-  const { alerts, seen } = planBadgeAlerts({ badges, watch, seen: alertsSeenFrom(stored), shortMs, now, baseline: stored[BADGE_ALERT_SEEN_KEY] === undefined });
+  const plus = isPlusActive(stored[PLUS_KEY]);
+  const shortMs = plus && limitedFrom(stored) ? LIMITED_EVENT_MS : prefs.badgeAlerts === true ? SHORT_EVENT_MS : 0;
+  // Portée « tous les badges / jeux choisis » : jamais sans licence active.
+  const scope = plus ? stored[BADGE_SCOPE_KEY] : null;
+  const { alerts, seen } = planBadgeAlerts({ badges, watch, seen: alertsSeenFrom(stored), shortMs, now, scope, baseline: stored[BADGE_ALERT_SEEN_KEY] === undefined });
   // Un badge suivi dont plus rien ne se joue (obtenu, terminé) quitte la liste.
   const live = new Set(badges.map((badge) => badge.id));
   const all = catalogBadges(badgesFrom(stored), { now, events: eventsFrom(stored).events, added: addedFrom(stored).added });
@@ -335,13 +339,13 @@ export function checkBadgeAfterClaim() {
 
 
 
-/** Alerte pour les nouveaux badges gratuits (3 au plus d'un coup). */
-async function announceBadges(badges) {
-  const free = badges.filter((badge) => !isPaidBadge(badge)).slice(0, 3);
-  if (!free.length) return;
+/** Alerte pour les nouveaux badges : gratuits (réglage gratuit) ou tous (portée StreamPulse+). */
+async function announceBadges(added) {
+  if (!added?.length) return;
   const prefs = await PreferenceStore.get();
-  if (!prefs.badgeAlerts) return;
-  for (const badge of free) {
+  const stored = await chrome.storage.local.get([PLUS_KEY, BADGE_SCOPE_KEY]);
+  const scope = isPlusActive(stored[PLUS_KEY]) ? stored[BADGE_SCOPE_KEY] : null;
+  for (const badge of newBadgeAlerts(added, { scope, freeAlerts: prefs.badgeAlerts === true, isPaid: isPaidBadge })) {
     await NotificationCenter.show({
       title: translateWithPrefs(prefs, "background.notifications.badgeTitle", { name: badge.title }),
       message: badge.description || badge.title,

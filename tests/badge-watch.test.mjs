@@ -137,3 +137,27 @@ test("l'état de départ ne coupe pas le rappel de fin d'un badge suivi", () => 
   const result = plan([closing], { baseline: true, watch: { x: { at: NOW - HOUR, live: true } } });
   assert.deepEqual(kinds(result), ["x:ending"]);
 });
+
+test("portée Plus « jeux choisis » : un badge du jeu prévient à son démarrage, pas les autres", async () => {
+  const scope = { enabled: true, mode: "games", games: ["Valorant"], since: NOW - HOUR };
+  const long = (id, game) => badge(id, NOW - MIN, NOW + 10 * 24 * HOUR, { event: { campaignId: id, dropId: "d", startsAt: NOW - MIN, endsAt: NOW + 10 * 24 * HOUR, game } });
+  const result = plan([long("v", "VALORANT"), long("r", "Rust")], { scope, shortMs: 0 });
+  assert.deepEqual(kinds(result), ["v:start"]);
+  assert.deepEqual(kinds(plan([long("v", "Valorant")], { scope, shortMs: 0, seen: result.seen })), []);
+});
+
+test("portée Plus « tous » : badges déjà en cours au réglage ignorés, nouveaux annoncés", async () => {
+  const scope = { enabled: true, mode: "all", since: NOW - 10 * MIN };
+  const ev = (id, startsAt) => badge(id, startsAt, NOW + 3 * 24 * HOUR, { event: { campaignId: id, dropId: "d", startsAt, endsAt: NOW + 3 * 24 * HOUR, game: "Rust" } });
+  assert.deepEqual(kinds(plan([ev("old", NOW - HOUR), ev("new", NOW - MIN)], { scope, shortMs: 0 })), ["new:start"]);
+  assert.deepEqual(kinds(plan([ev("new", NOW - MIN)], { scope: null, shortMs: 0 })), []);
+});
+
+test("newBadgeAlerts : tous avec la portée Plus, gratuits sinon, rien éteint", async () => {
+  const { newBadgeAlerts } = await import("../js/badge-watch.js");
+  const added = [{ id: "a", paid: false }, { id: "b", paid: true }];
+  const isPaid = (b) => b.paid;
+  assert.deepEqual(newBadgeAlerts(added, { scope: { enabled: true, mode: "all" }, freeAlerts: false, isPaid }).map((b) => b.id), ["a", "b"]);
+  assert.deepEqual(newBadgeAlerts(added, { scope: null, freeAlerts: true, isPaid }).map((b) => b.id), ["a"]);
+  assert.deepEqual(newBadgeAlerts(added, { scope: { enabled: true, mode: "games", games: ["Rust"] }, freeAlerts: false, isPaid }), []);
+});

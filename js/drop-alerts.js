@@ -1,5 +1,5 @@
 // Alertes de campagnes Drops (StreamPulse+) : prévenir quand une campagne
-// démarre sur un jeu suivi. Module pur : aucun accès à chrome.* ni au DOM.
+// démarre, sur tous les jeux ou sur les jeux choisis (js/alert-scope.js). Module pur : aucun accès à chrome.* ni au DOM.
 // Testé par tests/drop-alerts.test.mjs. Les campagnes viennent de la liste
 // relue par les onglets Twitch (Twitch refuse la liste au service worker, qui
 // n'a pas l'en-tête Client-Integrity) : l'alerte part à chaque nouvelle liste,
@@ -7,30 +7,18 @@
 
 import { isActiveCampaign, isPlainObject, list } from "./drops-data.js";
 import { sameGame } from "./badges-data.js";
+import { normalizeScope, scopeMatches } from "./alert-scope.js";
 
 export const DROP_ALERTS_KEY = "streamPulseDropAlerts";
 export const DROP_ALERTS_SEEN_KEY = "streamPulseDropAlertsSeen";
 
-export const MAX_GAMES = 12;
+export { MAX_GAMES } from "./alert-scope.js";
 export const MAX_SEEN = 400;
 /** Une campagne démarrée depuis plus longtemps n'est plus une actu : pas d'alerte. */
 const FRESH_CAMPAIGN_MS = 7 * 86_400_000;
 
-/** Réglages lus du storage : { enabled, games } nettoyé, dédupliqué. */
-export function normalizeDropAlerts(stored) {
-  const value = isPlainObject(stored) ? stored : {};
-  const seen = new Set();
-  const games = [];
-  for (const raw of list(value.games)) {
-    const game = String(raw ?? "").trim().slice(0, 60);
-    const key = game.toLowerCase();
-    if (!game || seen.has(key)) continue;
-    seen.add(key);
-    games.push(game);
-    if (games.length >= MAX_GAMES) break;
-  }
-  return { enabled: value.enabled === true, games };
-}
+/** Réglages lus du storage : { enabled, mode ("all" | "games"), games, since }. */
+export const normalizeDropAlerts = normalizeScope;
 
 /** Campagnes déjà signalées : { at, ids }. `at` vaut 0 tant que rien n'est noté. */
 export function seenFrom(stored) {
@@ -57,7 +45,8 @@ export function gameMatches(campaignGame, followed) {
  *
  * @returns {{ alerts: object[], seen: { at: number, ids: string[] } }}
  */
-export function campaignAlerts(campaigns, settings, seen, now) {
+export function campaignAlerts(campaigns, rawSettings, seen, now) {
+  const settings = normalizeScope(rawSettings);
   const known = new Set(seen.ids);
   const alerts = [];
   const ids = [...seen.ids];
@@ -65,11 +54,13 @@ export function campaignAlerts(campaigns, settings, seen, now) {
   for (const campaign of list(campaigns)) {
     if (!isPlainObject(campaign) || typeof campaign.id !== "string" || !campaign.id) continue;
     inList.add(campaign.id);
-    if (!settings.enabled || !gameMatches(campaign.game, settings.games)) continue;
+    if (!scopeMatches(settings, campaign.game)) continue;
     if (!isActiveCampaign(campaign, now) || known.has(campaign.id)) continue;
     known.add(campaign.id);
     ids.push(campaign.id);
-    if (seen.at && campaign.startsAt && now - campaign.startsAt <= FRESH_CAMPAIGN_MS) alerts.push(campaign);
+    // Une campagne déjà en course quand la portée a changé est notée sans alerte.
+    const fresh = campaign.startsAt && now - campaign.startsAt <= FRESH_CAMPAIGN_MS && campaign.startsAt >= (settings.since || 0);
+    if (seen.at && fresh) alerts.push(campaign);
   }
   // Les campagnes sorties de la liste (terminées depuis une semaine) quittent
   // les déjà-vues, pour ne pas gonfler ; la liste reste plafonnée en dernier

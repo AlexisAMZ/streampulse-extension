@@ -266,11 +266,21 @@ export default {
       "failed": "거부됨",
       "note": "결과는 포인트 잔액 변화로 추정합니다."
     },
+    "alertScope": {
+      "label": "알림 범위",
+      "allGames": "모든 게임",
+      "someGames": "선택한 게임",
+      "allBadges": "모든 배지"
+    },
+    "badgeScope": {
+      "title": "새 배지 알림",
+      "body": "StreamPulse+ · 새 배지가 생기는 즉시 Chrome 알림. 모든 배지 또는 선택한 게임의 배지만."
+    },
     "dropAlerts": {
       "title": "Drops 알림",
-      "lockedBody": "팔로우한 게임에서 Drops 캠페인이 시작되면 알림: Valorant, CS2 등. StreamPulse+ 전용.",
+      "lockedBody": "드롭 캠페인이 시작되면 알림. 모든 게임 또는 선택한 게임만. StreamPulse+ 전용.",
       "toggle": "새 캠페인 알림",
-      "toggleBody": "캠페인 목록은 Twitch를 방문할 때 갱신됩니다: 그때 캠페인당 한 번 알림을 보냅니다.",
+      "toggleBody": "새 캠페인마다 Chrome 알림. 모든 게임 또는 선택한 게임만. Twitch 탭이 열려 있을 때 목록을 새로 고칩니다.",
       "gamesLabel": "팔로우한 게임",
       "gamePlaceholder": "게임 추가(Enter)",
       "removeGame": "{{game}} 제거"

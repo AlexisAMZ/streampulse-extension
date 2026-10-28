@@ -266,11 +266,21 @@ export default {
       "failed": "Abgelehnt",
       "note": "Ergebnisse geschätzt anhand der Entwicklung deines Kanalpunkte-Guthabens."
     },
+    "alertScope": {
+      "label": "Umfang der Benachrichtigung",
+      "allGames": "Alle Spiele",
+      "someGames": "Ausgewählte Spiele",
+      "allBadges": "Alle Abzeichen"
+    },
+    "badgeScope": {
+      "title": "Benachrichtigungen für neue Abzeichen",
+      "body": "StreamPulse+ · Eine Chrome-Benachrichtigung für jedes neue Abzeichen oder nur für die deiner gewählten Spiele, sobald es verfügbar ist."
+    },
     "dropAlerts": {
       "title": "Drops-Alarme",
-      "lockedBody": "Eine Benachrichtigung, wenn eine Drops-Kampagne für ein Spiel von dir startet: Valorant, CS2… Nur StreamPulse+.",
+      "lockedBody": "Eine Benachrichtigung, wenn eine Drops-Kampagne startet, für alle Spiele oder nur deine ausgewählten. Nur mit StreamPulse+.",
       "toggle": "Bei neuen Kampagnen melden",
-      "toggleBody": "Die Kampagnenliste wird aktualisiert, wenn du Twitch besuchst: Die Meldung kommt dann, einmal pro Kampagne.",
+      "toggleBody": "Eine Chrome-Benachrichtigung pro neuer Kampagne, für alle Spiele oder nur deine ausgewählten. Die Liste wird aktualisiert, sobald ein Twitch-Tab offen ist.",
       "gamesLabel": "Verfolgte Spiele",
       "gamePlaceholder": "Spiel hinzufügen (Enter)",
       "removeGame": "{{game}} entfernen"

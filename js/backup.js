@@ -17,6 +17,8 @@ export const MAX_BACKUP_BYTES = 5 * 1024 * 1024;
 import { JOURNAL_LIMIT, POINTS_CHANNELS_KEY, POINTS_DAILY_KEY, POINTS_JOURNAL_KEY } from "./points-data.js";
 import { DROPS_HISTORY_KEY, HISTORY_LIMIT as DROPS_HISTORY_LIMIT, isHistoryEntry as isDropEntry } from "./drops-data.js";
 import { DROP_ALERTS_KEY, normalizeDropAlerts } from "./drop-alerts.js";
+import { mergeScope, normalizeScope } from "./alert-scope.js";
+import { BADGE_SCOPE_KEY } from "./badge-watch.js";
 import { WATCH_LATER_KEY, normalizeWatchLater } from "./watch-later.js";
 import { LINKED_ACCOUNTS_KEY, normalizeLinkedAccounts } from "./linked-accounts.js";
 
@@ -40,14 +42,14 @@ export const BACKUP_KEYS = [
   STREAMERS, PREFERENCES, STATS, WATCH_MONTHLY, WATCH_DAILY, PROFILE,
   PINNED, GROUPS, HISTORY, SMART_ALERTS, COSMETICS, LAYOUT, PREDICTION_RULE,
   POINTS_DAILY_KEY, POINTS_JOURNAL_KEY, POINTS_CHANNELS_KEY, DROPS_HISTORY_KEY,
-  DROP_ALERTS_KEY, WATCH_LATER_KEY, LINKED_ACCOUNTS_KEY,
+  DROP_ALERTS_KEY, BADGE_SCOPE_KEY, WATCH_LATER_KEY, LINKED_ACCOUNTS_KEY,
 ];
 
 /**
  * Reglages proprement dits : par defaut ceux de l'installation courante gagnent ;
  * avec l'option replaceSettings, ceux de la sauvegarde les remplacent.
  */
-const SETTINGS_KEYS = [PREFERENCES, LAYOUT, COSMETICS, PREDICTION_RULE, SMART_ALERTS, DROP_ALERTS_KEY];
+const SETTINGS_KEYS = [PREFERENCES, LAYOUT, COSMETICS, PREDICTION_RULE, SMART_ALERTS, DROP_ALERTS_KEY, BADGE_SCOPE_KEY];
 
 /** La sauvegarde validee contient-elle des reglages a proposer de restaurer ? */
 export function hasSettings(data) {
@@ -73,6 +75,7 @@ export function buildBackup(storage, { version, now = new Date() }) {
   for (const key of BACKUP_KEYS) {
     if (!storage || storage[key] === undefined) continue;
     if (key === DROP_ALERTS_KEY) data[key] = normalizeDropAlerts(storage[key]);
+    else if (key === BADGE_SCOPE_KEY) data[key] = normalizeScope(storage[key]);
     else if (key === WATCH_LATER_KEY) data[key] = normalizeWatchLater(storage[key]);
     else if (key === LINKED_ACCOUNTS_KEY) data[key] = normalizeLinkedAccounts(storage[key]);
     else data[key] = storage[key];
@@ -228,7 +231,8 @@ function cleanValue(key, value) {
     case SMART_ALERTS:
       return Array.isArray(value) || isPlainObject(value) ? value : undefined;
     case DROP_ALERTS_KEY:
-      return isPlainObject(value) ? normalizeDropAlerts(value) : undefined;
+    case BADGE_SCOPE_KEY:
+      return isPlainObject(value) ? normalizeScope(value) : undefined;
     case WATCH_LATER_KEY:
       return Array.isArray(value) ? normalizeWatchLater(value) : undefined;
     case LINKED_ACCOUNTS_KEY:
@@ -435,7 +439,8 @@ export function mergeBackup(current, incoming, { replaceSettings = false } = {})
         data[key] = mergeDropsHistory(Array.isArray(now[key]) ? now[key] : [], value);
         break;
       case DROP_ALERTS_KEY:
-        data[key] = mergeDropAlerts(now[key], value, replaceSettings);
+      case BADGE_SCOPE_KEY:
+        data[key] = mergeScope(now[key], value, replaceSettings);
         break;
       case WATCH_LATER_KEY:
         data[key] = mergeById(normalizeWatchLater(now[key]), normalizeWatchLater(value));
@@ -461,12 +466,6 @@ function mergeHistory(local, incoming) {
     if (entry && typeof entry.id === "string") entries.set(entry.id, entry);
   }
   return { ...b, ...a, entries: [...entries.values()].sort((x, y) => (y.endedAt || 0) - (x.endedAt || 0)).slice(0, 60) };
-}
-
-function mergeDropAlerts(local, incoming, replace) {
-  const before = normalizeDropAlerts(local);
-  const after = normalizeDropAlerts(incoming);
-  return { enabled: replace ? after.enabled : before.enabled || after.enabled, games: [...new Set([...before.games, ...after.games])].slice(0, 12) };
 }
 
 function mergeSmartAlerts(local, incoming, replace) {

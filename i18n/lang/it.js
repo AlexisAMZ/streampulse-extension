@@ -266,11 +266,21 @@ export default {
       "failed": "Rifiutata",
       "note": "Risultati stimati in base all'andamento del tuo saldo punti."
     },
+    "alertScope": {
+      "label": "Ambito dell'avviso",
+      "allGames": "Tutti i giochi",
+      "someGames": "Giochi scelti",
+      "allBadges": "Tutti i badge"
+    },
+    "badgeScope": {
+      "title": "Avvisi nuovi badge",
+      "body": "StreamPulse+ · Una notifica di Chrome per ogni nuovo badge, o solo per quelli dei giochi che scegli, appena diventa disponibile."
+    },
     "dropAlerts": {
       "title": "Avvisi Drops",
-      "lockedBody": "Una notifica quando parte una campagna Drops su un gioco che segui: Valorant, CS2… Solo con StreamPulse+.",
+      "lockedBody": "Una notifica quando inizia una campagna Drops, su tutti i giochi o solo su quelli che scegli. Solo con StreamPulse+.",
       "toggle": "Avvisa per le nuove campagne",
-      "toggleBody": "L'elenco delle campagne viene riletto quando apri Twitch: l'avviso parte in quel momento, una volta per campagna.",
+      "toggleBody": "Una notifica di Chrome per ogni nuova campagna, su tutti i giochi o solo su quelli che scegli. L'elenco si aggiorna quando è aperta una scheda di Twitch.",
       "gamesLabel": "Giochi seguiti",
       "gamePlaceholder": "Aggiungi un gioco (Invio)",
       "removeGame": "Rimuovi {{game}}"

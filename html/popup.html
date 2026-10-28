@@ -942,18 +942,22 @@
 
           <h3 class="drops-section"><span data-i18n="popup.dropAlerts.title">Alertes Drops</span><span class="plus-tag" data-i18n="popup.plus.badge">PLUS</span></h3>
           <div class="smart-locked" id="drop-alerts-locked">
-            <p class="settings-description" data-i18n="popup.dropAlerts.lockedBody">Une notification quand une campagne de Drops démarre sur un jeu que tu suis : Valorant, CS2… Réservé à StreamPulse+.</p>
+            <p class="settings-description" data-i18n="popup.dropAlerts.lockedBody">Une notification quand une campagne de Drops démarre, sur tous les jeux ou seulement ceux que tu choisis. Réservé à StreamPulse+.</p>
             <button class="button button-primary" id="drop-alerts-unlock" type="button" data-i18n="popup.smart.unlock">Débloquer</button>
           </div>
           <div class="drop-alerts" id="drop-alerts-editor" hidden>
             <label class="settings-toggle">
               <span class="settings-text">
                 <span class="settings-title" data-i18n="popup.dropAlerts.toggle">Prévenir aux nouvelles campagnes</span>
-                <span class="settings-description" data-i18n="popup.dropAlerts.toggleBody">La liste des campagnes est relue quand tu passes sur Twitch : l'alerte part à ce moment-là, une seule fois par campagne.</span>
+                <span class="settings-description" data-i18n="popup.dropAlerts.toggleBody">Une notification Chrome par nouvelle campagne, sur tous les jeux ou ceux que tu choisis. La liste est relue dès qu'un onglet Twitch est ouvert.</span>
               </span>
               <input id="pref-drop-campaign-alerts" type="checkbox" role="switch" />
             </label>
-            <div class="smart-line drop-alerts-line">
+            <div class="segmented alert-scope-modes" id="drop-alerts-modes" role="group" data-i18n-attr-ariaLabel="popup.alertScope.label">
+              <button type="button" class="pf-btn" aria-pressed="false" data-mode="all" data-i18n="popup.alertScope.allGames">Tous les jeux</button>
+              <button type="button" class="pf-btn active" aria-pressed="true" data-mode="games" data-i18n="popup.alertScope.someGames">Jeux choisis</button>
+            </div>
+            <div class="smart-line drop-alerts-line" id="drop-alerts-line">
               <span data-i18n="popup.dropAlerts.gamesLabel">Jeux suivis</span>
               <div class="smart-terms" id="drop-alerts-games"></div>
             </div>
@@ -1001,6 +1005,23 @@
                 </span>
                 <input id="badges-limited" type="checkbox" role="switch" />
               </label>
+              <div class="drop-alerts badges-scope">
+                <label class="settings-toggle">
+                  <span class="settings-text">
+                    <span class="settings-title"><span data-i18n="popup.badgeScope.title">Alertes nouveaux badges</span><span class="plus-tag" id="badges-scope-lock" data-i18n="popup.plus.badge">PLUS</span></span>
+                    <span class="settings-description" data-i18n="popup.badgeScope.body">StreamPulse+ · Une notification Chrome pour chaque nouveau badge, ou seulement ceux des jeux que tu choisis, dès qu'il devient disponible.</span>
+                  </span>
+                  <input id="badges-scope-toggle" type="checkbox" role="switch" />
+                </label>
+                <div class="segmented alert-scope-modes" id="badges-scope-modes" role="group" data-i18n-attr-ariaLabel="popup.alertScope.label">
+                  <button type="button" class="pf-btn active" aria-pressed="true" data-mode="all" data-i18n="popup.alertScope.allBadges">Tous les badges</button>
+                  <button type="button" class="pf-btn" aria-pressed="false" data-mode="games" data-i18n="popup.alertScope.someGames">Jeux choisis</button>
+                </div>
+                <div class="smart-line drop-alerts-line" id="badges-scope-line" hidden>
+                  <span data-i18n="popup.dropAlerts.gamesLabel">Jeux suivis</span>
+                  <div class="smart-terms" id="badges-scope-games"></div>
+                </div>
+              </div>
               <p class="badges-auto-status" id="badges-auto-status" role="status" hidden></p>
               <p class="badges-note" data-i18n="popup.drops.badgeAutoAllHint">Un onglet épinglé et muet regarde un live à la fois (Twitch ne compte qu'un live à la fois). Les paliers d'un même jeu (30 min, 1 h, 90 min…) avancent ensemble, puis l'onglet passe au jeu suivant.</p>
             </div>

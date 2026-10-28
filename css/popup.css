@@ -1426,3 +1426,8 @@ input[type="checkbox"][role="switch"]:indeterminate::before { background: var(--
 /* Note posée au-dessus de la barre d'ajout : dans la barre, elle écrasait le champ et le bouton. */
 .platform-hint { position: absolute; inset-inline: 16px; bottom: calc(100% + 6px); z-index: 5; margin: 0; padding: 8px 12px; border-radius: 10px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line), 0 8px 20px -10px rgba(0, 0, 0, .6); color: var(--text-2); font-size: 11.5px; line-height: 1.4; }
 .platform-hint[hidden] { display: none; }
+
+/* Portée des alertes StreamPulse+ (Drops et badges). */
+.alert-scope-modes { margin-block: 8px; }
+.alert-scope-modes .pf-btn:disabled { opacity: .5; cursor: default; }
+.badges-scope { margin-top: 10px; }
