@@ -8,6 +8,7 @@ import { BADGE_ALERT_SEEN_KEY, BADGE_LIMITED_KEY, BADGE_SCOPE_KEY, BADGE_WATCH_K
 import { DROP_ALERTS_KEY, DROP_ALERTS_SEEN_KEY, campaignAlerts, normalizeDropAlerts, seenFrom } from "../drop-alerts.js";
 import { scopeActive } from "../alert-scope.js";
 import { DEFAULT_REFRESH_MINUTES, effectiveRefreshMinutes, refreshGapMs } from "../refresh-interval.js";
+import { recordMissedBadges, recordMissedCampaigns } from "./missed.js";
 import { createDropsClient } from "../drops-gql.js";
 import { createDropsStore } from "../drops-store.js";
 import { createPointsStore } from "../points-store.js";
@@ -99,9 +100,13 @@ const CAMPAIGN_ALERTS_PER_READ = 3;
  */
 export async function checkDropCampaignAlerts() {
   const stored = await chrome.storage.local.get([PLUS_KEY, DROP_ALERTS_KEY, DROP_ALERTS_SEEN_KEY, DROPS_CAMPAIGNS_KEY]);
+  // Sans StreamPulse+ : aucune notification, la campagne part dans les alertes manquées.
+  if (!isPlusActive(stored[PLUS_KEY])) {
+    await recordMissedCampaigns(campaignsFrom(stored).campaigns);
+    return;
+  }
   const settings = normalizeDropAlerts(stored[DROP_ALERTS_KEY]);
   if (!scopeActive(settings)) return;
-  if (!isPlusActive(stored[PLUS_KEY])) return;
   const { alerts, seen } = campaignAlerts(campaignsFrom(stored).campaigns, settings, seenFrom(stored[DROP_ALERTS_SEEN_KEY]), Date.now());
   await chrome.storage.local.set({ [DROP_ALERTS_SEEN_KEY]: seen });
   if (!alerts.length) return;
@@ -255,6 +260,8 @@ export async function checkBadgeWatch() {
   const badges = catalogBadges(badgesFrom(stored), { status: "live", now, events: eventsFrom(stored).events, added: addedFrom(stored).added });
   // StreamPulse+ avec l'option : tout badge d'une journée ou moins prévient ; sinon, les événements de 2 h ou moins si les alertes de badges sont actives.
   const plus = isPlusActive(stored[PLUS_KEY]);
+  // Sans licence, les badges courts partent dans les alertes manquées (popup), sans notification.
+  if (!plus) recordMissedBadges({ liveBadges: badges }, now).catch(warnWith("alertes manquées (badges)"));
   // Toutes les alertes de badges sont réservées à StreamPulse+ : sans licence, rien ne part.
   const shortMs = !plus ? 0 : limitedFrom(stored) ? LIMITED_EVENT_MS : prefs.badgeAlerts === true ? SHORT_EVENT_MS : 0;
   // Portée « tous les badges / jeux choisis » : jamais sans licence active.
@@ -349,6 +356,7 @@ async function announceBadges(added) {
   const prefs = await PreferenceStore.get();
   const stored = await chrome.storage.local.get([PLUS_KEY, BADGE_SCOPE_KEY]);
   const scope = isPlusActive(stored[PLUS_KEY]) ? stored[BADGE_SCOPE_KEY] : null;
+  if (!scope) await recordMissedBadges({ added: added.filter((badge) => !isPaidBadge(badge)) });
   for (const badge of newBadgeAlerts(added, { scope, freeAlerts: scope !== null && prefs.badgeAlerts === true, isPaid: isPaidBadge })) {
     await NotificationCenter.show({
       title: translateWithPrefs(prefs, "background.notifications.badgeTitle", { name: badge.title }),

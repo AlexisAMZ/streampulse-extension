@@ -8,7 +8,9 @@ import { syncChzzkAccess } from "./sw/chzzk-access.js";
 import { installDebugTools } from "./sw/debug.js";
 import { badgeAuto, scheduleDropsAlarm } from "./sw/drops.js";
 import { PREFERENCES_KEY } from "./sw/constants.js";
-import { PLUS_KEY } from "./plus.js";
+import { PLUS_KEY, isPlusActive } from "./plus.js";
+import { MISSED_KEY, missedFrom } from "./missed-alerts.js";
+import { clearMissed, syncMissedDot } from "./sw/missed.js";
 import { NotificationCenter } from "./sw/notifications.js";
 import { handleAlarm, scheduleKeepAliveAlarm, scheduleWatchTimeFlushAlarm, scheduleWatcherAlarm } from "./sw/alarms.js";
 import { handleInstalled, handleStartup, initOnWake } from "./sw/lifecycle.js";
@@ -105,9 +107,17 @@ runPlusGuard(plusGuardDeps);
 // preventTabDiscard : pages de chaîne Twitch et Kick gardées chargées.
 chrome.storage.onChanged.addListener(onPreferencesChangedForTabDiscard);
 // Délai d'actualisation des badges et Drops : suit le réglage et la licence.
+// Alertes manquées : point de l'icône, et liste vidée dès que StreamPulse+ (ou l'essai) s'active.
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area !== "local" || !(changes[PREFERENCES_KEY] || changes[PLUS_KEY])) return;
-  scheduleDropsAlarm().catch((error) => console.warn("[StreamPulse] alarme des Drops :", error?.message || error));
+  if (area !== "local") return;
+  if (changes[PREFERENCES_KEY] || changes[PLUS_KEY]) {
+    scheduleDropsAlarm().catch((error) => console.warn("[StreamPulse] alarme des Drops :", error?.message || error));
+  }
+  if (changes[PLUS_KEY] && isPlusActive(changes[PLUS_KEY].newValue)) {
+    clearMissed().catch((error) => console.warn("[StreamPulse] alertes manquées :", error?.message || error));
+  } else if (changes[MISSED_KEY]) {
+    syncMissedDot(missedFrom(changes[MISSED_KEY].newValue)).catch(() => {});
+  }
 });
 if (chrome.tabs?.onUpdated?.addListener) {
   chrome.tabs.onUpdated.addListener(keepChannelTabLoaded);

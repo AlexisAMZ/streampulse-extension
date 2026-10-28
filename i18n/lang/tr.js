@@ -237,6 +237,7 @@ export default {
       "activeTitle": "StreamPulse+ etkin",
       "planMonthly": "Aylık plan · {{key}}",
       "planLifetime": "Ömür boyu plan · {{key}}",
+      "planTrial": "Ücretsiz deneme · {{date}} tarihine kadar",
       "planYearly": "Yıllık plan · {{key}}",
       "manage": "Aboneliğimi yönet",
       "manageError": "Hesabın şu an açılamıyor. Birkaç dakika sonra tekrar dene.",
@@ -275,6 +276,19 @@ export default {
     "dropsRefresh": {
       "title": "Rozet ve Drops yenileme",
       "body": "StreamPulse'ın rozetleri ve Drops'ları ne sıklıkla kontrol ettiği. Bazıları yalnızca birkaç dakika sürer: hiçbirini kaçırmamak için 1 veya 2 dk seç. Yalnızca StreamPulse+ ile."
+    },
+    "trial": {
+      "days": "{{days}} gün",
+      "body": "StreamPulse+ denemesi · her şey açık",
+      "subscribe": "Abone ol"
+    },
+    "missed": {
+      "unit": "KAÇIRILDI",
+      "cta": "Hiçbirini kaçırma",
+      "newCampaign": "Yeni kampanya",
+      "ended": "bitti {{ago}}",
+      "left": "{{time}} kaldı",
+      "newBadge": "Yeni rozet"
     },
     "badgeScope": {
       "title": "Yeni rozet uyarıları",

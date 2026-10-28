@@ -237,6 +237,7 @@ export default {
       "activeTitle": "StreamPulse+ 활성화됨",
       "planMonthly": "월간 요금제 · {{key}}",
       "planLifetime": "평생 요금제 · {{key}}",
+      "planTrial": "무료 체험 · {{date}}까지",
       "planYearly": "연간 플랜 · {{key}}",
       "manage": "구독 관리",
       "manageError": "지금은 계정 페이지를 열 수 없습니다. 몇 분 후 다시 시도하세요.",
@@ -275,6 +276,19 @@ export default {
     "dropsRefresh": {
       "title": "배지 및 드롭 새로 고침",
       "body": "StreamPulse가 배지와 드롭을 확인하는 간격입니다. 몇 분만 열리는 것도 있으니 놓치지 않으려면 1~2분을 고르세요. StreamPulse+ 전용."
+    },
+    "trial": {
+      "days": "{{days}}일 남음",
+      "body": "StreamPulse+ 체험 · 모두 열림",
+      "subscribe": "구독하기"
+    },
+    "missed": {
+      "unit": "놓침",
+      "cta": "더는 놓치지 않기",
+      "newCampaign": "새 캠페인",
+      "ended": "{{ago}} 종료",
+      "left": "{{time}} 남음",
+      "newBadge": "새 배지"
     },
     "badgeScope": {
       "title": "새 배지 알림",

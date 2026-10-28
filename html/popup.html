@@ -44,6 +44,11 @@
         </button>
       </div>
     </header>
+    <div class="trial-strip" id="trial-strip" role="status" hidden>
+      <b id="trial-days">J-7</b>
+      <span data-i18n="popup.trial.body">Essai StreamPulse+ · tout est débloqué</span>
+      <button class="button trial-subscribe" id="trial-subscribe" type="button" data-i18n="popup.trial.subscribe">S'abonner</button>
+    </div>
 
     <div class="notif-blocked" id="notif-blocked" role="status" hidden>
       <span data-i18n="popup.notifBlockedBody">Chrome bloque les notifications de StreamPulse : aucune alerte de live ne peut s'afficher.</span>
@@ -914,6 +919,13 @@
               <span id="drops-auto-label" data-i18n="popup.drops.autoOn">Récupération auto</span>
             </button>
           </div>
+          <div class="missed-lcd" id="drops-missed" role="status" hidden>
+            <div class="missed-lcd-head">
+              <p class="missed-lcd-total"><span class="missed-count">0</span><small data-i18n="popup.missed.unit">RATÉS</small></p>
+              <button class="button missed-lcd-cta" type="button" data-i18n="popup.missed.cta">Ne plus rien rater</button>
+            </div>
+            <ul class="missed-lcd-list"></ul>
+          </div>
 
           <!-- Chaîne 24/7 bannie : masquée temporairement (réactiver LIVE_247_PAGE dans js/popup-drops.js à son retour) -->
           <button type="button" class="drops-live" id="drops-live" hidden style="display:none" data-i18n-attr-ariaLabel="popup.drops.liveOpen" aria-label="Ouvrir la chaîne 24/7">
@@ -983,6 +995,13 @@
         <section class="menu-panel drops-panel" id="menu-badges" role="tabpanel" aria-labelledby="menu-tab-badges" hidden>
           <div class="pts-head">
             <h2><span data-i18n="popup.osd.menuBadges">Badges</span><span class="pill-beta" data-i18n="popup.settings.betaLabel">bêta</span></h2>
+          </div>
+          <div class="missed-lcd" id="badges-missed" role="status" hidden>
+            <div class="missed-lcd-head">
+              <p class="missed-lcd-total"><span class="missed-count">0</span><small data-i18n="popup.missed.unit">RATÉS</small></p>
+              <button class="button missed-lcd-cta" type="button" data-i18n="popup.missed.cta">Ne plus rien rater</button>
+            </div>
+            <ul class="missed-lcd-list"></ul>
           </div>
           <button type="button" class="drops-live" id="badges-live" hidden style="display:none" data-i18n-attr-ariaLabel="popup.drops.liveOpen" aria-label="Ouvrir la chaîne 24/7">
             <i class="drops-live-dot" aria-hidden="true"></i>

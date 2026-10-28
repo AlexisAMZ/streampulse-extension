@@ -237,6 +237,7 @@ export default {
       "activeTitle": "O StreamPulse+ está ativo",
       "planMonthly": "Plano mensal · {{key}}",
       "planLifetime": "Plano vitalício · {{key}}",
+      "planTrial": "Teste grátis · até {{date}}",
       "planYearly": "Plano anual · {{key}}",
       "manage": "Gerenciar minha assinatura",
       "manageError": "Não dá para abrir sua conta agora. Tente de novo em alguns minutos.",
@@ -275,6 +276,19 @@ export default {
     "dropsRefresh": {
       "title": "Atualização de insígnias e Drops",
       "body": "De quanto em quanto tempo o StreamPulse verifica insígnias e Drops. Alguns duram só alguns minutos: escolha 1 ou 2 min para não perder nada. Exclusivo do StreamPulse+."
+    },
+    "trial": {
+      "days": "{{days}} d",
+      "body": "Teste do StreamPulse+ · tudo liberado",
+      "subscribe": "Assinar"
+    },
+    "missed": {
+      "unit": "PERDIDOS",
+      "cta": "Não perder mais nada",
+      "newCampaign": "Nova campanha",
+      "ended": "terminou {{ago}}",
+      "left": "faltam {{time}}",
+      "newBadge": "Nova insígnia"
     },
     "badgeScope": {
       "title": "Alertas de novas insígnias",

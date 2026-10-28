@@ -237,6 +237,7 @@ export default {
       "activeTitle": "StreamPulse+ активен",
       "planMonthly": "Помесячный тариф · {{key}}",
       "planLifetime": "Тариф навсегда · {{key}}",
+      "planTrial": "Бесплатный пробный период · до {{date}}",
       "planYearly": "Годовой план · {{key}}",
       "manage": "Управлять подпиской",
       "manageError": "Сейчас не получается открыть твой кабинет. Попробуй через несколько минут.",
@@ -275,6 +276,19 @@ export default {
     "dropsRefresh": {
       "title": "Обновление значков и Drops",
       "body": "Как часто StreamPulse проверяет значки и Drops. Некоторые доступны всего несколько минут: выбери 1 или 2 мин, чтобы ничего не пропустить. Только со StreamPulse+."
+    },
+    "trial": {
+      "days": "{{days}} дн.",
+      "body": "Пробный StreamPulse+ · всё открыто",
+      "subscribe": "Подписаться"
+    },
+    "missed": {
+      "unit": "ПРОПУЩЕНО",
+      "cta": "Ничего не пропускать",
+      "newCampaign": "Новая кампания",
+      "ended": "закончился {{ago}}",
+      "left": "ещё {{time}}",
+      "newBadge": "Новый значок"
     },
     "badgeScope": {
       "title": "Оповещения о новых значках",

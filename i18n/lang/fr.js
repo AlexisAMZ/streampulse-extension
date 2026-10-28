@@ -237,6 +237,7 @@ export default {
       "activeTitle": "StreamPulse+ est actif",
       "planMonthly": "Formule mensuelle · {{key}}",
       "planLifetime": "Formule à vie · {{key}}",
+      "planTrial": "Essai gratuit · jusqu'au {{date}}",
       "planYearly": "Formule annuelle · {{key}}",
       "manage": "Gérer mon abonnement",
       "manageError": "Impossible d'ouvrir ton espace pour l'instant. Réessaie dans quelques minutes.",
@@ -275,6 +276,19 @@ export default {
     "dropsRefresh": {
       "title": "Actualisation des badges et Drops",
       "body": "Toutes les combien StreamPulse relit les badges et les Drops. Certains ne durent que quelques minutes : choisis 1 ou 2 min pour ne rien rater. Réservé à StreamPulse+."
+    },
+    "trial": {
+      "days": "J-{{days}}",
+      "body": "Essai StreamPulse+ · tout est débloqué",
+      "subscribe": "S'abonner"
+    },
+    "missed": {
+      "unit": "RATÉS",
+      "cta": "Ne plus rien rater",
+      "newCampaign": "Nouvelle campagne",
+      "ended": "fini {{ago}}",
+      "left": "encore {{time}}",
+      "newBadge": "Nouveau badge"
     },
     "badgeScope": {
       "title": "Alertes nouveaux badges",

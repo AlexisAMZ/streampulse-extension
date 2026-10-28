@@ -287,6 +287,7 @@ export default {
       "activeTitle": "StreamPulse+ مفعَّل",
       "planMonthly": "الخطة الشهرية · {{key}}",
       "planLifetime": "الخطة الدائمة · {{key}}",
+      "planTrial": "تجربة مجانية · حتى {{date}}",
       "planYearly": "الخطة السنوية · {{key}}",
       "manage": "إدارة اشتراكي",
       "manageError": "تعذّر فتح حسابك الآن. حاول مجددًا بعد بضع دقائق.",
@@ -325,6 +326,19 @@ export default {
     "dropsRefresh": {
       "title": "تحديث الشارات وDrops",
       "body": "كم مرة يتحقق StreamPulse من الشارات وDrops. بعضها لا يدوم إلا بضع دقائق: اختر 1 أو 2 دقيقة حتى لا يفوتك شيء. حصريًا مع StreamPulse+."
+    },
+    "trial": {
+      "days": "{{days}} يوم",
+      "body": "تجربة StreamPulse+ · كل شيء مفتوح",
+      "subscribe": "اشترك"
+    },
+    "missed": {
+      "unit": "فائتة",
+      "cta": "لا تفوّت شيئًا",
+      "newCampaign": "حملة جديدة",
+      "ended": "انتهت {{ago}}",
+      "left": "يتبقى {{time}}",
+      "newBadge": "شارة جديدة"
     },
     "badgeScope": {
       "title": "تنبيهات الشارات الجديدة",

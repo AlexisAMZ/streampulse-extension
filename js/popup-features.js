@@ -18,7 +18,7 @@ import { groupMissedEntries } from "./history-grouping.js";
 import { LINKED_ACCOUNTS_KEY, normalizeLinkedAccounts } from "./linked-accounts.js";
 import { getPlatformIcon, getPlatformLabelKey } from "./platforms.js";
 import { PREDICTION_HISTORY_KEY, PREDICTION_RULE_KEY, normalizeRule as normalizePredictionRule, summarize as summarizePredictions } from "./predictions-data.js";
-import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, verifyLicense } from "./plus.js";
+import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, trialEndsAt, verifyLicense } from "./plus.js";
 import { mountLiquidMetalButton } from "./promo-liquid-button.js";
 import { mountClipsMorph } from "./promo-clips-morph.js";
 import { hasRecentSuccess, reviewAskDecision, REMOTE_CONFIG_CACHE_KEY } from "./popup-review.js";
@@ -231,7 +231,7 @@ let promoClipsOk = false;
 let promoRemoteOff = false;
 let promoHasDrops = false;
 let promoHasWatch = false;
-const PLAN_LABELS = { monthly: "popup.plus.planMonthly", yearly: "popup.plus.planYearly", lifetime: "popup.plus.planLifetime" };
+const PLAN_LABELS = { monthly: "popup.plus.planMonthly", yearly: "popup.plus.planYearly", lifetime: "popup.plus.planLifetime", trial: "popup.plus.planTrial" };
 const plusListeners = new Set();
 
 /** Rappelé à chaque changement d'état de la licence. */
@@ -241,6 +241,21 @@ export function onPlusChange(listener) {
 
 export function plusActive() {
   return isPlusActive(plusRecord);
+}
+
+const DAY_MS = 86_400_000;
+
+/** Bandeau LCD de l'essai StreamPulse+ : jours restants et bouton S'abonner. */
+function renderTrialStrip(trial) {
+  const strip = $("trial-strip");
+  if (!strip) return;
+  strip.hidden = !trial;
+  document.body.classList.toggle("has-trial", trial);
+  if (!trial) return;
+  const days = Math.max(1, Math.ceil((trialEndsAt(plusRecord) - Date.now()) / DAY_MS));
+  $("trial-days").textContent = t("popup.trial.days", { days });
+  // Les deux derniers jours, l'écran passe en alerte.
+  strip.classList.toggle("is-ending", days <= 2);
 }
 
 function renderPlus() {
@@ -257,18 +272,22 @@ function renderPlus() {
     openButton.title = hint;
     openButton.setAttribute("aria-label", hint);
   }
-  if ($("plus-offer")) $("plus-offer").hidden = active || deviceLimited;
+  // Pendant l'essai, l'offre reste visible : c'est le moment de s'abonner.
+  const trial = active && plusRecord?.plan === "trial";
+  if ($("plus-offer")) $("plus-offer").hidden = (active && !trial) || deviceLimited;
   if ($("plus-device-limited")) $("plus-device-limited").hidden = !deviceLimited;
   if ($("plus-active")) $("plus-active").hidden = !active;
   if (active && $("plus-active-plan")) {
     const key = plusRecord.licenseKey.replace(/^(SP-[A-Z0-9]{4}).*(.{4})$/, "$1-…-$2");
+    const date = new Date(trialEndsAt(plusRecord)).toLocaleDateString(getCurrentLanguage(), { day: "numeric", month: "long" });
     $("plus-active-plan").textContent = t(
       PLAN_LABELS[plusRecord.plan] || PLAN_LABELS.monthly,
-      { key },
+      { key, date },
     );
   }
   if ($("plus-menu-text")) $("plus-menu-text").textContent = t(active ? "popup.plusMenu.statusActive" : "popup.plusMenu.statusInactive");
   if ($("plus-menu-open")) $("plus-menu-open").textContent = t(active ? "popup.plusMenu.manage" : "popup.plusMenu.discover");
+  renderTrialStrip(trial);
   renderPromo();
   renderPlusValue().catch(() => {});
   plusListeners.forEach((listener) => listener(active));
@@ -428,6 +447,7 @@ function showKeyError(key) {
 function initPlus() {
   initLocalPrices().catch((error) => console.warn("[plus] prix locaux indisponibles :", error));
   $("open-plus")?.addEventListener("click", openPlus);
+  $("trial-subscribe")?.addEventListener("click", openPlus);
   $("plus-close")?.addEventListener("click", () => closePlus());
   $("plus-menu-open")?.addEventListener("click", openPlus);
   $("plus-menu-recap")?.addEventListener("click", () => {

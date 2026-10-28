@@ -237,6 +237,7 @@ export default {
       "activeTitle": "StreamPulse+ ist aktiv",
       "planMonthly": "Monatstarif · {{key}}",
       "planLifetime": "Lebenslanger Tarif · {{key}}",
+      "planTrial": "Gratis-Test · bis {{date}}",
       "planYearly": "Jahresabo · {{key}}",
       "manage": "Mein Abo verwalten",
       "manageError": "Dein Konto lässt sich gerade nicht öffnen. Versuch es in ein paar Minuten noch mal.",
@@ -275,6 +276,19 @@ export default {
     "dropsRefresh": {
       "title": "Aktualisierung von Abzeichen und Drops",
       "body": "Wie oft StreamPulse Abzeichen und Drops prüft. Manche gibt es nur wenige Minuten: Wähle 1 oder 2 Min., um nichts zu verpassen. Nur mit StreamPulse+."
+    },
+    "trial": {
+      "days": "{{days}} T.",
+      "body": "StreamPulse+-Test · alles freigeschaltet",
+      "subscribe": "Abonnieren"
+    },
+    "missed": {
+      "unit": "VERPASST",
+      "cta": "Nichts mehr verpassen",
+      "newCampaign": "Neue Kampagne",
+      "ended": "beendet {{ago}}",
+      "left": "noch {{time}}",
+      "newBadge": "Neues Abzeichen"
     },
     "badgeScope": {
       "title": "Benachrichtigungen für neue Abzeichen",

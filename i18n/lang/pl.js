@@ -237,6 +237,7 @@ export default {
       "activeTitle": "StreamPulse+ jest aktywny",
       "planMonthly": "Plan miesięczny · {{key}}",
       "planLifetime": "Plan dożywotni · {{key}}",
+      "planTrial": "Darmowy okres próbny · do {{date}}",
       "planYearly": "Plan roczny · {{key}}",
       "manage": "Zarządzaj subskrypcją",
       "manageError": "Nie można teraz otworzyć twojego konta. Spróbuj ponownie za kilka minut.",
@@ -275,6 +276,19 @@ export default {
     "dropsRefresh": {
       "title": "Odświeżanie odznak i Drops",
       "body": "Jak często StreamPulse sprawdza odznaki i Drops. Niektóre trwają tylko kilka minut: wybierz 1 lub 2 min, by niczego nie przegapić. Tylko w StreamPulse+."
+    },
+    "trial": {
+      "days": "{{days}} dni",
+      "body": "Próbny StreamPulse+ · wszystko odblokowane",
+      "subscribe": "Subskrybuj"
+    },
+    "missed": {
+      "unit": "PRZEGAPIONE",
+      "cta": "Niczego nie przegap",
+      "newCampaign": "Nowa kampania",
+      "ended": "zakończona {{ago}}",
+      "left": "jeszcze {{time}}",
+      "newBadge": "Nowa odznaka"
     },
     "badgeScope": {
       "title": "Alerty o nowych odznakach",

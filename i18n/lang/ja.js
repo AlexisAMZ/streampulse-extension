@@ -237,6 +237,7 @@ export default {
       "activeTitle": "StreamPulse+ は有効です",
       "planMonthly": "月額プラン · {{key}}",
       "planLifetime": "買い切りプラン · {{key}}",
+      "planTrial": "無料お試し · {{date}}まで",
       "planYearly": "年間プラン · {{key}}",
       "manage": "サブスクリプションを管理",
       "manageError": "現在アカウントページを開けません。数分後にもう一度お試しください。",
@@ -275,6 +276,19 @@ export default {
     "dropsRefresh": {
       "title": "バッジとドロップの更新間隔",
       "body": "StreamPulse がバッジとドロップを確認する間隔。数分しかないものもあるので、見逃さないよう 1〜2 分を選んでください。StreamPulse+ 限定。"
+    },
+    "trial": {
+      "days": "残り{{days}}日",
+      "body": "StreamPulse+ お試し中 · すべて解放",
+      "subscribe": "購読する"
+    },
+    "missed": {
+      "unit": "見逃し",
+      "cta": "もう見逃さない",
+      "newCampaign": "新しいキャンペーン",
+      "ended": "{{ago}}に終了",
+      "left": "残り{{time}}",
+      "newBadge": "新しいバッジ"
     },
     "badgeScope": {
       "title": "新しいバッジの通知",
