@@ -1435,14 +1435,17 @@ input[type="checkbox"][role="switch"]:indeterminate::before { background: var(--
 .drops-refresh-select { flex: none; }
 
 /* Essai StreamPulse+ : bandeau LCD sous la barre du haut (maquette A). */
-.trial-strip { position: absolute; z-index: 19; top: 56px; inset-inline: 16px; display: flex; align-items: center; gap: 12px; padding: 6px 8px 6px 14px; box-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.8); border-radius: 10px; background: var(--lcd); color: var(--lcd-ink); }
+.trial-strip { position: absolute; z-index: 19; top: 54px; inset-inline: 16px; display: flex; align-items: center; gap: 12px; padding: 4px 4px 4px 14px; box-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.8); border-radius: 10px; background: var(--lcd); color: var(--lcd-ink); }
 .trial-strip[hidden] { display: none; }
 /* Le bandeau flotte sous la barre : les vues à défilement lui laissent la place. */
 body.has-trial .menu,
-body.has-trial .history { padding-top: 102px; }
-.trial-strip b { font-family: var(--display); font-size: 18px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+body.has-trial .history { padding-top: 96px; }
+/* Accueil : le bonjour et les flèches descendent sous le bandeau (le popup Chrome plafonne à 600 px de haut). */
+body.has-trial .greeting,
+body.has-trial .stage-pager { top: 100px; }
+.trial-strip b { font-family: var(--display); font-size: 16px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 .trial-strip span { flex: 1; min-width: 0; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
-.trial-strip .trial-subscribe { flex: none; height: 30px; background: var(--lcd-ink); color: var(--lcd); }
+.trial-strip .trial-subscribe { flex: none; height: 26px; background: var(--lcd-ink); color: var(--lcd); }
 .trial-strip .trial-subscribe:hover { background: #000; }
 .trial-strip.is-ending b { animation: lcd-blink 1s steps(2, start) infinite; }
 @keyframes lcd-blink { to { visibility: hidden; } }
