@@ -52,7 +52,7 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
-    version: "26.10.29",
+    version: "26.11.1",
     date: "2026-10-31",
     title: {
       "fr": "Moins de saisie, plus de clics",

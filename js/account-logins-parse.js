@@ -24,9 +24,9 @@ export function youtubeChannelIdFromAccountHtml(html) {
 // Où la page d'une chaîne donne son @handle (son lien canonique pointe sur /channel/UC…).
 // Du plus propre à la chaîne affichée au plus général.
 const HANDLE_PATTERNS = [
-  /"ownerUrls"\s*:\s*\[\s*"https?:\\?\/\\?\/www\.youtube\.com\\?\/@([^"\\\/]{3,60})"/,
-  /"vanityChannelUrl"\s*:\s*"https?:\\?\/\\?\/www\.youtube\.com\\?\/@([^"\\\/]{3,60})"/,
-  /"canonicalBaseUrl"\s*:\s*"\\?\/@([^"\\\/]{3,60})"/,
+  /"ownerUrls"\s*:\s*\[\s*"https?:\\?\/\\?\/www\.youtube\.com\\?\/@([^"\\/]{3,60})"/,
+  /"vanityChannelUrl"\s*:\s*"https?:\\?\/\\?\/www\.youtube\.com\\?\/@([^"\\/]{3,60})"/,
+  /"canonicalBaseUrl"\s*:\s*"\\?\/@([^"\\/]{3,60})"/,
 ];
 
 /** @handle d'une page de chaîne ; "" si la chaîne n'en a pas. */

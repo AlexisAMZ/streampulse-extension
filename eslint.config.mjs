@@ -22,6 +22,7 @@ const ES_MODULES = [
   "scripts/dev/sw-debug.js",
   "js/platforms.js",
   "js/chzzk.js",
+  "js/account-logins-parse.js",
   "js/chzzk-permission.js",
   "js/chzzk-sync.js",
   "js/plus.js",
