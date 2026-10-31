@@ -25,6 +25,7 @@ import {
   getPlatformIcon,
   getPlatformLabelKey,
   getOfferedPlatforms,
+  channelFromPageUrl,
   getPlatformPlaceholderKey,
   isPlatformOffered,
   normalizePlatform,
@@ -2235,6 +2236,31 @@ function runAfterFirstPaint(tasks) {
   requestAnimationFrame(() => setTimeout(next, 0));
 }
 
+/**
+ * Si la popup s'ouvre sur la page d'une chaîne pas encore suivie (Twitch, Kick,
+ * YouTube), prérègle la plateforme et préremplit le champ d'ajout. Sans
+ * permission « tabs » : l'URL de l'onglet actif est lisible grâce aux
+ * host_permissions du manifeste, et reste vide ailleurs.
+ */
+async function prefillFromActiveTab() {
+  if (!streamerInput) return;
+  try {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const channel = channelFromPageUrl(tab?.url);
+    if (!channel || streamerInput.value) return;
+    const followed = (state.streamers || []).some(
+      (streamer) =>
+        getHandleComparisonKey(streamer.platform || "twitch", streamer.handle || streamer.twitch || "") ===
+        getHandleComparisonKey(channel.platform, channel.handle)
+    );
+    if (followed || !isPlatformOffered(channel.platform, getCurrentLanguage(), followedPlatformIds())) return;
+    setSelectedPlatform(channel.platform);
+    streamerInput.value = channel.handle;
+  } catch (error) {
+    console.warn("[popup] préremplissage depuis l'onglet impossible", error);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     // Show skeleton placeholders immediately. The platform picker waits for
@@ -2293,6 +2319,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     initTheme();
     renderPlatformPicker();
     setSelectedPlatform(state.selectedPlatform);
+    await prefillFromActiveTab();
 
     // Render Stats (settings + header badge + V7 greeting bar): use pre-fetched data
     renderStats(data.betaGeneralStats || {}).catch(() => {});

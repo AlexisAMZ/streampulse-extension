@@ -4,6 +4,7 @@ import { sanitizeHandle } from "../platforms.js";
 import { applyStreamerOrder, pruneStreamerRefs, sanitizePinnedIds } from "../streamers-data.js";
 import { translateWithPrefs } from "./i18n.js";
 import { reply, respond } from "./message-dispatch.js";
+import { readAccountLogins } from "./account-logins.js";
 import { addStreamer } from "./add-streamer.js";
 import { PlatformChecker } from "./platform-checker.js";
 import { pollStreamers } from "./polling.js";
@@ -41,6 +42,13 @@ export function handleLookupTwitchUser(request, sender, sendResponse) {
 
 export function handleGetTwitchLogin(request, sender, sendResponse) {
   readTwitchLogin().then((login) => sendResponse({ login }));
+  return true;
+}
+
+export function handleGetAccountLogins(request, sender, sendResponse) {
+  readAccountLogins()
+    .then((logins) => sendResponse({ logins }))
+    .catch(() => sendResponse({ logins: { twitch: "", kick: "", youtube: "" } }));
   return true;
 }
 

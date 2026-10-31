@@ -284,6 +284,38 @@ export function isChannelPageUrl(url) {
   return false;
 }
 
+/**
+ * Chaîne affichée dans un onglet, déduite de son URL seule : { platform, handle }
+ * ou null. Sert à préremplir l'ajout quand la popup s'ouvre sur un stream.
+ * YouTube : seulement les pages en /@handle (une page /watch ne dit pas la chaîne
+ * sans lire le DOM de la page).
+ */
+export function channelFromPageUrl(url) {
+  if (typeof url !== "string" || !url) return null;
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return null;
+  }
+  if (parsed.protocol !== "https:") return null;
+  const host = parsed.hostname.toLowerCase().replace(/^www\./, "");
+  let first = parsed.pathname.split("/").filter(Boolean)[0] || "";
+  try {
+    first = decodeURIComponent(first);
+  } catch {
+    return null;
+  }
+  if (host === "youtube.com") {
+    const match = /^@([\p{L}\p{N}._-]{3,30})$/u.exec(first);
+    return match ? { platform: "youtube", handle: match[1].toLowerCase() } : null;
+  }
+  if ((host === "twitch.tv" || host === "kick.com") && isChannelPageUrl(url)) {
+    return { platform: host === "twitch.tv" ? "twitch" : "kick", handle: first.toLowerCase() };
+  }
+  return null;
+}
+
 // Note: To avoid circular dependency with i18n, we export the Label Key getter
 // and let the consumer translate it. But for compatibility with existing code expectation:
 // If we want a simple getPlatformLabel(platform) that returns the translated string,

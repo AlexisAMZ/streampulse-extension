@@ -1,6 +1,6 @@
 // Table de dispatch des messages runtime : un handler par type.
 
-import { handleAddStreamer, handleGetStreamers, handleGetTwitchLogin, handleLookupTwitchUser, handleRefreshStatuses, handleRemoveStreamer, handleReorderStreamers, handleSearchChannels, handleSetPinnedStreamers, handleToggleNotificationFlag } from "./messages-streamers.js";
+import { handleAddStreamer, handleGetAccountLogins, handleGetStreamers, handleGetTwitchLogin, handleLookupTwitchUser, handleRefreshStatuses, handleRemoveStreamer, handleReorderStreamers, handleSearchChannels, handleSetPinnedStreamers, handleToggleNotificationFlag } from "./messages-streamers.js";
 import { handleBadgeAutoStart, handleBadgeAutoStop, handleClaimDrop, handleDropClaimedByClick, handleDropsRefresh, handleOpenDropsStream, handleRecordDropClaim, handleRecordDropsCampaignDetails, handleRecordDropsCampaigns, handleRecordDropsEvent, handleRecordDropsInventory, handleRecordPointsGain, handleResetPoints } from "./messages-drops.js";
 import { handleResetPreferences, handleTestNotification, handleUpdatePreferences, handleUpdateUserProfile } from "./messages-preferences.js";
 import { handleClearEventLogs, handleGetConfig, handleGetEventLogs, handleImportHistoryCsv, handleIncrementStat, handleMarkHistorySeen, handleOpenPatchNotes, handleOpenPlusOnboarding, handleStartTrial, handleOpenSettings, handleRemoveHistoryEntry, handleTrackWatchTime } from "./messages-app.js";
@@ -9,6 +9,7 @@ export const MESSAGE_HANDLERS = Object.freeze({
   getStreamers: handleGetStreamers,
   lookupTwitchUser: handleLookupTwitchUser,
   getTwitchLogin: handleGetTwitchLogin,
+  getAccountLogins: handleGetAccountLogins,
   searchChannels: handleSearchChannels,
   addStreamer: handleAddStreamer,
   removeStreamer: handleRemoveStreamer,

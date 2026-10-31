@@ -112,6 +112,7 @@ let plusRecord = null;
 const PROFILE_PLATFORMS = ["twitch", "kick", "youtube"];
 
 let profilePlatform = "twitch";
+let profilePlatformTouched = false;
 let userProfile = { handle: "", displayName: "", avatarUrl: "", platform: profilePlatform };
 let profileLookupTimer = null;
 let profileLookupSeq = 0;
@@ -790,7 +791,10 @@ function registerEventListeners() {
   profilePlatformPicker?.addEventListener("click", (event) => {
     if (saving || navigating) return;
     const button = event.target.closest(".platform-button");
-    if (button?.dataset.platform) setProfilePlatform(button.dataset.platform);
+    if (button?.dataset.platform) {
+      profilePlatformTouched = true;
+      setProfilePlatform(button.dataset.platform);
+    }
   });
 
   /* Profile input */
@@ -1092,14 +1096,26 @@ function initPlusStyle() {
  * Il était écrit V1.0 en dur dans le HTML : tous les utilisateurs voyaient cette
  * valeur quelle que soit leur version installée.
  */
-/** Pseudo du compte Twitch connecté, écrit d'office si le champ est encore vide. */
-async function prefillProfileFromTwitch() {
-  if (!profileInput || profileInput.value.trim() || profilePlatform !== "twitch") return;
-  const response = await chrome.runtime.sendMessage({ type: "getTwitchLogin" }).catch(() => null);
-  const login = typeof response?.login === "string" ? response.login : "";
-  if (!login || profileInput.value.trim() || profilePlatform !== "twitch") return;
-  profileInput.value = login;
-  scheduleProfileLookup(login);
+const PROFILE_PREFILL_ORDER = ["twitch", "kick", "youtube"];
+
+/**
+ * Pseudo du compte connecté, écrit d'office si le champ est encore vide :
+ * Twitch d'abord, sinon Kick, sinon YouTube. La plateforme choisie à la main
+ * n'est jamais écrasée ; sinon on bascule sur celle où une session est ouverte.
+ */
+async function prefillProfileFromAccounts() {
+  if (!profileInput || profileInput.value.trim()) return;
+  const response = await chrome.runtime.sendMessage({ type: "getAccountLogins" }).catch(() => null);
+  const logins = response?.logins || {};
+  if (profileInput.value.trim()) return;
+  const platform = PROFILE_PREFILL_ORDER.find((id) => typeof logins[id] === "string" && logins[id]);
+  if (!platform) return;
+  if (platform !== profilePlatform) {
+    if (profilePlatformTouched) return;
+    setProfilePlatform(platform);
+  }
+  profileInput.value = logins[platform];
+  scheduleProfileLookup(logins[platform]);
 }
 
 async function initialize() {
@@ -1111,7 +1127,7 @@ async function initialize() {
   setHintState("idle", t("onboarding.profileHintIdle"));
   renderProfileFromState();
   renderProfilePlatformPicker();
-  prefillProfileFromTwitch();
+  prefillProfileFromAccounts();
 
   unsubscribeLanguage = onLanguageChange(() => refreshTranslations());
 

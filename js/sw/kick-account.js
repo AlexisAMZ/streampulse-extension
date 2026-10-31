@@ -6,19 +6,23 @@
 const KICK_USER_URL = "https://kick.com/api/v1/user";
 const KICK_TIMEOUT_MS = 8_000;
 
-export async function kickViewerId() {
+/** Utilisateur Kick connecté (réponse brute de /api/v1/user), ou null. */
+export async function fetchKickUser() {
   try {
     const cookie = await chrome.cookies.get({ url: "https://kick.com", name: "session_token" });
-    if (!cookie?.value) return "";
+    if (!cookie?.value) return null;
     const response = await fetch(KICK_USER_URL, {
       headers: { Accept: "application/json", Authorization: `Bearer ${decodeURIComponent(cookie.value)}` },
       credentials: "omit",
       signal: AbortSignal.timeout(KICK_TIMEOUT_MS),
     });
-    if (!response.ok) return "";
-    const id = String((await response.json())?.id ?? "");
-    return /^\d{1,20}$/.test(id) ? id : "";
+    return response.ok ? await response.json() : null;
   } catch {
-    return "";
+    return null;
   }
+}
+
+export async function kickViewerId() {
+  const id = String((await fetchKickUser())?.id ?? "");
+  return /^\d{1,20}$/.test(id) ? id : "";
 }

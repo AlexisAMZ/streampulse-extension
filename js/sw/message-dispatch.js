@@ -15,6 +15,7 @@ const SENSITIVE_MESSAGE_TYPES = new Set([
   "setPinnedStreamers",
   "importHistoryCsv",
   "getTwitchLogin",
+  "getAccountLogins",
   "startTrial",
 ]);
 
