@@ -21,15 +21,28 @@ export function youtubeChannelIdFromAccountHtml(html) {
   return /\/channel\/(UC[\w-]{10,32})/.exec(block)?.[1] || "";
 }
 
-/** @handle d'une page de chaîne, lu dans son lien canonique ; "" si la chaîne n'en a pas. */
+// Où la page d'une chaîne donne son @handle (son lien canonique pointe sur /channel/UC…).
+// Du plus propre à la chaîne affichée au plus général.
+const HANDLE_PATTERNS = [
+  /"ownerUrls"\s*:\s*\[\s*"https?:\\?\/\\?\/www\.youtube\.com\\?\/@([^"\\\/]{3,60})"/,
+  /"vanityChannelUrl"\s*:\s*"https?:\\?\/\\?\/www\.youtube\.com\\?\/@([^"\\\/]{3,60})"/,
+  /"canonicalBaseUrl"\s*:\s*"\\?\/@([^"\\\/]{3,60})"/,
+];
+
+/** @handle d'une page de chaîne ; "" si la chaîne n'en a pas. */
 export function youtubeHandleFromChannelHtml(html) {
   if (typeof html !== "string") return "";
-  const raw = /<link rel="canonical" href="https:\/\/www\.youtube\.com\/@([^"\/]{3,30})"/.exec(html)?.[1] || "";
-  let decoded = raw;
-  try {
-    decoded = decodeURIComponent(raw);
-  } catch {
-    return "";
+  for (const pattern of HANDLE_PATTERNS) {
+    const raw = pattern.exec(html)?.[1];
+    if (!raw) continue;
+    try {
+      const decoded = decodeURIComponent(raw);
+      const handle = sanitizeHandle("youtube", decoded);
+      // Le nettoyage retire les caractères qu'il ne gère pas (accents) : mieux vaut ne rien remplir qu'un faux pseudo.
+      if (handle && handle.toLowerCase() === decoded.toLowerCase()) return handle;
+    } catch {
+      // Handle mal encodé : on essaie le motif suivant.
+    }
   }
-  return decoded ? sanitizeHandle("youtube", decoded) : "";
+  return "";
 }

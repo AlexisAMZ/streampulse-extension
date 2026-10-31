@@ -11,13 +11,19 @@ const YOUTUBE_ACCOUNT_URL = "https://www.youtube.com/account";
 const YOUTUBE_TIMEOUT_MS = 8_000;
 
 async function readKickLogin() {
-  return kickLoginFromUser(await fetchKickUser());
+  const user = await fetchKickUser();
+  const login = kickLoginFromUser(user);
+  if (!login) console.info("[SP] pseudo Kick : rien lu", user ? `champs reçus : ${Object.keys(user).join(", ")}` : "pas de session ou réponse refusée");
+  return login;
 }
 
 async function fetchYoutubeHtml(url, credentials) {
   const response = await fetch(url, { credentials, signal: AbortSignal.timeout(YOUTUBE_TIMEOUT_MS) });
   // Mur de consentement européen : pas de page de chaîne, donc rien à lire.
-  if (!response.ok || new URL(response.url).hostname === "consent.youtube.com") return "";
+  if (!response.ok || new URL(response.url).hostname === "consent.youtube.com") {
+    console.info("[SP] pseudo YouTube : page refusée", new URL(response.url).hostname, response.status);
+    return "";
+  }
   return response.text();
 }
 
@@ -25,9 +31,15 @@ async function fetchYoutubeHtml(url, credentials) {
 async function readYoutubeHandle() {
   try {
     const channelId = youtubeChannelIdFromAccountHtml(await fetchYoutubeHtml(YOUTUBE_ACCOUNT_URL, "include"));
-    if (!channelId) return "";
-    return youtubeHandleFromChannelHtml(await fetchYoutubeHtml(`https://www.youtube.com/channel/${channelId}`, "include"));
-  } catch {
+    if (!channelId) {
+      console.info("[SP] pseudo YouTube : pas de chaîne trouvée dans la page compte");
+      return "";
+    }
+    const handle = youtubeHandleFromChannelHtml(await fetchYoutubeHtml(`https://www.youtube.com/channel/${channelId}`, "include"));
+    if (!handle) console.info("[SP] pseudo YouTube : chaîne trouvée mais @handle illisible");
+    return handle;
+  } catch (error) {
+    console.info("[SP] pseudo YouTube : échec", error?.message || error);
     return "";
   }
 }

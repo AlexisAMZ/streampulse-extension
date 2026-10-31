@@ -26,9 +26,15 @@ test("YouTube : déconnecté ou sans bloc chaîne, chaîne vide", () => {
   assert.equal(youtubeChannelIdFromAccountHtml(undefined), "");
 });
 
-test("YouTube : le @handle vient du lien canonique de la page de la chaîne", () => {
-  const html = '<link rel="canonical" href="https://www.youtube.com/@MonCanal">';
-  assert.equal(youtubeHandleFromChannelHtml(html), "moncanal");
+test("YouTube : le @handle de la chaîne vient des métadonnées de sa page", () => {
+  assert.equal(youtubeHandleFromChannelHtml('"ownerUrls":["http:\\/\\/www.youtube.com\\/@MonCanal"]'), "moncanal");
+  assert.equal(youtubeHandleFromChannelHtml('"vanityChannelUrl":"http://www.youtube.com/@MonCanal"'), "moncanal");
+  assert.equal(youtubeHandleFromChannelHtml('"canonicalBaseUrl":"/@MonCanal"'), "moncanal");
+  assert.equal(youtubeHandleFromChannelHtml('"canonicalBaseUrl":"/@caf%C3%A9"'), "");
+});
+
+test("YouTube : le lien canonique /channel/UC… ne donne pas de handle", () => {
   assert.equal(youtubeHandleFromChannelHtml('<link rel="canonical" href="https://www.youtube.com/channel/UCabcdefghijklmnopqrstuv">'), "");
   assert.equal(youtubeHandleFromChannelHtml(""), "");
+  assert.equal(youtubeHandleFromChannelHtml(undefined), "");
 });

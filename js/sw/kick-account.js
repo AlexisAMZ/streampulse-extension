@@ -10,14 +10,19 @@ const KICK_TIMEOUT_MS = 8_000;
 export async function fetchKickUser() {
   try {
     const cookie = await chrome.cookies.get({ url: "https://kick.com", name: "session_token" });
-    if (!cookie?.value) return null;
+    if (!cookie?.value) {
+      console.info("[SP] Kick : cookie session_token absent");
+      return null;
+    }
     const response = await fetch(KICK_USER_URL, {
       headers: { Accept: "application/json", Authorization: `Bearer ${decodeURIComponent(cookie.value)}` },
       credentials: "omit",
       signal: AbortSignal.timeout(KICK_TIMEOUT_MS),
     });
+    if (!response.ok) console.info("[SP] Kick : API utilisateur refusée", response.status);
     return response.ok ? await response.json() : null;
-  } catch {
+  } catch (error) {
+    console.info("[SP] Kick : API utilisateur injoignable", error?.message || error);
     return null;
   }
 }
