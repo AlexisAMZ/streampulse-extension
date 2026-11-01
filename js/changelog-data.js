@@ -52,6 +52,50 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.11.2",
+    date: "2026-11-01",
+    changes: [
+      {
+        type: "fix",
+        area: "plus",
+        text: {
+          "fr": "Ton style de pseudo StreamPulse+ ne disparaît plus quelques secondes après ton message dans le tchat Twitch, même quand tu survoles ton pseudo.",
+          "en": "Your StreamPulse+ name style no longer vanishes a few seconds after you send a message in Twitch chat, even when you hover your name.",
+          "es": "Tu estilo de nombre de StreamPulse+ ya no desaparece unos segundos después de escribir en el chat de Twitch, aunque pases el ratón por tu nombre.",
+          "pt-BR": "Seu estilo de nome do StreamPulse+ não some mais alguns segundos depois da sua mensagem no chat da Twitch, mesmo ao passar o mouse sobre o seu nome.",
+          "de": "Dein StreamPulse+-Namensstil verschwindet nicht mehr ein paar Sekunden nach deiner Nachricht im Twitch-Chat, auch nicht, wenn du über deinen Namen fährst.",
+          "it": "Il tuo stile del nome StreamPulse+ non scompare più pochi secondi dopo il tuo messaggio nella chat di Twitch, anche passando il mouse sul tuo nome.",
+          "pl": "Twój styl nazwy StreamPulse+ nie znika już kilka sekund po wysłaniu wiadomości na czacie Twitcha, nawet gdy najedziesz na swoją nazwę.",
+          "tr": "StreamPulse+ ad stilin artık Twitch sohbetinde mesaj gönderdikten birkaç saniye sonra kaybolmuyor, adının üzerine gelsen bile.",
+          "ru": "Стиль ника StreamPulse+ больше не пропадает через несколько секунд после сообщения в чате Twitch, даже если навести курсор на ник.",
+          "ja": "Twitch チャットで発言した数秒後に StreamPulse+ のネームスタイルが消える問題を修正しました。名前にカーソルを合わせても消えません。",
+          "ko": "Twitch 채팅에 메시지를 보낸 뒤 몇 초 만에 StreamPulse+ 이름 스타일이 사라지던 문제를 고쳤어요. 이름에 마우스를 올려도 유지돼요.",
+          "ar": "لم يعد نمط اسمك في StreamPulse+ يختفي بعد ثوانٍ من إرسال رسالتك في دردشة Twitch، حتى عند تمرير المؤشر فوق اسمك.",
+        },
+      },
+    ],
+    thanks: [
+      {
+        handle: "Strelox_",
+        for: {
+          fr: "signalement du style de pseudo qui disparaissait",
+          en: "reporting the disappearing name style",
+          es: "avisar del estilo de nombre que desaparecía",
+          "pt-BR": "avisar do estilo de nome que sumia",
+          de: "Meldung des verschwindenden Namensstils",
+          it: "la segnalazione dello stile del nome che spariva",
+          pl: "zgłoszenie znikającego stylu nazwy",
+          tr: "kaybolan ad stilini bildirdiği için",
+          ru: "сообщение о пропадающем стиле ника",
+          ja: "ネームスタイルが消える不具合の報告",
+          ko: "사라지는 이름 스타일 제보",
+          ar: "الإبلاغ عن اختفاء نمط الاسم",
+        },
+      },
+    ],
+  },
+
+  {
     version: "26.11.1",
     date: "2026-10-31",
     title: {

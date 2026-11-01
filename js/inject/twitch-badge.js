@@ -917,10 +917,33 @@
     '.chat-room'
   ].join(", ");
 
+  /**
+   * Repose le pseudo special d'une ligne deja badgee. React reecrit l'attribut
+   * class du pseudo a chaque re-rendu (message confirme par le serveur, survol)
+   * ou remplace le noeud : nos classes sp-paint disparaissent alors sans que la
+   * ligne soit rajoutee au tchat.
+   */
+  function repaintFrom(node) {
+    try {
+      var line = node.closest && node.closest(MESSAGE_SELECTORS);
+      var badge = line && line.querySelector(".sp-chat-badge[data-sp-hash]");
+      if (badge) applyPaint(line, badge.getAttribute("data-sp-hash"));
+    } catch (_e) {
+      // Twitch reconstruit son DOM en permanence : le noeud peut disparaitre entre sa selection et son usage.
+    }
+  }
+
   function setupChatObserver() {
     var chatObserver = new MutationObserver(function (mutations) {
       for (var i = 0; i < mutations.length; i++) {
         var mut = mutations[i];
+        if (mut.type === "attributes") {
+          var target = mut.target;
+          if (target.matches && target.matches(NAME_SELECTOR) && !target.classList.contains("sp-paint")) {
+            repaintFrom(target);
+          }
+          continue;
+        }
         for (var j = 0; j < mut.addedNodes.length; j++) {
           var node = mut.addedNodes[j];
           if (node.nodeType !== 1) continue;
@@ -936,6 +959,10 @@
             for (var k = 0; k < subMessages.length; k++) {
               processMessageLine(subMessages[k]);
             }
+            // Pseudo remonte a neuf dans une ligne deja traitee.
+            if (!subMessages.length && (node.matches(NAME_SELECTOR) || node.querySelector(NAME_SELECTOR))) {
+              repaintFrom(node);
+            }
           }
         }
       }
@@ -947,7 +974,12 @@
       var chatContainer = document.querySelector(CONTAINER_SELECTORS);
       if (chatContainer && chatContainer !== currentContainer) {
         chatObserver.disconnect();
-        chatObserver.observe(chatContainer, { childList: true, subtree: true });
+        chatObserver.observe(chatContainer, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ["class"]
+        });
         currentContainer = chatContainer;
         log("observe sur", chatContainer.className || chatContainer.tagName);
 
