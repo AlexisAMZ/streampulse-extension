@@ -55,10 +55,12 @@ const payload = {};
 // doivent quand même être résolvables si Chrome les demande.
 for (const { code } of ALL_LANGUAGES) {
   const block = translations[code]?.[NAMESPACE];
-  if (!block) {
-    throw new Error(`i18n/lang/${code}.js n'a pas de bloc ${NAMESPACE}.* : le recopier depuis en.js.`);
+  if (!block && code === "en") {
+    throw new Error(`i18n/lang/en.js n'a pas de bloc ${NAMESPACE}.*`);
   }
-  payload[code] = { ...block, shared: sharedPopupStrings(translations[code]?.popup) };
+  // Une langue déclarée mais pas encore traduite n'a pas de bloc : get()
+  // retombe alors clé par clé sur l'anglais.
+  payload[code] = { ...(block ?? {}), shared: sharedPopupStrings(translations[code]?.popup) };
 }
 
 const banner = `/**
@@ -135,6 +137,33 @@ const body = `(function () {
     return value;
   }
 
+  /**
+   * Pluriel CLDR : la clé désigne un groupe { one, few, many, other }.
+   * Forme absente → other de la même langue, puis l'anglais.
+   */
+  function plural(lang, key, count, params) {
+    var vars = { count: count };
+    if (params) for (var name in params) vars[name] = params[name];
+    var form = pickForm(dig(STRINGS[lang], key), lang, count);
+    if (form == null) form = pickForm(dig(STRINGS[DEFAULT_LANG], key), DEFAULT_LANG, count);
+    if (form == null) return key;
+    return form.replace(/{{\\s*([^}\\s]+)\\s*}}/g, function (match, name) {
+      return Object.prototype.hasOwnProperty.call(vars, name) ? vars[name] : match;
+    });
+  }
+
+  function pickForm(group, lang, count) {
+    if (!group || typeof group !== "object") return null;
+    var category = "other";
+    try {
+      category = new Intl.PluralRules(lang === "ar" ? "ar-AE" : lang).select(Number(count));
+    } catch (_e) {
+      // Locale inconnue d'Intl : forme générale.
+    }
+    var form = group[category] != null ? group[category] : group.other;
+    return typeof form === "string" ? form : null;
+  }
+
   function dig(root, key) {
     if (!root) return null;
     var parts = String(key).split(".");
@@ -149,6 +178,7 @@ const body = `(function () {
   window.__SP_I18N__ = {
     resolve: resolve,
     get: get,
+    plural: plural,
     languages: Object.keys(STRINGS),
     defaultLanguage: DEFAULT_LANG,
   };

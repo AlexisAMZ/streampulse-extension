@@ -160,7 +160,8 @@ export default {
     "plusStyleDesc": "يحمل اسمك وشارة دردشتك تأثيرات اشتراكك — تدرّجات وخامات ومتحركات. يُختار كل شيء من النافذة المنبثقة، قسم الشارة. وتُنزَّل مقاطع Twitch بصيغة MP4 من صفحتها.",
     "plusStyleNameTitle": "اسمك",
     "plusStyleBadgeTitle": "شارتك",
-    "plusFinish": "استمتع بـ StreamPulse+"
+    "plusFinish": "استمتع بـ StreamPulse+",
+    "stepperLabel": "التقدّم"
   },
   "popup": {
     "settingsFilter": {
@@ -209,8 +210,14 @@ export default {
       "durationHoursShort": "{{h}} س {{m}}",
       "filterLabel": "التصفية حسب المنصة",
       "filterAll": "الكل",
-      "countSingular": "بث مباشر واحد",
-      "countPlural": "{{count}} بثوث مباشرة",
+      "count": {
+        "zero": "{{count}} بثوث مباشرة",
+        "one": "بث مباشر واحد",
+        "two": "بثّان مباشران",
+        "few": "{{count}} بثوث مباشرة",
+        "many": "{{count}} بثًّا مباشرًا",
+        "other": "{{count}} بثوث مباشرة"
+      },
       "summary": "فاتتك خلال آخر 14 يومًا · {{duration}} من المحتوى",
       "emptyTitle": "لا توجد بثوث فائتة",
       "emptyBody": "عندما ينهي بثّاث تتابعه بثًّا لم تشاهده، يظهر هنا مع إعادته.",
@@ -437,8 +444,14 @@ export default {
       "streamersLabel": "البثّاثون",
       "rulesFor": "تنبيهات {{name}}",
       "addRule": "قاعدة جديدة",
-      "ruleCountSingular": "قاعدة واحدة",
-      "ruleCountPlural": "{{count}} قواعد",
+      "ruleCount": {
+        "zero": "{{count}} قواعد",
+        "one": "قاعدة واحدة",
+        "two": "قاعدتان",
+        "few": "{{count}} قواعد",
+        "many": "{{count}} قاعدةً",
+        "other": "{{count}} قواعد"
+      },
       "noRules": "لا قواعد: تنبيه معتاد عند كل بث.",
       "ruleName": "اسم القاعدة",
       "ruleNamePlaceholder": "مثلًا: ليلة GTA",
@@ -466,8 +479,14 @@ export default {
       "activityLabel": "نشاط اليوم",
       "autoClaimOn": "الاستلام التلقائي مفعَّل",
       "pointsToday": "+{{count}} نقطة اليوم",
-      "dropsToday": "{{count}} من Drops اليوم",
-      "dropsTodayPlural": "{{count}} من Drops اليوم",
+      "dropsToday": {
+        "zero": "{{count}} من Drops اليوم",
+        "one": "{{count}} من Drops اليوم",
+        "two": "{{count}} من Drops اليوم",
+        "few": "{{count}} من Drops اليوم",
+        "many": "{{count}} من Drops اليوم",
+        "other": "{{count}} من Drops اليوم"
+      },
       "search": "ابحث عن قناة",
       "searchLabel": "بحث",
       "allChannels": "كل القنوات",
@@ -575,9 +594,15 @@ export default {
       "staleHint": "افتح Twitch للتحديث",
       "bandOpen": "افتح لوحة Drops",
       "bandClaimed": "تم استلام Drop · {{name}}",
-      "bandMoreOne": "+{{count}} إضافي",
+      "bandMore": {
+        "zero": "+{{count}} إضافية",
+        "one": "+{{count}} إضافي",
+        "two": "+{{count}} إضافية",
+        "few": "+{{count}} إضافية",
+        "many": "+{{count}} إضافية",
+        "other": "+{{count}} إضافية"
+      },
       "timeLeft": "بقي {{time}}",
-      "bandMoreOther": "+{{count}} إضافية",
       "campaigns": "الحملات",
       "campaignsMeta": "{{count}} نشطة · قُرئت من Twitch {{ago}}",
       "campaignsNone": "افتح صفحة حملات Drops على Twitch لتحميل القائمة.",
@@ -594,8 +619,14 @@ export default {
       "filterNew": "جديدة",
       "filterEnding": "تنتهي قريبًا",
       "filterUpcoming": "قادمة",
-      "rewardsOne": "مكافأة واحدة",
-      "rewardsOther": "{{count}} مكافآت",
+      "rewards": {
+        "zero": "{{count}} مكافآت",
+        "one": "مكافأة واحدة",
+        "two": "مكافأتان",
+        "few": "{{count}} مكافآت",
+        "many": "{{count}} مكافأةً",
+        "other": "{{count}} مكافآت"
+      },
       "linkAccount": "حساب للربط",
       "yourGames": "ألعابك",
       "badge": "شارة",
@@ -607,8 +638,14 @@ export default {
       "rewardTypeBadge": "شارة",
       "rewardTypeEmote": "إيموجي (Emote)",
       "rewardTypeItem": "عنصر",
-      "badgeSubOne": "اشتراك واحد",
-      "badgeSubOther": "{{count}} اشتراكات",
+      "badgeSub": {
+        "zero": "{{count}} اشتراكات",
+        "one": "اشتراك واحد",
+        "two": "اشتراكان",
+        "few": "{{count}} اشتراكات",
+        "many": "{{count}} اشتراكًا",
+        "other": "{{count}} اشتراكات"
+      },
       "badgeOr": "أو",
       "badgesKnown": "{{count}} شارة قيد التتبع",
       "badgesSyncing": "جارٍ مزامنة شارات Twitch…",
@@ -673,10 +710,22 @@ export default {
       "isNew": "جديد",
       "dateRange": "{{start}} ← {{end}}",
       "history": "السجل",
-      "historyMetaOne": "Drop واحد مُكتسَب منذ التثبيت",
-      "historyMetaOther": "{{count}} من Drops مكتسَبة منذ التثبيت",
-      "historyMonthOne": "{{month}} · Drop واحد",
-      "historyMonthOther": "{{month}} · {{count}} من Drops",
+      "historyMeta": {
+        "zero": "{{count}} من Drops مكتسَبة منذ التثبيت",
+        "one": "Drop واحد مُكتسَب منذ التثبيت",
+        "two": "{{count}} من Drops مكتسَبة منذ التثبيت",
+        "few": "{{count}} من Drops مكتسَبة منذ التثبيت",
+        "many": "{{count}} من Drops مكتسَبة منذ التثبيت",
+        "other": "{{count}} من Drops مكتسَبة منذ التثبيت"
+      },
+      "historyMonth": {
+        "zero": "{{month}} · {{count}} من Drops",
+        "one": "{{month}} · Drop واحد",
+        "two": "{{month}} · {{count}} من Drops",
+        "few": "{{month}} · {{count}} من Drops",
+        "many": "{{month}} · {{count}} من Drops",
+        "other": "{{month}} · {{count}} من Drops"
+      },
       "historyEmpty": "لم يُكتسَب أي Drop منذ بدء التتبع. ستظهر هنا شهرًا بشهر.",
       "lockedBody": "سجل كل Drop كسبته، شهرًا بشهر، مع اللعبة والقناة. حصريًا في StreamPulse+.",
       "trackingTitle": "تتبّع Drops",
@@ -821,8 +870,14 @@ export default {
       "settings": "الإعدادات"
     },
     "refresh": "تحديث",
-    "greetingLiveCountSingular": "{{count}} بثّاث يبث الآن",
-    "greetingLiveCountPlural": "{{count}} بثّاثين يبثون الآن",
+    "greetingLiveCount": {
+      "zero": "{{count}} بثّاثين يبثون الآن",
+      "one": "{{count}} بثّاث يبث الآن",
+      "two": "بثّاثان يبثّان الآن",
+      "few": "{{count}} بثّاثين يبثون الآن",
+      "many": "{{count}} بثّاثًا يبثّون الآن",
+      "other": "{{count}} بثّاثين يبثون الآن"
+    },
     "platformFilter": {
       "twitch": "twitch",
       "kick": "kick"
@@ -982,6 +1037,7 @@ export default {
       "previewsAudioTitle": "الصوت (وضع الفيديو)",
       "previewsAudioDescription": "فعّل الصوت في معاينات الفيديو.",
       "previewsDelayTitle": "تأخير المعاينة",
+      "unitMs": "ms",
       "previewsAnimationsTitle": "الحركات",
       "previewsAnimationsDescription": "تُظهر المعاينة وتُخفيها بتلاشٍ. عطّلها لإظهارها فورًا.",
       "groupChat": "الدردشة",
@@ -1289,7 +1345,6 @@ export default {
       "updateTitle": "تم تحديث StreamPulse",
       "updateMessage": "انقر لترى الجديد وما أُصلح."
     },
-    "diagnostics": {},
     "badge": {
       "idle": "StreamPulse",
       "live": "{{count}} مباشر"
@@ -1425,8 +1480,14 @@ export default {
     "tagImproved": "مُحسَّن",
     "tagOther": "أخرى",
     "genericChanges": "إصلاحات داخلية وتحسينات في الاستقرار.",
-    "changeCountSingular": "{{count}} تغيير في هذا الإصدار.",
-    "changeCountPlural": "{{count}} تغييرات في هذا الإصدار.",
+    "changeCount": {
+      "zero": "{{count}} تغييرات في هذا الإصدار.",
+      "one": "{{count}} تغيير في هذا الإصدار.",
+      "two": "تغييران في هذا الإصدار.",
+      "few": "{{count}} تغييرات في هذا الإصدار.",
+      "many": "{{count}} تغييرًا في هذا الإصدار.",
+      "other": "{{count}} تغييرات في هذا الإصدار."
+    },
     "noNotes": "لا ملاحظات إصدار متاحة",
     "noNotesBody": "لم تُنشر ملاحظات هذا الإصدار بعد."
   },
@@ -1461,8 +1522,14 @@ export default {
       "founder": "مؤسس StreamPulse",
       "ambassador": "سفير",
       "lifetime": "عضو مدى الحياة",
-      "months": "مشترك منذ {{count}} أشهر",
-      "monthOne": "مشترك منذ شهر واحد",
+      "months": {
+        "zero": "مشترك منذ {{count}} أشهر",
+        "one": "مشترك منذ شهر واحد",
+        "two": "مشترك منذ شهرين",
+        "few": "مشترك منذ {{count}} أشهر",
+        "many": "مشترك منذ {{count}} شهرًا",
+        "other": "مشترك منذ {{count}} أشهر"
+      },
       "newMember": "مشترك جديد",
       "freeLine": "مستخدم الإضافة",
       "worn": "مُجهَّز",
@@ -1516,6 +1583,10 @@ export default {
     },
     "chatFilter": {
       "replacement": "حذف StreamPulse هذه الرسالة"
+    },
+    "previews": {
+      "live": "مباشر",
+      "loading": "جارٍ التحميل…"
     }
   }
 };

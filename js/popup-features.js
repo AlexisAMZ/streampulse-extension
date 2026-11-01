@@ -2,7 +2,7 @@
 // Séparé de popup.js pour garder chaque fichier lisible ; tout passe par
 // chrome.storage, que le service worker alimente.
 
-import { t, getCurrentLanguage } from "./i18n.js";
+import { t, tp, getCurrentLanguage } from "./i18n.js";
 import { thankPlusSubscriber } from "./plus-thanks.js";
 import { initPoints } from "./popup-points.js";
 import { initDrops } from "./popup-drops.js";
@@ -187,7 +187,7 @@ export async function renderHistory() {
   const stats = summarize(missed);
 
   $("history-count").textContent =
-    stats.count === 1 ? t("popup.history.countSingular") : t("popup.history.countPlural", { count: stats.count });
+    tp("popup.history.count", stats.count);
   const sub = $("history-sub");
   sub.textContent = t("popup.history.summary", { duration: durationLabel(stats.totalSeconds) });
   sub.title = sub.textContent;
@@ -719,7 +719,7 @@ function renderSmartStreamers() {
           active === 0 ? "" : String(active),
         ),
       );
-      if (active) button.title = active === 1 ? t("popup.smart.ruleCountSingular") : t("popup.smart.ruleCountPlural", { count: active });
+      if (active) button.title = tp("popup.smart.ruleCount", active);
       button.addEventListener("click", () => {
         smartSelectedId = streamer.id;
         renderSmart();

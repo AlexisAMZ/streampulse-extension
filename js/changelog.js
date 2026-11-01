@@ -7,7 +7,7 @@
  */
 
 import { RELEASES, getLatestRelease, pickLocalized } from "./changelog-data.js";
-import { initI18n, applyTranslations, t, resolveLocale, getCurrentLanguage } from "./i18n.js";
+import { initI18n, applyTranslations, t, tp, resolveLocale, getCurrentLanguage } from "./i18n.js";
 import { PLUS_KEY, isPlusActive, plusPageUrl } from "./plus.js";
 
 /**
@@ -377,7 +377,7 @@ function render(release) {
   } else {
     const count = Array.isArray(release.changes) ? release.changes.length : 0;
     subtitle.textContent = count
-      ? t(count > 1 ? "changelog.changeCountPlural" : "changelog.changeCountSingular", { count })
+      ? tp("changelog.changeCount", count)
       : t("changelog.genericChanges");
   }
 

@@ -1,0 +1,707 @@
+{"at":"2026-11-01T21:09:54.710Z","locale":"fr","key":"*","event":"baseline","to":"approved","by":"legacy","count":1354,"reason":"état de référence à la mise en place de l'outillage i18n"}
+{"at":"2026-11-01T21:09:54.733Z","locale":"es","key":"*","event":"baseline","to":"reviewed","by":"legacy","count":1354,"reason":"état de référence à la mise en place de l'outillage i18n"}
+{"at":"2026-11-01T21:09:54.744Z","locale":"pt-BR","key":"*","event":"baseline","to":"reviewed","by":"legacy","count":1354,"reason":"état de référence à la mise en place de l'outillage i18n"}
+{"at":"2026-11-01T21:09:54.754Z","locale":"de","key":"*","event":"baseline","to":"reviewed","by":"legacy","count":1354,"reason":"état de référence à la mise en place de l'outillage i18n"}
+{"at":"2026-11-01T21:09:54.768Z","locale":"it","key":"*","event":"baseline","to":"reviewed","by":"legacy","count":1354,"reason":"état de référence à la mise en place de l'outillage i18n"}
+{"at":"2026-11-01T21:09:54.778Z","locale":"pl","key":"*","event":"baseline","to":"reviewed","by":"legacy","count":1354,"reason":"état de référence à la mise en place de l'outillage i18n"}
+{"at":"2026-11-01T21:09:54.788Z","locale":"tr","key":"*","event":"baseline","to":"reviewed","by":"legacy","count":1354,"reason":"état de référence à la mise en place de l'outillage i18n"}
+{"at":"2026-11-01T21:09:54.797Z","locale":"ru","key":"*","event":"baseline","to":"reviewed","by":"legacy","count":1354,"reason":"état de référence à la mise en place de l'outillage i18n"}
+{"at":"2026-11-01T21:09:54.806Z","locale":"ja","key":"*","event":"baseline","to":"reviewed","by":"legacy","count":1354,"reason":"état de référence à la mise en place de l'outillage i18n"}
+{"at":"2026-11-01T21:09:54.816Z","locale":"ko","key":"*","event":"baseline","to":"reviewed","by":"legacy","count":1354,"reason":"état de référence à la mise en place de l'outillage i18n"}
+{"at":"2026-11-01T21:09:54.824Z","locale":"ar","key":"*","event":"baseline","to":"reviewed","by":"legacy","count":1354,"reason":"état de référence à la mise en place de l'outillage i18n"}
+{"at":"2026-11-01T21:09:54.837Z","locale":"uk","key":"*","event":"baseline","to":"reviewed","by":"legacy","count":1354,"reason":"état de référence à la mise en place de l'outillage i18n"}
+{"at":"2026-11-01T21:10:03.141Z","locale":"uk","key":"@manifest.appDesc","event":"manual-edit","from":"reviewed","to":"pending"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"onboarding.stepperLabel","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.history.count.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.history.count.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.history.count.other","event":"migration","to":"approved","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.smart.ruleCount.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.smart.ruleCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.smart.ruleCount.other","event":"migration","to":"approved","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.cplus.dropsToday.one","event":"migration","to":"approved","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.cplus.dropsToday.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.cplus.dropsToday.other","event":"migration","to":"approved","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.drops.bandMore.one","event":"migration","to":"approved","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.drops.bandMore.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.drops.bandMore.other","event":"migration","to":"approved","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.drops.rewards.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.drops.rewards.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.drops.rewards.other","event":"migration","to":"approved","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.drops.badgeSub.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.drops.badgeSub.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.drops.badgeSub.other","event":"migration","to":"approved","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.drops.historyMeta.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.drops.historyMeta.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.drops.historyMeta.other","event":"migration","to":"approved","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.drops.historyMonth.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.drops.historyMonth.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.drops.historyMonth.other","event":"migration","to":"approved","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.greetingLiveCount.one","event":"migration","to":"approved","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.greetingLiveCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.greetingLiveCount.other","event":"migration","to":"approved","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"popup.settings.unitMs","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"changelog.changeCount.one","event":"migration","to":"approved","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"changelog.changeCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"changelog.changeCount.other","event":"migration","to":"approved","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"inject.badge.months.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"inject.badge.months.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"inject.badge.months.other","event":"migration","to":"approved","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"inject.previews.live","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"fr","key":"inject.previews.loading","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"onboarding.stepperLabel","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.history.count.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.history.count.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.history.count.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.smart.ruleCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.smart.ruleCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.smart.ruleCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.cplus.dropsToday.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.cplus.dropsToday.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.cplus.dropsToday.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.drops.bandMore.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.drops.bandMore.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.drops.bandMore.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.drops.rewards.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.drops.rewards.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.drops.rewards.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.drops.badgeSub.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.drops.badgeSub.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.drops.badgeSub.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.drops.historyMeta.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.drops.historyMeta.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.drops.historyMeta.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.drops.historyMonth.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.drops.historyMonth.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.drops.historyMonth.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.greetingLiveCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.greetingLiveCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.greetingLiveCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"popup.settings.unitMs","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"changelog.changeCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"changelog.changeCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"changelog.changeCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"inject.badge.months.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"inject.badge.months.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"inject.badge.months.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"inject.previews.live","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"es","key":"inject.previews.loading","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"onboarding.stepperLabel","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.history.count.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.history.count.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.history.count.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.smart.ruleCount.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.smart.ruleCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.smart.ruleCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.cplus.dropsToday.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.cplus.dropsToday.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.cplus.dropsToday.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.drops.bandMore.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.drops.bandMore.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.drops.bandMore.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.drops.rewards.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.drops.rewards.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.drops.rewards.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.drops.badgeSub.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.drops.badgeSub.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.drops.badgeSub.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.drops.historyMeta.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.drops.historyMeta.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.drops.historyMeta.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.drops.historyMonth.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.drops.historyMonth.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.drops.historyMonth.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.greetingLiveCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.greetingLiveCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.greetingLiveCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"popup.settings.unitMs","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"changelog.changeCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"changelog.changeCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"changelog.changeCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"inject.badge.months.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"inject.badge.months.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"inject.badge.months.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"inject.previews.live","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pt-BR","key":"inject.previews.loading","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"onboarding.stepperLabel","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.history.count.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.history.count.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.smart.ruleCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.smart.ruleCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.cplus.dropsToday.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.cplus.dropsToday.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.drops.bandMore.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.drops.bandMore.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.drops.rewards.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.drops.rewards.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.drops.badgeSub.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.drops.badgeSub.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.drops.historyMeta.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.drops.historyMeta.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.drops.historyMonth.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.drops.historyMonth.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.greetingLiveCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.greetingLiveCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"popup.settings.unitMs","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"changelog.changeCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"changelog.changeCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"inject.badge.months.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"inject.badge.months.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"inject.previews.live","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"de","key":"inject.previews.loading","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"onboarding.stepperLabel","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.history.count.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.history.count.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.history.count.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.smart.ruleCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.smart.ruleCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.smart.ruleCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.cplus.dropsToday.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.cplus.dropsToday.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.cplus.dropsToday.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.drops.bandMore.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.drops.bandMore.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.drops.bandMore.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.drops.rewards.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.drops.rewards.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.drops.rewards.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.drops.badgeSub.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.drops.badgeSub.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.drops.badgeSub.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.drops.historyMeta.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.drops.historyMeta.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.drops.historyMeta.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.drops.historyMonth.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.drops.historyMonth.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.drops.historyMonth.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.greetingLiveCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.greetingLiveCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.greetingLiveCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"popup.settings.unitMs","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"changelog.changeCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"changelog.changeCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"changelog.changeCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"inject.badge.months.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"inject.badge.months.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"inject.badge.months.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"inject.previews.live","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"it","key":"inject.previews.loading","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"onboarding.stepperLabel","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.history.count.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.history.count.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.history.count.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.history.count.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.smart.ruleCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.smart.ruleCount.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.smart.ruleCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.smart.ruleCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.cplus.dropsToday.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.cplus.dropsToday.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.cplus.dropsToday.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.cplus.dropsToday.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.bandMore.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.bandMore.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.bandMore.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.bandMore.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.rewards.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.rewards.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.rewards.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.rewards.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.badgeSub.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.badgeSub.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.badgeSub.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.badgeSub.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.historyMeta.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.historyMeta.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.historyMeta.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.historyMeta.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.historyMonth.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.historyMonth.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.historyMonth.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.drops.historyMonth.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.greetingLiveCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.greetingLiveCount.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.greetingLiveCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.greetingLiveCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"popup.settings.unitMs","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"changelog.changeCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"changelog.changeCount.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"changelog.changeCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"changelog.changeCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"inject.badge.months.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"inject.badge.months.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"inject.badge.months.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"inject.badge.months.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"inject.previews.live","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"pl","key":"inject.previews.loading","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"onboarding.stepperLabel","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.history.count.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.history.count.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.smart.ruleCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.smart.ruleCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.cplus.dropsToday.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.cplus.dropsToday.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.drops.bandMore.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.drops.bandMore.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.drops.rewards.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.drops.rewards.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.drops.badgeSub.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.drops.badgeSub.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.drops.historyMeta.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.drops.historyMeta.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.drops.historyMonth.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.drops.historyMonth.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.greetingLiveCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.greetingLiveCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"popup.settings.unitMs","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"changelog.changeCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"changelog.changeCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"inject.badge.months.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"inject.badge.months.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"inject.previews.live","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"tr","key":"inject.previews.loading","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"onboarding.stepperLabel","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.history.count.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.history.count.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.history.count.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.history.count.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.smart.ruleCount.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.smart.ruleCount.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.smart.ruleCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.smart.ruleCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.cplus.dropsToday.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.cplus.dropsToday.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.cplus.dropsToday.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.cplus.dropsToday.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.bandMore.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.bandMore.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.bandMore.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.bandMore.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.rewards.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.rewards.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.rewards.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.rewards.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.badgeSub.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.badgeSub.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.badgeSub.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.badgeSub.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.historyMeta.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.historyMeta.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.historyMeta.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.historyMeta.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.historyMonth.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.historyMonth.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.historyMonth.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.drops.historyMonth.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.greetingLiveCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.greetingLiveCount.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.greetingLiveCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.greetingLiveCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"popup.settings.unitMs","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"changelog.changeCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"changelog.changeCount.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"changelog.changeCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"changelog.changeCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"inject.badge.months.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"inject.badge.months.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"inject.badge.months.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"inject.badge.months.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"inject.previews.live","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ru","key":"inject.previews.loading","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ja","key":"onboarding.stepperLabel","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ja","key":"popup.history.count.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ja","key":"popup.smart.ruleCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ja","key":"popup.cplus.dropsToday.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ja","key":"popup.drops.bandMore.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ja","key":"popup.drops.rewards.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ja","key":"popup.drops.badgeSub.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ja","key":"popup.drops.historyMeta.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ja","key":"popup.drops.historyMonth.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ja","key":"popup.greetingLiveCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ja","key":"popup.settings.unitMs","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ja","key":"changelog.changeCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ja","key":"inject.badge.months.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ja","key":"inject.previews.live","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ja","key":"inject.previews.loading","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ko","key":"onboarding.stepperLabel","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ko","key":"popup.history.count.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ko","key":"popup.smart.ruleCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ko","key":"popup.cplus.dropsToday.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ko","key":"popup.drops.bandMore.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ko","key":"popup.drops.rewards.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ko","key":"popup.drops.badgeSub.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ko","key":"popup.drops.historyMeta.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ko","key":"popup.drops.historyMonth.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ko","key":"popup.greetingLiveCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ko","key":"popup.settings.unitMs","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ko","key":"changelog.changeCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ko","key":"inject.badge.months.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ko","key":"inject.previews.live","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ko","key":"inject.previews.loading","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"onboarding.stepperLabel","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.history.count.zero","event":"migration","to":"pending","by":"copy","reason":"forme zero recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.history.count.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.history.count.two","event":"migration","to":"pending","by":"copy","reason":"forme two recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.history.count.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.history.count.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.history.count.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.smart.ruleCount.zero","event":"migration","to":"pending","by":"copy","reason":"forme zero recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.smart.ruleCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.smart.ruleCount.two","event":"migration","to":"pending","by":"copy","reason":"forme two recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.smart.ruleCount.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.smart.ruleCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.smart.ruleCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.cplus.dropsToday.zero","event":"migration","to":"pending","by":"copy","reason":"forme zero recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.cplus.dropsToday.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.cplus.dropsToday.two","event":"migration","to":"pending","by":"copy","reason":"forme two recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.cplus.dropsToday.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.cplus.dropsToday.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.cplus.dropsToday.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.bandMore.zero","event":"migration","to":"pending","by":"copy","reason":"forme zero recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.bandMore.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.bandMore.two","event":"migration","to":"pending","by":"copy","reason":"forme two recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.bandMore.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.bandMore.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.bandMore.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.rewards.zero","event":"migration","to":"pending","by":"copy","reason":"forme zero recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.rewards.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.rewards.two","event":"migration","to":"pending","by":"copy","reason":"forme two recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.rewards.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.rewards.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.rewards.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.badgeSub.zero","event":"migration","to":"pending","by":"copy","reason":"forme zero recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.badgeSub.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.badgeSub.two","event":"migration","to":"pending","by":"copy","reason":"forme two recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.badgeSub.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.badgeSub.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.badgeSub.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.historyMeta.zero","event":"migration","to":"pending","by":"copy","reason":"forme zero recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.historyMeta.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.historyMeta.two","event":"migration","to":"pending","by":"copy","reason":"forme two recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.historyMeta.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.historyMeta.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.historyMeta.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.historyMonth.zero","event":"migration","to":"pending","by":"copy","reason":"forme zero recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.historyMonth.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.historyMonth.two","event":"migration","to":"pending","by":"copy","reason":"forme two recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.historyMonth.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.historyMonth.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.drops.historyMonth.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.greetingLiveCount.zero","event":"migration","to":"pending","by":"copy","reason":"forme zero recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.greetingLiveCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.greetingLiveCount.two","event":"migration","to":"pending","by":"copy","reason":"forme two recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.greetingLiveCount.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.greetingLiveCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.greetingLiveCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"popup.settings.unitMs","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"changelog.changeCount.zero","event":"migration","to":"pending","by":"copy","reason":"forme zero recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"changelog.changeCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"changelog.changeCount.two","event":"migration","to":"pending","by":"copy","reason":"forme two recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"changelog.changeCount.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"changelog.changeCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"changelog.changeCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"inject.badge.months.zero","event":"migration","to":"pending","by":"copy","reason":"forme zero recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"inject.badge.months.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"inject.badge.months.two","event":"migration","to":"pending","by":"copy","reason":"forme two recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"inject.badge.months.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"inject.badge.months.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"inject.badge.months.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"inject.previews.live","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"ar","key":"inject.previews.loading","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"onboarding.stepperLabel","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.history.count.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.history.count.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.history.count.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.history.count.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.smart.ruleCount.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.smart.ruleCount.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.smart.ruleCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.smart.ruleCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.cplus.dropsToday.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.cplus.dropsToday.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.cplus.dropsToday.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.cplus.dropsToday.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.bandMore.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.bandMore.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.bandMore.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.bandMore.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.rewards.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.rewards.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.rewards.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.rewards.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.badgeSub.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.badgeSub.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.badgeSub.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.badgeSub.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.historyMeta.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.historyMeta.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.historyMeta.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.historyMeta.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.historyMonth.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.historyMonth.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.historyMonth.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.drops.historyMonth.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.greetingLiveCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.greetingLiveCount.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.greetingLiveCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.greetingLiveCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"popup.settings.unitMs","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"changelog.changeCount.one","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"changelog.changeCount.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"changelog.changeCount.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"changelog.changeCount.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"inject.badge.months.one","event":"migration","to":"pending","by":"claude","reason":"« 1 » écrit en dur remplacé par {{count}} : la catégorie one couvre aussi d'autres nombres"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"inject.badge.months.few","event":"migration","to":"pending","by":"copy","reason":"forme few recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"inject.badge.months.many","event":"migration","to":"pending","by":"copy","reason":"forme many recopiée de la forme plurielle existante, à accorder"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"inject.badge.months.other","event":"migration","to":"reviewed","by":"legacy","reason":"paire singulier/pluriel convertie en groupe CLDR"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"inject.previews.live","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:15:45.855Z","locale":"uk","key":"inject.previews.loading","event":"migration","to":"pending","by":"claude","reason":"nouvelle clé (texte auparavant écrit en dur)"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"onboarding.stepperLabel","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.history.count.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.history.count.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.history.count.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.smart.ruleCount.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.smart.ruleCount.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.smart.ruleCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.cplus.dropsToday.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.cplus.dropsToday.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.drops.bandMore.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.drops.bandMore.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.drops.rewards.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.drops.rewards.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.drops.rewards.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.drops.badgeSub.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.drops.badgeSub.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.drops.badgeSub.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.drops.historyMeta.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.drops.historyMeta.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.drops.historyMeta.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.drops.historyMonth.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.drops.historyMonth.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.drops.historyMonth.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.greetingLiveCount.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.greetingLiveCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"popup.settings.unitMs","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"changelog.changeCount.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"changelog.changeCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"inject.badge.months.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"inject.badge.months.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"inject.badge.months.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"inject.previews.live","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"inject.previews.loading","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.385Z","locale":"uk","key":"@manifest.appDesc","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"onboarding.stepperLabel","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.history.count.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.history.count.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.history.count.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.smart.ruleCount.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.smart.ruleCount.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.smart.ruleCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.cplus.dropsToday.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.cplus.dropsToday.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.drops.bandMore.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.drops.bandMore.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.drops.rewards.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.drops.rewards.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.drops.rewards.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.drops.badgeSub.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.drops.badgeSub.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.drops.badgeSub.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.drops.historyMeta.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.drops.historyMeta.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.drops.historyMeta.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.drops.historyMonth.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.drops.historyMonth.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.drops.historyMonth.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.greetingLiveCount.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.greetingLiveCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.settings.unitMs","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"changelog.changeCount.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"changelog.changeCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"inject.badge.months.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"inject.badge.months.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"inject.badge.months.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"inject.previews.live","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"inject.previews.loading","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.plus.compareBadges","event":"review-fix","from":"reviewed","by":"claude","old":"Бейджи","new":"Значки","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.plus.compareFxPlus","event":"review-fix","from":"reviewed","by":"claude","old":"Анимированные бейдж и ник","new":"Анимированные значок и ник","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.plus.value","event":"review-fix","from":"reviewed","by":"claude","old":"StreamPulse+ принёс вам {{badges}} бейджей и {{drops}} Drops","new":"StreamPulse+ принёс вам {{badges}} значков и {{drops}} Drops","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.plus.valueBothOne","event":"review-fix","from":"reviewed","by":"claude","old":"StreamPulse+ принёс вам 1 бейдж и 1 Drop","new":"StreamPulse+ принёс вам 1 значок и 1 Drop","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.plus.valueBadgeOne","event":"review-fix","from":"reviewed","by":"claude","old":"StreamPulse+ принёс вам 1 бейдж и {{drops}} Drops","new":"StreamPulse+ принёс вам 1 значок и {{drops}} Drops","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:42.869Z","locale":"ru","key":"popup.plus.valueDropOne","event":"review-fix","from":"reviewed","by":"claude","old":"StreamPulse+ принёс вам {{badges}} бейджей и 1 Drop","new":"StreamPulse+ принёс вам {{badges}} значков и 1 Drop","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"onboarding.stepperLabel","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.history.count.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.history.count.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.smart.ruleCount.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.smart.ruleCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.cplus.dropsToday.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.cplus.dropsToday.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.drops.bandMore.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.drops.bandMore.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.drops.rewards.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.drops.rewards.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.drops.badgeSub.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.drops.badgeSub.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.drops.historyMeta.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.drops.historyMeta.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.drops.historyMonth.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.drops.historyMonth.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.greetingLiveCount.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.greetingLiveCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"popup.settings.unitMs","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"changelog.changeCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"inject.badge.months.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"inject.badge.months.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"inject.previews.live","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"inject.previews.loading","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:43.252Z","locale":"pl","key":"changelog.changeCount.few","event":"review-fix","from":"pending","by":"claude","old":"{{count}} zmian w tej wersji.","new":"{{count}} zmiany w tej wersji.","reason":"accord du pluriel polonais : 2 à 4 (few) prennent « zmiany », « zmian » est réservé à 5 et plus"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"onboarding.stepperLabel","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.history.count.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.smart.ruleCount.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.cplus.dropsToday.two","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.cplus.dropsToday.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.cplus.dropsToday.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.drops.bandMore.two","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.drops.bandMore.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.drops.bandMore.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.drops.rewards.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.drops.badgeSub.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.drops.historyMeta.two","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.drops.historyMeta.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.drops.historyMeta.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.drops.historyMonth.two","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.drops.historyMonth.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.drops.historyMonth.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.greetingLiveCount.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.settings.unitMs","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"changelog.changeCount.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"inject.badge.months.few","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"inject.previews.live","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"inject.previews.loading","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.history.count.two","event":"review-fix","from":"pending","by":"claude","old":"{{count}} بثوث مباشرة","new":"بثّان مباشران","reason":"forme duelle arabe (2) : le nom au duel, sans chiffre"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.history.count.many","event":"review-fix","from":"pending","by":"claude","old":"{{count}} بثوث مباشرة","new":"{{count}} بثًّا مباشرًا","reason":"arabe 11 à 99 (many) : nom au singulier accusatif"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.smart.ruleCount.two","event":"review-fix","from":"pending","by":"claude","old":"{{count}} قواعد","new":"قاعدتان","reason":"forme duelle arabe (2) : le nom au duel, sans chiffre"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.smart.ruleCount.many","event":"review-fix","from":"pending","by":"claude","old":"{{count}} قواعد","new":"{{count}} قاعدةً","reason":"arabe 11 à 99 (many) : nom au singulier accusatif"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.drops.rewards.two","event":"review-fix","from":"pending","by":"claude","old":"{{count}} مكافآت","new":"مكافأتان","reason":"forme duelle arabe (2) : le nom au duel, sans chiffre"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.drops.rewards.many","event":"review-fix","from":"pending","by":"claude","old":"{{count}} مكافآت","new":"{{count}} مكافأةً","reason":"arabe 11 à 99 (many) : nom au singulier accusatif"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.drops.badgeSub.two","event":"review-fix","from":"pending","by":"claude","old":"{{count}} اشتراكات","new":"اشتراكان","reason":"forme duelle arabe (2) : le nom au duel, sans chiffre"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.drops.badgeSub.many","event":"review-fix","from":"pending","by":"claude","old":"{{count}} اشتراكات","new":"{{count}} اشتراكًا","reason":"arabe 11 à 99 (many) : nom au singulier accusatif"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.greetingLiveCount.two","event":"review-fix","from":"pending","by":"claude","old":"{{count}} بثّاثين يبثون الآن","new":"بثّاثان يبثّان الآن","reason":"forme duelle arabe (2) : le nom au duel, sans chiffre"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"popup.greetingLiveCount.many","event":"review-fix","from":"pending","by":"claude","old":"{{count}} بثّاثين يبثون الآن","new":"{{count}} بثّاثًا يبثّون الآن","reason":"arabe 11 à 99 (many) : nom au singulier accusatif"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"changelog.changeCount.two","event":"review-fix","from":"pending","by":"claude","old":"{{count}} تغييرات في هذا الإصدار.","new":"تغييران في هذا الإصدار.","reason":"forme duelle arabe (2) : le nom au duel, sans chiffre"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"changelog.changeCount.many","event":"review-fix","from":"pending","by":"claude","old":"{{count}} تغييرات في هذا الإصدار.","new":"{{count}} تغييرًا في هذا الإصدار.","reason":"arabe 11 à 99 (many) : nom au singulier accusatif"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"inject.badge.months.two","event":"review-fix","from":"pending","by":"claude","old":"مشترك منذ {{count}} أشهر","new":"مشترك منذ شهرين","reason":"forme duelle arabe (2) : le nom au duel, sans chiffre"}
+{"at":"2026-11-01T21:26:44.604Z","locale":"ar","key":"inject.badge.months.many","event":"review-fix","from":"pending","by":"claude","old":"مشترك منذ {{count}} أشهر","new":"مشترك منذ {{count}} شهرًا","reason":"arabe 11 à 99 (many) : nom au singulier accusatif"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"onboarding.stepperLabel","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"popup.history.count.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"popup.history.count.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"popup.smart.ruleCount.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"popup.smart.ruleCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"popup.cplus.dropsToday.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"popup.drops.bandMore.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"popup.drops.rewards.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"popup.drops.rewards.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"popup.drops.badgeSub.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"popup.drops.badgeSub.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"popup.drops.historyMeta.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"popup.drops.historyMeta.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"popup.drops.historyMonth.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"popup.drops.historyMonth.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"popup.greetingLiveCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"popup.settings.unitMs","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"changelog.changeCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"inject.badge.months.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"inject.badge.months.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"inject.previews.live","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.009Z","locale":"fr","key":"inject.previews.loading","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"onboarding.stepperLabel","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"popup.history.count.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"popup.smart.ruleCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"popup.cplus.dropsToday.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"popup.drops.bandMore.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"popup.drops.rewards.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"popup.drops.badgeSub.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"popup.drops.historyMeta.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"popup.drops.historyMonth.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"popup.greetingLiveCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"popup.settings.unitMs","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"changelog.changeCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"inject.badge.months.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"inject.previews.live","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"inject.previews.loading","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"popup.plus.compareBadges","event":"review-fix","from":"reviewed","by":"claude","old":"Badges","new":"Insignias","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"popup.plus.compareFxPlus","event":"review-fix","from":"reviewed","by":"claude","old":"Badge y nombre animados","new":"Insignia y nombre animados","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"popup.plus.value","event":"review-fix","from":"reviewed","by":"claude","old":"StreamPulse+ te hizo ganar {{badges}} badges y {{drops}} Drops","new":"StreamPulse+ te hizo ganar {{badges}} insignias y {{drops}} Drops","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"popup.plus.valueBothOne","event":"review-fix","from":"reviewed","by":"claude","old":"StreamPulse+ te hizo ganar 1 badge y 1 Drop","new":"StreamPulse+ te hizo ganar 1 insignia y 1 Drop","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"popup.plus.valueBadgeOne","event":"review-fix","from":"reviewed","by":"claude","old":"StreamPulse+ te hizo ganar 1 badge y {{drops}} Drops","new":"StreamPulse+ te hizo ganar 1 insignia y {{drops}} Drops","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:45.462Z","locale":"es","key":"popup.plus.valueDropOne","event":"review-fix","from":"reviewed","by":"claude","old":"StreamPulse+ te hizo ganar {{badges}} badges y 1 Drop","new":"StreamPulse+ te hizo ganar {{badges}} insignias y 1 Drop","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"onboarding.stepperLabel","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.history.count.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.history.count.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.smart.ruleCount.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.smart.ruleCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.cplus.dropsToday.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.drops.bandMore.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.drops.rewards.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.drops.rewards.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.drops.badgeSub.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.drops.badgeSub.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.drops.historyMeta.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.drops.historyMeta.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.drops.historyMonth.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.drops.historyMonth.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.greetingLiveCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.settings.unitMs","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"changelog.changeCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"inject.badge.months.one","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"inject.badge.months.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"inject.previews.live","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"inject.previews.loading","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.plus.compareBadges","event":"review-fix","from":"reviewed","by":"claude","old":"Badges","new":"Emblemas","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.plus.compareFxPlus","event":"review-fix","from":"reviewed","by":"claude","old":"Badge e nome animados","new":"Emblema e nome animados","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.plus.value","event":"review-fix","from":"reviewed","by":"claude","old":"O StreamPulse+ te rendeu {{badges}} badges e {{drops}} Drops","new":"O StreamPulse+ te rendeu {{badges}} emblemas e {{drops}} Drops","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.plus.valueBothOne","event":"review-fix","from":"reviewed","by":"claude","old":"O StreamPulse+ te rendeu 1 badge e 1 Drop","new":"O StreamPulse+ te rendeu 1 emblema e 1 Drop","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.plus.valueBadgeOne","event":"review-fix","from":"reviewed","by":"claude","old":"O StreamPulse+ te rendeu 1 badge e {{drops}} Drops","new":"O StreamPulse+ te rendeu 1 emblema e {{drops}} Drops","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:46.237Z","locale":"pt-BR","key":"popup.plus.valueDropOne","event":"review-fix","from":"reviewed","by":"claude","old":"O StreamPulse+ te rendeu {{badges}} badges e 1 Drop","new":"O StreamPulse+ te rendeu {{badges}} emblemas e 1 Drop","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:46.734Z","locale":"it","key":"onboarding.stepperLabel","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.734Z","locale":"it","key":"popup.history.count.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.734Z","locale":"it","key":"popup.smart.ruleCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.734Z","locale":"it","key":"popup.cplus.dropsToday.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.734Z","locale":"it","key":"popup.drops.bandMore.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.734Z","locale":"it","key":"popup.drops.rewards.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.734Z","locale":"it","key":"popup.drops.badgeSub.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.734Z","locale":"it","key":"popup.drops.historyMeta.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.734Z","locale":"it","key":"popup.drops.historyMonth.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.734Z","locale":"it","key":"popup.greetingLiveCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.734Z","locale":"it","key":"popup.settings.unitMs","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.734Z","locale":"it","key":"changelog.changeCount.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.734Z","locale":"it","key":"inject.badge.months.many","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.734Z","locale":"it","key":"inject.previews.live","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:46.734Z","locale":"it","key":"inject.previews.loading","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:47.090Z","locale":"de","key":"onboarding.stepperLabel","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:47.090Z","locale":"de","key":"popup.settings.unitMs","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:47.090Z","locale":"de","key":"inject.previews.live","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:47.090Z","locale":"de","key":"inject.previews.loading","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:47.090Z","locale":"de","key":"popup.plus.compareBadges","event":"review-fix","from":"reviewed","by":"claude","old":"Badges","new":"Abzeichen","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:47.090Z","locale":"de","key":"popup.plus.compareFxPlus","event":"review-fix","from":"reviewed","by":"claude","old":"Animierter Badge und Name","new":"Animiertes Abzeichen und Name","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:47.090Z","locale":"de","key":"popup.plus.value","event":"review-fix","from":"reviewed","by":"claude","old":"StreamPulse+ hat dir {{badges}} Badges und {{drops}} Drops beschert","new":"StreamPulse+ hat dir {{badges}} Abzeichen und {{drops}} Drops beschert","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:47.090Z","locale":"de","key":"popup.plus.valueBothOne","event":"review-fix","from":"reviewed","by":"claude","old":"StreamPulse+ hat dir 1 Badge und 1 Drop beschert","new":"StreamPulse+ hat dir 1 Abzeichen und 1 Drop beschert","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:47.090Z","locale":"de","key":"popup.plus.valueBadgeOne","event":"review-fix","from":"reviewed","by":"claude","old":"StreamPulse+ hat dir 1 Badge und {{drops}} Drops beschert","new":"StreamPulse+ hat dir 1 Abzeichen und {{drops}} Drops beschert","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:47.090Z","locale":"de","key":"popup.plus.valueDropOne","event":"review-fix","from":"reviewed","by":"claude","old":"StreamPulse+ hat dir {{badges}} Badges und 1 Drop beschert","new":"StreamPulse+ hat dir {{badges}} Abzeichen und 1 Drop beschert","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:47.544Z","locale":"tr","key":"onboarding.stepperLabel","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:47.544Z","locale":"tr","key":"popup.settings.unitMs","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:47.544Z","locale":"tr","key":"inject.previews.live","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:47.544Z","locale":"tr","key":"inject.previews.loading","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:47.544Z","locale":"tr","key":"popup.plus.compareFxPlus","event":"review-fix","from":"reviewed","by":"claude","old":"Animasyonlu badge ve isim","new":"Animasyonlu rozet ve isim","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:47.544Z","locale":"tr","key":"popup.plus.value","event":"review-fix","from":"reviewed","by":"claude","old":"StreamPulse+ sana {{badges}} badge ve {{drops}} Drops kazandırdı","new":"StreamPulse+ sana {{badges}} rozet ve {{drops}} Drops kazandırdı","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:47.544Z","locale":"tr","key":"popup.plus.valueBothOne","event":"review-fix","from":"reviewed","by":"claude","old":"StreamPulse+ sana 1 badge ve 1 Drop kazandırdı","new":"StreamPulse+ sana 1 rozet ve 1 Drop kazandırdı","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:47.544Z","locale":"tr","key":"popup.plus.valueBadgeOne","event":"review-fix","from":"reviewed","by":"claude","old":"StreamPulse+ sana 1 badge ve {{drops}} Drop kazandırdı","new":"StreamPulse+ sana 1 rozet ve {{drops}} Drop kazandırdı","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:47.544Z","locale":"tr","key":"popup.plus.valueDropOne","event":"review-fix","from":"reviewed","by":"claude","old":"StreamPulse+ sana {{badges}} badge ve 1 Drop kazandırdı","new":"StreamPulse+ sana {{badges}} rozet ve 1 Drop kazandırdı","reason":"harmonisation terminologique : même mot pour « badge » que dans le reste de l'interface (glossaire)"}
+{"at":"2026-11-01T21:26:47.904Z","locale":"ja","key":"onboarding.stepperLabel","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:47.904Z","locale":"ja","key":"popup.settings.unitMs","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:47.904Z","locale":"ja","key":"inject.previews.live","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:47.904Z","locale":"ja","key":"inject.previews.loading","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:48.452Z","locale":"ko","key":"onboarding.stepperLabel","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:48.452Z","locale":"ko","key":"popup.settings.unitMs","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:48.452Z","locale":"ko","key":"inject.previews.live","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:26:48.452Z","locale":"ko","key":"inject.previews.loading","event":"reviewed","from":"pending","by":"claude"}
+{"at":"2026-11-01T21:28:00.992Z","locale":"tr","key":"popup.plus.compareBadges","event":"review-fix","from":"reviewed","by":"claude","old":"Badgeler","new":"Rozetler","reason":"harmonisation terminologique : « rozet » comme dans le reste de l interface (glossaire)"}

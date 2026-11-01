@@ -161,9 +161,26 @@ else {
       f.includes("changelog-data") || f.includes("history-data") || f.includes("predictions-data");
     const keyPatterns = [
       /\bt\("([a-zA-Z][a-zA-Z0-9]*(?:\.[a-zA-Z0-9-]+)+)"/g,
-      /translate(?:WithPrefs)?\([^,\n]+,\s*"([a-zA-Z][a-zA-Z0-9]*(?:\.[a-zA-Z0-9-]+)+)"/g,
-      /__SP_I18N__\.get\([^,\n]+,\s*"([a-zA-Z][a-zA-Z0-9]*(?:\.[a-zA-Z0-9-]+)+)"/g,
+      /\btp\("([a-zA-Z][a-zA-Z0-9]*(?:\.[a-zA-Z0-9-]+)+)"/g,
+      /translate(?:WithPrefs|Plural)?\([^,\n]+,\s*"([a-zA-Z][a-zA-Z0-9]*(?:\.[a-zA-Z0-9-]+)+)"/g,
+      /__SP_I18N__\.(?:get|plural)\([^,\n]+,\s*"([a-zA-Z][a-zA-Z0-9]*(?:\.[a-zA-Z0-9-]+)+)"/g,
     ];
+    // Un groupe de pluriel (tp("popup.history.count", n)) se nomme par sa
+    // base : la référencer compte pour toutes ses formes (.one, .other…).
+    const { expectedEntries, isPluralGroup } = await import(new URL("./i18n/lib/core.mjs", import.meta.url).href);
+    const pluralBases = new Set();
+    const collectGroups = (node, prefix) => {
+      for (const [k, v] of Object.entries(node ?? {})) {
+        const key = prefix ? `${prefix}.${k}` : k;
+        if (isPluralGroup(v)) pluralBases.add(key);
+        else if (v && typeof v === "object") collectGroups(v, key);
+      }
+    };
+    collectGroups(translations[DEFAULT_LANGUAGE], "");
+    const markUsed = (key) => {
+      if (pluralBases.has(key)) referenceKeys.filter((k) => k.startsWith(`${key}.`)).forEach((k) => usedKeys.add(k));
+      else usedKeys.add(key);
+    };
     const scanDir = (dir) => {
       for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
         const full = path.join(dir, entry.name);
@@ -174,13 +191,13 @@ else {
         if (!/\.(js|mjs|html)$/.test(entry.name) || skip(full)) continue;
         const text = fs.readFileSync(full, "utf8");
         for (const re of keyPatterns) {
-          for (const m of text.matchAll(re)) usedKeys.add(m[1]);
+          for (const m of text.matchAll(re)) markUsed(m[1]);
         }
         // Clé écrite en entier comme littéral (table de clés, code d'erreur
         // traduit plus loin) : elle est référencée même hors d'un appel t().
         // Seules les clés existantes comptent, pour ne pas polluer « unknown ».
         for (const m of text.matchAll(/"([a-zA-Z][a-zA-Z0-9]*(?:\.[a-zA-Z0-9-]+)+)"/g)) {
-          if (referenceKeySet.has(m[1])) usedKeys.add(m[1]);
+          if (referenceKeySet.has(m[1]) || pluralBases.has(m[1])) markUsed(m[1]);
         }
         if (full.endsWith(".html")) {
           // pas de DOM en node : grep sur les attributs suffit
@@ -219,7 +236,9 @@ else {
     // popup.notificationTools.state.*) ou attend l'interface du planificateur.
     // 172 (2026-10-27) : carte du badge dans le chat (inject.badge.worn,
     // tenure, nameStyle, bughunter), lue par tr("clé courte") dans twitch-badge.js.
-    const MAX_UNUSED_KEYS = 172;
+    // 174 (2026-11-01) : libellés de la carte d'aperçu (inject.previews.live,
+    // .loading), lus par label("clé courte") dans js/previews/card.js.
+    const MAX_UNUSED_KEYS = 174;
     const unusedKeys = referenceKeys.filter((k) => !usedKeys.has(k));
     if (unusedKeys.length > MAX_UNUSED_KEYS) {
       fail(`${unusedKeys.length} translation keys are never referenced by any literal call (max ${MAX_UNUSED_KEYS}) : une clé morte vient probablement d'être ajoutée, ou un nouveau mécanisme dynamique demande d'ajuster MAX_UNUSED_KEYS`);
@@ -235,13 +254,17 @@ else {
         incomplete += 1;
         continue;
       }
+      // Clés attendues de CETTE langue : un groupe de pluriel anglais
+      // (one/other) devient one/few/many/other en ukrainien, other en japonais.
       const keys = new Set(flatten(block));
-      const missing = referenceKeys.filter((k) => !keys.has(k));
+      const missing = [...expectedEntries(translations[DEFAULT_LANGUAGE], code).keys()].filter((k) => !keys.has(k));
       if (missing.length) {
         const preview = missing.slice(0, 5).join(", ");
         const rest = missing.length > 5 ? ` (+${missing.length - 5} more)` : "";
-        fail(`translations.js "${code}" is missing ${missing.length} key(s): ${preview}${rest}`);
-        incomplete += 1;
+        // Une langue pas encore publiée retombe sur l'anglais clé par clé :
+        // le manque est attendu tant qu'elle se traduit.
+        (published.includes(code) ? fail : warn)(`translations.js "${code}" is missing ${missing.length} key(s): ${preview}${rest}`);
+        if (published.includes(code)) incomplete += 1;
       }
     }
 
@@ -304,11 +327,14 @@ else {
 
     // Placeholders, noms de marque et codes de langue : trois choses que la
     // traduction automatique abime sans que ca se voie a la relecture. Le
-    // detail des regles est dans scripts/lib/i18n-audit.mjs.
-    const { auditTranslations } = await import(
-      new URL("./lib/i18n-audit.mjs", import.meta.url).href
-    );
-    const i18nProblems = auditTranslations(translations);
+    // detail des regles est dans scripts/i18n/lib/validate.mjs.
+    // Règles complètes : scripts/i18n/lib/validate.mjs (npm run i18n:validate).
+    const { measure } = await import(new URL("./i18n/commands/status.mjs", import.meta.url).href);
+    const i18nProblems = [];
+    for (const code of declared.filter((c) => c !== DEFAULT_LANGUAGE)) {
+      const m = await measure(code);
+      for (const p of [...m.errors, ...m.warnings]) i18nProblems.push({ ...p, message: `${code} ${p.key} [${p.rule}] ${p.message}` });
+    }
     const i18nErrors = i18nProblems.filter((p) => p.level === "error");
     const i18nWarnings = i18nProblems.filter((p) => p.level === "warning");
     if (i18nErrors.length) {
@@ -316,14 +342,14 @@ else {
       const rest = i18nErrors.length > 8 ? ` (+${i18nErrors.length - 8} more)` : "";
       fail(`translations.js has ${i18nErrors.length} integrity problem(s): ${preview}${rest}`);
     } else {
-      pass("translations.js: placeholders, brand names, language codes and site URLs intact in every language");
+      pass("translations.js: variables, HTML tags, protected terms, language codes and store limits intact in every language");
     }
     // Les libelles trop longs debordent de leur bouton, mais la limite relevant
     // du jugement, ils ne font pas echouer le build.
     if (i18nWarnings.length) {
       const preview = i18nWarnings.slice(0, 3).map((p) => p.message).join("; ");
       const rest = i18nWarnings.length > 3 ? ` (+${i18nWarnings.length - 3} more)` : "";
-      warn(`translations.js: ${i18nWarnings.length} label(s) much longer than English: ${preview}${rest}`);
+      warn(`translations: ${i18nWarnings.length} i18n warning(s), see npm run i18n:validate -- --verbose: ${preview}${rest}`);
     }
 
     // Every language declared here must also reach the content scripts, which

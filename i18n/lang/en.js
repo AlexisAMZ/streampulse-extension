@@ -160,7 +160,8 @@ export default {
     "plusStyleDesc": "Your name and chat badge carry your subscription's effects — gradients, textures, animations. Everything is picked in the popup, Badge section. And Twitch clips download as MP4 from their page.",
     "plusStyleNameTitle": "Your name",
     "plusStyleBadgeTitle": "Your badge",
-    "plusFinish": "Enjoy StreamPulse+"
+    "plusFinish": "Enjoy StreamPulse+",
+    "stepperLabel": "Setup progress"
   },
   "popup": {
     "settingsFilter": {
@@ -175,8 +176,20 @@ export default {
       "listen": "Listen",
       "perKind": "A different sound per alert type",
       "plusNote": "A different sound per alert type is a StreamPulse+ feature.",
-      "preset": { "classic": "Classic", "chime": "Chime", "pulse": "Pulse", "bubble": "Bubble", "arpeggio": "Arpeggio", "drop": "Drop" },
-      "kind": { "live": "Stream started", "game": "Category change", "title": "Title change", "raid": "Incoming raid" }
+      "preset": {
+        "classic": "Classic",
+        "chime": "Chime",
+        "pulse": "Pulse",
+        "bubble": "Bubble",
+        "arpeggio": "Arpeggio",
+        "drop": "Drop"
+      },
+      "kind": {
+        "live": "Stream started",
+        "game": "Category change",
+        "title": "Title change",
+        "raid": "Incoming raid"
+      }
     },
     "greetingSubNobody": "Nobody's live right now.",
     "greetingSubEmpty": "Welcome to StreamPulse.",
@@ -197,8 +210,10 @@ export default {
       "durationHoursShort": "{{h}} hr {{m}}",
       "filterLabel": "Filter by platform",
       "filterAll": "All",
-      "countSingular": "1 live",
-      "countPlural": "{{count}} lives",
+      "count": {
+        "one": "{{count}} live",
+        "other": "{{count}} lives"
+      },
       "summary": "missed in the last 14 days · {{duration}} of content",
       "emptyTitle": "No missed lives",
       "emptyBody": "When a streamer you follow ends a live you didn't watch, it shows up here with its replay.",
@@ -425,8 +440,10 @@ export default {
       "streamersLabel": "Streamers",
       "rulesFor": "Alerts for {{name}}",
       "addRule": "New rule",
-      "ruleCountSingular": "1 rule",
-      "ruleCountPlural": "{{count}} rules",
+      "ruleCount": {
+        "one": "{{count}} rule",
+        "other": "{{count}} rules"
+      },
       "noRules": "No rules: regular alert on every live.",
       "ruleName": "Rule name",
       "ruleNamePlaceholder": "e.g. GTA night",
@@ -454,8 +471,10 @@ export default {
       "activityLabel": "Today's activity",
       "autoClaimOn": "Auto-claim on",
       "pointsToday": "+{{count}} pts today",
-      "dropsToday": "{{count}} Drop today",
-      "dropsTodayPlural": "{{count}} Drops today",
+      "dropsToday": {
+        "one": "{{count}} Drop today",
+        "other": "{{count}} Drops today"
+      },
       "search": "Search a channel",
       "searchLabel": "Search",
       "allChannels": "All channels",
@@ -563,9 +582,11 @@ export default {
       "staleHint": "open Twitch to update",
       "bandOpen": "Open the Drops panel",
       "bandClaimed": "Drop claimed · {{name}}",
-      "bandMoreOne": "+{{count}} more",
+      "bandMore": {
+        "one": "+{{count}} more",
+        "other": "+{{count}} more"
+      },
       "timeLeft": "{{time}} left",
-      "bandMoreOther": "+{{count}} more",
       "campaigns": "Campaigns",
       "campaignsMeta": "{{count}} active · read on Twitch {{ago}}",
       "campaignsNone": "Open the Drops campaigns page on Twitch to load the list.",
@@ -582,8 +603,10 @@ export default {
       "filterNew": "New",
       "filterEnding": "Ending soon",
       "filterUpcoming": "Upcoming",
-      "rewardsOne": "1 reward",
-      "rewardsOther": "{{count}} rewards",
+      "rewards": {
+        "one": "{{count}} reward",
+        "other": "{{count}} rewards"
+      },
       "linkAccount": "account to link",
       "yourGames": "your games",
       "badge": "BADGE",
@@ -595,8 +618,10 @@ export default {
       "rewardTypeBadge": "Badge",
       "rewardTypeEmote": "Emote",
       "rewardTypeItem": "Item",
-      "badgeSubOne": "1 sub",
-      "badgeSubOther": "{{count}} subs",
+      "badgeSub": {
+        "one": "{{count}} sub",
+        "other": "{{count}} subs"
+      },
       "badgeOr": "or",
       "badgesKnown": "{{count}} badges tracked",
       "badgesSyncing": "Syncing Twitch badges…",
@@ -661,10 +686,14 @@ export default {
       "isNew": "new",
       "dateRange": "{{start}} → {{end}}",
       "history": "History",
-      "historyMetaOne": "1 Drop earned since install",
-      "historyMetaOther": "{{count}} Drops earned since install",
-      "historyMonthOne": "{{month}} · 1 Drop",
-      "historyMonthOther": "{{month}} · {{count}} Drops",
+      "historyMeta": {
+        "one": "{{count}} Drop earned since install",
+        "other": "{{count}} Drops earned since install"
+      },
+      "historyMonth": {
+        "one": "{{month}} · {{count}} Drop",
+        "other": "{{month}} · {{count}} Drops"
+      },
       "historyEmpty": "No Drop earned since tracking started. They will show up here, month by month.",
       "lockedBody": "The history of every Drop you earned, month by month, with the game and the channel. StreamPulse+ only.",
       "trackingTitle": "Track Drops",
@@ -809,8 +838,10 @@ export default {
       "settings": "Settings"
     },
     "refresh": "Refresh",
-    "greetingLiveCountSingular": "{{count}} streamer live",
-    "greetingLiveCountPlural": "{{count}} streamers live",
+    "greetingLiveCount": {
+      "one": "{{count}} streamer live",
+      "other": "{{count}} streamers live"
+    },
     "platformFilter": {
       "twitch": "twitch",
       "kick": "kick"
@@ -970,6 +1001,7 @@ export default {
       "previewsAudioTitle": "Audio (video mode)",
       "previewsAudioDescription": "Enable sound in video previews.",
       "previewsDelayTitle": "Preview delay",
+      "unitMs": "ms",
       "previewsAnimationsTitle": "Animations",
       "previewsAnimationsDescription": "Fades the preview in and out. Turn off to show it instantly.",
       "groupChat": "Chat",
@@ -1413,8 +1445,10 @@ export default {
     "tagImproved": "IMPROVED",
     "tagOther": "OTHER",
     "genericChanges": "Internal fixes and stability improvements.",
-    "changeCountSingular": "{{count}} change in this release.",
-    "changeCountPlural": "{{count}} changes in this release.",
+    "changeCount": {
+      "one": "{{count}} change in this release.",
+      "other": "{{count}} changes in this release."
+    },
     "noNotes": "No release notes available",
     "noNotesBody": "The notes for this version have not been published yet."
   },
@@ -1449,8 +1483,10 @@ export default {
       "founder": "StreamPulse founder",
       "ambassador": "Ambassador",
       "lifetime": "Lifetime member",
-      "months": "Subscribed for {{count}} months",
-      "monthOne": "Subscribed for 1 month",
+      "months": {
+        "one": "Subscribed for {{count}} month",
+        "other": "Subscribed for {{count}} months"
+      },
       "newMember": "New subscriber",
       "freeLine": "Extension user",
       "worn": "Worn",
@@ -1504,6 +1540,10 @@ export default {
     },
     "chatFilter": {
       "replacement": "Message removed by StreamPulse"
+    },
+    "previews": {
+      "live": "LIVE",
+      "loading": "Loading…"
     }
   }
 };

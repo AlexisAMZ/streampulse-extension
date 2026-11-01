@@ -14,6 +14,7 @@ import {
   getAvailableLanguages,
   getCurrentLanguage,
   t,
+  tp,
   syncDocumentLanguage,
   resolveLocale,
 } from "./i18n.js";
@@ -819,8 +820,7 @@ function renderGreeting(live = state.streamers.filter((s) => isLiveId(s.id))) {
   if (hintEl && !live.length) {
     hintEl.textContent = "";
   } else if (hintEl) {
-    const countKey = live.length > 1 ? "popup.greetingLiveCountPlural" : "popup.greetingLiveCountSingular";
-    const parts = [t(countKey, { count: live.length })];
+    const parts = [tp("popup.greetingLiveCount", live.length)];
     const newest = live.find((s) => justLiveIds.has(s.id));
     if (newest) parts.push(t("popup.cplus.justStarted", { name: nameFor(newest.id) }));
     hintEl.textContent = parts.join(" · ");

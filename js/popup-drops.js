@@ -3,7 +3,7 @@
 // avec StreamPulse+, historique). Lit le storage que le service worker
 // alimente ; tous les calculs viennent de drops-data.js et badges-data.js.
 
-import { t, getCurrentLanguage } from "./i18n.js";
+import { t, tp, getCurrentLanguage } from "./i18n.js";
 import { currentGroup, normalizeAuto } from "./badge-auto.js";
 import { BADGE_FREE_KEY, freeAvailable, freeUsedToday } from "./badge-free.js";
 import { BADGE_LIMITED_KEY, BADGE_SCOPE_KEY, BADGE_WATCH_KEY, ENDING_SOON_MS, limitedFrom, toggleWatch, watchFrom } from "./badge-watch.js";
@@ -153,7 +153,7 @@ function monthLabel(key) {
   return new Date(year, month - 1, 1).toLocaleDateString(locale(), { month: "long", year: "numeric" });
 }
 
-const plural = (count, one, other, params = {}) => t(count === 1 ? one : other, { count, ...params });
+const plural = (count, key, params = {}) => tp(key, count, params);
 
 function channelLabel(drop) {
   const name = drop.channel || (drop.channelId && progress.channels?.[drop.channelId]) || "";
@@ -229,7 +229,7 @@ function renderChip(now) {
   if (model?.kind === "progress") {
     const { drop } = model;
     const left = isClaimable(drop) ? t("popup.drops.ready") : t("popup.drops.timeLeft", { time: minutesLabel(remainingMinutes(drop)) });
-    const more = model.others ? plural(model.others, "popup.drops.bandMoreOne", "popup.drops.bandMoreOther") : "";
+    const more = model.others ? plural(model.others, "popup.drops.bandMore") : "";
     text = [drop.name, left, more].filter(Boolean).join(" · ");
     setFill(fill, percent(drop));
     chip.title = [drop.game, channelLabel(drop), model.stale ? t("popup.drops.staleHint") : endsLabel(drop, now)].filter(Boolean).join(" · ");
@@ -238,7 +238,7 @@ function renderChip(now) {
     setFill(fill, 0);
     chip.title = model.entry.game || "";
   } else {
-    text = plural(today, "popup.cplus.dropsToday", "popup.cplus.dropsTodayPlural");
+    text = plural(today, "popup.cplus.dropsToday");
     setFill(fill, 0);
     chip.title = "";
   }
@@ -332,7 +332,7 @@ function campaignRow(campaign, now) {
 
   const meta = [
     campaign.owner,
-    campaign.rewardCount ? plural(campaign.rewardCount, "popup.drops.rewardsOne", "popup.drops.rewardsOther") : "",
+    campaign.rewardCount ? plural(campaign.rewardCount, "popup.drops.rewards") : "",
     campaign.connected === false && campaign.accountLinkUrl ? t("popup.drops.linkAccount") : "",
     mine ? t("popup.drops.yourGames") : "",
   ].filter(Boolean).join(" · ");
@@ -668,7 +668,7 @@ function renderDropAlerts() {
 function rewardRequirement(reward) {
   const parts = [];
   if (reward.minutesGoal) parts.push(t("popup.drops.badgeWatch", { time: minutesLabel(reward.minutesGoal) }));
-  if (reward.subsGoal) parts.push(plural(reward.subsGoal, "popup.drops.badgeSubOne", "popup.drops.badgeSubOther"));
+  if (reward.subsGoal) parts.push(plural(reward.subsGoal, "popup.drops.badgeSub"));
   return parts.join(` ${t("popup.drops.badgeOr")} `);
 }
 
@@ -1009,7 +1009,7 @@ function renderHistory() {
   $("drops-locked").hidden = plus;
   $("drops-history").hidden = !plus;
   const summary = summarizeHistory(history);
-  $("drops-history-meta").textContent = plus && summary.total ? plural(summary.total, "popup.drops.historyMetaOne", "popup.drops.historyMetaOther") : "";
+  $("drops-history-meta").textContent = plus && summary.total ? plural(summary.total, "popup.drops.historyMeta") : "";
   if (!plus) return;
   if (!summary.total) {
     $("drops-history").replaceChildren(el("p", "drops-empty", t("popup.drops.historyEmpty")));
@@ -1019,7 +1019,7 @@ function renderHistory() {
   let rows = 0;
   for (const month of summary.months) {
     if (rows >= HISTORY_ROWS) break;
-    nodes.push(el("p", "drops-month", plural(month.count, "popup.drops.historyMonthOne", "popup.drops.historyMonthOther", { month: monthLabel(month.key) })));
+    nodes.push(el("p", "drops-month", plural(month.count, "popup.drops.historyMonth", { month: monthLabel(month.key) })));
     for (const row of month.rows) {
       if (rows++ >= HISTORY_ROWS) break;
       const line = el("div", "drops-hrow");

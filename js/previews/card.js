@@ -73,6 +73,27 @@
    * Creates one reusable floating card. Instantiate a single card per page.
    * @returns {{mount:Function, show:Function, hide:Function, destroy:Function, isVisible:Function}}
    */
+  // Libellés de la carte : langue choisie dans StreamPulse, sinon celle de
+  // Chrome (même règle que le popup). window.__SP_I18N__ vient de
+  // js/inject/i18n-inline.js, chargé par une autre entrée content_scripts.
+  let previewLanguage = "";
+
+  function label(key, fallback) {
+    const api = NS.__SP_I18N__;
+    return api ? api.get(api.resolve(previewLanguage), "previews." + key) : fallback;
+  }
+
+  function loadPreviewLanguage(done) {
+    try {
+      chrome.storage.local.get("betaGeneralPreferences", (stored) => {
+        previewLanguage = stored?.betaGeneralPreferences?.language || "";
+        done();
+      });
+    } catch (_e) {
+      // Hors extension (tests) : la langue de Chrome s'applique.
+    }
+  }
+
   function createPreviewCard() {
     let root = null;
     let mediaEl, imgEl, iframeEl, videoEl, fallbackEl, fbAvatarEl, fbGameEl, titleEl, categoryEl;
@@ -124,9 +145,8 @@
       fbAvatarEl.alt = "";
       
       const fbLoadingEl = el("span", "sp-preview__fallback-loading");
-      const lang = (document.documentElement.lang || navigator.language || "en").toLowerCase();
-      fbLoadingEl.textContent = lang.startsWith("fr") ? "Chargement..." : "Loading...";
-      
+      fbLoadingEl.textContent = label("loading", "Loading…");
+
       fbGameEl = el("span", "sp-preview__fallback-game");
       fallbackEl.append(fbAvatarEl, fbLoadingEl, fbGameEl);
 
@@ -136,7 +156,12 @@
       overlay.append(titleEl, categoryEl);
 
       const badge = el("span", "sp-preview__badge");
-      badge.textContent = "LIVE";
+      badge.textContent = label("live", "LIVE");
+      // La préférence arrive après le premier rendu : on repeint les libellés.
+      loadPreviewLanguage(() => {
+        fbLoadingEl.textContent = label("loading", "Loading…");
+        badge.textContent = label("live", "LIVE");
+      });
 
       mediaEl.append(videoEl, imgEl, iframeEl, fallbackEl, overlay, badge);
       root.append(mediaEl);

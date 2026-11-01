@@ -35,6 +35,23 @@ export function translate(lang, key, params = {}) {
   return value;
 }
 
+/** Pluriel CLDR côté service worker (même règle que tp() dans js/i18n.js). */
+export function translatePlural(lang, key, count, params = {}) {
+  const pick = (code) => {
+    const group = resolveTranslationValue(code, key);
+    if (!group || typeof group !== "object") return null;
+    let category = "other";
+    try {
+      category = new Intl.PluralRules(resolveLocale(code)).select(Number(count));
+    } catch {
+      // Locale inconnue d'Intl : forme générale.
+    }
+    return typeof group[category] === "string" ? group[category] : typeof group.other === "string" ? group.other : null;
+  };
+  const form = pick(lang) ?? pick(DEFAULT_LANGUAGE);
+  return form == null ? key : formatTemplate(form, { count, ...params });
+}
+
 export function translateWithPrefs(preferences, key, params = {}) {
   const lang = normalizeLanguage(preferences?.language);
   return translate(lang, key, params);

@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { translations } from "../i18n/translations.js";
+import { expectedEntries } from "../scripts/i18n/lib/core.mjs";
 
 /** Chemins de feuilles d'un objet i18n, ex. ["popup.history.summary", …]. */
 function leafPaths(node, prefix = "") {
@@ -13,13 +14,15 @@ function leafPaths(node, prefix = "") {
   return paths;
 }
 
-test("toutes les locales exposent exactement les mêmes clés", () => {
+test("toutes les locales exposent exactement les clés attendues pour leur langue", () => {
   const locales = Object.keys(translations);
   assert.ok(locales.length >= 11, `au moins 11 locales attendues, trouvé ${locales.length}`);
 
-  const reference = new Set(leafPaths(translations.fr)).difference(new Set(["fr.htmlLang"]));
+  // Même jeu de clés partout, sauf les groupes de pluriel : chaque langue y a
+  // ses catégories CLDR (one/few/many/other en ukrainien, other en japonais).
   for (const locale of locales) {
-    const keys = new Set(leafPaths(translations[locale])).difference(new Set([`${locale}.htmlLang`]));
+    const reference = new Set(expectedEntries(translations.en, locale).keys());
+    const keys = new Set(leafPaths(translations[locale]));
     const missing = reference.difference(keys);
     assert.equal(
       missing.size,
@@ -30,7 +33,7 @@ test("toutes les locales exposent exactement les mêmes clés", () => {
     assert.equal(
       extra.size,
       0,
-      `${locale} a des clés inconnues de fr : ${[...extra].slice(0, 10).join(", ")}${extra.size > 10 ? " …" : ""}`,
+      `${locale} a des clés inconnues de l'anglais : ${[...extra].slice(0, 10).join(", ")}${extra.size > 10 ? " …" : ""}`,
     );
   }
 });

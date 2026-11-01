@@ -1,0 +1,14 @@
+{
+  "$comment": "Textes visibles écrits en dur, assumés. `npm run i18n:extract -- --strict` échoue sur tout texte en dur absent de cette liste. Chaque entrée dit pourquoi.",
+  "entries": [
+    { "file": "html/popup.html", "text": "Bonsoir.", "reason": "Valeur d'attente : popup.js remplace le titre par la salutation traduite au premier rendu." },
+    { "file": "html/onboarding.html", "text": "aria-label=\"Progression\"", "reason": "Valeur d'attente : remplacée par onboarding.stepperLabel (data-i18n-attr-aria-label)." },
+    { "file": "html/popup.html", "text": "aria-label=\"Code créateur ou promo\"", "reason": "Valeur d'attente : remplacée par popup.plus.creatorPlaceholder." },
+    { "file": "html/onboarding.html", "text": "placeholder=\"pseudo ou URL\"", "reason": "Valeur d'attente : onboarding.js pose le placeholder traduit selon la plateforme." },
+    { "file": "html/onboarding.html", "text": "placeholder=\"alexisamz\"", "reason": "Exemple de pseudo, identique dans toutes les langues." },
+    { "file": "html/popup.html", "text": ": gg !", "reason": "Faux message de tchat de l'aperçu des effets cosmétiques." },
+    { "file": "js/inject/settings-drawer.js", "text": ": gg !", "reason": "Faux message de tchat de l'aperçu des effets cosmétiques." },
+    { "file": "js/inject/twitch-badge.js", "text": "Aa", "reason": "Échantillon typographique du style de pseudo." },
+    { "file": "html/recap.html", "text": "PLUS", "reason": "Élément du logo StreamPulse+ sur la carte récap." }
+  ]
+}

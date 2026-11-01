@@ -1,5 +1,43 @@
 // StreamPulse, langue « ru ». Fichier source à éditer (i18n/translations.js ne fait que regrouper les langues).
 export default {
+  "bulk": {
+    "documentTitle": "Добавлять стримеров сразу нескольких | StreamPulse",
+    "title": "Добавляй стримеров сразу всех",
+    "intro": "Вставь до 50 ников или ссылок на каналы, а потом выбери, какие из них добавить в StreamPulse.",
+    "listLabel": "Твой список",
+    "listHint": "Один ник или ссылка в строке. Можно использовать запятые, точки с запятой и табуляцию.",
+    "platformLabel": "Платформа для ников без ссылки",
+    "groupLabel": "Группа (необязательно)",
+    "noGroup": "Без группы",
+    "groupHint": "Добавь новых стримеров в существующую группу, не меняя другие группы.",
+    "preview": "Просмотри список",
+    "previewTitle": "Проверь текст перед добавлением",
+    "previewHint": "Здесь проверяется формат и наличие дубликатов. Каждая учётная запись проверяется при добавлении.",
+    "selectAll": "Выбери все варианты",
+    "emptyPreview": "Вставь свой список, а потом просмотри его, чтобы найти подходящие варианты, дубликаты и неверные записи.",
+    "keepOpen": "Твой ввод останется здесь, когда всплывающее окно StreamPulse закроется. Держи эту вкладку открытой, пока добавляешь текст.",
+    "ready": "Готово к добавлению",
+    "duplicate": "Дубликат в этом списке",
+    "existing": "Уже подписан",
+    "invalid": "Неверный ник или ссылка",
+    "adding": "Добавляется…",
+    "success": "Добавлено",
+    "error": "Не удалось добавить",
+    "stale": "Список изменился: пересмотри его ещё раз перед добавлением.",
+    "summary": "{{candidates}} — добавить · {{duplicates}} — дубликаты · {{invalid}} — неверные",
+    "tooMany": "Найденo {{count}} записей; за раз можно добавить только {{max}}.",
+    "retrySelected": "Попробовать ещё {{count}} раз",
+    "addSelected": "Добавь {{count}}",
+    "progress": "Добавляется {{done}} из {{total}}…",
+    "finished": "{{added}} добавлено · {{failed}} не удалось",
+    "partial": "Некоторые аккаунты не были добавлены. Они сохранены, и их можно добавить позже.",
+    "addFailed": "Не удалось добавить аккаунт.",
+    "readFailed": "Не удалось прочитать твои данные StreamPulse.",
+    "verifyFailed": "Не удалось подтвердить аккаунт.",
+    "groupFailed": "Аккаунт добавлен, но его группу не удалось обновить.",
+    "groupMissing": "Аккаунт был добавлен, но больше не входит в выбранную группу.",
+    "missingGroupOption": "Группа больше не доступна"
+  },
   "meta": {
     "languageSwitcherLabel": "Язык"
   },
@@ -122,7 +160,8 @@ export default {
     "plusStyleDesc": "Твой ник и значок в чате несут эффекты подписки — градиенты, текстуры, анимации. Всё выбирается во всплывающем окне, раздел «Значок». А клипы Twitch скачиваются в MP4 прямо с их страницы.",
     "plusStyleNameTitle": "Твой ник",
     "plusStyleBadgeTitle": "Твой значок",
-    "plusFinish": "Пользоваться StreamPulse+"
+    "plusFinish": "Пользоваться StreamPulse+",
+    "stepperLabel": "Прогресс"
   },
   "popup": {
     "settingsFilter": {
@@ -137,8 +176,20 @@ export default {
       "listen": "Прослушать",
       "perKind": "Свой звук для каждого типа оповещения",
       "plusNote": "Отдельный звук для каждого типа оповещения доступен в StreamPulse+.",
-      "preset": { "classic": "Классика", "chime": "Колокольчик", "pulse": "Пульс", "bubble": "Пузырь", "arpeggio": "Арпеджио", "drop": "Капля" },
-      "kind": { "live": "Начало трансляции", "game": "Смена категории", "title": "Смена названия", "raid": "Входящий рейд" }
+      "preset": {
+        "classic": "Классика",
+        "chime": "Колокольчик",
+        "pulse": "Пульс",
+        "bubble": "Пузырь",
+        "arpeggio": "Арпеджио",
+        "drop": "Капля"
+      },
+      "kind": {
+        "live": "Начало трансляции",
+        "game": "Смена категории",
+        "title": "Смена названия",
+        "raid": "Входящий рейд"
+      }
     },
     "greetingSubNobody": "Никого нет в эфире.",
     "greetingSubEmpty": "Добро пожаловать в StreamPulse.",
@@ -159,8 +210,12 @@ export default {
       "durationHoursShort": "{{h}} ч {{m}}",
       "filterLabel": "Фильтр по платформе",
       "filterAll": "Все",
-      "countSingular": "1 эфир",
-      "countPlural": "Эфиров: {{count}}",
+      "count": {
+        "one": "{{count}} эфир",
+        "few": "Эфиров: {{count}}",
+        "many": "Эфиров: {{count}}",
+        "other": "Эфиров: {{count}}"
+      },
       "summary": "пропущено за 14 дней · {{duration}} контента",
       "emptyTitle": "Пропущенных эфиров нет",
       "emptyBody": "Когда кто-то из твоих стримеров закончит эфир, который ты не смотрел, он появится здесь вместе с записью.",
@@ -180,7 +235,7 @@ export default {
       "compareDrops": "Drops",
       "compareDropsFree": "Забирать вручную",
       "compareDropsPlus": "Забираются сами",
-      "compareBadges": "Бейджи",
+      "compareBadges": "Значки",
       "compareBadgesFree": "1 в день",
       "compareBadgesPlus": "Все, без лимита",
       "compareAlerts": "Оповещения",
@@ -194,11 +249,11 @@ export default {
       "compareClips": "Клипы",
       "compareClipsPlus": "Скачивание MP4",
       "compareFx": "Эффекты",
-      "compareFxPlus": "Анимированные бейдж и ник",
-      "value": "StreamPulse+ принёс вам {{badges}} бейджей и {{drops}} Drops",
-      "valueBothOne": "StreamPulse+ принёс вам 1 бейдж и 1 Drop",
-      "valueBadgeOne": "StreamPulse+ принёс вам 1 бейдж и {{drops}} Drops",
-      "valueDropOne": "StreamPulse+ принёс вам {{badges}} бейджей и 1 Drop",
+      "compareFxPlus": "Анимированные значок и ник",
+      "value": "StreamPulse+ принёс вам {{badges}} значков и {{drops}} Drops",
+      "valueBothOne": "StreamPulse+ принёс вам 1 значок и 1 Drop",
+      "valueBadgeOne": "StreamPulse+ принёс вам 1 значок и {{drops}} Drops",
+      "valueDropOne": "StreamPulse+ принёс вам {{badges}} значков и 1 Drop",
       "badge": "PLUS",
       "open": "Узнать о подписке StreamPulse+",
       "openActive": "StreamPulse+: управление подпиской",
@@ -387,8 +442,12 @@ export default {
       "streamersLabel": "Стримеры",
       "rulesFor": "Оповещения для {{name}}",
       "addRule": "Новое правило",
-      "ruleCountSingular": "1 правило",
-      "ruleCountPlural": "Правил: {{count}}",
+      "ruleCount": {
+        "one": "{{count}} правило",
+        "few": "Правил: {{count}}",
+        "many": "Правил: {{count}}",
+        "other": "Правил: {{count}}"
+      },
       "noRules": "Правил нет: обычное оповещение о каждом эфире.",
       "ruleName": "Название правила",
       "ruleNamePlaceholder": "Напр. Вечер GTA",
@@ -416,8 +475,12 @@ export default {
       "activityLabel": "Активность за сегодня",
       "autoClaimOn": "Автосбор включён",
       "pointsToday": "+{{count}} баллов сегодня",
-      "dropsToday": "Drops сегодня: {{count}}",
-      "dropsTodayPlural": "Drops сегодня: {{count}}",
+      "dropsToday": {
+        "one": "Drops сегодня: {{count}}",
+        "few": "Drops сегодня: {{count}}",
+        "many": "Drops сегодня: {{count}}",
+        "other": "Drops сегодня: {{count}}"
+      },
       "search": "Найти стримера",
       "searchLabel": "Поиск",
       "allChannels": "Все каналы",
@@ -525,9 +588,13 @@ export default {
       "staleHint": "открой Twitch, чтобы обновить",
       "bandOpen": "Открыть панель Drops",
       "bandClaimed": "Drop забран · {{name}}",
-      "bandMoreOne": "+{{count}} ещё",
+      "bandMore": {
+        "one": "+{{count}} ещё",
+        "few": "+{{count}} ещё",
+        "many": "+{{count}} ещё",
+        "other": "+{{count}} ещё"
+      },
       "timeLeft": "осталось {{time}}",
-      "bandMoreOther": "+{{count}} ещё",
       "campaigns": "Кампании",
       "campaignsMeta": "Активных: {{count}} · загружено с Twitch {{ago}}",
       "campaignsNone": "Открой страницу кампаний Drops на Twitch, чтобы загрузить список.",
@@ -544,8 +611,12 @@ export default {
       "filterNew": "Новые",
       "filterEnding": "Скоро закончатся",
       "filterUpcoming": "Скоро начнутся",
-      "rewardsOne": "1 награда",
-      "rewardsOther": "Наград: {{count}}",
+      "rewards": {
+        "one": "{{count}} награда",
+        "few": "Наград: {{count}}",
+        "many": "Наград: {{count}}",
+        "other": "Наград: {{count}}"
+      },
       "linkAccount": "нужно привязать аккаунт",
       "yourGames": "твои игры",
       "badge": "ЗНАЧОК",
@@ -557,8 +628,12 @@ export default {
       "rewardTypeBadge": "Значок",
       "rewardTypeEmote": "Эмоция",
       "rewardTypeItem": "Предмет",
-      "badgeSubOne": "1 подписка",
-      "badgeSubOther": "Подписок: {{count}}",
+      "badgeSub": {
+        "one": "{{count}} подписка",
+        "few": "Подписок: {{count}}",
+        "many": "Подписок: {{count}}",
+        "other": "Подписок: {{count}}"
+      },
       "badgeOr": "или",
       "badgesKnown": "Отслеживается значков: {{count}}",
       "badgesSyncing": "Синхронизация значков Twitch…",
@@ -623,10 +698,18 @@ export default {
       "isNew": "новая",
       "dateRange": "{{start}} → {{end}}",
       "history": "История",
-      "historyMetaOne": "1 Drop получен с момента установки",
-      "historyMetaOther": "Получено Drops с момента установки: {{count}}",
-      "historyMonthOne": "{{month}} · 1 Drop",
-      "historyMonthOther": "{{month}} · Drops: {{count}}",
+      "historyMeta": {
+        "one": "{{count}} Drop получен с момента установки",
+        "few": "Получено Drops с момента установки: {{count}}",
+        "many": "Получено Drops с момента установки: {{count}}",
+        "other": "Получено Drops с момента установки: {{count}}"
+      },
+      "historyMonth": {
+        "one": "{{month}} · {{count}} Drop",
+        "few": "{{month}} · Drops: {{count}}",
+        "many": "{{month}} · Drops: {{count}}",
+        "other": "{{month}} · Drops: {{count}}"
+      },
       "historyEmpty": "С начала отслеживания Drops ещё не получены. Они появятся здесь, по месяцам.",
       "lockedBody": "История всех твоих Drops по месяцам, с игрой и каналом. Только в StreamPulse+.",
       "trackingTitle": "История Drops",
@@ -771,8 +854,12 @@ export default {
       "settings": "Настройки"
     },
     "refresh": "Обновить",
-    "greetingLiveCountSingular": "{{count}} стример в эфире",
-    "greetingLiveCountPlural": "Стримеров в эфире: {{count}}",
+    "greetingLiveCount": {
+      "one": "{{count}} стример в эфире",
+      "few": "Стримеров в эфире: {{count}}",
+      "many": "Стримеров в эфире: {{count}}",
+      "other": "Стримеров в эфире: {{count}}"
+    },
     "platformFilter": {
       "twitch": "twitch",
       "kick": "kick"
@@ -932,6 +1019,7 @@ export default {
       "previewsAudioTitle": "Аудио (режим видео)",
       "previewsAudioDescription": "Воспроизводит звук в превью в режиме «Видео».",
       "previewsDelayTitle": "Задержка появления",
+      "unitMs": "мс",
       "previewsAnimationsTitle": "Анимации",
       "previewsAnimationsDescription": "Плавно показывает и скрывает превью. Выключи, чтобы оно появлялось сразу.",
       "groupChat": "Чат",
@@ -1056,6 +1144,8 @@ export default {
       "open": "Добавляй сразу нескольких стримеров"
     },
     "notificationTools": {
+      "pauseOneHour": "Отключить уведомления на 1 час",
+      "pauseUntilTomorrow": "Отключи уведомления до завтра, 8:00",
       "pauseTitle": "Приостановить уведомления",
       "pauseHour": "Отключить уведомления на 1 час",
       "pauseTomorrow": "Отключи уведомления до завтра, 8:00",
@@ -1104,12 +1194,16 @@ export default {
         "catchUp": "Этот прямой эфир включён в уведомления о пропущенных трансляциях.",
         "changes": "Об изменении категории или названия будет отправлено уведомление.",
         "noChange": "С момента последней проверки ничего не изменилось."
-      },
-      "pauseOneHour": "Отключить уведомления на 1 час",
-      "pauseUntilTomorrow": "Отключи уведомления до завтра, 8:00"
+      }
     },
     "rewardPlan": {
       "title": "Запланируй сессию Drops",
+      "description": "Выбирай Drops, укажи, сколько времени у тебя есть, и посмотри, что удастся завершить. Это приблизительная оценка: Twitch сам решает, что считать.",
+      "minutes": "{{count}} мин",
+      "unknownDuration": "Продолжительность неизвестна",
+      "remaining": "осталось {{time}}",
+      "selectedCount": "выбрано: {{count}}",
+      "impossible": "При таком темпе не успеть до срока",
       "hint": "Выбери Drops и оцени, сколько времени на это уйдёт. Время указано приблизительно: окончательное решение остаётся за Twitch.",
       "select": "Выбери {{name}}",
       "budget": "Оставшееся время сессии (минуты)",
@@ -1121,13 +1215,7 @@ export default {
       "empty": "Выбери «Drop», чтобы рассчитать свой план просмотра.",
       "loading": "Загрузка кампаний…",
       "readError": "Не удалось загрузить выбранные Drops.",
-      "writeError": "Не удалось сохранить твой план просмотра.",
-      "description": "Выбирай Drops, укажи, сколько времени у тебя есть, и посмотри, что удастся завершить. Это приблизительная оценка: Twitch сам решает, что считать.",
-      "minutes": "{{count}} мин",
-      "unknownDuration": "Продолжительность неизвестна",
-      "remaining": "осталось {{time}}",
-      "selectedCount": "выбрано: {{count}}",
-      "impossible": "При таком темпе не успеть до срока"
+      "writeError": "Не удалось сохранить твой план просмотра."
     },
     "linkPicker": {
       "button": "Связать с другим аккаунтом",
@@ -1239,7 +1327,6 @@ export default {
       "updateTitle": "StreamPulse обновлён",
       "updateMessage": "Нажми, чтобы посмотреть новинки и исправления."
     },
-    "diagnostics": {},
     "badge": {
       "idle": "StreamPulse",
       "live": "{{count}} в эфире"
@@ -1281,8 +1368,8 @@ export default {
     "formatDesktop": "ПК · 16:9",
     "formatMobile": "Телефон · 9:16",
     "loading": "Загрузка статистики…",
-    "emptyTitle": "За этот период нечего показать.",
     "canvasSummary": "Картинка итогов: {{time}} просмотра за период. Самый просматриваемый канал: {{top}}.",
+    "emptyTitle": "За этот период нечего показать.",
     "emptyBody": "За этот период время просмотра не записано. Проверь, что «Считать время просмотра» включено в Настройках, раздел «Время и данные».",
     "download": "Скачать изображение",
     "share": "Поделиться в X",
@@ -1375,8 +1462,12 @@ export default {
     "tagImproved": "УЛУЧШЕНО",
     "tagOther": "ПРОЧЕЕ",
     "genericChanges": "Внутренние исправления и повышение стабильности.",
-    "changeCountSingular": "{{count}} изменение в этой версии.",
-    "changeCountPlural": "Изменений в этой версии: {{count}}.",
+    "changeCount": {
+      "one": "{{count}} изменение в этой версии.",
+      "few": "Изменений в этой версии: {{count}}.",
+      "many": "Изменений в этой версии: {{count}}.",
+      "other": "Изменений в этой версии: {{count}}."
+    },
     "noNotes": "Заметок нет",
     "noNotesBody": "Заметки к этой версии ещё не опубликованы."
   },
@@ -1411,8 +1502,12 @@ export default {
       "founder": "Основатель StreamPulse",
       "ambassador": "Посол",
       "lifetime": "Участник навсегда",
-      "months": "Подписчик {{count}} мес.",
-      "monthOne": "Подписчик 1 месяц",
+      "months": {
+        "one": "Подписчик {{count}} месяц",
+        "few": "Подписчик {{count}} мес.",
+        "many": "Подписчик {{count}} мес.",
+        "other": "Подписчик {{count}} мес."
+      },
       "newMember": "Новый подписчик",
       "freeLine": "Пользователь расширения",
       "worn": "Надет",
@@ -1466,44 +1561,10 @@ export default {
     },
     "chatFilter": {
       "replacement": "Сообщение удалено StreamPulse"
+    },
+    "previews": {
+      "live": "В ЭФИРЕ",
+      "loading": "Загрузка…"
     }
-  },
-  "bulk": {
-    "documentTitle": "Добавлять стримеров сразу нескольких | StreamPulse",
-    "title": "Добавляй стримеров сразу всех",
-    "intro": "Вставь до 50 ников или ссылок на каналы, а потом выбери, какие из них добавить в StreamPulse.",
-    "listLabel": "Твой список",
-    "listHint": "Один ник или ссылка в строке. Можно использовать запятые, точки с запятой и табуляцию.",
-    "platformLabel": "Платформа для ников без ссылки",
-    "groupLabel": "Группа (необязательно)",
-    "noGroup": "Без группы",
-    "groupHint": "Добавь новых стримеров в существующую группу, не меняя другие группы.",
-    "preview": "Просмотри список",
-    "previewTitle": "Проверь текст перед добавлением",
-    "previewHint": "Здесь проверяется формат и наличие дубликатов. Каждая учётная запись проверяется при добавлении.",
-    "selectAll": "Выбери все варианты",
-    "emptyPreview": "Вставь свой список, а потом просмотри его, чтобы найти подходящие варианты, дубликаты и неверные записи.",
-    "keepOpen": "Твой ввод останется здесь, когда всплывающее окно StreamPulse закроется. Держи эту вкладку открытой, пока добавляешь текст.",
-    "ready": "Готово к добавлению",
-    "duplicate": "Дубликат в этом списке",
-    "existing": "Уже подписан",
-    "invalid": "Неверный ник или ссылка",
-    "adding": "Добавляется…",
-    "success": "Добавлено",
-    "error": "Не удалось добавить",
-    "stale": "Список изменился: пересмотри его ещё раз перед добавлением.",
-    "summary": "{{candidates}} — добавить · {{duplicates}} — дубликаты · {{invalid}} — неверные",
-    "tooMany": "Найденo {{count}} записей; за раз можно добавить только {{max}}.",
-    "retrySelected": "Попробовать ещё {{count}} раз",
-    "addSelected": "Добавь {{count}}",
-    "progress": "Добавляется {{done}} из {{total}}…",
-    "finished": "{{added}} добавлено · {{failed}} не удалось",
-    "partial": "Некоторые аккаунты не были добавлены. Они сохранены, и их можно добавить позже.",
-    "addFailed": "Не удалось добавить аккаунт.",
-    "readFailed": "Не удалось прочитать твои данные StreamPulse.",
-    "verifyFailed": "Не удалось подтвердить аккаунт.",
-    "groupFailed": "Аккаунт добавлен, но его группу не удалось обновить.",
-    "groupMissing": "Аккаунт был добавлен, но больше не входит в выбранную группу.",
-    "missingGroupOption": "Группа больше не доступна"
   }
 };

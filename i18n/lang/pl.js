@@ -1,5 +1,43 @@
 // StreamPulse, langue « pl ». Fichier source à éditer (i18n/translations.js ne fait que regrouper les langues).
 export default {
+  "bulk": {
+    "documentTitle": "Dodawaj streamerów zbiorczo | StreamPulse",
+    "title": "Dodawaj streamerów zbiorczo",
+    "intro": "Wklej maksymalnie 50 nazw użytkowników lub linków do kanałów, a potem wybierz, które z nich chcesz dodać do StreamPulse.",
+    "listLabel": "Twoja lista",
+    "listHint": "Jedna nazwa użytkownika lub link w każdym wierszu. Możesz też używać przecinków, średników i tabulatorów.",
+    "platformLabel": "Platforma dla nazw użytkowników bez linku",
+    "groupLabel": "Grupa (opcjonalnie)",
+    "noGroup": "Brak grupy",
+    "groupHint": "Dodaj nowych streamerów do istniejącej grupy bez wprowadzania zmian w pozostałych grupach.",
+    "preview": "Przejrzyj listę",
+    "previewTitle": "Sprawdź to przed dodaniem",
+    "previewHint": "Sprawdza to format i duplikaty. Każde konto jest weryfikowane po dodaniu.",
+    "selectAll": "Zaznacz wszystkie propozycje",
+    "emptyPreview": "Wklej swoją listę, a potem przejrzyj ją, żeby sprawdzić propozycje, duplikaty i nieprawidłowe wpisy.",
+    "keepOpen": "Twoje dane pozostaną tutaj po zamknięciu okienka StreamPulse. Zostaw tę kartę otwartą podczas dodawania.",
+    "ready": "Gotowe do dodania",
+    "duplicate": "Duplikat na tej liście",
+    "existing": "Już obserwujesz",
+    "invalid": "Nieprawidłowy identyfikator lub link",
+    "adding": "Dodaję…",
+    "success": "Dodano",
+    "error": "Nie udało się dodać",
+    "stale": "Lista uległa zmianie: przejrzyj ją jeszcze raz przed dodaniem.",
+    "summary": "{{candidates}} do dodania · {{duplicates}} duplikaty · {{invalid}} nieprawidłowe",
+    "tooMany": "Znaleziono {{count}} wpisów; naraz można dodać tylko {{max}}.",
+    "retrySelected": "Spróbuj ponownie {{count}}",
+    "addSelected": "Dodaj {{count}}",
+    "progress": "Dodawanie {{done}} z {{total}}…",
+    "finished": "{{added}} dodano · {{failed}} nie udało się",
+    "partial": "Niektóre konta nie zostały dodane. Są one zachowane i można spróbować ponownie.",
+    "addFailed": "Nie udało się dodać konta.",
+    "readFailed": "Nie udało się odczytać twoich danych ze StreamPulse.",
+    "verifyFailed": "Nie udało się zweryfikować konta.",
+    "groupFailed": "Konto zostało dodane, ale nie udało się zaktualizować jego grupy.",
+    "groupMissing": "Konto zostało dodane, ale nie znajduje się już w wybranej grupie.",
+    "missingGroupOption": "Grupa jest już niedostępna"
+  },
   "meta": {
     "languageSwitcherLabel": "Język"
   },
@@ -122,7 +160,8 @@ export default {
     "plusStyleDesc": "Twoja nazwa i odznaka czatu mają efekty twojej subskrypcji — gradienty, tekstury, animacje. Wszystko wybierasz w popupie, w sekcji Odznaka. A klipy z Twitcha pobierzesz w MP4 z ich strony.",
     "plusStyleNameTitle": "Twoja nazwa",
     "plusStyleBadgeTitle": "Twoja odznaka",
-    "plusFinish": "Korzystaj ze StreamPulse+"
+    "plusFinish": "Korzystaj ze StreamPulse+",
+    "stepperLabel": "Postęp"
   },
   "popup": {
     "settingsFilter": {
@@ -137,8 +176,20 @@ export default {
       "listen": "Odsłuchaj",
       "perKind": "Inny dźwięk dla każdego typu alertu",
       "plusNote": "Osobny dźwięk dla każdego typu alertu to funkcja StreamPulse+.",
-      "preset": { "classic": "Klasyczny", "chime": "Dzwonek", "pulse": "Puls", "bubble": "Bąbelek", "arpeggio": "Arpeggio", "drop": "Kropla" },
-      "kind": { "live": "Start transmisji", "game": "Zmiana kategorii", "title": "Zmiana tytułu", "raid": "Przychodzący raid" }
+      "preset": {
+        "classic": "Klasyczny",
+        "chime": "Dzwonek",
+        "pulse": "Puls",
+        "bubble": "Bąbelek",
+        "arpeggio": "Arpeggio",
+        "drop": "Kropla"
+      },
+      "kind": {
+        "live": "Start transmisji",
+        "game": "Zmiana kategorii",
+        "title": "Zmiana tytułu",
+        "raid": "Przychodzący raid"
+      }
     },
     "greetingSubNobody": "Nikt teraz nie nadaje.",
     "greetingSubEmpty": "Witaj w StreamPulse.",
@@ -159,8 +210,12 @@ export default {
       "durationHoursShort": "{{h}} godz. {{m}}",
       "filterLabel": "Filtruj według platformy",
       "filterAll": "Wszystko",
-      "countSingular": "1 transmisja",
-      "countPlural": "Transmisje: {{count}}",
+      "count": {
+        "one": "1 transmisja",
+        "few": "Transmisje: {{count}}",
+        "many": "Transmisje: {{count}}",
+        "other": "Transmisje: {{count}}"
+      },
       "summary": "przegapione w ciągu ostatnich 14 dni · {{duration}} treści",
       "emptyTitle": "Brak przegapionych transmisji",
       "emptyBody": "Gdy któryś z twoich streamerów zakończy transmisję, a ciebie na niej nie było, pojawi się ona tutaj razem z powtórką.",
@@ -387,8 +442,12 @@ export default {
       "streamersLabel": "Streamerzy",
       "rulesFor": "Alerty dla {{name}}",
       "addRule": "Nowa reguła",
-      "ruleCountSingular": "1 reguła",
-      "ruleCountPlural": "Reguły: {{count}}",
+      "ruleCount": {
+        "one": "1 reguła",
+        "few": "Reguły: {{count}}",
+        "many": "Reguły: {{count}}",
+        "other": "Reguły: {{count}}"
+      },
       "noRules": "Brak reguł: zwykły alert przy każdej transmisji.",
       "ruleName": "Nazwa reguły",
       "ruleNamePlaceholder": "np. Wieczór z GTA",
@@ -416,8 +475,12 @@ export default {
       "activityLabel": "Dzisiejsza aktywność",
       "autoClaimOn": "Auto-odbieranie włączone",
       "pointsToday": "+{{count}} pkt dziś",
-      "dropsToday": "Drops dziś: {{count}}",
-      "dropsTodayPlural": "Drops dziś: {{count}}",
+      "dropsToday": {
+        "one": "Drops dziś: {{count}}",
+        "few": "Drops dziś: {{count}}",
+        "many": "Drops dziś: {{count}}",
+        "other": "Drops dziś: {{count}}"
+      },
       "search": "Szukaj streamera",
       "searchLabel": "Szukaj",
       "allChannels": "Wszystkie kanały",
@@ -525,9 +588,13 @@ export default {
       "staleHint": "otwórz Twitcha, aby odświeżyć",
       "bandOpen": "Otwórz panel Dropsów",
       "bandClaimed": "Odebrano Drop · {{name}}",
-      "bandMoreOne": "+{{count}} inny",
+      "bandMore": {
+        "one": "+{{count}} inny",
+        "few": "+{{count}} więcej",
+        "many": "+{{count}} więcej",
+        "other": "+{{count}} więcej"
+      },
       "timeLeft": "jeszcze {{time}}",
-      "bandMoreOther": "+{{count}} więcej",
       "campaigns": "Kampanie",
       "campaignsMeta": "Aktywne: {{count}} · odczytano z Twitcha {{ago}}",
       "campaignsNone": "Otwórz stronę kampanii Dropsów na Twitchu, aby wczytać listę.",
@@ -544,8 +611,12 @@ export default {
       "filterNew": "Nowe",
       "filterEnding": "Wkrótce koniec",
       "filterUpcoming": "Nadchodzące",
-      "rewardsOne": "1 nagroda",
-      "rewardsOther": "Nagrody: {{count}}",
+      "rewards": {
+        "one": "1 nagroda",
+        "few": "Nagrody: {{count}}",
+        "many": "Nagrody: {{count}}",
+        "other": "Nagrody: {{count}}"
+      },
       "linkAccount": "konto do połączenia",
       "yourGames": "twoje gry",
       "badge": "ODZNAKA",
@@ -557,8 +628,12 @@ export default {
       "rewardTypeBadge": "Odznaka",
       "rewardTypeEmote": "Emotka",
       "rewardTypeItem": "Przedmiot",
-      "badgeSubOne": "1 sub",
-      "badgeSubOther": "Suby: {{count}}",
+      "badgeSub": {
+        "one": "1 sub",
+        "few": "Suby: {{count}}",
+        "many": "Suby: {{count}}",
+        "other": "Suby: {{count}}"
+      },
       "badgeOr": "lub",
       "badgesKnown": "Śledzone odznaki: {{count}}",
       "badgesSyncing": "Synchronizacja odznak Twitcha…",
@@ -623,10 +698,18 @@ export default {
       "isNew": "nowa",
       "dateRange": "{{start}} → {{end}}",
       "history": "Historia",
-      "historyMetaOne": "1 Drop zdobyty od instalacji",
-      "historyMetaOther": "Dropsy zdobyte od instalacji: {{count}}",
-      "historyMonthOne": "{{month}} · 1 Drop",
-      "historyMonthOther": "{{month}} · Dropsy: {{count}}",
+      "historyMeta": {
+        "one": "1 Drop zdobyty od instalacji",
+        "few": "Dropsy zdobyte od instalacji: {{count}}",
+        "many": "Dropsy zdobyte od instalacji: {{count}}",
+        "other": "Dropsy zdobyte od instalacji: {{count}}"
+      },
+      "historyMonth": {
+        "one": "{{month}} · 1 Drop",
+        "few": "{{month}} · Dropsy: {{count}}",
+        "many": "{{month}} · Dropsy: {{count}}",
+        "other": "{{month}} · Dropsy: {{count}}"
+      },
       "historyEmpty": "Od początku śledzenia nie zdobyto jeszcze żadnego Dropsa. Pojawią się tutaj, miesiąc po miesiącu.",
       "lockedBody": "Historia wszystkich zdobytych Dropsów, miesiąc po miesiącu, z grą i kanałem. Tylko w StreamPulse+.",
       "trackingTitle": "Historia Drops",
@@ -771,8 +854,12 @@ export default {
       "settings": "Ustawienia"
     },
     "refresh": "Odśwież",
-    "greetingLiveCountSingular": "{{count}} streamer na żywo",
-    "greetingLiveCountPlural": "Streamerzy na żywo: {{count}}",
+    "greetingLiveCount": {
+      "one": "{{count}} streamer na żywo",
+      "few": "Streamerzy na żywo: {{count}}",
+      "many": "Streamerzy na żywo: {{count}}",
+      "other": "Streamerzy na żywo: {{count}}"
+    },
     "platformFilter": {
       "twitch": "twitch",
       "kick": "kick"
@@ -932,6 +1019,7 @@ export default {
       "previewsAudioTitle": "Dźwięk (tryb wideo)",
       "previewsAudioDescription": "Odtwarza dźwięk w podglądach w trybie Wideo.",
       "previewsDelayTitle": "Opóźnienie pojawienia się",
+      "unitMs": "ms",
       "previewsAnimationsTitle": "Animacje",
       "previewsAnimationsDescription": "Płynnie pokazuje i chowa podgląd. Wyłącz, żeby pojawiał się od razu.",
       "groupChat": "Czat",
@@ -1056,6 +1144,8 @@ export default {
       "open": "Dodaj kilku streamerów naraz"
     },
     "notificationTools": {
+      "pauseOneHour": "Wycisz powiadomienia na 1 godzinę",
+      "pauseUntilTomorrow": "Wycisz powiadomienia do jutra do godziny 8:00",
       "pauseTitle": "Wstrzymaj powiadomienia",
       "pauseHour": "Wycisz powiadomienia na 1 godzinę",
       "pauseTomorrow": "Wycisz powiadomienia do jutra do godziny 8:00",
@@ -1104,12 +1194,16 @@ export default {
         "catchUp": "Ta transmisja na żywo jest zgrupowana w powiadomieniu o możliwości obejrzenia na żądanie.",
         "changes": "O zmianie kategorii lub tytułu pojawi się powiadomienie.",
         "noChange": "Od ostatniej kontroli nic się nie zmieniło."
-      },
-      "pauseOneHour": "Wycisz powiadomienia na 1 godzinę",
-      "pauseUntilTomorrow": "Wycisz powiadomienia do jutra do godziny 8:00"
+      }
     },
     "rewardPlan": {
       "title": "Zaplanuj sesję Drops",
+      "description": "Wybierz nagrody Drops, ustaw czas, jaki faktycznie masz, i zobacz, co uda się ukończyć. To tylko szacunkowa wartość: o tym, co się liczy, decyduje Twitch.",
+      "minutes": "{{count}} min",
+      "unknownDuration": "Czas trwania nieznany",
+      "remaining": "zostało {{time}}",
+      "selectedCount": "wybrano: {{count}}",
+      "impossible": "W tym tempie nie zdąży przed terminem",
       "hint": "Wybierz Drops i oszacuj, ile to zajmie. Czasy są orientacyjne: to Twitch decyduje, co się liczy.",
       "select": "Wybierz {{name}}",
       "budget": "Czas pozostały na tę sesję (w minutach)",
@@ -1121,13 +1215,7 @@ export default {
       "empty": "Wybierz Drop, żeby oszacować swój plan oglądania.",
       "loading": "Ładowanie kampanii…",
       "readError": "Nie udało się załadować wybranych Dropsów.",
-      "writeError": "Nie udało się zapisać twojego planu oglądania.",
-      "description": "Wybierz nagrody Drops, ustaw czas, jaki faktycznie masz, i zobacz, co uda się ukończyć. To tylko szacunkowa wartość: o tym, co się liczy, decyduje Twitch.",
-      "minutes": "{{count}} min",
-      "unknownDuration": "Czas trwania nieznany",
-      "remaining": "zostało {{time}}",
-      "selectedCount": "wybrano: {{count}}",
-      "impossible": "W tym tempie nie zdąży przed terminem"
+      "writeError": "Nie udało się zapisać twojego planu oglądania."
     },
     "linkPicker": {
       "button": "Połącz z innym kontem",
@@ -1239,7 +1327,6 @@ export default {
       "updateTitle": "StreamPulse został zaktualizowany",
       "updateMessage": "Kliknij, aby zobaczyć nowości i poprawki."
     },
-    "diagnostics": {},
     "badge": {
       "idle": "StreamPulse",
       "live": "{{count}} na żywo"
@@ -1281,8 +1368,8 @@ export default {
     "formatDesktop": "PC · 16:9",
     "formatMobile": "Telefon · 9:16",
     "loading": "Wczytywanie statystyk…",
-    "emptyTitle": "Brak danych dla tego okresu.",
     "canvasSummary": "Obraz podsumowania: {{time}} oglądania w tym okresie. Najczęściej oglądany kanał: {{top}}.",
+    "emptyTitle": "Brak danych dla tego okresu.",
     "emptyBody": "W tym okresie nie zapisano czasu oglądania. Sprawdź, czy opcja „Licz czas oglądania” jest włączona w Ustawieniach, w sekcji Czas i dane.",
     "download": "Pobierz obraz",
     "share": "Udostępnij na X",
@@ -1375,8 +1462,12 @@ export default {
     "tagImproved": "ULEPSZONO",
     "tagOther": "INNE",
     "genericChanges": "Wewnętrzne poprawki i ulepszenia stabilności.",
-    "changeCountSingular": "{{count}} zmiana w tej wersji.",
-    "changeCountPlural": "{{count}} zmian w tej wersji.",
+    "changeCount": {
+      "one": "{{count}} zmiana w tej wersji.",
+      "few": "{{count}} zmiany w tej wersji.",
+      "many": "{{count}} zmian w tej wersji.",
+      "other": "{{count}} zmian w tej wersji."
+    },
     "noNotes": "Brak dostępnych informacji o wydaniu",
     "noNotesBody": "Uwagi do tej wersji nie zostały jeszcze opublikowane."
   },
@@ -1411,8 +1502,12 @@ export default {
       "founder": "Założyciel StreamPulse",
       "ambassador": "Ambasador",
       "lifetime": "Członek dożywotni",
-      "months": "Subskrybuje od {{count}} mies.",
-      "monthOne": "Subskrybuje od 1 miesiąca",
+      "months": {
+        "one": "Subskrybuje od 1 miesiąca",
+        "few": "Subskrybuje od {{count}} mies.",
+        "many": "Subskrybuje od {{count}} mies.",
+        "other": "Subskrybuje od {{count}} mies."
+      },
       "newMember": "Nowy subskrybent",
       "freeLine": "Użytkownik rozszerzenia",
       "worn": "Noszony",
@@ -1466,44 +1561,10 @@ export default {
     },
     "chatFilter": {
       "replacement": "Wiadomość usunięta przez StreamPulse"
+    },
+    "previews": {
+      "live": "NA ŻYWO",
+      "loading": "Ładowanie…"
     }
-  },
-  "bulk": {
-    "documentTitle": "Dodawaj streamerów zbiorczo | StreamPulse",
-    "title": "Dodawaj streamerów zbiorczo",
-    "intro": "Wklej maksymalnie 50 nazw użytkowników lub linków do kanałów, a potem wybierz, które z nich chcesz dodać do StreamPulse.",
-    "listLabel": "Twoja lista",
-    "listHint": "Jedna nazwa użytkownika lub link w każdym wierszu. Możesz też używać przecinków, średników i tabulatorów.",
-    "platformLabel": "Platforma dla nazw użytkowników bez linku",
-    "groupLabel": "Grupa (opcjonalnie)",
-    "noGroup": "Brak grupy",
-    "groupHint": "Dodaj nowych streamerów do istniejącej grupy bez wprowadzania zmian w pozostałych grupach.",
-    "preview": "Przejrzyj listę",
-    "previewTitle": "Sprawdź to przed dodaniem",
-    "previewHint": "Sprawdza to format i duplikaty. Każde konto jest weryfikowane po dodaniu.",
-    "selectAll": "Zaznacz wszystkie propozycje",
-    "emptyPreview": "Wklej swoją listę, a potem przejrzyj ją, żeby sprawdzić propozycje, duplikaty i nieprawidłowe wpisy.",
-    "keepOpen": "Twoje dane pozostaną tutaj po zamknięciu okienka StreamPulse. Zostaw tę kartę otwartą podczas dodawania.",
-    "ready": "Gotowe do dodania",
-    "duplicate": "Duplikat na tej liście",
-    "existing": "Już obserwujesz",
-    "invalid": "Nieprawidłowy identyfikator lub link",
-    "adding": "Dodaję…",
-    "success": "Dodano",
-    "error": "Nie udało się dodać",
-    "stale": "Lista uległa zmianie: przejrzyj ją jeszcze raz przed dodaniem.",
-    "summary": "{{candidates}} do dodania · {{duplicates}} duplikaty · {{invalid}} nieprawidłowe",
-    "tooMany": "Znaleziono {{count}} wpisów; naraz można dodać tylko {{max}}.",
-    "retrySelected": "Spróbuj ponownie {{count}}",
-    "addSelected": "Dodaj {{count}}",
-    "progress": "Dodawanie {{done}} z {{total}}…",
-    "finished": "{{added}} dodano · {{failed}} nie udało się",
-    "partial": "Niektóre konta nie zostały dodane. Są one zachowane i można spróbować ponownie.",
-    "addFailed": "Nie udało się dodać konta.",
-    "readFailed": "Nie udało się odczytać twoich danych ze StreamPulse.",
-    "verifyFailed": "Nie udało się zweryfikować konta.",
-    "groupFailed": "Konto zostało dodane, ale nie udało się zaktualizować jego grupy.",
-    "groupMissing": "Konto zostało dodane, ale nie znajduje się już w wybranej grupie.",
-    "missingGroupOption": "Grupa jest już niedostępna"
   }
 };

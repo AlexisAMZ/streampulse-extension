@@ -10,6 +10,16 @@
     <title>StreamPulse · banc du popup</title>
     <link rel="stylesheet" href="../css/tokens.css" />
     <link rel="stylesheet" href="../css/popup.css" />
+    <script>
+      // &pseudo=1&lang=en : la pseudo-langue (npm run i18n:pseudo) remplace
+      // l'anglais. L'import map doit exister avant le premier module chargé.
+      if (new URLSearchParams(location.search).get("pseudo") === "1") {
+        const map = document.createElement("script");
+        map.type = "importmap";
+        map.textContent = JSON.stringify({ imports: { "/i18n/lang/en.js": "/localization/.cache/pseudo/en-XA.js" } });
+        document.currentScript.after(map);
+      }
+    </script>
     <script src="/scripts/dev/mock-chrome.js"></script>
   </head>
   <body data-theme="dark">
@@ -49,7 +59,33 @@
       }
 
       await wait(400);
+      if (params.get("pseudo") === "1") reportUnlocalized();
       document.documentElement.dataset.ready = "1";
+
+      /**
+       * En pseudo-langue, tout texte traduit est encadré de ［ ］. Un texte
+       * visible sans crochet ne passe pas par l'i18n : on le liste.
+       */
+      function reportUnlocalized() {
+        const visible = (node) => {
+          const el = node.nodeType === 1 ? node : node.parentElement;
+          return el && el.closest("script, style, [hidden], [aria-hidden='true']") === null && el.getClientRects().length > 0;
+        };
+        const found = [];
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+          const text = node.textContent.trim();
+          if (/\p{L}{2,}/u.test(text) && !text.includes("［") && visible(node)) found.push(text.slice(0, 60));
+        }
+        for (const el of document.querySelectorAll("[title], [placeholder], [aria-label]")) {
+          for (const attr of ["title", "placeholder", "aria-label"]) {
+            const value = el.getAttribute(attr);
+            if (value && /\p{L}{2,}/u.test(value) && !value.includes("［") && visible(el)) found.push(`${attr}="${value.slice(0, 50)}"`);
+          }
+        }
+        window.__pseudoReport = [...new Set(found)];
+        console.warn(`[i18n] ${window.__pseudoReport.length} texte(s) visible(s) hors i18n`, window.__pseudoReport);
+      }
     </script>
   </body>
 </html>

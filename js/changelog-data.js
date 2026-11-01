@@ -74,6 +74,25 @@ export const RELEASES = [
           "ar": "لم يعد نمط اسمك في StreamPulse+ يختفي بعد ثوانٍ من إرسال رسالتك في دردشة Twitch، حتى عند تمرير المؤشر فوق اسمك.",
         },
       },
+      {
+        type: "improved",
+        area: "interface",
+        text: {
+          "fr": "Traductions plus justes : les nombres s'accordent selon la grammaire de chaque langue (ukrainien, russe, polonais, arabe…), le mot « badge » est le même sur tous les écrans, et la carte d'aperçu au survol s'affiche dans ta langue.",
+          "en": "More accurate translations: counts now follow each language's grammar (Ukrainian, Russian, Polish, Arabic…), the word for badges is the same on every screen, and the hover preview card speaks your language.",
+          "uk": "Точніші переклади: числа тепер узгоджуються за граматикою кожної мови (українська, російська, польська, арабська…), слово «значок» однакове на всіх екранах, а картка попереднього перегляду показується вашою мовою.",
+          "es": "Traducciones más precisas: los números concuerdan según la gramática de cada idioma (ucraniano, ruso, polaco, árabe…), las insignias se llaman igual en todas las pantallas y la tarjeta de vista previa aparece en tu idioma.",
+          "pt-BR": "Traduções mais precisas: os números seguem a gramática de cada idioma (ucraniano, russo, polonês, árabe…), os emblemas têm o mesmo nome em todas as telas e o card de prévia aparece no seu idioma.",
+          "de": "Genauere Übersetzungen: Zahlen richten sich jetzt nach der Grammatik jeder Sprache (Ukrainisch, Russisch, Polnisch, Arabisch…), Abzeichen heißen auf jedem Bildschirm gleich, und die Vorschaukarte beim Überfahren spricht deine Sprache.",
+          "it": "Traduzioni più precise: i numeri seguono la grammatica di ogni lingua (ucraino, russo, polacco, arabo…), i badge hanno lo stesso nome in ogni schermata e la scheda di anteprima parla la tua lingua.",
+          "pl": "Dokładniejsze tłumaczenia: liczebniki odmieniają się zgodnie z gramatyką każdego języka (ukraiński, rosyjski, polski, arabski…), odznaki nazywają się tak samo na każdym ekranie, a karta podglądu mówi w twoim języku.",
+          "tr": "Daha doğru çeviriler: sayılar artık her dilin dilbilgisine uyuyor (Ukraynaca, Rusça, Lehçe, Arapça…), rozetler her ekranda aynı adı taşıyor ve önizleme kartı senin dilinde görünüyor.",
+          "ru": "Более точные переводы: числа теперь согласуются по грамматике каждого языка (украинский, русский, польский, арабский…), значки называются одинаково на всех экранах, а карточка предпросмотра показывается на вашем языке.",
+          "ja": "翻訳の精度を上げました。数の表現が各言語の文法に沿うようになり（ウクライナ語、ロシア語、ポーランド語、アラビア語など）、バッジの呼び方がすべての画面でそろい、ホバー時のプレビューカードも選択した言語で表示されます。",
+          "ko": "번역이 더 정확해졌어요. 숫자 표현이 언어별 문법을 따르고(우크라이나어, 러시아어, 폴란드어, 아랍어 등), 배지 이름이 모든 화면에서 같아졌으며, 마우스를 올렸을 때 나오는 미리보기 카드도 선택한 언어로 표시돼요.",
+          "ar": "ترجمات أدق: صارت الأعداد تتبع قواعد كل لغة (الأوكرانية والروسية والبولندية والعربية…)، وأصبح اسم الشارات واحدًا في كل الشاشات، وتظهر بطاقة المعاينة عند التمرير بلغتك.",
+        },
+      },
     ],
     thanks: [
       {

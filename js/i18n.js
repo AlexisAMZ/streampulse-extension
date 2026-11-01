@@ -4,6 +4,7 @@ import {
   formatTemplate,
   isRtlLanguage,
   matchLanguage,
+  resolveLocale,
 } from "../i18n/meta.js";
 import { detectInstallLanguage } from "./preferences-data.js";
 
@@ -205,7 +206,44 @@ export function t(key, params = {}, lang = currentLanguage) {
   if (resolved == null) {
     return key;
   }
+  // Groupe de pluriel lu par t() au lieu de tp() : la forme générale plutôt
+  // qu'un objet affiché « [object Object] ».
+  if (typeof resolved === "object" && typeof resolved.other === "string") {
+    return formatTemplate(resolved.other, params);
+  }
   return resolved;
+}
+
+/** Catégorie CLDR (one, few, many, other…) de `count` dans `lang`. */
+function pluralCategory(count, lang) {
+  try {
+    return new Intl.PluralRules(resolveLocale(lang)).select(Number(count));
+  } catch {
+    return "other";
+  }
+}
+
+function pickPlural(group, count, lang) {
+  if (!group || typeof group !== "object") return null;
+  const form = group[pluralCategory(count, lang)] ?? group.other;
+  return typeof form === "string" ? form : null;
+}
+
+/**
+ * Pluriel selon les règles de chaque langue. La clé désigne un groupe
+ * { one, few, many, other… } : tp("popup.history.count", 3) lit
+ * popup.history.count.few en ukrainien et .other en anglais. Une forme
+ * absente retombe sur `other` de la même langue, puis sur l'anglais.
+ */
+export function tp(key, count, params = {}, lang = currentLanguage) {
+  warnIfNotReady(key);
+  const segments = key.split(".");
+  const vars = { count, ...params };
+  const own = dictionaries.has(lang) ? pickPlural(lookup(dictionaries.get(lang), segments), count, lang) : null;
+  if (own != null) return formatTemplate(own, vars);
+  const fallback = dictionaries.get(DEFAULT_LANGUAGE);
+  const english = fallback ? pickPlural(lookup(fallback, segments), count, DEFAULT_LANGUAGE) : null;
+  return english != null ? formatTemplate(english, vars) : key;
 }
 
 function camelToKebab(value) {

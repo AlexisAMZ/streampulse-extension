@@ -112,6 +112,7 @@
       ],
       "all_frames": false,
       "js": [
+        "js/inject/i18n-inline.js",
         "js/previews/sources.js",
         "js/previews/card.js",
         "js/previews/targets-twitch.js",

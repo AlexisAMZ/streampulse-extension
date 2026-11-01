@@ -160,7 +160,8 @@ export default {
     "plusStyleDesc": "Ваш нік і значок у чаті отримують ефекти підписки — градієнти, текстури, анімації. Усе вибирається у спливаючому вікні, розділ «Значок». А кліпи Twitch можна завантажити у форматі MP4 з їхньої сторінки.",
     "plusStyleNameTitle": "Ваше ім’я",
     "plusStyleBadgeTitle": "Ваш значок",
-    "plusFinish": "Користуйтеся StreamPulse+"
+    "plusFinish": "Користуйтеся StreamPulse+",
+    "stepperLabel": "Прогрес"
   },
   "popup": {
     "settingsFilter": {
@@ -209,8 +210,12 @@ export default {
       "durationHoursShort": "{{h}} год {{m}}",
       "filterLabel": "Фільтр за платформою",
       "filterAll": "Усе",
-      "countSingular": "1 трансляція",
-      "countPlural": "Трансляцій: {{count}}",
+      "count": {
+        "one": "{{count}} трансляція",
+        "few": "Трансляцій: {{count}}",
+        "many": "Трансляцій: {{count}}",
+        "other": "Трансляцій: {{count}}"
+      },
       "summary": "пропущено за останні 14 днів · {{duration}} контенту",
       "emptyTitle": "Немає пропущених трансляцій",
       "emptyBody": "Коли стрімер, якого ви відстежуєте, завершить трансляцію, яку ви не дивилися, вона з’явиться тут разом із записом.",
@@ -437,8 +442,12 @@ export default {
       "streamersLabel": "Стрімери",
       "rulesFor": "Сповіщення для {{name}}",
       "addRule": "Нове правило",
-      "ruleCountSingular": "1 правило",
-      "ruleCountPlural": "Правил: {{count}}",
+      "ruleCount": {
+        "one": "{{count}} правило",
+        "few": "Правил: {{count}}",
+        "many": "Правил: {{count}}",
+        "other": "Правил: {{count}}"
+      },
       "noRules": "Без правил: звичайне сповіщення про кожну трансляцію.",
       "ruleName": "Назва правила",
       "ruleNamePlaceholder": "Наприклад: «Вечір у GTA»",
@@ -466,8 +475,12 @@ export default {
       "activityLabel": "Активність за сьогодні",
       "autoClaimOn": "Автозбір увімкнено",
       "pointsToday": "+{{count}} балів сьогодні",
-      "dropsToday": "Drop сьогодні: {{count}}",
-      "dropsTodayPlural": "Drops сьогодні: {{count}}",
+      "dropsToday": {
+        "one": "Drop сьогодні: {{count}}",
+        "few": "Drops сьогодні: {{count}}",
+        "many": "Drops сьогодні: {{count}}",
+        "other": "Drops сьогодні: {{count}}"
+      },
       "search": "Пошук каналів",
       "searchLabel": "Пошук",
       "allChannels": "Усі канали",
@@ -575,9 +588,13 @@ export default {
       "staleHint": "відкрийте Twitch, щоб оновити",
       "bandOpen": "Відкрити панель Drops",
       "bandClaimed": "Drop отримано · {{name}}",
-      "bandMoreOne": "+{{count}} ще",
+      "bandMore": {
+        "one": "+{{count}} ще",
+        "few": "+{{count}} ще",
+        "many": "+{{count}} ще",
+        "other": "+{{count}} ще"
+      },
       "timeLeft": "залишилось {{time}}",
-      "bandMoreOther": "+{{count}} ще",
       "campaigns": "Кампанії",
       "campaignsMeta": "Активних: {{count}} · зчитано з Twitch {{ago}}",
       "campaignsNone": "Відкрийте сторінку кампаній Drops на Twitch, щоб завантажити список.",
@@ -594,8 +611,12 @@ export default {
       "filterNew": "Нове",
       "filterEnding": "Скоро закінчиться",
       "filterUpcoming": "Незабаром",
-      "rewardsOne": "1 винагорода",
-      "rewardsOther": "Нагород: {{count}}",
+      "rewards": {
+        "one": "{{count}} винагорода",
+        "few": "Нагород: {{count}}",
+        "many": "Нагород: {{count}}",
+        "other": "Нагород: {{count}}"
+      },
       "linkAccount": "акаунт для зв’язування",
       "yourGames": "ваші ігри",
       "badge": "ЗНАЧОК",
@@ -607,8 +628,12 @@ export default {
       "rewardTypeBadge": "Значок",
       "rewardTypeEmote": "Емоут",
       "rewardTypeItem": "Предмет",
-      "badgeSubOne": "1 підписка",
-      "badgeSubOther": "Підписок: {{count}}",
+      "badgeSub": {
+        "one": "{{count}} підписка",
+        "few": "Підписок: {{count}}",
+        "many": "Підписок: {{count}}",
+        "other": "Підписок: {{count}}"
+      },
       "badgeOr": "або",
       "badgesKnown": "Значків відстежується: {{count}}",
       "badgesSyncing": "Синхронізація значків Twitch…",
@@ -673,10 +698,18 @@ export default {
       "isNew": "нове",
       "dateRange": "{{start}} → {{end}}",
       "history": "Історія",
-      "historyMetaOne": "1 Drop отримано з моменту встановлення",
-      "historyMetaOther": "Drops отримано з моменту встановлення: {{count}}",
-      "historyMonthOne": "{{month}} · 1 Drop",
-      "historyMonthOther": "{{month}} · Drops: {{count}}",
+      "historyMeta": {
+        "one": "{{count}} Drop отримано з моменту встановлення",
+        "few": "Drops отримано з моменту встановлення: {{count}}",
+        "many": "Drops отримано з моменту встановлення: {{count}}",
+        "other": "Drops отримано з моменту встановлення: {{count}}"
+      },
+      "historyMonth": {
+        "one": "{{month}} · {{count}} Drop",
+        "few": "{{month}} · Drops: {{count}}",
+        "many": "{{month}} · Drops: {{count}}",
+        "other": "{{month}} · Drops: {{count}}"
+      },
       "historyEmpty": "Відколи почалося відстеження, жодного Drop не отримано. Вони з’являтимуться тут по місяцях.",
       "lockedBody": "Історія кожного отриманого вами Drop по місяцях, з грою та каналом. Лише зі StreamPulse+.",
       "trackingTitle": "Відстежувати Drops",
@@ -821,8 +854,12 @@ export default {
       "settings": "Налаштування"
     },
     "refresh": "Оновити",
-    "greetingLiveCountSingular": "{{count}} стрімер в ефірі",
-    "greetingLiveCountPlural": "У прямому ефірі: {{count}}",
+    "greetingLiveCount": {
+      "one": "{{count}} стрімер в ефірі",
+      "few": "У прямому ефірі: {{count}}",
+      "many": "У прямому ефірі: {{count}}",
+      "other": "У прямому ефірі: {{count}}"
+    },
     "platformFilter": {
       "twitch": "twitch",
       "kick": "kick"
@@ -982,6 +1019,7 @@ export default {
       "previewsAudioTitle": "Звук (режим відео)",
       "previewsAudioDescription": "Вмикає звук у відеоперегляді.",
       "previewsDelayTitle": "Затримка перегляду",
+      "unitMs": "мс",
       "previewsAnimationsTitle": "Анімації",
       "previewsAnimationsDescription": "Плавна поява й зникнення перегляду. Вимкніть, щоб він з’являвся миттєво.",
       "groupChat": "Чат",
@@ -1289,7 +1327,6 @@ export default {
       "updateTitle": "StreamPulse оновлено",
       "updateMessage": "Натисніть, щоб дізнатися, що нового й що виправлено."
     },
-    "diagnostics": {},
     "badge": {
       "idle": "StreamPulse",
       "live": "В ефірі: {{count}}"
@@ -1425,8 +1462,12 @@ export default {
     "tagImproved": "ПОКРАЩЕНО",
     "tagOther": "ІНШЕ",
     "genericChanges": "Внутрішні виправлення та покращення стабільності.",
-    "changeCountSingular": "{{count}} зміна в цьому випуску.",
-    "changeCountPlural": "Змін у цьому випуску: {{count}}.",
+    "changeCount": {
+      "one": "{{count}} зміна в цьому випуску.",
+      "few": "Змін у цьому випуску: {{count}}.",
+      "many": "Змін у цьому випуску: {{count}}.",
+      "other": "Змін у цьому випуску: {{count}}."
+    },
     "noNotes": "Немає нотаток до версії",
     "noNotesBody": "Нотатки до цього випуску ще не опубліковано."
   },
@@ -1461,8 +1502,12 @@ export default {
       "founder": "Засновник StreamPulse",
       "ambassador": "Амбасадор",
       "lifetime": "Довічний учасник",
-      "months": "Підписка: {{count}} міс.",
-      "monthOne": "Підписка: 1 місяць",
+      "months": {
+        "one": "Підписка: {{count}} місяць",
+        "few": "Підписка: {{count}} міс.",
+        "many": "Підписка: {{count}} міс.",
+        "other": "Підписка: {{count}} міс."
+      },
       "newMember": "Новий учасник",
       "freeLine": "Користувач розширення",
       "worn": "Надягнено",
@@ -1516,6 +1561,10 @@ export default {
     },
     "chatFilter": {
       "replacement": "Повідомлення видалено StreamPulse"
+    },
+    "previews": {
+      "live": "В ЕФІРІ",
+      "loading": "Завантаження…"
     }
   }
 };

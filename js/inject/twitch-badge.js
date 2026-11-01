@@ -653,6 +653,11 @@
     return api ? api.get(badgeLang, "badge." + key, params) : key;
   }
 
+  function trPlural(key, count) {
+    var api = typeof window !== "undefined" ? window.__SP_I18N__ : null;
+    return api && api.plural ? api.plural(badgeLang, "badge." + key, count) : key;
+  }
+
   /** Une seule carte pour tout le tchat, creee au premier survol. */
   var NAME_SELECTOR = '[data-a-target="chat-message-username"], .chat-author__display-name, .seventv-chat-user-username';
 
@@ -771,7 +776,7 @@
     if (style.p === "lifetime") return tr("lifetime");
     var months = style.s ? Math.floor((Date.now() - style.s) / MONTH_MS) : 0;
     if (months < 1) return tr("newMember");
-    return months === 1 ? tr("monthOne") : tr("months", { count: months });
+    return trPlural("months", months);
   }
 
   /** Deuxieme ligne de la carte : le rang d'abord, puis l'anciennete d'abonne. */

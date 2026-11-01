@@ -40,3 +40,6 @@ images/cws_screenshots/*
 images/cws_screenshots/EN/*
 !images/cws_screenshots/EN/01-dashboard.png
 !images/cws_screenshots/EN/02-drops.png
+
+# Cache de l outillage i18n (reponses DeepL, glossaires DeepL, dossiers de relecture, pseudo-langue)
+localization/.cache/

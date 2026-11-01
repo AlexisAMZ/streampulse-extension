@@ -46,8 +46,11 @@
       "founder": "Fondateur de StreamPulse",
       "ambassador": "Ambassadeur",
       "lifetime": "Membre à vie",
-      "months": "Abonné depuis {{count}} mois",
-      "monthOne": "Abonné depuis 1 mois",
+      "months": {
+        "one": "Abonné depuis {{count}} mois",
+        "many": "Abonné depuis {{count}} mois",
+        "other": "Abonné depuis {{count}} mois"
+      },
       "newMember": "Nouvel abonné",
       "freeLine": "Utilisateur de l'extension",
       "worn": "Porté",
@@ -101,6 +104,10 @@
     },
     "chatFilter": {
       "replacement": "Message supprimé par StreamPulse"
+    },
+    "previews": {
+      "live": "EN DIRECT",
+      "loading": "Chargement…"
     },
     "shared": {
       "settings": {
@@ -227,8 +234,10 @@
       "founder": "StreamPulse founder",
       "ambassador": "Ambassador",
       "lifetime": "Lifetime member",
-      "months": "Subscribed for {{count}} months",
-      "monthOne": "Subscribed for 1 month",
+      "months": {
+        "one": "Subscribed for {{count}} month",
+        "other": "Subscribed for {{count}} months"
+      },
       "newMember": "New subscriber",
       "freeLine": "Extension user",
       "worn": "Worn",
@@ -282,6 +291,10 @@
     },
     "chatFilter": {
       "replacement": "Message removed by StreamPulse"
+    },
+    "previews": {
+      "live": "LIVE",
+      "loading": "Loading…"
     },
     "shared": {
       "settings": {
@@ -408,8 +421,11 @@
       "founder": "Fundador de StreamPulse",
       "ambassador": "Embajador",
       "lifetime": "Miembro de por vida",
-      "months": "Suscrito desde hace {{count}} meses",
-      "monthOne": "Suscrito desde hace 1 mes",
+      "months": {
+        "one": "Suscrito desde hace 1 mes",
+        "many": "Suscrito desde hace {{count}} meses",
+        "other": "Suscrito desde hace {{count}} meses"
+      },
       "newMember": "Nuevo suscriptor",
       "freeLine": "Usuario de la extensión",
       "worn": "Equipado",
@@ -463,6 +479,10 @@
     },
     "chatFilter": {
       "replacement": "Mensaje eliminado por StreamPulse"
+    },
+    "previews": {
+      "live": "EN DIRECTO",
+      "loading": "Cargando…"
     },
     "shared": {
       "settings": {
@@ -589,8 +609,11 @@
       "founder": "Fundador do StreamPulse",
       "ambassador": "Embaixador",
       "lifetime": "Membro vitalício",
-      "months": "Assinante há {{count}} meses",
-      "monthOne": "Assinante há 1 mês",
+      "months": {
+        "one": "Assinante há {{count}} mês",
+        "many": "Assinante há {{count}} meses",
+        "other": "Assinante há {{count}} meses"
+      },
       "newMember": "Novo assinante",
       "freeLine": "Usuário da extensão",
       "worn": "Equipado",
@@ -644,6 +667,10 @@
     },
     "chatFilter": {
       "replacement": "Mensagem removida pelo StreamPulse"
+    },
+    "previews": {
+      "live": "AO VIVO",
+      "loading": "Carregando…"
     },
     "shared": {
       "settings": {
@@ -770,8 +797,10 @@
       "founder": "Gründer von StreamPulse",
       "ambassador": "Botschafter",
       "lifetime": "Mitglied auf Lebenszeit",
-      "months": "Seit {{count}} Monaten dabei",
-      "monthOne": "Seit 1 Monat dabei",
+      "months": {
+        "one": "Seit 1 Monat dabei",
+        "other": "Seit {{count}} Monaten dabei"
+      },
       "newMember": "Neues Mitglied",
       "freeLine": "Nutzt die Erweiterung",
       "worn": "Getragen",
@@ -825,6 +854,10 @@
     },
     "chatFilter": {
       "replacement": "Nachricht von StreamPulse entfernt"
+    },
+    "previews": {
+      "live": "LIVE",
+      "loading": "Wird geladen…"
     },
     "shared": {
       "settings": {
@@ -951,8 +984,11 @@
       "founder": "Fondatore di StreamPulse",
       "ambassador": "Ambasciatore",
       "lifetime": "Membro a vita",
-      "months": "Abbonato da {{count}} mesi",
-      "monthOne": "Abbonato da 1 mese",
+      "months": {
+        "one": "Abbonato da 1 mese",
+        "many": "Abbonato da {{count}} mesi",
+        "other": "Abbonato da {{count}} mesi"
+      },
       "newMember": "Nuovo abbonato",
       "freeLine": "Utente dell'estensione",
       "worn": "Indossato",
@@ -1006,6 +1042,10 @@
     },
     "chatFilter": {
       "replacement": "Messaggio rimosso da StreamPulse"
+    },
+    "previews": {
+      "live": "LIVE",
+      "loading": "Caricamento…"
     },
     "shared": {
       "settings": {
@@ -1132,8 +1172,12 @@
       "founder": "Założyciel StreamPulse",
       "ambassador": "Ambasador",
       "lifetime": "Członek dożywotni",
-      "months": "Subskrybuje od {{count}} mies.",
-      "monthOne": "Subskrybuje od 1 miesiąca",
+      "months": {
+        "one": "Subskrybuje od 1 miesiąca",
+        "few": "Subskrybuje od {{count}} mies.",
+        "many": "Subskrybuje od {{count}} mies.",
+        "other": "Subskrybuje od {{count}} mies."
+      },
       "newMember": "Nowy subskrybent",
       "freeLine": "Użytkownik rozszerzenia",
       "worn": "Noszony",
@@ -1187,6 +1231,10 @@
     },
     "chatFilter": {
       "replacement": "Wiadomość usunięta przez StreamPulse"
+    },
+    "previews": {
+      "live": "NA ŻYWO",
+      "loading": "Ładowanie…"
     },
     "shared": {
       "settings": {
@@ -1313,8 +1361,10 @@
       "founder": "StreamPulse kurucusu",
       "ambassador": "Elçi",
       "lifetime": "Ömür boyu üye",
-      "months": "{{count}} aydır abone",
-      "monthOne": "1 aydır abone",
+      "months": {
+        "one": "1 aydır abone",
+        "other": "{{count}} aydır abone"
+      },
       "newMember": "Yeni abone",
       "freeLine": "Eklenti kullanıcısı",
       "worn": "Takılı",
@@ -1368,6 +1418,10 @@
     },
     "chatFilter": {
       "replacement": "Mesaj, StreamPulse tarafından kaldırıldı"
+    },
+    "previews": {
+      "live": "CANLI",
+      "loading": "Yükleniyor…"
     },
     "shared": {
       "settings": {
@@ -1494,8 +1548,12 @@
       "founder": "Основатель StreamPulse",
       "ambassador": "Посол",
       "lifetime": "Участник навсегда",
-      "months": "Подписчик {{count}} мес.",
-      "monthOne": "Подписчик 1 месяц",
+      "months": {
+        "one": "Подписчик {{count}} месяц",
+        "few": "Подписчик {{count}} мес.",
+        "many": "Подписчик {{count}} мес.",
+        "other": "Подписчик {{count}} мес."
+      },
       "newMember": "Новый подписчик",
       "freeLine": "Пользователь расширения",
       "worn": "Надет",
@@ -1549,6 +1607,10 @@
     },
     "chatFilter": {
       "replacement": "Сообщение удалено StreamPulse"
+    },
+    "previews": {
+      "live": "В ЭФИРЕ",
+      "loading": "Загрузка…"
     },
     "shared": {
       "settings": {
@@ -1675,8 +1737,9 @@
       "founder": "StreamPulse 創設者",
       "ambassador": "アンバサダー",
       "lifetime": "永久メンバー",
-      "months": "{{count}}か月利用中",
-      "monthOne": "1か月利用中",
+      "months": {
+        "other": "{{count}}か月利用中"
+      },
       "newMember": "新規メンバー",
       "freeLine": "拡張機能ユーザー",
       "worn": "装着中",
@@ -1730,6 +1793,10 @@
     },
     "chatFilter": {
       "replacement": "StreamPulse によりメッセージが削除されました"
+    },
+    "previews": {
+      "live": "ライブ",
+      "loading": "読み込み中…"
     },
     "shared": {
       "settings": {
@@ -1856,8 +1923,9 @@
       "founder": "StreamPulse 창립자",
       "ambassador": "앰배서더",
       "lifetime": "평생 멤버",
-      "months": "{{count}}개월째 구독 중",
-      "monthOne": "1개월째 구독 중",
+      "months": {
+        "other": "{{count}}개월째 구독 중"
+      },
       "newMember": "새 구독자",
       "freeLine": "확장 프로그램 사용자",
       "worn": "장착 중",
@@ -1911,6 +1979,10 @@
     },
     "chatFilter": {
       "replacement": "StreamPulse에 의해 메시지가 삭제되었습니다."
+    },
+    "previews": {
+      "live": "생방송",
+      "loading": "불러오는 중…"
     },
     "shared": {
       "settings": {
@@ -2037,8 +2109,14 @@
       "founder": "مؤسس StreamPulse",
       "ambassador": "سفير",
       "lifetime": "عضو مدى الحياة",
-      "months": "مشترك منذ {{count}} أشهر",
-      "monthOne": "مشترك منذ شهر واحد",
+      "months": {
+        "zero": "مشترك منذ {{count}} أشهر",
+        "one": "مشترك منذ شهر واحد",
+        "two": "مشترك منذ شهرين",
+        "few": "مشترك منذ {{count}} أشهر",
+        "many": "مشترك منذ {{count}} شهرًا",
+        "other": "مشترك منذ {{count}} أشهر"
+      },
       "newMember": "مشترك جديد",
       "freeLine": "مستخدم الإضافة",
       "worn": "مُجهَّز",
@@ -2092,6 +2170,10 @@
     },
     "chatFilter": {
       "replacement": "حذف StreamPulse هذه الرسالة"
+    },
+    "previews": {
+      "live": "مباشر",
+      "loading": "جارٍ التحميل…"
     },
     "shared": {
       "settings": {
@@ -2218,8 +2300,12 @@
       "founder": "Засновник StreamPulse",
       "ambassador": "Амбасадор",
       "lifetime": "Довічний учасник",
-      "months": "Підписка: {{count}} міс.",
-      "monthOne": "Підписка: 1 місяць",
+      "months": {
+        "one": "Підписка: {{count}} місяць",
+        "few": "Підписка: {{count}} міс.",
+        "many": "Підписка: {{count}} міс.",
+        "other": "Підписка: {{count}} міс."
+      },
       "newMember": "Новий учасник",
       "freeLine": "Користувач розширення",
       "worn": "Надягнено",
@@ -2273,6 +2359,10 @@
     },
     "chatFilter": {
       "replacement": "Повідомлення видалено StreamPulse"
+    },
+    "previews": {
+      "live": "В ЕФІРІ",
+      "loading": "Завантаження…"
     },
     "shared": {
       "settings": {
@@ -2425,6 +2515,33 @@
     return value;
   }
 
+  /**
+   * Pluriel CLDR : la clé désigne un groupe { one, few, many, other }.
+   * Forme absente → other de la même langue, puis l'anglais.
+   */
+  function plural(lang, key, count, params) {
+    var vars = { count: count };
+    if (params) for (var name in params) vars[name] = params[name];
+    var form = pickForm(dig(STRINGS[lang], key), lang, count);
+    if (form == null) form = pickForm(dig(STRINGS[DEFAULT_LANG], key), DEFAULT_LANG, count);
+    if (form == null) return key;
+    return form.replace(/{{\s*([^}\s]+)\s*}}/g, function (match, name) {
+      return Object.prototype.hasOwnProperty.call(vars, name) ? vars[name] : match;
+    });
+  }
+
+  function pickForm(group, lang, count) {
+    if (!group || typeof group !== "object") return null;
+    var category = "other";
+    try {
+      category = new Intl.PluralRules(lang === "ar" ? "ar-AE" : lang).select(Number(count));
+    } catch (_e) {
+      // Locale inconnue d'Intl : forme générale.
+    }
+    var form = group[category] != null ? group[category] : group.other;
+    return typeof form === "string" ? form : null;
+  }
+
   function dig(root, key) {
     if (!root) return null;
     var parts = String(key).split(".");
@@ -2439,6 +2556,7 @@
   window.__SP_I18N__ = {
     resolve: resolve,
     get: get,
+    plural: plural,
     languages: Object.keys(STRINGS),
     defaultLanguage: DEFAULT_LANG,
   };

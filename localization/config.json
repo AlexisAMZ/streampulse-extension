@@ -1,0 +1,45 @@
+{
+  "$comment": "Configuration de l'outillage de localisation (scripts/i18n). Le registre lu par l'extension reste i18n/meta.js ; ce fichier ne sert qu'aux scripts et ne part pas dans le zip.",
+  "source": "en",
+  "deepl": {
+    "freeEndpoint": "https://api-free.deepl.com",
+    "proEndpoint": "https://api.deepl.com",
+    "batchSize": 40,
+    "maxBatchBytes": 60000,
+    "timeoutMs": 30000,
+    "maxRetries": 5,
+    "costPerMillionChars": 20,
+    "currency": "EUR",
+    "context": "Short user interface text of StreamPulse, a browser extension for viewers of Twitch, Kick and YouTube streams (channel points, Drops, badges, live alerts, chat tools). Keep it concise and natural, as in a modern app. Never translate brand names."
+  },
+  "review": {
+    "model": "claude-sonnet-5-5",
+    "batchSize": 40,
+    "timeoutMs": 120000
+  },
+  "manifest": {
+    "limits": { "appName": 75, "appDesc": 132, "openPopupDesc": 60 }
+  },
+  "locales": {
+    "fr": { "label": "Français", "deepl": "FR", "chrome": "fr", "formality": "prefer_less" },
+    "es": { "label": "Español", "deepl": "ES", "chrome": "es", "formality": "prefer_less" },
+    "pt-BR": { "label": "Português (Brasil)", "deepl": "PT-BR", "chrome": "pt_BR", "formality": "prefer_less" },
+    "de": { "label": "Deutsch", "deepl": "DE", "chrome": "de", "formality": "prefer_less" },
+    "it": { "label": "Italiano", "deepl": "IT", "chrome": "it", "formality": "prefer_less" },
+    "pl": { "label": "Polski", "deepl": "PL", "chrome": "pl", "formality": "prefer_less" },
+    "tr": { "label": "Türkçe", "deepl": "TR", "chrome": "tr" },
+    "ru": { "label": "Русский", "deepl": "RU", "chrome": "ru", "formality": "prefer_more" },
+    "ja": { "label": "日本語", "deepl": "JA", "chrome": "ja", "formality": "prefer_more" },
+    "ko": { "label": "한국어", "deepl": "KO", "chrome": "ko" },
+    "ar": { "label": "العربية", "deepl": "AR", "chrome": "ar", "rtl": true },
+    "uk": { "label": "Українська", "deepl": "UK", "chrome": "uk", "formality": "prefer_more" }
+  },
+  "planned": {
+    "nl": { "label": "Nederlands", "deepl": "NL", "chrome": "nl", "formality": "prefer_less" },
+    "zh-CN": { "label": "简体中文", "deepl": "ZH-HANS", "chrome": "zh_CN" },
+    "pt-PT": { "label": "Português (Portugal)", "deepl": "PT-PT", "chrome": "pt_PT", "formality": "prefer_less" },
+    "sv": { "label": "Svenska", "deepl": "SV", "chrome": "sv" },
+    "cs": { "label": "Čeština", "deepl": "CS", "chrome": "cs" },
+    "id": { "label": "Bahasa Indonesia", "deepl": "ID", "chrome": "id" }
+  }
+}

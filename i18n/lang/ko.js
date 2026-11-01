@@ -1,5 +1,43 @@
 // StreamPulse, langue « ko ». Fichier source à éditer (i18n/translations.js ne fait que regrouper les langues).
 export default {
+  "bulk": {
+    "documentTitle": "스트리머 일괄 추가 | StreamPulse",
+    "title": "스트리머 일괄 추가",
+    "intro": "최대 50개의 핸들 또는 채널 링크를 붙여넣은 후, StreamPulse에 추가할 항목을 선택하세요.",
+    "listLabel": "목록",
+    "listHint": "한 줄에 하나의 핸들 또는 링크만 기재하십시오. 쉼표, 세미콜론, 탭도 사용할 수 있습니다.",
+    "platformLabel": "링크가 없는 핸들용 플랫폼",
+    "groupLabel": "그룹 (선택 사항)",
+    "noGroup": "그룹 없음",
+    "groupHint": "다른 그룹을 변경하지 않고 기존 그룹에 새로운 스트리머를 추가하세요.",
+    "preview": "목록을 검토해 주세요",
+    "previewTitle": "추가하기 전에 검토해 주세요.",
+    "previewHint": "이 문서는 서식 및 중복 내용을 확인합니다. 계정을 추가할 때마다 해당 계정이 검증됩니다.",
+    "selectAll": "모든 후보 항목 선택",
+    "emptyPreview": "목록을 붙여넣은 후, 후보 항목, 중복 항목 및 유효하지 않은 항목을 확인하십시오.",
+    "keepOpen": "StreamPulse 팝업이 닫혀도 입력한 내용은 이곳에 그대로 유지됩니다. 내용을 추가하는 동안 이 탭을 열어 두십시오.",
+    "ready": "추가할 준비가 되었습니다",
+    "duplicate": "이 목록에 중복된 항목",
+    "existing": "이미 팔로우 중",
+    "invalid": "유효하지 않은 핸들 또는 링크",
+    "adding": "추가 중…",
+    "success": "추가됨",
+    "error": "추가할 수 없음",
+    "stale": "목록이 변경되었습니다: 추가하기 전에 다시 한 번 검토해 주세요.",
+    "summary": "추가할 항목: {{candidates}} · 중복 항목: {{duplicates}} · 유효하지 않은 항목: {{invalid}}",
+    "tooMany": "{{count}}개의 항목이 발견되었으며, 한 번에 {{max}}개까지만 추가할 수 있습니다.",
+    "retrySelected": "{{count}}번 재시도",
+    "addSelected": "{{count}} 추가",
+    "progress": "{{total}}개 중 {{done}}개를 추가 중…",
+    "finished": "{{added}} 추가됨 · {{failed}} 실패",
+    "partial": "일부 계정은 추가되지 않았습니다. 해당 계정은 그대로 유지되며, 나중에 다시 시도할 수 있습니다.",
+    "addFailed": "계정을 추가할 수 없습니다.",
+    "readFailed": "StreamPulse 데이터를 읽을 수 없습니다.",
+    "verifyFailed": "계정을 인증할 수 없습니다.",
+    "groupFailed": "계정은 추가되었으나 해당 계정의 그룹을 업데이트할 수 없습니다.",
+    "groupMissing": "계정이 추가되었으나 더 이상 선택된 그룹에 속해 있지 않습니다.",
+    "missingGroupOption": "이 그룹은 더 이상 사용할 수 없습니다."
+  },
   "meta": {
     "languageSwitcherLabel": "언어"
   },
@@ -122,7 +160,8 @@ export default {
     "plusStyleDesc": "닉네임과 채팅 배지에 구독 효과(그라데이션, 텍스처, 애니메이션)가 적용됩니다. 모두 팝업의 배지 항목에서 고릅니다. Twitch 클립은 해당 페이지에서 MP4로 내려받을 수 있습니다.",
     "plusStyleNameTitle": "내 닉네임",
     "plusStyleBadgeTitle": "내 배지",
-    "plusFinish": "StreamPulse+ 즐기기"
+    "plusFinish": "StreamPulse+ 즐기기",
+    "stepperLabel": "진행 상황"
   },
   "popup": {
     "settingsFilter": {
@@ -137,8 +176,20 @@ export default {
       "listen": "들어보기",
       "perKind": "알림 종류별로 다른 소리",
       "plusNote": "알림 종류별 소리 설정은 StreamPulse+ 기능입니다.",
-      "preset": { "classic": "클래식", "chime": "차임", "pulse": "펄스", "bubble": "버블", "arpeggio": "아르페지오", "drop": "물방울" },
-      "kind": { "live": "방송 시작", "game": "카테고리 변경", "title": "제목 변경", "raid": "레이드 수신" }
+      "preset": {
+        "classic": "클래식",
+        "chime": "차임",
+        "pulse": "펄스",
+        "bubble": "버블",
+        "arpeggio": "아르페지오",
+        "drop": "물방울"
+      },
+      "kind": {
+        "live": "방송 시작",
+        "game": "카테고리 변경",
+        "title": "제목 변경",
+        "raid": "레이드 수신"
+      }
     },
     "greetingSubNobody": "지금 라이브 중인 스트리머가 없습니다.",
     "greetingSubEmpty": "StreamPulse에 오신 것을 환영합니다.",
@@ -159,8 +210,9 @@ export default {
       "durationHoursShort": "{{h}}시간 {{m}}분",
       "filterLabel": "플랫폼별 필터",
       "filterAll": "전체",
-      "countSingular": "라이브 1개",
-      "countPlural": "라이브 {{count}}개",
+      "count": {
+        "other": "라이브 {{count}}개"
+      },
       "summary": "최근 14일간 놓침 · 콘텐츠 {{duration}}",
       "emptyTitle": "놓친 라이브가 없습니다",
       "emptyBody": "팔로우한 스트리머가 내가 보지 않은 라이브를 끝내면, 다시보기와 함께 여기에 표시됩니다.",
@@ -387,8 +439,9 @@ export default {
       "streamersLabel": "스트리머",
       "rulesFor": "{{name}} 알림",
       "addRule": "새 규칙",
-      "ruleCountSingular": "규칙 1개",
-      "ruleCountPlural": "규칙 {{count}}개",
+      "ruleCount": {
+        "other": "규칙 {{count}}개"
+      },
       "noRules": "규칙 없음: 라이브마다 기본 알림을 받습니다.",
       "ruleName": "규칙 이름",
       "ruleNamePlaceholder": "예: GTA 저녁",
@@ -416,8 +469,9 @@ export default {
       "activityLabel": "오늘의 활동",
       "autoClaimOn": "자동 수령 켜짐",
       "pointsToday": "오늘 +{{count}}포인트",
-      "dropsToday": "오늘 드롭 {{count}}개",
-      "dropsTodayPlural": "오늘 드롭 {{count}}개",
+      "dropsToday": {
+        "other": "오늘 드롭 {{count}}개"
+      },
       "search": "스트리머 검색",
       "searchLabel": "검색",
       "allChannels": "모든 채널",
@@ -525,9 +579,10 @@ export default {
       "staleHint": "Twitch를 열어 업데이트",
       "bandOpen": "드롭 패널 열기",
       "bandClaimed": "드롭 수령됨 · {{name}}",
-      "bandMoreOne": "+{{count}}개 더",
+      "bandMore": {
+        "other": "+{{count}}개 더"
+      },
       "timeLeft": "{{time}} 남음",
-      "bandMoreOther": "+{{count}}개 더",
       "campaigns": "캠페인",
       "campaignsMeta": "진행 중 {{count}}개 · Twitch에서 {{ago}} 읽음",
       "campaignsNone": "Twitch의 드롭 캠페인 페이지를 열면 목록을 불러옵니다.",
@@ -544,8 +599,9 @@ export default {
       "filterNew": "신규",
       "filterEnding": "곧 종료",
       "filterUpcoming": "예정",
-      "rewardsOne": "보상 1개",
-      "rewardsOther": "보상 {{count}}개",
+      "rewards": {
+        "other": "보상 {{count}}개"
+      },
       "linkAccount": "계정 연결 필요",
       "yourGames": "내 게임",
       "badge": "배지",
@@ -557,8 +613,9 @@ export default {
       "rewardTypeBadge": "배지",
       "rewardTypeEmote": "이모트",
       "rewardTypeItem": "아이템",
-      "badgeSubOne": "구독 1개",
-      "badgeSubOther": "구독 {{count}}개",
+      "badgeSub": {
+        "other": "구독 {{count}}개"
+      },
       "badgeOr": "또는",
       "badgesKnown": "추적 중인 배지 {{count}}개",
       "badgesSyncing": "Twitch 배지 동기화 중…",
@@ -623,10 +680,12 @@ export default {
       "isNew": "신규",
       "dateRange": "{{start}} → {{end}}",
       "history": "기록",
-      "historyMetaOne": "설치 후 획득한 드롭 1개",
-      "historyMetaOther": "설치 후 획득한 드롭 {{count}}개",
-      "historyMonthOne": "{{month}} · 1개",
-      "historyMonthOther": "{{month}} · {{count}}개",
+      "historyMeta": {
+        "other": "설치 후 획득한 드롭 {{count}}개"
+      },
+      "historyMonth": {
+        "other": "{{month}} · {{count}}개"
+      },
       "historyEmpty": "추적을 시작한 후 아직 획득한 드롭이 없습니다. 여기에 월별로 표시됩니다.",
       "lockedBody": "획득한 모든 드롭의 기록을 게임과 채널과 함께 월별로 볼 수 있습니다. StreamPulse+ 전용.",
       "trackingTitle": "드롭 기록",
@@ -771,8 +830,9 @@ export default {
       "settings": "설정"
     },
     "refresh": "새로 고침",
-    "greetingLiveCountSingular": "{{count}}명의 스트리머가 생방송 중입니다",
-    "greetingLiveCountPlural": "{{count}}명의 스트리머가 생방송 중입니다",
+    "greetingLiveCount": {
+      "other": "{{count}}명의 스트리머가 생방송 중입니다"
+    },
     "platformFilter": {
       "twitch": "twitch",
       "kick": "kick"
@@ -932,6 +992,7 @@ export default {
       "previewsAudioTitle": "오디오 (동영상 모드)",
       "previewsAudioDescription": "동영상 모드 미리보기에서 소리를 재생합니다.",
       "previewsDelayTitle": "표시 지연",
+      "unitMs": "ms",
       "previewsAnimationsTitle": "애니메이션",
       "previewsAnimationsDescription": "미리보기가 부드럽게 나타나고 사라집니다. 끄면 바로 표시됩니다.",
       "groupChat": "채팅",
@@ -1056,6 +1117,8 @@ export default {
       "open": "스트리머 여러 명을 한 번에 추가하기"
     },
     "notificationTools": {
+      "pauseOneHour": "1시간 동안 알림 음소거",
+      "pauseUntilTomorrow": "내일 오전 8시까지 알림을 음소거하세요.",
       "pauseTitle": "알림 일시 중지",
       "pauseHour": "1시간 동안 알림 음소거",
       "pauseTomorrow": "내일 오전 8시까지 알림을 음소거하세요.",
@@ -1104,12 +1167,16 @@ export default {
         "catchUp": "이 라이브 방송은 다시보기 알림 그룹에 포함됩니다.",
         "changes": "카테고리나 제목이 변경될 경우 알림이 전송됩니다.",
         "noChange": "지난 점검 이후 변경된 사항은 없습니다."
-      },
-      "pauseOneHour": "1시간 동안 알림 음소거",
-      "pauseUntilTomorrow": "내일 오전 8시까지 알림을 음소거하세요."
+      }
     },
     "rewardPlan": {
       "title": "드롭스 세션 계획하기",
+      "description": "드롭을 선택하고, 실제로 할애할 수 있는 시간을 설정한 다음, 무엇을 완료할 수 있는지 확인하세요. 이는 예상치일 뿐이며, 실제로 인정되는 항목은 Twitch에서 결정합니다.",
+      "minutes": "{{count}} 분",
+      "unknownDuration": "소요 시간 미정",
+      "remaining": "{{time}} 남음",
+      "selectedCount": "{{count}}개 선택",
+      "impossible": "이 속도로는 마감 전에 끝낼 수 없음",
       "hint": "Drops를 선택하고 소요 시간을 예상해 주세요. 시간은 예상치일 뿐이며, 실제 적용 여부는 Twitch 측에서 결정합니다.",
       "select": "{{name}}을(를) 선택하세요",
       "budget": "이번 세션의 남은 시간 (분)",
@@ -1121,13 +1188,7 @@ export default {
       "empty": "드롭을 선택하여 시청 계획을 예상해 보세요.",
       "loading": "캠페인 로딩 중…",
       "readError": "선택한 드롭스를 불러올 수 없습니다.",
-      "writeError": "시청 계획을 저장할 수 없습니다.",
-      "description": "드롭을 선택하고, 실제로 할애할 수 있는 시간을 설정한 다음, 무엇을 완료할 수 있는지 확인하세요. 이는 예상치일 뿐이며, 실제로 인정되는 항목은 Twitch에서 결정합니다.",
-      "minutes": "{{count}} 분",
-      "unknownDuration": "소요 시간 미정",
-      "remaining": "{{time}} 남음",
-      "selectedCount": "{{count}}개 선택",
-      "impossible": "이 속도로는 마감 전에 끝낼 수 없음"
+      "writeError": "시청 계획을 저장할 수 없습니다."
     },
     "linkPicker": {
       "button": "다른 계정과 연결",
@@ -1239,7 +1300,6 @@ export default {
       "updateTitle": "StreamPulse가 업데이트되었습니다",
       "updateMessage": "클릭해서 새로운 기능과 수정 사항을 확인하세요."
     },
-    "diagnostics": {},
     "badge": {
       "idle": "StreamPulse",
       "live": "라이브 {{count}}개"
@@ -1281,8 +1341,8 @@ export default {
     "formatDesktop": "PC · 16:9",
     "formatMobile": "모바일 · 9:16",
     "loading": "통계를 불러오는 중…",
-    "emptyTitle": "이 기간에 표시할 내용이 없습니다.",
     "canvasSummary": "요약 이미지: 기간 동안 {{time}} 시청. 가장 많이 시청한 채널: {{top}}.",
+    "emptyTitle": "이 기간에 표시할 내용이 없습니다.",
     "emptyBody": "이 기간에 기록된 시청 시간이 없습니다. 설정의 ‘시간 및 데이터’에서 ‘시청 시간 집계’가 켜져 있는지 확인하세요.",
     "download": "이미지 다운로드",
     "share": "X에 공유",
@@ -1375,8 +1435,9 @@ export default {
     "tagImproved": "개선됨",
     "tagOther": "기타",
     "genericChanges": "내부 수정 사항 및 안정성 개선.",
-    "changeCountSingular": "이번 릴리스에서 {{count}}가 변경되었습니다.",
-    "changeCountPlural": "이번 릴리스에는 {{count}}개의 변경 사항이 있습니다.",
+    "changeCount": {
+      "other": "이번 릴리스에는 {{count}}개의 변경 사항이 있습니다."
+    },
     "noNotes": "릴리스 노트가 없습니다.",
     "noNotesBody": "이 버전에 대한 변경 내역은 아직 공개되지 않았습니다."
   },
@@ -1411,8 +1472,9 @@ export default {
       "founder": "StreamPulse 창립자",
       "ambassador": "앰배서더",
       "lifetime": "평생 멤버",
-      "months": "{{count}}개월째 구독 중",
-      "monthOne": "1개월째 구독 중",
+      "months": {
+        "other": "{{count}}개월째 구독 중"
+      },
       "newMember": "새 구독자",
       "freeLine": "확장 프로그램 사용자",
       "worn": "장착 중",
@@ -1466,44 +1528,10 @@ export default {
     },
     "chatFilter": {
       "replacement": "StreamPulse에 의해 메시지가 삭제되었습니다."
+    },
+    "previews": {
+      "live": "생방송",
+      "loading": "불러오는 중…"
     }
-  },
-  "bulk": {
-    "documentTitle": "스트리머 일괄 추가 | StreamPulse",
-    "title": "스트리머 일괄 추가",
-    "intro": "최대 50개의 핸들 또는 채널 링크를 붙여넣은 후, StreamPulse에 추가할 항목을 선택하세요.",
-    "listLabel": "목록",
-    "listHint": "한 줄에 하나의 핸들 또는 링크만 기재하십시오. 쉼표, 세미콜론, 탭도 사용할 수 있습니다.",
-    "platformLabel": "링크가 없는 핸들용 플랫폼",
-    "groupLabel": "그룹 (선택 사항)",
-    "noGroup": "그룹 없음",
-    "groupHint": "다른 그룹을 변경하지 않고 기존 그룹에 새로운 스트리머를 추가하세요.",
-    "preview": "목록을 검토해 주세요",
-    "previewTitle": "추가하기 전에 검토해 주세요.",
-    "previewHint": "이 문서는 서식 및 중복 내용을 확인합니다. 계정을 추가할 때마다 해당 계정이 검증됩니다.",
-    "selectAll": "모든 후보 항목 선택",
-    "emptyPreview": "목록을 붙여넣은 후, 후보 항목, 중복 항목 및 유효하지 않은 항목을 확인하십시오.",
-    "keepOpen": "StreamPulse 팝업이 닫혀도 입력한 내용은 이곳에 그대로 유지됩니다. 내용을 추가하는 동안 이 탭을 열어 두십시오.",
-    "ready": "추가할 준비가 되었습니다",
-    "duplicate": "이 목록에 중복된 항목",
-    "existing": "이미 팔로우 중",
-    "invalid": "유효하지 않은 핸들 또는 링크",
-    "adding": "추가 중…",
-    "success": "추가됨",
-    "error": "추가할 수 없음",
-    "stale": "목록이 변경되었습니다: 추가하기 전에 다시 한 번 검토해 주세요.",
-    "summary": "추가할 항목: {{candidates}} · 중복 항목: {{duplicates}} · 유효하지 않은 항목: {{invalid}}",
-    "tooMany": "{{count}}개의 항목이 발견되었으며, 한 번에 {{max}}개까지만 추가할 수 있습니다.",
-    "retrySelected": "{{count}}번 재시도",
-    "addSelected": "{{count}} 추가",
-    "progress": "{{total}}개 중 {{done}}개를 추가 중…",
-    "finished": "{{added}} 추가됨 · {{failed}} 실패",
-    "partial": "일부 계정은 추가되지 않았습니다. 해당 계정은 그대로 유지되며, 나중에 다시 시도할 수 있습니다.",
-    "addFailed": "계정을 추가할 수 없습니다.",
-    "readFailed": "StreamPulse 데이터를 읽을 수 없습니다.",
-    "verifyFailed": "계정을 인증할 수 없습니다.",
-    "groupFailed": "계정은 추가되었으나 해당 계정의 그룹을 업데이트할 수 없습니다.",
-    "groupMissing": "계정이 추가되었으나 더 이상 선택된 그룹에 속해 있지 않습니다.",
-    "missingGroupOption": "이 그룹은 더 이상 사용할 수 없습니다."
   }
 };

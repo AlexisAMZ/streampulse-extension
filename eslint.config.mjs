@@ -116,7 +116,7 @@ const ES_MODULES = [
 
 export default [
   {
-    ignores: ["js/vendor/**", "node_modules/**", "coverage/**", "stream-247/**", "DevKit/**", "promo/**"],
+    ignores: ["js/vendor/**", "node_modules/**", "coverage/**", "stream-247/**", "DevKit/**", "promo/**", "localization/.cache/**"],
   },
   js.configs.recommended,
   {

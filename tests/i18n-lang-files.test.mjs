@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readdir, readFile } from "node:fs/promises";
 import { ALL_LANGUAGES, DEFAULT_LANGUAGE, LANGUAGE_CODES } from "../i18n/meta.js";
 import { translations } from "../i18n/translations.js";
+import { expectedEntries } from "../scripts/i18n/lib/core.mjs";
 
 // Une langue = un fichier source, i18n/lang/<code>.js, éditable seul. Chaque
 // fichier doit porter exactement les clés de l'anglais (langue de repli) :
@@ -30,8 +31,10 @@ test("chaque langue déclarée a son fichier, et aucun fichier n'est orphelin", 
 });
 
 for (const code of LANGUAGE_CODES) {
-  test(`i18n/lang/${code}.js a exactement les clés de en`, async () => {
-    const reference = new Set(leafPaths(await loadLanguageFile(DEFAULT_LANGUAGE)));
+  test(`i18n/lang/${code}.js a exactement les clés de en (pluriels selon sa langue)`, async () => {
+    // Un groupe de pluriel anglais { one, other } s'attend sous les
+    // catégories CLDR de la langue : one/few/many/other en ukrainien.
+    const reference = new Set(expectedEntries(await loadLanguageFile(DEFAULT_LANGUAGE), code).keys());
     const keys = new Set(leafPaths(await loadLanguageFile(code)));
     const missing = [...reference.difference(keys)];
     const extra = [...keys.difference(reference)];

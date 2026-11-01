@@ -331,7 +331,7 @@
           <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span data-i18n="popup.plus.trustDevices">Clé active sur 2 navigateurs</span></li>
         </ul>
         <div class="plus-creator-row">
-          <input id="plus-creator-input" class="text-input" type="text" autocomplete="off" spellcheck="false" data-i18n-attr-placeholder="popup.plus.creatorPlaceholder" placeholder="Code créateur ou promo (facultatif)" aria-label="Code créateur ou promo" />
+          <input id="plus-creator-input" class="text-input" type="text" autocomplete="off" spellcheck="false" data-i18n-attr-placeholder="popup.plus.creatorPlaceholder" placeholder="Code créateur ou promo (facultatif)" aria-label="Code créateur ou promo" data-i18n-attr-aria-label="popup.plus.creatorPlaceholder" />
         </div>
         <p class="plus-secure" data-i18n="popup.plus.secure">Paiement sécurisé sur streampulse.tech</p>
         <form class="plus-key" id="plus-key-form" novalidate>
@@ -809,7 +809,7 @@
                 <div class="field-stack">
                   <div class="field-head">
                     <label class="settings-title" for="pref-previews-delay" data-i18n="popup.settings.previewsDelayTitle">Délai d'apparition</label>
-                    <span class="field-value"><span id="previews-delay-value">200</span> ms</span>
+                    <span class="field-value"><span id="previews-delay-value">200</span> <span data-i18n="popup.settings.unitMs">ms</span></span>
                   </div>
                   <input id="pref-previews-delay" type="range" min="0" max="800" step="50" value="200" class="settings-range" />
                 </div>

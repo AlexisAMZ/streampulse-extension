@@ -1,5 +1,43 @@
 // StreamPulse, langue « ja ». Fichier source à éditer (i18n/translations.js ne fait que regrouper les langues).
 export default {
+  "bulk": {
+    "documentTitle": "ストリーマーを一括追加 | StreamPulse",
+    "title": "ストリーマーを一括で追加する",
+    "intro": "最大50件のハンドル名またはチャンネルリンクを貼り付け、StreamPulseに追加する対象を選択する。",
+    "listLabel": "リスト",
+    "listHint": "1行につき1つのハンドル名またはリンクを記載すること。コンマ、セミコロン、タブも使用可能だ。",
+    "platformLabel": "リンクのないハンドル名用プラットフォーム",
+    "groupLabel": "グループ（任意）",
+    "noGroup": "グループなし",
+    "groupHint": "他のグループを変更することなく、新しいストリーマーを既存のグループに追加する。",
+    "preview": "リストを確認する",
+    "previewTitle": "追加する前に確認すること",
+    "previewHint": "これは形式と重複をチェックする。アカウントは追加時にそれぞれ確認される。",
+    "selectAll": "候補をすべて選択する",
+    "emptyPreview": "リストを貼り付けた後、候補、重複、無効な項目がないか確認する。",
+    "keepOpen": "StreamPulseのポップアップが閉じても、入力内容はここに残る。追加中は、このタブを開いたままにしておくこと。",
+    "ready": "追加の準備はできた",
+    "duplicate": "このリスト内の重複",
+    "existing": "すでにフォロー済み",
+    "invalid": "無効なハンドルまたはリンク",
+    "adding": "追加中…",
+    "success": "追加",
+    "error": "追加できなかった",
+    "stale": "リストが変更された：追加する前に再度確認すること。",
+    "summary": "追加候補：{{candidates}} · 重複：{{duplicates}} · 無効：{{invalid}}",
+    "tooMany": "{{count}}件のエントリが見つかった；一度に追加できるのは{{max}}件までだ。",
+    "retrySelected": "{{count}}回再試行する",
+    "addSelected": "{{count}}を追加する",
+    "progress": "{{total}}件のうち{{done}}件を追加中…",
+    "finished": "{{added}} 追加 · {{failed}} 失敗",
+    "partial": "一部のアカウントは追加されなかった。それらは保持されており、再試行が可能だ。",
+    "addFailed": "アカウントを追加できなかった。",
+    "readFailed": "StreamPulseのデータを読み取れなかった。",
+    "verifyFailed": "アカウントの確認ができなかった。",
+    "groupFailed": "アカウントは追加されたが、そのグループを更新できなかった。",
+    "groupMissing": "アカウントは追加されたが、選択されたグループにはもはや含まれていない。",
+    "missingGroupOption": "このグループは利用できなくなった"
+  },
   "meta": {
     "languageSwitcherLabel": "言語"
   },
@@ -122,7 +160,8 @@ export default {
     "plusStyleDesc": "名前とチャットバッジにサブスクのエフェクト（グラデーション、テクスチャ、アニメーション）が付きます。すべてポップアップの「バッジ」で選べます。Twitch のクリップはそのページから MP4 でダウンロードできます。",
     "plusStyleNameTitle": "あなたの名前",
     "plusStyleBadgeTitle": "あなたのバッジ",
-    "plusFinish": "StreamPulse+ を楽しむ"
+    "plusFinish": "StreamPulse+ を楽しむ",
+    "stepperLabel": "進行状況"
   },
   "popup": {
     "settingsFilter": {
@@ -137,8 +176,20 @@ export default {
       "listen": "試聴",
       "perKind": "通知の種類ごとに別の音",
       "plusNote": "通知の種類ごとに別の音を設定する機能は StreamPulse+ 専用です。",
-      "preset": { "classic": "クラシック", "chime": "チャイム", "pulse": "パルス", "bubble": "バブル", "arpeggio": "アルペジオ", "drop": "しずく" },
-      "kind": { "live": "配信開始", "game": "カテゴリ変更", "title": "タイトル変更", "raid": "レイド受信" }
+      "preset": {
+        "classic": "クラシック",
+        "chime": "チャイム",
+        "pulse": "パルス",
+        "bubble": "バブル",
+        "arpeggio": "アルペジオ",
+        "drop": "しずく"
+      },
+      "kind": {
+        "live": "配信開始",
+        "game": "カテゴリ変更",
+        "title": "タイトル変更",
+        "raid": "レイド受信"
+      }
     },
     "greetingSubNobody": "いま配信中のストリーマーはいません。",
     "greetingSubEmpty": "StreamPulse へようこそ。",
@@ -159,8 +210,9 @@ export default {
       "durationHoursShort": "{{h}}時間{{m}}分",
       "filterLabel": "プラットフォームで絞り込む",
       "filterAll": "すべて",
-      "countSingular": "1件の配信",
-      "countPlural": "{{count}}件の配信",
+      "count": {
+        "other": "{{count}}件の配信"
+      },
       "summary": "過去14日間に見逃した配信 · 合計 {{duration}}",
       "emptyTitle": "見逃した配信はありません",
       "emptyBody": "ストリーマーの配信をあなたが見ないまま終わると、アーカイブと一緒にここに表示されます。",
@@ -387,8 +439,9 @@ export default {
       "streamersLabel": "ストリーマー",
       "rulesFor": "{{name}} の通知",
       "addRule": "新しいルール",
-      "ruleCountSingular": "ルール1件",
-      "ruleCountPlural": "ルール{{count}}件",
+      "ruleCount": {
+        "other": "ルール{{count}}件"
+      },
       "noRules": "ルールなし：配信のたびに通常の通知が届きます。",
       "ruleName": "ルール名",
       "ruleNamePlaceholder": "例：GTA の夜",
@@ -416,8 +469,9 @@ export default {
       "activityLabel": "今日のアクティビティ",
       "autoClaimOn": "自動受け取り オン",
       "pointsToday": "今日 +{{count}} pt",
-      "dropsToday": "今日のドロップ {{count}} 件",
-      "dropsTodayPlural": "今日のドロップ {{count}} 件",
+      "dropsToday": {
+        "other": "今日のドロップ {{count}} 件"
+      },
       "search": "ストリーマーを検索",
       "searchLabel": "検索",
       "allChannels": "すべてのチャンネル",
@@ -525,9 +579,10 @@ export default {
       "staleHint": "Twitch を開いて更新",
       "bandOpen": "ドロップパネルを開く",
       "bandClaimed": "ドロップ受け取り済み · {{name}}",
-      "bandMoreOne": "ほか {{count}} 件",
+      "bandMore": {
+        "other": "ほか {{count}} 件"
+      },
       "timeLeft": "のこり{{time}}",
-      "bandMoreOther": "ほか {{count}} 件",
       "campaigns": "キャンペーン",
       "campaignsMeta": "開催中 {{count}} 件 · Twitch から{{ago}}に取得",
       "campaignsNone": "Twitch のドロップキャンペーンページを開くと一覧を読み込みます。",
@@ -544,8 +599,9 @@ export default {
       "filterNew": "新着",
       "filterEnding": "まもなく終了",
       "filterUpcoming": "開催予定",
-      "rewardsOne": "報酬 1 件",
-      "rewardsOther": "報酬 {{count}} 件",
+      "rewards": {
+        "other": "報酬 {{count}} 件"
+      },
       "linkAccount": "アカウント連携が必要",
       "yourGames": "あなたのゲーム",
       "badge": "バッジ",
@@ -557,8 +613,9 @@ export default {
       "rewardTypeBadge": "バッジ",
       "rewardTypeEmote": "エモート",
       "rewardTypeItem": "アイテム",
-      "badgeSubOne": "サブスク 1 件",
-      "badgeSubOther": "サブスク {{count}} 件",
+      "badgeSub": {
+        "other": "サブスク {{count}} 件"
+      },
       "badgeOr": "または",
       "badgesKnown": "追跡中のバッジ {{count}} 件",
       "badgesSyncing": "Twitch のバッジを同期中…",
@@ -623,10 +680,12 @@ export default {
       "isNew": "新着",
       "dateRange": "{{start}} → {{end}}",
       "history": "履歴",
-      "historyMetaOne": "インストール以降に獲得したドロップ 1 件",
-      "historyMetaOther": "インストール以降に獲得したドロップ {{count}} 件",
-      "historyMonthOne": "{{month}} · 1 件",
-      "historyMonthOther": "{{month}} · {{count}} 件",
+      "historyMeta": {
+        "other": "インストール以降に獲得したドロップ {{count}} 件"
+      },
+      "historyMonth": {
+        "other": "{{month}} · {{count}} 件"
+      },
       "historyEmpty": "記録を始めてから獲得したドロップはまだありません。ここに月ごとに表示されます。",
       "lockedBody": "獲得したすべてのドロップの履歴を、ゲームとチャンネル付きで月ごとに確認できます。StreamPulse+ 限定。",
       "trackingTitle": "ドロップの履歴",
@@ -771,8 +830,9 @@ export default {
       "settings": "設定"
     },
     "refresh": "更新",
-    "greetingLiveCountSingular": "{{count}}人のストリーマーが配信中",
-    "greetingLiveCountPlural": "{{count}}人のストリーマーが配信中",
+    "greetingLiveCount": {
+      "other": "{{count}}人のストリーマーが配信中"
+    },
     "platformFilter": {
       "twitch": "twitch",
       "kick": "kick"
@@ -932,6 +992,7 @@ export default {
       "previewsAudioTitle": "音声（動画モード）",
       "previewsAudioDescription": "動画モードのプレビューで音声を再生します。",
       "previewsDelayTitle": "表示までの遅延",
+      "unitMs": "ミリ秒",
       "previewsAnimationsTitle": "アニメーション",
       "previewsAnimationsDescription": "プレビューをなめらかに表示・非表示にします。オフにすると即座に表示されます。",
       "groupChat": "チャット",
@@ -1056,6 +1117,8 @@ export default {
       "open": "複数のストリーマーを一度に追加する"
     },
     "notificationTools": {
+      "pauseOneHour": "1時間の間、通知をミュートする",
+      "pauseUntilTomorrow": "明日8:00までアラートをミュートする",
       "pauseTitle": "通知を一時停止する",
       "pauseHour": "1時間、通知をミュートする",
       "pauseTomorrow": "明日8:00までアラートをミュートする",
@@ -1104,12 +1167,16 @@ export default {
         "catchUp": "このライブ配信は、見逃し配信通知にグループ化されている。",
         "changes": "カテゴリやタイトルの変更があった場合は通知される。",
         "noChange": "前回の確認以降、変更点はない。"
-      },
-      "pauseOneHour": "1時間の間、通知をミュートする",
-      "pauseUntilTomorrow": "明日8:00までアラートをミュートする"
+      }
     },
     "rewardPlan": {
       "title": "Dropsセッションを計画する",
+      "description": "ドロップを選んで、実際に使える時間を設定し、何が完了できるか確認する。これはあくまで目安であり、何がカウントされるかはTwitchが決定する。",
+      "minutes": "{{count}} 分",
+      "unknownDuration": "所要時間は不明",
+      "remaining": "残り {{time}}",
+      "selectedCount": "{{count}} 件選択",
+      "impossible": "このペースでは期限までに終わりません",
       "hint": "Dropsを選択し、所要時間を推定する。時間はあくまで目安であり、何が対象となるかはTwitchが決定する。",
       "select": "{{name}}を選択",
       "budget": "このセッションの残り時間（分）",
@@ -1121,13 +1188,7 @@ export default {
       "empty": "Dropを選択して、視聴プランを見積もる。",
       "loading": "キャンペーンを読み込み中…",
       "readError": "選択したDropsを読み込めなかった。",
-      "writeError": "視聴プランを保存できなかった。",
-      "description": "ドロップを選んで、実際に使える時間を設定し、何が完了できるか確認する。これはあくまで目安であり、何がカウントされるかはTwitchが決定する。",
-      "minutes": "{{count}} 分",
-      "unknownDuration": "所要時間は不明",
-      "remaining": "残り {{time}}",
-      "selectedCount": "{{count}} 件選択",
-      "impossible": "このペースでは期限までに終わりません"
+      "writeError": "視聴プランを保存できなかった。"
     },
     "linkPicker": {
       "button": "別のアカウントとリンク",
@@ -1239,7 +1300,6 @@ export default {
       "updateTitle": "StreamPulse を更新しました",
       "updateMessage": "クリックして新機能や修正内容を確認しましょう。"
     },
-    "diagnostics": {},
     "badge": {
       "idle": "StreamPulse",
       "live": "{{count}}件の配信"
@@ -1281,8 +1341,8 @@ export default {
     "formatDesktop": "PC · 16:9",
     "formatMobile": "モバイル · 9:16",
     "loading": "統計を読み込み中…",
-    "emptyTitle": "この期間に表示するデータはありません。",
     "canvasSummary": "リキャップ画像：期間の視聴時間は{{time}}。最も視聴したチャンネル：{{top}}。",
+    "emptyTitle": "この期間に表示するデータはありません。",
     "emptyBody": "この期間の視聴時間は記録されていません。設定の「視聴時間とデータ」で「視聴時間を記録」がオンになっているか確認してください。",
     "download": "画像をダウンロード",
     "share": "Xでシェア",
@@ -1375,8 +1435,9 @@ export default {
     "tagImproved": "改善",
     "tagOther": "その他",
     "genericChanges": "内部の修正および安定性の向上。",
-    "changeCountSingular": "このリリースでの変更点は{{count}}件です。",
-    "changeCountPlural": "このリリースでは{{count}}件の変更が行われました。",
+    "changeCount": {
+      "other": "このリリースでは{{count}}件の変更が行われました。"
+    },
     "noNotes": "リリースノートはありません",
     "noNotesBody": "このバージョンのリリースノートはまだ公開されていません。"
   },
@@ -1411,8 +1472,9 @@ export default {
       "founder": "StreamPulse 創設者",
       "ambassador": "アンバサダー",
       "lifetime": "永久メンバー",
-      "months": "{{count}}か月利用中",
-      "monthOne": "1か月利用中",
+      "months": {
+        "other": "{{count}}か月利用中"
+      },
       "newMember": "新規メンバー",
       "freeLine": "拡張機能ユーザー",
       "worn": "装着中",
@@ -1466,44 +1528,10 @@ export default {
     },
     "chatFilter": {
       "replacement": "StreamPulse によりメッセージが削除されました"
+    },
+    "previews": {
+      "live": "ライブ",
+      "loading": "読み込み中…"
     }
-  },
-  "bulk": {
-    "documentTitle": "ストリーマーを一括追加 | StreamPulse",
-    "title": "ストリーマーを一括で追加する",
-    "intro": "最大50件のハンドル名またはチャンネルリンクを貼り付け、StreamPulseに追加する対象を選択する。",
-    "listLabel": "リスト",
-    "listHint": "1行につき1つのハンドル名またはリンクを記載すること。コンマ、セミコロン、タブも使用可能だ。",
-    "platformLabel": "リンクのないハンドル名用プラットフォーム",
-    "groupLabel": "グループ（任意）",
-    "noGroup": "グループなし",
-    "groupHint": "他のグループを変更することなく、新しいストリーマーを既存のグループに追加する。",
-    "preview": "リストを確認する",
-    "previewTitle": "追加する前に確認すること",
-    "previewHint": "これは形式と重複をチェックする。アカウントは追加時にそれぞれ確認される。",
-    "selectAll": "候補をすべて選択する",
-    "emptyPreview": "リストを貼り付けた後、候補、重複、無効な項目がないか確認する。",
-    "keepOpen": "StreamPulseのポップアップが閉じても、入力内容はここに残る。追加中は、このタブを開いたままにしておくこと。",
-    "ready": "追加の準備はできた",
-    "duplicate": "このリスト内の重複",
-    "existing": "すでにフォロー済み",
-    "invalid": "無効なハンドルまたはリンク",
-    "adding": "追加中…",
-    "success": "追加",
-    "error": "追加できなかった",
-    "stale": "リストが変更された：追加する前に再度確認すること。",
-    "summary": "追加候補：{{candidates}} · 重複：{{duplicates}} · 無効：{{invalid}}",
-    "tooMany": "{{count}}件のエントリが見つかった；一度に追加できるのは{{max}}件までだ。",
-    "retrySelected": "{{count}}回再試行する",
-    "addSelected": "{{count}}を追加する",
-    "progress": "{{total}}件のうち{{done}}件を追加中…",
-    "finished": "{{added}} 追加 · {{failed}} 失敗",
-    "partial": "一部のアカウントは追加されなかった。それらは保持されており、再試行が可能だ。",
-    "addFailed": "アカウントを追加できなかった。",
-    "readFailed": "StreamPulseのデータを読み取れなかった。",
-    "verifyFailed": "アカウントの確認ができなかった。",
-    "groupFailed": "アカウントは追加されたが、そのグループを更新できなかった。",
-    "groupMissing": "アカウントは追加されたが、選択されたグループにはもはや含まれていない。",
-    "missingGroupOption": "このグループは利用できなくなった"
   }
 };
