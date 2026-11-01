@@ -24,6 +24,7 @@ const LANGUAGE_CURRENCY = Object.freeze({
   tr: "TRY",
   ru: "RUB",
   ar: "EUR",
+  uk: "UAH",
 });
 
 const EURO_REGIONS = "AT BE BG CY DE EE ES FI FR GR HR IE IT LT LU LV MT NL PT SI SK".split(" ");

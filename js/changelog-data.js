@@ -61,6 +61,7 @@ export const RELEASES = [
         text: {
           "fr": "Ton style de pseudo StreamPulse+ ne disparaît plus quelques secondes après ton message dans le tchat Twitch, même quand tu survoles ton pseudo.",
           "en": "Your StreamPulse+ name style no longer vanishes a few seconds after you send a message in Twitch chat, even when you hover your name.",
+          "uk": "Ваш стиль імені StreamPulse+ більше не зникає через кілька секунд після відправлення повідомлення в чаті Twitch, навіть якщо навести курсор на ваше ім’я.",
           "es": "Tu estilo de nombre de StreamPulse+ ya no desaparece unos segundos después de escribir en el chat de Twitch, aunque pases el ratón por tu nombre.",
           "pt-BR": "Seu estilo de nome do StreamPulse+ não some mais alguns segundos depois da sua mensagem no chat da Twitch, mesmo ao passar o mouse sobre o seu nome.",
           "de": "Dein StreamPulse+-Namensstil verschwindet nicht mehr ein paar Sekunden nach deiner Nachricht im Twitch-Chat, auch nicht, wenn du über deinen Namen fährst.",
@@ -80,6 +81,7 @@ export const RELEASES = [
         for: {
           fr: "signalement du style de pseudo qui disparaissait",
           en: "reporting the disappearing name style",
+          uk: "повідомлення про зникнення стилю ніка",
           es: "avisar del estilo de nombre que desaparecía",
           "pt-BR": "avisar do estilo de nome que sumia",
           de: "Meldung des verschwindenden Namensstils",
@@ -101,6 +103,7 @@ export const RELEASES = [
     title: {
       "fr": "Moins de saisie, plus de clics",
       "en": "Less typing, more clicking",
+      "uk": "Менше набирання тексту, більше кліків",
       "es": "Menos escribir, más clics",
       "pt-BR": "Menos digitação, mais cliques",
       "de": "Weniger tippen, mehr klicken",
@@ -115,6 +118,7 @@ export const RELEASES = [
     subtitle: {
       "fr": "Ton pseudo Kick et YouTube se remplit tout seul.",
       "en": "Your Kick and YouTube names fill in on their own.",
+      "uk": "Назви ваших Kick та YouTube заповнюються автоматично.",
       "es": "Tu nombre de Kick y YouTube se rellena solo.",
       "pt-BR": "Seu nome do Kick e do YouTube é preenchido sozinho.",
       "de": "Dein Kick- und YouTube-Name wird automatisch eingetragen.",
@@ -132,6 +136,7 @@ export const RELEASES = [
         text: {
           "fr": "À l'installation, StreamPulse détecte maintenant ton pseudo Kick ou YouTube si tu es connecté, comme pour Twitch : plus besoin de le taper.",
           "en": "On install, StreamPulse now detects your Kick or YouTube name if you're signed in, like it does for Twitch: no more typing it.",
+          "uk": "Після встановлення StreamPulse тепер визначає ваше ім’я Kick або YouTube, якщо ви увійшли в систему, так само як це відбувається з Twitch: більше не потрібно вводити його вручну.",
           "es": "Al instalar, StreamPulse detecta ahora tu nombre de Kick o YouTube si has iniciado sesión, como con Twitch: ya no hace falta escribirlo.",
           "pt-BR": "Na instalação, o StreamPulse agora detecta seu nome do Kick ou do YouTube se você estiver conectado, como já fazia com a Twitch: não precisa mais digitar.",
           "de": "Bei der Installation erkennt StreamPulse jetzt deinen Kick- oder YouTube-Namen, wenn du angemeldet bist – wie bei Twitch: kein Tippen mehr nötig.",
@@ -149,6 +154,7 @@ export const RELEASES = [
         text: {
           "fr": "Si tu ouvres la fenêtre sur la chaîne d'un streamer pas encore suivi (Twitch, Kick, YouTube), son pseudo est déjà prérempli : il ne reste qu'à valider.",
           "en": "If you open the popup on a streamer's channel you don't follow yet (Twitch, Kick, YouTube), their name is already filled in: just confirm.",
+          "uk": "Якщо ви відкриєте спливаюче вікно на каналі стрімера, на якого ще не підписані (Twitch, Kick, YouTube), його ім’я вже буде вказано: просто підтвердьте.",
           "es": "Si abres la ventana en el canal de un streamer que aún no sigues (Twitch, Kick, YouTube), su nombre ya aparece escrito: solo falta confirmar.",
           "pt-BR": "Se você abrir a janela no canal de um streamer que ainda não segue (Twitch, Kick, YouTube), o nome dele já vem preenchido: é só confirmar.",
           "de": "Öffnest du das Fenster auf dem Kanal eines Streamers, dem du noch nicht folgst (Twitch, Kick, YouTube), ist sein Name schon eingetragen: nur noch bestätigen.",
@@ -170,6 +176,7 @@ export const RELEASES = [
     title: {
       "fr": "Ne rate plus aucun badge",
       "en": "Never miss a badge again",
+      "uk": "Більше ніколи не пропустіть значок",
       "es": "No te pierdas ninguna insignia",
       "pt-BR": "Não perca mais nenhuma insígnia",
       "de": "Kein Abzeichen mehr verpassen",
@@ -184,6 +191,7 @@ export const RELEASES = [
     subtitle: {
       "fr": "7 jours de StreamPulse+ offerts, en un clic.",
       "en": "7 days of StreamPulse+ free, in one click.",
+      "uk": "7 днів StreamPulse+ безкоштовно, одним кліком.",
       "es": "7 días de StreamPulse+ gratis, en un clic.",
       "pt-BR": "7 dias de StreamPulse+ grátis, em um clique.",
       "de": "7 Tage StreamPulse+ gratis, mit einem Klick.",
@@ -202,6 +210,7 @@ export const RELEASES = [
         text: {
           "fr": "Une notification te prévient la veille de la fin de l'essai, puis à la fin.",
           "en": "A notification warns you the day before the trial ends, then when it ends.",
+          "uk": "Повідомлення попереджає вас за день до закінчення пробного періоду, а потім — коли він закінчується.",
           "es": "Una notificación te avisa el día antes del fin de la prueba y luego al terminar.",
           "pt-BR": "Uma notificação avisa na véspera do fim do teste e depois quando ele termina.",
           "de": "Eine Benachrichtigung warnt dich am Tag vor dem Testende und dann zum Ende.",
@@ -220,6 +229,7 @@ export const RELEASES = [
         text: {
           "fr": "L'essai StreamPulse+ est lié à ton compte Twitch : les Drops, badges et points se récupèrent sur ce compte pendant 7 jours.",
           "en": "The StreamPulse+ trial is linked to your Twitch account: Drops, badges and points are claimed on that account for 7 days.",
+          "uk": "Пробна версія StreamPulse+ прив’язана до вашого облікового запису Twitch: Drops, значки та бали нараховуються на цей обліковий запис протягом 7 днів.",
           "es": "La prueba de StreamPulse+ está vinculada a tu cuenta de Twitch: los Drops, insignias y puntos se reclaman en esa cuenta durante 7 días.",
           "pt-BR": "O teste do StreamPulse+ fica vinculado à sua conta da Twitch: Drops, insígnias e pontos são resgatados nessa conta por 7 dias.",
           "de": "Der StreamPulse+-Test ist an dein Twitch-Konto gebunden: Drops, Abzeichen und Punkte werden 7 Tage lang auf diesem Konto eingesammelt.",
@@ -238,6 +248,7 @@ export const RELEASES = [
         text: {
           "fr": "Un bouton « Débloquer les 7 jours » offre StreamPulse+ pendant une semaine, sans carte, une fois par compte Twitch. Rien ne démarre sans ton clic.",
           "en": "An \"Unlock 7 days\" button gives you StreamPulse+ for a week, no card, once per Twitch account. Nothing starts without your click.",
+          "uk": "Кнопка «Розблокувати на 7 днів» дає вам StreamPulse+ на тиждень, без картки, один раз на обліковий запис Twitch. Нічого не запускається без вашого кліка.",
           "es": "Un botón «Desbloquear 7 días» te da StreamPulse+ durante una semana, sin tarjeta, una vez por cuenta de Twitch. Nada empieza sin tu clic.",
           "pt-BR": "Um botão «Liberar 7 dias» dá StreamPulse+ por uma semana, sem cartão, uma vez por conta da Twitch. Nada começa sem o seu clique.",
           "de": "Eine Schaltfläche „7 Tage freischalten“ gibt dir StreamPulse+ für eine Woche, ohne Karte, einmal pro Twitch-Konto. Ohne deinen Klick startet nichts.",
@@ -256,6 +267,7 @@ export const RELEASES = [
         text: {
           "fr": "Sans abonnement, un écran indique les badges et les Drops que tu as ratés cette semaine, et un point apparaît sur l'icône. Pendant l'essai, un bandeau affiche les jours restants.",
           "en": "Without a subscription, a screen shows the badges and Drops you missed this week, and a dot appears on the icon. During the trial, a banner shows the days left.",
+          "uk": "Без передплати на екрані відображаються значки та Drops, які ви пропустили цього тижня, а на іконці з’являється крапка. Під час пробного періоду банер показує, скільки днів залишилося.",
           "es": "Sin suscripción, una pantalla muestra las insignias y los Drops que te perdiste esta semana, y aparece un punto en el icono. Durante la prueba, una franja muestra los días restantes.",
           "pt-BR": "Sem assinatura, uma tela mostra as insígnias e os Drops que você perdeu na semana, e um ponto aparece no ícone. Durante o teste, uma faixa mostra os dias restantes.",
           "de": "Ohne Abo zeigt ein Bildschirm die Abzeichen und Drops, die du diese Woche verpasst hast, und ein Punkt erscheint auf dem Symbol. Während des Tests zeigt ein Banner die verbleibenden Tage.",
@@ -274,6 +286,7 @@ export const RELEASES = [
         text: {
           "fr": "StreamPulse+ : choisis toutes les combien les badges et les Drops sont relus (de 1 à 15 min), pour ne plus rater ceux qui ne durent que quelques minutes.",
           "en": "StreamPulse+: choose how often badges and Drops are checked (1 to 15 min), so you never miss the ones that only last a few minutes.",
+          "uk": "StreamPulse+: виберіть, як часто перевіряти значки та Drops (від 1 до 15 хвилин), щоб ніколи не пропустити ті, що з’являються лише на кілька хвилин.",
           "es": "StreamPulse+: elige cada cuánto se revisan las insignias y los Drops (de 1 a 15 min), para no perderte los que duran solo unos minutos.",
           "pt-BR": "StreamPulse+: escolha de quanto em quanto tempo insígnias e Drops são verificados (de 1 a 15 min), para não perder os que duram só alguns minutos.",
           "de": "StreamPulse+: Wähle, wie oft Abzeichen und Drops geprüft werden (1 bis 15 Min.), damit du keine verpasst, die nur wenige Minuten verfügbar sind.",
@@ -292,6 +305,7 @@ export const RELEASES = [
         text: {
           "fr": "StreamPulse+ : alertes de nouveaux badges, pour tous les badges ou seulement ceux des jeux que tu choisis, et alertes Drops sur tous les jeux ou sur une liste de jeux. Une notification Chrome dès que c'est disponible.",
           "en": "StreamPulse+: new badge alerts, for every badge or only those from games you pick, and Drops alerts on every game or a list of games. A Chrome notification as soon as it's available.",
+          "uk": "StreamPulse+: нові сповіщення про значки — для всіх значків або лише з обраних ігор, а також сповіщення про Drops для всіх ігор або списку ігор. Сповіщення Chrome надходить, щойно вони стають доступними.",
           "es": "StreamPulse+: alertas de insignias nuevas, para todas o solo las de los juegos que elijas, y alertas de Drops en todos los juegos o en una lista. Una notificación de Chrome en cuanto esté disponible.",
           "pt-BR": "StreamPulse+: alertas de novas insígnias, para todas ou só as dos jogos que você escolher, e alertas de Drops em todos os jogos ou numa lista. Uma notificação do Chrome assim que estiver disponível.",
           "de": "StreamPulse+: Benachrichtigungen für neue Abzeichen, für alle oder nur für deine gewählten Spiele, und Drops-Benachrichtigungen für alle Spiele oder eine Liste. Eine Chrome-Benachrichtigung, sobald es verfügbar ist.",
@@ -313,6 +327,7 @@ export const RELEASES = [
     title: {
       "fr": "Les prix dans ta devise",
       "en": "Prices in your currency",
+      "uk": "Ціни у вашій валюті",
       "es": "Los precios en tu moneda",
       "pt-BR": "Os preços na sua moeda",
       "de": "Preise in deiner Währung",
@@ -331,6 +346,7 @@ export const RELEASES = [
         text: {
           "fr": "StreamPulse+ : sous chaque prix en euros, tu vois maintenant sa valeur dans ta devise (≈), selon ta langue et ta région. Le taux est celui du jour, arrondi vers le haut : le prix ne change jamais d'un pays à l'autre, et le paiement reste en euros.",
           "en": "StreamPulse+: under each euro price you now see its value in your currency (≈), based on your language and region. The rate is today's, rounded up: the price never changes from one country to another, and payment stays in euros.",
+          "uk": "StreamPulse+: під кожною ціною в євро тепер ви бачите її вартість у вашій валюті (≈), відповідно до вашої мови та регіону. Курс — сьогоднішній, округлений у більшу сторону: ціна не змінюється в різних країнах, а оплата здійснюється в євро.",
           "es": "StreamPulse+: bajo cada precio en euros ves ahora su valor en tu moneda (≈), según tu idioma y tu región. Se usa el tipo de cambio del día, redondeado al alza: el precio no cambia de un país a otro y el pago sigue siendo en euros.",
           "pt-BR": "StreamPulse+: abaixo de cada preço em euros você vê agora o valor na sua moeda (≈), conforme seu idioma e sua região. A cotação é a do dia, arredondada para cima: o preço não muda de um país para outro e o pagamento continua em euros.",
           "de": "StreamPulse+: Unter jedem Euro-Preis siehst du jetzt den Wert in deiner Währung (≈), passend zu Sprache und Region. Es gilt der Tageskurs, aufgerundet: Der Preis ist in jedem Land derselbe, bezahlt wird weiterhin in Euro.",
@@ -349,6 +365,7 @@ export const RELEASES = [
         text: {
           "fr": "Premier lancement : si tu es connecté à Twitch, ton pseudo est déjà rempli. Tu choisis ta plateforme (Twitch, Kick ou YouTube) et ta photo de profil y est retrouvée.",
           "en": "First launch: if you're signed in to Twitch, your username is already filled in. Pick your platform (Twitch, Kick or YouTube) and your profile picture is found there.",
+          "uk": "Перший запуск: якщо ви увійшли в систему Twitch, ваше ім’я користувача вже введено. Оберіть платформу (Twitch, Kick або YouTube), і ваше фото профілю з’явиться там.",
           "es": "Primer inicio: si tienes sesión en Twitch, tu usuario ya aparece escrito. Tu foto de perfil ahora también se encuentra en Kick y YouTube, no solo en Twitch.",
           "pt-BR": "Primeira abertura: se você estiver conectado à Twitch, seu nome de usuário já vem preenchido. Sua foto de perfil agora também é encontrada na Kick e no YouTube, não só na Twitch.",
           "de": "Erster Start: Bist du bei Twitch angemeldet, ist dein Benutzername schon ausgefüllt. Dein Profilbild wird jetzt auch auf Kick und YouTube gefunden, nicht nur auf Twitch.",
@@ -367,6 +384,7 @@ export const RELEASES = [
         text: {
           "fr": "Mise à jour de sécurité et corrections de bugs.",
           "en": "Security update and bug fixes.",
+          "uk": "Оновлення безпеки та виправлення помилок.",
           "es": "Actualización de seguridad y corrección de errores.",
           "pt-BR": "Atualização de segurança e correções de bugs.",
           "de": "Sicherheitsupdate und Fehlerbehebungen.",
@@ -388,6 +406,7 @@ export const RELEASES = [
     title: {
       "fr": "Un mode auto plus lisible",
       "en": "A clearer auto mode",
+      "uk": "Більш зрозумілий автоматичний режим",
       "es": "Un modo auto más claro",
       "pt-BR": "Um modo auto mais claro",
       "de": "Ein übersichtlicherer Auto-Modus",
@@ -406,6 +425,7 @@ export const RELEASES = [
         text: {
           "fr": "Mode auto des badges : nouvelle bannière avec le logo, une barre de progression du Drop et le temps restant, les badges visés, un avertissement quand un autre live Twitch joue, et un bouton pour la replier.",
           "en": "Badge auto mode: new banner with the logo, a Drop progress bar and time left, the targeted badges, a warning when another Twitch live is playing, and a button to collapse it.",
+          "uk": "Автоматичний режим значків: новий банер із логотипом, індикатор прогресу Drop та час, що залишився, цільові значки, попередження про те, що в цей час транслюється інший прямий ефір Twitch, та кнопка для його згорнення.",
           "es": "Modo auto de insignias: nuevo banner con el logo, una barra de progreso del Drop y el tiempo restante, las insignias buscadas, un aviso cuando otro directo de Twitch se reproduce y un botón para contraerlo.",
           "pt-BR": "Modo auto de emblemas: novo banner com o logo, uma barra de progresso do Drop e o tempo restante, os emblemas buscados, um aviso quando outra live da Twitch está tocando e um botão para recolhê-lo.",
           "de": "Auto-Modus für Abzeichen: neues Banner mit Logo, Fortschrittsbalken des Drops und Restzeit, den angestrebten Abzeichen, einem Hinweis, wenn ein anderes Twitch-Live läuft, und einer Taste zum Einklappen.",
@@ -424,6 +444,7 @@ export const RELEASES = [
         text: {
           "fr": "Parrainage plus simple : un bouton « Copier mon lien » (ton ami n'a plus de code à saisir, ni de remise), une carte sur l'onglet Streamers pour le trouver, et des textes à jour (plan annuel, parrainage ouvert à tous).",
           "en": "Simpler referrals: a “Copy my link” button (your friend no longer has a code to type, or a discount), a card on the Streamers tab to find it, and up-to-date texts (yearly plan, referrals open to everyone).",
+          "uk": "Простіші реферальні посилання: кнопка «Скопіювати моє посилання» (вашому другу більше не потрібно вводити код чи знижку), картка на вкладці «Стрімери» для його пошуку та актуальні тексти (річний план, реферальні посилання доступні для всіх).",
           "es": "Invitaciones más simples: un botón «Copiar mi enlace» (tu amigo ya no tiene código que escribir ni descuento), una tarjeta en la pestaña Streamers para encontrarlo y textos al día (plan anual, invitaciones abiertas a todos).",
           "pt-BR": "Indicações mais simples: um botão “Copiar meu link” (seu amigo não tem mais código para digitar nem desconto), um cartão na aba Streamers para encontrá-lo e textos atualizados (plano anual, indicações abertas a todos).",
           "de": "Einfacher werben: eine Taste „Meinen Link kopieren“ (dein Freund muss keinen Code mehr eintippen und bekommt keinen Rabatt), eine Karte im Streamers-Tab zum Finden und aktuelle Texte (Jahresabo, Empfehlungen für alle offen).",
@@ -442,6 +463,7 @@ export const RELEASES = [
         text: {
           "fr": "Mode auto des badges : l'avertissement « un autre live joue » s'affichait sous forme de code au lieu d'une phrase.",
           "en": "Badge auto mode: the “another live is playing” warning showed as code instead of a sentence.",
+          "uk": "Автоматичний режим значка: попередження «триває інша пряма трансляція» відображалося у вигляді коду замість речення.",
           "es": "Modo auto de insignias: el aviso «otro directo se está reproduciendo» aparecía como código en lugar de una frase.",
           "pt-BR": "Modo auto de emblemas: o aviso “outra live está tocando” aparecia como código em vez de uma frase.",
           "de": "Auto-Modus für Abzeichen: Der Hinweis „ein anderes Live läuft“ wurde als Code statt als Satz angezeigt.",
@@ -463,6 +485,7 @@ export const RELEASES = [
     title: {
       "fr": "Parrainage pour tous",
       "en": "Referrals for everyone",
+      "uk": "Реферальні посилання для всіх",
       "es": "Referidos para todos",
       "pt-BR": "Indicações para todos",
       "de": "Empfehlungen für alle",
@@ -481,6 +504,7 @@ export const RELEASES = [
         text: {
           "fr": "Parrainage ouvert à tous : même sans StreamPulse+, crée ton code avec ton e-mail et gagne un mois offert pour chaque ami qui s'abonne.",
           "en": "Referrals open to everyone: even without StreamPulse+, create your code with your email and earn a free month for every friend who subscribes.",
+          "uk": "Реферальна програма відкрита для всіх: навіть без StreamPulse+ ви можете створити свій код, вказавши свою електронну адресу, і отримати безкоштовний місяць за кожного друга, який підпишеться.",
           "es": "Referidos abiertos a todos: incluso sin StreamPulse+, crea tu código con tu correo y gana un mes gratis por cada amigo que se suscriba.",
           "pt-BR": "Indicações abertas a todos: mesmo sem StreamPulse+, crie seu código com seu e-mail e ganhe um mês grátis para cada amigo que assinar.",
           "de": "Empfehlungen für alle: Auch ohne StreamPulse+ erstellst du deinen Code mit deiner E-Mail und bekommst einen Gratismonat für jeden Freund, der abonniert.",
@@ -499,6 +523,7 @@ export const RELEASES = [
         text: {
           "fr": "StreamPulse+ : après le paiement, la clé s'active toute seule dans l'extension sur Chrome, plus besoin de la copier-coller.",
           "en": "StreamPulse+: after payment, your key now activates itself in the extension on Chrome, no more copy and paste.",
+          "uk": "StreamPulse+: після оплати ваш ключ тепер активується автоматично в розширенні на Chrome, більше не потрібно копіювати та вставляти.",
           "es": "StreamPulse+: tras el pago, la clave se activa sola en la extensión en Chrome, ya no hace falta copiarla y pegarla.",
           "pt-BR": "StreamPulse+: depois do pagamento, a chave se ativa sozinha na extensão no Chrome, sem precisar copiar e colar.",
           "de": "StreamPulse+: Nach der Zahlung aktiviert sich der Schlüssel in Chrome von selbst in der Erweiterung, kein Kopieren und Einfügen mehr.",
@@ -517,6 +542,7 @@ export const RELEASES = [
         text: {
           "fr": "Nouvel effet Matrix pour le badge et le pseudo, réservé à celles et ceux qui ont trouvé et signalé un bug. Tout le monde le voit dans le tchat, avec le rang « Chasseur de bugs ».",
           "en": "New Matrix effect for the badge and username, reserved for people who found and reported a bug. Everyone sees it in chat, with the “Bug hunter” rank.",
+          "uk": "Новий ефект «Матриця» для значка та імені користувача, призначений для тих, хто виявив і повідомив про помилку. Усі бачать його в чаті разом із званням «Мисливець за багами».",
           "es": "Nuevo efecto Matrix para la insignia y el nombre, reservado a quienes encontraron y reportaron un bug. Todos lo ven en el chat, con el rango «Cazador de bugs».",
           "pt-BR": "Novo efeito Matrix para o emblema e o nome, reservado a quem encontrou e relatou um bug. Todos o veem no chat, com o rank “Caçador de bugs”.",
           "de": "Neuer Matrix-Effekt für Badge und Namen, reserviert für alle, die einen Bug gefunden und gemeldet haben. Alle sehen ihn im Chat, mit dem Rang „Bugjäger“.",
@@ -535,6 +561,7 @@ export const RELEASES = [
         text: {
           "fr": "Chat Twitch : au survol d'un badge StreamPulse ou du pseudo, une nouvelle carte montre le pseudo, le rang, l'ancienneté et les cosmétiques de la personne : badge porté, badge d'ancienneté et style du pseudo.",
           "en": "Twitch chat: hovering a StreamPulse badge or the username now opens a new card with the person's name, rank, tenure and cosmetics: worn badge, tenure badge and name style.",
+          "uk": "Чат Twitch: при наведенні курсору на значок StreamPulse або ім’я користувача тепер відкривається нова картка з ім’ям людини, її рангом, стажем та косметичними елементами: значком, що носить, значком стажу та стилем імені.",
           "es": "Chat de Twitch: al pasar el ratón por una insignia de StreamPulse o por el nombre, una nueva tarjeta muestra el nombre, el rango, la antigüedad y los cosméticos de la persona: insignia puesta, insignia de antigüedad y estilo del nombre.",
           "pt-BR": "Chat da Twitch: ao passar o mouse sobre um emblema do StreamPulse ou o nome, um novo cartão mostra o nome, o rank, o tempo de assinatura e os cosméticos da pessoa: emblema em uso, emblema de tempo e estilo do nome.",
           "de": "Twitch-Chat: Beim Überfahren eines StreamPulse-Badges oder des Namens zeigt eine neue Karte Name, Rang, Treue und Kosmetik der Person: getragenes Badge, Treue-Badge und Namensstil.",
@@ -553,6 +580,7 @@ export const RELEASES = [
         text: {
           "fr": "Badges : suis un badge à durée limitée avec la cloche pour être prévenu de son départ et de sa fin ; les événements courts te préviennent tout seuls.",
           "en": "Badges: follow a limited-time badge with the bell to be notified of its start and end; short events alert automatically.",
+          "uk": "Значки: підпишіться на тимчасовий значок із дзвіночком, щоб отримувати сповіщення про його початок і закінчення; короткі події сповіщаються автоматично.",
           "es": "Insignias: sigue una insignia de duración limitada con la campana para recibir un aviso de su inicio y su fin; los eventos cortos avisan automáticamente.",
           "pt-BR": "Emblemas: acompanhe um emblema por tempo limitado com o sino para ser avisado do início e do fim; eventos curtos alertam automaticamente.",
           "de": "Badges: Folge einem zeitlich begrenzten Badge mit der Glocke und lass dich an Beginn und Ende erinnern; kurze Events melden sich von selbst.",
@@ -571,6 +599,7 @@ export const RELEASES = [
         text: {
           "fr": "Compte StreamPulse+ mieux protégé : une nouvelle adresse PayPal et le parrainage gratuit se confirment par e-mail, et le lien de ton espace peut t'être envoyé à ton adresse de paiement.",
           "en": "Better-protected StreamPulse+ account: a new PayPal address and free referrals are confirmed by email, and the link to your space can be sent to your payment email.",
+          "uk": "Краще захищений обліковий запис StreamPulse+: нова адреса PayPal і безкоштовні реферали підтверджуються електронною поштою, а посилання на кабінет можна надіслати на платіжну адресу.",
           "es": "Cuenta StreamPulse+ más protegida: una nueva dirección de PayPal y los referidos gratuitos se confirman por correo, y el enlace a tu espacio puede enviarse a tu correo de pago.",
           "pt-BR": "Conta StreamPulse+ mais protegida: um novo endereço PayPal e as indicações grátis são confirmados por e-mail, e o link do seu espaço pode ser enviado ao seu e-mail de pagamento.",
           "de": "Besser geschütztes StreamPulse+-Konto: Eine neue PayPal-Adresse und kostenlose Empfehlungen werden per E-Mail bestätigt, und der Link zu deinem Bereich kann an deine Zahlungs-E-Mail gesendet werden.",
@@ -589,6 +618,7 @@ export const RELEASES = [
         text: {
           "fr": "YouTube : « Ajouter à StreamPulse » fonctionne sur les pages de chaîne en /channel/…, et une chaîne qui n'est pas en direct s'ajoute avec un message qui confirme qu'on te prévient au prochain live. Un refus affiche maintenant sa vraie raison.",
           "en": "YouTube: “Add to StreamPulse” now works on /channel/… pages, and a channel that isn't live is added with a message confirming you'll be alerted at its next stream. A refusal now shows its real reason.",
+          "uk": "YouTube: Функція «Додати до StreamPulse» тепер працює на сторінках /channel/…, а канал, на якому немає прямої трансляції, додається з повідомленням про те, що ви отримаєте сповіщення про його наступну трансляцію. У разі відмови тепер відображається справжня причина відмови.",
           "es": "YouTube: «Añadir a StreamPulse» funciona en las páginas /channel/…, y un canal que no está en directo se añade con un mensaje que confirma que te avisaremos en su próximo directo. Un rechazo ahora muestra su motivo real.",
           "pt-BR": "YouTube: “Adicionar ao StreamPulse” funciona nas páginas /channel/…, e um canal que não está ao vivo é adicionado com uma mensagem confirmando que você será avisado na próxima live. Uma recusa agora mostra o motivo real.",
           "de": "YouTube: „Zu StreamPulse hinzufügen“ funktioniert auf /channel/…-Seiten, und ein Kanal, der gerade nicht live ist, wird mit dem Hinweis hinzugefügt, dass du beim nächsten Stream benachrichtigt wirst. Eine Ablehnung nennt jetzt den echten Grund.",
@@ -607,6 +637,7 @@ export const RELEASES = [
         text: {
           "fr": "YouTube : les lives programmés et les Premières ne déclenchent plus d'alerte avant de commencer. Tu es prévenu quand ils démarrent vraiment.",
           "en": "YouTube: scheduled streams and Premieres no longer trigger an alert before they begin. You're notified when they actually start.",
+          "uk": "YouTube: заплановані трансляції та прем’єри більше не викликають сповіщення перед початком. Ви отримуєте сповіщення, коли вони фактично починаються.",
           "es": "YouTube: los directos programados y los estrenos ya no envían alerta antes de empezar. Te avisamos cuando empiezan de verdad.",
           "pt-BR": "YouTube: lives agendadas e estreias não disparam mais alerta antes de começar. Você é avisado quando elas começam de verdade.",
           "de": "YouTube: Geplante Streams und Premieren lösen keine Benachrichtigung mehr vor dem Start aus. Du wirst benachrichtigt, wenn sie wirklich beginnen.",
@@ -625,6 +656,7 @@ export const RELEASES = [
         text: {
           "fr": "La mise à jour précédente empêchait l'extension de démarrer : popup vide, points et temps de visionnage perdus de vue. Le démarrage est rétabli, aucune donnée enregistrée n'a été perdue.",
           "en": "The previous update stopped the extension from starting: empty popup, points and watch time gone from view. Startup is restored; no saved data was lost.",
+          "uk": "Попереднє оновлення заважало запуску розширення: з’являлося порожнє спливаюче вікно, а бали та час перегляду зникали з екрану. Запуск відновлено; збережені дані не втрачено.",
           "es": "La actualización anterior impedía iniciar la extensión: ventana emergente vacía, puntos y tiempo de visualización desaparecidos. El inicio está restablecido y no se perdió ningún dato guardado.",
           "pt-BR": "A atualização anterior impedia a extensão de iniciar: pop-up vazio, pontos e tempo de exibição desaparecidos. A inicialização foi restaurada e nenhum dado salvo foi perdido.",
           "de": "Das vorherige Update verhinderte den Start der Erweiterung: leeres Popup, Punkte und Sendezeit verschwunden. Der Start funktioniert wieder, gespeicherte Daten gingen nicht verloren.",
@@ -646,6 +678,7 @@ export const RELEASES = [
     title: {
       "fr": "Traductions espagnoles et accueil",
       "en": "Spanish translations and welcome",
+      "uk": "Іспанські переклади та привітання",
       "es": "Traducciones en español e inicio",
       "pt-BR": "Traduções em espanhol e início",
       "de": "Spanische Übersetzungen und Startseite",
@@ -664,6 +697,7 @@ export const RELEASES = [
         text: {
           "fr": "Traductions en espagnol : correction de la description de l'écran d'accueil, des alertes de direct et du type de récompense Emoticono.",
           "en": "Spanish translations: fixed welcome screen description, live alerts, and Emoticono reward type.",
+          "uk": "Іспанські переклади: виправлено опис екрану привітання, сповіщення в режимі реального часу та тип винагороди «Емотикони».",
           "es": "Traducciones en español: corrección de la descripción de bienvenida, de las alertas de directo y del tipo de recompensa Emoticono.",
           "pt-BR": "Traduções em espanhol: correção da descrição de boas-vindas, dos alertas de transmissão ao vivo e do tipo de recompensa Emoticono.",
           "de": "Spanische Übersetzungen: Beschreibung der Startseite, Live-Benachrichtigungen und Belohnungstyp Emoticono korrigiert.",
@@ -682,6 +716,7 @@ export const RELEASES = [
         text: {
           "fr": "Accueil : la description de bienvenue reflète fidèlement l'étape du choix de la langue dans toutes les langues.",
           "en": "Welcome: the introduction description accurately reflects the language selection step across all languages.",
+          "uk": "Вітання: опис у вступі точно відображає етап вибору мови для всіх мовних версій.",
           "es": "Inicio: la descripción de bienvenida refleja con precisión el paso de selección de idioma en todos los idiomas.",
           "pt-BR": "Início: a descrição de boas-vindas reflete com precisão a etapa de escolha do idioma em todos os idiomas.",
           "de": "Startseite: Die Begrüßungsbeschreibung spiegelt die Sprachauswahl in allen Sprachen präzise wider.",
@@ -703,6 +738,7 @@ export const RELEASES = [
     title: {
       "fr": "Corrections CHZZK",
       "en": "CHZZK fixes",
+      "uk": "Виправлення CHZZK",
       "es": "Correcciones de CHZZK",
       "pt-BR": "Correções do CHZZK",
       "de": "CHZZK-Korrekturen",
@@ -721,6 +757,7 @@ export const RELEASES = [
         text: {
           "fr": "CHZZK : l'ajout d'une chaîne marche dès que tu acceptes l'accès, sans avoir à recharger l'extension.",
           "en": "CHZZK: adding a channel works as soon as you accept the access, without reloading the extension.",
+          "uk": "CHZZK: додавання каналу відбувається одразу після надання дозволу на доступ, без перезавантаження розширення.",
           "es": "CHZZK: añadir un canal funciona en cuanto aceptas el acceso, sin recargar la extensión.",
           "pt-BR": "CHZZK: adicionar um canal funciona assim que você aceita o acesso, sem recarregar a extensão.",
           "de": "CHZZK: Das Hinzufügen eines Kanals funktioniert, sobald du den Zugriff erlaubst, ohne die Erweiterung neu zu laden.",
@@ -739,6 +776,7 @@ export const RELEASES = [
         text: {
           "fr": "La phrase qui explique la demande d'accès à CHZZK s'affiche maintenant au-dessus de la barre d'ajout, au lieu de l'écraser.",
           "en": "The sentence explaining the CHZZK access request now appears above the add bar instead of squeezing it.",
+          "uk": "Речення, що пояснює запит на доступ до CHZZK, тепер відображається над панеллю додавання, а не стискається під нею.",
           "es": "La frase que explica la petición de acceso a CHZZK aparece ahora encima de la barra de añadir, en lugar de aplastarla.",
           "pt-BR": "A frase que explica o pedido de acesso ao CHZZK agora aparece acima da barra de adicionar, em vez de espremê-la.",
           "de": "Der Satz, der die CHZZK-Zugriffsanfrage erklärt, erscheint jetzt über der Hinzufügen-Leiste, statt sie zusammenzudrücken.",
@@ -757,6 +795,7 @@ export const RELEASES = [
         text: {
           "fr": "L'adresse de contact de l'accueil et de la popup est maintenant contact@streampulse.tech.",
           "en": "The contact address on the welcome page and in the popup is now contact@streampulse.tech.",
+          "uk": "Контактна адреса на сторінці привітання та у спливаючому вікні тепер — contact@streampulse.tech.",
           "es": "La dirección de contacto de la bienvenida y de la ventana emergente es ahora contact@streampulse.tech.",
           "pt-BR": "O endereço de contato da tela de boas-vindas e do popup agora é contact@streampulse.tech.",
           "de": "Die Kontaktadresse auf der Startseite und im Popup lautet jetzt contact@streampulse.tech.",
@@ -775,6 +814,7 @@ export const RELEASES = [
         text: {
           "fr": "Badge communautaire : la note de confidentialité de l'accueil dit seulement ce qui est envoyé à streampulse.tech, sans promesse plus large que la réalité.",
           "en": "Community badge: the privacy note on the welcome page now only states what is sent to streampulse.tech, with no claim broader than reality.",
+          "uk": "Значок спільноти: у повідомленні про конфіденційність на сторінці привітання тепер вказано лише те, що надсилається на streampulse.tech, без жодних заяв, що виходять за межі дійсності.",
           "es": "Insignia de la comunidad: la nota de privacidad de la bienvenida indica solo lo que se envía a streampulse.tech, sin prometer más de lo real.",
           "pt-BR": "Selo da comunidade: a nota de privacidade da tela de boas-vindas informa apenas o que é enviado para streampulse.tech, sem prometer mais do que a realidade.",
           "de": "Community-Badge: Der Datenschutzhinweis auf der Startseite nennt jetzt nur noch, was an streampulse.tech gesendet wird, ohne weitergehendes Versprechen.",
@@ -793,6 +833,7 @@ export const RELEASES = [
         text: {
           "fr": "Badges : la liste se lit maintenant correctement quand Twitch est réglé dans une autre langue que l'anglais, et un badge dont la campagne porte un nom un peu différent (comme Castlevania: Belmont's Curse) passe bien « En cours ».",
           "en": "Badges: the list now reads correctly when Twitch is set to a language other than English, and a badge whose campaign has a slightly different name (like Castlevania: Belmont's Curse) now shows as \"Live\".",
+          "uk": "Значки: список тепер відображається правильно, коли для Twitch встановлено мову, відмінну від англійської, а значок, кампанія якого має дещо іншу назву (наприклад, Castlevania: Belmont's Curse), тепер відображається як «Live».",
           "es": "Insignias: la lista se lee ahora correctamente cuando Twitch está en otro idioma que no es inglés, y una insignia cuya campaña tiene un nombre algo distinto (como Castlevania: Belmont's Curse) aparece bien como «En curso».",
           "pt-BR": "Emblemas: a lista agora é lida corretamente quando o Twitch está em outro idioma que não o inglês, e um emblema cuja campanha tem um nome um pouco diferente (como Castlevania: Belmont's Curse) aparece corretamente como «Em andamento».",
           "de": "Abzeichen: Die Liste wird jetzt korrekt gelesen, wenn Twitch auf eine andere Sprache als Englisch eingestellt ist, und ein Abzeichen, dessen Kampagne etwas anders heißt (wie Castlevania: Belmont's Curse), erscheint richtig als „Läuft“.",
@@ -811,6 +852,7 @@ export const RELEASES = [
         text: {
           "fr": "Une cloche sur chaque badge en cours ou à venir : tu es prévenu au départ et 15 minutes avant la fin. Les badges d'événements courts (2 h ou moins) préviennent d'eux-mêmes quand les alertes de badges sont actives.",
           "en": "A bell on every live or upcoming badge: you get notified when it starts and 15 minutes before it ends. Short-event badges (2 h or less) alert you on their own when badge alerts are on.",
+          "uk": "Дзвіночок на кожному значку прямої трансляції або майбутньої трансляції: ви отримуєте сповіщення про початок трансляції та за 15 хвилин до її закінчення. Значки коротких подій (2 години або менше) сповіщають вас самостійно, якщо увімкнено сповіщення про значки.",
           "es": "Una campana en cada insignia en curso o próxima: te avisa al empezar y 15 minutos antes de que termine. Las insignias de eventos cortos (2 h o menos) avisan por sí solas cuando las alertas de insignias están activas.",
           "pt-BR": "Um sino em cada emblema em andamento ou futuro: você é avisado no início e 15 minutos antes do fim. Os emblemas de eventos curtos (2 h ou menos) avisam sozinhos quando os alertas de emblemas estão ativos.",
           "de": "Eine Glocke an jedem laufenden oder kommenden Abzeichen: Du wirst beim Start und 15 Minuten vor dem Ende benachrichtigt. Abzeichen kurzer Events (2 Std. oder weniger) melden sich von selbst, wenn die Abzeichen-Hinweise aktiv sind.",
@@ -829,6 +871,7 @@ export const RELEASES = [
         text: {
           "fr": "Le catalogue des badges est relu toutes les 5 minutes (au lieu de 30), pour ne plus rater un événement de 30 minutes.",
           "en": "The badge catalogue is now refreshed every 5 minutes (instead of 30), so you no longer miss a 30-minute event.",
+          "uk": "Каталог значків тепер оновлюється кожні 5 хвилин (замість 30), тож ви більше не пропустите 30-хвилинну подію.",
           "es": "El catálogo de insignias se actualiza cada 5 minutos (en lugar de 30), para no perderte un evento de 30 minutos.",
           "pt-BR": "O catálogo de emblemas é atualizado a cada 5 minutos (em vez de 30), para você não perder um evento de 30 minutos.",
           "de": "Der Abzeichen-Katalog wird jetzt alle 5 Minuten aktualisiert (statt alle 30), damit du kein 30-Minuten-Event mehr verpasst.",
@@ -850,6 +893,7 @@ export const RELEASES = [
     title: {
       "fr": "CHZZK arrive",
       "en": "CHZZK joins",
+      "uk": "CHZZK приєднується",
       "es": "Llega CHZZK",
       "pt-BR": "Chegou o CHZZK",
       "de": "CHZZK ist dabei",
@@ -868,6 +912,7 @@ export const RELEASES = [
         text: {
           "fr": "CHZZK, la plateforme coréenne, rejoint Twitch, Kick et YouTube : alertes de live, titre, catégorie et spectateurs. Elle est proposée avec l'extension en coréen ou en anglais ; au premier ajout, le navigateur te demande l'accès à l'API de CHZZK.",
           "en": "CHZZK, the Korean platform, joins Twitch, Kick and YouTube: live alerts, title, category and viewers. It is offered when the extension is in Korean or English; the first time you add a channel, your browser asks for access to the CHZZK API.",
+          "uk": "Корейська платформа CHZZK приєднується до Twitch, Kick та YouTube: сповіщення в режимі реального часу, назва, категорія та кількість глядачів. Ця функція доступна, коли розширення налаштовано на корейську або англійську мову; під час першого додавання каналу браузер запитує доступ до API CHZZK.",
           "es": "CHZZK, la plataforma coreana, se suma a Twitch, Kick y YouTube: alertas de directo, título, categoría y espectadores. Se ofrece con la extensión en coreano o inglés; al añadir el primer canal, el navegador te pide acceso a la API de CHZZK.",
           "pt-BR": "O CHZZK, a plataforma coreana, se junta a Twitch, Kick e YouTube: alertas de live, título, categoria e espectadores. Ele aparece com a extensão em coreano ou inglês; ao adicionar o primeiro canal, o navegador pede acesso à API do CHZZK.",
           "de": "CHZZK, die koreanische Plattform, kommt zu Twitch, Kick und YouTube dazu: Live-Alarme, Titel, Kategorie und Zuschauer. Sie wird angeboten, wenn die Erweiterung auf Koreanisch oder Englisch läuft; beim ersten Hinzufügen fragt der Browser nach Zugriff auf die CHZZK-API.",
@@ -886,6 +931,7 @@ export const RELEASES = [
         text: {
           "fr": "Le sondage de désinstallation ajoute le nombre de jours depuis l'installation, un simple entier, toujours sans identifiant.",
           "en": "The uninstall survey now also sends the number of days since install, a plain integer, still never an identifier.",
+          "uk": "Опитування під час видалення тепер також надсилає кількість днів, що минули з моменту встановлення — просте ціле число, яке, як і раніше, ніколи не є ідентифікатором.",
           "es": "La encuesta de desinstalación añade los días desde la instalación, un simple número entero, siempre sin identificador.",
           "pt-BR": "A pesquisa de desinstalação agora envia também os dias desde a instalação, um simples número inteiro, ainda sem nenhum identificador.",
           "de": "Die Deinstallationsumfrage sendet jetzt auch die Tage seit der Installation, eine einfache ganze Zahl, weiterhin nie eine Kennung.",
@@ -904,6 +950,7 @@ export const RELEASES = [
         text: {
           "fr": "Un streamer relié sur deux plateformes n'apparaît plus qu'une fois : dans « Toutes les chaînes » (une ligne, une pastille par plateforme, et tu choisis laquelle retirer) et dans l'Historique (une seule carte, un lien de rediffusion par plateforme).",
           "en": "A streamer linked on two platforms now shows up once: in All channels (one row, one chip per platform, and you choose which one to remove) and in History (one card, one replay link per platform).",
+          "uk": "Стрімер, на якого є посилання на двох платформах, тепер відображається лише один раз: у розділі «Усі канали» (один рядок, одна картка на кожну платформу, і ви самі обираєте, яку з них видалити) та в «Історії» (одна картка, одне посилання на повтор для кожної платформи).",
           "es": "Un streamer enlazado en dos plataformas ahora aparece una sola vez: en Todos los canales (una fila, una etiqueta por plataforma, y eliges cuál quitar) y en el Historial (una tarjeta, un enlace de repetición por plataforma).",
           "pt-BR": "Um streamer ligado em duas plataformas agora aparece uma única vez: em Todos os canais (uma linha, uma etiqueta por plataforma, e você escolhe qual remover) e no Histórico (um cartão, um link de replay por plataforma).",
           "de": "Ein auf zwei Plattformen verknüpfter Streamer erscheint jetzt nur noch einmal: in Alle Kanäle (eine Zeile, ein Chip pro Plattform, du wählst, welche entfernt wird) und im Verlauf (eine Karte, ein Wiederholungslink pro Plattform).",
@@ -922,6 +969,7 @@ export const RELEASES = [
         text: {
           "fr": "Sur les pages de chaîne CHZZK, un bouton « Ajouter à StreamPulse » et l'indicateur de latence, au même endroit que sur Twitch et Kick (sur le lecteur, ou à la place du titre du tchat). La latence est celle du lecteur ; un clic rattrape le direct. L'accès au site CHZZK est demandé avec celui de l'API.",
           "en": "On CHZZK channel pages, an “Add to StreamPulse” button and the latency indicator, in the same place as on Twitch and Kick (on the player, or in place of the chat title). The latency is the player's own; a click jumps to live. Access to the CHZZK site is requested together with the API's.",
+          "uk": "На сторінках каналів CHZZK з’явилася кнопка «Додати до StreamPulse» та індикатор затримки — у тому ж місці, що й на Twitch та Kick (на плеєрі або замість заголовка чату). Затримка — власна для плеєра; після натискання відбувається перехід до прямої трансляції. Доступ до сайту CHZZK запитується разом із запитами до API.",
           "es": "En las páginas de canal de CHZZK, un botón «Añadir a StreamPulse» y el indicador de latencia, en el mismo sitio que en Twitch y Kick (sobre el reproductor, o en lugar del título del chat). La latencia es la del propio reproductor; un clic salta al directo. El acceso al sitio de CHZZK se pide junto con el de la API.",
           "pt-BR": "Nas páginas de canal do CHZZK, um botão «Adicionar ao StreamPulse» e o indicador de latência, no mesmo lugar que na Twitch e na Kick (sobre o player, ou no lugar do título do chat). A latência é a do próprio player; um clique vai para o ao vivo. O acesso ao site do CHZZK é pedido junto com o da API.",
           "de": "Auf CHZZK-Kanalseiten gibt es einen Button «Zu StreamPulse hinzufügen» und die Latenzanzeige, am selben Ort wie bei Twitch und Kick (auf dem Player oder anstelle des Chat-Titels). Die Latenz stammt vom Player selbst; ein Klick springt zum Live-Bild. Der Zugriff auf die CHZZK-Seite wird zusammen mit dem auf die API angefragt.",
@@ -940,6 +988,7 @@ export const RELEASES = [
         text: {
           "fr": "Le récap te laisse choisir les plateformes comptées (Twitch, Kick, YouTube), avec ou sans StreamPulse+. YouTube est décoché pour l'instant : on vérifie que seuls les directs comptent, pour que les chaînes regardées en temps normal ne gonflent pas ton récap.",
           "en": "The recap lets you choose which platforms count (Twitch, Kick, YouTube), with or without StreamPulse+. YouTube is unchecked for now while we verify that only live streams count, so channels you watch normally don't inflate your recap.",
+          "uk": "У підсумку ви можете вибрати, які платформи враховувати (Twitch, Kick, YouTube), з StreamPulse+ чи без нього. YouTube наразі не відмічено, поки ми перевіряємо, що враховуються лише прямі трансляції, тож канали, які ви переглядаєте зазвичай, не завищують показники у вашому підсумку.",
           "es": "El resumen te deja elegir qué plataformas cuentan (Twitch, Kick, YouTube), con o sin StreamPulse+. YouTube está desmarcado por ahora mientras comprobamos que solo cuentan los directos, para que los canales que ves normalmente no inflen tu resumen.",
           "pt-BR": "O resumo deixa você escolher quais plataformas contam (Twitch, Kick, YouTube), com ou sem StreamPulse+. O YouTube está desmarcado por enquanto, enquanto verificamos que só as lives contam, para que os canais que você assiste normalmente não inflem seu resumo.",
           "de": "Im Rückblick wählst du, welche Plattformen zählen (Twitch, Kick, YouTube), mit oder ohne StreamPulse+. YouTube ist vorerst abgewählt, während wir prüfen, dass nur Livestreams zählen, damit normal gesehene Kanäle deinen Rückblick nicht aufblähen.",
@@ -961,6 +1010,7 @@ export const RELEASES = [
     title: {
       "fr": "Plus d'outils, moins de clics",
       "en": "More tools, fewer clicks",
+      "uk": "Більше інструментів, менше кліків",
       "es": "Más herramientas, menos clics",
       "pt-BR": "Mais ferramentas, menos cliques",
       "de": "Mehr Werkzeuge, weniger Klicks",
@@ -979,6 +1029,7 @@ export const RELEASES = [
         text: {
           "fr": "L'onglet Badges rappelle la chaîne 24/7, ouverte à tous avec ou sans StreamPulse+. L'onglet Drops n'est plus dans la barre du haut par défaut : il reste dans les Réglages, et se réaffiche dans Général › Disposition.",
           "en": "The Badges tab now points to the 24/7 channel, open to everyone with or without StreamPulse+. The Drops tab is no longer in the top bar by default: it stays in Settings and can be shown again in General > Layout.",
+          "uk": "Вкладка «Значки» тепер веде на канал, що працює цілодобово, доступний для всіх, незалежно від наявності StreamPulse+. Вкладка Drops більше не відображається у верхній панелі за замовчуванням: вона залишається в налаштуваннях і її можна знову відобразити в розділі «Загальні» > «Макет».",
           "es": "La pestaña Insignias ahora señala el canal 24/7, abierto a todos con o sin StreamPulse+. La pestaña Drops ya no está en la barra superior por defecto: sigue en Ajustes y se vuelve a mostrar en General > Disposición.",
           "pt-BR": "A aba Emblemas agora indica o canal 24/7, aberto a todos com ou sem StreamPulse+. A aba Drops não fica mais na barra superior por padrão: continua nos Ajustes e pode voltar em Geral > Disposição.",
           "de": "Der Tab Abzeichen verweist jetzt auf den 24/7-Kanal, offen für alle mit oder ohne StreamPulse+. Der Drops-Tab ist standardmäßig nicht mehr in der oberen Leiste: Er bleibt in den Einstellungen und lässt sich unter Allgemein > Anordnung wieder einblenden.",
@@ -997,6 +1048,7 @@ export const RELEASES = [
         text: {
           "fr": "« Planifier une session Drops » est corrigé : le temps estimé ne compte plus les Drops d'une même campagne l'un après l'autre (Twitch les fait avancer ensemble), tes minutes déjà regardées sont déduites, les campagnes se replient, le temps disponible se choisit en un clic et chaque Drop montre son temps restant. La saisie ne perd plus le focus à chaque changement.",
           "en": "“Plan a Drops session” is fixed: the estimate no longer adds up Drops of the same campaign one after another (Twitch advances them together), minutes you already watched are deducted, campaigns collapse, the available time is one click away and each Drop shows its remaining time. Typing no longer loses focus on every change.",
+          "uk": "Виправлено «Планувати сесію Drops»: підрахунок більше не додає Drops однієї й тієї ж кампанії одну за одною (Twitch переходить до них разом), хвилини, які ви вже переглянули, віднімаються, кампанії згортаються, доступний час можна переглянути одним кліком, а кожна Drop показує час, що залишився. Під час набору тексту фокус більше не втрачається після кожної зміни.",
           "es": "«Planificar una sesión de Drops» está corregido: la estimación ya no suma los Drops de una misma campaña uno tras otro (Twitch los hace avanzar a la vez), se descuentan los minutos ya vistos, las campañas se pliegan, el tiempo disponible se elige con un clic y cada Drop muestra su tiempo restante. Escribir ya no pierde el foco en cada cambio.",
           "pt-BR": "«Planejar uma sessão de Drops» foi corrigido: a estimativa não soma mais os Drops de uma mesma campanha um após o outro (a Twitch os faz avançar juntos), os minutos já assistidos são descontados, as campanhas se recolhem, o tempo disponível se escolhe com um clique e cada Drop mostra o tempo restante. Digitar não perde mais o foco a cada mudança.",
           "de": "„Drops-Session planen“ ist repariert: Die Schätzung addiert Drops derselben Kampagne nicht mehr nacheinander (Twitch lässt sie gemeinsam laufen), bereits gesehene Minuten werden abgezogen, Kampagnen lassen sich einklappen, die verfügbare Zeit wählst du mit einem Klick und jeder Drop zeigt seine Restzeit. Die Eingabe verliert bei Änderungen nicht mehr den Fokus.",
@@ -1015,6 +1067,7 @@ export const RELEASES = [
         text: {
           "fr": "Réglages réorganisés : « Lecteur » et « Aperçus et chat » sont séparés, les onglets du navigateur rejoignent le Lecteur, la notification de mise à jour passe dans Général, et le doublon de l'historique des Drops a disparu. Les alertes de live, de catégorie et de titre affichent maintenant un état mixte quand tes streamers n'ont pas tous le même réglage.",
           "en": "Settings reorganized: Player and Previews and chat are now separate, browser tabs join the Player page, the update notification moves to General, and the duplicate Drops history switch is gone. The live, category and title alerts now show a mixed state when your streamers don't all share the same setting.",
+          "uk": "Переорганізовано налаштування: «Плеєр», «Попередній перегляд» та «Чат» тепер розділені, вкладки браузера додано до сторінки «Плеєр», повідомлення про оновлення переміщено до розділу «Загальне», а дублюючий перемикач історії Drops видалено. Повідомлення про прямі ефіри, категорії та назви тепер відображають змішаний стан, якщо не всі ваші стрімери мають однакові налаштування.",
           "es": "Ajustes reorganizados: Reproductor y Vistas previas y chat ahora van por separado, las pestañas del navegador pasan al Reproductor, la notificación de actualización va a General y el interruptor duplicado del historial de Drops ha desaparecido. Las alertas de directo, categoría y título muestran un estado mixto cuando tus streamers no comparten el mismo ajuste.",
           "pt-BR": "Ajustes reorganizados: Player e Prévias e chat agora são separados, as abas do navegador vão para o Player, a notificação de atualização passa para Geral e o interruptor duplicado do histórico de Drops sumiu. Os alertas de live, categoria e título mostram um estado misto quando seus streamers não têm o mesmo ajuste.",
           "de": "Einstellungen neu geordnet: Player sowie Vorschauen und Chat sind getrennt, die Browser-Tabs wechseln zum Player, die Update-Benachrichtigung steht jetzt unter Allgemein und der doppelte Schalter für den Drops-Verlauf ist weg. Die Alarme für Live, Kategorie und Titel zeigen einen gemischten Zustand, wenn deine Streamer nicht alle gleich eingestellt sind.",
@@ -1033,6 +1086,7 @@ export const RELEASES = [
         text: {
           "fr": "Relie un streamer à son compte d'une autre plateforme directement depuis sa carte d'accueil : un bouton, un clic sur l'autre compte, et tu n'as plus qu'une tuile et qu'une notification quand les deux sont en live. Plus besoin de passer par les Réglages.",
           "en": "Link a streamer to their account on another platform right from the home card: one button, one click on the other account, and you get a single tile and a single notification when both are live. No need to go through Settings.",
+          "uk": "Прив’яжіть стрімера до його облікового запису на іншій платформі прямо з головної картки: одна кнопка, один клік на інший обліковий запис — і ви отримаєте єдину картку та одне сповіщення, коли обидва канали будуть у прямому ефірі. Не потрібно заходити в налаштування.",
           "es": "Vincula a un streamer con su cuenta de otra plataforma desde su tarjeta de inicio: un botón, un clic en la otra cuenta, y solo tendrás una tarjeta y una notificación cuando ambas estén en directo. Sin pasar por Ajustes.",
           "pt-BR": "Vincule um streamer à conta dele em outra plataforma direto no cartão da tela inicial: um botão, um clique na outra conta, e você recebe só um cartão e uma notificação quando as duas estiverem ao vivo. Sem passar pelos Ajustes.",
           "de": "Verknüpfe einen Streamer direkt auf seiner Startkarte mit seinem Konto auf einer anderen Plattform: ein Button, ein Klick auf das andere Konto, und du bekommst nur noch eine Kachel und eine Benachrichtigung, wenn beide live sind. Der Weg über die Einstellungen entfällt.",
@@ -1051,6 +1105,7 @@ export const RELEASES = [
         text: {
           "fr": "Kick : la récompense quotidienne et les Drops terminés sont maintenant récupérés tout seuls, par un clic dans ton propre onglet, comme sur Twitch. Les points de chaîne Kick gagnés sont aussi comptés correctement dans tes stats.",
           "en": "Kick: the daily reward and finished Drops are now claimed automatically, with a click in your own tab, just like on Twitch. Kick channel points you earn are also counted correctly in your stats.",
+          "uk": "Kick: щоденна винагорода та завершені завдання Drops тепер отримуються автоматично одним кліком у вашій вкладці, так само як і на Twitch. Очки каналу Kick, які ви заробляєте, також правильно враховуються у вашій статистиці.",
           "es": "Kick: la recompensa diaria y los Drops terminados ahora se reclaman solos, con un clic en tu propia pestaña, como en Twitch. Los puntos de canal de Kick que ganas también se cuentan bien en tus estadísticas.",
           "pt-BR": "Kick: a recompensa diária e os Drops concluídos agora são resgatados sozinhos, com um clique na sua própria aba, como na Twitch. Os pontos de canal da Kick que você ganha também são contados corretamente nas suas estatísticas.",
           "de": "Kick: Die tägliche Belohnung und fertige Drops werden jetzt automatisch abgeholt, per Klick in deinem eigenen Tab, genau wie auf Twitch. Verdiente Kick-Kanalpunkte werden außerdem korrekt in deinen Statistiken gezählt.",
@@ -1069,6 +1124,7 @@ export const RELEASES = [
         text: {
           "fr": "Sons de notification au choix : six sons à écouter avant de choisir, un son général et, avec StreamPulse+, un son différent pour les lives, les changements de catégorie, de titre et les raids (Réglages > Notifications).",
           "en": "Choose your notification sounds: six sounds you can preview, one general sound and, with StreamPulse+, a different one for lives, category changes, title changes and raids (Settings > Notifications).",
+          "uk": "Оберіть звуки сповіщень: шість звуків, які можна прослухати, один загальний звук та, за допомогою StreamPulse+, окремі звуки для прямих ефірів, зміни категорії, зміни назви та рейдів (Налаштування > Сповіщення).",
           "es": "Sonidos de notificación a tu gusto: seis sonidos para escuchar antes de elegir, un sonido general y, con StreamPulse+, uno distinto para directos, cambios de categoría, de título y raids (Ajustes > Notificaciones).",
           "pt-BR": "Sons de notificação à sua escolha: seis sons para ouvir antes de escolher, um som geral e, com o StreamPulse+, um diferente para lives, mudanças de categoria, de título e raids (Configurações > Notificações).",
           "de": "Benachrichtigungstöne zur Wahl: sechs Töne zum Vorhören, ein allgemeiner Ton und mit StreamPulse+ je ein eigener für Lives, Kategorie- und Titelwechsel und Raids (Einstellungen > Benachrichtigungen).",
@@ -1087,6 +1143,7 @@ export const RELEASES = [
         text: {
           "fr": "Chaîne Twitch 24/7 : un live StreamPulse tourne jour et nuit sur un jeu avec badge ou Drop actif. Le panneau Drops l'ouvre d'un clic ; tape !game dans son chat pour choisir le jeu.",
           "en": "24/7 Twitch channel: a StreamPulse live runs day and night on a game with an active badge or Drop. The Drops panel opens it in one click; type !game in its chat to pick the game.",
+          "uk": "Канал 24/7 Twitch: StreamPulse веде пряму трансляцію вдень і вночі, граючи в гру з активним значком або Drop. Панель Drops відкриває його одним кліком; введіть !game у чаті, щоб вибрати гру.",
           "es": "Canal de Twitch 24/7: un directo de StreamPulse funciona día y noche en un juego con insignia o Drop activo. El panel Drops lo abre con un clic; escribe !game en su chat para elegir el juego.",
           "pt-BR": "Canal da Twitch 24/7: uma live da StreamPulse fica no ar dia e noite em um jogo com emblema ou Drop ativo. O painel Drops abre com um clique; digite !game no chat para escolher o jogo.",
           "de": "24/7-Twitch-Kanal: Ein StreamPulse-Live läuft Tag und Nacht mit einem Spiel, das ein aktives Abzeichen oder Drop bietet. Das Drops-Panel öffnet ihn mit einem Klick; tippe !game im Chat, um das Spiel zu wählen.",
@@ -1105,6 +1162,7 @@ export const RELEASES = [
         text: {
           "fr": "Nouvel onglet « À voir » : garde des liens Twitch, Kick et YouTube avec une note personnelle. La liste reste dans ton navigateur.",
           "en": "New “Watch later” tab: keep Twitch, Kick and YouTube links with a personal note. The list stays in your browser.",
+          "uk": "Нова вкладка «Переглянути пізніше»: зберігайте посилання Twitch, Kick та YouTube разом із особистою приміткою. Список зберігається у вашому браузері.",
           "es": "Nueva pestaña «Ver después»: guarda enlaces de Twitch, Kick y YouTube con una nota personal. La lista se queda en tu navegador.",
           "pt-BR": "Nova aba “Ver depois”: guarde links da Twitch, Kick e YouTube com uma nota pessoal. A lista fica no seu navegador.",
           "de": "Neuer Tab „Später ansehen“: Speichere Links zu Twitch, Kick und YouTube mit einer persönlichen Notiz. Die Liste bleibt in deinem Browser.",
@@ -1123,6 +1181,7 @@ export const RELEASES = [
         text: {
           "fr": "Ajout par lot : colle jusqu'à 50 pseudos ou liens de chaînes, vérifie la liste, puis ajoute-les d'un coup.",
           "en": "Bulk add: paste up to 50 usernames or channel links, review the list, then add them all at once.",
+          "uk": "Масове додавання: вставте до 50 імен користувачів або посилань на канали, перегляньте список, а потім додайте їх усі одразу.",
           "es": "Añadir en lote: pega hasta 50 nombres o enlaces de canales, revisa la lista y añádelos de una vez.",
           "pt-BR": "Adição em lote: cole até 50 nomes ou links de canais, revise a lista e adicione tudo de uma vez.",
           "de": "Mehrfach hinzufügen: Füge bis zu 50 Namen oder Kanallinks ein, prüfe die Liste und füge sie auf einmal hinzu.",
@@ -1141,6 +1200,7 @@ export const RELEASES = [
         text: {
           "fr": "Comptes liés : relie à la main les comptes Twitch, Kick et YouTube d'un même streamer. Les statistiques et réglages restent séparés.",
           "en": "Linked accounts: manually link a streamer's Twitch, Kick and YouTube accounts. Stats and settings stay separate.",
+          "uk": "Прив’язані акаунти: вручну прив’язуйте акаунти стрімера Twitch, Kick та YouTube. Статистика та налаштування залишаються окремими.",
           "es": "Cuentas vinculadas: enlaza a mano las cuentas de Twitch, Kick y YouTube de un mismo streamer. Las estadísticas y ajustes siguen separados.",
           "pt-BR": "Contas vinculadas: vincule manualmente as contas da Twitch, Kick e YouTube de um mesmo streamer. Estatísticas e ajustes continuam separados.",
           "de": "Verknüpfte Konten: Verbinde die Twitch-, Kick- und YouTube-Konten eines Streamers von Hand. Statistiken und Einstellungen bleiben getrennt.",
@@ -1159,6 +1219,7 @@ export const RELEASES = [
         text: {
           "fr": "Pause des alertes : coupe les notifications 1 h ou jusqu'à demain 8 h, en gardant si tu veux celles des streamers épinglés. Un diagnostic « Pourquoi aucune alerte ? » explique aussi ce qui bloque.",
           "en": "Alert pause: silence notifications for 1 hour or until tomorrow 8 am, optionally keeping pinned streamers. A “Why no alert?” diagnostic also explains what's blocking one.",
+          "uk": "Пауза сповіщень: вимкніть сповіщення на 1 годину або до завтра о 8:00, за бажанням залишивши закріплених стрімерів. Діагностика «Чому немає сповіщень?» також пояснює, що саме блокує їх.",
           "es": "Pausa de alertas: silencia las notificaciones 1 hora o hasta mañana a las 8 h y, si quieres, mantén las de los streamers fijados. Un diagnóstico «¿Por qué no hay alerta?» explica qué la bloquea.",
           "pt-BR": "Pausa de alertas: silencie as notificações por 1 hora ou até amanhã às 8h, mantendo, se quiser, as dos streamers fixados. Um diagnóstico «Por que nenhum alerta?» explica o que está bloqueando.",
           "de": "Alarm-Pause: Schalte Benachrichtigungen für 1 Stunde oder bis morgen 8 Uhr stumm, auf Wunsch bleiben angeheftete Streamer erlaubt. Eine Diagnose „Warum kein Alarm?“ zeigt außerdem, was blockiert.",
@@ -1177,6 +1238,7 @@ export const RELEASES = [
         text: {
           "fr": "Planificateur Drops : sélectionne des Drops, indique le temps dont tu disposes et vois ce qui peut se terminer avant la date limite. C'est une estimation.",
           "en": "Drops planner: pick Drops, say how much time you have and see what can finish before the deadline. It's an estimate.",
+          "uk": "Drops Планувальник: виберіть Drops, вкажіть, скільки часу у вас є, і подивіться, що можна встигнути зробити до дедлайну. Це приблизний розрахунок.",
           "es": "Planificador de Drops: elige Drops, indica el tiempo que tienes y mira cuáles pueden terminar antes de la fecha límite. Es una estimación.",
           "pt-BR": "Planejador de Drops: escolha Drops, informe quanto tempo você tem e veja quais dá para concluir antes do prazo. É uma estimativa.",
           "de": "Drops-Planer: Wähle Drops, gib deine verfügbare Zeit an und sieh, was vor Fristende fertig werden kann. Das ist eine Schätzung.",
@@ -1195,6 +1257,7 @@ export const RELEASES = [
         text: {
           "fr": "StreamPulse+ : un écran de bienvenue présente en quelques étapes les badges, les Drops, les alertes avancées et ton style de chat.",
           "en": "StreamPulse+: a welcome screen walks you through badges, Drops, advanced alerts and your chat style in a few steps.",
+          "uk": "StreamPulse+: екран привітання за кілька кроків ознайомить вас із значками, Drops, розширеними сповіщеннями та стилем чату.",
           "es": "StreamPulse+: una pantalla de bienvenida te presenta en pocos pasos las insignias, los Drops, las alertas avanzadas y tu estilo de chat.",
           "pt-BR": "StreamPulse+: uma tela de boas-vindas apresenta em poucos passos os emblemas, os Drops, os alertas avançados e seu estilo de chat.",
           "de": "StreamPulse+: Ein Willkommensbildschirm führt dich in wenigen Schritten durch Abzeichen, Drops, erweiterte Alarme und deinen Chat-Stil.",
@@ -1213,6 +1276,7 @@ export const RELEASES = [
         text: {
           "fr": "StreamPulse+ : dès qu'un nouveau badge gratuit paraît sur Twitch, un onglet muet part le récupérer. Option « Farm en 160p » pour consommer moins de bande passante.",
           "en": "StreamPulse+: as soon as a new free badge appears on Twitch, a muted tab goes to claim it. A “160p farming” option uses less bandwidth.",
+          "uk": "StreamPulse+: щойно на Twitch з’являється новий безкоштовний значок, вкладка у режимі без звуку переходить, щоб його отримати. Опція «фарм 160p» використовує менше трафіку.",
           "es": "StreamPulse+: en cuanto aparece una insignia gratuita nueva en Twitch, una pestaña silenciada va a recogerla. Opción «Farmeo en 160p» para gastar menos datos.",
           "pt-BR": "StreamPulse+: assim que um novo emblema gratuito aparece na Twitch, uma aba silenciosa vai buscá-lo. Opção «Farm em 160p» para gastar menos banda.",
           "de": "StreamPulse+: Sobald ein neues kostenloses Abzeichen auf Twitch erscheint, holt es ein stummer Tab ab. Die Option „Farmen in 160p“ spart Bandbreite.",
@@ -1231,6 +1295,7 @@ export const RELEASES = [
         text: {
           "fr": "Sauvegarde : elle inclut désormais les alertes de campagnes Drops, ta liste « À voir » et tes comptes liés, et la restauration fusionne l'historique au lieu de l'écraser.",
           "en": "Backup: it now includes Drops campaign alerts, your Watch later list and linked accounts, and restoring merges history instead of overwriting it.",
+          "uk": "Резервне копіювання: тепер воно включає сповіщення про кампанії Drops, ваш список «Переглянути пізніше» та пов’язані облікові записи, а також відновлення історії злиття замість її перезапису.",
           "es": "Copia de seguridad: ahora incluye las alertas de campañas de Drops, tu lista «Ver después» y las cuentas vinculadas, y al restaurar se fusiona el historial en vez de sobrescribirlo.",
           "pt-BR": "Backup: agora inclui os alertas de campanhas de Drops, sua lista «Ver depois» e as contas vinculadas, e a restauração mescla o histórico em vez de sobrescrevê-lo.",
           "de": "Sicherung: Sie enthält jetzt die Drops-Kampagnen-Alarme, deine Liste „Später ansehen“ und die verknüpften Konten, und beim Wiederherstellen wird der Verlauf zusammengeführt statt überschrieben.",
@@ -1249,6 +1314,7 @@ export const RELEASES = [
         text: {
           "fr": "Mode auto des badges : le lecteur silencieux tient mieux face aux changements de Twitch — la lecture reprend seule et la qualité cible n'est plus réappliquée en boucle.",
           "en": "Auto badge mode: the silent player copes better with Twitch changes — playback resumes by itself and the target quality is no longer re-applied in a loop.",
+          "uk": "Режим автоматичного значка: беззвучний плеєр краще справляється зі змінами Twitch — відтворення відновлюється самостійно, а цільова якість більше не застосовується повторно у циклі.",
           "es": "Modo auto de insignias: el reproductor silencioso resiste mejor los cambios de Twitch — la reproducción se reanuda sola y la calidad objetivo ya no se reaplica en bucle.",
           "pt-BR": "Modo auto dos emblemas: o player silencioso lida melhor com as mudanças da Twitch — a reprodução retoma sozinha e a qualidade alvo não é mais reaplicada em loop.",
           "de": "Auto-Modus der Abzeichen: Der stumme Player kommt besser mit Twitch-Änderungen zurecht — die Wiedergabe startet von selbst neu und die Zielqualität wird nicht mehr in Dauerschleife gesetzt.",
@@ -1267,6 +1333,7 @@ export const RELEASES = [
         text: {
           "fr": "Si tu désinstalles StreamPulse, un court sondage anonyme s'ouvre pour nous dire ce qui n'allait pas. Il ne transmet que la version et la langue, jamais d'identifiant.",
           "en": "If you uninstall StreamPulse, a short anonymous survey opens so you can tell us what went wrong. It only sends the version and language, never an identifier.",
+          "uk": "Якщо ви видалите StreamPulse, відкриється коротке анонімне опитування, щоб ви могли повідомити нам, що пішло не так. Воно надсилає лише інформацію про версію та мову, ніколи — ідентифікатор.",
           "es": "Si desinstalas StreamPulse, se abre una breve encuesta anónima para contarnos qué falló. Solo envía la versión y el idioma, nunca un identificador.",
           "pt-BR": "Se você desinstalar o StreamPulse, uma pesquisa anônima rápida é aberta para nos contar o que deu errado. Ela envia só a versão e o idioma, nunca um identificador.",
           "de": "Wenn du StreamPulse deinstallierst, öffnet sich eine kurze anonyme Umfrage, damit du uns sagen kannst, was nicht gepasst hat. Sie sendet nur Version und Sprache, nie eine Kennung.",
@@ -1288,6 +1355,7 @@ export const RELEASES = [
     title: {
       "fr": "StreamPulse+ passe à l'année",
       "en": "StreamPulse+ goes yearly",
+      "uk": "StreamPulse+ тепер і на рік",
       "es": "StreamPulse+ pasa a anual",
       "pt-BR": "StreamPulse+ agora é anual",
       "de": "StreamPulse+ jetzt jährlich",
@@ -1306,6 +1374,7 @@ export const RELEASES = [
         text: {
           "fr": "Une carte découverte peut apparaître au-dessus de la barre d'ajout : l'essai StreamPulse+ et StreamPulse Clips, fermable à tout moment.",
           "en": "A discovery card can now appear above the add bar: the StreamPulse+ trial and StreamPulse Clips — dismissible at any time.",
+          "uk": "Тепер над панеллю додавання може з’являтися картка відкриттів: пробна версія StreamPulse+ та StreamPulse Clips — їх можна закрити в будь-який момент.",
           "es": "Una tarjeta de descubrimiento puede aparecer sobre la barra de añadir: la prueba de StreamPulse+ y StreamPulse Clips, se puede cerrar en cualquier momento.",
           "pt-BR": "Um cartão de descoberta pode aparecer acima da barra de adição: o teste do StreamPulse+ e o StreamPulse Clips, fechável a qualquer momento.",
           "de": "Eine Entdeckungskarte kann über der Hinzufügen-Leiste erscheinen: der StreamPulse+-Test und StreamPulse Clips — jederzeit schließbar.",
@@ -1324,6 +1393,7 @@ export const RELEASES = [
         text: {
           "fr": "Écran StreamPulse+ : la colonne de droite défile jusqu'au bout, les récompenses de parrainage ne sont plus coupées.",
           "en": "StreamPulse+ screen: the right column now scrolls to the end, referral rewards are no longer cut off.",
+          "uk": "Екран StreamPulse+: права колонка тепер прокручується до кінця, винагороди за рефералів більше не обрізаються.",
           "es": "Pantalla StreamPulse+: la columna derecha se desplaza hasta el final, las recompensas de recomendación ya no se cortan.",
           "pt-BR": "Tela StreamPulse+: a coluna direita rola até o fim, as recompensas de indicação não são mais cortadas.",
           "de": "StreamPulse+-Bildschirm: Die rechte Spalte scrollt ganz nach unten, die Empfehlungsprämien werden nicht mehr abgeschnitten.",
@@ -1342,6 +1412,7 @@ export const RELEASES = [
         text: {
           "fr": "La pastille StreamPulse+ de la barre ressemble désormais à un bouton : elle affiche l'étoile de la marque, et pour les abonnés, la coche verte avec « Gérer mon abonnement » au survol.",
           "en": "The StreamPulse+ pill in the toolbar now looks like a button: it carries the brand star, and for subscribers a green check with “Manage my subscription” on hover.",
+          "uk": "Елемент StreamPulse на панелі інструментів тепер виглядає як кнопка: на ньому зображено логотип у вигляді зірки, а для передплатників — зелена галочка з написом «Керувати моєю передплатою» при наведенні курсору.",
           "es": "La etiqueta StreamPulse+ de la barra ahora parece un botón: muestra la estrella de la marca y, para los suscriptores, una marca verde con “Gestionar mi suscripción” al pasar el ratón.",
           "pt-BR": "O selo StreamPulse+ da barra agora parece um botão: mostra a estrela da marca e, para assinantes, um visto verde com “Gerenciar minha assinatura” ao passar o mouse.",
           "de": "Die StreamPulse+-Marke in der Leiste sieht jetzt wie eine Schaltfläche aus: mit dem Markenstern, und für Abonnenten mit grünem Häkchen und „Mein Abo verwalten“ beim Darüberfahren.",
@@ -1360,6 +1431,7 @@ export const RELEASES = [
         text: {
           "fr": "Alertes de campagnes Drops : sois prévenu quand une campagne démarre sur un jeu que tu suis, Valorant ou CS2 par exemple. Tu choisis tes jeux dans l'onglet Drops.",
           "en": "Drops campaign alerts: get notified when a campaign starts on a game you follow, Valorant or CS2 for example. Pick your games in the Drops tab.",
+          "uk": "Drops сповіщення про кампанії: отримуйте повідомлення, коли розпочинається кампанія в грі, за якою ви стежите, наприклад, у Valorant або CS2. Оберіть свої ігри на вкладці Drops.",
           "es": "Alertas de campañas de Drops: recibe un aviso cuando empieza una campaña en un juego que sigues, Valorant o CS2 por ejemplo. Elige tus juegos en la pestaña Drops.",
           "pt-BR": "Alertas de campanhas de Drops: seja avisado quando uma campanha começar num jogo que você segue, Valorant ou CS2 por exemplo. Escolha seus jogos na aba Drops.",
           "de": "Drops-Kampagnen-Alarme: erfahre, wenn eine Kampagne für ein Spiel von dir startet, zum Beispiel Valorant oder CS2. Wähle deine Spiele im Tab Drops.",
@@ -1378,6 +1450,7 @@ export const RELEASES = [
         text: {
           "fr": "StreamPulse+ : un compteur dans l'écran Plus montre ce que l'abonnement t'a fait gagner, badges farmés et Drops récupérés tout seuls.",
           "en": "StreamPulse+: a counter in the Plus screen shows what the subscription won you, badges farmed and Drops claimed on their own.",
+          "uk": "StreamPulse+: лічильник на екрані «Plus» показує, що ви отримали завдяки підписці, а також значки, зароблені та Drops отримані самостійно.",
           "es": "StreamPulse+: un contador en la pantalla Plus muestra lo que la suscripción te ha dado, insignias conseguidas y Drops reclamados solos.",
           "pt-BR": "StreamPulse+: um contador na tela Plus mostra o que a assinatura te rendeu, emblemas conquistados e Drops resgatados sozinhos.",
           "de": "StreamPulse+: Ein Zähler im Plus-Bildschirm zeigt, was das Abo dir gebracht hat: gefarmte Badges und automatisch geholte Drops.",
@@ -1396,6 +1469,7 @@ export const RELEASES = [
         text: {
           "fr": "L'écran StreamPulse+ est repensé pour plus de clarté : chaque fonction est décrite simplement.",
           "en": "The StreamPulse+ screen is redesigned for clarity: every feature is described in plain words.",
+          "uk": "Екран StreamPulse+ перероблено для більшої зрозумілості: кожна функція описана простими словами.",
           "es": "La pantalla StreamPulse+ se rediseña para ganar claridad: cada función se describe de forma sencilla.",
           "pt-BR": "A tela do StreamPulse+ foi redesenhada para ficar mais clara: cada recurso é descrito de forma simples.",
           "de": "Der StreamPulse+-Bildschirm ist übersichtlicher gestaltet: jede Funktion wird einfach beschrieben.",
@@ -1414,6 +1488,7 @@ export const RELEASES = [
         text: {
           "fr": "StreamPulse+ : nouvelle formule annuelle à 19 € par an, soit 1,58 € par mois. Déjà à vie ? Rien ne change pour toi.",
           "en": "StreamPulse+: new yearly plan at €19 a year, that is €1.58 a month. Already lifetime? Nothing changes for you.",
+          "uk": "StreamPulse+: новий річний тариф за 19 євро на рік, тобто 1,58 євро на місяць. Уже маєте довічний доступ? Для вас нічого не змінюється.",
           "es": "StreamPulse+: nueva fórmula anual a 19 € al año, es decir, 1,58 € al mes. ¿Ya eres de por vida? Nada cambia para ti.",
           "pt-BR": "StreamPulse+: novo plano anual a 19 € por ano, ou seja, 1,58 € por mês. Já é vitalício? Nada muda para você.",
           "de": "StreamPulse+: neuer Jahresplan für 19 € pro Jahr, also 1,58 € pro Monat. Schon lebenslang? Für dich ändert sich nichts.",
@@ -1432,6 +1507,7 @@ export const RELEASES = [
         text: {
           "fr": "Parrainage : un ami qui prend l'annuel a sa première année à 16,01 €, et tu touches 5 € pour chaque année qu'il paie.",
           "en": "Referrals: a friend who takes the yearly plan gets their first year for €16.01, and you earn €5 for every year they pay.",
+          "uk": "Реферальна програма: якщо ваш друг придбає річний план, він отримає перший рік за 16,01 євро, а ви зароблятимете 5 євро за кожен рік, за який він сплачуватиме.",
           "es": "Referidos: un amigo que elige el plan anual tiene su primer año por 16,01 €, y tú ganas 5 € por cada año que pague.",
           "pt-BR": "Indicações: um amigo que escolhe o plano anual paga 16,01 € no primeiro ano, e você ganha 5 € por cada ano que ele pagar.",
           "de": "Empfehlungen: Ein Freund mit Jahresabo zahlt im ersten Jahr 16,01 €, und du bekommst 5 € für jedes Jahr, das er zahlt.",
@@ -1450,6 +1526,7 @@ export const RELEASES = [
         text: {
           "fr": "Badges : le mode auto décroche maintenant 1 badge gratuit par jour, à choisir avec ▶ dans l'onglet Badges. Avec StreamPulse+, ils tombent tous en même temps.",
           "en": "Badges: auto mode now grabs 1 free badge a day — pick it with ▶ in the Badges tab. With StreamPulse+, they all drop at once.",
+          "uk": "Значки: у автоматичному режимі тепер можна отримати 1 безкоштовний значок на день — візьміть його за допомогою ▶ на вкладці «Значки». За допомогою StreamPulse+ їх можна отримати всі одразу.",
           "es": "Insignias: el modo automático consigue ahora 1 insignia gratis al día, elígela con ▶ en la pestaña Insignias. Con StreamPulse+, caen todas a la vez.",
           "pt-BR": "Emblemas: o modo automático agora conquista 1 emblema grátis por dia — escolha com ▶ na aba Emblemas. Com StreamPulse+, todos caem ao mesmo tempo.",
           "de": "Abzeichen: Der Auto-Modus holt jetzt 1 Gratis-Abzeichen pro Tag — wähle es mit ▶ im Tab Abzeichen. Mit StreamPulse+ fallen sie alle gleichzeitig.",
@@ -1468,6 +1545,7 @@ export const RELEASES = [
         text: {
           "fr": "Extension allégée : plus de 100 Ko de moins à télécharger et du code inutilisé retiré.",
           "en": "Lighter extension: over 100 KB less to download and unused code removed.",
+          "uk": "Полегшене розширення: розмір завантаження зменшено на понад 100 КБ, а невикористаний код видалено.",
           "es": "Extensión más ligera: más de 100 KB menos de descarga y código sin usar eliminado.",
           "pt-BR": "Extensão mais leve: mais de 100 KB a menos no download e código não usado removido.",
           "de": "Leichtere Erweiterung: über 100 KB weniger Download und ungenutzter Code entfernt.",
@@ -1486,6 +1564,7 @@ export const RELEASES = [
         text: {
           "fr": "Le menu Twitch suit la langue de ton navigateur quand aucun choix n'est enregistré.",
           "en": "The Twitch menu follows your browser language when no choice is saved.",
+          "uk": "Меню Twitch використовує мову вашого браузера, якщо вибір мови не збережено.",
           "es": "El menú de Twitch sigue el idioma de tu navegador cuando no hay ninguna elección guardada.",
           "pt-BR": "O menu do Twitch segue o idioma do seu navegador quando não há escolha salva.",
           "de": "Das Twitch-Menü folgt der Sprache deines Browsers, wenn keine Wahl gespeichert ist.",
@@ -1507,6 +1586,7 @@ export const RELEASES = [
     title: {
       "fr": "Une nouvelle adresse",
       "en": "A new address",
+      "uk": "Нова адреса",
       "es": "Una nueva dirección",
       "pt-BR": "Um novo endereço",
       "de": "Eine neue Adresse",
@@ -1525,6 +1605,7 @@ export const RELEASES = [
         text: {
           "fr": "StreamPulse a une nouvelle adresse : streampulse.tech. La clé StreamPulse+, le badge communautaire et les jetons passent désormais par ce domaine.",
           "en": "StreamPulse has a new home: streampulse.tech. Your StreamPulse+ key, the community badge and tokens now go through this domain.",
+          "uk": "StreamPulse має нову домашню сторінку: streampulse.tech. Ваш ключ StreamPulse+, значок спільноти та токени тепер проходять через цей домен.",
           "es": "StreamPulse tiene nueva dirección: streampulse.tech. Tu clave StreamPulse+, la insignia de la comunidad y los tokens pasan ahora por este dominio.",
           "pt-BR": "O StreamPulse tem um novo endereço: streampulse.tech. Sua chave StreamPulse+, o emblema da comunidade e os tokens agora passam por este domínio.",
           "de": "StreamPulse hat eine neue Adresse: streampulse.tech. Dein StreamPulse+-Schlüssel, das Community-Abzeichen und die Tokens laufen jetzt über diese Domain.",
@@ -1546,6 +1627,7 @@ export const RELEASES = [
     title: {
       "fr": "Une demande d'avis plus polie",
       "en": "A gentler review ask",
+      "uk": "Більш ввічливе прохання про відгук",
       "es": "Una petición de reseña más amable",
       "pt-BR": "Um pedido de avaliação mais gentil",
       "de": "Eine höflichere Bewertungsanfrage",
@@ -1564,6 +1646,7 @@ export const RELEASES = [
         text: {
           "fr": "La demande d'avis attend un moment utile récent (points gagnés ou temps de visionnage des deux derniers jours), s'affiche au plus trois fois, et « Plus tard » la repousse de deux mois au lieu d'un.",
           "en": "The review ask now waits for a recent useful moment (points earned or watch time in the last two days), shows at most three times, and \"Later\" pushes it back two months instead of one.",
+          "uk": "Запит на огляд тепер очікує на найсвіжіший відповідний момент (зароблені бали або час перегляду за останні два дні), показується не більше трьох разів, а кнопка «Пізніше» відкладає його на два місяці замість одного.",
           "es": "La petición de reseña espera un momento útil reciente (puntos ganados o tiempo de visión de los dos últimos días), aparece como máximo tres veces, y «Más tarde» la aplaza dos meses en lugar de uno.",
           "pt-BR": "O pedido de avaliação espera um momento útil recente (pontos ganados ou tempo de assistência nos últimos dois dias), aparece no máximo três vezes, e \"Mais tarde\" o adia em dois meses em vez de um.",
           "de": "Die Bewertungsanfrage wartet auf einen aktuellen nützlichen Moment (Punkte oder Sehzeit in den letzten zwei Tagen), erscheint höchstens dreimal, und \"Später\" verschiebt sie um zwei Monate statt einen.",
@@ -1585,6 +1668,7 @@ export const RELEASES = [
     title: {
       "fr": "Des badges aux vraies dates",
       "en": "Badges with real dates",
+      "uk": "Значки з реальними датами",
       "es": "Insignias con fechas reales",
       "pt-BR": "Emblemas com datas reais",
       "de": "Abzeichen mit echten Daten",
@@ -1603,6 +1687,7 @@ export const RELEASES = [
         text: {
           "fr": "Onglet Badges : chaque badge est En cours, À venir ou Terminé, avec les vraies dates des campagnes Twitch, son coût, ce qu'il faut faire et la date à laquelle Twitch l'a ajouté. Tout se met à jour seul dès qu'un onglet Twitch est ouvert.",
           "en": "Badges tab: every badge is Active, Upcoming or Ended, with the real dates of the Twitch campaigns, its cost, what to do and the date Twitch added it. Everything updates on its own whenever a Twitch tab is open.",
+          "uk": "Вкладка «Значки»: кожен значок має статус «Активний», «Майбутній» або «Завершений», із зазначенням реальних дат кампаній Twitch, їхньої вартості, що потрібно зробити та дати Twitch, коли його додано. Усе оновлюється автоматично щоразу, коли відкрита вкладка Twitch.",
           "es": "Pestaña Insignias: cada insignia está Activa, Próxima o Terminada, con las fechas reales de las campañas de Twitch, su coste, qué hay que hacer y la fecha en que Twitch la añadió. Todo se actualiza solo en cuanto hay una pestaña de Twitch abierta.",
           "pt-BR": "Aba Emblemas: cada emblema aparece como Ativo, Em breve ou Encerrado, com as datas reais das campanhas da Twitch, o custo, o que fazer e a data em que a Twitch o adicionou. Tudo se atualiza sozinho assim que uma aba da Twitch está aberta.",
           "de": "Tab Abzeichen: Jedes Abzeichen ist Aktiv, Demnächst oder Beendet, mit den echten Daten der Twitch-Kampagnen, den Kosten, der Aufgabe und dem Datum, an dem Twitch es hinzugefügt hat. Alles aktualisiert sich von selbst, sobald ein Twitch-Tab offen ist.",
@@ -1621,6 +1706,7 @@ export const RELEASES = [
         text: {
           "fr": "Les badges terminés ne sont plus présentés comme obtenables, et les badges à venir ne sont plus annoncés comme disponibles avant leur début.",
           "en": "Ended badges are no longer shown as earnable, and upcoming badges are no longer announced as available before they start.",
+          "uk": "Значки, термін дії яких закінчився, більше не відображаються як такі, що можна заробити, а майбутні значки більше не анонсуються як доступні до початку їхнього терміну дії.",
           "es": "Las insignias terminadas ya no aparecen como obtenibles, y las próximas ya no se anuncian como disponibles antes de empezar.",
           "pt-BR": "Os emblemas encerrados não aparecem mais como obtíveis, e os que estão por vir não são mais anunciados como disponíveis antes de começar.",
           "de": "Beendete Abzeichen werden nicht mehr als erhältlich angezeigt, und kommende Abzeichen werden nicht mehr vor ihrem Start als verfügbar angekündigt.",
@@ -1639,6 +1725,7 @@ export const RELEASES = [
         text: {
           "fr": "Ultramarine, ACE COMBAT 8 Nugget, Koromaru et d20 sont enfin reliés à leur campagne : leur date de fin s'affiche, et d20 peut s'obtenir en mode auto.",
           "en": "Ultramarine, ACE COMBAT 8 Nugget, Koromaru and d20 are finally linked to their campaign: their end date shows, and d20 can be earned in auto mode.",
+          "uk": "Ultramarine, ACE COMBAT 8 Nugget, Koromaru та d20 нарешті прив’язані до своєї кампанії: відображається дата їхнього закінчення, а d20 можна заробляти в автоматичному режимі.",
           "es": "Ultramarine, ACE COMBAT 8 Nugget, Koromaru y d20 por fin están vinculadas a su campaña: se muestra su fecha de fin y d20 se puede obtener en modo automático.",
           "pt-BR": "Ultramarine, ACE COMBAT 8 Nugget, Koromaru e d20 finalmente estão ligados à sua campanha: a data de término aparece e d20 pode ser obtido no modo automático.",
           "de": "Ultramarine, ACE COMBAT 8 Nugget, Koromaru und d20 sind endlich mit ihrer Kampagne verknüpft: Das Enddatum wird angezeigt, und d20 lässt sich im Automodus holen.",
@@ -1657,6 +1744,7 @@ export const RELEASES = [
         text: {
           "fr": "Mode auto des badges : l'onglet épinglé reste muet, mais le lecteur Twitch n'est plus jamais muet ni à 0 % (2 % au minimum), pour que Twitch compte bien le temps de visionnage.",
           "en": "Badge auto mode: the pinned tab stays muted, but the Twitch player is never muted or at 0% anymore (2% minimum), so Twitch properly counts the watch time.",
+          "uk": "Автоматичний режим значка: закріплена вкладка залишається вимкненою, але плеєр Twitch більше ніколи не вимикається і не перебуває на рівні 0% (мінімум 2%), тому Twitch коректно підраховує час перегляду.",
           "es": "Modo automático de insignias: la pestaña fijada sigue silenciada, pero el reproductor de Twitch ya nunca está silenciado ni al 0 % (2 % como mínimo), para que Twitch cuente bien el tiempo visto.",
           "pt-BR": "Modo automático de emblemas: a aba fixada continua sem som, mas o player da Twitch nunca mais fica mudo nem em 0% (no mínimo 2%), para a Twitch contar direito o tempo assistido.",
           "de": "Automodus für Abzeichen: Der angeheftete Tab bleibt stumm, aber der Twitch-Player ist nie mehr stumm oder auf 0 % (mindestens 2 %), damit Twitch die Zuschauzeit richtig zählt.",
@@ -1675,6 +1763,7 @@ export const RELEASES = [
         text: {
           "fr": "Réglages, rubrique Général : plus de grande bande vide en bas du popup, et la colonne « Rubriques des Réglages » de la disposition liste de nouveau toutes les rubriques.",
           "en": "Settings, General section: no more large empty band at the bottom of the popup, and the \"Settings sections\" layout column lists every section again.",
+          "uk": "Налаштування, розділ «Загальні»: у нижній частині спливаючого вікна більше немає великої порожньої смуги, а у стовпці «Розділи налаштувань» знову перелічено всі розділи.",
           "es": "Ajustes, sección General: ya no hay una gran franja vacía al final de la ventana, y la columna «Secciones de Ajustes» de la disposición vuelve a mostrar todas las secciones.",
           "pt-BR": "Configurações, seção Geral: não há mais uma grande faixa vazia no fim do pop-up, e a coluna \"Seções das Configurações\" do layout volta a listar todas as seções.",
           "de": "Einstellungen, Bereich Allgemein: kein großer leerer Streifen mehr unten im Popup, und die Layout-Spalte „Bereiche der Einstellungen“ listet wieder alle Bereiche auf.",
@@ -1695,6 +1784,7 @@ export const RELEASES = [
     title: {
       "fr": "Fluidité et accès Discord",
       "en": "Smoothness and Discord access",
+      "uk": "Плавність роботи та доступ до Discord",
       "es": "Fluidez y acceso a Discord",
       "pt-BR": "Fluidez e acesso ao Discord",
       "de": "Flüssigkeit und Discord-Zugang",
@@ -1712,6 +1802,7 @@ export const RELEASES = [
         text: {
           "fr": "Correction du blocage de l'interface lors de l'ouverture du menu Plus : la barre supérieure et les onglets restent pleinement interactifs.",
           "en": "Fixed interface freeze when opening the Plus menu: the top bar and tabs remain fully interactive.",
+          "uk": "Виправлено зависання інтерфейсу під час відкриття меню «Плюс»: верхня панель та вкладки залишаються повністю інтерактивними.",
           "es": "Corrección del bloqueo de la interfaz al abrir el menú Plus: la barra superior y las pestañas siguen siendo interactivas.",
           "pt-BR": "Correção do travamento da interface ao abrir o menu Plus: a barra superior e as abas permanecem totalmente interativas.",
           "de": "Fehlerbehebung beim Einfrieren der Benutzeroberfläche beim Öffnen des Plus-Menüs: Die obere Leiste und die Tabs bleiben vollständig interaktiv.",
@@ -1729,6 +1820,7 @@ export const RELEASES = [
         text: {
           "fr": "Ajustement de l'alignement et de la largeur du bouton de recherche de streamer dans le popup pour éviter tout saut de ligne.",
           "en": "Adjusted alignment and width of the streamer search button in the popup to prevent line breaks.",
+          "uk": "Скориговано вирівнювання та ширину кнопки пошуку стрімерів у спливаючому вікні, щоб уникнути розривів рядків.",
           "es": "Ajuste de alineación y ancho del botón de búsqueda de streamer en el popup para evitar saltos de línea.",
           "pt-BR": "Ajuste de alinhamento e largura do botão de busca de streamer no popup para evitar quebra de linha.",
           "de": "Ausrichtung und Breite der Streamer-Suchschaltfläche im Pop-up angepasst, um Zeilenumbrüche zu verhindern.",
@@ -1746,6 +1838,7 @@ export const RELEASES = [
         text: {
           "fr": "Accès direct au serveur officiel Discord StreamPulse depuis les réglages pour rejoindre la communauté et contacter le support.",
           "en": "Direct access to the official StreamPulse Discord server from settings to join the community and reach support.",
+          "uk": "Прямий доступ до офіційного сервера StreamPulse Discord з налаштувань, щоб приєднатися до спільноти та звернутися до служби підтримки.",
           "es": "Acceso directo al servidor oficial de Discord de StreamPulse desde los ajustes para unirse a la comunidad y contactar al soporte.",
           "pt-BR": "Acesso direto ao servidor oficial do Discord do StreamPulse a partir das configurações para entrar na comunidade e falar com o suporte.",
           "de": "Direkter Zugriff auf den offiziellen StreamPulse-Discord-Server über die Einstellungen, um der Community beizutreten und Support zu erhalten.",
@@ -1764,13 +1857,14 @@ export const RELEASES = [
   {
     version: "26.9.33",
     date: "2026-10-01",
-    title: { "fr": "Ta liste te suit, YouTube aussi", "en": "Your list follows you, YouTube too", "es": "Tu lista te sigue, YouTube también", "pt-BR": "Sua lista acompanha você, YouTube também", "de": "Deine Liste folgt dir, YouTube auch", "it": "La tua lista ti segue, YouTube incluso", "pl": "Twoja lista podąża za Tobą, YouTube też", "tr": "Listen seninle gelir, YouTube dahil", "ru": "Ваш список следует за вами, и YouTube тоже", "ja": "リストは同期、YouTubeも対応", "ko": "목록이 따라갑니다, YouTube도 지원", "ar": "قائمتك تتبعك، وYouTube أيضًا" },
+    title: { "fr": "Ta liste te suit, YouTube aussi", "en": "Your list follows you, YouTube too", "uk": "Ваш список іде за вами, YouTube теж", "es": "Tu lista te sigue, YouTube también", "pt-BR": "Sua lista acompanha você, YouTube também", "de": "Deine Liste folgt dir, YouTube auch", "it": "La tua lista ti segue, YouTube incluso", "pl": "Twoja lista podąża za Tobą, YouTube też", "tr": "Listen seninle gelir, YouTube dahil", "ru": "Ваш список следует за вами, и YouTube тоже", "ja": "リストは同期、YouTubeも対応", "ko": "목록이 따라갑니다, YouTube도 지원", "ar": "قائمتك تتبعك، وYouTube أيضًا" },
     changes: [
       {
         type: "new",
         text: {
           "fr": "Le badge communautaire et les cosmétiques StreamPulse+ débarquent dans le tchat Kick : ton badge et ta paint de pseudo s'affichent comme sur Twitch, avec la couleur du tchat Kick. Réglage « Badge communautaire » inchangé.",
           "en": "The community badge and StreamPulse+ cosmetics arrive in the Kick chat: your badge and name paint now show just like on Twitch, tinted with the Kick chat color. The “Community badge” setting is unchanged.",
+          "uk": "Значок спільноти та StreamPulse+ косметичні елементи з’явилися в чаті Kick: ваш значок і колір імені тепер відображаються так само, як на Twitch, забарвлені у колір чату Kick. Налаштування «Значок спільноти» залишилося без змін.",
           "es": "El badge comunitario y los cosméticos de StreamPulse+ llegan al chat de Kick: tu badge y la pintura de tu pseudo se muestran como en Twitch, con el color del chat de Kick. El ajuste «Badge comunitario» no cambia.",
           "pt-BR": "O selo comunitário e os cosméticos do StreamPulse+ chegam ao chat do Kick: seu selo e a pintura do seu nome aparecem como na Twitch, com a cor do chat do Kick. A configuração \"Selo comunitário\" permanece a mesma.",
           "de": "Der Community-Badge und die StreamPulse+-Kosmetika kommen in den Kick-Chat: Dein Badge und dein Namens-Effekt erscheinen wie auf Twitch, getönt in der Kick-Chat-Farbe. Die Einstellung „Community-Badge“ bleibt unverändert.",
@@ -1788,6 +1882,7 @@ export const RELEASES = [
         text: {
           "fr": "Le menu Badges est marqué « bêta », comme la fonctionnalité qu'il reste : l'étiquette est posée sur l'onglet et sur le panneau, pas seulement sur le badge communautaire.",
           "en": "The Badges menu is now labeled “beta”, matching the feature it still is: the tag sits on the tab and the panel, no longer only on the community badge setting.",
+          "uk": "Меню «Значки» тепер має позначку «бета», що відповідає статусу цієї функції: позначка відображається на вкладці та панелі, а не лише в налаштуваннях значків спільноти.",
           "es": "El menú Badges ahora lleva la etiqueta «beta», acorde a lo que todavía es: la etiqueta está en la pestaña y en el panel, no solo en el ajuste del badge comunitario.",
           "pt-BR": "O menu Badges agora recebe o rótulo \"beta\", coerente com o que ele ainda é: a etiqueta está na aba e no painel, não apenas na configuração do selo comunitário.",
           "de": "Das Badges-Menü trägt jetzt das Label „Beta“, passend dazu, was es noch ist: Das Etikett sitzt auf dem Tab und im Panel, nicht mehr nur an der Community-Badge-Einstellung.",
@@ -1805,6 +1900,7 @@ export const RELEASES = [
         text: {
           "fr": "Kick au niveau de Twitch : la favicon de l'onglet prend la photo du streamer suivi avec sa pastille de direct, un indicateur de latence rejoint les contrôles du lecteur, et les avatars manquants se rattrapent tout seuls au fil des sondages.",
           "en": "Kick caught up with Twitch: the tab favicon shows the followed streamer's photo with its live dot, a latency indicator joins the player controls, and missing avatars backfill themselves over successive polls.",
+          "uk": "Kick наздогнав Twitch: фавікон вкладки показує фотографію стрімера, на якого підписано, із позначкою «у прямому ефірі», до елементів керування плеєром додано індикатор затримки, а відсутні аватари заповнюються під час послідовних опитувань.",
           "es": "Kick al nivel de Twitch: la favicon de la pestaña muestra la foto del streamer seguido con su punto de directo, un indicador de latencia se une a los controles del reproductor, y los avatares que falten se rellenan solos con los sondeos.",
           "pt-BR": "Kick no nível da Twitch: o favicon da aba mostra a foto do streamer seguido com seu ponto de live, um indicador de latência entra nos controles do player, e avatares ausentes se preenchem sozinhos nas verificações.",
           "de": "Kick auf Twitch-Niveau: Der Tab-Favicon zeigt das Foto des gefolgten Streamers mit Live-Punkt, ein Latenzindikator hält in der Player-Leiste Einzug, und fehlende Avatare füllen sich mit den Abfragen von selbst auf.",
@@ -1822,6 +1918,7 @@ export const RELEASES = [
         text: {
           "fr": "Historique en CSV : exporte le détail de tes points et de tes Drops depuis Réglages → Sauvegarde, et réimporte-les sur un autre navigateur — la fusion ignore les doublons.",
           "en": "History as CSV: export your points and Drops details from Settings → Backup, and re-import them on another browser — merging skips duplicates.",
+          "uk": "Історія у форматі CSV: експортуйте свої бали та деталі Drops у розділі «Налаштування» → «Резервне копіювання» та імпортуйте їх у інший браузер — під час об’єднання дублікати будуть пропущені.",
           "es": "Historial en CSV: exporta el detalle de tus puntos y Drops desde Ajustes → Copia de seguridad, y reimporta en otro navegador; la fusión ignora duplicados.",
           "pt-BR": "Histórico em CSV: exporte o detalhe dos seus pontos e Drops em Configurações → Backup e reimporte em outro navegador — a mesclagem ignora duplicados.",
           "de": "Verlauf als CSV: Exportiere deine Punkt- und Drop-Details über Einstellungen → Backup und importiere sie in einem anderen Browser erneut — Zusammenführen überspringt Duplikate.",
@@ -1839,6 +1936,7 @@ export const RELEASES = [
         text: {
           "fr": "Alt+Shift+S ouvre le popup, raccourci modifiable dans chrome://extensions/shortcuts.",
           "en": "Alt+Shift+S opens the pop-up, editable in chrome://extensions/shortcuts.",
+          "uk": "Комбінація клавіш Alt+Shift+S відкриває спливаюче вікно, яке можна редагувати в chrome://extensions/shortcuts.",
           "es": "Alt+Shift+S abre el popup, editable en chrome://extensions/shortcuts.",
           "pt-BR": "Alt+Shift+S abre o pop-up, editável em chrome://extensions/shortcuts.",
           "de": "Alt+Shift+S öffnet das Pop-up, änderbar unter chrome://extensions/shortcuts.",
@@ -1856,6 +1954,7 @@ export const RELEASES = [
         text: {
           "fr": "Dans l'onglet Drops, le temps qu'il te reste est explicite : « reste 2 h 14 » plutôt qu'un chiffre nu.",
           "en": "In the Drops tab, the time you have left is explicit: “2 h 14 left” instead of a bare number.",
+          "uk": "На вкладці Drops час, що залишився, вказано чітко: «Залишилося 2 год 14 хв» замість простого числа.",
           "es": "En la pestaña de Drops, el tiempo que te queda es explícito: «quedan 2 h 14» en lugar de una cifra suelta.",
           "pt-BR": "Na aba de Drops, o tempo que falta é explícito: «faltam 2 h 14» em vez de um número solto.",
           "de": "Im Drops-Tab ist die Restzeit ausdrücklich: „noch 2 Std. 14“ statt einer nackten Zahl.",
@@ -1873,6 +1972,7 @@ export const RELEASES = [
         text: {
           "fr": "Synchronisation entre tes appareils, activable dans Réglages → Données : tes streamers, tes épingles, tes réglages et ta langue suivent ton navigateur, sans compte ni serveur StreamPulse. Ton temps de visionnage, tes points et tes Drops restent sur chaque appareil. Elle t'est proposée dès l'installation.",
           "en": "Sync across your devices, toggle it in Settings → Data: your streamers, pins, settings and language follow your browser — no account, no StreamPulse server. Watch time, points and Drops stay on each device. It's offered right at installation.",
+          "uk": "Синхронізація між вашими пристроями: увімкніть її в меню «Налаштування» → «Дані» — ваші стрімери, закріплені публікації, налаштування та мова слідують за вашим браузером — без облікового запису, без сервера StreamPulse. Час перегляду, бали та Drops зберігаються на кожному пристрої. Ця функція пропонується одразу під час встановлення.",
           "es": "Sincronización entre tus dispositivos, activable en Ajustes → Datos: tus streamers, fijados, ajustes e idioma siguen tu navegador, sin cuenta ni servidor de StreamPulse. Tu tiempo de visualización, puntos y Drops se quedan en cada dispositivo. Se propone ya en la instalación.",
           "pt-BR": "Sincronização entre seus dispositivos, ativável em Configurações → Dados: seus streamers, fixados, configurações e idioma seguem seu navegador, sem conta nem servidor do StreamPulse. Seu tempo assistido, pontos e Drops ficam em cada dispositivo. Ela é oferecida já na instalação.",
           "de": "Synchronisierung zwischen deinen Geräten, aktivierbar unter Einstellungen → Daten: Deine Streamer, angehefteten Einträge, Einstellungen und Sprache folgen deinem Browser — ohne Konto, ohne StreamPulse-Server. Zuschauzeit, Punkte und Drops bleiben auf jedem Gerät. Sie wird schon bei der Installation vorgeschlagen.",
@@ -1890,6 +1990,7 @@ export const RELEASES = [
         text: {
           "fr": "Le temps de visionnage compte maintenant YouTube : regarde un direct d'une chaîne suivie et les minutes partent dans tes statistiques et ton Récap, avatar à l'appui. Les vidéos normales et les rediffusions ne comptent pas.  Le bouton « Ajouter à StreamPulse » est aussi là sur les pages de chaîne YouTube et Kick.",
           "en": "Watch time now counts YouTube: watch a live from a followed channel and the minutes land in your stats and Recap, avatar included. Regular videos and replays don't count.  The “Add to StreamPulse” button is there on YouTube and Kick channel pages too.",
+          "uk": "Тепер час перегляду враховується YouTube: дивіться пряму трансляцію з каналу, на який ви підписані, і хвилини перегляду потрапляють у вашу статистику та Recap, включаючи аватар. Звичайні відео та повтори не враховуються.  Кнопка «Додати до StreamPulse» також є на сторінках каналів YouTube та Kick.",
           "es": "El tiempo de visualización ahora cuenta YouTube: mira un directo de un canal seguido y los minutos van a tus estadísticas y tu resumen, con su avatar. Los vídeos normales y las repeticiones no cuentan.  El botón «Añadir a StreamPulse» también está en las páginas de canal de YouTube y Kick.",
           "pt-BR": "O tempo assistido agora conta o YouTube: assista a uma live de um canal seguido e os minutos vão para suas estatísticas e seu resumo, com avatar. Vídeos normais e replays não contam.  O botão “Adicionar ao StreamPulse” também está nas páginas de canal do YouTube e da Kick.",
           "de": "Die Zuschauzeit zählt jetzt YouTube: Schaue einen Stream eines gefolgten Kanals, und die Minuten landen in deiner Statistik und deinem Rückblick, Avatar inklusive. Normale Videos und Wiederholungen zählen nicht.  Der Button «Zu StreamPulse hinzufügen» ist auch auf YouTube- und Kick-Kanalseiten zu Hause.",
@@ -1907,6 +2008,7 @@ export const RELEASES = [
         text: {
           "fr": "Onglet Badges enrichi : progression des campagnes à objectif de minutes avec le temps qui reste (estimée sur ton temps regardé, Twitch n'expose pas l'avancée), les récompenses de type code sont étiquetées comme telles et les badges sans lien de catégorie sont enfin cliquables. Les nouveaux paliers d'une série de badges sont signalés comme nouveautés.",
           "en": "Richer Badges tab: progress on minute-goal campaigns with the time left (estimated from your watch time — Twitch exposes no progress), code rewards are labelled as such and badges without a category link are finally clickable. New tiers within an existing badge series are flagged as new.",
+          "uk": "Розширена вкладка «Значки»: прогрес у кампаніях із хвилинними цілями із зазначенням часу, що залишився (розрахований на основі вашого часу перегляду — Twitch не відображає прогрес), нагороди за код позначені як такі, а значки без посилання на категорію нарешті можна натискати. Нові рівні в існуючій серії значків позначені як нові.",
           "es": "Pestaña de insignias más rica: progreso de las campañas con objetivo de minutos y el tiempo que falta (estimado según lo que miraste, Twitch no da el avance), las recompensas de código se etiquetan como tales y las insignias sin enlace de categoría por fin se pueden pulsar. Los nuevos niveles de una serie de insignias se marcan como novedades.",
           "pt-BR": "Aba de distintivos mais rica: progresso das campanhas com meta de minutos e o tempo que falta (estimado pelo que você assistiu, a Twitch não mostra o avanço), recompensas de código são rotuladas como tal e distintivos sem link de categoria agora são clicáveis. Novos níveis de uma série de distintivos são marcados como novidades.",
           "de": "Richerer Abzeichen-Tab: Fortschritt bei Kampagnen mit Minutenziel samt Restzeit (aus deiner Zuschauzeit geschätzt, Twitch liefert keinen Fortschritt), Code-Belohnungen werden als solche gekennzeichnet und Abzeichen ohne Kategorie-Link sind endlich anklickbar. Neue Stufen einer bestehenden Abzeichen-Serie werden als Neuheit markiert.",
@@ -1924,6 +2026,7 @@ export const RELEASES = [
         text: {
           "fr": "Les notifications de nouveaux badges ont leur propre réglage, découplé des alertes de Drops — et les cinq interrupteurs d'alertes du popup répondent de nouveau : ils n'étaient plus câblés.",
           "en": "New-badge notifications get their own setting, decoupled from Drops alerts — and the five alert switches in the pop-up respond again: they had come unwired.",
+          "uk": "Сповіщення про нові значки отримали власне налаштування, відокремлене від сповіщень Drops, — і п’ять перемикачів сповіщень у спливаючому вікні знову реагують: раніше вони не працювали.",
           "es": "Las notificaciones de nuevas insignias tienen su propio ajuste, separado de las alertas de Drops, y los cinco interruptores de alertas del popup vuelven a responder: habían quedado sin conectar.",
           "pt-BR": "As notificações de novos distintivos ganham configuração própria, separada das alertas de Drops — e os cinco interruptores de alerta do pop-up voltam a responder: estavam sem fiação.",
           "de": "Benachrichtigungen über neue Abzeichen haben eine eigene Einstellung, entkoppelt von den Drop-Benachrichtigungen — und die fünf Benachrichtigungsschalter im Pop-up reagieren wieder: Sie waren nicht mehr verdrahtet.",
@@ -1942,13 +2045,14 @@ export const RELEASES = [
   {
     version: "26.9.32",
     date: "2026-10-01",
-    title: { "fr": "Le bandeau reste où tu le laisses", "en": "The strip stays where you leave it", "es": "La tira se queda donde la dejas", "pt-BR": "A faixa fica onde você deixa", "de": "Die Leiste bleibt, wo du sie lässt", "it": "La barra resta dove la lasci", "pl": "Pasek zostaje tam, gdzie go zostawisz", "tr": "Şerit bıraktığın yerde kalıyor", "ru": "Лента остаётся там, где вы её оставили", "ja": "バーは動かした位置に留まります", "ko": "스트립은 놓은 자리에 그대로 있습니다", "ar": "الشريط يبقى حيث تتركه" },
+    title: { "fr": "Le bandeau reste où tu le laisses", "en": "The strip stays where you leave it", "uk": "Смужка залишається там, де ви її залишили", "es": "La tira se queda donde la dejas", "pt-BR": "A faixa fica onde você deixa", "de": "Die Leiste bleibt, wo du sie lässt", "it": "La barra resta dove la lasci", "pl": "Pasek zostaje tam, gdzie go zostawisz", "tr": "Şerit bıraktığın yerde kalıyor", "ru": "Лента остаётся там, где вы её оставили", "ja": "バーは動かした位置に留まります", "ko": "스트립은 놓은 자리에 그대로 있습니다", "ar": "الشريط يبقى حيث تتركه" },
     changes: [
       {
         type: "fix",
         text: {
           "fr": "Dans le popup, le bandeau des lives ne se recentre plus tout seul pendant que tu le fais défiler : il reste où tu le laisses.",
           "en": "In the pop-up, the live strip no longer snaps back on its own while you scroll it: it stays where you leave it.",
+          "uk": "У спливаючому вікні смуга прямої трансляції більше не повертається на місце самостійно під час прокручування: вона залишається там, де ви її залишили.",
           "es": "En el popup, la tira de directos ya no se recentra sola mientras la desplazas: se queda donde la dejas.",
           "pt-BR": "No pop-up, a faixa de lives não volta mais sozinha para o centro enquanto você rola: ela fica onde você deixa.",
           "de": "Im Pop-up zentriert sich die Live-Leiste nicht mehr von selbst, während du sie scrollst: Sie bleibt, wo du sie lässt.",
@@ -1966,6 +2070,7 @@ export const RELEASES = [
         text: {
           "fr": "La liste des badges et des campagnes se met à jour dès que tu ouvres le popup, au lieu d'attendre la prochaine vérification automatique.",
           "en": "The badges and campaigns list updates as soon as you open the pop-up, instead of waiting for the next automatic check.",
+          "uk": "Список значків та кампаній оновлюється одразу після відкриття спливаючого вікна, замість того, щоб чекати на наступну автоматичну перевірку.",
           "es": "La lista de insignias y campañas se actualiza en cuanto abres el popup, en lugar de esperar la próxima comprobación automática.",
           "pt-BR": "A lista de distintivos e campanhas é atualizada assim que você abre o pop-up, em vez de esperar a próxima verificação automática.",
           "de": "Die Liste der Abzeichen und Kampagnen aktualisiert sich, sobald du das Pop-up öffnest, statt auf die nächste automatische Prüfung zu warten.",
@@ -1984,13 +2089,14 @@ export const RELEASES = [
   {
     version: "26.9.31",
     date: "2026-09-30",
-    title: { "fr": "Les boutons de Twitch répondent de nouveau", "en": "Twitch buttons respond again", "es": "Los botones de Twitch responden de nuevo", "pt-BR": "Os botões na Twitch voltaram a responder", "de": "Die Twitch-Schaltflächen reagieren wieder", "it": "I pulsanti su Twitch rispondono di nuovo", "pl": "Przyciski na Twitchu znowu działają", "tr": "Twitch düğmeleri yeniden çalışıyor", "ru": "Кнопки на Twitch снова работают", "ja": "Twitch上のボタンが再び動作します", "ko": "Twitch의 버튼이 다시 작동합니다", "ar": "أزرار Twitch تستجيب من جديد" },
+    title: { "fr": "Les boutons de Twitch répondent de nouveau", "en": "Twitch buttons respond again", "uk": "Кнопки Twitch знову працюють", "es": "Los botones de Twitch responden de nuevo", "pt-BR": "Os botões na Twitch voltaram a responder", "de": "Die Twitch-Schaltflächen reagieren wieder", "it": "I pulsanti su Twitch rispondono di nuovo", "pl": "Przyciski na Twitchu znowu działają", "tr": "Twitch düğmeleri yeniden çalışıyor", "ru": "Кнопки на Twitch снова работают", "ja": "Twitch上のボタンが再び動作します", "ko": "Twitch의 버튼이 다시 작동합니다", "ar": "أزرار Twitch تستجيب من جديد" },
     changes: [
       {
         type: "fix",
         text: {
           "fr": "Sur Twitch, retirer un streamer avec le bouton « Ajouter à StreamPulse » marche de nouveau, et les réglages du panneau et du tiroir StreamPulse s'enregistrent de nouveau.",
           "en": "On Twitch, removing a streamer with the “Add to StreamPulse” button works again, and the settings in the StreamPulse panel and drawer save again.",
+          "uk": "На Twitch знову працює видалення стрімера за допомогою кнопки «Додати до StreamPulse», а налаштування на панелі StreamPulse та у висувному меню знову зберігаються.",
           "es": "En Twitch, quitar un streamer con el botón «Añadir a StreamPulse» vuelve a funcionar, y los ajustes del panel y del cajón de StreamPulse se guardan de nuevo.",
           "pt-BR": "Na Twitch, remover um streamer com o botão “Adicionar ao StreamPulse” voltou a funcionar, e os ajustes do painel e da gaveta do StreamPulse voltam a ser salvos.",
           "de": "Auf Twitch funktioniert das Entfernen eines Streamers über «Zu StreamPulse hinzufügen» wieder, und die Einstellungen im StreamPulse-Panel und -Drawer werden wieder gespeichert.",
@@ -2008,6 +2114,7 @@ export const RELEASES = [
         text: {
           "fr": "Le bouton « Ajouter à StreamPulse » retrouve son fond violet sur les pages Twitch.",
           "en": "The “Add to StreamPulse” button gets its purple background back on Twitch pages.",
+          "uk": "Кнопка «Додати до StreamPulse» знову отримала фіолетовий фон на сторінках Twitch.",
           "es": "El botón «Añadir a StreamPulse» recupera su fondo morado en las páginas de Twitch.",
           "pt-BR": "O botão “Adicionar ao StreamPulse” recupera o fundo roxo nas páginas da Twitch.",
           "de": "Die Schaltfläche «Zu StreamPulse hinzufügen» hat auf Twitch-Seiten wieder ihren violetten Hintergrund.",
@@ -2026,13 +2133,14 @@ export const RELEASES = [
   {
     version: "26.9.30",
     date: "2026-09-28",
-    title: { "fr": "Un popup plus vif, des réglages clairs", "en": "A snappier popup, clearer settings", "es": "Un popup más ágil, ajustes más claros", "pt-BR": "Um popup mais ágil, ajustes mais claros", "de": "Schnelleres Popup, klarere Einstellungen", "it": "Popup più rapido, impostazioni più chiare", "pl": "Szybszy popup, czytelniejsze ustawienia", "tr": "Daha hızlı popup, daha net ayarlar", "ru": "Быстрее попап, понятнее настройки", "ja": "より速いポップアップ、わかりやすい設定", "ko": "더 빠른 팝업, 더 명확한 설정", "ar": "نافذة منبثقة أسرع وإعدادات أوضح" },
+    title: { "fr": "Un popup plus vif, des réglages clairs", "en": "A snappier popup, clearer settings", "uk": "Жвавіше спливаюче вікно, зрозуміліші налаштування", "es": "Un popup más ágil, ajustes más claros", "pt-BR": "Um popup mais ágil, ajustes mais claros", "de": "Schnelleres Popup, klarere Einstellungen", "it": "Popup più rapido, impostazioni più chiare", "pl": "Szybszy popup, czytelniejsze ustawienia", "tr": "Daha hızlı popup, daha net ayarlar", "ru": "Быстрее попап, понятнее настройки", "ja": "より速いポップアップ、わかりやすい設定", "ko": "더 빠른 팝업, 더 명확한 설정", "ar": "نافذة منبثقة أسرع وإعدادات أوضح" },
     changes: [
       {
         type: "fix",
         text: {
           "fr": "La page d'accueil de l'installation ne déborde plus sur les écrans étroits ni en allemand ou en russe.",
           "en": "The welcome page no longer overflows on narrow screens or in German and Russian.",
+          "uk": "Сторінка привітання більше не виходить за межі екрану на вузьких екранах або при перегляді німецькою та російською мовами.",
           "es": "La página de bienvenida ya no se desborda en pantallas estrechas ni en alemán o ruso.",
           "pt-BR": "A página de boas-vindas não transborda mais em telas estreitas nem em alemão ou russo.",
           "de": "Die Willkommensseite läuft auf schmalen Bildschirmen sowie auf Deutsch und Russisch nicht mehr über.",
@@ -2050,6 +2158,7 @@ export const RELEASES = [
         text: {
           "fr": "Les titres coupés dans le popup s'affichent en entier au survol.",
           "en": "Truncated titles in the popup now show in full on hover.",
+          "uk": "Скорочені заголовки у спливаючому вікні тепер відображаються повністю при наведенні курсору.",
           "es": "Los títulos recortados del popup se muestran completos al pasar el ratón.",
           "pt-BR": "Os títulos cortados no popup aparecem inteiros ao passar o mouse.",
           "de": "Abgeschnittene Titel im Popup werden beim Überfahren vollständig angezeigt.",
@@ -2067,6 +2176,7 @@ export const RELEASES = [
         text: {
           "fr": "La page de restauration de sauvegarde fonctionne de nouveau : le fichier est lu, l'aperçu s'affiche et « Ajouter à mes données » refait son travail.",
           "en": "The backup restore page works again: the file is read, the preview shows up and “Add to my data” works as advertised.",
+          "uk": "Сторінка відновлення резервної копії знову працює: файл читається, з’являється попередній перегляд, а функція «Додати до моїх даних» працює так, як заявлено.",
           "es": "La página de restauración de copias vuelve a funcionar: el archivo se lee, aparece la vista previa y «Añadir a mis datos» hace su trabajo.",
           "pt-BR": "A página de restauração de backup voltou a funcionar: o arquivo é lido, a prévia aparece e “Adicionar aos meus dados” faz o seu trabalho.",
           "de": "Die Seite zum Wiederherstellen einer Sicherung funktioniert wieder: Die Datei wird gelesen, die Vorschau erscheint und „Zu meinen Daten hinzufügen“ tut, was es soll.",
@@ -2084,6 +2194,7 @@ export const RELEASES = [
         text: {
           "fr": "Les réglages sont rangés en 8 rubriques claires, ouverture sur Notifications, fonctions Plus à leur place avec leur cadenas, et une section Outils : Drops, Badges, Activité, StreamPulse+, Aide. Le tiroir Twitch suit la même organisation.",
           "en": "Settings are organized into 8 clear sections, opening on Notifications, Plus features in their right place with their lock, and a Tools area: Drops, Badges, Activity, StreamPulse+, Help. The Twitch drawer follows the same layout.",
+          "uk": "Налаштування розділені на 8 чітких розділів, що відкриваються з «Повідомлень», додаткових функцій «+» на своїх місцях із відповідними значками блокування та розділу «Інструменти»: Drops, «Значки», «Активність», StreamPulse+, «Довідка». Висувний меню Twitch має такий самий макет.",
           "es": "Los ajustes se ordenan en 8 secciones claras, empiezan por Notificaciones, las funciones Plus están en su sitio con su candado y hay una sección Herramientas: Drops, Insignias, Actividad, StreamPulse+, Ayuda. El panel de Twitch sigue la misma organización.",
           "pt-BR": "Os ajustes estão organizados em 8 seções claras, abrindo em Notificações, com os recursos Plus no lugar certo com o cadeado, e uma área Ferramentas: Drops, Emblemas, Atividade, StreamPulse+, Ajuda. A gaveta da Twitch segue a mesma organização.",
           "de": "Die Einstellungen sind in 8 klare Bereiche gegliedert, starten bei Benachrichtigungen, Plus-Funktionen stehen mit Schloss an ihrem Platz, dazu ein Werkzeuge-Bereich: Drops, Abzeichen, Aktivität, StreamPulse+, Hilfe. Die Twitch-Seitenleiste folgt demselben Aufbau.",
@@ -2101,6 +2212,7 @@ export const RELEASES = [
         text: {
           "fr": "Bouton « Réinitialiser les réglages » : tout revient comme à l'installation, ta langue et ton thème sont conservés.",
           "en": "New “Reset settings” button: everything goes back to install defaults, your language and theme are kept.",
+          "uk": "Нова кнопка «Скинути налаштування»: все повертається до заводських налаштувань, а ваша мова та тема зберігаються.",
           "es": "Nuevo botón «Restablecer ajustes»: todo vuelve a como estaba al instalar, y se conservan tu idioma y tu tema.",
           "pt-BR": "Novo botão “Redefinir ajustes”: tudo volta ao padrão da instalação, mantendo seu idioma e seu tema.",
           "de": "Neue Schaltfläche „Einstellungen zurücksetzen“: Alles kehrt zum Installationszustand zurück, Sprache und Design bleiben erhalten.",
@@ -2118,6 +2230,7 @@ export const RELEASES = [
         text: {
           "fr": "Les alertes de live, de catégorie et de titre s'appliquent à tous tes streamers d'un coup ; chaque carte reste ajustable séparément.",
           "en": "Live, category and title alerts now apply to all your streamers at once; each card can still be adjusted on its own.",
+          "uk": "Сповіщення про прямі ефіри, категорії та назви тепер застосовуються до всіх ваших стрімерів одночасно; кожну картку можна налаштувати окремо.",
           "es": "Las alertas de directo, categoría y título se aplican a todos tus streamers a la vez; cada tarjeta se puede ajustar por separado.",
           "pt-BR": "Os alertas de live, categoria e título agora valem para todos os seus streamers de uma vez; cada cartão continua ajustável separadamente.",
           "de": "Live-, Kategorie- und Titel-Benachrichtigungen gelten jetzt für alle deine Streamer auf einmal; jede Karte lässt sich weiterhin einzeln anpassen.",
@@ -2135,6 +2248,7 @@ export const RELEASES = [
         text: {
           "fr": "Le clic sur une notification rouvre la bonne chaîne, même après une mise en veille de l'extension, et les heures calmes silencient vraiment la nuit.",
           "en": "Clicking a notification opens the right channel again, even after the extension sleeps, and quiet hours really silence the night.",
+          "uk": "Натискання на сповіщення знову відкриває потрібний канал, навіть після того, як розширення перейшло в режим сну, а «тихі години» справді роблять ніч тихою.",
           "es": "Al pulsar una notificación se abre el canal correcto, incluso si la extensión estaba en reposo, y las horas tranquilas silencian de verdad la noche.",
           "pt-BR": "Clicar numa notificação abre o canal certo de novo, mesmo depois de a extensão entrar em repouso, e o horário silencioso realmente silencia a noite.",
           "de": "Ein Klick auf eine Benachrichtigung öffnet wieder den richtigen Kanal, auch nachdem die Erweiterung geruht hat, und die Ruhezeiten sind nachts wirklich still.",
@@ -2152,6 +2266,7 @@ export const RELEASES = [
         text: {
           "fr": "Le temps de visionnage ne compte plus un onglet en arrière-plan ni un live en pause, et deux fenêtres sur le même live ne comptent plus double. YouTube s'y affiche correctement, avec le bon logo.",
           "en": "Watch time no longer counts a background tab or a paused stream, and two windows on the same live no longer count twice. YouTube shows up correctly there, with the right logo.",
+          "uk": "Час перегляду більше не враховує вкладки, що працюють у фоновому режимі, або призупинені трансляції, а два вікна з однією й тією ж трансляцією більше не враховуються двічі. YouTube відображається там правильно, з правильним логотипом.",
           "es": "El tiempo de visualización ya no cuenta una pestaña en segundo plano ni un directo en pausa, y dos ventanas del mismo directo ya no cuentan doble. YouTube aparece correctamente, con su logo.",
           "pt-BR": "O tempo assistido não conta mais uma aba em segundo plano nem uma live pausada, e duas janelas na mesma live não contam em dobro. O YouTube aparece corretamente, com o logo certo.",
           "de": "Die Zuschauzeit zählt keinen Hintergrund-Tab und keinen pausierten Stream mehr, und zwei Fenster mit demselben Live zählen nicht mehr doppelt. YouTube wird dort korrekt angezeigt, mit dem richtigen Logo.",
@@ -2169,6 +2284,7 @@ export const RELEASES = [
         text: {
           "fr": "Connexion Kick plus fiable : le jeton est réutilisé au lieu d'être redemandé à chaque mesure, et le repli qui exposait des clés côté serveur est supprimé.",
           "en": "More reliable Kick connection: the token is reused instead of being requested at every check, and the fallback that exposed keys server-side is removed.",
+          "uk": "Більш надійне з’єднання Kick: токен використовується повторно, а не запитується під час кожної перевірки, а також усунено резервний варіант, який розкривав ключі на стороні сервера.",
           "es": "Conexión con Kick más fiable: el token se reutiliza en lugar de pedirse en cada comprobación, y se elimina el mecanismo de respaldo que exponía claves en el servidor.",
           "pt-BR": "Conexão com a Kick mais confiável: o token é reutilizado em vez de ser pedido a cada verificação, e o fallback que expunha chaves no servidor foi removido.",
           "de": "Zuverlässigere Kick-Verbindung: Das Token wird wiederverwendet, statt bei jeder Prüfung neu angefordert zu werden, und der Fallback, der serverseitig Schlüssel preisgab, ist entfernt.",
@@ -2186,6 +2302,7 @@ export const RELEASES = [
         text: {
           "fr": "Ton pseudo se modifie de nouveau dans « Profil et badge », et couper le badge communautaire l'arrête aussitôt, sans recharger la page.",
           "en": "Your display name is editable again in “Profile & badge”, and turning the community badge off stops it right away, no reload needed.",
+          "uk": "Ваше ім’я для відображення знову можна редагувати в розділі «Профіль та значок», а вимкнення значка спільноти відбувається миттєво, без необхідності перезавантаження сторінки.",
           "es": "Tu nombre se puede editar de nuevo en «Perfil e insignia», y desactivar la insignia de la comunidad la detiene al instante, sin recargar la página.",
           "pt-BR": "Seu nome de exibição pode ser editado de novo em “Perfil e emblema”, e desligar o emblema da comunidade o interrompe na hora, sem recarregar a página.",
           "de": "Dein Anzeigename lässt sich in „Profil & Abzeichen“ wieder ändern, und das Community-Abzeichen verschwindet beim Ausschalten sofort, ohne Neuladen.",
@@ -2203,6 +2320,7 @@ export const RELEASES = [
         text: {
           "fr": "L'onboarding commence par les notifications et tient dans les petits écrans.",
           "en": "Onboarding starts with notifications and fits small screens.",
+          "uk": "Ознайомлення з сервісом починається з повідомлень і добре підходить для невеликих екранів.",
           "es": "La bienvenida empieza por las notificaciones y cabe en pantallas pequeñas.",
           "pt-BR": "As boas-vindas começam pelas notificações e cabem em telas pequenas.",
           "de": "Das Onboarding beginnt mit den Benachrichtigungen und passt auf kleine Bildschirme.",
@@ -2220,6 +2338,7 @@ export const RELEASES = [
         text: {
           "fr": "« Regarder » bascule sur l'onglet déjà ouvert sur la chaîne au lieu d'en ouvrir un nouveau.",
           "en": "“Watch” switches to the tab already open on that channel instead of opening a new one.",
+          "uk": "Функція «Переглянути» перемикає на вкладку, яка вже відкрита на цьому каналі, замість того, щоб відкривати нову.",
           "es": "«Ver» cambia a la pestaña que ya tiene abierto el canal en lugar de abrir otra.",
           "pt-BR": "“Assistir” muda para a aba já aberta no canal em vez de abrir uma nova.",
           "de": "„Ansehen“ wechselt zum bereits geöffneten Tab des Kanals, statt einen neuen zu öffnen.",
@@ -2237,6 +2356,7 @@ export const RELEASES = [
         text: {
           "fr": "Après avoir retiré un streamer, « Annuler » le remet en place avec ses notifications, son épingle et son groupe.",
           "en": "After removing a streamer, “Undo” puts them back with their notifications, pin and group.",
+          "uk": "Після видалення стрімера функція «Скасувати» повертає його разом із повідомленнями, позначкою та групою.",
           "es": "Tras quitar a un streamer, «Deshacer» lo devuelve a su sitio con sus notificaciones, su fijado y su grupo.",
           "pt-BR": "Depois de remover um streamer, “Desfazer” o coloca de volta com as notificações, o fixado e o grupo.",
           "de": "Nach dem Entfernen eines Streamers stellt „Rückgängig“ ihn samt Benachrichtigungen, Anheftung und Gruppe wieder her.",
@@ -2254,6 +2374,7 @@ export const RELEASES = [
         text: {
           "fr": "Une recherche sans résultat propose d'ajouter directement ce que tu as tapé.",
           "en": "A search with no results offers to add exactly what you typed.",
+          "uk": "Якщо пошук не дав результатів, пропонується додати саме те, що ви ввели.",
           "es": "Una búsqueda sin resultados te propone añadir directamente lo que escribiste.",
           "pt-BR": "Uma busca sem resultados sugere adicionar direto o que você digitou.",
           "de": "Findet die Suche nichts, kannst du das Eingetippte direkt hinzufügen.",
@@ -2271,6 +2392,7 @@ export const RELEASES = [
         text: {
           "fr": "L'accueil s'adapte quand personne n'est en direct ou que ta liste est vide.",
           "en": "The home screen adapts when nobody is live or your list is empty.",
+          "uk": "Головний екран адаптується, коли ніхто не веде пряму трансляцію або ваш список порожній.",
           "es": "La pantalla de inicio se adapta cuando nadie está en directo o tu lista está vacía.",
           "pt-BR": "A tela inicial se adapta quando ninguém está ao vivo ou sua lista está vazia.",
           "de": "Die Startansicht passt sich an, wenn niemand live ist oder deine Liste leer ist.",
@@ -2288,6 +2410,7 @@ export const RELEASES = [
         text: {
           "fr": "Meilleure accessibilité au clavier et contrastes renforcés dans le popup.",
           "en": "Better keyboard accessibility and stronger contrast in the popup.",
+          "uk": "Покращено доступність клавіатури та підвищено контрастність у спливаючому вікні.",
           "es": "Mejor accesibilidad con teclado y más contraste en el popup.",
           "pt-BR": "Melhor acessibilidade pelo teclado e contraste reforçado no popup.",
           "de": "Bessere Tastaturbedienung und stärkere Kontraste im Popup.",
@@ -2305,6 +2428,7 @@ export const RELEASES = [
         text: {
           "fr": "Les demandes d'avis et de badge ne cachent plus tes lives : elles attendent quelques secondes et se placent sous la scène.",
           "en": "Review and badge prompts no longer hide your lives: they wait a few seconds and sit below the stage.",
+          "uk": "Підказки щодо відгуків та значків більше не приховують ваші лайви: вони чекають кілька секунд і залишаються під сценою.",
           "es": "Las peticiones de reseña y de insignia ya no tapan tus directos: esperan unos segundos y se colocan bajo el escenario.",
           "pt-BR": "Os pedidos de avaliação e de emblema não escondem mais suas lives: esperam alguns segundos e ficam abaixo do palco.",
           "de": "Bitten um Bewertung und Abzeichen verdecken deine Lives nicht mehr: Sie warten ein paar Sekunden und erscheinen unter der Bühne.",
@@ -2322,6 +2446,7 @@ export const RELEASES = [
         text: {
           "fr": "Barre du haut plus calme : un seul point par nouveauté, qui s'éteint dès que tu l'as vue.",
           "en": "A calmer top bar: a single dot per new thing, gone as soon as you've seen it.",
+          "uk": "Більш спокійна верхня панель: одна крапка на кожну нову подію, яка зникає, щойно ви її побачите.",
           "es": "Barra superior más tranquila: un solo punto por novedad, que se apaga en cuanto la ves.",
           "pt-BR": "Barra superior mais calma: um único ponto por novidade, que some assim que você a vê.",
           "de": "Ruhigere obere Leiste: ein einziger Punkt pro Neuigkeit, der verschwindet, sobald du sie gesehen hast.",
@@ -2339,6 +2464,7 @@ export const RELEASES = [
         text: {
           "fr": "StreamPulse s'ouvre plus vite : seule ta langue est chargée.",
           "en": "StreamPulse opens faster: only your language is loaded.",
+          "uk": "StreamPulse завантажується швидше: завантажується лише ваша мова.",
           "es": "StreamPulse se abre más rápido: solo se carga tu idioma.",
           "pt-BR": "O StreamPulse abre mais rápido: só o seu idioma é carregado.",
           "de": "StreamPulse öffnet sich schneller: Nur deine Sprache wird geladen.",
@@ -2356,6 +2482,7 @@ export const RELEASES = [
         text: {
           "fr": "Les pages Twitch chargent moins de code et d'images StreamPulse.",
           "en": "Twitch pages load less StreamPulse code and fewer images.",
+          "uk": "Twitch сторінки завантажують менше StreamPulse коду та менше зображень.",
           "es": "Las páginas de Twitch cargan menos código e imágenes de StreamPulse.",
           "pt-BR": "As páginas da Twitch carregam menos código e imagens do StreamPulse.",
           "de": "Twitch-Seiten laden weniger Code und Bilder von StreamPulse.",
@@ -2373,6 +2500,7 @@ export const RELEASES = [
         text: {
           "fr": "Textes plus clairs et traductions complètes dans les 11 langues : plus de phrases restées en anglais.",
           "en": "Clearer wording and complete translations in all 11 languages: no more sentences left in English.",
+          "uk": "Більш чітке формулювання та повні переклади всіма 11 мовами: більше немає речень, залишених англійською.",
           "es": "Textos más claros y traducciones completas en los 11 idiomas: ya no quedan frases en inglés.",
           "pt-BR": "Textos mais claros e traduções completas nos 11 idiomas: nenhuma frase ficou em inglês.",
           "de": "Klarere Texte und vollständige Übersetzungen in allen 11 Sprachen: keine Sätze mehr, die auf Englisch geblieben sind.",
@@ -2394,6 +2522,7 @@ export const RELEASES = [
     title: {
       fr: "Un badge d'ancienneté plus lisible",
       en: "A clearer seniority badge",
+      uk: "Більш зрозумілий значок стажу",
       es: "Una insignia de antigüedad más legible",
       "pt-BR": "Um emblema de antiguidade mais legível",
       de: "Ein besser lesbares Treueabzeichen",
@@ -2412,6 +2541,7 @@ export const RELEASES = [
         text: {
           fr: "Le parrainage sort de sa cachette : il est maintenant dans les Réglages généraux, et un bouton « Copier mon code » attend à la fin de ton récap.",
           en: "Referrals step into the light: they now live in General settings, and a “Copy my code” button waits at the end of your recap.",
+          uk: "Реферальні посилання вийшли на перший план: тепер вони знаходяться в розділі «Загальні налаштування», а в кінці вашого підсумку вас чекає кнопка «Скопіювати мій код».",
           es: "El programa de amigos sale de su escondite: ahora está en los ajustes generales y un botón «Copiar mi código» te espera al final de tu resumen.",
           "pt-BR": "O programa de indicações saiu do esconderijo: ele agora está nos ajustes gerais, e um botão “Copiar meu código” espera no final do seu resumo.",
           de: "Das Freundschaftswerben kommt aus seinem Versteck: es gibt es jetzt in den allgemeinen Einstellungen, und am Ende deines Rückblicks wartet die Schaltfläche „Code kopieren“.",
@@ -2430,6 +2560,7 @@ export const RELEASES = [
         text: {
           fr: "Les badges « League of Legends Classic » et Elden Ring, liés à des événements terminés, ne sont plus proposés comme disponibles ni visés par le mode auto.",
           en: "The “League of Legends Classic” and Elden Ring badges, from events that have ended, are no longer shown as available or targeted by auto mode.",
+          uk: "Значки «League of Legends Classic» та «Elden Ring», пов’язані з подіями, що вже завершилися, більше не відображаються як доступні та не враховуються в автоматичному режимі.",
           es: "Las insignias «League of Legends Classic» y de Elden Ring, de eventos ya terminados, ya no aparecen como disponibles ni las busca el modo automático.",
           "pt-BR": "Os selos “League of Legends Classic” e de Elden Ring, de eventos já encerrados, não aparecem mais como disponíveis nem são buscados pelo modo automático.",
           de: "Die Abzeichen „League of Legends Classic“ und Elden Ring aus beendeten Events werden nicht mehr als verfügbar angezeigt und vom Auto-Modus nicht mehr angesteuert.",
@@ -2448,6 +2579,7 @@ export const RELEASES = [
         text: {
           fr: "Badge d'ancienneté : la licence à vie passe à un disque noir avec anneau et logo dorés, bien plus lisible dans le tchat, et le fondateur de StreamPulse a son propre badge.",
           en: "Loyalty badge: the lifetime license now shows a black disc with a gold ring and logo, much easier to read in chat, and the StreamPulse founder gets a dedicated badge.",
+          uk: "Значок лояльності: довічна ліцензія тепер відображається у вигляді чорного диска із золотим кільцем та логотипом, що набагато краще читається в чаті, а засновник StreamPulse отримує спеціальний значок.",
           es: "Insignia de antigüedad: la licencia de por vida pasa a un disco negro con anillo y logo dorados, mucho más legible en el chat, y el fundador de StreamPulse tiene su propia insignia.",
           "pt-BR": "Selo de fidelidade: a licença vitalícia passa a um disco preto com anel e logo dourados, bem mais legível no chat, e o fundador do StreamPulse ganha um selo próprio.",
           de: "Treue-Abzeichen: Die lebenslange Lizenz zeigt jetzt eine schwarze Scheibe mit goldenem Ring und Logo, im Chat viel besser lesbar, und der StreamPulse-Gründer hat ein eigenes Abzeichen.",
@@ -2466,6 +2598,7 @@ export const RELEASES = [
         text: {
           fr: "Le badge StreamPulse d'une personne disparaît du tchat au plus tard 7 jours après qu'elle a supprimé l'extension ou coupé son badge communautaire.",
           en: "A person's StreamPulse badge now disappears from chat at most 7 days after they remove the extension or turn off their community badge.",
+          uk: "Значок користувача StreamPulse тепер зникає з чату не пізніше ніж через 7 днів після того, як він видалить розширення або вимкне свій значок спільноти.",
           es: "La insignia StreamPulse de una persona desaparece del chat como máximo 7 días después de que elimine la extensión o desactive su insignia comunitaria.",
           "pt-BR": "O selo StreamPulse de uma pessoa some do chat no máximo 7 dias depois que ela remove a extensão ou desativa o selo da comunidade.",
           de: "Das StreamPulse-Abzeichen einer Person verschwindet spätestens 7 Tage, nachdem sie die Erweiterung entfernt oder ihr Community-Abzeichen ausgeschaltet hat, aus dem Chat.",
@@ -2484,6 +2617,7 @@ export const RELEASES = [
         text: {
           fr: "Badge d'ancienneté Jauge plus lisible dans le tchat : un disque plein de la couleur de ton palier, un anneau blanc qui se remplit et un logo bien net, avec un reflet à partir d'un an.",
           en: "The Gauge loyalty badge is easier to read in chat: a solid disc in your tier's color, a white ring that fills up and a crisp logo, with a shine from one year on.",
+          uk: "Значок лояльності Gauge став краще читатися в чаті: суцільний диск у кольорі вашого рівня, біле кільце, яке заповнюється, та чіткий логотип, що починає сяяти після першого року.",
           es: "La insignia de antigüedad Indicador se lee mejor en el chat: un disco lleno del color de tu nivel, un anillo blanco que se llena y un logo nítido, con un brillo a partir de un año.",
           "pt-BR": "O selo de fidelidade Medidor ficou mais legível no chat: um disco cheio na cor do seu nível, um anel branco que se enche e um logo nítido, com um brilho a partir de um ano.",
           de: "Das Treue-Abzeichen Anzeige ist im Chat besser lesbar: eine volle Scheibe in der Farbe deiner Stufe, ein weißer Ring, der sich füllt, und ein scharfes Logo, ab einem Jahr mit Glanz.",
@@ -2505,6 +2639,7 @@ export const RELEASES = [
     title: {
       fr: "Badge d'ancienneté et effets façon 7TV",
       en: "Seniority badge and 7TV-style effects",
+      uk: "Значок стажу та ефекти у стилі 7TV",
       es: "Insignia de antigüedad y efectos estilo 7TV",
       "pt-BR": "Emblema de antiguidade e efeitos estilo 7TV",
       de: "Treueabzeichen und Effekte im 7TV-Stil",
@@ -2523,6 +2658,7 @@ export const RELEASES = [
         text: {
           fr: "Badge d'ancienneté StreamPulse+ : dans l'effet du badge, choisis « Jauge », une pastille dont l'anneau se remplit au fil des mois, ou « Pager », l'écran de StreamPulse dans une coque qui change de matière. De 1 mois à 4 ans, doré pour la licence à vie. C'est le badge par défaut si tu n'as choisi aucun effet, et tes mois d'abonnement se cumulent, même après une pause.",
           en: "StreamPulse+ loyalty badge: as your badge effect, pick “Gauge”, a badge whose ring fills up month after month, or “Pager”, the StreamPulse screen in a case that changes material. From 1 month to 4 years, gold for lifetime licenses. It's the default badge if you haven't picked an effect, and your subscribed months add up, even after a break.",
+          uk: "Значок лояльності StreamPulse+: як ефект значка виберіть «Шкала» — значок, кільце якого заповнюється місяць за місяцем, або «Пейджер» — екран StreamPulse у корпусі, що змінює матеріал. Від 1 місяця до 4 років, золото для довічних ліцензій. Це значок за замовчуванням, якщо ви не вибрали ефект, а місяці вашої підписки сумуються навіть після перерви.",
           es: "Insignia de antigüedad StreamPulse+: como efecto de insignia, elige «Indicador», un anillo que se llena mes a mes, o «Pager», la pantalla de StreamPulse en una carcasa que cambia de material. De 1 mes a 4 años, dorada para la licencia de por vida. Es la insignia por defecto si no has elegido ningún efecto, y tus meses de suscripción se acumulan, incluso tras una pausa.",
           "pt-BR": "Selo de fidelidade StreamPulse+: como efeito do selo, escolha “Medidor”, um anel que se enche mês a mês, ou “Pager”, a tela do StreamPulse numa capa que muda de material. De 1 mês a 4 anos, dourado para a licença vitalícia. É o selo padrão se você não escolheu nenhum efeito, e seus meses de assinatura se acumulam, mesmo depois de uma pausa.",
           de: "StreamPulse+-Treue-Abzeichen: Wähle als Abzeichen-Effekt „Anzeige“, einen Ring, der sich Monat für Monat füllt, oder „Pager“, den StreamPulse-Bildschirm in einem Gehäuse, dessen Material wechselt. Von 1 Monat bis 4 Jahre, golden für die lebenslange Lizenz. Es ist das Standard-Abzeichen, wenn du keinen Effekt gewählt hast, und deine Abomonate addieren sich, auch nach einer Pause.",
@@ -2541,6 +2677,7 @@ export const RELEASES = [
         text: {
           fr: "Pseudo et badge repensés, comme les « paints » de 7TV : un seul nuancier pour le logo et le pseudo, 7 dégradés et 9 textures (Galaxie, Holographique, Lave, Marbre, Chrome, Paillettes, Sucre d'orge, Toxique, Océan), chacun avec son animation intégrée. Les animations à choisir à part (Pulsation, Rebond…) et les effets Néon et Glitch sont retirés : un badge qui en utilisait un revient au logo classique, et Prisme devient Arc-en-ciel.",
           en: "Name and badge redesigned, like 7TV paints: one palette for the logo and the name, 7 gradients and 9 textures (Galaxy, Holographic, Lava, Marble, Chrome, Glitter, Candy cane, Toxic, Ocean), each with its own built-in animation. Separate animations (Pulse, Bounce…) and the Neon and Glitch effects are gone: a badge that used one goes back to the classic logo, and Prism becomes Rainbow.",
+          uk: "Нік і значок перероблено, як фарби 7TV: одна палітра для логотипа й ніка, 7 градієнтів і 9 текстур (Галактика, Голографічний, Лава, Мармур, Chrome, Блискітки, Льодяник, Токсичний, Океан), кожна з власною вбудованою анімацією. Окремі анімації (Пульс, Підскок…) та ефекти «Неон» і «Глітч» прибрано: значок, що їх використовував, повертається до класичного логотипа, а «Призма» стає «Веселкою».",
           es: "Nombre e insignia rediseñados, como los «paints» de 7TV: una sola paleta para el logo y el nombre, 7 degradados y 9 texturas (Galaxia, Holográfico, Lava, Mármol, Cromo, Purpurina, Bastón de caramelo, Tóxico, Océano), cada una con su animación integrada. Se retiran las animaciones aparte (Pulso, Rebote…) y los efectos Neón y Glitch: una insignia que los usaba vuelve al logo clásico, y Prisma pasa a Arcoíris.",
           "pt-BR": "Nome e selo redesenhados, como os “paints” do 7TV: uma só paleta para o logo e o nome, 7 degradês e 9 texturas (Galáxia, Holográfico, Lava, Mármore, Cromo, Glitter, Bengala doce, Tóxico, Oceano), cada uma com sua animação embutida. As animações à parte (Pulso, Quique…) e os efeitos Neon e Glitch saem: um selo que usava um deles volta ao logo clássico, e Prisma vira Arco-íris.",
           de: "Name und Abzeichen neu gestaltet, wie die „Paints“ von 7TV: eine Palette für Logo und Namen, 7 Verläufe und 9 Texturen (Galaxie, Holografisch, Lava, Marmor, Chrom, Glitzer, Zuckerstange, Toxisch, Ozean), jede mit eigener Animation. Separate Animationen (Puls, Hüpfen…) sowie die Effekte Neon und Glitch entfallen: Ein Abzeichen mit einem davon wird wieder zum klassischen Logo, und Prisma wird zu Regenbogen.",
@@ -2559,6 +2696,7 @@ export const RELEASES = [
         text: {
           fr: "L'étape Réglages de l'installation ne propose plus la récupération automatique des Moments : Twitch a retiré cette fonctionnalité.",
           en: "The Settings step of the first-time setup no longer offers automatic Moments claiming: Twitch removed that feature.",
+          uk: "На кроці «Налаштування» першого запуску більше немає автоматичного отримання Moments: Twitch прибрав цю функцію.",
           es: "El paso de Ajustes de la instalación ya no ofrece el reclamo automático de Moments: Twitch eliminó esta función.",
           "pt-BR": "A etapa de Configurações da instalação não oferece mais o resgate automático de Moments: a Twitch removeu esse recurso.",
           de: "Der Einstellungsschritt der Ersteinrichtung bietet kein automatisches Abholen von Moments mehr: Twitch hat diese Funktion entfernt.",
@@ -2577,6 +2715,7 @@ export const RELEASES = [
         text: {
           fr: "L'écran final de l'installation est repensé : un aperçu de la notification que tu recevras au prochain direct de ton premier streamer suivi, le bandeau de tes streamers, et un contenu bien ancré dans la page.",
           en: "The final screen of the first-time setup is redesigned: a preview of the notification you'll get when your first followed streamer goes live, a strip of your streamers, and content properly anchored in the page.",
+          uk: "Останній екран першого запуску перероблено: попередній перегляд сповіщення, яке ви отримаєте, коли перший відстежуваний стрімер вийде в ефір, смужка ваших стрімерів і вміст, правильно розташований на сторінці.",
           es: "La pantalla final de la instalación está rediseñada: una vista previa de la notificación que recibirás cuando tu primer streamer seguido inicie un directo, una tira con tus streamers y un contenido bien anclado en la página.",
           "pt-BR": "A tela final da instalação foi redesenhada: uma prévia da notificação que você receberá quando o primeiro streamer seguido iniciar uma live, uma faixa com seus streamers e um conteúdo bem ancorado na página.",
           de: "Der letzte Bildschirm der Ersteinrichtung ist neu gestaltet: eine Vorschau der Benachrichtigung, die du beim nächsten Live deines ersten gefolgten Streamers erhältst, eine Leiste mit deinen Streamern und ein inhaltsverankerter Seitenaufbau.",
@@ -2595,6 +2734,7 @@ export const RELEASES = [
         text: {
           fr: "Le badge communautaire se propose maintenant tout seul : une carte dans la popup l'active en un clic (avec le rappel de confidentialité), et l'installation met l'aperçu du tchat en avant avant l'interrupteur.",
           en: "The community badge now offers itself: a card in the popup turns it on in one click (with the privacy reminder), and the first-time setup shows the chat preview before the switch.",
+          uk: "Значок спільноти тепер пропонує себе сам: картка у спливаючому вікні вмикає його одним кліком (з нагадуванням про конфіденційність), а під час першого запуску перед перемикачем показується попередній перегляд чату.",
           es: "La insignia comunitaria ahora se ofrece sola: una tarjeta en la ventana emergente la activa en un clic (con el recordatorio de privacidad), y la instalación muestra la vista previa del chat antes del interruptor.",
           "pt-BR": "O emblema comunitário agora se oferece sozinho: um cartão na janela o ativa com um clique (com o lembrete de privacidade), e a instalação mostra a prévia do chat antes da chave.",
           de: "Das Community-Abzeichen bietet sich jetzt von selbst an: Eine Karte im Popup aktiviert es mit einem Klick (mit dem Datenschutz-Hinweis), und die Ersteinrichtung zeigt die Chat-Vorschau vor dem Schalter.",
@@ -2613,6 +2753,7 @@ export const RELEASES = [
         text: {
           fr: "Mode auto des badges : l'onglet franchit maintenant tout seul les écrans bloquants (contenu averti, conditions du chat) qui laissaient le live en pause sans faire progresser les badges. La qualité 360p et le volume quasi nul sont réappliqués après les pubs et les reprises de live.",
           en: "Badge auto mode: the tab now gets past blocking screens on its own (mature content, chat consent) that left the stream paused and badges frozen. The 360p quality and near-silent volume are reapplied after ads and stream restarts.",
+          uk: "Автоматичний режим значків: вкладка сама проходить екрани-блокувальники (контент для дорослих, згода на чат), через які трансляція зупинялася, а значки застигали. Якість 360p і майже беззвучна гучність застосовуються знову після реклами та перезапуску трансляції.",
           es: "Modo automático de insignias: la pestaña ahora supera sola las pantallas de bloqueo (contenido adulto, condiciones del chat) que dejaban el directo en pausa sin hacer avanzar las insignias. La calidad 360p y el volumen casi nulo se reaplican tras los anuncios y las reanudaciones.",
           "pt-BR": "Modo automático de emblemas: a aba agora passa sozinha pelas telas de bloqueio (conteúdo adulto, termos do chat) que deixavam a live pausada sem fazer os emblemas avançarem. A qualidade 360p e o volume quase nulo são reaplicados após anúncios e retomadas.",
           de: "Automodus für Abzeichen: Der Tab übersteht jetzt selbst die blockierenden Bildschirme (Inhalte für Erwachsene, Chat-Zustimmung), die den Stream pausiert und die Abzeichen eingefroren haben. 360p und das nahezu stumme Volumen werden nach Werbung und Stream-Neustarts erneut gesetzt.",
@@ -2634,6 +2775,7 @@ export const RELEASES = [
     title: {
       fr: "Drops, badges, points et effets de pseudo",
       en: "Drops, badges, points and username effects",
+      uk: "Drops, значки, бали та ефекти ніка",
       es: "Drops, insignias, puntos y efectos de nombre",
       "pt-BR": "Drops, emblemas, pontos e efeitos de nome",
       de: "Drops, Abzeichen, Punkte und Namenseffekte",
@@ -2652,6 +2794,7 @@ export const RELEASES = [
         text: {
           fr: "Nouveau panneau Drops dans les Réglages : tes Drops Twitch en cours avec leur progression et le temps restant, ceux prêts à récupérer, et les campagnes de Twitch avec des filtres (nouvelles, finissent bientôt, à venir), celles de tes jeux en premier. Avec StreamPulse+, l'historique de tous tes Drops obtenus, mois par mois, avec le jeu et la chaîne.",
           en: "New Drops panel in Settings: your Twitch Drops in progress with their progress and time left, the ones ready to claim, and Twitch's campaigns with filters (new, ending soon, upcoming), your games first. With StreamPulse+, the history of every Drop you earned, month by month, with the game and the channel.",
+          uk: "Нова панель Drops у налаштуваннях: ваші Drops Twitch у процесі з прогресом і часом, що залишився, ті, що готові до отримання, та кампанії Twitch із фільтрами (нові, скоро закінчуються, майбутні) — ваші ігри першими. Зі StreamPulse+ — історія кожного отриманого Drop по місяцях, з грою та каналом.",
           es: "Nuevo panel Drops en los Ajustes: tus Drops de Twitch en curso con su progreso y el tiempo restante, los que están listos para reclamar y las campañas de Twitch con filtros (nuevas, terminan pronto, próximas), primero las de tus juegos. Con StreamPulse+, el historial de todos tus Drops obtenidos, mes a mes, con el juego y el canal.",
           "pt-BR": "Novo painel Drops nas Configurações: seus Drops da Twitch em andamento com o progresso e o tempo restante, os prontos para resgatar e as campanhas da Twitch com filtros (novas, terminam em breve, em breve), primeiro as dos seus jogos. Com o StreamPulse+, o histórico de todos os Drops obtidos, mês a mês, com o jogo e o canal.",
           de: "Neues Drops-Panel in den Einstellungen: deine laufenden Twitch-Drops mit Fortschritt und Restzeit, die abholbereiten und die Twitch-Kampagnen mit Filtern (neu, enden bald, demnächst), deine Spiele zuerst. Mit StreamPulse+ der Verlauf aller erhaltenen Drops, Monat für Monat, mit Spiel und Kanal.",
@@ -2670,6 +2813,7 @@ export const RELEASES = [
         text: {
           fr: "Plus besoin d'ouvrir Twitch : StreamPulse relit tes Drops toutes les 10 minutes et récupère ceux qui sont prêts, même si tu regardes sur ton téléphone ou ta télé.",
           en: "No need to open Twitch anymore: StreamPulse checks your Drops every 10 minutes and claims the ready ones, even when you watch on your phone or TV.",
+          uk: "Відкривати Twitch більше не потрібно: StreamPulse перевіряє ваші Drops кожні 10 хвилин і забирає готові, навіть якщо ви дивитеся з телефона чи телевізора.",
           es: "Ya no hace falta abrir Twitch: StreamPulse revisa tus Drops cada 10 minutos y reclama los que están listos, incluso si miras en el móvil o la tele.",
           "pt-BR": "Não é mais preciso abrir a Twitch: o StreamPulse verifica seus Drops a cada 10 minutos e resgata os prontos, mesmo se você assiste no celular ou na TV.",
           de: "Twitch muss nicht mehr offen sein: StreamPulse prüft deine Drops alle 10 Minuten und holt bereite ab, auch wenn du am Handy oder Fernseher schaust.",
@@ -2688,6 +2832,7 @@ export const RELEASES = [
         text: {
           fr: "Sur l'accueil, la pastille Drops montre le Drop en cours avec un liseré de progression, sans prendre de place à la scène.",
           en: "On the home screen, the Drops chip shows the Drop in progress with a progress line, without taking space from the stage.",
+          uk: "На головному екрані чіп Drops показує Drop у процесі з лінією прогресу, не займаючи місця в основній області.",
           es: "En la pantalla de inicio, la pastilla Drops muestra el Drop en curso con una línea de progreso, sin quitarle espacio al escenario.",
           "pt-BR": "Na tela inicial, a pílula Drops mostra o Drop em andamento com uma linha de progresso, sem tirar espaço do palco.",
           de: "Auf dem Startbildschirm zeigt die Drops-Plakette den laufenden Drop mit Fortschrittslinie, ohne der Bühne Platz zu nehmen.",
@@ -2706,6 +2851,7 @@ export const RELEASES = [
         text: {
           fr: "La récupération automatique des Drops passe directement par Twitch dès qu'un Drop est prêt, sans attendre l'ouverture de l'inventaire, et chaque Drop obtenu est compté une seule fois, avec son nom.",
           en: "Drops are now auto-claimed directly through Twitch as soon as they are ready, without waiting for the inventory page, and each Drop you earn is counted once, with its name.",
+          uk: "Drops тепер забираються безпосередньо через Twitch, щойно готові, не чекаючи сторінки інвентарю, а кожен отриманий Drop рахується один раз — з назвою.",
           es: "Los Drops se reclaman automáticamente a través de Twitch en cuanto están listos, sin esperar a que se abra el inventario, y cada Drop obtenido se cuenta una sola vez, con su nombre.",
           "pt-BR": "Os Drops são resgatados automaticamente pela Twitch assim que ficam prontos, sem esperar a abertura do inventário, e cada Drop obtido é contado uma única vez, com o nome.",
           de: "Drops werden jetzt direkt über Twitch abgeholt, sobald sie bereit sind, ohne auf das Inventar zu warten, und jeder erhaltene Drop wird genau einmal mit seinem Namen gezählt.",
@@ -2724,6 +2870,7 @@ export const RELEASES = [
         text: {
           fr: "Mode auto des badges : un bouton « Récupérer tous les badges possibles » enchaîne tout seul les badges gratuits, et tu peux en mettre plusieurs en file à la main. Un seul onglet regarde un jeu à la fois (Twitch ne compte qu'un live à la fois) : les paliers d'un même jeu (30 min, 1 h, 90 min…) avancent ensemble, puis l'onglet passe au jeu suivant. Une bannière sur la page Twitch montre les badges en cours, les minutes du Drop et la suite de la file.",
           en: "Badge auto mode: a \"Get every available badge\" button works through the free badges on its own, and you can queue several by hand. One tab watches one game at a time (Twitch only counts one live at a time): tiers of the same game (30 min, 1 h, 90 min…) progress together, then the tab moves to the next game. A banner on the Twitch page shows the badges in progress, the Drop minutes and what's next.",
+          uk: "Автоматичний режим значків: кнопка «Отримати всі доступні значки» сама проходить безкоштовні значки, а кілька можна додати до черги вручну. Одна вкладка дивиться одну гру за раз (Twitch рахує лише одну трансляцію одночасно): рівні однієї гри (30 хв, 1 год, 90 хв…) проходять разом, потім вкладка переходить до наступної гри. Банер на сторінці Twitch показує значки в процесі, хвилини Drop і що далі.",
           es: "Modo auto de insignias: un botón «Conseguir todas las insignias posibles» encadena solo las insignias gratuitas, y puedes poner varias en cola a mano. Una sola pestaña ve un juego a la vez (Twitch solo cuenta un directo a la vez): los niveles de un mismo juego (30 min, 1 h, 90 min…) avanzan juntos y luego pasa al siguiente juego. Un banner en la página de Twitch muestra las insignias en curso, los minutos del Drop y lo que viene.",
           "pt-BR": "Modo auto de emblemas: um botão \"Pegar todos os emblemas possíveis\" encadeia sozinho os emblemas grátis, e você pode colocar vários na fila à mão. Uma única aba assiste a um jogo por vez (a Twitch só conta uma live por vez): os níveis do mesmo jogo (30 min, 1 h, 90 min…) avançam juntos e depois a aba passa ao próximo jogo. Um banner na página da Twitch mostra os emblemas em andamento, os minutos do Drop e o que vem depois.",
           de: "Auto-Modus für Abzeichen: Ein Knopf „Alle möglichen Abzeichen holen“ arbeitet die kostenlosen Abzeichen selbst ab, und du kannst mehrere von Hand in die Warteschlange stellen. Ein Tab schaut ein Spiel nach dem anderen (Twitch zählt nur einen Livestream gleichzeitig): Stufen desselben Spiels (30 Min., 1 Std., 90 Min. …) laufen zusammen, dann geht es zum nächsten Spiel. Ein Banner auf der Twitch-Seite zeigt die laufenden Abzeichen, die Drop-Minuten und was als Nächstes kommt.",
@@ -2742,6 +2889,7 @@ export const RELEASES = [
         text: {
           fr: "Nouvel onglet Badges dans les Réglages : les campagnes de badges de chat en cours avec leurs conditions, et les nouveaux badges globaux de Twitch dès leur apparition, avec comment les obtenir, s'ils sont gratuits ou payants, et ceux que tu as déjà. Une notification t'avertit d'un nouveau badge gratuit.",
           en: "New Badges tab in Settings: running chat badge campaigns with their requirements, and new Twitch global badges as soon as they appear, with how to get them, whether they are free or paid, and the ones you already own. A notification tells you about new free badges.",
+          uk: "Нова вкладка «Значки» в налаштуваннях: поточні кампанії значків чату з вимогами та нові глобальні значки Twitch, щойно вони з’являються, — як їх отримати, безкоштовні вони чи платні, і які вже є у вас. Сповіщення повідомляє про нові безкоштовні значки.",
           es: "Nueva pestaña Insignias en los Ajustes: las campañas de insignias de chat en curso con sus condiciones, y las nuevas insignias globales de Twitch en cuanto aparecen, con cómo obtenerlas, si son gratis o de pago y las que ya tienes. Una notificación te avisa de cada nueva insignia gratis.",
           "pt-BR": "Nova aba Emblemas nas Configurações: as campanhas de emblemas de chat em andamento com as condições, e os novos emblemas globais da Twitch assim que surgem, com como obtê-los, se são grátis ou pagos e os que você já tem. Uma notificação avisa sobre cada novo emblema grátis.",
           de: "Neuer Tab Abzeichen in den Einstellungen: laufende Chat-Abzeichen-Kampagnen mit Bedingungen und neue globale Twitch-Abzeichen, sobald sie erscheinen, mit Anleitung, Hinweis gratis oder kostenpflichtig und deinen bereits erhaltenen. Eine Benachrichtigung meldet neue kostenlose Abzeichen.",
@@ -2760,6 +2908,7 @@ export const RELEASES = [
         text: {
           fr: "Mode auto dans l'onglet Badges : « Obtenir en auto » ouvre un live de la campagne dans un onglet épinglé et muet, en qualité basse, puis le ferme et te prévient dès que le badge est à toi.",
           en: "Auto mode in the Badges tab: \"Get it automatically\" opens a live stream from the campaign in a pinned, muted tab at low quality, then closes it and lets you know as soon as the badge is yours.",
+          uk: "Автоматичний режим на вкладці «Значки»: «Отримати автоматично» відкриває трансляцію кампанії в закріпленій вкладці без звуку на низькій якості, потім закриває її та повідомляє, щойно значок ваш.",
           es: "Modo auto en la pestaña Insignias: «Obtener en auto» abre un directo de la campaña en una pestaña fijada y silenciada, en baja calidad, y la cierra avisándote en cuanto la insignia es tuya.",
           "pt-BR": "Modo automático na aba Emblemas: \"Obter no automático\" abre uma live da campanha numa aba fixada e sem som, em baixa qualidade, e a fecha avisando assim que o emblema for seu.",
           de: "Auto-Modus im Tab Abzeichen: „Automatisch holen“ öffnet einen Stream der Kampagne in einem angehefteten, stummen Tab in niedriger Qualität, schließt ihn und sagt dir Bescheid, sobald das Abzeichen dir gehört.",
@@ -2778,6 +2927,7 @@ export const RELEASES = [
         text: {
           fr: "Nouveau panneau Points dans les Réglages : StreamPulse enregistre chaque point de chaîne gagné sur Twitch et te montre combien tu en as gagné sur chaque chaîne. Avec StreamPulse+, tu vois d'où ils viennent (regarder, bonus, raids, suivis, séries, cheers et subs offerts), ce que ton abonnement t'a rapporté en plus, et une fiche par streamer avec le journal de tes gains. Le récap affiche aussi tes points gagnés.",
           en: "New Points panel in Settings: StreamPulse records every channel point you earn on Twitch and shows how many you earned on each channel. With StreamPulse+, see where they come from (watching, bonuses, raids, follows, streaks, cheers and gift subs), what your sub added on top, and a card for each streamer with a log of your gains. Your recap now shows the points you earned too.",
+          uk: "Нова панель «Бали» в налаштуваннях: StreamPulse записує кожен бал каналу, який ви заробляєте на Twitch, і показує, скільки заробили на кожному каналі. Зі StreamPulse+ видно, звідки вони беруться (перегляд, бонуси, рейди, підписки на канал, серії, cheers і подаровані підписки), що додала ваша підписка, і картку кожного стрімера з журналом нарахувань. Ваш підсумок тепер також показує зароблені бали.",
           es: "Nuevo panel Puntos en los Ajustes: StreamPulse registra cada punto de canal que ganas en Twitch y te muestra cuántos ganaste en cada canal. Con StreamPulse+, ves de dónde vienen (ver, bonos, raids, follows, rachas, cheers y suscripciones regaladas), lo que tu suscripción añadió y una ficha por streamer con el registro de tus ganancias. El resumen también muestra tus puntos ganados.",
           "pt-BR": "Novo painel Pontos nas Configurações: o StreamPulse registra cada ponto de canal que você ganha na Twitch e mostra quantos você ganhou em cada canal. Com o StreamPulse+, você vê de onde eles vêm (assistir, bônus, raids, follows, sequências, cheers e subs de presente), o que sua inscrição rendeu a mais e uma ficha por streamer com o registro dos seus ganhos. O resumo também mostra os pontos ganhos.",
           de: "Neues Punkte-Panel in den Einstellungen: StreamPulse erfasst jeden Kanalpunkt, den du auf Twitch verdienst, und zeigt, wie viele du auf jedem Kanal verdient hast. Mit StreamPulse+ siehst du, woher sie kommen (Zuschauen, Boni, Raids, Follows, Serien, Cheers und verschenkte Abos), was dein Abo zusätzlich gebracht hat, und eine Übersicht pro Streamer mit dem Protokoll deiner Gewinne. Auch dein Rückblick zeigt jetzt deine verdienten Punkte.",
@@ -2796,6 +2946,7 @@ export const RELEASES = [
         text: {
           fr: "Nouvel onglet Pseudo et badge : avec StreamPulse+, choisis un effet pour ton pseudo et pour le logo StreamPulse à côté de lui dans le tchat Twitch, vus par tous les utilisateurs de StreamPulse. 25 effets, dont les nouveaux Battement, Lévitation, Secousse, Prisme, Glitch, Braise et Givre. Le réglage de couleur du badge disparaît : il prend la couleur de ton pseudo.",
           en: "New Name & badge tab: with StreamPulse+, pick an effect for your username and for the StreamPulse logo next to it in Twitch chat, seen by every StreamPulse user. 25 effects, including the new Heartbeat, Float, Wobble, Prism, Glitch, Ember and Frost. The badge colour setting is gone: the badge takes your username colour.",
+          uk: "Нова вкладка «Нік і значок»: зі StreamPulse+ виберіть ефект для свого ніка та для логотипа StreamPulse поруч із ним у чаті Twitch — його бачать усі користувачі StreamPulse. 25 ефектів, зокрема нові: «Серцебиття», «Левітація», «Погойдування», «Призма», «Глітч», «Жар» та «Іній». Налаштування кольору значка прибрано: значок бере колір вашого ніка.",
           es: "Nueva pestaña Nombre e insignia: con StreamPulse+, elige un efecto para tu nombre y para el logo de StreamPulse a su lado en el chat de Twitch, visible para todos los usuarios de StreamPulse. 25 efectos, entre ellos los nuevos Latido, Levitación, Sacudida, Prisma, Glitch, Brasa y Escarcha. Desaparece el ajuste de color de la insignia: toma el color de tu nombre.",
           "pt-BR": "Nova aba Nome e emblema: com o StreamPulse+, escolha um efeito para o seu nome e para o logo do StreamPulse ao lado dele no chat da Twitch, visto por todos os usuários do StreamPulse. 25 efeitos, incluindo os novos Batimento, Levitação, Balanço, Prisma, Glitch, Brasa e Geada. A opção de cor do emblema saiu: ele usa a cor do seu nome.",
           de: "Neuer Tab Name & Abzeichen: Mit StreamPulse+ wählst du einen Effekt für deinen Namen und für das StreamPulse-Logo daneben im Twitch-Chat, sichtbar für alle StreamPulse-Nutzer. 25 Effekte, darunter die neuen Herzschlag, Schweben, Wackeln, Prisma, Glitch, Glut und Frost. Die Einstellung für die Abzeichenfarbe entfällt: Das Abzeichen nimmt die Farbe deines Namens an.",
@@ -2814,6 +2965,7 @@ export const RELEASES = [
         text: {
           fr: "Parrainage StreamPulse+ : partage ton code, ton ami a 2,99 € offerts (1er mois gratuit, ou la formule à vie à 16 €). Toi, tu touches de l'argent sur PayPal : 1 € pour chaque mois qu'il paie, ou 5 € d'un coup s'il prend la formule à vie, versé dès 10 €. En plus : un mois gratuit par ami si tu es au mois, l'effet de pseudo Ambassadeur, l'effet de badge Halo doré et un appareil de plus.",
           en: "StreamPulse+ referrals: share your code, your friend gets €2.99 off (first month free, or the lifetime plan for €16). You earn money on PayPal: €1 for every month they pay, or €5 at once if they take the lifetime plan, paid out from €10. Plus: a free month per friend on the monthly plan, the Ambassador username effect, the Golden halo badge effect and one more device.",
+          uk: "Реферальна програма StreamPulse+: діліться своїм кодом — ваш друг отримує знижку 2,99 € (перший місяць безкоштовно або довічний тариф за 16 €). Ви заробляєте гроші на PayPal: 1 € за кожен місяць його оплати або одразу 5 €, якщо він візьме довічний тариф, виплата від 10 €. Додатково: безкоштовний місяць за кожного друга на місячному тарифі, ефект ніка «Амбасадор», ефект значка «Золотий німб» та ще один пристрій.",
           es: "Invitaciones StreamPulse+: comparte tu código, tu amigo tiene 2,99 € de descuento (1.er mes gratis, o el plan de por vida a 16 €). Tú ganas dinero en PayPal: 1 € por cada mes que pague, o 5 € de una vez si elige el plan de por vida, pagado a partir de 10 €. Además: un mes gratis por amigo con el plan mensual, el efecto de nombre Embajador, el efecto de insignia Halo dorado y un dispositivo más.",
           "pt-BR": "Indicações StreamPulse+: compartilhe seu código, seu amigo ganha 2,99 € de desconto (1º mês grátis, ou o plano vitalício por 16 €). Você ganha dinheiro no PayPal: 1 € por cada mês que ele pagar, ou 5 € de uma vez se ele escolher o plano vitalício, pago a partir de 10 €. E mais: um mês grátis por amigo no plano mensal, o efeito de nome Embaixador, o efeito de emblema Halo dourado e um dispositivo a mais.",
           de: "StreamPulse+ Empfehlungen: Teile deinen Code, dein Freund bekommt 2,99 € Rabatt (1. Monat gratis oder lebenslang für 16 €). Du verdienst Geld über PayPal: 1 € für jeden Monat, den er bezahlt, oder 5 € auf einmal für den lebenslangen Plan, ausgezahlt ab 10 €. Dazu: ein Gratismonat pro Freund im Monatsabo, der Namenseffekt Botschafter, der Abzeichen-Effekt Goldener Heiligenschein und ein Gerät mehr.",
@@ -2832,6 +2984,7 @@ export const RELEASES = [
         text: {
           fr: "La formule mensuelle de StreamPulse+ commence maintenant par 7 jours gratuits.",
           en: "The StreamPulse+ monthly plan now starts with 7 free days.",
+          uk: "Місячний тариф StreamPulse+ тепер починається із 7 безкоштовних днів.",
           es: "El plan mensual de StreamPulse+ ahora empieza con 7 días gratis.",
           "pt-BR": "O plano mensal do StreamPulse+ agora começa com 7 dias grátis.",
           de: "Das Monatsabo von StreamPulse+ beginnt jetzt mit 7 Gratistagen.",
@@ -2850,6 +3003,7 @@ export const RELEASES = [
         text: {
           fr: "Drops et Badges ont leur onglet dans la barre du haut, et les Nouveautés passent en icône à droite. Les Réglages sont réorganisés : Pseudo et badge, Drops et Badges en tête, avec une étiquette Nouveau jusqu'à ta première visite.",
           en: "Drops and Badges get their own tabs in the top bar, and What's new moves to an icon on the right. Settings are reorganised: Name & badge, Drops and Badges come first, with a New label until your first visit.",
+          uk: "Drops і «Значки» отримали власні вкладки на верхній панелі, а «Що нового» перемістилося в іконку праворуч. Налаштування реорганізовано: «Нік і значок», Drops та «Значки» тепер першими, з позначкою «Нове» до вашого першого візиту.",
           es: "Drops e Insignias tienen su pestaña en la barra superior, y Novedades pasa a un icono a la derecha. Los Ajustes se reorganizan: Nombre e insignia, Drops e Insignias primero, con una etiqueta Nuevo hasta tu primera visita.",
           "pt-BR": "Drops e Emblemas ganham aba na barra superior, e Novidades vira um ícone à direita. As Configurações foram reorganizadas: Nome e emblema, Drops e Emblemas primeiro, com uma etiqueta Novo até a sua primeira visita.",
           de: "Drops und Abzeichen haben eigene Tabs in der oberen Leiste, Neuigkeiten wird zum Symbol rechts. Die Einstellungen sind neu geordnet: Name & Abzeichen, Drops und Abzeichen zuerst, mit einem Neu-Label bis zum ersten Besuch.",
@@ -2868,6 +3022,7 @@ export const RELEASES = [
         text: {
           fr: "En tapant un pseudo pour ajouter une chaîne Twitch ou Kick, les chaînes correspondantes s'affichent comme sur Twitch, avec leur avatar et celles en direct en premier. Flèches et Entrée pour l'ajouter sans finir de taper.",
           en: "While typing a name to add a Twitch or Kick channel, matching channels show up like on Twitch, with their avatar and live ones first. Use the arrows and Enter to add one without typing it all.",
+          uk: "Коли ви вводите нік, щоб додати канал Twitch або Kick, підходящі канали з’являються, як на Twitch, з аватаром, а ті, що в ефірі, — першими. Стрілки та Enter дозволяють додати канал, не вводячи все повністю.",
           es: "Al escribir un nombre para añadir un canal de Twitch o Kick, los canales que coinciden aparecen como en Twitch, con su avatar y los que están en directo primero. Flechas y Enter para añadirlo sin terminar de escribir.",
           "pt-BR": "Ao digitar um nome para adicionar um canal da Twitch ou da Kick, os canais correspondentes aparecem como na Twitch, com avatar e os ao vivo primeiro. Setas e Enter para adicionar sem terminar de digitar.",
           de: "Beim Eintippen eines Namens für einen Twitch- oder Kick-Kanal erscheinen passende Kanäle wie auf Twitch, mit Avatar und Live-Kanälen zuerst. Mit Pfeiltasten und Enter hinzufügen, ohne fertig zu tippen.",
@@ -2886,6 +3041,7 @@ export const RELEASES = [
         text: {
           fr: "Disposition : dans Général et aide, change l'ordre des onglets de la barre du haut et des rubriques des Réglages, et masque ceux dont tu ne te sers pas (l'Historique, par exemple).",
           en: "Layout: in General & help, reorder the top bar tabs and the Settings sections, and hide the ones you don't use (History, for example).",
+          uk: "Розташування: у розділі «Загальні та довідка» можна змінити порядок вкладок верхньої панелі й розділів налаштувань та сховати непотрібні (наприклад, «Історію»).",
           es: "Disposición: en General y ayuda, cambia el orden de las pestañas de la barra superior y de las secciones de Ajustes, y oculta las que no uses (Historial, por ejemplo).",
           "pt-BR": "Disposição: em Geral e ajuda, mude a ordem das abas da barra superior e das seções das Configurações, e oculte as que você não usa (Histórico, por exemplo).",
           de: "Anordnung: Unter Allgemein & Hilfe änderst du die Reihenfolge der Tabs oben und der Einstellungsbereiche und blendest ungenutzte aus (zum Beispiel den Verlauf).",
@@ -2904,6 +3060,7 @@ export const RELEASES = [
         text: {
           fr: "Des libellés trop longs pour leur bouton ont été raccourcis en italien, polonais, turc, russe et français (aperçus au survol, aide et FAQ, temps de visionnage…).",
           en: "Labels that overflowed their buttons were shortened in Italian, Polish, Turkish, Russian and French (hover previews, help & FAQ, watch time…).",
+          uk: "Підписи, що не вміщалися на кнопках, скорочено в італійській, польській, турецькій, російській та французькій мовах (попередній перегляд при наведенні, довідка й FAQ, час перегляду…).",
           es: "Se acortaron etiquetas demasiado largas para su botón en italiano, polaco, turco, ruso y francés (vistas previas al pasar el ratón, ayuda y FAQ, tiempo de visualización…).",
           "pt-BR": "Rótulos longos demais para o botão foram encurtados em italiano, polonês, turco, russo e francês (prévias ao passar o mouse, ajuda e FAQ, tempo assistido…).",
           de: "Zu lange Beschriftungen wurden auf Italienisch, Polnisch, Türkisch, Russisch und Französisch gekürzt (Hover-Vorschau, Hilfe & FAQ, Wiedergabezeit…).",
@@ -2922,6 +3079,7 @@ export const RELEASES = [
         text: {
           fr: "Une notification annonce chaque mise à jour de StreamPulse, une seule fois par version, et un clic ouvre les nouveautés. Ça se désactive dans les Réglages, onglet Alertes.",
           en: "A notification announces every StreamPulse update, once per version, and a click opens What's new. It can be turned off in Settings, Alerts tab.",
+          uk: "Сповіщення повідомляє про кожне оновлення StreamPulse, раз на версію, а клік відкриває «Що нового». Його можна вимкнути в налаштуваннях, на вкладці «Сповіщення».",
           es: "Una notificación anuncia cada actualización de StreamPulse, una sola vez por versión, y un clic abre las novedades. Se puede desactivar en los Ajustes, pestaña Alertas.",
           "pt-BR": "Uma notificação anuncia cada atualização do StreamPulse, uma vez por versão, e um clique abre as novidades. Dá para desativar nas Configurações, aba Alertas.",
           de: "Eine Benachrichtigung kündigt jedes StreamPulse-Update an, einmal pro Version, ein Klick öffnet die Neuigkeiten. Deaktivierbar in den Einstellungen, Tab Alarme.",
@@ -2940,6 +3098,7 @@ export const RELEASES = [
         text: {
           fr: "L'indicateur de latence se place où tu veux : sous le lecteur à côté des spectateurs, comme aujourd'hui, ou dans l'en-tête du tchat à la place du titre « Chat du stream ». Ça se règle dans Lecteur.",
           en: "The latency indicator goes where you want: under the player next to the viewer count, as today, or in the chat header in place of the \"Stream Chat\" title. Set it in Player.",
+          uk: "Індикатор затримки можна розташувати де завгодно: під плеєром поруч із кількістю глядачів, як зараз, або в заголовку чату замість напису «Stream Chat». Налаштовується в розділі «Плеєр».",
           es: "El indicador de latencia se coloca donde quieras: bajo el reproductor junto a los espectadores, como ahora, o en el encabezado del chat en lugar del título «Chat del stream». Se ajusta en Reproductor.",
           "pt-BR": "O indicador de latência fica onde você quiser: sob o player ao lado dos espectadores, como hoje, ou no cabeçalho do chat no lugar do título \"Chat da transmissão\". Ajuste em Player.",
           de: "Die Latenzanzeige sitzt, wo du willst: unter dem Player neben der Zuschauerzahl wie bisher oder in der Chat-Kopfzeile anstelle des Titels „Stream-Chat“. Einstellbar unter Player.",
@@ -2958,6 +3117,7 @@ export const RELEASES = [
         text: {
           fr: "Les points gagnés sur l'image du récap sont les vrais points de la période : le nouveau suivi par jour, et avant lui les coffres récupérés que l'extension avait datés. Si le suivi ne couvre qu'une partie de la période, l'image l'indique (« Points depuis le 26 sept. »). Le Wrapped annuel reprend ton total depuis l'installation.",
           en: "The points on the recap image are the real points of the period: the new daily tracking, and before it the bonus chests the extension had dated. If tracking only covers part of the period, the image says so (\"Points since Sep 26\"). The yearly Wrapped uses your total since install.",
+          uk: "Бали на зображенні підсумку — це реальні бали періоду: нове щоденне відстеження, а до нього — бонусні скрині, які розширення датувало. Якщо відстеження охоплює лише частину періоду, зображення про це повідомляє («Бали з 26 вер.»). Річний Wrapped використовує ваш загальний підсумок від встановлення.",
           es: "Los puntos de la imagen del resumen son los puntos reales del periodo: el nuevo registro diario y, antes de él, los cofres que la extensión había fechado. Si el registro solo cubre parte del periodo, la imagen lo indica («Puntos desde el 26 sept.»). El Wrapped anual usa tu total desde la instalación.",
           "pt-BR": "Os pontos na imagem do resumo são os pontos reais do período: o novo registro diário e, antes dele, os baús que a extensão tinha datado. Se o registro cobre só parte do período, a imagem avisa (\"Pontos desde 26 de set.\"). O Wrapped anual usa seu total desde a instalação.",
           de: "Die Punkte im Rückblick-Bild sind die echten Punkte des Zeitraums: die neue tägliche Erfassung und davor die Bonustruhen, die die Erweiterung datiert hatte. Deckt die Erfassung nur einen Teil ab, steht es im Bild („Punkte seit 26. Sept.“). Der Jahres-Wrapped nutzt deine Summe seit der Installation.",
@@ -2976,6 +3136,7 @@ export const RELEASES = [
         text: {
           fr: "Image du récap : le temps regardé ne déborde plus au-delà de 100 heures, le nom de ta chaîne favorite s'affiche en entier, StreamPulse n'est plus écrit trois fois, et l'image téléchargée est deux fois plus nette tout en pesant moins de 1 Mo (JPEG), assez léger pour X.",
           en: "Recap image: watch time no longer overflows past 100 hours, your favorite channel's name is shown in full, StreamPulse is no longer written three times, and the downloaded image is twice as sharp while weighing under 1 MB (JPEG), light enough for X.",
+          uk: "Зображення підсумку: час перегляду більше не вилазить за 100 годин, назва вашого улюбленого каналу показується повністю, StreamPulse більше не написано тричі, а завантажене зображення вдвічі чіткіше й важить менше 1 МБ (JPEG) — достатньо легке для X.",
           es: "Imagen del resumen: el tiempo visto ya no se desborda a partir de 100 horas, el nombre de tu canal favorito se ve completo, StreamPulse ya no aparece tres veces y la imagen descargada es el doble de nítida y pesa menos de 1 MB (JPEG), ligera para X.",
           "pt-BR": "Imagem do resumo: o tempo assistido não transborda mais acima de 100 horas, o nome do seu canal favorito aparece inteiro, StreamPulse não aparece mais três vezes e a imagem baixada é duas vezes mais nítida e pesa menos de 1 MB (JPEG), leve para o X.",
           de: "Rückblick-Bild: Die Zuschauzeit läuft über 100 Stunden nicht mehr über, der Name deines Lieblingskanals erscheint vollständig, StreamPulse steht nicht mehr dreimal da und das heruntergeladene Bild ist doppelt so scharf und wiegt unter 1 MB (JPEG), leicht genug für X.",
@@ -2994,6 +3155,7 @@ export const RELEASES = [
         text: {
           fr: "Le compteur « Drops aujourd'hui » de l'accueil est de retour : il compte les Drops réellement obtenus, et non plus les clics sur les boutons de Twitch.",
           en: "The \"Drops today\" counter on the home screen is back: it counts the Drops you actually earned, no longer clicks on Twitch buttons.",
+          uk: "Лічильник «Drops сьогодні» на головному екрані повернувся: він рахує Drops, які ви справді отримали, а не кліки по кнопках Twitch.",
           es: "El contador «Drops de hoy» de la pantalla de inicio vuelve: cuenta los Drops realmente obtenidos, ya no los clics en los botones de Twitch.",
           "pt-BR": "O contador «Drops hoje» da tela inicial está de volta: ele conta os Drops realmente obtidos, e não mais os cliques nos botões da Twitch.",
           de: "Der Zähler „Drops heute“ auf dem Startbildschirm ist zurück: Er zählt die tatsächlich erhaltenen Drops statt Klicks auf Twitch-Schaltflächen.",
@@ -3012,6 +3174,7 @@ export const RELEASES = [
         text: {
           fr: "Le Wrapped annuel pouvait afficher moins d'heures que l'un de ses mois (par exemple 120 h pour 2026 contre 160 h pour septembre) : le mois en cours n'était compté qu'à partir de l'arrivée du suivi par jour. Chaque mois est maintenant compté en entier.",
           en: "The yearly Wrapped could show fewer hours than one of its months (for example 120 h for 2026 versus 160 h for September): the current month only counted from when daily tracking arrived. Every month is now counted in full.",
+          uk: "Річний Wrapped міг показувати менше годин, ніж один із його місяців (наприклад, 120 год за 2026 рік проти 160 год за вересень): поточний місяць рахувався лише з моменту появи щоденного відстеження. Тепер кожен місяць рахується повністю.",
           es: "El Wrapped anual podía mostrar menos horas que uno de sus meses (por ejemplo 120 h para 2026 frente a 160 h para septiembre): el mes en curso solo se contaba desde la llegada del registro diario. Ahora cada mes se cuenta entero.",
           "pt-BR": "O Wrapped anual podia mostrar menos horas que um dos seus meses (por exemplo 120 h em 2026 contra 160 h em setembro): o mês atual só era contado a partir da chegada do registro diário. Agora cada mês é contado por inteiro.",
           de: "Der Jahres-Wrapped konnte weniger Stunden zeigen als einer seiner Monate (zum Beispiel 120 h für 2026 gegenüber 160 h für September): Der laufende Monat wurde erst ab Einführung der Tageserfassung gezählt. Jetzt wird jeder Monat vollständig gezählt.",
@@ -3031,6 +3194,7 @@ export const RELEASES = [
         for: {
           fr: "idée du suivi des points par chaîne",
           en: "the idea of per-channel points tracking",
+          uk: "ідея обліку балів по каналах",
           es: "la idea del registro de puntos por canal",
           "pt-BR": "a ideia do registro de pontos por canal",
           de: "die Idee der Punkteerfassung pro Kanal",

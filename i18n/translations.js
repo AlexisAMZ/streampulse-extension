@@ -21,6 +21,7 @@ import ru from "./lang/ru.js";
 import ja from "./lang/ja.js";
 import ko from "./lang/ko.js";
 import ar from "./lang/ar.js";
+import uk from "./lang/uk.js";
 
 export {
   ALL_LANGUAGES,
@@ -46,4 +47,5 @@ export const translations = {
   ja,
   ko,
   ar,
+  uk,
 };

@@ -33,6 +33,7 @@ export const ALL_LANGUAGES = [
   { code: "ja", label: "日本語", ready: true },
   { code: "ko", label: "한국어", ready: true },
   { code: "ar", label: "العربية", ready: true },
+  { code: "uk", label: "Українська", ready: true },
 ];
 
 /** Langues réellement proposées à l'utilisateur (celles qui sont traduites). */
