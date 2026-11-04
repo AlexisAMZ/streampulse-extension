@@ -13,7 +13,7 @@ const $ = (id) => document.getElementById(id);
 /** Les deux listes réordonnables : conteneur, éléments et leur identifiant. */
 const LISTS = {
   tabs: { container: () => document.querySelector(".tabs"), items: () => [...document.querySelectorAll(".tabs > .tab-button")], id: (node) => node.dataset.tab },
-  // Les rubriques sont rangées en groupes (Réglages, puis Outils) : chacune se
+  // Les rubriques sont rangées en trois groupes (au quotidien, personnalisation, compte) : chacune se
   // réordonne dans son groupe, jamais d'un groupe à l'autre.
   menu: { container: () => document.querySelector(".menu-nav"), items: () => [...document.querySelectorAll(".menu-nav .menu-tab")], id: (node) => node.dataset.panel },
 };
@@ -226,5 +226,5 @@ export async function initLayout() {
 
 const DEFAULT_ORDER = {
   tabs: ["streamers", "history", "drops", "badges", "settings"],
-  menu: ["notifications", "rewards", "player", "previews", "tabs", "chat", "identity", "general", "linked", "drops", "badges", "activity", "plus", "help"],
+  menu: ["notifications", "rewards", "drops", "badges", "activity", "player", "previews", "chat", "identity", "general", "data", "plus", "help"],
 };

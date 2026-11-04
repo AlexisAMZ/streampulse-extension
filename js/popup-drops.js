@@ -1329,10 +1329,10 @@ export async function initDrops({ isPlus, onPlusChange, openPlus }) {
     renderRewards(Date.now());
   }).catch(() => {});
   setInterval(render, TICK_MS);
-  // Un seul chemin : gratuit → StreamPulse+, Plus → la rubrique Récompenses qui porte le réglage.
+  // Un seul chemin : gratuit → StreamPulse+, Plus → les réglages de cette rubrique, plus bas.
   $("drops-auto")?.addEventListener("click", () => {
     if (!deps.isPlus()) deps.openPlus();
-    else $("menu-tab-rewards")?.click();
+    else $("drops-settings")?.scrollIntoView({ block: "start", behavior: "smooth" });
   });
   // Popup ouvert : on demande une lecture fraîche à un onglet Twitch, s'il y en a un.
   chrome.runtime.sendMessage({ type: "dropsRefresh" }).catch(() => {});

@@ -1212,6 +1212,21 @@ async function handleSavePseudo() {
 }
 
 /**
+ * Curseurs : la valeur affichée à côté (« 150 % », « 200 ms ») devient aussi le
+ * texte annoncé par les lecteurs d'écran, qui sinon n'entendent que le nombre brut.
+ */
+function initRangeAnnouncements() {
+  for (const range of document.querySelectorAll(".settings-range")) {
+    const valueNode = range.closest(".field-stack")?.querySelector(".field-value");
+    if (!valueNode) continue;
+    const sync = () => range.setAttribute("aria-valuetext", valueNode.textContent.replace(/\s+/g, " ").trim() || range.value);
+    new MutationObserver(sync).observe(valueNode, { childList: true, characterData: true, subtree: true });
+    sync();
+  }
+}
+
+
+/**
  * Sous-réglages visuellement et fonctionnellement désactivés quand leur
  * interrupteur principal est coupé (heures calmes, aperçus).
  */
@@ -1225,6 +1240,11 @@ function setSubEnabled(container, enabled) {
 
 function syncQuietHoursTimes() {
   setSubEnabled(quietHoursTimesRow, state.preferences?.quietHoursEnabled === true);
+}
+
+/** La fréquence d'ouverture de l'inventaire ne sert à rien tant que l'ouverture auto est coupée. */
+function syncInventoryInterval() {
+  setSubEnabled(document.getElementById("auto-open-inventory-interval-wrap"), autoOpenInventoryToggle?.checked === true);
 }
 
 function syncPreviewsSub(enabled) {
@@ -1253,6 +1273,7 @@ function syncDropsPlusLock() {
   if (autoClaimDropsToggle) autoClaimDropsToggle.checked = plus && prefs.autoClaimDrops !== false;
   if (autoOpenInventoryToggle) autoOpenInventoryToggle.checked = plus && Boolean(prefs.autoOpenInventory);
   if (badgeAlertsToggle) badgeAlertsToggle.checked = plus && prefs.badgeAlerts === true;
+  syncInventoryInterval();
 }
 
 /** Sans licence, activer un réglage Drops ouvre l'offre au lieu d'enregistrer. */
@@ -1384,6 +1405,7 @@ function renderPreferences() {
   if (autoOpenInventoryIntervalSelect) {
     autoOpenInventoryIntervalSelect.value = String(prefs.autoOpenInventoryIntervalHours || 24);
   }
+  syncInventoryInterval();
   if (hideTwitchExtensionsToggle) {
     hideTwitchExtensionsToggle.checked = Boolean(prefs.hideTwitchExtensions);
   }
@@ -2394,10 +2416,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       next.focus();
     });
     initMenuNav();
+    initRangeAnnouncements();
     // « Page complète » du tiroir Twitch : ?menu=<panneau> ouvre les réglages
     // directement sur la rubrique demandée.
     // Rubriques fusionnées : les anciens liens (?menu=previews…) arrivent au bon panneau.
-    const MERGED_PANELS = { chat: "previews", tabs: "player", linked: "identity" };
+    const MERGED_PANELS = { tabs: "player", linked: "identity" };
     const menuParam = new URLSearchParams(location.search).get("menu");
     const requestedPanel = MERGED_PANELS[menuParam] || menuParam;
     if (requestedPanel && document.querySelector(`.menu-tab[data-panel="${CSS.escape(requestedPanel)}"]`)) {
@@ -2541,12 +2564,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     addStreamerForm?.addEventListener("submit", handleAddStreamer);
-    // Parrainage : l'entrée des Réglages généraux renvoie vers le bloc complet
-    // (code, gains, paliers) qui vit dans l'onglet StreamPulse+.
-    document.getElementById("referral-general-open")?.addEventListener("click", () => {
-      document.querySelector('.menu-nav > .menu-tab[data-panel="plus"]')?.click();
-      document.getElementById("referral-block")?.scrollIntoView({ block: "start", behavior: "smooth" });
-    });
     soundsToggle?.addEventListener("change", (e) => {
       updatePreferences({ soundsEnabled: e.target.checked });
     });
@@ -2572,6 +2589,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     autoOpenInventoryToggle?.addEventListener("change", (e) => {
       if (guardDropsPlus(e)) return;
       updatePreferences({ autoOpenInventory: e.target.checked });
+      syncInventoryInterval();
     });
     autoOpenInventoryIntervalSelect?.addEventListener("change", (e) => {
       updatePreferences({ autoOpenInventoryIntervalHours: Number(e.target.value) });

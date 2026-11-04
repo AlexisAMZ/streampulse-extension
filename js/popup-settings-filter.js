@@ -4,7 +4,7 @@ import { getPlatformIcon } from "./platforms.js";
 import { PLATFORM_FILTERS, matchesFilter, normalizeText, platformsOfIds } from "./settings-filter.js";
 import { onLanguageChange, t } from "./i18n.js";
 
-const FILTERABLE_PANELS = ["notifications", "rewards", "player", "previews", "general"];
+const FILTERABLE_PANELS = ["notifications", "rewards", "player", "previews", "chat", "data", "general"];
 const FOLLOWERS = "P"; // une note ou un statut suit la décision de la ligne qu'il commente
 
 // Clés écrites en entier : le contrôle des clés mortes de verify les voit.
