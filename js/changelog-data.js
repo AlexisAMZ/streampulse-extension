@@ -52,6 +52,32 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.11.4",
+    date: "2026-11-04",
+    changes: [
+      {
+        type: "improved",
+        area: "plus",
+        text: {
+          "fr": "Le rappel de l'essai StreamPulse+ est plus discret : une seule notification, au bout de trois jours, et seulement si tu n'as pas ouvert StreamPulse ces deux derniers jours.",
+          "en": "The StreamPulse+ trial reminder is quieter: a single notification after three days, and only if you haven't opened StreamPulse in the last two days.",
+          "uk": "Нагадування про пробний період StreamPulse+ стало ненав'язливішим: лише одне сповіщення через три дні і лише якщо ви не відкривали StreamPulse протягом останніх двох днів.",
+          "es": "El recordatorio de la prueba de StreamPulse+ es más discreto: una sola notificación a los tres días, y solo si no has abierto StreamPulse en los últimos dos días.",
+          "pt-BR": "O lembrete do teste do StreamPulse+ ficou mais discreto: uma única notificação após três dias, e só se você não abriu o StreamPulse nos últimos dois dias.",
+          "de": "Die Erinnerung an die StreamPulse+-Testphase ist dezenter: nur eine Benachrichtigung nach drei Tagen, und nur wenn du StreamPulse in den letzten zwei Tagen nicht geöffnet hast.",
+          "it": "Il promemoria della prova di StreamPulse+ è più discreto: una sola notifica dopo tre giorni, e solo se non hai aperto StreamPulse negli ultimi due giorni.",
+          "pl": "Przypomnienie o okresie próbnym StreamPulse+ jest mniej natarczywe: jedno powiadomienie po trzech dniach i tylko wtedy, gdy StreamPulse nie był otwierany w ciągu ostatnich dwóch dni.",
+          "tr": "StreamPulse+ deneme hatırlatması daha sakin: üç gün sonra yalnızca tek bir bildirim, o da yalnızca son iki gündür StreamPulse'u açmadıysan.",
+          "ru": "Напоминание о пробном периоде StreamPulse+ стало ненавязчивее: всего одно уведомление через три дня, и только если вы не открывали StreamPulse последние два дня.",
+          "ja": "StreamPulse+ のお試しリマインダーを控えめにしました。通知は3日後に1回だけで、直近2日間に StreamPulse を開いていない場合に限ります。",
+          "ko": "StreamPulse+ 체험 알림이 더 조용해졌어요. 알림은 3일 뒤 한 번만 오고, 최근 이틀 동안 StreamPulse를 열지 않았을 때만 와요.",
+          "ar": "تذكير تجربة StreamPulse+ أصبح أقل إزعاجًا: إشعار واحد فقط بعد ثلاثة أيام، ولا يصل إلا إذا لم تفتح StreamPulse خلال اليومين الماضيين.",
+        },
+      },
+    ],
+  },
+
+  {
     version: "26.11.2",
     date: "2026-11-01",
     changes: [
