@@ -12,15 +12,19 @@ test("premier passage : on note la date, pas de rappel le jour même", () => {
   assert.equal(first.reminder.firstSeenAt, T0);
 });
 
-test("un jour plus tard, popup jamais ouvert : rappel, puis attente de 4 jours", () => {
+test("pas de rappel avant trois jours, même popup jamais ouvert", () => {
   const seen = { firstSeenAt: T0, count: 0, lastAt: 0 };
-  const one = planTrialReminder({ ...base, now: T0 + DAY, reminder: seen });
+  assert.equal(planTrialReminder({ ...base, now: T0 + DAY, reminder: seen }).send, false);
+  assert.equal(planTrialReminder({ ...base, now: T0 + 2 * DAY, reminder: seen }).send, false);
+});
+
+test("trois jours plus tard, popup jamais ouvert : un seul rappel, jamais un second", () => {
+  const seen = { firstSeenAt: T0, count: 0, lastAt: 0 };
+  const one = planTrialReminder({ ...base, now: T0 + 3 * DAY, reminder: seen });
   assert.equal(one.send, true);
-  assert.equal(planTrialReminder({ ...base, now: T0 + 3 * DAY, reminder: one.reminder }).send, false);
-  const two = planTrialReminder({ ...base, now: T0 + 5 * DAY, reminder: one.reminder });
-  assert.equal(two.send, true);
-  assert.equal(two.reminder.count, MAX_REMINDERS);
-  assert.equal(planTrialReminder({ ...base, now: T0 + 30 * DAY, reminder: two.reminder }).send, false, "jamais plus de deux");
+  assert.equal(one.reminder.count, MAX_REMINDERS);
+  assert.equal(MAX_REMINDERS, 1);
+  assert.equal(planTrialReminder({ ...base, now: T0 + 30 * DAY, reminder: one.reminder }).send, false, "jamais plus d'un");
 });
 
 test("jamais pour un abonné, un essai déjà pris, ou un popup ouvert récemment", () => {

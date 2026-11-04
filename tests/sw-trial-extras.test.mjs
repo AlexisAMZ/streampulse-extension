@@ -126,11 +126,12 @@ test("manquées : sans canvas hors écran (Node, vieux navigateur), l'icône n'e
 
 // ─── Rappel de l'essai ────────────────────────────────────────────────────────
 
-test("rappel : premier passage noté, puis une notification au bout d'un jour", async () => {
+test("rappel : premier passage noté, puis une seule notification au bout de trois jours", async () => {
   const { maybeRemindTrial } = await mods.reminder();
   assert.equal(await maybeRemindTrial(NOW), false);
   assert.equal(fake.storage.local.dump().streamPulseTrialReminder.firstSeenAt, NOW);
-  assert.equal(await maybeRemindTrial(NOW + DAY), true);
+  assert.equal(await maybeRemindTrial(NOW + DAY), false, "pas avant trois jours");
+  assert.equal(await maybeRemindTrial(NOW + 3 * DAY), true);
   const created = fake.calls.filter(([name]) => name === "notifications.create");
   assert.equal(created.length, 1);
   assert.equal(fake.storage.local.dump().streamPulseTrialReminder.count, 1);

@@ -1,6 +1,8 @@
 // Rappel de l'essai StreamPulse+ pour qui n'ouvre pas le popup : une
-// notification Chrome « 7 jours offerts, sans carte bancaire ». Deux au plus,
-// jamais à un abonné ni à qui a déjà pris l'essai. Module pur, testé par
+// notification Chrome « 7 jours offerts, sans carte bancaire ». Une seule, trois
+// jours après la première vérification (adouci le 2026-11-04 : les pics de
+// désinstallations des 29 octobre et 2 novembre tombaient sur les dates les plus
+// tôt des deux rappels). Jamais à un abonné ni à qui a déjà pris l'essai. Module pur, testé par
 // tests/trial-reminder.test.mjs.
 
 export const TRIAL_REMINDER_KEY = "streamPulseTrialReminder";
@@ -8,9 +10,9 @@ export const TRIAL_REMINDER_KEY = "streamPulseTrialReminder";
 export const POPUP_SEEN_KEY = "streamPulsePopupSeenAt";
 
 const DAY_MS = 86_400_000;
-export const MAX_REMINDERS = 2;
-/** Premier rappel au plus tôt un jour après la première vérification (installation ou mise à jour). */
-const FIRST_DELAY_MS = DAY_MS;
+export const MAX_REMINDERS = 1;
+/** Rappel au plus tôt trois jours après la première vérification (installation ou mise à jour). */
+const FIRST_DELAY_MS = 3 * DAY_MS;
 /** Écart minimal entre deux rappels. */
 const GAP_MS = 4 * DAY_MS;
 /** Popup ouvert récemment : la personne voit déjà le bandeau, pas besoin de rappel. */
