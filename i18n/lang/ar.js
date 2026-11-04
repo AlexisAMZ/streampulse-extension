@@ -182,7 +182,11 @@ export default {
         "pulse": "نبض",
         "bubble": "فقاعة",
         "arpeggio": "أرپيجيو",
-        "drop": "قطرة"
+        "drop": "قطرة",
+        "punch": "لكمة",
+        "airhorn": "بوق",
+        "siren": "صفارة",
+        "laser": "ليزر"
       },
       "kind": {
         "live": "بدأ البث",
@@ -465,7 +469,30 @@ export default {
       "removeTerm": "إزالة {{term}}",
       "deleteRule": "حذف القاعدة",
       "enableRule": "تفعيل القاعدة",
-      "noStreamers": "أضف بثّاثًا من الشاشة الرئيسية أولًا."
+      "noStreamers": "أضف بثّاثًا من الشاشة الرئيسية أولًا.",
+      "useCurrent": "يبث الآن: {{game}}",
+      "categorySearch": "ابحث عن فئة",
+      "categoryNone": "لم يتم العثور على فئة. تحقق من الإملاء.",
+      "categoryOffline": "البحث غير متاح. حاول مجددًا بعد قليل.",
+      "noCategory": "بدون فئة",
+      "verdictOff": "القاعدة معطّلة.",
+      "verdictOffline": "ليس مباشرًا الآن: ستُفحص هذه القاعدة عند البث التالي.",
+      "verdictMatch": "تطابق هذه القاعدة البث الحالي: كنت ستتلقى إشعارًا.",
+      "verdictMismatch": "لا تطابق البث الحالي.",
+      "whyGame": "الفئة هي «{{game}}».",
+      "whyTitle": "العنوان لا يحتوي على أي من كلماتك.",
+      "whyViewers": "{{count}} مشاهدين فقط.",
+      "soundLine": "الصوت",
+      "soundTarget": "صوت التنبيه المخصّص",
+      "soundOff": "بدون صوت",
+      "soundMine": "أصواتي",
+      "soundDelete": "احذف هذا الصوت",
+      "soundImport": "استيراد صوت",
+      "soundImportHint": "ملف صوتي، حتى {{kb}} كيلوبايت و{{seconds}} ثوانٍ. يبقى على هذا الجهاز.",
+      "soundBadFile": "هذا الملف ليس ملفًا صوتيًا قابلًا للقراءة.",
+      "soundTooBig": "هذا الملف كبير جدًا (الحد الأقصى {{kb}} كيلوبايت).",
+      "soundTooLong": "هذا الصوت طويل جدًا (الحد الأقصى {{seconds}} ثوانٍ).",
+      "soundFull": "تم بلوغ الحد: {{count}} أصوات شخصية. احذف واحدًا أولًا."
     },
     "cplus": {
       "addFromSearch": "إضافة «{{name}}»",
@@ -1311,6 +1338,8 @@ export default {
     },
     "notifications": {
       "liveTitle": "{{name}} يبث الآن",
+      "smartTitle": "تم تفعيل تنبيهك: {{name}} يبث الآن",
+      "smartRule": "التنبيه «{{rule}}»",
       "startupBatchTitle": "يبثون الآن",
       "startupBatchBody": "يبثون بالفعل: {{names}}",
       "liveMessage": "{{game}} • {{viewers}} مشاهد",

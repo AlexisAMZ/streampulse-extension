@@ -129,7 +129,7 @@ export function explainStreamerAlerts({ streamer, previous, next, smartDecision,
   if (!next.isLive) return { alerts: [], reason: "offline" };
   if (smartDecision) {
     return {
-      alerts: smartDecision.notifyRule ? [{ type: "live" }] : [],
+      alerts: smartDecision.notifyRule ? [{ type: "live", smart: true, ruleName: smartDecision.notifyRule.name || "", sound: smartDecision.notifyRule.sound }] : [],
       reason: smartDecision.notifyRule ? "smartMatch" : smartDecision.matchedIds?.length ? "smartUnchanged" : "smartNoMatch",
     };
   }

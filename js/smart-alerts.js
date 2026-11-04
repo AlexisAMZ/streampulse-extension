@@ -1,6 +1,8 @@
 // Alertes intelligentes (StreamPulse+) : règles par streamer qui remplacent
 // l'alerte classique « passe en live ». Module pur, testé à part.
 
+import { normalizeRuleSound } from "./notification-sounds.js";
+
 export const SMART_ALERTS_KEY = "streamPulseSmartAlerts";
 
 export const MAX_RULES_PER_STREAMER = 6;
@@ -30,6 +32,7 @@ export function normalizeRule(rule) {
     games: cleanTerms(rule?.games),
     keywords: cleanTerms(rule?.keywords),
     minViewers,
+    sound: normalizeRuleSound(rule?.sound),
   };
 }
 
@@ -79,4 +82,27 @@ export function decideSmartAlert(rules, status, previouslyMatchedIds = []) {
     matchedIds,
     notifyRule: fresh ? active.find((rule) => rule.id === fresh) : null,
   };
+}
+
+/**
+ * Pourquoi une règle correspond ou non au live actuel, critère par critère.
+ * Sert à l'aperçu du popup : l'utilisateur voit tout de suite si son jeu est
+ * le bon. `state` : off (règle coupée), offline (pas en live), match, mismatch.
+ */
+export function explainRule(rule, status) {
+  if (!rule?.enabled) return { state: "off", failed: [] };
+  if (!status?.isLive) return { state: "offline", failed: [] };
+  const game = fold(status.game);
+  const title = fold(status.title);
+  const failed = [];
+  if (rule.games.length && !rule.games.some((g) => game && game === fold(g))) failed.push("games");
+  if (rule.keywords.length && !rule.keywords.some((k) => title.includes(fold(k)))) failed.push("keywords");
+  if (rule.minViewers > 0 && !(Number(status.viewers) >= rule.minViewers)) failed.push("viewers");
+  return { state: failed.length ? "mismatch" : "match", failed };
+}
+
+/** Le nom est-il celui d'une catégorie connue (actuelle, récente, proposée) ? */
+export function isKnownCategory(name, known) {
+  const key = fold(name);
+  return Boolean(key) && (known || []).some((item) => fold(item) === key);
 }

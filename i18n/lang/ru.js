@@ -182,7 +182,11 @@ export default {
         "pulse": "Пульс",
         "bubble": "Пузырь",
         "arpeggio": "Арпеджио",
-        "drop": "Капля"
+        "drop": "Капля",
+        "punch": "Удар",
+        "airhorn": "Горн",
+        "siren": "Сирена",
+        "laser": "Лазер"
       },
       "kind": {
         "live": "Начало трансляции",
@@ -461,7 +465,30 @@ export default {
       "removeTerm": "Убрать {{term}}",
       "deleteRule": "Удалить правило",
       "enableRule": "Включить правило",
-      "noStreamers": "Сначала добавь стримера на главном экране."
+      "noStreamers": "Сначала добавь стримера на главном экране.",
+      "useCurrent": "Сейчас: {{game}}",
+      "categorySearch": "Найти категорию",
+      "categoryNone": "Категория не найдена. Проверь написание.",
+      "categoryOffline": "Поиск недоступен. Попробуй ещё раз чуть позже.",
+      "noCategory": "без категории",
+      "verdictOff": "Правило отключено.",
+      "verdictOffline": "Не в эфире: правило проверится при следующем эфире.",
+      "verdictMatch": "Правило подходит к текущему эфиру: ты получил бы уведомление.",
+      "verdictMismatch": "Не подходит к текущему эфиру.",
+      "whyGame": "Категория: «{{game}}».",
+      "whyTitle": "В названии нет ни одного из твоих слов.",
+      "whyViewers": "Всего {{count}} зрителей.",
+      "soundLine": "Звук",
+      "soundTarget": "Звук целевого алерта",
+      "soundOff": "Без звука",
+      "soundMine": "Мои звуки",
+      "soundDelete": "Удалить этот звук",
+      "soundImport": "Импортировать звук",
+      "soundImportHint": "Аудиофайл, до {{kb}} КБ и {{seconds}} с. Остаётся на этом устройстве.",
+      "soundBadFile": "Этот файл не является читаемым аудио.",
+      "soundTooBig": "Файл слишком большой (макс. {{kb}} КБ).",
+      "soundTooLong": "Звук слишком длинный (макс. {{seconds}} с).",
+      "soundFull": "Достигнут лимит: {{count}} личных звука. Сначала удали один."
     },
     "cplus": {
       "addFromSearch": "Добавить «{{name}}»",
@@ -1293,6 +1320,8 @@ export default {
     },
     "notifications": {
       "liveTitle": "{{name}} в эфире",
+      "smartTitle": "Твой алерт сработал: {{name}} в эфире",
+      "smartRule": "Алерт «{{rule}}»",
       "startupBatchTitle": "Сейчас в эфире",
       "startupBatchBody": "Уже в эфире: {{names}}",
       "liveMessage": "{{game}} • {{viewers}} зрителей",

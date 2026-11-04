@@ -13,6 +13,7 @@ const LABELS = {
   preset: {
     classic: "popup.sounds.preset.classic", chime: "popup.sounds.preset.chime", pulse: "popup.sounds.preset.pulse",
     bubble: "popup.sounds.preset.bubble", arpeggio: "popup.sounds.preset.arpeggio", drop: "popup.sounds.preset.drop",
+    punch: "popup.sounds.preset.punch", airhorn: "popup.sounds.preset.airhorn", siren: "popup.sounds.preset.siren", laser: "popup.sounds.preset.laser",
   },
 };
 const GENERAL_ROW = { id: "pref-sound-general", key: "notificationSound", label: "popup.sounds.general" };

@@ -32,7 +32,15 @@ import {
   MAX_TERMS_PER_RULE,
   normalizeRule,
   normalizeRules,
+  explainRule,
 } from "./smart-alerts.js";
+import { createCategoryField } from "./popup-category-picker.js";
+import { playNotificationSound } from "./notification-sound-player.js";
+import { SMART_SOUND, SMART_SOUND_OFF, SOUND_PRESETS } from "./notification-sounds.js";
+import {
+  CUSTOM_SOUNDS_KEY, MAX_CUSTOM_BYTES, MAX_CUSTOM_SECONDS, MAX_CUSTOM_SOUNDS,
+  addCustomSound, checkSoundFile, customSoundData, isCustomSound, normalizeLibrary, removeCustomSound,
+} from "./custom-sounds.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -684,6 +692,7 @@ function initPlus() {
 let smartStreamers = [];
 let smartRules = {};
 let smartSelectedId = null;
+let smartStatuses = {};
 let saveTimer = 0;
 
 function saveRules({ immediate = false } = {}) {
@@ -770,7 +779,200 @@ function termLine(rule, field, labelKey, anyKey, placeholderKey) {
   return line;
 }
 
-function createRuleCard(rule, streamerId) {
+function activeStatus(streamer) {
+  return smartStatuses[streamer.id]?.active || { isLive: false };
+}
+
+function gameLine(rule, streamer) {
+  const line = node("div", "smart-line");
+  const status = activeStatus(streamer);
+  line.append(
+    node("span", null, t("popup.smart.gameLine")),
+    createCategoryField({
+      rule,
+      platform: streamer.platform,
+      currentGame: status.isLive ? status.game || "" : "",
+      onChange: () => {
+        saveRules({ immediate: true });
+        renderSmartRules();
+        $("smart-rules")?.querySelector(`[data-rule="${rule.id}"] .smart-cat-input`)?.focus();
+      },
+    }),
+  );
+  return line;
+}
+
+const RULE_SOUND_LABELS = {
+  [SMART_SOUND]: "popup.smart.soundTarget",
+  [SMART_SOUND_OFF]: "popup.smart.soundOff",
+  classic: "popup.sounds.preset.classic", chime: "popup.sounds.preset.chime", pulse: "popup.sounds.preset.pulse",
+  bubble: "popup.sounds.preset.bubble", arpeggio: "popup.sounds.preset.arpeggio", drop: "popup.sounds.preset.drop",
+  punch: "popup.sounds.preset.punch", airhorn: "popup.sounds.preset.airhorn", siren: "popup.sounds.preset.siren", laser: "popup.sounds.preset.laser",
+};
+const SOUND_ERRORS = {
+  type: "popup.smart.soundBadFile",
+  size: "popup.smart.soundTooBig",
+  length: "popup.smart.soundTooLong",
+  full: "popup.smart.soundFull",
+};
+
+let customLibrary = {};
+
+function playRuleSound(value) {
+  const own = customSoundData(customLibrary, value);
+  const preset = isCustomSound(value) ? (own ? "custom" : SMART_SOUND) : value;
+  return playNotificationSound(preset, { dataUrl: own?.dataUrl || "", getUrl: (path) => chrome.runtime.getURL(path) });
+}
+
+/** Durée d'un fichier audio, lue sans le jouer. */
+function audioSeconds(dataUrl) {
+  return new Promise((resolve) => {
+    const probe = new Audio();
+    probe.preload = "metadata";
+    probe.addEventListener("loadedmetadata", () => resolve(probe.duration), { once: true });
+    probe.addEventListener("error", () => resolve(0), { once: true });
+    probe.src = dataUrl;
+  });
+}
+
+function readAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ""));
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+/** Son de l'alerte de CETTE règle : menu, Écouter, import d'un son personnel. */
+function soundLine(rule) {
+  const line = node("div", "smart-line");
+  const wrap = node("div", "smart-sound-wrap");
+  const controls = node("div", "smart-sound");
+  const select = node("select", "settings-select");
+  select.setAttribute("aria-label", t("popup.smart.soundLine"));
+  const addOption = (parent, value, label) => {
+    const option = node("option", null, label);
+    option.value = value;
+    parent.append(option);
+  };
+  [SMART_SOUND, ...SOUND_PRESETS].forEach((value) => addOption(select, value, t(RULE_SOUND_LABELS[value])));
+  const mine = Object.entries(customLibrary);
+  if (mine.length) {
+    const group = node("optgroup");
+    group.label = t("popup.smart.soundMine");
+    mine.forEach(([id, sound]) => addOption(group, `custom:${id}`, sound.name));
+    select.append(group);
+  }
+  addOption(select, SMART_SOUND_OFF, t(RULE_SOUND_LABELS[SMART_SOUND_OFF]));
+  // Un son personnel supprimé ailleurs : la règle retombe sur le son d'alerte ciblée.
+  select.value = isCustomSound(rule.sound) && !customSoundData(customLibrary, rule.sound) ? SMART_SOUND : rule.sound;
+
+  const listen = node("button", "button button-quiet", t("popup.sounds.listen"));
+  listen.type = "button";
+  const remove = node("button", "icon-button");
+  remove.type = "button";
+  remove.innerHTML = TRASH_ICON;
+  remove.title = t("popup.smart.soundDelete");
+  remove.setAttribute("aria-label", t("popup.smart.soundDelete"));
+  const sync = () => {
+    listen.disabled = rule.sound === SMART_SOUND_OFF;
+    remove.hidden = !isCustomSound(rule.sound);
+  };
+  sync();
+
+  const message = node("p", "smart-sound-note");
+  message.setAttribute("role", "status");
+  message.hidden = true;
+  const say = (key, params) => {
+    message.textContent = t(key, params);
+    message.hidden = false;
+  };
+
+  select.addEventListener("change", () => {
+    rule.sound = select.value;
+    sync();
+    saveRules({ immediate: true });
+    if (rule.sound !== SMART_SOUND_OFF) playRuleSound(rule.sound).catch(() => {});
+  });
+  listen.addEventListener("click", () => {
+    playRuleSound(rule.sound).catch((error) => console.warn("[popup] son impossible à jouer", error));
+  });
+  remove.addEventListener("click", async () => {
+    customLibrary = removeCustomSound(customLibrary, rule.sound);
+    rule.sound = SMART_SOUND;
+    await chrome.storage.local.set({ [CUSTOM_SOUNDS_KEY]: customLibrary });
+    saveRules({ immediate: true });
+    renderSmartRules();
+  });
+
+  const file = node("input");
+  file.type = "file";
+  file.accept = "audio/*";
+  file.hidden = true;
+  const importButton = node("button", "button button-quiet", t("popup.smart.soundImport"));
+  importButton.type = "button";
+  importButton.disabled = Object.keys(customLibrary).length >= MAX_CUSTOM_SOUNDS;
+  importButton.title = importButton.disabled
+    ? t(SOUND_ERRORS.full, { count: MAX_CUSTOM_SOUNDS })
+    : t("popup.smart.soundImportHint", { kb: Math.round(MAX_CUSTOM_BYTES / 1024), seconds: MAX_CUSTOM_SECONDS });
+  importButton.addEventListener("click", () => file.click());
+  file.addEventListener("change", async () => {
+    const picked = file.files?.[0];
+    file.value = "";
+    if (!picked) return;
+    try {
+      const dataUrl = await readAsDataUrl(picked);
+      const seconds = await audioSeconds(dataUrl);
+      const problem = checkSoundFile({ type: picked.type, size: picked.size, seconds });
+      if (problem) return say(SOUND_ERRORS[problem], { kb: Math.round(MAX_CUSTOM_BYTES / 1024), seconds: MAX_CUSTOM_SECONDS });
+      const name = picked.name.replace(/\.[^.]+$/, "");
+      const added = addCustomSound(customLibrary, { name, dataUrl, seconds });
+      if (!added.id) return say(SOUND_ERRORS.full, { count: MAX_CUSTOM_SOUNDS });
+      customLibrary = added.library;
+      await chrome.storage.local.set({ [CUSTOM_SOUNDS_KEY]: customLibrary });
+      rule.sound = `custom:${added.id}`;
+      saveRules({ immediate: true });
+      renderSmartRules();
+      playRuleSound(rule.sound).catch(() => {});
+    } catch (error) {
+      console.warn("[popup] import du son :", error?.message || error);
+      say(SOUND_ERRORS.type);
+    }
+  });
+
+  controls.append(select, listen, remove);
+  wrap.append(controls, importButton, file, message);
+  line.append(node("span", null, t("popup.smart.soundLine")), wrap);
+  return line;
+}
+
+/** Dit tout de suite si la règle aurait sonné pour le live en cours, et pourquoi sinon. */
+function ruleVerdict(rule, streamer) {
+  const status = activeStatus(streamer);
+  const { state, failed } = explainRule(rule, status);
+  const verdict = node("p", `smart-verdict is-${state}`);
+  verdict.setAttribute("role", "status");
+  if (state === "off") return node("p", "smart-verdict is-off", t("popup.smart.verdictOff"));
+  if (state === "offline") {
+    verdict.textContent = t("popup.smart.verdictOffline");
+    return verdict;
+  }
+  if (state === "match") {
+    verdict.textContent = t("popup.smart.verdictMatch");
+    return verdict;
+  }
+  const reasons = failed.map((field) => {
+    if (field === "games") return t("popup.smart.whyGame", { game: status.game || t("popup.smart.noCategory") });
+    if (field === "keywords") return t("popup.smart.whyTitle");
+    return t("popup.smart.whyViewers", { count: Number(status.viewers) || 0 });
+  });
+  verdict.textContent = `${t("popup.smart.verdictMismatch")} ${reasons.join(" ")}`;
+  return verdict;
+}
+
+function createRuleCard(rule, streamer) {
+  const streamerId = streamer.id;
   const card = node("div", `smart-rule${rule.enabled ? "" : " is-off"}`);
   card.dataset.rule = rule.id;
 
@@ -827,9 +1029,11 @@ function createRuleCard(rule, streamerId) {
 
   card.append(
     top,
-    termLine(rule, "games", "popup.smart.gameLine", "popup.smart.anyGame", "popup.smart.gamePlaceholder"),
+    gameLine(rule, streamer),
     termLine(rule, "keywords", "popup.smart.keywordLine", "popup.smart.anyKeyword", "popup.smart.keywordPlaceholder"),
     viewersLine,
+    soundLine(rule),
+    ruleVerdict(rule, streamer),
   );
   return card;
 }
@@ -862,7 +1066,7 @@ function renderSmartRules() {
     children.push(node("p", "smart-replaces", t("popup.smart.replacesStreamer", { name: streamer.displayName || streamer.handle })));
   }
   if (!rules.length) children.push(node("p", "smart-empty", t("popup.smart.noRules")));
-  rules.forEach((rule) => children.push(createRuleCard(rule, streamer.id)));
+  rules.forEach((rule) => children.push(createRuleCard(rule, streamer)));
   host.replaceChildren(...children);
 }
 
@@ -1046,7 +1250,7 @@ export async function initFeatures() {
   initClipDownloadLock();
   initPredictions();
 
-  const stored = await chrome.storage.local.get([PLUS_KEY, PROMO_KEY, SMART_ALERTS_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers", "streamPulseWatchTimeDaily", "streamPulsePointsDaily", "streamPulseDropsProgress", REMOTE_CONFIG_CACHE_KEY, ...IDENTITY_STORAGE_KEYS]);
+  const stored = await chrome.storage.local.get([PLUS_KEY, PROMO_KEY, SMART_ALERTS_KEY, PREDICTION_RULE_KEY, PREDICTION_HISTORY_KEY, "betaGeneralStreamers", "betaGeneralStatuses", CUSTOM_SOUNDS_KEY, "streamPulseWatchTimeDaily", "streamPulsePointsDaily", "streamPulseDropsProgress", REMOTE_CONFIG_CACHE_KEY, ...IDENTITY_STORAGE_KEYS]);
   plusRecord = stored[PLUS_KEY] || null;
   promoState = {
     plusClosed: stored[PROMO_KEY]?.plusClosed === true,
@@ -1075,6 +1279,8 @@ export async function initFeatures() {
   recheckOnOpen().catch(() => {});
   smartRules = normalizeRules(stored[SMART_ALERTS_KEY]);
   smartStreamers = Array.isArray(stored.betaGeneralStreamers) ? stored.betaGeneralStreamers : [];
+  smartStatuses = stored.betaGeneralStatuses || {};
+  customLibrary = normalizeLibrary(stored[CUSTOM_SOUNDS_KEY]);
   promoDue = decidePromoDue();
   renderPlus();
   $("promo-plus-close")?.addEventListener("click", () => {
@@ -1116,6 +1322,11 @@ export async function initFeatures() {
     if (changes[PREDICTION_HISTORY_KEY]) {
       predictionHistory = changes[PREDICTION_HISTORY_KEY].newValue || [];
       renderPredictions();
+    }
+    if (changes.betaGeneralStatuses) {
+      smartStatuses = changes.betaGeneralStatuses.newValue || {};
+      // Pas de redessin pendant une saisie : on ne casse pas le champ en cours.
+      if (!document.activeElement?.classList?.contains("smart-cat-input")) renderSmart();
     }
     if (changes.betaGeneralStreamers) {
       smartStreamers = changes.betaGeneralStreamers.newValue || [];

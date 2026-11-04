@@ -182,7 +182,11 @@ export default {
         "pulse": "パルス",
         "bubble": "バブル",
         "arpeggio": "アルペジオ",
-        "drop": "しずく"
+        "drop": "しずく",
+        "punch": "パンチ",
+        "airhorn": "エアホーン",
+        "siren": "サイレン",
+        "laser": "レーザー"
       },
       "kind": {
         "live": "配信開始",
@@ -455,7 +459,30 @@ export default {
       "removeTerm": "{{term}} を削除",
       "deleteRule": "ルールを削除",
       "enableRule": "ルールを有効にする",
-      "noStreamers": "まずホーム画面でストリーマーを追加してください。"
+      "noStreamers": "まずホーム画面でストリーマーを追加してください。",
+      "useCurrent": "現在: {{game}}",
+      "categorySearch": "カテゴリーを検索",
+      "categoryNone": "カテゴリーが見つかりません。つづりを確認してください。",
+      "categoryOffline": "検索を利用できません。しばらくしてからもう一度お試しください。",
+      "noCategory": "カテゴリーなし",
+      "verdictOff": "ルールはオフです。",
+      "verdictOffline": "配信していません：次の配信でこのルールを確認します。",
+      "verdictMatch": "このルールは現在の配信に一致します：通知が届きます。",
+      "verdictMismatch": "現在の配信には一致しません。",
+      "whyGame": "カテゴリーは「{{game}}」です。",
+      "whyTitle": "タイトルにあなたの言葉が含まれていません。",
+      "whyViewers": "視聴者は{{count}}人だけです。",
+      "soundLine": "サウンド",
+      "soundTarget": "ターゲットアラート音",
+      "soundOff": "サウンドなし",
+      "soundMine": "マイサウンド",
+      "soundDelete": "このサウンドを削除",
+      "soundImport": "サウンドを読み込む",
+      "soundImportHint": "音声ファイル（{{kb}}KB・{{seconds}}秒まで）。この端末にのみ保存されます。",
+      "soundBadFile": "このファイルは再生できる音声ではありません。",
+      "soundTooBig": "ファイルが大きすぎます（最大{{kb}}KB）。",
+      "soundTooLong": "サウンドが長すぎます（最大{{seconds}}秒）。",
+      "soundFull": "上限に達しました：個人サウンドは{{count}}件までです。先に1件削除してください。"
     },
     "cplus": {
       "addFromSearch": "「{{name}}」を追加",
@@ -1266,6 +1293,8 @@ export default {
     },
     "notifications": {
       "liveTitle": "{{name}}が配信中です",
+      "smartTitle": "あなたのアラートが作動：{{name}}が配信中",
+      "smartRule": "アラート「{{rule}}」",
       "startupBatchTitle": "配信中",
       "startupBatchBody": "すでに配信中：{{names}}",
       "liveMessage": "{{game}} • {{viewers}}人の視聴者",

@@ -260,7 +260,8 @@ function dispatchAlert(alert, { streamer, status, next, preferences, queueAlert,
     const platform = status.platform || streamer.platform || "twitch";
     catchUpLive.push({ id: streamer.id, name: streamer.displayName || formatHandleForDisplay(platform, streamer.handle || streamer.twitch) });
   } else if (alert.type === "live") {
-    queueAlert(() => NotificationSystem.notifyLive(streamer, status.active, preferences), { liveId: streamer.id, streamer });
+    const smart = alert.smart ? { ruleName: alert.ruleName || "", sound: alert.sound } : null;
+    queueAlert(() => NotificationSystem.notifyLive(streamer, status.active, preferences, smart), { liveId: streamer.id, streamer });
   } else if (alert.type === "game") {
     queueAlert(() => NotificationSystem.notifyGameChange(streamer, alert.from, alert.to, preferences, next.platform));
   } else if (alert.type === "title") {

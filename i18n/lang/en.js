@@ -182,7 +182,11 @@ export default {
         "pulse": "Pulse",
         "bubble": "Bubble",
         "arpeggio": "Arpeggio",
-        "drop": "Drop"
+        "drop": "Drop",
+        "punch": "Punch",
+        "airhorn": "Air horn",
+        "siren": "Siren",
+        "laser": "Laser"
       },
       "kind": {
         "live": "Stream started",
@@ -457,7 +461,30 @@ export default {
       "removeTerm": "Remove {{term}}",
       "deleteRule": "Delete rule",
       "enableRule": "Enable rule",
-      "noStreamers": "Add a streamer from the home screen first."
+      "noStreamers": "Add a streamer from the home screen first.",
+      "useCurrent": "Playing now: {{game}}",
+      "categorySearch": "Search a category",
+      "categoryNone": "No category found. Check the spelling.",
+      "categoryOffline": "Search unavailable. Try again in a moment.",
+      "noCategory": "no category",
+      "verdictOff": "Rule turned off.",
+      "verdictOffline": "Not live right now: this rule is checked at the next live.",
+      "verdictMatch": "This rule matches the current live: you would be notified.",
+      "verdictMismatch": "Doesn't match the current live.",
+      "whyGame": "Category is \"{{game}}\".",
+      "whyTitle": "The title has none of your words.",
+      "whyViewers": "Only {{count}} viewers.",
+      "soundLine": "Sound",
+      "soundTarget": "Targeted-alert sound",
+      "soundOff": "No sound",
+      "soundMine": "My sounds",
+      "soundDelete": "Delete this sound",
+      "soundImport": "Import a sound",
+      "soundImportHint": "Audio file, up to {{kb}} KB and {{seconds}} s. It stays on this device.",
+      "soundBadFile": "This file isn't a readable audio file.",
+      "soundTooBig": "This file is too big (max {{kb}} KB).",
+      "soundTooLong": "This sound is too long (max {{seconds}} s).",
+      "soundFull": "Limit reached: {{count}} personal sounds. Delete one first."
     },
     "cplus": {
       "addFromSearch": "Add “{{name}}”",
@@ -1275,6 +1302,8 @@ export default {
     },
     "notifications": {
       "liveTitle": "{{name}} is live",
+      "smartTitle": "Your alert fired: {{name}} is live",
+      "smartRule": "Alert “{{rule}}”",
       "startupBatchTitle": "Live right now",
       "startupBatchBody": "Already live: {{names}}",
       "liveMessage": "{{game}} • {{viewers}} viewers",

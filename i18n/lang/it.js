@@ -182,7 +182,11 @@ export default {
         "pulse": "Pulsazione",
         "bubble": "Bolla",
         "arpeggio": "Arpeggio",
-        "drop": "Goccia"
+        "drop": "Goccia",
+        "punch": "Pugno",
+        "airhorn": "Clacson",
+        "siren": "Sirena",
+        "laser": "Laser"
       },
       "kind": {
         "live": "Live iniziata",
@@ -459,7 +463,30 @@ export default {
       "removeTerm": "Rimuovi {{term}}",
       "deleteRule": "Elimina la regola",
       "enableRule": "Attiva la regola",
-      "noStreamers": "Aggiungi prima uno streamer dalla schermata iniziale."
+      "noStreamers": "Aggiungi prima uno streamer dalla schermata iniziale.",
+      "useCurrent": "In corso: {{game}}",
+      "categorySearch": "Cerca una categoria",
+      "categoryNone": "Nessuna categoria trovata. Controlla l'ortografia.",
+      "categoryOffline": "Ricerca non disponibile. Riprova tra un istante.",
+      "noCategory": "nessuna categoria",
+      "verdictOff": "Regola disattivata.",
+      "verdictOffline": "Non in diretta: la regola sarà verificata alla prossima diretta.",
+      "verdictMatch": "Questa regola corrisponde alla diretta attuale: saresti avvisato.",
+      "verdictMismatch": "Non corrisponde alla diretta attuale.",
+      "whyGame": "La categoria è «{{game}}».",
+      "whyTitle": "Il titolo non contiene nessuna delle tue parole.",
+      "whyViewers": "Solo {{count}} spettatori.",
+      "soundLine": "Suono",
+      "soundTarget": "Suono avviso mirato",
+      "soundOff": "Nessun suono",
+      "soundMine": "I miei suoni",
+      "soundDelete": "Elimina questo suono",
+      "soundImport": "Importa un suono",
+      "soundImportHint": "File audio, massimo {{kb}} KB e {{seconds}} s. Resta su questo dispositivo.",
+      "soundBadFile": "Questo file non è un audio leggibile.",
+      "soundTooBig": "Questo file è troppo grande (max {{kb}} KB).",
+      "soundTooLong": "Questo suono è troppo lungo (max {{seconds}} s).",
+      "soundFull": "Limite raggiunto: {{count}} suoni personali. Eliminane uno prima."
     },
     "cplus": {
       "addFromSearch": "Aggiungi «{{name}}»",
@@ -1284,6 +1311,8 @@ export default {
     },
     "notifications": {
       "liveTitle": "{{name}} è in live",
+      "smartTitle": "Il tuo avviso è scattato: {{name}} è in diretta",
+      "smartRule": "Avviso «{{rule}}»",
       "startupBatchTitle": "In live adesso",
       "startupBatchBody": "Già in live: {{names}}",
       "liveMessage": "{{game}} • {{viewers}} spettatori",

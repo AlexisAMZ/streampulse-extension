@@ -95,7 +95,7 @@ test("planStreamerAlerts: forceNotification envoie l'alerte de live", () => {
 });
 
 test("planStreamerAlerts: les règles intelligentes remplacent l'alerte classique", () => {
-  assert.deepEqual(plan({ smartDecision: { notifyRule: true } }), [{ type: "live" }]);
+  assert.deepEqual(plan({ smartDecision: { notifyRule: { name: "Soirée GTA", sound: "target" } } }), [{ type: "live", smart: true, ruleName: "Soirée GTA", sound: "target" }]);
   assert.deepEqual(plan({ smartDecision: { notifyRule: false } }), []);
   assert.deepEqual(plan({ smartDecision: { notifyRule: true }, streamer: { notificationsEnabled: false } }), []);
 });

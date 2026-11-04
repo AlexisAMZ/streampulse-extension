@@ -182,7 +182,11 @@ export default {
         "pulse": "Pulso",
         "bubble": "Bolha",
         "arpeggio": "Arpejo",
-        "drop": "Gota"
+        "drop": "Gota",
+        "punch": "Soco",
+        "airhorn": "Buzina",
+        "siren": "Sirene",
+        "laser": "Laser"
       },
       "kind": {
         "live": "Live iniciada",
@@ -459,7 +463,30 @@ export default {
       "removeTerm": "Remover {{term}}",
       "deleteRule": "Excluir a regra",
       "enableRule": "Ativar a regra",
-      "noStreamers": "Primeiro adicione um streamer na tela inicial."
+      "noStreamers": "Primeiro adicione um streamer na tela inicial.",
+      "useCurrent": "Jogando agora: {{game}}",
+      "categorySearch": "Buscar uma categoria",
+      "categoryNone": "Nenhuma categoria encontrada. Verifique a grafia.",
+      "categoryOffline": "Busca indisponível. Tente novamente em instantes.",
+      "noCategory": "sem categoria",
+      "verdictOff": "Regra desativada.",
+      "verdictOffline": "Fora do ar: esta regra será verificada na próxima live.",
+      "verdictMatch": "Esta regra corresponde à live atual: você seria avisado.",
+      "verdictMismatch": "Não corresponde à live atual.",
+      "whyGame": "A categoria é \"{{game}}\".",
+      "whyTitle": "O título não contém nenhuma das suas palavras.",
+      "whyViewers": "Apenas {{count}} espectadores.",
+      "soundLine": "Som",
+      "soundTarget": "Som de alerta direcionado",
+      "soundOff": "Sem som",
+      "soundMine": "Meus sons",
+      "soundDelete": "Excluir este som",
+      "soundImport": "Importar um som",
+      "soundImportHint": "Arquivo de áudio, até {{kb}} KB e {{seconds}} s. Fica neste dispositivo.",
+      "soundBadFile": "Este arquivo não é um áudio legível.",
+      "soundTooBig": "Este arquivo é grande demais (máx. {{kb}} KB).",
+      "soundTooLong": "Este som é longo demais (máx. {{seconds}} s).",
+      "soundFull": "Limite atingido: {{count}} sons pessoais. Exclua um primeiro."
     },
     "cplus": {
       "addFromSearch": "Adicionar “{{name}}”",
@@ -1284,6 +1311,8 @@ export default {
     },
     "notifications": {
       "liveTitle": "{{name}} está ao vivo",
+      "smartTitle": "Seu alerta disparou: {{name}} está ao vivo",
+      "smartRule": "Alerta “{{rule}}”",
       "startupBatchTitle": "Ao vivo agora",
       "startupBatchBody": "Já ao vivo: {{names}}",
       "liveMessage": "{{game}} • {{viewers}} espectadores",

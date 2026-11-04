@@ -182,7 +182,11 @@ export default {
         "pulse": "Nabız",
         "bubble": "Baloncuk",
         "arpeggio": "Arpej",
-        "drop": "Damla"
+        "drop": "Damla",
+        "punch": "Yumruk",
+        "airhorn": "Korna",
+        "siren": "Siren",
+        "laser": "Lazer"
       },
       "kind": {
         "live": "Yayın başladı",
@@ -457,7 +461,30 @@ export default {
       "removeTerm": "{{term}} kaldır",
       "deleteRule": "Kuralı sil",
       "enableRule": "Kuralı etkinleştir",
-      "noStreamers": "Önce ana ekrandan bir yayıncı ekle."
+      "noStreamers": "Önce ana ekrandan bir yayıncı ekle.",
+      "useCurrent": "Şu an oynuyor: {{game}}",
+      "categorySearch": "Kategori ara",
+      "categoryNone": "Kategori bulunamadı. Yazımı kontrol et.",
+      "categoryOffline": "Arama kullanılamıyor. Biraz sonra tekrar dene.",
+      "noCategory": "kategori yok",
+      "verdictOff": "Kural kapalı.",
+      "verdictOffline": "Canlı değil: bu kural bir sonraki yayında denetlenecek.",
+      "verdictMatch": "Bu kural mevcut yayınla eşleşiyor: bildirim alırdın.",
+      "verdictMismatch": "Mevcut yayınla eşleşmiyor.",
+      "whyGame": "Kategori \"{{game}}\".",
+      "whyTitle": "Başlık kelimelerinden hiçbirini içermiyor.",
+      "whyViewers": "Yalnızca {{count}} izleyici.",
+      "soundLine": "Ses",
+      "soundTarget": "Hedefli uyarı sesi",
+      "soundOff": "Ses yok",
+      "soundMine": "Seslerim",
+      "soundDelete": "Bu sesi sil",
+      "soundImport": "Ses içe aktar",
+      "soundImportHint": "Ses dosyası, en fazla {{kb}} KB ve {{seconds}} sn. Bu cihazda kalır.",
+      "soundBadFile": "Bu dosya okunabilir bir ses dosyası değil.",
+      "soundTooBig": "Bu dosya çok büyük (en fazla {{kb}} KB).",
+      "soundTooLong": "Bu ses çok uzun (en fazla {{seconds}} sn).",
+      "soundFull": "Sınıra ulaşıldı: {{count}} kişisel ses. Önce birini sil."
     },
     "cplus": {
       "addFromSearch": "“{{name}}” ekle",
@@ -1275,6 +1302,8 @@ export default {
     },
     "notifications": {
       "liveTitle": "{{name}} yayında",
+      "smartTitle": "Uyarın tetiklendi: {{name}} yayında",
+      "smartRule": "Uyarı “{{rule}}”",
       "startupBatchTitle": "Şu anda canlı",
       "startupBatchBody": "Hâlihazırda canlı: {{names}}",
       "liveMessage": "{{game}} • {{viewers}} izleyici",

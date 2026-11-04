@@ -182,7 +182,11 @@ export default {
         "pulse": "Pulso",
         "bubble": "Burbuja",
         "arpeggio": "Arpegio",
-        "drop": "Gota"
+        "drop": "Gota",
+        "punch": "Puñetazo",
+        "airhorn": "Bocina",
+        "siren": "Sirena",
+        "laser": "Láser"
       },
       "kind": {
         "live": "Directo iniciado",
@@ -459,7 +463,30 @@ export default {
       "removeTerm": "Quitar {{term}}",
       "deleteRule": "Eliminar la regla",
       "enableRule": "Activar la regla",
-      "noStreamers": "Primero añade un streamer desde el inicio."
+      "noStreamers": "Primero añade un streamer desde el inicio.",
+      "useCurrent": "Ahora se está reproduciendo: {{game}}",
+      "categorySearch": "Buscar una categoría",
+      "categoryNone": "No se ha encontrado ninguna categoría. Comprueba la ortografía.",
+      "categoryOffline": "La búsqueda no está disponible. Inténtalo de nuevo dentro de un momento.",
+      "noCategory": "sin categoría",
+      "verdictOff": "Regla desactivada.",
+      "verdictOffline": "No está en directo ahora mismo: esta regla se comprobará en la próxima retransmisión en directo.",
+      "verdictMatch": "Esta regla se aplica a la retransmisión en directo actual: recibirías una notificación.",
+      "verdictMismatch": "No coincide con la retransmisión en directo actual.",
+      "whyGame": "La categoría es «{{game}}».",
+      "whyTitle": "El título no contiene ninguna de tus palabras.",
+      "whyViewers": "Solo espectadores {{count}}.",
+      "soundLine": "Sonido",
+      "soundTarget": "Sonido de alerta dirigida",
+      "soundOff": "Sin sonido",
+      "soundMine": "Mis sonidos",
+      "soundDelete": "Eliminar este sonido",
+      "soundImport": "Importar un sonido",
+      "soundImportHint": "Archivo de audio, máximo {{kb}} KB y {{seconds}} s. Se queda en este dispositivo.",
+      "soundBadFile": "Este archivo no es un audio legible.",
+      "soundTooBig": "Este archivo es demasiado grande (máx. {{kb}} KB).",
+      "soundTooLong": "Este sonido es demasiado largo (máx. {{seconds}} s).",
+      "soundFull": "Límite alcanzado: {{count}} sonidos personales. Elimina uno primero."
     },
     "cplus": {
       "addFromSearch": "Añadir «{{name}}»",
@@ -1284,6 +1311,8 @@ export default {
     },
     "notifications": {
       "liveTitle": "{{name}} está en directo",
+      "smartTitle": "Se activó tu alerta: {{name}} está en directo",
+      "smartRule": "Alerta «{{rule}}»",
       "startupBatchTitle": "En directo ahora",
       "startupBatchBody": "Ya en directo: {{names}}",
       "liveMessage": "{{game}} • {{viewers}} espectadores",

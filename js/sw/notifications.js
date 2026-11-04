@@ -2,7 +2,8 @@
 
 import { DEFAULT_LANGUAGE } from "../../i18n/meta.js";
 import { readNotificationControls } from "../notification-controls.js";
-import { DEFAULT_SOUND, resolveSound } from "../notification-sounds.js";
+import { CUSTOM_SOUNDS_KEY, customSoundData } from "../custom-sounds.js";
+import { DEFAULT_SOUND, SMART_SOUND, resolveSmartSound, resolveSound } from "../notification-sounds.js";
 import { PLUS_KEY, isPlusActive } from "../plus.js";
 import { DEFAULT_PLATFORM, buildProfileUrl, formatHandleForDisplay, getPlatformIcon, getPlatformLabelKey, normalizePlatform, platformSupportsLiveStatus, sanitizeHandle } from "../platforms.js";
 import { DEFAULT_PREFERENCES, normalizeLanguage } from "../preferences-data.js";
@@ -268,7 +269,7 @@ export class NotificationSystem {
     );
   }
 
-  static async notifyLive(streamer, status, preferences = DEFAULT_PREFERENCES) {
+  static async notifyLive(streamer, status, preferences = DEFAULT_PREFERENCES, smart = null) {
     // Le verrou par streamer est dejà verifie par l'appelant : ici on ne
     // re-verifie pas la preference globale (modele « par streamer d'abord »).
     const lang = normalizeLanguage(preferences?.language);
@@ -276,11 +277,16 @@ export class NotificationSystem {
     const name =
       streamer.displayName ||
       formatHandleForDisplay(platform, streamer.handle || streamer.twitch);
-    const title = translate(lang, "background.notifications.liveTitle", {
+    // Alerte ciblée : titre propre, nom de la règle, son à part. Le but est
+    // qu'on comprenne tout de suite que c'est SA alerte qui s'est déclenchée.
+    const title = translate(lang, smart ? "background.notifications.smartTitle" : "background.notifications.liveTitle", {
       name,
     });
 
     const detailParts = [];
+    if (smart?.ruleName) {
+      detailParts.push(translate(lang, "background.notifications.smartRule", { rule: smart.ruleName }));
+    }
     if (status.title) {
       detailParts.push(status.title);
     }
@@ -323,7 +329,7 @@ export class NotificationSystem {
       iconUrl: this.resolveNotificationIcon(streamer, platform),
       requireInteraction: true,
       priority: 2,
-      sound: await soundFor(preferences, "live"),
+      sound: smart ? resolveSmartSound(preferences, smart.sound) : await soundFor(preferences, "live"),
     });
   }
 
@@ -408,14 +414,14 @@ export class NotificationSystem {
   }
 
   // Chaque clic sur « Tester une notification » fait tourner un compteur :
-  // 1er clic = live, 2e = changement de categorie, 3e = changement de titre.
+  // 1er clic = live, 2e = changement de categorie, 3e = changement de titre, 4e = alerte ciblee.
   // Permet de verifier le pipeline complet des trois alertes sans attendre
   // qu'un streamer change reellement de jeu ou de titre.
   static _testStep = 0;
 
   static async sendTest(preferences = DEFAULT_PREFERENCES) {
     const lang = normalizeLanguage(preferences?.language);
-    const step = this._testStep % 3;
+    const step = this._testStep % 4;
     this._testStep += 1;
 
     if (step === 0) {
@@ -447,6 +453,16 @@ export class NotificationSystem {
       gameNotificationsEnabled: true,
       titleNotificationsEnabled: true,
     };
+    if (step === 3) {
+      // Alerte ciblée : titre, ligne de règle et son propres à ce type.
+      await this.notifyLive(
+        { ...fakeStreamer, displayName: translate(lang, "common.appName") },
+        { isLive: true, platform: "twitch", title: translate(lang, "background.notifications.testTitleMessage"), game: translate(lang, "background.notifications.newCategory"), viewers: 1234 },
+        forcedPrefs,
+        { ruleName: translate(lang, "popup.smart.title"), sound: undefined },
+      );
+      return;
+    }
     if (step === 1) {
       await this.notifyGameChange(
         fakeStreamer,
@@ -472,6 +488,18 @@ export class NotificationSystem {
 class SoundManager {
   static async play(preset = DEFAULT_SOUND) {
     if (!preset) return;
+    // Son importé : on lit le fichier en stockage ; s'il a été supprimé, le son d'alerte ciblée.
+    let dataUrl = "";
+    if (String(preset).startsWith("custom:")) {
+      try {
+        const library = (await chrome.storage.local.get(CUSTOM_SOUNDS_KEY))[CUSTOM_SOUNDS_KEY];
+        const sound = customSoundData(library, preset);
+        dataUrl = sound?.dataUrl || "";
+      } catch (error) {
+        console.warn("[SP] son personnalisé illisible :", error?.message || error);
+      }
+      if (!dataUrl) preset = SMART_SOUND;
+    }
     try {
       await chrome.offscreen.createDocument({
         url: "html/audio-handler.html",
@@ -492,6 +520,7 @@ class SoundManager {
         audioCommand: {
           action: "play",
           preset,
+          dataUrl,
           volume: 1.0,
         },
       });

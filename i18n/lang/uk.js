@@ -182,7 +182,11 @@ export default {
         "pulse": "Імпульс",
         "bubble": "Бульбашка",
         "arpeggio": "Арпеджіо",
-        "drop": "Крапля"
+        "drop": "Крапля",
+        "punch": "Удар",
+        "airhorn": "Ріг",
+        "siren": "Сирена",
+        "laser": "Лазер"
       },
       "kind": {
         "live": "Початок трансляції",
@@ -461,7 +465,30 @@ export default {
       "removeTerm": "Видалити {{term}}",
       "deleteRule": "Видалити правило",
       "enableRule": "Увімкнути правило",
-      "noStreamers": "Спочатку додайте стрімера на головному екрані."
+      "noStreamers": "Спочатку додайте стрімера на головному екрані.",
+      "useCurrent": "Зараз: {{game}}",
+      "categorySearch": "Знайти категорію",
+      "categoryNone": "Категорію не знайдено. Перевір написання.",
+      "categoryOffline": "Пошук недоступний. Спробуй ще раз трохи згодом.",
+      "noCategory": "без категорії",
+      "verdictOff": "Правило вимкнено.",
+      "verdictOffline": "Не в ефірі: правило перевіриться під час наступного ефіру.",
+      "verdictMatch": "Правило підходить до поточного ефіру: ти отримав би сповіщення.",
+      "verdictMismatch": "Не підходить до поточного ефіру.",
+      "whyGame": "Категорія: «{{game}}».",
+      "whyTitle": "У назві немає жодного з твоїх слів.",
+      "whyViewers": "Лише {{count}} глядачів.",
+      "soundLine": "Звук",
+      "soundTarget": "Звук цільового алерта",
+      "soundOff": "Без звуку",
+      "soundMine": "Мої звуки",
+      "soundDelete": "Видалити цей звук",
+      "soundImport": "Імпортувати звук",
+      "soundImportHint": "Аудіофайл, до {{kb}} КБ і {{seconds}} с. Залишається на цьому пристрої.",
+      "soundBadFile": "Цей файл не є читабельним аудіо.",
+      "soundTooBig": "Файл завеликий (макс. {{kb}} КБ).",
+      "soundTooLong": "Звук задовгий (макс. {{seconds}} с).",
+      "soundFull": "Досягнуто ліміт: {{count}} особисті звуки. Спершу видали один."
     },
     "cplus": {
       "addFromSearch": "Додати «{{name}}»",
@@ -1293,6 +1320,8 @@ export default {
     },
     "notifications": {
       "liveTitle": "{{name}} в ефірі",
+      "smartTitle": "Твій алерт спрацював: {{name}} в ефірі",
+      "smartRule": "Алерт «{{rule}}»",
       "startupBatchTitle": "Зараз в ефірі",
       "startupBatchBody": "Уже в ефірі: {{names}}",
       "liveMessage": "{{game}} • глядачів: {{viewers}}",

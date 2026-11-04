@@ -11,7 +11,7 @@ import { pollStreamers } from "./polling.js";
 import { PROFILE_PLATFORMS, lookupUserProfile, readTwitchLogin } from "./profile-lookup.js";
 import { streamerCache, streamerLiveState, streamerStates } from "./state.js";
 import { DataStore, PreferenceStore } from "./stores.js";
-import { suggestChannels } from "./suggest.js";
+import { suggestCategories, suggestChannels } from "./suggest.js";
 
 export function handleGetStreamers(request, sender, sendResponse) {
   (async () => {
@@ -57,6 +57,16 @@ export function handleSearchChannels(request, sender, sendResponse) {
     .then((items) => sendResponse({ items }))
     .catch((error) => {
       console.warn("[StreamPulse] suggestions de chaînes :", error?.message || error);
+      sendResponse({ items: [], error: "unavailable" });
+    });
+  return true;
+}
+
+export function handleSearchCategories(request, sender, sendResponse) {
+  suggestCategories(String(request.platform || ""), String(request.query || ""))
+    .then((items) => sendResponse({ items }))
+    .catch((error) => {
+      console.warn("[StreamPulse] suggestions de catégories :", error?.message || error);
       sendResponse({ items: [], error: "unavailable" });
     });
   return true;

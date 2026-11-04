@@ -182,7 +182,11 @@ export default {
         "pulse": "Puls",
         "bubble": "Bąbelek",
         "arpeggio": "Arpeggio",
-        "drop": "Kropla"
+        "drop": "Kropla",
+        "punch": "Cios",
+        "airhorn": "Róg",
+        "siren": "Syrena",
+        "laser": "Laser"
       },
       "kind": {
         "live": "Start transmisji",
@@ -461,7 +465,30 @@ export default {
       "removeTerm": "Usuń {{term}}",
       "deleteRule": "Usuń regułę",
       "enableRule": "Włącz regułę",
-      "noStreamers": "Najpierw dodaj streamera na ekranie głównym."
+      "noStreamers": "Najpierw dodaj streamera na ekranie głównym.",
+      "useCurrent": "Teraz gra: {{game}}",
+      "categorySearch": "Szukaj kategorii",
+      "categoryNone": "Nie znaleziono kategorii. Sprawdź pisownię.",
+      "categoryOffline": "Wyszukiwanie niedostępne. Spróbuj za chwilę.",
+      "noCategory": "brak kategorii",
+      "verdictOff": "Reguła wyłączona.",
+      "verdictOffline": "Brak transmisji: reguła zostanie sprawdzona przy następnej.",
+      "verdictMatch": "Ta reguła pasuje do bieżącej transmisji: dostaniesz powiadomienie.",
+      "verdictMismatch": "Nie pasuje do bieżącej transmisji.",
+      "whyGame": "Kategoria to „{{game}}”.",
+      "whyTitle": "Tytuł nie zawiera żadnego z twoich słów.",
+      "whyViewers": "Tylko {{count}} widzów.",
+      "soundLine": "Dźwięk",
+      "soundTarget": "Dźwięk alertu celowanego",
+      "soundOff": "Bez dźwięku",
+      "soundMine": "Moje dźwięki",
+      "soundDelete": "Usuń ten dźwięk",
+      "soundImport": "Importuj dźwięk",
+      "soundImportHint": "Plik audio, maks. {{kb}} KB i {{seconds}} s. Zostaje na tym urządzeniu.",
+      "soundBadFile": "Ten plik nie jest czytelnym plikiem audio.",
+      "soundTooBig": "Ten plik jest za duży (maks. {{kb}} KB).",
+      "soundTooLong": "Ten dźwięk jest za długi (maks. {{seconds}} s).",
+      "soundFull": "Osiągnięto limit: {{count}} własne dźwięki. Najpierw usuń jeden."
     },
     "cplus": {
       "addFromSearch": "Dodaj „{{name}}”",
@@ -1293,6 +1320,8 @@ export default {
     },
     "notifications": {
       "liveTitle": "{{name}} jest na żywo",
+      "smartTitle": "Twój alert zadziałał: {{name}} jest na żywo",
+      "smartRule": "Alert „{{rule}}”",
       "startupBatchTitle": "Na żywo teraz",
       "startupBatchBody": "Już na żywo: {{names}}",
       "liveMessage": "{{game}} • {{viewers}} widzów",

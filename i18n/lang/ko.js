@@ -182,7 +182,11 @@ export default {
         "pulse": "펄스",
         "bubble": "버블",
         "arpeggio": "아르페지오",
-        "drop": "물방울"
+        "drop": "물방울",
+        "punch": "펀치",
+        "airhorn": "에어혼",
+        "siren": "사이렌",
+        "laser": "레이저"
       },
       "kind": {
         "live": "방송 시작",
@@ -455,7 +459,30 @@ export default {
       "removeTerm": "{{term}} 제거",
       "deleteRule": "규칙 삭제",
       "enableRule": "규칙 활성화",
-      "noStreamers": "먼저 홈에서 스트리머를 추가하세요."
+      "noStreamers": "먼저 홈에서 스트리머를 추가하세요.",
+      "useCurrent": "지금 방송 중: {{game}}",
+      "categorySearch": "카테고리 검색",
+      "categoryNone": "카테고리를 찾을 수 없어요. 철자를 확인하세요.",
+      "categoryOffline": "검색을 사용할 수 없어요. 잠시 후 다시 시도하세요.",
+      "noCategory": "카테고리 없음",
+      "verdictOff": "규칙이 꺼져 있어요.",
+      "verdictOffline": "방송 중이 아니에요: 다음 방송 때 이 규칙을 확인해요.",
+      "verdictMatch": "이 규칙이 현재 방송과 일치해요: 알림을 받게 돼요.",
+      "verdictMismatch": "현재 방송과 일치하지 않아요.",
+      "whyGame": "카테고리는 \"{{game}}\"예요.",
+      "whyTitle": "제목에 입력한 단어가 없어요.",
+      "whyViewers": "시청자가 {{count}}명뿐이에요.",
+      "soundLine": "소리",
+      "soundTarget": "맞춤 알림 소리",
+      "soundOff": "소리 없음",
+      "soundMine": "내 소리",
+      "soundDelete": "이 소리 삭제",
+      "soundImport": "소리 가져오기",
+      "soundImportHint": "오디오 파일, 최대 {{kb}}KB·{{seconds}}초. 이 기기에만 저장돼요.",
+      "soundBadFile": "이 파일은 재생할 수 있는 오디오가 아니에요.",
+      "soundTooBig": "파일이 너무 커요 (최대 {{kb}}KB).",
+      "soundTooLong": "소리가 너무 길어요 (최대 {{seconds}}초).",
+      "soundFull": "한도에 도달했어요: 개인 소리는 {{count}}개까지예요. 먼저 하나를 삭제하세요."
     },
     "cplus": {
       "addFromSearch": "‘{{name}}’ 추가",
@@ -1266,6 +1293,8 @@ export default {
     },
     "notifications": {
       "liveTitle": "{{name}}이(가) 생방송 중입니다",
+      "smartTitle": "내 알림이 작동했어요: {{name}} 님이 방송 중",
+      "smartRule": "알림 \"{{rule}}\"",
       "startupBatchTitle": "지금 라이브 중",
       "startupBatchBody": "이미 라이브 중: {{names}}",
       "liveMessage": "{{game}} • {{viewers}} 명의 시청자",

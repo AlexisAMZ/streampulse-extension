@@ -182,7 +182,11 @@ export default {
         "pulse": "Pulse",
         "bubble": "Bulle",
         "arpeggio": "Arpège",
-        "drop": "Goutte"
+        "drop": "Goutte",
+        "punch": "Coup de poing",
+        "airhorn": "Corne de brume",
+        "siren": "Sirène",
+        "laser": "Laser"
       },
       "kind": {
         "live": "Live démarré",
@@ -459,7 +463,30 @@ export default {
       "removeTerm": "Retirer {{term}}",
       "deleteRule": "Supprimer la règle",
       "enableRule": "Activer la règle",
-      "noStreamers": "Ajoute d'abord un streamer depuis l'accueil."
+      "noStreamers": "Ajoute d'abord un streamer depuis l'accueil.",
+      "useCurrent": "En ce moment : {{game}}",
+      "categorySearch": "Chercher une catégorie",
+      "categoryNone": "Aucune catégorie trouvée. Vérifie l'orthographe.",
+      "categoryOffline": "Recherche indisponible. Réessaie dans un instant.",
+      "noCategory": "aucune catégorie",
+      "verdictOff": "Règle désactivée.",
+      "verdictOffline": "Pas en live : cette règle sera testée au prochain live.",
+      "verdictMatch": "Cette règle correspond au live en cours : tu serais prévenu·e.",
+      "verdictMismatch": "Ne correspond pas au live en cours.",
+      "whyGame": "La catégorie est « {{game}} ».",
+      "whyTitle": "Le titre ne contient aucun de tes mots.",
+      "whyViewers": "Seulement {{count}} viewers.",
+      "soundLine": "Son",
+      "soundTarget": "Son d'alerte ciblée",
+      "soundOff": "Aucun son",
+      "soundMine": "Mes sons",
+      "soundDelete": "Supprimer ce son",
+      "soundImport": "Importer un son",
+      "soundImportHint": "Fichier audio, {{kb}} Ko et {{seconds}} s maximum. Il reste sur cet appareil.",
+      "soundBadFile": "Ce fichier n'est pas un son lisible.",
+      "soundTooBig": "Ce fichier est trop lourd ({{kb}} Ko maximum).",
+      "soundTooLong": "Ce son est trop long ({{seconds}} s maximum).",
+      "soundFull": "Limite atteinte : {{count}} sons personnels. Supprime-en un d'abord."
     },
     "cplus": {
       "addFromSearch": "Ajouter « {{name}} »",
@@ -1284,6 +1311,8 @@ export default {
     },
     "notifications": {
       "liveTitle": "{{name}} est en live",
+      "smartTitle": "Ton alerte s'est déclenchée : {{name}} est en live",
+      "smartRule": "Alerte « {{rule}} »",
       "startupBatchTitle": "En direct maintenant",
       "startupBatchBody": "Déjà en direct : {{names}}",
       "liveMessage": "{{game}} • {{viewers}} spectateurs",
