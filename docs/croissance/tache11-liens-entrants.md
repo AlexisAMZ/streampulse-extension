@@ -3,7 +3,7 @@
 Date : 2026-09-28. Cibles vérifiées le jour même (pages de soumission
 existantes, dépôts actifs). **Aucune action automatisée** : chaque envoi est
 manuel, depuis les comptes personnels. Règle transverse : répondre à des
-questions, jamais poster un lien seul ; utiliser `streampulse.fr/en` partout,
+questions, jamais poster un lien seul ; utiliser `streampulse.tech/en` partout,
 car toutes les cibles sont anglophones.
 
 Déjà en place (à ne pas refaire) : AlternativeTo, Product Hunt, Fazier,
@@ -20,7 +20,7 @@ Better Launch, Maidensail — plus le seul lien entrant actuel, alexisamz.com.
 
 Deux dépôts vérifiés actifs (commits 09/2026 et 03/2026), procédure PR
 standard. Les PR passent par le dépôt GitHub de l'extension enRewriting le
-README si besoin (lien vers streampulse.fr déjà requis pour créditer).
+README si besoin (lien vers streampulse.tech déjà requis pour créditer).
 
 ## Semaine du 6 octobre — présence communautaire (comptes personnels)
 

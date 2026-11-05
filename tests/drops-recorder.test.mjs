@@ -6,6 +6,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import "../js/inject/human-delay.js";
 
 const SOURCE = readFileSync(new URL("../js/dropsRecorder.js", import.meta.url), "utf8");
 const ORIGIN = "https://www.twitch.tv";
@@ -77,6 +78,9 @@ test("un inventaire lu est transmis, puis les Drops confiés par le service work
   await box.flush();
   assert.equal(box.sent[0].type, "recordDropsInventory");
   assert.equal(box.sent[0].ok, true);
+  // Récupération différée par un délai naturel : rien ne part à la seconde près.
+  assert.deepEqual(box.commands(), [], "aucun clic avant le délai");
+  box.timers.at(-1)();
   const [claim] = box.commands();
   assert.deepEqual([claim.action, claim.instanceId, claim.auto], ["claim", "999#c1#d1", true]);
 

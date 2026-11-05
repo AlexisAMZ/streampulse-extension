@@ -1095,9 +1095,8 @@
         if (newPrefs.language) {
           badgeLang = i18n ? i18n.resolve(newPrefs.language) : badgeLang;
         }
-        // Badge desactive par defaut depuis 26.9.18 : il envoie une empreinte
-        // du pseudo, donc seule la valeur true explicite le demarre.
-        if (newPrefs.communityBadge === true) startCommunityBadge();
+        // Badge actif par defaut (2026-11-05) : seul un false explicite l'arrete.
+        if (newPrefs.communityBadge !== false) startCommunityBadge();
         else stopCommunityBadge();
       }
     });
@@ -1119,10 +1118,9 @@
       var i18n = typeof window !== "undefined" ? window.__SP_I18N__ : null;
       badgeLang = i18n ? i18n.resolve(prefs.language || navigator.language) : badgeLang;
       readOwnLocal(res && res[COSMETICS_KEY]);
-      // Badge desactive par defaut depuis 26.9.18 : il envoie une empreinte du
-      // pseudo, donc il ne demarre qu'avec l'accord explicite de l'utilisateur.
-      if (prefs.communityBadge !== true) {
-        log("desactive (non active par l utilisateur)");
+      // Badge actif par defaut (2026-11-05) : seul un false explicite l'arrete.
+      if (prefs.communityBadge === false) {
+        log("desactive par l utilisateur");
         return;
       }
       startCommunityBadge();

@@ -1,0 +1,355 @@
+/* Réglages : la DA « Tatoo » de streampulse.tech (voir StreampulseSite/DESIGN.md).
+   Le boîtier du pager : coque bleu nuit, touches en caoutchouc qui s'enfoncent,
+   écrans LCD vert-gris en police matricielle, filets plutôt que des cartes.
+   Chargée après popup.css : elle ne touche que ce qui est dans la section Réglages
+   et la barre du haut quand elle est affichée. Surfaces pleines, aucun halo. */
+
+@font-face { font-family: "DotGothic16"; font-style: normal; font-weight: 400; font-display: swap; src: url("../font/dotgothic16-cyrillic-0.woff2") format("woff2"); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "DotGothic16"; font-style: normal; font-weight: 400; font-display: swap; src: url("../font/dotgothic16-latin-ext-1.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "DotGothic16"; font-style: normal; font-weight: 400; font-display: swap; src: url("../font/dotgothic16-latin-2.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+:root {
+  --dot: "DotGothic16", ui-monospace, "SF Mono", Menlo, monospace;
+  --case: #1b1f4a;
+  --case-deep: #11142f;
+  --rubber: #e6e3ec;
+  --rubber-edge: #b9b4c6;
+  --ink: #1a0b14;
+  --lcd-lit: #d8e4b4;
+  --lcd-dim: #9aa87a;
+  --rule: color-mix(in srgb, var(--text) 20%, transparent);
+  --key-shadow: 0 4px 0 -1px var(--rubber-edge), 0 9px 12px -8px rgba(26, 11, 20, 0.5);
+  --key-shadow-down: 0 1px 0 -1px var(--rubber-edge), 0 3px 6px -5px rgba(26, 11, 20, 0.5);
+}
+
+/* ── Barre du haut : le haut du boîtier ── */
+body.is-settings .topbar { background: var(--case); box-shadow: inset 0 -3px 0 var(--case-deep); color: #fff; }
+body.is-settings .tab-button,
+body.is-settings .topbar-link,
+body.is-settings .stat-pill,
+body.is-settings .topbar .icon-button { color: rgba(255, 255, 255, 0.78); }
+body.is-settings .tab-button:hover,
+body.is-settings .topbar-link:hover,
+body.is-settings .tab-button.active { color: #fff; }
+body.is-settings .tab-button.active { box-shadow: inset 0 -3px 0 var(--lcd); }
+body.is-settings .topbar .icon-button:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+body.is-settings .news-button .unread-dot { box-shadow: 0 0 0 2px var(--case); }
+[data-theme="light"]:has(#settings-section:not(.hidden)) .brand-mark { filter: brightness(0) invert(1); }
+
+/* ── Navigation : les touches du boîtier ── */
+.menu-nav { gap: 0; padding: 10px; overflow-y: auto; overscroll-behavior: contain; background: var(--case); box-shadow: inset -3px 0 0 var(--case-deep); }
+.menu-nav-group { display: grid; gap: 2px; }
+.menu-nav-sep { height: 3px; margin: 8px 6px; border-radius: 2px; background: var(--case-deep); }
+.menu-tab { height: 36px; border-radius: 14px; color: rgba(255, 255, 255, 0.78); font-weight: 600; transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease; }
+.menu-tab svg { width: 16px; height: 16px; stroke-width: 2.2; }
+.menu-tab:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+.menu-tab[aria-selected="true"] { background: var(--lcd); box-shadow: none; color: var(--lcd-ink); font-weight: 700; }
+.menu .menu-tab[aria-selected="true"] svg { color: var(--lcd-ink); }
+.menu-tab:focus-visible { outline: 3px solid var(--lcd); outline-offset: 2px; }
+.menu-tab[aria-selected="true"]:focus-visible { outline-color: #fff; }
+
+/* ── Panneaux : titres, filets, lignes ── */
+.menu-panels { scrollbar-color: var(--text-3) transparent; }
+.menu-panel { padding: 22px 26px 28px; }
+.menu-panel h2 { margin-bottom: 12px; font-size: 24px; line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; }
+.settings-group-header { margin: 28px 0 6px; padding-top: 12px; border-top: 3px solid var(--text); font-size: 14px; letter-spacing: -0.01em; }
+.panel-head { margin: 28px 0 8px; padding-top: 12px; border-top: 3px solid var(--text); }
+.panel-head .settings-group-header { padding: 0; border: 0; }
+.settings-toggle,
+.settings-row,
+.settings-sub-row,
+.field-stack,
+.cosmetic-preview,
+.pred-numbers,
+.pred-bet,
+.log-entry,
+.wt-ranking li,
+.smart-locked,
+.smart-editor,
+.sound-plus-note,
+.plus-key,
+.pred-editor,
+.settings-advanced > summary,
+.faq-item { box-shadow: inset 0 -1px 0 var(--rule); }
+.settings-toggle,
+.settings-row,
+.settings-sub-row { padding-block: 14px; }
+.settings-title { font-size: 14px; font-weight: 600; }
+.settings-description,
+.settings-note { color: var(--text-2); font-size: 12.5px; line-height: 1.5; }
+.log-list { box-shadow: inset 0 3px 0 var(--text); }
+.faq { box-shadow: inset 0 3px 0 var(--text); }
+.faq-item summary { font-family: var(--display); font-size: 13px; font-weight: 700; }
+.settings-advanced > summary { color: var(--text); font-family: var(--display); font-size: 13px; font-weight: 700; }
+.settings-advanced > summary::after { color: var(--text); font-family: var(--display); }
+.menu ::selection { background: var(--lcd); color: var(--lcd-ink); }
+
+/* ── Touches en caoutchouc : l'unique bouton ── */
+.menu .button {
+  height: 36px;
+  margin-bottom: 4px;
+  padding: 0 16px;
+  border-radius: 14px;
+  background: var(--rubber);
+  box-shadow: var(--key-shadow);
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  transition: transform 0.12s var(--ease-out), box-shadow 0.12s var(--ease-out), background-color var(--dur-fast) ease;
+}
+.menu .button:hover { background: #f1eff6; color: var(--ink); transform: translateY(-1px); }
+.menu .button:active { box-shadow: var(--key-shadow-down); transform: translateY(3px); }
+.menu .button:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.menu .button-primary { background: var(--violet); box-shadow: 0 4px 0 -1px var(--violet-strong), 0 9px 12px -8px rgba(26, 11, 20, 0.5); color: #fff; }
+.menu .button-primary:hover { background: var(--violet); color: #fff; filter: brightness(1.08); }
+.menu .button-primary:active { box-shadow: 0 1px 0 -1px var(--violet-strong), 0 3px 6px -5px rgba(26, 11, 20, 0.5); }
+.menu .button-danger { background: var(--danger-bg); box-shadow: 0 4px 0 -1px #8f2226, 0 9px 12px -8px rgba(26, 11, 20, 0.5); color: #fff; }
+.menu .button-danger:hover { background: var(--danger-bg); color: #fff; filter: brightness(1.1); }
+.menu .button-danger:active { box-shadow: 0 1px 0 -1px #8f2226, 0 3px 6px -5px rgba(26, 11, 20, 0.5); }
+.menu .button-link-danger { height: 28px; margin: 0; padding: 0 8px; background: transparent; box-shadow: none; color: var(--danger); font-family: var(--body); font-size: 12px; transform: none; }
+.menu .button-link-danger:hover { background: transparent; color: var(--danger); text-decoration: underline; text-underline-offset: 3px; transform: none; filter: none; }
+.menu .button-link-danger:active { box-shadow: none; transform: none; }
+.menu .btn-success { background: var(--lcd) !important; box-shadow: var(--key-shadow-down) !important; color: var(--lcd-ink) !important; transform: translateY(3px); }
+
+/* ── Écrans LCD : tout champ où l'on lit ou saisit une donnée ── */
+.menu .settings-select,
+.menu .text-input,
+.menu .settings-textarea,
+.menu .settings-search,
+.menu .smart-cat-input,
+.menu .smart-add {
+  border: 0;
+  border-radius: 10px;
+  background-color: var(--lcd);
+  box-shadow: inset 0 0 0 3px var(--case-deep);
+  color: var(--lcd-ink);
+  font-family: var(--dot);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+.menu .settings-textarea { font-family: var(--body); font-size: 12.5px; letter-spacing: 0; }
+.menu .settings-select { height: 34px; padding-inline: 12px 30px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231c2615' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-position: right 11px center; }
+.menu .settings-select option { background: var(--lcd); color: var(--lcd-ink); }
+.menu .text-input,
+.menu .settings-search { padding-inline: 12px; }
+.menu .settings-textarea { padding: 10px 12px; }
+.menu .text-input::placeholder,
+.menu .settings-search::placeholder,
+.menu .smart-cat-input::placeholder,
+.menu .smart-add::placeholder { font-family: var(--body); font-size: 12.5px; letter-spacing: 0; }
+.menu .text-input::placeholder,
+.menu .settings-textarea::placeholder,
+.menu .settings-search::placeholder,
+.menu .smart-cat-input::placeholder,
+.menu .smart-add::placeholder { color: rgba(28, 38, 21, 0.72); opacity: 1; }
+.menu .settings-select:hover,
+.menu .text-input:hover,
+.menu .settings-textarea:hover,
+.menu .settings-search:hover { background-color: var(--lcd-lit); }
+.menu .settings-select:focus,
+.menu .text-input:focus,
+.menu .settings-textarea:focus,
+.menu .settings-search:focus,
+.menu .settings-search:focus-visible,
+.menu .smart-cat-input:focus,
+.menu .smart-add:focus { outline: 3px solid var(--focus); outline-offset: 3px; background-color: var(--lcd-lit); box-shadow: inset 0 0 0 3px var(--case-deep); }
+.menu .settings-select:disabled,
+.menu .text-input:disabled { opacity: 0.5; }
+.field-value { color: var(--text); font-family: var(--dot); font-size: 13px; letter-spacing: 0.04em; }
+.settings-filter { padding: 14px 26px; background: var(--bg); box-shadow: inset 0 -1px 0 var(--rule); }
+
+/* ── Interrupteurs : curseur moulé dans une fenêtre LCD ── */
+.menu input[type="checkbox"][role="switch"] { width: 48px; height: 28px; border-radius: 9px; background: var(--case-deep); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--text) 38%, var(--case-deep)); }
+.menu input[type="checkbox"][role="switch"]::before { top: 3px; inset-inline-start: 3px; width: 22px; height: 22px; border-radius: 6px; background: var(--rubber); box-shadow: 0 3px 0 -1px var(--rubber-edge); }
+.menu input[type="checkbox"][role="switch"]:checked { background: var(--lcd); box-shadow: inset 0 0 0 3px var(--case-deep); }
+.menu input[type="checkbox"][role="switch"]:checked::before { background: var(--case); box-shadow: 0 3px 0 -1px var(--case-deep); transform: translateX(20px); }
+.menu input[type="checkbox"][role="switch"]:indeterminate { background: var(--lcd-dim); box-shadow: inset 0 0 0 3px var(--case-deep); }
+/* Mixte : le curseur reste à gauche (un clic active tout) ; la fenêtre LCD éteinte dit « partiel ». */
+.menu input[type="checkbox"][role="switch"]:indeterminate::before { background: var(--rubber); transform: none; }
+.menu input[type="checkbox"][role="switch"]:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.menu input[type="checkbox"][role="switch"]:disabled { opacity: 0.5; }
+.alert-mixed { color: var(--text-2); }
+
+/* ── Petites touches : puces, langues, filtres, raccourcis ── */
+.menu .chip-check,
+.menu .language-button,
+.menu .filter-chip,
+.menu .panel-jump,
+.menu .pf-btn,
+.menu .seg-btn {
+  height: 30px;
+  margin-bottom: 3px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--rubber);
+  box-shadow: 0 3px 0 -1px var(--rubber-edge);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 12px;
+  font-weight: 600;
+  transition: transform 0.12s var(--ease-out), box-shadow 0.12s var(--ease-out), background-color var(--dur-fast) ease;
+}
+.menu .chip-check:hover,
+.menu .language-button:hover,
+.menu .filter-chip:hover,
+.menu .panel-jump:hover,
+.menu .pf-btn:hover,
+.menu .seg-btn:hover { background: #f1eff6; color: var(--ink); box-shadow: 0 3px 0 -1px var(--rubber-edge); }
+.menu .chip-check:has(input:checked),
+.menu .language-button.is-active,
+.menu .filter-chip[aria-pressed="true"],
+.menu .pf-btn.active,
+.menu .seg-btn.active,
+.menu .pf-btn[aria-pressed="true"] { background: var(--lcd); box-shadow: 0 1px 0 -1px var(--lcd-dim); color: var(--lcd-ink); transform: translateY(2px); }
+.menu .chip-check input { accent-color: var(--lcd-ink); }
+.menu .panel-jump:focus-visible,
+.menu .filter-chip:focus-visible,
+.menu .language-button:focus-visible,
+.menu .chip-check:focus-within,
+.menu .pf-btn:focus-visible,
+.menu .seg-btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.settings-filter-chips { gap: 6px; }
+.panel-jumps { gap: 8px; margin-block: 6px 10px; }
+
+/* Compteurs dans les touches (« À venir 2 ») : encre, jamais le blanc des textes secondaires. */
+.menu .pf-btn em { color: rgba(26, 11, 20, 0.72); font-family: var(--dot); font-style: normal; letter-spacing: 0.03em; opacity: 1; }
+.menu .pf-btn.active em { color: var(--lcd-ink); }
+
+/* ── Curseur de réglage ── */
+.menu .settings-range::-webkit-slider-runnable-track { height: 8px; border-radius: 4px; background: var(--case-deep); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.12); }
+.menu .settings-range::-webkit-slider-thumb { width: 24px; height: 20px; margin-top: -6px; border: 0; border-radius: 7px; background: var(--rubber); box-shadow: 0 3px 0 -1px var(--rubber-edge); }
+.menu .settings-range:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+
+/* ── Étiquettes et pastilles LCD ── */
+.plus-tag { padding: 1px 7px; border-radius: 4px; font-family: var(--dot); font-size: 12px; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; }
+.smart-term { height: 26px; padding-inline: 9px 4px; border-radius: 4px; background: var(--lcd); box-shadow: none; color: var(--lcd-ink); font-family: var(--dot); font-size: 12.5px; font-weight: 400; letter-spacing: 0.03em; }
+.smart-term button { color: var(--lcd-ink); }
+.smart-term button:hover { background: rgba(28, 38, 21, 0.14); color: var(--lcd-ink); }
+.smart-term.is-verified { box-shadow: inset 0 0 0 2px var(--lcd-ink); }
+.smart-cat-now { border-radius: 4px; background: var(--lcd); box-shadow: none; color: var(--lcd-ink); font-family: var(--dot); letter-spacing: 0.03em; }
+.smart-cat-now:hover { background: var(--lcd-lit); color: var(--lcd-ink); }
+.smart-streamer { border-radius: 12px; }
+.smart-streamer[aria-selected="true"] { background: var(--lcd); box-shadow: none; color: var(--lcd-ink); }
+.smart-streamer[aria-selected="true"] .smart-count { color: var(--lcd-ink); }
+.smart-streamer:hover { background: var(--surface-2); }
+.smart-cat-list { border-radius: 14px; background: var(--case); box-shadow: inset 0 0 0 3px var(--case-deep), 0 18px 28px -16px rgba(0, 0, 0, 0.7); }
+.smart-cat-option { color: #fff; }
+.smart-cat-option[aria-selected="true"],
+.smart-cat-option:hover { background: var(--lcd); box-shadow: none; color: var(--lcd-ink); }
+
+/* ── Écrans d'information : on pose du LCD, l'encre LCD suit ── */
+.plus-menu-status,
+.pred-stats div,
+.smart-verdict {
+  --text: var(--lcd-ink);
+  --text-2: rgba(28, 38, 21, 0.86);
+  --text-3: rgba(28, 38, 21, 0.72);
+  background: var(--lcd);
+  box-shadow: none;
+  color: var(--lcd-ink);
+}
+.plus-menu-status { padding: 16px 18px; border-radius: 10px; }
+.pred-stats div { border-radius: 10px; }
+.pred-stats dd { font-family: var(--dot); font-size: 20px; font-weight: 400; letter-spacing: 0.04em; }
+.pred-stats dt { font-family: var(--dot); letter-spacing: 0.04em; text-transform: uppercase; }
+.smart-verdict.is-match,
+.smart-verdict.is-mismatch,
+.smart-verdict.is-off { background: var(--lcd); color: var(--lcd-ink); }
+.smart-verdict { border-radius: 10px; font-family: var(--body); font-size: 12.5px; font-weight: 500; line-height: 1.45; letter-spacing: 0; }
+.smart-verdict.is-match { box-shadow: inset 0 0 0 2px var(--lcd-ink); font-weight: 600; }
+.smart-verdict.is-mismatch { box-shadow: inset 0 0 0 2px #8f2226; }
+.smart-verdict.is-off { opacity: 0.8; }
+.pred-result { border-radius: 4px; box-shadow: inset 0 0 0 2px var(--rule); font-family: var(--dot); font-weight: 400; letter-spacing: 0.04em; }
+.pred-result.is-won { background: var(--lcd); box-shadow: none; color: var(--lcd-ink); }
+
+/* ── Plus de cartes : des filets ── */
+.smart-rule { padding: 14px 0 12px; border-radius: 0; background: transparent; box-shadow: inset 0 3px 0 var(--text); }
+
+/* ── Données lues par l'appareil : police matricielle ── */
+.wt-ranking li::before,
+.wt-value,
+.log-time,
+.plus-active-plan { font-family: var(--dot); font-size: 13px; letter-spacing: 0.04em; }
+.wt-ranking li::before { color: var(--text-2); }
+.wt-total-value,
+.stat-value { letter-spacing: -0.03em; }
+.log-entry svg { color: var(--text); }
+
+/* ── Pastilles d'accent : des touches de couleur ── */
+.accent-swatch { width: 30px; height: 30px; margin-bottom: 3px; border-radius: 10px; box-shadow: 0 3px 0 -1px color-mix(in srgb, var(--swatch) 55%, #000); }
+.accent-swatch[aria-checked="true"] { box-shadow: 0 1px 0 -1px color-mix(in srgb, var(--swatch) 55%, #000), 0 0 0 3px var(--bg), 0 0 0 6px var(--text); transform: translateY(2px); }
+.accent-swatch:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+
+/* ── Carte pager du profil : le boîtier lui-même ── */
+.menu .pager-card { border-radius: 26px 26px 32px 32px; box-shadow: inset 0 -7px 0 rgba(0, 0, 0, 0.22), 0 24px 34px -20px rgba(17, 20, 47, 0.7); }
+.menu .pager-key { background: var(--rubber); box-shadow: 0 4px 0 -1px var(--rubber-edge); color: var(--ink); font-family: var(--display); font-size: 12px; font-weight: 700; transition: transform 0.12s var(--ease-out), box-shadow 0.12s var(--ease-out); }
+.menu .pager-key:hover { background: #f1eff6; }
+.menu .pager-key[aria-checked="true"] { background: var(--violet); box-shadow: 0 1px 0 -1px var(--violet-strong); color: #fff; transform: translateY(3px); }
+.menu .pager-key:focus-visible,
+.menu .pager-swatch:focus-visible { outline: 3px solid var(--lcd); outline-offset: 3px; }
+.menu .pager-card .text-input { background-color: var(--lcd); box-shadow: inset 0 0 0 3px var(--case-deep); color: var(--lcd-ink); }
+.menu .pager-card .button { margin-bottom: 4px; }
+.menu .pager-name,
+.menu .pager-hello,
+.menu .pager-source { font-family: var(--dot); }
+.pager-swatch { border-radius: 10px; }
+
+/* ── Parrainage et listes : plus de cartes ── */
+.referral-tier,
+.referral-earnings { padding: 12px 0; border-radius: 0; background: transparent; box-shadow: inset 0 3px 0 var(--text); }
+.referral-tier.is-done,
+.referral-tier--money { --text: var(--lcd-ink); --text-2: rgba(28, 38, 21, 0.86); --text-3: rgba(28, 38, 21, 0.72); padding-inline: 10px; border-radius: 0 0 10px 10px; background: var(--lcd); box-shadow: none; color: var(--lcd-ink); }
+.referral-tier.is-done b::after { color: var(--lcd-ink); }
+.referral-code { border-radius: 10px; font-family: var(--dot); font-weight: 400; letter-spacing: 0.1em; }
+.referral-balance { font-size: 24px; letter-spacing: -0.03em; }
+.look-switch { gap: 4px; padding: 0; background: transparent; }
+.menu .look-switch-btn { height: 28px; margin-bottom: 3px; padding: 0 12px; border-radius: 10px; background: var(--rubber); box-shadow: 0 3px 0 -1px var(--rubber-edge); color: var(--ink); font-family: var(--body); font-weight: 600; transition: transform 0.12s var(--ease-out), box-shadow 0.12s var(--ease-out); }
+.menu .look-switch-btn[aria-pressed="true"] { background: var(--lcd); box-shadow: 0 1px 0 -1px var(--lcd-dim); color: var(--lcd-ink); transform: translateY(2px); }
+.menu .segmented { gap: 4px; padding: 0; background: transparent; box-shadow: none; }
+
+/* ── Disposition : flèches en touches ── */
+.menu .layout-move { width: 28px; height: 26px; margin-bottom: 3px; border-radius: 8px; background: var(--rubber); box-shadow: 0 3px 0 -1px var(--rubber-edge); color: var(--ink); }
+.menu .layout-move:hover { background: #f1eff6; color: var(--ink); }
+.menu .layout-move:active { box-shadow: 0 1px 0 -1px var(--rubber-edge); transform: translateY(2px); }
+.menu .layout-move:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.menu .layout-label input { accent-color: var(--case); }
+.layout-row { box-shadow: inset 0 -1px 0 var(--rule); }
+
+/* ── Accessibilité : l'état actif se lit à la forme, pas seulement à la teinte ── */
+.menu .language-button.is-active::before,
+.menu .filter-chip[aria-pressed="true"]::before,
+.menu .seg-btn.active::before,
+.menu .pf-btn.active::before,
+.menu .look-switch-btn[aria-pressed="true"]::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-inline-end: 7px; background: var(--lcd-ink); vertical-align: 1px; }
+
+/* ── Focus : toujours à 3:1 au moins, quelle que soit la surface ── */
+.menu-nav,
+.pager-card,
+.plus-offer,
+.smart-cat-list { --focus: var(--lcd); }
+.plus-menu-status { --focus: var(--case); }
+.menu summary:focus-visible,
+.menu .smart-streamer:focus-visible,
+.menu .smart-cat-option:focus-visible,
+.menu .smart-cat-now:focus-visible,
+.menu .smart-term button:focus-visible,
+.menu .layout-label input:focus-visible,
+.plus-close:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .menu .button,
+  .menu .chip-check,
+  .menu .language-button,
+  .menu .filter-chip,
+  .menu .panel-jump,
+  .menu .pf-btn,
+  .menu .seg-btn,
+  .menu .pager-key,
+  .menu .look-switch-btn,
+  .menu-tab { transition: none; }
+  .menu .button:hover,
+  .menu .button:active { transform: none; }
+}

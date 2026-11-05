@@ -145,9 +145,11 @@
     const streamers = [];
     const statuses = {};
     list.forEach((item) => {
-      const id = `twitch:${item.login}`;
+      // `platform` facultatif (chzzk…) : le champ `login` porte alors l'identifiant de la chaîne.
+      const platform = item.platform || "twitch";
+      const id = `${platform}:${item.login}`;
       const live = Boolean(item.live && item.stream);
-      streamers.push({ id, platform: "twitch", handle: item.login, displayName: item.name || item.login, avatarUrl: item.avatar || "", notificationsEnabled: true, gameNotificationsEnabled: true, titleNotificationsEnabled: false });
+      streamers.push({ id, platform, handle: item.login, displayName: item.name || item.login, avatarUrl: item.avatar || "", notificationsEnabled: true, gameNotificationsEnabled: true, titleNotificationsEnabled: false });
       statuses[id] = {
         updatedAt: now - 60 * 1000,
         viewers: live ? item.stream.viewers : undefined,

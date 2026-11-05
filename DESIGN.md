@@ -62,6 +62,9 @@ Sur la scène de la popup, Twitch affiche sa thumbnail (capture), disponible pub
 ### Suppression accessible depuis le tableau de bord
 Chaque carte de live porte sa corbeille (au survol, comme l'épingle) avec confirmation inline sur la carte (`mini-confirm`). La liste complète (sheet) garde sa corbeille par ligne. Ne jamais supprimer sans confirmation.
 
+### Les réglages suivent le « Tatoo » du site (2026-11-05)
+`css/settings-pager.css` (chargée après `popup.css`) porte toute la section Réglages dans l'univers pager de streampulse.tech : navigation en coque bleu nuit avec rubrique active en LCD, touches en caoutchouc (tranche de 4px, descente de 3px au clic) pour boutons, puces et flèches, champs et étiquettes en écran LCD avec DotGothic16 (données et saisies courtes, jamais un paragraphe), interrupteurs à curseur moulé, filets de 3px puis de 1px à la place des cartes. Le texte posé sur du LCD prend l'encre LCD en redéfinissant `--text*` localement. DotGothic16 est embarquée dans `font/` (OFL, copiée du site). L'écran StreamPulse+ (`plus-view`) n'est pas encore migré.
+
 ### Exceptions volontaires aux détecteurs d'anti-patterns
 Constats assumés, à ne pas « corriger » : glows violets et textes dégradés des cosmétiques Plus (voir plus haut) ; rebond `sp-badge-bounce` des badges de chat (feature Plus) ; `#c4a3ff` (`--violet-text`) sur les titres (marque) ; groupes de réglages encadrés dans leur panneau (menu popup, insights du récap, aperçu du chat de l'onboarding) — boîtes dans boîtes assumées ; pills du stepper et champs compacts du popup (surface souris fixe, padding validé au rendu).
 

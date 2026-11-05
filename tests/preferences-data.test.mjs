@@ -111,3 +111,10 @@ test("playerVolumeBoost : borné à 100-300, sinon défaut", () => {
   assert.equal(sanitizePreferences({ playerVolumeBoost: 999 }).playerVolumeBoost, 300);
   assert.equal(sanitizePreferences({}).playerVolumeBoost, 100);
 });
+
+test("le badge communautaire est actif par défaut, seul un false explicite le coupe", async () => {
+  const { DEFAULT_PREFERENCES, sanitizePreferences } = await import("../js/preferences-data.js");
+  assert.equal(DEFAULT_PREFERENCES.communityBadge, true);
+  assert.equal(sanitizePreferences({}).communityBadge, true);
+  assert.equal(sanitizePreferences({ communityBadge: false }).communityBadge, false);
+});

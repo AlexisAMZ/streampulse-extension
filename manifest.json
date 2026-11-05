@@ -3,7 +3,7 @@
   "default_locale": "en",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "26.11.4",
+  "version": "26.11.5",
   "permissions": [
     "storage",
     "alarms",
@@ -64,6 +64,7 @@
       ],
       "all_frames": false,
       "js": [
+        "js/inject/human-delay.js",
         "js/pointsRecorder.js",
         "js/dropsRecorder.js"
       ],
@@ -78,6 +79,7 @@
         "js/inject/i18n-inline.js",
         "js/inject/dom.js",
         "js/inject/plus-rule.js",
+        "js/inject/human-delay.js",
         "js/inject/clips-handoff.js",
         "js/inject/topbar-panel.js",
         "js/inject/settings-drawer.js",
@@ -155,6 +157,7 @@
         "js/kickPreviews.js",
         "js/kickPlayerEnhancer.js",
         "js/inject/plus-rule.js",
+        "js/inject/human-delay.js",
         "js/inject/kick-claim-rules.js",
         "js/kickChannelPoints.js",
         "js/chatFilter.js",

@@ -6,6 +6,8 @@
     <title>StreamPulse</title>
     <link rel="stylesheet" href="../css/tokens.css" />
     <link rel="stylesheet" href="../css/popup.css" />
+    <link rel="stylesheet" href="../css/settings-pager.css" />
+    <link rel="stylesheet" href="../css/plus-pager.css" />
     <link rel="stylesheet" href="../css/fx-effects.css" />
   </head>
   <body data-theme="dark">
@@ -171,6 +173,10 @@
           </div>
         </div>
         <ul class="strip" id="streamer-list"></ul>
+        <button type="button" class="strip-more" id="strip-more" hidden data-i18n-attr-ariaLabel="popup.osd.moreLives" data-i18n-attr-title="popup.osd.moreLives" aria-label="Voir les lives suivants">
+          <span id="strip-more-count"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
       </section>
 
       <div class="promo-float" id="promo-float" hidden>
@@ -273,12 +279,12 @@
             <span class="is-plus" data-i18n="popup.plus.comparePlus">StreamPulse+</span>
           </li>
           <li class="plus-compare-row">
-            <span class="compare-name" data-i18n="popup.plus.compareDrops">Drops</span>
+            <span class="compare-name" data-i18n="popup.plus.compareDrops">Drops (Twitch)</span>
             <span class="compare-free" data-i18n="popup.plus.compareDropsFree">À récupérer à la main</span>
             <span class="compare-plus" data-i18n="popup.plus.compareDropsPlus">Récupérés tout seuls</span>
           </li>
           <li class="plus-compare-row">
-            <span class="compare-name" data-i18n="popup.plus.compareBadges">Badges</span>
+            <span class="compare-name" data-i18n="popup.plus.compareBadges">Badges (Twitch)</span>
             <span class="compare-free" data-i18n="popup.plus.compareBadgesFree">1 par jour</span>
             <span class="compare-plus" data-i18n="popup.plus.compareBadgesPlus">Tous, sans limite</span>
           </li>
@@ -312,6 +318,12 @@
 
       <div class="plus-side">
       <aside class="plus-offer" id="plus-offer">
+        <form class="plus-key" id="plus-key-form" novalidate>
+          <label class="visually-hidden" for="plus-key-input" data-i18n="popup.plus.keyPlaceholder">J'ai déjà une clé de licence</label>
+          <input id="plus-key-input" class="text-input" type="text" autocomplete="off" spellcheck="false" data-i18n-attr-placeholder="popup.plus.keyPlaceholder" placeholder="J'ai déjà une clé de licence" />
+          <button class="button button-ghost" id="plus-key-activate" type="submit" data-i18n="popup.plus.activate">Activer</button>
+        </form>
+        <p class="plus-error" id="plus-key-error" role="alert" hidden></p>
         <div class="plus-plans" role="radiogroup" data-i18n-attr-ariaLabel="popup.plus.plansLabel" aria-label="Formule">
           <button class="plus-plan" type="button" role="radio" aria-checked="false" data-plan="monthly">
             <span class="plan-text"><b data-i18n="popup.plus.monthly">Mensuel</b><small data-i18n="popup.plus.monthlyNote">Sans engagement, résiliable à tout moment</small></span>
@@ -334,12 +346,6 @@
           <input id="plus-creator-input" class="text-input" type="text" autocomplete="off" spellcheck="false" data-i18n-attr-placeholder="popup.plus.creatorPlaceholder" placeholder="Code créateur ou promo (facultatif)" aria-label="Code créateur ou promo" data-i18n-attr-aria-label="popup.plus.creatorPlaceholder" />
         </div>
         <p class="plus-secure" data-i18n="popup.plus.secure">Paiement sécurisé sur streampulse.tech</p>
-        <form class="plus-key" id="plus-key-form" novalidate>
-          <label class="visually-hidden" for="plus-key-input" data-i18n="popup.plus.keyPlaceholder">J'ai déjà une clé de licence</label>
-          <input id="plus-key-input" class="text-input" type="text" autocomplete="off" spellcheck="false" data-i18n-attr-placeholder="popup.plus.keyPlaceholder" placeholder="J'ai déjà une clé de licence" />
-          <button class="button button-ghost" id="plus-key-activate" type="submit" data-i18n="popup.plus.activate">Activer</button>
-        </form>
-        <p class="plus-error" id="plus-key-error" role="alert" hidden></p>
       </aside>
 
       <aside class="plus-offer" id="plus-device-limited" hidden>
@@ -375,6 +381,10 @@
     <section id="settings-section" class="menu hidden" role="tabpanel" aria-labelledby="tab-settings">
       <nav class="menu-nav" role="tablist" aria-orientation="vertical" data-i18n-attr-ariaLabel="popup.osd.menuLabel">
         <div class="menu-nav-group" id="menu-nav-daily">
+          <button id="menu-tab-general" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-general" data-panel="general" tabindex="-1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+            <span data-i18n="popup.osd.menuGeneral">Général</span>
+          </button>
           <button id="menu-tab-notifications" class="menu-tab" type="button" role="tab" aria-selected="true" aria-controls="menu-notifications" data-panel="notifications">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
             <span data-i18n="popup.settings.groupNotifications">Notifications</span>
@@ -414,10 +424,6 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
             <span data-i18n="popup.osd.menuIdentityLinked">Profil et comptes</span>
             <span class="new-dot new-dot-inline" data-new="identity" hidden><span class="visually-hidden" data-i18n="popup.news.new">Nouveau</span></span>
-          </button>
-          <button id="menu-tab-general" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-general" data-panel="general" tabindex="-1">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-            <span data-i18n="popup.osd.menuGeneral">Général</span>
           </button>
           <button id="menu-tab-data" class="menu-tab" type="button" role="tab" aria-selected="false" aria-controls="menu-data" data-panel="data" tabindex="-1">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>
@@ -1155,12 +1161,29 @@
           <h2 data-i18n="popup.osd.menuIdentityLinked">Profil et comptes</h2>
           <p class="settings-description" data-i18n="popup.identity.intro">L'apparence de ton badge StreamPulse et de ton pseudo dans le chat Twitch, visible par les autres utilisateurs de StreamPulse.</p>
           <p class="identity-rank" id="identity-rank" role="status" hidden></p>
-          <div class="field-stack pseudo-field">
-            <label class="settings-title" for="pref-pseudo-input" data-i18n="popup.settings.pseudoTitle">Ton pseudo</label>
-            <span class="settings-description" data-i18n="popup.settings.pseudoDescription">Utilisé dans le message d'accueil.</span>
+          <div class="pager-card" id="pager-card">
+            <div class="pager-screen" aria-live="polite">
+              <div class="pager-photo" id="pager-photo" data-platform="twitch">
+                <span class="pager-initials" id="pager-initials">?</span>
+                <img class="pager-img" id="pager-img" alt="" hidden />
+                <span class="pager-platform-tag" id="pager-platform-tag"><img id="pager-platform-icon" alt="" /></span>
+              </div>
+              <div class="pager-readout">
+                <span class="pager-hello" id="pager-hello"></span>
+                <b class="pager-name" id="pager-name"></b>
+                <span class="pager-source" id="pager-source" data-i18n="popup.profileCard.sourceNone">Photo : aucune</span>
+              </div>
+            </div>
+            <div class="pager-keys" id="pager-platforms" role="radiogroup" data-i18n-attr-ariaLabel="popup.profileCard.platformLabel"></div>
+            <label class="pager-label" for="pref-pseudo-input" data-i18n="popup.profileCard.handleLabel">Ton pseudo sur cette plateforme</label>
             <div class="pseudo-row">
               <input id="pref-pseudo-input" class="text-input" type="text" maxlength="25" autocomplete="off" autocapitalize="none" spellcheck="false" data-i18n-attr-placeholder="popup.settings.pseudoPlaceholder" placeholder="Ton pseudo" />
-              <button id="pref-pseudo-save" class="button button-quiet" type="button" data-i18n="popup.settings.pseudoSave">Enregistrer</button>
+              <button id="pref-pseudo-save" class="button button-primary" type="button" data-i18n="popup.settings.pseudoSave">Enregistrer</button>
+            </div>
+            <p class="pager-note" data-i18n="popup.profileCard.note">La plateforme décide d'où vient ta photo. Elle sert aussi au message d'accueil, rien d'autre.</p>
+            <div class="pager-accent">
+              <span class="pager-label" id="pager-accent-label" data-i18n="popup.profileCard.accentLabel">Couleur de l'interface</span>
+              <div class="pager-swatches" id="pager-accents" role="radiogroup" aria-labelledby="pager-accent-label"></div>
             </div>
           </div>
           <label class="settings-toggle">

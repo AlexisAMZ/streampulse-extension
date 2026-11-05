@@ -21,11 +21,10 @@ const CONFIRMED_MS = 2400;
 const $ = (id) => document.getElementById(id);
 
 /** Faut-il afficher la carte ? Pur, testé. */
-export function shouldAsk(state, preferences, now) {
-  if (!state?.firstSeen || state.done) return false;
-  if (preferences?.communityBadge === true) return false;
-  if (now - state.firstSeen < FIRST_ASK_MS) return false;
-  return !state.snoozedUntil || now >= state.snoozedUntil;
+export function shouldAsk() {
+  // Badge actif par défaut (2026-11-05) : plus de carte de proposition, ni pour
+  // ceux qui l'ont coupé ensuite.
+  return false;
 }
 
 async function save(state) {

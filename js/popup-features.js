@@ -469,16 +469,16 @@ function trapPlusFocus(event) {
 export function openPlus() {
   const view = $("plus-view");
   if (!view) return;
-  if (!view.classList.contains("hidden")) {
-    closePlus();
-    return;
-  }
+  // Déjà ouverte (refus d'essai depuis la page elle-même, deuxième clic sur un réglage verrouillé) : on ne la referme pas.
+  if (!view.classList.contains("hidden")) return;
   const active = document.activeElement;
   plusOpener = active && active !== document.body && !view.contains(active) ? active : null;
   view.classList.remove("hidden");
   setBackgroundInert(view, true);
   view.tabIndex = -1;
   view.focus({ preventScroll: true });
+  // La colonne de l'offre garde son défilement d'une ouverture à l'autre : on repart du haut.
+  view.querySelector(".plus-side")?.scrollTo({ top: 0 });
 }
 
 export function closePlus({ restoreFocus = true } = {}) {

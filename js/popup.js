@@ -51,6 +51,7 @@ import { createLinkPicker } from "./popup-link-picker.js";
 import { initNotificationControls } from "./popup-notifications.js";
 import { initWatchLater } from "./popup-watch-later.js";
 import { initLinkedAccounts } from "./popup-linked-accounts.js";
+import { ACCENT_KEY, initProfileCard } from "./popup-profile-card.js";
 
 const defaultPreferences = DEFAULT_PREFERENCES;
 let preferenceControls = null;
@@ -164,7 +165,7 @@ const pointsTrackingToggle = document.getElementById("pref-points-tracking");
 const communityBadgeToggle = document.getElementById("pref-community-badge");
 
 const pseudoInput = document.getElementById("pref-pseudo-input");
-const pseudoSaveButton = document.getElementById("pref-pseudo-save");
+let profileCard = null;
 
 const toastContainer = document.getElementById("toast-container");
 const MAX_TOASTS = 5;
@@ -956,6 +957,7 @@ function renderStreamers() {
     }
   }
 
+  updateStripOverflow();
   const liveCountEl = document.getElementById("live-count");
   const filteredOut = live.length === 0 && state.streamers.some((streamer) => isLiveId(streamer.id)) && state.platformFilter !== "all";
   if (liveCountEl) {
@@ -971,6 +973,38 @@ function renderStreamers() {
   if (sheetEl && !sheetEl.hidden) renderSheet();
   renderActivity();
 }
+
+// --- Débordement de la bande des lives ---
+const stripMoreEl = document.getElementById("strip-more");
+const stripMoreCountEl = document.getElementById("strip-more-count");
+let stripOverflowFrame = 0;
+
+/** Fondu de bord + « +N » : combien de lives restent hors de vue, à droite. */
+function updateStripOverflow() {
+  const host = streamerListEl?.closest(".live-strip");
+  if (!host || !stripMoreEl) return;
+  const bounds = streamerListEl.getBoundingClientRect();
+  const rtl = getComputedStyle(streamerListEl).direction === "rtl";
+  const beyond = (rect) => (rtl ? rect.left < bounds.left - 2 : rect.right > bounds.right + 2);
+  const hidden = [...streamerListEl.querySelectorAll(".mini:not(.mini-all)")].filter((card) => beyond(card.getBoundingClientRect())).length;
+  const hasMore = streamerListEl.scrollWidth - streamerListEl.clientWidth - Math.abs(streamerListEl.scrollLeft) > 4;
+  const hasBefore = Math.abs(streamerListEl.scrollLeft) > 4;
+  host.toggleAttribute("data-more-end", hasMore);
+  host.toggleAttribute("data-more-start", hasBefore);
+  stripMoreEl.hidden = !hasMore || hidden === 0;
+  if (stripMoreCountEl) stripMoreCountEl.textContent = hidden ? `+${hidden}` : "";
+}
+
+streamerListEl?.addEventListener("scroll", () => {
+  cancelAnimationFrame(stripOverflowFrame);
+  stripOverflowFrame = requestAnimationFrame(updateStripOverflow);
+}, { passive: true });
+
+stripMoreEl?.addEventListener("click", () => {
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const direction = getComputedStyle(streamerListEl).direction === "rtl" ? -1 : 1;
+  streamerListEl.scrollBy({ left: direction * (streamerListEl.clientWidth - 72), behavior: reducedMotion ? "auto" : "smooth" });
+});
 
 function setChip(id, visible, text) {
   const chip = document.getElementById(id);
@@ -1172,45 +1206,6 @@ function renderSheet() {
   if (focusedId) [...sheetListEl.querySelectorAll("[data-id]")].find((element) => element.dataset.id === focusedId)?.focus({ preventScroll: true });
 }
 
-async function handleSavePseudo() {
-  if (!pseudoInput || !pseudoSaveButton) return;
-  const raw = pseudoInput.value.trim();
-  if (!raw) {
-    showFeedback(t("popup.settings.pseudoEmpty") || "Pseudo vide", "error");
-    return;
-  }
-  const previous = state.userProfile || {};
-
-  pseudoSaveButton.disabled = true;
-
-  // L'avatar doit suivre le pseudo. Sans ce lookup, le spread de l'ancien
-  // profil conservait la photo posee a l'onboarding : apres un changement de
-  // pseudo, le filigrane des statistiques montrait encore l'ancien compte.
-  const lookup = await sendMessage({ type: "lookupTwitchUser", handle: raw, platform: previous.platform });
-  const user = lookup?.user || null;
-  const next = {
-    ...previous,
-    handle: raw,
-    displayName: user?.display_name || raw,
-    // Compte introuvable ou hors ligne : pas de photo vaut mieux que celle
-    // de quelqu'un d'autre.
-    avatarUrl: user?.profile_image_url || "",
-  };
-
-  const result = await sendMessage({ type: "updateUserProfile", profile: next });
-  // eslint-disable-next-line require-atomic-updates -- reactivation du bouton apres le geste qui l'a desactive.
-  pseudoSaveButton.disabled = false;
-
-  if (result?.success) {
-    // eslint-disable-next-line require-atomic-updates -- profil ecrit par une seule action utilisateur a la fois.
-    state.userProfile = next;
-    markButtonSuccess(pseudoSaveButton);
-    showFeedback(t("popup.settings.pseudoSaved") || "Pseudo mis à jour", "success");
-  } else {
-    showFeedback(result?.error || t("popup.errors.generic"), "error");
-  }
-}
-
 /**
  * Curseurs : la valeur affichée à côté (« 150 % », « 200 ms ») devient aussi le
  * texte annoncé par les lecteurs d'écran, qui sinon n'entendent que le nombre brut.
@@ -1268,7 +1263,11 @@ function syncClipDownloadLock() {
  */
 function syncDropsPlusLock() {
   const plus = plusActive();
-  document.querySelectorAll(".drops-plus-lock").forEach((lock) => { lock.hidden = plus; });
+  document.querySelectorAll(".drops-plus-lock").forEach((lock) => {
+    lock.hidden = plus;
+    // Le clic sur un réglage verrouillé ouvre l'offre : on le dit à la souris et aux lecteurs d'écran.
+    lock.title = t("popup.plus.open");
+  });
   const prefs = state.preferences || {};
   if (autoClaimDropsToggle) autoClaimDropsToggle.checked = plus && prefs.autoClaimDrops !== false;
   if (autoOpenInventoryToggle) autoOpenInventoryToggle.checked = plus && Boolean(prefs.autoOpenInventory);
@@ -1463,7 +1462,7 @@ function renderPreferences() {
     pointsTrackingToggle.checked = prefs.pointsTracking !== false;
   }
   if (communityBadgeToggle) {
-    communityBadgeToggle.checked = prefs.communityBadge === true;
+    communityBadgeToggle.checked = prefs.communityBadge !== false;
   }
   if (previewsEnabledToggle) {
     previewsEnabledToggle.checked = prefs.previewsEnabled !== false;
@@ -2299,6 +2298,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       "betaGeneralPreferences",
       "betaGeneralStats",
       "userProfile",
+      ACCENT_KEY,
       "betaPinnedIds",
       "betaChannelGroups",
       LINKED_ACCOUNTS_KEY,
@@ -2326,6 +2326,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (pseudoInput) {
       pseudoInput.value = state.userProfile?.handle || state.userProfile?.displayName || "";
     }
+    profileCard = initProfileCard({
+      getProfile: () => state.userProfile,
+      setProfile: (profile) => { state.userProfile = profile; },
+      send: sendMessage,
+      feedback: showFeedback,
+      markSuccess: markButtonSuccess,
+      isPlus: plusActive,
+      openPlus,
+      onSaved: () => { renderGreeting(); renderFeatured(); },
+      accent: data[ACCENT_KEY],
+    });
+    onPlusChange(() => profileCard?.renderAccents());
 
     // 2. Setup State & Render UI Immediately
     state.streamers = data.betaGeneralStreamers || [];
@@ -2799,14 +2811,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         },
       );
     }
-
-    pseudoSaveButton?.addEventListener("click", handleSavePseudo);
-    pseudoInput?.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        handleSavePseudo();
-      }
-    });
 
     buildLanguageButtons();
     setActiveTab("streamers");

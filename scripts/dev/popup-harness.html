@@ -25,7 +25,7 @@
   <body data-theme="dark">
     <script type="module">
       const params = new URLSearchParams(location.search);
-      const source = await (await fetch("/html/popup.html")).text();
+      const source = await (await fetch("/html/popup.html", { cache: "no-store" })).text();
       const parsed = new DOMParser().parseFromString(source, "text/html");
       parsed.querySelectorAll("script").forEach((node) => node.remove());
       // Feuilles de style du vrai popup absentes d'ici (fx-effects.css…) : reprises telles quelles.

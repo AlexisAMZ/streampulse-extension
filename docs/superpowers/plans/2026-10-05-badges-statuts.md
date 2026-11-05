@@ -9,7 +9,7 @@ dates, son coût, son objectif et sa date d'ajout, sans action de l'utilisateur.
 **Architecture :** le pont de la page Twitch lit la liste des campagnes de Drops avec leurs Drops (et, à
 défaut, le détail des campagnes « Twitch Gaming », 5 par minute). Le service worker relie chaque badge du
 catalogue au Drop qui le donne (par le nom de la récompense BADGE, sinon par le jeu) dans un journal
-`streamPulseBadgeEvents`. Le popup calcule les statuts. streampulse.fr fournit la date d'ajout de chaque
+`streamPulseBadgeEvents`. Le popup calcule les statuts. streampulse.tech fournit la date d'ajout de chaque
 badge.
 
 **Pile :** JavaScript ES modules (extension MV3, sans build), `node:test`, Vercel Functions (site),
@@ -41,7 +41,7 @@ Upstash Redis REST.
 | `js/inject/drops-bridge.js` | Liste avec Drops, action `details`, retrait du repli Apollo |
 | `js/dropsRecorder.js` | Relaie le détail demandé par le service worker, une fois par minute |
 | `js/sw/messages-drops.js`, `js/sw/messages.js` | Message `recordDropsCampaignDetails` |
-| `js/sw/drops.js` | `refreshBadgeAdded()` (dates de streampulse.fr) |
+| `js/sw/drops.js` | `refreshBadgeAdded()` (dates de streampulse.tech) |
 | `js/badge-auto-worker.js` | Catalogue du mode auto lu depuis le journal |
 | `js/popup-drops.js`, `html/popup.html`, `css/popup.css` | Maquette 1 |
 | `i18n/lang/*.js` (11) | 21 clés ajoutées, 2 modifiées, 3 retirées |
@@ -139,7 +139,7 @@ export const CATALOG_RAW = {
   owned: ["hoxton"],
 };
 
-/** Dates d'ajout notées par streampulse.fr (relevé du 2026-10-05). */
+/** Dates d'ajout notées par streampulse.tech (relevé du 2026-10-05). */
 export const SITE_ADDED = {
   vaultbreakers: Date.parse("2026-10-05T11:39:15Z"),
   "clipped-that": Date.parse("2026-10-05T11:39:15Z"),
@@ -442,7 +442,7 @@ En tête, après `BADGE_AUTO_KEY` :
 ```js
 /** Journal des badges : chaque badge relié au Drop (ou à la récompense) qui le donne, avec ses dates. */
 export const BADGE_EVENTS_KEY = "streamPulseBadgeEvents";
-/** Dates d'ajout des badges notées par streampulse.fr : { fetchedAt, added: { setID: ms } }. */
+/** Dates d'ajout des badges notées par streampulse.tech : { fetchedAt, added: { setID: ms } }. */
 export const BADGE_ADDED_KEY = "streamPulseBadgeAdded";
 export const DROPS_KEYS = [DROPS_PROGRESS_KEY, DROPS_CAMPAIGNS_KEY, DROPS_HISTORY_KEY, DROPS_SINCE_KEY, DROPS_REWARDS_KEY, DROPS_BADGES_KEY, BADGE_EVENTS_KEY, BADGE_ADDED_KEY];
 ```
@@ -734,7 +734,7 @@ export function viewerEarnable(description) {
 
 const SET_ID = /^[a-z0-9][a-z0-9_-]{0,119}$/i;
 
-/** Dates d'ajout renvoyées par streampulse.fr : { setID: ms }, valeurs illisibles écartées. */
+/** Dates d'ajout renvoyées par streampulse.tech : { setID: ms }, valeurs illisibles écartées. */
 export function normalizeAdded(raw) {
   const out = {};
   if (!isPlainObject(raw)) return out;
@@ -1019,7 +1019,7 @@ Remplacer `recordCampaigns`, `recordRewards` et `recordBadges` par :
     });
   }
 
-  /** Dates d'ajout des badges notées par streampulse.fr. */
+  /** Dates d'ajout des badges notées par streampulse.tech. */
   function recordBadgeAdded(raw) {
     return enqueue(async () => {
       const added = normalizeAdded(raw);
@@ -1300,8 +1300,8 @@ Au début de `tick()`, après la garde `if (!enabled || !contextAlive()) return;
   Avant `refreshRewardsFromWorker`, ajouter :
 
 ```js
-/** Dates d'ajout des badges notées par streampulse.fr (le CDN garde la réponse 10 min). */
-const BADGE_ADDED_URL = "https://streampulse.fr/api/twitch-badges?added=1";
+/** Dates d'ajout des badges notées par streampulse.tech (le CDN garde la réponse 10 min). */
+const BADGE_ADDED_URL = "https://streampulse.tech/api/twitch-badges?added=1";
 const BADGE_ADDED_EVERY_MS = 6 * 3_600_000;
 
 /** Relues toutes les 6 h, ou tout de suite quand un badge vient d'apparaître. */
@@ -1333,7 +1333,7 @@ Dans `refreshRewardsFromWorker`, remplacer le bloc des badges globaux par :
 
 - [ ] **Étape 2 : vérifier** `node --check js/sw/drops.js` puis `npm test` → SUCCÈS.
 
-- [ ] **Étape 3 : point de commit** : `feat: dates d'ajout des badges lues sur streampulse.fr`.
+- [ ] **Étape 3 : point de commit** : `feat: dates d'ajout des badges lues sur streampulse.tech`.
 
 ---
 

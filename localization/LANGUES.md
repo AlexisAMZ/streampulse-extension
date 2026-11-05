@@ -113,7 +113,7 @@ npm run i18n:translate -- --locale=nl,sv,cs
 ## Après publication, à faire à la main
 
 - `js/currency.js` : associer la devise du pays (`add` prévient si elle manque).
-- Site streampulse.tech : vérifier que la page d'aide `/xx/support` existe, sinon les liens pointent vers l'anglais.
+- Site streampulse.tech (dépôt `StreampulseSite`) : la langue doit y exister aussi, sinon les liens d'aide pointent vers l'anglais. `node build/l10n/cli.js sync` puis `compare` la signale « À AJOUTER au site » ; la procédure complète est dans `build/l10n/README.md` du site. Après toute modification de `glossary.json` ou `protected-terms.json`, relancer `sync` côté site : son `validate` avertit tant que la copie est en retard.
 - Captures du store dans la langue (DevKit).
 - Une entrée dans `js/changelog-data.js` pour annoncer la nouvelle langue, dans toutes les langues publiées.
 

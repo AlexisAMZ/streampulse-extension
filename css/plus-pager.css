@@ -1,0 +1,70 @@
+/* Écran StreamPulse+ dans la DA « Tatoo » (voir settings-pager.css, qui définit
+   les variables --case, --rubber, --dot… et doit être chargée avant). */
+
+.plus-view { background: var(--bg); }
+.plus-title { letter-spacing: -0.03em; text-wrap: balance; }
+.plus-compare-head,
+.plus-compare-row { padding-block: 10px; box-shadow: inset 0 -1px 0 var(--rule); }
+.plus-compare-head { padding-block: 0 8px; border-top: 0; box-shadow: inset 0 -3px 0 var(--text); color: var(--text-2); font-family: var(--dot); font-size: 12px; font-weight: 400; letter-spacing: 0.06em; }
+.plus-compare-head .is-plus { color: var(--text); }
+.compare-name { color: var(--text); font-family: var(--display); font-size: 11.5px; }
+.compare-plus { font-weight: 600; }
+.plus-value { border-radius: 10px; background: var(--lcd); color: var(--lcd-ink); font-weight: 600; }
+
+/* Le boîtier de l'offre : coque bleu nuit, texte blanc, écran LCD pour la clé. */
+.plus-offer {
+  --text: #fff;
+  --text-2: rgba(255, 255, 255, 0.86);
+  --text-3: rgba(255, 255, 255, 0.7);
+  --rule: rgba(255, 255, 255, 0.24);
+  padding: 20px 18px 22px;
+  border-radius: 26px 26px 32px 32px;
+  background: var(--case);
+  box-shadow: inset 0 -7px 0 rgba(0, 0, 0, 0.22), 0 24px 34px -20px rgba(17, 20, 47, 0.7);
+  color: #fff;
+}
+.plus-offer .text-input {
+  border: 0;
+  border-radius: 10px;
+  background: var(--lcd);
+  box-shadow: inset 0 0 0 3px var(--case-deep);
+  color: var(--lcd-ink);
+  font-family: var(--dot);
+  font-size: 13px;
+}
+.plus-offer .text-input::placeholder { color: rgba(28, 38, 21, 0.72); font-family: var(--body); font-size: 12.5px; opacity: 1; }
+.plus-offer .text-input:focus { outline: 3px solid var(--lcd); outline-offset: 3px; background: var(--lcd-lit); }
+.plus-key { box-shadow: inset 0 -1px 0 var(--rule); }
+.plus-plan { box-shadow: inset 0 -1px 0 var(--rule); color: #fff; }
+.plus-plan::before { border-radius: 4px; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.55); }
+.plus-plan.active::before { background: var(--lcd); box-shadow: inset 0 0 0 3px var(--case-deep); }
+.plus-plan:focus-visible { outline: 3px solid var(--lcd); outline-offset: 2px; }
+.plus-badge-save { border-radius: 4px; background: var(--lcd); box-shadow: none; color: var(--lcd-ink); font-family: var(--dot); font-weight: 400; letter-spacing: 0.04em; }
+.plus-checkout { height: 46px; margin-bottom: 4px; border-radius: 14px; background: var(--rubber); box-shadow: var(--key-shadow); color: var(--ink); letter-spacing: 0.01em; transition: transform 0.12s var(--ease-out), box-shadow 0.12s var(--ease-out); }
+.plus-checkout:hover { background: #f1eff6; transform: translateY(-1px); }
+.plus-checkout:active { box-shadow: var(--key-shadow-down); transform: translateY(3px); }
+.plus-checkout:focus-visible { outline: 3px solid var(--lcd); outline-offset: 3px; }
+.plus-offer .button { height: 36px; margin-bottom: 4px; padding: 0 14px; border-radius: 14px; background: var(--violet); box-shadow: 0 4px 0 -1px var(--violet-strong); color: #fff; font-family: var(--display); font-size: 12px; font-weight: 700; transition: transform 0.12s var(--ease-out), box-shadow 0.12s var(--ease-out); }
+.plus-offer .button:active { box-shadow: 0 1px 0 -1px var(--violet-strong); transform: translateY(3px); }
+.plus-offer .button:focus-visible { outline: 3px solid var(--lcd); outline-offset: 3px; }
+.plus-error { color: #ffb4ac; }
+.plus-trust-list svg { color: var(--lcd); }
+.plus-check { border-radius: 14px; }
+.plus-active-plan { font-family: var(--dot); letter-spacing: 0.04em; }
+.plus-close { border-radius: 14px; }
+
+/* Parrainage et effets : filets, LCD, pas de cartes. */
+.plus-referral-title { letter-spacing: -0.01em; }
+.plus-referral .referral-tier { padding: 8px 0 6px; border-radius: 0; background: transparent; box-shadow: inset 0 3px 0 var(--text); }
+.plus-referral .referral-tier.is-done,
+.plus-referral .referral-tier--money { padding-inline: 8px; border-radius: 0 0 8px 8px; background: var(--lcd); box-shadow: none; color: var(--lcd-ink); }
+.plus-referral .referral-tier.is-done > span:last-child,
+.plus-referral .referral-tier--money > span:last-child { color: rgba(28, 38, 21, 0.8); }
+
+@media (prefers-reduced-motion: reduce) {
+  .plus-checkout,
+  .plus-offer .button { transition: none; }
+  .plus-checkout:hover,
+  .plus-checkout:active,
+  .plus-offer .button:active { transform: none; }
+}

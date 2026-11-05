@@ -77,8 +77,17 @@
     window.postMessage({ source: COMMAND, v: 1, token: TOKEN, id: `${Date.now()}-${++sequence}`, action, ...fields }, location.origin);
   }
 
+  /**
+   * Récupère les Drops prêts, un par un, avec un délai naturel avant chacun
+   * (js/inject/human-delay.js) : jamais à la seconde où Twitch les annonce.
+   */
   function claimAll(instanceIds, auto) {
-    for (const instanceId of Array.isArray(instanceIds) ? instanceIds : []) command("claim", { instanceId, auto });
+    const delays = globalThis.StreamPulseHumanDelay;
+    let wait = 0;
+    for (const instanceId of Array.isArray(instanceIds) ? instanceIds : []) {
+      wait += delays ? delays.pick("dropClick") : 0;
+      setTimeout(() => command("claim", { instanceId, auto }), wait);
+    }
   }
 
   /** Campagnes dont le service worker veut le détail : tout de suite, puis au plus une demande par minute. */

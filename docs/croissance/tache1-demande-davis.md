@@ -49,7 +49,7 @@ interdit tout ping de collecte.
 ### 2.2 Trois variantes de déclencheur, derrière un drapeau
 
 La variante se choisit à distance, sans republier l'extension : l'API
-`https://streampulse.fr/api/streampulse-config` renvoie désormais
+`https://streampulse.tech/api/streampulse-config` renvoie désormais
 `reviewAsk: { variant }`, mis en cache côté extension (TTL 30 min). La
 variable d'environnement Vercel `STREAMPULSE_REVIEW_ASK_VARIANT` pilote la
 valeur (`calendar` par défaut).

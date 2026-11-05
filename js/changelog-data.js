@@ -52,6 +52,70 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.11.5",
+    date: "2026-11-05",
+    changes: [
+      {
+        type: "improved",
+        area: "interface",
+        text: {
+          "fr": "Popup au nouveau look : la bande des lives indique combien de lives restent hors de vue, et dans Profil et comptes tu choisis la plateforme de ta photo et la couleur de l'interface.",
+          "en": "The popup has a new look: the live strip shows how many lives are out of view, and in Profile and accounts you pick the platform your photo comes from and the interface colour.",
+          "uk": "Попап має новий вигляд: стрічка лайвів показує, скільки лайвів лишилося поза екраном, а в розділі «Профіль і акаунти» ти обираєш платформу для фото та колір інтерфейсу.",
+          "es": "El popup estrena diseño: la tira de directos indica cuántos quedan fuera de vista, y en Perfil y cuentas eliges la plataforma de tu foto y el color de la interfaz.",
+          "pt-BR": "O popup ganhou um visual novo: a faixa de lives mostra quantas ficaram fora de vista, e em Perfil e contas você escolhe a plataforma da sua foto e a cor da interface.",
+          "de": "Das Popup hat ein neues Aussehen: Die Live-Leiste zeigt, wie viele Lives außerhalb des Sichtbereichs liegen, und unter Profil und Konten wählst du die Plattform deines Fotos und die Farbe der Oberfläche.",
+          "it": "Il popup ha un nuovo look: la fascia dei live indica quanti restano fuori vista, e in Profilo e account scegli la piattaforma della tua foto e il colore dell'interfaccia.",
+          "pl": "Popup ma nowy wygląd: pasek transmisji pokazuje, ile z nich jest poza widokiem, a w sekcji Profil i konta wybierasz platformę swojego zdjęcia oraz kolor interfejsu.",
+          "tr": "Açılır pencere yeni bir görünüme kavuştu: yayın şeridi görünümün dışında kalan yayın sayısını gösteriyor; Profil ve hesaplar bölümünde fotoğrafının geldiği platformu ve arayüz rengini seçebiliyorsun.",
+          "ru": "У попапа новый вид: лента эфиров показывает, сколько эфиров осталось за пределами экрана, а в разделе «Профиль и аккаунты» ты выбираешь платформу для фото и цвет интерфейса.",
+          "ja": "ポップアップの見た目を一新しました。ライブの帯に画面外のライブの数が表示され、「プロフィールとアカウント」では写真の取得元プラットフォームとインターフェースの色を選べます。",
+          "ko": "팝업의 디자인을 새롭게 바꿨어요. 라이브 목록에 화면 밖에 있는 라이브 수가 표시되고, '프로필 및 계정'에서 사진을 가져올 플랫폼과 인터페이스 색상을 고를 수 있어요.",
+          "ar": "حلّة جديدة للنافذة المنبثقة: يعرض شريط البثوث عدد البثوث الخارجة عن النظر، وفي «الملف الشخصي والحسابات» تختار منصة صورتك ولون الواجهة.",
+        },
+      },
+      {
+        type: "improved",
+        area: "drops",
+        text: {
+          "fr": "Les Drops se récupèrent maintenant avec un court délai naturel, de quelques secondes, au lieu de la seconde exacte où ils apparaissent.",
+          "en": "Drops are now claimed after a short, natural delay of a few seconds instead of the exact second they appear.",
+          "uk": "Дропи тепер забираються з невеликою природною затримкою в кілька секунд, а не в ту саму секунду, коли вони з'являються.",
+          "es": "Los Drops ahora se reclaman con un breve retraso natural de unos segundos, en lugar de en el segundo exacto en que aparecen.",
+          "pt-BR": "Os Drops agora são resgatados com um breve atraso natural de alguns segundos, em vez de no segundo exato em que aparecem.",
+          "de": "Drops werden jetzt mit einer kurzen, natürlichen Verzögerung von ein paar Sekunden eingelöst, statt in der exakten Sekunde, in der sie erscheinen.",
+          "it": "I Drop ora vengono riscattati con un breve ritardo naturale di qualche secondo, invece che nell'istante preciso in cui compaiono.",
+          "pl": "Dropy są teraz odbierane z krótkim, naturalnym opóźnieniem rzędu kilku sekund, a nie w tej samej sekundzie, w której się pojawiają.",
+          "tr": "Drop'lar artık göründükleri saniyede değil, birkaç saniyelik kısa ve doğal bir gecikmeyle alınıyor.",
+          "ru": "Дропы теперь забираются с короткой естественной задержкой в несколько секунд, а не в ту же секунду, когда появляются.",
+          "ja": "ドロップは、表示された瞬間ではなく、数秒ほどの自然な間を置いて受け取るようになりました。",
+          "ko": "드롭은 나타나는 바로 그 순간이 아니라 몇 초의 자연스러운 간격을 두고 받아 와요.",
+          "ar": "تُستلم الدروبات الآن بعد تأخير طبيعي قصير من بضع ثوانٍ بدل اللحظة نفسها التي تظهر فيها.",
+        },
+      },
+      {
+        type: "improved",
+        area: "badges",
+        text: {
+          "fr": "Le badge communautaire est activé par défaut. Tu peux le couper à tout moment dans les réglages.",
+          "en": "The community badge is now on by default. You can turn it off at any time in the settings.",
+          "uk": "Бейдж спільноти тепер увімкнено за замовчуванням. Його можна вимкнути будь-коли в налаштуваннях.",
+          "es": "La insignia de la comunidad ahora viene activada por defecto. Puedes desactivarla cuando quieras en los ajustes.",
+          "pt-BR": "O selo da comunidade agora vem ativado por padrão. Você pode desativá-lo quando quiser nos ajustes.",
+          "de": "Das Community-Abzeichen ist jetzt standardmäßig aktiv. Du kannst es jederzeit in den Einstellungen ausschalten.",
+          "it": "Il badge della community è ora attivo per impostazione predefinita. Puoi disattivarlo in qualsiasi momento nelle impostazioni.",
+          "pl": "Odznaka społeczności jest teraz domyślnie włączona. Możesz ją wyłączyć w dowolnym momencie w ustawieniach.",
+          "tr": "Topluluk rozeti artık varsayılan olarak açık. İstediğin zaman ayarlardan kapatabilirsin.",
+          "ru": "Значок сообщества теперь включён по умолчанию. Его можно отключить в любой момент в настройках.",
+          "ja": "コミュニティバッジが初期設定でオンになりました。設定からいつでもオフにできます。",
+          "ko": "커뮤니티 배지가 기본으로 켜져 있어요. 설정에서 언제든 끌 수 있어요.",
+          "ar": "شارة المجتمع مفعّلة الآن افتراضيًا. يمكنك إيقافها في أي وقت من الإعدادات.",
+        },
+      },
+    ],
+  },
+
+  {
     version: "26.11.4",
     date: "2026-11-04",
     changes: [

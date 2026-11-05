@@ -1,5 +1,6 @@
 // Points de chaîne, Drops, badges et mode auto des badges.
 
+import "../inject/human-delay.js";
 import { createBadgeAuto, watchProbe } from "../badge-auto-worker.js";
 import { PLUS_KEY, isPlusActive, plusActiveFrom } from "../plus.js";
 import { refreshTrialAccount } from "./trial-account.js";
@@ -180,11 +181,19 @@ export async function refreshDropsFromWorker({ minGapMs, rewardsMaxAgeMs = REWAR
   const autoClaim = (await plusActiveFrom(chrome.storage.local)) && prefs.autoClaimDrops !== false;
   const result = await dropsStore.recordInventory(inventory, { autoClaim });
   announceDrops(result.added).catch(warnWith("annonce des Drops"));
-  for (const instanceId of result.claim) await claimDropFromWorker(instanceId, true);
+  // Un Drop après l'autre, avec une pause naturelle avant chacun (js/inject/human-delay.js).
+  for (const instanceId of result.claim) {
+    await pause(StreamPulseHumanDelay.pick("dropWorker"));
+    await claimDropFromWorker(instanceId, true);
+  }
   return { read: true };
 }
 
 const REWARDS_EVERY_MS = 30 * 60_000;
+
+/** Attente sans bloquer le worker (délais < 25 s, voir human-delay.js). */
+const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const { StreamPulseHumanDelay } = globalThis;
 
 /** Dates d'ajout des badges notées par streampulse.tech (le CDN garde la réponse 10 min). */
 const BADGE_ADDED_URL = "https://streampulse.tech/api/twitch-badges?added=1";

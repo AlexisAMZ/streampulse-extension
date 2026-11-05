@@ -384,11 +384,6 @@ export function createBadgeAuto(deps) {
     for (const job of obtained) await deps.notify("background.notifications.badgeAutoTitle", "background.badgeAuto.obtained", { name: job.title });
     // Compteur de valeur : badges farmés par le mode auto, réservé à Plus.
     if (plus && obtained.length) recordPlusValue({ badges: obtained.length }).catch(() => {});
-    // Badge gratuit obtenu : on montre ce que Plus récupérerait encore.
-    if (!plus && obtained.length) {
-      const remaining = freeBadgeJobs(await catalog()).filter((job) => !owned.includes(job.badgeId) && !obtained.some((done) => done.badgeId === job.badgeId)).length;
-      if (remaining > 0) await deps.notify("background.badgeAuto.freeDoneTitle", "background.badgeAuto.freeDoneMessage", { count: remaining });
-    }
 
     const group = currentGroup(state);
     if (!group) {

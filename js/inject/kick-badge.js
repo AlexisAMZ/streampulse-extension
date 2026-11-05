@@ -365,8 +365,8 @@
   function loadSettings() {
     chrome.storage.local.get([PREFERENCES_KEY], function (result) {
       var prefs = (result && result[PREFERENCES_KEY]) || {};
-      enabled = prefs.communityBadge === true;
-      log("reglages :", enabled ? "actif" : "inactif (communityBadge !== true)");
+      enabled = prefs.communityBadge !== false;
+      log("reglages :", enabled ? "actif" : "inactif (desactive par l utilisateur)");
       if (enabled) start();
       else stop();
     });

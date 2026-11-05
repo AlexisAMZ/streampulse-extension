@@ -4,6 +4,8 @@
   if (window.top !== window) return;
 
   const CLAIM_CHECK_INTERVAL = 2500;
+  /** Délais naturels avant chaque clic : js/inject/human-delay.js. */
+  const HUMAN_DELAY = globalThis.StreamPulseHumanDelay;
   const PREFERENCES_KEY = "betaGeneralPreferences";
 
   let intervalId = null;
@@ -136,6 +138,23 @@
     return CLAIM_VERB.test(label);
   }
 
+  /**
+   * Programme le clic d'un bouton de Drop après un délai naturel. Faux si ce
+   * bouton est déjà en attente ou vient d'être cliqué : le même bouton ne part
+   * pas deux fois.
+   */
+  function scheduleDropClaim(btn) {
+    if (btn.__spClaimedAt && Date.now() - btn.__spClaimedAt < 30_000) return false;
+    btn.__spClaimedAt = Date.now();
+    lastClaimTime = Date.now();
+    setTimeout(() => {
+      if (!btn.isConnected || btn.offsetParent === null || btn.hasAttribute("disabled")) return;
+      btn.click();
+      notifyDropClaimed();
+    }, HUMAN_DELAY.pick("dropClick"));
+    return true;
+  }
+
   function tryClaimDrops() {
     // Boutons désignés par attribut : ce sont les vrais, on leur fait confiance.
     const exact = [
@@ -152,10 +171,7 @@
           btn.offsetParent !== null &&
           !btn.hasAttribute("disabled")
         ) {
-          lastClaimTime = Date.now();
-          btn.click();
-          notifyDropClaimed();
-          return true;
+          if (scheduleDropClaim(btn)) return true;
         }
       }
     }
@@ -175,10 +191,7 @@
     for (const scope of scopes) {
       for (const btn of scope.querySelectorAll("button")) {
         if (!isClaimButton(btn)) continue;
-        lastClaimTime = Date.now();
-        btn.click();
-        notifyDropClaimed();
-        return true;
+        if (scheduleDropClaim(btn)) return true;
       }
     }
 

@@ -93,6 +93,23 @@ async function migrateAutoCancelRaidsOff() {
   }
 }
 
+// Badge communautaire actif pour tout le monde (décision du propriétaire,
+// 2026-11-05). L'ancien défaut (désactivé) est déjà écrit en storage : on bascule
+// une seule fois, marqué par un drapeau, pour qu'un choix de désactiver ensuite
+// ne soit jamais écrasé.
+const COMMUNITY_BADGE_MIGRATION_KEY = "communityBadgeMigratedToOn";
+
+async function migrateCommunityBadgeOn() {
+  try {
+    const stored = await chrome.storage.local.get(COMMUNITY_BADGE_MIGRATION_KEY);
+    if (stored[COMMUNITY_BADGE_MIGRATION_KEY]) return;
+    await PreferenceStore.update({ communityBadge: true });
+    await chrome.storage.local.set({ [COMMUNITY_BADGE_MIGRATION_KEY]: true });
+  } catch (error) {
+    console.warn("Community badge migration failed:", error.message);
+  }
+}
+
 // Notification « StreamPulse a été mis à jour » : une seule fois par version.
 // Le drapeau dédié survit à un éventuel double déclenchement de onInstalled,
 // qui ne remet pas seenPatchNotesVersion à jour. Clic : ouvre la page des
@@ -129,6 +146,7 @@ export async function handleInstalled(details) {
   await PreferenceStore.ensureDefaults();
   await migrateAutoOpenInventoryInterval();
   await migrateAutoCancelRaidsOff();
+  await migrateCommunityBadgeOn();
   await NotificationCenter.init();
   scheduleWatcherAlarm();
   scheduleKeepAliveAlarm();

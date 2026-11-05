@@ -12,7 +12,7 @@
 Dire, pour chaque badge global Twitch, s'il est **en cours**, **à venir** ou
 **terminé**, avec ses vraies dates, son coût, son objectif et sa date d'ajout,
 sans que l'utilisateur ait rien à faire. Toutes les infos viennent de Twitch et
-de streampulse.fr : aucun site tiers n'est lu ni cité (décision d'Alexis du
+de streampulse.tech : aucun site tiers n'est lu ni cité (décision d'Alexis du
 2026-10-05).
 
 Aujourd'hui, l'onglet tient pour « obtenable » tout badge apparu depuis moins
@@ -34,7 +34,7 @@ constatées le 2026-10-05 :
 - Liaison exacte badge ↔ campagne par le nom de la récompense BADGE, avec un
   secours par nom de jeu normalisé.
 - Statuts En cours / À venir / Terminé, calculés sur l'appareil.
-- Date d'ajout fournie par streampulse.fr, croisée avec celle de l'appareil.
+- Date d'ajout fournie par streampulse.tech, croisée avec celle de l'appareil.
 - Écran : maquette 1 (filtres par statut sur la grille actuelle).
 - Mise à jour automatique, sans action de l'utilisateur : le détail des
   campagnes est lu en arrière-plan dans tout onglet Twitch ouvert.
@@ -102,7 +102,7 @@ js/inject/drops-bridge.js ─postMessage─▶ js/dropsRecorder.js ─▶ js/dro
                                                                         ▲
                                           js/sw/drops.js ── GET ?added=1 ┘  dates d'ajout
                                                                 │
-                                                     streampulse.fr/api/twitch-badges
+                                                     streampulse.tech/api/twitch-badges
                                                      (catalogue Helix + 1re apparition, cron quotidien)
 ```
 
@@ -206,7 +206,7 @@ contient « ACE COMBAT 8 » ; « Warhammer 40,000: Space Marine II » contient
 - `recordBadges` : si de nouveaux badges arrivent, le journal est relié de
   nouveau (une récompense déjà vue peut enfin trouver son badge).
 - Dates d'ajout : `refreshBadgeAdded()` lit
-  `https://streampulse.fr/api/twitch-badges?added=1` quand la dernière lecture
+  `https://streampulse.tech/api/twitch-badges?added=1` quand la dernière lecture
   a plus de 6 h, ou tout de suite si `recordBadges` vient de voir un nouveau
   badge. Rangé dans l'état des badges (`added`, `addedFetchedAt`). En cas
   d'échec, l'ancienne valeur reste et on réessaie au cycle suivant. Pas de

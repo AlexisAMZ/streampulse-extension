@@ -95,7 +95,9 @@ export const DEFAULT_PREFERENCES = {
   previewsAudio: false,
   previewsShowDelayMs: 350,
   previewsAnimations: true,
-  communityBadge: false,
+  // Badge communautaire : actif par défaut (décision du propriétaire, 2026-11-05),
+  // désactivable dans les réglages. Il envoie une empreinte du pseudo Twitch.
+  communityBadge: true,
 };
 
 const HH_MM = /^([01]\d|2[0-3]):([0-5]\d)$/;
@@ -258,6 +260,6 @@ export function sanitizePreferences(preferences = {}) {
       ? Math.min(2000, Math.max(0, previewsDelay))
       : DEFAULT_PREFERENCES.previewsShowDelayMs,
     previewsAnimations: preferences.previewsAnimations !== false,
-    communityBadge: preferences.communityBadge === true,
+    communityBadge: preferences.communityBadge !== false,
   };
 }

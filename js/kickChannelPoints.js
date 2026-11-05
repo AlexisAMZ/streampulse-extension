@@ -18,6 +18,8 @@
 
   const RULES = globalThis.StreamPulseKickClaim;
   const PLUS_RULE = globalThis.StreamPulsePlusRule;
+  /** Délais naturels avant chaque clic : js/inject/human-delay.js. */
+  const HUMAN_DELAY = globalThis.StreamPulseHumanDelay;
 
   let pointsActive = true;
   let dropsActive = false;
@@ -136,8 +138,13 @@
       if (!RULES.isDropClaimButton({ aria }, current)) continue;
       const description = describe(button);
       if (!RULES.isDropClaimButton(description, current) || recentlyClicked(button)) continue;
-      button.click();
-      safeSend({ type: "incrementStat", stat: "dropsClaimed", value: 1, channel: currentChannel(), text: description.aria });
+      // Clic après un délai naturel ; recentlyClicked() garde le bouton en attente.
+      const channel = currentChannel();
+      setTimeout(() => {
+        if (!button.isConnected || button.disabled) return;
+        button.click();
+        safeSend({ type: "incrementStat", stat: "dropsClaimed", value: 1, channel, text: description.aria });
+      }, HUMAN_DELAY.pick("dropClick"));
       return true;
     }
     return false;
