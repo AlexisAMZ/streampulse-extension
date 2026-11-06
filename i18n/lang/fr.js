@@ -75,7 +75,9 @@ export default {
       "undoYes": "Oui, retirer ({{count}})",
       "undone": "Chaînes importées retirées : {{count}}. Tes autres chaînes sont toujours là.",
       "settingsHint": "Choisis des chaînes que tu suis déjà sur Twitch. Tu pourras retirer d'un coup tout ce que tu as importé.",
-      "settingsOpen": "Importer ou retirer mes follows"
+      "settingsOpen": "Importer ou retirer mes follows",
+      "noMatch": "Aucune chaîne ne correspond à ce filtre.",
+      "otherWay": "Revenir au choix"
     }
   },
   "meta": {
@@ -139,6 +141,13 @@ export default {
     "blockedUsersTitle": "Utilisateurs masqués",
     "blockedUsersDescription": "Masque dans le chat Twitch et Kick les messages de ces utilisateurs (séparés par des virgules).",
     "blockedUsersPlaceholder": "bot, spammer...",
+    "doors": {
+      "question": "Tu as un compte Twitch ?",
+      "importTitle": "Oui, importer mes follows",
+      "importHint": "Choisis parmi les chaînes que tu suis déjà. Rien n'est ajouté sans ton choix.",
+      "manualTitle": "Non, ajouter à la main",
+      "manualHint": "Twitch, Kick ou YouTube : colle un pseudo ou le lien d'une chaîne."
+    },
     "formLabelBase": "Pseudo du streamer *",
     "formLabelPlatform": "Ajouter un streamer {{platform}}",
     "helperTextBase": "Saisis le pseudo du streamer ou colle le lien de sa chaîne.",

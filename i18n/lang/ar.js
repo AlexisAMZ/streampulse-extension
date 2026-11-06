@@ -75,7 +75,9 @@ export default {
       "undoYes": "نعم، أزل ({{count}})",
       "undone": "القنوات المستوردة التي أُزيلت: {{count}}. قنواتك الأخرى ما زالت موجودة.",
       "settingsHint": "اختر قنوات تتابعها بالفعل على Twitch. يمكنك إزالة كل ما استوردته دفعة واحدة.",
-      "settingsOpen": "استيراد متابعاتي أو إزالتها"
+      "settingsOpen": "استيراد متابعاتي أو إزالتها",
+      "noMatch": "لا توجد قناة تطابق هذا الفلتر.",
+      "otherWay": "العودة إلى الاختيار"
     }
   },
   "meta": {
@@ -139,6 +141,13 @@ export default {
     "blockedUsersTitle": "المستخدمون المحظورون",
     "blockedUsersDescription": "إخفاء رسائل هؤلاء المستخدمين (مفصولة بفواصل).",
     "blockedUsersPlaceholder": "بوت، مزعج...",
+    "doors": {
+      "question": "هل لديك حساب على Twitch؟",
+      "importTitle": "نعم، استيراد متابعاتي",
+      "importHint": "اختر من بين القنوات التي تتابعها. لا يُضاف شيء دون اختيارك.",
+      "manualTitle": "لا، الإضافة يدويًا",
+      "manualHint": "Twitch أو Kick أو YouTube: الصق اسم مستخدم أو رابط قناة."
+    },
     "formLabelBase": "اسم صانع المحتوى *",
     "formLabelPlatform": "إضافة صانع محتوى على {{platform}}",
     "helperTextBase": "أدخل اسم صانع المحتوى أو رابط قناته.",

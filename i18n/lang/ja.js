@@ -75,7 +75,9 @@ export default {
       "undoYes": "はい、削除する（{{count}}）",
       "undone": "削除したインポート済みチャンネル：{{count}}。ほかのチャンネルはそのままです。",
       "settingsHint": "Twitchですでにフォローしているチャンネルを選びます。インポートしたものはまとめて削除できます。",
-      "settingsOpen": "フォローをインポート・削除"
+      "settingsOpen": "フォローをインポート・削除",
+      "noMatch": "このフィルターに一致するチャンネルはありません。",
+      "otherWay": "選択に戻る"
     }
   },
   "meta": {
@@ -139,6 +141,13 @@ export default {
     "blockedUsersTitle": "非表示にするユーザー",
     "blockedUsersDescription": "これらのユーザー（カンマ区切り）のメッセージを Twitch と Kick のチャットで非表示にします。",
     "blockedUsersPlaceholder": "bot、スパマー…",
+    "doors": {
+      "question": "Twitchアカウントをお持ちですか？",
+      "importTitle": "はい、フォローをインポート",
+      "importHint": "すでにフォローしているチャンネルから選べます。選ばない限り何も追加されません。",
+      "manualTitle": "いいえ、手動で追加",
+      "manualHint": "Twitch、Kick、YouTube：ユーザー名またはチャンネルのリンクを貼り付けてください。"
+    },
     "formLabelBase": "ストリーマーのユーザー名 *",
     "formLabelPlatform": "{{platform}} のストリーマーを追加",
     "helperTextBase": "ストリーマーのユーザー名を入力するか、チャンネルのリンクを貼り付けてください。",

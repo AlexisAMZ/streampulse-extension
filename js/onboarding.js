@@ -557,6 +557,37 @@ function setSelectedPlatform(platform) {
 /* ════════════════════════════════
    STREAMER CRUD
    ════════════════════════════════ */
+
+/** Étape Streamers : les deux portes, puis l'ajout à la main ou l'import. */
+function setStreamerPath(path) {
+  document.getElementById("streamer-doors").hidden = path !== "doors";
+  document.getElementById("manual-path").hidden = path !== "manual";
+  document.getElementById("follows-import-root").hidden = path !== "import";
+  const step = document.querySelector('.wizard-step[data-step="2"]');
+  step.querySelector(".step-desc").hidden = path !== "manual";
+  step.querySelector(".step-frame").classList.remove("is-wide");
+  if (path === "manual") input?.focus();
+  if (path === "doors") document.getElementById("door-import").focus();
+}
+
+function setupStreamerDoors() {
+  const stepFrame = document.querySelector('.wizard-step[data-step="2"] .step-frame');
+  const followsImport = mountFollowsImport(document.getElementById("follows-import-root"), {
+    executeBulkAdd,
+    onChange: loadStreamers,
+    embedded: true,
+    onExit: () => setStreamerPath("doors"),
+    onStep: (step) => stepFrame.classList.toggle("is-wide", step === "pick"),
+  });
+  document.getElementById("door-import").addEventListener("click", async () => {
+    setStreamerPath("import");
+    await followsImport.open();
+  });
+  document.getElementById("door-manual").addEventListener("click", () => setStreamerPath("manual"));
+  document.getElementById("manual-back").addEventListener("click", () => setStreamerPath("doors"));
+  document.querySelector('.wizard-step[data-step="2"] .step-desc').hidden = true;
+}
+
 function updateNextButton() {
   const btn = document.getElementById("btn-next-2");
   if (btn) btn.disabled = saving || navigating || currentStreamers.length === 0;
@@ -1136,7 +1167,7 @@ async function initialize() {
   setupUpdateModeUI();
   setupPlusModeUI();
   chrome.storage.onChanged.addListener(onStorageChange);
-  mountFollowsImport(document.getElementById("follows-import-root"), { executeBulkAdd, onChange: loadStreamers });
+  setupStreamerDoors();
   await Promise.all([loadStreamers(), loadPlusAccess()]);
 }
 

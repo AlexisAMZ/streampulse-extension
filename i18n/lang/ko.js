@@ -75,7 +75,9 @@ export default {
       "undoYes": "네, 삭제({{count}})",
       "undone": "삭제한 가져온 채널: {{count}}. 다른 채널은 그대로예요.",
       "settingsHint": "Twitch에서 이미 팔로우 중인 채널을 고르세요. 가져온 채널은 한 번에 삭제할 수 있어요.",
-      "settingsOpen": "팔로우 가져오기 또는 삭제"
+      "settingsOpen": "팔로우 가져오기 또는 삭제",
+      "noMatch": "이 필터와 일치하는 채널이 없어요.",
+      "otherWay": "선택으로 돌아가기"
     }
   },
   "meta": {
@@ -139,6 +141,13 @@ export default {
     "blockedUsersTitle": "숨긴 사용자",
     "blockedUsersDescription": "Twitch 및 Kick 채팅에서 이 사용자들의 메시지를 숨깁니다(쉼표로 구분).",
     "blockedUsersPlaceholder": "bot, spammer...",
+    "doors": {
+      "question": "Twitch 계정이 있나요?",
+      "importTitle": "네, 내 팔로우 가져오기",
+      "importHint": "이미 팔로우한 채널 중에서 고르세요. 직접 고르기 전에는 아무것도 추가되지 않아요.",
+      "manualTitle": "아니요, 직접 추가하기",
+      "manualHint": "Twitch, Kick 또는 YouTube: 사용자 이름이나 채널 링크를 붙여넣으세요."
+    },
     "formLabelBase": "스트리머 사용자 이름 *",
     "formLabelPlatform": "{{platform}} 스트리머 추가",
     "helperTextBase": "스트리머 사용자 이름을 입력하거나 채널 링크를 붙여 넣으세요.",

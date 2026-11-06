@@ -75,7 +75,9 @@ export default {
       "undoYes": "Tak, usuń ({{count}})",
       "undone": "Usunięte zaimportowane kanały: {{count}}. Pozostałe kanały nadal tam są.",
       "settingsHint": "Wybierz kanały, które już obserwujesz na Twitchu. Wszystko, co zaimportujesz, usuniesz za jednym razem.",
-      "settingsOpen": "Importuj lub usuń obserwowane"
+      "settingsOpen": "Importuj lub usuń obserwowane",
+      "noMatch": "Żaden kanał nie pasuje do tego filtra.",
+      "otherWay": "Wróć do wyboru"
     }
   },
   "meta": {
@@ -139,6 +141,13 @@ export default {
     "blockedUsersTitle": "Ukryci użytkownicy",
     "blockedUsersDescription": "Ukrywa na czacie Twitcha i Kicka wiadomości od tych użytkowników (oddzielonych przecinkami).",
     "blockedUsersPlaceholder": "bot, spamer...",
+    "doors": {
+      "question": "Masz konto na Twitchu?",
+      "importTitle": "Tak, importuj moje obserwowane",
+      "importHint": "Wybierz spośród kanałów, które już obserwujesz. Bez Twojego wyboru nic nie zostanie dodane.",
+      "manualTitle": "Nie, dodaj ręcznie",
+      "manualHint": "Twitch, Kick lub YouTube: wklej nazwę użytkownika lub link do kanału."
+    },
     "formLabelBase": "Nazwa streamera *",
     "formLabelPlatform": "Dodaj streamera z {{platform}}",
     "helperTextBase": "Wpisz nazwę streamera albo wklej link do jego kanału.",

@@ -13,6 +13,7 @@ import { formatHandleForDisplay } from "./platforms.js";
 import { buildAuthorizeUrl, followsToRows, parseAuthRedirect, readFollowsThenRevoke } from "./twitch-follows.js";
 
 export const IMPORT_MAX = 100;
+const STRIP_MAX = 16;
 
 const STREAMERS_KEY = "betaGeneralStreamers";
 const ERROR_KEYS = {
@@ -79,6 +80,25 @@ function label(tag, className, key) {
   return node;
 }
 
+const CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
+
+/** Rond du streamer : les initiales restent dessous si la photo manque ou ne charge pas. */
+function avatarNode(row) {
+  const node = el("span", "fi-avatar");
+  node.textContent = Array.from(row.displayName || row.handle).slice(0, 2).join("").toUpperCase();
+  if (row.avatar) {
+    const image = el("img");
+    image.alt = "";
+    image.loading = "lazy";
+    image.decoding = "async";
+    image.referrerPolicy = "no-referrer";
+    image.addEventListener("error", () => image.remove());
+    image.src = row.avatar;
+    node.append(image);
+  }
+  return node;
+}
+
 function button(kind, key, onClick) {
   const node = key ? label("button", `btn ${kind}`, key) : el("button", `btn ${kind}`);
   node.type = "button";
@@ -88,10 +108,12 @@ function button(kind, key, onClick) {
 
 /**
  * @param {HTMLElement} root
- * @param {{executeBulkAdd: Function, getGroupId?: () => string, onChange?: () => unknown}} options
+ * @param {{executeBulkAdd: Function, getGroupId?: () => string, onChange?: () => unknown, embedded?: boolean, onExit?: () => void, onStep?: (step: string) => void}} options
+ *   `embedded` : le module vit derrière une porte de l'onboarding ; `onExit` y ramène.
+ * @returns {{open: () => Promise<void>} | undefined}
  */
-export function mountFollowsImport(root, { executeBulkAdd, getGroupId = () => "", onChange = () => {} }) {
-  if (!root) return;
+export function mountFollowsImport(root, { executeBulkAdd, getGroupId = () => "", onChange = () => {}, embedded = false, onExit = () => {}, onStep = () => {} }) {
+  if (!root) return undefined;
   let rows = [];
   let busy = false;
   let importedCount = 0;
@@ -109,11 +131,16 @@ export function mountFollowsImport(root, { executeBulkAdd, getGroupId = () => ""
   filter.id = "fi-filter";
   filter.autocomplete = "off";
   filter.spellcheck = false;
+  filter.dataset.i18nAttrPlaceholder = "bulk.import.filter";
+  filter.placeholder = t("bulk.import.filter");
   const filterLabel = label("label", "fi-sr", "bulk.import.filter");
   filterLabel.htmlFor = filter.id;
   const selectAll = el("input");
   selectAll.type = "checkbox";
   const list = el("ul", "fi-list");
+  const noMatch = label("p", "fi-hint", "bulk.import.noMatch");
+  noMatch.hidden = true;
+  const strip = el("div", "fi-strip");
   const count = el("p", "fi-count");
   const confirmText = el("p", "fi-text");
   const undoText = el("p", "fi-text");
@@ -126,6 +153,7 @@ export function mountFollowsImport(root, { executeBulkAdd, getGroupId = () => ""
 
   function show(step, { focus = true } = {}) {
     for (const [name, node] of Object.entries(steps)) node.hidden = name !== step;
+    onStep(step);
     if (focus) steps[step].querySelector("button")?.focus();
   }
 
@@ -139,8 +167,17 @@ export function mountFollowsImport(root, { executeBulkAdd, getGroupId = () => ""
     status.textContent = "";
   }
 
+  /** Annuler dans l'onboarding ramène aux portes, sauf s'il reste un import à retirer. */
+  function leave() {
+    if (embedded && !importedCount) onExit();
+    else show("start");
+  }
+
+  const exitButtons = () => (embedded ? [button("btn-ghost", "bulk.import.otherWay", onExit)] : []);
+
   const reviewButton = button("btn-primary", "bulk.import.review", () => {
     renderControls();
+    strip.replaceChildren(...selectedRows().slice(0, STRIP_MAX).map(avatarNode));
     show("confirm2");
   });
   const addButton = button("btn-primary", "", addChosen);
@@ -151,26 +188,29 @@ export function mountFollowsImport(root, { executeBulkAdd, getGroupId = () => ""
   steps.start = el("div", "fi-step",
     label("p", "fi-hint", "bulk.import.intro"),
     el("div", "fi-actions",
-      button("btn-ghost", "bulk.import.open", () => { clearMessages(); show("confirm1"); }),
-      undoButton));
+      button(embedded ? "btn-primary" : "btn-ghost", "bulk.import.open", () => { clearMessages(); show("confirm1"); }),
+      undoButton,
+      ...exitButtons()));
   steps.confirm1 = el("div", "fi-step",
     label("p", "fi-text", "bulk.import.confirm1"),
     label("p", "fi-hint", "bulk.import.revokeNote"),
     el("div", "fi-actions",
-      button("btn-ghost", "bulk.import.cancel", () => show("start")),
+      button("btn-ghost", "bulk.import.cancel", leave),
       button("btn-primary", "bulk.import.continue", start)));
   steps.loading = el("div", "fi-step", label("p", "fi-hint", "bulk.import.keepOpen"));
   steps.pick = el("div", "fi-step",
     label("p", "fi-hint", "bulk.import.pickHint"),
-    filterLabel,
-    filter,
-    el("label", "fi-all", selectAll, label("span", "", "bulk.import.selectAll")),
-    count,
+    el("div", "fi-tools",
+      el("div", "fi-search", filterLabel, filter),
+      el("label", "fi-all", selectAll, label("span", "", "bulk.import.selectAll")),
+      count),
     list,
+    noMatch,
     el("div", "fi-actions",
-      button("btn-ghost", "bulk.import.cancel", () => { rows = []; clearMessages(); show("start"); }),
+      button("btn-ghost", "bulk.import.cancel", () => { rows = []; clearMessages(); leave(); }),
       reviewButton));
   steps.confirm2 = el("div", "fi-step",
+    strip,
     confirmText,
     el("div", "fi-actions",
       button("btn-ghost", "bulk.import.back", () => show("pick")),
@@ -184,7 +224,8 @@ export function mountFollowsImport(root, { executeBulkAdd, getGroupId = () => ""
         renderControls();
         show(rows.some(isSelectable) ? "pick" : "start");
       }),
-      undoDoneButton));
+      undoDoneButton,
+      ...exitButtons()));
   steps.confirmUndo = el("div", "fi-step",
     undoText,
     el("div", "fi-actions",
@@ -207,16 +248,23 @@ export function mountFollowsImport(root, { executeBulkAdd, getGroupId = () => ""
       box.checked = row.selected;
       box.disabled = busy || !isSelectable(row);
       box.addEventListener("change", () => toggleRow(row, box));
-      const name = el("strong");
-      name.textContent = formatHandleForDisplay("twitch", row.handle);
+      const tick = el("span", "fi-tick");
+      tick.innerHTML = CHECK_ICON;
+      const avatar = avatarNode(row);
+      avatar.append(tick);
+      const displayed = row.displayName || formatHandleForDisplay("twitch", row.handle);
+      const name = el("strong", "fi-name");
+      name.textContent = displayed;
+      name.title = displayed;
       const result = el("span", "fi-result");
       if (row.status === "existing") result.textContent = t("bulk.existing");
       else if (row.status === "success") result.textContent = t("bulk.success");
       else if (row.status === "error") result.textContent = t("bulk.error");
-      const item = el("li", "fi-row", el("label", "", box, name), result);
+      const item = el("li", "fi-row", el("label", "", box, avatar, name), result);
       item.dataset.status = row.status;
       list.append(item);
     }
+    noMatch.hidden = list.childElementCount > 0 || rows.length === 0;
   }
 
   function toggleRow(row, box) {
@@ -268,9 +316,9 @@ export function mountFollowsImport(root, { executeBulkAdd, getGroupId = () => ""
       // `token` ne vit que dans ce bloc. Pas de log ici : ni jeton, ni adresse de retour.
       const { token, clientId } = await authorize();
       status.textContent = t("bulk.import.reading");
-      const logins = await readFollowsThenRevoke({ token, clientId });
+      const { logins, profiles } = await readFollowsThenRevoke({ token, clientId });
       const stored = await chrome.storage.local.get([STREAMERS_KEY]);
-      rows = followsToRows(logins, stored[STREAMERS_KEY]);
+      rows = followsToRows(logins, stored[STREAMERS_KEY], profiles);
       filter.value = "";
       status.textContent = t("bulk.import.found", { count: rows.length });
       if (!rows.length) showError("bulk.import.empty");
@@ -373,4 +421,13 @@ export function mountFollowsImport(root, { executeBulkAdd, getGroupId = () => ""
   renderUndo();
   show("start", { focus: false });
   refreshImportedCount().catch((failure) => console.warn("[follows-import] lecture impossible :", failure?.message));
+
+  /** Entrée par la porte de l'onboarding : directement à Twitch, sauf s'il y a un import à retirer. */
+  async function open() {
+    clearMessages();
+    await refreshImportedCount().catch(() => {});
+    show(importedCount ? "start" : "confirm1");
+  }
+
+  return { open };
 }

@@ -75,7 +75,9 @@ export default {
       "undoYes": "Yes, remove ({{count}})",
       "undone": "Imported channels removed: {{count}}. Your other channels are still there.",
       "settingsHint": "Pick channels you already follow on Twitch. You can remove everything you imported in one go.",
-      "settingsOpen": "Import or remove my follows"
+      "settingsOpen": "Import or remove my follows",
+      "noMatch": "No channel matches this filter.",
+      "otherWay": "Back to the choices"
     }
   },
   "meta": {
@@ -139,6 +141,13 @@ export default {
     "blockedUsersTitle": "Blocked Users",
     "blockedUsersDescription": "Hide messages from these users (comma separated).",
     "blockedUsersPlaceholder": "bot, spammer...",
+    "doors": {
+      "question": "Do you have a Twitch account?",
+      "importTitle": "Yes, import my follows",
+      "importHint": "Pick from the channels you already follow. Nothing is added unless you pick it.",
+      "manualTitle": "No, add them by hand",
+      "manualHint": "Twitch, Kick or YouTube: paste a username or a channel link."
+    },
     "formLabelBase": "Creator name *",
     "formLabelPlatform": "Add a {{platform}} creator",
     "helperTextBase": "Enter the creator handle or channel link.",

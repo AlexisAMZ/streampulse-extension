@@ -75,7 +75,9 @@ export default {
       "undoYes": "Evet, kaldır ({{count}})",
       "undone": "Kaldırılan içe aktarılmış kanallar: {{count}}. Diğer kanalların hâlâ yerinde.",
       "settingsHint": "Twitch'te zaten takip ettiğin kanalları seç. İçe aktardığın her şeyi tek seferde kaldırabilirsin.",
-      "settingsOpen": "Takipleri içe aktar veya kaldır"
+      "settingsOpen": "Takipleri içe aktar veya kaldır",
+      "noMatch": "Bu filtreyle eşleşen kanal yok.",
+      "otherWay": "Seçime dön"
     }
   },
   "meta": {
@@ -139,6 +141,13 @@ export default {
     "blockedUsersTitle": "Gizlenen kullanıcılar",
     "blockedUsersDescription": "Twitch ve Kick sohbetinde bu kullanıcıların mesajlarını gizler (virgülle ayır).",
     "blockedUsersPlaceholder": "bot, spam gönderen...",
+    "doors": {
+      "question": "Twitch hesabın var mı?",
+      "importTitle": "Evet, takiplerimi içe aktar",
+      "importHint": "Zaten takip ettiğin kanallar arasından seç. Sen seçmeden hiçbir şey eklenmez.",
+      "manualTitle": "Hayır, elle ekle",
+      "manualHint": "Twitch, Kick veya YouTube: bir kullanıcı adı ya da kanal bağlantısı yapıştır."
+    },
     "formLabelBase": "Yayıncının kullanıcı adı *",
     "formLabelPlatform": "Bir {{platform}} yayıncısı ekle",
     "helperTextBase": "Yayıncının kullanıcı adını yaz ya da kanal bağlantısını yapıştır.",

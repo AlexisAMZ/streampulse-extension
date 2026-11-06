@@ -75,7 +75,9 @@ export default {
       "undoYes": "Ja, entfernen ({{count}})",
       "undone": "Importierte Kanäle entfernt: {{count}}. Deine anderen Kanäle sind noch da.",
       "settingsHint": "Wähle Kanäle aus, denen du auf Twitch schon folgst. Alles Importierte kannst du auf einmal wieder entfernen.",
-      "settingsOpen": "Follows importieren oder entfernen"
+      "settingsOpen": "Follows importieren oder entfernen",
+      "noMatch": "Kein Kanal passt zu diesem Filter.",
+      "otherWay": "Zurück zur Auswahl"
     }
   },
   "meta": {
@@ -139,6 +141,13 @@ export default {
     "blockedUsersTitle": "Ausgeblendete Nutzer",
     "blockedUsersDescription": "Blendet im Twitch- und Kick-Chat Nachrichten dieser Nutzer aus (durch Kommas getrennt).",
     "blockedUsersPlaceholder": "bot, spammer...",
+    "doors": {
+      "question": "Hast du ein Twitch-Konto?",
+      "importTitle": "Ja, meine Follows importieren",
+      "importHint": "Wähle aus den Kanälen, denen du schon folgst. Ohne deine Auswahl wird nichts hinzugefügt.",
+      "manualTitle": "Nein, von Hand hinzufügen",
+      "manualHint": "Twitch, Kick oder YouTube: Füge einen Namen oder einen Kanallink ein."
+    },
     "formLabelBase": "Name des Streamers *",
     "formLabelPlatform": "{{platform}}-Streamer hinzufügen",
     "helperTextBase": "Gib den Namen des Streamers ein oder füge den Link zu seinem Kanal ein.",

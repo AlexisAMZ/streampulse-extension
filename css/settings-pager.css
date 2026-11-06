@@ -353,3 +353,10 @@ body.is-settings .news-button .unread-dot { box-shadow: 0 0 0 2px var(--case); }
   .menu .button:hover,
   .menu .button:active { transform: none; }
 }
+
+/* Import des follows : première chose de Général, pour qu'on le voie sans le chercher. */
+.follows-callout { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 12px 14px; margin: 4px 0 20px; padding: 16px; border-radius: 14px; background: var(--violet-soft); box-shadow: inset 0 0 0 1.5px var(--violet); }
+.follows-callout-mark { width: 28px; height: 28px; margin-top: 2px; }
+.follows-callout-text { display: grid; gap: 4px; min-width: 0; }
+.follows-callout-title { margin: 0; font-family: var(--display); font-size: 15px; font-weight: 700; line-height: 1.3; }
+.follows-callout .button { grid-column: 1 / -1; width: 100%; margin-bottom: 4px; }

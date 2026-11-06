@@ -107,6 +107,29 @@
 
 /* Streamers */
 .streamers-card { display: grid; gap: 16px; }
+.streamers-card [hidden] { display: none; }
+/* Étape Streamers : deux portes, puis la grille prend toute la largeur. */
+.doors { display: grid; gap: 10px; }
+.doors-question { margin: 0 0 6px; font: 700 21px/1.25 var(--display); letter-spacing: -0.02em; text-wrap: balance; }
+.door { appearance: none; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 18px; padding: 18px 20px; border: 0; border-radius: 16px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line); color: var(--text); font: inherit; text-align: start; cursor: pointer; transition: background-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease; }
+.door:hover { box-shadow: inset 0 0 0 1px var(--line-2); }
+.door-primary { background: var(--violet-soft); box-shadow: inset 0 0 0 1.5px var(--violet); }
+.door-primary:hover { box-shadow: inset 0 0 0 2px var(--violet); }
+.door-title { font-size: 16px; font-weight: 700; }
+.door-hint { grid-column: 1; color: var(--text-2); font-size: 14px; line-height: 1.5; }
+.door svg { grid-column: 2; grid-row: 1 / span 2; width: 20px; height: 20px; color: var(--text-2); }
+.door-primary svg { color: var(--violet-text); }
+[dir="rtl"] .door svg { transform: scaleX(-1); }
+@media (prefers-reduced-motion: no-preference) {
+  .door svg { transition: translate 200ms var(--ease-out); }
+  .door:hover svg { translate: 4px 0; }
+  [dir="rtl"] .door:hover svg { translate: -4px 0; }
+}
+.manual-path { display: grid; gap: 12px; min-width: 0; }
+.manual-back { appearance: none; justify-self: start; min-height: 36px; padding: 0; border: 0; background: none; color: var(--text-2); font: inherit; font-size: 14px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.manual-back:hover { color: var(--text); }
+.step-frame.is-wide { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+.step-frame.is-wide .step-header { position: static; }
 .streamer-form { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; min-width: 0; }
 .platform-picker { display: flex; flex-wrap: wrap; gap: 8px; }
 .platform-button { display: inline-flex; align-items: center; gap: 8px; height: 42px; padding: 0 16px; border: 0; border-radius: 12px; background: var(--bg); box-shadow: inset 0 0 0 1px var(--line); color: var(--text-2); font-weight: 600; cursor: pointer; }

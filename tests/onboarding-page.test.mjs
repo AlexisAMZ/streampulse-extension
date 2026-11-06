@@ -201,3 +201,28 @@ test("onboarding: settings, streamer mutations and finish require explicit save 
     assert.equal(result.closesAfterRetry, 1);
   });
 });
+
+test("onboarding : deux portes mènent à l'import ou à l'ajout à la main, et on peut revenir", async () => {
+  const result = await extensionPage("onboarding", async ({ $, module, waitFor, calls }) => {
+    await module("onboarding.js");
+    await waitFor(() => calls.some((call) => call.type === "getStreamers"));
+    const visible = () => ["streamer-doors", "manual-path", "follows-import-root"].filter((id) => !$(id).hidden);
+    const atStart = visible();
+    $("door-manual").click();
+    const manual = visible();
+    $("manual-back").click();
+    const back = visible();
+    $("door-import").click();
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    const imported = visible();
+    const confirm = document.querySelector(".fi-step:not([hidden]) .btn-primary")?.dataset.i18n;
+    document.querySelector(".fi-step:not([hidden]) .btn-ghost").click();
+    return { atStart, manual, back, imported, confirm, cancelled: visible() };
+  }, { stored: {} });
+  assert.deepEqual(result.atStart, ["streamer-doors"]);
+  assert.deepEqual(result.manual, ["manual-path"]);
+  assert.deepEqual(result.back, ["streamer-doors"]);
+  assert.deepEqual(result.imported, ["follows-import-root"]);
+  assert.equal(result.confirm, "bulk.import.continue");
+  assert.deepEqual(result.cancelled, ["streamer-doors"]);
+});

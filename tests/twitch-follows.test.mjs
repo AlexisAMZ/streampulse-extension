@@ -6,6 +6,7 @@ import {
   parseAuthRedirect,
   followsToRows,
   fetchAllFollows,
+  fetchFollowProfiles,
   readFollowsThenRevoke,
   revokeToken,
 } from "../js/twitch-follows.js";
@@ -113,7 +114,8 @@ test("le jeton est annulé après la lecture, même quand elle échoue", async (
     if (url.includes("/users")) return { ok: true, status: 200, json: async () => ({ data: [{ id: "1" }] }) };
     return page(["a"], null);
   };
-  assert.deepEqual(await readFollowsThenRevoke({ token: "t", clientId: "c", fetchImpl: okFetch }), ["a"]);
+  const read = await readFollowsThenRevoke({ token: "t", clientId: "c", fetchImpl: okFetch });
+  assert.deepEqual(read.logins, ["a"]);
   assert.equal(revoked.length, 1);
   const badFetch = async (url) => {
     if (url.includes("revoke")) { revoked.push("ko"); return { ok: true }; }
@@ -121,4 +123,64 @@ test("le jeton est annulé après la lecture, même quand elle échoue", async (
   };
   await assert.rejects(readFollowsThenRevoke({ token: "t", clientId: "c", fetchImpl: badFetch }), (e) => e.code === "unauthorized");
   assert.deepEqual(revoked, ["ok", "ko"]);
+});
+
+const AVATAR = "https://static-cdn.jtvnw.net/jtv_user_pictures/a.png";
+
+function profilesResponse(entries) {
+  return { ok: true, status: 200, json: async () => ({ data: entries }) };
+}
+
+test("fetchFollowProfiles lit les photos par lots de 100, avec le jeton", async () => {
+  const urls = [];
+  const logins = Array.from({ length: 150 }, (_, index) => `user${index}`);
+  const fetchImpl = async (url, init) => {
+    urls.push(url);
+    assert.equal(init.headers.Authorization, "Bearer tok");
+    return profilesResponse([{ login: "user0", display_name: "User0", profile_image_url: AVATAR }]);
+  };
+  const profiles = await fetchFollowProfiles({ logins, token: "tok", clientId: "cid", fetchImpl });
+  assert.equal(urls.length, 2);
+  assert.equal(new URL(urls[0]).searchParams.getAll("login").length, 100);
+  assert.equal(new URL(urls[1]).searchParams.getAll("login").length, 50);
+  assert.deepEqual(profiles.get("user0"), { displayName: "User0", avatar: AVATAR });
+});
+
+test("fetchFollowProfiles écarte une image qui ne vient pas de Twitch", async () => {
+  const fetchImpl = async () => profilesResponse([
+    { login: "a", display_name: "A", profile_image_url: "https://evil.example/a.png" },
+    { login: "b", display_name: "B", profile_image_url: "http://static-cdn.jtvnw.net/b.png" },
+  ]);
+  const profiles = await fetchFollowProfiles({ logins: ["a", "b"], token: "t", clientId: "c", fetchImpl });
+  assert.equal(profiles.get("a").avatar, "");
+  assert.equal(profiles.get("b").avatar, "");
+});
+
+test("fetchFollowProfiles : un échec garde l'import, sans photo", async () => {
+  const fetchImpl = async () => ({ ok: false, status: 500, json: async () => ({}) });
+  const profiles = await fetchFollowProfiles({ logins: ["a"], token: "t", clientId: "c", fetchImpl });
+  assert.equal(profiles.size, 0);
+});
+
+test("les photos sont lues avant l'annulation du jeton", async () => {
+  const order = [];
+  const fetchImpl = async (url) => {
+    if (url.includes("revoke")) { order.push("revoke"); return { ok: true }; }
+    if (url.includes("channels/followed")) { order.push("follows"); return page(["a"], null); }
+    if (url.includes("login=")) { order.push("profiles"); return profilesResponse([{ login: "a", display_name: "A", profile_image_url: AVATAR }]); }
+    return profilesResponse([{ id: "1" }]);
+  };
+  const { logins, profiles } = await readFollowsThenRevoke({ token: "t", clientId: "c", fetchImpl });
+  assert.deepEqual(order, ["follows", "profiles", "revoke"]);
+  assert.deepEqual(logins, ["a"]);
+  assert.equal(profiles.get("a").avatar, AVATAR);
+});
+
+test("followsToRows reprend la photo et le nom affiché, sans rien cocher", () => {
+  const profiles = new Map([["alice", { displayName: "Alice", avatar: AVATAR }]]);
+  const [alice, bob] = followsToRows(["alice", "bob"], [], profiles);
+  assert.equal(alice.avatar, AVATAR);
+  assert.equal(alice.displayName, "Alice");
+  assert.equal(alice.selected, false);
+  assert.equal(bob.avatar, undefined);
 });

@@ -168,6 +168,21 @@
 
             <div class="step-content">
               <div class="glass streamers-card">
+                <div id="streamer-doors" class="doors">
+                  <h3 class="doors-question" data-i18n="onboarding.doors.question">Tu as un compte Twitch ?</h3>
+                  <button id="door-import" class="door door-primary" type="button">
+                    <span class="door-title" data-i18n="onboarding.doors.importTitle">Oui, importer mes follows</span>
+                    <span class="door-hint" data-i18n="onboarding.doors.importHint">Choisis parmi les chaînes que tu suis déjà. Rien n'est ajouté sans ton choix.</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+                  </button>
+                  <button id="door-manual" class="door" type="button">
+                    <span class="door-title" data-i18n="onboarding.doors.manualTitle">Non, ajouter à la main</span>
+                    <span class="door-hint" data-i18n="onboarding.doors.manualHint">Twitch, Kick ou YouTube : colle un pseudo ou le lien d'une chaîne.</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+                  </button>
+                </div>
+
+                <div id="manual-path" class="manual-path" hidden>
                 <form id="onboarding-form" class="streamer-form" autocomplete="off">
                   <div class="platform-picker" id="onboarding-platform-picker" role="group" data-i18n-attr-ariaLabel="popup.platformSelectorLabel"></div>
         <p class="platform-hint" id="chzzk-hint" hidden data-i18n="popup.errors.chzzkHint">Chrome va te demander l'accès à chzzk.naver.com. C'est uniquement pour voir si cette chaîne est en live.</p>
@@ -179,8 +194,10 @@
                 </form>
 
                 <p id="feedback" class="feedback" hidden aria-live="polite"></p>
+                <button id="manual-back" class="manual-back" type="button" data-i18n="bulk.import.otherWay">Revenir au choix</button>
+                </div>
 
-                <div id="follows-import-root" class="onboarding-follows-import"></div>
+                <div id="follows-import-root" class="onboarding-follows-import" hidden></div>
 
                 <section id="current-streamers" class="current-streamers" hidden>
                   <div class="section-row">

@@ -75,7 +75,9 @@ export default {
       "undoYes": "Sì, rimuovi ({{count}})",
       "undone": "Canali importati rimossi: {{count}}. Gli altri tuoi canali sono ancora lì.",
       "settingsHint": "Scegli i canali che già segui su Twitch. Potrai rimuovere in un colpo tutto ciò che hai importato.",
-      "settingsOpen": "Importa o rimuovi i miei follow"
+      "settingsOpen": "Importa o rimuovi i miei follow",
+      "noMatch": "Nessun canale corrisponde a questo filtro.",
+      "otherWay": "Torna alla scelta"
     }
   },
   "meta": {
@@ -139,6 +141,13 @@ export default {
     "blockedUsersTitle": "Utenti nascosti",
     "blockedUsersDescription": "Nasconde nella chat di Twitch e Kick i messaggi di questi utenti (separati da virgole).",
     "blockedUsersPlaceholder": "bot, spammer...",
+    "doors": {
+      "question": "Hai un account Twitch?",
+      "importTitle": "Sì, importa i miei follow",
+      "importHint": "Scegli tra i canali che segui già. Non viene aggiunto nulla senza la tua scelta.",
+      "manualTitle": "No, aggiungi a mano",
+      "manualHint": "Twitch, Kick o YouTube: incolla un nome utente o il link di un canale."
+    },
     "formLabelBase": "Nome dello streamer *",
     "formLabelPlatform": "Aggiungi uno streamer {{platform}}",
     "helperTextBase": "Scrivi il nome dello streamer o incolla il link del suo canale.",
