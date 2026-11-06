@@ -1,5 +1,6 @@
 // Handlers de messages runtime (voir messages.js pour la table).
 
+import { IMPORTED_FOLLOWS_KEY, planImportedRemoval } from "../imported-follows.js";
 import { sanitizeHandle } from "../platforms.js";
 import { applyStreamerOrder, pruneStreamerRefs, sanitizePinnedIds } from "../streamers-data.js";
 import { translateWithPrefs } from "./i18n.js";
@@ -103,6 +104,33 @@ export function handleRemoveStreamer(request, sender, sendResponse) {
       sendResponse({ error: error?.message || String(error) });
     }
   })();
+  return true;
+}
+
+// Retrait groupé des chaînes importées : un seul sondage à la fin, et réservé aux
+// pages de l'extension (un content script n'a aucune raison de vider une liste).
+export function handleRemoveImportedFollows(request, sender, sendResponse) {
+  respond(async () => {
+    if (sender?.id !== chrome.runtime.id || !String(sender?.url || "").startsWith(chrome.runtime.getURL(""))) {
+      throw new Error("forbidden");
+    }
+    const stored = await chrome.storage.local.get([IMPORTED_FOLLOWS_KEY, "betaPinnedIds", "betaChannelGroups"]);
+    const plan = planImportedRemoval({
+      registry: stored[IMPORTED_FOLLOWS_KEY],
+      streamers: await DataStore.getStreamers(),
+      pinnedIds: stored.betaPinnedIds,
+      groups: stored.betaChannelGroups,
+    });
+    const streamers = await DataStore.saveStreamers(plan.streamers);
+    await chrome.storage.local.set({ betaPinnedIds: plan.pinnedIds, betaChannelGroups: plan.groups, [IMPORTED_FOLLOWS_KEY]: [] });
+    for (const id of plan.removedIds) {
+      streamerStates.delete(id);
+      streamerCache.delete(id);
+      streamerLiveState.delete(id);
+    }
+    await pollStreamers({ forceNotification: false });
+    return { removed: plan.removedIds.length, streamers };
+  }, sendResponse, request.type);
   return true;
 }
 

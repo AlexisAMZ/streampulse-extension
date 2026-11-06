@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../css/tokens.css" />
     <link rel="stylesheet" href="../css/pages.css" />
     <link rel="stylesheet" href="../css/bulk-add.css" />
+    <link rel="stylesheet" href="../css/follows-import.css" />
   </head>
   <body>
     <div class="page-shell">
@@ -22,46 +23,7 @@
           <h1 id="bulk-title" data-i18n="bulk.title">Add streamers in bulk</h1>
           <p class="lede" data-i18n="bulk.intro">Paste up to 50 handles or channel links, then choose which ones to add to StreamPulse.</p>
         </header>
-        <section id="import-follows" class="import-follows" aria-labelledby="import-title">
-          <h2 id="import-title" data-i18n="bulk.import.title">Import your Twitch follows</h2>
-          <div id="import-step-start">
-            <p class="bulk-hint" data-i18n="bulk.import.intro">Sign in with Twitch once to pick channels you already follow. Nothing is added until you confirm twice.</p>
-            <button id="import-open" class="btn btn-ghost" type="button" data-i18n="bulk.import.open">Import my Twitch follows</button>
-          </div>
-          <div id="import-step-confirm1" hidden>
-            <p data-i18n="bulk.import.confirm1">You are about to sign in with Twitch. StreamPulse only asks to read the list of channels you follow. It cannot follow, unfollow or post anything, and your Twitch token is never saved. Nothing is added yet: you choose the channels afterwards.</p>
-            <div class="import-actions">
-              <button id="import-cancel-1" class="btn btn-ghost" type="button" data-i18n="bulk.import.cancel">Cancel</button>
-              <button id="import-continue" class="btn btn-primary" type="button" data-i18n="bulk.import.continue">Continue to Twitch</button>
-            </div>
-          </div>
-          <div id="import-step-loading" hidden><p class="bulk-hint" data-i18n="bulk.import.connecting">Waiting for Twitch…</p></div>
-          <div id="import-step-pick" hidden>
-            <p class="bulk-hint" data-i18n="bulk.import.pickHint">Nothing is selected. Tick only the channels you want in StreamPulse.</p>
-            <label class="visually-hidden" for="import-filter" data-i18n="bulk.import.filter">Filter channels</label>
-            <input id="import-filter" type="search" autocomplete="off" spellcheck="false" />
-            <label class="bulk-select-all"><input id="import-select-all" type="checkbox" /><span data-i18n="bulk.import.selectAll">Select all (up to the limit)</span></label>
-            <p id="import-count" class="bulk-summary"></p>
-            <ul id="import-list" class="bulk-list"></ul>
-            <div class="import-actions">
-              <button id="import-leave" class="btn btn-ghost" type="button" data-i18n="bulk.import.cancel">Cancel</button>
-              <button id="import-review" class="btn btn-primary" type="button" data-i18n="bulk.import.review">Review my choice</button>
-            </div>
-          </div>
-          <div id="import-step-confirm2" hidden>
-            <p id="import-confirm2-text"></p>
-            <div class="import-actions">
-              <button id="import-cancel-2" class="btn btn-ghost" type="button" data-i18n="bulk.import.back">Go back</button>
-              <button id="import-add" class="btn btn-primary" type="button"></button>
-            </div>
-          </div>
-          <div id="import-step-adding" hidden><p class="bulk-hint" data-i18n="bulk.keepOpen">Keep this tab open while adding.</p></div>
-          <div id="import-step-done" hidden>
-            <button id="import-restart" class="btn btn-ghost" type="button" data-i18n="bulk.import.again">Import more</button>
-          </div>
-          <p id="import-status" class="bulk-status" role="status" aria-live="polite" tabindex="-1"></p>
-          <p id="import-error" class="bulk-error" role="alert" hidden></p>
-        </section>
+        <div id="follows-import-root"></div>
         <form id="bulk-form" aria-busy="true">
           <fieldset id="bulk-controls" aria-labelledby="bulk-title" disabled>
             <div class="bulk-workspace">

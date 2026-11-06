@@ -52,6 +52,32 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.11.6",
+    date: "2026-11-06",
+    changes: [
+      {
+        type: "new",
+        area: "interface",
+        text: {
+          "fr": "Tu peux importer tes follows Twitch, depuis les réglages ou l'accueil : tu te connectes à Twitch, tu coches les chaînes voulues et tu confirmes deux fois. Ton accès est annulé juste après la lecture, et un bouton retire d'un coup ce que tu as importé sans toucher au reste.",
+          "en": "You can import your Twitch follows, from the settings or the welcome screens: sign in with Twitch, tick the channels you want and confirm twice. Your access is cancelled right after the list is read, and one button removes everything you imported without touching the rest.",
+          "uk": "Тепер можна імпортувати підписки Twitch із налаштувань або вітальних екранів: увійди через Twitch, познач потрібні канали й підтвердь двічі. Доступ скасовується одразу після читання списку, а одна кнопка прибирає все імпортоване, не чіпаючи решти.",
+          "es": "Ya puedes importar tus seguidos de Twitch desde los ajustes o la bienvenida: inicia sesión con Twitch, marca los canales que quieras y confirma dos veces. Tu acceso se cancela justo después de leer la lista, y un botón quita de una vez todo lo importado sin tocar lo demás.",
+          "pt-BR": "Agora você pode importar seus seguidos da Twitch pelas configurações ou pelas telas de boas-vindas: entre com a Twitch, marque os canais que quiser e confirme duas vezes. Seu acesso é cancelado logo depois da leitura da lista, e um botão remove de uma vez tudo o que foi importado sem mexer no resto.",
+          "de": "Du kannst deine Twitch-Follows importieren, über die Einstellungen oder die Willkommensseiten: Melde dich bei Twitch an, hake die gewünschten Kanäle an und bestätige zweimal. Dein Zugriff wird direkt nach dem Lesen der Liste widerrufen, und ein Button entfernt alles Importierte auf einmal, ohne den Rest anzurühren.",
+          "it": "Ora puoi importare i tuoi follow di Twitch dalle impostazioni o dalle schermate di benvenuto: accedi con Twitch, spunta i canali che vuoi e conferma due volte. Il tuo accesso viene annullato subito dopo la lettura dell'elenco, e un pulsante rimuove in un colpo tutto ciò che hai importato senza toccare il resto.",
+          "pl": "Możesz zaimportować obserwowane z Twitcha, z ustawień lub ekranów powitalnych: zaloguj się przez Twitcha, zaznacz wybrane kanały i potwierdź dwukrotnie. Dostęp jest cofany zaraz po odczytaniu listy, a jeden przycisk usuwa wszystko, co zaimportowano, nie ruszając reszty.",
+          "tr": "Twitch takiplerini artık ayarlardan veya karşılama ekranlarından içe aktarabilirsin: Twitch ile giriş yap, istediğin kanalları işaretle ve iki kez onayla. Liste okunur okunmaz erişimin iptal edilir; tek bir düğme de içe aktardığın her şeyi, gerisine dokunmadan kaldırır.",
+          "ru": "Теперь можно импортировать подписки Twitch из настроек или приветственных экранов: войди через Twitch, отметь нужные каналы и подтверди дважды. Доступ отзывается сразу после чтения списка, а одна кнопка убирает всё импортированное, не трогая остальное.",
+          "ja": "設定またはようこそ画面からTwitchのフォローをインポートできるようになりました。Twitchでログインし、チャンネルにチェックを入れて2回確認します。アクセスはリストの読み取り直後に取り消され、インポートしたものはほかに影響を与えずボタン1つでまとめて削除できます。",
+          "ko": "이제 설정이나 환영 화면에서 Twitch 팔로우를 가져올 수 있어요. Twitch로 로그인하고 원하는 채널을 체크한 뒤 두 번 확인하면 돼요. 접근 권한은 목록을 읽은 직후 취소되고, 버튼 하나로 가져온 채널만 한 번에 삭제할 수 있어요.",
+          "ar": "يمكنك الآن استيراد متابعاتك من Twitch من الإعدادات أو شاشات الترحيب: سجّل الدخول عبر Twitch، وحدّد القنوات التي تريدها، وأكّد مرتين. يُلغى وصولك فور قراءة القائمة، ويزيل زر واحد كل ما استوردته دون المساس بالباقي.",
+        },
+      },
+    ],
+  },
+
+  {
     version: "26.11.5",
     date: "2026-11-05",
     changes: [

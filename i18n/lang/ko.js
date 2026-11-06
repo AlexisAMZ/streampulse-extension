@@ -57,7 +57,7 @@ export default {
       "review": "선택 확인",
       "confirm2": "고른 채널을 StreamPulse에 추가하려고 해요(총 {{count}}). 각 채널은 새로고침할 때마다 확인되고 알림을 보낼 수 있어요. 추가할까요?",
       "confirmAdd": "네, 추가({{count}})",
-      "again": "더 가져오기",
+      "again": "목록으로 돌아가기",
       "err": {
         "config": "StreamPulse가 Twitch 설정을 불러오지 못했어요. 1분 뒤에 다시 시도하세요.",
         "permission": "로그인 권한이 거부되어 아무 일도 일어나지 않았어요.",
@@ -65,8 +65,17 @@ export default {
         "state": "Twitch의 응답을 확인할 수 없었어요. 아무것도 가져오지 않았어요.",
         "unauthorized": "Twitch가 접근을 거부했어요. 다시 로그인해 보세요.",
         "rateLimited": "Twitch가 요청을 제한하고 있어요. 1분 뒤에 다시 시도하세요.",
-        "generic": "가져오기에 실패했어요. 아무것도 추가되지 않았어요."
-      }
+        "generic": "가져오기에 실패했어요. 아무것도 추가되지 않았어요.",
+        "undo": "가져온 채널을 삭제하지 못했어요. 아무것도 바뀌지 않았어요."
+      },
+      "revokeNote": "목록을 읽는 즉시 Twitch 접근 권한이 취소돼요.",
+      "keepOpen": "끝날 때까지 이 페이지를 열어 두세요.",
+      "undo": "가져온 채널 삭제({{count}})",
+      "undoConfirm": "가져오기로 추가된 채널(총 {{count}})을 고정 및 그룹 내 위치와 함께 삭제해요. 원래 있던 채널은 그대로 남아요.",
+      "undoYes": "네, 삭제({{count}})",
+      "undone": "삭제한 가져온 채널: {{count}}. 다른 채널은 그대로예요.",
+      "settingsHint": "Twitch에서 이미 팔로우 중인 채널을 고르세요. 가져온 채널은 한 번에 삭제할 수 있어요.",
+      "settingsOpen": "팔로우 가져오기 또는 삭제"
     }
   },
   "meta": {

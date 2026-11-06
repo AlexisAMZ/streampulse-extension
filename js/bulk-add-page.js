@@ -1,7 +1,7 @@
 import { initI18n, applyTranslations, t, getCurrentLanguage } from "./i18n.js";
 import { formatHandleForDisplay, getPlatformLabelKey } from "./platforms.js";
 import { MAX_BULK_SIZE, getBulkKey, parseBulkAdd } from "./bulk-add.js";
-import { initFollowsImport } from "./twitch-follows-import.js";
+import { mountFollowsImport } from "./twitch-follows-import.js";
 
 const STREAMERS_KEY = "betaGeneralStreamers";
 const GROUPS_KEY = "betaChannelGroups";
@@ -16,6 +16,7 @@ export async function executeBulkAdd(rows, {
   groupId = "",
   max = MAX_BULK_SIZE,
   onUpdate = () => {},
+  onAdded = async () => {},
 } = {}) {
   if (rows.length > max) throw new Error("bulk.tooMany");
   for (const row of rows) {
@@ -42,6 +43,7 @@ export async function executeBulkAdd(rows, {
         // Acknowledged adds are never sent again, even when verification or grouping fails.
         const matches = Array.isArray(response.streamers) ? response.streamers.filter((streamer) => getBulkKey(streamer) === key) : [];
         Object.assign(row, { added: true, streamerId: matches.length === 1 && typeof matches[0].id === "string" ? matches[0].id : "" });
+        if (row.streamerId) await onAdded(row, matches[0]);
       }
       errorKey = "bulk.verifyFailed";
       const current = await storage.get([STREAMERS_KEY, GROUPS_KEY]);
@@ -261,7 +263,9 @@ async function initBulkAddPage() {
     applyTranslations(document);
     document.documentElement.lang = getCurrentLanguage();
     readOptions(await chrome.storage.local.get([GROUPS_KEY, PREFERENCES_KEY]));
-    initFollowsImport({ executeBulkAdd, getGroupId: () => group.value });
+    const importRoot = document.getElementById("follows-import-root");
+    mountFollowsImport(importRoot, { executeBulkAdd, getGroupId: () => group.value });
+    if (location.hash === "#import") importRoot.querySelector("button")?.focus();
   } catch {
     showError("bulk.readFailed");
   } finally {

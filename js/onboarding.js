@@ -18,7 +18,9 @@ import {
   normalizePlatform,
   sanitizeHandle,
 } from "./platforms.js";
+import { executeBulkAdd } from "./bulk-add-page.js";
 import { requestChzzkAccess } from "./chzzk-permission.js";
+import { mountFollowsImport } from "./twitch-follows-import.js";
 import { DEFAULT_PREFERENCES } from "./preferences-data.js";
 import { BADGE_FX, COSMETICS_KEY, NAME_FX, REFERRAL_FX, TENURE_STYLES, fxLock, normalizeCosmetics, visibleFx } from "./cosmetics-data.js";
 import { PLUS_KEY, isPlusActive } from "./plus.js";
@@ -1134,6 +1136,7 @@ async function initialize() {
   setupUpdateModeUI();
   setupPlusModeUI();
   chrome.storage.onChanged.addListener(onStorageChange);
+  mountFollowsImport(document.getElementById("follows-import-root"), { executeBulkAdd, onChange: loadStreamers });
   await Promise.all([loadStreamers(), loadPlusAccess()]);
 }
 

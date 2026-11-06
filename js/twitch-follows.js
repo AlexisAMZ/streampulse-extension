@@ -1,12 +1,14 @@
 // Import des follows Twitch par connexion OAuth ponctuelle (jeton implicite,
 // lecture seule). Module pur : aucune API Chrome, le réseau est injecté.
-// Le jeton ne quitte jamais la page et n'est jamais stocké.
+// Le jeton ne quitte jamais la page, n'est jamais stocké, et il est annulé
+// auprès de Twitch dès que la liste est lue.
 
 import { getBulkKey } from "./bulk-add.js";
 
 export const FOLLOWS_SCOPE = "user:read:follows";
 
 const AUTHORIZE_URL = "https://id.twitch.tv/oauth2/authorize";
+const REVOKE_URL = "https://id.twitch.tv/oauth2/revoke";
 const HELIX = "https://api.twitch.tv/helix";
 const PAGE_SIZE = 100;
 const DEFAULT_MAX_PAGES = 50; // 5 000 follows : au-delà, Twitch lui-même plafonne
@@ -91,4 +93,27 @@ export async function fetchAllFollows({ token, clientId, fetchImpl = fetch, maxP
     if (!cursor) break;
   }
   return logins;
+}
+
+/** Annule le jeton côté Twitch. Ne lève jamais : un échec ne doit pas casser l'import. */
+export async function revokeToken({ token, clientId, fetchImpl = fetch }) {
+  try {
+    const response = await fetchImpl(REVOKE_URL, {
+      method: "POST",
+      body: new URLSearchParams({ client_id: clientId, token }),
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
+    return response.ok === true;
+  } catch {
+    return false;
+  }
+}
+
+/** Lit les follows puis annule le jeton, que la lecture ait réussi ou non. */
+export async function readFollowsThenRevoke({ token, clientId, fetchImpl = fetch, maxPages }) {
+  try {
+    return await fetchAllFollows({ token, clientId, fetchImpl, maxPages });
+  } finally {
+    await revokeToken({ token, clientId, fetchImpl });
+  }
 }

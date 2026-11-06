@@ -6,6 +6,8 @@ import {
   parseAuthRedirect,
   followsToRows,
   fetchAllFollows,
+  readFollowsThenRevoke,
+  revokeToken,
 } from "../js/twitch-follows.js";
 
 const REDIRECT = "https://abcdefgh.chromiumapp.org/";
@@ -87,4 +89,36 @@ test("fetchAllFollows plafonne le parcours pour ne jamais boucler", async () => 
     : page(["x"], "toujours"));
   const out = await fetchAllFollows({ token: "t", clientId: "c", fetchImpl, maxPages: 3 });
   assert.equal(out.length, 3);
+});
+
+test("revokeToken annule le jeton sur Twitch, sans le mettre dans l'adresse", async () => {
+  const calls = [];
+  const done = await revokeToken({ token: "secret", clientId: "cid", fetchImpl: async (url, init) => { calls.push({ url, init }); return { ok: true }; } });
+  assert.equal(done, true);
+  assert.equal(calls[0].url, "https://id.twitch.tv/oauth2/revoke");
+  assert.ok(!calls[0].url.includes("secret"));
+  assert.equal(calls[0].init.method, "POST");
+  assert.equal(calls[0].init.body.get("client_id"), "cid");
+  assert.equal(calls[0].init.body.get("token"), "secret");
+});
+
+test("revokeToken ne lève jamais : un échec réseau ne casse pas l'import", async () => {
+  assert.equal(await revokeToken({ token: "t", clientId: "c", fetchImpl: async () => { throw new Error("réseau"); } }), false);
+});
+
+test("le jeton est annulé après la lecture, même quand elle échoue", async () => {
+  const revoked = [];
+  const okFetch = async (url) => {
+    if (url.includes("revoke")) { revoked.push("ok"); return { ok: true }; }
+    if (url.includes("/users")) return { ok: true, status: 200, json: async () => ({ data: [{ id: "1" }] }) };
+    return page(["a"], null);
+  };
+  assert.deepEqual(await readFollowsThenRevoke({ token: "t", clientId: "c", fetchImpl: okFetch }), ["a"]);
+  assert.equal(revoked.length, 1);
+  const badFetch = async (url) => {
+    if (url.includes("revoke")) { revoked.push("ko"); return { ok: true }; }
+    return { ok: false, status: 401, json: async () => ({}) };
+  };
+  await assert.rejects(readFollowsThenRevoke({ token: "t", clientId: "c", fetchImpl: badFetch }), (e) => e.code === "unauthorized");
+  assert.deepEqual(revoked, ["ok", "ko"]);
 });

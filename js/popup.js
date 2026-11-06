@@ -2497,6 +2497,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("open-bulk-add")?.addEventListener("click", () => {
       chrome.tabs.create({ url: chrome.runtime.getURL("html/bulk-add.html") });
     });
+    // Jamais de connexion Twitch depuis la popup : elle se ferme dès que la fenêtre prend le focus.
+    document.getElementById("open-follows-import")?.addEventListener("click", () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL("html/bulk-add.html#import") });
+    });
 
     if (streamerInput) {
       streamerInput.addEventListener("input", (e) => {

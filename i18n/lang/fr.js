@@ -57,7 +57,7 @@ export default {
       "review": "Vérifier mon choix",
       "confirm2": "Tu vas ajouter à StreamPulse les chaînes que tu as choisies (total : {{count}}). Chacune sera vérifiée à chaque actualisation et pourra envoyer des notifications. Les ajouter ?",
       "confirmAdd": "Oui, ajouter ({{count}})",
-      "again": "Importer plus",
+      "again": "Revenir à la liste",
       "err": {
         "config": "StreamPulse n'a pas pu charger ses réglages Twitch. Réessaie dans une minute.",
         "permission": "L'autorisation de connexion a été refusée, rien n'a été fait.",
@@ -65,8 +65,17 @@ export default {
         "state": "La réponse de Twitch n'a pas pu être vérifiée. Rien n'a été importé.",
         "unauthorized": "Twitch a refusé l'accès. Reconnecte-toi.",
         "rateLimited": "Twitch limite les requêtes. Réessaie dans une minute.",
-        "generic": "L'import a échoué. Rien n'a été ajouté."
-      }
+        "generic": "L'import a échoué. Rien n'a été ajouté.",
+        "undo": "Les chaînes importées n'ont pas pu être retirées. Rien n'a changé."
+      },
+      "revokeNote": "Ton accès Twitch est annulé dès que la liste est lue.",
+      "keepOpen": "Garde cette page ouverte jusqu'à la fin.",
+      "undo": "Retirer les chaînes importées ({{count}})",
+      "undoConfirm": "Ça retire les chaînes ajoutées par l'import (total : {{count}}), avec leurs épingles et leur place dans les groupes. Les chaînes que tu avais déjà restent en place.",
+      "undoYes": "Oui, retirer ({{count}})",
+      "undone": "Chaînes importées retirées : {{count}}. Tes autres chaînes sont toujours là.",
+      "settingsHint": "Choisis des chaînes que tu suis déjà sur Twitch. Tu pourras retirer d'un coup tout ce que tu as importé.",
+      "settingsOpen": "Importer ou retirer mes follows"
     }
   },
   "meta": {

@@ -57,7 +57,7 @@ export default {
       "review": "Revisar minha escolha",
       "confirm2": "Você vai adicionar ao StreamPulse os canais que escolheu (total: {{count}}). Cada um será verificado a cada atualização e poderá enviar notificações. Adicionar?",
       "confirmAdd": "Sim, adicionar ({{count}})",
-      "again": "Importar mais",
+      "again": "Voltar à lista",
       "err": {
         "config": "O StreamPulse não conseguiu carregar suas configurações da Twitch. Tente de novo em um minuto.",
         "permission": "A permissão de login foi recusada, então nada aconteceu.",
@@ -65,8 +65,17 @@ export default {
         "state": "Não foi possível verificar a resposta da Twitch. Nada foi importado.",
         "unauthorized": "A Twitch recusou o acesso. Entre novamente.",
         "rateLimited": "A Twitch está limitando as requisições. Tente de novo em um minuto.",
-        "generic": "A importação falhou. Nada foi adicionado."
-      }
+        "generic": "A importação falhou. Nada foi adicionado.",
+        "undo": "Não foi possível remover os canais importados. Nada mudou."
+      },
+      "revokeNote": "Seu acesso à Twitch é cancelado assim que a lista é lida.",
+      "keepOpen": "Mantenha esta página aberta até terminar.",
+      "undo": "Remover canais importados ({{count}})",
+      "undoConfirm": "Isso remove os canais adicionados pela importação (total: {{count}}), junto com os fixados e o lugar deles nos grupos. Os canais que você já tinha continuam onde estão.",
+      "undoYes": "Sim, remover ({{count}})",
+      "undone": "Canais importados removidos: {{count}}. Seus outros canais continuam lá.",
+      "settingsHint": "Escolha canais que você já segue na Twitch. Você poderá remover de uma vez tudo o que importou.",
+      "settingsOpen": "Importar ou remover meus seguidos"
     }
   },
   "meta": {

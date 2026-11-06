@@ -90,6 +90,7 @@ const ES_MODULES = [
   "js/bulk-add.js",
   "js/bulk-add-page.js",
   "js/twitch-follows.js",
+  "js/imported-follows.js",
   "js/twitch-follows-import.js",
   "js/watch-later.js",
   "js/popup-watch-later.js",

@@ -57,7 +57,7 @@ export default {
       "review": "Sprawdź mój wybór",
       "confirm2": "Zaraz dodasz do StreamPulse wybrane kanały (łącznie: {{count}}). Każdy będzie sprawdzany przy każdym odświeżeniu i może wysyłać powiadomienia. Dodać je?",
       "confirmAdd": "Tak, dodaj ({{count}})",
-      "again": "Importuj więcej",
+      "again": "Wróć do listy",
       "err": {
         "config": "StreamPulse nie mógł wczytać ustawień Twitcha. Spróbuj ponownie za minutę.",
         "permission": "Odmówiono uprawnienia do logowania, więc nic się nie stało.",
@@ -65,8 +65,17 @@ export default {
         "state": "Nie udało się zweryfikować odpowiedzi Twitcha. Nic nie zaimportowano.",
         "unauthorized": "Twitch odmówił dostępu. Zaloguj się ponownie.",
         "rateLimited": "Twitch ogranicza liczbę żądań. Spróbuj ponownie za minutę.",
-        "generic": "Import się nie powiódł. Nic nie dodano."
-      }
+        "generic": "Import się nie powiódł. Nic nie dodano.",
+        "undo": "Nie udało się usunąć zaimportowanych kanałów. Nic się nie zmieniło."
+      },
+      "revokeNote": "Twój dostęp do Twitcha jest cofany, gdy tylko lista zostanie odczytana.",
+      "keepOpen": "Nie zamykaj tej strony do końca.",
+      "undo": "Usuń zaimportowane kanały ({{count}})",
+      "undoConfirm": "To usuwa kanały dodane przez import (łącznie: {{count}}) wraz z przypięciami i miejscem w grupach. Kanały, które już miałeś, zostają na miejscu.",
+      "undoYes": "Tak, usuń ({{count}})",
+      "undone": "Usunięte zaimportowane kanały: {{count}}. Pozostałe kanały nadal tam są.",
+      "settingsHint": "Wybierz kanały, które już obserwujesz na Twitchu. Wszystko, co zaimportujesz, usuniesz za jednym razem.",
+      "settingsOpen": "Importuj lub usuń obserwowane"
     }
   },
   "meta": {

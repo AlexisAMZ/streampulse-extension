@@ -57,7 +57,7 @@ export default {
       "review": "Review my choice",
       "confirm2": "You are about to add the channels you picked to StreamPulse (total: {{count}}). Each one is checked at every refresh and can send notifications. Add them?",
       "confirmAdd": "Yes, add ({{count}})",
-      "again": "Import more",
+      "again": "Back to the list",
       "err": {
         "config": "StreamPulse could not load its Twitch settings. Try again in a minute.",
         "permission": "The sign-in permission was declined, so nothing happened.",
@@ -65,8 +65,17 @@ export default {
         "state": "The Twitch answer could not be verified. Nothing was imported.",
         "unauthorized": "Twitch refused the access. Try signing in again.",
         "rateLimited": "Twitch is limiting requests. Try again in a minute.",
-        "generic": "The import failed. Nothing was added."
-      }
+        "generic": "The import failed. Nothing was added.",
+        "undo": "The imported channels could not be removed. Nothing changed."
+      },
+      "revokeNote": "Your Twitch access is cancelled as soon as the list has been read.",
+      "keepOpen": "Keep this page open until it finishes.",
+      "undo": "Remove imported channels ({{count}})",
+      "undoConfirm": "This removes the channels added by the import (total: {{count}}), along with their pins and places in groups. The channels you already had stay in place.",
+      "undoYes": "Yes, remove ({{count}})",
+      "undone": "Imported channels removed: {{count}}. Your other channels are still there.",
+      "settingsHint": "Pick channels you already follow on Twitch. You can remove everything you imported in one go.",
+      "settingsOpen": "Import or remove my follows"
     }
   },
   "meta": {

@@ -252,3 +252,22 @@ test("the standalone page uses shared design, translated labels and an external 
   assert.match(html, /aria-live="polite"/);
   assert.doesNotMatch(html, /<script(?![^>]*src=)[^>]*>|\son\w+\s*=/i);
 });
+
+test("onAdded reçoit la chaîne créée, attendu avant la suite, et jamais pour une chaîne déjà suivie", async () => {
+  const h = harness({ betaGeneralStreamers: [{ platform: "twitch", handle: "deja", id: "deja" }] });
+  const rows = [
+    { raw: "deja", platform: "twitch", handle: "deja", status: "ready", selected: true },
+    { raw: "neuve", platform: "twitch", handle: "neuve", status: "ready", selected: true },
+  ];
+  const added = [];
+  await executeBulkAdd(rows, { ...h, onAdded: async (row, streamer) => { added.push([row.handle, streamer.id]); } });
+  assert.deepEqual(added, [["neuve", "returned-twitch-neuve"]]);
+  assert.equal(rows[0].status, "existing");
+});
+
+test("max élargit le plafond sur demande explicite", async () => {
+  const h = harness();
+  const rows = Array.from({ length: 60 }, (_, i) => ({ raw: `c${i}`, platform: "twitch", handle: `c${i}`, status: "ready", selected: false }));
+  await assert.rejects(executeBulkAdd(rows, h));
+  await executeBulkAdd(rows, { ...h, max: 100 });
+});

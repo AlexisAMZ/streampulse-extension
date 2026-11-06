@@ -57,7 +57,7 @@ export default {
       "review": "Seçimimi gözden geçir",
       "confirm2": "Seçtiğin kanalları StreamPulse'a eklemek üzeresin (toplam: {{count}}). Her biri her yenilemede kontrol edilir ve bildirim gönderebilir. Eklensin mi?",
       "confirmAdd": "Evet, ekle ({{count}})",
-      "again": "Daha fazla içe aktar",
+      "again": "Listeye dön",
       "err": {
         "config": "StreamPulse Twitch ayarlarını yükleyemedi. Bir dakika sonra tekrar dene.",
         "permission": "Giriş izni reddedildi, bu yüzden hiçbir şey olmadı.",
@@ -65,8 +65,17 @@ export default {
         "state": "Twitch yanıtı doğrulanamadı. Hiçbir şey içe aktarılmadı.",
         "unauthorized": "Twitch erişimi reddetti. Tekrar giriş yapmayı dene.",
         "rateLimited": "Twitch istekleri sınırlıyor. Bir dakika sonra tekrar dene.",
-        "generic": "İçe aktarma başarısız oldu. Hiçbir şey eklenmedi."
-      }
+        "generic": "İçe aktarma başarısız oldu. Hiçbir şey eklenmedi.",
+        "undo": "İçe aktarılan kanallar kaldırılamadı. Hiçbir şey değişmedi."
+      },
+      "revokeNote": "Liste okunur okunmaz Twitch erişimin iptal edilir.",
+      "keepOpen": "Bitene kadar bu sayfayı açık tut.",
+      "undo": "İçe aktarılan kanalları kaldır ({{count}})",
+      "undoConfirm": "Bu, içe aktarmayla eklenen kanalları (toplam: {{count}}), sabitlemeleri ve gruplardaki yerleriyle birlikte kaldırır. Zaten sahip olduğun kanallar yerinde kalır.",
+      "undoYes": "Evet, kaldır ({{count}})",
+      "undone": "Kaldırılan içe aktarılmış kanallar: {{count}}. Diğer kanalların hâlâ yerinde.",
+      "settingsHint": "Twitch'te zaten takip ettiğin kanalları seç. İçe aktardığın her şeyi tek seferde kaldırabilirsin.",
+      "settingsOpen": "Takipleri içe aktar veya kaldır"
     }
   },
   "meta": {

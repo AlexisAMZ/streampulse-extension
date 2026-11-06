@@ -57,7 +57,7 @@ export default {
       "review": "Auswahl prüfen",
       "confirm2": "Du fügst gleich die ausgewählten Kanäle zu StreamPulse hinzu (insgesamt: {{count}}). Jeder wird bei jeder Aktualisierung geprüft und kann Benachrichtigungen senden. Hinzufügen?",
       "confirmAdd": "Ja, hinzufügen ({{count}})",
-      "again": "Mehr importieren",
+      "again": "Zurück zur Liste",
       "err": {
         "config": "StreamPulse konnte seine Twitch-Einstellungen nicht laden. Versuche es in einer Minute erneut.",
         "permission": "Die Anmeldeberechtigung wurde abgelehnt, es ist nichts passiert.",
@@ -65,8 +65,17 @@ export default {
         "state": "Die Antwort von Twitch konnte nicht überprüft werden. Es wurde nichts importiert.",
         "unauthorized": "Twitch hat den Zugriff verweigert. Melde dich erneut an.",
         "rateLimited": "Twitch begrenzt die Anfragen. Versuche es in einer Minute erneut.",
-        "generic": "Der Import ist fehlgeschlagen. Es wurde nichts hinzugefügt."
-      }
+        "generic": "Der Import ist fehlgeschlagen. Es wurde nichts hinzugefügt.",
+        "undo": "Die importierten Kanäle konnten nicht entfernt werden. Es hat sich nichts geändert."
+      },
+      "revokeNote": "Dein Twitch-Zugriff wird widerrufen, sobald die Liste gelesen wurde.",
+      "keepOpen": "Lass diese Seite geöffnet, bis es fertig ist.",
+      "undo": "Importierte Kanäle entfernen ({{count}})",
+      "undoConfirm": "Das entfernt die durch den Import hinzugefügten Kanäle (insgesamt: {{count}}), samt Anheftungen und Platz in Gruppen. Kanäle, die du schon hattest, bleiben erhalten.",
+      "undoYes": "Ja, entfernen ({{count}})",
+      "undone": "Importierte Kanäle entfernt: {{count}}. Deine anderen Kanäle sind noch da.",
+      "settingsHint": "Wähle Kanäle aus, denen du auf Twitch schon folgst. Alles Importierte kannst du auf einmal wieder entfernen.",
+      "settingsOpen": "Follows importieren oder entfernen"
     }
   },
   "meta": {
