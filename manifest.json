@@ -13,7 +13,8 @@
     "scripting"
   ],
   "optional_permissions": [
-    "declarativeNetRequestWithHostAccess"
+    "declarativeNetRequestWithHostAccess",
+    "identity"
   ],
   "optional_host_permissions": [
     "https://*.chzzk.naver.com/*"

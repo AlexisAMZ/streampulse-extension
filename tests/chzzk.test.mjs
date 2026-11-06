@@ -178,6 +178,8 @@ test("manifeste : la règle d'en-tête est une permission facultative, jamais ob
   const { readFile } = await import("node:fs/promises");
   const manifest = JSON.parse(await readFile(new URL("../manifest.json", import.meta.url), "utf8"));
   assert.ok(!manifest.permissions.includes("declarativeNetRequestWithHostAccess"));
-  assert.deepEqual(manifest.optional_permissions, ["declarativeNetRequestWithHostAccess"]);
+  // identity (import des follows Twitch) est facultative aussi : demandée au clic, jamais à l'installation.
+  assert.ok(!manifest.permissions.includes("identity"));
+  assert.deepEqual(manifest.optional_permissions, ["declarativeNetRequestWithHostAccess", "identity"]);
   assert.deepEqual(manifest.optional_host_permissions, [CHZZK_HOST_PERMISSION]);
 });

@@ -36,7 +36,38 @@ export default {
     "verifyFailed": "Le compte n'a pas pu être vérifié.",
     "groupFailed": "Le compte a été ajouté, mais son groupe n'a pas pu être mis à jour.",
     "groupMissing": "Le compte a été ajouté mais ne fait plus partie du groupe sélectionné.",
-    "missingGroupOption": "Groupe plus disponible"
+    "missingGroupOption": "Groupe plus disponible",
+    "import": {
+      "title": "Importer tes follows Twitch",
+      "intro": "Connecte-toi une fois avec Twitch pour choisir des chaînes que tu suis déjà. Rien n'est ajouté tant que tu n'as pas confirmé deux fois.",
+      "open": "Importer mes follows Twitch",
+      "confirm1": "Tu vas te connecter avec Twitch. StreamPulse demande seulement à lire la liste des chaînes que tu suis. Il ne peut ni suivre, ni ne plus suivre, ni publier, et ton jeton Twitch n'est jamais enregistré. Rien n'est ajouté pour l'instant : tu choisis les chaînes ensuite.",
+      "cancel": "Annuler",
+      "continue": "Continuer vers Twitch",
+      "back": "Revenir",
+      "connecting": "En attente de Twitch…",
+      "reading": "Lecture de tes follows…",
+      "found": "Chaînes trouvées : {{count}}",
+      "empty": "Aucune chaîne trouvée sur ce compte.",
+      "pickHint": "Rien n'est coché. Coche seulement les chaînes que tu veux dans StreamPulse.",
+      "filter": "Filtrer les chaînes",
+      "selectAll": "Tout cocher (dans la limite)",
+      "count": "Cochées : {{selected}} / {{max}} · Disponibles : {{total}}",
+      "tooMany": "Limite atteinte ({{max}} à la fois). Importe le reste ensuite.",
+      "review": "Vérifier mon choix",
+      "confirm2": "Tu vas ajouter à StreamPulse les chaînes que tu as choisies (total : {{count}}). Chacune sera vérifiée à chaque actualisation et pourra envoyer des notifications. Les ajouter ?",
+      "confirmAdd": "Oui, ajouter ({{count}})",
+      "again": "Importer plus",
+      "err": {
+        "config": "StreamPulse n'a pas pu charger ses réglages Twitch. Réessaie dans une minute.",
+        "permission": "L'autorisation de connexion a été refusée, rien n'a été fait.",
+        "denied": "La connexion Twitch a été annulée ou refusée. Rien n'a été importé.",
+        "state": "La réponse de Twitch n'a pas pu être vérifiée. Rien n'a été importé.",
+        "unauthorized": "Twitch a refusé l'accès. Reconnecte-toi.",
+        "rateLimited": "Twitch limite les requêtes. Réessaie dans une minute.",
+        "generic": "L'import a échoué. Rien n'a été ajouté."
+      }
+    }
   },
   "meta": {
     "languageSwitcherLabel": "Langue"

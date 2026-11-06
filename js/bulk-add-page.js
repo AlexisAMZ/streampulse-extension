@@ -1,6 +1,7 @@
 import { initI18n, applyTranslations, t, getCurrentLanguage } from "./i18n.js";
 import { formatHandleForDisplay, getPlatformLabelKey } from "./platforms.js";
 import { MAX_BULK_SIZE, getBulkKey, parseBulkAdd } from "./bulk-add.js";
+import { initFollowsImport } from "./twitch-follows-import.js";
 
 const STREAMERS_KEY = "betaGeneralStreamers";
 const GROUPS_KEY = "betaChannelGroups";
@@ -13,9 +14,10 @@ export async function executeBulkAdd(rows, {
   sendMessage = (message) => chrome.runtime.sendMessage(message),
   storage = chrome.storage.local,
   groupId = "",
+  max = MAX_BULK_SIZE,
   onUpdate = () => {},
 } = {}) {
-  if (rows.length > MAX_BULK_SIZE) throw new Error("bulk.tooMany");
+  if (rows.length > max) throw new Error("bulk.tooMany");
   for (const row of rows) {
     if (!row.selected || !canRetry(row)) continue;
     Object.assign(row, { status: "adding", error: "", errorKey: "" });
@@ -259,6 +261,7 @@ async function initBulkAddPage() {
     applyTranslations(document);
     document.documentElement.lang = getCurrentLanguage();
     readOptions(await chrome.storage.local.get([GROUPS_KEY, PREFERENCES_KEY]));
+    initFollowsImport({ executeBulkAdd, getGroupId: () => group.value });
   } catch {
     showError("bulk.readFailed");
   } finally {

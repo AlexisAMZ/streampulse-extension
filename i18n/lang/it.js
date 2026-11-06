@@ -36,7 +36,38 @@ export default {
     "verifyFailed": "Non è stato possibile verificare l'account.",
     "groupFailed": "L'account è stato aggiunto, ma non è stato possibile aggiornare il suo gruppo.",
     "groupMissing": "L'account è stato aggiunto ma non fa più parte del gruppo selezionato.",
-    "missingGroupOption": "Gruppo non più disponibile"
+    "missingGroupOption": "Gruppo non più disponibile",
+    "import": {
+      "title": "Importa i tuoi follow di Twitch",
+      "intro": "Accedi una volta con Twitch per scegliere i canali che già segui. Non viene aggiunto nulla finché non confermi due volte.",
+      "open": "Importa i miei follow di Twitch",
+      "confirm1": "Stai per accedere con Twitch. StreamPulse chiede solo di leggere l'elenco dei canali che segui. Non può seguire, smettere di seguire né pubblicare nulla, e il tuo token Twitch non viene mai salvato. Per ora non viene aggiunto nulla: scegli i canali dopo.",
+      "cancel": "Annulla",
+      "continue": "Continua su Twitch",
+      "back": "Indietro",
+      "connecting": "In attesa di Twitch…",
+      "reading": "Lettura dei tuoi follow…",
+      "found": "Canali trovati: {{count}}",
+      "empty": "Nessun canale trovato su questo account.",
+      "pickHint": "Nessuna selezione. Spunta solo i canali che vuoi in StreamPulse.",
+      "filter": "Filtra i canali",
+      "selectAll": "Seleziona tutto (entro il limite)",
+      "count": "Selezionati: {{selected}} / {{max}} · Disponibili: {{total}}",
+      "tooMany": "Limite raggiunto ({{max}} alla volta). Importa il resto dopo.",
+      "review": "Controlla la mia scelta",
+      "confirm2": "Stai per aggiungere a StreamPulse i canali che hai scelto (totale: {{count}}). Ognuno verrà controllato a ogni aggiornamento e potrà inviare notifiche. Aggiungerli?",
+      "confirmAdd": "Sì, aggiungi ({{count}})",
+      "again": "Importa altri",
+      "err": {
+        "config": "StreamPulse non è riuscito a caricare le sue impostazioni Twitch. Riprova tra un minuto.",
+        "permission": "Il permesso di accesso è stato rifiutato, quindi non è successo nulla.",
+        "denied": "L'accesso a Twitch è stato annullato o rifiutato. Non è stato importato nulla.",
+        "state": "Non è stato possibile verificare la risposta di Twitch. Non è stato importato nulla.",
+        "unauthorized": "Twitch ha rifiutato l'accesso. Accedi di nuovo.",
+        "rateLimited": "Twitch sta limitando le richieste. Riprova tra un minuto.",
+        "generic": "Importazione non riuscita. Non è stato aggiunto nulla."
+      }
+    }
   },
   "meta": {
     "languageSwitcherLabel": "Lingua"

@@ -36,7 +36,38 @@ export default {
     "verifyFailed": "Nie udało się zweryfikować konta.",
     "groupFailed": "Konto zostało dodane, ale nie udało się zaktualizować jego grupy.",
     "groupMissing": "Konto zostało dodane, ale nie znajduje się już w wybranej grupie.",
-    "missingGroupOption": "Grupa jest już niedostępna"
+    "missingGroupOption": "Grupa jest już niedostępna",
+    "import": {
+      "title": "Zaimportuj swoje obserwowane z Twitcha",
+      "intro": "Zaloguj się raz przez Twitcha, aby wybrać kanały, które już obserwujesz. Nic nie zostanie dodane, dopóki nie potwierdzisz dwukrotnie.",
+      "open": "Importuj moje obserwowane z Twitcha",
+      "confirm1": "Zaraz zalogujesz się przez Twitcha. StreamPulse prosi tylko o odczyt listy kanałów, które obserwujesz. Nie może niczego obserwować, przestać obserwować ani publikować, a Twój token Twitcha nigdy nie jest zapisywany. Na razie nic nie jest dodawane: kanały wybierzesz później.",
+      "cancel": "Anuluj",
+      "continue": "Przejdź do Twitcha",
+      "back": "Wróć",
+      "connecting": "Czekam na Twitcha…",
+      "reading": "Czytanie Twoich obserwowanych…",
+      "found": "Znalezione kanały: {{count}}",
+      "empty": "Nie znaleziono żadnego kanału na tym koncie.",
+      "pickHint": "Nic nie jest zaznaczone. Zaznacz tylko kanały, które chcesz mieć w StreamPulse.",
+      "filter": "Filtruj kanały",
+      "selectAll": "Zaznacz wszystko (do limitu)",
+      "count": "Zaznaczone: {{selected}} / {{max}} · Dostępne: {{total}}",
+      "tooMany": "Osiągnięto limit ({{max}} naraz). Resztę zaimportujesz później.",
+      "review": "Sprawdź mój wybór",
+      "confirm2": "Zaraz dodasz do StreamPulse wybrane kanały (łącznie: {{count}}). Każdy będzie sprawdzany przy każdym odświeżeniu i może wysyłać powiadomienia. Dodać je?",
+      "confirmAdd": "Tak, dodaj ({{count}})",
+      "again": "Importuj więcej",
+      "err": {
+        "config": "StreamPulse nie mógł wczytać ustawień Twitcha. Spróbuj ponownie za minutę.",
+        "permission": "Odmówiono uprawnienia do logowania, więc nic się nie stało.",
+        "denied": "Logowanie do Twitcha zostało anulowane lub odrzucone. Nic nie zaimportowano.",
+        "state": "Nie udało się zweryfikować odpowiedzi Twitcha. Nic nie zaimportowano.",
+        "unauthorized": "Twitch odmówił dostępu. Zaloguj się ponownie.",
+        "rateLimited": "Twitch ogranicza liczbę żądań. Spróbuj ponownie za minutę.",
+        "generic": "Import się nie powiódł. Nic nie dodano."
+      }
+    }
   },
   "meta": {
     "languageSwitcherLabel": "Język"

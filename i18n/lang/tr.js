@@ -36,7 +36,38 @@ export default {
     "verifyFailed": "Hesap doğrulanamadı.",
     "groupFailed": "Hesap eklendi ancak grubu güncellenemedi.",
     "groupMissing": "Hesap eklendi ancak artık seçilen grupta yer almıyor.",
-    "missingGroupOption": "Grup artık mevcut değil"
+    "missingGroupOption": "Grup artık mevcut değil",
+    "import": {
+      "title": "Twitch takiplerini içe aktar",
+      "intro": "Zaten takip ettiğin kanalları seçmek için Twitch ile bir kez giriş yap. İki kez onaylamadan hiçbir şey eklenmez.",
+      "open": "Twitch takiplerimi içe aktar",
+      "confirm1": "Twitch ile giriş yapmak üzeresin. StreamPulse yalnızca takip ettiğin kanalların listesini okumak istiyor. Takip edemez, takibi bırakamaz ve hiçbir şey paylaşamaz; Twitch jetonun asla kaydedilmez. Şimdilik hiçbir şey eklenmez: kanalları sonra seçersin.",
+      "cancel": "İptal",
+      "continue": "Twitch'e devam et",
+      "back": "Geri dön",
+      "connecting": "Twitch bekleniyor…",
+      "reading": "Takiplerin okunuyor…",
+      "found": "Bulunan kanallar: {{count}}",
+      "empty": "Bu hesapta kanal bulunamadı.",
+      "pickHint": "Hiçbir şey seçili değil. Yalnızca StreamPulse'ta istediğin kanalları işaretle.",
+      "filter": "Kanalları filtrele",
+      "selectAll": "Tümünü seç (sınıra kadar)",
+      "count": "Seçilen: {{selected}} / {{max}} · Uygun: {{total}}",
+      "tooMany": "Sınıra ulaşıldı (tek seferde {{max}}). Kalanını sonra içe aktar.",
+      "review": "Seçimimi gözden geçir",
+      "confirm2": "Seçtiğin kanalları StreamPulse'a eklemek üzeresin (toplam: {{count}}). Her biri her yenilemede kontrol edilir ve bildirim gönderebilir. Eklensin mi?",
+      "confirmAdd": "Evet, ekle ({{count}})",
+      "again": "Daha fazla içe aktar",
+      "err": {
+        "config": "StreamPulse Twitch ayarlarını yükleyemedi. Bir dakika sonra tekrar dene.",
+        "permission": "Giriş izni reddedildi, bu yüzden hiçbir şey olmadı.",
+        "denied": "Twitch girişi iptal edildi veya reddedildi. Hiçbir şey içe aktarılmadı.",
+        "state": "Twitch yanıtı doğrulanamadı. Hiçbir şey içe aktarılmadı.",
+        "unauthorized": "Twitch erişimi reddetti. Tekrar giriş yapmayı dene.",
+        "rateLimited": "Twitch istekleri sınırlıyor. Bir dakika sonra tekrar dene.",
+        "generic": "İçe aktarma başarısız oldu. Hiçbir şey eklenmedi."
+      }
+    }
   },
   "meta": {
     "languageSwitcherLabel": "Dil"

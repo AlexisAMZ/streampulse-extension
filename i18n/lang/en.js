@@ -36,7 +36,38 @@ export default {
     "verifyFailed": "The account could not be verified.",
     "groupFailed": "The account was added but its group could not be updated.",
     "groupMissing": "The account was added but is no longer in the selected group.",
-    "missingGroupOption": "Group no longer available"
+    "missingGroupOption": "Group no longer available",
+    "import": {
+      "title": "Import your Twitch follows",
+      "intro": "Sign in with Twitch once to pick channels you already follow. Nothing is added until you confirm twice.",
+      "open": "Import my Twitch follows",
+      "confirm1": "You are about to sign in with Twitch. StreamPulse only asks to read the list of channels you follow. It cannot follow, unfollow or post anything, and your Twitch token is never saved. Nothing is added yet: you choose the channels afterwards.",
+      "cancel": "Cancel",
+      "continue": "Continue to Twitch",
+      "back": "Go back",
+      "connecting": "Waiting for Twitch…",
+      "reading": "Reading your follows…",
+      "found": "Channels found: {{count}}",
+      "empty": "No channel found on this account.",
+      "pickHint": "Nothing is selected. Tick only the channels you want in StreamPulse.",
+      "filter": "Filter channels",
+      "selectAll": "Select all (up to the limit)",
+      "count": "Selected: {{selected}} / {{max}} · Available: {{total}}",
+      "tooMany": "Limit reached ({{max}} at a time). Import the rest afterwards.",
+      "review": "Review my choice",
+      "confirm2": "You are about to add the channels you picked to StreamPulse (total: {{count}}). Each one is checked at every refresh and can send notifications. Add them?",
+      "confirmAdd": "Yes, add ({{count}})",
+      "again": "Import more",
+      "err": {
+        "config": "StreamPulse could not load its Twitch settings. Try again in a minute.",
+        "permission": "The sign-in permission was declined, so nothing happened.",
+        "denied": "The Twitch sign-in was cancelled or refused. Nothing was imported.",
+        "state": "The Twitch answer could not be verified. Nothing was imported.",
+        "unauthorized": "Twitch refused the access. Try signing in again.",
+        "rateLimited": "Twitch is limiting requests. Try again in a minute.",
+        "generic": "The import failed. Nothing was added."
+      }
+    }
   },
   "meta": {
     "languageSwitcherLabel": "Language"

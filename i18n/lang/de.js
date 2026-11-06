@@ -36,7 +36,38 @@ export default {
     "verifyFailed": "Das Konto konnte nicht verifiziert werden.",
     "groupFailed": "Das Konto wurde hinzugefügt, aber seine Gruppe konnte nicht aktualisiert werden.",
     "groupMissing": "Das Konto wurde hinzugefügt, befindet sich aber nicht mehr in der ausgewählten Gruppe.",
-    "missingGroupOption": "Gruppe nicht mehr verfügbar"
+    "missingGroupOption": "Gruppe nicht mehr verfügbar",
+    "import": {
+      "title": "Twitch-Follows importieren",
+      "intro": "Melde dich einmal bei Twitch an, um Kanäle auszuwählen, denen du schon folgst. Es wird nichts hinzugefügt, bevor du zweimal bestätigt hast.",
+      "open": "Meine Twitch-Follows importieren",
+      "confirm1": "Du meldest dich gleich bei Twitch an. StreamPulse bittet nur darum, die Liste der Kanäle zu lesen, denen du folgst. Es kann nichts folgen, entfolgen oder veröffentlichen, und dein Twitch-Token wird nie gespeichert. Noch wird nichts hinzugefügt: Die Kanäle wählst du danach aus.",
+      "cancel": "Abbrechen",
+      "continue": "Weiter zu Twitch",
+      "back": "Zurück",
+      "connecting": "Warte auf Twitch…",
+      "reading": "Deine Follows werden gelesen…",
+      "found": "Gefundene Kanäle: {{count}}",
+      "empty": "Auf diesem Konto wurde kein Kanal gefunden.",
+      "pickHint": "Nichts ausgewählt. Hake nur die Kanäle an, die du in StreamPulse haben möchtest.",
+      "filter": "Kanäle filtern",
+      "selectAll": "Alle auswählen (bis zum Limit)",
+      "count": "Ausgewählt: {{selected}} / {{max}} · Verfügbar: {{total}}",
+      "tooMany": "Limit erreicht ({{max}} auf einmal). Importiere den Rest danach.",
+      "review": "Auswahl prüfen",
+      "confirm2": "Du fügst gleich die ausgewählten Kanäle zu StreamPulse hinzu (insgesamt: {{count}}). Jeder wird bei jeder Aktualisierung geprüft und kann Benachrichtigungen senden. Hinzufügen?",
+      "confirmAdd": "Ja, hinzufügen ({{count}})",
+      "again": "Mehr importieren",
+      "err": {
+        "config": "StreamPulse konnte seine Twitch-Einstellungen nicht laden. Versuche es in einer Minute erneut.",
+        "permission": "Die Anmeldeberechtigung wurde abgelehnt, es ist nichts passiert.",
+        "denied": "Die Twitch-Anmeldung wurde abgebrochen oder abgelehnt. Es wurde nichts importiert.",
+        "state": "Die Antwort von Twitch konnte nicht überprüft werden. Es wurde nichts importiert.",
+        "unauthorized": "Twitch hat den Zugriff verweigert. Melde dich erneut an.",
+        "rateLimited": "Twitch begrenzt die Anfragen. Versuche es in einer Minute erneut.",
+        "generic": "Der Import ist fehlgeschlagen. Es wurde nichts hinzugefügt."
+      }
+    }
   },
   "meta": {
     "languageSwitcherLabel": "Sprache"

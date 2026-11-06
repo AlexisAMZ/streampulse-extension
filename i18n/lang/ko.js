@@ -36,7 +36,38 @@ export default {
     "verifyFailed": "계정을 인증할 수 없습니다.",
     "groupFailed": "계정은 추가되었으나 해당 계정의 그룹을 업데이트할 수 없습니다.",
     "groupMissing": "계정이 추가되었으나 더 이상 선택된 그룹에 속해 있지 않습니다.",
-    "missingGroupOption": "이 그룹은 더 이상 사용할 수 없습니다."
+    "missingGroupOption": "이 그룹은 더 이상 사용할 수 없습니다.",
+    "import": {
+      "title": "Twitch 팔로우 가져오기",
+      "intro": "Twitch로 한 번 로그인해서 이미 팔로우 중인 채널을 고르세요. 두 번 확인하기 전에는 아무것도 추가되지 않아요.",
+      "open": "내 Twitch 팔로우 가져오기",
+      "confirm1": "곧 Twitch로 로그인합니다. StreamPulse는 팔로우 중인 채널 목록을 읽는 권한만 요청해요. 팔로우, 언팔로우, 게시는 할 수 없고 Twitch 토큰은 저장되지 않아요. 아직은 아무것도 추가되지 않아요. 채널은 나중에 고르면 돼요.",
+      "cancel": "취소",
+      "continue": "Twitch로 계속",
+      "back": "돌아가기",
+      "connecting": "Twitch 응답을 기다리는 중…",
+      "reading": "팔로우 목록을 읽는 중…",
+      "found": "찾은 채널: {{count}}",
+      "empty": "이 계정에서 채널을 찾지 못했어요.",
+      "pickHint": "선택된 항목이 없어요. StreamPulse에 넣고 싶은 채널만 체크하세요.",
+      "filter": "채널 필터",
+      "selectAll": "모두 선택(한도까지)",
+      "count": "선택: {{selected}} / {{max}} · 선택 가능: {{total}}",
+      "tooMany": "한도에 도달했어요(한 번에 {{max}}개). 나머지는 나중에 가져오세요.",
+      "review": "선택 확인",
+      "confirm2": "고른 채널을 StreamPulse에 추가하려고 해요(총 {{count}}). 각 채널은 새로고침할 때마다 확인되고 알림을 보낼 수 있어요. 추가할까요?",
+      "confirmAdd": "네, 추가({{count}})",
+      "again": "더 가져오기",
+      "err": {
+        "config": "StreamPulse가 Twitch 설정을 불러오지 못했어요. 1분 뒤에 다시 시도하세요.",
+        "permission": "로그인 권한이 거부되어 아무 일도 일어나지 않았어요.",
+        "denied": "Twitch 로그인이 취소되었거나 거부되었어요. 아무것도 가져오지 않았어요.",
+        "state": "Twitch의 응답을 확인할 수 없었어요. 아무것도 가져오지 않았어요.",
+        "unauthorized": "Twitch가 접근을 거부했어요. 다시 로그인해 보세요.",
+        "rateLimited": "Twitch가 요청을 제한하고 있어요. 1분 뒤에 다시 시도하세요.",
+        "generic": "가져오기에 실패했어요. 아무것도 추가되지 않았어요."
+      }
+    }
   },
   "meta": {
     "languageSwitcherLabel": "언어"

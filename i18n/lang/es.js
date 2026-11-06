@@ -36,7 +36,38 @@ export default {
     "verifyFailed": "No se ha podido verificar la cuenta.",
     "groupFailed": "Se ha añadido la cuenta, pero no se ha podido actualizar su grupo.",
     "groupMissing": "Se ha añadido la cuenta, pero ya no está en el grupo seleccionado.",
-    "missingGroupOption": "El grupo ya no está disponible"
+    "missingGroupOption": "El grupo ya no está disponible",
+    "import": {
+      "title": "Importa tus seguidos de Twitch",
+      "intro": "Inicia sesión una vez con Twitch para elegir canales que ya sigues. No se añade nada hasta que confirmes dos veces.",
+      "open": "Importar mis seguidos de Twitch",
+      "confirm1": "Vas a iniciar sesión con Twitch. StreamPulse solo pide leer la lista de canales que sigues. No puede seguir, dejar de seguir ni publicar nada, y tu token de Twitch nunca se guarda. Todavía no se añade nada: eliges los canales después.",
+      "cancel": "Cancelar",
+      "continue": "Continuar a Twitch",
+      "back": "Volver",
+      "connecting": "Esperando a Twitch…",
+      "reading": "Leyendo tus seguidos…",
+      "found": "Canales encontrados: {{count}}",
+      "empty": "No se encontró ningún canal en esta cuenta.",
+      "pickHint": "No hay nada seleccionado. Marca solo los canales que quieras en StreamPulse.",
+      "filter": "Filtrar canales",
+      "selectAll": "Seleccionar todo (hasta el límite)",
+      "count": "Seleccionados: {{selected}} / {{max}} · Disponibles: {{total}}",
+      "tooMany": "Límite alcanzado ({{max}} a la vez). Importa el resto después.",
+      "review": "Revisar mi elección",
+      "confirm2": "Vas a añadir a StreamPulse los canales que elegiste (total: {{count}}). Cada uno se comprobará en cada actualización y podrá enviar notificaciones. ¿Añadirlos?",
+      "confirmAdd": "Sí, añadir ({{count}})",
+      "again": "Importar más",
+      "err": {
+        "config": "StreamPulse no pudo cargar sus ajustes de Twitch. Inténtalo de nuevo en un minuto.",
+        "permission": "Se rechazó el permiso de inicio de sesión, así que no pasó nada.",
+        "denied": "El inicio de sesión de Twitch se canceló o se rechazó. No se importó nada.",
+        "state": "No se pudo verificar la respuesta de Twitch. No se importó nada.",
+        "unauthorized": "Twitch rechazó el acceso. Vuelve a iniciar sesión.",
+        "rateLimited": "Twitch está limitando las solicitudes. Inténtalo de nuevo en un minuto.",
+        "generic": "La importación falló. No se añadió nada."
+      }
+    }
   },
   "meta": {
     "languageSwitcherLabel": "Idioma"

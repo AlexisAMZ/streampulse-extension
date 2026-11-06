@@ -89,6 +89,8 @@ const ES_MODULES = [
   "js/popup-notifications.js",
   "js/bulk-add.js",
   "js/bulk-add-page.js",
+  "js/twitch-follows.js",
+  "js/twitch-follows-import.js",
   "js/watch-later.js",
   "js/popup-watch-later.js",
   "js/linked-accounts.js",
@@ -164,7 +166,7 @@ export default [
     // Ces écrans protègent déjà chaque écriture asynchrone par un drapeau
     // (busy, writing, saving) testé en entrée : la règle y voit une course
     // qui n'existe pas. Dans les tests, ce sont des doublures qu'on réassigne.
-    files: ["js/bulk-add-page.js", "js/onboarding.js", "js/popup-linked-accounts.js", "tests/**/*.mjs"],
+    files: ["js/bulk-add-page.js", "js/twitch-follows-import.js", "js/onboarding.js", "js/popup-linked-accounts.js", "tests/**/*.mjs"],
     rules: { "require-atomic-updates": "off" },
   },
   {

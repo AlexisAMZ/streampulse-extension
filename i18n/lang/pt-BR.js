@@ -36,7 +36,38 @@ export default {
     "verifyFailed": "Não foi possível verificar a conta.",
     "groupFailed": "A conta foi adicionada, mas não foi possível atualizar o grupo dela.",
     "groupMissing": "A conta foi adicionada, mas não está mais no grupo selecionado.",
-    "missingGroupOption": "Grupo não está mais disponível"
+    "missingGroupOption": "Grupo não está mais disponível",
+    "import": {
+      "title": "Importe seus seguidos da Twitch",
+      "intro": "Entre uma vez com a Twitch para escolher canais que você já segue. Nada é adicionado até você confirmar duas vezes.",
+      "open": "Importar meus seguidos da Twitch",
+      "confirm1": "Você vai entrar com a Twitch. O StreamPulse só pede para ler a lista de canais que você segue. Ele não pode seguir, deixar de seguir nem publicar nada, e seu token da Twitch nunca é salvo. Nada é adicionado ainda: você escolhe os canais depois.",
+      "cancel": "Cancelar",
+      "continue": "Continuar para a Twitch",
+      "back": "Voltar",
+      "connecting": "Aguardando a Twitch…",
+      "reading": "Lendo seus seguidos…",
+      "found": "Canais encontrados: {{count}}",
+      "empty": "Nenhum canal encontrado nesta conta.",
+      "pickHint": "Nada está selecionado. Marque só os canais que você quer no StreamPulse.",
+      "filter": "Filtrar canais",
+      "selectAll": "Selecionar tudo (até o limite)",
+      "count": "Selecionados: {{selected}} / {{max}} · Disponíveis: {{total}}",
+      "tooMany": "Limite atingido ({{max}} por vez). Importe o resto depois.",
+      "review": "Revisar minha escolha",
+      "confirm2": "Você vai adicionar ao StreamPulse os canais que escolheu (total: {{count}}). Cada um será verificado a cada atualização e poderá enviar notificações. Adicionar?",
+      "confirmAdd": "Sim, adicionar ({{count}})",
+      "again": "Importar mais",
+      "err": {
+        "config": "O StreamPulse não conseguiu carregar suas configurações da Twitch. Tente de novo em um minuto.",
+        "permission": "A permissão de login foi recusada, então nada aconteceu.",
+        "denied": "O login na Twitch foi cancelado ou recusado. Nada foi importado.",
+        "state": "Não foi possível verificar a resposta da Twitch. Nada foi importado.",
+        "unauthorized": "A Twitch recusou o acesso. Entre novamente.",
+        "rateLimited": "A Twitch está limitando as requisições. Tente de novo em um minuto.",
+        "generic": "A importação falhou. Nada foi adicionado."
+      }
+    }
   },
   "meta": {
     "languageSwitcherLabel": "Idioma"

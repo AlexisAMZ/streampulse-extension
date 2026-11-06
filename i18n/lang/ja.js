@@ -36,7 +36,38 @@ export default {
     "verifyFailed": "アカウントの確認ができなかった。",
     "groupFailed": "アカウントは追加されたが、そのグループを更新できなかった。",
     "groupMissing": "アカウントは追加されたが、選択されたグループにはもはや含まれていない。",
-    "missingGroupOption": "このグループは利用できなくなった"
+    "missingGroupOption": "このグループは利用できなくなった",
+    "import": {
+      "title": "Twitchのフォローをインポート",
+      "intro": "Twitchで一度ログインして、すでにフォローしているチャンネルを選びます。2回確認するまで何も追加されません。",
+      "open": "Twitchのフォローをインポート",
+      "confirm1": "これからTwitchでログインします。StreamPulseが求めるのは、フォロー中のチャンネル一覧の読み取りだけです。フォローやフォロー解除、投稿はできず、Twitchのトークンは保存されません。まだ何も追加されません。チャンネルはこのあと選びます。",
+      "cancel": "キャンセル",
+      "continue": "Twitchに進む",
+      "back": "戻る",
+      "connecting": "Twitchの応答を待っています…",
+      "reading": "フォローを読み込んでいます…",
+      "found": "見つかったチャンネル：{{count}}",
+      "empty": "このアカウントにチャンネルが見つかりませんでした。",
+      "pickHint": "何も選択されていません。StreamPulseに入れたいチャンネルだけにチェックしてください。",
+      "filter": "チャンネルを絞り込む",
+      "selectAll": "すべて選択（上限まで）",
+      "count": "選択中：{{selected}} / {{max}} ・ 選択可能：{{total}}",
+      "tooMany": "上限に達しました（一度に{{max}}件）。残りはあとでインポートしてください。",
+      "review": "選択内容を確認",
+      "confirm2": "選んだチャンネルをStreamPulseに追加します（合計：{{count}}）。それぞれ更新のたびに確認され、通知を送ることがあります。追加しますか？",
+      "confirmAdd": "はい、追加する（{{count}}）",
+      "again": "さらにインポート",
+      "err": {
+        "config": "StreamPulseがTwitchの設定を読み込めませんでした。1分後にもう一度お試しください。",
+        "permission": "ログインの許可が拒否されたため、何も行われませんでした。",
+        "denied": "Twitchのログインがキャンセルまたは拒否されました。何もインポートされていません。",
+        "state": "Twitchの応答を確認できませんでした。何もインポートされていません。",
+        "unauthorized": "Twitchがアクセスを拒否しました。もう一度ログインしてください。",
+        "rateLimited": "Twitchがリクエストを制限しています。1分後にもう一度お試しください。",
+        "generic": "インポートに失敗しました。何も追加されていません。"
+      }
+    }
   },
   "meta": {
     "languageSwitcherLabel": "言語"
