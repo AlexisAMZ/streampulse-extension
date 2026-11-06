@@ -62,47 +62,45 @@ async function fetchKickAppToken() {
   }
 }
 
+// Oublie le jeton que Kick vient de refuser, sauf s'il a deja ete remplace :
+// sans cela il resterait en cache jusqu'a son expiration (60 jours).
+async function forgetKickToken(rejected) {
+  if (_kickToken.value === rejected) {
+    _kickToken.value = null;
+    _kickToken.expiresAt = 0;
+  }
+  const stored = await chrome.storage.local.get(KICK_TOKEN_STORAGE_KEY);
+  if (stored[KICK_TOKEN_STORAGE_KEY]?.value === rejected) {
+    await chrome.storage.local.remove(KICK_TOKEN_STORAGE_KEY);
+  }
+}
+
+async function fetchKickData(path, token) {
+  const resp = await fetch(`https://api.kick.com/public/v1/${path}`, {
+    headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+    signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS),
+  });
+  if (resp.status === 401) await forgetKickToken(token);
+  if (!resp.ok) throw new Error(`${resp.status}`);
+  const json = await resp.json();
+  return Array.isArray(json?.data) ? json.data : [];
+}
+
 /** Canaux officiels par slugs groupés (jusqu'à 50 par appel). */
 export async function fetchKickChannelsOfficial(slugs, token) {
   const params = new URLSearchParams();
   for (const slug of slugs) params.append("slug", slug);
-  const resp = await fetch(
-    `https://api.kick.com/public/v1/channels?${params.toString()}`,
-    {
-      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
-      signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS),
-    }
-  );
-  if (!resp.ok) throw new Error(`${resp.status}`);
-  const json = await resp.json();
-  return Array.isArray(json?.data) ? json.data : [];
+  return fetchKickData(`channels?${params.toString()}`, token);
 }
 
 /** Lives actifs par broadcaster user IDs groupés (jusqu'à 100 par appel). */
 export async function fetchKickLivestreamsOfficial(userIds, token) {
   const params = new URLSearchParams();
   for (const id of userIds) params.append("user_id", id);
-  const resp = await fetch(
-    `https://api.kick.com/public/v1/users/livestreams?${params.toString()}`,
-    {
-      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
-      signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS),
-    }
-  );
-  if (!resp.ok) throw new Error(`${resp.status}`);
-  const json = await resp.json();
-  return Array.isArray(json?.data) ? json.data : [];
+  return fetchKickData(`users/livestreams?${params.toString()}`, token);
 }
 
 export async function fetchKickOfficial(slug, token) {
-  const resp = await fetch(
-    `https://api.kick.com/public/v1/channels?slug=${encodeURIComponent(slug)}`,
-    {
-      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
-      signal: AbortSignal.timeout(NETWORK_TIMEOUT_MS),
-    }
-  );
-  if (!resp.ok) throw new Error(`${resp.status}`);
-  const json = await resp.json();
-  return json?.data?.[0] ?? null;
+  const [channel] = await fetchKickData(`channels?slug=${encodeURIComponent(slug)}`, token);
+  return channel ?? null;
 }
