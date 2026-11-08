@@ -1,0 +1,26 @@
+{
+  "_note": "Série 3 : Stream Pulse Clips Web (le site, convertisseur dans le navigateur). Rien de gratuit sauf l'essai de 3 jours. Faits repris du site : cam trouvée seule, 7 dispositions, sous-titres karaoké, tout tourne dans le navigateur, pas de serveur ni de file d'attente, export MP4. Les trois textes commencent par une accroche (question ou ordre direct) pour retenir dès la première seconde.",
+  "videos": [
+    {
+      "id": "12-web-avant-apres",
+      "serie": "Stream Pulse Clips Web",
+      "angle": "Le clip de base, puis le clip transformé",
+      "texte": "Regarde ce clip Twitch. Maintenant, regarde-le en vertical, en quelques secondes. Tu colles le lien sur Stream Pulse Clips. La cam est trouvée, le jeu est recadré, et c'est déjà prêt à exporter. Bientôt, un bouton pour poster direct sur TikTok et Instagram. Lien dans ma bio.",
+      "texte_eleven": "[excited] Regarde ce clip Twitch. [short pause] Maintenant, regarde-le en vertical, en quelques secondes ! [short pause] Tu colles le lien sur Stream Pulse Clips. La cam est trouvée, le jeu est recadré, et c'est déjà prêt à exporter. [curious] Bientôt, un bouton pour poster direct sur TikTok et Instagram. Lien dans ma bio."
+    },
+    {
+      "id": "13-web-rapide",
+      "serie": "Stream Pulse Clips Web",
+      "angle": "Ultra rapide, pas de file d'attente",
+      "texte": "Arrête d'attendre dans une file pour monter tes clips. Sur Stream Pulse Clips, il n'y a ni serveur, ni file d'attente. Tout se passe dans ton navigateur. Tu colles le lien, et en quelques secondes ton clip est cadré et prêt à exporter. Sois le premier à poster. Lien dans ma bio.",
+      "texte_eleven": "[sighs] Arrête d'attendre dans une file pour monter tes clips. [short pause] Sur Stream Pulse Clips, il n'y a ni serveur, ni file d'attente. Tout se passe dans ton navigateur. [excited] Tu colles le lien, et en quelques secondes ton clip est cadré et prêt à exporter ! Sois le premier à poster. Lien dans ma bio."
+    },
+    {
+      "id": "14-web-automatise",
+      "serie": "Stream Pulse Clips Web",
+      "angle": "Tout est automatique, il ne reste qu'à exporter",
+      "texte": "Tu perds encore du temps à recadrer tes clips à la main ? Sur Stream Pulse Clips, tu colles le lien d'un clip Twitch ou Kick. La cam est trouvée toute seule, le cadrage est fait, les sous-titres karaoké se posent mot à mot. Il ne te reste qu'à exporter ton MP4 et à poster. Bientôt, directement vers TikTok et Instagram. Essaie trois jours. Lien dans ma bio.",
+      "texte_eleven": "[curious] Tu perds encore du temps à recadrer tes clips à la main ? [short pause] Sur Stream Pulse Clips, tu colles le lien d'un clip Twitch ou Kick. La cam est trouvée toute seule, le cadrage est fait, les sous-titres karaoké se posent mot à mot. [excited] Il ne te reste qu'à exporter ton MP4 et à poster ! [curious] Bientôt, directement vers TikTok et Instagram ! Essaie trois jours. Lien dans ma bio."
+    }
+  ]
+}

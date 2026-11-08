@@ -1,0 +1,35 @@
+{
+  "_note": "Texte parlé uniquement (pas d'emoji, pas de ponctuation décorative). « Stream Pulse » en deux mots pour que la voix prononce le nom à l'anglaise. Tutoiement, durée visée 18 à 28 s.",
+  "videos": [
+    {
+      "id": "01-live-rate",
+      "angle": "Ne plus rater un live",
+      "ecran": "Notification Chrome qui tombe sur un jeu, clic, le live s'ouvre. Popup avec la grille des streamers en direct.",
+      "texte": "Tu rates toujours le début des lives de ton streamer préféré. Et quand tu arrives, c'est déjà fini. Avec Stream Pulse, une notification tombe à la seconde où il lance son stream. Tu cliques, t'es dedans. C'est une extension gratuite, pour Chrome. Lien dans ma bio."
+    },
+    {
+      "id": "02-points-auto",
+      "angle": "Les points de chaîne tout seuls",
+      "ecran": "Le coffre de points qui apparaît dans le chat, puis le compteur qui monte sans toucher à la souris.",
+      "texte": "Arrête de cliquer sur le petit coffre toutes les cinq minutes. Stream Pulse récupère tes points de chaîne à ta place, sur Twitch et sur Kick. Tu regardes ton stream, les points s'accumulent tout seuls. Gratuit, et ça prend dix secondes à installer."
+    },
+    {
+      "id": "03-drops",
+      "angle": "Les Drops Twitch",
+      "ecran": "Page des Drops Twitch, barre de progression, puis le planificateur de Drops de l'extension.",
+      "texte": "Les Drops Twitch, c'est génial, sauf quand tu oublies de les réclamer. Stream Pulse suit ta progression et les récupère pour toi. Tu ne perds plus jamais une récompense parce que t'avais fermé l'onglet trop tôt. Une extension gratuite, lien dans ma bio."
+    },
+    {
+      "id": "04-trois-plateformes",
+      "angle": "Twitch, Kick et YouTube dans un seul endroit",
+      "ecran": "Popup avec les trois logos, un streamer de chaque plateforme en live, filtre par plateforme.",
+      "texte": "Moi je regarde des lives sur Twitch, sur Kick et sur YouTube. Avant, j'avais trois onglets et je ratais tout. Maintenant, un clic sur Stream Pulse et je vois qui est en direct, au même endroit, sur les trois plateformes. Pas de compte à créer. Tu tapes le pseudo de tes streamers, et c'est réglé."
+    },
+    {
+      "id": "05-sans-compte",
+      "angle": "Extension gratuite, sans compte, tes listes restent sur ton ordinateur",
+      "ecran": "Installation en trois secondes, ajout d'un streamer par son pseudo, popup rempli. Texte à l'écran : sans compte, sans pub.",
+      "texte": "Une extension pour suivre tes streamers, sans créer de compte. Tu tapes un pseudo, et c'est tout. Tes listes restent sur ton ordinateur, personne d'autre n'y a accès. Stream Pulse, c'est une extension gratuite, ça marche sur Twitch, Kick et YouTube, et c'est traduit en onze langues. Lien dans ma bio."
+    }
+  ]
+}

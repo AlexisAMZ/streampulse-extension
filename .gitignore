@@ -43,3 +43,10 @@ images/cws_screenshots/EN/*
 
 # Cache de l outillage i18n (reponses DeepL, glossaires DeepL, dossiers de relecture, pseudo-langue)
 localization/.cache/
+
+# Rendus TikTok (voix, vidéos montées) : lourds et regénérables, jamais versionnés
+promo/tiktok-voix/sortie/
+promo/tiktok-voix/videos/
+
+# Journal local de consommation DeepL
+localization/usage.jsonl

@@ -1,0 +1,47 @@
+{
+  "_note": "Seconde série : live 24/7 (3) et StreamPulse Clips (3). Texte parlé uniquement, tutoiement. « Stream Pulse » en deux mots. Rien de gratuit pour Clips (seul l'essai de 3 jours l'est). Chaque texte se termine par « Lien dans ma bio » pour que la voix lance l'appel final. « texte_eleven » = version avec balises ElevenLabs v3 à coller sur le site ; « texte » = texte nu servant à l'alignement mot à mot (les balises ne sont pas prononcées).",
+  "videos": [
+    {
+      "id": "06-live-247-jamais",
+      "serie": "live 24/7",
+      "angle": "Un live qui ne s'arrête jamais",
+      "texte": "Il existe un live Twitch qui tourne jour et nuit. Pas de pause, pas de streamer. Il joue toujours à un jeu avec un Drop ou un badge actif. Tu l'ouvres, tu le laisses tourner, et ton temps de visionnage compte. La chaîne s'appelle Stream Pulse vingt-quatre sur sept. Lien dans ma bio.",
+      "texte_eleven": "[curious] Il existe un live Twitch qui tourne jour et nuit. [short pause] Pas de pause, pas de streamer. Il joue toujours à un jeu avec un Drop ou un badge actif. [excited] Tu l'ouvres, tu le laisses tourner, et ton temps de visionnage compte ! La chaîne s'appelle Stream Pulse vingt-quatre sur sept. Lien dans ma bio."
+    },
+    {
+      "id": "07-live-247-jeu",
+      "serie": "live 24/7",
+      "angle": "Tu choisis le jeu depuis le chat",
+      "texte": "Tu veux le Drop d'un jeu précis ? Va dans le chat de la chaîne Stream Pulse vingt-quatre sur sept, et tape game avec un point d'exclamation devant, puis le nom du jeu. Le live change de jeu tout seul. Il est ouvert à tout le monde, avec ou sans Stream Pulse Plus. Lien dans ma bio.",
+      "texte_eleven": "[curious] Tu veux le Drop d'un jeu précis ? Va dans le chat de la chaîne Stream Pulse vingt-quatre sur sept, et tape game avec un point d'exclamation devant, puis le nom du jeu. [excited] Le live change de jeu tout seul ! Il est ouvert à tout le monde, avec ou sans Stream Pulse Plus. Lien dans ma bio."
+    },
+    {
+      "id": "08-live-247-tableau",
+      "serie": "live 24/7",
+      "angle": "Le tableau des Drops en direct",
+      "texte": "Des Drops Twitch, il y en a des dizaines, et on ne sait jamais lesquels sont encore actifs. Sur la chaîne Stream Pulse vingt-quatre sur sept, un tableau défile en direct avec les campagnes en cours et les jeux concernés. Tu regardes, tu choisis, et c'est réglé. Lien dans ma bio.",
+      "texte_eleven": "[sighs] Des Drops Twitch, il y en a des dizaines, et on ne sait jamais lesquels sont encore actifs. [short pause] Sur la chaîne Stream Pulse vingt-quatre sur sept, un tableau défile en direct avec les campagnes en cours et les jeux concernés. [excited] Tu regardes, tu choisis, et c'est réglé ! Lien dans ma bio."
+    },
+    {
+      "id": "09-clips-vertical",
+      "serie": "Stream Pulse Clips",
+      "angle": "Un clip Twitch en vertical, cadré tout seul",
+      "texte": "Tu as un clip Twitch et tu veux le poster sur TikTok. Sauf qu'il est en horizontal, et que la cam du streamer est minuscule. Avec Stream Pulse Clips, tu colles le lien. L'app trouve la cam et le jeu, et les recadre en vertical. En dix secondes, c'est prêt à poster. Lien dans ma bio.",
+      "texte_eleven": "[sighs] Tu as un clip Twitch et tu veux le poster sur TikTok. Sauf qu'il est en horizontal, et que la cam du streamer est minuscule. [short pause] Avec Stream Pulse Clips, tu colles le lien. [excited] L'app trouve la cam et le jeu, et les recadre en vertical ! En dix secondes, c'est prêt à poster. Lien dans ma bio."
+    },
+    {
+      "id": "10-clips-partager",
+      "serie": "Stream Pulse Clips",
+      "angle": "Depuis Twitch, en un geste",
+      "texte": "Tu regardes un clip dans l'app Twitch. Tu appuies sur partager, tu choisis Stream Pulse Clips, et c'est tout. Le clip arrive dans l'app, déjà cadré, la cam en haut et le jeu en dessous. Tu ajustes si tu veux, tu exportes. Lien dans ma bio.",
+      "texte_eleven": "[curious] Tu regardes un clip dans l'app Twitch. Tu appuies sur partager, tu choisis Stream Pulse Clips, et c'est tout. [excited] Le clip arrive dans l'app, déjà cadré, la cam en haut et le jeu en dessous ! Tu ajustes si tu veux, tu exportes. Lien dans ma bio."
+    },
+    {
+      "id": "11-clips-clippeurs",
+      "serie": "Stream Pulse Clips",
+      "angle": "Pour les clippeurs : réglages par streamer, tout sur l'iPhone",
+      "texte": "Tu gères un compte de clips ? Tu en sors des dizaines par semaine. Stream Pulse Clips retient tes réglages pour chaque streamer, ajoute les sous-titres, et tout se calcule sur ton iPhone. Ton montage ne part sur aucun serveur, et pour ton premier clip, tu n'as même pas besoin de compte. Lien dans ma bio.",
+      "texte_eleven": "[curious] Tu gères un compte de clips ? Tu en sors des dizaines par semaine. [short pause] Stream Pulse Clips retient tes réglages pour chaque streamer, ajoute les sous-titres, et tout se calcule sur ton iPhone. [excited] Ton montage ne part sur aucun serveur, et pour ton premier clip, tu n'as même pas besoin de compte ! Lien dans ma bio."
+    }
+  ]
+}
