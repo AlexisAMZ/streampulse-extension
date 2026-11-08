@@ -181,5 +181,6 @@ test("manifeste : la règle d'en-tête est une permission facultative, jamais ob
   // identity (import des follows Twitch) est facultative aussi : demandée au clic, jamais à l'installation.
   assert.ok(!manifest.permissions.includes("identity"));
   assert.deepEqual(manifest.optional_permissions, ["declarativeNetRequestWithHostAccess", "identity"]);
-  assert.deepEqual(manifest.optional_host_permissions, [CHZZK_HOST_PERMISSION]);
+  // L'adresse de retour chromiumapp.org sert à lire la réponse de Twitch dans notre propre fenêtre de connexion.
+  assert.deepEqual(manifest.optional_host_permissions, [CHZZK_HOST_PERMISSION, "https://*.chromiumapp.org/*"]);
 });

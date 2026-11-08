@@ -35,12 +35,46 @@ function randomState() {
   return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
+const REDIRECT_ORIGIN = "https://*.chromiumapp.org/*";
+const AUTH_WINDOW = { width: 560, height: 820 };
+
+/**
+ * Fenêtre de connexion Twitch à nous : celle de launchWebAuthFlow est minuscule
+ * sous Chrome et cache le bouton Autoriser. Rend l'adresse de retour (avec le
+ * jeton dans le fragment) dès que Twitch y redirige, puis referme la fenêtre.
+ */
+async function openAuthWindow(url, redirectUri) {
+  const win = await chrome.windows.create({ url, type: "popup", focused: true, ...AUTH_WINDOW });
+  const tabId = win.tabs?.[0]?.id;
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    const finish = (settle, value) => {
+      if (settled) return;
+      settled = true;
+      chrome.tabs.onUpdated.removeListener(onUpdated);
+      chrome.windows.onRemoved.removeListener(onRemoved);
+      settle(value);
+    };
+    const onUpdated = (id, info, tab) => {
+      const current = info.url || tab?.url;
+      if (id !== tabId || !current?.startsWith(redirectUri)) return;
+      finish(resolve, current);
+      chrome.windows.remove(win.id).catch(() => {});
+    };
+    const onRemoved = (id) => {
+      if (id === win.id) finish(reject, typedError("denied"));
+    };
+    chrome.tabs.onUpdated.addListener(onUpdated);
+    chrome.windows.onRemoved.addListener(onRemoved);
+  });
+}
+
 /**
  * Ouvre la fenêtre Twitch et rend le jeton. La demande de permission vient en
  * premier : Chrome l'exige pendant le clic, avant toute attente.
  */
 async function authorize() {
-  const granted = await chrome.permissions.request({ permissions: ["identity"] });
+  const granted = await chrome.permissions.request({ permissions: ["identity"], origins: [REDIRECT_ORIGIN] });
   if (!granted) throw typedError("permission");
   const config = await chrome.runtime.sendMessage({ type: "getConfig" });
   const clientId = config?.clientId;
@@ -48,10 +82,8 @@ async function authorize() {
   const state = randomState();
   let redirect;
   try {
-    redirect = await chrome.identity.launchWebAuthFlow({
-      url: buildAuthorizeUrl({ clientId, redirectUri: chrome.identity.getRedirectURL(), state }),
-      interactive: true,
-    });
+    const redirectUri = chrome.identity.getRedirectURL();
+    redirect = await openAuthWindow(buildAuthorizeUrl({ clientId, redirectUri, state }), redirectUri);
   } catch {
     throw typedError("denied");
   }
@@ -62,7 +94,7 @@ async function authorize() {
 
 /** La permission ne sert qu'à ce moment-là : on la rend aussitôt. */
 function releaseIdentityPermission() {
-  chrome.permissions.remove({ permissions: ["identity"] }).catch(() => {});
+  chrome.permissions.remove({ permissions: ["identity"], origins: [REDIRECT_ORIGIN] }).catch(() => {});
 }
 
 function el(tag, className, ...children) {

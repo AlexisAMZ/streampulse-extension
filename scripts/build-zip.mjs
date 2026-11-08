@@ -24,8 +24,9 @@ const DEV_ONLY = [/^localization\//, /\.md$/i, /^\.gitignore$/, /^package(-lock)
   // formulaire du store, pas au paquet. 61 fichiers, ~22 Mo telecharges par
   // chaque utilisateur pour rien.
   /^images\/cws_screenshots\//, /^images\/promo\//,
-  // Visuels de travail (7tv, betterttv, ffz) : non references par l'extension.
-  /^images\/platforms\//,
+  // Visuels de travail (7tv, betterttv, ffz...) : non references par l'extension.
+  // Seul twitch.svg est charge (carte d'import des follows, popup.html).
+  /^images\/platforms\/(?!twitch\.svg$)/,
   // Studio promo TikTok : rendus, mp4 et pages de capture, 1,4 Mo hors-sujet
   // dans le paquet livre.
   /^promo\//,
