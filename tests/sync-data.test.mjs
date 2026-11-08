@@ -68,3 +68,31 @@ test("isRemoteSync ignore les échos et les états incomplets", async () => {
   assert.equal(isRemoteSync({ device: "autre", rev: 0 }, "moi"), false);
   assert.equal(isRemoteSync(null, "moi"), false);
 });
+
+test("mergeStreamers n'invente pas de streamer supprimé ailleurs (pierres tombales)", async () => {
+  const { mergeStreamers } = await import("../js/sync-data.js");
+  const local = [{ id: "a" }, { id: "xqc" }];
+  const remote = [{ id: "a" }, { id: "xqc" }, { id: "c" }];
+  const merged = mergeStreamers(local, remote, [{ id: "xqc", at: 1 }]);
+  assert.deepEqual(merged.map((streamer) => streamer.id), ["a", "c"]);
+});
+
+test("recordRemovals note les retraits, oublie les ré-ajouts et borne la liste", async () => {
+  const { recordRemovals, MAX_TOMBSTONES } = await import("../js/sync-data.js");
+  const before = [{ id: "a" }, { id: "xqc" }];
+  const afterRemoval = recordRemovals([], before, [{ id: "a" }], 100);
+  assert.deepEqual(afterRemoval, [{ id: "xqc", at: 100 }]);
+  const afterReadd = recordRemovals(afterRemoval, [{ id: "a" }], before, 200);
+  assert.deepEqual(afterReadd, []);
+  const many = Array.from({ length: MAX_TOMBSTONES + 20 }, (_, i) => ({ id: `s${i}` }));
+  const capped = recordRemovals([], many, [], 300);
+  assert.equal(capped.length, MAX_TOMBSTONES);
+});
+
+test("mergeTombstones garde celles du nuage et les locales pas encore poussées", async () => {
+  const { mergeTombstones } = await import("../js/sync-data.js");
+  const local = [{ id: "x", at: 1 }, { id: "y", at: 2 }];
+  const remote = [{ id: "z", at: 3 }];
+  const merged = mergeTombstones(local, remote, [{ id: "y" }]);
+  assert.deepEqual(merged.map((entry) => entry.id).sort(), ["x", "z"]);
+});

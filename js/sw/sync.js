@@ -9,6 +9,7 @@ import {
   SYNC_META_KEY,
   SYNC_PINNED_KEY,
   SYNC_PREFS_KEY,
+  SYNC_REMOVED_KEY,
   SYNC_STATUS_KEY,
   SYNC_STREAMERS_PREFIX,
   chunkForSync,
@@ -16,6 +17,8 @@ import {
   mergePinnedIds,
   mergePreferences,
   mergeStreamers,
+  mergeTombstones,
+  recordRemovals,
 } from "../sync-data.js";
 import { PREFERENCES_KEY, STORAGE_KEYS } from "./constants.js";
 import { warnWith } from "./log.js";
@@ -74,7 +77,7 @@ async function pushToSync() {
   }
   const [streamers, localStored] = await Promise.all([
     DataStore.getStreamers(),
-    chrome.storage.local.get(PREFERENCES_KEY),
+    chrome.storage.local.get([PREFERENCES_KEY, SYNC_REMOVED_KEY]),
   ]);
   const rev = (Number(cloudMeta?.rev) || 0) + 1;
   const chunks = chunkForSync(streamers);
@@ -82,6 +85,7 @@ async function pushToSync() {
     [SYNC_META_KEY]: { rev, updatedAt: Date.now(), device, chunks: chunks.length },
     [SYNC_PREFS_KEY]: localStored[PREFERENCES_KEY] || {},
     [SYNC_PINNED_KEY]: localStored.betaPinnedIds || [],
+    [SYNC_REMOVED_KEY]: localStored[SYNC_REMOVED_KEY] || [],
   };
   chunks.forEach((chunk, index) => { data[`${SYNC_STREAMERS_PREFIX}${index}`] = chunk; });
   const staleKeys = [];
@@ -113,7 +117,7 @@ async function pullFromSync(meta) {
   applyingRemote = true;
   try {
     const chunkCount = Number(meta.chunks) || 0;
-    const keys = [SYNC_PREFS_KEY];
+    const keys = [SYNC_PREFS_KEY, SYNC_PINNED_KEY, SYNC_REMOVED_KEY];
     for (let index = 0; index < chunkCount; index += 1) keys.push(`${SYNC_STREAMERS_PREFIX}${index}`);
     const stored = await chrome.storage.sync.get(keys);
     const remoteStreamers = [];
@@ -122,9 +126,10 @@ async function pullFromSync(meta) {
     }
     const [localStreamers, localStored] = await Promise.all([
       DataStore.getStreamers(),
-      chrome.storage.local.get(PREFERENCES_KEY),
+      chrome.storage.local.get([PREFERENCES_KEY, "betaPinnedIds", SYNC_REMOVED_KEY]),
     ]);
-    const streamers = mergeStreamers(localStreamers, remoteStreamers);
+    const tombstones = mergeTombstones(localStored[SYNC_REMOVED_KEY], stored[SYNC_REMOVED_KEY], remoteStreamers);
+    const streamers = mergeStreamers(localStreamers, remoteStreamers, tombstones);
     const preferences = mergePreferences(localStored[PREFERENCES_KEY] || {}, stored[SYNC_PREFS_KEY] || {});
     // Épingles : union des deux appareils, bornée aux streamers qui existent.
     const knownIds = new Set(streamers.map((streamer) => streamer?.id).filter(Boolean));
@@ -134,6 +139,9 @@ async function pullFromSync(meta) {
     }
     if (JSON.stringify(preferences) !== JSON.stringify(localStored[PREFERENCES_KEY] || {})) {
       await PreferenceStore.set(preferences);
+    }
+    if (JSON.stringify(tombstones) !== JSON.stringify(localStored[SYNC_REMOVED_KEY] || [])) {
+      await chrome.storage.local.set({ [SYNC_REMOVED_KEY]: tombstones });
     }
     if (JSON.stringify(pinnedIds) !== JSON.stringify(localStored.betaPinnedIds || [])) {
       await chrome.storage.local.set({ betaPinnedIds: pinnedIds });
@@ -152,7 +160,7 @@ async function pullFromSync(meta) {
 async function clearSync() {
   const stored = await chrome.storage.sync.get(null);
   const keys = Object.keys(stored).filter(
-    (key) => key === SYNC_META_KEY || key === SYNC_PREFS_KEY || key === SYNC_PINNED_KEY || key.startsWith(SYNC_STREAMERS_PREFIX),
+    (key) => key === SYNC_META_KEY || key === SYNC_PREFS_KEY || key === SYNC_PINNED_KEY || key === SYNC_REMOVED_KEY || key.startsWith(SYNC_STREAMERS_PREFIX),
   );
   if (keys.length) await chrome.storage.sync.remove(keys);
   await chrome.storage.local.remove(SYNC_STATUS_KEY);
@@ -172,6 +180,17 @@ export function initSync() {
         // Le réglage vient de repasser à faux : ne plus rien laisser dans le nuage.
         if (changes[PREFERENCES_KEY]?.oldValue?.crossDeviceSync === true) await clearSync();
         return;
+      }
+      if (changes[STORAGE_KEYS.STREAMERS]) {
+        const stored = await chrome.storage.local.get(SYNC_REMOVED_KEY);
+        const next = recordRemovals(
+          stored[SYNC_REMOVED_KEY],
+          changes[STORAGE_KEYS.STREAMERS].oldValue,
+          changes[STORAGE_KEYS.STREAMERS].newValue,
+        );
+        if (JSON.stringify(next) !== JSON.stringify(stored[SYNC_REMOVED_KEY] || [])) {
+          await chrome.storage.local.set({ [SYNC_REMOVED_KEY]: next });
+        }
       }
       schedulePush();
     })().catch(warnWith("[Sync] réaction locale"));

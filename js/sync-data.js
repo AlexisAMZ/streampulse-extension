@@ -8,6 +8,9 @@ export const SYNC_PREFS_KEY = "sp:sync:prefs";
 export const SYNC_STREAMERS_PREFIX = "sp:sync:streamers.";
 export const SYNC_PINNED_KEY = "sp:sync:pinned";
 export const SYNC_STATUS_KEY = "sp:sync:status";
+export const SYNC_REMOVED_KEY = "sp:sync:removed";
+/** Pierres tombales gardées : assez pour rattraper un appareil resté éteint, sous les 8 Ko par clé. */
+export const MAX_TOMBSTONES = 120;
 
 /** Chrome refuse plus de 8 192 octets par clé : budget prudent pour le JSON d'une tranche. */
 export const CHUNK_BUDGET_BYTES = 7000;
@@ -34,20 +37,55 @@ export function chunkForSync(streamers, budget = CHUNK_BUDGET_BYTES) {
 }
 
 /**
- * Fusion des listes : union par identifiant. En cas de doublon, l'appareil
- * qui fusionne garde sa version — elle repartira vers l'autre à la poussée
- * suivante de l'état fusionné.
+ * Fusion des listes : union par identifiant, moins les streamers supprimés
+ * (pierres tombales). Sans elles, l'appareil qui n'a pas encore vu la
+ * suppression remettait le streamer dans le nuage. En cas de doublon,
+ * l'appareil qui fusionne garde sa version.
  */
-export function mergeStreamers(local, remote) {
-  const merged = Array.isArray(local) ? [...local] : [];
+export function mergeStreamers(local, remote, tombstones = []) {
+  const removed = new Set((Array.isArray(tombstones) ? tombstones : []).map((entry) => entry?.id).filter(Boolean));
+  const merged = (Array.isArray(local) ? local : []).filter((streamer) => !removed.has(streamer?.id));
   const seen = new Set(merged.map((streamer) => streamer?.id).filter(Boolean));
   for (const streamer of Array.isArray(remote) ? remote : []) {
-    if (streamer?.id && !seen.has(streamer.id)) {
+    if (streamer?.id && !seen.has(streamer.id) && !removed.has(streamer.id)) {
       seen.add(streamer.id);
       merged.push(streamer);
     }
   }
   return merged;
+}
+
+/**
+ * Met à jour les pierres tombales après une écriture locale de la liste :
+ * un id disparu est noté, un id revenu est oublié. Les plus anciennes
+ * sortent quand la liste dépasse MAX_TOMBSTONES.
+ */
+export function recordRemovals(tombstones, before, after, now = Date.now()) {
+  const ids = (list) => new Set((Array.isArray(list) ? list : []).map((streamer) => streamer?.id).filter(Boolean));
+  const beforeIds = ids(before);
+  const afterIds = ids(after);
+  const kept = (Array.isArray(tombstones) ? tombstones : []).filter((entry) => entry?.id && !afterIds.has(entry.id));
+  const known = new Set(kept.map((entry) => entry.id));
+  for (const id of beforeIds) {
+    if (!afterIds.has(id) && !known.has(id)) kept.push({ id, at: now });
+  }
+  return kept.sort((a, b) => (Number(b.at) || 0) - (Number(a.at) || 0)).slice(0, MAX_TOMBSTONES);
+}
+
+/**
+ * Tombstones après une tirée : celles du nuage, plus les locales pas encore
+ * poussées. Un id que le nuage porte vivant a été ré-ajouté depuis : on l'oublie.
+ */
+export function mergeTombstones(local, remote, remoteStreamers) {
+  const remoteLive = new Set((Array.isArray(remoteStreamers) ? remoteStreamers : []).map((streamer) => streamer?.id).filter(Boolean));
+  const merged = new Map();
+  for (const entry of Array.isArray(local) ? local : []) {
+    if (entry?.id && !remoteLive.has(entry.id)) merged.set(entry.id, entry);
+  }
+  for (const entry of Array.isArray(remote) ? remote : []) {
+    if (entry?.id) merged.set(entry.id, entry);
+  }
+  return [...merged.values()].sort((a, b) => (Number(b.at) || 0) - (Number(a.at) || 0)).slice(0, MAX_TOMBSTONES);
 }
 
 /** Préférences qui restent propres à chaque appareil, même en synchro. */
