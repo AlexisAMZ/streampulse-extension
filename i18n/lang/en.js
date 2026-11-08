@@ -1058,7 +1058,7 @@ export default {
       "preventTabDiscardTitle": "Prevent tab discarding",
       "preventTabDiscardDescription": "Stops Chrome from putting your Twitch and Kick channel tabs to sleep, so points and Drops keep coming.",
       "fastForwardTitle": "Fast-forward button",
-      "fastForwardDescription": "Add a button to instantly catch up to live when the stream lags behind.",
+      "fastForwardDescription": "Adds a button that jumps to the live edge of the video buffer. It does not lower Twitch's own delay, and on a slow connection the video may stutter after the jump.",
       "communityBadgeTitle": "Community badge",
       "betaLabel": "beta",
       "saved": "Setting saved",

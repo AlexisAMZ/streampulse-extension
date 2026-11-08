@@ -1067,7 +1067,7 @@ export default {
       "preventTabDiscardTitle": "Impedisci la sospensione della scheda",
       "preventTabDiscardDescription": "Impedisce a Chrome di sospendere le tue schede dei canali Twitch e Kick, così punti e Drop continuano ad arrivare.",
       "fastForwardTitle": "Pulsante di avanzamento veloce",
-      "fastForwardDescription": "Aggiunge un pulsante al player di Twitch e Kick per tornare al live quando il video è rimasto indietro.",
+      "fastForwardDescription": "Aggiunge un pulsante che salta alla fine del buffer video per tornare al live. Non riduce il ritardo di Twitch e, con una connessione lenta, il video può scattare dopo il salto.",
       "communityBadgeTitle": "Badge della comunità",
       "betaLabel": "beta",
       "saved": "Impostazione salvata",

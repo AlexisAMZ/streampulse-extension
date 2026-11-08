@@ -1076,7 +1076,7 @@ export default {
       "preventTabDiscardTitle": "Не давать вкладке засыпать",
       "preventTabDiscardDescription": "Не даёт Chrome усыплять твои вкладки каналов Twitch и Kick, чтобы баллы и Drops продолжали капать.",
       "fastForwardTitle": "Кнопка перемотки",
-      "fastForwardDescription": "Добавляет в плеер Twitch и Kick кнопку, чтобы догнать прямой эфир, когда видео отстаёт.",
+      "fastForwardDescription": "Добавляет кнопку, которая перескакивает в конец видеобуфера, чтобы догнать прямой эфир. Она не уменьшает собственную задержку Twitch, а при медленном соединении после прыжка видео может подтормаживать.",
       "communityBadgeTitle": "Значок сообщества",
       "betaLabel": "бета",
       "saved": "Настройка сохранена",

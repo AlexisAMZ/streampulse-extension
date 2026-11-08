@@ -1058,7 +1058,7 @@ export default {
       "preventTabDiscardTitle": "Tab-Ruhezustand verhindern",
       "preventTabDiscardDescription": "Verhindert, dass Chrome deine Twitch- und Kick-Kanal-Tabs in den Ruhezustand versetzt, damit Punkte und Drops weiter reinkommen.",
       "fastForwardTitle": "Schnellvorlauf-Schaltfläche",
-      "fastForwardDescription": "Fügt dem Twitch- und Kick-Player eine Schaltfläche hinzu, um wieder live zu sein, wenn das Video hinterherhängt.",
+      "fastForwardDescription": "Fügt eine Schaltfläche hinzu, die zum Live-Ende des Videopuffers springt. Sie senkt nicht die Verzögerung von Twitch selbst, und bei langsamer Verbindung kann das Video nach dem Sprung ruckeln.",
       "communityBadgeTitle": "Community-Abzeichen",
       "betaLabel": "Beta",
       "saved": "Einstellung gespeichert",

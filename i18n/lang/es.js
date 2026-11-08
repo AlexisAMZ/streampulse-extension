@@ -1067,7 +1067,7 @@ export default {
       "preventTabDiscardTitle": "Evitar la suspensión de pestañas",
       "preventTabDiscardDescription": "Evita que Chrome suspenda tus pestañas de canal de Twitch y Kick, para que los puntos y los Drops sigan sumando.",
       "fastForwardTitle": "Botón de avance rápido",
-      "fastForwardDescription": "Añade un botón al reproductor de Twitch y Kick para alcanzar el directo cuando el vídeo se ha retrasado.",
+      "fastForwardDescription": "Añade un botón que salta al final del búfer de vídeo para ponerte al día con el directo. No reduce el retraso propio de Twitch, y con una conexión lenta el vídeo puede ir a tirones tras el salto.",
       "communityBadgeTitle": "Insignia comunitaria",
       "betaLabel": "beta",
       "saved": "Ajuste guardado",

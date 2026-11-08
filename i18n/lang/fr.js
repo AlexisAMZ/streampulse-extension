@@ -1067,7 +1067,7 @@ export default {
       "preventTabDiscardTitle": "Empêcher la mise en veille de l'onglet",
       "preventTabDiscardDescription": "Empêche Chrome de mettre en veille tes onglets de chaîne Twitch et Kick, pour que points et Drops continuent de tomber.",
       "fastForwardTitle": "Bouton d'avance rapide",
-      "fastForwardDescription": "Ajoute un bouton au lecteur Twitch et Kick pour rattraper le direct quand la vidéo a pris du retard.",
+      "fastForwardDescription": "Ajoute un bouton qui saute à la fin du tampon vidéo pour rattraper le direct. Il ne réduit pas le délai propre à Twitch, et sur une connexion lente la vidéo peut saccader après le saut.",
       "communityBadgeTitle": "Badge communautaire",
       "betaLabel": "bêta",
       "saved": "Réglage enregistré",

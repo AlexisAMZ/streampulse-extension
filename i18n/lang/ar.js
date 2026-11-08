@@ -1094,7 +1094,7 @@ export default {
       "preventTabDiscardTitle": "منع تجميد التبويبات",
       "preventTabDiscardDescription": "يمنع Chrome من تجميد تبويبات قنوات Twitch وKick الخاصة بك، لتستمر النقاط وDrops في التراكم.",
       "fastForwardTitle": "زر التقديم السريع",
-      "fastForwardDescription": "أضف زرًا للّحاق بالبث المباشر فورًا عندما يتأخر البث.",
+      "fastForwardDescription": "يضيف زرًا ينتقل إلى نهاية مخزن الفيديو المؤقت للّحاق بالبث المباشر. لا يقلّل تأخير Twitch نفسه، وقد يتقطع الفيديو بعد القفز إذا كان الاتصال بطيئًا.",
       "communityBadgeTitle": "شارة المجتمع",
       "betaLabel": "تجريبي",
       "saved": "تم حفظ الإعداد",

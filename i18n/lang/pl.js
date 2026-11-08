@@ -1076,7 +1076,7 @@ export default {
       "preventTabDiscardTitle": "Nie usypiaj karty",
       "preventTabDiscardDescription": "Nie pozwala Chrome usypiać twoich kart kanałów Twitcha i Kicka, żeby punkty i Drops dalej wpadały.",
       "fastForwardTitle": "Przycisk przewijania do przodu",
-      "fastForwardDescription": "Dodaje przycisk do odtwarzacza Twitcha i Kicka, żeby nadrobić transmisję, gdy wideo ma opóźnienie.",
+      "fastForwardDescription": "Dodaje przycisk, który przeskakuje na koniec bufora wideo, by dogonić transmisję na żywo. Nie skraca opóźnienia samego Twitcha, a przy wolnym łączu obraz może się zacinać po skoku.",
       "communityBadgeTitle": "Odznaka społeczności",
       "betaLabel": "beta",
       "saved": "Ustawienie zapisane",

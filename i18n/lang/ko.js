@@ -1049,7 +1049,7 @@ export default {
       "preventTabDiscardTitle": "탭 절전 방지",
       "preventTabDiscardDescription": "Chrome이 Twitch와 Kick 채널 탭을 절전 상태로 만들지 않게 해 포인트와 드롭이 계속 쌓이게 합니다.",
       "fastForwardTitle": "빨리 감기 버튼",
-      "fastForwardDescription": "동영상이 지연되었을 때 라이브를 따라잡을 수 있도록 Twitch 및 Kick 플레이어에 버튼을 추가합니다.",
+      "fastForwardDescription": "영상 버퍼의 끝으로 이동해 라이브를 따라잡는 버튼을 추가합니다. Twitch 자체의 지연은 줄여 주지 않으며, 연결이 느리면 이동 후 영상이 끊길 수 있습니다.",
       "communityBadgeTitle": "커뮤니티 배지",
       "betaLabel": "베타",
       "saved": "설정이 저장되었습니다",

@@ -1049,7 +1049,7 @@ export default {
       "preventTabDiscardTitle": "タブのスリープを防ぐ",
       "preventTabDiscardDescription": "Chrome が Twitch と Kick のチャンネルタブをスリープさせないようにし、ポイントとドロップを貯め続けます。",
       "fastForwardTitle": "早送りボタン",
-      "fastForwardDescription": "映像が遅れたときにライブに追いつくボタンを、Twitch と Kick のプレーヤーに追加します。",
+      "fastForwardDescription": "動画バッファの末尾へジャンプして、ライブに追いつくボタンを追加します。Twitch自体の遅延は短くならず、回線が遅いとジャンプ後に映像がカクつくことがあります。",
       "communityBadgeTitle": "コミュニティバッジ",
       "betaLabel": "ベータ",
       "saved": "設定を保存しました",

@@ -1058,7 +1058,7 @@ export default {
       "preventTabDiscardTitle": "Sekmenin uykuya geçmesini engelle",
       "preventTabDiscardDescription": "Chrome'un Twitch ve Kick kanal sekmelerini uykuya almasını engeller, böylece puanlar ve Drops gelmeye devam eder.",
       "fastForwardTitle": "İleri sarma düğmesi",
-      "fastForwardDescription": "Video geride kaldığında canlı yayına yetişmek için Twitch ve Kick oynatıcısına bir düğme ekler.",
+      "fastForwardDescription": "Canlı yayına yetişmek için video arabelleğinin sonuna atlayan bir düğme ekler. Twitch'in kendi gecikmesini azaltmaz; bağlantı yavaşsa atlamadan sonra video takılabilir.",
       "communityBadgeTitle": "Topluluk rozeti",
       "betaLabel": "beta",
       "saved": "Ayar kaydedildi",

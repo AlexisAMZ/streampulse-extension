@@ -1067,7 +1067,7 @@ export default {
       "preventTabDiscardTitle": "Impedir a suspensão da aba",
       "preventTabDiscardDescription": "Impede o Chrome de suspender suas abas de canal da Twitch e da Kick, para os pontos e os Drops continuarem caindo.",
       "fastForwardTitle": "Botão de avanço rápido",
-      "fastForwardDescription": "Adiciona um botão ao player da Twitch e da Kick para alcançar a live quando o vídeo atrasa.",
+      "fastForwardDescription": "Adiciona um botão que salta para o fim do buffer de vídeo para alcançar a live. Ele não reduz o delay da própria Twitch e, em uma conexão lenta, o vídeo pode travar um pouco depois do salto.",
       "communityBadgeTitle": "Emblema da comunidade",
       "betaLabel": "beta",
       "saved": "Configuração salva",
