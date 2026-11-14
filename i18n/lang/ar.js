@@ -844,7 +844,14 @@ export default {
       "accentLcd": "أخضر LCD",
       "accentOcean": "محيطي",
       "accentEmber": "جمري",
-      "accentCrimson": "قرمزي"
+      "accentCrimson": "قرمزي",
+      "accentGta6": "GTA VI"
+    },
+    "gta6": {
+      "countdownLabel": "الإصدار خلال · منتصف الليل بالتوقيت المحلي",
+      "days": "{{days}} ي",
+      "outLabel": "فايس سيتي بانتظارك",
+      "outTitle": "متوفر الآن!"
     },
     "referralAsk": {
       "title": "ادعُ صديقًا",

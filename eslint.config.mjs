@@ -118,12 +118,14 @@ const ES_MODULES = [
   "js/custom-sounds.js",
   "js/popup-category-picker.js",
   "js/popup-profile-card.js",
+  "js/gta6-launch.js",
+  "js/theme-gta6.js",
   "eslint.config.mjs",
 ];
 
 export default [
   {
-    ignores: ["js/vendor/**", "node_modules/**", "coverage/**", "stream-247/**", "DevKit/**", "promo/**", "localization/.cache/**"],
+    ignores: ["js/vendor/**", "node_modules/**", "coverage/**", "stream-247/**", "DevKit/**", "promo/**", "localization/.cache/**", "scripts/dev/.local/**"],
   },
   js.configs.recommended,
   {

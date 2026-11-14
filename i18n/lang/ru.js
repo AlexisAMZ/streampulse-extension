@@ -828,7 +828,14 @@ export default {
       "accentLcd": "Зелёный LCD",
       "accentOcean": "Океан",
       "accentEmber": "Жар",
-      "accentCrimson": "Малиновый"
+      "accentCrimson": "Малиновый",
+      "accentGta6": "GTA VI"
+    },
+    "gta6": {
+      "countdownLabel": "До выхода · полночь по местному времени",
+      "days": "{{days}} д",
+      "outLabel": "Вайс-Сити ждёт",
+      "outTitle": "Уже в продаже!"
     },
     "referralAsk": {
       "title": "Пригласи друга",

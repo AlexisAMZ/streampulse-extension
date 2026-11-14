@@ -1,0 +1,177 @@
+/* Thème événement « GTA VI » (sortie le 19 novembre 2026) : un écran de chargement
+   de nuit. Actif avec data-accent="gta6" sur <body>, quel que soit le thème clair ou
+   sombre choisi : l'univers est la nuit néon de Vice City.
+   Visuels officiels de rockstargames.com/VI rangés dans images/gta6/ ; ils ne sont
+   chargés que si ce thème est actif. Compte à rebours : js/theme-gta6.js. */
+
+body[data-accent="gta6"] {
+  color-scheme: dark;
+
+  --gta-night: #0c0620;
+  --gta-night-2: #170b33;
+  --gta-night-3: #23104a;
+  --gta-edge: #12061f;
+  --gta-pink: #ff3ea5;
+  --gta-pink-strong: #e0207f;
+  --gta-cyan: #3fd0ff;
+
+  --violet: #e0207f;
+  --violet-strong: #b8136a;
+  --violet-soft: rgba(255, 62, 165, 0.2);
+  --violet-line: rgba(255, 120, 200, 0.55);
+  --violet-text: #ff8fd0;
+
+  --lcd: #3fd0ff;
+  --lcd-ink: #04131c;
+  --lcd-accent: #6fdcff;
+  --lcd-soft: rgba(63, 208, 255, 0.12);
+  --lcd-line: rgba(63, 208, 255, 0.4);
+
+  --bg: var(--gta-night);
+  --surface: var(--gta-night-2);
+  --surface-2: var(--gta-night-3);
+  --line: rgba(255, 140, 220, 0.12);
+  --line-2: rgba(255, 140, 220, 0.22);
+
+  --text: #f6f0ff;
+  --text-2: rgba(246, 240, 255, 0.76);
+  --text-3: rgba(246, 240, 255, 0.6);
+
+  --danger: #ff8a80;
+  --star: #ffd23f;
+  --focus: #6fdcff;
+  --shadow-pop: 0 18px 36px -18px rgba(0, 0, 0, 0.8);
+
+  /* Boîtier des Réglages : coque nuit, écrans LCD néon. */
+  --case: #1c0c3e;
+  --case-deep: #0f0526;
+  --lcd-lit: #c4f0ff;
+  --lcd-dim: #7fb3c7;
+
+  background: var(--gta-night);
+}
+html:has(body[data-accent="gta6"]) { background: #0c0620; }
+body[data-accent="gta6"] ::selection { background: var(--gta-pink); color: #fff; }
+body[data-accent="gta6"] * { scrollbar-color: rgba(255, 62, 165, 0.45) transparent; }
+
+/* ── La scène d'accueil : l'écran de chargement ── */
+body[data-accent="gta6"] .stage {
+  --stage-accent-text: #ff8fd0;
+  background: var(--gta-night) url("../images/gta6/night.jpg") left 60px top 4% / 760px auto no-repeat;
+}
+body[data-accent="gta6"] .stage::before { background: linear-gradient(180deg, rgba(12, 6, 32, 0.82), rgba(12, 6, 32, 0) 24%); }
+/* Voile de lecture : gauche sombre pour l'accueil, bas sombre pour la fiche du live. */
+body[data-accent="gta6"] .stage::after {
+  background:
+    linear-gradient(90deg, rgba(12, 6, 32, 0.92) 0%, rgba(12, 6, 32, 0.64) 28%, rgba(12, 6, 32, 0) 46%),
+    linear-gradient(0deg, rgba(12, 6, 32, 0.96) 0%, rgba(12, 6, 32, 0.5) 26%, rgba(12, 6, 32, 0) 46%);
+}
+body[data-accent="gta6"] .stage.is-playing::after { opacity: 1; }
+/* Arabe : l'accueil est à droite, le décor et le voile passent de l'autre côté. */
+[dir="rtl"] body[data-accent="gta6"] .stage { background-position: right 60px top 4%; }
+[dir="rtl"] body[data-accent="gta6"] .stage::after {
+  background:
+    linear-gradient(270deg, rgba(12, 6, 32, 0.92) 0%, rgba(12, 6, 32, 0.64) 28%, rgba(12, 6, 32, 0) 46%),
+    linear-gradient(0deg, rgba(12, 6, 32, 0.96) 0%, rgba(12, 6, 32, 0.5) 26%, rgba(12, 6, 32, 0) 46%);
+}
+
+/* Le live devient une case de l'affiche : inclinée, filet blanc, contour nuit. Image,
+   lecteur Kick et clic restent ceux de la scène. */
+body[data-accent="gta6"] .stage-media {
+  inset: auto;
+  top: 110px;
+  inset-inline-end: 24px;
+  z-index: 0;
+  width: 224px;
+  height: 126px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--gta-night-3);
+  transform: rotate(2.4deg);
+  box-shadow: 0 0 0 3px #fff, 0 0 0 7px var(--gta-edge), 0 18px 30px -10px rgba(0, 0, 0, 0.8);
+}
+[dir="rtl"] body[data-accent="gta6"] .stage-media { transform: rotate(-2.4deg); }
+body[data-accent="gta6"] .stage-media:empty { display: none; }
+body[data-accent="gta6"] .stage-image.is-avatar { opacity: 0.85; }
+body[data-accent="gta6"] .stage-pager { top: 66px; z-index: 3; }
+body[data-accent="gta6"] .stage-pager .icon-button { background: rgba(12, 6, 32, 0.82); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3); }
+
+body[data-accent="gta6"] .greeting-title { font-weight: 900; text-shadow: 0 2px 0 var(--gta-edge), 0 6px 18px rgba(0, 0, 0, 0.6); }
+body[data-accent="gta6"] .greeting-hint { color: #fff; font-weight: 600; text-shadow: 0 1px 3px #000; }
+body[data-accent="gta6"] .feature-sub { color: rgba(255, 255, 255, 0.86); text-shadow: 0 1px 3px #000; }
+
+/* ── Compte à rebours : une étiquette collée en travers du live ── */
+.gta6-count {
+  position: absolute;
+  z-index: 2;
+  top: 196px;
+  inset-inline-end: 196px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 300px;
+  padding-block: 7px 8px;
+  padding-inline: 8px 14px;
+  border-radius: 3px;
+  background: var(--gta-edge);
+  box-shadow: 0 0 0 2px #fff, 0 12px 24px -10px rgba(0, 0, 0, 0.9);
+  color: #fff;
+  transform: rotate(-3.5deg);
+  pointer-events: none;
+}
+.gta6-count[hidden] { display: none; }
+[dir="rtl"] .gta6-count { transform: rotate(3.5deg); }
+.gta6-count-logo { flex: none; width: 54px; height: auto; }
+.gta6-count-text { display: grid; gap: 2px; min-width: 0; line-height: 1; }
+.gta6-count-label { overflow: hidden; color: #9fe6ff; font: 700 10px/1.2 var(--body); text-overflow: ellipsis; white-space: nowrap; }
+.gta6-count-time {
+  color: var(--gta-pink);
+  font: 900 22px/1.05 var(--display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  text-shadow: 0 0 10px rgba(255, 62, 165, 0.55);
+}
+.gta6-count[data-phase="out"] .gta6-count-time { color: #fff; text-shadow: 0 0 12px rgba(63, 208, 255, 0.7); }
+.gta6-count[data-phase="out"] .gta6-count-label { color: #ff8fd0; }
+/* Sans live affiché, rien à recouvrir : l'étiquette remonte à la place de la case. */
+body[data-accent="gta6"] .stage-media:empty ~ .gta6-count,
+body[data-accent="gta6"] .stage[data-state="empty"] .gta6-count { top: 204px; inset-inline-end: 24px; max-width: 270px; }
+
+/* ── Fiche du live, bas de scène ── */
+body[data-accent="gta6"] .watch-button { border-radius: 3px; background: var(--gta-pink); color: #fff; box-shadow: 0 0 0 2px #fff, 0 0 0 5px var(--gta-edge); }
+body[data-accent="gta6"] .watch-button:hover { background: #ff5cb3; }
+body[data-accent="gta6"] .feature-alerts { border-radius: 6px; background: rgba(12, 6, 32, 0.84); }
+body[data-accent="gta6"] .alert-toggle { border-radius: 4px; }
+body[data-accent="gta6"] .alert-toggle[aria-pressed="true"] { background: rgba(255, 62, 165, 0.42); }
+
+/* ── Le reste de l'accueil : nuit néon, lives en collage ── */
+body[data-accent="gta6"] .home { background: linear-gradient(180deg, var(--gta-night) 300px, #120830 100%); }
+body[data-accent="gta6"] .strip-title { color: #fff; font-size: 14px; font-weight: 900; text-shadow: 0 0 10px rgba(255, 62, 165, 0.6); }
+body[data-accent="gta6"] .strip { gap: 14px; padding: 10px 18px 12px; }
+body[data-accent="gta6"] .mini-hit { border-radius: 3px; background: var(--gta-night-3); box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85), 0 0 0 5px var(--gta-edge); }
+body[data-accent="gta6"] .mini:nth-child(odd) .mini-hit { transform: rotate(-1deg); }
+body[data-accent="gta6"] .mini:nth-child(even) .mini-hit { transform: rotate(1deg); }
+body[data-accent="gta6"] .mini.is-selected .mini-hit { box-shadow: 0 0 0 2px #fff, 0 0 0 5px var(--gta-pink), 0 0 18px rgba(255, 62, 165, 0.55); }
+body[data-accent="gta6"] .mini.is-selected .mini-hit::before { display: none; }
+body[data-accent="gta6"] .mini-all .mini-hit { background: var(--gta-night-2); }
+body[data-accent="gta6"] .skeleton-card { border-radius: 3px; }
+body[data-accent="gta6"] .chip,
+body[data-accent="gta6"] .search-trigger,
+body[data-accent="gta6"] .home .segmented,
+body[data-accent="gta6"] .pf-btn { border-radius: 4px; }
+body[data-accent="gta6"] .pf-btn.active { background: var(--gta-pink); color: #fff; }
+body[data-accent="gta6"] .dock { background: #0a041a; box-shadow: inset 0 2px 0 var(--gta-pink), 0 -8px 24px -12px rgba(255, 62, 165, 0.5); }
+body[data-accent="gta6"] .add-field { border-radius: 4px; }
+body[data-accent="gta6"] .add-submit { border-radius: 3px; background: var(--gta-pink-strong); }
+body[data-accent="gta6"] .add-submit:hover { background: var(--gta-pink); }
+body[data-accent="gta6"] .topbar .stat-points svg { color: #6fdcff; }
+
+/* Pastille du sélecteur : le dégradé du logo. */
+.pager-swatch[data-accent="gta6"] { background: linear-gradient(135deg, #3d2bd6 0%, #c11fa8 45%, #ff3d8b 70%, #ff9a3c 100%); }
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-accent="gta6"] .mini-hit,
+  body[data-accent="gta6"] .stage-media,
+  .gta6-count { transition: none; }
+}

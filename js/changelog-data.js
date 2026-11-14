@@ -52,6 +52,46 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.11.14",
+    date: "2026-11-14",
+    title: {
+      "fr": "Le thème GTA VI est là",
+      "en": "The GTA VI theme is here",
+      "uk": "Тема GTA VI вже тут",
+      "es": "Llega el tema GTA VI",
+      "pt-BR": "O tema GTA VI chegou",
+      "de": "Das GTA-VI-Thema ist da",
+      "it": "Arriva il tema GTA VI",
+      "pl": "Motyw GTA VI już jest",
+      "tr": "GTA VI teması geldi",
+      "ru": "Тема GTA VI уже здесь",
+      "ja": "GTA VIテーマが登場",
+      "ko": "GTA VI 테마가 왔어요",
+      "ar": "ثيم GTA VI وصل",
+    },
+    changes: [
+      {
+        type: "new",
+        area: "interface",
+        text: {
+          "fr": "Pour la sortie de GTA VI, un thème de nuit à Vice City : l'illustration officielle sur l'accueil, ton live dans une case de l'affiche et un compte à rebours jusqu'à minuit le 19 novembre, à ton heure locale. Offert à tous jusqu'au 30 novembre : Réglages, Profil et comptes, Couleur de l'interface.",
+          "en": "For GTA VI's launch, a Vice City night theme: the official artwork on the home screen, your live in a poster panel and a countdown to midnight on November 19, in your local time. Free for everyone until November 30: Settings, Profile and accounts, Interface colour.",
+          "uk": "До виходу GTA VI — нічна тема Вайс-Сіті: офіційна ілюстрація на головному екрані, ваш стрім у рамці постера і зворотний відлік до опівночі 19 листопада за вашим місцевим часом. Безкоштовно для всіх до 30 листопада: Налаштування, Профіль і акаунти, Колір інтерфейсу.",
+          "es": "Para el lanzamiento de GTA VI, un tema nocturno de Vice City: la ilustración oficial en la pantalla de inicio, tu directo en una viñeta del póster y una cuenta atrás hasta la medianoche del 19 de noviembre, en tu hora local. Gratis para todos hasta el 30 de noviembre: Ajustes, Perfil y cuentas, Color de la interfaz.",
+          "pt-BR": "Para o lançamento de GTA VI, um tema noturno de Vice City: a ilustração oficial na tela inicial, sua live num quadro do pôster e uma contagem regressiva até a meia-noite de 19 de novembro, no seu horário local. Grátis para todos até 30 de novembro: Configurações, Perfil e contas, Cor da interface.",
+          "de": "Zum Release von GTA VI gibt es ein Vice-City-Nachtthema: das offizielle Artwork auf dem Startbildschirm, dein Live in einem Posterfeld und einen Countdown bis Mitternacht am 19. November, in deiner Ortszeit. Bis zum 30. November für alle kostenlos: Einstellungen, Profil und Konten, Farbe der Oberfläche.",
+          "it": "Per l'uscita di GTA VI, un tema notturno di Vice City: l'illustrazione ufficiale nella schermata iniziale, la tua live in un riquadro del poster e un conto alla rovescia fino alla mezzanotte del 19 novembre, nella tua ora locale. Gratis per tutti fino al 30 novembre: Impostazioni, Profilo e account, Colore dell'interfaccia.",
+          "pl": "Na premierę GTA VI — nocny motyw Vice City: oficjalna ilustracja na ekranie głównym, twój live w kadrze plakatu i odliczanie do północy 19 listopada według twojego czasu lokalnego. Za darmo dla wszystkich do 30 listopada: Ustawienia, Profil i konta, Kolor interfejsu.",
+          "tr": "GTA VI'ın çıkışı için Vice City gece teması: ana ekranda resmî illüstrasyon, posterin bir karesinde canlı yayının ve yerel saatinle 19 Kasım gece yarısına geri sayım. 30 Kasım'a kadar herkese ücretsiz: Ayarlar, Profil ve hesaplar, Arayüz rengi.",
+          "ru": "К релизу GTA VI — ночная тема Вайс-Сити: официальная иллюстрация на главном экране, твой стрим в кадре постера и обратный отсчёт до полуночи 19 ноября по твоему местному времени. Бесплатно для всех до 30 ноября: Настройки, Профиль и аккаунты, Цвет интерфейса.",
+          "ja": "GTA VIの発売を記念して、バイスシティの夜テーマが登場。ホーム画面に公式イラスト、配信はポスターのコマの中に、そして現地時間で11月19日深夜0時までのカウントダウン。11月30日まで全員無料：設定、プロフィールとアカウント、インターフェースの色。",
+          "ko": "GTA VI 출시를 맞아 바이스 시티 밤 테마가 추가됐어요. 홈 화면에 공식 일러스트, 포스터 칸 안에 라이브, 현지 시간 기준 11월 19일 자정까지 카운트다운. 11월 30일까지 모두에게 무료: 설정, 프로필 및 계정, 인터페이스 색상.",
+          "ar": "بمناسبة إصدار GTA VI، ثيم ليلي لفايس سيتي: الرسم الرسمي في الشاشة الرئيسية، بثّك داخل إطار من الملصق، وعدّ تنازلي حتى منتصف ليل 19 نوفمبر بتوقيتك المحلي. مجاني للجميع حتى 30 نوفمبر: الإعدادات، الملف الشخصي والحسابات، لون الواجهة.",
+        },
+      },
+    ],
+  },
+  {
     version: "26.11.8",
     date: "2026-11-08",
     title: {

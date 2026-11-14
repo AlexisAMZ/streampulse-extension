@@ -812,7 +812,14 @@ export default {
       "accentLcd": "LCD yeşili",
       "accentOcean": "Okyanus",
       "accentEmber": "Kor",
-      "accentCrimson": "Kızıl"
+      "accentCrimson": "Kızıl",
+      "accentGta6": "GTA VI"
+    },
+    "gta6": {
+      "countdownLabel": "Çıkışa · yerel saatle gece yarısı",
+      "days": "{{days}} g",
+      "outLabel": "Vice City seni bekliyor",
+      "outTitle": "Şimdi çıktı!"
     },
     "referralAsk": {
       "title": "Bir arkadaşını davet et",

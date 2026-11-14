@@ -804,7 +804,14 @@ export default {
       "accentLcd": "LCD 그린",
       "accentOcean": "오션",
       "accentEmber": "엠버",
-      "accentCrimson": "크림슨"
+      "accentCrimson": "크림슨",
+      "accentGta6": "GTA VI"
+    },
+    "gta6": {
+      "countdownLabel": "출시까지 · 현지 시간 자정",
+      "days": "{{days}}일",
+      "outLabel": "바이스 시티가 기다려요",
+      "outTitle": "지금 출시!"
     },
     "referralAsk": {
       "title": "친구 추천하기",

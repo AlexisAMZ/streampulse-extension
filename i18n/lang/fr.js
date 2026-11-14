@@ -820,7 +820,14 @@ export default {
       "accentLcd": "Vert LCD",
       "accentOcean": "Océan",
       "accentEmber": "Braise",
-      "accentCrimson": "Cramoisi"
+      "accentCrimson": "Cramoisi",
+      "accentGta6": "GTA VI"
+    },
+    "gta6": {
+      "countdownLabel": "Sortie dans · minuit, heure locale",
+      "days": "{{days}} j",
+      "outLabel": "Vice City t'attend",
+      "outTitle": "Disponible !"
     },
     "referralAsk": {
       "title": "Parraine un ami",

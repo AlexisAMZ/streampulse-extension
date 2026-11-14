@@ -812,7 +812,14 @@ export default {
       "accentLcd": "LCD green",
       "accentOcean": "Ocean",
       "accentEmber": "Ember",
-      "accentCrimson": "Crimson"
+      "accentCrimson": "Crimson",
+      "accentGta6": "GTA VI"
+    },
+    "gta6": {
+      "countdownLabel": "Out in · midnight, local time",
+      "days": "{{days}} d",
+      "outLabel": "Vice City awaits",
+      "outTitle": "Out now!"
     },
     "referralAsk": {
       "title": "Refer a friend",
