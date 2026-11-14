@@ -999,12 +999,14 @@ button.pts-row:focus-visible { background: var(--surface-2); }
 .camp-row { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; align-items: center; gap: 10px; width: 100%; padding: 8px 6px; border: 0; background: transparent; box-shadow: inset 0 1px 0 var(--line); color: var(--text); text-align: start; cursor: pointer; }
 .camp-row:hover,
 .camp-row:focus-visible { background: var(--surface-2); }
-li.has-camp-auto { display: flex; align-items: center; gap: 4px; }
-li.has-camp-auto .camp-row { flex: 1; min-width: 0; }
-.camp-auto { flex: none; display: inline-grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%; background: var(--violet-soft, rgba(145, 70, 255, 0.18)); box-shadow: inset 0 0 0 1px var(--violet-line); color: var(--violet); cursor: pointer; transition: background var(--dur-fast) ease, color var(--dur-fast) ease; }
-.camp-auto svg { width: 12px; height: 12px; }
+li.has-camp-auto { display: flex; flex-direction: column; gap: 6px; padding: 0 0 8px; box-shadow: inset 0 1px 0 var(--line); }
+li.has-camp-auto .camp-row { box-shadow: none; }
+.camp-auto { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 30px; margin: 0 6px; padding: 0 10px; border: 0; border-radius: 9px; background: var(--violet-soft, rgba(145, 70, 255, 0.18)); box-shadow: inset 0 0 0 1px var(--violet-line); color: var(--text); font-size: 11.5px; font-weight: 800; cursor: pointer; transition: background var(--dur-fast) ease, box-shadow var(--dur-fast) ease; }
+.camp-auto svg { width: 11px; height: 11px; color: var(--violet); }
 .camp-auto:hover, .camp-auto:focus-visible, .camp-auto.is-on { background: var(--violet, #9146ff); box-shadow: none; color: #fff; }
-.camp-auto.is-queued { background: var(--violet-soft, rgba(145, 70, 255, 0.18)); box-shadow: inset 0 0 0 1px var(--violet); color: var(--violet); }
+.camp-auto:hover svg, .camp-auto:focus-visible svg, .camp-auto.is-on svg { color: #fff; }
+.camp-auto.is-queued { background: var(--surface); box-shadow: inset 0 0 0 1px var(--violet-line); color: var(--text); }
+.camp-auto.is-queued svg { color: var(--violet); }
 .camp-row.is-mine { border-radius: 10px; background: var(--violet-soft); box-shadow: inset 0 0 0 1px var(--violet-line); }
 .camp-box { width: 34px; height: 44px; overflow: hidden; border-radius: 6px; background: linear-gradient(160deg, var(--violet), var(--surface-2)); }
 .camp-box img { width: 100%; height: 100%; object-fit: cover; }

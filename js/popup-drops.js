@@ -363,7 +363,7 @@ function isFarmable(campaign, now) {
     && (!campaign.drops || campaign.drops.some((drop) => drop.minutes > 0));
 }
 
-/** Bouton rond au bout de la ligne : lance (▶), met en file (horloge) ou retire la campagne du mode auto. */
+/** Barre sous la ligne, comme sur les badges : lance (▶), met en file (horloge) ou retire la campagne du mode auto. */
 function campaignAutoButton(campaign, now) {
   if (!isFarmable(campaign, now)) return null;
   const id = dropJobId(campaign);
@@ -377,6 +377,8 @@ function campaignAutoButton(campaign, now) {
     : state === "queued"
       ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>'
       : '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>';
+  // Même libellé que sur les badges : on voit tout de suite ce que fait le bouton.
+  button.append(el("span", null, t(state === "running" ? "popup.drops.badgeAutoOn" : state === "queued" ? "popup.drops.badgeAutoQueued" : "popup.drops.badgeAuto")));
   const label = t(state === "running" ? "popup.drops.campAutoOn" : state === "queued" ? "popup.drops.campAutoQueued" : "popup.drops.campAuto", { game: campaign.game });
   button.title = label;
   button.setAttribute("aria-label", label);
