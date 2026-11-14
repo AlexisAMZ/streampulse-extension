@@ -167,8 +167,8 @@ body[data-accent="gta6"] .add-submit { border-radius: 3px; background: var(--gta
 body[data-accent="gta6"] .add-submit:hover { background: var(--gta-pink); }
 body[data-accent="gta6"] .topbar .stat-points svg { color: #6fdcff; }
 
-/* Pastille du sélecteur : le dégradé du logo. */
-.pager-swatch[data-accent="gta6"] { background: linear-gradient(135deg, #3d2bd6 0%, #c11fa8 45%, #ff3d8b 70%, #ff9a3c 100%); }
+/* Bouton du sélecteur : le logo officiel sur fond de nuit. */
+.pager-swatch[data-accent="gta6"] { background: #12061f; }
 
 @media (prefers-reduced-motion: reduce) {
   body[data-accent="gta6"] .mini-hit,

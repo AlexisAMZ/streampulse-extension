@@ -5,10 +5,10 @@
 // live terminé, badge gagné ou onglet figé sont repris sans attendre l'alarme
 // des Drops. Les Drops prêts sont récupérés par l'alarme habituelle.
 
-import { BADGE_ADDED_KEY, BADGE_AUTO_KEY, BADGE_EVENTS_KEY, DROPS_BADGES_KEY, DROPS_PROGRESS_KEY, progressFrom } from "./drops-data.js";
+import { BADGE_ADDED_KEY, BADGE_AUTO_KEY, BADGE_EVENTS_KEY, DROPS_BADGES_KEY, DROPS_CAMPAIGNS_KEY, DROPS_HISTORY_KEY, DROPS_PROGRESS_KEY, campaignsFrom, historyFrom, isActiveCampaign, isBadgeCampaign, progressFrom } from "./drops-data.js";
 import { BADGE_AUTO_ALARM } from "./sw/constants.js";
 import { addedFrom, badgesFrom, catalogBadges, eventsFrom } from "./badges-data.js";
-import { addJobs, bannerModel, currentGroup, freeBadgeJobs, normalizeAuto, pruneJobs, removeJob } from "./badge-auto.js";
+import { addJobs, bannerModel, claimedDropIds, currentGroup, dropCampaignJobs, freeBadgeJobs, isCampaignDone, isDropJob, normalizeAuto, pruneJobs, removeDropJobs, removeJob, DROP_JOB_PREFIX } from "./badge-auto.js";
 import { plusActiveFrom } from "./plus.js";
 import { BADGE_FREE_KEY, dayKey, freeAvailable, isFreeRun } from "./badge-free.js";
 import { recordPlusValue } from "./sw/plus-value.js";
@@ -301,10 +301,10 @@ export function createBadgeAuto(deps) {
     // Twitch ne fait progresser qu'un live à la fois : le dire plutôt que laisser croire au farm.
     const elsewhere = deps.audibleElsewhere ? await deps.audibleElsewhere(state.tabId) : false;
     return {
-      title: await t(model.mode === "all" ? "background.badgeAuto.bannerAll" : "background.badgeAuto.bannerTitle"),
+      title: await t(model.dropsOnly ? "background.badgeAuto.bannerDrops" : model.mode === "all" ? "background.badgeAuto.bannerAll" : "background.badgeAuto.bannerTitle"),
       game: model.game,
       badges: model.badges,
-      gameLabel: await t("background.badgeAuto.bannerBadges", { game: model.game, badges: model.badges.join(", ") }),
+      gameLabel: await t(model.dropsOnly ? "background.badgeAuto.bannerDropsGame" : "background.badgeAuto.bannerBadges", { game: model.game, badges: model.badges.join(", ") }),
       progress: model.minutes
         ? {
           ...model.minutes,
@@ -331,6 +331,12 @@ export function createBadgeAuto(deps) {
   async function catalog() {
     const stored = await chrome.storage.local.get([DROPS_BADGES_KEY, BADGE_EVENTS_KEY, BADGE_ADDED_KEY]);
     return catalogBadges(badgesFrom(stored), { status: "live", now: Date.now(), events: eventsFrom(stored).events, added: addedFrom(stored).added });
+  }
+
+  /** Campagnes de jeux à farmer et Drops déjà récupérés (mode « Drops »). */
+  async function dropCatalog() {
+    const stored = await chrome.storage.local.get([DROPS_CAMPAIGNS_KEY, DROPS_HISTORY_KEY, DROPS_PROGRESS_KEY]);
+    return { campaigns: campaignsFrom(stored), claimed: claimedDropIds(historyFrom(stored), progressFrom(stored).drops) };
   }
 
   /** Sonde de lecture de l'onglet ; null quand rien n'est mesurable (page de
@@ -376,21 +382,32 @@ export function createBadgeAuto(deps) {
       await deps.notify("background.notifications.badgeAutoTitle", "background.badgeAuto.stoppedPlus");
       return;
     }
-    const owned = badgesFrom(await chrome.storage.local.get(DROPS_BADGES_KEY)).owned;
+    const owned = [...badgesFrom(await chrome.storage.local.get(DROPS_BADGES_KEY)).owned];
     if (state.mode === "all") state = addJobs(state, freeBadgeJobs(await catalog()));
+    // Mode « Drops » : la file suit les campagnes de jeux ; une campagne entièrement récupérée sort comme un badge obtenu.
+    if (state.drops || state.jobs.some(isDropJob)) {
+      const { campaigns, claimed } = await dropCatalog();
+      const now = Date.now();
+      if (state.drops) state = addJobs(state, dropCampaignJobs(campaigns, { claimed, now, isActive: isActiveCampaign, isBadge: isBadgeCampaign }));
+      for (const campaign of campaigns) if (isCampaignDone(campaign, claimed)) owned.push(`${DROP_JOB_PREFIX}${campaign.id}`);
+    }
     const { state: next, obtained } = pruneJobs(state, { owned, now: Date.now() });
     state = next;
 
-    for (const job of obtained) await deps.notify("background.notifications.badgeAutoTitle", "background.badgeAuto.obtained", { name: job.title });
+    const obtainedBadges = obtained.filter((job) => !isDropJob(job));
+    for (const job of obtained) {
+      if (isDropJob(job)) await deps.notify("background.notifications.dropAutoTitle", "background.badgeAuto.dropsObtained", { name: job.title });
+      else await deps.notify("background.notifications.badgeAutoTitle", "background.badgeAuto.obtained", { name: job.title });
+    }
     // Compteur de valeur : badges farmés par le mode auto, réservé à Plus.
-    if (plus && obtained.length) recordPlusValue({ badges: obtained.length }).catch(() => {});
+    if (plus && obtainedBadges.length) recordPlusValue({ badges: obtainedBadges.length }).catch(() => {});
 
     const group = currentGroup(state);
     if (!group) {
       await chrome.storage.local.remove(BADGE_AUTO_KEY);
       await closeTab(state.tabId);
       syncAlarm(false);
-      if (state.mode === "all" || obtained.length) await deps.notify("background.badgeAuto.doneTitle", "background.badgeAuto.doneMessage");
+      if (state.mode === "all" || state.drops || obtained.length) await deps.notify("background.badgeAuto.doneTitle", state.drops && state.mode !== "all" ? "background.badgeAuto.doneDropsMessage" : "background.badgeAuto.doneMessage");
       return;
     }
 
@@ -430,19 +447,24 @@ export function createBadgeAuto(deps) {
   });
 
   /** Ajoute un badge à la file (ou lance « tous les badges possibles »). */
-  const start = ({ job = null, all = false } = {}) => serial(async () => {
+  const start = ({ job = null, all = false, drops = false } = {}) => serial(async () => {
     // Même garde que l'interface (le volet badges n'apparaît qu'aux abonnés) :
     // un démarrage direct par message ne doit pas contourner la licence.
     const previous = await read();
     if (!(await plusActive())) {
       // Sans Plus : un seul badge, choisi à la main, une fois par jour.
       const badgeId = job?.badgeId || "";
+      if (isDropJob(job)) return { started: false, plusRequired: true };
       const busy = previous?.jobs.some((item) => item.badgeId !== badgeId);
-      if (all || !badgeId || busy || !freeAvailable(await freeRecord(), badgeId)) return { started: false, plusRequired: true };
+      if (all || drops || !badgeId || busy || !freeAvailable(await freeRecord(), badgeId)) return { started: false, plusRequired: true };
       await chrome.storage.local.set({ [BADGE_FREE_KEY]: { day: dayKey(), badgeId } });
     }
-    let state = addJobs(previous, job ? [job] : [], all ? { mode: "all" } : {});
+    let state = addJobs(previous, job ? [job] : [], { ...(all ? { mode: "all" } : {}), ...(drops ? { drops: true } : {}) });
     if (all) state = addJobs(state, freeBadgeJobs(await catalog()));
+    if (drops) {
+      const { campaigns, claimed } = await dropCatalog();
+      state = addJobs(state, dropCampaignJobs(campaigns, { claimed, now: Date.now(), isActive: isActiveCampaign, isBadge: isBadgeCampaign }));
+    }
     if (!state.jobs.length) return { started: false };
     if (!previous || !(await tabExists(state.tabId))) {
       const group = currentGroup(state);
@@ -486,13 +508,13 @@ export function createBadgeAuto(deps) {
   };
 
   /** Retire un badge de la file ; sans badge, arrête tout et ferme l'onglet. */
-  const stop = (badgeId = "") => serial(async () => {
+  const stop = (badgeId = "", { drops = false } = {}) => serial(async () => {
     const state = await read();
     if (!state) return;
-    const next = badgeId ? removeJob(state, badgeId) : null;
+    const next = drops ? removeDropJobs(state) : badgeId ? removeJob(state, badgeId) : null;
     if (next?.jobs.length) {
-      // Retirer un badge ne change pas le mode : « tous » le reprendrait au passage suivant.
-      await write({ ...next, mode: "manual" });
+      // Retirer un badge ne change pas le mode : « tous » le reprendrait au passage suivant ; arrêter les Drops laisse les badges.
+      await write(drops ? next : { ...next, mode: "manual", drops: next.drops && !isDropJob({ badgeId }) });
       return;
     }
     await chrome.storage.local.remove(BADGE_AUTO_KEY);

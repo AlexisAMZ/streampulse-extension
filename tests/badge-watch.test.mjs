@@ -161,3 +161,14 @@ test("newBadgeAlerts : tous avec la portée Plus, gratuits sinon, rien éteint",
   assert.deepEqual(newBadgeAlerts(added, { scope: null, freeAlerts: true, isPaid }).map((b) => b.id), ["a"]);
   assert.deepEqual(newBadgeAlerts(added, { scope: { enabled: true, mode: "games", games: ["Rust"] }, freeAlerts: false, isPaid }), []);
 });
+
+test("un nouveau badge annoncé prévient quand il devient récupérable, une seule fois", () => {
+  const long = badge("neuf", NOW - MIN, NOW + 10 * 24 * HOUR);
+  const announce = (b) => b.id === "neuf";
+  const first = plan([long], { shortMs: 0, announce });
+  assert.deepEqual(kinds(first), ["neuf:start"]);
+  assert.equal(first.alerts[0].fresh, true);
+  assert.deepEqual(plan([long], { shortMs: 0, announce, seen: first.seen }).alerts, [], "déjà signalé");
+  assert.deepEqual(plan([long], { shortMs: 0 }).alerts, [], "sans annonce voulue, rien ne part");
+  assert.deepEqual(plan([long], { shortMs: 0, announce, baseline: true }).alerts, [], "premier passage silencieux");
+});

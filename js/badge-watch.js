@@ -83,15 +83,16 @@ export function isShortEvent(event, maxMs = SHORT_EVENT_MS) {
 }
 
 /**
- * @param {{ badges: object[], watch: object, seen: object, shortMs: number, now: number, baseline?: boolean, scope?: object }} input
+ * @param {{ badges: object[], watch: object, seen: object, shortMs: number, now: number, baseline?: boolean, scope?: object, announce?: (badge: object) => boolean }} input
+ *   `announce` : badge récent que l'alerte « nouveau badge » doit signaler dès qu'il est récupérable.
  *   `scope` : portée StreamPulse+ (déjà vérifiée côté licence) ; un badge de la
  *   portée prévient à son démarrage, s'il a démarré après le réglage.
  *   `baseline` : premier passage, les départs déjà en cours sont notés comme vus sans prévenir.
  *   `shortMs` : durée en dessous de laquelle un badge prévient seul (0 = jamais).
  *   `badges` : sortie de catalogBadges (status, owned, event).
- * @returns {{ alerts: { badge: object, kind: "start" | "ending", endsAt: number }[], seen: object }}
+ * @returns {{ alerts: { badge: object, kind: "start" | "ending", endsAt: number, fresh?: boolean }[], seen: object }}
  */
-export function planBadgeAlerts({ badges, watch, seen, shortMs, now, baseline = false, scope = null }) {
+export function planBadgeAlerts({ badges, watch, seen, shortMs, now, baseline = false, scope = null, announce = null }) {
   const plusScope = normalizeScope(scope);
   const next = {};
   for (const [key, at] of Object.entries(seen)) if (now - at < SEEN_KEEP_MS) next[key] = at;
@@ -103,10 +104,12 @@ export function planBadgeAlerts({ badges, watch, seen, shortMs, now, baseline = 
     const base = `${badge.id}|${event.campaignId}|${event.dropId}`;
     const followed = watch[badge.id];
     const inScope = scopeMatches(plusScope, event.game) && !(event.startsAt > 0 && event.startsAt < plusScope.since);
-    const wantsStart = isShortEvent(event, shortMs) || (followed && !followed.live) || inScope;
+    const announced = typeof announce === "function" && announce(badge) === true;
+    const wantsStart = isShortEvent(event, shortMs) || (followed && !followed.live) || inScope || announced;
     if (wantsStart && !next[`${base}|start`] && alerts.length < MAX_ALERTS_PER_PASS) {
       next[`${base}|start`] = now;
-      if (!baseline) alerts.push({ badge, kind: "start", endsAt: event.endsAt });
+      // `fresh` : nouveau badge annoncé, qui devient récupérable (texte dédié).
+      if (!baseline) alerts.push({ badge, kind: "start", endsAt: event.endsAt, fresh: announced && !followed && !inScope && !isShortEvent(event, shortMs) });
     }
 
     const left = event.endsAt - now;

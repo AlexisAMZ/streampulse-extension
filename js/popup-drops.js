@@ -4,7 +4,7 @@
 // alimente ; tous les calculs viennent de drops-data.js et badges-data.js.
 
 import { t, tp, getCurrentLanguage } from "./i18n.js";
-import { currentGroup, normalizeAuto } from "./badge-auto.js";
+import { claimedDropIds, currentGroup, isCampaignDone, isDropJob, normalizeAuto } from "./badge-auto.js";
 import { BADGE_FREE_KEY, freeAvailable, freeUsedToday } from "./badge-free.js";
 import { BADGE_LIMITED_KEY, BADGE_SCOPE_KEY, BADGE_WATCH_KEY, ENDING_SOON_MS, limitedFrom, toggleWatch, watchFrom } from "./badge-watch.js";
 import { DROP_ALERTS_KEY } from "./drop-alerts.js";
@@ -15,6 +15,7 @@ import {
   DROPS_KEYS,
   BADGE_AUTO_KEY,
   activeRewards,
+  isActiveCampaign,
   isBadgeCampaign,
   bandModel,
   campaignsFrom,
@@ -346,7 +347,62 @@ function campaignRow(campaign, now) {
 
   button.append(box, main, side);
   item.append(button);
+  const auto = campaignAutoButton(campaign, now);
+  if (auto) {
+    item.classList.add("has-camp-auto");
+    item.append(auto);
+  }
   return item;
+}
+
+const dropJobId = (campaign) => `drop:${campaign.id}`;
+
+/** Campagne que le mode auto peut farmer : en cours, compte lié, pas déjà tout récupéré. */
+function isFarmable(campaign, now) {
+  return isActiveCampaign(campaign, now) && campaign.connected !== false && !isCampaignDone(campaign, claimedDropIds(history, progress.drops))
+    && (!campaign.drops || campaign.drops.some((drop) => drop.minutes > 0));
+}
+
+/** Bouton rond au bout de la ligne : lance (▶), met en file (horloge) ou retire la campagne du mode auto. */
+function campaignAutoButton(campaign, now) {
+  if (!isFarmable(campaign, now)) return null;
+  const id = dropJobId(campaign);
+  const state = autoState(id);
+  const on = state !== "off";
+  const button = el("button", on ? `camp-auto is-on${state === "queued" ? " is-queued" : ""}` : "camp-auto");
+  button.type = "button";
+  button.dataset.campAuto = campaign.id;
+  button.innerHTML = state === "running"
+    ? '<span class="badge-auto-dot" aria-hidden="true"></span>'
+    : state === "queued"
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>';
+  const label = t(state === "running" ? "popup.drops.campAutoOn" : state === "queued" ? "popup.drops.campAutoQueued" : "popup.drops.campAuto", { game: campaign.game });
+  button.title = label;
+  button.setAttribute("aria-label", label);
+  button.setAttribute("aria-pressed", on ? "true" : "false");
+  return button;
+}
+
+/** Ajoute une campagne à la file du mode auto, ou l'en retire (le service worker gère l'onglet). */
+function toggleCampaignAuto(campaignId) {
+  const campaign = campaigns.campaigns.find((item) => item.id === campaignId);
+  if (!campaign) return;
+  const id = dropJobId(campaign);
+  if (autoState(id) !== "off") {
+    sendAuto({ type: "badgeAutoStop", badgeId: id });
+    return;
+  }
+  if (!deps.isPlus()) {
+    deps.openPlus();
+    return;
+  }
+  sendAuto({
+    type: "badgeAutoStart",
+    badge: { badgeId: id, title: campaign.name || campaign.game, image: campaign.boxArt, game: campaign.game, gameId: campaign.gameId, campaignId: campaign.id, endsAt: campaign.endsAt },
+  }).then((result) => {
+    if (result?.plusRequired) deps.openPlus();
+  });
 }
 
 function renderCampaigns(now) {
@@ -1060,6 +1116,7 @@ function render() {
   for (const [id, at] of claiming) if (now - at >= CLAIM_PENDING_MS) claiming.delete(id);
   renderChip(now);
   renderPanel(now);
+  renderDropsAutoBar();
 }
 
 function openTab(url) {
@@ -1123,7 +1180,11 @@ function bind() {
     }
     return true;
   };
-  $("drops-campaigns")?.addEventListener("click", openStream);
+  $("drops-campaigns")?.addEventListener("click", (event) => {
+    const auto = event.target.closest("[data-camp-auto]");
+    if (auto) toggleCampaignAuto(auto.dataset.campAuto);
+    else openStream(event);
+  });
   $("drops-progress")?.addEventListener("click", (event) => {
     const button = event.target.closest("[data-claim]");
     if (button && !button.disabled) claim(button);
@@ -1164,6 +1225,7 @@ function bind() {
     });
   }
   $("badges-auto-all")?.addEventListener("click", toggleAutoAll);
+  $("drops-auto-all")?.addEventListener("click", toggleDropsAuto);
   $("badges-limited")?.addEventListener("change", toggleLimited);
   $("drops-campaigns-more")?.addEventListener("click", () => {
     campaignLimit += CAMPAIGN_ROWS;
@@ -1227,6 +1289,28 @@ function renderAutoBar() {
   status.hidden = !group && !free;
   if (group) status.textContent = t("popup.drops.badgeAutoStatus", { count: badgeAuto.jobs.length, game: group.game });
   else if (free) status.textContent = t(freeUsedToday(badgeFree) ? "popup.drops.badgeFreeUsed" : "popup.drops.badgeFreeLeft");
+}
+
+/** Bouton « Récupérer tous les Drops possibles » (StreamPulse+) : la file suit les campagnes de jeux. */
+function renderDropsAutoBar() {
+  const button = $("drops-auto-all");
+  const status = $("drops-auto-status");
+  if (!button || !status) return;
+  const on = badgeAuto?.drops === true;
+  button.textContent = t(on ? "popup.drops.dropAutoAllStop" : "popup.drops.dropAutoAll");
+  button.classList.toggle("is-on", on);
+  button.setAttribute("aria-pressed", on ? "true" : "false");
+  const group = on ? currentGroup(badgeAuto) : null;
+  status.hidden = !group;
+  if (group) status.textContent = t("popup.drops.dropAutoStatus", { count: badgeAuto.jobs.filter(isDropJob).length, game: group.game });
+}
+
+function toggleDropsAuto() {
+  if (!deps.isPlus()) {
+    deps.openPlus();
+    return;
+  }
+  sendAuto(badgeAuto?.drops === true ? { type: "badgeAutoStop", drops: true } : { type: "badgeAutoStart", drops: true });
 }
 
 /** Notification Chrome pour les badges temporaires : réservée à StreamPulse+. */

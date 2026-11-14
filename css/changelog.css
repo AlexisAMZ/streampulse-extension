@@ -26,6 +26,36 @@ html { scrollbar-color: color-mix(in srgb, var(--text-3) 55%, transparent) trans
 .cl-toc-count { color: var(--text-3); font-size: 12.5px; font-variant-numeric: tabular-nums; }
 .cl-toc-link[aria-current="true"] .cl-toc-count { color: inherit; }
 
+/* ── Mot de l'auteur et barre de la cagnotte ── */
+.cl-note { display: grid; gap: 14px; margin-bottom: 8px; padding: 28px 0 32px; box-shadow: inset 0 1px 0 var(--line-2), inset 0 -1px 0 var(--line-2); }
+.cl-note[hidden] { display: none; }
+.cl-note-text { max-width: 62ch; color: var(--text); font-size: 17px; line-height: 1.6; text-wrap: pretty; }
+.cl-meter { display: grid; gap: 10px; max-width: 62ch; margin-top: 6px; }
+.cl-meter[hidden] { display: none; }
+.cl-meter-figures { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.cl-meter-amount { color: var(--text); font-family: var(--display); font-size: 18px; font-weight: 700; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.cl-meter-percent { color: var(--text-2); font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+/* Piste façon écran LCD : dix segments égaux, remplis de gauche à droite (de droite à gauche en RTL). */
+.cl-meter-track { position: relative; height: 18px; overflow: hidden; border-radius: 999px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line-2); }
+.cl-meter-fill { display: block; width: var(--pct, 0%); height: 100%; border-radius: inherit; background: var(--lcd); }
+.cl-meter-track::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0, transparent calc(10% - 2px), var(--surface-2) calc(10% - 2px), var(--surface-2) 10%); pointer-events: none; }
+[dir="rtl"] .cl-meter-track::after { background: repeating-linear-gradient(270deg, transparent 0, transparent calc(10% - 2px), var(--surface-2) calc(10% - 2px), var(--surface-2) 10%); }
+.cl-meter-updated { color: var(--text-3); font-size: 13px; }
+.cl-note-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; margin-top: 8px; }
+.cl-note-cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 46px; padding: 0 20px; border-radius: 12px; background: var(--violet); color: var(--paper); font-weight: 700; font-size: 15px; text-decoration: none; white-space: nowrap; transition: background-color var(--dur-fast) ease; }
+.cl-note-cta:hover { background: var(--violet-strong); }
+.cl-note-cta svg { width: 16px; height: 16px; }
+.cl-note-donate { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.cl-note-donate-label { color: var(--text-2); font-size: 14px; font-weight: 600; }
+.cl-note-btn { display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 16px; border-radius: 12px; background: var(--surface); box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text); font-weight: 700; font-size: 14.5px; text-decoration: none; transition: background-color var(--dur-fast) ease; }
+.cl-note-btn:hover { background: var(--surface-2); }
+.cl-note-btn-icon { width: 16px; height: 16px; }
+.cl-note-cta:focus-visible, .cl-note-btn:focus-visible { outline: 2px solid var(--violet-text); outline-offset: 3px; }
+@media (prefers-reduced-motion: no-preference) {
+  .cl-meter-fill { animation: meter-in 900ms var(--ease-out) 250ms both; }
+  @keyframes meter-in { from { width: 0; } }
+}
+
 /* ── Sections et changements ── */
 .cl-area { padding: 32px 0 6px; box-shadow: inset 0 1px 0 var(--line-2); scroll-margin-top: 20px; }
 .cl-area-title,
@@ -140,6 +170,8 @@ a.cl-thanks-handle:hover { color: var(--violet-text); }
 @media (prefers-reduced-motion: reduce) {
   .cl-history-summary::after,
   .cl-donation-btn,
+  .cl-note-cta,
+  .cl-note-btn,
   .cl-toc-link,
   .cl-toc-label::before { transition: none; }
 }

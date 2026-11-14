@@ -15,7 +15,7 @@ const ACCENTS = [
   { id: "ember", color: "#c2410c", labelKey: "popup.profileCard.accentEmber" },
   { id: "crimson", color: "#be123c", labelKey: "popup.profileCard.accentCrimson" },
   // Thème événement : sortie de GTA VI le 19/11/2026. Offert à tous jusqu'au 30/11 inclus.
-  { id: "gta6", color: "#d81b7a", labelKey: "popup.profileCard.accentGta6", freeUntil: GTA6_EVENT_END.getTime() },
+  { id: "gta6", color: "#d81b7a", labelKey: "popup.profileCard.accentGta6", logo: "../images/gta6/vi.png", freeUntil: GTA6_EVENT_END.getTime() },
 ];
 
 /** Une teinte d'événement est libre pendant sa fenêtre, sinon elle suit StreamPulse+. */
@@ -36,7 +36,14 @@ function safeImage(raw) {
   }
 }
 
+/** Sans choix enregistré : le thème événement pendant sa fenêtre, sinon le violet de StreamPulse. */
+export function defaultAccent(now = Date.now()) {
+  const event = ACCENTS.find((entry) => entry.freeUntil !== undefined && now < entry.freeUntil);
+  return event ? event.id : "violet";
+}
+
 export function normalizeAccent(value) {
+  if (value === undefined || value === null) return defaultAccent();
   return ACCENTS.some((accent) => accent.id === value) ? value : "violet";
 }
 
@@ -150,6 +157,14 @@ export function initProfileCard(options) {
       swatch.classList.toggle("is-locked", locked);
       swatch.title = locked ? `${t(entry.labelKey)} · ${t("popup.plus.badge")}` : t(entry.labelKey);
       swatch.setAttribute("aria-label", swatch.title);
+      if (entry.logo) {
+        // Le vrai logo de l'événement plutôt qu'une pastille de couleur.
+        swatch.classList.add("has-logo");
+        const logo = document.createElement("img");
+        logo.src = entry.logo;
+        logo.alt = "";
+        swatch.append(logo);
+      }
       return swatch;
     }));
   }

@@ -168,14 +168,14 @@ export function handleBadgeAutoStart(request, sender, sendResponse) {
     endsAt: Number(raw.endsAt) || 0,
     addedAt: Date.now(),
   } : null;
-  badgeAuto.start({ job, all: request.all === true })
+  badgeAuto.start({ job, all: request.all === true, drops: request.drops === true })
     .then((result) => sendResponse({ success: true, ...result }))
     .catch((error) => sendResponse({ error: error?.message || String(error) }));
   return true;
 }
 
 export function handleBadgeAutoStop(request, sender, sendResponse) {
-  badgeAuto.stop(String(request.badgeId || ""))
+  badgeAuto.stop(String(request.badgeId || ""), { drops: request.drops === true })
     .then(() => sendResponse({ success: true }))
     .catch((error) => sendResponse({ error: error?.message || String(error) }));
   return true;

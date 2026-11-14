@@ -7,9 +7,11 @@
 // finit le plus tôt passe en premier.
 //
 // État rangé sous BADGE_AUTO_KEY :
-//   { mode: "manual" | "all", jobs: Job[], tabId, gameKey, startedAt }
+//   { mode: "manual" | "all", drops: boolean, jobs: Job[], tabId, gameKey, startedAt }
 //   Job = { badgeId, title, image, game, gameId, campaignId, endsAt, addedAt }
 // « all » : « Récupérer tous les badges possibles », la file se complète seule.
+// `drops` : « Récupérer tous les Drops possibles » (hors badges), indépendant de
+// `all` : la file se complète avec les campagnes de jeux (tâche `drop:<campagne>`).
 
 const isPlainObject = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 const text = (value, max = 120) => (typeof value === "string" ? value.slice(0, max) : "");
@@ -49,6 +51,7 @@ export function normalizeAuto(raw) {
   const jobs = Array.isArray(raw.jobs) ? raw.jobs : raw.badgeId ? [{ ...raw, addedAt: raw.startedAt }] : [];
   return {
     mode: raw.mode === "all" ? "all" : "manual",
+    drops: raw.drops === true,
     jobs: jobs.map(normalizeJob).filter(Boolean),
     tabId: Number.isInteger(raw.tabId) ? raw.tabId : 0,
     // Jeu (clé de groupe) sur lequel l'onglet regarde un live.
@@ -76,10 +79,16 @@ export function jobFromBadge(badge, now = Date.now()) {
 
 /** Ajoute des tâches à la file, sans doublon (la première version d'un badge reste). */
 export function addJobs(state, jobs, patch = {}) {
-  const base = normalizeAuto(state) || { mode: "manual", jobs: [], tabId: 0, gameKey: "", startedAt: 0 };
+  const base = normalizeAuto(state) || { mode: "manual", drops: false, jobs: [], tabId: 0, gameKey: "", startedAt: 0 };
   const known = new Set(base.jobs.map((job) => job.badgeId));
   const added = (jobs || []).map(normalizeJob).filter((job) => job && !known.has(job.badgeId) && known.add(job.badgeId));
   return { ...base, ...patch, jobs: [...base.jobs, ...added] };
+}
+
+/** Arrête le mode « Drops » : ses tâches quittent la file, celles des badges restent. */
+export function removeDropJobs(state) {
+  const base = normalizeAuto(state);
+  return base ? { ...base, drops: false, jobs: base.jobs.filter((job) => !isDropJob(job)) } : null;
 }
 
 export function removeJob(state, badgeId) {
@@ -92,9 +101,53 @@ export function freeBadgeJobs(catalog, now = Date.now()) {
   return (catalog || []).filter((badge) => !badge.owned && !badge.paid && badge.campaign).map((badge) => jobFromBadge(badge, now)).filter(Boolean);
 }
 
+export const DROP_JOB_PREFIX = "drop:";
+export const isDropJob = (job) => String(job?.badgeId || "").startsWith(DROP_JOB_PREFIX);
+
+/** Campagne de jeu → tâche du mode « Drops » ; null sans jeu. */
+export function jobFromCampaign(campaign, now = Date.now()) {
+  if (!campaign?.id || !campaign.game) return null;
+  return normalizeJob({
+    badgeId: `${DROP_JOB_PREFIX}${campaign.id}`,
+    title: campaign.name || campaign.game,
+    image: campaign.boxArt,
+    game: campaign.game,
+    gameId: campaign.gameId,
+    campaignId: campaign.id,
+    endsAt: campaign.endsAt,
+    addedAt: now,
+  });
+}
+
+/** Ids des Drops déjà récupérés : historique, plus les Drops de l'inventaire marqués récupérés. */
+export function claimedDropIds(history = [], drops = []) {
+  const ids = new Set((history || []).map((entry) => entry.dropId).filter(Boolean));
+  for (const drop of drops || []) if (drop.claimed) ids.add(drop.id);
+  return ids;
+}
+
+/** Tous les Drops à minutes de la campagne sont déjà récupérés (liste détaillée connue). */
+export function isCampaignDone(campaign, claimedDropIds) {
+  const drops = (campaign?.drops || []).filter((drop) => drop.minutes > 0);
+  return drops.length > 0 && drops.every((drop) => claimedDropIds.has(drop.id));
+}
+
+/**
+ * Campagnes de jeux à farmer : en cours, hors badges, compte lié, pas encore
+ * entièrement récupérées, avec au moins un Drop au temps de visionnage.
+ * @param {{ isActive: (c: object, now: number) => boolean, isBadge: (c: object) => boolean }} rules
+ */
+export function dropCampaignJobs(campaigns, { claimed = new Set(), now = Date.now(), isActive, isBadge } = {}) {
+  return (campaigns || [])
+    .filter((campaign) => isActive(campaign, now) && !isBadge(campaign) && campaign.connected !== false && !isCampaignDone(campaign, claimed))
+    .filter((campaign) => !campaign.drops || campaign.drops.some((drop) => drop.minutes > 0))
+    .map((campaign) => jobFromCampaign(campaign, now))
+    .filter(Boolean);
+}
+
 /** Retire de la file les badges obtenus et ceux dont la campagne est finie. */
 export function pruneJobs(state, { owned = [], now = Date.now() } = {}) {
-  const base = normalizeAuto(state) || { mode: "manual", jobs: [], tabId: 0, gameKey: "", startedAt: 0 };
+  const base = normalizeAuto(state) || { mode: "manual", drops: false, jobs: [], tabId: 0, gameKey: "", startedAt: 0 };
   const have = new Set(owned);
   const obtained = [];
   const expired = [];
@@ -143,6 +196,7 @@ export function bannerModel(state, drops = []) {
     mode: normalizeAuto(state).mode,
     game: group.game,
     badges: group.jobs.map((job) => job.title),
+    dropsOnly: group.jobs.every(isDropJob),
     minutes: closest ? { done: Math.min(closest.minutes, closest.required), required: closest.required } : null,
     nextBadges: rest.reduce((sum, item) => sum + item.jobs.length, 0),
     nextGames: rest.length,

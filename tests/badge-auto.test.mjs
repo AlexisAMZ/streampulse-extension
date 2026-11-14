@@ -93,9 +93,38 @@ test("bannière : badges en cours, jeu, suite de la file et minutes du Drop le p
     mode: "all",
     game: "League of Legends",
     badges: ["Badge l1"],
+    dropsOnly: false,
     minutes: { done: 12, required: 30 },
     nextBadges: 3,
     nextGames: 2,
   });
   assert.equal(bannerModel({ jobs: [] }, []), null);
+});
+
+test("mode Drops : campagnes de jeux actives, hors badges et déjà récupérées", async () => {
+  const { dropCampaignJobs, isCampaignDone, isDropJob, removeDropJobs, addJobs, normalizeAuto, pruneJobs } = await import("../js/badge-auto.js");
+  const { isActiveCampaign, isBadgeCampaign } = await import("../js/drops-data.js");
+  const NOW = 1_000_000;
+  const campaign = (id, extra = {}) => ({ id, name: `Camp ${id}`, game: `Jeu ${id}`, gameId: id, boxArt: "", owner: "Studio", startsAt: NOW - 10, endsAt: NOW + 10_000, status: "ACTIVE", connected: true, drops: [{ id: `d${id}`, minutes: 60 }], ...extra });
+  const rules = { now: NOW, isActive: isActiveCampaign, isBadge: isBadgeCampaign };
+  const jobs = dropCampaignJobs([
+    campaign("1"),
+    campaign("2", { owner: "Twitch Gaming" }),
+    campaign("3", { connected: false }),
+    campaign("4", { status: "UPCOMING", startsAt: NOW + 5_000 }),
+    campaign("5"),
+    campaign("6", { drops: [{ id: "abo", minutes: 0 }] }),
+  ], { ...rules, claimed: new Set(["d5"]) });
+  assert.deepEqual(jobs.map((job) => job.badgeId), ["drop:1"]);
+  assert.ok(isDropJob(jobs[0]));
+  assert.equal(isCampaignDone(campaign("5"), new Set(["d5"])), true);
+  assert.equal(isCampaignDone(campaign("7", { drops: null }), new Set()), false, "liste inconnue : pas finie");
+
+  let state = addJobs(null, jobs, { drops: true });
+  state = addJobs(state, [{ badgeId: "badge-x", title: "x", game: "Jeu 9", gameId: "9", campaignId: "c9", endsAt: NOW + 1, addedAt: NOW }]);
+  assert.equal(normalizeAuto(state).drops, true);
+  const stopped = removeDropJobs(state);
+  assert.equal(stopped.drops, false);
+  assert.deepEqual(stopped.jobs.map((job) => job.badgeId), ["badge-x"]);
+  assert.deepEqual(pruneJobs(state, { owned: ["drop:1"], now: NOW }).obtained.map((job) => job.badgeId), ["drop:1"]);
 });

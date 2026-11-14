@@ -260,7 +260,10 @@ const BADGE_ALERT_KEYS = Object.freeze({
   short: ["background.notifications.badgeShortTitle", "background.notifications.badgeShortMessage"],
   live: ["background.notifications.badgeLiveTitle", "background.notifications.badgeLiveMessage"],
   last: ["background.notifications.badgeLastTitle", "background.notifications.badgeLastMessage"],
+  fresh: ["background.notifications.badgeLiveTitle", "background.notifications.badgeFreshMessage"],
 });
+/** Un badge ajouté depuis plus longtemps n'est plus « nouveau » : pas d'alerte à son démarrage. */
+const NEW_ALERT_WINDOW_MS = 3 * 86_400_000;
 
 /**
  * Alertes des badges à durée limitée : événements courts (si les alertes de
@@ -281,7 +284,10 @@ export async function checkBadgeWatch() {
   const shortMs = !plus ? 0 : limitedFrom(stored) ? LIMITED_EVENT_MS : prefs.badgeAlerts === true ? SHORT_EVENT_MS : 0;
   // Portée « tous les badges / jeux choisis » : jamais sans licence active.
   const scope = plus ? stored[BADGE_SCOPE_KEY] : null;
-  const { alerts, seen } = planBadgeAlerts({ badges, watch: plus ? watch : {}, seen: alertsSeenFrom(stored), shortMs, now, scope, baseline: stored[BADGE_ALERT_SEEN_KEY] === undefined });
+  // « Nouveau badge » : l'alerte part quand le badge récent est récupérable (l'annonce d'arrivée ne couvre que l'à-venir).
+  const freeAlerts = plus && scope !== null && prefs.badgeAlerts === true;
+  const announce = (badge) => badge.addedAt > 0 && now - badge.addedAt <= NEW_ALERT_WINDOW_MS && newBadgeAlerts([badge], { scope, freeAlerts, isPaid: isPaidBadge }).length > 0;
+  const { alerts, seen } = planBadgeAlerts({ badges, watch: plus ? watch : {}, seen: alertsSeenFrom(stored), shortMs, now, scope, announce, baseline: stored[BADGE_ALERT_SEEN_KEY] === undefined });
   // Un badge suivi dont plus rien ne se joue (obtenu, terminé) quitte la liste.
   const live = new Set(badges.map((badge) => badge.id));
   const all = catalogBadges(badgesFrom(stored), { now, events: eventsFrom(stored).events, added: addedFrom(stored).added });
@@ -290,10 +296,10 @@ export async function checkBadgeWatch() {
   const changedWatch = Object.keys(kept).length !== Object.keys(watch).length;
   const changedSeen = stored[BADGE_ALERT_SEEN_KEY] === undefined || alerts.length > 0 || Object.keys(seen).length !== Object.keys(alertsSeenFrom(stored)).length;
   if (changedSeen || changedWatch) await chrome.storage.local.set({ [BADGE_ALERT_SEEN_KEY]: seen, ...(changedWatch ? { [BADGE_WATCH_KEY]: kept } : {}) });
-  for (const { badge, kind, endsAt } of alerts) {
+  for (const { badge, kind, endsAt, fresh } of alerts) {
     const time = endsAt > 0 ? formatTimeLeft(endsAt - now) : "";
     const short = isShortEvent(badge.event, LIMITED_EVENT_MS);
-    const [titleKey, messageKey] = BADGE_ALERT_KEYS[kind === "ending" ? "last" : short ? "short" : "live"];
+    const [titleKey, messageKey] = BADGE_ALERT_KEYS[kind === "ending" ? "last" : fresh ? "fresh" : short ? "short" : "live"];
     const game = badge.event?.game;
     await NotificationCenter.show({
       title: translateWithPrefs(prefs, titleKey, { name: badge.title }),
@@ -365,16 +371,25 @@ export function checkBadgeAfterClaim() {
 
 
 
-/** Alerte pour les nouveaux badges (StreamPulse+) : gratuits (réglage « Nouveau badge ») ou tous (portée). */
+/**
+ * Alerte pour les nouveaux badges (StreamPulse+) : gratuits (réglage « Nouveau badge ») ou tous (portée).
+ * Un badge déjà récupérable est annoncé par checkBadgeWatch, qui le note comme tel ; ici, seuls partent
+ * ceux qui arrivent prochainement (« Bientôt ») ou dont le statut n'est pas encore connu.
+ */
 async function announceBadges(added) {
   if (!added?.length) return;
   const prefs = await PreferenceStore.get();
-  const stored = await chrome.storage.local.get([PLUS_KEY, BADGE_SCOPE_KEY]);
+  const stored = await chrome.storage.local.get([PLUS_KEY, BADGE_SCOPE_KEY, DROPS_BADGES_KEY, BADGE_EVENTS_KEY, BADGE_ADDED_KEY]);
   const scope = isPlusActive(stored[PLUS_KEY]) ? stored[BADGE_SCOPE_KEY] : null;
   if (!scope) await recordMissedBadges({ added: added.filter((badge) => !isPaidBadge(badge)) });
-  for (const badge of newBadgeAlerts(added, { scope, freeAlerts: scope !== null && prefs.badgeAlerts === true, isPaid: isPaidBadge })) {
+  const now = Date.now();
+  const status = new Map(catalogBadges(badgesFrom(stored), { now, events: eventsFrom(stored).events, added: addedFrom(stored).added }).map((badge) => [badge.id, badge]));
+  const notLive = added.filter((badge) => status.get(badge.id)?.status !== "live");
+  for (const badge of newBadgeAlerts(notLive, { scope, freeAlerts: scope !== null && prefs.badgeAlerts === true, isPaid: isPaidBadge })) {
+    const event = status.get(badge.id)?.event;
+    const upcoming = event?.startsAt > now;
     await NotificationCenter.show({
-      title: translateWithPrefs(prefs, "background.notifications.badgeTitle", { name: badge.title }),
+      title: translateWithPrefs(prefs, upcoming ? "background.notifications.badgeSoonTitle" : "background.notifications.badgeTitle", { name: badge.title }),
       message: badge.description || badge.title,
     });
   }

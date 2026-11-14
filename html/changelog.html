@@ -33,6 +33,38 @@
           <ol class="cl-toc-list" id="cl-toc-list"></ol>
         </nav>
 
+        <section class="cl-note" id="cl-note" aria-labelledby="cl-note-title" hidden>
+          <h2 class="cl-area-title" id="cl-note-title"></h2>
+          <p class="cl-note-text" id="cl-note-text"></p>
+          <div class="cl-meter" id="cl-meter" hidden>
+            <div class="cl-meter-figures">
+              <p class="cl-meter-amount" id="cl-meter-amount"></p>
+              <p class="cl-meter-percent" id="cl-meter-percent"></p>
+            </div>
+            <div class="cl-meter-track" role="progressbar" id="cl-meter-track" aria-valuemin="0" data-i18n-attr-ariaLabel="changelog.noteMeter" aria-label="Avancement de la cagnotte">
+              <span class="cl-meter-fill" id="cl-meter-fill"></span>
+            </div>
+            <p class="cl-meter-updated" id="cl-meter-updated"></p>
+          </div>
+          <div class="cl-note-actions">
+            <a class="cl-note-cta" id="cl-note-plus" href="https://streampulse.tech/plus" target="_blank" rel="noopener noreferrer">
+              <span data-i18n="changelog.notePlusCta">Prendre StreamPulse+</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+            </a>
+            <div class="cl-note-donate" role="group" aria-labelledby="cl-note-donate-label">
+              <span class="cl-note-donate-label" id="cl-note-donate-label" data-i18n="changelog.noteDonate">Faire un don</span>
+              <a href="https://revolut.me/alexisamz" target="_blank" rel="noopener noreferrer" class="cl-note-btn">
+              <svg class="cl-note-btn-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.9133 6.9566C20.9133 3.1208 17.7898 0 13.9503 0H2.424v3.8605h10.9782c1.7376 0 3.177 1.3651 3.2087 3.043.016.84-.2994 1.633-.8878 2.2324-.5886.5998-1.375.9303-2.2144.9303H9.2322a.2756.2756 0 0 0-.2755.2752v3.431c0 .0585.018.1142.052.1612L16.2646 24h5.3114l-7.2727-10.094c3.6625-.1838 6.61-3.2612 6.61-6.9494zM6.8943 5.9229H2.424V24h4.4704z"/></svg>
+              <span>Revolut</span>
+            </a>
+              <a href="https://paypal.me/alexisamzdcrz" target="_blank" rel="noopener noreferrer" class="cl-note-btn">
+              <svg class="cl-note-btn-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.607 4.653H8.941L6.645 19.251H1.82L4.862 0h7.995c3.754 0 6.375 2.294 6.473 5.513-.648-.478-2.105-.86-3.722-.86m6.57 5.546c0 3.41-3.01 6.853-6.958 6.853h-2.493L11.595 24H6.74l1.845-11.538h3.592c4.208 0 7.346-3.634 7.153-6.949a5.24 5.24 0 0 1 2.848 4.686M9.653 5.546h6.408c.907 0 1.942.222 2.363.541-.195 2.741-2.655 5.483-6.441 5.483H8.714Z"/></svg>
+              <span>PayPal</span>
+            </a>
+            </div>
+          </div>
+        </section>
+
         <div class="cl-changes" id="cl-changes"></div>
 
         <section class="cl-thanks" id="cl-thanks" hidden>

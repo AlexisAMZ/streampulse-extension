@@ -352,6 +352,61 @@ function renderDisplay(text) {
   });
 }
 
+/** Montant en euros (ou autre devise du don), dans la langue choisie. */
+function formatMoney(amount, currency) {
+  const locale = resolveLocale(getCurrentLanguage());
+  try {
+    return new Intl.NumberFormat(locale, { style: "currency", currency, maximumFractionDigits: 0 }).format(amount);
+  } catch {
+    return `${amount} ${currency}`;
+  }
+}
+
+/**
+ * Mot de l'auteur et barre de la cagnotte. Le pourcentage est borné à 0-100 :
+ * une donnée mal saisie ne doit jamais faire déborder la barre.
+ */
+function renderNote(release) {
+  const section = document.getElementById("cl-note");
+  const note = release.note;
+  const title = note ? localized(note.title) : "";
+  const text = note ? localized(note.text) : "";
+  if (!title && !text) {
+    section.hidden = true;
+    return;
+  }
+  section.hidden = false;
+  document.getElementById("cl-note-title").textContent = title;
+  document.getElementById("cl-note-text").textContent = text;
+  const plusLink = document.getElementById("cl-note-plus");
+  if (plusLink) plusLink.href = plusPageUrl(getCurrentLanguage(), "monthly");
+
+  const meter = document.getElementById("cl-meter");
+  const fund = note.fundraiser;
+  const goal = Number(fund?.goal);
+  const raised = Number(fund?.raised);
+  if (!(goal > 0) || !Number.isFinite(raised) || raised < 0) {
+    meter.hidden = true;
+    return;
+  }
+  meter.hidden = false;
+  const currency = typeof fund.currency === "string" && fund.currency ? fund.currency : "EUR";
+  const ratio = Math.min(1, raised / goal);
+  const amount = t("changelog.noteRaised", { raised: formatMoney(raised, currency), goal: formatMoney(goal, currency) });
+  const locale = resolveLocale(getCurrentLanguage());
+  const track = document.getElementById("cl-meter-track");
+  track.setAttribute("aria-valuemax", String(goal));
+  track.setAttribute("aria-valuenow", String(Math.min(raised, goal)));
+  track.setAttribute("aria-valuetext", amount);
+  document.getElementById("cl-meter-fill").style.setProperty("--pct", `${(ratio * 100).toFixed(1)}%`);
+  document.getElementById("cl-meter-amount").textContent = amount;
+  document.getElementById("cl-meter-percent").textContent = new Intl.NumberFormat(locale, { style: "percent", maximumFractionDigits: 0 }).format(ratio);
+  const updated = formatDate(fund.updated);
+  const stamp = document.getElementById("cl-meter-updated");
+  stamp.textContent = updated ? t("changelog.noteUpdated", { date: updated }) : "";
+  stamp.hidden = !updated;
+}
+
 function render(release) {
   const versionLabel = `v${release.version}`;
   document.getElementById("cl-version").textContent = versionLabel;
@@ -381,6 +436,7 @@ function render(release) {
       : t("changelog.genericChanges");
   }
 
+  renderNote(release);
   const sections = renderChanges(release);
   renderThanks(release);
   renderHistory(release.version);
@@ -426,6 +482,7 @@ function renderPromo() {
       if (chrome.runtime.lastError) return;
       if (isPlusActive(stored?.[PLUS_KEY])) {
         document.getElementById("cl-promo-plus")?.remove();
+        document.getElementById("cl-note-plus")?.remove();
       }
     });
   } catch {
