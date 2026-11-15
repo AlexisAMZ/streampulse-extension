@@ -366,6 +366,24 @@ function formatMoney(amount, currency) {
  * Mot de l'auteur et barre de la cagnotte. Le pourcentage est borné à 0-100 :
  * une donnée mal saisie ne doit jamais faire déborder la barre.
  */
+const FUNDRAISER_URL = "https://streampulse.tech/cagnotte.json";
+
+/**
+ * Montant de la cagnotte tenu à jour sur le site (un seul fichier à modifier,
+ * sans republier l'extension). Toute réponse invalide ou absente est ignorée :
+ * le montant embarqué dans changelog-data.js reste alors affiché.
+ */
+async function fetchFundraiser() {
+  try {
+    const response = await fetch(FUNDRAISER_URL, { cache: "no-cache", signal: AbortSignal.timeout(4000) });
+    if (!response.ok) return null;
+    const data = await response.json();
+    return Number(data?.goal) > 0 && Number.isFinite(Number(data?.raised)) && Number(data.raised) >= 0 ? data : null;
+  } catch {
+    return null;
+  }
+}
+
 function renderNote(release) {
   const section = document.getElementById("cl-note");
   const note = release.note;
@@ -437,6 +455,11 @@ function render(release) {
   }
 
   renderNote(release);
+  if (release.note) {
+    fetchFundraiser().then((fund) => {
+      if (fund) renderNote({ ...release, note: { ...release.note, fundraiser: { ...release.note.fundraiser, ...fund } } });
+    });
+  }
   const sections = renderChanges(release);
   renderThanks(release);
   renderHistory(release.version);
