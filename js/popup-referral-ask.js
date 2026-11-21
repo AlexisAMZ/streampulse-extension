@@ -19,7 +19,19 @@ async function save(state) {
 
 async function loadState() {
   const now = Date.now();
-  const stored = await chrome.storage.local.get([KEY, CODE_KEY, "betaGeneralStreamers", "streamPulseWatchTimeDaily"]);
+  const stored = await chrome.storage.local.get([
+    KEY,
+    CODE_KEY,
+    "betaGeneralStreamers",
+    "streamPulseWatchTimeDaily",
+    "streamPulsePlus",
+    "streamPulseTrial",
+  ]);
+  const plusRecord = stored.streamPulsePlus;
+  const isPlus = Boolean(plusRecord && (plusRecord.status === "active" || plusRecord.plan === "trial"));
+  const trialUsed = Boolean(stored.streamPulseTrial?.used || plusRecord?.plan === "trial");
+  const isPlusOrTrial = isPlus || trialUsed;
+
   let state = stored[KEY] || null;
   if (!state?.firstSeen) {
     // Utilisateur qui a déjà de l'historique : éligible tout de suite ; installation fraîche : on attend.
@@ -28,7 +40,10 @@ async function loadState() {
     state = { firstSeen: existing ? now - REFERRAL_ASK_FIRST_MS : now };
     await save(state);
   }
-  return { state, due: shouldAskReferral(state, { hasCode: Boolean(stored[CODE_KEY]) }, now) };
+  return {
+    state,
+    due: shouldAskReferral(state, { hasCode: Boolean(stored[CODE_KEY]), plusUser: isPlusOrTrial }, now),
+  };
 }
 
 /** Une seule carte à la fois : l'avis, le badge et CHZZK gardent la place s'ils sont affichés. */

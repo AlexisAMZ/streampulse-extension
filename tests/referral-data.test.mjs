@@ -45,6 +45,8 @@ test("carte parrainage de l'onglet Streamers : sobre et jamais insistante", asyn
   const now = 100 * 86_400_000;
   const fresh = { firstSeen: now - REFERRAL_ASK_FIRST_MS };
   assert.equal(shouldAskReferral(fresh, { hasCode: false }, now), true);
+  assert.equal(shouldAskReferral(fresh, { hasCode: false, plusUser: false }, now), false, "réservé aux abonnés Plus ou ayant testé l'essai");
+  assert.equal(shouldAskReferral(fresh, { hasCode: false, plusUser: true }, now), true);
   assert.equal(shouldAskReferral({ firstSeen: now - REFERRAL_ASK_FIRST_MS + 1 }, { hasCode: false }, now), false, "trop tôt après l'installation");
   assert.equal(shouldAskReferral(null, { hasCode: false }, now), false);
   assert.equal(shouldAskReferral({ ...fresh, done: true }, { hasCode: false }, now), false, "« Non merci » est définitif");

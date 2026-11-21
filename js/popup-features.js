@@ -348,21 +348,20 @@ function renderPlus() {
 }
 
 /**
- * La carte au-dessus de la barre d'ajout : l'essai StreamPulse+ d'abord (hors
- * abonnement), puis StreamPulse Clips — produit séparé, pour tous. Elle se
- * mérite : jamais aux nouvelles installations, au plus une fois par jour, et
+ * La carte au-dessus de la barre d'ajout : StreamPulse+ (hors abonnement).
+ * Pas de cumul quand le bandeau d'essai 7 jours est proposé en haut.
+ * Jamais aux nouvelles installations, au plus une fois par jour, et
  * chaque fermeture est gardée en storage.
  */
 function renderPromo() {
-  const showPlus = promoDue && promoPlusOk && !plusActive() && !promoState.plusClosed;
-  const showClips = promoDue && promoClipsOk && !showPlus && !promoState.clipsClosed;
+  const trialOffered = !plusActive() && !trialState.used && !trialState.pending;
+  const showPlus = !trialOffered && promoDue && promoPlusOk && !plusActive() && !promoState.plusClosed;
   const plus = $("promo-plus");
   const clips = $("promo-clips");
   if (plus) plus.hidden = !showPlus;
-  if (clips) clips.hidden = !showClips;
+  if (clips) clips.hidden = true;
   const container = $("promo-float");
-  if (container) container.hidden = !showPlus && !showClips;
-  if (showClips) ensureClipsMetal();
+  if (container) container.hidden = !showPlus;
 }
 
 /**
@@ -372,17 +371,19 @@ function renderPromo() {
  * jamais exposée à la promo. Puis : trois ouvertures éligibles avant la
  * première carte, une seule par jour, la demande d'avis passe devant elle,
  * et l'interrupteur distant (config.promo.enabled) peut tout couper.
- * Contextuel : Plus vise ceux qui ont de l'activité Drops, Clips ceux qui
- * ont de l'historique de visionnage (les futurs clippeurs).
+ * Si le bandeau d'essai 7 jours est proposé en haut, la carte flottante
+ * s'efface pour éviter toute saturation.
  */
 function decidePromoDue() {
   const activated = Array.isArray(smartStreamers) && smartStreamers.length > 0;
   if (!activated || !promoSuccess) return false;
   if (reviewAskDecision().due) return false; // la demande d'avis gagne la place
   if (promoRemoteOff) return false; // coupe-circuit piloté depuis streampulse.tech
-  promoPlusOk = promoHasDrops;   // Plus vise ceux qui vivent des Drops
-  promoClipsOk = promoHasWatch;  // Clips vise ceux qui regardent (futurs clippeurs)
-  if (!promoPlusOk && !promoClipsOk) return false;
+  const trialOffered = !plusActive() && !trialState.used && !trialState.pending;
+  if (trialOffered) return false;
+  promoPlusOk = promoHasDrops;
+  promoClipsOk = false;
+  if (!promoPlusOk) return false;
   promoState.opens = (promoState.opens || 0) + 1;
   const seenEnough = promoState.opens >= PROMO_MIN_OPENS;
   const cooled = Date.now() - (promoState.lastShownAt || 0) >= promoFreqMs;

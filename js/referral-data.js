@@ -49,7 +49,8 @@ export const REFERRAL_ASK_FIRST_MS = 3 * 86_400_000;
 export const REFERRAL_ASK_LATER_MS = 30 * 86_400_000;
 
 /** Faut-il proposer le parrainage sur l'onglet Streamers ? Pur, testé. */
-export function shouldAskReferral(state, { hasCode = false } = {}, now = Date.now()) {
+export function shouldAskReferral(state, { hasCode = false, plusUser = true } = {}, now = Date.now()) {
+  if (!plusUser) return false;
   if (!state?.firstSeen || state.done || hasCode) return false;
   if (now - state.firstSeen < REFERRAL_ASK_FIRST_MS) return false;
   return !state.snoozedUntil || now >= state.snoozedUntil;

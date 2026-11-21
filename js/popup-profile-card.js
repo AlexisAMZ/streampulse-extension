@@ -36,10 +36,9 @@ function safeImage(raw) {
   }
 }
 
-/** Sans choix enregistré : le thème événement pendant sa fenêtre, sinon le violet de StreamPulse. */
-export function defaultAccent(now = Date.now()) {
-  const event = ACCENTS.find((entry) => entry.freeUntil !== undefined && now < entry.freeUntil);
-  return event ? event.id : "violet";
+/** Sans choix enregistré : le thème de base de StreamPulse (violet). */
+export function defaultAccent() {
+  return "violet";
 }
 
 export function normalizeAccent(value) {
