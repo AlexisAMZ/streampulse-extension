@@ -73,7 +73,7 @@ function apply() {
     });
   }
   // Rubrique active masquée : on bascule sur la première visible.
-  const active = document.querySelector('.menu-nav > .menu-tab[aria-selected="true"]');
+  const active = document.querySelector('.menu-nav .menu-tab[aria-selected="true"]');
   if (active?.hidden) LISTS.menu.items().find((node) => !node.hidden)?.click();
   const tab = document.querySelector('.tabs > .tab-button[aria-selected="true"]');
   if (tab?.hidden) LISTS.tabs.items().find((node) => !node.hidden && node.dataset.tab)?.click();

@@ -45,8 +45,20 @@ async function slotIsFree() {
 /** Ouvre le bloc Parrainage : Réglages, puis l'onglet StreamPulse+, puis descente jusqu'au code. */
 function openReferral() {
   $("tab-settings")?.click();
-  document.querySelector('.menu-nav > .menu-tab[data-panel="plus"]')?.click();
-  $("referral-block")?.scrollIntoView({ block: "start", behavior: "smooth" });
+  const plusTab = $("menu-tab-plus") || document.querySelector('.menu-nav .menu-tab[data-panel="plus"]');
+  plusTab?.click();
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      const block = $("referral-block");
+      if (block) {
+        block.scrollIntoView({ block: "start", behavior: "smooth" });
+        const getBtn = $("referral-get");
+        if (getBtn && !getBtn.hidden) {
+          getBtn.click();
+        }
+      }
+    }, 80);
+  });
 }
 
 function wireButtons(card, initialState) {

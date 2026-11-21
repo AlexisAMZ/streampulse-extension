@@ -524,7 +524,7 @@
       <span>Audio disponible avec StreamPulse+</span>
     `;
     promo.addEventListener("click", () => {
-      chrome.runtime.sendMessage({ type: "openSettings" });
+      chrome.runtime.sendMessage({ type: "openSettings", panel: "plus" });
     });
 
     playerContainer.appendChild(promo);

@@ -2432,11 +2432,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     // « Page complète » du tiroir Twitch : ?menu=<panneau> ouvre les réglages
     // directement sur la rubrique demandée.
     // Rubriques fusionnées : les anciens liens (?menu=previews…) arrivent au bon panneau.
-    const MERGED_PANELS = { tabs: "player", linked: "identity" };
+    const MERGED_PANELS = { tabs: "player", linked: "identity", referral: "plus" };
     const menuParam = new URLSearchParams(location.search).get("menu");
     const requestedPanel = MERGED_PANELS[menuParam] || menuParam;
     if (requestedPanel && document.querySelector(`.menu-tab[data-panel="${CSS.escape(requestedPanel)}"]`)) {
+      setActiveTab("settings");
       showMenuPanel(requestedPanel);
+      if (menuParam === "referral") {
+        setTimeout(() => {
+          document.getElementById("referral-block")?.scrollIntoView({ block: "start", behavior: "smooth" });
+        }, 100);
+      }
     }
     initHomeInteractions();
     initChzzkAsk(() => state.streamers);
