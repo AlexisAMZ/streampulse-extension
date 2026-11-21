@@ -56,7 +56,7 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
     `../js/sw/vod-unmute.js?t=${Date.now()}`
   );
 
-  // 1. Installation de 30 segments muets en mode repli (doit générer 2 règles regex de 15 segments + 1 règle modifyHeaders CORS)
+  // 1. Installation de 30 segments muets en mode repli (doit générer 2 règles regex de 15 segments + 3 règles modifyHeaders CORS)
   const segmentIds = Array.from({ length: 30 }, (_, i) => String(900 + i));
   const res = await handleVodUnmuteInstallRules(
     { segmentIds, append: false },
@@ -64,8 +64,8 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
   );
 
   assert.equal(res.ok, true);
-  assert.equal(res.count, 3);
-  assert.equal(fakeRules.length, 3);
+  assert.equal(res.count, 5);
+  assert.equal(fakeRules.length, 5);
 
   // Vérification de la première règle (redirection regex compacte)
   const firstRule = fakeRules[0];
@@ -74,16 +74,16 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
   assert.equal(firstRule.action.type, "redirect");
   assert.equal(firstRule.action.redirect.regexSubstitution, "\\1\\2\\3");
 
-  // Vérification de la règle modifyHeaders CORS (dédiée au contournement 403 S3)
+  // Vérification de la règle modifyHeaders CORS (dédiée au contournement 403 S3 avec urlFilter zéro DFA)
   const corsRule = fakeRules[2];
-  assert.equal(corsRule.priority, 1);
+  assert.equal(corsRule.priority, 4);
   assert.equal(corsRule.action.type, "modifyHeaders");
   assert.equal(corsRule.action.requestHeaders[0].header, "Origin");
   assert.equal(corsRule.action.requestHeaders[0].operation, "remove");
   assert.equal(corsRule.action.responseHeaders[0].header, "Access-Control-Allow-Origin");
   assert.equal(corsRule.action.responseHeaders[0].value, "https://www.twitch.tv");
   assert.ok(corsRule.action.responseHeaders.some((h) => h.header === "Access-Control-Expose-Headers"));
-  assert.ok(new RegExp(corsRule.condition.regexFilter).test("https://d2vi6trrdongqn.cloudfront.net/hash/chunked/1223.ts"));
+  assert.equal(corsRule.condition.urlFilter, "||cloudfront.net/*");
 
   // Test de la regex sur différentes qualités et domaines (y compris twitch.tv)
   const re = new RegExp(firstRule.condition.regexFilter);
@@ -128,7 +128,7 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
     { tab: { id: 10 } }
   );
   assert.equal(directRedirectRes.ok, true);
-  assert.equal(fakeRules.length, 3); // 2 règles urlFilter (-muted et -unmuted) + 1 modifyHeaders CORS
+  assert.equal(fakeRules.length, 5); // 2 règles urlFilter (-muted et -unmuted) + 3 modifyHeaders CORS
   const directRuleMuted = fakeRules[0];
   const directRuleUnmuted = fakeRules[1];
   assert.equal(directRuleMuted.action.type, "redirect");

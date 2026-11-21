@@ -205,18 +205,20 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
         }
       }
 
-      // Regle modifyHeaders pour lever le blocage CORS Amazon S3 sur les segments audio bruts
+      // Regles modifyHeaders pour lever le blocage CORS Amazon S3 sur les segments audio bruts
       // Amazon S3 renvoie 403 AccessDenied si l'en-tete Origin est transmis sur les segments originaux.
       // On retire Origin vers CloudFront et on declare les en-tetes CORS pour autoriser la lecture dans le lecteur Twitch.
+      // Utilisation stricte de urlFilter (zero compilation DFA re2, zero risque de depassement de la limite de 2KB).
       if (addRules.length > 0) {
-        const corsRuleId = allocateRuleId(usedIds);
-        const corsRule = {
-          id: corsRuleId,
-          priority: 1,
+        const corsDomains = ["cloudfront.net", "ttvnw.net", "twitch.tv"];
+        const corsRules = corsDomains.map((domain) => ({
+          id: allocateRuleId(usedIds),
+          priority: 4,
           action: {
             type: "modifyHeaders",
             requestHeaders: [
               { header: "Origin", operation: "remove" },
+              { header: "Accept-Encoding", operation: "set", value: "identity" },
             ],
             responseHeaders: [
               { header: "Access-Control-Allow-Origin", operation: "set", value: "https://www.twitch.tv" },
@@ -226,10 +228,10 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
             ],
           },
           condition: {
-            regexFilter: "^https://[^/]+\\.(?:cloudfront\\.net|ttvnw\\.net|twitch\\.tv)/.*\\.(?:ts|mp4|m4s)(?:\\?.*)?$",
+            urlFilter: `||${domain}/*`,
             resourceTypes: ["xmlhttprequest", "media", "other"],
           },
-        };
+        }));
 
         const rememberAddedRules = (rules) => {
           for (const r of rules) _activeVodRuleIds.add(r.id);
@@ -238,28 +240,29 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
         try {
           await chrome.declarativeNetRequest.updateSessionRules({
             removeRuleIds: staleIds,
-            addRules: [...addRules, corsRule],
+            addRules: [...addRules, ...corsRules],
           });
-          rememberAddedRules([...addRules, corsRule]);
-          return { ok: true, count: addRules.length + 1 };
+          rememberAddedRules([...addRules, ...corsRules]);
+          return { ok: true, count: addRules.length + corsRules.length };
         } catch (corsErr) {
           console.warn("[StreamPulse] updateSessionRules avec responseHeaders echoue, repli :", corsErr?.message || corsErr);
-          const lightCorsRule = {
-            ...corsRule,
+          const lightCorsRules = corsRules.map((r) => ({
+            ...r,
             action: {
               type: "modifyHeaders",
               requestHeaders: [
                 { header: "Origin", operation: "remove" },
+                { header: "Accept-Encoding", operation: "set", value: "identity" },
               ],
             },
-          };
+          }));
           try {
             await chrome.declarativeNetRequest.updateSessionRules({
               removeRuleIds: staleIds,
-              addRules: [...addRules, lightCorsRule],
+              addRules: [...addRules, ...lightCorsRules],
             });
-            rememberAddedRules([...addRules, lightCorsRule]);
-            return { ok: true, count: addRules.length + 1 };
+            rememberAddedRules([...addRules, ...lightCorsRules]);
+            return { ok: true, count: addRules.length + lightCorsRules.length };
           } catch (_lightErr) {
             await chrome.declarativeNetRequest.updateSessionRules({
               removeRuleIds: staleIds,

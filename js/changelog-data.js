@@ -52,6 +52,55 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.11.27",
+    "date": "2026-11-22",
+    "title": {
+      "fr": "Contournement CORS et démutage audio VOD direct",
+      "en": "CORS Bypass and Direct VOD Audio Restoration",
+      "uk": "Обхід CORS та пряме відновлення звуку VOD",
+      "es": "Omisión de CORS y restauración de audio VOD directo",
+      "pt-BR": "Ignorar CORS e restauração de áudio VOD direto",
+      "de": "CORS-Umgehung und direkte VOD-Audiowiederherstellung",
+      "it": "Bypass CORS e ripristino audio VOD diretto",
+      "pl": "Obejście CORS i bezpośrednie przywracanie dźwięku VOD",
+      "tr": "CORS Atlama ve Doğrudan VOD Ses Geri Yükleme",
+      "ru": "Обход CORS и прямое восстановление звука VOD",
+      "ja": "CORSバイパスとダイレクトVOD音声復元",
+      "ko": "CORS 우회 및 직접 VOD 오디오 복원",
+      "ar": "تجاوز CORS واستعادة صوت VOD المباشر",
+      "id": "Bypass CORS dan Pemulihan Audio VOD Langsung",
+      "nl": "CORS-omzeiling en direct herstel van VOD-audio",
+      "sv": "CORS-kringgående och direkt återställning av VOD-ljud",
+      "cs": "Obejití CORS a přímé obnovení zvuku VOD"
+    },
+    "changes": [
+      {
+        "type": "fix",
+        "area": "fixes",
+        "text": {
+          "fr": "Suppression définitive des filtres regex dans les règles modifyHeaders au profit de filtres d'URL stricts par domaine afin de lever les erreurs 403 S3 et restaurer le son.",
+          "en": "Permanent elimination of regex filters in modifyHeaders rules in favor of domain URL filters to bypass S3 403 errors and restore audio.",
+          "uk": "Повне усунення регулярних виразів у правилах modifyHeaders на користь фільтрів URL доменів для виправлення помилок 403 S3 та відновлення звуку.",
+          "es": "Eliminación permanente de filtros regex en reglas modifyHeaders en favor de filtros de URL de dominio para evitar errores 403 de S3 y restaurar el sonido.",
+          "pt-BR": "Eliminação permanente de filtros regex nas regras modifyHeaders em favor de filtros de URL de domínio para evitar erros 403 do S3 e restaurar o som.",
+          "de": "Dauerhafte Beseitigung von Regex-Filtern in modifyHeaders-Regeln zugunsten von Domänen-URL-Filtern zur Behebung von S3-403-Fehlern und Tonwiederherstellung.",
+          "it": "Eliminazione permanente dei filtri regex nelle regole modifyHeaders a favore di filtri URL di dominio per superare gli errori 403 di S3 e ripristinare il suono.",
+          "pl": "Trwałe usunięcie filtrów regex w regułach modifyHeaders na rzecz filtrów URL domeny, aby usunąć błędy 403 S3 i przywrócić dźwięk.",
+          "tr": "S3 403 hatalarını gidermek ve sesi geri yüklemek için modifyHeaders kurallarındaki regex filtreleri alan adı URL filtreleriyle değiştirildi.",
+          "ru": "Полный отказ от регулярных выражений в правилах modifyHeaders в пользу доменных URL-фильтров для устранения ошибок 403 S3 и восстановления звука.",
+          "ja": "S3の403エラーを解消して音声を正常再生するため、modifyHeadersルール内の正規表現をドメイン単位のダイレクトURLフィルターに完全移行。",
+          "ko": "S3 403 오류를 해결하고 오디오를 정상 재생하기 위해 modifyHeaders 규칙의 정규식을 도메인 단위의 직접 URL 필터로 완전 전환.",
+          "ar": "إلغاء فلاتر التعبيرات النمطية في قواعد modifyHeaders لصالح فلاتر عناوين URL للنطاقات لحل أخطاء 403 S3 واستعادة الصوت.",
+          "id": "Penghapusan permanen filter regex pada aturan modifyHeaders demi filter URL domain untuk mengatasi kesalahan 403 S3 dan memulihkan audio.",
+          "nl": "Definitieve verwijdering van regex-filters in modifyHeaders-regels ten gunste van domein-URL-filters om S3 403-fouten op te lossen en audio te herstellen.",
+          "sv": "Permanent borttagning av regex-filter i modifyHeaders-regler till förmån för domän-URL-filter för att kringgå S3 403-fel och återställa ljudet.",
+          "cs": "Trvalé odstranění regulárních výrazů v pravidlech modifyHeaders ve prospěch doménových filtrů URL pro vyřešení chyb 403 S3 a obnovení zvuku."
+        }
+      }
+    ]
+  },
+
+  {
     version: "26.11.26",
     "date": "2026-11-22",
     "title": {
