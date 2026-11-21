@@ -10,13 +10,17 @@
   if (window.__streampulseVodUnmute) return;
   window.__streampulseVodUnmute = true;
 
-  const MUTED_MARKER = /-(?:muted|unmuted)(?=\.[^.]*$|$)/;
+  const MUTED_MARKER = /-(?:muted|unmuted)(?=\.[^.]*(?:\?|$))/;
   const STYLE_ID = "streampulse-vod-unmute-styles";
   const processedPlaylists = new Set();
   let currentVodId = null;
+  let vodResolved = false;
+  let isResolving = false;
   let plusActive = false;
   let restoredRanges = [];
   let totalVodDuration = 0;
+  let indicatorShown = false;
+  let promoShown = false;
 
   const TOOLTIP_TEXTS = {
     fr: "Récupéré grâce à StreamPulse+",
@@ -35,11 +39,11 @@
   };
 
   function isVodPage() {
-    return /^\/videos\/(\d+)/.test(window.location.pathname);
+    return /\/videos?\/(\d+)/.test(window.location.pathname);
   }
 
   function getVodId() {
-    const match = /^\/videos\/(\d+)/.exec(window.location.pathname);
+    const match = /\/videos?\/(\d+)/.exec(window.location.pathname);
     return match ? match[1] : null;
   }
 
@@ -51,6 +55,12 @@
       lang = navigator.language.split("-")[0];
     }
     return TOOLTIP_TEXTS[lang] || TOOLTIP_TEXTS.fr;
+  }
+
+  function extractSegmentId(url) {
+    if (!url || typeof url !== "string") return null;
+    const match = /\/([^/?#]+)-(?:muted|unmuted)(?=\.[^.]*(?:\?|$))/.exec(url);
+    return match ? match[1] : null;
   }
 
   function updatePlusStatus(record) {
@@ -189,6 +199,24 @@
     document.head?.appendChild(style);
   }
 
+  function extractFirstMediaPlaylist(masterText, baseUrl) {
+    const lines = masterText.split(/\r?\n/);
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (line.startsWith("#EXT-X-STREAM-INF") && i + 1 < lines.length) {
+        const nextLine = lines[i + 1].trim();
+        if (nextLine && !nextLine.startsWith("#")) {
+          try {
+            return new URL(nextLine, baseUrl).href;
+          } catch (_e) {
+            return nextLine;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
   function parseM3u8(text, playlistUrl) {
     const lines = text.split(/\r?\n/);
     const entries = [];
@@ -230,7 +258,7 @@
   async function probeSegment(url) {
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000);
+      const timeoutId = setTimeout(() => controller.abort(), 2500);
       const res = await fetch(url, {
         method: "HEAD",
         signal: controller.signal,
@@ -253,13 +281,8 @@
         body: JSON.stringify([
           {
             operationName: "VideoPlayer_SeekPreviews",
+            query: "query VideoPlayer_SeekPreviews($videoID: ID!) { video(id: $videoID) { id seekPreviewsURL } }",
             variables: { videoID: vodId },
-            extensions: {
-              persistedQuery: {
-                version: 1,
-                sha256Hash: "b2875b287232de15c1e79f602b70f0893f6b95b4ee3c749eb40375cf39f40c74",
-              },
-            },
           },
         ]),
       });
@@ -284,6 +307,15 @@
       const res = await fetch(playlistUrl);
       if (!res.ok) return;
       const text = await res.text();
+
+      // Prise en charge des master playlists (Usher / multi-variantes)
+      if (!text.includes("#EXTINF:") && text.includes("#EXT-X-STREAM-INF")) {
+        const variantUrl = extractFirstMediaPlaylist(text, playlistUrl);
+        if (variantUrl) {
+          return processPlaylist(variantUrl);
+        }
+      }
+
       const parsed = parseM3u8(text, playlistUrl);
       if (!parsed || parsed.entries.length === 0) return;
 
@@ -291,18 +323,19 @@
       const mutedEntries = parsed.entries.filter((e) => e.isMuted);
       if (mutedEntries.length === 0) return;
 
-      // Sonde les segments en parallèle par petits lots
-      const validRedirects = [];
-      const batchSize = 6;
+      // Sondage en parallèle par lots de 20 avec installation progressive
+      const batchSize = 20;
 
       for (let i = 0; i < mutedEntries.length; i += batchSize) {
         const batch = mutedEntries.slice(i, i + batchSize);
+        const validBatch = [];
+
         await Promise.all(
           batch.map(async (item) => {
             const unmutedUrl = item.url.replace(MUTED_MARKER, "");
             const exists = await probeSegment(unmutedUrl);
             if (exists) {
-              validRedirects.push({
+              validBatch.push({
                 sourceUrl: item.url,
                 targetUrl: unmutedUrl,
                 startTime: item.startTime,
@@ -311,34 +344,38 @@
             }
           })
         );
-      }
 
-      if (validRedirects.length === 0) return;
+        if (validBatch.length > 0) {
+          restoredRanges = restoredRanges.concat(validBatch);
+          paintSeekbar();
 
-      restoredRanges = validRedirects;
+          if (plusActive) {
+            const segmentIds = validBatch
+              .map((v) => extractSegmentId(v.sourceUrl))
+              .filter(Boolean);
 
-      // Peint la seekbar avec le halo vert et attache l'infobulle
-      paintSeekbar();
-
-      // Si l'utilisateur a StreamPulse+, on installe les règles de redirection
-      if (plusActive) {
-        chrome.runtime.sendMessage(
-          {
-            type: "vodUnmuteInstallRules",
-            redirects: validRedirects.map((v) => ({
-              sourceUrl: v.sourceUrl,
-              targetUrl: v.targetUrl,
-            })),
-          },
-          (response) => {
-            if (response?.ok) {
-              showIndicator(validRedirects.length);
-            }
+            chrome.runtime.sendMessage(
+              {
+                type: "vodUnmuteInstallRules",
+                segmentIds,
+                redirects: validBatch.map((v) => ({
+                  sourceUrl: v.sourceUrl,
+                  targetUrl: v.targetUrl,
+                })),
+                append: true,
+              },
+              (response) => {
+                if (response?.ok && !indicatorShown) {
+                  indicatorShown = true;
+                  showIndicator();
+                }
+              }
+            );
+          } else if (!promoShown) {
+            promoShown = true;
+            showPromoIndicator();
           }
-        );
-      } else {
-        // Notification informative pour non-abonnés
-        showPromoIndicator(validRedirects.length);
+        }
       }
     } catch (error) {
       console.warn("[StreamPulse] Traitement playlist VOD :", error?.message || error);
@@ -487,7 +524,7 @@
     }
   }
 
-  function showIndicator(count) {
+  function showIndicator() {
     ensureStyles();
     const existing = document.getElementById("streampulse-unmute-badge");
     if (existing) existing.remove();
@@ -507,7 +544,7 @@
     setTimeout(() => badge.remove(), 6000);
   }
 
-  function showPromoIndicator(count) {
+  function showPromoIndicator() {
     ensureStyles();
     const existing = document.getElementById("streampulse-unmute-promo");
     if (existing) return;
@@ -531,23 +568,46 @@
     setTimeout(() => promo.remove(), 8000);
   }
 
+  function resetVodState() {
+    currentVodId = null;
+    vodResolved = false;
+    isResolving = false;
+    processedPlaylists.clear();
+    restoredRanges = [];
+    totalVodDuration = 0;
+    indicatorShown = false;
+    promoShown = false;
+    hideTooltip();
+    document.querySelectorAll(".streampulse-unmuted-segment").forEach((el) => el.remove());
+    chrome.runtime.sendMessage({ type: "vodUnmuteClearRules" }).catch(() => {});
+  }
+
   async function checkCurrentVod() {
-    if (!isVodPage()) return;
+    if (!isVodPage()) {
+      if (currentVodId) resetVodState();
+      return;
+    }
     const vodId = getVodId();
     if (!vodId) return;
 
     if (vodId !== currentVodId) {
+      resetVodState();
       currentVodId = vodId;
-      processedPlaylists.clear();
-      restoredRanges = [];
-      totalVodDuration = 0;
-      hideTooltip();
+    }
 
-      // Déduction immédiate de la playlist CloudFront via GQL
+    if (vodResolved || isResolving) return;
+
+    isResolving = true;
+    try {
       const gqlPlaylistUrl = await fetchVodPlaylistFromGql(vodId);
-      if (gqlPlaylistUrl) {
-        processPlaylist(gqlPlaylistUrl);
+      if (gqlPlaylistUrl && currentVodId === vodId) {
+        vodResolved = true;
+        await processPlaylist(gqlPlaylistUrl);
       }
+    } catch (err) {
+      console.warn("[StreamPulse] Résolution VOD :", err?.message || err);
+    } finally {
+      isResolving = false;
     }
   }
 
@@ -563,7 +623,34 @@
     });
     perfObserver.observe({ entryTypes: ["resource"] });
   } catch (_e) {
-    // PerformanceObserver
+    // PerformanceObserver indisponible
+  }
+
+  // Détection instantanée des navigations SPA
+  function notifyNavigation() {
+    requestAnimationFrame(() => {
+      checkCurrentVod();
+    });
+  }
+
+  window.addEventListener("popstate", notifyNavigation);
+  try {
+    const origPushState = history.pushState;
+    if (typeof origPushState === "function") {
+      history.pushState = function (...args) {
+        origPushState.apply(this, args);
+        notifyNavigation();
+      };
+    }
+    const origReplaceState = history.replaceState;
+    if (typeof origReplaceState === "function") {
+      history.replaceState = function (...args) {
+        origReplaceState.apply(this, args);
+        notifyNavigation();
+      };
+    }
+  } catch (_e) {
+    // Fallback sans hook d'historique
   }
 
   // Boucle de surveillance SPA et maintien de la seekbar
@@ -575,12 +662,7 @@
         paintSeekbar();
       }
     } else if (currentVodId) {
-      currentVodId = null;
-      processedPlaylists.clear();
-      restoredRanges = [];
-      totalVodDuration = 0;
-      hideTooltip();
-      chrome.runtime.sendMessage({ type: "vodUnmuteClearRules" }).catch(() => {});
+      resetVodState();
     }
   }, 1200);
 
