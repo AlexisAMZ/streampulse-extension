@@ -148,20 +148,39 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
 
       const addRules = [];
 
-      // Redirections inter-qualites prioritaires sans restriction d'onglet pour supporter les workers Blob/HLS
+      // Redirections inter-qualites directes via urlFilter (zero empreinte memoire re2, contourne la limite 2KB de Chromium)
       for (const item of crossQualityRedirects) {
         const segId = item?.segmentId || extractSegmentId(item?.sourceUrl);
         if (!segId || !item?.targetUrl) continue;
-        const ruleId = allocateRuleId(usedIds);
+        let domain = "cloudfront.net";
+        try {
+          domain = new URL(item.targetUrl).host;
+        } catch (_e) {
+          // Fallback sur le domaine CloudFront standard
+        }
+
         addRules.push({
-          id: ruleId,
+          id: allocateRuleId(usedIds),
           priority: 3,
           action: {
             type: "redirect",
             redirect: { url: item.targetUrl },
           },
           condition: {
-            regexFilter: `^(https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net|\\.twitch\\.tv)/.+/)[^/]+/${segId}-(?:muted|unmuted)(\\.(?:ts|mp4|m4s)(?:\\?.*)?)$`,
+            urlFilter: `||${domain}/*/${segId}-muted.*`,
+            resourceTypes: ["xmlhttprequest", "media", "other"],
+          },
+        });
+
+        addRules.push({
+          id: allocateRuleId(usedIds),
+          priority: 3,
+          action: {
+            type: "redirect",
+            redirect: { url: item.targetUrl },
+          },
+          condition: {
+            urlFilter: `||${domain}/*/${segId}-unmuted.*`,
             resourceTypes: ["xmlhttprequest", "media", "other"],
           },
         });
@@ -242,7 +261,7 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
             ],
           },
           condition: {
-            regexFilter: "^https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net|\\.twitch\\.tv)/.+/[^/?#]+(?:-(?:muted|unmuted))?\\.(?:ts|mp4|m4s)(?:\\?.*)?$",
+            regexFilter: "^https://[^/]+\\.(?:cloudfront\\.net|ttvnw\\.net|twitch\\.tv)/.*\\.(?:ts|mp4|m4s)(?:\\?.*)?$",
             resourceTypes: ["xmlhttprequest", "media", "other"],
           },
         };

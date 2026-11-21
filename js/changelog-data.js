@@ -52,6 +52,55 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.11.25",
+    "date": "2026-11-21",
+    "title": {
+      "fr": "Optimisation des règles déclaratives VOD",
+      "en": "Declarative VOD Rules Optimization",
+      "uk": "Оптимізація декларативних правил VOD",
+      "es": "Optimización de reglas declarativas VOD",
+      "pt-BR": "Otimização de regras declarativas VOD",
+      "de": "Optimierung der deklarativen VOD-Regeln",
+      "it": "Ottimizzazione delle regole dichiarative VOD",
+      "pl": "Optymalizacja deklaratywnych reguł VOD",
+      "tr": "Bildirimsel VOD Kuralları Optimizasyonu",
+      "ru": "Оптимизация декларативных правил VOD",
+      "ja": "宣言型VODルールのメモリ最適化",
+      "ko": "선언적 VOD 규칙 메모리 최적화",
+      "ar": "تحسين القواعد التصريحية لـ VOD",
+      "id": "Optimalisasi Aturan Deklaratif VOD",
+      "nl": "Optimalisatie van declaratieve VOD-regels",
+      "sv": "Optimering av deklarativa VOD-regler",
+      "cs": "Optimalizace deklarativních pravidel VOD"
+    },
+    "changes": [
+      {
+        "type": "fix",
+        "area": "fixes",
+        "text": {
+          "fr": "Remplacement des expressions régulières volumineuses par des filtres d'URL directs pour respecter le quota mémoire de 2 Ko de Chromium.",
+          "en": "Replacement of bulky regular expressions with direct URL filters to respect Chromium 2 KB memory quota.",
+          "uk": "Заміна об'ємних регулярних виразів прямими фільтрами URL для дотримання ліміту пам'яті Chromium у 2 КБ.",
+          "es": "Reemplazo de expresiones regulares voluminosas por filtros de URL directos para respetar la cuota de memoria de 2 KB de Chromium.",
+          "pt-BR": "Substituição de expressões regulares volumosas por filtros de URL diretos para respeitar o limite de memória de 2 KB do Chromium.",
+          "de": "Ersetzung umfangreicher regulärer Ausdrücke durch direkte URL-Filter zur Einhaltung des Chromium-Speicherlimits von 2 KB.",
+          "it": "Sostituzione di espressioni regolari voluminose con filtri URL diretti per rispettare il limite di memoria di 2 KB di Chromium.",
+          "pl": "Zastąpienie obszernych wyrażeń regularnych bezpośrednimi filtrami adresów URL w celu przestrzegania limitu pamięci 2 KB w Chromium.",
+          "tr": "Chromium'un 2 KB bellek sınırına uymak için hacimli düzenli ifadeler doğrudan URL filtreleriyle değiştirildi.",
+          "ru": "Замена объемных регулярных выражений прямыми фильтрами URL для соблюдения лимита памяти Chromium в 2 КБ.",
+          "ja": "Chromiumの2KBメモリ制限を遵守するため、巨大な正規表現をダイレクトURLフィルターに置き換え。",
+          "ko": "Chromium의 2KB 메모리 할당량을 준수하기 위해 대용량 정규식을 직접 URL 필터로 교체.",
+          "ar": "استبدال التعبيرات النمطية الكبيرة بفلاتر عناوين URL مباشرة لاحترام حد ذاكرة Chromium البالغ 2 كيلوبايت.",
+          "id": "Penggantian ekspresi reguler besar dengan filter URL langsung untuk mematuhi batas memori 2 KB Chromium.",
+          "nl": "Vervanging van omvangrijke reguliere expressies door directe URL-filters om te voldoen aan de geheugenlimiet van 2 KB van Chromium.",
+          "sv": "Ersättning av skrymmande reguljära uttryck med direkta URL-filter för att respektera Chromium 2 KB-minneskvoten.",
+          "cs": "Nahrazení objemných regulárních výrazů přímými filtry URL pro dodržení paměťového limitu 2 KB v Chromiu."
+        }
+      }
+    ]
+  },
+
+  {
     version: "26.11.24",
     "date": "2026-11-21",
     "title": {
