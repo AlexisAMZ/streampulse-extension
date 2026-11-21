@@ -58,18 +58,25 @@
         position: absolute;
         top: 0;
         bottom: 0;
-        background: rgba(0, 245, 155, 0.75);
+        background: linear-gradient(90deg, #ff0055, #ff5500, #ffcc00, #00ff66, #00ccff, #7700ff, #ff00aa);
+        background-size: 200% 100%;
+        animation: streampulse-rainbow 3s linear infinite;
         border-radius: 2px;
+        box-shadow: 0 0 6px rgba(255, 255, 255, 0.45);
         pointer-events: none;
         z-index: 10;
         transition: opacity 0.2s ease;
+      }
+      @keyframes streampulse-rainbow {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
       }
       .streampulse-unmuted-indicator {
         position: absolute;
         bottom: 48px;
         right: 16px;
         background: rgba(14, 14, 16, 0.88);
-        border: 1px solid rgba(0, 245, 155, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.3);
         color: #efeff1;
         font-size: 12px;
         font-weight: 500;
@@ -217,6 +224,36 @@
     }
   }
 
+  function mergeContinuousRanges(ranges) {
+    if (!ranges || ranges.length === 0) return [];
+    const sorted = [...ranges].sort((a, b) => a.startTime - b.startTime);
+    const merged = [];
+    let cur = { ...sorted[0] };
+
+    for (let i = 1; i < sorted.length; i++) {
+      const next = sorted[i];
+      if (next.startTime <= cur.startTime + cur.duration + 0.5) {
+        cur.duration = (next.startTime + next.duration) - cur.startTime;
+      } else {
+        merged.push(cur);
+        cur = { ...next };
+      }
+    }
+    merged.push(cur);
+    return merged;
+  }
+
+  function formatTimecode(seconds) {
+    const s = Math.floor(seconds);
+    const hrs = Math.floor(s / 3600);
+    const mins = Math.floor((s % 3600) / 60);
+    const secs = s % 60;
+    if (hrs > 0) {
+      return `${hrs.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+    }
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  }
+
   function paintSeekbar() {
     ensureStyles();
     const seekbar = document.querySelector("div.seekbar-bar");
@@ -225,15 +262,20 @@
     // Supprime les anciens marqueurs StreamPulse
     seekbar.querySelectorAll(".streampulse-unmuted-segment").forEach((el) => el.remove());
 
-    for (const range of restoredRanges) {
+    const merged = mergeContinuousRanges(restoredRanges);
+
+    for (const range of merged) {
       const segEl = document.createElement("div");
       segEl.className = "streampulse-unmuted-segment";
       const leftPercent = (range.startTime / totalVodDuration) * 100;
       const widthPercent = (range.duration / totalVodDuration) * 100;
 
+      const startTc = formatTimecode(range.startTime);
+      const endTc = formatTimecode(range.startTime + range.duration);
+
       segEl.style.left = `${leftPercent.toFixed(3)}%`;
-      segEl.style.width = `${Math.max(0.2, widthPercent).toFixed(3)}%`;
-      segEl.title = "Audio restauré (StreamPulse+)";
+      segEl.style.width = `${Math.max(0.25, widthPercent).toFixed(3)}%`;
+      segEl.title = `Audio restauré par StreamPulse+ (${startTc} - ${endTc})`;
       seekbar.appendChild(segEl);
     }
   }
