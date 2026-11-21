@@ -2,6 +2,7 @@
 
 import { CLAIM_OK_STATUSES } from "../drops-data.js";
 import { DROPS_POPUP_REFRESH_MS, announceDrops, badgeAuto, checkBadgeAfterClaim, checkDropCampaignAlerts, claimDropFromWorker, dropsStore, dropsStreamUrl, pointsStore, refreshDropsFromWorker, sendDropsCommand } from "./drops.js";
+import { refreshKickDropsFromWorker, unboxKickRewards } from "./kick-drops.js";
 import { PreferenceStore } from "./stores.js";
 import { plusActiveFrom } from "../plus.js";
 import { warnWith } from "./log.js";
@@ -145,11 +146,25 @@ export function handleDropsRefresh(request, sender, sendResponse) {
       // minGapMs infini : inventaire réputé frais, seuls badges et récompenses partent.
       const inventoryGap = request.force || now - readAt >= DROPS_POPUP_REFRESH_MS ? 0 : Number.POSITIVE_INFINITY;
       const result = await refreshDropsFromWorker({ minGapMs: inventoryGap, rewardsMaxAgeMs: DROPS_POPUP_REFRESH_MS });
+      refreshKickDropsFromWorker({ force: request.force }).catch(warnWith("relecture drops Kick"));
       const sent = result.read || (inventoryGap === 0 && (await sendDropsCommand({ action: "inventory" })));
       if (now - campaignsAt >= 30 * 60_000) sendDropsCommand({ action: "campaigns" }).catch(warnWith("relecture des campagnes"));
       sendResponse({ success: true, sent });
     } catch (error) {
       sendResponse({ error: error?.message || String(error) });
+    }
+  })();
+  return true;
+}
+
+export function handleUnboxKickRewards(request, sender, sendResponse) {
+  (async () => {
+    try {
+      const ids = Array.isArray(request.ids) ? request.ids : [];
+      const result = await unboxKickRewards(ids);
+      sendResponse(result);
+    } catch (error) {
+      sendResponse({ success: false, error: error?.message || String(error) });
     }
   })();
   return true;

@@ -2,7 +2,7 @@
 
 import { HISTORY_KEY, addSession, emptyHistory, markSeen, patchSession, removeEntry } from "../history-data.js";
 import { formatHandleForDisplay, normalizePlatform } from "../platforms.js";
-import { fetchTwitchJson, twitchHeaders } from "./config.js";
+import { fetchJson, fetchTwitchJson, twitchHeaders } from "./config.js";
 import { sizeThumbnail } from "./normalize.js";
 import { PlatformChecker } from "./platform-checker.js";
 
@@ -88,8 +88,40 @@ export class HistoryStore {
     }).then((saved) => {
       if (saved && saved.platform === "twitch" && !saved.watched) {
         this.attachTwitchVod(saved).catch((error) => console.warn("VOD lookup failed:", error?.message || error));
+      } else if (saved && saved.platform === "kick" && !saved.watched) {
+        this.attachKickVod(saved).catch((error) => console.warn("Kick VOD lookup failed:", error?.message || error));
       }
     });
+  }
+
+  /** La rediffusion Kick est accessible via l'API des vidéos de la chaîne. */
+  static async attachKickVod(entry) {
+    try {
+      const data = await fetchJson(
+        `https://kick.com/api/v1/channels/${encodeURIComponent(entry.handle)}/videos`
+      );
+      const list = Array.isArray(data) ? data : (Array.isArray(data?.videos) ? data.videos : []);
+      const video = list[0];
+      if (!video) return;
+      const startedAt = Date.parse(entry.startedAt || "");
+      const createdAt = Date.parse(video.created_at || "");
+      if (Number.isFinite(startedAt) && Number.isFinite(createdAt) && Math.abs(createdAt - startedAt) > 4 * 60 * 60 * 1000) return;
+      const vodUrl = video.slug
+        ? `https://kick.com/${encodeURIComponent(entry.handle)}/videos/${encodeURIComponent(video.slug)}`
+        : (video.id ? `https://kick.com/video/${video.id}` : `https://kick.com/${encodeURIComponent(entry.handle)}/videos`);
+      const thumbnailUrl = video.thumbnail?.url || video.thumbnail?.src || (typeof video.thumbnail === "string" ? video.thumbnail : "");
+      await this._enqueue(async () =>
+        this.save(
+          patchSession(await this.get(), entry.id, {
+            vodUrl,
+            hasVod: true,
+            ...(thumbnailUrl ? { thumbnailUrl } : {}),
+          })
+        )
+      );
+    } catch (error) {
+      console.warn("[StreamPulse] Kick VOD lookup failed:", error?.message || error);
+    }
   }
 
   /** La rediffusion Twitch n'existe qu'apres coup : on la cherche une fois le live fini. */

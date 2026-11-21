@@ -33,7 +33,7 @@ export const PLATFORM_BY_CONTROL = {
   "pref-clip-download": TWITCH,
   "pref-player-quality": TWITCH,
   "pref-keep-quality": TWITCH,
-  "pref-latency-placement": TWITCH,
+  "pref-latency-placement": TWITCH_KICK,
   "pref-hide-twitch-extensions": TWITCH,
   "pref-auto-refresh": TWITCH,
   "pref-previews-enabled": TWITCH,

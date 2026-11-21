@@ -105,13 +105,30 @@
     dialog.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", code: "Escape", bubbles: true }));
   }
 
+  function dismissUnboxing() {
+    for (const dialog of document.querySelectorAll("[role='dialog']")) {
+      const btn = Array.from(dialog.querySelectorAll("button")).find((b) => {
+        const text = (b.textContent || "").trim().toLowerCase();
+        return (text === "passer" || text === "quitter" || text === "skip" || text === "close") && !b.disabled;
+      });
+      if (btn) {
+        btn.click();
+        return true;
+      }
+    }
+    return false;
+  }
+
   function claimInOpenDialog() {
     const dialog = Array.from(document.querySelectorAll("[role='dialog']")).pop();
     if (!dialog) return;
     const current = getLabels();
     const button = Array.from(dialog.querySelectorAll("button")).find((b) => RULES.isDailyClaimButton(describe(b), current));
     if (button) button.click();
-    setTimeout(() => closeDialog(dialog), button ? DIALOG_CLOSE_MS : 0);
+    setTimeout(() => {
+      dismissUnboxing();
+      closeDialog(dialog);
+    }, button ? DIALOG_CLOSE_MS : 0);
   }
 
   function tryClaimDailyReward() {

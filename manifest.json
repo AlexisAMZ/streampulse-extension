@@ -3,7 +3,7 @@
   "default_locale": "en",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "26.11.14",
+  "version": "26.11.20",
   "permissions": [
     "storage",
     "alarms",
@@ -157,8 +157,8 @@
         "js/previews/card.js",
         "js/previews/observer.js",
         "js/kickPreviews.js",
-        "js/kickPlayerEnhancer.js",
         "js/inject/plus-rule.js",
+        "js/kickPlayerEnhancer.js",
         "js/inject/human-delay.js",
         "js/inject/kick-claim-rules.js",
         "js/kickChannelPoints.js",

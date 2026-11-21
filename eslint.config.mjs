@@ -67,6 +67,7 @@ const ES_MODULES = [
   "js/points-data.js",
   "js/points-store.js",
   "js/drops-data.js",
+  "js/kick-drops-data.js",
   "js/drop-alerts.js",
   "js/plus-value.js",
   "js/badges-data.js",

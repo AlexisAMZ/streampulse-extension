@@ -7,10 +7,16 @@
 
   const PREFERENCES_KEY = "betaGeneralPreferences";
   const FAST_FORWARD_ID = "streampulse-kick-fast-forward";
+  const PIP_ID = "streampulse-kick-pip";
+  const CLIP_DOWNLOAD_ID = "streampulse-kick-clip-download";
   const LATENCY_ID = "streampulse-kick-latency";
   const LATENCY_STYLE_ID = "streampulse-kick-latency-style";
 
   let fastForwardEnabled = true;
+  let pipEnabled = true;
+  let clipDownloadEnabled = true;
+  let plusActive = false;
+  let downloadingClip = false;
   let intervalId = null;
   let latencyTimer = null;
   let headerTimer = null;
@@ -20,6 +26,18 @@
   let currentLang = "en";
   const i18nApi = () => (typeof window !== "undefined" ? window.__SP_I18N__ : null);
 
+  function i18nLabel(key) {
+    const api = i18nApi();
+    return api ? api.get(currentLang, "player." + key) : key;
+  }
+
+  function kickClipSlugFromLocation() {
+    const loc = typeof window !== "undefined" && window.location ? window.location : null;
+    if (!loc || typeof loc.pathname !== "string") return null;
+    const match = /(?:\/clips\/|^\/[^/]+\/clips\/)([A-Za-z0-9_-]+)/.exec(loc.pathname);
+    return match ? match[1] : null;
+  }
+
   function jumpToLiveTitle() {
     const api = i18nApi();
     return api ? api.get(currentLang, "enhancer.jumpToLive") : "Jump to Live (StreamPulse)";
@@ -28,7 +46,7 @@
   /**
    * Direct ? Infinity n'arrive que sur certains pipelines. Pour le lecteur MSE
    * de Kick (durée = fin de fenêtre glissante, même en low-latency) : une
-   * durée qui GRANDIT d'un passage à l'autre trahit le direct — un VOD a une
+   * durée qui GRANDIT d'un passage à l'autre trahit le direct : un VOD a une
    * durée constante. Au premier passage, repli : fenêtre à plus de 8 s de la
    * fin de la fenêtre.
    */
@@ -57,10 +75,25 @@
       : api.get(currentLang, "player.latencyValue", { value: delay.toFixed(2) });
   }
 
+  function latencyParts(delay) {
+    const raw = latencyText(delay);
+    const match = /^(.+?)\s*[:：]\s*(.+)$/.exec(raw);
+    if (!match) {
+      return {
+        label: "latence",
+        value: delay == null ? "--" : `${delay.toFixed(2)}s`,
+      };
+    }
+    const label = match[1].trim().toLowerCase();
+    const value = match[2].trim();
+    return { label, value };
+  }
+
   // ─── Placement, comme sur Twitch ─────────────────────────────────────────────
-  // « viewers » : bouton fixé sur le lecteur. « chat » : le mot « Chat » de
-  // l'en-tête du tchat est remplacé par le bouton de latence, texte repris à
-  // la fin.
+  // « viewers » : bouton placé sous le lecteur (près du compteur de spectateurs
+  // ou des métadonnées de chaîne, repli sur la barre de commandes basse).
+  // « chat » : le mot « Chat » de l'en-tête du tchat est remplacé par le bouton
+  // de latence, texte repris à la fin.
 
   let latencyPlacement = "viewers";
   let chatTitleEl = null;
@@ -69,12 +102,12 @@
     if (chatTitleEl && chatTitleEl.isConnected) chatTitleEl.style.display = "";
     chatTitleEl = null;
     const badge = document.getElementById(LATENCY_ID);
-    if (badge) badge.remove();
+    if (badge && badge.classList.contains("is-chat")) badge.remove();
   }
 
-  function hidePlayerBadge() {
+  function detachBadge() {
     const badge = document.getElementById(LATENCY_ID);
-    if (badge) badge.style.display = "none";
+    if (badge && badge.isConnected) badge.remove();
   }
 
   /**
@@ -95,9 +128,67 @@
     return candidates.length ? candidates[candidates.length - 1] : null;
   }
 
+  /**
+   * Barre de commandes basse du lecteur vidéo (Kick moderne Tailwind .z-controls
+   * ou Video.js .vjs-control-bar).
+   */
+  function findControls() {
+    const modern = document.querySelector(".z-controls, [class*='z-controls']");
+    if (modern) {
+      const leftGroup = modern.querySelector(".flex.items-center") || modern;
+      return leftGroup;
+    }
+    const vjs = document.querySelector(".vjs-control-bar");
+    if (vjs) return vjs;
+
+    const playBtn = document.querySelector("button[title*='Play' i], button[title*='Pause' i], button[aria-label*='Play' i], button[aria-label*='Pause' i]");
+    if (playBtn && playBtn.parentElement) {
+      return playBtn.parentElement.parentElement || playBtn.parentElement;
+    }
+
+    return null;
+  }
+
+  /**
+   * Emplacement sous le lecteur vidéo (section métadonnées).
+   * Priorité : devant le compteur de spectateurs, sinon rangée d'actions (follow),
+   * sinon repli sur la barre de commandes basse (qui s'efface hors survol).
+   */
+  function findMetadataAnchor() {
+    // 1. Conteneur des spectateurs sous le lecteur
+    const spans = document.querySelectorAll("main span.text-surface-fg-subtle, main span.tabular-nums, main span");
+    for (const span of spans) {
+      const text = (span.textContent || "").trim();
+      if (/\b(spectateur|viewer)s?\b/i.test(text)) {
+        const holder = span.closest(".flex.items-center") || span.parentElement;
+        if (holder) return { element: holder, mode: "before" };
+      }
+    }
+
+    // 2. Rangée d'actions de chaîne (bouton suivre / follow)
+    const followBtn = document.querySelector('[data-testid="follow-button"], main button[data-slot="button"]');
+    if (followBtn && followBtn.parentElement) {
+      return { element: followBtn.parentElement, mode: "append" };
+    }
+
+    // 3. Bloc catégorie
+    const catLink = document.querySelector('main a[href^="/category/"]');
+    if (catLink && catLink.parentElement) {
+      return { element: catLink.parentElement, mode: "append" };
+    }
+
+    // 4. Repli : barre de commandes basse (qui s'efface hors survol)
+    const controls = findControls();
+    if (controls) {
+      return { element: controls, mode: "append", isControlBar: true };
+    }
+
+    return null;
+  }
+
   // ─── Bouton de latence (même D.A. et même clic que Twitch) ───────────────────
 
-  /** Feuille de style partagée : reprise du CSS du bouton Twitch. */
+  /** Feuille de style partagée : D.A. calquée sur le compteur de spectateurs de Kick. */
   function ensureStyles() {
     if (document.getElementById(LATENCY_STYLE_ID)) return;
     const style = document.createElement("style");
@@ -107,48 +198,65 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 6px 12px;
+      padding: 0;
+      background: transparent;
+      border: none;
       color: #dedee3;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 14px;
-      transition: all 0.2s ease;
+      font-family: inherit;
+      line-height: 1.25rem;
+      transition: opacity 0.2s ease;
       user-select: none;
-      gap: 8px;
+      gap: 4px;
     }
     .streampulse-latency-button:hover {
       color: #ffffff;
       cursor: pointer;
-      transform: translateY(-1px);
+      opacity: 0.85;
     }
     .streampulse-latency-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: #888;
+      display: none;
     }
-    .streampulse-latency-button.is-live .streampulse-latency-dot {
-      background-color: #ff4d4d;
+    .streampulse-latency-value {
+      color: #53fc18;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .streampulse-latency-label {
+      color: var(--edge-color-surface-fg-subtle, #a8a8a8);
+      font-weight: 700;
     }
     .streampulse-latency-button.is-disabled {
-      opacity: 0.4;
+      opacity: 0.45;
       cursor: default;
       transform: none;
       pointer-events: none;
     }
+    .streampulse-latency-button.is-disabled .streampulse-latency-value {
+      color: var(--edge-color-surface-fg-subtle, #a8a8a8);
+    }
     .streampulse-latency-button.is-disabled:hover {
-      color: #dedee3;
+      opacity: 0.45;
       transform: none;
     }
-    .streampulse-latency-button.is-on-player {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      z-index: 60;
-      background: rgba(9, 11, 15, .72);
-      border-radius: 6px;
-      padding: 4px 10px;
+    .streampulse-latency-button.is-metadata {
+      margin-right: 12px;
+      align-self: center;
+    }
+    .streampulse-latency-button.is-in-controls {
       font-size: 12px;
+      padding: 0 6px;
+      align-self: center;
+    }
+    .streampulse-latency-button.is-in-controls .streampulse-latency-label {
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .streampulse-latency-button.is-chat {
+      font-size: 13px;
+      padding: 0 4px;
+      align-self: center;
     }
     `;
     document.head.appendChild(style);
@@ -162,14 +270,17 @@
       btn.id = LATENCY_ID;
       btn.className = "streampulse-latency-button";
 
-      const dot = document.createElement("span");
-      dot.className = "streampulse-latency-dot";
+      const val = document.createElement("span");
+      val.className = "streampulse-latency-value";
 
-      const text = document.createElement("span");
-      text.className = "streampulse-latency-text";
-      text.textContent = latencyText(null);
+      const lbl = document.createElement("span");
+      lbl.className = "streampulse-latency-label";
 
-      btn.append(dot, text);
+      const parts = latencyParts(null);
+      val.textContent = parts.value;
+      lbl.textContent = parts.label;
+
+      btn.append(val, lbl);
       // Cliquer = rattraper le direct, même comportement que sur Twitch.
       btn.addEventListener("click", () => {
         const video = findVideo();
@@ -183,6 +294,16 @@
         if (video.paused) video.play().catch(() => {});
         updateLatency();
       });
+    } else if (!btn.querySelector(".streampulse-latency-value")) {
+      btn.textContent = "";
+      const val = document.createElement("span");
+      val.className = "streampulse-latency-value";
+      const lbl = document.createElement("span");
+      lbl.className = "streampulse-latency-label";
+      const parts = latencyParts(null);
+      val.textContent = parts.value;
+      lbl.textContent = parts.label;
+      btn.append(val, lbl);
     }
     return btn;
   }
@@ -194,19 +315,41 @@
         if (chatTitleEl && chatTitleEl.isConnected) chatTitleEl.style.display = "";
         chatTitleEl = title;
       }
+      btn.classList.remove("is-metadata", "is-in-controls", "is-on-player");
+      btn.classList.add("is-chat");
       title.style.display = "none";
-      title.insertAdjacentElement("beforebegin", btn);
+      if (btn.nextElementSibling !== title) {
+        title.insertAdjacentElement("beforebegin", btn);
+      }
       return true;
     }
     return false;
   }
 
-  function attachPlayerButton(btn, video) {
-    if (!video || !video.parentElement) return false;
-    const container = video.parentElement;
-    if (window.getComputedStyle(container).position === "static") container.style.position = "relative";
-    btn.classList.add("is-on-player");
-    if (!container.contains(btn)) container.appendChild(btn);
+  function attachMetadataButton(btn) {
+    const anchor = findMetadataAnchor();
+    if (!anchor) return false;
+
+    if (anchor.isControlBar) {
+      btn.classList.remove("is-metadata", "is-chat", "is-on-player");
+      btn.classList.add("is-in-controls");
+      if (!anchor.element.contains(btn)) {
+        anchor.element.appendChild(btn);
+      }
+      return true;
+    }
+
+    btn.classList.remove("is-in-controls", "is-chat", "is-on-player");
+    btn.classList.add("is-metadata");
+    if (anchor.mode === "before") {
+      if (btn.nextElementSibling !== anchor.element) {
+        anchor.element.insertAdjacentElement("beforebegin", btn);
+      }
+    } else {
+      if (!anchor.element.contains(btn)) {
+        anchor.element.appendChild(btn);
+      }
+    }
     return true;
   }
 
@@ -218,8 +361,6 @@
     const isChat = latencyPlacement === "chat";
 
     if (isChat) {
-      btn.classList.remove("is-on-player");
-      hidePlayerBadge();
       if (!attachChatButton(btn)) {
         // Pas d'en-tête de tchat (tchat masqué) : pas d'indicateur du tout.
         if (btn.isConnected) btn.remove();
@@ -227,59 +368,47 @@
       }
     } else {
       restoreChatTitle();
-      if (!attachPlayerButton(btn, video)) return;
+      if (!attachMetadataButton(btn)) return;
     }
 
-    if (!isLive(video)) {
+    const live = isLive(video);
+    const delay = live ? latencyDelay(video) : null;
+    const parts = latencyParts(delay);
+    const valEl = btn.querySelector(".streampulse-latency-value");
+    const lblEl = btn.querySelector(".streampulse-latency-label");
+    if (valEl) valEl.textContent = parts.value;
+    if (lblEl) lblEl.textContent = parts.label;
+
+    if (!live) {
       btn.classList.remove("is-live");
       btn.classList.add("is-disabled");
-      const text = btn.querySelector(".streampulse-latency-text");
-      if (text) text.textContent = latencyText(null);
+      btn.title = jumpToLiveTitle();
       return;
     }
     btn.classList.add("is-live");
-    const delay = latencyDelay(video);
     const canRealign = delay != null && delay > 0.25 && video && !video.paused;
     btn.classList.toggle("is-disabled", !canRealign);
-    const text = btn.querySelector(".streampulse-latency-text");
-    if (text) text.textContent = latencyText(delay == null ? null : delay);
+    btn.title = delay != null ? `${jumpToLiveTitle()} (${latencyText(delay)})` : jumpToLiveTitle();
   }
 
   function loadSettings() {
-    chrome.storage.local.get([PREFERENCES_KEY], (result) => {
+    chrome.storage.local.get([PREFERENCES_KEY, "streamPulsePlus"], (result) => {
       const prefs = result[PREFERENCES_KEY] || {};
       const api = i18nApi();
       if (api && prefs.language) currentLang = api.resolve(prefs.language);
       fastForwardEnabled = prefs.enableFastForwardButton !== false; // Default true
+      pipEnabled = prefs.enablePipButton !== false;
+      clipDownloadEnabled = prefs.enableClipDownload !== false;
+      const rule = globalThis.StreamPulsePlusRule;
+      plusActive = Boolean(rule ? rule.isPlusActive(result.streamPulsePlus) : result.streamPulsePlus?.status === "active");
       latencyPlacement = prefs.latencyPlacement === "chat" ? "chat" : "viewers";
-      // La boucle tourne toujours : elle porte aussi l'indicateur de latence,
-      // qui ne dépend pas du bouton d'avance rapide.
       startLoop();
-      if (!fastForwardEnabled) {
-        removeButton();
-      }
+      ensureButtons();
     });
   }
 
   function findVideo() {
     return document.querySelector("video");
-  }
-
-  function findControls() {
-    // Kick uses various classes based on player version.
-    // Common: .vjs-control-bar, or generic container checking.
-    // We try to find the row of controls at the bottom.
-    const vjs = document.querySelector(".vjs-control-bar");
-    if (vjs) return vjs;
-
-    // Fallback: look for play button parent
-    const playBtn = document.querySelector("button[title='Play'], button[title='Pause']");
-    if (playBtn && playBtn.parentElement) {
-      // Traverse up to find the bar
-      return playBtn.parentElement.parentElement || playBtn.parentElement;
-    }
-
-    return null;
   }
 
   function createButton() {
@@ -323,30 +452,188 @@
     return btn;
   }
 
-  function ensureButton() {
-    // Contexte mort (extension rechargee) : couper la boucle au lieu de
-    // jeter dans le vide toutes les 2 s jusqu'a la fermeture de l'onglet.
+  function createPipButton() {
+    if (document.getElementById(PIP_ID)) return document.getElementById(PIP_ID);
+    const btn = document.createElement("button");
+    btn.id = PIP_ID;
+    btn.className = "streampulse-kick-btn";
+    btn.type = "button";
+    btn.innerHTML = `
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+        <path d="M2 4h20v9h-2V6H4v10h6v2H2V4Z"></path>
+        <path d="M12 14h10v6H12v-6Z"></path>
+      </svg>
+    `;
+    btn.style.cssText = `
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      margin-left: 5px;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    `;
+    btn.title = i18nLabel("pictureInPicture");
+    btn.onmouseenter = () => btn.style.opacity = "1";
+    btn.onmouseleave = () => btn.style.opacity = "0.8";
+    btn.onclick = async () => {
+      try {
+        if (document.pictureInPictureElement) {
+          await document.exitPictureInPicture();
+          return;
+        }
+        const video = findVideo();
+        if (!video) return;
+        video.disablePictureInPicture = false;
+        await video.requestPictureInPicture();
+      } catch (err) {
+        console.warn("[StreamPulse] PIP failed:", err);
+      }
+    };
+    return btn;
+  }
+
+  function createClipDownloadButton(slug) {
+    if (document.getElementById(CLIP_DOWNLOAD_ID)) return document.getElementById(CLIP_DOWNLOAD_ID);
+    const btn = document.createElement("button");
+    btn.id = CLIP_DOWNLOAD_ID;
+    btn.className = "streampulse-kick-btn";
+    btn.type = "button";
+    btn.innerHTML = `
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+        <path d="M11 3h2v9.17l3.59-3.59L18 10l-6 6-6-6 1.41-1.42L11 12.17V3Z"></path>
+        <path d="M5 18h14v2H5v-2Z"></path>
+      </svg>
+    `;
+    btn.style.cssText = `
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px;
+      margin-left: 5px;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    `;
+    btn.title = i18nLabel("clipDownload");
+    btn.onmouseenter = () => btn.style.opacity = "1";
+    btn.onmouseleave = () => btn.style.opacity = "0.8";
+    btn.onclick = () => downloadKickClip(btn, slug);
+    return btn;
+  }
+
+  async function downloadKickClip(btn, slug) {
+    if (downloadingClip) return;
+    downloadingClip = true;
+    btn.setAttribute("aria-busy", "true");
+    const origTitle = btn.title;
+    btn.title = i18nLabel("clipDownloading");
+
+    try {
+      let videoUrl = "";
+      let title = slug;
+      let channel = "";
+
+      // 1. Essayer l'API Kick
+      try {
+        const res = await fetch(`https://kick.com/api/v2/clips/${encodeURIComponent(slug)}`);
+        if (res.ok) {
+          const json = await res.json();
+          const clipData = json?.clip || json;
+          videoUrl = clipData?.clip_url || clipData?.video_url || "";
+          title = clipData?.title || slug;
+          channel = clipData?.channel?.slug || clipData?.creator?.username || "";
+        }
+      } catch (_) {
+        // repli sur le DOM
+      }
+
+      // 2. Si pas d'URL trouvée, chercher dans le DOM vidéo
+      if (!videoUrl) {
+        const video = findVideo();
+        if (video?.currentSrc && !video.currentSrc.startsWith("blob:")) {
+          videoUrl = video.currentSrc;
+        } else if (video?.src && !video.src.startsWith("blob:")) {
+          videoUrl = video.src;
+        }
+      }
+
+      if (!videoUrl) throw new Error("Source introuvable");
+
+      const media = await fetch(videoUrl);
+      if (!media.ok) throw new Error(`HTTP ${media.status}`);
+      const blob = await media.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      const safe = [channel, title].filter(Boolean).join(" - ").replace(/[\\/:*?"<>|]/g, " ").trim();
+      link.download = `${safe || slug}.mp4`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+      btn.title = origTitle;
+    } catch (err) {
+      console.warn("[StreamPulse] Téléchargement clip Kick échoué :", err?.message || err);
+      btn.title = i18nLabel("clipDownloadFailed");
+    } finally {
+      downloadingClip = false;
+      btn.removeAttribute("aria-busy");
+    }
+  }
+
+  function ensureButtons() {
     if (!(chrome.runtime && chrome.runtime.id)) {
       stopLoop();
       return;
     }
-    if (!fastForwardEnabled) return;
     const controls = findControls();
     if (!controls) return;
 
-    // Check if already inserted
-    if (document.getElementById(FAST_FORWARD_ID)) {
-      // Check if still in DOM
-      if (!controls.contains(document.getElementById(FAST_FORWARD_ID))) {
-        // Re-append if moved/removed
+    // Fast Forward button (live only)
+    if (fastForwardEnabled) {
+      if (!document.getElementById(FAST_FORWARD_ID)) {
+        controls.appendChild(createButton());
+      } else if (!controls.contains(document.getElementById(FAST_FORWARD_ID))) {
         controls.appendChild(createButton());
       }
-      return;
+    } else {
+      removeButton();
     }
 
-    // Append to controls
-    // Kick controls usually have left/right sections. We assume appending works ok.
-    controls.appendChild(createButton());
+    // PIP button
+    if (pipEnabled && document.pictureInPictureEnabled) {
+      if (!document.getElementById(PIP_ID)) {
+        controls.appendChild(createPipButton());
+      } else if (!controls.contains(document.getElementById(PIP_ID))) {
+        controls.appendChild(createPipButton());
+      }
+    } else {
+      document.getElementById(PIP_ID)?.remove();
+    }
+
+    // Clip download button (sur page de clip)
+    const clipSlug = kickClipSlugFromLocation();
+    if (clipSlug && clipDownloadEnabled && plusActive) {
+      if (!document.getElementById(CLIP_DOWNLOAD_ID)) {
+        controls.appendChild(createClipDownloadButton(clipSlug));
+      } else if (!controls.contains(document.getElementById(CLIP_DOWNLOAD_ID))) {
+        controls.appendChild(createClipDownloadButton(clipSlug));
+      }
+    } else {
+      document.getElementById(CLIP_DOWNLOAD_ID)?.remove();
+    }
+  }
+
+  function ensureButton() {
+    ensureButtons();
   }
 
   function startLoop() {
@@ -368,6 +655,7 @@
     if (headerTimer) clearInterval(headerTimer);
     headerTimer = null;
     restoreChatTitle();
+    detachBadge();
   }
 
   function removeButton() {

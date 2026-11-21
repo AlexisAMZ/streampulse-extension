@@ -79,6 +79,7 @@ export function normalizeStreamer(raw) {
         : DEFAULT_PREFERENCES.titleNotifications,
     avatarUrl: raw.avatarUrl || "",
     twitchId: platform === "twitch" ? raw.twitchId || "" : "",
+    kickChannelId: platform === "kick" ? (raw.kickChannelId || raw.broadcasterUserId || raw.channelId || "") : "",
     createdAt: raw.createdAt || Date.now(),
     socials: normalizeSocialLinks(raw.socials),
   };

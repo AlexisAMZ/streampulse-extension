@@ -21,6 +21,7 @@ import { createPlusExternalListener } from "./sw/plus-external.js";
 import { keepChannelTabLoaded, onPreferencesChangedForTabDiscard } from "./sw/tab-discard.js";
 import { WatchTimeStore } from "./sw/watchtime.js";
 import { initSync } from "./sw/sync.js";
+import { syncKickPusher } from "./sw/kick-pusher.js";
 
 
 // Le repli OAuth côté client a été supprimé (le secret client ne doit jamais
@@ -109,6 +110,9 @@ chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== "local") return;
   if (changes[PREFERENCES_KEY] || changes[PLUS_KEY]) {
     scheduleDropsAlarm().catch((error) => console.warn("[StreamPulse] alarme des Drops :", error?.message || error));
+  }
+  if (changes.betaGeneralStreamers) {
+    syncKickPusher().catch((e) => console.warn("[StreamPulse] Kick Pusher:", e?.message || e));
   }
   if (changes[PLUS_KEY] && isPlusActive(changes[PLUS_KEY].newValue)) {
     clearMissed().catch((error) => console.warn("[StreamPulse] alertes manquées :", error?.message || error));

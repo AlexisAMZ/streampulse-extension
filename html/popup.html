@@ -936,6 +936,11 @@
         <section class="menu-panel drops-panel" id="menu-drops" role="tabpanel" aria-labelledby="menu-tab-drops" hidden>
           <div class="pts-head">
             <h2 data-i18n="popup.drops.title">Drops</h2>
+            <div class="segmented" id="drops-platform" role="group" data-i18n-attr-ariaLabel="popup.history.filterLabel" aria-label="Filtrer par plateforme">
+              <button type="button" class="pf-btn active" aria-pressed="true" data-platform="all" data-i18n="popup.history.filterAll">Tout</button>
+              <button type="button" class="pf-btn" aria-pressed="false" data-platform="twitch" data-i18n="platforms.twitch">Twitch</button>
+              <button type="button" class="pf-btn" aria-pressed="false" data-platform="kick" data-i18n="platforms.kick">Kick</button>
+            </div>
             <button type="button" class="chip drops-auto" id="drops-auto" data-i18n-attr-title="popup.drops.autoHint" title="Régler plus bas, dans cette rubrique">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg>
               <span id="drops-auto-label" data-i18n="popup.drops.autoOn">Récupération auto</span>
@@ -958,12 +963,23 @@
           </button>
 
           <h3 class="drops-section"><span data-i18n="popup.drops.inProgress">En cours</span><small id="drops-updated" role="status"></small></h3>
+          <div class="drops-auth-notice" id="drops-auth-notice" role="status" hidden>
+            <p id="drops-auth-notice-text" data-i18n="popup.drops.dropsAuthNotice">Non connecté à Twitch sur ce navigateur. Connecte-toi sur twitch.tv pour synchroniser tes Drops.</p>
+            <button type="button" class="button button-quiet is-auth-link" id="drops-auth-link" data-i18n="popup.drops.connectTwitch">Se connecter à Twitch</button>
+          </div>
           <ul class="drops-list" id="drops-progress"></ul>
           <p class="drops-empty" id="drops-progress-empty" data-i18n="popup.drops.emptyProgress" hidden>Aucun Drop en cours. Regarde un live avec les Drops activés : ta progression s'affichera ici.</p>
 
           <h3 class="drops-section"><span data-i18n="popup.drops.campaigns">Campagnes</span><small id="drops-campaigns-meta"></small></h3>
           <div class="badges-auto-bar drops-auto-bar">
-            <button class="button button-primary badges-auto-all" id="drops-auto-all" type="button" aria-pressed="false" data-i18n="popup.drops.dropAutoAll">Récupérer tous les Drops possibles</button>
+            <div class="auto-bar-actions">
+              <div class="segmented auto-platform-picker" id="drops-auto-platform" role="group" aria-label="Plateforme Drops">
+                <button type="button" class="pf-btn active" aria-pressed="true" data-platform="all" data-i18n="popup.history.filterAll">Tout</button>
+                <button type="button" class="pf-btn" aria-pressed="false" data-platform="twitch" data-i18n="platforms.twitch">Twitch</button>
+                <button type="button" class="pf-btn" aria-pressed="false" data-platform="kick" data-i18n="platforms.kick">Kick</button>
+              </div>
+              <button class="button button-primary badges-auto-all" id="drops-auto-all" type="button" aria-pressed="false" data-i18n="popup.drops.dropAutoAll">Récupérer tous les Drops possibles</button>
+            </div>
             <p class="badges-auto-status" id="drops-auto-status" role="status" hidden></p>
           </div>
           <div class="drops-filters" id="drops-filters" role="group" data-i18n-attr-ariaLabel="popup.drops.filterLabel">
@@ -1016,7 +1032,7 @@
           <label class="settings-toggle">
             <span class="settings-text">
               <span class="settings-title"><span data-i18n="popup.osd.autoClaimDrops">Récupération auto des Drops</span><span class="plus-tag drops-plus-lock" data-i18n="popup.plus.badge" hidden>PLUS</span></span>
-              <span class="settings-description" data-i18n="popup.settings.autoClaimDropsDescription">Récupère tes Drops dès qu'ils sont prêts à être réclamés. Twitch uniquement.</span>
+              <span class="settings-description" data-i18n="popup.settings.autoClaimDropsDescription">Récupère tes Drops dès qu'ils sont prêts à être réclamés. Compatible Twitch et Kick.</span>
             </span>
             <input id="pref-auto-claim-drops" type="checkbox" role="switch" />
           </label>
@@ -1066,6 +1082,11 @@
         <section class="menu-panel drops-panel" id="menu-badges" role="tabpanel" aria-labelledby="menu-tab-badges" hidden>
           <div class="pts-head">
             <h2><span data-i18n="popup.osd.menuBadges">Badges</span><span class="pill-beta" data-i18n="popup.settings.betaLabel">bêta</span></h2>
+            <div class="segmented" id="badges-platform" role="group" data-i18n-attr-ariaLabel="popup.history.filterLabel" aria-label="Filtrer par plateforme">
+              <button type="button" class="pf-btn active" aria-pressed="true" data-platform="all" data-i18n="popup.history.filterAll">Tout</button>
+              <button type="button" class="pf-btn" aria-pressed="false" data-platform="twitch" data-i18n="platforms.twitch">Twitch</button>
+              <button type="button" class="pf-btn" aria-pressed="false" data-platform="kick" data-i18n="platforms.kick">Kick</button>
+            </div>
           </div>
           <div class="missed-lcd" id="badges-missed" role="status" hidden>
             <div class="missed-lcd-head">
@@ -1095,7 +1116,14 @@
               <p class="pts-lcd-meta" id="badges-lcd-meta"></p>
             </div>
             <div class="badges-auto-bar">
-              <button class="button button-primary badges-auto-all" id="badges-auto-all" type="button" aria-pressed="false" data-i18n="popup.drops.badgeAutoAll">Récupérer tous les badges possibles</button>
+              <div class="auto-bar-actions">
+                <div class="segmented auto-platform-picker" id="badges-auto-platform" role="group" aria-label="Plateforme Badges">
+                  <button type="button" class="pf-btn active" aria-pressed="true" data-platform="all" data-i18n="popup.history.filterAll">Tout</button>
+                  <button type="button" class="pf-btn" aria-pressed="false" data-platform="twitch" data-i18n="platforms.twitch">Twitch</button>
+                  <button type="button" class="pf-btn" aria-pressed="false" data-platform="kick" data-i18n="platforms.kick">Kick</button>
+                </div>
+                <button class="button button-primary badges-auto-all" id="badges-auto-all" type="button" aria-pressed="false" data-i18n="popup.drops.badgeAutoAll">Récupérer tous les badges possibles</button>
+              </div>
               <label class="settings-toggle badges-limited">
                 <span class="settings-text">
                   <span class="settings-title"><span data-i18n="popup.drops.badgeLimited">Alertes badges temporaires</span><span class="plus-tag" id="badges-limited-lock" data-i18n="popup.plus.badge" hidden>PLUS</span></span>
@@ -1149,6 +1177,10 @@
               </label>
             </div>
             <p class="badges-sort" id="badges-sort"></p>
+            <div class="badges-auth-notice" id="badges-auth-notice" role="status" hidden>
+              <p id="badges-auth-notice-text" data-i18n="popup.drops.badgesAuthNotice">Non connecté à Twitch sur ce navigateur. Connecte-toi sur twitch.tv pour synchroniser tes badges obtenus et ta progression.</p>
+              <button type="button" class="button button-quiet is-auth-link" id="badges-auth-link" data-i18n="popup.drops.connectTwitch">Se connecter à Twitch</button>
+            </div>
             <ul class="badge-grid" id="badges-catalog"></ul>
             <p class="drops-empty" id="badges-catalog-empty" hidden></p>
             <button id="badges-more" class="button button-quiet" type="button" data-i18n="popup.drops.showMore" hidden>Voir plus</button>

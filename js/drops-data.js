@@ -593,7 +593,7 @@ export function watchedMinutesFor(watchDaily, reward, now) {
 // utile quand la liste des récompenses n'est pas lue.
 const BADGE_OWNER = /twitch gaming|badge/i;
 
-export const isBadgeCampaign = (campaign) => BADGE_OWNER.test(campaign.owner || "") || campaign.badgeOnly === true;
+export const isBadgeCampaign = (campaign) => BADGE_OWNER.test(campaign.owner || "") || campaign.badgeOnly === true || Boolean(campaign.isBadge) || /badge/i.test(campaign.name || "");
 
 export const isTwitchGaming = (campaign) => BADGE_OWNER.test(campaign.owner || "");
 

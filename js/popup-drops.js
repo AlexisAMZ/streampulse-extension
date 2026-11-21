@@ -47,12 +47,38 @@ import {
   gameFromDescription,
 } from "./badges-data.js";
 import { buildRewardPlan, normalizePlanSelection } from "./reward-plan.js";
+import { KICK_DROPS_KEY, kickDropsFrom, isKickBadge, kickBadgesFrom } from "./kick-drops-data.js";
 
 const $ = (id) => document.getElementById(id);
 /** Descriptions de badges traduites par le site (DeepL), gardées par langue. */
 const BADGE_TEXT_URL = "https://streampulse.tech/api/twitch-badges";
 const BADGE_TEXT_KEY = "streamPulseBadgeText";
 const REWARD_PLAN_KEY = "streamPulseRewardPlan";
+export const DROPS_PLATFORM_KEY = "streamPulseDropsPlatform";
+export const BADGES_PLATFORM_KEY = "streamPulseBadgesPlatform";
+let dropsPlatform = "all";
+let badgesPlatform = "all";
+
+export function setDropsPlatformForTest(platform) {
+  dropsPlatform = platform;
+}
+export function setBadgesPlatformForTest(platform) {
+  badgesPlatform = platform;
+}
+export function getDropsPlatform() {
+  return dropsPlatform;
+}
+export function getBadgesPlatform() {
+  return badgesPlatform;
+}
+
+function renderPlatformFilter(groupId, current) {
+  document.querySelectorAll(`#${groupId} [data-platform]`).forEach((btn) => {
+    const active = btn.dataset.platform === current;
+    btn.classList.toggle("active", active);
+    btn.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+}
 const BADGE_TEXT_MAX_AGE_MS = 7 * 86_400_000;
 let badgeText = {};
 let badgeAuto = null;
@@ -84,6 +110,49 @@ const GIFT_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 /** Alertes de campagnes Drops (Plus) : { enabled, games }, lu comme le reste. */
 
 let deps = { isPlus: () => false, openPlus: () => {} };
+let twitchLogin = "";
+
+/** Vérifie si l'utilisateur est connecté à Twitch (cookie login ou auth-token sur twitch.tv). */
+export async function isTwitchSignedIn() {
+  try {
+    if (typeof chrome !== "undefined" && chrome.cookies?.get) {
+      const loginCookie = await chrome.cookies.get({ url: "https://www.twitch.tv", name: "login" }).catch(() => null);
+      if (loginCookie?.value) {
+        twitchLogin = decodeURIComponent(loginCookie.value);
+        return true;
+      }
+      const authCookie = await chrome.cookies.get({ url: "https://www.twitch.tv", name: "auth-token" }).catch(() => null);
+      if (authCookie?.value) {
+        twitchLogin = "signed-in";
+        return true;
+      }
+      twitchLogin = "";
+      return false;
+    }
+  } catch {
+    // cookies non disponibles
+  }
+  try {
+    if (typeof chrome !== "undefined" && chrome.runtime?.sendMessage) {
+      const res = await chrome.runtime.sendMessage({ type: "getTwitchLogin" }).catch(() => null);
+      if (res?.login) {
+        twitchLogin = res.login;
+        return true;
+      }
+      if (res && res.login === "") {
+        twitchLogin = "";
+        return false;
+      }
+    }
+  } catch {
+    // repli
+  }
+  return Boolean(twitchLogin);
+}
+
+export function setTwitchLoginForTest(val) {
+  twitchLogin = val;
+}
 let progress = progressFrom({});
 let campaigns = campaignsFrom({});
 let rewards = rewardsFrom({});
@@ -105,6 +174,7 @@ let badgeLimit = 40;
 /** Campagnes affichées : la liste en compte une centaine, le reste se déplie avec « Voir plus ». */
 let campaignLimit = CAMPAIGN_ROWS;
 let rewardPlan = normalizePlanSelection(null);
+let kickDrops = kickDropsFrom({});
 /** Récupérations demandées depuis ce popup : instanceId → heure de la demande. */
 const claiming = new Map();
 
@@ -120,12 +190,19 @@ function el(tag, className, text) {
 const locale = () => getCurrentLanguage();
 const unit = (value, name) => new Intl.NumberFormat(locale(), { style: "unit", unit: name, unitDisplay: "short" }).format(value);
 
-/** Minutes restantes : « 27 min », « 1 h 38 min ». */
-function minutesLabel(minutes) {
-  if (minutes < 60) return unit(minutes, "minute");
-  const hours = Math.floor(minutes / 60);
-  const rest = minutes % 60;
-  return rest ? `${unit(hours, "hour")} ${unit(rest, "minute")}` : unit(hours, "hour");
+/** Minutes restantes ou durée en minutes, heures ou jours : « 27 min », « 1 h 38 min », « 5 h », « 10 j 10 h ». */
+export function minutesLabel(minutes) {
+  const m = Math.max(0, Math.round(Number(minutes) || 0));
+  if (m < 60) return unit(m, "minute");
+  if (m < 1440) {
+    const hours = Math.floor(m / 60);
+    const rest = m % 60;
+    return rest ? `${unit(hours, "hour")} ${unit(rest, "minute")}` : unit(hours, "hour");
+  }
+  const days = Math.floor(m / 1440);
+  const remainingMin = m % 1440;
+  const hours = Math.floor(remainingMin / 60);
+  return hours ? `${unit(days, "day")} ${unit(hours, "hour")}` : unit(days, "day");
 }
 
 /** Durée jusqu'à une échéance, à l'unité la plus parlante : « 1 j », « 5 h », « 40 min ». */
@@ -293,11 +370,125 @@ function claimedRow(entry) {
   return row;
 }
 
+function kickBoxedRow(boxed) {
+  const row = el("li", "drop-row is-ready kick-boxed-row");
+  const icon = el("div", "drop-img");
+  icon.innerHTML = GIFT_ICON;
+  const main = el("div", "drop-main");
+  const count = boxed.length;
+  const label = count > 1 ? `${count} coffres Kick prêts à ouvrir !` : "Coffre Kick prêt à ouvrir !";
+  main.append(el("b", null, label), el("small", null, boxed.map((b) => b.label).join(", ")));
+  const side = el("div", "drop-side");
+  const btn = el("button", "button button-primary button-small", "Ouvrir");
+  btn.type = "button";
+  btn.addEventListener("click", () => {
+    btn.disabled = true;
+    btn.textContent = "...";
+    chrome.runtime.sendMessage({ type: "unboxKickRewards", ids: boxed.map((b) => b.id) }).then(() => {
+      reload();
+    }).catch(() => {
+      btn.disabled = false;
+      btn.textContent = "Ouvrir";
+    });
+  });
+  side.append(btn);
+  row.append(icon, main, side);
+  return row;
+}
+
+function kickChallengeRow(ch) {
+  const row = el("li", ch.ready ? "drop-row is-ready" : "drop-row");
+  const icon = el("div", "drop-img");
+  icon.innerHTML = GIFT_ICON;
+  const main = el("div", "drop-main");
+  const tag = el("span", "plat-tag-kick", "KICK");
+  const title = el("b", null, ch.name);
+  const meta = el("small");
+  meta.append(tag, `${minutesLabel(ch.minutes)} / ${minutesLabel(ch.required)} · Défi quotidien`);
+  main.append(title, meta);
+  if (!ch.ready) main.append(bar(ch));
+  const side = el("div", "drop-side");
+  if (ch.ready) {
+    const btn = el("a", "button button-primary button-small", "Récupérer");
+    btn.href = ch.url || "https://kick.com/drops/rewards";
+    btn.target = "_blank";
+    btn.rel = "noopener";
+    side.append(btn);
+  } else {
+    const left = Math.max(0, ch.required - ch.minutes);
+    side.append(
+      el("b", null, t("popup.drops.timeLeft", { time: minutesLabel(left) })),
+      el("small", null, "Kick Rewards")
+    );
+  }
+  row.append(icon, main, side);
+  return row;
+}
+
+function kickDropRow(drop) {
+  const row = el("li", drop.ready ? "drop-row is-ready" : "drop-row");
+  const main = el("div", "drop-main");
+  const tag = el("span", "plat-tag-kick", "KICK");
+  const title = el("b", null, drop.name);
+  const meta = el("small");
+  meta.append(tag, `${drop.game} · ${minutesLabel(drop.minutes)} / ${minutesLabel(drop.required)}`);
+  main.append(title, meta);
+  if (!drop.ready) main.append(bar(drop));
+  const side = el("div", "drop-side");
+  if (drop.ready) {
+    const btn = el("a", "button button-primary button-small", "Réclamer");
+    btn.href = "https://kick.com/drops/campaigns";
+    btn.target = "_blank";
+    btn.rel = "noopener";
+    side.append(btn);
+  } else {
+    const link = el("a", null, "Regarder");
+    link.href = drop.url || "https://kick.com/drops/campaigns";
+    link.target = "_blank";
+    link.rel = "noopener";
+    const left = Math.max(0, drop.required - drop.minutes);
+    side.append(
+      el("b", null, t("popup.drops.timeLeft", { time: minutesLabel(left) })),
+      el("small", null, link)
+    );
+  }
+  row.append(thumb(drop.image, "drop-img"), main, side);
+  return row;
+}
+
 function renderProgress(now) {
-  const drops = currentDrops(progress, now);
-  const claimed = recentClaims(history, now, CLAIMED_SHOWN_MS).slice(0, CLAIMED_SHOWN_MAX);
-  $("drops-progress").replaceChildren(...drops.map((drop) => progressRow(drop, now)), ...claimed.map(claimedRow));
-  $("drops-progress-empty").hidden = drops.length + claimed.length > 0;
+  const showTwitch = dropsPlatform === "all" || dropsPlatform === "twitch";
+  const showKick = dropsPlatform === "all" || dropsPlatform === "kick";
+
+  const drops = showTwitch ? currentDrops(progress, now) : [];
+  const claimed = showTwitch ? recentClaims(history, now, CLAIMED_SHOWN_MS).slice(0, CLAIMED_SHOWN_MAX) : [];
+  const kickBoxed = showKick ? (kickDrops.boxed || []) : [];
+  const kickChallenges = showKick ? (kickDrops.challenges || []).filter((c) => !c.claimed && !isKickBadge(c)) : [];
+  const kickProgress = showKick ? (kickDrops.progress || []).filter((p) => !p.claimed && !isKickBadge(p)) : [];
+
+  const rows = [
+    ...(kickBoxed.length ? [kickBoxedRow(kickBoxed)] : []),
+    ...kickChallenges.map(kickChallengeRow),
+    ...kickProgress.map(kickDropRow),
+    ...drops.map((drop) => progressRow(drop, now)),
+    ...claimed.map(claimedRow),
+  ];
+
+  $("drops-progress").replaceChildren(...rows);
+  const isTwitchConnected = Boolean(twitchLogin);
+  const dropsAuthNotice = $("drops-auth-notice");
+  if (dropsAuthNotice) {
+    dropsAuthNotice.hidden = dropsPlatform === "kick" || isTwitchConnected;
+    const textEl = $("drops-auth-notice-text");
+    if (textEl) textEl.textContent = t("popup.drops.dropsAuthNotice");
+  }
+  const emptyProgress = $("drops-progress-empty");
+  if (emptyProgress) {
+    emptyProgress.hidden = rows.length > 0;
+    emptyProgress.textContent = (!isTwitchConnected && dropsPlatform !== "kick")
+      ? t("popup.drops.emptyProgressSignedOut")
+      : t("popup.drops.emptyProgress");
+  }
   const readAt = lastReadAt(progress);
   $("drops-updated").textContent = readAt ? t("popup.drops.updatedAgo", { ago: agoLabel(readAt, now) }) : t("popup.drops.neverRead");
 }
@@ -313,12 +504,17 @@ function campaignWhen(campaign, now) {
 }
 
 function campaignRow(campaign, now) {
-  const mine = isMine(campaign, myGames);
+  const isKick = campaign.platform === "kick";
+  const mine = !isKick && isMine(campaign, myGames);
   const item = el("li");
   const button = el("button", mine ? "camp-row is-mine" : "camp-row");
   button.type = "button";
-  button.dataset.gameId = campaign.gameId || "";
-  button.dataset.game = campaign.game;
+  if (isKick) {
+    button.dataset.kickUrl = campaign.url || "https://kick.com/drops/campaigns";
+  } else {
+    button.dataset.gameId = campaign.gameId || "";
+    button.dataset.game = campaign.game;
+  }
   if (campaign.name) button.title = campaign.name;
 
   const box = el("span", "camp-box");
@@ -332,13 +528,17 @@ function campaignRow(campaign, now) {
   }
 
   const meta = [
-    campaign.owner,
+    isKick ? null : campaign.owner,
     campaign.rewardCount ? plural(campaign.rewardCount, "popup.drops.rewards") : "",
     campaign.connected === false && campaign.accountLinkUrl ? t("popup.drops.linkAccount") : "",
     mine ? t("popup.drops.yourGames") : "",
   ].filter(Boolean).join(" · ");
   const main = el("span", "camp-main");
-  main.append(el("b", null, campaign.game), el("small", null, meta));
+  const title = el("b", null, campaign.game);
+  if (isKick) {
+    title.prepend(el("span", "plat-tag-kick", "KICK"));
+  }
+  main.append(title, el("small", null, meta));
 
   const side = el("span", "camp-side");
   if (campaign.badgeOnly) side.append(el("span", "camp-badge", t("popup.drops.badge")));
@@ -346,6 +546,11 @@ function campaignRow(campaign, now) {
   if (when.text) side.append(el("span", when.tone ? `camp-when is-${when.tone}` : "camp-when", when.text));
 
   button.append(box, main, side);
+  if (isKick && campaign.url) {
+    button.addEventListener("click", () => {
+      chrome.tabs.create({ url: campaign.url });
+    });
+  }
   item.append(button);
   const auto = campaignAutoButton(campaign, now);
   if (auto) {
@@ -359,6 +564,7 @@ const dropJobId = (campaign) => `drop:${campaign.id}`;
 
 /** Campagne que le mode auto peut farmer : en cours, compte lié, pas déjà tout récupéré. */
 function isFarmable(campaign, now) {
+  if (campaign.platform === "kick") return false;
   return isActiveCampaign(campaign, now) && campaign.connected !== false && !isCampaignDone(campaign, claimedDropIds(history, progress.drops))
     && (!campaign.drops || campaign.drops.some((drop) => drop.minutes > 0));
 }
@@ -409,8 +615,20 @@ function toggleCampaignAuto(campaignId) {
 
 function renderCampaigns(now) {
   if (!$("drops-campaigns")) return;
+  const showTwitch = dropsPlatform === "all" || dropsPlatform === "twitch";
+  const showKick = dropsPlatform === "all" || dropsPlatform === "kick";
+
   // Les campagnes de badges (PAYDAY 3, ATLUS…) sont dans l'onglet Badges, réservé à StreamPulse+.
-  const all = campaigns.campaigns.filter((campaign) => !isBadgeCampaign(campaign));
+  const kickDropsCampaigns = showKick
+    ? (kickDrops.campaigns || []).filter((c) => !isBadgeCampaign(c) && !isKickBadge(c))
+    : [];
+  const twitchCampaigns = showTwitch
+    ? campaigns.campaigns.filter((campaign) => !isBadgeCampaign(campaign))
+    : [];
+  const all = [
+    ...twitchCampaigns,
+    ...kickDropsCampaigns,
+  ];
   const counts = countFilters(all, now);
   document.querySelectorAll("#drops-filters [data-filter]").forEach((button) => {
     const active = button.dataset.filter === filter;
@@ -419,8 +637,9 @@ function renderCampaigns(now) {
     const count = button.querySelector("[data-count]");
     if (count) count.textContent = all.length ? String(counts[button.dataset.filter] ?? 0) : "";
   });
-  $("drops-campaigns-meta").textContent = campaigns.updatedAt
-    ? t("popup.drops.campaignsMeta", { count: counts.all, ago: agoLabel(campaigns.updatedAt, now) })
+  const updatedAt = campaigns.updatedAt || 0;
+  $("drops-campaigns-meta").textContent = updatedAt
+    ? t("popup.drops.campaignsMeta", { count: counts.all, ago: agoLabel(updatedAt, now) })
     : "";
 
   const matching = filterCampaigns(all, filter, now, myGames);
@@ -1009,6 +1228,45 @@ function setPressed(selector, isActive, extra) {
   });
 }
 
+function kickBadgeRow(badge) {
+  const item = el("li");
+  const card = el("div", "badge-card");
+  card.setAttribute("role", "button");
+  card.tabIndex = 0;
+  card.dataset.url = badge.url;
+  card.title = `${badge.title} · ${badge.game}`;
+  card.addEventListener("click", () => openTab(badge.url));
+
+  const art = el("span", "badge-card-art");
+  if (badge.image) {
+    const img = el("img");
+    img.src = badge.image;
+    img.alt = "";
+    img.loading = "lazy";
+    img.onerror = () => img.remove();
+    art.append(img);
+  }
+  if (badge.owned) art.append(el("span", "badge-card-check", "✓"));
+
+  const body = el("span", "badge-card-body");
+  const title = el("b", null, badge.title);
+  body.append(title);
+  const condText = badge.required ? `${minutesLabel(badge.minutes)} / ${minutesLabel(badge.required)}` : "Kick";
+  body.append(el("small", "badge-card-cond", `${condText} · ${badge.game}`));
+
+  const foot = el("span", "badge-card-foot");
+  const tag = el("span", "plat-tag-kick", "KICK");
+  foot.append(tag);
+  foot.append(el("span", badge.owned ? "badge-pill is-owned" : "badge-pill is-free", t(badge.owned ? "popup.drops.badgeOwned" : "popup.drops.badgeFree")));
+  if (!badge.owned && badge.required > 0) {
+    const leftMin = Math.max(0, badge.required - badge.minutes);
+    foot.append(el("span", "badge-when is-soon", t("popup.drops.timeLeft", { time: minutesLabel(leftMin) })));
+  }
+  card.append(art, body, foot);
+  item.append(card);
+  return item;
+}
+
 /** Note sous la grille : campagnes jamais lues, ou pas relues depuis 12 h. */
 function renderBadgesNote(now) {
   const note = $("badges-campaigns-note");
@@ -1021,11 +1279,16 @@ function renderCatalog() {
   if (!$("badges-catalog")) return;
   renderAutoBar();
   const now = Date.now();
+  const showTwitch = badgesPlatform === "all" || badgesPlatform === "twitch";
+  const showKick = badgesPlatform === "all" || badgesPlatform === "kick";
+
   const context = { now, events: badgeEvents.events, added: badgeAdded.added };
-  const counts = countBadges(badges, context);
-  // Seuls les vrais badges : une récompense qui en donne un est déjà reliée au
-  // catalogue ; les autres (codes, objets en jeu) restent dans l'onglet Drops.
-  const { live, liveFree } = counts;
+  const counts = showTwitch ? countBadges(badges, context) : { live: 0, soon: 0, ended: 0, owned: 0, liveFree: 0 };
+  const allKickBadges = showKick ? kickBadgesFrom(kickDrops, now) : [];
+  const kickLive = allKickBadges.filter((b) => b.status === "live").length;
+  const kickOwned = allKickBadges.filter((b) => b.owned).length;
+  const live = counts.live + kickLive;
+  const liveFree = counts.liveFree + kickLive;
   const plus = deps.isPlus();
   // Catalogue visible par tous : sans Plus, un badge auto gratuit par jour.
   $("badges-locked").hidden = plus;
@@ -1034,20 +1297,44 @@ function renderCatalog() {
   const search = $("badges-search")?.closest("label");
   if (search) search.hidden = !plus;
   if (!plus) badgeQuery = "";
-  const filterCounts = { live, soon: counts.soon, ended: counts.ended, owned: counts.owned };
+  const filterCounts = { live, soon: counts.soon, ended: counts.ended, owned: counts.owned + kickOwned };
   setPressed("#badges-filters [data-filter]", (button) => button.dataset.filter === badgeFilter, (button) => {
     const count = button.querySelector("[data-count]");
     if (count) count.textContent = String(filterCounts[button.dataset.filter] ?? 0);
   });
   setPressed("#badges-cost [data-cost]", (button) => button.dataset.cost === badgeCost);
-  const list = catalogBadges(badges, { ...context, status: badgeFilter, cost: badgeCost, query: badgeQuery });
+  const list = showTwitch ? catalogBadges(badges, { ...context, status: badgeFilter, cost: badgeCost, query: badgeQuery }) : [];
+  const filteredKick = allKickBadges.filter((b) => {
+    if (badgeFilter === "live" && b.status !== "live") return false;
+    if (badgeFilter === "owned" && !b.owned) return false;
+    if (badgeFilter === "soon" || badgeFilter === "ended") return false;
+    if (badgeCost === "paid") return false;
+    if (badgeQuery.trim()) {
+      const q = badgeQuery.trim().toLowerCase();
+      if (!`${b.title} ${b.game}`.toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
   const shown = list.slice(0, badgeLimit);
-  $("badges-catalog").replaceChildren(...catalogRows(shown));
+  $("badges-catalog").replaceChildren(...catalogRows(shown), ...filteredKick.map(kickBadgeRow));
   translateBadges(shown.filter((badge) => !badgeCondition(badge.description)).map((badge) => badge.id));
-  const empty = list.length === 0;
+  const isTwitchConnected = Boolean(twitchLogin);
+  const authNotice = $("badges-auth-notice");
+  if (authNotice) {
+    authNotice.hidden = badgesPlatform === "kick" || isTwitchConnected;
+    const textEl = $("badges-auth-notice-text");
+    if (textEl) textEl.textContent = t("popup.drops.badgesAuthNotice");
+  }
+  const empty = list.length + filteredKick.length === 0;
   $("badges-catalog-empty").hidden = !empty;
   // Vide à cause d'une recherche ou du coût : « aucun ne correspond » ; sinon, rien dans ce statut.
-  $("badges-catalog-empty").textContent = badgeQuery.trim() || badgeCost !== "all" ? t("popup.drops.noBadgeMatch") : t(BADGE_EMPTY_KEYS[badgeFilter]);
+  if (badgeQuery.trim() || badgeCost !== "all") {
+    $("badges-catalog-empty").textContent = t("popup.drops.noBadgeMatch");
+  } else if (badgeFilter === "owned" && !isTwitchConnected && badgesPlatform !== "kick") {
+    $("badges-catalog-empty").textContent = t("popup.drops.badgesEmptyOwnedSignedOut");
+  } else {
+    $("badges-catalog-empty").textContent = t(BADGE_EMPTY_KEYS[badgeFilter]);
+  }
   $("badges-sort").textContent = empty ? "" : t(BADGE_SORT_KEYS[badgeFilter]);
   $("badges-more").hidden = list.length <= badgeLimit;
   $("badges-total").textContent = String(live);
@@ -1161,6 +1448,52 @@ function bind() {
   for (const cta of document.querySelectorAll(".missed-lcd-buy")) cta.addEventListener("click", () => deps.openPlus());
   for (const id of ["tab-badges", "tab-drops"]) $(id)?.addEventListener("click", () => seeMissed());
   for (const select of document.querySelectorAll(".drops-refresh-select")) select.addEventListener("change", changeRefresh);
+  $("drops-platform")?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-platform]");
+    if (!button) return;
+    dropsPlatform = button.dataset.platform || "all";
+    chrome.storage.local.set({ [DROPS_PLATFORM_KEY]: dropsPlatform }).catch(() => {});
+    renderPlatformFilter("drops-platform", dropsPlatform);
+    renderPlatformFilter("drops-auto-platform", dropsPlatform);
+    renderDropsAutoBar();
+    const now = Date.now();
+    renderProgress(now);
+    renderCampaigns(now);
+  });
+  $("drops-auto-platform")?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-platform]");
+    if (!button) return;
+    dropsPlatform = button.dataset.platform || "all";
+    chrome.storage.local.set({ [DROPS_PLATFORM_KEY]: dropsPlatform }).catch(() => {});
+    renderPlatformFilter("drops-platform", dropsPlatform);
+    renderPlatformFilter("drops-auto-platform", dropsPlatform);
+    renderDropsAutoBar();
+    const now = Date.now();
+    renderProgress(now);
+    renderCampaigns(now);
+  });
+  $("badges-platform")?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-platform]");
+    if (!button) return;
+    badgesPlatform = button.dataset.platform || "all";
+    chrome.storage.local.set({ [BADGES_PLATFORM_KEY]: badgesPlatform }).catch(() => {});
+    renderPlatformFilter("badges-platform", badgesPlatform);
+    renderPlatformFilter("badges-auto-platform", badgesPlatform);
+    renderAutoBar();
+    badgeLimit = 40;
+    renderCatalog();
+  });
+  $("badges-auto-platform")?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-platform]");
+    if (!button) return;
+    badgesPlatform = button.dataset.platform || "all";
+    chrome.storage.local.set({ [BADGES_PLATFORM_KEY]: badgesPlatform }).catch(() => {});
+    renderPlatformFilter("badges-platform", badgesPlatform);
+    renderPlatformFilter("badges-auto-platform", badgesPlatform);
+    renderAutoBar();
+    badgeLimit = 40;
+    renderCatalog();
+  });
   $("drops-filters")?.addEventListener("click", (event) => {
     const button = event.target.closest("[data-filter]");
     if (!button) return;
@@ -1184,8 +1517,16 @@ function bind() {
   };
   $("drops-campaigns")?.addEventListener("click", (event) => {
     const auto = event.target.closest("[data-camp-auto]");
-    if (auto) toggleCampaignAuto(auto.dataset.campAuto);
-    else openStream(event);
+    if (auto) {
+      toggleCampaignAuto(auto.dataset.campAuto);
+      return;
+    }
+    const kick = event.target.closest("[data-kick-url]");
+    if (kick) {
+      openTab(kick.dataset.kickUrl);
+      return;
+    }
+    openStream(event);
   });
   $("drops-progress")?.addEventListener("click", (event) => {
     const button = event.target.closest("[data-claim]");
@@ -1238,6 +1579,9 @@ function bind() {
     renderCatalog();
   });
   $("drops-open-campaigns")?.addEventListener("click", () => openTab(CAMPAIGNS_PAGE));
+  const openTwitchLogin = () => openTab("https://www.twitch.tv/login");
+  $("drops-auth-link")?.addEventListener("click", openTwitchLogin);
+  $("badges-auth-link")?.addEventListener("click", openTwitchLogin);
   $("drops-live")?.addEventListener("click", () => openTab(LIVE_247_PAGE));
   $("badges-live")?.addEventListener("click", () => openTab(LIVE_247_PAGE));
   $("drops-unlock")?.addEventListener("click", () => deps.openPlus());
@@ -1283,14 +1627,28 @@ function renderAutoBar() {
     $("badges-limited-lock").hidden = deps.isPlus();
   }
   const all = badgeAuto?.mode === "all";
-  button.textContent = t(all ? "popup.drops.badgeAutoAllStop" : "popup.drops.badgeAutoAll");
-  button.classList.toggle("is-on", all);
-  button.setAttribute("aria-pressed", all ? "true" : "false");
-  const group = currentGroup(badgeAuto);
-  const free = !deps.isPlus();
-  status.hidden = !group && !free;
-  if (group) status.textContent = t("popup.drops.badgeAutoStatus", { count: badgeAuto.jobs.length, game: group.game });
-  else if (free) status.textContent = t(freeUsedToday(badgeFree) ? "popup.drops.badgeFreeUsed" : "popup.drops.badgeFreeLeft");
+  if (all) {
+    button.textContent = t("popup.drops.badgeAutoAllStop");
+    button.classList.add("is-on");
+    button.setAttribute("aria-pressed", "true");
+    const group = currentGroup(badgeAuto);
+    status.hidden = !group;
+    if (group) status.textContent = t("popup.drops.badgeAutoStatus", { count: badgeAuto.jobs.length, game: group.game });
+  } else {
+    button.classList.remove("is-on");
+    button.setAttribute("aria-pressed", "false");
+    const free = !deps.isPlus();
+    status.hidden = !freeUsedToday(badgeFree);
+    if (free) status.textContent = t(freeUsedToday(badgeFree) ? "popup.drops.badgeFreeUsed" : "popup.drops.badgeFreeLeft");
+    else status.textContent = "";
+    if (badgesPlatform === "kick") {
+      button.textContent = t("popup.drops.badgeAutoAllKick");
+    } else if (badgesPlatform === "twitch") {
+      button.textContent = t("popup.drops.badgeAutoAllTwitch");
+    } else {
+      button.textContent = t("popup.drops.badgeAutoAll");
+    }
+  }
 }
 
 /** Bouton « Récupérer tous les Drops possibles » (StreamPulse+) : la file suit les campagnes de jeux. */
@@ -1299,20 +1657,134 @@ function renderDropsAutoBar() {
   const status = $("drops-auto-status");
   if (!button || !status) return;
   const on = badgeAuto?.drops === true;
-  button.textContent = t(on ? "popup.drops.dropAutoAllStop" : "popup.drops.dropAutoAll");
-  button.classList.toggle("is-on", on);
-  button.setAttribute("aria-pressed", on ? "true" : "false");
-  const group = on ? currentGroup(badgeAuto) : null;
-  status.hidden = !group;
-  if (group) status.textContent = t("popup.drops.dropAutoStatus", { count: badgeAuto.jobs.filter(isDropJob).length, game: group.game });
+  if (on) {
+    button.textContent = t("popup.drops.dropAutoAllStop");
+    button.classList.add("is-on");
+    button.setAttribute("aria-pressed", "true");
+    const group = on ? currentGroup(badgeAuto) : null;
+    status.hidden = !group;
+    if (group) status.textContent = t("popup.drops.dropAutoStatus", { count: badgeAuto.jobs.filter(isDropJob).length, game: group.game });
+  } else {
+    button.classList.remove("is-on");
+    button.setAttribute("aria-pressed", "false");
+    status.hidden = true;
+    if (dropsPlatform === "kick") {
+      button.textContent = t("popup.drops.dropAutoAllKick");
+    } else if (dropsPlatform === "twitch") {
+      button.textContent = t("popup.drops.dropAutoAllTwitch");
+    } else {
+      button.textContent = t("popup.drops.dropAutoAll");
+    }
+  }
 }
 
-function toggleDropsAuto() {
+async function claimAllKickDrops() {
   if (!deps.isPlus()) {
     deps.openPlus();
     return;
   }
-  sendAuto(badgeAuto?.drops === true ? { type: "badgeAutoStop", drops: true } : { type: "badgeAutoStart", drops: true });
+  const button = $("drops-auto-all");
+  const status = $("drops-auto-status");
+  if (button) button.disabled = true;
+
+  try {
+    let unboxedCount = 0;
+    const boxed = kickDrops.boxed || [];
+    if (boxed.length > 0) {
+      const boxIds = boxed.map((b) => b.id);
+      const res = await chrome.runtime.sendMessage({ type: "unboxKickRewards", ids: boxIds });
+      if (res?.success) unboxedCount = boxIds.length;
+    }
+
+    const readyItems = [
+      ...(kickDrops.progress || []).filter((p) => p.ready && !isKickBadge(p)),
+      ...(kickDrops.challenges || []).filter((c) => c.ready && !isKickBadge(c)),
+    ];
+
+    if (readyItems.length > 0) {
+      await chrome.tabs.create({ url: "https://kick.com/drops/rewards", active: true });
+    } else if (unboxedCount === 0) {
+      const activeCamp = (kickDrops.campaigns || []).find((c) => !isKickBadge(c));
+      const targetUrl = activeCamp?.url || "https://kick.com/drops/campaigns";
+      await chrome.tabs.create({ url: targetUrl, active: true });
+    }
+
+    if (status) {
+      status.hidden = false;
+      status.textContent = unboxedCount > 0
+        ? `Kick : ${unboxedCount} coffre(s) déballé(s) !`
+        : readyItems.length > 0
+          ? `Kick : ${readyItems.length} récompense(s) prête(s), inventaire ouvert !`
+          : "Kick : campagnes Drops ouvertes !";
+    }
+    await reload();
+  } catch (error) {
+    console.warn("[popup] récupération Kick drops :", error?.message || error);
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+
+async function claimAllKickBadges() {
+  if (!deps.isPlus()) {
+    deps.openPlus();
+    return;
+  }
+  const button = $("badges-auto-all");
+  const status = $("badges-auto-status");
+  if (button) button.disabled = true;
+
+  try {
+    let unboxedCount = 0;
+    const boxed = kickDrops.boxed || [];
+    if (boxed.length > 0) {
+      const boxIds = boxed.map((b) => b.id);
+      const res = await chrome.runtime.sendMessage({ type: "unboxKickRewards", ids: boxIds });
+      if (res?.success) unboxedCount = boxIds.length;
+    }
+
+    const readyBadges = kickBadgesFrom(kickDrops).filter((b) => b.ready);
+    if (readyBadges.length > 0) {
+      await chrome.tabs.create({ url: "https://kick.com/drops/rewards", active: true });
+    } else if (unboxedCount === 0) {
+      const liveBadges = kickBadgesFrom(kickDrops).filter((b) => b.status === "live");
+      const targetUrl = liveBadges[0]?.url || "https://kick.com/drops/campaigns";
+      await chrome.tabs.create({ url: targetUrl, active: true });
+    }
+
+    if (status) {
+      status.hidden = false;
+      status.textContent = unboxedCount > 0
+        ? `Kick : ${unboxedCount} coffre(s) déballé(s) !`
+        : readyBadges.length > 0
+          ? `Kick : ${readyBadges.length} badge(s) prêt(s), inventaire ouvert !`
+          : "Kick : badges ouverts !";
+    }
+    await reload();
+  } catch (error) {
+    console.warn("[popup] récupération Kick badges :", error?.message || error);
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+
+async function toggleDropsAuto() {
+  if (!deps.isPlus()) {
+    deps.openPlus();
+    return;
+  }
+  if (dropsPlatform === "kick") {
+    await claimAllKickDrops();
+    return;
+  }
+  if (badgeAuto?.drops === true) {
+    sendAuto({ type: "badgeAutoStop", drops: true });
+  } else {
+    if (dropsPlatform === "all") {
+      claimAllKickDrops().catch(() => {});
+    }
+    sendAuto({ type: "badgeAutoStart", drops: true, platform: dropsPlatform });
+  }
 }
 
 /** Notification Chrome pour les badges temporaires : réservée à StreamPulse+. */
@@ -1333,13 +1805,23 @@ async function toggleLimited(event) {
 }
 
 /** Mode « tous les badges » : lance la file complète, ou arrête tout. */
-function toggleAutoAll() {
+async function toggleAutoAll() {
   if (!deps.isPlus()) {
     deps.openPlus();
     return;
   }
-  if (badgeAuto?.mode === "all") sendAuto({ type: "badgeAutoStop" });
-  else sendAuto({ type: "badgeAutoStart", all: true });
+  if (badgesPlatform === "kick") {
+    await claimAllKickBadges();
+    return;
+  }
+  if (badgeAuto?.mode === "all") {
+    sendAuto({ type: "badgeAutoStop" });
+  } else {
+    if (badgesPlatform === "all") {
+      claimAllKickBadges().catch(() => {});
+    }
+    sendAuto({ type: "badgeAutoStart", all: true, platform: badgesPlatform });
+  }
 }
 
 /** Ajoute un badge à la file du mode auto, ou l'en retire (le service worker gère l'onglet). */
@@ -1365,7 +1847,15 @@ function toggleAuto(badgeId) {
 }
 
 async function reload() {
-  const stored = await chrome.storage.local.get([...DROPS_KEYS, PREFERENCES_KEY, BADGE_AUTO_KEY, BADGE_FREE_KEY, BADGE_WATCH_KEY, BADGE_LIMITED_KEY, BADGE_SCOPE_KEY, DROP_ALERTS_KEY, REWARD_PLAN_KEY, MISSED_KEY]);
+  await isTwitchSignedIn();
+  const stored = await chrome.storage.local.get([...DROPS_KEYS, KICK_DROPS_KEY, PREFERENCES_KEY, BADGE_AUTO_KEY, BADGE_FREE_KEY, BADGE_WATCH_KEY, BADGE_LIMITED_KEY, BADGE_SCOPE_KEY, DROP_ALERTS_KEY, REWARD_PLAN_KEY, MISSED_KEY, DROPS_PLATFORM_KEY, BADGES_PLATFORM_KEY]);
+  kickDrops = kickDropsFrom(stored);
+  dropsPlatform = stored[DROPS_PLATFORM_KEY] || "all";
+  badgesPlatform = stored[BADGES_PLATFORM_KEY] || "all";
+  renderPlatformFilter("drops-platform", dropsPlatform);
+  renderPlatformFilter("drops-auto-platform", dropsPlatform);
+  renderPlatformFilter("badges-platform", badgesPlatform);
+  renderPlatformFilter("badges-auto-platform", badgesPlatform);
   badgeAuto = normalizeAuto(stored[BADGE_AUTO_KEY]);
   badgeFree = stored[BADGE_FREE_KEY] || null;
   badgeWatch = watchFrom(stored);
@@ -1404,8 +1894,16 @@ export async function initDrops({ isPlus, onPlusChange, openPlus }) {
       if (host?.contains(document.activeElement)) host._updateSummary?.();
       else renderRewardPlan(Date.now(), { force: true });
     }
-    if (area === "local" && (DROPS_KEYS.some((key) => key in changes) || PREFERENCES_KEY in changes || BADGE_AUTO_KEY in changes || BADGE_FREE_KEY in changes || DROP_ALERTS_KEY in changes)) reload().catch(() => {});
+    if (area === "local" && (DROPS_KEYS.some((key) => key in changes) || KICK_DROPS_KEY in changes || PREFERENCES_KEY in changes || BADGE_AUTO_KEY in changes || BADGE_FREE_KEY in changes || DROP_ALERTS_KEY in changes)) reload().catch(() => {});
   });
+  if (typeof chrome !== "undefined" && chrome.cookies?.onChanged) {
+    chrome.cookies.onChanged.addListener((changeInfo) => {
+      const name = changeInfo.cookie?.name;
+      if (name === "login" || name === "auth-token") {
+        isTwitchSignedIn().then(() => render());
+      }
+    });
+  }
   await reload();
   // Les jeux regardés ne changent pas pendant que le popup est ouvert : lus une fois.
   chrome.storage.local.get([WATCH_DAILY_KEY]).then((stored) => {

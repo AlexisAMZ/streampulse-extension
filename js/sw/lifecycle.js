@@ -16,6 +16,7 @@ import { uninstallSurveyUrl } from "./uninstall-survey.js";
 import { repairYoutubeNames } from "./youtube-repair.js";
 import { requestPendingTrial } from "./trial.js";
 import { kickViewerId } from "./kick-account.js";
+import { syncKickPusher } from "./kick-pusher.js";
 
 export { uninstallSurveyUrl };
 
@@ -208,6 +209,7 @@ export async function handleStartup() {
   setupAutoOpenInventoryAlarm(prefs);
   await NotificationCenter.init();
   await pollStreamers({ forceNotification: false });
+  syncKickPusher().catch((e) => console.warn("[StreamPulse] Kick Pusher:", e?.message || e));
   // Le texte de badge peut survivre a un redemarrage du navigateur avec une
   // valeur perimee : on le resynchronise avec l'etat reel du stockage.
   await syncUpdateBadge();
@@ -222,6 +224,7 @@ export async function initOnWake() {
   await PreferenceStore.ensureDefaults();
   await NotificationCenter.init();
   refreshRaidWatcher();
+  syncKickPusher().catch((e) => console.warn("[StreamPulse] Kick Pusher:", e?.message || e));
 
   // Only poll on SW wake if cached statuses are stale (>60s old).
   // Avoids triggering a full poll every time the popup is reopened.

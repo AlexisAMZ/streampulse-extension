@@ -457,7 +457,21 @@ function render(release) {
   renderNote(release);
   if (release.note) {
     fetchFundraiser().then((fund) => {
-      if (fund) renderNote({ ...release, note: { ...release.note, fundraiser: { ...release.note.fundraiser, ...fund } } });
+      if (fund) {
+        const localRaised = Number(release.note?.fundraiser?.raised) || 0;
+        const remoteRaised = Number(fund.raised) || 0;
+        const bestRaised = Math.max(localRaised, remoteRaised);
+        const bestUpdated = bestRaised === localRaised && localRaised > remoteRaised
+          ? (release.note?.fundraiser?.updated || fund.updated)
+          : fund.updated;
+        renderNote({
+          ...release,
+          note: {
+            ...release.note,
+            fundraiser: { ...release.note.fundraiser, ...fund, raised: bestRaised, updated: bestUpdated },
+          },
+        });
+      }
     });
   }
   const sections = renderChanges(release);

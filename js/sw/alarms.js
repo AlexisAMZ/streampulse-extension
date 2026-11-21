@@ -7,6 +7,7 @@ import { RAID_WATCHER_ALARM } from "../raidWatcher.js";
 import { pollIntervalMinutes } from "./config.js";
 import { AUTO_OPEN_INVENTORY_ALARM, BADGE_AUTO_ALARM, DROPS_ALARM, KEEP_ALIVE_ALARM, WATCHER_ALARM } from "./constants.js";
 import { badgeAuto, refreshDropsFromWorker } from "./drops.js";
+import { refreshKickDropsFromWorker } from "./kick-drops.js";
 import { NotificationCenter } from "./notifications.js";
 import { pollStreamers } from "./polling.js";
 import { refreshRaidWatcher } from "./raids.js";
@@ -88,6 +89,7 @@ export async function handleAlarm(alarm) {
     });
   } else if (alarm.name === DROPS_ALARM) {
     refreshDropsFromWorker().catch((error) => console.warn("[StreamPulse] Drops :", error?.message || error));
+    refreshKickDropsFromWorker().catch((error) => console.warn("[StreamPulse] Kick Drops :", error?.message || error));
   } else if (alarm.name === BADGE_AUTO_ALARM) {
     // Mode auto des badges : passage de contrôle rapproché (live terminé,
     // badge gagné, onglet figé ou déchargé).

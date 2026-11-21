@@ -60,6 +60,7 @@ export const DEFAULT_PREFERENCES = {
   enablePipButton: true,
   autoRefreshPlayerErrors: true,
   enableClipDownload: false,
+  autoUnboxKickRewards: false,
   playerQuality: "auto",
   // Amplification du volume du lecteur : 100 % = aucune amplification, 300 % max.
   playerVolumeBoost: 100,
@@ -222,6 +223,7 @@ export function sanitizePreferences(preferences = {}) {
     enablePipButton: preferences.enablePipButton !== false,
     autoRefreshPlayerErrors: preferences.autoRefreshPlayerErrors !== false,
     enableClipDownload: optIn(preferences, "enableClipDownload"),
+    autoUnboxKickRewards: optIn(preferences, "autoUnboxKickRewards"),
     playerQuality: PLAYER_QUALITIES.includes(preferences.playerQuality) ? preferences.playerQuality : "auto",
     playerVolumeBoost: clampVolumeBoost(preferences.playerVolumeBoost),
     latencyPlacement: LATENCY_PLACEMENTS.includes(preferences.latencyPlacement)

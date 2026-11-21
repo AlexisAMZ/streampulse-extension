@@ -40,6 +40,7 @@ test("drops, raids et clips restent opt-in ; une mise à jour installée se sign
   assert.equal(DEFAULT_PREFERENCES.dropAlerts, false);
   assert.equal(DEFAULT_PREFERENCES.raidAlerts, false);
   assert.equal(DEFAULT_PREFERENCES.enableClipDownload, false);
+  assert.equal(DEFAULT_PREFERENCES.autoUnboxKickRewards, false);
   // Décision du propriétaire (2026-10-17) : la notification de mise à jour
   // part par défaut, sans que personne n'ait à l'activer.
   assert.equal(DEFAULT_PREFERENCES.updateNotifications, true);
