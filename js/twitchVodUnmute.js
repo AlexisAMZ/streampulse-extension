@@ -1,18 +1,23 @@
 (() => {
   "use strict";
 
-  // StreamPulse+ : Restauration visuelle et démutage des segments VOD Twitch.
+  // StreamPulse+ : Démutage automatique des rediffusions (VODs) Twitch coupées par le copyright.
+  // Détecte les flux M3U8 de VOD hébergés sur CloudFront, sonde la présence des segments originaux
+  // sans filtre DMCA (*.ts), installe les règles de redirection et met en valeur les zones
+  // restaurées sur la barre de progression avec un halo vert émeraude signature StreamPulse
+  // et une infobulle interactive au survol.
 
   if (window.__streampulseVodUnmute) return;
   window.__streampulseVodUnmute = true;
 
+  const MUTED_MARKER = /-(?:muted|unmuted)(?=\.[^.]*(?:\?|$))/;
   const STYLE_ID = "streampulse-vod-unmute-styles";
+  const processedPlaylists = new Set();
   let currentVodId = null;
   let vodResolved = false;
   let isResolving = false;
   let plusActive = false;
   let restoredRanges = [];
-  let purgedRanges = [];
   let totalVodDuration = 0;
   let indicatorShown = false;
   let promoShown = false;
@@ -66,16 +71,6 @@
     }
   }
 
-  function ensureStoredPlusStatus() {
-    return new Promise((resolve) => {
-      if (!chrome.storage?.local) return resolve(plusActive);
-      chrome.storage.local.get("streamPulsePlus", (res) => {
-        updatePlusStatus(res?.streamPulsePlus);
-        resolve(plusActive);
-      });
-    });
-  }
-
   // Initialisation du statut StreamPulse+
   if (chrome.storage?.local) {
     chrome.storage.local.get("streamPulsePlus", (res) => {
@@ -83,13 +78,9 @@
     });
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area === "local" && changes.streamPulsePlus) {
-        const wasPlus = plusActive;
         updatePlusStatus(changes.streamPulsePlus.newValue);
         if (restoredRanges.length > 0) {
           paintSeekbar();
-          if (!wasPlus && plusActive) {
-            installRulesForRanges(restoredRanges);
-          }
         }
       }
     });
@@ -109,27 +100,6 @@
         box-shadow: 0 0 10px rgba(0, 245, 155, 0.85), 0 0 3px #00f59b;
         pointer-events: none;
         z-index: 10;
-        transition: opacity 0.2s ease;
-      }
-      .streampulse-unmuted-segment.streampulse-locked-segment {
-        background: repeating-linear-gradient(
-          -45deg,
-          rgba(0, 245, 155, 0.4),
-          rgba(0, 245, 155, 0.4) 4px,
-          rgba(0, 245, 155, 0.15) 4px,
-          rgba(0, 245, 155, 0.15) 8px
-        );
-        box-shadow: none;
-      }
-      .streampulse-purged-segment {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        background: rgba(255, 170, 0, 0.5);
-        border-radius: 2px;
-        box-shadow: 0 0 6px rgba(255, 170, 0, 0.6);
-        pointer-events: none;
-        z-index: 9;
         transition: opacity 0.2s ease;
       }
       .streampulse-vod-unmute-tooltip {
@@ -217,12 +187,6 @@
         z-index: 20;
         animation: spFadeIn 0.3s ease;
       }
-      .streampulse-unmuted-indicator.is-purged {
-        border-color: rgba(255, 170, 0, 0.5);
-      }
-      .streampulse-unmuted-indicator.is-purged svg {
-        fill: #ffaa00;
-      }
       .streampulse-unmuted-indicator svg {
         width: 14px;
         height: 14px;
@@ -237,12 +201,187 @@
     document.head?.appendChild(style);
   }
 
-  async function resolveVod(vodId) {
-    return new Promise((resolve) => {
-      chrome.runtime.sendMessage({ type: "vodUnmuteResolve", vodId }, (response) => {
-        resolve(response || null);
+  function extractFirstMediaPlaylist(masterText, baseUrl) {
+    const lines = masterText.split(/\r?\n/);
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (line.startsWith("#EXT-X-STREAM-INF") && i + 1 < lines.length) {
+        const nextLine = lines[i + 1].trim();
+        if (nextLine && !nextLine.startsWith("#")) {
+          try {
+            return new URL(nextLine, baseUrl).href;
+          } catch (_e) {
+            return nextLine;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  function parseM3u8(text, playlistUrl) {
+    const lines = text.split(/\r?\n/);
+    const entries = [];
+    let currentTime = 0;
+    let pendingDuration = null;
+
+    for (const rawLine of lines) {
+      const line = rawLine.trim();
+      if (!line) continue;
+      if (line.startsWith("#EXTINF:")) {
+        const d = Number.parseFloat(line.slice(8).split(",")[0]);
+        pendingDuration = Number.isFinite(d) && d >= 0 ? d : 10;
+        continue;
+      }
+      if (line.startsWith("#")) continue;
+      if (pendingDuration === null) continue;
+
+      let absoluteUrl = line;
+      try {
+        absoluteUrl = new URL(line, playlistUrl).href;
+      } catch (_e) {
+        // url relative
+      }
+
+      entries.push({
+        url: absoluteUrl,
+        startTime: currentTime,
+        duration: pendingDuration,
+        isMuted: MUTED_MARKER.test(line),
       });
-    });
+
+      currentTime += pendingDuration;
+      pendingDuration = null;
+    }
+
+    return { entries, totalDuration: currentTime };
+  }
+
+  async function probeSegment(url) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2500);
+      const res = await fetch(url, {
+        method: "HEAD",
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+      return res.status === 200 || res.status === 206;
+    } catch (_err) {
+      return false;
+    }
+  }
+
+  async function fetchVodPlaylistFromGql(vodId) {
+    try {
+      const res = await fetch("https://gql.twitch.tv/gql", {
+        method: "POST",
+        headers: {
+          "Client-ID": "kimne78kx3ncx6brgo4mv6wki5h1ko",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify([
+          {
+            operationName: "VideoPlayer_SeekPreviews",
+            query: "query VideoPlayer_SeekPreviews($videoID: ID!) { video(id: $videoID) { id seekPreviewsURL } }",
+            variables: { videoID: vodId },
+          },
+        ]),
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      const seekPreviewsURL = data?.[0]?.data?.video?.seekPreviewsURL;
+      if (!seekPreviewsURL || !seekPreviewsURL.includes("/storyboards/")) return null;
+
+      // Déduit l'URL de la playlist chunked à partir de l'URL du storyboard
+      const playlistUrl = seekPreviewsURL.replace(/storyboards\/.*$/, "chunked/index-dvr.m3u8");
+      return playlistUrl;
+    } catch (_e) {
+      return null;
+    }
+  }
+
+  async function processPlaylist(playlistUrl) {
+    if (processedPlaylists.has(playlistUrl)) return;
+    processedPlaylists.add(playlistUrl);
+
+    try {
+      const res = await fetch(playlistUrl);
+      if (!res.ok) return;
+      const text = await res.text();
+
+      // Prise en charge des master playlists (Usher / multi-variantes)
+      if (!text.includes("#EXTINF:") && text.includes("#EXT-X-STREAM-INF")) {
+        const variantUrl = extractFirstMediaPlaylist(text, playlistUrl);
+        if (variantUrl) {
+          return processPlaylist(variantUrl);
+        }
+      }
+
+      const parsed = parseM3u8(text, playlistUrl);
+      if (!parsed || parsed.entries.length === 0) return;
+
+      totalVodDuration = parsed.totalDuration;
+      const mutedEntries = parsed.entries.filter((e) => e.isMuted);
+      if (mutedEntries.length === 0) return;
+
+      // Sondage en parallèle par lots de 20 avec installation progressive
+      const batchSize = 20;
+
+      for (let i = 0; i < mutedEntries.length; i += batchSize) {
+        const batch = mutedEntries.slice(i, i + batchSize);
+        const validBatch = [];
+
+        await Promise.all(
+          batch.map(async (item) => {
+            const unmutedUrl = item.url.replace(MUTED_MARKER, "");
+            const exists = await probeSegment(unmutedUrl);
+            if (exists) {
+              validBatch.push({
+                sourceUrl: item.url,
+                targetUrl: unmutedUrl,
+                startTime: item.startTime,
+                duration: item.duration,
+              });
+            }
+          })
+        );
+
+        if (validBatch.length > 0) {
+          restoredRanges = restoredRanges.concat(validBatch);
+          paintSeekbar();
+
+          if (plusActive) {
+            const segmentIds = validBatch
+              .map((v) => extractSegmentId(v.sourceUrl))
+              .filter(Boolean);
+
+            chrome.runtime.sendMessage(
+              {
+                type: "vodUnmuteInstallRules",
+                segmentIds,
+                redirects: validBatch.map((v) => ({
+                  sourceUrl: v.sourceUrl,
+                  targetUrl: v.targetUrl,
+                })),
+                append: true,
+              },
+              (response) => {
+                if (response?.ok && !indicatorShown) {
+                  indicatorShown = true;
+                  showIndicator();
+                }
+              }
+            );
+          } else if (!promoShown) {
+            promoShown = true;
+            showPromoIndicator();
+          }
+        }
+      }
+    } catch (error) {
+      console.warn("[StreamPulse] Traitement playlist VOD :", error?.message || error);
+    }
   }
 
   function mergeContinuousRanges(ranges) {
@@ -301,7 +440,7 @@
     hitArea.__spHoverAttached = true;
 
     hitArea.addEventListener("mousemove", (e) => {
-      if ((restoredRanges.length === 0 && purgedRanges.length === 0) || totalVodDuration <= 0) {
+      if (restoredRanges.length === 0 || totalVodDuration <= 0) {
         hideTooltip();
         return;
       }
@@ -314,46 +453,29 @@
       }
 
       const hoverTime = ratio * totalVodDuration;
-      const mergedRestored = mergeContinuousRanges(restoredRanges);
-      const matchedRestored = mergedRestored.find(
+      const merged = mergeContinuousRanges(restoredRanges);
+      const matched = merged.find(
         (r) => hoverTime >= r.startTime && hoverTime <= r.startTime + r.duration
       );
 
-      const mergedPurged = mergeContinuousRanges(purgedRanges);
-      const matchedPurged = mergedPurged.find(
-        (r) => hoverTime >= r.startTime && hoverTime <= r.startTime + r.duration
-      );
-
-      if (!matchedRestored && !matchedPurged) {
+      if (!matched) {
         hideTooltip();
         return;
       }
 
       const player = document.querySelector('div[data-a-target="video-player"]') || document.body;
       const tip = getOrCreateTooltip(player);
-      const matched = matchedRestored || matchedPurged;
-      const isPurged = !matchedRestored && Boolean(matchedPurged);
       const startTc = formatTimecode(matched.startTime);
       const endTc = formatTimecode(matched.startTime + matched.duration);
+      const text = getTooltipText();
 
-      if (isPurged) {
-        tip.innerHTML = `
-          <div class="sp-pager-case" style="border-color: rgba(255, 170, 0, 0.55); box-shadow: 0 10px 28px rgba(0, 0, 0, 0.85), 0 0 14px rgba(255, 170, 0, 0.25);">
-            <span class="sp-pager-tag" style="background: rgba(255, 170, 0, 0.15); border-color: rgba(255, 170, 0, 0.6); color: #ffaa00;">Twitch DMCA</span>
-            <span class="sp-pager-text">Audio original purgé des serveurs Twitch</span>
-            <span class="sp-pager-screen">${startTc} · ${endTc}</span>
-          </div>
-        `;
-      } else {
-        const text = plusActive ? getTooltipText() : "Audio disponible avec StreamPulse+";
-        tip.innerHTML = `
-          <div class="sp-pager-case">
-            <span class="sp-pager-tag">StreamPulse+</span>
-            <span class="sp-pager-text">${text}</span>
-            <span class="sp-pager-screen">${startTc} · ${endTc}</span>
-          </div>
-        `;
-      }
+      tip.innerHTML = `
+        <div class="sp-pager-case">
+          <span class="sp-pager-tag">StreamPulse+</span>
+          <span class="sp-pager-text">${text}</span>
+          <span class="sp-pager-screen">${startTc} · ${endTc}</span>
+        </div>
+      `;
 
       if (player !== document.body) {
         const pRect = player.getBoundingClientRect();
@@ -378,7 +500,7 @@
     });
   }
 
-  function paintSeekbar(isPlus = plusActive) {
+  function paintSeekbar() {
     ensureStyles();
     const seekbar = document.querySelector("div.seekbar-bar");
     if (!seekbar || totalVodDuration <= 0) return;
@@ -386,30 +508,13 @@
     setupSeekbarHover(seekbar);
 
     // Supprime les anciens marqueurs StreamPulse
-    seekbar.querySelectorAll(".streampulse-unmuted-segment, .streampulse-purged-segment").forEach((el) => el.remove());
+    seekbar.querySelectorAll(".streampulse-unmuted-segment").forEach((el) => el.remove());
 
-    const mergedRestored = mergeContinuousRanges(restoredRanges);
-    for (const range of mergedRestored) {
+    const merged = mergeContinuousRanges(restoredRanges);
+
+    for (const range of merged) {
       const segEl = document.createElement("div");
-      if (!isPlus) {
-        segEl.className = "streampulse-unmuted-segment streampulse-locked-segment";
-        segEl.title = `StreamPulse+ : Audio disponible avec StreamPulse+ (${formatTimecode(range.startTime)} · ${formatTimecode(range.startTime + range.duration)})`;
-      } else {
-        segEl.className = "streampulse-unmuted-segment";
-        segEl.title = `StreamPulse+ : Récupéré grâce à StreamPulse+ (${formatTimecode(range.startTime)} · ${formatTimecode(range.startTime + range.duration)})`;
-      }
-      const leftPercent = (range.startTime / totalVodDuration) * 100;
-      const widthPercent = (range.duration / totalVodDuration) * 100;
-
-      segEl.style.left = `${leftPercent.toFixed(3)}%`;
-      segEl.style.width = `${Math.max(0.25, widthPercent).toFixed(3)}%`;
-      seekbar.appendChild(segEl);
-    }
-
-    const mergedPurged = mergeContinuousRanges(purgedRanges);
-    for (const range of mergedPurged) {
-      const segEl = document.createElement("div");
-      segEl.className = "streampulse-purged-segment";
+      segEl.className = "streampulse-unmuted-segment";
       const leftPercent = (range.startTime / totalVodDuration) * 100;
       const widthPercent = (range.duration / totalVodDuration) * 100;
 
@@ -418,7 +523,7 @@
 
       segEl.style.left = `${leftPercent.toFixed(3)}%`;
       segEl.style.width = `${Math.max(0.25, widthPercent).toFixed(3)}%`;
-      segEl.title = `Twitch : Audio original supprimé des serveurs (${startTc} · ${endTc})`;
+      segEl.title = `StreamPulse+ : Récupéré grâce à StreamPulse+ (${startTc} · ${endTc})`;
       seekbar.appendChild(segEl);
     }
   }
@@ -441,27 +546,6 @@
 
     playerContainer.appendChild(badge);
     setTimeout(() => badge.remove(), 6000);
-  }
-
-  function showPurgedIndicator() {
-    ensureStyles();
-    const existing = document.getElementById("streampulse-unmute-badge");
-    if (existing) existing.remove();
-
-    const playerContainer = document.querySelector('div[data-a-target="video-player"]');
-    if (!playerContainer) return;
-
-    const badge = document.createElement("div");
-    badge.id = "streampulse-unmute-badge";
-    badge.className = "streampulse-unmuted-indicator is-purged";
-    badge.title = "Les fichiers audio originaux de ce replay ont été définitivement supprimés par Twitch lors du contrôle DMCA.";
-    badge.innerHTML = `
-      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-      <span>Audio d'origine supprimé par Twitch</span>
-    `;
-
-    playerContainer.appendChild(badge);
-    setTimeout(() => badge.remove(), 7000);
   }
 
   function showPromoIndicator() {
@@ -488,81 +572,30 @@
     setTimeout(() => promo.remove(), 8000);
   }
 
-  function installRulesForRanges(ranges) {
-    if (!ranges || ranges.length === 0) return;
-    const segmentIds = ranges
-      .map((v) => {
-        if (v.segmentId) return String(v.segmentId);
-        if (v.sourceUrl) return extractSegmentId(v.sourceUrl);
-        if (typeof v.startTime === "number" && typeof v.duration === "number" && v.duration > 0) {
-          return String(Math.round(v.startTime / v.duration));
-        }
-        return null;
-      })
-      .filter(Boolean);
-
-    if (segmentIds.length === 0) return;
-
-    chrome.runtime.sendMessage(
-      {
-        type: "vodUnmuteInstallRules",
-        segmentIds,
-        redirects: ranges.map((v) => {
-          const segId =
-            v.segmentId ||
-            extractSegmentId(v.sourceUrl) ||
-            (typeof v.startTime === "number" && typeof v.duration === "number" && v.duration > 0
-              ? String(Math.round(v.startTime / v.duration))
-              : null);
-          return {
-            segmentId: segId,
-            sourceUrl: v.sourceUrl,
-            targetUrl: v.targetUrl,
-            targetType: v.targetType || (v.targetUrl?.includes("-unmuted") ? "unmuted" : "bare"),
-          };
-        }),
-        append: false,
-      },
-      (response) => {
-        if (response?.ok) {
-          console.log(`[StreamPulse] VOD Unmute : ${response.count} regles declarativeNetRequest actives pour ${ranges.length} segments`);
-          if (!indicatorShown) {
-            indicatorShown = true;
-            showIndicator();
-          }
-        } else {
-          console.warn("[StreamPulse] VOD Unmute : echec installation des regles :", response?.error);
-        }
-      }
-    );
-  }
-
-  function resetVodState(clearRules = true) {
+  function resetVodState() {
     currentVodId = null;
     vodResolved = false;
     isResolving = false;
+    processedPlaylists.clear();
     restoredRanges = [];
-    purgedRanges = [];
     totalVodDuration = 0;
     indicatorShown = false;
     promoShown = false;
     hideTooltip();
-    document.querySelectorAll(".streampulse-unmuted-segment, .streampulse-purged-segment").forEach((el) => el.remove());
-    if (clearRules) {
-      chrome.runtime.sendMessage({ type: "vodUnmuteClearRules" }).catch(() => {});
-    }
+    document.querySelectorAll(".streampulse-unmuted-segment").forEach((el) => el.remove());
+    chrome.runtime.sendMessage({ type: "vodUnmuteClearRules" }).catch(() => {});
   }
 
   async function checkCurrentVod() {
     if (!isVodPage()) {
-      if (currentVodId) resetVodState(true);
+      if (currentVodId) resetVodState();
       return;
     }
     const vodId = getVodId();
     if (!vodId) return;
 
     if (vodId !== currentVodId) {
-      resetVodState(false);
+      resetVodState();
       currentVodId = vodId;
     }
 
@@ -570,44 +603,31 @@
 
     isResolving = true;
     try {
-      await ensureStoredPlusStatus();
-
-      const data = await resolveVod(vodId);
-      if (data?.ok && currentVodId === vodId) {
+      const gqlPlaylistUrl = await fetchVodPlaylistFromGql(vodId);
+      if (gqlPlaylistUrl && currentVodId === vodId) {
         vodResolved = true;
-        totalVodDuration = data.totalDuration || 0;
-        const validBatch = data.restoredRanges || [];
-        const purgedBatch = data.purgedRanges || [];
-
-        if (validBatch.length > 0) {
-          console.log(`[StreamPulse] VOD ${vodId} : ${validBatch.length} segments audio restaurables detectes (${purgedBatch.length} purges)`);
-          restoredRanges = validBatch;
-          purgedRanges = purgedBatch;
-          const isUserPlus = Boolean(data.isPlus || plusActive);
-          paintSeekbar(isUserPlus);
-          installRulesForRanges(validBatch);
-
-          if (!isUserPlus && !promoShown) {
-            promoShown = true;
-            showPromoIndicator();
-          }
-        } else if (data.purgedByTwitch || purgedBatch.length > 0) {
-          purgedRanges = purgedBatch;
-          restoredRanges = [];
-          if (purgedBatch.length > 0) {
-            paintSeekbar(false);
-          }
-          if (!indicatorShown) {
-            indicatorShown = true;
-            showPurgedIndicator();
-          }
-        }
+        await processPlaylist(gqlPlaylistUrl);
       }
     } catch (err) {
       console.warn("[StreamPulse] Résolution VOD :", err?.message || err);
     } finally {
       isResolving = false;
     }
+  }
+
+  // Observer de requêtes réseau pour intercepter les flux HLS alternatifs
+  try {
+    const perfObserver = new PerformanceObserver((list) => {
+      if (!isVodPage()) return;
+      for (const entry of list.getEntries()) {
+        if (entry.name.includes(".m3u8") && (entry.name.includes("cloudfront.net") || entry.name.includes("ttvnw.net"))) {
+          processPlaylist(entry.name);
+        }
+      }
+    });
+    perfObserver.observe({ entryTypes: ["resource"] });
+  } catch (_e) {
+    // PerformanceObserver indisponible
   }
 
   // Détection instantanée des navigations SPA
@@ -642,12 +662,11 @@
     if (isVodPage()) {
       checkCurrentVod();
       const seekbar = document.querySelector("div.seekbar-bar");
-      if (seekbar && (restoredRanges.length > 0 || purgedRanges.length > 0) &&
-          !seekbar.querySelector(".streampulse-unmuted-segment, .streampulse-purged-segment")) {
-        paintSeekbar(plusActive);
+      if (seekbar && restoredRanges.length > 0 && !seekbar.querySelector(".streampulse-unmuted-segment")) {
+        paintSeekbar();
       }
     } else if (currentVodId) {
-      resetVodState(true);
+      resetVodState();
     }
   }, 1200);
 
