@@ -549,7 +549,7 @@
 
         if (validBatch.length > 0) {
           restoredRanges = validBatch;
-          purgedRanges = [];
+          purgedRanges = purgedBatch;
           paintSeekbar();
 
           const isUserPlus = Boolean(data.isPlus || plusActive);
@@ -559,7 +559,7 @@
             promoShown = true;
             showPromoIndicator();
           }
-        } else if (data.purgedByTwitch) {
+        } else if (data.purgedByTwitch || purgedBatch.length > 0) {
           purgedRanges = purgedBatch;
           restoredRanges = [];
           if (purgedBatch.length > 0) {

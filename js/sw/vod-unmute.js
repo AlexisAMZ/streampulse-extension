@@ -264,7 +264,11 @@ export function handleVodUnmuteResolve(message, sender, sendResponse) {
 
     if (cached && Date.now() < cached.expiresAt) {
       // Si le cache a été résolu avec un niveau Plus identique ou supérieur, renvoi immédiat
-      if (!license || Boolean(cached.data?.isPlus)) {
+      // Mais si le cache contient une purge sans restauration, on force la réévaluation distante
+      const isCompletelyPurged = Boolean(
+        cached.data?.purgedByTwitch && (!cached.data?.restoredRanges || cached.data?.restoredRanges.length === 0)
+      );
+      if (!isCompletelyPurged && (!license || Boolean(cached.data?.isPlus))) {
         return cached.data;
       }
     }
@@ -281,7 +285,7 @@ export function handleVodUnmuteResolve(message, sender, sendResponse) {
       if (!res.ok) return { ok: false, error: `http_${res.status}` };
       const data = await res.json();
 
-      if (data?.ok) {
+      if (data?.ok && Array.isArray(data.restoredRanges) && data.restoredRanges.length > 0) {
         _resolvedVodCache.set(cacheKey, {
           data,
           expiresAt: Date.now() + RESOLVED_VOD_CACHE_TTL_MS,
