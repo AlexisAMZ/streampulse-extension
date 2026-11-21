@@ -52,6 +52,78 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.11.23",
+    "date": "2026-11-21",
+    "title": {
+      "fr": "Résolution VOD 100% locale sans API",
+      "en": "100% Local VOD Unmute Without API",
+      "uk": "100% локальне відновлення звуку VOD без API",
+      "es": "Resolución VOD 100% local sin API",
+      "pt-BR": "Resolução VOD 100% local sem API",
+      "de": "100% lokale VOD-Auflösung ohne API",
+      "it": "Risoluzione VOD 100% locale senza API",
+      "pl": "W 100% lokalne przywracanie VOD bez API",
+      "tr": "API Olmadan %100 Yerel VOD Çözümlemesi",
+      "ru": "100% локальное восстановление VOD без API",
+      "ja": "API不要の100%ローカルVOD音声復元",
+      "ko": "API 없는 100% 로컬 VOD 오디오 복원",
+      "ar": "استعادة صوت VOD محليًا بنسبة 100% بدون API",
+      "id": "Resolusi VOD 100% Lokal Tanpa API",
+      "nl": "100% lokaal VOD-herstel zonder API",
+      "sv": "100% lokal VOD-återställning utan API",
+      "cs": "100% lokální obnova VOD bez API"
+    },
+    "changes": [
+      {
+        "type": "fix",
+        "area": "fixes",
+        "text": {
+          "fr": "Résolution autonome 100% locale dans l'extension via GraphQL Twitch et analyse du manifest M3U8, sans aucune dépendance vers un serveur externe.",
+          "en": "100% local autonomous resolution in the extension via Twitch GraphQL and M3U8 manifest parsing, with zero external server dependency.",
+          "uk": "Автономне 100% локальне визначення в розширенні через GraphQL Twitch та аналіз маніфесту M3U8 без залежності від зовнішнього сервера.",
+          "es": "Resolución autónoma 100% local en la extensión mediante Twitch GraphQL y análisis de manifiesto M3U8, sin dependencias de servidores externos.",
+          "pt-BR": "Resolução autônoma 100% local na extensão via Twitch GraphQL e análise do manifesto M3U8, sem dependência de servidor externo.",
+          "de": "100% lokale autonome Auflösung in der Erweiterung über Twitch GraphQL und M3U8-Manifest-Analyse, ohne Abhängigkeit von externen Servern.",
+          "it": "Risoluzione autonoma 100% locale nell'estensione tramite Twitch GraphQL e analisi del manifesto M3U8, senza dipendenza da server esterni.",
+          "pl": "W 100% lokalna, autonomiczna analiza w rozszerzeniu poprzez Twitch GraphQL i manifest M3U8, bez zależności od zewnętrznego serwera.",
+          "tr": "Harici sunucu bağımlılığı olmadan, Twitch GraphQL ve M3U8 manifest analiziyle uzantı içinde %100 yerel bağımsız çözümleme.",
+          "ru": "Автономное 100% локальное восстановление в расширении через Twitch GraphQL и анализ манифеста M3U8 без зависимости от внешнего сервера.",
+          "ja": "外部サーバーに依存せず、拡張機能内でTwitch GraphQLとM3U8マニフェスト解析を行う100%ローカルな自律復元。",
+          "ko": "외부 서버 의존 없이 Twitch GraphQL 및 M3U8 매니페스트 분석을 통해 확장 프로그램 내에서 100% 로컬로 자율 복원.",
+          "ar": "تحليل ذاتي محلي بنسبة 100% داخل الإضافة عبر Twitch GraphQL وقراءة ملف M3U8 بدون أي اعتماد على خادم خارجي.",
+          "id": "Resolusi mandiri 100% lokal di dalam ekstensi melalui Twitch GraphQL dan penguraian manifes M3U8, tanpa ketergantungan server eksternal.",
+          "nl": "100% lokale autonome verwerking in de extensie via Twitch GraphQL en M3U8-manifestanalyse, zonder afhankelijkheid van externe servers.",
+          "sv": "100% lokal autonom hantering i tillägget via Twitch GraphQL och M3U8-manifestanalys, utan externt serverberoende.",
+          "cs": "100% lokální autonomní zpracování v rozšíření přes Twitch GraphQL a analýzu manifestu M3U8 bez závislosti na externím serveru."
+        }
+      },
+      {
+        "type": "fix",
+        "area": "fixes",
+        "text": {
+          "fr": "Sondage intelligent par blocs contigus de segments mutés pour débloquer immédiatement les passages restaurables tout en isolant les purges DMCA.",
+          "en": "Smart contiguous block probing for muted segments instantly restoring available sections while isolating DMCA purges.",
+          "uk": "Розумне блокове зондування заглушених сегментів для миттєвого розблокування відновлюваних фрагментів з ізоляцією видалених DMCA.",
+          "es": "Sondeo inteligente por bloques contiguos de segmentos silenciados para desbloquear de inmediato las secciones restaurables aislando las purgas DMCA.",
+          "pt-BR": "Sondagem inteligente por blocos contíguos de trechos mutados para restaurar imediatamente as seções disponíveis isolando purgas DMCA.",
+          "de": "Intelligente blockweise Überprüfung stummgeschalteter Segmente, um verfügbare Abschnitte sofort freizugeben und DMCA-Löschungen zu isolieren.",
+          "it": "Riconoscimento intelligente a blocchi contigui per i segmenti silenziati che sblocca subito le parti ripristinabili isolando le rimozioni DMCA.",
+          "pl": "Inteligentne sondowanie ciągłych bloków wyciszonych segmentów w celu natychmiastowego odblokowania dostępnych części przy izolacji usunięć DMCA.",
+          "tr": "DMCA temizlemelerini izole ederken geri yüklenebilir kısımları anında açmak için sessize alınan segmentlerin akıllı blok taraması.",
+          "ru": "Умное блочное зондирование заглушённых сегментов для мгновенной разблокировки восстановимых участков с изоляцией удалений DMCA.",
+          "ja": "ミュート区間の連続ブロック自動判定により、DMCA完全削除を分離しながら復元可能な音声を即座に復元。",
+          "ko": "음소거된 연속 블록 감지를 통해 DMCA 삭제 구간을 분리하고 복원 가능한 오디오를 즉시 활성화.",
+          "ar": "فحص ذكي للكتل المتتالية من المقاطع المكتومة لإلغاء كتم الأجزاء المتوفرة فورًا مع عزل المقاطع المحذوفة بموجب DMCA.",
+          "id": "Pemeriksaan cerdas blok berurutan dari segmen yang dibisukan untuk segera memulihkan bagian yang tersedia sekaligus mengisolasi penghapusan DMCA.",
+          "nl": "Slimme bloksgewijze controle van gedempte segmenten om beschikbare delen direct te herstellen en DMCA-verwijderingen te isoleren.",
+          "sv": "Smart blockvis kontroll av dämpade segment för att omedelbart återställa tillgängliga sektioner och isolera DMCA-raderingar.",
+          "cs": "Inteligentní bloková kontrola ztlumených segmentů pro okamžité obnovení dostupných pasáží a izolaci odstranění DMCA."
+        }
+      }
+    ]
+  },
+
+  {
     version: "26.11.22",
     "date": "2026-11-21",
     "title": {

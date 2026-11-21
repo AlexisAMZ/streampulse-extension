@@ -1,8 +1,7 @@
-// StreamPulse+ : Gestion des règles de redirection declarativeNetRequest pour la lecture vidéo.
+// StreamPulse+ : Résolution locale autonome et gestion des règles declarativeNetRequest pour la lecture vidéo.
 
-import { getDeviceId, verifyLicense } from "../plus.js";
-
-const REMOTE_UNMUTE_URL = "https://streampulse.tech/api/vod-unmute";
+const TWITCH_CLIENT_ID = "kimne78kx3ncx6brgo4mv6wki5h1ko";
+const MUTED_MARKER = /-(?:muted|unmuted)(?=\.[^.]*(?:\?|$))/;
 
 let updateQueue = Promise.resolve();
 let nextRuleId = 1;
@@ -259,6 +258,79 @@ export function handleVodUnmuteClearRules(_message, sender, sendResponse) {
   return runner();
 }
 
+function extractFirstMediaPlaylist(masterText, baseUrl) {
+  const lines = masterText.split(/\r?\n/);
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (line.startsWith("#EXT-X-STREAM-INF") && i + 1 < lines.length) {
+      const nextLine = lines[i + 1].trim();
+      if (nextLine && !nextLine.startsWith("#")) {
+        try {
+          return new URL(nextLine, baseUrl).href;
+        } catch (_e) {
+          return nextLine;
+        }
+      }
+    }
+  }
+  return null;
+}
+
+function parseM3u8(text, playlistUrl) {
+  const lines = text.split(/\r?\n/);
+  const entries = [];
+  let currentTime = 0;
+  let pendingDuration = null;
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) continue;
+    if (line.startsWith("#EXTINF:")) {
+      const d = Number.parseFloat(line.slice(8).split(",")[0]);
+      pendingDuration = Number.isFinite(d) && d >= 0 ? d : 10;
+      continue;
+    }
+    if (line.startsWith("#")) continue;
+    if (pendingDuration === null) continue;
+
+    let absoluteUrl = line;
+    try {
+      absoluteUrl = new URL(line, playlistUrl).href;
+    } catch (_e) {
+      // url relative
+    }
+
+    entries.push({
+      url: absoluteUrl,
+      startTime: currentTime,
+      duration: pendingDuration,
+      isMuted: MUTED_MARKER.test(line),
+    });
+
+    currentTime += pendingDuration;
+    pendingDuration = null;
+  }
+  return { entries, totalDuration: currentTime };
+}
+
+async function probeSegment(url) {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
+    const res = await fetch(url, {
+      method: "GET",
+      signal: controller.signal,
+      headers: {
+        Range: "bytes=0-100",
+      },
+    });
+    clearTimeout(timeoutId);
+    return res.status === 200 || res.status === 206;
+  } catch (_e) {
+    return false;
+  }
+}
+
 export function handleVodUnmuteResolve(message, sender, sendResponse) {
   const runner = async () => {
     const vodId = message?.vodId;
@@ -269,83 +341,149 @@ export function handleVodUnmuteResolve(message, sender, sendResponse) {
     const cacheKey = String(vodId);
     const cached = _resolvedVodCache.get(cacheKey);
 
-    let license = null;
-    if (chrome.storage?.local) {
-      try {
-        const stored = await chrome.storage.local.get(["streamPulsePlus", "streamPulseDeviceId"]);
-        let record = stored?.streamPulsePlus;
-        let device = stored?.streamPulseDeviceId;
-        if (!device && typeof getDeviceId === "function") {
-          device = await getDeviceId(chrome.storage.local);
-        }
-        if (record && record.licenseKey && !record.sig && typeof verifyLicense === "function") {
-          try {
-            const verified = await verifyLicense(record.licenseKey, fetch, Date.now(), device || "");
-            if (verified?.ok && verified.record) {
-              record = verified.record;
-              await chrome.storage.local.set({ streamPulsePlus: record });
-            }
-          } catch (_vErr) {
-            // Tolérance réseau
-          }
-        }
-        if (record && record.licenseKey) {
-          license = {
-            key: record.licenseKey,
-            device: device || record.device || "",
-            plan: record.plan || "",
-            role: record.role || "",
-            since: record.since || 0,
-            referrals: record.referrals || 0,
-            iat: record.iat || 0,
-            sig: record.sig || "",
-            twitch: record.twitch || "",
-          };
-        }
-      } catch (_e) {
-        // Fallback sans licence
-      }
-    }
-
     if (cached && Date.now() < cached.expiresAt) {
-      // Si le cache a été résolu avec un niveau Plus identique ou supérieur, renvoi immédiat
-      // Mais si le cache contient une purge sans restauration, on force la réévaluation distante
-      const isCompletelyPurged = Boolean(
-        cached.data?.purgedByTwitch && (!cached.data?.restoredRanges || cached.data?.restoredRanges.length === 0)
-      );
-      const isOutdatedCache = Array.isArray(cached.data?.restoredRanges) &&
-        cached.data.restoredRanges.length > 0 &&
-        !cached.data.restoredRanges[0].segmentId &&
-        !cached.data.restoredRanges[0].sourceUrl;
-      const needsPlusUpgrade = Boolean(license?.sig) && !cached.data?.isPlus;
-      if (!isOutdatedCache && !isCompletelyPurged && !needsPlusUpgrade && (!license || Boolean(cached.data?.isPlus))) {
-        return cached.data;
-      }
+      return cached.data;
     }
 
     try {
-      const res = await fetch(REMOTE_UNMUTE_URL, {
+      // 1. Découverte de la playlist M3U8 via l'API GraphQL Twitch publique
+      const gqlRes = await fetch("https://gql.twitch.tv/gql", {
         method: "POST",
         headers: {
+          "Client-ID": TWITCH_CLIENT_ID,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ vodId, license }),
+        body: JSON.stringify([
+          {
+            operationName: "VideoPlayer_SeekPreviews",
+            query: "query VideoPlayer_SeekPreviews($videoID: ID!) { video(id: $videoID) { id seekPreviewsURL } }",
+            variables: { videoID: String(vodId) },
+          },
+        ]),
       });
 
-      if (!res.ok) return { ok: false, error: `http_${res.status}` };
-      const data = await res.json();
-
-      if (data?.ok && Array.isArray(data.restoredRanges) && data.restoredRanges.length > 0) {
-        _resolvedVodCache.set(cacheKey, {
-          data,
-          expiresAt: Date.now() + RESOLVED_VOD_CACHE_TTL_MS,
-        });
+      if (!gqlRes.ok) return { ok: false, error: `gql_${gqlRes.status}` };
+      const gqlData = await gqlRes.json();
+      const seekPreviewsURL = gqlData?.[0]?.data?.video?.seekPreviewsURL;
+      if (!seekPreviewsURL || !seekPreviewsURL.includes("/storyboards/")) {
+        return { ok: false, error: "no_storyboard_url" };
       }
 
-      return data;
+      const playlistUrl = seekPreviewsURL.replace(/storyboards\/.*$/, "chunked/index-dvr.m3u8");
+
+      // 2. Téléchargement et analyse du manifest HLS M3U8 en local
+      let targetPlaylist = playlistUrl;
+      const m3u8Res = await fetch(targetPlaylist);
+      if (!m3u8Res.ok) return { ok: false, error: `m3u8_${m3u8Res.status}` };
+      let text = await m3u8Res.text();
+
+      if (!text.includes("#EXTINF:") && text.includes("#EXT-X-STREAM-INF")) {
+        const variantUrl = extractFirstMediaPlaylist(text, targetPlaylist);
+        if (variantUrl) {
+          targetPlaylist = variantUrl;
+          const vRes = await fetch(targetPlaylist);
+          if (vRes.ok) text = await vRes.text();
+        }
+      }
+
+      const parsed = parseM3u8(text, targetPlaylist);
+      if (!parsed || parsed.entries.length === 0) {
+        return { ok: false, error: "empty_playlist" };
+      }
+
+      const mutedEntries = parsed.entries.filter((e) => e.isMuted);
+      if (mutedEntries.length === 0) {
+        const noMuteData = {
+          ok: true,
+          isPlus: true,
+          vodId,
+          totalDuration: parsed.totalDuration,
+          mutedDetected: false,
+          purgedByTwitch: false,
+          restoredRanges: [],
+          purgedRanges: [],
+        };
+        _resolvedVodCache.set(cacheKey, { data: noMuteData, expiresAt: Date.now() + RESOLVED_VOD_CACHE_TTL_MS });
+        return noMuteData;
+      }
+
+      // 3. Regroupement par blocs contigus de segments mutés
+      const blocks = [];
+      let curBlock = [];
+      for (const entry of mutedEntries) {
+        if (curBlock.length === 0) {
+          curBlock.push(entry);
+        } else {
+          const prev = curBlock[curBlock.length - 1];
+          if (Math.abs(prev.startTime + prev.duration - entry.startTime) < 0.5) {
+            curBlock.push(entry);
+          } else {
+            blocks.push(curBlock);
+            curBlock = [entry];
+          }
+        }
+      }
+      if (curBlock.length > 0) blocks.push(curBlock);
+
+      // 4. Sondage simultané de chaque bloc contigu pour isoler les portions restaurables
+      const restoredRanges = [];
+      const purgedRanges = [];
+
+      await Promise.all(
+        blocks.map(async (block) => {
+          const head = block[0];
+          const bareUrl = head.url.replace(MUTED_MARKER, "");
+          const unmutedUrl = head.url.replace(MUTED_MARKER, "-unmuted");
+
+          let confirmedType = null;
+          if (await probeSegment(bareUrl)) {
+            confirmedType = "bare";
+          } else if (await probeSegment(unmutedUrl)) {
+            confirmedType = "unmuted";
+          }
+
+          if (confirmedType) {
+            for (const item of block) {
+              restoredRanges.push({
+                segmentId: extractSegmentId(item.url),
+                sourceUrl: item.url,
+                targetUrl: item.url.replace(MUTED_MARKER, confirmedType === "bare" ? "" : "-unmuted"),
+                targetType: confirmedType,
+                startTime: item.startTime,
+                duration: item.duration,
+              });
+            }
+          } else {
+            for (const item of block) {
+              purgedRanges.push({
+                startTime: item.startTime,
+                duration: item.duration,
+              });
+            }
+          }
+        })
+      );
+
+      const resultData = {
+        ok: true,
+        isPlus: true,
+        vodId,
+        totalDuration: parsed.totalDuration,
+        mutedDetected: true,
+        purgedByTwitch: mutedEntries.length > 0 && restoredRanges.length === 0,
+        restoredRanges,
+        purgedRanges,
+      };
+
+      _resolvedVodCache.set(cacheKey, {
+        data: resultData,
+        expiresAt: Date.now() + RESOLVED_VOD_CACHE_TTL_MS,
+      });
+
+      return resultData;
     } catch (error) {
-      console.warn("[StreamPulse] Erreur résolution VOD distante :", error?.message || error);
-      return { ok: false, error: error?.message || "network_error" };
+      console.warn("[StreamPulse] Erreur résolution VOD locale :", error?.message || error);
+      return { ok: false, error: error?.message || "local_error" };
     }
   };
 

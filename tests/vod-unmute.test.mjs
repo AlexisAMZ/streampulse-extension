@@ -152,7 +152,7 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
   assert.equal(fakeRules.length, 0);
 });
 
-test("VOD Unmute : résolution distante via le service worker", async () => {
+test("VOD Unmute : résolution autonome locale via GraphQL et M3U8 sans API distante", async () => {
   const { handleVodUnmuteResolve } = await import(
     `../js/sw/vod-unmute.js?t=${Date.now()}`
   );
@@ -162,52 +162,46 @@ test("VOD Unmute : résolution distante via le service worker", async () => {
   assert.equal(invalidRes.ok, false);
   assert.equal(invalidRes.error, "invalid_vod_id");
 
-  // Mock de fetch global pour tester la réponse valide
+  // Mock de fetch global pour tester la résolution 100% locale
   const originalFetch = global.fetch;
   try {
-    // Configuration du stockage local avec licence active et identifiant d'appareil
-    await global.chrome.storage.local.set({
-      streamPulseDeviceId: "0123456789abcdef0123456789abcdef",
-      streamPulsePlus: {
-        licenseKey: "SP-TEST-KEY1-KEY2-KEY3",
-        plan: "lifetime",
-        role: "admin",
-        since: 1600000000,
-        referrals: 2,
-        iat: 1700000000,
-        sig: "fake_signature_abc",
-        twitch: "98765432",
-      },
-    });
-
-    let sentBody = null;
     global.fetch = async (url, opts) => {
-      assert.ok(url.includes("vod-unmute"));
-      assert.equal(opts.method, "POST");
-      sentBody = JSON.parse(opts.body);
-      assert.equal(sentBody.vodId, "123456");
-      assert.equal(sentBody.license?.key, "SP-TEST-KEY1-KEY2-KEY3");
-      assert.equal(sentBody.license?.device, "0123456789abcdef0123456789abcdef");
-      assert.equal(sentBody.license?.sig, "fake_signature_abc");
-      assert.equal(sentBody.license?.twitch, "98765432");
-      return {
-        ok: true,
-        json: async () => ({
+      if (url.includes("gql.twitch.tv")) {
+        return {
           ok: true,
-          isPlus: true,
-          vodId: "123456",
-          totalDuration: 3600,
-          restoredRanges: [
+          json: async () => [
             {
-              segmentId: "12",
-              sourceUrl: "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/12-muted.ts",
-              targetUrl: "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/12.ts",
-              startTime: 120,
-              duration: 60,
+              data: {
+                video: {
+                  id: "123456",
+                  seekPreviewsURL: "https://d2vi6trrdongqn.cloudfront.net/hash/storyboards/123456-info.json",
+                },
+              },
             },
           ],
-        }),
-      };
+        };
+      }
+      if (url.includes(".m3u8")) {
+        const m3u8Content = [
+          "#EXTM3U",
+          "#EXT-X-VERSION:3",
+          "#EXT-X-TARGETDURATION:10",
+          "#EXTINF:10.000,",
+          "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/12-muted.ts",
+          "#EXT-X-ENDLIST",
+        ].join("\n");
+        return {
+          ok: true,
+          text: async () => m3u8Content,
+        };
+      }
+      if (url.includes("12.ts")) {
+        return {
+          status: 206,
+          ok: true,
+        };
+      }
+      return { status: 404, ok: false };
     };
 
     const validRes = await handleVodUnmuteResolve({ vodId: "123456" });
@@ -215,40 +209,48 @@ test("VOD Unmute : résolution distante via le service worker", async () => {
     assert.equal(validRes.vodId, "123456");
     assert.equal(validRes.isPlus, true);
     assert.equal(validRes.restoredRanges.length, 1);
-    assert.ok(sentBody?.license);
+    assert.equal(validRes.restoredRanges[0].segmentId, "12");
+    assert.equal(validRes.restoredRanges[0].targetType, "bare");
   } finally {
     global.fetch = originalFetch;
   }
 });
 
-test("VOD Unmute : appel asynchrone avec sendResponse (compatibilité dispatcher et F5)", async () => {
+test("VOD Unmute : appel asynchrone avec sendResponse et cache mémoire local F5", async () => {
   const { handleVodUnmuteResolve, handleVodUnmuteInstallRules, handleVodUnmuteClearRules } = await import(
     `../js/sw/vod-unmute.js?t=${Date.now()}`
   );
 
-  let fetchCount = 0;
+  let fetchCalls = 0;
   const originalFetch = global.fetch;
   try {
-    global.fetch = async () => {
-      fetchCount++;
-      return {
-        ok: true,
-        json: async () => ({
+    global.fetch = async (url) => {
+      fetchCalls++;
+      if (url.includes("gql.twitch.tv")) {
+        return {
           ok: true,
-          isPlus: true,
-          vodId: "888999",
-          totalDuration: 1800,
-          restoredRanges: [
+          json: async () => [
             {
-              segmentId: "40",
-              sourceUrl: "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/40-muted.mp4",
-              targetUrl: "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/40.mp4",
-              startTime: 400,
-              duration: 10,
+              data: {
+                video: {
+                  id: "888999",
+                  seekPreviewsURL: "https://d2vi6trrdongqn.cloudfront.net/hash/storyboards/888999-info.json",
+                },
+              },
             },
           ],
-        }),
-      };
+        };
+      }
+      if (url.includes(".m3u8")) {
+        return {
+          ok: true,
+          text: async () => "#EXTM3U\n#EXTINF:10.000,\nhttps://d2vi6trrdongqn.cloudfront.net/hash/chunked/40-muted.mp4\n#EXT-X-ENDLIST",
+        };
+      }
+      if (url.includes("40.mp4")) {
+        return { status: 206, ok: true };
+      }
+      return { status: 404, ok: false };
     };
 
     // 1. handleVodUnmuteResolve doit renvoyer true pour maintenir le port de message ouvert
@@ -263,13 +265,14 @@ test("VOD Unmute : appel asynchrone avec sendResponse (compatibilité dispatcher
     assert.equal(isAsync, true);
 
     // Attente que le callback sendResponse soit exécuté
-    await new Promise((r) => setTimeout(r, 20));
+    await new Promise((r) => setTimeout(r, 40));
     assert.ok(resolveResult);
     assert.equal(resolveResult.ok, true);
     assert.equal(resolveResult.vodId, "888999");
-    assert.equal(fetchCount, 1);
+    const countAfterFirst = fetchCalls;
+    assert.ok(countAfterFirst >= 2);
 
-    // 2. Simulation F5 : second appel pour le même vodId doit taper le cache mémoire sans requête réseau
+    // 2. Simulation F5 : second appel pour le même vodId doit taper le cache mémoire local sans requête réseau
     let secondResult = null;
     const isSecondAsync = handleVodUnmuteResolve(
       { vodId: "888999" },
@@ -279,10 +282,10 @@ test("VOD Unmute : appel asynchrone avec sendResponse (compatibilité dispatcher
       }
     );
     assert.equal(isSecondAsync, true);
-    await new Promise((r) => setTimeout(r, 20));
+    await new Promise((r) => setTimeout(r, 40));
     assert.ok(secondResult);
     assert.equal(secondResult.ok, true);
-    assert.equal(fetchCount, 1); // Pas de nouvelle requête fetch
+    assert.equal(fetchCalls, countAfterFirst); // Pas de nouvelle requête réseau
 
     // 3. handleVodUnmuteInstallRules doit aussi renvoyer true et appeler sendResponse
     let installResult = null;
