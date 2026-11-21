@@ -4,7 +4,8 @@
   // StreamPulse+ : Démutage automatique des rediffusions (VODs) Twitch coupées par le copyright.
   // Détecte les flux M3U8 de VOD hébergés sur CloudFront, sonde la présence des segments originaux
   // sans filtre DMCA (*.ts), installe les règles de redirection et met en valeur les zones
-  // restaurées sur la barre de progression en dégradé arc-en-ciel animé.
+  // restaurées sur la barre de progression avec un halo vert émeraude signature StreamPulse
+  // et une infobulle interactive au survol.
 
   if (window.__streampulseVodUnmute) return;
   window.__streampulseVodUnmute = true;
@@ -17,6 +18,22 @@
   let restoredRanges = [];
   let totalVodDuration = 0;
 
+  const TOOLTIP_TEXTS = {
+    fr: "Récupéré grâce à StreamPulse+",
+    en: "Restored with StreamPulse+",
+    es: "Recuperado con StreamPulse+",
+    "pt-BR": "Recuperado com StreamPulse+",
+    de: "Wiederhergestellt mit StreamPulse+",
+    it: "Recuperato con StreamPulse+",
+    pl: "Przywrócono dzięki StreamPulse+",
+    tr: "StreamPulse+ ile geri yüklendi",
+    ru: "Восстановлено с StreamPulse+",
+    ja: "StreamPulse+で復元済み",
+    ko: "StreamPulse+로 복원됨",
+    ar: "تمت الاستعادة عبر StreamPulse+",
+    uk: "Відновлено за допомогою StreamPulse+",
+  };
+
   function isVodPage() {
     return /^\/videos\/(\d+)/.test(window.location.pathname);
   }
@@ -24,6 +41,16 @@
   function getVodId() {
     const match = /^\/videos\/(\d+)/.exec(window.location.pathname);
     return match ? match[1] : null;
+  }
+
+  function getTooltipText() {
+    let lang = "fr";
+    if (typeof window !== "undefined" && window.__SP_I18N__?.resolve) {
+      lang = window.__SP_I18N__.resolve(navigator.language || "fr");
+    } else if (navigator.language) {
+      lang = navigator.language.split("-")[0];
+    }
+    return TOOLTIP_TEXTS[lang] || TOOLTIP_TEXTS.fr;
   }
 
   function updatePlusStatus(record) {
@@ -58,18 +85,76 @@
         position: absolute;
         top: 0;
         bottom: 0;
-        background: linear-gradient(90deg, #ff0055, #ff5500, #ffcc00, #00ff66, #00ccff, #7700ff, #ff00aa);
+        background: linear-gradient(90deg, #00f59b, #10b981, #00f59b);
         background-size: 200% 100%;
-        animation: streampulse-rainbow 3s linear infinite;
+        animation: streampulse-emerald-glow 2.8s ease-in-out infinite;
         border-radius: 2px;
-        box-shadow: 0 0 6px rgba(255, 255, 255, 0.45);
+        box-shadow: 0 0 8px rgba(0, 245, 155, 0.75), 0 0 2px rgba(255, 255, 255, 0.85);
         pointer-events: none;
         z-index: 10;
         transition: opacity 0.2s ease;
       }
-      @keyframes streampulse-rainbow {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 200% 50%; }
+      @keyframes streampulse-emerald-glow {
+        0% {
+          background-position: 0% 50%;
+          box-shadow: 0 0 6px rgba(0, 245, 155, 0.65), 0 0 2px rgba(255, 255, 255, 0.7);
+        }
+        50% {
+          background-position: 100% 50%;
+          box-shadow: 0 0 14px rgba(0, 245, 155, 0.95), 0 0 3px rgba(255, 255, 255, 1);
+        }
+        100% {
+          background-position: 0% 50%;
+          box-shadow: 0 0 6px rgba(0, 245, 155, 0.65), 0 0 2px rgba(255, 255, 255, 0.7);
+        }
+      }
+      .streampulse-vod-unmute-tooltip {
+        position: absolute;
+        transform: translate(-50%, -100%);
+        background: rgba(11, 12, 34, 0.94);
+        border: 1px solid rgba(0, 245, 155, 0.5);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 245, 155, 0.35);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        color: #f4f2f7;
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-family: "SP Onest", Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 1.3;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        pointer-events: none;
+        z-index: 99999;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+      }
+      .streampulse-vod-unmute-tooltip.is-visible {
+        opacity: 1;
+        visibility: visible;
+      }
+      .streampulse-vod-unmute-tooltip .sp-tip-pill {
+        background: linear-gradient(135deg, #00f59b, #10b981);
+        color: #0b0c22;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 4px;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+      }
+      .streampulse-vod-unmute-tooltip .sp-tip-text {
+        color: #ffffff;
+        font-weight: 600;
+      }
+      .streampulse-vod-unmute-tooltip .sp-tip-time {
+        color: rgba(244, 242, 247, 0.65);
+        font-size: 10px;
+        font-weight: 400;
       }
       .streampulse-unmuted-indicator {
         position: absolute;
@@ -165,17 +250,28 @@
           "Client-ID": "kimne78kx3ncx6brgo4mv6wki5h1ko",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          query: `query { video(id: "${vodId}") { seekPreviewsURL } }`,
-        }),
+        body: JSON.stringify([
+          {
+            operationName: "VideoPlayer_SeekPreviews",
+            variables: { videoID: vodId },
+            extensions: {
+              persistedQuery: {
+                version: 1,
+                sha256Hash: "b2875b287232de15c1e79f602b70f0893f6b95b4ee3c749eb40375cf39f40c74",
+              },
+            },
+          },
+        ]),
       });
       if (!res.ok) return null;
       const data = await res.json();
-      const seekUrl = data?.data?.video?.seekPreviewsURL;
-      if (!seekUrl || !seekUrl.includes("/storyboards/")) return null;
-      const basePrefix = seekUrl.split("/storyboards/")[0];
-      return `${basePrefix}/chunked/index-dvr.m3u8`;
-    } catch (_err) {
+      const seekPreviewsURL = data?.[0]?.data?.video?.seekPreviewsURL;
+      if (!seekPreviewsURL || !seekPreviewsURL.includes("/storyboards/")) return null;
+
+      // Déduit l'URL de la playlist chunked à partir de l'URL du storyboard
+      const playlistUrl = seekPreviewsURL.replace(/storyboards\/.*$/, "chunked/index-dvr.m3u8");
+      return playlistUrl;
+    } catch (_e) {
       return null;
     }
   }
@@ -206,26 +302,12 @@
             const unmutedUrl = item.url.replace(MUTED_MARKER, "");
             const exists = await probeSegment(unmutedUrl);
             if (exists) {
-              // Redirige à la fois la version -muted et la version -unmuted
-              const cleanBase = item.url.replace(MUTED_MARKER, "");
-              const ext = cleanBase.includes(".mp4") ? ".mp4" : ".ts";
-              const mutedVariant = cleanBase.replace(new RegExp(`\\${ext}$`), `-muted${ext}`);
-
               validRedirects.push({
                 sourceUrl: item.url,
                 targetUrl: unmutedUrl,
                 startTime: item.startTime,
                 duration: item.duration,
               });
-
-              if (mutedVariant !== item.url) {
-                validRedirects.push({
-                  sourceUrl: mutedVariant,
-                  targetUrl: unmutedUrl,
-                  startTime: item.startTime,
-                  duration: item.duration,
-                });
-              }
             }
           })
         );
@@ -235,24 +317,29 @@
 
       restoredRanges = validRedirects;
 
-      // Peint immédiatement la timeline arc-en-ciel
+      // Peint la seekbar avec le halo vert et attache l'infobulle
       paintSeekbar();
 
-      // Installe les règles de redirection via le service worker
-      chrome.runtime.sendMessage(
-        {
-          type: "vodUnmuteInstallRules",
-          redirects: validRedirects.map((v) => ({
-            sourceUrl: v.sourceUrl,
-            targetUrl: v.targetUrl,
-          })),
-        },
-        (response) => {
-          if (response?.ok) {
-            showIndicator(validRedirects.length);
+      // Si l'utilisateur a StreamPulse+, on installe les règles de redirection
+      if (plusActive) {
+        chrome.runtime.sendMessage(
+          {
+            type: "vodUnmuteInstallRules",
+            redirects: validRedirects.map((v) => ({
+              sourceUrl: v.sourceUrl,
+              targetUrl: v.targetUrl,
+            })),
+          },
+          (response) => {
+            if (response?.ok) {
+              showIndicator(validRedirects.length);
+            }
           }
-        }
-      );
+        );
+      } else {
+        // Notification informative pour non-abonnés
+        showPromoIndicator(validRedirects.length);
+      }
     } catch (error) {
       console.warn("[StreamPulse] Traitement playlist VOD :", error?.message || error);
     }
@@ -260,21 +347,14 @@
 
   function mergeContinuousRanges(ranges) {
     if (!ranges || ranges.length === 0) return [];
-    // Déduplique par startTime
-    const uniqueMap = new Map();
-    for (const r of ranges) {
-      if (!uniqueMap.has(r.startTime) || uniqueMap.get(r.startTime).duration < r.duration) {
-        uniqueMap.set(r.startTime, r);
-      }
-    }
-    const sorted = [...uniqueMap.values()].sort((a, b) => a.startTime - b.startTime);
+    const sorted = [...ranges].sort((a, b) => a.startTime - b.startTime);
     const merged = [];
     let cur = { ...sorted[0] };
 
     for (let i = 1; i < sorted.length; i++) {
       const next = sorted[i];
-      if (next.startTime <= cur.startTime + cur.duration + 0.5) {
-        cur.duration = (next.startTime + next.duration) - cur.startTime;
+      if (Math.abs(cur.startTime + cur.duration - next.startTime) < 0.5) {
+        cur.duration += next.duration;
       } else {
         merged.push(cur);
         cur = { ...next };
@@ -295,10 +375,96 @@
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   }
 
+  function getOrCreateTooltip(container) {
+    let tip = document.getElementById("streampulse-vod-tooltip");
+    if (!tip) {
+      tip = document.createElement("div");
+      tip.id = "streampulse-vod-tooltip";
+      tip.className = "streampulse-vod-unmute-tooltip";
+      container.appendChild(tip);
+    } else if (tip.parentElement !== container) {
+      container.appendChild(tip);
+    }
+    return tip;
+  }
+
+  function hideTooltip() {
+    const tip = document.getElementById("streampulse-vod-tooltip");
+    if (tip) {
+      tip.classList.remove("is-visible");
+    }
+  }
+
+  function setupSeekbarHover(seekbar) {
+    const hitArea = seekbar.closest('[data-a-target="player-seekbar"]') || seekbar.parentElement || seekbar;
+    if (hitArea.__spHoverAttached) return;
+    hitArea.__spHoverAttached = true;
+
+    hitArea.addEventListener("mousemove", (e) => {
+      if (restoredRanges.length === 0 || totalVodDuration <= 0) {
+        hideTooltip();
+        return;
+      }
+
+      const rect = seekbar.getBoundingClientRect();
+      const ratio = (e.clientX - rect.left) / rect.width;
+      if (ratio < 0 || ratio > 1) {
+        hideTooltip();
+        return;
+      }
+
+      const hoverTime = ratio * totalVodDuration;
+      const merged = mergeContinuousRanges(restoredRanges);
+      const matched = merged.find(
+        (r) => hoverTime >= r.startTime && hoverTime <= r.startTime + r.duration
+      );
+
+      if (!matched) {
+        hideTooltip();
+        return;
+      }
+
+      const player = document.querySelector('div[data-a-target="video-player"]') || document.body;
+      const tip = getOrCreateTooltip(player);
+      const startTc = formatTimecode(matched.startTime);
+      const endTc = formatTimecode(matched.startTime + matched.duration);
+      const text = getTooltipText();
+
+      tip.innerHTML = `
+        <span class="sp-tip-pill">StreamPulse+</span>
+        <span class="sp-tip-text">${text}</span>
+        <span class="sp-tip-time">(${startTc} · ${endTc})</span>
+      `;
+
+      if (player !== document.body) {
+        const pRect = player.getBoundingClientRect();
+        const clampedX = Math.max(100, Math.min(pRect.width - 100, e.clientX - pRect.left));
+        const topOffset = rect.top - pRect.top - 12;
+        tip.style.left = `${clampedX}px`;
+        tip.style.top = `${topOffset}px`;
+        tip.style.bottom = "auto";
+        tip.style.position = "absolute";
+      } else {
+        tip.style.left = `${e.clientX}px`;
+        tip.style.top = `${rect.top - 12}px`;
+        tip.style.bottom = "auto";
+        tip.style.position = "fixed";
+      }
+
+      tip.classList.add("is-visible");
+    });
+
+    hitArea.addEventListener("mouseleave", () => {
+      hideTooltip();
+    });
+  }
+
   function paintSeekbar() {
     ensureStyles();
     const seekbar = document.querySelector("div.seekbar-bar");
     if (!seekbar || totalVodDuration <= 0) return;
+
+    setupSeekbarHover(seekbar);
 
     // Supprime les anciens marqueurs StreamPulse
     seekbar.querySelectorAll(".streampulse-unmuted-segment").forEach((el) => el.remove());
@@ -316,7 +482,7 @@
 
       segEl.style.left = `${leftPercent.toFixed(3)}%`;
       segEl.style.width = `${Math.max(0.25, widthPercent).toFixed(3)}%`;
-      segEl.title = `Audio restauré par StreamPulse+ (${startTc} - ${endTc})`;
+      segEl.title = `StreamPulse+ : Récupéré grâce à StreamPulse+ (${startTc} · ${endTc})`;
       seekbar.appendChild(segEl);
     }
   }
@@ -341,6 +507,30 @@
     setTimeout(() => badge.remove(), 6000);
   }
 
+  function showPromoIndicator(count) {
+    ensureStyles();
+    const existing = document.getElementById("streampulse-unmute-promo");
+    if (existing) return;
+
+    const playerContainer = document.querySelector('div[data-a-target="video-player"]');
+    if (!playerContainer) return;
+
+    const promo = document.createElement("div");
+    promo.id = "streampulse-unmute-promo";
+    promo.className = "streampulse-unmuted-indicator";
+    promo.style.cursor = "pointer";
+    promo.innerHTML = `
+      <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+      <span>Audio disponible avec StreamPulse+</span>
+    `;
+    promo.addEventListener("click", () => {
+      chrome.runtime.sendMessage({ type: "openSettings" });
+    });
+
+    playerContainer.appendChild(promo);
+    setTimeout(() => promo.remove(), 8000);
+  }
+
   async function checkCurrentVod() {
     if (!isVodPage()) return;
     const vodId = getVodId();
@@ -351,6 +541,7 @@
       processedPlaylists.clear();
       restoredRanges = [];
       totalVodDuration = 0;
+      hideTooltip();
 
       // Déduction immédiate de la playlist CloudFront via GQL
       const gqlPlaylistUrl = await fetchVodPlaylistFromGql(vodId);
@@ -388,6 +579,7 @@
       processedPlaylists.clear();
       restoredRanges = [];
       totalVodDuration = 0;
+      hideTooltip();
       chrome.runtime.sendMessage({ type: "vodUnmuteClearRules" }).catch(() => {});
     }
   }, 1200);
