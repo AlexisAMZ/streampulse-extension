@@ -240,5 +240,20 @@ export function initClipsTab() {
     renderClipsPanel();
   });
 
+  // Bouton retour vers l'extension
+  const backBtn = $("clips-back-to-ext");
+  backBtn?.addEventListener("click", () => {
+    document.getElementById("tab-streamers")?.click();
+  });
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      const universe = $("clips-universe");
+      if (universe && !universe.classList.contains("hidden")) {
+        document.getElementById("tab-streamers")?.click();
+      }
+    }
+  });
+
   renderClipsPanel();
 }

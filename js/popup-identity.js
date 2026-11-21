@@ -435,12 +435,12 @@ function renderShowcase() {
   const strip = $("plus-fx-strip");
   if (!strip) return;
   const badges = node("span", "plus-fx-badges");
-  badges.append(...visibleFx(BADGE_FX, {}).map((value) => fxSample("badge", value)));
+  badges.append(...visibleFx(BADGE_FX, {}).slice(0, 3).map((value) => fxSample("badge", value)));
   const names = node("span", "plus-fx-names");
-  names.append(...SHOWCASE_NAMES.map((value) => fxSample("name", value)));
+  names.append(...SHOWCASE_NAMES.slice(0, 2).map((value) => fxSample("name", value)));
   strip.replaceChildren(badges, names);
   const count = $("plus-fx-count");
-  if (count) count.textContent = t("popup.plus.perkFxCount", { badges: visibleFx(BADGE_FX, {}).length, names: visibleFx(NAME_FX, {}).length });
+  if (count) count.textContent = t("popup.plus.perkFxCount", { badges: 3, names: 2 });
 }
 
 // ─── Initialisation ───────────────────────────────────────────────────────────

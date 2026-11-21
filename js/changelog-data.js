@@ -52,49 +52,49 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
-    version: "26.11.23",
+    version: "26.11.21",
     "date": "2026-11-21",
     "title": {
-      "fr": "Onglet StreamPulse Clips et intégration Twitch",
-      "en": "StreamPulse Clips Tab and Twitch Player Integration",
-      "uk": "Вкладка StreamPulse Clips та інтеграція з Twitch",
-      "es": "Pestaña StreamPulse Clips e integración con Twitch",
-      "pt-BR": "Aba StreamPulse Clips e integração com a Twitch",
-      "de": "StreamPulse Clips Tab und Twitch-Player-Integration",
-      "it": "Scheda StreamPulse Clips e integrazione con Twitch",
-      "pl": "Karta StreamPulse Clips i integracja z Twitch",
-      "tr": "StreamPulse Clips Sekmesi ve Twitch Oynatıcı Entegrasyonu",
-      "ru": "Вкладка StreamPulse Clips и интеграция с Twitch",
-      "ja": "StreamPulse Clips タブと Twitch プレイヤー統合",
-      "ko": "StreamPulse Clips 탭 및 Twitch 플레이어 연동",
-      "ar": "علامة تبويب StreamPulse Clips والتكامل مع مشغل Twitch",
-      "id": "Tab StreamPulse Clips dan Integrasi Pemutar Twitch",
-      "nl": "StreamPulse Clips-tabblad en Twitch-spelerintegratie",
-      "sv": "StreamPulse Clips-flik och integration med Twitch-spelaren",
-      "cs": "Karta StreamPulse Clips a integrace přehrávače Twitch"
+      "fr": "StreamPulse Clips et nouveautés",
+      "en": "StreamPulse Clips and New Features",
+      "uk": "StreamPulse Clips та нові можливості",
+      "es": "StreamPulse Clips y novedades",
+      "pt-BR": "StreamPulse Clips e novidades",
+      "de": "StreamPulse Clips und Neuerungen",
+      "it": "StreamPulse Clips e novità",
+      "pl": "StreamPulse Clips i nowości",
+      "tr": "StreamPulse Clips ve Yenilikler",
+      "ru": "StreamPulse Clips и новые функции",
+      "ja": "StreamPulse Clips と新機能",
+      "ko": "StreamPulse Clips 및 새로운 기능",
+      "ar": "StreamPulse Clips والميزات الجديدة",
+      "id": "StreamPulse Clips dan Fitur Baru",
+      "nl": "StreamPulse Clips en nieuwe functies",
+      "sv": "StreamPulse Clips och nya funktioner",
+      "cs": "StreamPulse Clips a novinky"
     },
     "changes": [
       {
         "type": "feat",
         "area": "interface",
         "text": {
-          "fr": "Nouvel onglet dédié StreamPulse Clips reprenant entièrement la direction artistique du studio 9:16 : convertisseur de lien direct, maquette smartphone et explications.",
-          "en": "New dedicated StreamPulse Clips tab adopting the full 9:16 studio design: direct link converter, smartphone mockup, and complete feature walkthrough.",
-          "uk": "Нова окрема вкладка StreamPulse Clips у стилі студії 9:16: конвертер посилань, макет смартфона та повний опис можливостей.",
-          "es": "Nueva pestaña dedicada a StreamPulse Clips con el diseño completo del estudio 9:16: conversor de enlaces directo, maqueta de móvil y explicación detallada.",
-          "pt-BR": "Nova aba dedicada ao StreamPulse Clips com o visual completo do estúdio 9:16: conversor de link direto, mockup de celular e explicação detalhada.",
-          "de": "Neuer StreamPulse Clips Tab im vollständigen 9:16-Studio-Design: direkter Link-Konverter, Smartphone-Mockup und Funktionsübersicht.",
-          "it": "Nuova scheda StreamPulse Clips con il design completo dello studio 9:16: convertitore di link diretto, mockup smartphone e spiegazione dettagliata.",
-          "pl": "Nowa dedykowana karta StreamPulse Clips w pełnym stylu studia 9:16: bezpośredni konwerter linków, makieta smartfona i opis funkcji.",
-          "tr": "Tam 9:16 stüdyo tasarımına sahip yeni StreamPulse Clips sekmesi: doğrudan bağlantı dönüştürücü, akıllı telefon maketi ve özellik tanıtımı.",
-          "ru": "Новая вкладка StreamPulse Clips в фирменном стиле студии 9:16: прямой конвертер ссылок, макет смартфона и наглядный обзор возможностей.",
-          "ja": "9:16スタジオのデザインを採用した新しいStreamPulse Clipsタブ：直接リンク変換、スマホモックアップ、機能解説を搭載。",
-          "ko": "9:16 스튜디오 디자인이 적용된 StreamPulse Clips 전용 탭: 다이렉트 링크 변환기, 스마트폰 목업 및 기능 소개 제공.",
-          "ar": "علامة تبويب مخصصة لـ StreamPulse Clips بتصميم استوديو 9:16: محول روابط مباشر، نموذج هاتف ذكي، وشرح كامل للميزات.",
-          "id": "Tab khusus StreamPulse Clips baru dengan desain studio 9:16 lengkap: pengonversi tautan langsung, mockup ponsel cerdas, dan panduan fitur.",
-          "nl": "Nieuw speciaal StreamPulse Clips-tabblad met het volledige 9:16-studio-ontwerp: directe linkconverter, smartphone-mockup en functiegids.",
-          "sv": "Ny dedikerad StreamPulse Clips-flik med 9:16-studiodesign: direkt länk-konverterare, smartphone-mockup och funktionsöversikt.",
-          "cs": "Nová karta StreamPulse Clips v kompletním designu studia 9:16: přímý převodník odkazů, maketa smartphonu a přehled funkcí."
+          "fr": "Onglet dédié StreamPulse Clips reprenant entièrement l'univers Web et la DA Apple : convertisseur de lien 9:16, aperçu interactif smartphone et bouton direct pour revenir à l'extension.",
+          "en": "Dedicated StreamPulse Clips tab with full Web universe and Apple design: 9:16 link converter, interactive smartphone mockup, and direct return button.",
+          "uk": "Окрема вкладка StreamPulse Clips у стилі веб-додатка та дизайну Apple: конвертер посилань 9:16, інтерактивний макет смартфона та кнопка повернення до розширення.",
+          "es": "Pestaña dedicada a StreamPulse Clips con el diseño web completo de Apple: conversor 9:16, maqueta interactiva y botón directo para volver a la extensión.",
+          "pt-BR": "Aba dedicada ao StreamPulse Clips com o visual web completo da Apple: conversor de link 9:16, mockup interativo de celular e botão direto para voltar à extensão.",
+          "de": "Eigener StreamPulse Clips Tab im vollständigen Apple-Web-Design: 9:16-Link-Konverter, interaktives Smartphone-Mockup und direkter Zurück-Button.",
+          "it": "Scheda dedicata StreamPulse Clips con il design web completo Apple: convertitore 9:16, mockup smartphone interattivo e pulsante per tornare all'estensione.",
+          "pl": "Dedykowana karta StreamPulse Clips w pełnym stylu Apple: konwerter linków 9:16, interaktywna makieta smartfona i przycisk powrotu do rozszerzenia.",
+          "tr": "Tam Apple web tasarımına sahip özel StreamPulse Clips sekmesi: 9:16 bağlantı dönüştürücü, etkileşimli telefon maketi ve doğrudan uzantıya dön butonu.",
+          "ru": "Отдельная вкладка StreamPulse Clips в фирменном веб-стиле Apple: конвертер ссылок 9:16, интерактивный макет смартфона и кнопка возврата в расширение.",
+          "ja": "AppleデザインのWeb版を完全再現したStreamPulse Clips専用タブ：9:16リンク変換、スマホモックアップ、拡張機能へ戻るボタンを搭載。",
+          "ko": "Apple 디자인의 웹 버전을 완벽하게 적용한 StreamPulse Clips 전용 탭: 9:16 링크 변환기, 반응형 스마트폰 목업 및 확장 프로그램 복귀 버튼 제공.",
+          "ar": "علامة تبويب مخصصة لـ StreamPulse Clips بتصميم Apple: محول روابط 9:16، نموذج هاتف تفاعلي، وزر مباشر للعودة إلى الإضافة.",
+          "id": "Tab khusus StreamPulse Clips dengan desain web Apple lengkap: pengonversi tautan 9:16, mockup ponsel interaktif, dan tombol kembali ke ekstensi.",
+          "nl": "Speciaal StreamPulse Clips-tabblad met het volledige Apple-webontwerp: 9:16-linkconverter, interactieve smartphone-mockup en terugknop naar de extensie.",
+          "sv": "Dedikerad StreamPulse Clips-flik i fullständig Apple-webbdesign: 9:16-länkkonverterare, interaktiv smartphone-mockup och knapp för att återgå till tillägget.",
+          "cs": "Vyhrazená karta StreamPulse Clips v kompletním designu Apple: převodník odkazů 9:16, interaktivní maketa smartphonu a tlačítko pro návrat do rozšíření."
         }
       },
       {
@@ -119,105 +119,7 @@ export const RELEASES = [
           "sv": "Integration av den officiella StreamPulse Clips-logotypen i Twitch-spelaren med direkt klippskapande med ett klick och övergång till 9:16-redigeraren.",
           "cs": "Integrace oficiálního loga StreamPulse Clips v přehrávači Twitch s vytvořením klipu jedním kliknutím a přechodem do editoru 9:16."
         }
-      }
-    ]
-  },
-
-  {
-    version: "26.11.22",
-    "date": "2026-11-21",
-    "title": {
-      "fr": "Historique dans les réglages et disposition affinée",
-      "en": "History in Settings and Refined Layout",
-      "uk": "Історія в налаштуваннях та вдосконалений макет",
-      "es": "Historial en ajustes y diseño refinado",
-      "pt-BR": "Histórico nas configurações e layout refinado",
-      "de": "Verlauf in den Einstellungen und verfeinertes Layout",
-      "it": "Cronologia nelle impostazioni e layout perfezionato",
-      "pl": "Historia w ustawieniach i dopracowany układ",
-      "tr": "Ayarlarda Geçmiş ve İyileştirilmiş Düzen",
-      "ru": "История в настройках и обновлённая компоновка",
-      "ja": "設定内の履歴とレイアウトの最適化",
-      "ko": "설정 내 기록 및 다듬어진 레이아웃",
-      "ar": "السجل في الإعدادات وتخطيط محسّن",
-      "id": "Riwayat di Pengaturan dan Tata Letak yang Disempurnakan",
-      "nl": "Geschiedenis in instellingen en verfijnde indeling",
-      "sv": "Historik i inställningarna och förfinad layout",
-      "cs": "Historie v nastavení a vyladěné rozvržení"
-    },
-    "changes": [
-      {
-        "type": "improved",
-        "area": "interface",
-        "text": {
-          "fr": "L'historique des lives et rediffusions est désormais intégré directement dans les Réglages pour une interface principale plus épurée.",
-          "en": "Live and replay history is now integrated directly into Settings for a cleaner main interface.",
-          "uk": "Історія трансляцій і повторів тепер інтегрована безпосередньо в Налаштування для чистішого основного інтерфейсу.",
-          "es": "El historial de directos y repeticiones ahora está integrado directamente en Ajustes para una interfaz principal más limpia.",
-          "pt-BR": "O histórico de transmissões e reprises agora está integrado diretamente nas Configurações para uma interface principal mais limpa.",
-          "de": "Der Verlauf von Lives und Wiederholungen ist nun direkt in die Einstellungen integriert, was die Hauptoberfläche übersichtlicher macht.",
-          "it": "La cronologia delle live e delle repliche è ora integrata directement nelle Impostazioni per un'interfaccia principale più ordinata.",
-          "pl": "Historia transmisji i powtórek jest teraz zintegrowana bezpośrednio w Ustawieniach, co upraszcza główny interfejs.",
-          "tr": "Yayın ve tekrar geçmişi, daha sade bir ana arayüz için artık doğrudan Ayarlar bölümüne entegre edildi.",
-          "ru": "История трансляций и записей теперь встроена напрямую в Настройки для более лаконичного интерфейса.",
-          "ja": "メイン画面をよりすっきり保つため、配信とアーカイブの履歴が設定内に直接統合されました。",
-          "ko": "더욱 깔끔한 기본 인터페이스를 위해 라이브 및 다시보기 기록이 설정 내로 직접 통합되었습니다.",
-          "ar": "تم دمج سجل البث المباشر والإعادة الآن مباشرة في الإعدادات لواجهة رئيسية أكثر ترتيبًا.",
-          "id": "Riwayat siaran langsung dan tayangan ulang kini terintegrasi langsung ke Pengaturan agar antarmuka utama lebih bersih.",
-          "nl": "De geschiedenis van livestreams en herhalingen is nu direct opgenomen in de Instellingen voor een overzichtelijkere hoofdinterface.",
-          "sv": "Historik över livesändningar och repriser är nu integrerad direkt i Inställningar för ett renare gränssnitt.",
-          "cs": "Historie vysílání a záznamů je nyní integrována přímo do Nastavení pro přehlednější hlavní rozhraní."
-        }
       },
-      {
-        "type": "feat",
-        "area": "interface",
-        "text": {
-          "fr": "L'onglet Historique de la barre supérieure est masqué par défaut mais reste réactivable à tout moment dans Général > Disposition.",
-          "en": "The History tab in the top bar is hidden by default but can be re-enabled at any time in General > Layout.",
-          "uk": "Вкладка Історія у верхній панелі прихована за замовчуванням, але її можна будь-коли увімкнути в Загальні > Макет.",
-          "es": "La pestaña Historial de la barra superior está oculta por defecto, pero se puede reactivar en cualquier momento en General > Diseño.",
-          "pt-BR": "A aba Histórico na barra superior fica oculta por padrão, mas pode ser reativada a qualquer momento em Geral > Layout.",
-          "de": "Der Tab Verlauf in der oberen Leiste ist standardmäßig ausgeblendet, kann jedoch jederzeit unter Allgemein > Layout wieder aktiviert werden.",
-          "it": "La scheda Cronologia nella barra superiore è nascosta per impostazione predefinita, ma può essere riattivata in qualsiasi momento in Generale > Layout.",
-          "pl": "Karta Historia na górnym pasku jest domyślnie ukryta, lecz można ją w każdej chwili włączyć w Ogólne > Układ.",
-          "tr": "Üst çubuktaki Geçmiş sekmesi varsayılan olarak gizlendi, ancak Genel > Düzen bölümünden istenildiği zaman yeniden etkinleştirilebilir.",
-          "ru": "Вкладка История на верхней панели скрыта по умолчанию, но её можно снова включить в любое время в меню Общие > Компоновка.",
-          "ja": "トップバーの履歴タブは初期状態で非表示になりましたが、一般 > レイアウトからいつでも再表示できます。",
-          "ko": "상단 바의 기록 탭은 기본적으로 숨겨져 있지만 일반 > 레이아웃에서 언제든지 다시 활성화할 수 있습니다.",
-          "ar": "علامة تبويب السجل في الشريط العلوي مخفية افتراضيًا ولكن يمكن إعادة تفعيلها في أي وقت عبر عام > التخطيط.",
-          "id": "Tab Riwayat di bilah atas disembunyikan secara default tetapi dapat diaktifkan kembali kapan saja di Umum > Tata Letak.",
-          "nl": "Het tabblad Geschiedenis in de bovenste balk is standaard verborgen, maar kan op elk moment weer worden ingeschakeld via Algemeen > Indeling.",
-          "sv": "Fliken Historik i toppfältet är dold som standard men kan aktiveras när som helst under Allmänt > Layout.",
-          "cs": "Karta Historie v horní liště je ve výchozím stavu skrytá, ale lze ji kdykoli znovu zapnout v Obecné > Rozvržení."
-        }
-      }
-    ]
-  },
-
-  {
-    version: "26.11.21",
-    "date": "2026-11-21",
-    "title": {
-      "fr": "Démutage automatique des VODs Twitch",
-      "en": "Automatic Twitch VOD Audio Unmute",
-      "uk": "Автоматичне увімкнення звуку у VOD Twitch",
-      "es": "Reactivación automática de audio en VODs de Twitch",
-      "pt-BR": "Desmutar áudio de VODs da Twitch",
-      "de": "Automatisches Aufheben der Stummschaltung bei Twitch-VODs",
-      "it": "Ripristino automatico dell'audio nei VOD di Twitch",
-      "pl": "Automatyczne odmutowywanie dźwięku w VOD na Twitchu",
-      "tr": "Twitch VOD'larında Otomatik Ses Açma",
-      "ru": "Автоматическое включение звука в VOD на Twitch",
-      "ja": "Twitch VODの自動ミュート解除",
-      "ko": "Twitch VOD 자동 음소거 해제",
-      "ar": "إلغاء كتم الصوت التلقائي في VOD على Twitch",
-      "id": "Buka Suara Otomatis VOD Twitch",
-      "nl": "Automatisch dempen opheffen in Twitch-VOD's",
-      "sv": "Automatisk avstängning av ljudavstängning i Twitch VOD",
-      "cs": "Automatické obnovení zvuku u Twitch VOD"
-    },
-    "changes": [
       {
         "type": "feat",
         "area": "plus",
@@ -242,26 +144,49 @@ export const RELEASES = [
         }
       },
       {
-        "type": "feat",
-        "area": "player",
+        "type": "improved",
+        "area": "interface",
         "text": {
-          "fr": "Surbrillance visuelle verte sur la barre de lecture Twitch indiquant avec précision chaque passage audio restauré par StreamPulse+.",
-          "en": "Green visual highlight on the Twitch progress bar pinpointing every audio segment restored by StreamPulse+.",
-          "uk": "Зелена візуальна підсвітка на смузі прогресу Twitch, що позначає кожен сегмент аудіо, відновлений StreamPulse+.",
-          "es": "Resaltado visual verde en la barra de reproducción de Twitch indicando con precisión cada fragmento de audio restaurado por StreamPulse+.",
-          "pt-BR": "Destaque visual verde na barra de reprodução da Twitch mostrando com precisão cada trecho de áudio restaurado pelo StreamPulse+.",
-          "de": "Grüne visuelle Hervorhebung auf der Twitch-Fortschrittsleiste, die jeden von StreamPulse+ wiederhergestellten Audioabschnitt präzise anzeigt.",
-          "it": "Evidenziazione visiva verde sulla barra di riproduzione di Twitch che segnala con precisione ogni passaggio audio ripristinato da StreamPulse+.",
-          "pl": "Zielone wyróżnienie na pasku odtwarzania Twitcha wskazujące każdy fragment dźwięku przywrócony przez StreamPulse+.",
-          "tr": "StreamPulse+ tarafından geri yüklenen her ses bölümünü Twitch ilerleme çubuğunda gösteren yeşil görsel vurgu.",
-          "ru": "Зелёная подсветка на полосе воспроизведения Twitch, точно показывающая каждый восстановленный с помощью StreamPulse+ аудиофрагмент.",
-          "ja": "StreamPulse+によって復元された音声区間をTwitchシークバー上に緑色のハイライトで正確に表示。",
-          "ko": "StreamPulse+로 복원된 오디오 구간을 Twitch 재생바에 초록색 하이라이트로 정확하게 표시.",
-          "ar": "تمييز بصري أخضر على شريط تقدم Twitch يوضح بدقة كل جزء صوتي تمت استعادته بواسطة StreamPulse+.",
-          "id": "Sorotan visual hijau pada bilah pemutar Twitch yang menunjukkan setiap segmen audio yang dipulihkan oleh StreamPulse+.",
-          "nl": "Groene visuele markering op de Twitch-voortgangsbalk die elk door StreamPulse+ hersteld audiodeel nauwkeurig aangeeft.",
-          "sv": "Grön visuell markering på Twitch-förloppsindikatorn som visar varje ljudavsnitt som återställts av StreamPulse+.",
-          "cs": "Zelené vizuální zvýraznění na časové ose Twitch přesně označující každý segment zvuku obnovený pomocí StreamPulse+."
+          "fr": "L'historique des lives est intégré dans les Réglages pour une interface principale plus épurée, et le badge bêta est retiré de la section Badges.",
+          "en": "Live history is integrated into Settings for a cleaner main interface, and the beta tag has been removed from Badges.",
+          "uk": "Історія трансляцій інтегрована в Налаштування для чистішого інтерфейсу, а позначку бета знято з розділу Значки.",
+          "es": "El historial de directos se integra en Ajustes para una interfaz más limpia, y se elimina la etiqueta beta de Emblemas.",
+          "pt-BR": "O histórico de transmissões foi integrado nas Configurações para uma interface mais limpa, e a tag beta foi removida de Emblemas.",
+          "de": "Der Live-Verlauf wurde für eine übersichtlichere Oberfläche in die Einstellungen integriert, und das Beta-Label bei Abzeichen wurde entfernt.",
+          "it": "La cronologia delle live è integrata nelle Impostazioni per un'interfaccia più ordinata, e il badge beta è stato rimosso dalla sezione Distintivi.",
+          "pl": "Historia transmisji została przeniesiona do Ustawień dla czystszego interfejsu, a oznaczenie beta usunięto z Odznak.",
+          "tr": "Yayın geçmişi daha sade bir arayüz için Ayarlar bölümüne entegre edildi ve Rozetler bölümündeki beta etiketi kaldırıldı.",
+          "ru": "История трансляций перенесена в Настройки для более чистого интерфейса, а отметка бета снята с раздела Значки.",
+          "ja": "メイン画面をすっきり保つため配信履歴を設定内に統合し、バッジ画面のベータ表記を削除。",
+          "ko": "더 깔끔한 기본 화면을 위해 라이브 기록을 설정 내로 통합하고 배지 화면의 베타 라벨을 제거.",
+          "ar": "تم دمج سجل البث في الإعدادات لواجهة أكثر ترتيبًا، وتمت إزالة شارة تجريبي من قسم الشارات.",
+          "id": "Riwayat siaran diintegrasikan ke Pengaturan untuk antarmuka yang lebih bersih, dan label beta dihapus dari Lencana.",
+          "nl": "De live-geschiedenis is geïntegreerd in de Instellingen voor een overzichtelijkere interface, en het bètalabel is verwijderd bij Badges.",
+          "sv": "Livehistoriken har flyttats till Inställningar för ett renare gränssnitt, och betamärkningen har tagits bort från Märken.",
+          "cs": "Historie vysílání je integrována do Nastavení pro přehlednější rozhraní a štítek beta byl odebrán ze sekce Odznaky."
+        }
+      },
+      {
+        "type": "improved",
+        "area": "plus",
+        "text": {
+          "fr": "Page d'abonnement StreamPulse+ révisée avec les atouts majeurs (Démutage VOD, anti-pause, studio 9:16) et aperçu cosmétique épuré.",
+          "en": "StreamPulse+ subscription page overhauled with top perks (VOD Unmute, anti-pause, 9:16 studio) and refined cosmetic showcase.",
+          "uk": "Сторінку підписки StreamPulse+ оновлено з акцентом на ключові переваги (увімкнення звуку VOD, антипауза, студія 9:16) та витончений попередній перегляд.",
+          "es": "Página de suscripción StreamPulse+ renovada con ventajas clave (reactivación VOD, antipausa, estudio 9:16) y muestra cosmética depurada.",
+          "pt-BR": "Página de assinatura do StreamPulse+ aprimorada com os principais benefícios (desmutar VOD, antipausa, estúdio 9:16) e vitrine cosmética refinada.",
+          "de": "StreamPulse+ Aboseite überarbeitet mit den wichtigsten Vorteilen (VOD-Stummschaltung aufheben, Anti-Pause, 9:16-Studio) und eleganter Vorschau.",
+          "it": "Pagina abbonamento StreamPulse+ rinnovata con i vantaggi principali (ripristino VOD, antipausa, studio 9:16) e anteprima cosmetica raffinata.",
+          "pl": "Odświeżona strona subskrypcji StreamPulse+ z kluczowymi korzyściami (odmutowywanie VOD, anty-pauza, studio 9:16) i eleganckim podglądem efektów.",
+          "tr": "StreamPulse+ abonelik sayfası en önemli avantajlar (VOD sesi açma, duraklama önleyici, 9:16 stüdyo) ve sadeleştirilmiş efekt önizlemesiyle yenilendi.",
+          "ru": "Страница подписки StreamPulse+ обновлена с акцентом на главные преимущества (включение звука VOD, антипауза, студия 9:16) и лаконичный предпросмотр.",
+          "ja": "StreamPulse+加入ページを刷新：主要な特典（VODミュート解除、一時停止防止、9:16スタジオ）を強調し、装飾プレビューを洗練。",
+          "ko": "StreamPulse+ 구독 페이지 개편: 주요 혜택(VOD 음소거 해제, 일시정지 방지, 9:16 스튜디오)을 강조하고 깔끔한 치장 미리보기 적용.",
+          "ar": "تجديد صفحة اشتراك StreamPulse+ مع إبراز الميزات الرئيسية (إلغاء كتم VOD، منع الإيقاف، استوديو 9:16) وعرض مظهر مبسط.",
+          "id": "Halaman langganan StreamPulse+ diperbarui dengan sorotan fitur utama (buka suara VOD, antipausa, studio 9:16) dan pratinjau kosmetik yang lebih rapi.",
+          "nl": "StreamPulse+ abonnementspagina vernieuwd met belangrijke voordelen (VOD dempen opheffen, anti-pauze, 9:16-studio) en verfijnde cosmetische weergave.",
+          "sv": "StreamPulse+ prenumerationssida förnyad med de viktigaste fördelarna (återställning av VOD-ljud, antipaus, 9:16-studio) och renare förhandsgranskning.",
+          "cs": "Stránka předplatného StreamPulse+ přepracována s důrazem na hlavní výhody (obnovení zvuku VOD, antipauza, studio 9:16) a čistší ukázku efektů."
         }
       }
     ]

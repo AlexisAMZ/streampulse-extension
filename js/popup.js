@@ -1583,7 +1583,7 @@ async function renderEventLogs() {
  * Rubriques des Réglages qui ont aussi leur onglet dans la barre du haut :
  * l'onglet surligné suit la rubrique affichée.
  */
-const PANEL_TABS = new Set(["drops", "badges", "history", "clips"]);
+const PANEL_TABS = new Set(["drops", "badges", "history"]);
 
 function highlightTab(tabName) {
   tabButtons.forEach((button) => {
@@ -1596,6 +1596,17 @@ function highlightTab(tabName) {
 
 function setActiveTab(tabName) {
   if (tabName !== "streamers") flushDeferredInit();
+  const clipsUniverse = document.getElementById("clips-universe");
+  if (tabName === "clips") {
+    clipsUniverse?.classList.remove("hidden");
+    document.body.classList.add("is-clips-universe");
+    renderClipsPanel().catch(() => {});
+    currentTab = "clips";
+    highlightTab("clips");
+    return;
+  }
+  clipsUniverse?.classList.add("hidden");
+  document.body.classList.remove("is-clips-universe");
   if (PANEL_TABS.has(tabName)) {
     showMenuPanel(tabName);
   } else if (tabName === "settings") {
