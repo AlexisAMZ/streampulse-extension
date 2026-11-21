@@ -1,18 +1,12 @@
 (() => {
   "use strict";
 
-  // StreamPulse+ : Démutage automatique des rediffusions (VODs) Twitch coupées par le copyright.
-  // Détecte les flux M3U8 de VOD hébergés sur CloudFront, sonde la présence des segments originaux
-  // sans filtre DMCA (*.ts), installe les règles de redirection et met en valeur les zones
-  // restaurées sur la barre de progression avec un halo vert émeraude signature StreamPulse
-  // et une infobulle interactive au survol.
+  // StreamPulse+ : Restauration visuelle et démutage des segments VOD Twitch.
 
   if (window.__streampulseVodUnmute) return;
   window.__streampulseVodUnmute = true;
 
-  const MUTED_MARKER = /-(?:muted|unmuted)(?=\.[^.]*(?:\?|$))/;
   const STYLE_ID = "streampulse-vod-unmute-styles";
-  const processedPlaylists = new Set();
   let currentVodId = null;
   let vodResolved = false;
   let isResolving = false;
@@ -201,187 +195,12 @@
     document.head?.appendChild(style);
   }
 
-  function extractFirstMediaPlaylist(masterText, baseUrl) {
-    const lines = masterText.split(/\r?\n/);
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
-      if (line.startsWith("#EXT-X-STREAM-INF") && i + 1 < lines.length) {
-        const nextLine = lines[i + 1].trim();
-        if (nextLine && !nextLine.startsWith("#")) {
-          try {
-            return new URL(nextLine, baseUrl).href;
-          } catch (_e) {
-            return nextLine;
-          }
-        }
-      }
-    }
-    return null;
-  }
-
-  function parseM3u8(text, playlistUrl) {
-    const lines = text.split(/\r?\n/);
-    const entries = [];
-    let currentTime = 0;
-    let pendingDuration = null;
-
-    for (const rawLine of lines) {
-      const line = rawLine.trim();
-      if (!line) continue;
-      if (line.startsWith("#EXTINF:")) {
-        const d = Number.parseFloat(line.slice(8).split(",")[0]);
-        pendingDuration = Number.isFinite(d) && d >= 0 ? d : 10;
-        continue;
-      }
-      if (line.startsWith("#")) continue;
-      if (pendingDuration === null) continue;
-
-      let absoluteUrl = line;
-      try {
-        absoluteUrl = new URL(line, playlistUrl).href;
-      } catch (_e) {
-        // url relative
-      }
-
-      entries.push({
-        url: absoluteUrl,
-        startTime: currentTime,
-        duration: pendingDuration,
-        isMuted: MUTED_MARKER.test(line),
+  async function resolveVod(vodId) {
+    return new Promise((resolve) => {
+      chrome.runtime.sendMessage({ type: "vodUnmuteResolve", vodId }, (response) => {
+        resolve(response || null);
       });
-
-      currentTime += pendingDuration;
-      pendingDuration = null;
-    }
-
-    return { entries, totalDuration: currentTime };
-  }
-
-  async function probeSegment(url) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2500);
-      const res = await fetch(url, {
-        method: "HEAD",
-        signal: controller.signal,
-      });
-      clearTimeout(timeoutId);
-      return res.status === 200 || res.status === 206;
-    } catch (_err) {
-      return false;
-    }
-  }
-
-  async function fetchVodPlaylistFromGql(vodId) {
-    try {
-      const res = await fetch("https://gql.twitch.tv/gql", {
-        method: "POST",
-        headers: {
-          "Client-ID": "kimne78kx3ncx6brgo4mv6wki5h1ko",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify([
-          {
-            operationName: "VideoPlayer_SeekPreviews",
-            query: "query VideoPlayer_SeekPreviews($videoID: ID!) { video(id: $videoID) { id seekPreviewsURL } }",
-            variables: { videoID: vodId },
-          },
-        ]),
-      });
-      if (!res.ok) return null;
-      const data = await res.json();
-      const seekPreviewsURL = data?.[0]?.data?.video?.seekPreviewsURL;
-      if (!seekPreviewsURL || !seekPreviewsURL.includes("/storyboards/")) return null;
-
-      // Déduit l'URL de la playlist chunked à partir de l'URL du storyboard
-      const playlistUrl = seekPreviewsURL.replace(/storyboards\/.*$/, "chunked/index-dvr.m3u8");
-      return playlistUrl;
-    } catch (_e) {
-      return null;
-    }
-  }
-
-  async function processPlaylist(playlistUrl) {
-    if (processedPlaylists.has(playlistUrl)) return;
-    processedPlaylists.add(playlistUrl);
-
-    try {
-      const res = await fetch(playlistUrl);
-      if (!res.ok) return;
-      const text = await res.text();
-
-      // Prise en charge des master playlists (Usher / multi-variantes)
-      if (!text.includes("#EXTINF:") && text.includes("#EXT-X-STREAM-INF")) {
-        const variantUrl = extractFirstMediaPlaylist(text, playlistUrl);
-        if (variantUrl) {
-          return processPlaylist(variantUrl);
-        }
-      }
-
-      const parsed = parseM3u8(text, playlistUrl);
-      if (!parsed || parsed.entries.length === 0) return;
-
-      totalVodDuration = parsed.totalDuration;
-      const mutedEntries = parsed.entries.filter((e) => e.isMuted);
-      if (mutedEntries.length === 0) return;
-
-      // Sondage en parallèle par lots de 20 avec installation progressive
-      const batchSize = 20;
-
-      for (let i = 0; i < mutedEntries.length; i += batchSize) {
-        const batch = mutedEntries.slice(i, i + batchSize);
-        const validBatch = [];
-
-        await Promise.all(
-          batch.map(async (item) => {
-            const unmutedUrl = item.url.replace(MUTED_MARKER, "");
-            const exists = await probeSegment(unmutedUrl);
-            if (exists) {
-              validBatch.push({
-                sourceUrl: item.url,
-                targetUrl: unmutedUrl,
-                startTime: item.startTime,
-                duration: item.duration,
-              });
-            }
-          })
-        );
-
-        if (validBatch.length > 0) {
-          restoredRanges = restoredRanges.concat(validBatch);
-          paintSeekbar();
-
-          if (plusActive) {
-            const segmentIds = validBatch
-              .map((v) => extractSegmentId(v.sourceUrl))
-              .filter(Boolean);
-
-            chrome.runtime.sendMessage(
-              {
-                type: "vodUnmuteInstallRules",
-                segmentIds,
-                redirects: validBatch.map((v) => ({
-                  sourceUrl: v.sourceUrl,
-                  targetUrl: v.targetUrl,
-                })),
-                append: true,
-              },
-              (response) => {
-                if (response?.ok && !indicatorShown) {
-                  indicatorShown = true;
-                  showIndicator();
-                }
-              }
-            );
-          } else if (!promoShown) {
-            promoShown = true;
-            showPromoIndicator();
-          }
-        }
-      }
-    } catch (error) {
-      console.warn("[StreamPulse] Traitement playlist VOD :", error?.message || error);
-    }
+    });
   }
 
   function mergeContinuousRanges(ranges) {
@@ -576,7 +395,6 @@
     currentVodId = null;
     vodResolved = false;
     isResolving = false;
-    processedPlaylists.clear();
     restoredRanges = [];
     totalVodDuration = 0;
     indicatorShown = false;
@@ -603,31 +421,48 @@
 
     isResolving = true;
     try {
-      const gqlPlaylistUrl = await fetchVodPlaylistFromGql(vodId);
-      if (gqlPlaylistUrl && currentVodId === vodId) {
+      const data = await resolveVod(vodId);
+      if (data?.ok && currentVodId === vodId) {
         vodResolved = true;
-        await processPlaylist(gqlPlaylistUrl);
+        totalVodDuration = data.totalDuration || 0;
+        const validBatch = data.restoredRanges || [];
+        if (validBatch.length > 0) {
+          restoredRanges = validBatch;
+          paintSeekbar();
+
+          if (plusActive) {
+            const segmentIds = validBatch
+              .map((v) => v.segmentId || extractSegmentId(v.sourceUrl))
+              .filter(Boolean);
+
+            chrome.runtime.sendMessage(
+              {
+                type: "vodUnmuteInstallRules",
+                segmentIds,
+                redirects: validBatch.map((v) => ({
+                  sourceUrl: v.sourceUrl,
+                  targetUrl: v.targetUrl,
+                })),
+                append: false,
+              },
+              (response) => {
+                if (response?.ok && !indicatorShown) {
+                  indicatorShown = true;
+                  showIndicator();
+                }
+              }
+            );
+          } else if (!promoShown) {
+            promoShown = true;
+            showPromoIndicator();
+          }
+        }
       }
     } catch (err) {
       console.warn("[StreamPulse] Résolution VOD :", err?.message || err);
     } finally {
       isResolving = false;
     }
-  }
-
-  // Observer de requêtes réseau pour intercepter les flux HLS alternatifs
-  try {
-    const perfObserver = new PerformanceObserver((list) => {
-      if (!isVodPage()) return;
-      for (const entry of list.getEntries()) {
-        if (entry.name.includes(".m3u8") && (entry.name.includes("cloudfront.net") || entry.name.includes("ttvnw.net"))) {
-          processPlaylist(entry.name);
-        }
-      }
-    });
-    perfObserver.observe({ entryTypes: ["resource"] });
-  } catch (_e) {
-    // PerformanceObserver indisponible
   }
 
   // Détection instantanée des navigations SPA

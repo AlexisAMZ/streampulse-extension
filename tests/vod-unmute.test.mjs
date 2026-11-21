@@ -87,3 +87,46 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
   await pruneOrphanVodRules();
   assert.equal(fakeRules.length, 0);
 });
+
+test("VOD Unmute : résolution distante via le service worker", async () => {
+  const { handleVodUnmuteResolve } = await import(
+    `../js/sw/vod-unmute.js?t=${Date.now()}`
+  );
+
+  // Rejet immédiat sur identifiant invalide
+  const invalidRes = await handleVodUnmuteResolve({ vodId: "abc" });
+  assert.equal(invalidRes.ok, false);
+  assert.equal(invalidRes.error, "invalid_vod_id");
+
+  // Mock de fetch global pour tester la réponse valide
+  const originalFetch = global.fetch;
+  try {
+    global.fetch = async (url) => {
+      assert.ok(url.includes("vodId=123456"));
+      return {
+        ok: true,
+        json: async () => ({
+          ok: true,
+          vodId: "123456",
+          totalDuration: 3600,
+          restoredRanges: [
+            {
+              segmentId: "12",
+              sourceUrl: "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/12-muted.ts",
+              targetUrl: "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/12.ts",
+              startTime: 120,
+              duration: 60,
+            },
+          ],
+        }),
+      };
+    };
+
+    const validRes = await handleVodUnmuteResolve({ vodId: "123456" });
+    assert.equal(validRes.ok, true);
+    assert.equal(validRes.vodId, "123456");
+    assert.equal(validRes.restoredRanges.length, 1);
+  } finally {
+    global.fetch = originalFetch;
+  }
+});

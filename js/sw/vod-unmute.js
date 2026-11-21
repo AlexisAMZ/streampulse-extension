@@ -1,7 +1,6 @@
-// StreamPulse+ : Démutage automatique des VODs Twitch coupées par le copyright.
-// Gère l'installation et la suppression des règles déclaratives de redirection
-// par onglet (chrome.declarativeNetRequest.updateSessionRules) de manière compacte
-// et résiliente multi-résolution.
+// StreamPulse+ : Gestion des règles de redirection declarativeNetRequest pour la lecture vidéo.
+
+const REMOTE_UNMUTE_URL = "https://streampulse.tech/api/vod-unmute";
 
 let updateQueue = Promise.resolve();
 let nextRuleId = 1;
@@ -184,6 +183,23 @@ export async function handleVodUnmuteClearRules(_message, sender) {
     await clearVodRulesForTab(tabId);
   }
   return { ok: true };
+}
+
+export async function handleVodUnmuteResolve(message) {
+  const vodId = message?.vodId;
+  if (!vodId || !/^\d+$/.test(String(vodId))) {
+    return { ok: false, error: "invalid_vod_id" };
+  }
+
+  try {
+    const res = await fetch(`${REMOTE_UNMUTE_URL}?vodId=${encodeURIComponent(vodId)}`);
+    if (!res.ok) return { ok: false, error: `http_${res.status}` };
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.warn("[StreamPulse] Erreur résolution VOD distante :", error?.message || error);
+    return { ok: false, error: error?.message || "network_error" };
+  }
 }
 
 // Nettoyage automatique au démarrage et à la fermeture d'onglet
