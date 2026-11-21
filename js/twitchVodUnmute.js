@@ -491,7 +491,14 @@
   function installRulesForRanges(ranges) {
     if (!ranges || ranges.length === 0) return;
     const segmentIds = ranges
-      .map((v) => v.segmentId || extractSegmentId(v.sourceUrl))
+      .map((v) => {
+        if (v.segmentId) return String(v.segmentId);
+        if (v.sourceUrl) return extractSegmentId(v.sourceUrl);
+        if (typeof v.startTime === "number" && typeof v.duration === "number" && v.duration > 0) {
+          return String(Math.round(v.startTime / v.duration));
+        }
+        return null;
+      })
       .filter(Boolean);
 
     if (segmentIds.length === 0) return;
@@ -500,12 +507,20 @@
       {
         type: "vodUnmuteInstallRules",
         segmentIds,
-        redirects: ranges.map((v) => ({
-          segmentId: v.segmentId || extractSegmentId(v.sourceUrl),
-          sourceUrl: v.sourceUrl,
-          targetUrl: v.targetUrl,
-          targetType: v.targetType || (v.targetUrl?.includes("-unmuted") ? "unmuted" : "bare"),
-        })),
+        redirects: ranges.map((v) => {
+          const segId =
+            v.segmentId ||
+            extractSegmentId(v.sourceUrl) ||
+            (typeof v.startTime === "number" && typeof v.duration === "number" && v.duration > 0
+              ? String(Math.round(v.startTime / v.duration))
+              : null);
+          return {
+            segmentId: segId,
+            sourceUrl: v.sourceUrl,
+            targetUrl: v.targetUrl,
+            targetType: v.targetType || (v.targetUrl?.includes("-unmuted") ? "unmuted" : "bare"),
+          };
+        }),
         append: false,
       },
       (response) => {
@@ -564,10 +579,9 @@
           purgedRanges = purgedBatch;
           const isUserPlus = Boolean(data.isPlus || plusActive);
           paintSeekbar(isUserPlus);
+          installRulesForRanges(validBatch);
 
-          if (isUserPlus) {
-            installRulesForRanges(validBatch);
-          } else if (!promoShown) {
+          if (!isUserPlus && !promoShown) {
             promoShown = true;
             showPromoIndicator();
           }

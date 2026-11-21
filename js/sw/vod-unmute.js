@@ -207,10 +207,11 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
               { header: "Access-Control-Allow-Origin", operation: "set", value: "https://www.twitch.tv" },
               { header: "Access-Control-Allow-Credentials", operation: "set", value: "true" },
               { header: "Access-Control-Allow-Methods", operation: "set", value: "GET, HEAD, OPTIONS" },
+              { header: "Access-Control-Expose-Headers", operation: "set", value: "Accept-Ranges, Content-Length, Content-Range, Date, Server" },
             ],
           },
           condition: {
-            regexFilter: "^https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net|\\.twitch\\.tv)/.+/\\d+(?:-(?:muted|unmuted))?\\.(?:ts|mp4|m4s)(?:\\?.*)?$",
+            regexFilter: "^https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net|\\.twitch\\.tv)/.+/[^/?#]+(?:-(?:muted|unmuted))?\\.(?:ts|mp4|m4s)(?:\\?.*)?$",
             tabIds: [tabId],
             resourceTypes: ["xmlhttprequest", "media", "other"],
           },
@@ -312,8 +313,12 @@ export function handleVodUnmuteResolve(message, sender, sendResponse) {
       const isCompletelyPurged = Boolean(
         cached.data?.purgedByTwitch && (!cached.data?.restoredRanges || cached.data?.restoredRanges.length === 0)
       );
+      const isOutdatedCache = Array.isArray(cached.data?.restoredRanges) &&
+        cached.data.restoredRanges.length > 0 &&
+        !cached.data.restoredRanges[0].segmentId &&
+        !cached.data.restoredRanges[0].sourceUrl;
       const needsPlusUpgrade = Boolean(license?.sig) && !cached.data?.isPlus;
-      if (!isCompletelyPurged && !needsPlusUpgrade && (!license || Boolean(cached.data?.isPlus))) {
+      if (!isOutdatedCache && !isCompletelyPurged && !needsPlusUpgrade && (!license || Boolean(cached.data?.isPlus))) {
         return cached.data;
       }
     }

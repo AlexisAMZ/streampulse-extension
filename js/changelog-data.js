@@ -52,6 +52,78 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.11.22",
+    "date": "2026-11-21",
+    "title": {
+      "fr": "Restauration audio VOD renforcée",
+      "en": "Enhanced VOD Audio Unmute",
+      "uk": "Покращене відновлення звуку VOD",
+      "es": "Restauración de audio VOD mejorada",
+      "pt-BR": "Restauração de áudio VOD aprimorada",
+      "de": "Verbesserte VOD-Audio-Wiederherstellung",
+      "it": "Ripristino audio VOD potenziato",
+      "pl": "Ulepszone przywracanie dźwięku VOD",
+      "tr": "Gelişmiş VOD Ses Geri Yükleme",
+      "ru": "Улучшенное восстановление звука VOD",
+      "ja": "VOD音声復元機能の強化",
+      "ko": "VOD 오디오 복원 기능 강화",
+      "ar": "تحسين استعادة صوت VOD",
+      "id": "Peningkatan Pemulihan Audio VOD",
+      "nl": "Verbeterd VOD-audioherstel",
+      "sv": "Förbättrad VOD-ljudåterställning",
+      "cs": "Vylepšené obnovení zvuku VOD"
+    },
+    "changes": [
+      {
+        "type": "fix",
+        "area": "fixes",
+        "text": {
+          "fr": "Correction de la lecture audio des segments restaurés sur les rediffusions Twitch : transmission intégrale des identifiants de segments et en-têtes CORS étendus.",
+          "en": "Fixed audio playback for restored sections on Twitch VODs: full segment ID delivery and extended CORS headers.",
+          "uk": "Виправлено відтворення аудіо для відновлених сегментів VOD Twitch: повна передача ідентифікаторів та розширені заголовки CORS.",
+          "es": "Corrección de la reproducción de audio en secciones restauradas de VODs de Twitch: entrega completa de identificadores de segmentos y encabezados CORS ampliados.",
+          "pt-BR": "Correção da reprodução de áudio em trechos restaurados de VODs da Twitch: envio integral dos identificadores de segmentos e cabeçalhos CORS estendidos.",
+          "de": "Fehlerbehebung bei der Audiowiedergabe wiederhergestellter Abschnitte in Twitch-VODs: vollständige Übertragung von Segment-IDs und erweiterte CORS-Header.",
+          "it": "Correzione della riproduzione audio per le sezioni ripristinate nei VOD di Twitch: trasmissione integrale degli identificatori di segmento e intestazioni CORS estese.",
+          "pl": "Naprawa odtwarzania dźwięku w przywróconych fragmentach VOD na Twitchu: pełne przekazywanie identyfikatorów segmentów i rozszerzone nagłówki CORS.",
+          "tr": "Twitch VOD'larında geri yüklenen bölümler için ses oynatma düzeltmesi: tam segment kimliği iletimi ve genişletilmiş CORS başlıkları.",
+          "ru": "Исправлено воспроизведение звука в восстановленных сегментах VOD на Twitch: полная передача идентификаторов сегментов и расширенные заголовки CORS.",
+          "ja": "Twitch VODの復元区間における音声再生を修正：セグメントIDの完全な受け渡しとCORSヘッダーの拡張。",
+          "ko": "Twitch VOD 복원 구간의 오디오 재생 오류 수정: 세グ먼트 ID 전체 전달 및 확장된 CORS 헤더 적용.",
+          "ar": "إصلاح تشغيل الصوت للأجزاء المستعادة في تسجيلات Twitch VOD: نقل كامل لمعرفات المقاطع ورؤوس CORS موسعة.",
+          "id": "Perbaikan pemutaran audio untuk bagian yang dipulihkan pada VOD Twitch: pengiriman ID segmen lengkap dan header CORS yang diperluas.",
+          "nl": "Oplossing voor het afspelen van audio bij herstelde secties op Twitch VOD's: volledige levering van segment-ID's en uitgebreide CORS-headers.",
+          "sv": "Åtgärdat ljuduppspelning för återställda sektioner på Twitch VOD:er: fullständig överföring av segment-ID och utökade CORS-rubriker.",
+          "cs": "Oprava přehrávání zvuku u obnovených částí Twitch VOD: kompletní předávání identifikátorů segmentů a rozšířené hlavičky CORS."
+        }
+      },
+      {
+        "type": "fix",
+        "area": "fixes",
+        "text": {
+          "fr": "Déduction résiliente des segments et levée automatique du blocage S3 CloudFront pour garantir un son continu sans coupure.",
+          "en": "Resilient segment resolution and automatic CloudFront S3 unblocking ensuring smooth audio playback.",
+          "uk": "Стійке визначення сегментів та автоматичне розблокування CloudFront S3 для безперервного звуку.",
+          "es": "Deducción resistente de segmentos y desbloqueo automático de CloudFront S3 para garantizar un sonido continuo sin cortes.",
+          "pt-BR": "Dedução resiliente de segmentos e desbloqueio automático do CloudFront S3 para garantir áudio contínuo sem cortes.",
+          "de": "Ausfallsichere Segment-Ermittlung und automatische CloudFront S3-Entsperrung für unterbrechungsfreien Ton.",
+          "it": "Riconoscimento resiliente dei segmenti e sblocco automatico di CloudFront S3 per garantire un audio continuo senza interruzioni.",
+          "pl": "Odporne na błędy wyliczanie segmentów i automatyczne odblokowywanie CloudFront S3 dla płynnego odtwarzania dźwięku.",
+          "tr": "Kesintisiz ses çalma için esnek segment tespiti ve otomatik CloudFront S3 engeli kaldırma.",
+          "ru": "Устойчивое вычисление сегментов и автоматическое снятие блокировки CloudFront S3 для непрерывного звука.",
+          "ja": "セグメント自動補正とCloudFront S3ブロックの自動解除により、途切れのない音声再生を実現。",
+          "ko": "탄력적인 세그먼트 유추 및 CloudFront S3 자동 차단 해제를 통한 끊김 없는 오디오 재생 보장.",
+          "ar": "استنتاج مرن للمقاطع وإلغاء حظر CloudFront S3 تلقائيًا لضمان تشغيل صوت مستمر بدون انقطاع.",
+          "id": "Penentuan segmen yang tangguh dan pembukaan blokir otomatis CloudFront S3 untuk memastikan audio lancar tanpa henti.",
+          "nl": "Veerkrachtige segmentafleiding en automatische deblokkering van CloudFront S3 voor continue audioweergave zonder onderbrekingen.",
+          "sv": "Robust segmenthärledning och automatisk CloudFront S3-avblockering för oavbruten ljuduppspelning.",
+          "cs": "Spolehlivé odvozování segmentů a automatické odblokování CloudFront S3 pro nepřetržitý zvuk bez výpadků."
+        }
+      }
+    ]
+  },
+
+  {
     version: "26.11.21",
     "date": "2026-11-21",
     "title": {

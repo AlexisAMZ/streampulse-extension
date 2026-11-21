@@ -82,6 +82,8 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
   assert.equal(corsRule.action.requestHeaders[0].operation, "remove");
   assert.equal(corsRule.action.responseHeaders[0].header, "Access-Control-Allow-Origin");
   assert.equal(corsRule.action.responseHeaders[0].value, "https://www.twitch.tv");
+  assert.ok(corsRule.action.responseHeaders.some((h) => h.header === "Access-Control-Expose-Headers"));
+  assert.ok(new RegExp(corsRule.condition.regexFilter).test("https://d2vi6trrdongqn.cloudfront.net/hash/chunked/1223.ts"));
 
   // Test de la regex sur différentes qualités et domaines (y compris twitch.tv)
   const re = new RegExp(firstRule.condition.regexFilter);
