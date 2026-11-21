@@ -101,12 +101,16 @@ test("VOD Unmute : résolution distante via le service worker", async () => {
   // Mock de fetch global pour tester la réponse valide
   const originalFetch = global.fetch;
   try {
-    global.fetch = async (url) => {
-      assert.ok(url.includes("vodId=123456"));
+    global.fetch = async (url, opts) => {
+      assert.ok(url.includes("vod-unmute"));
+      assert.equal(opts.method, "POST");
+      const body = JSON.parse(opts.body);
+      assert.equal(body.vodId, "123456");
       return {
         ok: true,
         json: async () => ({
           ok: true,
+          isPlus: true,
           vodId: "123456",
           totalDuration: 3600,
           restoredRanges: [
@@ -125,6 +129,7 @@ test("VOD Unmute : résolution distante via le service worker", async () => {
     const validRes = await handleVodUnmuteResolve({ vodId: "123456" });
     assert.equal(validRes.ok, true);
     assert.equal(validRes.vodId, "123456");
+    assert.equal(validRes.isPlus, true);
     assert.equal(validRes.restoredRanges.length, 1);
   } finally {
     global.fetch = originalFetch;

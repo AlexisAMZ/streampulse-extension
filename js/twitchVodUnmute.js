@@ -430,28 +430,30 @@
           restoredRanges = validBatch;
           paintSeekbar();
 
-          if (plusActive) {
+          if (plusActive && data.isPlus) {
             const segmentIds = validBatch
               .map((v) => v.segmentId || extractSegmentId(v.sourceUrl))
               .filter(Boolean);
 
-            chrome.runtime.sendMessage(
-              {
-                type: "vodUnmuteInstallRules",
-                segmentIds,
-                redirects: validBatch.map((v) => ({
-                  sourceUrl: v.sourceUrl,
-                  targetUrl: v.targetUrl,
-                })),
-                append: false,
-              },
-              (response) => {
-                if (response?.ok && !indicatorShown) {
-                  indicatorShown = true;
-                  showIndicator();
+            if (segmentIds.length > 0) {
+              chrome.runtime.sendMessage(
+                {
+                  type: "vodUnmuteInstallRules",
+                  segmentIds,
+                  redirects: validBatch.map((v) => ({
+                    sourceUrl: v.sourceUrl,
+                    targetUrl: v.targetUrl,
+                  })),
+                  append: false,
+                },
+                (response) => {
+                  if (response?.ok && !indicatorShown) {
+                    indicatorShown = true;
+                    showIndicator();
+                  }
                 }
-              }
-            );
+              );
+            }
           } else if (!promoShown) {
             promoShown = true;
             showPromoIndicator();

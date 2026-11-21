@@ -192,7 +192,37 @@ export async function handleVodUnmuteResolve(message) {
   }
 
   try {
-    const res = await fetch(`${REMOTE_UNMUTE_URL}?vodId=${encodeURIComponent(vodId)}`);
+    let license = null;
+    if (chrome.storage?.local) {
+      try {
+        const stored = await chrome.storage.local.get("streamPulsePlus");
+        const record = stored?.streamPulsePlus;
+        if (record && record.licenseKey && record.sig) {
+          license = {
+            key: record.licenseKey,
+            device: record.device,
+            plan: record.plan,
+            role: record.role,
+            since: record.since,
+            referrals: record.referrals,
+            iat: record.iat,
+            sig: record.sig,
+            twitch: record.twitchAccount,
+          };
+        }
+      } catch (_e) {
+        // Fallback sans licence
+      }
+    }
+
+    const res = await fetch(REMOTE_UNMUTE_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ vodId, license }),
+    });
+
     if (!res.ok) return { ok: false, error: `http_${res.status}` };
     const data = await res.json();
     return data;
