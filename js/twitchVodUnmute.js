@@ -4,12 +4,12 @@
   // StreamPulse+ : Démutage automatique des rediffusions (VODs) Twitch coupées par le copyright.
   // Détecte les flux M3U8 de VOD hébergés sur CloudFront, sonde la présence des segments originaux
   // sans filtre DMCA (*.ts), installe les règles de redirection et met en valeur les zones
-  // restaurées sur la barre de progression.
+  // restaurées sur la barre de progression en dégradé arc-en-ciel animé.
 
   if (window.__streampulseVodUnmute) return;
   window.__streampulseVodUnmute = true;
 
-  const MUTED_MARKER = /-muted(?=\.[^.]*$|$)/;
+  const MUTED_MARKER = /-(?:muted|unmuted)(?=\.[^.]*$|$)/;
   const STYLE_ID = "streampulse-vod-unmute-styles";
   const processedPlaylists = new Set();
   let currentVodId = null;
@@ -42,7 +42,7 @@
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area === "local" && changes.streamPulsePlus) {
         updatePlusStatus(changes.streamPulsePlus.newValue);
-        if (plusActive && restoredRanges.length > 0) {
+        if (restoredRanges.length > 0) {
           paintSeekbar();
         }
       }
@@ -125,7 +125,7 @@
       try {
         absoluteUrl = new URL(line, playlistUrl).href;
       } catch (_e) {
-        // url relative non resolue
+        // url relative
       }
 
       entries.push({
@@ -157,6 +157,29 @@
     }
   }
 
+  async function fetchVodPlaylistFromGql(vodId) {
+    try {
+      const res = await fetch("https://gql.twitch.tv/gql", {
+        method: "POST",
+        headers: {
+          "Client-ID": "kimne78kx3ncx6brgo4mv6wki5h1ko",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: `query { video(id: "${vodId}") { seekPreviewsURL } }`,
+        }),
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      const seekUrl = data?.data?.video?.seekPreviewsURL;
+      if (!seekUrl || !seekUrl.includes("/storyboards/")) return null;
+      const basePrefix = seekUrl.split("/storyboards/")[0];
+      return `${basePrefix}/chunked/index-dvr.m3u8`;
+    } catch (_err) {
+      return null;
+    }
+  }
+
   async function processPlaylist(playlistUrl) {
     if (processedPlaylists.has(playlistUrl)) return;
     processedPlaylists.add(playlistUrl);
@@ -183,12 +206,26 @@
             const unmutedUrl = item.url.replace(MUTED_MARKER, "");
             const exists = await probeSegment(unmutedUrl);
             if (exists) {
+              // Redirige à la fois la version -muted et la version -unmuted
+              const cleanBase = item.url.replace(MUTED_MARKER, "");
+              const ext = cleanBase.includes(".mp4") ? ".mp4" : ".ts";
+              const mutedVariant = cleanBase.replace(new RegExp(`\\${ext}$`), `-muted${ext}`);
+
               validRedirects.push({
                 sourceUrl: item.url,
                 targetUrl: unmutedUrl,
                 startTime: item.startTime,
                 duration: item.duration,
               });
+
+              if (mutedVariant !== item.url) {
+                validRedirects.push({
+                  sourceUrl: mutedVariant,
+                  targetUrl: unmutedUrl,
+                  startTime: item.startTime,
+                  duration: item.duration,
+                });
+              }
             }
           })
         );
@@ -198,27 +235,24 @@
 
       restoredRanges = validRedirects;
 
-      // Si l'utilisateur a StreamPulse+, on installe les règles de redirection
-      if (plusActive) {
-        chrome.runtime.sendMessage(
-          {
-            type: "vodUnmuteInstallRules",
-            redirects: validRedirects.map((v) => ({
-              sourceUrl: v.sourceUrl,
-              targetUrl: v.targetUrl,
-            })),
-          },
-          (response) => {
-            if (response?.ok) {
-              paintSeekbar();
-              showIndicator(validRedirects.length);
-            }
+      // Peint immédiatement la timeline arc-en-ciel
+      paintSeekbar();
+
+      // Installe les règles de redirection via le service worker
+      chrome.runtime.sendMessage(
+        {
+          type: "vodUnmuteInstallRules",
+          redirects: validRedirects.map((v) => ({
+            sourceUrl: v.sourceUrl,
+            targetUrl: v.targetUrl,
+          })),
+        },
+        (response) => {
+          if (response?.ok) {
+            showIndicator(validRedirects.length);
           }
-        );
-      } else {
-        // Notification informative pour non-abonnés
-        showPromoIndicator(validRedirects.length);
-      }
+        }
+      );
     } catch (error) {
       console.warn("[StreamPulse] Traitement playlist VOD :", error?.message || error);
     }
@@ -226,7 +260,14 @@
 
   function mergeContinuousRanges(ranges) {
     if (!ranges || ranges.length === 0) return [];
-    const sorted = [...ranges].sort((a, b) => a.startTime - b.startTime);
+    // Déduplique par startTime
+    const uniqueMap = new Map();
+    for (const r of ranges) {
+      if (!uniqueMap.has(r.startTime) || uniqueMap.get(r.startTime).duration < r.duration) {
+        uniqueMap.set(r.startTime, r);
+      }
+    }
+    const sorted = [...uniqueMap.values()].sort((a, b) => a.startTime - b.startTime);
     const merged = [];
     let cur = { ...sorted[0] };
 
@@ -293,81 +334,64 @@
     badge.className = "streampulse-unmuted-indicator";
     badge.innerHTML = `
       <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
-      <span>StreamPulse+ : ${count} segments audio restaurés</span>
+      <span>StreamPulse+ : segments audio restaurés</span>
     `;
 
     playerContainer.appendChild(badge);
     setTimeout(() => badge.remove(), 6000);
   }
 
-  function showPromoIndicator(count) {
-    ensureStyles();
-    const existing = document.getElementById("streampulse-unmute-badge");
-    if (existing) return;
-
-    const playerContainer = document.querySelector('div[data-a-target="video-player"]');
-    if (!playerContainer) return;
-
-    const badge = document.createElement("div");
-    badge.id = "streampulse-unmute-badge";
-    badge.className = "streampulse-unmuted-indicator";
-    badge.style.borderColor = "rgba(145, 70, 255, 0.5)";
-    badge.innerHTML = `
-      <svg viewBox="0 0 24 24" style="fill: #9146ff;"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
-      <span>${count} segments audio restaurables avec StreamPulse+</span>
-    `;
-
-    playerContainer.appendChild(badge);
-    setTimeout(() => badge.remove(), 8000);
-  }
-
-  function scanExistingResources() {
+  async function checkCurrentVod() {
     if (!isVodPage()) return;
-    const entries = performance.getEntriesByType("resource");
-    for (const e of entries) {
-      if (e.name.includes("cloudfront.net") && e.name.includes(".m3u8")) {
-        processPlaylist(e.name);
+    const vodId = getVodId();
+    if (!vodId) return;
+
+    if (vodId !== currentVodId) {
+      currentVodId = vodId;
+      processedPlaylists.clear();
+      restoredRanges = [];
+      totalVodDuration = 0;
+
+      // Déduction immédiate de la playlist CloudFront via GQL
+      const gqlPlaylistUrl = await fetchVodPlaylistFromGql(vodId);
+      if (gqlPlaylistUrl) {
+        processPlaylist(gqlPlaylistUrl);
       }
     }
   }
 
-  // Observer de requêtes réseau pour intercepter les flux HLS
+  // Observer de requêtes réseau pour intercepter les flux HLS alternatifs
   try {
     const perfObserver = new PerformanceObserver((list) => {
       if (!isVodPage()) return;
       for (const entry of list.getEntries()) {
-        if (entry.name.includes("cloudfront.net") && entry.name.includes(".m3u8")) {
+        if (entry.name.includes(".m3u8") && (entry.name.includes("cloudfront.net") || entry.name.includes("ttvnw.net"))) {
           processPlaylist(entry.name);
         }
       }
     });
     perfObserver.observe({ entryTypes: ["resource"] });
   } catch (_e) {
-    // PerformanceObserver non disponible ou limite
+    // PerformanceObserver
   }
 
-  // Vérification de changement de page SPA
+  // Boucle de surveillance SPA et maintien de la seekbar
   setInterval(() => {
-    const newVodId = getVodId();
-    if (newVodId !== currentVodId) {
-      currentVodId = newVodId;
+    if (isVodPage()) {
+      checkCurrentVod();
+      const seekbar = document.querySelector("div.seekbar-bar");
+      if (seekbar && restoredRanges.length > 0 && !seekbar.querySelector(".streampulse-unmuted-segment")) {
+        paintSeekbar();
+      }
+    } else if (currentVodId) {
+      currentVodId = null;
       processedPlaylists.clear();
       restoredRanges = [];
       totalVodDuration = 0;
-      if (newVodId) {
-        scanExistingResources();
-      } else {
-        chrome.runtime.sendMessage({ type: "vodUnmuteClearRules" }).catch(() => {});
-      }
-    } else if (isVodPage() && restoredRanges.length > 0) {
-      // S'assure que la seekbar garde son affichage lors des re-rendus React
-      const seekbar = document.querySelector("div.seekbar-bar");
-      if (seekbar && !seekbar.querySelector(".streampulse-unmuted-segment")) {
-        paintSeekbar();
-      }
+      chrome.runtime.sendMessage({ type: "vodUnmuteClearRules" }).catch(() => {});
     }
-  }, 1500);
+  }, 1200);
 
-  // Scan initial
-  scanExistingResources();
+  // Lancement immédiat
+  checkCurrentVod();
 })();
