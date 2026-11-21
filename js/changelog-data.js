@@ -52,6 +52,55 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.11.24",
+    "date": "2026-11-21",
+    "title": {
+      "fr": "Redirection VOD directe et déblocage audio",
+      "en": "Direct VOD Redirection & Audio Unmute",
+      "uk": "Пряме перенаправлення VOD та розблокування звуку",
+      "es": "Redirección VOD directa y desbloqueo de audio",
+      "pt-BR": "Redirecionamento VOD direto e desbloqueio de áudio",
+      "de": "Direkte VOD-Weiterleitung & Audio-Freischaltung",
+      "it": "Reindirizzamento VOD diretto e sblocco audio",
+      "pl": "Bezpośrednie przekierowanie VOD i odblokowanie dźwięku",
+      "tr": "Doğrudan VOD Yönlendirmesi ve Ses Kilit Açma",
+      "ru": "Прямое перенаправление VOD и разблокировка звука",
+      "ja": "ダイレクトVODリダイレクトと音声復元の最適化",
+      "ko": "직접 VOD 리디렉션 및 오디오 음소거 해제",
+      "ar": "إعادة توجيه VOD المباشر وإلغاء كتم الصوت",
+      "id": "Pengalihan VOD Langsung & Pemulihan Audio",
+      "nl": "Directe VOD-omleiding en audioherstel",
+      "sv": "Direkt VOD-omdirigering och ljudåterställning",
+      "cs": "Přímé přesměrování VOD a obnovení zvuku"
+    },
+    "changes": [
+      {
+        "type": "fix",
+        "area": "fixes",
+        "text": {
+          "fr": "Redirection directe des segments audio par URL sans restriction d'onglet pour supporter les workers de streaming et déblocage CORS Amazon S3.",
+          "en": "Direct segment audio redirection by URL without tab restrictions to support streaming workers and Amazon S3 CORS unblocking.",
+          "uk": "Пряме перенаправлення аудіосегментів за URL без обмеження вкладок для підтримки потокових воркерів та розблокування CORS Amazon S3.",
+          "es": "Redirección directa de segmentos de audio por URL sin restricción de pestaña para soportar workers de streaming y desbloqueo CORS Amazon S3.",
+          "pt-BR": "Redirecionamento direto de segmentos de áudio por URL sem restrição de aba para suportar workers de streaming e desbloqueio CORS Amazon S3.",
+          "de": "Direkte Audiosegment-Weiterleitung per URL ohne Tab-Einschränkung zur Unterstützung von Streaming-Workern und Amazon S3 CORS-Freischaltung.",
+          "it": "Reindirizzamento diretto dei segmenti audio tramite URL senza restrizioni di scheda per supportare i worker di streaming e sblocco CORS Amazon S3.",
+          "pl": "Bezpośrednie przekierowanie segmentów audio według adresu URL bez ograniczeń kart, aby wspierać workery strumieniowe i odblokowanie CORS Amazon S3.",
+          "tr": "Yayın worker'larını desteklemek için sekme kısıtlaması olmadan doğrudan URL ile ses segmenti yönlendirmesi ve Amazon S3 CORS engeli kaldırma.",
+          "ru": "Прямое перенаправление аудиосегментов по URL без ограничения вкладок для поддержки потоковых воркеров и снятия блокировки CORS Amazon S3.",
+          "ja": "ストリーミングワーカーをサポートするためのタブ制限のないURL直接音声セグメントリダイレクトとAmazon S3 CORSブロック解除。",
+          "ko": "스트리밍 워커 지원을 위해 탭 제한 없는 URL 직접 오디오 세그먼트 리디렉션 및 Amazon S3 CORS 차단 해제.",
+          "ar": "إعادة توجيه مباشرة لمقاطع الصوت عبر الرابط بدون قيود علامات التبويب لدعم مشغلات البث ورفع حظر CORS Amazon S3.",
+          "id": "Pengalihan segmen audio langsung melalui URL tanpa batasan tab untuk mendukung streaming worker dan pembukaan blokir CORS Amazon S3.",
+          "nl": "Directe audiosegment-omleiding via URL zonder tabbladbeperking ter ondersteuning van streaming workers en Amazon S3 CORS-deblokkering.",
+          "sv": "Direkt ljudsegmentomdirigering via URL utan flikbegränsningar för att stödja strömningsarbetare och Amazon S3 CORS-avblockering.",
+          "cs": "Přímé přesměrování zvukových segmentů podle URL bez omezení karet pro podporu streamovacích workerů a odblokování CORS Amazon S3."
+        }
+      }
+    ]
+  },
+
+  {
     version: "26.11.23",
     "date": "2026-11-21",
     "title": {

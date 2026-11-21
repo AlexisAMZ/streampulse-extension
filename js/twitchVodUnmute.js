@@ -524,9 +524,14 @@
         append: false,
       },
       (response) => {
-        if (response?.ok && !indicatorShown) {
-          indicatorShown = true;
-          showIndicator();
+        if (response?.ok) {
+          console.log(`[StreamPulse] VOD Unmute : ${response.count} regles declarativeNetRequest actives pour ${ranges.length} segments`);
+          if (!indicatorShown) {
+            indicatorShown = true;
+            showIndicator();
+          }
+        } else {
+          console.warn("[StreamPulse] VOD Unmute : echec installation des regles :", response?.error);
         }
       }
     );

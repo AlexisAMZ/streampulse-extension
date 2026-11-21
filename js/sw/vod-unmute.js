@@ -9,7 +9,7 @@ const MAX_RULE_ID = 2147480000;
 const CHUNK_SIZE = 40;
 
 const _resolvedVodCache = new Map();
-const RESOLVED_VOD_CACHE_TTL_MS = 60 * 60 * 1000; // 1 heure de cache mémoire pour VOD résolue
+const RESOLVED_VOD_CACHE_TTL_MS = 60 * 60 * 1000; // 1 heure de cache memoire pour VOD resolue
 
 function enqueueUpdate(task) {
   const next = updateQueue.then(task, task);
@@ -49,7 +49,7 @@ export async function clearVodRulesForTab(tabId) {
         await chrome.declarativeNetRequest.updateSessionRules({ removeRuleIds: toRemove });
       }
     } catch (error) {
-      console.warn("[StreamPulse] Erreur lors du nettoyage des règles VOD :", error?.message || error);
+      console.warn("[StreamPulse] Erreur lors du nettoyage des regles VOD :", error?.message || error);
     }
   });
 }
@@ -96,7 +96,7 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
       const usedIds = new Set(liveRules.map((r) => r.id));
       const staleIds = [];
 
-      // Si append !== true, on purge les règles existantes de cet onglet
+      // Si append !== true, on purge les regles existantes de cet onglet
       if (!message?.append) {
         for (const rule of liveRules) {
           if (rule.condition?.tabIds?.includes(tabId)) {
@@ -105,16 +105,27 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
         }
       }
 
-      // Séparation des identifiants selon le mode de redirection (standard sans suffixe ou -unmuted)
+      // Separation des identifiants selon le mode de redirection (standard sans suffixe ou -unmuted)
       const bareIds = new Set();
       const unmutedIds = new Set();
+      const crossQualityRedirects = [];
 
       if (Array.isArray(message?.redirects)) {
         for (const item of message.redirects) {
           const segId = item?.segmentId || extractSegmentId(item?.sourceUrl || item);
           if (!segId) continue;
           const targetUrl = item?.targetUrl || "";
-          if (item?.targetType === "unmuted" || targetUrl.includes("-unmuted")) {
+
+          // Verification si la redirection bascule vers une autre qualite (ex: chunked -> 720p60)
+          const sourceQualityMatch = /\/([^/]+)\/[^/]+-(?:muted|unmuted)\.[^.]+$/.exec(item.sourceUrl || "");
+          const targetQualityMatch = /\/([^/]+)\/[^/]+\.[^.]+$/.exec(targetUrl);
+          const isCrossQuality = Boolean(
+            sourceQualityMatch && targetQualityMatch && sourceQualityMatch[1] !== targetQualityMatch[1]
+          );
+
+          if (isCrossQuality) {
+            crossQualityRedirects.push(item);
+          } else if (item?.targetType === "unmuted" || targetUrl.includes("-unmuted")) {
             unmutedIds.add(String(segId));
           } else {
             bareIds.add(String(segId));
@@ -132,6 +143,26 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
       }
 
       const addRules = [];
+
+      // Redirections inter-qualites prioritaires (ex: si l'audio non mute n'existe qu'en 720p60)
+      for (const item of crossQualityRedirects) {
+        const segId = item?.segmentId || extractSegmentId(item?.sourceUrl);
+        if (!segId || !item?.targetUrl) continue;
+        const ruleId = allocateRuleId(usedIds);
+        addRules.push({
+          id: ruleId,
+          priority: 3,
+          action: {
+            type: "redirect",
+            redirect: { url: item.targetUrl },
+          },
+          condition: {
+            regexFilter: `^(https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net|\\.twitch\\.tv)/.+/)[^/]+/${segId}-(?:muted|unmuted)(\\.(?:ts|mp4|m4s)(?:\\?.*)?)$`,
+            tabIds: [tabId],
+            resourceTypes: ["xmlhttprequest", "media", "other"],
+          },
+        });
+      }
 
       const installChunkedGroup = (idList, isUnmutedTarget) => {
         const uniqueIds = Array.from(new Set(idList));
@@ -165,11 +196,11 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
         installChunkedGroup(unmutedIds, true);
       }
 
-      // Fallback pour toute redirection spécifique qui ne correspondrait pas au schéma de segment ts standard
+      // Fallback pour toute redirection specifique qui ne correspondrait pas au schema de segment standard
       if (Array.isArray(message?.redirects)) {
         for (const item of message.redirects) {
           if (!item?.sourceUrl || !item?.targetUrl) continue;
-          if (extractSegmentId(item.sourceUrl)) continue; // Déjà pris en compte par regex
+          if (extractSegmentId(item.sourceUrl)) continue;
           const cleanSource = item.sourceUrl.split("?")[0];
           const ruleId = allocateRuleId(usedIds);
 
@@ -189,12 +220,12 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
         }
       }
 
-      // Règle modifyHeaders pour lever le blocage CORS Amazon S3 sur les segments réorientés.
-      // S3 rejette (403 AccessDenied) tout appel portant l'en-tête Origin vers les segments audio bruts.
-      // On retire Origin en sortie vers S3 et on injecte Access-Control-Allow-Origin pour le lecteur Twitch.
+      // Regle modifyHeaders pour lever le blocage CORS Amazon S3 sur les segments audio bruts
+      // Amazon S3 renvoie 403 AccessDenied si l'en-tete Origin est transmis sur les segments originaux.
+      // On retire Origin vers CloudFront et on declare les en-tetes CORS pour autoriser la lecture dans le lecteur Twitch.
       if (addRules.length > 0) {
         const corsRuleId = allocateRuleId(usedIds);
-        addRules.push({
+        const corsRule = {
           id: corsRuleId,
           priority: 1,
           action: {
@@ -214,19 +245,50 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
             tabIds: [tabId],
             resourceTypes: ["xmlhttprequest", "media", "other"],
           },
-        });
+        };
+
+        try {
+          await chrome.declarativeNetRequest.updateSessionRules({
+            removeRuleIds: staleIds,
+            addRules: [...addRules, corsRule],
+          });
+          return { ok: true, count: addRules.length + 1 };
+        } catch (corsErr) {
+          console.warn("[StreamPulse] updateSessionRules avec responseHeaders echoue, repli :", corsErr?.message || corsErr);
+          const lightCorsRule = {
+            ...corsRule,
+            action: {
+              type: "modifyHeaders",
+              requestHeaders: [
+                { header: "Origin", operation: "remove" },
+              ],
+            },
+          };
+          try {
+            await chrome.declarativeNetRequest.updateSessionRules({
+              removeRuleIds: staleIds,
+              addRules: [...addRules, lightCorsRule],
+            });
+            return { ok: true, count: addRules.length + 1 };
+          } catch (_lightErr) {
+            await chrome.declarativeNetRequest.updateSessionRules({
+              removeRuleIds: staleIds,
+              addRules,
+            });
+            return { ok: true, count: addRules.length };
+          }
+        }
       }
 
-      if (staleIds.length > 0 || addRules.length > 0) {
+      if (staleIds.length > 0) {
         await chrome.declarativeNetRequest.updateSessionRules({
           removeRuleIds: staleIds,
-          addRules,
         });
       }
 
-      return { ok: true, count: addRules.length };
+      return { ok: true, count: 0 };
     } catch (error) {
-      console.warn("[StreamPulse] Échec de l'installation des règles VOD Unmute :", error?.message || error);
+      console.warn("[StreamPulse] Echec de l'installation des regles VOD Unmute :", error?.message || error);
       return { ok: false, error: error?.message || String(error) };
     }
   });
@@ -428,6 +490,7 @@ export function handleVodUnmuteResolve(message, sender, sendResponse) {
       // 4. Sondage simultané de chaque bloc contigu pour isoler les portions restaurables
       const restoredRanges = [];
       const purgedRanges = [];
+      const ALTERNATE_QUALITIES = ["720p60", "480p30", "360p30", "160p30"];
 
       await Promise.all(
         blocks.map(async (block) => {
@@ -436,18 +499,40 @@ export function handleVodUnmuteResolve(message, sender, sendResponse) {
           const unmutedUrl = head.url.replace(MUTED_MARKER, "-unmuted");
 
           let confirmedType = null;
+          let confirmedTargetQuality = null;
+
           if (await probeSegment(bareUrl)) {
             confirmedType = "bare";
           } else if (await probeSegment(unmutedUrl)) {
             confirmedType = "unmuted";
+          } else {
+            // Repli multi-qualités : sondage dans les transcodages (ex: 720p60) si chunked a été altéré
+            for (const altQ of ALTERNATE_QUALITIES) {
+              const altBare = bareUrl.replace(/\/chunked\//, `/${altQ}/`);
+              if (await probeSegment(altBare)) {
+                confirmedType = "bare";
+                confirmedTargetQuality = altQ;
+                break;
+              }
+              const altUnmuted = unmutedUrl.replace(/\/chunked\//, `/${altQ}/`);
+              if (await probeSegment(altUnmuted)) {
+                confirmedType = "unmuted";
+                confirmedTargetQuality = altQ;
+                break;
+              }
+            }
           }
 
           if (confirmedType) {
             for (const item of block) {
+              let targetUrl = item.url.replace(MUTED_MARKER, confirmedType === "bare" ? "" : "-unmuted");
+              if (confirmedTargetQuality) {
+                targetUrl = targetUrl.replace(/\/chunked\//, `/${confirmedTargetQuality}/`);
+              }
               restoredRanges.push({
                 segmentId: extractSegmentId(item.url),
                 sourceUrl: item.url,
-                targetUrl: item.url.replace(MUTED_MARKER, confirmedType === "bare" ? "" : "-unmuted"),
+                targetUrl,
                 targetType: confirmedType,
                 startTime: item.startTime,
                 duration: item.duration,
