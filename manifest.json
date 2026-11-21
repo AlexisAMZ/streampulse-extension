@@ -26,6 +26,8 @@
     "https://gql.twitch.tv/*",
     "https://www.twitch.tv/*",
     "https://clips.twitch.tv/*",
+    "https://*.twitch.tv/*",
+    "https://*.ttvnw.net/*",
     "https://kick.com/*",
     "https://*.kick.com/*",
     "https://www.youtube.com/*",

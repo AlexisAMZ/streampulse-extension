@@ -111,6 +111,16 @@
         z-index: 10;
         transition: opacity 0.2s ease;
       }
+      .streampulse-unmuted-segment.streampulse-locked-segment {
+        background: repeating-linear-gradient(
+          -45deg,
+          rgba(0, 245, 155, 0.4),
+          rgba(0, 245, 155, 0.4) 4px,
+          rgba(0, 245, 155, 0.15) 4px,
+          rgba(0, 245, 155, 0.15) 8px
+        );
+        box-shadow: none;
+      }
       .streampulse-purged-segment {
         position: absolute;
         top: 0;
@@ -335,7 +345,7 @@
           </div>
         `;
       } else {
-        const text = getTooltipText();
+        const text = plusActive ? getTooltipText() : "Audio disponible avec StreamPulse+";
         tip.innerHTML = `
           <div class="sp-pager-case">
             <span class="sp-pager-tag">StreamPulse+</span>
@@ -368,7 +378,7 @@
     });
   }
 
-  function paintSeekbar() {
+  function paintSeekbar(isPlus = plusActive) {
     ensureStyles();
     const seekbar = document.querySelector("div.seekbar-bar");
     if (!seekbar || totalVodDuration <= 0) return;
@@ -381,16 +391,18 @@
     const mergedRestored = mergeContinuousRanges(restoredRanges);
     for (const range of mergedRestored) {
       const segEl = document.createElement("div");
-      segEl.className = "streampulse-unmuted-segment";
+      if (!isPlus) {
+        segEl.className = "streampulse-unmuted-segment streampulse-locked-segment";
+        segEl.title = `StreamPulse+ : Audio disponible avec StreamPulse+ (${formatTimecode(range.startTime)} · ${formatTimecode(range.startTime + range.duration)})`;
+      } else {
+        segEl.className = "streampulse-unmuted-segment";
+        segEl.title = `StreamPulse+ : Récupéré grâce à StreamPulse+ (${formatTimecode(range.startTime)} · ${formatTimecode(range.startTime + range.duration)})`;
+      }
       const leftPercent = (range.startTime / totalVodDuration) * 100;
       const widthPercent = (range.duration / totalVodDuration) * 100;
 
-      const startTc = formatTimecode(range.startTime);
-      const endTc = formatTimecode(range.startTime + range.duration);
-
       segEl.style.left = `${leftPercent.toFixed(3)}%`;
       segEl.style.width = `${Math.max(0.25, widthPercent).toFixed(3)}%`;
-      segEl.title = `StreamPulse+ : Récupéré grâce à StreamPulse+ (${startTc} · ${endTc})`;
       seekbar.appendChild(segEl);
     }
 
@@ -550,9 +562,9 @@
         if (validBatch.length > 0) {
           restoredRanges = validBatch;
           purgedRanges = purgedBatch;
-          paintSeekbar();
-
           const isUserPlus = Boolean(data.isPlus || plusActive);
+          paintSeekbar(isUserPlus);
+
           if (isUserPlus) {
             installRulesForRanges(validBatch);
           } else if (!promoShown) {
@@ -563,7 +575,7 @@
           purgedRanges = purgedBatch;
           restoredRanges = [];
           if (purgedBatch.length > 0) {
-            paintSeekbar();
+            paintSeekbar(false);
           }
           if (!indicatorShown) {
             indicatorShown = true;
@@ -612,7 +624,7 @@
       const seekbar = document.querySelector("div.seekbar-bar");
       if (seekbar && (restoredRanges.length > 0 || purgedRanges.length > 0) &&
           !seekbar.querySelector(".streampulse-unmuted-segment, .streampulse-purged-segment")) {
-        paintSeekbar();
+        paintSeekbar(plusActive);
       }
     } else if (currentVodId) {
       resetVodState(true);

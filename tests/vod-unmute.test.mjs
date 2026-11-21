@@ -33,13 +33,30 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
         addListener() {},
       },
     },
+    storage: {
+      local: {
+        _data: {},
+        async get(keys) {
+          if (typeof keys === "string") return { [keys]: this._data[keys] };
+          if (Array.isArray(keys)) {
+            const res = {};
+            for (const k of keys) res[k] = this._data[k];
+            return res;
+          }
+          return { ...this._data };
+        },
+        async set(obj) {
+          Object.assign(this._data, obj);
+        },
+      },
+    },
   };
 
   const { handleVodUnmuteInstallRules, clearVodRulesForTab, pruneOrphanVodRules } = await import(
     `../js/sw/vod-unmute.js?t=${Date.now()}`
   );
 
-  // 1. Installation de 95 segments muets (doit générer 3 règles de 40 max par regex)
+  // 1. Installation de 95 segments muets (doit générer 3 règles de redirection + 1 règle modifyHeaders CORS)
   const segmentIds = Array.from({ length: 95 }, (_, i) => String(900 + i));
   const res = await handleVodUnmuteInstallRules(
     { segmentIds, append: false },
@@ -47,20 +64,31 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
   );
 
   assert.equal(res.ok, true);
-  assert.equal(res.count, 3);
-  assert.equal(fakeRules.length, 3);
+  assert.equal(res.count, 4);
+  assert.equal(fakeRules.length, 4);
 
-  // Vérification de la première règle
+  // Vérification de la première règle (redirection)
   const firstRule = fakeRules[0];
   assert.equal(firstRule.condition.tabIds[0], 10);
+  assert.equal(firstRule.priority, 2);
   assert.equal(firstRule.action.type, "redirect");
   assert.equal(firstRule.action.redirect.regexSubstitution, "\\1\\2\\3");
 
-  // Test de la regex sur différentes qualités et domaines
+  // Vérification de la règle modifyHeaders CORS (dédiée au contournement 403 S3)
+  const corsRule = fakeRules[3];
+  assert.equal(corsRule.priority, 1);
+  assert.equal(corsRule.action.type, "modifyHeaders");
+  assert.equal(corsRule.action.requestHeaders[0].header, "Origin");
+  assert.equal(corsRule.action.requestHeaders[0].operation, "remove");
+  assert.equal(corsRule.action.responseHeaders[0].header, "Access-Control-Allow-Origin");
+  assert.equal(corsRule.action.responseHeaders[0].value, "https://www.twitch.tv");
+
+  // Test de la regex sur différentes qualités et domaines (y compris twitch.tv)
   const re = new RegExp(firstRule.condition.regexFilter);
   const testUrlChunked = "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/900-unmuted.ts";
   const testUrl720p = "https://d2vi6trrdongqn.cloudfront.net/hash/720p60/915-muted.ts?sig=abc";
   const testUrlTtvnw = "https://video-edge.ttvnw.net/v1/1080p60/939-muted.ts";
+  const testUrlTwitch = "https://vod-metro.twitch.tv/v1/1080p60/900-muted.ts";
   const testUrlOther = "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/945-unmuted.ts"; // dans la 2ème règle
 
   assert.equal(re.test(testUrlChunked), true);
@@ -71,6 +99,9 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
 
   assert.equal(re.test(testUrlTtvnw), true);
   assert.equal(testUrlTtvnw.replace(re, "$1$2$3"), "https://video-edge.ttvnw.net/v1/1080p60/939.ts");
+
+  assert.equal(re.test(testUrlTwitch), true);
+  assert.equal(testUrlTwitch.replace(re, "$1$2$3"), "https://vod-metro.twitch.tv/v1/1080p60/900.ts");
 
   // Support des flux modernes au format mp4 / m4s
   const testUrlMp4 = "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/900-muted.mp4";
@@ -95,7 +126,7 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
     { tab: { id: 10 } }
   );
   assert.equal(unmutedRedirectRes.ok, true);
-  assert.equal(fakeRules.length, 1);
+  assert.equal(fakeRules.length, 2); // 1 redirection + 1 modifyHeaders CORS
   const unmutedRule = fakeRules[0];
   assert.equal(unmutedRule.action.redirect.regexSubstitution, "\\1\\2-unmuted\\3");
   const reUnmuted = new RegExp(unmutedRule.condition.regexFilter);
@@ -132,11 +163,31 @@ test("VOD Unmute : résolution distante via le service worker", async () => {
   // Mock de fetch global pour tester la réponse valide
   const originalFetch = global.fetch;
   try {
+    // Configuration du stockage local avec licence active et identifiant d'appareil
+    await global.chrome.storage.local.set({
+      streamPulseDeviceId: "0123456789abcdef0123456789abcdef",
+      streamPulsePlus: {
+        licenseKey: "SP-TEST-KEY1-KEY2-KEY3",
+        plan: "lifetime",
+        role: "admin",
+        since: 1600000000,
+        referrals: 2,
+        iat: 1700000000,
+        sig: "fake_signature_abc",
+        twitch: "98765432",
+      },
+    });
+
+    let sentBody = null;
     global.fetch = async (url, opts) => {
       assert.ok(url.includes("vod-unmute"));
       assert.equal(opts.method, "POST");
-      const body = JSON.parse(opts.body);
-      assert.equal(body.vodId, "123456");
+      sentBody = JSON.parse(opts.body);
+      assert.equal(sentBody.vodId, "123456");
+      assert.equal(sentBody.license?.key, "SP-TEST-KEY1-KEY2-KEY3");
+      assert.equal(sentBody.license?.device, "0123456789abcdef0123456789abcdef");
+      assert.equal(sentBody.license?.sig, "fake_signature_abc");
+      assert.equal(sentBody.license?.twitch, "98765432");
       return {
         ok: true,
         json: async () => ({
@@ -162,6 +213,7 @@ test("VOD Unmute : résolution distante via le service worker", async () => {
     assert.equal(validRes.vodId, "123456");
     assert.equal(validRes.isPlus, true);
     assert.equal(validRes.restoredRanges.length, 1);
+    assert.ok(sentBody?.license);
   } finally {
     global.fetch = originalFetch;
   }

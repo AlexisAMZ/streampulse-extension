@@ -1,5 +1,7 @@
 // StreamPulse+ : Gestion des règles de redirection declarativeNetRequest pour la lecture vidéo.
 
+import { getDeviceId, verifyLicense } from "../plus.js";
+
 const REMOTE_UNMUTE_URL = "https://streampulse.tech/api/vod-unmute";
 
 let updateQueue = Promise.resolve();
@@ -143,13 +145,13 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
 
           addRules.push({
             id: ruleId,
-            priority: 1,
+            priority: 2,
             action: {
               type: "redirect",
               redirect: { regexSubstitution: isUnmutedTarget ? "\\1\\2-unmuted\\3" : "\\1\\2\\3" },
             },
             condition: {
-              regexFilter: `^(https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net)/.+/)(${pattern})-(?:muted|unmuted)(\\.(?:ts|mp4|m4s)(?:\\?.*)?)$`,
+              regexFilter: `^(https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net|\\.twitch\\.tv)/.+/)(${pattern})-(?:muted|unmuted)(\\.(?:ts|mp4|m4s)(?:\\?.*)?)$`,
               tabIds: [tabId],
               resourceTypes: ["xmlhttprequest", "media", "other"],
             },
@@ -174,7 +176,7 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
 
           addRules.push({
             id: ruleId,
-            priority: 1,
+            priority: 2,
             action: {
               type: "redirect",
               redirect: { url: item.targetUrl },
@@ -186,6 +188,33 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
             },
           });
         }
+      }
+
+      // Règle modifyHeaders pour lever le blocage CORS Amazon S3 sur les segments réorientés.
+      // S3 rejette (403 AccessDenied) tout appel portant l'en-tête Origin vers les segments audio bruts.
+      // On retire Origin en sortie vers S3 et on injecte Access-Control-Allow-Origin pour le lecteur Twitch.
+      if (addRules.length > 0) {
+        const corsRuleId = allocateRuleId(usedIds);
+        addRules.push({
+          id: corsRuleId,
+          priority: 1,
+          action: {
+            type: "modifyHeaders",
+            requestHeaders: [
+              { header: "Origin", operation: "remove" },
+            ],
+            responseHeaders: [
+              { header: "Access-Control-Allow-Origin", operation: "set", value: "https://www.twitch.tv" },
+              { header: "Access-Control-Allow-Credentials", operation: "set", value: "true" },
+              { header: "Access-Control-Allow-Methods", operation: "set", value: "GET, HEAD, OPTIONS" },
+            ],
+          },
+          condition: {
+            regexFilter: "^https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net|\\.twitch\\.tv)/.+/\\d+(?:-(?:muted|unmuted))?\\.(?:ts|mp4|m4s)(?:\\?.*)?$",
+            tabIds: [tabId],
+            resourceTypes: ["xmlhttprequest", "media", "other"],
+          },
+        });
       }
 
       if (staleIds.length > 0 || addRules.length > 0) {
@@ -242,19 +271,34 @@ export function handleVodUnmuteResolve(message, sender, sendResponse) {
     let license = null;
     if (chrome.storage?.local) {
       try {
-        const stored = await chrome.storage.local.get("streamPulsePlus");
-        const record = stored?.streamPulsePlus;
-        if (record && record.licenseKey && record.sig) {
+        const stored = await chrome.storage.local.get(["streamPulsePlus", "streamPulseDeviceId"]);
+        let record = stored?.streamPulsePlus;
+        let device = stored?.streamPulseDeviceId;
+        if (!device && typeof getDeviceId === "function") {
+          device = await getDeviceId(chrome.storage.local);
+        }
+        if (record && record.licenseKey && !record.sig && typeof verifyLicense === "function") {
+          try {
+            const verified = await verifyLicense(record.licenseKey, fetch, Date.now(), device || "");
+            if (verified?.ok && verified.record) {
+              record = verified.record;
+              await chrome.storage.local.set({ streamPulsePlus: record });
+            }
+          } catch (_vErr) {
+            // Tolérance réseau
+          }
+        }
+        if (record && record.licenseKey) {
           license = {
             key: record.licenseKey,
-            device: record.device,
-            plan: record.plan,
-            role: record.role,
-            since: record.since,
-            referrals: record.referrals,
-            iat: record.iat,
-            sig: record.sig,
-            twitch: record.twitchAccount,
+            device: device || record.device || "",
+            plan: record.plan || "",
+            role: record.role || "",
+            since: record.since || 0,
+            referrals: record.referrals || 0,
+            iat: record.iat || 0,
+            sig: record.sig || "",
+            twitch: record.twitch || "",
           };
         }
       } catch (_e) {
@@ -268,7 +312,8 @@ export function handleVodUnmuteResolve(message, sender, sendResponse) {
       const isCompletelyPurged = Boolean(
         cached.data?.purgedByTwitch && (!cached.data?.restoredRanges || cached.data?.restoredRanges.length === 0)
       );
-      if (!isCompletelyPurged && (!license || Boolean(cached.data?.isPlus))) {
+      const needsPlusUpgrade = Boolean(license?.sig) && !cached.data?.isPlus;
+      if (!isCompletelyPurged && !needsPlusUpgrade && (!license || Boolean(cached.data?.isPlus))) {
         return cached.data;
       }
     }
