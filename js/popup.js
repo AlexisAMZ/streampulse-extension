@@ -52,6 +52,7 @@ import { initNotificationControls } from "./popup-notifications.js";
 import { initWatchLater } from "./popup-watch-later.js";
 import { initLinkedAccounts } from "./popup-linked-accounts.js";
 import { ACCENT_KEY, initProfileCard } from "./popup-profile-card.js";
+import { initClipsTab, renderClipsPanel } from "./popup-clips.js";
 
 const defaultPreferences = DEFAULT_PREFERENCES;
 let preferenceControls = null;
@@ -1582,7 +1583,7 @@ async function renderEventLogs() {
  * Rubriques des Réglages qui ont aussi leur onglet dans la barre du haut :
  * l'onglet surligné suit la rubrique affichée.
  */
-const PANEL_TABS = new Set(["drops", "badges", "history"]);
+const PANEL_TABS = new Set(["drops", "badges", "history", "clips"]);
 
 function highlightTab(tabName) {
   tabButtons.forEach((button) => {
@@ -1631,6 +1632,8 @@ function setActiveTab(tabName) {
     settingsSection?.classList.remove("hidden");
     if (tabName === "history") {
       renderHistory().catch(() => {});
+    } else if (tabName === "clips") {
+      renderClipsPanel().catch(() => {});
     } else {
       renderEventLogs().catch(() => {});
       if (!_watchTimeLoaded) {
@@ -2142,6 +2145,8 @@ function showMenuPanel(panelName, { focus = false } = {}) {
   historyView?.classList.toggle("hidden", panelName !== "history");
   if (panelName === "history") {
     renderHistory().catch(() => {});
+  } else if (panelName === "clips") {
+    renderClipsPanel().catch(() => {});
   }
   const panels = document.getElementById("menu-panels");
   if (panels) panels.scrollTop = 0;
@@ -2495,6 +2500,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         getPreferences: () => state.preferences,
       }).catch((error) => console.warn("[popup] notification tools init failed:", error)),
       () => initWatchLater().catch((error) => console.warn("[popup] watch later init failed:", error)),
+      () => { initClipsTab(); },
       () => {
         const linkedMount = document.getElementById("linked-accounts-mount");
         if (linkedMount && !document.getElementById("linked-accounts")) {

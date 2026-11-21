@@ -98,6 +98,8 @@
       "clipDownloading": "Téléchargement du clip…",
       "clipDownloadFailed": "Téléchargement impossible. Recharge la page du clip et réessaie.",
       "clipOpenEditor": "Monter avec StreamPulse Clips",
+      "clipDirect": "StreamPulse Clips : Cliper et monter en 9:16 direct",
+      "clipCreating": "Création du clip en cours…",
       "latencyEmpty": "Latence : --",
       "latencyValue": "Latence : {{value}}s",
       "offline": "HORS LIGNE"
@@ -285,6 +287,8 @@
       "clipDownloading": "Downloading clip…",
       "clipDownloadFailed": "Download failed. Reload the clip page and try again.",
       "clipOpenEditor": "Edit with StreamPulse Clips",
+      "clipDirect": "StreamPulse Clips: Direct clip & 9:16 vertical edit",
+      "clipCreating": "Creating clip…",
       "latencyEmpty": "Latency: --",
       "latencyValue": "Latency: {{value}}s",
       "offline": "OFFLINE"
@@ -473,6 +477,8 @@
       "clipDownloading": "Descargando clip…",
       "clipDownloadFailed": "No se ha podido descargar. Recarga la página del clip y vuelve a intentarlo.",
       "clipOpenEditor": "Editar con StreamPulse Clips",
+      "clipDirect": "StreamPulse Clips: Crear clip y editar en 9:16 directo",
+      "clipCreating": "Creando clip…",
       "latencyEmpty": "Latencia: --",
       "latencyValue": "Latencia: {{value}}s",
       "offline": "DESCONECTADO"
@@ -661,6 +667,8 @@
       "clipDownloading": "Baixando clipe…",
       "clipDownloadFailed": "Não foi possível baixar. Recarregue a página do clipe e tente de novo.",
       "clipOpenEditor": "Editar com o StreamPulse Clips",
+      "clipDirect": "StreamPulse Clips: Criar clipe e editar em 9:16 direto",
+      "clipCreating": "Criando clipe…",
       "latencyEmpty": "Latência: --",
       "latencyValue": "Latência: {{value}}s",
       "offline": "OFFLINE"
@@ -848,6 +856,8 @@
       "clipDownloading": "Clip wird heruntergeladen…",
       "clipDownloadFailed": "Download nicht möglich. Lade die Clipseite neu und versuch es noch mal.",
       "clipOpenEditor": "Mit StreamPulse Clips bearbeiten",
+      "clipDirect": "StreamPulse Clips: Direkt clippen und in 9:16 bearbeiten",
+      "clipCreating": "Clip wird erstellt…",
       "latencyEmpty": "vorzuspulen Latenz: --",
       "latencyValue": "Latenz: {{value}}s",
       "offline": "OFFLINE"
@@ -1036,6 +1046,8 @@
       "clipDownloading": "Download della clip…",
       "clipDownloadFailed": "Download non riuscito. Ricarica la pagina della clip e riprova.",
       "clipOpenEditor": "Modifica con StreamPulse Clips",
+      "clipDirect": "StreamPulse Clips: Crea clip e modifica in 9:16 diretto",
+      "clipCreating": "Creazione clip in corso…",
       "latencyEmpty": "Latenza: --",
       "latencyValue": "Latenza: {{value}}s",
       "offline": "OFFLINE"
@@ -1225,6 +1237,8 @@
       "clipDownloading": "Pobieranie klipu…",
       "clipDownloadFailed": "Nie udało się pobrać. Odśwież stronę klipu i spróbuj ponownie.",
       "clipOpenEditor": "Edytuj w StreamPulse Clips",
+      "clipDirect": "StreamPulse Clips: Twórz klipy i montuj w 9:16",
+      "clipCreating": "Tworzenie klipu…",
       "latencyEmpty": "Opóźnienie: --",
       "latencyValue": "Opóźnienie: {{value}} s",
       "offline": "OFFLINE"
@@ -1412,6 +1426,8 @@
       "clipDownloading": "Klip indiriliyor…",
       "clipDownloadFailed": "İndirilemedi. Klip sayfasını yenileyip tekrar dene.",
       "clipOpenEditor": "StreamPulse Clips ile düzenle",
+      "clipDirect": "StreamPulse Clips: Doğrudan klip al ve 9:16 düzenle",
+      "clipCreating": "Klip oluşturuluyor…",
       "latencyEmpty": "Gecikme: --",
       "latencyValue": "Gecikme süresi: {{value}} saniye",
       "offline": "ÇEVRİMDIŞI"
@@ -1601,6 +1617,8 @@
       "clipDownloading": "Скачивание клипа…",
       "clipDownloadFailed": "Не удалось скачать. Перезагрузи страницу клипа и попробуй снова.",
       "clipOpenEditor": "Монтировать в StreamPulse Clips",
+      "clipDirect": "StreamPulse Clips: Быстрый клип и монтаж 9:16",
+      "clipCreating": "Создание клипа…",
       "latencyEmpty": "Задержка: --",
       "latencyValue": "Задержка: {{value}} с",
       "offline": "ОФЛАЙН"
@@ -1787,6 +1805,8 @@
       "clipDownloading": "クリップをダウンロード中…",
       "clipDownloadFailed": "ダウンロードできませんでした。クリップのページを再読み込みして、もう一度お試しください。",
       "clipOpenEditor": "StreamPulse Clips で編集",
+      "clipDirect": "StreamPulse Clips: ダイレクトクリップ＆9:16編集",
+      "clipCreating": "クリップ作成中…",
       "latencyEmpty": "遅延：--",
       "latencyValue": "遅延：{{value}}秒",
       "offline": "オフライン"
@@ -1973,6 +1993,8 @@
       "clipDownloading": "클립 다운로드 중…",
       "clipDownloadFailed": "다운로드할 수 없습니다. 클립 페이지를 새로고침한 뒤 다시 시도하세요.",
       "clipOpenEditor": "StreamPulse Clips로 편집",
+      "clipDirect": "StreamPulse Clips: 다이렉트 클립 및 9:16 세로 편집",
+      "clipCreating": "클립 생성 중…",
       "latencyEmpty": "지연 시간: --",
       "latencyValue": "지연 시간: {{value}}초",
       "offline": "오프라인"
@@ -2164,6 +2186,8 @@
       "clipDownloading": "جارٍ تنزيل المقطع…",
       "clipDownloadFailed": "فشل التنزيل. أعد تحميل صفحة المقطع وحاول مجددًا.",
       "clipOpenEditor": "تعديل باستخدام StreamPulse Clips",
+      "clipDirect": "StreamPulse Clips: قص وتعديل عمودي 9:16 مباشر",
+      "clipCreating": "جارٍ إنشاء المقطع…",
       "latencyEmpty": "زمن الاستجابة: --",
       "latencyValue": "زمن الاستجابة: {{value}} ث",
       "offline": "غير متصل"
@@ -2353,6 +2377,8 @@
       "clipDownloading": "Завантаження кліпу…",
       "clipDownloadFailed": "Завантаження не вдалося. Оновіть сторінку кліпу й спробуйте ще раз.",
       "clipOpenEditor": "Редагувати в StreamPulse Clips",
+      "clipDirect": "StreamPulse Clips: Швидкий кліп та монтаж 9:16",
+      "clipCreating": "Створення кліпу…",
       "latencyEmpty": "Затримка: --",
       "latencyValue": "Затримка: {{value}} с",
       "offline": "ОФЛАЙН"

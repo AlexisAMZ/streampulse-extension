@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import "../js/inject/clips-handoff.js";
 
-const { editorUrlForClipPath, EDITOR_ORIGIN } = globalThis.StreamPulseClipsHandoff;
+const { editorUrlForClipPath, editorUrlForClip, parseClipUrl, EDITOR_ORIGIN } = globalThis.StreamPulseClipsHandoff;
 const CANON = "https://www.twitch.tv/gotaga/clip/Abc-1_x";
 
 test("clip Twitch : ouvre l'éditeur avec le lien canonique du clip", () => {
@@ -37,4 +37,18 @@ test("identifiants hors alphabet du clip refusés", () => {
 
 test("entrée inattendue : null, sans exception", () => {
   for (const bad of [undefined, null, 42, {}, ""]) assert.equal(editorUrlForClipPath(bad), null);
+});
+
+test("parseClipUrl et editorUrlForClip : support clips.twitch.tv et kick.com", () => {
+  const twitchClips = parseClipUrl("https://clips.twitch.tv/GloriousBraveClip-xyz");
+  assert.equal(twitchClips?.platform, "twitch");
+  assert.equal(twitchClips?.slug, "GloriousBraveClip-xyz");
+
+  const kickClip = parseClipUrl("https://kick.com/streamer?clip=clip_01H1234567890ABCDEF");
+  assert.equal(kickClip?.platform, "kick");
+  assert.equal(kickClip?.slug, "clip_01H1234567890ABCDEF");
+
+  const kickUrl = new URL(editorUrlForClip("https://kick.com/streamer?clip=clip_01H1234567890ABCDEF", "test"));
+  assert.equal(kickUrl.origin, "https://spclips.com");
+  assert.equal(kickUrl.searchParams.get("utm_campaign"), "test");
 });

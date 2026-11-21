@@ -225,6 +225,6 @@ export async function initLayout() {
 }
 
 const DEFAULT_ORDER = {
-  tabs: ["streamers", "history", "drops", "badges", "settings"],
-  menu: ["general", "notifications", "rewards", "drops", "badges", "history", "activity", "player", "previews", "chat", "identity", "data", "plus", "help"],
+  tabs: ["streamers", "history", "clips", "drops", "badges", "settings"],
+  menu: ["general", "notifications", "rewards", "drops", "badges", "history", "clips", "activity", "player", "previews", "chat", "identity", "data", "plus", "help"],
 };

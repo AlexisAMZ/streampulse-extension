@@ -3,7 +3,7 @@
   "default_locale": "en",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "26.11.22",
+  "version": "26.11.23",
   "permissions": [
     "storage",
     "alarms",
@@ -210,10 +210,17 @@
       "resources": [
         "images/photos/128px.png",
         "images/photos/badge-mark.svg",
-        "images/photos/logosp-128.png"
+        "images/photos/logosp-128.png",
+        "images/photos/spclips-logo.png",
+        "images/photos/spclips-raw.png",
+        "images/photos/spclips-tile-48.png",
+        "images/photos/spclips-tile-192.png",
+        "images/photos/spclips-icon.svg",
+        "images/photos/spclips-tile.svg"
       ],
       "matches": [
         "https://www.twitch.tv/*",
+        "https://clips.twitch.tv/*",
         "https://www.youtube.com/*",
         "https://kick.com/*",
         "https://chzzk.naver.com/*"

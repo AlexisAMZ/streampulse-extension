@@ -93,7 +93,7 @@ export async function extensionPage(page, scenario, { stored = {}, search = "", 
   // uncached files while that clock races ahead can end --dump-dom too early.
   const modules = page === "onboarding"
     ? ["js/onboarding.js"]
-    : ["js/popup-layout.js", "js/popup-sounds.js", "js/popup-identity.js", "js/popup-points.js", "js/points-data.js", "js/linked-accounts.js", "js/popup-linked-accounts.js", "js/watch-later.js", "js/popup-watch-later.js", "js/popup-alert-scope.js", "js/alert-scope.js", "js/badges-data.js", "js/confetti.js"];
+    : ["js/popup-layout.js", "js/popup-clips.js", "js/popup-sounds.js", "js/popup-identity.js", "js/popup-points.js", "js/points-data.js", "js/linked-accounts.js", "js/popup-linked-accounts.js", "js/watch-later.js", "js/popup-watch-later.js", "js/popup-alert-scope.js", "js/alert-scope.js", "js/badges-data.js", "js/confetti.js"];
   const driver = `
     ${["js/i18n.js", "i18n/lang/en.js", "i18n/lang/fr.js", ...modules].map((path) => `import ${JSON.stringify(new URL(`../${path}`, base).href)};`).join("\n")}
     const { api, failures } = window.__pageTest;

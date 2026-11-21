@@ -52,6 +52,78 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.11.23",
+    "date": "2026-11-21",
+    "title": {
+      "fr": "Onglet StreamPulse Clips et intégration Twitch",
+      "en": "StreamPulse Clips Tab and Twitch Player Integration",
+      "uk": "Вкладка StreamPulse Clips та інтеграція з Twitch",
+      "es": "Pestaña StreamPulse Clips e integración con Twitch",
+      "pt-BR": "Aba StreamPulse Clips e integração com a Twitch",
+      "de": "StreamPulse Clips Tab und Twitch-Player-Integration",
+      "it": "Scheda StreamPulse Clips e integrazione con Twitch",
+      "pl": "Karta StreamPulse Clips i integracja z Twitch",
+      "tr": "StreamPulse Clips Sekmesi ve Twitch Oynatıcı Entegrasyonu",
+      "ru": "Вкладка StreamPulse Clips и интеграция с Twitch",
+      "ja": "StreamPulse Clips タブと Twitch プレイヤー統合",
+      "ko": "StreamPulse Clips 탭 및 Twitch 플레이어 연동",
+      "ar": "علامة تبويب StreamPulse Clips والتكامل مع مشغل Twitch",
+      "id": "Tab StreamPulse Clips dan Integrasi Pemutar Twitch",
+      "nl": "StreamPulse Clips-tabblad en Twitch-spelerintegratie",
+      "sv": "StreamPulse Clips-flik och integration med Twitch-spelaren",
+      "cs": "Karta StreamPulse Clips a integrace přehrávače Twitch"
+    },
+    "changes": [
+      {
+        "type": "feat",
+        "area": "interface",
+        "text": {
+          "fr": "Nouvel onglet dédié StreamPulse Clips reprenant entièrement la direction artistique du studio 9:16 : convertisseur de lien direct, maquette smartphone et explications.",
+          "en": "New dedicated StreamPulse Clips tab adopting the full 9:16 studio design: direct link converter, smartphone mockup, and complete feature walkthrough.",
+          "uk": "Нова окрема вкладка StreamPulse Clips у стилі студії 9:16: конвертер посилань, макет смартфона та повний опис можливостей.",
+          "es": "Nueva pestaña dedicada a StreamPulse Clips con el diseño completo del estudio 9:16: conversor de enlaces directo, maqueta de móvil y explicación detallada.",
+          "pt-BR": "Nova aba dedicada ao StreamPulse Clips com o visual completo do estúdio 9:16: conversor de link direto, mockup de celular e explicação detalhada.",
+          "de": "Neuer StreamPulse Clips Tab im vollständigen 9:16-Studio-Design: direkter Link-Konverter, Smartphone-Mockup und Funktionsübersicht.",
+          "it": "Nuova scheda StreamPulse Clips con il design completo dello studio 9:16: convertitore di link diretto, mockup smartphone e spiegazione dettagliata.",
+          "pl": "Nowa dedykowana karta StreamPulse Clips w pełnym stylu studia 9:16: bezpośredni konwerter linków, makieta smartfona i opis funkcji.",
+          "tr": "Tam 9:16 stüdyo tasarımına sahip yeni StreamPulse Clips sekmesi: doğrudan bağlantı dönüştürücü, akıllı telefon maketi ve özellik tanıtımı.",
+          "ru": "Новая вкладка StreamPulse Clips в фирменном стиле студии 9:16: прямой конвертер ссылок, макет смартфона и наглядный обзор возможностей.",
+          "ja": "9:16スタジオのデザインを採用した新しいStreamPulse Clipsタブ：直接リンク変換、スマホモックアップ、機能解説を搭載。",
+          "ko": "9:16 스튜디오 디자인이 적용된 StreamPulse Clips 전용 탭: 다이렉트 링크 변환기, 스마트폰 목업 및 기능 소개 제공.",
+          "ar": "علامة تبويب مخصصة لـ StreamPulse Clips بتصميم استوديو 9:16: محول روابط مباشر، نموذج هاتف ذكي، وشرح كامل للميزات.",
+          "id": "Tab khusus StreamPulse Clips baru dengan desain studio 9:16 lengkap: pengonversi tautan langsung, mockup ponsel cerdas, dan panduan fitur.",
+          "nl": "Nieuw speciaal StreamPulse Clips-tabblad met het volledige 9:16-studio-ontwerp: directe linkconverter, smartphone-mockup en functiegids.",
+          "sv": "Ny dedikerad StreamPulse Clips-flik med 9:16-studiodesign: direkt länk-konverterare, smartphone-mockup och funktionsöversikt.",
+          "cs": "Nová karta StreamPulse Clips v kompletním designu studia 9:16: přímý převodník odkazů, maketa smartphonu a přehled funkcí."
+        }
+      },
+      {
+        "type": "feat",
+        "area": "player",
+        "text": {
+          "fr": "Intégration du logo officiel StreamPulse Clips dans le lecteur Twitch avec clipage direct en un clic et passerelle vers l'éditeur 9:16.",
+          "en": "Official StreamPulse Clips logo integration in the Twitch player with one-click direct clipping and 9:16 editor handoff.",
+          "uk": "Інтеграція офіційного логотипа StreamPulse Clips у плеєр Twitch зі швидким кліпуванням в один клік і переходом до редактора 9:16.",
+          "es": "Integración del logotipo oficial de StreamPulse Clips en el reproductor de Twitch con clip directo en un clic y acceso al editor 9:16.",
+          "pt-BR": "Integração do logo oficial do StreamPulse Clips no player da Twitch com criação direta de clipes e acesso ao editor 9:16.",
+          "de": "Integration des offiziellen StreamPulse Clips-Logos im Twitch-Player mit direktem Clip-Erstellen per Klick und Weiterleitung zum 9:16-Editor.",
+          "it": "Integrazione del logo ufficiale StreamPulse Clips nel player di Twitch con creazione clip diretta e passaggio all'editor 9:16.",
+          "pl": "Integracja oficjalnego logo StreamPulse Clips w odtwarzaczu Twitch z bezpośrednim tworzeniem klipów jednym kliknięciem i przejściem do edytora 9:16.",
+          "tr": "Tek tıkla doğrudan klip alma ve 9:16 düzenleyiciye aktarma özelliğine sahip resmi StreamPulse Clips logosunun Twitch oynatıcıya entegrasyonu.",
+          "ru": "Официальный логотип StreamPulse Clips в плеере Twitch: создание клипа в один клик и быстрый переход в редактор 9:16.",
+          "ja": "Twitchプレイヤー内にStreamPulse Clips公式ロゴを統合：ワンクリックで直接クリップ作成と9:16エディター連携が可能に。",
+          "ko": "Twitch 플레이어 내 공식 StreamPulse Clips 로고 연동: 한 번의 클릭으로 다이렉트 클립 생성 및 9:16 편집기 연결 지원.",
+          "ar": "دمج شعار StreamPulse Clips الرسمي في مشغل Twitch مع إمكانية القص المباشر بنقرة واحدة والانتقال إلى محرر 9:16.",
+          "id": "Integrasi logo resmi StreamPulse Clips di pemutar Twitch dengan pembuatan klip langsung sekali klik dan transisi ke editor 9:16.",
+          "nl": "Integratie van het officiële StreamPulse Clips-logo in de Twitch-speler met directe clipcreatie met één klik en overgang naar de 9:16-editor.",
+          "sv": "Integration av den officiella StreamPulse Clips-logotypen i Twitch-spelaren med direkt klippskapande med ett klick och övergång till 9:16-redigeraren.",
+          "cs": "Integrace oficiálního loga StreamPulse Clips v přehrávači Twitch s vytvořením klipu jedním kliknutím a přechodem do editoru 9:16."
+        }
+      }
+    ]
+  },
+
+  {
     version: "26.11.22",
     "date": "2026-11-21",
     "title": {
