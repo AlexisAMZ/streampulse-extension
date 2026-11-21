@@ -52,6 +52,78 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.11.22",
+    "date": "2026-11-21",
+    "title": {
+      "fr": "Historique dans les réglages et disposition affinée",
+      "en": "History in Settings and Refined Layout",
+      "uk": "Історія в налаштуваннях та вдосконалений макет",
+      "es": "Historial en ajustes y diseño refinado",
+      "pt-BR": "Histórico nas configurações e layout refinado",
+      "de": "Verlauf in den Einstellungen und verfeinertes Layout",
+      "it": "Cronologia nelle impostazioni e layout perfezionato",
+      "pl": "Historia w ustawieniach i dopracowany układ",
+      "tr": "Ayarlarda Geçmiş ve İyileştirilmiş Düzen",
+      "ru": "История в настройках и обновлённая компоновка",
+      "ja": "設定内の履歴とレイアウトの最適化",
+      "ko": "설정 내 기록 및 다듬어진 레이아웃",
+      "ar": "السجل في الإعدادات وتخطيط محسّن",
+      "id": "Riwayat di Pengaturan dan Tata Letak yang Disempurnakan",
+      "nl": "Geschiedenis in instellingen en verfijnde indeling",
+      "sv": "Historik i inställningarna och förfinad layout",
+      "cs": "Historie v nastavení a vyladěné rozvržení"
+    },
+    "changes": [
+      {
+        "type": "improved",
+        "area": "interface",
+        "text": {
+          "fr": "L'historique des lives et rediffusions est désormais intégré directement dans les Réglages pour une interface principale plus épurée.",
+          "en": "Live and replay history is now integrated directly into Settings for a cleaner main interface.",
+          "uk": "Історія трансляцій і повторів тепер інтегрована безпосередньо в Налаштування для чистішого основного інтерфейсу.",
+          "es": "El historial de directos y repeticiones ahora está integrado directamente en Ajustes para una interfaz principal más limpia.",
+          "pt-BR": "O histórico de transmissões e reprises agora está integrado diretamente nas Configurações para uma interface principal mais limpa.",
+          "de": "Der Verlauf von Lives und Wiederholungen ist nun direkt in die Einstellungen integriert, was die Hauptoberfläche übersichtlicher macht.",
+          "it": "La cronologia delle live e delle repliche è ora integrata directement nelle Impostazioni per un'interfaccia principale più ordinata.",
+          "pl": "Historia transmisji i powtórek jest teraz zintegrowana bezpośrednio w Ustawieniach, co upraszcza główny interfejs.",
+          "tr": "Yayın ve tekrar geçmişi, daha sade bir ana arayüz için artık doğrudan Ayarlar bölümüne entegre edildi.",
+          "ru": "История трансляций и записей теперь встроена напрямую в Настройки для более лаконичного интерфейса.",
+          "ja": "メイン画面をよりすっきり保つため、配信とアーカイブの履歴が設定内に直接統合されました。",
+          "ko": "더욱 깔끔한 기본 인터페이스를 위해 라이브 및 다시보기 기록이 설정 내로 직접 통합되었습니다.",
+          "ar": "تم دمج سجل البث المباشر والإعادة الآن مباشرة في الإعدادات لواجهة رئيسية أكثر ترتيبًا.",
+          "id": "Riwayat siaran langsung dan tayangan ulang kini terintegrasi langsung ke Pengaturan agar antarmuka utama lebih bersih.",
+          "nl": "De geschiedenis van livestreams en herhalingen is nu direct opgenomen in de Instellingen voor een overzichtelijkere hoofdinterface.",
+          "sv": "Historik över livesändningar och repriser är nu integrerad direkt i Inställningar för ett renare gränssnitt.",
+          "cs": "Historie vysílání a záznamů je nyní integrována přímo do Nastavení pro přehlednější hlavní rozhraní."
+        }
+      },
+      {
+        "type": "feat",
+        "area": "interface",
+        "text": {
+          "fr": "L'onglet Historique de la barre supérieure est masqué par défaut mais reste réactivable à tout moment dans Général > Disposition.",
+          "en": "The History tab in the top bar is hidden by default but can be re-enabled at any time in General > Layout.",
+          "uk": "Вкладка Історія у верхній панелі прихована за замовчуванням, але її можна будь-коли увімкнути в Загальні > Макет.",
+          "es": "La pestaña Historial de la barra superior está oculta por defecto, pero se puede reactivar en cualquier momento en General > Diseño.",
+          "pt-BR": "A aba Histórico na barra superior fica oculta por padrão, mas pode ser reativada a qualquer momento em Geral > Layout.",
+          "de": "Der Tab Verlauf in der oberen Leiste ist standardmäßig ausgeblendet, kann jedoch jederzeit unter Allgemein > Layout wieder aktiviert werden.",
+          "it": "La scheda Cronologia nella barra superiore è nascosta per impostazione predefinita, ma può essere riattivata in qualsiasi momento in Generale > Layout.",
+          "pl": "Karta Historia na górnym pasku jest domyślnie ukryta, lecz można ją w każdej chwili włączyć w Ogólne > Układ.",
+          "tr": "Üst çubuktaki Geçmiş sekmesi varsayılan olarak gizlendi, ancak Genel > Düzen bölümünden istenildiği zaman yeniden etkinleştirilebilir.",
+          "ru": "Вкладка История на верхней панели скрыта по умолчанию, но её можно снова включить в любое время в меню Общие > Компоновка.",
+          "ja": "トップバーの履歴タブは初期状態で非表示になりましたが、一般 > レイアウトからいつでも再表示できます。",
+          "ko": "상단 바의 기록 탭은 기본적으로 숨겨져 있지만 일반 > 레이아웃에서 언제든지 다시 활성화할 수 있습니다.",
+          "ar": "علامة تبويب السجل في الشريط العلوي مخفية افتراضيًا ولكن يمكن إعادة تفعيلها في أي وقت عبر عام > التخطيط.",
+          "id": "Tab Riwayat di bilah atas disembunyikan secara default tetapi dapat diaktifkan kembali kapan saja di Umum > Tata Letak.",
+          "nl": "Het tabblad Geschiedenis in de bovenste balk is standaard verborgen, maar kan op elk moment weer worden ingeschakeld via Algemeen > Indeling.",
+          "sv": "Fliken Historik i toppfältet är dold som standard men kan aktiveras när som helst under Allmänt > Layout.",
+          "cs": "Karta Historie v horní liště je ve výchozím stavu skrytá, ale lze ji kdykoli znovu zapnout v Obecné > Rozvržení."
+        }
+      }
+    ]
+  },
+
+  {
     version: "26.11.21",
     "date": "2026-11-21",
     "title": {

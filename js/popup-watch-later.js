@@ -60,6 +60,15 @@ export async function saveWatchLater(input = {}) {
 export async function initWatchLater() {
   const root = document.getElementById("watch-later");
   if (!root) return null;
+  if (typeof root.closest === "function") {
+    const historyView = root.closest("#history-view") || document?.getElementById?.("history-view");
+    if (historyView && !historyView.classList?.contains?.("hidden")) {
+      const panel = historyView.closest?.(".menu-panel");
+      if (panel) panel.hidden = false;
+      const menu = historyView.closest?.(".menu");
+      if (menu) menu.classList?.remove?.("hidden");
+    }
+  }
   const existing = instances.get(root);
   if (existing) {
     await existing.refresh();

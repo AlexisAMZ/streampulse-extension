@@ -1582,7 +1582,7 @@ async function renderEventLogs() {
  * Rubriques des Réglages qui ont aussi leur onglet dans la barre du haut :
  * l'onglet surligné suit la rubrique affichée.
  */
-const PANEL_TABS = new Set(["drops", "badges"]);
+const PANEL_TABS = new Set(["drops", "badges", "history"]);
 
 function highlightTab(tabName) {
   tabButtons.forEach((button) => {
@@ -1598,7 +1598,7 @@ function setActiveTab(tabName) {
   if (PANEL_TABS.has(tabName)) {
     showMenuPanel(tabName);
   } else if (tabName === "settings") {
-    // « Réglages » ne rouvre pas Drops ou Badges : ils ont leur propre onglet.
+    // « Réglages » ne rouvre pas Drops, Badges ou Historique : ils ont leur propre onglet.
     const current = document.querySelector('.menu-nav .menu-tab[aria-selected="true"]')?.dataset.panel;
     const first = [...document.querySelectorAll(".menu-nav .menu-tab")].find((tab) => !tab.hidden && !PANEL_TABS.has(tab.dataset.panel));
     const target = current && !PANEL_TABS.has(current) ? current : first?.dataset.panel;
@@ -1623,23 +1623,23 @@ function setActiveTab(tabName) {
   if (tabName === "streamers") {
     streamersView?.classList.remove("hidden");
     settingsSection?.classList.add("hidden");
-  } else if (tabName === "history") {
-    streamersView?.classList.add("hidden");
-    settingsSection?.classList.add("hidden");
-    renderHistory().catch(() => {});
   } else if (tabName === "watch-later") {
     streamersView?.classList.add("hidden");
     settingsSection?.classList.add("hidden");
   } else {
     streamersView?.classList.add("hidden");
     settingsSection?.classList.remove("hidden");
-    renderEventLogs().catch(() => {});
-    if (!_watchTimeLoaded) {
-      _watchTimeLoaded = true;
-      renderWatchTimeSummary().catch(() => {});
+    if (tabName === "history") {
+      renderHistory().catch(() => {});
+    } else {
+      renderEventLogs().catch(() => {});
+      if (!_watchTimeLoaded) {
+        _watchTimeLoaded = true;
+        renderWatchTimeSummary().catch(() => {});
+      }
     }
   }
-  settingsSection?.classList.toggle("hidden", tabName === "streamers" || tabName === "history" || tabName === "watch-later");
+  settingsSection?.classList.toggle("hidden", tabName === "streamers" || tabName === "watch-later");
 }
 
 async function loadStreamers() {
@@ -2138,11 +2138,17 @@ function showMenuPanel(panelName, { focus = false } = {}) {
   document.querySelectorAll(".menu-panel").forEach((panel) => {
     panel.hidden = panel.id !== `menu-${panelName}`;
   });
+  const historyView = document.getElementById("history-view");
+  historyView?.classList.toggle("hidden", panelName !== "history");
+  if (panelName === "history") {
+    renderHistory().catch(() => {});
+  }
   const panels = document.getElementById("menu-panels");
   if (panels) panels.scrollTop = 0;
   markSeen(panelName);
-  if (currentTab !== "streamers" && currentTab !== "history") {
-    currentTab = PANEL_TABS.has(panelName) ? panelName : "settings";
+  if (currentTab !== "streamers") {
+    const panelTab = document.querySelector(`.tabs > .tab-button[data-tab="${panelName}"]`);
+    currentTab = (PANEL_TABS.has(panelName) && panelTab && !panelTab.hidden) ? panelName : "settings";
     highlightTab(currentTab);
   }
 }

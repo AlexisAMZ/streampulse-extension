@@ -18,8 +18,8 @@ const LISTS = {
   menu: { container: () => document.querySelector(".menu-nav"), items: () => [...document.querySelectorAll(".menu-nav .menu-tab")], id: (node) => node.dataset.panel },
 };
 
-// Drops reste dans les Réglages : l'onglet du haut est masqué d'office, à réactiver dans Général › Disposition.
-const DEFAULT_HIDDEN = { tabs: ["drops"], menu: [] };
+// Drops et Historique restent dans les Réglages : les onglets du haut sont masqués d'office, à réactiver dans Général › Disposition.
+const DEFAULT_HIDDEN = { tabs: ["drops", "history"], menu: [] };
 
 let layout = { tabs: { order: [], hidden: [...DEFAULT_HIDDEN.tabs] }, menu: { order: [], hidden: [] } };
 let initialized = false;
@@ -226,5 +226,5 @@ export async function initLayout() {
 
 const DEFAULT_ORDER = {
   tabs: ["streamers", "history", "drops", "badges", "settings"],
-  menu: ["general", "notifications", "rewards", "drops", "badges", "activity", "player", "previews", "chat", "identity", "data", "plus", "help"],
+  menu: ["general", "notifications", "rewards", "drops", "badges", "history", "activity", "player", "previews", "chat", "identity", "data", "plus", "help"],
 };
