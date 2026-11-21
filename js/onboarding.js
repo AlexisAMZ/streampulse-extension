@@ -1062,8 +1062,7 @@ function plusFxChip(kind, value) {
   button.setAttribute("aria-checked", String(selected));
   if (lock) button.setAttribute("aria-disabled", "true");
   const label = t(`popup.cosmetics.${value || "none"}`);
-  // Effet d'ambassadeur verrouillé : l'infobulle dit combien de filleuls il manque.
-  button.title = lock === "referrals" ? t("popup.referral.needed", { count: REFERRAL_FX[value] || 1 }) : label;
+  button.title = label;
   button.append(Object.assign(document.createElement("span"), { className: "fx-radio" }));
   if (kind === "name") {
     button.append(Object.assign(document.createElement("b"), {
@@ -1076,7 +1075,20 @@ function plusFxChip(kind, value) {
     }));
     button.append(Object.assign(document.createElement("span"), { className: "fx-label", textContent: label }));
   }
-  if (lock) {
+  if (lock === "referrals") {
+    const needed = REFERRAL_FX[value] || 1;
+    button.title = t("popup.referral.needed", { count: needed });
+    button.append(Object.assign(document.createElement("span"), {
+      className: "fx-lock",
+      textContent: t("popup.referral.needed", { count: needed }),
+    }));
+  } else if (lock === "bughunter") {
+    button.title = t("popup.cosmetics.bughunterOnly");
+    button.append(Object.assign(document.createElement("span"), {
+      className: "fx-lock",
+      textContent: "🔒",
+    }));
+  } else if (lock) {
     button.append(Object.assign(document.createElement("span"), { className: "fx-lock", textContent: "★" }));
   }
   return button;
