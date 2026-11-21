@@ -69,7 +69,7 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
 
   // Vérification de la première règle (redirection)
   const firstRule = fakeRules[0];
-  assert.equal(firstRule.condition.tabIds[0], 10);
+  assert.equal(firstRule.condition.tabIds, undefined);
   assert.equal(firstRule.priority, 2);
   assert.equal(firstRule.action.type, "redirect");
   assert.equal(firstRule.action.redirect.regexSubstitution, "\\1\\2\\3");

@@ -580,6 +580,7 @@
         const purgedBatch = data.purgedRanges || [];
 
         if (validBatch.length > 0) {
+          console.log(`[StreamPulse] VOD ${vodId} : ${validBatch.length} segments audio restaurables detectes (${purgedBatch.length} purges)`);
           restoredRanges = validBatch;
           purgedRanges = purgedBatch;
           const isUserPlus = Boolean(data.isPlus || plusActive);

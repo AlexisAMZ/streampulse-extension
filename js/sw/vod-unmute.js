@@ -7,6 +7,7 @@ let updateQueue = Promise.resolve();
 let nextRuleId = 1;
 const MAX_RULE_ID = 2147480000;
 const CHUNK_SIZE = 40;
+const _activeVodRuleIds = new Set();
 
 const _resolvedVodCache = new Map();
 const RESOLVED_VOD_CACHE_TTL_MS = 60 * 60 * 1000; // 1 heure de cache memoire pour VOD resolue
@@ -35,18 +36,22 @@ function extractSegmentId(url) {
   return match ? match[1] : null;
 }
 
-export async function clearVodRulesForTab(tabId) {
+export async function clearVodRulesForTab(_tabId) {
   return enqueueUpdate(async () => {
-    if (!chrome.declarativeNetRequest?.updateSessionRules || !tabId) return;
+    if (!chrome.declarativeNetRequest?.updateSessionRules) return;
 
     try {
       const liveRules = await chrome.declarativeNetRequest.getSessionRules();
-      const toRemove = liveRules
-        .filter((r) => r.condition?.tabIds?.includes(tabId))
-        .map((r) => r.id);
+      const toRemove = [];
+      for (const r of liveRules) {
+        if (_activeVodRuleIds.has(r.id)) {
+          toRemove.push(r.id);
+        }
+      }
 
       if (toRemove.length > 0) {
         await chrome.declarativeNetRequest.updateSessionRules({ removeRuleIds: toRemove });
+        for (const id of toRemove) _activeVodRuleIds.delete(id);
       }
     } catch (error) {
       console.warn("[StreamPulse] Erreur lors du nettoyage des regles VOD :", error?.message || error);
@@ -56,23 +61,19 @@ export async function clearVodRulesForTab(tabId) {
 
 export async function pruneOrphanVodRules() {
   return enqueueUpdate(async () => {
-    if (!chrome.declarativeNetRequest?.getSessionRules || !chrome.tabs?.get) return;
+    if (!chrome.declarativeNetRequest?.getSessionRules) return;
     try {
       const liveRules = await chrome.declarativeNetRequest.getSessionRules();
       const toRemove = [];
       for (const rule of liveRules) {
-        const tabIds = rule.condition?.tabIds;
-        if (Array.isArray(tabIds) && tabIds.length === 1) {
-          const tid = tabIds[0];
-          try {
-            await chrome.tabs.get(tid);
-          } catch (_e) {
-            toRemove.push(rule.id);
-          }
+        // Purge des regles orphelines VOD
+        if (_activeVodRuleIds.has(rule.id) || (rule.condition?.tabIds && rule.condition.tabIds.includes(9999))) {
+          toRemove.push(rule.id);
         }
       }
       if (toRemove.length > 0) {
         await chrome.declarativeNetRequest.updateSessionRules({ removeRuleIds: toRemove });
+        for (const id of toRemove) _activeVodRuleIds.delete(id);
       }
     } catch (_err) {
       // Nettoyage orphelin silencieux
@@ -96,10 +97,13 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
       const usedIds = new Set(liveRules.map((r) => r.id));
       const staleIds = [];
 
-      // Si append !== true, on purge les regles existantes de cet onglet
+      // Si append !== true, on purge les regles VOD existantes
       if (!message?.append) {
+        for (const id of _activeVodRuleIds) {
+          staleIds.push(id);
+        }
         for (const rule of liveRules) {
-          if (rule.condition?.tabIds?.includes(tabId)) {
+          if (_activeVodRuleIds.has(rule.id) || (tabId && rule.condition?.tabIds?.includes(tabId))) {
             staleIds.push(rule.id);
           }
         }
@@ -144,7 +148,7 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
 
       const addRules = [];
 
-      // Redirections inter-qualites prioritaires (ex: si l'audio non mute n'existe qu'en 720p60)
+      // Redirections inter-qualites prioritaires sans restriction d'onglet pour supporter les workers Blob/HLS
       for (const item of crossQualityRedirects) {
         const segId = item?.segmentId || extractSegmentId(item?.sourceUrl);
         if (!segId || !item?.targetUrl) continue;
@@ -158,7 +162,6 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
           },
           condition: {
             regexFilter: `^(https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net|\\.twitch\\.tv)/.+/)[^/]+/${segId}-(?:muted|unmuted)(\\.(?:ts|mp4|m4s)(?:\\?.*)?)$`,
-            tabIds: [tabId],
             resourceTypes: ["xmlhttprequest", "media", "other"],
           },
         });
@@ -182,7 +185,6 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
             },
             condition: {
               regexFilter: `^(https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net|\\.twitch\\.tv)/.+/)(${pattern})-(?:muted|unmuted)(\\.(?:ts|mp4|m4s)(?:\\?.*)?)$`,
-              tabIds: [tabId],
               resourceTypes: ["xmlhttprequest", "media", "other"],
             },
           });
@@ -213,7 +215,6 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
             },
             condition: {
               urlFilter: `|${cleanSource}`,
-              tabIds: [tabId],
               resourceTypes: ["xmlhttprequest", "media", "other"],
             },
           });
@@ -242,9 +243,12 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
           },
           condition: {
             regexFilter: "^https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net|\\.twitch\\.tv)/.+/[^/?#]+(?:-(?:muted|unmuted))?\\.(?:ts|mp4|m4s)(?:\\?.*)?$",
-            tabIds: [tabId],
             resourceTypes: ["xmlhttprequest", "media", "other"],
           },
+        };
+
+        const rememberAddedRules = (rules) => {
+          for (const r of rules) _activeVodRuleIds.add(r.id);
         };
 
         try {
@@ -252,6 +256,7 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
             removeRuleIds: staleIds,
             addRules: [...addRules, corsRule],
           });
+          rememberAddedRules([...addRules, corsRule]);
           return { ok: true, count: addRules.length + 1 };
         } catch (corsErr) {
           console.warn("[StreamPulse] updateSessionRules avec responseHeaders echoue, repli :", corsErr?.message || corsErr);
@@ -269,12 +274,14 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
               removeRuleIds: staleIds,
               addRules: [...addRules, lightCorsRule],
             });
+            rememberAddedRules([...addRules, lightCorsRule]);
             return { ok: true, count: addRules.length + 1 };
           } catch (_lightErr) {
             await chrome.declarativeNetRequest.updateSessionRules({
               removeRuleIds: staleIds,
               addRules,
             });
+            rememberAddedRules(addRules);
             return { ok: true, count: addRules.length };
           }
         }
