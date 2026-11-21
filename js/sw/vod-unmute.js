@@ -109,87 +109,59 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
         }
       }
 
-      // Separation des identifiants selon le mode de redirection (standard sans suffixe ou -unmuted)
-      const bareIds = new Set();
-      const unmutedIds = new Set();
-      const crossQualityRedirects = [];
-
-      if (Array.isArray(message?.redirects)) {
-        for (const item of message.redirects) {
-          const segId = item?.segmentId || extractSegmentId(item?.sourceUrl || item);
-          if (!segId) continue;
-          const targetUrl = item?.targetUrl || "";
-
-          // Verification si la redirection bascule vers une autre qualite (ex: chunked -> 720p60)
-          const sourceQualityMatch = /\/([^/]+)\/[^/]+-(?:muted|unmuted)\.[^.]+$/.exec(item.sourceUrl || "");
-          const targetQualityMatch = /\/([^/]+)\/[^/]+\.[^.]+$/.exec(targetUrl);
-          const isCrossQuality = Boolean(
-            sourceQualityMatch && targetQualityMatch && sourceQualityMatch[1] !== targetQualityMatch[1]
-          );
-
-          if (isCrossQuality) {
-            crossQualityRedirects.push(item);
-          } else if (item?.targetType === "unmuted" || targetUrl.includes("-unmuted")) {
-            unmutedIds.add(String(segId));
-          } else {
-            bareIds.add(String(segId));
-          }
-        }
-      }
-
-      if (Array.isArray(message?.segmentIds)) {
-        for (const id of message.segmentIds) {
-          const sId = String(id);
-          if (!unmutedIds.has(sId)) {
-            bareIds.add(sId);
-          }
-        }
-      }
-
       const addRules = [];
 
-      // Redirections inter-qualites directes via urlFilter (zero empreinte memoire re2, contourne la limite 2KB de Chromium)
-      for (const item of crossQualityRedirects) {
-        const segId = item?.segmentId || extractSegmentId(item?.sourceUrl);
-        if (!segId || !item?.targetUrl) continue;
-        let domain = "cloudfront.net";
-        try {
-          domain = new URL(item.targetUrl).host;
-        } catch (_e) {
-          // Fallback sur le domaine CloudFront standard
+      // Traitement des redirections :
+      // 1. Si redirects est fourni (cas standard du lecteur VOD) : regles directes urlFilter
+      //    (zero compilation DFA re2, zero limite 2KB, execution en O(1)).
+      // 2. Si segmentIds seul est fourni (repli minimal/tests) : regex par chunks de 15 sans backtracking glouton.
+      if (Array.isArray(message?.redirects) && message.redirects.length > 0) {
+        const seenSegIds = new Set();
+        for (const item of message.redirects) {
+          const segId = item?.segmentId || extractSegmentId(item?.sourceUrl || item?.targetUrl || item);
+          if (!segId || !item?.targetUrl) continue;
+          if (seenSegIds.has(segId)) continue;
+          seenSegIds.add(segId);
+
+          let domain = "cloudfront.net";
+          try {
+            domain = new URL(item.targetUrl).host;
+          } catch (_e) {
+            // Repli sur le domaine CloudFront standard
+          }
+
+          addRules.push({
+            id: allocateRuleId(usedIds),
+            priority: 3,
+            action: {
+              type: "redirect",
+              redirect: { url: item.targetUrl },
+            },
+            condition: {
+              urlFilter: `||${domain}/*/${segId}-muted.*`,
+              resourceTypes: ["xmlhttprequest", "media", "other"],
+            },
+          });
+
+          addRules.push({
+            id: allocateRuleId(usedIds),
+            priority: 3,
+            action: {
+              type: "redirect",
+              redirect: { url: item.targetUrl },
+            },
+            condition: {
+              urlFilter: `||${domain}/*/${segId}-unmuted.*`,
+              resourceTypes: ["xmlhttprequest", "media", "other"],
+            },
+          });
         }
-
-        addRules.push({
-          id: allocateRuleId(usedIds),
-          priority: 3,
-          action: {
-            type: "redirect",
-            redirect: { url: item.targetUrl },
-          },
-          condition: {
-            urlFilter: `||${domain}/*/${segId}-muted.*`,
-            resourceTypes: ["xmlhttprequest", "media", "other"],
-          },
-        });
-
-        addRules.push({
-          id: allocateRuleId(usedIds),
-          priority: 3,
-          action: {
-            type: "redirect",
-            redirect: { url: item.targetUrl },
-          },
-          condition: {
-            urlFilter: `||${domain}/*/${segId}-unmuted.*`,
-            resourceTypes: ["xmlhttprequest", "media", "other"],
-          },
-        });
-      }
-
-      const installChunkedGroup = (idList, isUnmutedTarget) => {
-        const uniqueIds = Array.from(new Set(idList));
-        for (let i = 0; i < uniqueIds.length; i += CHUNK_SIZE) {
-          const chunk = uniqueIds.slice(i, i + CHUNK_SIZE);
+      } else if (Array.isArray(message?.segmentIds) && message.segmentIds.length > 0) {
+        const bareIds = new Set(message.segmentIds.map(String));
+        const CHUNK_SIZE_SAFE = 15;
+        const uniqueIds = Array.from(bareIds);
+        for (let i = 0; i < uniqueIds.length; i += CHUNK_SIZE_SAFE) {
+          const chunk = uniqueIds.slice(i, i + CHUNK_SIZE_SAFE);
           const pattern = chunk
             .map((id) => id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
             .join("|");
@@ -200,21 +172,14 @@ export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
             priority: 2,
             action: {
               type: "redirect",
-              redirect: { regexSubstitution: isUnmutedTarget ? "\\1\\2-unmuted\\3" : "\\1\\2\\3" },
+              redirect: { regexSubstitution: "\\1\\2\\3" },
             },
             condition: {
-              regexFilter: `^(https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net|\\.twitch\\.tv)/.+/)(${pattern})-(?:muted|unmuted)(\\.(?:ts|mp4|m4s)(?:\\?.*)?)$`,
+              regexFilter: `^(https://[^/]+\\.(?:cloudfront\\.net|ttvnw\\.net|twitch\\.tv)/[^?#]+/)(${pattern})-(?:muted|unmuted)(\\.(?:ts|mp4|m4s)(?:\\?.*)?)$`,
               resourceTypes: ["xmlhttprequest", "media", "other"],
             },
           });
         }
-      };
-
-      if (bareIds.size > 0) {
-        installChunkedGroup(bareIds, false);
-      }
-      if (unmutedIds.size > 0) {
-        installChunkedGroup(unmutedIds, true);
       }
 
       // Fallback pour toute redirection specifique qui ne correspondrait pas au schema de segment standard

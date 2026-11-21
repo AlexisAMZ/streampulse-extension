@@ -52,6 +52,55 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.11.26",
+    "date": "2026-11-22",
+    "title": {
+      "fr": "Redirection intégrale des segments audio VOD",
+      "en": "Full VOD Audio Segment Redirection",
+      "uk": "Повне перенаправлення аудіосегментів VOD",
+      "es": "Redirección completa de segmentos de audio VOD",
+      "pt-BR": "Redirecionamento completo de segmentos de áudio VOD",
+      "de": "Vollständige Weiterleitung der VOD-Audiodaten",
+      "it": "Reindirizzamento completo dei segmenti audio VOD",
+      "pl": "Pełne przekierowanie segmentów audio VOD",
+      "tr": "Eksiksiz VOD Ses Segmenti Yönlendirmesi",
+      "ru": "Полное перенаправление аудиосегментов VOD",
+      "ja": "VOD音声セグメントの完全ダイレクト転送",
+      "ko": "VOD 오디오 세그먼트 완전 직접 리디렉션",
+      "ar": "إعادة توجيه كاملة لقطاعات صوت VOD",
+      "id": "Pengalihan Penuh Segmen Audio VOD",
+      "nl": "Volledige omleiding van VOD-audiosegmenten",
+      "sv": "Fullständig omdirigering av VOD-ljudsegment",
+      "cs": "Úplné přesměrování zvukových segmentů VOD"
+    },
+    "changes": [
+      {
+        "type": "fix",
+        "area": "fixes",
+        "text": {
+          "fr": "Conversion intégrale des redirections de segments en filtres d'URL directs sans regex afin de supprimer définitivement tout dépassement de quota mémoire et de restaurer le son.",
+          "en": "Full conversion of segment redirections to direct URL filters without regex to permanently eliminate memory quota errors and restore sound.",
+          "uk": "Повне перетворення перенаправлень сегментів на прямі фільтри URL без регулярних виразів для усунення помилок ліміту пам'яті та відновлення звуку.",
+          "es": "Conversión completa de redirecciones de segmentos a filtros de URL directos sin expresiones regulares para eliminar errores de cuota de memoria y restaurar el sonido.",
+          "pt-BR": "Conversão integral de redirecionamentos de segmentos em filtros de URL diretos sem expressões regulares para eliminar erros de limite de memória e restaurar o som.",
+          "de": "Vollständige Umstellung der Segment-Weiterleitungen auf direkte URL-Filter ohne reguläre Ausdrücke zur Beseitigung von Speicherfehlern und Tonwiederherstellung.",
+          "it": "Conversione completa dei reindirizzamenti di segmento in filtri URL diretti senza espressioni regolari per eliminare errori di memoria e ripristinare l'audio.",
+          "pl": "Pełna konwersja przekierowań segmentów na bezpośrednie filtry URL bez wyrażeń regularnych w celu usunięcia błędów pamięci i przywrócenia dźwięku.",
+          "tr": "Bellek sınırı hatalarını tamamen ortadan kaldırmak ve sesi geri yüklemek için segment yönlendirmeleri düzenli ifade olmadan doğrudan URL filtrelerine dönüştürüldü.",
+          "ru": "Полный перевод перенаправлений сегментов на прямые фильтры URL без регулярных выражений для устранения ошибок лимита памяти и восстановления звука.",
+          "ja": "メモリ制限エラーを完全に排除して音声を復元するため、セグメント転送を正規表現なしのダイレクトURLフィルターに完全移行。",
+          "ko": "메모리 할당량 오류를 완전히 제거하고 소리를 복원하기 위해 세그먼트 리디렉션을 정규식 없는 직접 URL 필터로 완전 전환.",
+          "ar": "تحويل شامل لعمليات إعادة توجيه القطاعات إلى فلاتر عناوين URL مباشرة بدون تعبيرات نمطية لإلغاء أخطاء الذاكرة واستعادة الصوت.",
+          "id": "Konversi menyeluruh pengalihan segmen ke filter URL langsung tanpa ekspresi reguler untuk menghilangkan kesalahan kuota memori dan memulihkan audio.",
+          "nl": "Volledige conversie van segmentomleidingen naar directe URL-filters zonder reguliere expressies om geheugenfouten te elimineren en geluid te herstellen.",
+          "sv": "Fullständig konvertering av segmentomdirigeringar till direkta URL-filter utan reguljära uttryck för att eliminera minnesfel och återställa ljudet.",
+          "cs": "Úplný převod přesměrování segmentů na přímé filtry URL bez regulárních výrazů pro odstranění chyb paměťového limitu a obnovení zvuku."
+        }
+      }
+    ]
+  },
+
+  {
     version: "26.11.25",
     "date": "2026-11-21",
     "title": {

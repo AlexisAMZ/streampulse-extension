@@ -56,18 +56,18 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
     `../js/sw/vod-unmute.js?t=${Date.now()}`
   );
 
-  // 1. Installation de 95 segments muets (doit générer 3 règles de redirection + 1 règle modifyHeaders CORS)
-  const segmentIds = Array.from({ length: 95 }, (_, i) => String(900 + i));
+  // 1. Installation de 30 segments muets en mode repli (doit générer 2 règles regex de 15 segments + 1 règle modifyHeaders CORS)
+  const segmentIds = Array.from({ length: 30 }, (_, i) => String(900 + i));
   const res = await handleVodUnmuteInstallRules(
     { segmentIds, append: false },
     { tab: { id: 10 } }
   );
 
   assert.equal(res.ok, true);
-  assert.equal(res.count, 4);
-  assert.equal(fakeRules.length, 4);
+  assert.equal(res.count, 3);
+  assert.equal(fakeRules.length, 3);
 
-  // Vérification de la première règle (redirection)
+  // Vérification de la première règle (redirection regex compacte)
   const firstRule = fakeRules[0];
   assert.equal(firstRule.condition.tabIds, undefined);
   assert.equal(firstRule.priority, 2);
@@ -75,7 +75,7 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
   assert.equal(firstRule.action.redirect.regexSubstitution, "\\1\\2\\3");
 
   // Vérification de la règle modifyHeaders CORS (dédiée au contournement 403 S3)
-  const corsRule = fakeRules[3];
+  const corsRule = fakeRules[2];
   assert.equal(corsRule.priority, 1);
   assert.equal(corsRule.action.type, "modifyHeaders");
   assert.equal(corsRule.action.requestHeaders[0].header, "Origin");
@@ -88,19 +88,19 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
   // Test de la regex sur différentes qualités et domaines (y compris twitch.tv)
   const re = new RegExp(firstRule.condition.regexFilter);
   const testUrlChunked = "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/900-unmuted.ts";
-  const testUrl720p = "https://d2vi6trrdongqn.cloudfront.net/hash/720p60/915-muted.ts?sig=abc";
-  const testUrlTtvnw = "https://video-edge.ttvnw.net/v1/1080p60/939-muted.ts";
+  const testUrl720p = "https://d2vi6trrdongqn.cloudfront.net/hash/720p60/914-muted.ts?sig=abc";
+  const testUrlTtvnw = "https://video-edge.ttvnw.net/v1/1080p60/905-muted.ts";
   const testUrlTwitch = "https://vod-metro.twitch.tv/v1/1080p60/900-muted.ts";
-  const testUrlOther = "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/945-unmuted.ts"; // dans la 2ème règle
+  const testUrlOther = "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/925-unmuted.ts"; // dans la 2ème règle
 
   assert.equal(re.test(testUrlChunked), true);
   assert.equal(testUrlChunked.replace(re, "$1$2$3"), "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/900.ts");
 
   assert.equal(re.test(testUrl720p), true);
-  assert.equal(testUrl720p.replace(re, "$1$2$3"), "https://d2vi6trrdongqn.cloudfront.net/hash/720p60/915.ts?sig=abc");
+  assert.equal(testUrl720p.replace(re, "$1$2$3"), "https://d2vi6trrdongqn.cloudfront.net/hash/720p60/914.ts?sig=abc");
 
   assert.equal(re.test(testUrlTtvnw), true);
-  assert.equal(testUrlTtvnw.replace(re, "$1$2$3"), "https://video-edge.ttvnw.net/v1/1080p60/939.ts");
+  assert.equal(testUrlTtvnw.replace(re, "$1$2$3"), "https://video-edge.ttvnw.net/v1/1080p60/905.ts");
 
   assert.equal(re.test(testUrlTwitch), true);
   assert.equal(testUrlTwitch.replace(re, "$1$2$3"), "https://vod-metro.twitch.tv/v1/1080p60/900.ts");
@@ -112,9 +112,9 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
 
   assert.equal(re.test(testUrlOther), false); // Appartient au lot suivant
 
-  // Test de redirection vers cible -unmuted spécifique
+  // Test des redirections explicites directes par urlFilter (zéro DFA re2)
   await clearVodRulesForTab(10);
-  const unmutedRedirectRes = await handleVodUnmuteInstallRules(
+  const directRedirectRes = await handleVodUnmuteInstallRules(
     {
       redirects: [
         {
@@ -127,16 +127,14 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
     },
     { tab: { id: 10 } }
   );
-  assert.equal(unmutedRedirectRes.ok, true);
-  assert.equal(fakeRules.length, 2); // 1 redirection + 1 modifyHeaders CORS
-  const unmutedRule = fakeRules[0];
-  assert.equal(unmutedRule.action.redirect.regexSubstitution, "\\1\\2-unmuted\\3");
-  const reUnmuted = new RegExp(unmutedRule.condition.regexFilter);
-  assert.equal(reUnmuted.test("https://d2vi6trrdongqn.cloudfront.net/hash/chunked/414-muted.mp4"), true);
-  assert.equal(
-    "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/414-muted.mp4".replace(reUnmuted, "$1$2-unmuted$3"),
-    "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/414-unmuted.mp4"
-  );
+  assert.equal(directRedirectRes.ok, true);
+  assert.equal(fakeRules.length, 3); // 2 règles urlFilter (-muted et -unmuted) + 1 modifyHeaders CORS
+  const directRuleMuted = fakeRules[0];
+  const directRuleUnmuted = fakeRules[1];
+  assert.equal(directRuleMuted.action.type, "redirect");
+  assert.equal(directRuleMuted.action.redirect.url, "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/414-unmuted.mp4");
+  assert.equal(directRuleMuted.condition.urlFilter, "||d2vi6trrdongqn.cloudfront.net/*/414-muted.*");
+  assert.equal(directRuleUnmuted.condition.urlFilter, "||d2vi6trrdongqn.cloudfront.net/*/414-unmuted.*");
 
   // 2. Nettoyage ciblé par onglet
   await clearVodRulesForTab(10);
