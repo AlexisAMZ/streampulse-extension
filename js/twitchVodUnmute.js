@@ -95,47 +95,16 @@
         position: absolute;
         top: 0;
         bottom: 0;
-        background: linear-gradient(90deg, #00f59b, #10b981, #00f59b);
-        background-size: 200% 100%;
-        animation: streampulse-emerald-glow 2.8s ease-in-out infinite;
+        background: #00f59b;
         border-radius: 2px;
-        box-shadow: 0 0 8px rgba(0, 245, 155, 0.75), 0 0 2px rgba(255, 255, 255, 0.85);
+        box-shadow: 0 0 10px rgba(0, 245, 155, 0.85), 0 0 3px #00f59b;
         pointer-events: none;
         z-index: 10;
         transition: opacity 0.2s ease;
       }
-      @keyframes streampulse-emerald-glow {
-        0% {
-          background-position: 0% 50%;
-          box-shadow: 0 0 6px rgba(0, 245, 155, 0.65), 0 0 2px rgba(255, 255, 255, 0.7);
-        }
-        50% {
-          background-position: 100% 50%;
-          box-shadow: 0 0 14px rgba(0, 245, 155, 0.95), 0 0 3px rgba(255, 255, 255, 1);
-        }
-        100% {
-          background-position: 0% 50%;
-          box-shadow: 0 0 6px rgba(0, 245, 155, 0.65), 0 0 2px rgba(255, 255, 255, 0.7);
-        }
-      }
       .streampulse-vod-unmute-tooltip {
         position: absolute;
         transform: translate(-50%, -100%);
-        background: rgba(11, 12, 34, 0.94);
-        border: 1px solid rgba(0, 245, 155, 0.5);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 245, 155, 0.35);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        color: #f4f2f7;
-        padding: 5px 10px;
-        border-radius: 6px;
-        font-family: "SP Onest", Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 11px;
-        font-weight: 500;
-        line-height: 1.3;
-        display: flex;
-        align-items: center;
-        gap: 6px;
         pointer-events: none;
         z-index: 99999;
         white-space: nowrap;
@@ -147,24 +116,57 @@
         opacity: 1;
         visibility: visible;
       }
-      .streampulse-vod-unmute-tooltip .sp-tip-pill {
-        background: linear-gradient(135deg, #00f59b, #10b981);
-        color: #0b0c22;
+      .streampulse-vod-unmute-tooltip .sp-pager-case {
+        background: #11142f;
+        border: 1px solid rgba(0, 245, 155, 0.45);
+        border-radius: 8px;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.85), 0 0 14px rgba(0, 245, 155, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 5px 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: "SP Onest", Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      .streampulse-vod-unmute-tooltip .sp-pager-tag {
+        background: #1b1f4a;
+        border: 1px solid rgba(0, 245, 155, 0.6);
+        color: #00f59b;
         font-size: 10px;
-        font-weight: 700;
+        font-weight: 800;
         padding: 2px 6px;
         border-radius: 4px;
-        letter-spacing: 0.3px;
+        letter-spacing: 0.4px;
         text-transform: uppercase;
       }
-      .streampulse-vod-unmute-tooltip .sp-tip-text {
+      .streampulse-vod-unmute-tooltip .sp-pager-text {
         color: #ffffff;
+        font-size: 11px;
         font-weight: 600;
       }
-      .streampulse-vod-unmute-tooltip .sp-tip-time {
-        color: rgba(244, 242, 247, 0.65);
-        font-size: 10px;
-        font-weight: 400;
+      .streampulse-vod-unmute-tooltip .sp-pager-screen {
+        background: #cdd9a5;
+        color: #11142f;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: "DotGothic16", ui-monospace, "SF Mono", Menlo, monospace;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2);
+      }
+      .streampulse-vod-unmute-tooltip::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid #11142f;
       }
       .streampulse-unmuted-indicator {
         position: absolute;
@@ -468,9 +470,11 @@
       const text = getTooltipText();
 
       tip.innerHTML = `
-        <span class="sp-tip-pill">StreamPulse+</span>
-        <span class="sp-tip-text">${text}</span>
-        <span class="sp-tip-time">(${startTc} · ${endTc})</span>
+        <div class="sp-pager-case">
+          <span class="sp-pager-tag">StreamPulse+</span>
+          <span class="sp-pager-text">${text}</span>
+          <span class="sp-pager-screen">${startTc} · ${endTc}</span>
+        </div>
       `;
 
       if (player !== document.body) {
