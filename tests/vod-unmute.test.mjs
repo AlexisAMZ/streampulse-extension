@@ -166,3 +166,98 @@ test("VOD Unmute : résolution distante via le service worker", async () => {
     global.fetch = originalFetch;
   }
 });
+
+test("VOD Unmute : appel asynchrone avec sendResponse (compatibilité dispatcher et F5)", async () => {
+  const { handleVodUnmuteResolve, handleVodUnmuteInstallRules, handleVodUnmuteClearRules } = await import(
+    `../js/sw/vod-unmute.js?t=${Date.now()}`
+  );
+
+  let fetchCount = 0;
+  const originalFetch = global.fetch;
+  try {
+    global.fetch = async () => {
+      fetchCount++;
+      return {
+        ok: true,
+        json: async () => ({
+          ok: true,
+          isPlus: true,
+          vodId: "888999",
+          totalDuration: 1800,
+          restoredRanges: [
+            {
+              segmentId: "40",
+              sourceUrl: "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/40-muted.mp4",
+              targetUrl: "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/40.mp4",
+              startTime: 400,
+              duration: 10,
+            },
+          ],
+        }),
+      };
+    };
+
+    // 1. handleVodUnmuteResolve doit renvoyer true pour maintenir le port de message ouvert
+    let resolveResult = null;
+    const isAsync = handleVodUnmuteResolve(
+      { vodId: "888999" },
+      { tab: { id: 10 } },
+      (response) => {
+        resolveResult = response;
+      }
+    );
+    assert.equal(isAsync, true);
+
+    // Attente que le callback sendResponse soit exécuté
+    await new Promise((r) => setTimeout(r, 20));
+    assert.ok(resolveResult);
+    assert.equal(resolveResult.ok, true);
+    assert.equal(resolveResult.vodId, "888999");
+    assert.equal(fetchCount, 1);
+
+    // 2. Simulation F5 : second appel pour le même vodId doit taper le cache mémoire sans requête réseau
+    let secondResult = null;
+    const isSecondAsync = handleVodUnmuteResolve(
+      { vodId: "888999" },
+      { tab: { id: 10 } },
+      (response) => {
+        secondResult = response;
+      }
+    );
+    assert.equal(isSecondAsync, true);
+    await new Promise((r) => setTimeout(r, 20));
+    assert.ok(secondResult);
+    assert.equal(secondResult.ok, true);
+    assert.equal(fetchCount, 1); // Pas de nouvelle requête fetch
+
+    // 3. handleVodUnmuteInstallRules doit aussi renvoyer true et appeler sendResponse
+    let installResult = null;
+    const isInstallAsync = handleVodUnmuteInstallRules(
+      { segmentIds: ["40"], append: false },
+      { tab: { id: 10 } },
+      (response) => {
+        installResult = response;
+      }
+    );
+    assert.equal(isInstallAsync, true);
+    await new Promise((r) => setTimeout(r, 20));
+    assert.ok(installResult);
+    assert.equal(installResult.ok, true);
+
+    // 4. handleVodUnmuteClearRules doit renvoyer true et appeler sendResponse
+    let clearResult = null;
+    const isClearAsync = handleVodUnmuteClearRules(
+      {},
+      { tab: { id: 10 } },
+      (response) => {
+        clearResult = response;
+      }
+    );
+    assert.equal(isClearAsync, true);
+    await new Promise((r) => setTimeout(r, 20));
+    assert.ok(clearResult);
+    assert.equal(clearResult.ok, true);
+  } finally {
+    global.fetch = originalFetch;
+  }
+});

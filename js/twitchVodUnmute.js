@@ -66,6 +66,16 @@
     }
   }
 
+  function ensureStoredPlusStatus() {
+    return new Promise((resolve) => {
+      if (!chrome.storage?.local) return resolve(plusActive);
+      chrome.storage.local.get("streamPulsePlus", (res) => {
+        updatePlusStatus(res?.streamPulsePlus);
+        resolve(plusActive);
+      });
+    });
+  }
+
   // Initialisation du statut StreamPulse+
   if (chrome.storage?.local) {
     chrome.storage.local.get("streamPulsePlus", (res) => {
@@ -73,9 +83,13 @@
     });
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area === "local" && changes.streamPulsePlus) {
+        const wasPlus = plusActive;
         updatePlusStatus(changes.streamPulsePlus.newValue);
         if (restoredRanges.length > 0) {
           paintSeekbar();
+          if (!wasPlus && plusActive) {
+            installRulesForRanges(restoredRanges);
+          }
         }
       }
     });
@@ -462,7 +476,36 @@
     setTimeout(() => promo.remove(), 8000);
   }
 
-  function resetVodState() {
+  function installRulesForRanges(ranges) {
+    if (!ranges || ranges.length === 0) return;
+    const segmentIds = ranges
+      .map((v) => v.segmentId || extractSegmentId(v.sourceUrl))
+      .filter(Boolean);
+
+    if (segmentIds.length === 0) return;
+
+    chrome.runtime.sendMessage(
+      {
+        type: "vodUnmuteInstallRules",
+        segmentIds,
+        redirects: ranges.map((v) => ({
+          segmentId: v.segmentId || extractSegmentId(v.sourceUrl),
+          sourceUrl: v.sourceUrl,
+          targetUrl: v.targetUrl,
+          targetType: v.targetType || (v.targetUrl?.includes("-unmuted") ? "unmuted" : "bare"),
+        })),
+        append: false,
+      },
+      (response) => {
+        if (response?.ok && !indicatorShown) {
+          indicatorShown = true;
+          showIndicator();
+        }
+      }
+    );
+  }
+
+  function resetVodState(clearRules = true) {
     currentVodId = null;
     vodResolved = false;
     isResolving = false;
@@ -473,19 +516,21 @@
     promoShown = false;
     hideTooltip();
     document.querySelectorAll(".streampulse-unmuted-segment, .streampulse-purged-segment").forEach((el) => el.remove());
-    chrome.runtime.sendMessage({ type: "vodUnmuteClearRules" }).catch(() => {});
+    if (clearRules) {
+      chrome.runtime.sendMessage({ type: "vodUnmuteClearRules" }).catch(() => {});
+    }
   }
 
   async function checkCurrentVod() {
     if (!isVodPage()) {
-      if (currentVodId) resetVodState();
+      if (currentVodId) resetVodState(true);
       return;
     }
     const vodId = getVodId();
     if (!vodId) return;
 
     if (vodId !== currentVodId) {
-      resetVodState();
+      resetVodState(false);
       currentVodId = vodId;
     }
 
@@ -493,6 +538,8 @@
 
     isResolving = true;
     try {
+      await ensureStoredPlusStatus();
+
       const data = await resolveVod(vodId);
       if (data?.ok && currentVodId === vodId) {
         vodResolved = true;
@@ -505,32 +552,9 @@
           purgedRanges = [];
           paintSeekbar();
 
-          if (plusActive && data.isPlus) {
-            const segmentIds = validBatch
-              .map((v) => v.segmentId || extractSegmentId(v.sourceUrl))
-              .filter(Boolean);
-
-            if (segmentIds.length > 0) {
-              chrome.runtime.sendMessage(
-                {
-                  type: "vodUnmuteInstallRules",
-                  segmentIds,
-                  redirects: validBatch.map((v) => ({
-                    segmentId: v.segmentId || extractSegmentId(v.sourceUrl),
-                    sourceUrl: v.sourceUrl,
-                    targetUrl: v.targetUrl,
-                    targetType: v.targetType || (v.targetUrl?.includes("-unmuted") ? "unmuted" : "bare"),
-                  })),
-                  append: false,
-                },
-                (response) => {
-                  if (response?.ok && !indicatorShown) {
-                    indicatorShown = true;
-                    showIndicator();
-                  }
-                }
-              );
-            }
+          const isUserPlus = Boolean(data.isPlus || plusActive);
+          if (isUserPlus) {
+            installRulesForRanges(validBatch);
           } else if (!promoShown) {
             promoShown = true;
             showPromoIndicator();
@@ -586,11 +610,12 @@
     if (isVodPage()) {
       checkCurrentVod();
       const seekbar = document.querySelector("div.seekbar-bar");
-      if (seekbar && restoredRanges.length > 0 && !seekbar.querySelector(".streampulse-unmuted-segment")) {
+      if (seekbar && (restoredRanges.length > 0 || purgedRanges.length > 0) &&
+          !seekbar.querySelector(".streampulse-unmuted-segment, .streampulse-purged-segment")) {
         paintSeekbar();
       }
     } else if (currentVodId) {
-      resetVodState();
+      resetVodState(true);
     }
   }, 1200);
 

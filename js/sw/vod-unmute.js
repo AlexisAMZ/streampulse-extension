@@ -7,6 +7,9 @@ let nextRuleId = 1;
 const MAX_RULE_ID = 2147480000;
 const CHUNK_SIZE = 40;
 
+const _resolvedVodCache = new Map();
+const RESOLVED_VOD_CACHE_TTL_MS = 60 * 60 * 1000; // 1 heure de cache mémoire pour VOD résolue
+
 function enqueueUpdate(task) {
   const next = updateQueue.then(task, task);
   updateQueue = next;
@@ -76,8 +79,8 @@ export async function pruneOrphanVodRules() {
   });
 }
 
-export async function handleVodUnmuteInstallRules(message, sender) {
-  return enqueueUpdate(async () => {
+export function handleVodUnmuteInstallRules(message, sender, sendResponse) {
+  const runner = () => enqueueUpdate(async () => {
     const tabId = sender?.tab?.id;
     if (!tabId) {
       return { ok: false, error: "Identifiant d'onglet manquant" };
@@ -198,23 +201,44 @@ export async function handleVodUnmuteInstallRules(message, sender) {
       return { ok: false, error: error?.message || String(error) };
     }
   });
+
+  if (typeof sendResponse === "function") {
+    runner()
+      .then((res) => sendResponse(res))
+      .catch((err) => sendResponse({ ok: false, error: err?.message || String(err) }));
+    return true;
+  }
+  return runner();
 }
 
-export async function handleVodUnmuteClearRules(_message, sender) {
-  const tabId = sender?.tab?.id;
-  if (tabId) {
-    await clearVodRulesForTab(tabId);
+export function handleVodUnmuteClearRules(_message, sender, sendResponse) {
+  const runner = async () => {
+    const tabId = sender?.tab?.id;
+    if (tabId) {
+      await clearVodRulesForTab(tabId);
+    }
+    return { ok: true };
+  };
+
+  if (typeof sendResponse === "function") {
+    runner()
+      .then((res) => sendResponse(res))
+      .catch((err) => sendResponse({ ok: false, error: err?.message || String(err) }));
+    return true;
   }
-  return { ok: true };
+  return runner();
 }
 
-export async function handleVodUnmuteResolve(message) {
-  const vodId = message?.vodId;
-  if (!vodId || !/^\d+$/.test(String(vodId))) {
-    return { ok: false, error: "invalid_vod_id" };
-  }
+export function handleVodUnmuteResolve(message, sender, sendResponse) {
+  const runner = async () => {
+    const vodId = message?.vodId;
+    if (!vodId || !/^\d+$/.test(String(vodId))) {
+      return { ok: false, error: "invalid_vod_id" };
+    }
 
-  try {
+    const cacheKey = String(vodId);
+    const cached = _resolvedVodCache.get(cacheKey);
+
     let license = null;
     if (chrome.storage?.local) {
       try {
@@ -238,21 +262,46 @@ export async function handleVodUnmuteResolve(message) {
       }
     }
 
-    const res = await fetch(REMOTE_UNMUTE_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ vodId, license }),
-    });
+    if (cached && Date.now() < cached.expiresAt) {
+      // Si le cache a été résolu avec un niveau Plus identique ou supérieur, renvoi immédiat
+      if (!license || Boolean(cached.data?.isPlus)) {
+        return cached.data;
+      }
+    }
 
-    if (!res.ok) return { ok: false, error: `http_${res.status}` };
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    console.warn("[StreamPulse] Erreur résolution VOD distante :", error?.message || error);
-    return { ok: false, error: error?.message || "network_error" };
+    try {
+      const res = await fetch(REMOTE_UNMUTE_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ vodId, license }),
+      });
+
+      if (!res.ok) return { ok: false, error: `http_${res.status}` };
+      const data = await res.json();
+
+      if (data?.ok) {
+        _resolvedVodCache.set(cacheKey, {
+          data,
+          expiresAt: Date.now() + RESOLVED_VOD_CACHE_TTL_MS,
+        });
+      }
+
+      return data;
+    } catch (error) {
+      console.warn("[StreamPulse] Erreur résolution VOD distante :", error?.message || error);
+      return { ok: false, error: error?.message || "network_error" };
+    }
+  };
+
+  if (typeof sendResponse === "function") {
+    runner()
+      .then((res) => sendResponse(res))
+      .catch((err) => sendResponse({ ok: false, error: err?.message || String(err) }));
+    return true;
   }
+  return runner();
 }
 
 // Nettoyage automatique au démarrage et à la fermeture d'onglet
