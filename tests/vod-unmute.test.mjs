@@ -72,7 +72,38 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
   assert.equal(re.test(testUrlTtvnw), true);
   assert.equal(testUrlTtvnw.replace(re, "$1$2$3"), "https://video-edge.ttvnw.net/v1/1080p60/939.ts");
 
+  // Support des flux modernes au format mp4 / m4s
+  const testUrlMp4 = "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/900-muted.mp4";
+  assert.equal(re.test(testUrlMp4), true);
+  assert.equal(testUrlMp4.replace(re, "$1$2$3"), "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/900.mp4");
+
   assert.equal(re.test(testUrlOther), false); // Appartient au lot suivant
+
+  // Test de redirection vers cible -unmuted spécifique
+  await clearVodRulesForTab(10);
+  const unmutedRedirectRes = await handleVodUnmuteInstallRules(
+    {
+      redirects: [
+        {
+          sourceUrl: "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/414-muted.mp4",
+          targetUrl: "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/414-unmuted.mp4",
+          targetType: "unmuted",
+        },
+      ],
+      append: false,
+    },
+    { tab: { id: 10 } }
+  );
+  assert.equal(unmutedRedirectRes.ok, true);
+  assert.equal(fakeRules.length, 1);
+  const unmutedRule = fakeRules[0];
+  assert.equal(unmutedRule.action.redirect.regexSubstitution, "\\1\\2-unmuted\\3");
+  const reUnmuted = new RegExp(unmutedRule.condition.regexFilter);
+  assert.equal(reUnmuted.test("https://d2vi6trrdongqn.cloudfront.net/hash/chunked/414-muted.mp4"), true);
+  assert.equal(
+    "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/414-muted.mp4".replace(reUnmuted, "$1$2-unmuted$3"),
+    "https://d2vi6trrdongqn.cloudfront.net/hash/chunked/414-unmuted.mp4"
+  );
 
   // 2. Nettoyage ciblé par onglet
   await clearVodRulesForTab(10);

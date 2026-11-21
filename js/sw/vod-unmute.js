@@ -101,20 +101,36 @@ export async function handleVodUnmuteInstallRules(message, sender) {
         }
       }
 
-      // Extraction et déduplication des identifiants de segments
-      let segmentIds = [];
-      if (Array.isArray(message?.segmentIds) && message.segmentIds.length > 0) {
-        segmentIds = message.segmentIds;
-      } else if (Array.isArray(message?.redirects)) {
-        segmentIds = message.redirects
-          .map((r) => extractSegmentId(r?.sourceUrl || r))
-          .filter(Boolean);
+      // Séparation des identifiants selon le mode de redirection (standard sans suffixe ou -unmuted)
+      const bareIds = new Set();
+      const unmutedIds = new Set();
+
+      if (Array.isArray(message?.redirects)) {
+        for (const item of message.redirects) {
+          const segId = item?.segmentId || extractSegmentId(item?.sourceUrl || item);
+          if (!segId) continue;
+          const targetUrl = item?.targetUrl || "";
+          if (item?.targetType === "unmuted" || targetUrl.includes("-unmuted")) {
+            unmutedIds.add(String(segId));
+          } else {
+            bareIds.add(String(segId));
+          }
+        }
+      }
+
+      if (Array.isArray(message?.segmentIds)) {
+        for (const id of message.segmentIds) {
+          const sId = String(id);
+          if (!unmutedIds.has(sId)) {
+            bareIds.add(sId);
+          }
+        }
       }
 
       const addRules = [];
 
-      if (segmentIds.length > 0) {
-        const uniqueIds = Array.from(new Set(segmentIds.map(String)));
+      const installChunkedGroup = (idList, isUnmutedTarget) => {
+        const uniqueIds = Array.from(new Set(idList));
         for (let i = 0; i < uniqueIds.length; i += CHUNK_SIZE) {
           const chunk = uniqueIds.slice(i, i + CHUNK_SIZE);
           const pattern = chunk
@@ -127,15 +143,22 @@ export async function handleVodUnmuteInstallRules(message, sender) {
             priority: 1,
             action: {
               type: "redirect",
-              redirect: { regexSubstitution: "\\1\\2\\3" },
+              redirect: { regexSubstitution: isUnmutedTarget ? "\\1\\2-unmuted\\3" : "\\1\\2\\3" },
             },
             condition: {
-              regexFilter: `^(https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net)/.+/)(${pattern})-(?:muted|unmuted)(\\.ts(?:\\?.*)?)$`,
+              regexFilter: `^(https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net)/.+/)(${pattern})-(?:muted|unmuted)(\\.(?:ts|mp4|m4s)(?:\\?.*)?)$`,
               tabIds: [tabId],
               resourceTypes: ["xmlhttprequest", "media", "other"],
             },
           });
         }
+      };
+
+      if (bareIds.size > 0) {
+        installChunkedGroup(bareIds, false);
+      }
+      if (unmutedIds.size > 0) {
+        installChunkedGroup(unmutedIds, true);
       }
 
       // Fallback pour toute redirection spécifique qui ne correspondrait pas au schéma de segment ts standard

@@ -12,6 +12,7 @@
   let isResolving = false;
   let plusActive = false;
   let restoredRanges = [];
+  let purgedRanges = [];
   let totalVodDuration = 0;
   let indicatorShown = false;
   let promoShown = false;
@@ -94,6 +95,17 @@
         box-shadow: 0 0 10px rgba(0, 245, 155, 0.85), 0 0 3px #00f59b;
         pointer-events: none;
         z-index: 10;
+        transition: opacity 0.2s ease;
+      }
+      .streampulse-purged-segment {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        background: rgba(255, 170, 0, 0.5);
+        border-radius: 2px;
+        box-shadow: 0 0 6px rgba(255, 170, 0, 0.6);
+        pointer-events: none;
+        z-index: 9;
         transition: opacity 0.2s ease;
       }
       .streampulse-vod-unmute-tooltip {
@@ -181,6 +193,12 @@
         z-index: 20;
         animation: spFadeIn 0.3s ease;
       }
+      .streampulse-unmuted-indicator.is-purged {
+        border-color: rgba(255, 170, 0, 0.5);
+      }
+      .streampulse-unmuted-indicator.is-purged svg {
+        fill: #ffaa00;
+      }
       .streampulse-unmuted-indicator svg {
         width: 14px;
         height: 14px;
@@ -259,7 +277,7 @@
     hitArea.__spHoverAttached = true;
 
     hitArea.addEventListener("mousemove", (e) => {
-      if (restoredRanges.length === 0 || totalVodDuration <= 0) {
+      if ((restoredRanges.length === 0 && purgedRanges.length === 0) || totalVodDuration <= 0) {
         hideTooltip();
         return;
       }
@@ -272,29 +290,46 @@
       }
 
       const hoverTime = ratio * totalVodDuration;
-      const merged = mergeContinuousRanges(restoredRanges);
-      const matched = merged.find(
+      const mergedRestored = mergeContinuousRanges(restoredRanges);
+      const matchedRestored = mergedRestored.find(
         (r) => hoverTime >= r.startTime && hoverTime <= r.startTime + r.duration
       );
 
-      if (!matched) {
+      const mergedPurged = mergeContinuousRanges(purgedRanges);
+      const matchedPurged = mergedPurged.find(
+        (r) => hoverTime >= r.startTime && hoverTime <= r.startTime + r.duration
+      );
+
+      if (!matchedRestored && !matchedPurged) {
         hideTooltip();
         return;
       }
 
       const player = document.querySelector('div[data-a-target="video-player"]') || document.body;
       const tip = getOrCreateTooltip(player);
+      const matched = matchedRestored || matchedPurged;
+      const isPurged = !matchedRestored && Boolean(matchedPurged);
       const startTc = formatTimecode(matched.startTime);
       const endTc = formatTimecode(matched.startTime + matched.duration);
-      const text = getTooltipText();
 
-      tip.innerHTML = `
-        <div class="sp-pager-case">
-          <span class="sp-pager-tag">StreamPulse+</span>
-          <span class="sp-pager-text">${text}</span>
-          <span class="sp-pager-screen">${startTc} · ${endTc}</span>
-        </div>
-      `;
+      if (isPurged) {
+        tip.innerHTML = `
+          <div class="sp-pager-case" style="border-color: rgba(255, 170, 0, 0.55); box-shadow: 0 10px 28px rgba(0, 0, 0, 0.85), 0 0 14px rgba(255, 170, 0, 0.25);">
+            <span class="sp-pager-tag" style="background: rgba(255, 170, 0, 0.15); border-color: rgba(255, 170, 0, 0.6); color: #ffaa00;">Twitch DMCA</span>
+            <span class="sp-pager-text">Audio original purgé des serveurs Twitch</span>
+            <span class="sp-pager-screen">${startTc} · ${endTc}</span>
+          </div>
+        `;
+      } else {
+        const text = getTooltipText();
+        tip.innerHTML = `
+          <div class="sp-pager-case">
+            <span class="sp-pager-tag">StreamPulse+</span>
+            <span class="sp-pager-text">${text}</span>
+            <span class="sp-pager-screen">${startTc} · ${endTc}</span>
+          </div>
+        `;
+      }
 
       if (player !== document.body) {
         const pRect = player.getBoundingClientRect();
@@ -327,11 +362,10 @@
     setupSeekbarHover(seekbar);
 
     // Supprime les anciens marqueurs StreamPulse
-    seekbar.querySelectorAll(".streampulse-unmuted-segment").forEach((el) => el.remove());
+    seekbar.querySelectorAll(".streampulse-unmuted-segment, .streampulse-purged-segment").forEach((el) => el.remove());
 
-    const merged = mergeContinuousRanges(restoredRanges);
-
-    for (const range of merged) {
+    const mergedRestored = mergeContinuousRanges(restoredRanges);
+    for (const range of mergedRestored) {
       const segEl = document.createElement("div");
       segEl.className = "streampulse-unmuted-segment";
       const leftPercent = (range.startTime / totalVodDuration) * 100;
@@ -343,6 +377,22 @@
       segEl.style.left = `${leftPercent.toFixed(3)}%`;
       segEl.style.width = `${Math.max(0.25, widthPercent).toFixed(3)}%`;
       segEl.title = `StreamPulse+ : Récupéré grâce à StreamPulse+ (${startTc} · ${endTc})`;
+      seekbar.appendChild(segEl);
+    }
+
+    const mergedPurged = mergeContinuousRanges(purgedRanges);
+    for (const range of mergedPurged) {
+      const segEl = document.createElement("div");
+      segEl.className = "streampulse-purged-segment";
+      const leftPercent = (range.startTime / totalVodDuration) * 100;
+      const widthPercent = (range.duration / totalVodDuration) * 100;
+
+      const startTc = formatTimecode(range.startTime);
+      const endTc = formatTimecode(range.startTime + range.duration);
+
+      segEl.style.left = `${leftPercent.toFixed(3)}%`;
+      segEl.style.width = `${Math.max(0.25, widthPercent).toFixed(3)}%`;
+      segEl.title = `Twitch : Audio original supprimé des serveurs (${startTc} · ${endTc})`;
       seekbar.appendChild(segEl);
     }
   }
@@ -365,6 +415,27 @@
 
     playerContainer.appendChild(badge);
     setTimeout(() => badge.remove(), 6000);
+  }
+
+  function showPurgedIndicator() {
+    ensureStyles();
+    const existing = document.getElementById("streampulse-unmute-badge");
+    if (existing) existing.remove();
+
+    const playerContainer = document.querySelector('div[data-a-target="video-player"]');
+    if (!playerContainer) return;
+
+    const badge = document.createElement("div");
+    badge.id = "streampulse-unmute-badge";
+    badge.className = "streampulse-unmuted-indicator is-purged";
+    badge.title = "Les fichiers audio originaux de ce replay ont été définitivement supprimés par Twitch lors du contrôle DMCA.";
+    badge.innerHTML = `
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+      <span>Audio d'origine supprimé par Twitch</span>
+    `;
+
+    playerContainer.appendChild(badge);
+    setTimeout(() => badge.remove(), 7000);
   }
 
   function showPromoIndicator() {
@@ -396,11 +467,12 @@
     vodResolved = false;
     isResolving = false;
     restoredRanges = [];
+    purgedRanges = [];
     totalVodDuration = 0;
     indicatorShown = false;
     promoShown = false;
     hideTooltip();
-    document.querySelectorAll(".streampulse-unmuted-segment").forEach((el) => el.remove());
+    document.querySelectorAll(".streampulse-unmuted-segment, .streampulse-purged-segment").forEach((el) => el.remove());
     chrome.runtime.sendMessage({ type: "vodUnmuteClearRules" }).catch(() => {});
   }
 
@@ -426,8 +498,11 @@
         vodResolved = true;
         totalVodDuration = data.totalDuration || 0;
         const validBatch = data.restoredRanges || [];
+        const purgedBatch = data.purgedRanges || [];
+
         if (validBatch.length > 0) {
           restoredRanges = validBatch;
+          purgedRanges = [];
           paintSeekbar();
 
           if (plusActive && data.isPlus) {
@@ -441,8 +516,10 @@
                   type: "vodUnmuteInstallRules",
                   segmentIds,
                   redirects: validBatch.map((v) => ({
+                    segmentId: v.segmentId || extractSegmentId(v.sourceUrl),
                     sourceUrl: v.sourceUrl,
                     targetUrl: v.targetUrl,
+                    targetType: v.targetType || (v.targetUrl?.includes("-unmuted") ? "unmuted" : "bare"),
                   })),
                   append: false,
                 },
@@ -457,6 +534,16 @@
           } else if (!promoShown) {
             promoShown = true;
             showPromoIndicator();
+          }
+        } else if (data.purgedByTwitch) {
+          purgedRanges = purgedBatch;
+          restoredRanges = [];
+          if (purgedBatch.length > 0) {
+            paintSeekbar();
+          }
+          if (!indicatorShown) {
+            indicatorShown = true;
+            showPurgedIndicator();
           }
         }
       }
