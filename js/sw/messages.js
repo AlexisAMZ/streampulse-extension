@@ -4,6 +4,7 @@ import { handleRemoveImportedFollows, handleAddStreamer, handleGetAccountLogins,
 import { handleBadgeAutoStart, handleBadgeAutoStop, handleClaimDrop, handleDropClaimedByClick, handleDropsRefresh, handleOpenDropsStream, handleRecordDropClaim, handleRecordDropsCampaignDetails, handleRecordDropsCampaigns, handleRecordDropsEvent, handleRecordDropsInventory, handleRecordPointsGain, handleResetPoints, handleUnboxKickRewards } from "./messages-drops.js";
 import { handleResetPreferences, handleTestNotification, handleUpdatePreferences, handleUpdateUserProfile } from "./messages-preferences.js";
 import { handleClearEventLogs, handleGetConfig, handleGetEventLogs, handleImportHistoryCsv, handleIncrementStat, handleMarkHistorySeen, handleOpenPatchNotes, handleOpenPlusOnboarding, handleStartTrial, handleOpenSettings, handleRemoveHistoryEntry, handleTrackWatchTime } from "./messages-app.js";
+import { handleVodUnmuteInstallRules, handleVodUnmuteClearRules } from "./vod-unmute.js";
 
 export const MESSAGE_HANDLERS = Object.freeze({
   getStreamers: handleGetStreamers,
@@ -51,4 +52,6 @@ export const MESSAGE_HANDLERS = Object.freeze({
   getEventLogs: handleGetEventLogs,
   clearEventLogs: handleClearEventLogs,
   importHistoryCsv: handleImportHistoryCsv,
+  vodUnmuteInstallRules: handleVodUnmuteInstallRules,
+  vodUnmuteClearRules: handleVodUnmuteClearRules,
 });

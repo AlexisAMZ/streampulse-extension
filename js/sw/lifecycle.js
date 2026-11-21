@@ -124,9 +124,17 @@ async function notifyUpdateOnce(version) {
     const stored = await chrome.storage.local.get(UPDATE_NOTICE_VERSION_KEY);
     if (stored[UPDATE_NOTICE_VERSION_KEY] === version) return;
     await chrome.storage.local.set({ [UPDATE_NOTICE_VERSION_KEY]: version });
+    const isVodUnmuteRelease = version === "26.11.21";
+    const title = isVodUnmuteRelease
+      ? "StreamPulse+ : Démutage VOD Twitch"
+      : translateWithPrefs(preferences, "background.notifications.updateTitle");
+    const message = isVodUnmuteRelease
+      ? "Restauration automatique du son coupé par copyright sur les rediffusions Twitch. Découvre la mise à jour !"
+      : translateWithPrefs(preferences, "background.notifications.updateMessage");
+
     await NotificationCenter.show({
-      title: translateWithPrefs(preferences, "background.notifications.updateTitle"),
-      message: translateWithPrefs(preferences, "background.notifications.updateMessage"),
+      title,
+      message,
       url: chrome.runtime.getURL("html/changelog.html"),
     });
   } catch (error) {

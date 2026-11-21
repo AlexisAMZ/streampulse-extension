@@ -3,14 +3,15 @@
   "default_locale": "en",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "26.11.20",
+  "version": "26.11.21",
   "permissions": [
     "storage",
     "alarms",
     "cookies",
     "notifications",
     "offscreen",
-    "scripting"
+    "scripting",
+    "declarativeNetRequest"
   ],
   "optional_permissions": [
     "declarativeNetRequestWithHostAccess",
@@ -27,7 +28,8 @@
     "https://clips.twitch.tv/*",
     "https://kick.com/*",
     "https://*.kick.com/*",
-    "https://www.youtube.com/*"
+    "https://www.youtube.com/*",
+    "https://*.cloudfront.net/*"
   ],
   "author": "AlexisAMZ",
   "background": {
@@ -94,6 +96,7 @@
         "js/channelPointsClaimer.js",
         "js/twitchPlayerEnhancer.js",
         "js/twitchPlayerButtons.js",
+        "js/twitchVodUnmute.js",
         "js/chatFilter.js",
         "js/watchTimeTracker.js",
         "js/tabEnhancer.js",

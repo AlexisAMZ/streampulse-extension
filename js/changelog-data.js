@@ -52,6 +52,78 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.11.21",
+    "date": "2026-11-21",
+    "title": {
+      "fr": "Démutage automatique des VODs Twitch",
+      "en": "Automatic Twitch VOD Audio Unmute",
+      "uk": "Автоматичне увімкнення звуку у VOD Twitch",
+      "es": "Reactivación automática de audio en VODs de Twitch",
+      "pt-BR": "Desmutar áudio de VODs da Twitch",
+      "de": "Automatisches Aufheben der Stummschaltung bei Twitch-VODs",
+      "it": "Ripristino automatico dell'audio nei VOD di Twitch",
+      "pl": "Automatyczne odmutowywanie dźwięku w VOD na Twitchu",
+      "tr": "Twitch VOD'larında Otomatik Ses Açma",
+      "ru": "Автоматическое включение звука в VOD на Twitch",
+      "ja": "Twitch VODの自動ミュート解除",
+      "ko": "Twitch VOD 자동 음소거 해제",
+      "ar": "إلغاء كتم الصوت التلقائي في VOD على Twitch",
+      "id": "Buka Suara Otomatis VOD Twitch",
+      "nl": "Automatisch dempen opheffen in Twitch-VOD's",
+      "sv": "Automatisk avstängning av ljudavstängning i Twitch VOD",
+      "cs": "Automatické obnovení zvuku u Twitch VOD"
+    },
+    "changes": [
+      {
+        "type": "feat",
+        "area": "plus",
+        "text": {
+          "fr": "Exclusivité StreamPulse+ : démutage automatique et instantané des passages coupés pour copyright sur les rediffusions (VODs) Twitch lorsque l'audio original est encore disponible sur les serveurs.",
+          "en": "StreamPulse+ Exclusive: automatic and instant unmuting of copyright-muted sections on Twitch VODs whenever original audio is still available on servers.",
+          "uk": "Ексклюзив StreamPulse+: автоматичне та миттєве увімкнення звуку в сегментах VOD Twitch, заглушених через авторські права, якщо оригінальний звук ще доступний.",
+          "es": "Exclusivo de StreamPulse+: reactivación automática e instantánea de secciones silenciadas por derechos de autor en VODs de Twitch cuando el audio original sigue disponible.",
+          "pt-BR": "Exclusivo do StreamPulse+: restauração automática e instantânea de trechos mutados por direitos autorais em VODs da Twitch quando o áudio original ainda está disponível.",
+          "de": "StreamPulse+ Exklusiv: Automatische und sofortige Aufhebung der Stummschaltung bei urheberrechtlich stummgeschalteten Twitch-VOD-Abschnitten, sofern das Originalaudio noch vorhanden ist.",
+          "it": "Esclusiva StreamPulse+: ripristino automatico e istantaneo delle sezioni silenziate per copyright nei VOD di Twitch quando l'audio originale è ancora disponibile sui server.",
+          "pl": "Wyłącznie w StreamPulse+: automatyczne i natychmiastowe przywracanie dźwięku w wyciszonych fragmentach VOD na Twitchu, jeśli oryginalny dźwięk jest nadal dostępny.",
+          "tr": "StreamPulse+ Özel: Orijinal ses sunucularda mevcut olduğu sürece Twitch VOD'larındaki telif hakkı nedeniyle sessize alınan bölümlerin otomatik olarak açılması.",
+          "ru": "Эксклюзив StreamPulse+: автоматическое и мгновенное включение звука в заглушённых из-за копирайта частях VOD на Twitch, если исходный звук ещё доступен.",
+          "ja": "StreamPulse+限定：サーバー上に元の音声が残っている場合、Twitch VODの著作権ミュート区間を自動的かつ瞬時に復元。",
+          "ko": "StreamPulse+ 전용: 서버에 원본 오디오가 남아 있는 경우 Twitch VOD에서 저작권으로 음소거된 구간을 자동으로 즉시 복원.",
+          "ar": "حصريًا لـ StreamPulse+: إلغاء كتم الصوت التلقائي والفوري للأجزاء المكتومة بسبب حقوق النشر في VOD على Twitch عند توفر الصوت الأصلي.",
+          "id": "Eksklusif StreamPulse+: pemulihan audio otomatis dan instan untuk bagian VOD Twitch yang dibisukan karena hak cipta saat audio asli masih tersedia.",
+          "nl": "StreamPulse+ Exclusief: automatisch en direct dempen opheffen van auteursrechtelijk gedempte delen in Twitch-VOD's wanneer originele audio nog beschikbaar is.",
+          "sv": "StreamPulse+ Exklusivt: automatisk och omedelbar återställning av upphovsrättsblockerat ljud i Twitch VOD när originalljudet fortfarande finns tillgängligt.",
+          "cs": "Exkluzivně ve StreamPulse+: automatické a okamžité obnovení zvuku u ztišených částí Twitch VOD z důvodu autorských práv, pokud je původní zvuk stále dostupný."
+        }
+      },
+      {
+        "type": "feat",
+        "area": "player",
+        "text": {
+          "fr": "Surbrillance visuelle verte sur la barre de lecture Twitch indiquant avec précision chaque passage audio restauré par StreamPulse+.",
+          "en": "Green visual highlight on the Twitch progress bar pinpointing every audio segment restored by StreamPulse+.",
+          "uk": "Зелена візуальна підсвітка на смузі прогресу Twitch, що позначає кожен сегмент аудіо, відновлений StreamPulse+.",
+          "es": "Resaltado visual verde en la barra de reproducción de Twitch indicando con precisión cada fragmento de audio restaurado por StreamPulse+.",
+          "pt-BR": "Destaque visual verde na barra de reprodução da Twitch mostrando com precisão cada trecho de áudio restaurado pelo StreamPulse+.",
+          "de": "Grüne visuelle Hervorhebung auf der Twitch-Fortschrittsleiste, die jeden von StreamPulse+ wiederhergestellten Audioabschnitt präzise anzeigt.",
+          "it": "Evidenziazione visiva verde sulla barra di riproduzione di Twitch che segnala con precisione ogni passaggio audio ripristinato da StreamPulse+.",
+          "pl": "Zielone wyróżnienie na pasku odtwarzania Twitcha wskazujące każdy fragment dźwięku przywrócony przez StreamPulse+.",
+          "tr": "StreamPulse+ tarafından geri yüklenen her ses bölümünü Twitch ilerleme çubuğunda gösteren yeşil görsel vurgu.",
+          "ru": "Зелёная подсветка на полосе воспроизведения Twitch, точно показывающая каждый восстановленный с помощью StreamPulse+ аудиофрагмент.",
+          "ja": "StreamPulse+によって復元された音声区間をTwitchシークバー上に緑色のハイライトで正確に表示。",
+          "ko": "StreamPulse+로 복원된 오디오 구간을 Twitch 재생바에 초록색 하이라이트로 정확하게 표시.",
+          "ar": "تمييز بصري أخضر على شريط تقدم Twitch يوضح بدقة كل جزء صوتي تمت استعادته بواسطة StreamPulse+.",
+          "id": "Sorotan visual hijau pada bilah pemutar Twitch yang menunjukkan setiap segmen audio yang dipulihkan oleh StreamPulse+.",
+          "nl": "Groene visuele markering op de Twitch-voortgangsbalk die elk door StreamPulse+ hersteld audiodeel nauwkeurig aangeeft.",
+          "sv": "Grön visuell markering på Twitch-förloppsindikatorn som visar varje ljudavsnitt som återställts av StreamPulse+.",
+          "cs": "Zelené vizuální zvýraznění na časové ose Twitch přesně označující každý segment zvuku obnovený pomocí StreamPulse+."
+        }
+      }
+    ]
+  },
+
+  {
     version: "26.11.20",
     "date": "2026-11-20",
     "title": {
