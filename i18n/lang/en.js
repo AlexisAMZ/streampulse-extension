@@ -1701,6 +1701,11 @@ export default {
       "clipDownloading": "Downloading clip…",
       "clipDownloadFailed": "Download failed. Reload the clip page and try again.",
       "clipOpenEditor": "Edit with StreamPulse Clips",
+      "streamRecordStart": "Record stream (REC)",
+      "streamRecordStop": "Stop recording",
+      "streamCopyM3u8": "Copy direct stream (M3U8 / VLC)",
+      "streamM3u8Copied": "M3U8 stream link copied to clipboard!",
+      "streamRecordSaved": "Video recording saved!",
       "latencyEmpty": "Latency: --",
       "latencyValue": "Latency: {{value}}s",
       "offline": "OFFLINE"

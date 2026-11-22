@@ -1711,6 +1711,11 @@ export default {
       "clipDownloading": "Baixando clipe…",
       "clipDownloadFailed": "Não foi possível baixar. Recarregue a página do clipe e tente de novo.",
       "clipOpenEditor": "Editar com o StreamPulse Clips",
+      "streamRecordStart": "Gravar transmissão (REC)",
+      "streamRecordStop": "Parar gravação",
+      "streamCopyM3u8": "Copiar fluxo direto (M3U8 / VLC)",
+      "streamM3u8Copied": "Link M3U8 copiado para a área de transferência!",
+      "streamRecordSaved": "Gravação de vídeo salva!",
       "latencyEmpty": "Latência: --",
       "latencyValue": "Latência: {{value}}s",
       "offline": "OFFLINE"

@@ -1,14 +1,11 @@
 (() => {
   "use strict";
 
-  // StreamPulse+ : Démutage automatique des rediffusions (VODs) Twitch coupées par le copyright.
-  // Détecte les flux M3U8 de VOD hébergés sur CloudFront, sonde la présence des segments originaux
-  // sans filtre DMCA (*.ts), installe les règles de redirection et met en valeur les zones
-  // restaurées sur la barre de progression avec un halo vert émeraude signature StreamPulse
-  // et une infobulle interactive au survol.
-
-  if (window.__streampulseVodUnmute) return;
-  window.__streampulseVodUnmute = true;
+  // Fonctionnalité de démutage VOD désactivée temporairement.
+  if (typeof chrome !== "undefined" && chrome.runtime?.sendMessage) {
+    chrome.runtime.sendMessage({ type: "vodUnmuteClearRules" }).catch(() => {});
+  }
+  return;
 
   const MUTED_MARKER = /-(?:muted|unmuted)(?=\.[^.]*(?:\?|$))/;
   const STYLE_ID = "streampulse-vod-unmute-styles";

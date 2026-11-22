@@ -1689,6 +1689,11 @@ export default {
       "clipDownloading": "クリップをダウンロード中…",
       "clipDownloadFailed": "ダウンロードできませんでした。クリップのページを再読み込みして、もう一度お試しください。",
       "clipOpenEditor": "StreamPulse Clips で編集",
+      "streamRecordStart": "配信を録画 (REC)",
+      "streamRecordStop": "録画を停止",
+      "streamCopyM3u8": "直接配信URLをコピー (M3U8 / VLC)",
+      "streamM3u8Copied": "M3U8ストリームURLをクリップボードにコピーしました！",
+      "streamRecordSaved": "録画を保存しました！",
       "latencyEmpty": "遅延：--",
       "latencyValue": "遅延：{{value}}秒",
       "offline": "オフライン"

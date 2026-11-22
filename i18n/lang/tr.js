@@ -1700,6 +1700,11 @@ export default {
       "clipDownloading": "Klip indiriliyor…",
       "clipDownloadFailed": "İndirilemedi. Klip sayfasını yenileyip tekrar dene.",
       "clipOpenEditor": "StreamPulse Clips ile düzenle",
+      "streamRecordStart": "Yayını kaydet (REC)",
+      "streamRecordStop": "Kaydı durdur",
+      "streamCopyM3u8": "Doğrudan akışı kopyala (M3U8 / VLC)",
+      "streamM3u8Copied": "M3U8 akış bağlantısı panoya kopyalandı!",
+      "streamRecordSaved": "Video kaydı kaydedildi!",
       "latencyEmpty": "Gecikme: --",
       "latencyValue": "Gecikme süresi: {{value}} saniye",
       "offline": "ÇEVRİMDIŞI"

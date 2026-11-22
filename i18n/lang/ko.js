@@ -1689,6 +1689,11 @@ export default {
       "clipDownloading": "클립 다운로드 중…",
       "clipDownloadFailed": "다운로드할 수 없습니다. 클립 페이지를 새로고침한 뒤 다시 시도하세요.",
       "clipOpenEditor": "StreamPulse Clips로 편집",
+      "streamRecordStart": "방송 녹화 (REC)",
+      "streamRecordStop": "녹화 중지",
+      "streamCopyM3u8": "직접 스트림 복사 (M3U8 / VLC)",
+      "streamM3u8Copied": "M3U8 스트림 링크가 클립보드에 복사되었습니다!",
+      "streamRecordSaved": "동영상 녹화가 저장되었습니다!",
       "latencyEmpty": "지연 시간: --",
       "latencyValue": "지연 시간: {{value}}초",
       "offline": "오프라인"

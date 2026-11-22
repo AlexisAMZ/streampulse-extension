@@ -1722,6 +1722,11 @@ export default {
       "clipDownloading": "Скачивание клипа…",
       "clipDownloadFailed": "Не удалось скачать. Перезагрузи страницу клипа и попробуй снова.",
       "clipOpenEditor": "Монтировать в StreamPulse Clips",
+      "streamRecordStart": "Записать трансляцию (REC)",
+      "streamRecordStop": "Остановить запись",
+      "streamCopyM3u8": "Скопировать прямую ссылку (M3U8 / VLC)",
+      "streamM3u8Copied": "Ссылка M3U8 скопирована в буфер обмена!",
+      "streamRecordSaved": "Видеозапись сохранена!",
       "latencyEmpty": "Задержка: --",
       "latencyValue": "Задержка: {{value}} с",
       "offline": "ОФЛАЙН"

@@ -1722,6 +1722,11 @@ export default {
       "clipDownloading": "Завантаження кліпу…",
       "clipDownloadFailed": "Завантаження не вдалося. Оновіть сторінку кліпу й спробуйте ще раз.",
       "clipOpenEditor": "Редагувати в StreamPulse Clips",
+      "streamRecordStart": "Записати трансляцію (REC)",
+      "streamRecordStop": "Зупинити запис",
+      "streamCopyM3u8": "Скопіювати пряме посилання (M3U8 / VLC)",
+      "streamM3u8Copied": "Посилання M3U8 скопійовано в буфер обміну!",
+      "streamRecordSaved": "Відеозапис збережено!",
       "latencyEmpty": "Затримка: --",
       "latencyValue": "Затримка: {{value}} с",
       "offline": "ОФЛАЙН"

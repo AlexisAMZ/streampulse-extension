@@ -1744,6 +1744,11 @@ export default {
       "clipDownloading": "جارٍ تنزيل المقطع…",
       "clipDownloadFailed": "فشل التنزيل. أعد تحميل صفحة المقطع وحاول مجددًا.",
       "clipOpenEditor": "تعديل باستخدام StreamPulse Clips",
+      "streamRecordStart": "تسجيل البث (REC)",
+      "streamRecordStop": "إيقاف التسجيل",
+      "streamCopyM3u8": "نسخ رابط البث المباشر (M3U8 / VLC)",
+      "streamM3u8Copied": "تم نسخ رابط M3U8 إلى الحافظة!",
+      "streamRecordSaved": "تم حفظ تسجيل الفيديو!",
       "latencyEmpty": "زمن الاستجابة: --",
       "latencyValue": "زمن الاستجابة: {{value}} ث",
       "offline": "غير متصل"
