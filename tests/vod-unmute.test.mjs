@@ -74,6 +74,17 @@ test("VOD Unmute : installation et nettoyage des règles déclaratives compactes
 
   assert.equal(re.test(testUrlOther), false); // Appartient au lot suivant
 
+  // Test de restriction par qualité lorsque quality est fourni
+  const qualityRes = await handleVodUnmuteInstallRules(
+    { segmentIds: ["900"], quality: "chunked", append: false },
+    { tab: { id: 10 } }
+  );
+  assert.equal(qualityRes.ok, true);
+  const qRule = fakeRules[0];
+  const qRe = new RegExp(qRule.condition.regexFilter);
+  assert.equal(qRe.test("https://d2vi6trrdongqn.cloudfront.net/hash/chunked/900-unmuted.ts"), true);
+  assert.equal(qRe.test("https://d2vi6trrdongqn.cloudfront.net/hash/720p60/900-muted.ts"), false);
+
   // 2. Nettoyage ciblé par onglet
   await clearVodRulesForTab(10);
   assert.equal(fakeRules.length, 0);

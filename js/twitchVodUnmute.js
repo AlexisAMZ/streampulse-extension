@@ -262,10 +262,14 @@
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 2500);
       const res = await fetch(url, {
-        method: "HEAD",
+        method: "GET",
+        headers: { Range: "bytes=0-1" },
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
+      if (res.body && typeof res.body.cancel === "function") {
+        res.body.cancel().catch(() => {});
+      }
       return res.status === 200 || res.status === 206;
     } catch (_err) {
       return false;
@@ -321,6 +325,9 @@
       const parsed = parseM3u8(text, playlistUrl);
       if (!parsed || parsed.entries.length === 0) return;
 
+      const qualityMatch = /\/([a-zA-Z0-9_-]+)\/[^/]+\.m3u8/.exec(playlistUrl);
+      const quality = qualityMatch ? qualityMatch[1] : null;
+
       totalVodDuration = parsed.totalDuration;
       const mutedEntries = parsed.entries.filter((e) => e.isMuted);
       if (mutedEntries.length === 0) return;
@@ -360,6 +367,7 @@
               {
                 type: "vodUnmuteInstallRules",
                 segmentIds,
+                quality,
                 redirects: validBatch.map((v) => ({
                   sourceUrl: v.sourceUrl,
                   targetUrl: v.targetUrl,

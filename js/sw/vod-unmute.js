@@ -116,6 +116,9 @@ export async function handleVodUnmuteInstallRules(message, sender) {
 
       if (segmentIds.length > 0) {
         const uniqueIds = Array.from(new Set(segmentIds.map(String)));
+        const qualityPrefix = message?.quality
+          ? `${message.quality.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}/`
+          : "";
         for (let i = 0; i < uniqueIds.length; i += CHUNK_SIZE) {
           const chunk = uniqueIds.slice(i, i + CHUNK_SIZE);
           const pattern = chunk
@@ -131,7 +134,7 @@ export async function handleVodUnmuteInstallRules(message, sender) {
               redirect: { regexSubstitution: "\\1\\2\\3" },
             },
             condition: {
-              regexFilter: `^(https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net)/.+/)(${pattern})-(?:muted|unmuted)(\\.ts(?:\\?.*)?)$`,
+              regexFilter: `^(https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net)/.+/${qualityPrefix})(${pattern})-(?:muted|unmuted)(\\.ts(?:\\?.*)?)$`,
               tabIds: [tabId],
               resourceTypes: ["xmlhttprequest", "media", "other"],
             },
