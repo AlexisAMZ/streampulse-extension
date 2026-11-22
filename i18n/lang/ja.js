@@ -1111,6 +1111,8 @@ export default {
       "playerQualitySource": "ソース",
       "clipDownloadTitle": "クリップのダウンロード",
       "clipDownloadDescription": "Twitch のクリップページに MP4 で保存するボタンを追加します。StreamPulse+ 限定。",
+      "vodUnmuteTitle": "VOD音声復元",
+      "vodUnmuteDescription": "実験的：Twitch VODのアーカイブでミュートされた音声セグメントの復元を試みます。",
       "preventTabDiscardTitle": "タブのスリープを防ぐ",
       "preventTabDiscardDescription": "Chrome が Twitch と Kick のチャンネルタブをスリープさせないようにし、ポイントとドロップを貯め続けます。",
       "fastForwardTitle": "早送りボタン",

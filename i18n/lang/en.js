@@ -1120,6 +1120,8 @@ export default {
       "playerQualitySource": "Source",
       "clipDownloadTitle": "Clip downloads",
       "clipDownloadDescription": "Add a button on clip pages to save clips as MP4. StreamPulse+.",
+      "vodUnmuteTitle": "VOD Audio Restoration",
+      "vodUnmuteDescription": "Experimental: attempts to restore muted audio segments on Twitch VOD replays.",
       "preventTabDiscardTitle": "Prevent tab discarding",
       "preventTabDiscardDescription": "Stops Chrome from putting your Twitch and Kick channel tabs to sleep, so points and Drops keep coming.",
       "fastForwardTitle": "Fast-forward button",

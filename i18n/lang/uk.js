@@ -1138,6 +1138,8 @@ export default {
       "playerQualitySource": "Джерело",
       "clipDownloadTitle": "Завантаження кліпів",
       "clipDownloadDescription": "Додає на сторінках кліпів кнопку для збереження кліпу у форматі MP4. StreamPulse+.",
+      "vodUnmuteTitle": "Відновлення звуку VOD",
+      "vodUnmuteDescription": "Експериментально: спроба відновити заглушені фрагменти звуку в записах VOD на Twitch.",
       "preventTabDiscardTitle": "Не вивантажувати вкладки",
       "preventTabDiscardDescription": "Не дає Chrome присипляти твої вкладки каналів Twitch і Kick, щоб бали та Drops продовжували накопичуватися.",
       "fastForwardTitle": "Кнопка «Наздогнати ефір»",

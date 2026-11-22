@@ -1138,6 +1138,8 @@ export default {
       "playerQualitySource": "Источник",
       "clipDownloadTitle": "Скачивание клипов",
       "clipDownloadDescription": "Добавляет на страницы клипов Twitch кнопку, чтобы сохранить их в MP4. Только в StreamPulse+.",
+      "vodUnmuteTitle": "Восстановление звука VOD",
+      "vodUnmuteDescription": "Экспериментально: пытается восстановить заглушённые фрагменты аудио в повторах VOD на Twitch.",
       "preventTabDiscardTitle": "Не давать вкладке засыпать",
       "preventTabDiscardDescription": "Не даёт Chrome усыплять твои вкладки каналов Twitch и Kick, чтобы баллы и Drops продолжали капать.",
       "fastForwardTitle": "Кнопка перемотки",

@@ -1129,6 +1129,8 @@ export default {
       "playerQualitySource": "Fuente",
       "clipDownloadTitle": "Descarga de clips",
       "clipDownloadDescription": "Añade un botón en las páginas de clips de Twitch para guardarlos en MP4. Solo con StreamPulse+.",
+      "vodUnmuteTitle": "Restauración de audio VOD",
+      "vodUnmuteDescription": "Experimental: intenta restaurar los segmentos de audio silenciados en las repeticiones VOD de Twitch.",
       "preventTabDiscardTitle": "Evitar la suspensión de pestañas",
       "preventTabDiscardDescription": "Evita que Chrome suspenda tus pestañas de canal de Twitch y Kick, para que los puntos y los Drops sigan sumando.",
       "fastForwardTitle": "Botón de avance rápido",

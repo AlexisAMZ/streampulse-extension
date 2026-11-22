@@ -1138,6 +1138,8 @@ export default {
       "playerQualitySource": "Źródło",
       "clipDownloadTitle": "Pobieranie klipów",
       "clipDownloadDescription": "Dodaje na stronach klipów Twitcha przycisk do zapisu w MP4. Tylko w StreamPulse+.",
+      "vodUnmuteTitle": "Przywracanie dźwięku VOD",
+      "vodUnmuteDescription": "Eksperymentalne: próbuje przywrócić wyciszone fragmenty dźwięku w powtórkach VOD na Twitchu.",
       "preventTabDiscardTitle": "Nie usypiaj karty",
       "preventTabDiscardDescription": "Nie pozwala Chrome usypiać twoich kart kanałów Twitcha i Kicka, żeby punkty i Drops dalej wpadały.",
       "fastForwardTitle": "Przycisk przewijania do przodu",

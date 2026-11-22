@@ -1156,6 +1156,8 @@ export default {
       "playerQualitySource": "المصدر",
       "clipDownloadTitle": "تنزيل المقاطع",
       "clipDownloadDescription": "أضف زرًا في صفحات المقاطع لحفظها بصيغة MP4. StreamPulse+.",
+      "vodUnmuteTitle": "استعادة صوت VOD",
+      "vodUnmuteDescription": "تجريبي: محاولة استعادة مقاطع الصوت المكتومة في إعادات VOD على Twitch.",
       "preventTabDiscardTitle": "منع تجميد التبويبات",
       "preventTabDiscardDescription": "يمنع Chrome من تجميد تبويبات قنوات Twitch وKick الخاصة بك، لتستمر النقاط وDrops في التراكم.",
       "fastForwardTitle": "زر التقديم السريع",

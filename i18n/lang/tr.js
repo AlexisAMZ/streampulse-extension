@@ -1120,6 +1120,8 @@ export default {
       "playerQualitySource": "Kaynak",
       "clipDownloadTitle": "Klip indirme",
       "clipDownloadDescription": "Twitch klip sayfalarına, klipleri MP4 olarak kaydetmek için bir düğme ekler. StreamPulse+'a özel.",
+      "vodUnmuteTitle": "VOD Ses Geri Yükleme",
+      "vodUnmuteDescription": "Deneysel: Twitch VOD tekrarlarındaki sessize alınan ses bölümlerini geri yüklemeyi dener.",
       "preventTabDiscardTitle": "Sekmenin uykuya geçmesini engelle",
       "preventTabDiscardDescription": "Chrome'un Twitch ve Kick kanal sekmelerini uykuya almasını engeller, böylece puanlar ve Drops gelmeye devam eder.",
       "fastForwardTitle": "İleri sarma düğmesi",

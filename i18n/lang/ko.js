@@ -1111,6 +1111,8 @@ export default {
       "playerQualitySource": "소스",
       "clipDownloadTitle": "클립 다운로드",
       "clipDownloadDescription": "Twitch 클립 페이지에 MP4로 저장하는 버튼을 추가합니다. StreamPulse+ 전용.",
+      "vodUnmuteTitle": "VOD 오디오 복원",
+      "vodUnmuteDescription": "실험적: Twitch VOD 다시보기에서 음소거된 오디오 세그먼트 복원을 시도합니다.",
       "preventTabDiscardTitle": "탭 절전 방지",
       "preventTabDiscardDescription": "Chrome이 Twitch와 Kick 채널 탭을 절전 상태로 만들지 않게 해 포인트와 드롭이 계속 쌓이게 합니다.",
       "fastForwardTitle": "빨리 감기 버튼",

@@ -127,6 +127,7 @@ const keepQualityToggle = document.getElementById("pref-keep-quality");
 const pipButtonToggle = document.getElementById("pref-pip-button");
 const autoRefreshToggle = document.getElementById("pref-auto-refresh");
 const clipDownloadToggle = document.getElementById("pref-clip-download");
+const vodUnmuteToggle = document.getElementById("pref-vod-unmute");
 const playerQualitySelect = document.getElementById("pref-player-quality");
 const latencyPlacementSelect = document.getElementById("pref-latency-placement");
 const fastForwardToggle = document.getElementById("pref-fast-forward");
@@ -1436,6 +1437,9 @@ function renderPreferences() {
   if (clipDownloadToggle) {
     clipDownloadToggle.checked = prefs.enableClipDownload !== false;
   }
+  if (vodUnmuteToggle) {
+    vodUnmuteToggle.checked = Boolean(prefs.enableVodUnmute);
+  }
   if (playerQualitySelect) {
     playerQualitySelect.value = prefs.playerQuality || "auto";
   }
@@ -2671,6 +2675,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     clipDownloadToggle?.addEventListener("change", (e) => {
       updatePreferences({ enableClipDownload: e.target.checked });
+    });
+    vodUnmuteToggle?.addEventListener("change", (e) => {
+      updatePreferences({ enableVodUnmute: e.target.checked });
     });
     playerQualitySelect?.addEventListener("change", (e) => {
       updatePreferences({ playerQuality: e.target.value });

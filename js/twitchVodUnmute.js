@@ -1,11 +1,25 @@
 (() => {
   "use strict";
 
-  // Fonctionnalité de démutage VOD désactivée temporairement.
-  if (typeof chrome !== "undefined" && chrome.runtime?.sendMessage) {
-    chrome.runtime.sendMessage({ type: "vodUnmuteClearRules" }).catch(() => {});
+  const PREFERENCES_KEY = "betaGeneralPreferences";
+  let vodUnmuteEnabled = false;
+
+  function clearVodRules() {
+    if (typeof chrome !== "undefined" && chrome.runtime?.sendMessage) {
+      chrome.runtime.sendMessage({ type: "vodUnmuteClearRules" }).catch(() => {});
+    }
   }
-  return;
+
+  function updateVodUnmuteState(prefs) {
+    const nextVal = Boolean(prefs?.enableVodUnmute);
+    if (nextVal === vodUnmuteEnabled) return;
+    vodUnmuteEnabled = nextVal;
+    if (!vodUnmuteEnabled) {
+      resetVodState();
+    } else if (isVodPage()) {
+      checkCurrentVod();
+    }
+  }
 
   const MUTED_MARKER = /-(?:muted|unmuted)(?=\.[^.]*(?:\?|$))/;
   const STYLE_ID = "streampulse-vod-unmute-styles";
@@ -68,16 +82,25 @@
     }
   }
 
-  // Initialisation du statut StreamPulse+
+  // Initialisation du statut StreamPulse+ et du réglage VOD Unmute (Bêta)
   if (chrome.storage?.local) {
-    chrome.storage.local.get("streamPulsePlus", (res) => {
+    chrome.storage.local.get(["streamPulsePlus", PREFERENCES_KEY], (res) => {
       updatePlusStatus(res?.streamPulsePlus);
+      updateVodUnmuteState(res?.[PREFERENCES_KEY]);
+      if (!vodUnmuteEnabled) {
+        clearVodRules();
+      }
     });
     chrome.storage.onChanged.addListener((changes, area) => {
-      if (area === "local" && changes.streamPulsePlus) {
-        updatePlusStatus(changes.streamPulsePlus.newValue);
-        if (restoredRanges.length > 0) {
-          paintSeekbar();
+      if (area === "local") {
+        if (changes.streamPulsePlus) {
+          updatePlusStatus(changes.streamPulsePlus.newValue);
+          if (restoredRanges.length > 0) {
+            paintSeekbar();
+          }
+        }
+        if (changes[PREFERENCES_KEY]) {
+          updateVodUnmuteState(changes[PREFERENCES_KEY].newValue);
         }
       }
     });
@@ -592,6 +615,7 @@
   }
 
   async function checkCurrentVod() {
+    if (!vodUnmuteEnabled) return;
     if (!isVodPage()) {
       if (currentVodId) resetVodState();
       return;
@@ -623,7 +647,7 @@
   // Observer de requêtes réseau pour intercepter les flux HLS alternatifs
   try {
     const perfObserver = new PerformanceObserver((list) => {
-      if (!isVodPage()) return;
+      if (!vodUnmuteEnabled || !isVodPage()) return;
       for (const entry of list.getEntries()) {
         if (entry.name.includes(".m3u8") && (entry.name.includes("cloudfront.net") || entry.name.includes("ttvnw.net"))) {
           processPlaylist(entry.name);
@@ -637,6 +661,7 @@
 
   // Détection instantanée des navigations SPA
   function notifyNavigation() {
+    if (!vodUnmuteEnabled) return;
     requestAnimationFrame(() => {
       checkCurrentVod();
     });
@@ -664,6 +689,7 @@
 
   // Boucle de surveillance SPA et maintien de la seekbar
   setInterval(() => {
+    if (!vodUnmuteEnabled) return;
     if (isVodPage()) {
       checkCurrentVod();
       const seekbar = document.querySelector("div.seekbar-bar");
@@ -675,6 +701,8 @@
     }
   }, 1200);
 
-  // Lancement immédiat
-  checkCurrentVod();
+  // Lancement si activé
+  if (vodUnmuteEnabled) {
+    checkCurrentVod();
+  }
 })();

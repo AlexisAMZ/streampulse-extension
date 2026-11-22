@@ -6,7 +6,8 @@
 let updateQueue = Promise.resolve();
 let nextRuleId = 1;
 const MAX_RULE_ID = 2147480000;
-const CHUNK_SIZE = 15;
+const MAX_CHUNK_SIZE = 15;
+const MAX_PATTERN_CHARS = 350;
 const tabRulesMap = new Map(); // tabId -> Set<ruleId>
 
 function enqueueUpdate(task) {
@@ -148,8 +149,20 @@ export async function handleVodUnmuteInstallRules(message, sender) {
         const qualityPrefix = message?.quality
           ? `${message.quality.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}/`
           : "";
-        for (let i = 0; i < uniqueIds.length; i += CHUNK_SIZE) {
-          const chunk = uniqueIds.slice(i, i + CHUNK_SIZE);
+        let i = 0;
+        while (i < uniqueIds.length) {
+          let currentChars = 0;
+          const chunk = [];
+          while (i < uniqueIds.length && chunk.length < MAX_CHUNK_SIZE) {
+            const nextId = uniqueIds[i];
+            const escapedLen = nextId.length + 2;
+            if (chunk.length > 0 && currentChars + escapedLen > MAX_PATTERN_CHARS) {
+              break;
+            }
+            chunk.push(nextId);
+            currentChars += escapedLen;
+            i++;
+          }
           const pattern = chunk
             .map((id) => id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
             .join("|");
@@ -164,6 +177,7 @@ export async function handleVodUnmuteInstallRules(message, sender) {
               redirect: { regexSubstitution: "\\1\\2\\3" },
             },
             condition: {
+              tabIds: [tabId],
               regexFilter: `^(https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net)/.+/${qualityPrefix})(${pattern})-(?:muted|unmuted)(\\.ts(?:\\?.*)?)$`,
               resourceTypes: ["xmlhttprequest", "media", "other"],
             },
@@ -188,6 +202,7 @@ export async function handleVodUnmuteInstallRules(message, sender) {
               redirect: { url: item.targetUrl },
             },
             condition: {
+              tabIds: [tabId],
               urlFilter: `|${cleanSource}`,
               resourceTypes: ["xmlhttprequest", "media", "other"],
             },
@@ -212,6 +227,7 @@ export async function handleVodUnmuteInstallRules(message, sender) {
             ],
           },
           condition: {
+            tabIds: [tabId],
             urlFilter: "||cloudfront.net/*.ts*",
             resourceTypes: ["xmlhttprequest", "media", "other"],
           },

@@ -1120,6 +1120,8 @@ export default {
       "playerQualitySource": "Quelle",
       "clipDownloadTitle": "Clip-Downloads",
       "clipDownloadDescription": "Fügt auf Twitch-Clipseiten eine Schaltfläche hinzu, um Clips als MP4 zu speichern. Nur mit StreamPulse+.",
+      "vodUnmuteTitle": "VOD-Audiowiederherstellung",
+      "vodUnmuteDescription": "Experimentell: Versucht, stummgeschaltete Audiosegmente in Twitch-VOD-Wiederholungen wiederherzustellen.",
       "preventTabDiscardTitle": "Tab-Ruhezustand verhindern",
       "preventTabDiscardDescription": "Verhindert, dass Chrome deine Twitch- und Kick-Kanal-Tabs in den Ruhezustand versetzt, damit Punkte und Drops weiter reinkommen.",
       "fastForwardTitle": "Schnellvorlauf-Schaltfläche",
