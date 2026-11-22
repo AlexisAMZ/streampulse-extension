@@ -6,7 +6,8 @@
 let updateQueue = Promise.resolve();
 let nextRuleId = 1;
 const MAX_RULE_ID = 2147480000;
-const CHUNK_SIZE = 40;
+const CHUNK_SIZE = 15;
+const tabRulesMap = new Map(); // tabId -> Set<ruleId>
 
 function enqueueUpdate(task) {
   const next = updateQueue.then(task, task);
@@ -37,13 +38,20 @@ export async function clearVodRulesForTab(tabId) {
     if (!chrome.declarativeNetRequest?.updateSessionRules || !tabId) return;
 
     try {
-      const liveRules = await chrome.declarativeNetRequest.getSessionRules();
-      const toRemove = liveRules
-        .filter((r) => r.condition?.tabIds?.includes(tabId))
-        .map((r) => r.id);
+      const tabRuleSet = tabRulesMap.get(tabId);
+      const toRemove = tabRuleSet ? Array.from(tabRuleSet) : [];
+      tabRulesMap.delete(tabId);
 
-      if (toRemove.length > 0) {
-        await chrome.declarativeNetRequest.updateSessionRules({ removeRuleIds: toRemove });
+      const liveRules = await chrome.declarativeNetRequest.getSessionRules();
+      for (const r of liveRules) {
+        if (r.condition?.tabIds?.includes(tabId)) {
+          toRemove.push(r.id);
+        }
+      }
+
+      const uniqueRemove = Array.from(new Set(toRemove));
+      if (uniqueRemove.length > 0) {
+        await chrome.declarativeNetRequest.updateSessionRules({ removeRuleIds: uniqueRemove });
       }
     } catch (error) {
       console.warn("[StreamPulse] Erreur lors du nettoyage des règles VOD :", error?.message || error);
@@ -55,8 +63,17 @@ export async function pruneOrphanVodRules() {
   return enqueueUpdate(async () => {
     if (!chrome.declarativeNetRequest?.getSessionRules || !chrome.tabs?.get) return;
     try {
-      const liveRules = await chrome.declarativeNetRequest.getSessionRules();
       const toRemove = [];
+      for (const [tabId, ruleSet] of tabRulesMap.entries()) {
+        try {
+          await chrome.tabs.get(tabId);
+        } catch (_e) {
+          toRemove.push(...ruleSet);
+          tabRulesMap.delete(tabId);
+        }
+      }
+
+      const liveRules = await chrome.declarativeNetRequest.getSessionRules();
       for (const rule of liveRules) {
         const tabIds = rule.condition?.tabIds;
         if (Array.isArray(tabIds) && tabIds.length === 1) {
@@ -68,8 +85,10 @@ export async function pruneOrphanVodRules() {
           }
         }
       }
-      if (toRemove.length > 0) {
-        await chrome.declarativeNetRequest.updateSessionRules({ removeRuleIds: toRemove });
+
+      const uniqueRemove = Array.from(new Set(toRemove));
+      if (uniqueRemove.length > 0) {
+        await chrome.declarativeNetRequest.updateSessionRules({ removeRuleIds: uniqueRemove });
       }
     } catch (_err) {
       // Nettoyage orphelin silencieux
@@ -93,8 +112,18 @@ export async function handleVodUnmuteInstallRules(message, sender) {
       const usedIds = new Set(liveRules.map((r) => r.id));
       const staleIds = [];
 
+      let tabRuleSet = tabRulesMap.get(tabId);
+      if (!tabRuleSet) {
+        tabRuleSet = new Set();
+        tabRulesMap.set(tabId, tabRuleSet);
+      }
+
       // Si append !== true, on purge les règles existantes de cet onglet
       if (!message?.append) {
+        for (const id of tabRuleSet) {
+          staleIds.push(id);
+        }
+        tabRuleSet.clear();
         for (const rule of liveRules) {
           if (rule.condition?.tabIds?.includes(tabId)) {
             staleIds.push(rule.id);
@@ -125,6 +154,7 @@ export async function handleVodUnmuteInstallRules(message, sender) {
             .map((id) => id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
             .join("|");
           const ruleId = allocateRuleId(usedIds);
+          tabRuleSet.add(ruleId);
 
           addRules.push({
             id: ruleId,
@@ -135,7 +165,6 @@ export async function handleVodUnmuteInstallRules(message, sender) {
             },
             condition: {
               regexFilter: `^(https://[a-zA-Z0-9.-]+(?:\\.cloudfront\\.net|\\.ttvnw\\.net)/.+/${qualityPrefix})(${pattern})-(?:muted|unmuted)(\\.ts(?:\\?.*)?)$`,
-              tabIds: [tabId],
               resourceTypes: ["xmlhttprequest", "media", "other"],
             },
           });
@@ -149,6 +178,7 @@ export async function handleVodUnmuteInstallRules(message, sender) {
           if (extractSegmentId(item.sourceUrl)) continue; // Déjà pris en compte par regex
           const cleanSource = item.sourceUrl.split("?")[0];
           const ruleId = allocateRuleId(usedIds);
+          tabRuleSet.add(ruleId);
 
           addRules.push({
             id: ruleId,
@@ -159,18 +189,59 @@ export async function handleVodUnmuteInstallRules(message, sender) {
             },
             condition: {
               urlFilter: `|${cleanSource}`,
-              tabIds: [tabId],
               resourceTypes: ["xmlhttprequest", "media", "other"],
             },
           });
         }
       }
 
-      if (staleIds.length > 0 || addRules.length > 0) {
-        await chrome.declarativeNetRequest.updateSessionRules({
-          removeRuleIds: staleIds,
-          addRules,
+      if (addRules.length > 0) {
+        const corsRuleId = allocateRuleId(usedIds);
+        tabRuleSet.add(corsRuleId);
+        addRules.push({
+          id: corsRuleId,
+          priority: 2,
+          action: {
+            type: "modifyHeaders",
+            requestHeaders: [
+              { header: "Origin", operation: "remove" },
+            ],
+            responseHeaders: [
+              { header: "Access-Control-Allow-Origin", operation: "set", value: "https://www.twitch.tv" },
+              { header: "Access-Control-Allow-Credentials", operation: "set", value: "true" },
+            ],
+          },
+          condition: {
+            urlFilter: "||cloudfront.net/*.ts*",
+            resourceTypes: ["xmlhttprequest", "media", "other"],
+          },
         });
+      }
+
+      if (staleIds.length > 0 || addRules.length > 0) {
+        try {
+          await chrome.declarativeNetRequest.updateSessionRules({
+            removeRuleIds: staleIds,
+            addRules,
+          });
+        } catch (_corsErr) {
+          const fallbackRules = addRules.map((r) => {
+            if (r.action?.type === "modifyHeaders" && r.action.responseHeaders) {
+              return {
+                ...r,
+                action: {
+                  type: "modifyHeaders",
+                  requestHeaders: r.action.requestHeaders,
+                },
+              };
+            }
+            return r;
+          });
+          await chrome.declarativeNetRequest.updateSessionRules({
+            removeRuleIds: staleIds,
+            addRules: fallbackRules,
+          });
+        }
       }
 
       return { ok: true, count: addRules.length };
