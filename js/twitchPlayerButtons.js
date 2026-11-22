@@ -60,6 +60,7 @@
     timerId: null,
     targetName: "",
     badgeEl: null,
+    mimeType: "",
   };
   let ensureTimer = null;
 
@@ -415,20 +416,26 @@
 
   function getSupportedMimeType() {
     const candidates = [
-      "video/webm;codecs=vp9,opus",
-      "video/webm;codecs=h264,opus",
-      "video/webm;codecs=vp8,opus",
-      "video/webm;codecs=vp9",
-      "video/webm;codecs=h264",
-      "video/webm",
+      'video/mp4;codecs="avc1,mp4a.40.2"',
+      'video/mp4;codecs="avc1,opus"',
+      "video/mp4;codecs=avc1",
+      "video/mp4;codecs=h264",
       "video/mp4",
+      "video/webm;codecs=h264,opus",
+      "video/webm;codecs=vp9,opus",
+      "video/webm;codecs=vp8,opus",
+      "video/webm;codecs=h264",
+      "video/webm;codecs=vp9",
+      "video/webm",
     ];
     for (const type of candidates) {
-      if (typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported(type)) {
-        return type;
-      }
+      try {
+        if (typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported(type)) {
+          return type;
+        }
+      } catch (_e) {}
     }
-    return "video/webm";
+    return "video/mp4";
   }
 
   function getActiveChannel() {
@@ -552,11 +559,26 @@
       }
 
       const mimeType = getSupportedMimeType();
-      const recorder = new MediaRecorder(stream, { mimeType });
+      let recorder = null;
+      const optionsToTry = [
+        { mimeType, videoBitsPerSecond: 8000000, audioBitsPerSecond: 192000 },
+        { mimeType },
+        {}
+      ];
+      for (const opt of optionsToTry) {
+        try {
+          recorder = new MediaRecorder(stream, opt);
+          break;
+        } catch (_e) {}
+      }
+      if (!recorder) {
+        recorder = new MediaRecorder(stream);
+      }
       recordState.mediaRecorder = recorder;
       recordState.chunks = [];
       recordState.recording = true;
       recordState.startTime = Date.now();
+      recordState.mimeType = recorder.mimeType || mimeType;
 
       const vodId = getActiveVodId();
       const channel = getActiveChannel();
@@ -607,18 +629,20 @@
     hideRecordBadge();
   }
 
-  function finishRecording(mimeType) {
+  function finishRecording(fallbackMime) {
     if (!recordState.chunks.length) {
       showToast("Enregistrement vide.");
       return;
     }
 
-    const blob = new Blob(recordState.chunks, { type: mimeType });
+    const effectiveMime = recordState.mimeType || fallbackMime || "video/mp4";
+    const blob = new Blob(recordState.chunks, { type: effectiveMime });
     recordState.chunks = [];
 
     const now = new Date();
     const dateStr = now.toISOString().slice(0, 19).replace(/T/, "_").replace(/:/g, "-");
-    const ext = mimeType.includes("mp4") ? "mp4" : "webm";
+    const isMp4 = effectiveMime.toLowerCase().includes("mp4");
+    const ext = isMp4 ? "mp4" : "webm";
     const fileName = `StreamPulse_${recordState.targetName}_${dateStr}.${ext}`;
 
     const blobUrl = URL.createObjectURL(blob);
