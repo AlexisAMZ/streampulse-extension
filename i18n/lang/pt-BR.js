@@ -299,7 +299,13 @@ export default {
           "recentTitle": "Clipes recentes",
           "clearHistory": "Limpar",
           "openInSp": "Editar em 9:16",
-          "remove": "Remover da lista"
+          "remove": "Remover da lista",
+          "featuresTitle": "Por que usar o StreamPulse Clips?",
+          "openInSpLabel": "Editar {{name}} em 9:16 (nova aba)",
+          "emptyHint": "Nenhum clipe ainda. Em um clipe da Twitch, clique no botão StreamPulse Clips do player: ele vai aparecer aqui.",
+          "clearConfirm": "Apagar todos os clipes recentes?",
+          "cancel": "Cancelar",
+          "removed": "Clipe removido da lista"
     },
     "plus": {
       "perkFxCount": "{{badges}} efeitos de emblema e {{names}} de nome, vistos no chat da Twitch.",

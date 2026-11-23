@@ -302,7 +302,13 @@ export default {
           "recentTitle": "المقاطع الحديثة",
           "clearHistory": "مسح",
           "openInSp": "تعديل بنسبة 9:16",
-          "remove": "إزالة من القائمة"
+          "remove": "إزالة من القائمة",
+          "featuresTitle": "لماذا StreamPulse Clips؟",
+          "openInSpLabel": "تعديل {{name}} بنسبة 9:16 (تبويب جديد)",
+          "emptyHint": "لا توجد مقاطع بعد. في مقطع من Twitch، انقر زر StreamPulse Clips في المشغّل وسيظهر هنا.",
+          "clearConfirm": "هل تريد مسح كل المقاطع الأخيرة؟",
+          "cancel": "إلغاء",
+          "removed": "أُزيل المقطع من القائمة"
     },
     "plus": {
       "perkFxCount": "{{badges}} تأثير للشارات و{{names}} تأثير لأسماء المستخدمين، تظهر في دردشة Twitch.",

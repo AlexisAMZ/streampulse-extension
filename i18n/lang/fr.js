@@ -299,7 +299,13 @@ export default {
           "recentTitle": "Clips récents",
           "clearHistory": "Effacer",
           "openInSp": "Monter en 9:16",
-          "remove": "Retirer de la liste"
+          "remove": "Retirer de la liste",
+          "featuresTitle": "Pourquoi StreamPulse Clips ?",
+          "openInSpLabel": "Monter {{name}} en 9:16 (nouvel onglet)",
+          "emptyHint": "Aucun clip pour l'instant. Sur un clip Twitch, clique sur le bouton StreamPulse Clips du lecteur : il apparaîtra ici.",
+          "clearConfirm": "Effacer tous les clips récents ?",
+          "cancel": "Annuler",
+          "removed": "Clip retiré de la liste"
     },
     "plus": {
       "perkFxCount": "{{badges}} effets de badge et {{names}} de pseudo, vus dans le chat Twitch.",

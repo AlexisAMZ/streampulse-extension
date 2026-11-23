@@ -39,7 +39,7 @@ body:has(.trial-strip:not([hidden])) .clips-scroll { padding-top: 68px; }
 .clips-lead { margin: 12px 0 0; max-width: 56ch; font-size: 13px; line-height: 1.5; color: var(--clips-text-2); }
 
 /* Ce que fait le produit : une liste filetée, pas des cartes. */
-.clips-points { margin: 24px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--clips-rule); }
+.clips-points { margin: 8px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--clips-rule); }
 .clips-points li { display: grid; gap: 2px; padding: 10px 0; border-bottom: 1px solid var(--clips-rule); }
 .clips-points strong { font-size: 13.5px; font-weight: 700; letter-spacing: -0.01em; }
 .clips-points span { font-size: 12.5px; line-height: 1.45; color: var(--clips-text-2); }
@@ -58,7 +58,6 @@ body:has(.trial-strip:not([hidden])) .clips-scroll { padding-top: 68px; }
 .clips-btn-primary:active { transform: translateY(0); }
 
 .clips-btn-primary:focus-visible,
-.clips-clear-btn:focus-visible,
 .clips-card-open:focus-visible,
 .clips-card-remove:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
@@ -95,6 +94,34 @@ body:has(.trial-strip:not([hidden])) .clips-scroll { padding-top: 68px; }
 .clips-card-remove:hover { background: rgba(255, 255, 255, 0.1); color: var(--clips-text); }
 .clips-card-remove svg { width: 14px; height: 14px; }
 
+
+/* Amorce quand la liste est vide : d'où viennent les clips. */
+.clips-empty-hint { margin: 20px 0 0; max-width: 56ch; font-size: 12.5px; line-height: 1.5; color: var(--clips-text-2); }
+
+/* Effacer : confirmation sur place, dans l'en-tête de la liste. */
+.clips-clear-confirm { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: flex-end; font-size: 12px; color: var(--clips-text-2); }
+.clips-clear-btn.is-danger { color: #ff8a80; }
+.clips-clear-btn.is-danger:hover { background: rgba(255, 138, 128, 0.14); color: #ffb4ab; }
+.clips-clear-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Retrait d'un clip : quelques secondes pour revenir en arrière. */
+.clips-undo { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 12px 0 0; padding: 6px 6px 6px 16px; border-radius: 999px; background: #16161a; border: 1px solid rgba(255, 255, 255, 0.16); font-size: 12.5px; }
+
+/* Pourquoi StreamPulse Clips : les arguments restent à un clic, la page se lit sans défiler. */
+.clips-why { margin-top: 22px; border-top: 1px solid var(--clips-rule); padding-top: 10px; }
+.clips-why summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 28px; font: 700 13px/1.2 var(--body); letter-spacing: -0.01em; color: var(--clips-text-2); cursor: pointer; list-style: none; }
+.clips-why summary::-webkit-details-marker { display: none; }
+.clips-why summary::after { content: ""; flex: none; width: 8px; height: 8px; border-inline-end: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform 140ms ease; }
+.clips-why[open] summary::after { transform: rotate(-135deg); }
+.clips-why summary:hover { color: var(--clips-text); }
+.clips-why summary:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Vignette du clip : le logo de la plateforme garde le coin. */
+.clips-card-thumb { position: relative; flex: none; width: 60px; height: 34px; border-radius: 8px; background: #16161a; overflow: visible; }
+.clips-card-thumb-img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+.clips-card-thumb .clips-card-platform { position: absolute; inset-inline-start: -6px; bottom: -6px; width: 22px; height: 22px; background: #050505; }
+.clips-card-thumb .clips-card-platform img { width: 12px; height: 12px; }
+
 /* Le geste du produit : le clip 16:9 devient un 9:16, cam en haut, jeu en dessous.
    Dessiné, sans compteur ni emoji. Le cadre de détection se pose une fois à l'ouverture. */
 .clips-visual { position: sticky; top: 0; display: flex; flex-direction: column; align-items: center; }
@@ -111,7 +138,7 @@ body:has(.trial-strip:not([hidden])) .clips-scroll { padding-top: 68px; }
   border-radius: 26px; overflow: hidden; background: #16161a; border: 1px solid rgba(255, 255, 255, 0.22);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 20px 36px -14px rgba(0, 0, 0, 0.9);
 }
-.clips-phone-cam { position: relative; display: grid; place-items: center; flex: 0 0 34%; background: #5b2db3; border-bottom: 3px solid #000; }
+.clips-phone-cam { position: relative; display: grid; place-items: end center; padding-bottom: 14px; flex: 0 0 34%; background: #5b2db3; border-bottom: 3px solid #000; }
 .clips-phone-game { position: relative; flex: 1 1 auto; display: flex; align-items: flex-end; justify-content: center; padding: 0 12px 20px; background: #1b1d2a; }
 .clips-phone-label {
   position: absolute; top: 14px; inset-inline-start: 14px; padding: 2px 8px; border-radius: 999px;
@@ -129,5 +156,5 @@ body:has(.trial-strip:not([hidden])) .clips-scroll { padding-top: 68px; }
 
 @media (prefers-reduced-motion: reduce) {
   .clips-phone-face { animation: none; }
-  .clips-btn-primary, .clips-card-open { transition: none; }
+  .clips-btn-primary, .clips-card-open, .clips-why summary::after { transition: none; }
 }

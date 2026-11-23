@@ -298,7 +298,13 @@ export default {
           "recentTitle": "Son klipler",
           "clearHistory": "Temizle",
           "openInSp": "9:16 düzenle",
-          "remove": "Listeden kaldır"
+          "remove": "Listeden kaldır",
+          "featuresTitle": "Neden StreamPulse Clips?",
+          "openInSpLabel": "{{name}} klibini 9:16 düzenle (yeni sekme)",
+          "emptyHint": "Henüz klip yok. Bir Twitch klibinde oynatıcıdaki StreamPulse Clips düğmesine tıkla: burada görünecek.",
+          "clearConfirm": "Tüm son klipler silinsin mi?",
+          "cancel": "İptal",
+          "removed": "Klip listeden kaldırıldı"
     },
     "plus": {
       "perkFxCount": "Twitch sohbetinde görünen {{badges}} rozet efekti ve {{names}} kullanıcı adı efekti.",

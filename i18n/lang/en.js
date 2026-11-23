@@ -298,7 +298,13 @@ export default {
           "recentTitle": "Recent clips",
           "clearHistory": "Clear",
           "openInSp": "Edit in 9:16",
-          "remove": "Remove from the list"
+          "remove": "Remove from the list",
+          "featuresTitle": "Why StreamPulse Clips?",
+          "openInSpLabel": "Edit {{name}} in 9:16 (new tab)",
+          "emptyHint": "No clips yet. On a Twitch clip, click the StreamPulse Clips button in the player: it will show up here.",
+          "clearConfirm": "Clear all recent clips?",
+          "cancel": "Cancel",
+          "removed": "Clip removed from the list"
     },
     "plus": {
       "perkFxCount": "{{badges}} badge effects and {{names}} username effects, seen in Twitch chat.",

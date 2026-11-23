@@ -300,7 +300,13 @@ export default {
           "recentTitle": "Недавние клипы",
           "clearHistory": "Очистить",
           "openInSp": "Монтировать в 9:16",
-          "remove": "Убрать из списка"
+          "remove": "Убрать из списка",
+          "featuresTitle": "Преимущества StreamPulse Clips",
+          "openInSpLabel": "Редактировать {{name}} в 9:16 (новая вкладка)",
+          "emptyHint": "Клипов пока нет. На странице клипа Twitch нажмите кнопку StreamPulse Clips в плеере: клип появится здесь.",
+          "clearConfirm": "Очистить все недавние клипы?",
+          "cancel": "Отмена",
+          "removed": "Клип убран из списка"
     },
     "plus": {
       "perkFxCount": "{{badges}} эффектов значка и {{names}} эффектов ника в чате Twitch.",

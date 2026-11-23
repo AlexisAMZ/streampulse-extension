@@ -300,7 +300,13 @@ export default {
           "recentTitle": "Ostatnie klipy",
           "clearHistory": "Wyczyść",
           "openInSp": "Edytuj w 9:16",
-          "remove": "Usuń z listy"
+          "remove": "Usuń z listy",
+          "featuresTitle": "Dlaczego StreamPulse Clips?",
+          "openInSpLabel": "Edytuj {{name}} w 9:16 (nowa karta)",
+          "emptyHint": "Brak klipów. Na klipie z Twitcha kliknij przycisk StreamPulse Clips w odtwarzaczu: pojawi się tutaj.",
+          "clearConfirm": "Usunąć wszystkie ostatnie klipy?",
+          "cancel": "Anuluj",
+          "removed": "Klip usunięty z listy"
     },
     "plus": {
       "perkFxCount": "{{badges}} efektów odznaki i {{names}} efektów nicku, widocznych na czacie Twitcha.",

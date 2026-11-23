@@ -1458,19 +1458,34 @@
             <p class="clips-cta-note" data-i18n="popup.clips.ctaNote">100 % gratuit dans le navigateur · Aucun compte requis</p>
           </div>
 
+          <p class="clips-empty-hint" id="clips-empty-hint" data-i18n="popup.clips.emptyHint" hidden>Aucun clip pour l'instant. Sur un clip Twitch, clique sur le bouton StreamPulse Clips du lecteur : il apparaîtra ici.</p>
+
           <div class="clips-recent-section" id="clips-recent-section" hidden>
             <div class="clips-recent-header">
               <h3 class="clips-recent-title" data-i18n="popup.clips.recentTitle">Clips récents</h3>
               <button type="button" id="clips-btn-clear" class="clips-clear-btn" data-i18n="popup.clips.clearHistory">Effacer</button>
+              <div class="clips-clear-confirm" id="clips-clear-confirm" role="alertdialog" aria-label="Effacer" data-i18n-attr-ariaLabel="popup.clips.clearConfirm" hidden>
+                <span data-i18n="popup.clips.clearConfirm">Effacer tous les clips récents ?</span>
+                <button type="button" id="clips-clear-yes" class="clips-clear-btn is-danger" data-i18n="popup.clips.clearHistory">Effacer</button>
+                <button type="button" id="clips-clear-no" class="clips-clear-btn" data-i18n="popup.clips.cancel">Annuler</button>
+              </div>
             </div>
             <ul id="clips-recent-list" class="clips-recent-list"></ul>
           </div>
 
-          <ul class="clips-points">
-            <li><strong data-i18n="popup.clips.feat1Title">Recadrage 9:16 intelligent</strong><span data-i18n="popup.clips.feat1Body">Détection automatique de la caméra du streamer et du jeu. Zéro bande noire sur smartphone.</span></li>
-            <li><strong data-i18n="popup.clips.feat2Title">Sous-titres animés par IA</strong><span data-i18n="popup.clips.feat2Body">Transcription instantanée et animations mot à mot ultra dynamiques pour capter l'attention.</span></li>
-            <li><strong data-i18n="popup.clips.feat3Title">Export direct TikTok, Reels, Shorts</strong><span data-i18n="popup.clips.feat3Body">Téléchargement immédiat en HD 1080x1920 60 FPS sans filigrane. Prêt à publier.</span></li>
-          </ul>
+          <p class="clips-undo" id="clips-undo" role="status" hidden>
+            <span data-i18n="popup.clips.removed">Clip retiré de la liste</span>
+            <button type="button" id="clips-undo-btn" class="clips-clear-btn" data-i18n="popup.clips.cancel">Annuler</button>
+          </p>
+
+          <details class="clips-why">
+            <summary data-i18n="popup.clips.featuresTitle">Pourquoi StreamPulse Clips ?</summary>
+            <ul class="clips-points">
+              <li><strong data-i18n="popup.clips.feat1Title">Recadrage 9:16 intelligent</strong><span data-i18n="popup.clips.feat1Body">Détection automatique de la caméra du streamer et du jeu. Zéro bande noire sur smartphone.</span></li>
+              <li><strong data-i18n="popup.clips.feat2Title">Sous-titres animés par IA</strong><span data-i18n="popup.clips.feat2Body">Transcription instantanée et animations mot à mot ultra dynamiques pour capter l'attention.</span></li>
+              <li><strong data-i18n="popup.clips.feat3Title">Export direct TikTok, Reels, Shorts</strong><span data-i18n="popup.clips.feat3Body">Téléchargement immédiat en HD 1080x1920 60 FPS sans filigrane. Prêt à publier.</span></li>
+            </ul>
+          </details>
         </div>
 
         <div class="clips-visual" aria-hidden="true">

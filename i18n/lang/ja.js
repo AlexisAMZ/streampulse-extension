@@ -297,7 +297,13 @@ export default {
           "recentTitle": "最近のクリップ",
           "clearHistory": "消去",
           "openInSp": "9:16で編集",
-          "remove": "リストから削除"
+          "remove": "リストから削除",
+          "featuresTitle": "StreamPulse Clipsの特長",
+          "openInSpLabel": "{{name}}を9:16で編集（新しいタブ）",
+          "emptyHint": "クリップはまだありません。Twitchのクリップでプレーヤーの StreamPulse Clips ボタンをクリックすると、ここに表示されます。",
+          "clearConfirm": "最近のクリップをすべて消去しますか？",
+          "cancel": "キャンセル",
+          "removed": "クリップをリストから削除しました"
     },
     "plus": {
       "perkFxCount": "Twitch チャットで見えるバッジエフェクト {{badges}} 種と名前エフェクト {{names}} 種。",

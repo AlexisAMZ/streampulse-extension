@@ -297,7 +297,13 @@ export default {
           "recentTitle": "최근 클립",
           "clearHistory": "지우기",
           "openInSp": "9:16으로 편집",
-          "remove": "목록에서 제거"
+          "remove": "목록에서 제거",
+          "featuresTitle": "StreamPulse Clips의 장점",
+          "openInSpLabel": "{{name}}을(를) 9:16으로 편집 (새 탭)",
+          "emptyHint": "아직 클립이 없습니다. Twitch 클립에서 플레이어의 StreamPulse Clips 버튼을 클릭하면 여기에 표시됩니다.",
+          "clearConfirm": "최근 클립을 모두 지울까요?",
+          "cancel": "취소",
+          "removed": "클립을 목록에서 제거했습니다"
     },
     "plus": {
       "perkFxCount": "Twitch 채팅에 보이는 배지 효과 {{badges}}개와 닉네임 효과 {{names}}개.",
