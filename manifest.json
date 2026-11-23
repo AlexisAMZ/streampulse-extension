@@ -10,8 +10,7 @@
     "cookies",
     "notifications",
     "offscreen",
-    "scripting",
-    "declarativeNetRequest"
+    "scripting"
   ],
   "optional_permissions": [
     "declarativeNetRequestWithHostAccess",
@@ -19,6 +18,7 @@
   ],
   "optional_host_permissions": [
     "https://*.chzzk.naver.com/*",
+    "https://*.cloudfront.net/*",
     "https://*.chromiumapp.org/*"
   ],
   "host_permissions": [
@@ -28,8 +28,7 @@
     "https://clips.twitch.tv/*",
     "https://kick.com/*",
     "https://*.kick.com/*",
-    "https://www.youtube.com/*",
-    "https://*.cloudfront.net/*"
+    "https://www.youtube.com/*"
   ],
   "author": "AlexisAMZ",
   "background": {

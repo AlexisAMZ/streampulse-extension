@@ -34,6 +34,8 @@ const ES_MODULES = [
   "js/raidWatcher.js",
   "js/popup.js",
   "js/popup-features.js",
+  "js/popup-clips.js",
+  "js/vod-permission.js",
   "js/promo-liquid-button.js",
   "js/promo-clips-morph.js",
   "js/vendor/paper-shaders/**/*.js",
@@ -137,6 +139,8 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.webextensions,
+        // Charge avant ce script par le manifest (js/inject/plus-rule.js).
+        StreamPulsePlusRule: "readonly",
       },
     },
     rules: {
@@ -172,6 +176,10 @@ export default [
     // qui n'existe pas. Dans les tests, ce sont des doublures qu'on réassigne.
     files: ["js/bulk-add-page.js", "js/twitch-follows-import.js", "js/onboarding.js", "js/popup-linked-accounts.js", "tests/**/*.mjs"],
     rules: { "require-atomic-updates": "off" },
+  },
+  {
+    files: ["tests/**/*.mjs"],
+    languageOptions: { globals: { ...globals.node } },
   },
   {
     files: ["scripts/**/*.mjs"],

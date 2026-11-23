@@ -22,8 +22,6 @@ import { TRIAL_STATE_KEY, trialStateFrom, trialTakenOnAccount } from "./sw/trial
 import { celebrateTrial } from "./confetti.js";
 import { POPUP_SEEN_KEY } from "./trial-reminder.js";
 import { PLUS_KEY, plusPageUrl, getDeviceId, isPlusActive, normalizeLicenseKey, portalUrl, releaseDevice, trialEndsAt, trialPaused, verifyLicense } from "./plus.js";
-import { mountLiquidMetalButton } from "./promo-liquid-button.js";
-import { mountClipsMorph } from "./promo-clips-morph.js";
 import { hasRecentSuccess, reviewAskDecision, REMOTE_CONFIG_CACHE_KEY } from "./popup-review.js";
 import { PLUS_VALUE_KEY, plusValueFrom } from "./plus-value.js";
 import {
@@ -238,10 +236,8 @@ let promoState = { plusClosed: false, clipsClosed: false, opens: 0, lastShownAt:
 let promoDue = false;
 let promoSuccess = false;
 let promoPlusOk = false;
-let promoClipsOk = false;
 let promoRemoteOff = false;
 let promoHasDrops = false;
-let promoHasWatch = false;
 const PLAN_LABELS = { monthly: "popup.plus.planMonthly", yearly: "popup.plus.planYearly", lifetime: "popup.plus.planLifetime", trial: "popup.plus.planTrial" };
 const plusListeners = new Set();
 
@@ -382,7 +378,6 @@ function decidePromoDue() {
   const trialOffered = !plusActive() && !trialState.used && !trialState.pending;
   if (trialOffered) return false;
   promoPlusOk = promoHasDrops;
-  promoClipsOk = false;
   if (!promoPlusOk) return false;
   promoState.opens = (promoState.opens || 0) + 1;
   const seenEnough = promoState.opens >= PROMO_MIN_OPENS;
@@ -391,21 +386,6 @@ function decidePromoDue() {
   if (due) promoState.lastShownAt = Date.now();
   chrome.storage.local.set({ [PROMO_KEY]: promoState }).catch((error) => console.warn("[popup] promo :", error?.message || error));
   return due;
-}
-
-/** Le bouton métal ne se monte que lorsque la carte est montrée : un canvas
- *  WebGL monté dans un conteneur masqué naît avec une taille nulle. */
-let clipsMetalMounted = false;
-function ensureClipsMetal() {
-  const host = $("promo-clips-cta");
-  if (host && !clipsMetalMounted) {
-    clipsMetalMounted = true;
-    mountLiquidMetalButton(host, {
-      label: t("changelog.clipsCtaShort"),
-      onClick: () => window.open("https://spclips.com/app?utm_source=streampulse&utm_medium=extension&utm_campaign=popup", "_blank", "noopener"),
-    });
-  }
-  mountClipsMorph($("clips-morph"));
 }
 
 /**
@@ -1264,9 +1244,7 @@ export async function initFeatures() {
   // les 2 derniers jours (tables quotidiennes locales, jamais renvoyées).
   promoSuccess = hasRecentSuccess([stored.streamPulseWatchTimeDaily, stored.streamPulsePointsDaily]);
   // Ciblage contextuel : Drops vécus → la carte Plus parle à la bonne personne ;
-  // de l'historique de visionnage → la carte Clips (les futurs clippeurs).
   promoHasDrops = Object.keys(stored.streamPulseDropsProgress || {}).length > 0;
-  promoHasWatch = Object.keys(stored.streamPulseWatchTimeDaily || {}).length > 0;
   // Coupe-circuit distant : config.promo.enabled = false coupe tout, sans republier.
   promoRemoteOff = stored[REMOTE_CONFIG_CACHE_KEY]?.data?.promo?.enabled === false;
   // Fréquence distante en heures (config.promo.freqHours) : l'ajustement est

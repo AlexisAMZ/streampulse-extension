@@ -92,11 +92,6 @@
     return null;
   }
 
-  function isLiveOrVod() {
-    // Si ce n'est pas une page de clip, c'est un live ou une vidéo
-    return clipSlugFromLocation() === null;
-  }
-
   function insertStyle() {
     if (document.getElementById(STYLE_ID)) return;
     const style = document.createElement("style");
@@ -719,7 +714,7 @@
     if (existing) existing.remove();
   }
 
-  function openCaptureMenu(button, event) {
+  function openCaptureMenu(button) {
     closeCaptureMenu();
     insertStyle();
 
@@ -827,7 +822,7 @@
     button.addEventListener("contextmenu", (event) => {
       event.preventDefault();
       event.stopPropagation();
-      openCaptureMenu(button, event);
+      openCaptureMenu(button);
     });
 
     return button;

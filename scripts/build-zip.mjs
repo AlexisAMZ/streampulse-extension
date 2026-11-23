@@ -25,8 +25,8 @@ const DEV_ONLY = [/^localization\//, /\.md$/i, /^\.gitignore$/, /^package(-lock)
   // chaque utilisateur pour rien.
   /^images\/cws_screenshots\//, /^images\/promo\//,
   // Visuels de travail (7tv, betterttv, ffz...) : non references par l'extension.
-  // Seul twitch.svg est charge (carte d'import des follows, popup.html).
-  /^images\/platforms\/(?!twitch\.svg$)/,
+  // Seuls twitch.svg et kick.svg sont charges (popup.html : import, onglet Clips).
+  /^images\/platforms\/(?!(?:twitch|kick)\.svg$)/,
   // Studio promo TikTok : rendus, mp4 et pages de capture, 1,4 Mo hors-sujet
   // dans le paquet livre.
   /^promo\//,

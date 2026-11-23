@@ -33,6 +33,7 @@ import {
   sanitizeHandle,
 } from "./platforms.js";
 import { requestChzzkAccess } from "./chzzk-permission.js";
+import { requestVodUnmuteAccess } from "./vod-permission.js";
 import { initChzzkAsk } from "./popup-chzzk-ask.js";
 import { createAllChannelsTile, createChannelRow, createMiniCard, formatNumber, renderStage, renderStageEmpty } from "./ui.js";
 import { openChannel } from "./open-channel.js";
@@ -2676,8 +2677,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     clipDownloadToggle?.addEventListener("change", (e) => {
       updatePreferences({ enableClipDownload: e.target.checked });
     });
-    vodUnmuteToggle?.addEventListener("change", (e) => {
-      updatePreferences({ enableVodUnmute: e.target.checked });
+    vodUnmuteToggle?.addEventListener("change", async (e) => {
+      const toggle = e.target;
+      // La bêta redirige des segments vidéo : Chrome demande l'accès à ce moment-là, pas à l'installation.
+      if (toggle.checked && !(await requestVodUnmuteAccess())) {
+        toggle.checked = false;
+        return;
+      }
+      updatePreferences({ enableVodUnmute: toggle.checked });
     });
     playerQualitySelect?.addEventListener("change", (e) => {
       updatePreferences({ playerQuality: e.target.value });
