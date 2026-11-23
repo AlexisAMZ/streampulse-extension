@@ -191,6 +191,29 @@ export const RELEASES = [
       },
       {
         "type": "improved",
+        "area": "interface",
+        "text": {
+          "fr": "Onglet Clips repensé : la barre des onglets reste visible, StreamPulse Clips est présenté clairement et les clips récents s'affichent dans une liste claire avec les logos Twitch et Kick.",
+          "en": "Clips tab redesigned: the tab bar stays visible, StreamPulse Clips is clearly presented, and recent clips appear in a clean list with Twitch and Kick logos.",
+          "uk": "Вкладку «Clips» оновлено: панель вкладок залишається на місці, StreamPulse Clips чітко представлено, а нещодавні кліпи показано у списку з логотипами Twitch і Kick.",
+          "es": "Pestaña Clips rediseñada: la barra de pestañas sigue visible, StreamPulse Clips se presenta con claridad y los clips recientes aparecen en una lista clara con los logos de Twitch y Kick.",
+          "pt-BR": "Aba Clips redesenhada: a barra de abas continua visível, o StreamPulse Clips é apresentado com clareza e os clipes recentes aparecem em uma lista clara com os logotipos da Twitch e da Kick.",
+          "de": "Clips-Tab neu gestaltet: Die Tab-Leiste bleibt sichtbar, StreamPulse Clips wird klar vorgestellt und die letzten Clips stehen in einer übersichtlichen Liste mit Twitch- und Kick-Logos.",
+          "it": "Scheda Clips ridisegnata: la barra delle schede resta visibile, StreamPulse Clips è presentato con chiarezza e le clip recenti compaiono in un elenco chiaro con i loghi di Twitch e Kick.",
+          "pl": "Przeprojektowana karta Clips: pasek kart pozostaje widoczny, StreamPulse Clips jest czytelnie przedstawiony, a ostatnie klipy pojawiają się na przejrzystej liście z logo Twitch i Kick.",
+          "tr": "Clips sekmesi yeniden tasarlandı: sekme çubuğu görünür kalıyor, StreamPulse Clips net biçimde tanıtılıyor ve son klipler Twitch ile Kick logolarıyla sade bir listede görünüyor.",
+          "ru": "Вкладка «Clips» переработана: панель вкладок остаётся на виду, StreamPulse Clips понятно представлен, а недавние клипы показаны в списке с логотипами Twitch и Kick.",
+          "ja": "Clipsタブを刷新しました。タブバーは表示されたままになり、StreamPulse Clipsをわかりやすく紹介し、最近のクリップをTwitchとKickのロゴ付きの一覧で表示します。",
+          "ko": "Clips 탭을 새로 디자인했습니다. 탭 바가 계속 보이고, StreamPulse Clips를 명확하게 소개하며, 최근 클립을 Twitch와 Kick 로고가 있는 깔끔한 목록으로 보여 줍니다.",
+          "ar": "أُعيد تصميم تبويب Clips: يبقى شريط التبويبات ظاهرًا، ويُعرَّف بـ StreamPulse Clips بوضوح، وتظهر المقاطع الأخيرة في قائمة واضحة مع شعاري Twitch وKick.",
+          "id": "Tab Clips didesain ulang: bilah tab tetap terlihat, StreamPulse Clips dijelaskan dengan jelas, dan klip terbaru tampil dalam daftar rapi dengan logo Twitch dan Kick.",
+          "nl": "Clips-tab opnieuw ontworpen: de tabbalk blijft zichtbaar, StreamPulse Clips wordt duidelijk uitgelegd en recente clips staan in een overzichtelijke lijst met Twitch- en Kick-logo's.",
+          "sv": "Clips-fliken har gjorts om: flikfältet förblir synligt, StreamPulse Clips presenteras tydligt och senaste klipp visas i en tydlig lista med Twitch- och Kick-logotyper.",
+          "cs": "Karta Clips byla přepracována: lišta karet zůstává viditelná, StreamPulse Clips je přehledně představen a poslední klipy se zobrazují v přehledném seznamu s logy Twitch a Kick."
+        }
+      },
+      {
+        "type": "improved",
         "area": "plus",
         "text": {
           "fr": "Page d'abonnement StreamPulse+ révisée avec les atouts majeurs (Démutage VOD, anti-pause, studio 9:16) et aperçu cosmétique épuré.",

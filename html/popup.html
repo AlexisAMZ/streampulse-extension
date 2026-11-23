@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../css/popup.css" />
     <link rel="stylesheet" href="../css/settings-pager.css" />
     <link rel="stylesheet" href="../css/plus-pager.css" />
+    <link rel="stylesheet" href="../css/clips-tab.css" />
     <link rel="stylesheet" href="../css/fx-effects.css" />
     <link rel="stylesheet" href="../css/theme-gta6.css" />
   </head>
@@ -1442,132 +1443,51 @@
       </div>
     </section>
 
-    <!-- Univers complet StreamPulse SP Clips Web (plein écran avec retour extension) -->
-    <section id="clips-universe" class="clips-universe hidden" role="region" aria-label="StreamPulse Clips Studio">
-      <!-- Barre de navigation / Île façon SP Clips Web -->
-      <header class="clips-web-navbar">
-        <button id="clips-back-to-ext" type="button" class="clips-back-btn" data-i18n-attr-title="popup.clips.backToExtension" title="Revenir à l'extension">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
-          <span data-i18n="popup.clips.backToExtension">Revenir à l'extension</span>
-        </button>
-
-        <div class="clips-brand-lockup">
-          <img src="../images/photos/spclips-raw.png" alt="StreamPulse Clips" class="clips-studio-logo" />
-          <div class="clips-brand-text">
-            <span class="clips-brand-sup">StreamPulse</span>
-            <span class="clips-brand-name" data-i18n="popup.osd.menuClips">Clips</span>
-          </div>
-          <span class="clips-badge-live bg-coords">Studio 9:16</span>
-        </div>
-
-        <a href="https://spclips.com/app?utm_source=streampulse&utm_medium=extension&utm_campaign=web_nav" target="_blank" rel="noopener" class="clips-web-link">
-          <span data-i18n="popup.clips.openWeb">spclips.com</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M7 7h10v10"/></svg>
-        </a>
-      </header>
-
-      <div class="clips-web-scroll">
-        <div class="clips-ambient-glow" aria-hidden="true"></div>
-
-        <div class="clips-header">
+    <!-- Onglet Clips : présentation de StreamPulse Clips, envoi d'un clip vers le studio 9:16 et clips ouverts récemment. -->
+    <section id="clips-universe" class="clips-universe hidden" role="tabpanel" aria-labelledby="tab-clips">
+      <div class="clips-scroll">
+        <div class="clips-main">
           <h2 class="clips-headline">
             <span class="clips-headline-gray" data-i18n="popup.clips.heroTitleA">Du stream aux réseaux.</span>
             <span class="clips-headline-white" data-i18n="popup.clips.heroTitleB">Sans monter.</span>
           </h2>
           <p class="clips-lead" data-i18n="popup.clips.heroDesc">StreamPulse Clips transforme automatiquement tes clips Twitch et Kick en vidéos verticales 9:16 captivantes pour TikTok, YouTube Shorts et Instagram Reels.</p>
+
+          <div class="clips-try">
+            <a href="https://spclips.com/app?utm_source=streampulse&utm_medium=extension&utm_campaign=popup_universe" target="_blank" rel="noopener" class="clips-btn-primary" data-i18n="popup.clips.openStudio">Ouvrir le Studio 9:16</a>
+            <p class="clips-cta-note" data-i18n="popup.clips.ctaNote">100 % gratuit dans le navigateur · Aucun compte requis</p>
+          </div>
+
+          <div class="clips-recent-section" id="clips-recent-section" hidden>
+            <div class="clips-recent-header">
+              <h3 class="clips-recent-title" data-i18n="popup.clips.recentTitle">Clips récents</h3>
+              <button type="button" id="clips-btn-clear" class="clips-clear-btn" data-i18n="popup.clips.clearHistory">Effacer</button>
+            </div>
+            <ul id="clips-recent-list" class="clips-recent-list"></ul>
+          </div>
+
+          <ul class="clips-points">
+            <li><strong data-i18n="popup.clips.feat1Title">Recadrage 9:16 intelligent</strong><span data-i18n="popup.clips.feat1Body">Détection automatique de la caméra du streamer et du jeu. Zéro bande noire sur smartphone.</span></li>
+            <li><strong data-i18n="popup.clips.feat2Title">Sous-titres animés par IA</strong><span data-i18n="popup.clips.feat2Body">Transcription instantanée et animations mot à mot ultra dynamiques pour capter l'attention.</span></li>
+            <li><strong data-i18n="popup.clips.feat3Title">Export direct TikTok, Reels, Shorts</strong><span data-i18n="popup.clips.feat3Body">Téléchargement immédiat en HD 1080x1920 60 FPS sans filigrane. Prêt à publier.</span></li>
+          </ul>
         </div>
 
-        <div class="clips-stage-card">
-          <div class="clips-phone-mockup" aria-label="Aperçu vidéo 9:16 sur smartphone">
-            <div class="clips-phone-notch" aria-hidden="true"></div>
-
+        <div class="clips-visual" aria-hidden="true">
+          <div class="clips-sources">
+            <span class="clips-source"><img src="../images/platforms/twitch.svg" alt="" width="22" height="22" /></span>
+            <span class="clips-source"><img src="../images/platforms/kick.svg" alt="" width="22" height="22" /></span>
+          </div>
+          <span class="clips-flow"></span>
+          <div class="clips-phone">
             <div class="clips-phone-cam">
-              <div class="clips-cam-tag">
-                <span class="clips-cam-dot"></span>
-                <span data-i18n="popup.clips.mockupCam">Cam détectée</span>
-              </div>
-              <div class="clips-cam-face-box" aria-hidden="true">
-                <span class="clips-cam-corner top-l"></span>
-                <span class="clips-cam-corner top-r"></span>
-                <span class="clips-cam-corner btm-l"></span>
-                <span class="clips-cam-corner btm-r"></span>
-              </div>
+              <span class="clips-phone-label" data-i18n="popup.clips.mockupCam">Cam détectée</span>
+              <span class="clips-phone-face"></span>
             </div>
-
             <div class="clips-phone-game">
-              <div class="clips-game-label" data-i18n="popup.clips.mockupGame">Gameplay 16:9 recadré</div>
-              <div class="clips-game-crosshair" aria-hidden="true"></div>
-
-              <div class="clips-subtitles-bubble">
-                <span class="clips-sub-highlight" data-i18n="popup.clips.mockupSubtitles">Sous-titres synchronisés par IA</span>
-              </div>
+              <span class="clips-phone-label" data-i18n="popup.clips.mockupGame">Gameplay 16:9 recadré</span>
+              <span class="clips-phone-caption" data-i18n="popup.clips.mockupSubtitles">Sous-titres synchronisés par IA</span>
             </div>
-
-            <div class="clips-phone-actions" aria-hidden="true">
-              <div class="clips-action-item"><span class="clips-action-icon">❤️</span><span class="clips-action-count">86,2 k</span></div>
-              <div class="clips-action-item"><span class="clips-action-icon">💬</span><span class="clips-action-count">742</span></div>
-              <div class="clips-action-item"><span class="clips-action-icon">🔗</span><span class="clips-action-count">3 118</span></div>
-            </div>
-
-            <div class="clips-phone-footer">
-              <span class="clips-format-pill" data-i18n="popup.clips.mockupFormat">Format vertical 9:16 · 1080×1920 HD</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="clips-converter-island">
-          <label for="clips-input-url" class="clips-input-label" data-i18n="popup.clips.inputLabel">Coller un lien de clip Twitch ou Kick</label>
-          <div class="clips-input-box">
-            <input type="url" id="clips-input-url" class="clips-input-text" placeholder="https://clips.twitch.tv/... ou https://kick.com/...clip=..." autocomplete="off" />
-            <button type="button" id="clips-btn-detect" class="clips-detect-btn" data-i18n-attr-title="popup.clips.detectActive" title="Détecter l'onglet actif" aria-label="Détecter l'onglet actif">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-            </button>
-          </div>
-          <p id="clips-input-error" class="clips-input-error" hidden></p>
-          <div class="clips-action-row">
-            <button type="button" id="clips-btn-convert" class="clips-btn-primary" data-i18n="popup.clips.convertAction">Éditer en 9:16</button>
-            <a href="https://spclips.com/app?utm_source=streampulse&utm_medium=extension&utm_campaign=popup_universe" target="_blank" rel="noopener" class="clips-btn-secondary" data-i18n="popup.clips.openStudio">Ouvrir le Studio 9:16</a>
-          </div>
-          <p class="clips-cta-note" data-i18n="popup.clips.ctaNote">100 % gratuit dans le navigateur · Aucun compte requis</p>
-        </div>
-
-        <div class="clips-features-section">
-          <h3 class="clips-section-title" data-i18n="popup.clips.featuresTitle">Pourquoi StreamPulse Clips ?</h3>
-          <div class="clips-features-list">
-            <div class="clips-feature-card">
-              <div class="clips-feat-num">01</div>
-              <div class="clips-feat-content">
-                <h4 class="clips-feat-title" data-i18n="popup.clips.feat1Title">Recadrage 9:16 intelligent</h4>
-                <p class="clips-feat-desc" data-i18n="popup.clips.feat1Body">Détection automatique de la caméra du streamer et du jeu. Zéro bande noire sur smartphone.</p>
-              </div>
-            </div>
-            <div class="clips-feature-card">
-              <div class="clips-feat-num">02</div>
-              <div class="clips-feat-content">
-                <h4 class="clips-feat-title" data-i18n="popup.clips.feat2Title">Sous-titres animés par IA</h4>
-                <p class="clips-feat-desc" data-i18n="popup.clips.feat2Body">Transcription instantanée et animations mot à mot ultra dynamiques pour capter l'attention.</p>
-              </div>
-            </div>
-            <div class="clips-feature-card">
-              <div class="clips-feat-num">03</div>
-              <div class="clips-feat-content">
-                <h4 class="clips-feat-title" data-i18n="popup.clips.feat3Title">Export direct TikTok, Reels, Shorts</h4>
-                <p class="clips-feat-desc" data-i18n="popup.clips.feat3Body">Téléchargement immédiat en HD 1080x1920 60 FPS sans filigrane. Prêt à publier.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="clips-recent-section">
-          <div class="clips-recent-header">
-            <h3 class="clips-recent-title" data-i18n="popup.clips.recentTitle">Clips récents</h3>
-            <button type="button" id="clips-btn-clear" class="clips-clear-btn" data-i18n="popup.clips.clearHistory" hidden>Effacer</button>
-          </div>
-          <ul id="clips-recent-list" class="clips-recent-list"></ul>
-          <div id="clips-recent-empty" class="clips-empty-box">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><circle cx="12" cy="18" r="1"/><path d="M10 6h4"/></svg>
-            <p class="clips-empty-title" data-i18n="popup.clips.emptyTitle">Aucun clip récent</p>
-            <p class="clips-empty-desc" data-i18n="popup.clips.emptyBody">Colle un lien de clip ci-dessus ou clique directement sur le bouton StreamPulse Clips dans le lecteur Twitch.</p>
           </div>
         </div>
       </div>

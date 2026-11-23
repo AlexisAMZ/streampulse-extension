@@ -1,0 +1,133 @@
+/* Onglet Clips du popup. Il reprend le noir de spclips.com (app/globals.css) :
+   fond #050505, texte blanc, pilules blanches pleines. La barre du haut reste
+   visible et prend le même noir. Deux rayons seulement : la pilule (boutons,
+   champ, étiquettes) et celui du téléphone dessiné, qui garde ses coins d'objet. */
+
+.clips-universe {
+  --clips-bg: #050505;
+  --clips-text: #f5f5f7;
+  --clips-text-2: rgba(235, 235, 245, 0.7);
+  --clips-text-3: rgba(235, 235, 245, 0.58);
+  --clips-rule: rgba(255, 255, 255, 0.12);
+  --clips-field: #111216;
+  --clips-violet: #bf94ff;
+  position: fixed; inset: 54px 0 0 0; z-index: 10;
+  background: var(--clips-bg); color: var(--clips-text);
+  overflow: hidden;
+}
+
+/* Barre du haut : même noir que l'onglet, un filet plutôt qu'un fond de scène. */
+body.is-clips-universe .topbar { background: #0c0c0e; box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.1); color: var(--paper); }
+body.is-clips-universe .tab-button.active { box-shadow: inset 0 -2px 0 #fff; }
+
+.clips-scroll {
+  display: grid; grid-template-columns: minmax(0, 1fr) 216px; gap: 32px; align-items: start;
+  height: 100%; padding: 26px 30px 28px; overflow-y: auto; overscroll-behavior: contain;
+  scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.24) transparent;
+}
+/* La bande d'essai StreamPulse+ flotte sous la barre : on lui laisse la place. */
+body:has(.trial-strip:not([hidden])) .clips-scroll { padding-top: 68px; }
+.clips-scroll ::selection { background: rgba(145, 70, 255, 0.55); color: #fff; }
+.clips-main { display: flex; flex-direction: column; min-width: 0; }
+
+.clips-headline {
+  margin: 0; display: flex; flex-direction: column; text-wrap: balance;
+  font-family: var(--display); font-size: 26px; font-weight: 800; line-height: 1.08; letter-spacing: -0.03em;
+}
+.clips-headline-gray { color: #86868b; }
+.clips-headline-white { color: var(--clips-text); }
+.clips-lead { margin: 12px 0 0; max-width: 56ch; font-size: 13px; line-height: 1.5; color: var(--clips-text-2); }
+
+/* Ce que fait le produit : une liste filetée, pas des cartes. */
+.clips-points { margin: 24px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--clips-rule); }
+.clips-points li { display: grid; gap: 2px; padding: 10px 0; border-bottom: 1px solid var(--clips-rule); }
+.clips-points strong { font-size: 13.5px; font-weight: 700; letter-spacing: -0.01em; }
+.clips-points span { font-size: 12.5px; line-height: 1.45; color: var(--clips-text-2); }
+
+.clips-try { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 20px; }
+.clips-cta-note { margin: 0; flex: 1 1 160px; font-size: 12px; line-height: 1.4; color: var(--clips-text-3); }
+
+.clips-btn-primary {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  height: 42px; padding: 0 22px; border-radius: 999px; font: 700 13.5px/1 var(--body);
+  text-decoration: none; cursor: pointer;
+  transition: background-color 140ms ease, transform 140ms ease;
+}
+.clips-btn-primary { border: 0; background: var(--clips-text); color: #000; }
+.clips-btn-primary:hover { background: #fff; transform: translateY(-1px); }
+.clips-btn-primary:active { transform: translateY(0); }
+
+.clips-btn-primary:focus-visible,
+.clips-clear-btn:focus-visible,
+.clips-card-open:focus-visible,
+.clips-card-remove:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Clips ouverts récemment : n'apparaît que s'il y en a. */
+.clips-recent-section { display: grid; gap: 4px; margin-top: 22px; }
+.clips-recent-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.clips-recent-title { margin: 0; font: 700 13px/1.2 var(--body); letter-spacing: -0.01em; color: var(--clips-text-2); }
+.clips-clear-btn {
+  height: 28px; padding: 0 12px; border: 0; border-radius: 999px; background: transparent;
+  color: var(--clips-text-2); font: 600 12px/1 var(--body); cursor: pointer;
+}
+.clips-clear-btn:hover { background: rgba(255, 255, 255, 0.1); color: var(--clips-text); }
+.clips-recent-list { display: grid; margin: 0; padding: 0; list-style: none; }
+.clips-card { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-top: 1px solid var(--clips-rule); }
+.clips-card-platform {
+  display: inline-flex; flex: none; align-items: center; justify-content: center; width: 34px; height: 34px;
+  border-radius: 999px; background: #16161a; border: 1px solid rgba(255, 255, 255, 0.16);
+}
+.clips-card-platform img { display: block; width: 18px; height: 18px; }
+.clips-card-meta { display: grid; gap: 1px; flex: 1 1 auto; min-width: 0; }
+.clips-card-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 700; }
+.clips-card-sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; color: var(--clips-text-3); }
+.clips-card-actions { display: flex; flex: none; align-items: center; gap: 4px; }
+.clips-card-open {
+  display: inline-flex; align-items: center; height: 30px; padding: 0 14px; border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.28); color: var(--clips-text); font: 600 12px/1 var(--body); text-decoration: none;
+  transition: background-color 140ms ease;
+}
+.clips-card-open:hover { background: rgba(255, 255, 255, 0.1); }
+.clips-card-remove {
+  display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; padding: 0;
+  border: 0; border-radius: 999px; background: transparent; color: var(--clips-text-3); cursor: pointer;
+}
+.clips-card-remove:hover { background: rgba(255, 255, 255, 0.1); color: var(--clips-text); }
+.clips-card-remove svg { width: 14px; height: 14px; }
+
+/* Le geste du produit : le clip 16:9 devient un 9:16, cam en haut, jeu en dessous.
+   Dessiné, sans compteur ni emoji. Le cadre de détection se pose une fois à l'ouverture. */
+.clips-visual { position: sticky; top: 0; display: flex; flex-direction: column; align-items: center; }
+/* Les deux plateformes dont viennent les clips, avec leurs vrais logos, puis le fil vers le 9:16. */
+.clips-sources { display: flex; gap: 10px; }
+.clips-source {
+  display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px;
+  border-radius: 999px; background: #16161a; border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.clips-source img { display: block; width: 22px; height: 22px; }
+.clips-flow { width: 2px; height: 16px; background: linear-gradient(to bottom, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.08)); }
+.clips-phone {
+  position: relative; display: flex; flex-direction: column; width: 200px; height: 356px;
+  border-radius: 26px; overflow: hidden; background: #16161a; border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 20px 36px -14px rgba(0, 0, 0, 0.9);
+}
+.clips-phone-cam { position: relative; display: grid; place-items: center; flex: 0 0 34%; background: #5b2db3; border-bottom: 3px solid #000; }
+.clips-phone-game { position: relative; flex: 1 1 auto; display: flex; align-items: flex-end; justify-content: center; padding: 0 12px 20px; background: #1b1d2a; }
+.clips-phone-label {
+  position: absolute; top: 14px; inset-inline-start: 14px; padding: 2px 8px; border-radius: 999px;
+  background: rgba(0, 0, 0, 0.62); color: #fff; font-size: 12px; font-weight: 600; line-height: 1.4;
+}
+.clips-phone-face {
+  width: 52px; height: 52px; border-radius: 14px; border: 2px dashed rgba(255, 255, 255, 0.78);
+  animation: clips-lock 700ms cubic-bezier(0.19, 1, 0.22, 1) both;
+}
+.clips-phone-caption {
+  max-width: 100%; padding: 5px 10px; border-radius: 999px; background: rgba(0, 0, 0, 0.82);
+  color: #ffd60a; font-size: 12px; font-weight: 800; line-height: 1.25; text-align: center; text-wrap: balance;
+}
+@keyframes clips-lock { from { transform: scale(1.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .clips-phone-face { animation: none; }
+  .clips-btn-primary, .clips-card-open { transition: none; }
+}
