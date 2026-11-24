@@ -52,6 +52,199 @@ const FALLBACK_LANGUAGE = "en";
 export const RELEASES = [
 
   {
+    version: "26.11.24",
+    "date": "2026-11-24",
+    "title": {
+      "fr": "La cagnotte revient, la popup s'allège",
+      "en": "The fundraiser is back, the popup gets lighter",
+      "es": "La colecta vuelve y el popup se aligera",
+      "pt-BR": "A vaquinha volta e o popup fica mais leve",
+      "de": "Die Spendenaktion ist zurück, das Popup wird schlanker",
+      "it": "La raccolta fondi torna e il popup si alleggerisce",
+      "pl": "Zbiórka wraca, a popup staje się lżejszy",
+      "tr": "Bağış kampanyası geri döndü, açılır pencere hafifledi",
+      "ru": "Сбор вернулся, а окно стало легче",
+      "ja": "募金が復活、ポップアップもすっきり",
+      "ko": "모금이 돌아오고 팝업은 더 가벼워졌어요",
+      "ar": "عادت حملة التبرعات وأصبحت النافذة أخف",
+      "uk": "Збір повернувся, а вікно стало легшим"
+    },
+    "note": {
+      "title": {
+        "fr": "Aide-moi à prendre GTA VI",
+        "en": "Help me get GTA VI",
+        "uk": "Допоможи мені взяти GTA VI",
+        "es": "Ayúdame a conseguir GTA VI",
+        "pt-BR": "Me ajude a ter GTA VI",
+        "de": "Hilf mir, GTA VI zu holen",
+        "it": "Aiutami a prendere GTA VI",
+        "pl": "Pomóż mi zdobyć GTA VI",
+        "tr": "GTA VI'ı almama yardım et",
+        "ru": "Помоги мне взять GTA VI",
+        "ja": "GTA VIを手に入れるのを手伝って",
+        "ko": "GTA VI 사는 걸 도와주세요",
+        "ar": "ساعدني في الحصول على GTA VI"
+      },
+      "text": {
+        "fr": "Je n'ai toujours pas GTA VI. Une cagnotte est ouverte : chaque abonnement StreamPulse+ et chaque don me rapproche du jeu. Merci à Daniel pour ses 3 €, à Mansoor pour son abonnement et à celles et ceux qui ont déjà donné un coup de main.",
+        "en": "I still don't have GTA VI. A fundraiser is open: every StreamPulse+ subscription and every donation gets me closer to the game. Thanks to Daniel for his €3, to Mansoor for his subscription and to everyone who has already chipped in.",
+        "uk": "У мене досі немає GTA VI. Відкрито збір: кожна підписка StreamPulse+ і кожен донат наближає мене до гри. Дякую Daniel за його 3 €, Mansoor за підписку і всім, хто вже допоміг.",
+        "es": "Sigo sin tener GTA VI. Hay una colecta abierta: cada suscripción a StreamPulse+ y cada donación me acerca al juego. Gracias a Daniel por sus 3 €, a Mansoor por su suscripción y a quienes ya han echado una mano.",
+        "pt-BR": "Eu ainda não tenho GTA VI. Tem uma vaquinha aberta: cada assinatura do StreamPulse+ e cada doação me aproxima do jeu. Obrigado ao Daniel pelos 3 €, ao Mansoor pela assinatura e a quem já ajudou.",
+        "de": "Ich habe GTA VI immer noch nicht. Es läuft eine Spendenaktion: Jedes StreamPulse+-Abo und jede Spende bringt mich dem Spiel näher. Danke an Daniel für seine 3 €, an Mansoor für sein Abo und an alle, die schon mitgeholfen haben.",
+        "it": "Non ho ancora GTA VI. C'è una raccolta fondi aperta: ogni abbonamento a StreamPulse+ e ogni donazione mi avvicina al gioco. Grazie a Daniel per i suoi 3 €, a Mansoor per il suo abbonamento e a chi ha già dato una mano.",
+        "pl": "Nadal nie mam GTA VI. Trwa zbiórka: każda subskrypcja StreamPulse+ i każda wpłata przybliża mnie do gry. Dzięki Daniel za jego 3 €, Mansoor za subskrypcję i wszystkim, którzy już pomogli.",
+        "tr": "GTA VI hâlâ bende yok. Bir bağış kampanyası açık: her StreamPulse+ aboneliği ve her bağış beni oyuna biraz daha yaklaştırıyor. 3 € için Daniel'e, aboneliği için Mansoor'a ve şimdiye kadar destek olan herkese teşekkürler.",
+        "ru": "У меня до сих пор нет GTA VI. Открыт сбор: каждая подписка StreamPulse+ и каждое пожертвование приближает меня к игре. Спасибо Daniel за его 3 €, Mansoor за подписку и всем, кто уже помог.",
+        "ja": "僕はまだGTA VIを持っていません。募金を開いています。StreamPulse+のサブスクも寄付も、ゲームに一歩近づく力になります。3ユーロをくれたDaniel、サブスクしてくれたMansoor、そしてすでに助けてくれた皆さん、ありがとう。",
+        "ko": "저는 아직 GTA VI가 없어요. 모금을 열었고, StreamPulse+ 구독과 후원 하나하나가 게임에 한 걸음 더 다가가게 해줘요. 3유로를 보내준 Daniel, 구독해준 Mansoor, 그리고 이미 도와주신 분들, 고마워요.",
+        "ar": "ما زلت لا أملك GTA VI. هناك حملة تبرعات مفتوحة: كل اشتراك في StreamPulse+ وكل تبرع يقرّبني من اللعبة. شكرًا لـ Daniel على 3 €، ولـ Mansoor على اشتراكه ولكل من ساعد بالفعل."
+      },
+      "fundraiser": {
+        "goal": 100,
+        "raised": 16,
+        "currency": "EUR",
+        "updated": "2026-11-20"
+      }
+    },
+    "changes": [
+      {
+        "type": "new",
+        "area": "interface",
+        "text": {
+          "fr": "StreamPulse Clips dans les clips Twitch : une icône dans la fenêtre « Créer un clip » et sur la page d'un clip copie le lien et l'ouvre dans le studio 9:16. Le bouton quitte la barre du lecteur.",
+          "en": "StreamPulse Clips in Twitch clips: an icon in the “Create a clip” window and on a clip page copies the link and opens it in the 9:16 studio. The button leaves the player bar.",
+          "es": "StreamPulse Clips en los clips de Twitch: un icono en la ventana «Crear un clip» y en la página de un clip copia el enlace y lo abre en el estudio 9:16. El botón sale de la barra del reproductor.",
+          "pt-BR": "StreamPulse Clips nos clipes da Twitch: um ícone na janela «Criar um clipe» e na página de um clipe copia o link e o abre no estúdio 9:16. O botão sai da barra do player.",
+          "de": "StreamPulse Clips in Twitch-Clips: Ein Symbol im Fenster „Clip erstellen“ und auf der Clip-Seite kopiert den Link und öffnet ihn im 9:16-Studio. Die Schaltfläche verlässt die Player-Leiste.",
+          "it": "StreamPulse Clips nelle clip Twitch: un'icona nella finestra «Crea una clip» e nella pagina di una clip copia il link e lo apre nello studio 9:16. Il pulsante lascia la barra del player.",
+          "pl": "StreamPulse Clips w klipach Twitch: ikona w oknie „Utwórz klip” i na stronie klipu kopiuje link i otwiera go w studiu 9:16. Przycisk znika z paska odtwarzacza.",
+          "tr": "Twitch kliplerinde StreamPulse Clips: «Klip oluştur» penceresindeki ve klip sayfasındaki bir simge bağlantıyı kopyalar ve 9:16 stüdyosunda açar. Düğme oynatıcı çubuğundan kalktı.",
+          "ru": "StreamPulse Clips в клипах Twitch: значок в окне «Создать клип» и на странице клипа копирует ссылку и открывает её в студии 9:16. Кнопка убрана с панели плеера.",
+          "ja": "TwitchクリップでStreamPulse Clips：「クリップを作成」ウィンドウとクリップページのアイコンで、リンクをコピーして9:16スタジオで開けます。ボタンはプレイヤーバーから外しました。",
+          "ko": "Twitch 클립에서 StreamPulse Clips: '클립 만들기' 창과 클립 페이지의 아이콘이 링크를 복사하고 9:16 스튜디오에서 열어요. 버튼은 플레이어 바에서 빠졌어요.",
+          "ar": "StreamPulse Clips في مقاطع Twitch: أيقونة في نافذة «إنشاء مقطع» وفي صفحة المقطع تنسخ الرابط وتفتحه في استوديو 9:16. تمت إزالة الزر من شريط المشغّل.",
+          "uk": "StreamPulse Clips у кліпах Twitch: значок у вікні «Створити кліп» і на сторінці кліпу копіює посилання та відкриває його в студії 9:16. Кнопку прибрано з панелі плеєра."
+        }
+      },
+      {
+        "type": "new",
+        "area": "interface",
+        "text": {
+          "fr": "Gestionnaire de clips du tableau de bord Twitch : une icône StreamPulse Clips sur chaque clip. Réglage facultatif : Chrome demande l'accès au tableau de bord quand tu l'actives.",
+          "en": "Twitch dashboard clips manager: a StreamPulse Clips icon on every clip. Optional setting: Chrome asks for dashboard access when you turn it on.",
+          "es": "Gestor de clips del panel de Twitch: un icono de StreamPulse Clips en cada clip. Ajuste opcional: Chrome pide acceso al panel al activarlo.",
+          "pt-BR": "Gerenciador de clipes do painel da Twitch: um ícone do StreamPulse Clips em cada clipe. Ajuste opcional: o Chrome pede acesso ao painel ao ativar.",
+          "de": "Clip-Manager im Twitch-Dashboard: ein StreamPulse-Clips-Symbol an jedem Clip. Optionale Einstellung: Chrome fragt beim Aktivieren nach dem Dashboard-Zugriff.",
+          "it": "Gestore clip della dashboard Twitch: un'icona StreamPulse Clips su ogni clip. Impostazione facoltativa: Chrome chiede l'accesso alla dashboard all'attivazione.",
+          "pl": "Menedżer klipów w panelu Twitch: ikona StreamPulse Clips przy każdym klipie. Ustawienie opcjonalne: Chrome prosi o dostęp do panelu przy włączeniu.",
+          "tr": "Twitch panosundaki klip yöneticisi: her klipte bir StreamPulse Clips simgesi. İsteğe bağlı ayar: Chrome, etkinleştirdiğinde panoya erişim ister.",
+          "ru": "Менеджер клипов в панели Twitch: значок StreamPulse Clips у каждого клипа. Необязательная настройка: Chrome запрашивает доступ к панели при включении.",
+          "ja": "Twitchダッシュボードのクリップマネージャー：各クリップにStreamPulse Clipsのアイコンを表示。任意の設定で、有効にするとChromeがダッシュボードへのアクセスを求めます。",
+          "ko": "Twitch 대시보드 클립 관리자: 모든 클립에 StreamPulse Clips 아이콘이 생겨요. 선택 설정이며, 켜면 Chrome이 대시보드 접근 권한을 요청해요.",
+          "ar": "مدير المقاطع في لوحة Twitch: أيقونة StreamPulse Clips على كل مقطع. إعداد اختياري: يطلب Chrome الوصول إلى اللوحة عند التفعيل.",
+          "uk": "Менеджер кліпів на панелі Twitch: значок StreamPulse Clips біля кожного кліпу. Необов'язкове налаштування: Chrome просить доступ до панелі під час увімкнення."
+        }
+      },
+      {
+        "type": "fix",
+        "area": "badges",
+        "text": {
+          "fr": "Badges de campagnes de récompenses (GTA VI) : ils passent bien en « En cours » même quand Twitch traduit leur nom.",
+          "en": "Reward-campaign badges (GTA VI) now show as ongoing even when Twitch translates their names.",
+          "es": "Los badges de campañas de recompensas (GTA VI) pasan a «En curso» aunque Twitch traduzca su nombre.",
+          "pt-BR": "Os badges de campanhas de recompensas (GTA VI) passam para «Em andamento» mesmo quando a Twitch traduz o nome.",
+          "de": "Badges aus Belohnungskampagnen (GTA VI) erscheinen jetzt als laufend, auch wenn Twitch ihre Namen übersetzt.",
+          "it": "I badge delle campagne di ricompense (GTA VI) risultano «In corso» anche quando Twitch ne traduce il nome.",
+          "pl": "Odznaki z kampanii nagród (GTA VI) pokazują się jako trwające, nawet gdy Twitch tłumaczy ich nazwy.",
+          "tr": "Ödül kampanyası rozetleri (GTA VI), Twitch adlarını çevirse bile artık «Devam eden» olarak görünüyor.",
+          "ru": "Значки из кампаний с наградами (GTA VI) теперь показываются как «Идут сейчас», даже если Twitch переводит их названия.",
+          "ja": "報酬キャンペーンのバッジ（GTA VI）は、Twitchが名前を翻訳していても「開催中」に表示されます。",
+          "ko": "보상 캠페인 배지(GTA VI)는 Twitch가 이름을 번역해도 '진행 중'으로 표시돼요.",
+          "ar": "شارات حملات المكافآت (GTA VI) تظهر الآن «جارية» حتى عندما تترجم Twitch أسماءها.",
+          "uk": "Значки з кампаній із нагородами (GTA VI) тепер показуються як «Тривають», навіть коли Twitch перекладає їхні назви."
+        }
+      },
+      {
+        "type": "improved",
+        "area": "interface",
+        "text": {
+          "fr": "Moins de sollicitations : une seule demande (avis, badge, parrainage, StreamPulse+) toutes les 48 h, et la carte StreamPulse+ quitte la page des nouveautés.",
+          "en": "Fewer prompts: a single ask (review, badge, referral, StreamPulse+) every 48 hours, and the StreamPulse+ card leaves the changelog page.",
+          "es": "Menos avisos: una sola petición (opinión, badge, invitación, StreamPulse+) cada 48 h, y la tarjeta de StreamPulse+ sale de la página de novedades.",
+          "pt-BR": "Menos pedidos: apenas um aviso (avaliação, badge, indicação, StreamPulse+) a cada 48 h, e o cartão do StreamPulse+ sai da página de novidades.",
+          "de": "Weniger Hinweise: nur eine Anfrage (Bewertung, Badge, Empfehlung, StreamPulse+) alle 48 Std., und die StreamPulse+-Karte verschwindet von der Neuigkeitenseite.",
+          "it": "Meno richieste: una sola (recensione, badge, invito, StreamPulse+) ogni 48 ore, e la scheda StreamPulse+ esce dalla pagina delle novità.",
+          "pl": "Mniej próśb: tylko jedna (opinia, odznaka, polecenie, StreamPulse+) na 48 godzin, a karta StreamPulse+ znika ze strony nowości.",
+          "tr": "Daha az istek: her 48 saatte yalnızca bir istek (yorum, rozet, davet, StreamPulse+) ve StreamPulse+ kartı yenilikler sayfasından kalktı.",
+          "ru": "Меньше просьб: только одна (отзыв, значок, приглашение, StreamPulse+) раз в 48 часов, а карточка StreamPulse+ убрана со страницы обновлений.",
+          "ja": "お願い表示を減らしました。レビュー・バッジ・紹介・StreamPulse+のうち48時間に1回だけ表示し、更新情報ページからStreamPulse+のカードを外しました。",
+          "ko": "요청을 줄였어요. 리뷰·배지·추천·StreamPulse+ 중 48시간에 한 번만 표시하고, 업데이트 소식 페이지에서 StreamPulse+ 카드를 뺐어요.",
+          "ar": "طلبات أقل: طلب واحد فقط (تقييم، شارة، دعوة، StreamPulse+) كل 48 ساعة، وتمت إزالة بطاقة StreamPulse+ من صفحة الجديد.",
+          "uk": "Менше прохань: лише одне (відгук, значок, запрошення, StreamPulse+) раз на 48 годин, а картку StreamPulse+ прибрано зі сторінки оновлень."
+        }
+      },
+      {
+        "type": "fix",
+        "area": "interface",
+        "text": {
+          "fr": "Le mot sur la cagnotte GTA VI et son compteur réapparaissent dans les nouveautés.",
+          "en": "The note about the GTA VI fundraiser and its counter are back in the changelog.",
+          "es": "La nota sobre la colecta de GTA VI y su contador vuelven a aparecer en las novedades.",
+          "pt-BR": "O recado sobre a vaquinha do GTA VI e o contador voltam a aparecer nas novidades.",
+          "de": "Die Notiz zur GTA-VI-Spendenaktion und ihr Zähler erscheinen wieder in den Neuigkeiten.",
+          "it": "Il messaggio sulla raccolta fondi per GTA VI e il suo contatore tornano nelle novità.",
+          "pl": "Wiadomość o zbiórce na GTA VI i jej licznik znów pojawiają się w nowościach.",
+          "tr": "GTA VI bağış kampanyası notu ve sayacı yenilikler sayfasında yeniden görünüyor.",
+          "ru": "Заметка о сборе на GTA VI и её счётчик снова показываются в обновлениях.",
+          "ja": "GTA VI募金のメッセージとカウンターが、更新情報にふたたび表示されます。",
+          "ko": "GTA VI 모금 안내와 카운터가 업데이트 소식에 다시 표시돼요.",
+          "ar": "عادت رسالة حملة التبرعات لـ GTA VI وعدّادها إلى صفحة الجديد.",
+          "uk": "Повідомлення про збір на GTA VI та його лічильник знову показуються в оновленнях."
+        }
+      },
+      {
+        "type": "improved",
+        "area": "interface",
+        "text": {
+          "fr": "Bandeau StreamPulse Clips retiré de la popup et des nouveautés : l'onglet Clips suffit.",
+          "en": "StreamPulse Clips banner removed from the popup and the changelog: the Clips tab is enough.",
+          "es": "Banner de StreamPulse Clips retirado del popup y de las novedades: la pestaña Clips basta.",
+          "pt-BR": "Banner do StreamPulse Clips removido do popup e das novidades: a aba Clips já basta.",
+          "de": "StreamPulse-Clips-Banner aus Popup und Neuigkeiten entfernt: Der Clips-Tab genügt.",
+          "it": "Banner di StreamPulse Clips rimosso dal popup e dalle novità: basta la scheda Clips.",
+          "pl": "Baner StreamPulse Clips usunięty z popupu i nowości: wystarczy karta Clips.",
+          "tr": "StreamPulse Clips afişi açılır pencereden ve yeniliklerden kaldırıldı: Clips sekmesi yeterli.",
+          "ru": "Баннер StreamPulse Clips убран из окна и обновлений: хватает вкладки Clips.",
+          "ja": "StreamPulse Clipsのバナーをポップアップと更新情報から削除しました。Clipsタブがあれば十分です。",
+          "ko": "StreamPulse Clips 배너를 팝업과 업데이트 소식에서 없앴어요. Clips 탭이면 충분해요.",
+          "ar": "تمت إزالة شريط StreamPulse Clips من النافذة وصفحة الجديد: تبويب Clips يكفي.",
+          "uk": "Банер StreamPulse Clips прибрано з вікна й оновлень: достатньо вкладки Clips."
+        }
+      },
+      {
+        "type": "improved",
+        "area": "plus",
+        "text": {
+          "fr": "La restauration audio VOD (bêta) ne demande son accès réseau qu'au moment de l'activer : plus de nouvelle autorisation à la mise à jour sur Chrome.",
+          "en": "VOD audio restore (beta) only asks for its network access when you turn it on: no new permission prompt when updating on Chrome.",
+          "es": "La restauración de audio VOD (beta) solo pide su acceso de red al activarla: sin nuevo permiso al actualizar en Chrome.",
+          "pt-BR": "A restauração de áudio de VOD (beta) só pede acesso à rede quando você a ativa: sem nova permissão ao atualizar no Chrome.",
+          "de": "Die VOD-Audiowiederherstellung (Beta) fragt ihren Netzwerkzugriff erst beim Aktivieren an: keine neue Berechtigung beim Update in Chrome.",
+          "it": "Il ripristino audio VOD (beta) chiede l'accesso di rete solo quando lo attivi: nessuna nuova autorizzazione all'aggiornamento su Chrome.",
+          "pl": "Przywracanie dźwięku VOD (beta) prosi o dostęp do sieci dopiero po włączeniu: bez nowego pozwolenia przy aktualizacji w Chrome.",
+          "tr": "VOD ses geri yükleme (beta) ağ erişimini yalnızca etkinleştirdiğinde ister: Chrome'da güncellemede yeni izin istenmez.",
+          "ru": "Восстановление звука VOD (бета) запрашивает доступ к сети только при включении: при обновлении в Chrome новых разрешений нет.",
+          "ja": "VOD音声の復元（ベータ）は、オンにしたときだけネットワークアクセスを求めます。Chromeの更新で新しい許可は出ません。",
+          "ko": "VOD 오디오 복원(베타)은 켤 때만 네트워크 접근을 요청해요. Chrome 업데이트 시 새 권한 요청이 없어요.",
+          "ar": "استعادة صوت VOD (تجريبية) تطلب الوصول إلى الشبكة عند تفعيلها فقط: لا إذن جديد عند التحديث في Chrome.",
+          "uk": "Відновлення звуку VOD (бета) просить доступ до мережі лише під час увімкнення: жодного нового дозволу під час оновлення в Chrome."
+        }
+      }
+    ]
+  },
+
+  {
     version: "26.11.22",
     "date": "2026-11-22",
     "title": {

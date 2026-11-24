@@ -16,7 +16,6 @@
   const PLUS_KEY = PLUS_RULE.PLUS_KEY;
   const PIP_ID = "streampulse-pip-btn";
   const CLIP_ID = "streampulse-clip-dl-btn";
-  const EDITOR_ID = "streampulse-clip-editor-btn";
   const CAPTURE_ID = "streampulse-stream-capture-btn";
   const HANDOFF = window.StreamPulseClipsHandoff; // js/inject/clips-handoff.js, chargé avant (manifest)
   const STYLE_ID = "streampulse-player-buttons-style";
@@ -37,9 +36,6 @@
   // Grille 24 et formes pleines, comme les icones natives du lecteur Twitch.
   const ICON_PIP =
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 4h20v9h-2V6H4v10h6v2H2V4Z"></path><path d="M12 14h10v6H12v-6Z"></path></svg>';
-  const ICON_EDITOR = SPCLIPS_LOGO_URL
-    ? `<img src="${SPCLIPS_LOGO_URL}" alt="StreamPulse Clips" class="streampulse-player-spclips-icon" />`
-    : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2h8a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm0 2v16h8V4H8Z"></path><path d="m10.5 9.2 4 2.8-4 2.8V9.2Z"></path></svg>';
   const ICON_DOWNLOAD =
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v9.17l3.59-3.59L18 10l-6 6-6-6 1.41-1.42L11 12.17V3Z"></path><path d="M5 18h14v2H5v-2Z"></path></svg>';
   const ICON_RECORD =
@@ -77,6 +73,8 @@
   // "inject.player.streamCopyM3u8"
   // "inject.player.streamM3u8Copied"
   // "inject.player.streamRecordSaved"
+  // "inject.player.clipLinkCopied"
+  // "inject.player.clipLinkMissing"
 
   function plusActive(record) {
     return PLUS_RULE.isPlusActive(record);
@@ -243,19 +241,35 @@
         transform: translateX(-50%) translateY(0);
       }
 
-      /* Bouton promotionnel SP Clips sur l'interface de création de clip Twitch */
-      .streampulse-spclips-create-promo {
+      /* Pastille StreamPulse Clips sur la page d'un clip */
+      .streampulse-spclips-handoff {
+        position: fixed; inset-block-end: 88px; inset-inline-end: 16px; z-index: 2147483000;
         display: inline-flex; align-items: center; gap: 8px;
-        margin: 8px 0; padding: 8px 14px; border-radius: 10px;
-        background: rgba(145, 70, 255, 0.18); border: 1px solid rgba(145, 70, 255, 0.45);
+        padding: 8px 14px 8px 10px; border-radius: 999px;
+        background: rgba(14, 14, 16, 0.86); border: 1px solid rgba(145, 70, 255, 0.55);
         color: #fff; font-family: inherit; font-size: 13px; font-weight: 700;
-        text-decoration: none; cursor: pointer; transition: all 160ms ease;
+        backdrop-filter: blur(8px); cursor: pointer; transition: background 160ms ease, transform 160ms ease;
       }
-      .streampulse-spclips-create-promo:hover {
-        background: rgba(145, 70, 255, 0.32); border-color: rgba(145, 70, 255, 0.7);
-        transform: translateY(-1px);
+      .streampulse-spclips-handoff:hover { background: rgba(145, 70, 255, 0.4); transform: translateY(-1px); }
+      .streampulse-spclips-handoff:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+      .streampulse-spclips-handoff img { width: 20px; height: 20px; object-fit: contain; }
+      /* Dans la rangée d'actions d'un clip : même hauteur que « Partager », mais en violet Twitch pour qu'on la voie */
+      .streampulse-spclips-handoff.is-inline {
+        position: static; z-index: auto; height: 32px; padding: 0 14px 0 8px; margin-inline-start: 8px; flex: none;
+        background: #9146ff; border: 0; backdrop-filter: none; font-size: 14px; font-weight: 600; white-space: nowrap;
       }
-      .streampulse-spclips-create-promo img { width: 16px; height: 16px; object-fit: contain; }
+      .streampulse-spclips-handoff.is-inline:hover { background: #772ce8; transform: none; }
+      .streampulse-spclips-handoff.is-inline img { width: 22px; height: 22px; border-radius: 6px; }
+      /* Icône ronde dans la rangée de partage de la fenêtre « Créer un clip », comme celles des réseaux */
+      .streampulse-spclips-share {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 32px; height: 32px; padding: 0; border: 0; border-radius: 9000px; cursor: pointer;
+        background: #0e0e10 !important; box-shadow: inset 0 0 0 1.5px rgba(145, 70, 255, 0.85);
+        transition: transform 160ms ease, box-shadow 160ms ease;
+      }
+      .streampulse-spclips-share:hover { transform: scale(1.08); box-shadow: inset 0 0 0 1.5px #b794ff; }
+      .streampulse-spclips-share:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+      .streampulse-spclips-share img { width: 20px; height: 20px; object-fit: contain; pointer-events: none; }
     `;
     document.head?.appendChild(style);
   }
@@ -356,57 +370,6 @@
         button.removeAttribute("aria-busy");
         button.dataset.spLabel = title;
       });
-  }
-
-  function openInEditor(button) {
-    const slug = clipSlugFromLocation();
-    const url = HANDOFF?.editorUrlForClipPath(window.location.pathname) ||
-      (slug ? HANDOFF?.editorUrlForClip(window.location.href, "twitch_player") : null);
-
-    if (url) {
-      // Enregistre le clip dans l'historique local pour l'onglet Clips
-      const pageTitle = document.querySelector('h2[data-a-target="stream-title"]')?.textContent?.trim() ||
-        document.title.replace(/\s*-\s*Twitch\s*$/i, "").trim() || "Clip";
-      const channelMatch = /^\/([^/]+)/.exec(window.location.pathname);
-      HANDOFF?.saveClipToHistory?.({
-        id: slug,
-        url: window.location.href,
-        title: pageTitle,
-        channel: channelMatch ? channelMatch[1] : "",
-        platform: "twitch",
-      });
-      window.open(url, "_blank", "noopener");
-    } else {
-      // Sur un live : déclenche la création directe du clip
-      triggerDirectClip(button);
-    }
-  }
-
-  /**
-   * Sur un direct ou live Twitch : automatise le clipage en déclenchant le bouton
-   * natif de clip de Twitch (ou en ouvrant clips.twitch.tv/create).
-   */
-  function triggerDirectClip(button) {
-    const nativeClipBtn =
-      document.querySelector('button[data-a-target="player-clip-button"]') ||
-      document.querySelector('.player-controls button[data-a-target="player-clip-button"]');
-
-    if (nativeClipBtn) {
-      nativeClipBtn.click();
-      if (button) {
-        const original = button.dataset.spLabel;
-        button.dataset.spLabel = i18n("clipCreating");
-        window.setTimeout(() => {
-          button.dataset.spLabel = original;
-        }, 3000);
-      }
-    } else {
-      // Repli : tente d'ouvrir l'éditeur ou la création pour la chaîne active
-      const channel = window.location.pathname.replace(/^\//, "").split("/")[0];
-      if (channel && channel !== "directory" && channel !== "videos") {
-        window.open(`https://clips.twitch.tv/create`, "_blank", "noopener");
-      }
-    }
   }
 
   function getSupportedMimeType() {
@@ -844,28 +807,16 @@
     const controls = document.querySelector(
       'div[data-a-target="video-player"] .player-controls__right-control-group'
     );
-    if (!controls) return;
     insertStyle();
+    // Le logo de la fenêtre d'un clip ne dépend pas de la barre du lecteur : la fenêtre de création n'en a pas toujours.
+    ensureClipHandoff();
+    if (!controls) return;
+    const isClipPage = clipSlugFromLocation() !== null;
     const pipWanted = state.pip && document.pictureInPictureEnabled === true;
     const clipWanted = state.clip && state.plus && clipSlugFromLocation() !== null;
     placeButton(controls, PIP_ID, pipWanted, () =>
       makeButton(PIP_ID, ICON_PIP, i18n("pictureInPicture"), togglePictureInPicture)
     );
-
-    // Le bouton SP Clips s'affiche sur les clips ET sur les lives pour le clipage direct
-    const isClipPage = clipSlugFromLocation() !== null;
-    const editorLabel = isClipPage ? i18n("clipOpenEditor") : i18n("clipDirect");
-    const editorWanted = Boolean(HANDOFF);
-    placeButton(controls, EDITOR_ID, editorWanted, () =>
-      makeButton(EDITOR_ID, ICON_EDITOR, editorLabel, openInEditor)
-    );
-
-    // Met à jour le label si l'URL ou la page change
-    const existingEditor = document.getElementById(EDITOR_ID);
-    if (existingEditor) {
-      existingEditor.setAttribute("aria-label", editorLabel);
-      existingEditor.dataset.spLabel = editorLabel;
-    }
 
     // Le bouton Capture / Enregistrement / Copie de flux s'affiche sur les lives et les VODs
     const captureWanted = state.streamCapture !== false && !isClipPage;
@@ -886,46 +837,183 @@
       makeButton(CLIP_ID, ICON_DOWNLOAD, i18n("clipDownload"), downloadClip)
     );
 
-    ensureClipCreationPromo();
+  }
+
+  const HANDOFF_ID = "streampulse-spclips-handoff-btn";
+  const POPUP_ID = "CLIP_EDITOR_POPUP_ID"; // fenêtre « Créer un clip » de Twitch, posée sur le lecteur
+  const CLIP_LINK_EVENT = "streampulse:clip-link"; // relayé par js/inject/clipboard-tap.js (monde MAIN)
+  const SHARE_PLATFORMS = /youtube|tiktok|instagram|snapchat/i;
+
+  /** Page d'un clip ou fenêtre clips.twitch.tv : l'adresse porte déjà le lien du clip. */
+  function isClipPage() {
+    return clipSlugFromLocation() !== null || window.location.hostname === "clips.twitch.tv";
+  }
+
+  /** Lien du clip d'après l'adresse de la page, null ailleurs. */
+  function clipLinkFromPage() {
+    return HANDOFF?.parseClipUrl?.(window.location.href)?.canonicalUrl || null;
+  }
+
+  /** Rangée d'icônes de partage (YouTube, TikTok, Instagram, Snapchat) de la fenêtre du clip, une fois le clip sauvegardé. */
+  function shareRowOf(popup) {
+    const platform = Array.from(popup.querySelectorAll("button")).find((button) => SHARE_PLATFORMS.test(button.getAttribute("aria-label") || ""));
+    return platform ? platform.parentElement?.parentElement?.parentElement || null : null;
+  }
+
+  /** Bouton « Copier le lien » de Twitch : le seul de la fenêtre qui porte un texte à côté des icônes. */
+  function twitchCopyButton(popup, row) {
+    for (let node = row; node && node !== popup.parentElement; node = node.parentElement) {
+      const found = Array.from(node.querySelectorAll("button")).find((button) => button.textContent.trim() && !button.closest(`#${HANDOFF_ID}`));
+      if (found) return found;
+    }
+    return null;
   }
 
   /**
-   * Sur la page de création ou publication de clip Twitch (clips.twitch.tv/create ou modal),
-   * injecte un bouton officiel pour monter immédiatement le clip en 9:16 dans StreamPulse Clips.
+   * Twitch n'affiche pas le lien du clip : on clique son propre bouton « Copier le lien » et on lit l'adresse
+   * qu'il copie (clipboard-tap.js). Le lien est donc aussi dans le presse-papiers, comme avec Twitch seul.
    */
-  function ensureClipCreationPromo() {
-    if (!window.location.hostname.includes("clips.twitch.tv") && !document.querySelector('div[data-a-target="clips-creation-container"]')) {
+  function linkFromTwitchCopy(popup) {
+    const row = shareRowOf(popup);
+    const copy = row && twitchCopyButton(popup, row);
+    if (!copy) return Promise.resolve(null);
+    return new Promise((resolve) => {
+      const finish = (value) => {
+        window.removeEventListener(CLIP_LINK_EVENT, onLink);
+        clearTimeout(timer);
+        resolve(value);
+      };
+      const onLink = (event) => finish(HANDOFF?.parseClipUrl?.(String(event.detail || ""))?.canonicalUrl || null);
+      const timer = setTimeout(() => finish(null), 2500);
+      window.addEventListener(CLIP_LINK_EVENT, onLink);
+      copy.click();
+    });
+  }
+
+  /** Ouvre le clip dans le studio 9:16, l'ajoute à l'onglet Clips de la popup et garde le lien dans le presse-papiers. */
+  async function openClipInStudio(link) {
+    const parsed = link && HANDOFF.parseClipUrl(link);
+    const url = parsed && HANDOFF.editorUrlForClip(link, "twitch_clip_window");
+    if (!url) {
+      showToast(i18n("clipLinkMissing"));
       return;
     }
-    const PROMO_ID = "streampulse-spclips-create-promo-btn";
-    if (document.getElementById(PROMO_ID)) return;
+    const title = document.querySelector('meta[property="og:title"]')?.content?.trim() ||
+      document.querySelector(`#${POPUP_ID} h3 + *`)?.textContent?.trim() ||
+      document.title.replace(/\s*-\s*Twitch\s*$/i, "").trim() || "Clip";
+    HANDOFF.saveClipToHistory?.({ id: parsed.slug, url: link, title, channel: parsed.channel || "", platform: "twitch" });
+    showToast(i18n("clipLinkCopied"));
+    window.open(url, "_blank", "noopener");
+  }
 
-    // Cherche le conteneur des actions de publication
-    const targetParent =
-      document.querySelector('div[data-a-target="clips-creation-container"]') ||
-      document.querySelector('.clips-creation__actions') ||
-      document.querySelector('button[data-a-target="publish-clip-button"]')?.parentElement;
-
-    if (!targetParent) return;
-
-    const promo = document.createElement("a");
-    promo.id = PROMO_ID;
-    promo.className = "streampulse-spclips-create-promo";
-    promo.href = "https://spclips.com/app?utm_source=streampulse&utm_medium=extension&utm_campaign=twitch_clip_create";
-    promo.target = "_blank";
-    promo.rel = "noopener";
-    promo.innerHTML = `
-      ${SPCLIPS_LOGO_URL ? `<img src="${SPCLIPS_LOGO_URL}" alt="" />` : ""}
-      <span>${i18n("clipOpenEditor")} (9:16)</span>
-    `;
-    promo.addEventListener("click", () => {
-      const clipLink = window.location.href;
-      if (clipLink && !clipLink.includes("/create")) {
-        promo.href = `https://spclips.com/app?clip=${encodeURIComponent(clipLink)}&utm_source=streampulse&utm_medium=extension&utm_campaign=twitch_clip_create`;
-      }
+  /** Icône ronde StreamPulse Clips, calquée sur celles des réseaux de la rangée de partage. */
+  function makeShareIcon(row) {
+    const sample = row.querySelector("button");
+    const wrapper = document.createElement("div");
+    wrapper.id = HANDOFF_ID;
+    wrapper.className = row.firstElementChild?.className || "";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `${sample?.className || ""} streampulse-spclips-share`;
+    const label = i18n("clipOpenEditor");
+    button.setAttribute("aria-label", label);
+    button.innerHTML = SPCLIPS_LOGO_URL ? `<img src="${SPCLIPS_LOGO_URL}" alt="" />` : "SP";
+    window.__SP_TIP__?.attach(button, () => label);
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const popup = document.getElementById(POPUP_ID);
+      const task = popup ? linkFromTwitchCopy(popup) : Promise.resolve(clipLinkFromPage());
+      task.then(openClipInStudio).catch((error) => console.warn("StreamPulse: SP Clips handoff failed", error));
     });
+    wrapper.appendChild(button);
+    return wrapper;
+  }
 
-    targetParent.appendChild(promo);
+  /** Pose l'icône au bout de la rangée de partage de la fenêtre « Créer un clip » (visible une fois le clip sauvegardé). */
+  function ensureShareIcon(popup) {
+    const row = shareRowOf(popup);
+    const existing = popup.querySelector(`#${HANDOFF_ID}`);
+    if (!row) {
+      existing?.remove();
+      return;
+    }
+    if (existing && existing.parentElement === row) return;
+    existing?.remove();
+    row.appendChild(makeShareIcon(row));
+  }
+
+  const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  /**
+   * Rangée d'actions sous le lecteur d'un clip (Modifier, Partager, J'aime…). Le bouton « Partager » est repéré par
+   * son libellé, qui finit toujours par le titre du clip (« Partager le clip : titre »), donc dans toutes les langues.
+   * Renvoie { row, anchor } : la rangée et son enfant qui contient « Partager », ou null.
+   */
+  function clipActionRow() {
+    const title = document.title.replace(/\s*-\s*Twitch\s*$/i, "").trim();
+    if (!title) return null;
+    const ending = new RegExp(`\\s?:\\s?${escapeRegExp(title)}$`);
+    const share = Array.from(document.querySelectorAll("button[aria-label]")).find(
+      (button) => ending.test(button.getAttribute("aria-label")) && !button.closest('[data-a-target="video-player"]')
+    );
+    if (!share) return null;
+    let row = share.parentElement;
+    for (let level = 0; row && level < 6 && row.querySelectorAll("button").length < 4; level += 1) row = row.parentElement;
+    if (!row || row === document.body) return null;
+    const anchor = Array.from(row.children).find((child) => child.contains(share));
+    return anchor ? { row, anchor } : null;
+  }
+
+  function makeClipPageButton(inline) {
+    const button = document.createElement("button");
+    button.id = HANDOFF_ID;
+    button.type = "button";
+    button.className = `streampulse-spclips-handoff${inline ? " is-inline" : ""}`;
+    const label = i18n("clipOpenEditor");
+    button.setAttribute("aria-label", label);
+    button.innerHTML = `${SPCLIPS_LOGO_URL ? `<img src="${SPCLIPS_LOGO_URL}" alt="" />` : ""}<span></span>`;
+    button.querySelector("span").textContent = label;
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      openClipInStudio(clipLinkFromPage()).catch((error) => console.warn("StreamPulse: SP Clips handoff failed", error));
+    });
+    return button;
+  }
+
+  /**
+   * Page d'un clip : pastille violette dans la rangée d'actions sous le lecteur, juste après « Partager ». Si la page
+   * n'a pas cette rangée (clips.twitch.tv, mise en page changée), pastille flottante au-dessus du lecteur.
+   */
+  function ensureClipPageButton() {
+    const existing = document.getElementById(HANDOFF_ID);
+    if (existing && !existing.classList.contains("streampulse-spclips-handoff")) return; // c'est l'icône ronde de la fenêtre de clip
+    if (!isClipPage()) {
+      existing?.remove();
+      return;
+    }
+    const placed = clipActionRow();
+    if (placed) {
+      if (existing?.classList.contains("is-inline") && existing.previousElementSibling === placed.anchor) return;
+      existing?.remove();
+      placed.row.insertBefore(makeClipPageButton(true), placed.anchor.nextSibling);
+      return;
+    }
+    if (existing && !existing.classList.contains("is-inline")) return;
+    existing?.remove();
+    document.body.appendChild(makeClipPageButton(false));
+  }
+
+  /**
+   * StreamPulse Clips dans les fenêtres de clip de Twitch : l'icône ronde dans la rangée de partage de la fenêtre
+   * « Créer un clip », la pastille sur la page d'un clip. Un clic copie le lien du clip et l'ouvre dans le studio.
+   */
+  function ensureClipHandoff() {
+    if (!HANDOFF) return;
+    const popup = document.getElementById(POPUP_ID);
+    if (popup) ensureShareIcon(popup);
+    ensureClipPageButton();
   }
 
   function applyStorage(prefs, plusRecord) {

@@ -52,3 +52,10 @@ test("parseClipUrl et editorUrlForClip : support clips.twitch.tv et kick.com", (
   assert.equal(kickUrl.origin, "https://spclips.com");
   assert.equal(kickUrl.searchParams.get("utm_campaign"), "test");
 });
+
+test("parseClipUrl : la page d'édition clips.twitch.tv/<slug>/edit donne le même clip", () => {
+  const edit = parseClipUrl("https://clips.twitch.tv/AbCd-123_x/edit");
+  assert.equal(edit.slug, "AbCd-123_x");
+  assert.equal(edit.canonicalUrl, "https://clips.twitch.tv/AbCd-123_x");
+  assert.equal(parseClipUrl("https://clips.twitch.tv/create"), null);
+});

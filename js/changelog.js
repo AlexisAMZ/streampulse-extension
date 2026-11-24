@@ -507,18 +507,12 @@ async function init() {
   render(release);
 }
 
-/**
- * Cartes « Aller plus loin » : l'offre StreamPulse+ disparaît pour les
- * abonnés, et le bouton mène à la page d'abonnement dans la langue lue.
- */
+/** Le mot sur la cagnotte propose StreamPulse+ : il disparaît pour les abonnés. */
 function renderPromo() {
-  const plusCta = document.getElementById("cl-plus-cta");
-  if (plusCta) plusCta.href = plusPageUrl(getCurrentLanguage(), "monthly");
   try {
     chrome.storage.local.get(PLUS_KEY, (stored) => {
       if (chrome.runtime.lastError) return;
       if (isPlusActive(stored?.[PLUS_KEY])) {
-        document.getElementById("cl-promo-plus")?.remove();
         document.getElementById("cl-note-plus")?.remove();
       }
     });

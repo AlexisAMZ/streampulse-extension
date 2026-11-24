@@ -129,7 +129,7 @@ export function gameFromDescription(description) {
  * poser des Bits. Les badges gagnés en regardant se gagnent gratuitement —
  * une description qui parle d'un abonnement sans le demander ne paie pas.
  */
-export const isPaidBadge = (badge) => /subscrib|subbed|gift|\bsubs?\b|\bbits?\b/i.test(badge.description || "");
+export const isPaidBadge = (badge) => /subscrib|subbed|subbing|gift|\bsubs?\b|\bbits?\b/i.test(badge.description || "");
 
 /** Minuscules sans accents : « Pokémon » et « Pokemon » doivent se reconnaître. */
 const fold = (value) => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -209,6 +209,19 @@ function titleKey(value) {
   return folded.replace(/[^a-z0-9]+/g, "") || folded;
 }
 
+const GENERIC_WORDS = new Set(["launch", "celebration", "campaign", "rewards", "reward", "event", "season", "twitch", "prime", "gaming", "drops", "bonus", "special", "weekend", "anniversary", "badge", "badges", "collection", "gaming"]);
+
+/** Texte replié sans ponctuation ni espaces : « GTA VI » et « GTAVI » donnent la même clé. */
+function foldKey(value) {
+  return fold(value).replace(/[^a-z0-9]+/g, "");
+}
+
+/** Mots distinctifs du nom d'une campagne (≥ 5 lettres, hors mots génériques) : « GTAVI Launch Celebration » → gtavi. */
+function rewardKeywords(name) {
+  const words = fold(name).split(/[^a-z0-9]+/).filter((word) => word.length >= 5 && !GENERIC_WORDS.has(word));
+  return [...new Set(words)];
+}
+
 /** Fin d'un Drop, bornée par celle de sa campagne ; une campagne close avant terme clôt ses Drops. */
 function dropEnd(campaign, drop, now) {
   const ends = [drop?.endsAt, campaign.endsAt].filter((at) => at > 0);
@@ -271,9 +284,17 @@ export function buildBadgeEvents({ campaigns = [], rewards = [], catalog = [], p
   }
   // Twitch ajoute souvent « Badge » au nom de la récompense (« BeAGoldfish Badge » pour « BeAGoldfish ») :
   // le titre exact gagne, sinon on compare sans ce suffixe.
+  // Twitch traduit les titres du catalogue (« Chaîne violette ») mais nomme les récompenses d'une campagne en
+  // anglais (« Purple Chain ») : l'identifiant du badge (`purple-chain`) reste, lui, identique dans toutes les langues.
+  const byId = new Map();
+  for (const badge of catalog) {
+    const key = titleKey(badge.id);
+    if (key && !byId.has(key)) byId.set(key, badge);
+  }
   const named = (name) => {
     const key = titleKey(name);
-    return byTitle.get(key) || byTitle.get(withoutBadgeSuffix(key));
+    const bare = withoutBadgeSuffix(key);
+    return byTitle.get(key) || byTitle.get(bare) || byId.get(key) || byId.get(bare);
   };
   /**
    * Twitch nomme parfois le badge sans le jeu (« Belmont's Curse » pour
@@ -301,10 +322,14 @@ export function buildBadgeEvents({ campaigns = [], rewards = [], catalog = [], p
       }
     }
   }
+  const namedRewards = new Set();
   for (const reward of rewards) {
     for (const item of reward.rewards || []) {
       const badge = named(item.name);
-      if (badge) fresh.push(rewardEvent(badge.id, reward, item, now));
+      if (badge) {
+        fresh.push(rewardEvent(badge.id, reward, item, now));
+        namedRewards.add(reward.id);
+      }
     }
   }
   const exact = new Set([...previous, ...fresh].filter((event) => event.link === "reward").map((event) => event.badgeId));
@@ -315,6 +340,35 @@ export function buildBadgeEvents({ campaigns = [], rewards = [], catalog = [], p
       if (badgeGames(badge).some((game) => sameGame(game, campaign.game))) fresh.push(dropEvent(badge.id, campaign, null, "game", now));
     }
   }
+  // Certaines campagnes de récompenses ne listent qu'un coffre (« GTA DVD Chest ») : les badges qu'il donne n'y
+  // sont nommés nulle part. On les relie alors par le mot distinctif du nom de la campagne (« GTAVI »), à condition
+  // qu'il figure aussi dans son résumé et dans la description du badge, que le badge ne soit lié à aucune autre campagne, et que la campagne ne nomme déjà aucun badge.
+  // Les liens déduits d'une lecture précédente sont refaits ici : ils ne comptent ni comme « déjà liés » ni comme propriétaires.
+  const rewardIds = new Set(rewards.map((reward) => reward.id));
+  const settled = previous.filter((event) => !(event.kind === "rewards" && event.link === "game" && rewardIds.has(event.campaignId)));
+  const linked = new Set([...settled, ...fresh].map((event) => event.badgeId));
+  const owners = new Map();
+  for (const event of settled) owners.set(event.badgeId, new Set([...(owners.get(event.badgeId) || []), event.campaignId]));
+  for (const reward of rewards) {
+    // Seulement si la campagne ne nomme aucun badge : sinon (« Pokemon Evolutions » nomme Haunter) le mot de la marque
+    // attraperait tous les anciens badges de la même licence.
+    if (namedRewards.has(reward.id)) continue;
+    const summary = foldKey(reward.summary);
+    const keys = rewardKeywords(reward.name).filter((key) => summary.includes(key));
+    if (!keys.length) continue;
+    for (const badge of catalog) {
+      if (linked.has(badge.id) || RETIRED_BADGES.has(badge.id) || mentionsPastYear(badge, now)) continue;
+      const others = [...(owners.get(badge.id) || [])].filter((id) => id !== reward.id);
+      if (others.length) continue;
+      const description = foldKey(badge.description);
+      if (!keys.some((key) => description.includes(key))) continue;
+      // L'objectif de la campagne (« 60 min ») ne vaut que pour les badges de visionnage : un badge de sub, ou celui qui
+      // demande tous les autres, est payant.
+      const paid = isPaidBadge(badge) || /\b(all|every)\b.{0,20}\b(emotes?|badges?)\b/i.test(badge.description || "");
+      const event = rewardEvent(badge.id, reward, {}, now);
+      fresh.push({ ...event, link: "game", minutes: paid ? 0 : event.minutes, subs: paid ? Math.max(1, event.subs) : 0 });
+    }
+  }
   // Une campagne détaillée est recréée en entier par `fresh` : ses anciens événements partent.
   const detailed = new Set(campaigns.filter((campaign) => campaign.drops).map((campaign) => campaign.id));
   // Une campagne (ou récompense) que Twitch ne liste plus avant sa fin est close à ce moment-là.
@@ -322,6 +376,8 @@ export function buildBadgeEvents({ campaigns = [], rewards = [], catalog = [], p
   const sources = { drops: campaigns.length, rewards: rewards.length };
   const merged = new Map(previous
     .filter((event) => !(event.kind === "drops" && detailed.has(event.campaignId)))
+    // Les liens déduits d'une campagne de récompenses (link « game ») sont refaits à chaque lecture : un lien devenu faux ne reste pas.
+    .filter((event) => !(event.kind === "rewards" && event.link === "game" && rewardIds.has(event.campaignId)))
     .map((event) => (sources[event.kind] && !listed[event.kind]?.has(event.campaignId) && event.endsAt > now ? { ...event, endsAt: now } : event))
     .map((event) => [eventKey(event), event]));
   for (const event of fresh) merged.set(eventKey(event), event);

@@ -194,14 +194,6 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
           </button>
         </div>
-        <div class="promo-card promo-clips" id="promo-clips" hidden>
-          <div class="clips-morph" id="clips-morph" aria-hidden="true"></div>
-          <p class="promo-line" data-i18n="changelog.clipsBanner">StreamPulse Clips : de clip Twitch à TikTok, sans montage.</p>
-          <div class="promo-metal-slot" id="promo-clips-cta"></div>
-          <button class="promo-close" id="promo-clips-close" type="button" data-i18n-attr-ariaLabel="popup.plus.close" data-i18n-attr-title="popup.plus.close" aria-label="Fermer" title="Fermer">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-          </button>
-        </div>
       </div>
 
       <footer class="dock" id="add-bar">
@@ -672,6 +664,13 @@
               <span class="settings-description" data-i18n="popup.settings.vodUnmuteDescription">Expérimental : tente de restaurer les passages audio coupés sur les rediffusions VOD Twitch.</span>
             </span>
             <input id="pref-vod-unmute" type="checkbox" role="switch" />
+          </label>
+          <label class="settings-toggle">
+            <span class="settings-text">
+              <span class="settings-title" data-i18n="popup.settings.clipsDashboardTitle">StreamPulse Clips dans le gestionnaire de clips</span>
+              <span class="settings-description" data-i18n="popup.settings.clipsDashboardDescription">Ajoute une icône à chaque clip de ton tableau de bord Twitch pour le copier et l'ouvrir dans StreamPulse Clips. Chrome te demande l'accès au tableau de bord à l'activation.</span>
+            </span>
+            <input id="pref-clips-dashboard" type="checkbox" role="switch" />
           </label>
 
           <h3 class="settings-group-header" data-i18n="popup.settings.playerQualityGroup">Qualité</h3>

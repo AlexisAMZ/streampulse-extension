@@ -109,19 +109,6 @@ a.cl-thanks-handle:hover { color: var(--violet-text); }
 .cl-history-entry .cl-text { font-size: 14.5px; }
 
 /* ── Aller plus loin : StreamPulse+ et StreamPulse Clips ── */
-.cl-promo { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 56px; }
-.cl-promo-card { display: flex; flex-direction: column; gap: 10px; padding: 26px 28px; border-radius: 22px; }
-.cl-promo-plus { background: var(--violet); color: var(--paper); }
-.cl-promo-clips { background: var(--surface); color: var(--text); box-shadow: inset 0 0 0 1px var(--line); }
-.cl-promo-star { width: 26px; height: 26px; color: var(--lcd); }
-.cl-promo-clips .cl-promo-icon { width: 24px; height: 24px; color: var(--violet-text); }
-.cl-promo-title { font-family: var(--display); font-size: 19px; font-weight: 800; letter-spacing: -0.01em; }
-.cl-promo-line { font-size: 14.5px; line-height: 1.55; opacity: 0.88; }
-.cl-promo-cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; align-self: flex-start; margin-top: auto; height: 44px; padding: 0 18px; border-radius: 12px; background: var(--paper); color: var(--paper-ink); font-weight: 700; font-size: 14.5px; text-decoration: none; white-space: nowrap; transition: background-color var(--dur-fast) ease; }
-.cl-promo-cta:hover { background: var(--lcd); }
-.cl-promo-cta svg { width: 16px; height: 16px; }
-.cl-promo-cta-quiet { background: var(--violet); color: var(--paper); }
-.cl-promo-cta-quiet:hover { background: var(--violet-strong); }
 
 /* ── Soutien et fermeture ── */
 .cl-donation-card { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-top: 56px; padding: 24px 28px; border-radius: 22px; background: var(--violet); color: var(--paper); }

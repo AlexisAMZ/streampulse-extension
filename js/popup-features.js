@@ -35,6 +35,7 @@ import {
 import { createCategoryField } from "./popup-category-picker.js";
 import { playNotificationSound } from "./notification-sound-player.js";
 import { SMART_SOUND, SMART_SOUND_OFF, SOUND_PRESETS } from "./notification-sounds.js";
+import { claimAskSlot } from "./ask-budget.js";
 import {
   CUSTOM_SOUNDS_KEY, MAX_CUSTOM_BYTES, MAX_CUSTOM_SECONDS, MAX_CUSTOM_SOUNDS,
   addCustomSound, checkSoundFile, customSoundData, isCustomSound, normalizeLibrary, removeCustomSound,
@@ -232,8 +233,9 @@ const PROMO_KEY = "streamPulsePromo";
 const PROMO_FREQ_MS = 20 * 60 * 60 * 1000; // une fois par jour au plus
 const PROMO_MIN_OPENS = 3; // pas avant la 3e ouverture éligible
 let promoFreqMs = PROMO_FREQ_MS; // pilotable : config.promo.freqHours (distant)
-let promoState = { plusClosed: false, clipsClosed: false, opens: 0, lastShownAt: 0 };
+let promoState = { plusClosed: false, opens: 0, lastShownAt: 0 };
 let promoDue = false;
+let promoSlot = false; // la place a été réservée dans le budget global des demandes (js/ask-budget.js)
 let promoSuccess = false;
 let promoPlusOk = false;
 let promoRemoteOff = false;
@@ -351,11 +353,9 @@ function renderPlus() {
  */
 function renderPromo() {
   const trialOffered = !plusActive() && !trialState.used && !trialState.pending;
-  const showPlus = !trialOffered && promoDue && promoPlusOk && !plusActive() && !promoState.plusClosed;
+  const showPlus = !trialOffered && promoDue && promoSlot && promoPlusOk && !plusActive() && !promoState.plusClosed;
   const plus = $("promo-plus");
-  const clips = $("promo-clips");
   if (plus) plus.hidden = !showPlus;
-  if (clips) clips.hidden = true;
   const container = $("promo-float");
   if (container) container.hidden = !showPlus;
 }
@@ -1235,7 +1235,6 @@ export async function initFeatures() {
   plusRecord = stored[PLUS_KEY] || null;
   promoState = {
     plusClosed: stored[PROMO_KEY]?.plusClosed === true,
-    clipsClosed: stored[PROMO_KEY]?.clipsClosed === true,
     opens: stored[PROMO_KEY]?.opens || 0,
     lastShownAt: stored[PROMO_KEY]?.lastShownAt || 0,
   };
@@ -1268,18 +1267,20 @@ export async function initFeatures() {
     chrome.storage.local.set({ [PROMO_KEY]: promoState }).catch((error) => console.warn("[popup] carte plus :", error?.message || error));
   });
   $("promo-plus-cta")?.addEventListener("click", openPlus);
-  $("promo-clips-close")?.addEventListener("click", () => {
-    promoState.clipsClosed = true;
-    renderPromo();
-    chrome.storage.local.set({ [PROMO_KEY]: promoState }).catch((error) => console.warn("[popup] carte clips :", error?.message || error));
-  });
   initPoints({ isPlus: plusActive, onPlusChange: (listener) => plusListeners.add(listener), openPlus })
     .catch((error) => console.warn("[popup] points init failed:", error));
   // La carte parrainage passe après l'avis et le badge : une seule carte à la fois.
   Promise.all([initReviewAsk(), initBadgeAsk()])
     .catch((error) => console.warn("[popup] review/badge ask init failed:", error))
     .then(() => initReferralAsk())
-    .catch((error) => console.warn("[popup] referral ask init failed:", error));
+    .catch((error) => console.warn("[popup] referral ask init failed:", error))
+    // La carte StreamPulse+ passe en dernier : elle ne s'affiche que si aucune autre demande n'a la place.
+    .then(async () => {
+      if (!promoDue || !promoPlusOk) return;
+      promoSlot = await claimAskSlot("promo-plus");
+      renderPromo();
+    })
+    .catch((error) => console.warn("[popup] carte plus : budget des demandes illisible", error));
   initLayout().catch((error) => console.warn("[popup] layout init failed:", error));
   initDrops({ isPlus: plusActive, onPlusChange: (listener) => plusListeners.add(listener), openPlus })
     .catch((error) => console.warn("[popup] drops init failed:", error));

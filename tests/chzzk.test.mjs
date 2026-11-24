@@ -182,8 +182,10 @@ test("manifeste : la règle d'en-tête est une permission facultative, jamais ob
   assert.ok(!manifest.permissions.includes("identity"));
   assert.deepEqual(manifest.optional_permissions, ["declarativeNetRequestWithHostAccess", "identity"]);
   // L'adresse de retour chromiumapp.org sert à lire la réponse de Twitch dans notre propre fenêtre de connexion.
-  assert.deepEqual(manifest.optional_host_permissions, [CHZZK_HOST_PERMISSION, "https://*.cloudfront.net/*", "https://*.chromiumapp.org/*"]);
+  assert.deepEqual(manifest.optional_host_permissions, [CHZZK_HOST_PERMISSION, "https://*.cloudfront.net/*", "https://dashboard.twitch.tv/*", "https://*.chromiumapp.org/*"]);
   // La restauration audio VOD (bêta) demande son accès au clic : ni DNR ni CloudFront à l'installation.
   assert.ok(!manifest.permissions.includes("declarativeNetRequest"));
   assert.ok(!manifest.host_permissions.includes("https://*.cloudfront.net/*"));
+  // Le gestionnaire de clips du tableau de bord est facultatif aussi : demandé quand on active le réglage.
+  assert.ok(!manifest.host_permissions.includes("https://dashboard.twitch.tv/*"));
 });

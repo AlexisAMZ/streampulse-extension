@@ -31,6 +31,7 @@
 
 import { t } from "./i18n.js";
 import { rollingDayKeys } from "./recap-data.js";
+import { claimAskSlot } from "./ask-budget.js";
 
 const KEY = "streamPulseReviewAsk";
 const METRICS_KEY = "streamPulseReviewMetrics";
@@ -220,7 +221,7 @@ function wireButtons(banner, variant, initialState) {
 export async function initReviewAsk() {
   if (!$("review-ask")) return;
   const { due, state, variant } = await reviewAskDecision();
-  if (!due || !(await askGate())) return;
+  if (!due || !(await askGate()) || !(await claimAskSlot("review"))) return;
   // Relu après les attentes : le popup a pu être redessiné entre-temps.
   const banner = $("review-ask");
   if (!banner) return;

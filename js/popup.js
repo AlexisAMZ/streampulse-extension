@@ -34,6 +34,7 @@ import {
 } from "./platforms.js";
 import { requestChzzkAccess } from "./chzzk-permission.js";
 import { requestVodUnmuteAccess } from "./vod-permission.js";
+import { hasClipsDashboardAccess, removeClipsDashboardAccess, requestClipsDashboardAccess } from "./clips-dashboard-access.js";
 import { initChzzkAsk } from "./popup-chzzk-ask.js";
 import { createAllChannelsTile, createChannelRow, createMiniCard, formatNumber, renderStage, renderStageEmpty } from "./ui.js";
 import { openChannel } from "./open-channel.js";
@@ -129,6 +130,7 @@ const pipButtonToggle = document.getElementById("pref-pip-button");
 const autoRefreshToggle = document.getElementById("pref-auto-refresh");
 const clipDownloadToggle = document.getElementById("pref-clip-download");
 const vodUnmuteToggle = document.getElementById("pref-vod-unmute");
+const clipsDashboardToggle = document.getElementById("pref-clips-dashboard");
 const playerQualitySelect = document.getElementById("pref-player-quality");
 const latencyPlacementSelect = document.getElementById("pref-latency-placement");
 const fastForwardToggle = document.getElementById("pref-fast-forward");
@@ -1441,6 +1443,10 @@ function renderPreferences() {
   if (vodUnmuteToggle) {
     vodUnmuteToggle.checked = Boolean(prefs.enableVodUnmute);
   }
+  if (clipsDashboardToggle) {
+    // Pas de préférence : l'état de l'interrupteur est celui de la permission accordée à Chrome.
+    hasClipsDashboardAccess().then((granted) => { clipsDashboardToggle.checked = granted; });
+  }
   if (playerQualitySelect) {
     playerQualitySelect.value = prefs.playerQuality || "auto";
   }
@@ -2685,6 +2691,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
       updatePreferences({ enableVodUnmute: toggle.checked });
+    });
+    clipsDashboardToggle?.addEventListener("change", async (e) => {
+      const toggle = e.target;
+      // L'accès au tableau de bord est facultatif : demandé ici, au clic, jamais à l'installation.
+      if (toggle.checked) await requestClipsDashboardAccess();
+      else await removeClipsDashboardAccess();
+      toggle.checked = await hasClipsDashboardAccess();
     });
     playerQualitySelect?.addEventListener("change", (e) => {
       updatePreferences({ playerQuality: e.target.value });

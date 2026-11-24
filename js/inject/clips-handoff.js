@@ -9,7 +9,7 @@
   const EDITOR_ORIGIN = "https://spclips.com";
   const EDITOR_PATH = "/app";
   const CLIP_PATH = /^\/([A-Za-z0-9_]+)\/clip\/([A-Za-z0-9_-]+)\/?$/;
-  const CLIPS_TWITCH_TV_PATH = /^\/([A-Za-z0-9_-]+)\/?$/;
+  const CLIPS_TWITCH_TV_PATH = /^\/([A-Za-z0-9_-]+)(?:\/edit)?\/?$/;
   const HISTORY_KEY = "spClipsHistory";
   const MAX_HISTORY = 40;
 

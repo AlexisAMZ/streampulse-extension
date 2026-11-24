@@ -3,7 +3,7 @@
   "default_locale": "en",
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "26.11.22",
+  "version": "26.11.24",
   "permissions": [
     "storage",
     "alarms",
@@ -19,6 +19,7 @@
   "optional_host_permissions": [
     "https://*.chzzk.naver.com/*",
     "https://*.cloudfront.net/*",
+    "https://dashboard.twitch.tv/*",
     "https://*.chromiumapp.org/*"
   ],
   "host_permissions": [
@@ -110,6 +111,17 @@
         "css/inject/predictions.css"
       ],
       "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://www.twitch.tv/*"
+      ],
+      "all_frames": false,
+      "js": [
+        "js/inject/clipboard-tap.js"
+      ],
+      "world": "MAIN",
+      "run_at": "document_start"
     },
     {
       "matches": [

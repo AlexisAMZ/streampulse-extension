@@ -1358,41 +1358,16 @@ body.is-settings .new-dot { background: var(--violet); }
 .promo-float[hidden] { display: none; }
 .promo-card { display: flex; align-items: center; gap: 12px; height: 60px; padding: 0 16px; background: var(--violet); color: var(--paper); box-shadow: 0 -10px 24px rgba(6, 7, 20, 0.4); }
 .promo-card[hidden] { display: none; }
-/* Carte Clips : DA propre à spclips-web (app/globals.css) — noir #050505,
-   hairline iOS, bouton pilule blanc à texte noir. */
-.promo-clips { background: #050505; color: #fff; box-shadow: 0 -10px 24px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(84, 84, 88, 0.65); }
 .promo-star { width: 18px; height: 18px; flex: none; color: var(--lcd); }
-.clips-morph { width: 51px; height: 44px; flex: none; position: relative; }
 .promo-line { flex: 1; min-width: 0; margin: 0; font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.promo-clips .promo-line { color: rgba(235, 235, 245, 0.65); font-weight: 500; }
 .promo-close { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex: none; border: 0; border-radius: 8px; background: transparent; color: inherit; opacity: 0.75; cursor: pointer; transition: opacity var(--dur-fast) ease; }
 .promo-close:hover { opacity: 1; }
 .promo-close svg { width: 13px; height: 13px; }
 .promo-cta { flex: none; display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; border: 0; border-radius: 100px; background: var(--paper); color: var(--paper-ink); font: inherit; font-size: 12.5px; font-weight: 700; text-decoration: none; white-space: nowrap; cursor: pointer; transition: background-color var(--dur-fast) ease; }
 .promo-cta:hover { background: var(--lcd); }
-.promo-cta-clips { background: #fff; color: #000; }
-.promo-cta-clips:hover { background: rgba(255, 255, 255, 0.9); }
-.promo-metal-slot { flex: none; min-height: 46px; display: flex; align-items: center; }
-
-/* Le métal noir du bouton Clips se détache du noir #050505 de sa barre par la
-   hairline iOS de spclips. */
-.promo-clips .promo-metal { box-shadow: inset 0 0 0 1px rgba(84, 84, 88, 0.65); }
 
 
-/* Le geste du produit (ReframeMorph de l'app) : le clip 16:9 et sa cam
-   basse-droite ; la WAAPI anime gabarits et positions vers le 9:16. */
-.clips-frame { position: absolute; inset-inline-start: 0; inset-inline-end: 0; bottom: 0; top: 0; margin: auto; background: #2C2C2E; border: 1px solid rgba(84, 84, 88, 0.65); overflow: hidden; }
-.clips-game { position: absolute; inset-inline-start: 0; inset-inline-end: 0; bottom: 0; }
-.clips-hud { position: absolute; inset-inline-start: 1.5px; top: 1.5px; width: 6px; height: 1px; border-radius: 1px; background: rgba(84, 84, 88, 0.65); }
-.clips-target { position: absolute; left: 50%; top: 40%; width: 4px; height: 4px; border-radius: 50%; border: 0.5px solid #3A3A3C; transform: translate(-50%, -50%); }
-.clips-ground { position: absolute; inset-inline-start: 0; inset-inline-end: 0; bottom: 0; height: 22%; background: #1C1C1E; }
-.clips-cam { position: absolute; background: #9146FF; border-style: solid; border-color: #B794FF; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; z-index: 4; }
-.clips-seam { position: absolute; inset-inline-start: 0; inset-inline-end: 0; background: #000; z-index: 3; }
-.clips-whitezone { position: absolute; inset-inline-start: 0; inset-inline-end: 0; bottom: 0; background: #fff; display: flex; align-items: center; justify-content: center; z-index: 2; }
-.clips-play { width: 36%; aspect-ratio: 5 / 6; margin-inline-start: 6%; background: #000; clip-path: polygon(0 0, 100% 50%, 0 100%); }
-.clips-game { z-index: 1; }
-.clips-head { width: 22%; aspect-ratio: 1; border-radius: 999px; background: rgba(0, 0, 0, 0.3); margin-bottom: 1px; }
-.clips-shoulders { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 48%; height: 26%; border-start-start-radius: 999px; border-start-end-radius: 999px; background: rgba(0, 0, 0, 0.3); }
+
 
 /* Comptes liés */
 .linked-accounts { display: grid; gap: 8px; min-width: 0; }

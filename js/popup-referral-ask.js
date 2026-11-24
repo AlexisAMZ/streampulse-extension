@@ -7,6 +7,7 @@
 import { t } from "./i18n.js";
 import { askGate, reviewAskDecision } from "./popup-review.js";
 import { shouldAskReferral, REFERRAL_ASK_FIRST_MS, REFERRAL_ASK_LATER_MS } from "./referral-data.js";
+import { claimAskSlot } from "./ask-budget.js";
 
 const KEY = "streamPulseReferralAsk";
 const CODE_KEY = "streamPulseReferralCode";
@@ -97,7 +98,7 @@ export async function initReferralAsk() {
   const card = $("referral-ask");
   if (!card) return;
   const { state, due } = await loadState();
-  if (!due || !(await askGate()) || !(await slotIsFree())) return;
+  if (!due || !(await askGate()) || !(await slotIsFree()) || !(await claimAskSlot("referral"))) return;
   card.hidden = false;
   card.setAttribute("aria-label", t("popup.referralAsk.title"));
   wireButtons(card, state);

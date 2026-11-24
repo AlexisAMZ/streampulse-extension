@@ -5,6 +5,7 @@
 // MV3 peut livrer un événement dès l'évaluation du module, un listener posé
 // après un await le raterait.
 import { syncChzzkAccess } from "./sw/chzzk-access.js";
+import { syncClipsDashboardAccess } from "./clips-dashboard-access.js";
 import { badgeAuto, scheduleDropsAlarm } from "./sw/drops.js";
 import { PREFERENCES_KEY } from "./sw/constants.js";
 import { PLUS_KEY, isPlusActive } from "./plus.js";
@@ -55,6 +56,8 @@ chrome.alarms.onAlarm.addListener(handleAlarm);
 // La permission CHZZK s'accorde ou se retire depuis les réglages du navigateur comme depuis la popup.
 chrome.permissions?.onAdded?.addListener(syncChzzkAccess);
 chrome.permissions?.onRemoved?.addListener(syncChzzkAccess);
+chrome.permissions?.onAdded?.addListener(syncClipsDashboardAccess);
+chrome.permissions?.onRemoved?.addListener(syncClipsDashboardAccess);
 
 // Un handler par type de message (js/sw/messages.js), après contrôle de
 // l'expéditeur (js/sw/message-dispatch.js).

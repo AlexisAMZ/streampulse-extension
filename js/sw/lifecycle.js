@@ -4,6 +4,7 @@ import { DEFAULT_PREFERENCES } from "../preferences-data.js";
 import { syncUpdateBadge } from "./action-badge.js";
 import { scheduleKeepAliveAlarm, scheduleWatcherAlarm, setupAutoOpenInventoryAlarm } from "./alarms.js";
 import { syncChzzkAccess } from "./chzzk-access.js";
+import { syncClipsDashboardAccess } from "../clips-dashboard-access.js";
 import { fetchRemoteConfig } from "./config.js";
 import { currentTwitchId, dropsStore, scheduleDropsAlarm } from "./drops.js";
 import { translateWithPrefs } from "./i18n.js";
@@ -150,6 +151,7 @@ export async function handleInstalled(details) {
   if ((details?.reason || "install") === "install") await chrome.storage.local.set({ installedAt: Date.now() });
   await registerUninstallSurvey();
   await syncChzzkAccess();
+  await syncClipsDashboardAccess();
   await fetchRemoteConfig(); // load credentials before first poll
   const streamers = await DataStore.ensureDefaults();
   await PreferenceStore.ensureDefaults();
@@ -208,6 +210,7 @@ export async function handleStartup() {
   initDone = true;
   await registerUninstallSurvey();
   await syncChzzkAccess();
+  await syncClipsDashboardAccess();
   await fetchRemoteConfig(); // refresh credentials on browser startup
   scheduleWatcherAlarm();
   scheduleKeepAliveAlarm();

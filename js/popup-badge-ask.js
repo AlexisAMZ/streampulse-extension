@@ -11,6 +11,7 @@
 
 import { t } from "./i18n.js";
 import { askGate, reviewAskDecision } from "./popup-review.js";
+import { claimAskSlot } from "./ask-budget.js";
 
 const KEY = "streamPulseBadgeAsk";
 const PREFERENCES_KEY = "betaGeneralPreferences";
@@ -91,7 +92,7 @@ function wireButtons(card, initialState) {
 export async function initBadgeAsk() {
   if (!$("badge-ask")) return;
   const { state, due } = await loadState();
-  if (!due || !(await slotIsFree()) || !(await askGate())) return;
+  if (!due || !(await slotIsFree()) || !(await askGate()) || !(await claimAskSlot("badge"))) return;
   const card = $("badge-ask");
   if (!card) return;
   card.hidden = false;
